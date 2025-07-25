@@ -30,4 +30,9 @@ $callbacks = [
         'callback' => \local_iomadcustompage\hook_callbacks::class . '::before_standard_top_of_body_html_generation',
         'priority' => 0,
     ],
+    [
+        'hook' => \core\hook\after_config::class,
+        'callback' => [\local_iomadcustompage\hook_callbacks::class, 'after_config'],
+    ],
+
 ];

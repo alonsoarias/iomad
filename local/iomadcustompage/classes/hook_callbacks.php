@@ -22,6 +22,7 @@ use dml_read_exception;
 use Exception;
 use html_writer;
 use moodle_url;
+require_once($CFG->dirroot . '/local/iomadcustompage/lib.php');
 
 /**
  * Allows the plugin to perform action based on hook callback.
@@ -42,6 +43,24 @@ class hook_callbacks {
         if (isset($CFG->dbunmodifiedcustommenuitems)) {
           $CFG->custommenuitems = $CFG->dbunmodifiedcustommenuitems;
           unset($CFG->dbunmodifiedcustommenuitems);
+        }
+    }
+
+    /**
+     * Listener for the after_config hook.
+     *
+     * @param after_config $hook
+     */
+    public static function after_config(after_config $hook): void {
+        global $CFG;
+        $customcontextclasses = [
+            CONTEXT_CUSTOMPAGE => 'local_iomadcustompage\\custom_context\\context_iomadcustompage',
+        ];
+
+        if (isset($CFG->custom_context_classes)) {
+            $CFG->custom_context_classes = $CFG->custom_context_classes + $customcontextclasses;
+        } else {
+            $CFG->custom_context_classes = $customcontextclasses;
         }
     }
 }
