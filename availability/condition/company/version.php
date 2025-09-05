@@ -18,13 +18,14 @@
  * Version info.
  *
  * @package availability_company
- * @copyright 2014 The Open University
+ * @copyright 2022 e-Learn Design Ltd. https://www.e-learndesign.co.uk
+ * @author Derick Turner
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->release  = '4.5.6 (Build: 20250811)'; // Human-friendly version name
+$plugin->release  = '4.5.6 (Build: 20250811)'; // Human-friendly version name.
 $plugin->version  = 2024100745;   // The (date) version of this plugin.
 $plugin->requires = 2024100700;   // Requires this Moodle version.
 $plugin->component = 'availability_company';
