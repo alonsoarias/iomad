@@ -15,22 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Post install hook for the filter_iomad plugin.
+ * Privacy Subsystem implementation for filter_iomad.
  *
  * @package    filter_iomad
  * @copyright  2025 E-Learn Design Ltd https://www.e-learndesign.co.uk
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace filter_iomad\privacy;
 
 /**
- * Install function.
+ * Privacy Subsystem for filter_iomad implementing null_provider.
  *
- * @return void
+ * @copyright  2025 E-Learn Design Ltd https://www.e-learndesign.co.uk
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function xmldb_filter_iomad_install() {
-    global $CFG;
-    require_once("$CFG->libdir/filterlib.php");
+class provider implements \core_privacy\local\metadata\null_provider {
 
-    // Enable the filter by default.
-    filter_set_global_state('iomad', TEXTFILTER_ON);
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
 }
