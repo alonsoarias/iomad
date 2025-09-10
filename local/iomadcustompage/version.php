@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->release  = '4.5.6 (Build: 20250811)'; // Human-friendly version name
+$plugin->release  = '4.5.6 (Build: 20250811)'; // Human-friendly version name.
 $plugin->component = 'local_iomadcustompage';
 $plugin->release = '0.1.1';
 $plugin->version = 2024110445;

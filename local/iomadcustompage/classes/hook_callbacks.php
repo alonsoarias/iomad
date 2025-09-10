@@ -22,12 +22,15 @@ use dml_read_exception;
 use Exception;
 use html_writer;
 use moodle_url;
+
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/local/iomadcustompage/lib.php');
 
 /**
  * Allows the plugin to perform action based on hook callback.
  *
- * @package    tool_policy
+ * @package    local_iomadcustompage
  * @copyright  2024 BitAscii Solutions <bitascii.dev@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -41,8 +44,8 @@ class hook_callbacks {
         global $CFG;
 
         if (isset($CFG->dbunmodifiedcustommenuitems)) {
-          $CFG->custommenuitems = $CFG->dbunmodifiedcustommenuitems;
-          unset($CFG->dbunmodifiedcustommenuitems);
+            $CFG->custommenuitems = $CFG->dbunmodifiedcustommenuitems;
+            unset($CFG->dbunmodifiedcustommenuitems);
         }
     }
 
