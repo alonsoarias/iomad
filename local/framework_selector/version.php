@@ -15,14 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Version info
  * @package   local_framework_selector
  * @copyright 2021 Derick Turner
  * @author    Derick Turner
- * @basedon   standard Moodle framework_selector
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->release  = '4.5.6 (Build: 20250811)'; // Human-friendly version name
+defined('MOODLE_INTERNAL') || die();
+
+$plugin->release  = '4.5.6 (Build: 20250811)'; // Human-friendly version name.
 $plugin->version  = 2024100745;   // The (date) version of this plugin.
 $plugin->requires = 2024100700;   // Requires this Moodle version.
 $plugin->component  = 'local_framework_selector';
