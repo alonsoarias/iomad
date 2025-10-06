@@ -18,12 +18,15 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\output\dynamictabs;
 
+use coding_exception;
 use context_system;
 use core\output\dynamic_tabs\base;
+use core_reportbuilder\exception\source_invalid_exception;
 use local_iomadcustompage\local\models\page;
 use local_iomadcustompage\reportbuilder\local\systemreports\page_access_list;
 use local_iomadcustompage\permission;
 use core_reportbuilder\system_report_factory;
+use dml_exception;
 use local_iomadcustompage\custom_context\context_iomadcustompage;
 use renderer_base;
 

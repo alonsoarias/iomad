@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\external;
 
+use coding_exception;
 use core_collator;
 use core_component;
 use core_plugin_manager;

@@ -24,6 +24,8 @@
 
 namespace local_iomadcustompage\local\iomadcustompage;
 
+use coding_exception;
+use invalid_parameter_exception;
 use local_iomadcustompage\local\models\page as pagepersistent;
 use local_iomadcustompage\output\page_contents;
 use local_iomadcustompage\output\page_deatils;

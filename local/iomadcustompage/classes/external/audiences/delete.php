@@ -18,10 +18,14 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\external\audiences;
 
+use coding_exception;
+use core_external\restricted_context_exception;
 use local_iomadcustompage\local\audiences\base;
 use external_api;
 use external_function_parameters;
 use external_value;
+use invalid_parameter_exception;
+// use local_iomadcustompage\page_access_exception;
 use local_iomadcustompage\manager;
 use local_iomadcustompage\permission;
 

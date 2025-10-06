@@ -18,7 +18,12 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\output;
 
+use coding_exception;
+use core\invalid_persistent_exception;
 use core_external;
+use core_external\restricted_context_exception;
+use invalid_parameter_exception;
+// use local_custompage\page_access_exception;
 use core\output\inplace_editable;
 use local_iomadcustompage\permission;
 use local_iomadcustompage\local\audiences\base;

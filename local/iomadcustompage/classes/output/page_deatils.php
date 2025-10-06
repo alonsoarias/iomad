@@ -24,6 +24,7 @@
 
 namespace local_iomadcustompage\output;
 
+use coding_exception;
 use local_iomadcustompage\local\models\page;
 use renderable;
 use renderer_base;
