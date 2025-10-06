@@ -24,6 +24,7 @@
 
 namespace local_iomadcustompage\reportbuilder\local\entities;
 
+use core\exception\coding_exception;
 use core_collator;
 use core_reportbuilder\local\entities\base;
 use core_reportbuilder\local\filters\autocomplete;
@@ -31,6 +32,7 @@ use core_reportbuilder\local\filters\text;
 use core_reportbuilder\local\report\column;
 use core_reportbuilder\local\report\filter;
 use lang_string;
+use moodle_exception;
 
 /**
  * iomadcustompage entity

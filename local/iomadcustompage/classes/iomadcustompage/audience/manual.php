@@ -18,10 +18,12 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\iomadcustompage\audience;
 
+use coding_exception;
 use context_system;
 use local_iomadcustompage\local\audiences\base;
 use core_reportbuilder\local\helpers\database;
 use core_user;
+use dml_exception;
 use MoodleQuickForm;
 
 /**

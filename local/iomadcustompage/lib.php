@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 define('CONTEXT_CUSTOMPAGE', 75);
 
+use core\exception\moodle_exception;
 use core\output\inplace_editable;
 use local_iomadcustompage\form\audience;
 use local_iomadcustompage\local\models\page as pagepersistent;

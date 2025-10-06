@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace local_iomadcustompage\form;
 
 use context;
+use core\exception\moodle_exception;
 use core_form\dynamic_form;
 use local_iomadcustompage\local\audiences\base;
 use local_iomadcustompage\output\audience_heading_editable;

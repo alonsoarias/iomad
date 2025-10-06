@@ -18,9 +18,14 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\form;
 
+use coding_exception;
 use context;
 use context_system;
+use core\exception\moodle_exception;
+use core\invalid_persistent_exception;
 use core_form\dynamic_form;
+use dml_exception;
+use invalid_parameter_exception;
 use local_iomadcustompage\local\models\page as page_model;
 use local_iomadcustompage\manager;
 use local_iomadcustompage\permission;

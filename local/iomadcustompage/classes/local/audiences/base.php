@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\local\audiences;
 
+use coding_exception;
 use core_plugin_manager;
 use MoodleQuickForm;
 use stdClass;

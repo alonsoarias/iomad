@@ -18,6 +18,8 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\output\dynamictabs;
 
+use coding_exception;
+use core\exception\moodle_exception;
 use core\output\dynamic_tabs\base;
 use local_iomadcustompage\factories\page_factory;
 use local_iomadcustompage\local\models\page;

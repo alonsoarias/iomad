@@ -18,9 +18,13 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\external\page;
 
+use coding_exception;
+use core_external\restricted_context_exception;
 use external_api;
 use external_function_parameters;
 use external_value;
+use invalid_parameter_exception;
+// use local_custompage\page_access_exception;
 use local_iomadcustompage\factories\page_factory;
 use local_iomadcustompage\manager;
 use local_iomadcustompage\permission;

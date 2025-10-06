@@ -18,10 +18,12 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\local\models;
 
+use coding_exception;
 use context;
 use context_helper;
 use context_system;
 use core\persistent;
+use dml_exception;
 use local_iomadcustompage\event\iomadcustompage_created;
 use local_iomadcustompage\event\iomadcustompage_deleted;
 use local_iomadcustompage\event\iomadcustompage_updated;

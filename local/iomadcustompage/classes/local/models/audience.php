@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\local\models;
 
+use coding_exception;
 use context;
 use local_iomadcustompage\event\audience_created;
 use local_iomadcustompage\event\audience_deleted;

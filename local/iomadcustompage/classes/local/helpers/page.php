@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\local\helpers;
 
+use coding_exception;
 use core\invalid_persistent_exception;
 use stdClass;
 use invalid_parameter_exception;

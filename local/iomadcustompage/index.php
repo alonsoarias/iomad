@@ -23,6 +23,7 @@
  */
 declare(strict_types=1);
 
+use local_iomadcustompage\output\renderer;
 use local_iomadcustompage\permission;
 use core_reportbuilder\system_report_factory;
 use local_iomadcustompage\reportbuilder\local\systemreports\pages_list;

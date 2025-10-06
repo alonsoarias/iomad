@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\local\helpers;
 
+use coding_exception;
 use cache;
 use context;
 use context_system;
@@ -25,6 +26,7 @@ use core_collator;
 use core_component;
 use core_plugin_manager;
 use core_reportbuilder\local\helpers\database;
+use dml_exception;
 use local_iomadcustompage\local\audiences\base;
 use local_iomadcustompage\local\models\audience as audience_model;
 use iomad;

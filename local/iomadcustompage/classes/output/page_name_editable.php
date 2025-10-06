@@ -18,11 +18,17 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\output;
 
+use coding_exception;
+use core\invalid_persistent_exception;
 use core\output\inplace_editable;
 use core_external;
+use core_external\restricted_context_exception;
 use local_iomadcustompage\local\models\page;
 use local_iomadcustompage\permission;
 use html_writer;
+use invalid_parameter_exception;
+// use local_custompage\page_access_exception;
+use moodle_exception;
 use moodle_url;
 
 defined('MOODLE_INTERNAL') || die;

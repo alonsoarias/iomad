@@ -18,6 +18,8 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage;
 
+use coding_exception;
+use core\invalid_persistent_exception;
 use local_iomadcustompage\local\models\page;
 use stdClass;
 

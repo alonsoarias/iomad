@@ -20,6 +20,7 @@ namespace local_iomadcustompage\event;
 
 use coding_exception;
 use core\event\base;
+use core\exception\moodle_exception;
 use local_iomadcustompage\local\models\audience;
 use moodle_url;
 

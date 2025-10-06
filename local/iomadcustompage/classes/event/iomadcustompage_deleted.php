@@ -21,6 +21,7 @@ namespace local_iomadcustompage\event;
 use coding_exception;
 use context_system;
 use core\event\base;
+use dml_exception;
 use Exception;
 use local_iomadcustompage\local\models\page;
 

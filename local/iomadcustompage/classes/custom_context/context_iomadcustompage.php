@@ -18,6 +18,10 @@ namespace local_iomadcustompage\custom_context;
 
 use coding_exception;
 use context;
+use context_system;
+use core\exception\moodle_exception;
+use dml_exception;
+use dml_transaction_exception;
 use moodle_url;
 use stdClass;
 
@@ -104,7 +108,7 @@ class context_iomadcustompage extends context {
      * @param int $strictness
      * @return context|bool context instance
      */
-    public static function instance($pageid, $strictness = MUST_EXIST) {
+    public static function instance(int $pageid, $strictness = MUST_EXIST) {
         global $DB;
 
         if ($context = context::cache_get(CONTEXT_CUSTOMPAGE, $pageid)) {
@@ -233,6 +237,8 @@ class context_iomadcustompage extends context {
             $base = '/'.SYSCONTEXTID;
 
             // Normal top level pages.
+            // This will be used when we allow creating hierarchical custompages. For now we only have flat ones
+            /*
             $sql = "UPDATE {context}
                        SET depth=2,
                            path=".$DB->sql_concat("'$base/'", 'id')."
@@ -242,6 +248,7 @@ class context_iomadcustompage extends context {
                                         WHERE sp.id = {context}.instanceid AND sp.depth=1)
                            $emptyclause";
             $DB->execute($sql);
+            */
 
             // Deeper pages - one query per depthlevel.
             $maxdepth = $DB->get_field_sql("SELECT MAX(depth) FROM {iomadcustompages}");

@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\privacy;
 
+use coding_exception;
 use context;
 use stdClass;
 use core_privacy\local\metadata\collection;

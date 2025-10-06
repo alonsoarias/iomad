@@ -18,7 +18,9 @@ declare(strict_types=1);
 
 namespace local_iomadcustompage\iomadcustompage\audience;
 
+use coding_exception;
 use core_reportbuilder\local\helpers\database;
+use dml_exception;
 use local_iomadcustompage\local\audiences\base;
 use MoodleQuickForm;
 
