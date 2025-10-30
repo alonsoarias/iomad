@@ -15,31 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_iomad_learningpath', language 'es'.
+ * Language strings for learning path block
  *
- * @package   block_iomad_learningpath
- * @copyright 2018 e-Learn Design Ltd
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    block_iomad_learningpath
+ * @copyright  2018 e-Learn Design Ltd. https://www.e-learndesign.co.uk
+ * @author     Howard Miller (howardsmiller@gmail.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 $string['addlearningpaths'] = 'Añadir rutas de aprendizaje';
 $string['addlearningpathstosync'] = 'Añadir rutas de aprendizaje para sincronizar';
 $string['assignlearningpaths'] = 'Asignar rutas de aprendizaje';
-$string['coursedepends'] = 'Completa {$a} primero';
-$string['entercourse'] = 'Entrar al curso';
-$string['iomad_learningpath:addinstance'] = 'Agregar un bloque de rutas de aprendizaje';
-$string['iomad_learningpath:myaddinstance'] = 'Agregar el bloque de rutas de aprendizaje al escritorio de Moodle';
+$string['coursedepends'] = 'Completar {$a} primero';
+$string['entercourse'] = 'Ingresar al curso';
+$string['iomad_learningpath:addinstance'] = 'Añadir bloque de ruta de aprendizaje';
+$string['iomad_learningpath:myaddinstance'] = 'Añadir bloque de ruta de aprendizaje al Panel de Moodle';
 $string['learningpathssyncedtotemplate'] = 'Rutas de aprendizaje sincronizadas con esta plantilla de plan de aprendizaje';
-$string['nocompletion'] = 'Todavía no hay datos de progreso';
-$string['nopathprogress'] = 'Todavía no hay datos de progreso';
-$string['nopaths'] = 'No tienes rutas de aprendizaje';
+$string['nocompletion'] = 'Aún no hay datos de progreso';
+$string['nopathprogress'] = 'Aún no hay datos de progreso';
+$string['nopaths'] = 'No tiene rutas de aprendizaje';
 $string['open'] = 'Abrir';
 $string['pluginname'] = 'Rutas de aprendizaje';
-$string['returntopath'] = 'Volver a las rutas de aprendizaje';
+$string['returntopath'] = 'Volver a rutas de aprendizaje';
 $string['selectlearningpathstosync'] = 'Seleccionar rutas de aprendizaje para sincronizar';
-$string['stopsyncinglearningpath'] = 'Dejar de sincronizar la ruta de aprendizaje';
-$string['syncplanslearningpaths'] = 'Sincronizar planes desde las rutas de aprendizaje de la plantilla';
-$string['templatelearningpathnotsyncedwhileduedateispassed'] = 'Las rutas de aprendizaje no se sincronizarán si la fecha de vencimiento de la plantilla ya pasó.';
+$string['stopsyncinglearningpath'] = 'Detener sincronización de ruta de aprendizaje';
+$string['syncplanslearningpaths'] = 'Sincronizar planes desde rutas de aprendizaje de plantilla de plan de aprendizaje';
+$string['templatelearningpathnotsyncedwhileduedateispassed'] = 'Las rutas de aprendizaje no se sincronizarán si la fecha de vencimiento de la plantilla ha pasado.';
 $string['templatelearningpathnotsyncedwhilehidden'] = 'La ruta de aprendizaje no se sincronizará mientras esta plantilla esté oculta.';

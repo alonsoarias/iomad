@@ -15,19 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_iomad_reports', language 'es'.
+ * BLock IOMAD reports strings.
  *
  * @package   block_iomad_reports
  * @copyright 2021 Derick Turner
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 o posterior
+ * @author    Derick Turner
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$string['iomad_reports:addinstance'] = 'Añadir un nuevo bloque de informes de IOMAD';
-$string['iomad_reports:myaddinstance'] = 'Añadir un nuevo bloque de informes de IOMAD al escritorio del usuario';
-$string['iomad_reports:view'] = 'Acceder a los informes de IOMAD';
-$string['link'] = 'Ir al panel de IOMAD';
-$string['nocompanyselected'] = 'No se ha seleccionado ninguna compañía';
-$string['pluginname'] = 'Informes de IOMAD';
-$string['privacy:metadata'] = 'El bloque selector de compañía de IOMAD solo muestra datos almacenados en otros lugares.';
+$string['iomad_reports:addinstance'] = 'Añadir un nuevo bloque de Informes IOMAD';
+$string['iomad_reports:myaddinstance'] = 'Añadir un nuevo bloque de Informes IOMAD al panel del usuario';
+$string['iomad_reports:view'] = 'Acceso a Informes IOMAD';
+$string['link'] = 'Ir al Panel IOMAD';
+$string['nocompanyselected'] = 'No se ha seleccionado ninguna empresa';
+$string['pluginname'] = 'Informes IOMAD';
+$string['privacy:metadata'] = 'El bloque de selector de empresa IOMAD solo muestra datos almacenados en otras ubicaciones.';
