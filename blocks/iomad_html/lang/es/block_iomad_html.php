@@ -15,23 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_iomad_html', language 'en', branch 'MOODLE_20_STABLE'
+ * Strings for component 'block_iomad_html', language 'es'.
  *
  * @package   block_iomad_html
- * @author    Derick Turner - based on the standard Moodle HTML block
- * @copyright E-Learn Design - http://www.e-learndesign.co.uk
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @author    Derick Turner - basado en el bloque HTML estándar de Moodle
+ * @copyright E-Learn Design
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 o posterior
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 $string['allowadditionalcssclasses'] = 'Permitir clases CSS adicionales';
-$string['configallowadditionalcssclasses'] = 'Añade una opción de configuración a las instancias del bloque HTML que permite establecer clases CSS adicionales.';
+$string['configallowadditionalcssclasses'] = 'Añade una opción de configuración a las instancias del bloque HTML para permitir definir clases CSS adicionales.';
 $string['configclasses'] = 'Clases CSS adicionales';
-$string['configclasses_help'] = 'El propósito de esta configuración es ayudar con la creación de temas al ayudar a distinguir los bloques HTML entre sí. Cualquier clase CSS ingresada aquí (delimitada por espacios) se agregará a las clases predeterminadas del bloque.';
+$string['configclasses_help'] = 'Esta configuración ayuda con el diseño diferenciando unos bloques HTML de otros. Cualquier clase CSS introducida aquí (separada por espacios) se añadirá a las clases predeterminadas del bloque.';
 $string['configcontent'] = 'Contenido';
 $string['configtitle'] = 'Título del bloque';
-$string['iomad_html:addinstance'] = 'Añadir un nuevo bloque HTML de Empresa';
-$string['iomad_html:myaddinstance'] = 'Añadir un nuevo bloque HTML de Empresa al Panel';
+$string['iomad_html:addinstance'] = 'Añadir un nuevo bloque HTML de compañía';
+$string['iomad_html:myaddinstance'] = 'Añadir un nuevo bloque HTML de compañía al escritorio';
 $string['leaveblanktohide'] = 'dejar en blanco para ocultar el título';
-$string['newiomad_htmlblock'] = '(nuevo bloque HTML de Empresa)';
-$string['pluginname'] = 'IOMAD HTML';
-$string['privacy:metadata'] = 'El bloque HTML de IOMAD solo muestra datos almacenados en otras ubicaciones.';
+$string['newiomad_htmlblock'] = '(nuevo bloque HTML de compañía)';
+$string['pluginname'] = 'HTML de IOMAD';
+$string['privacy:metadata'] = 'El bloque HTML de IOMAD solo muestra datos almacenados en otros lugares.';

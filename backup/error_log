@@ -1,0 +1,627 @@
+[21-Apr-2025 15:05:14 America/Bogota] instantiating backup controller 8cef66236efcc8baf2319dd7a8cad264
+[21-Apr-2025 15:05:14 America/Bogota] setting controller status to 100
+[21-Apr-2025 15:05:14 America/Bogota] loading controller plan
+[21-Apr-2025 15:05:15 America/Bogota] setting controller status to 300
+[21-Apr-2025 15:05:15 America/Bogota] applying plan defaults
+[21-Apr-2025 15:05:15 America/Bogota] setting controller status to 400
+[21-Apr-2025 15:05:15 America/Bogota] setting file inclusion to 
+[21-Apr-2025 15:05:15 America/Bogota] checking plan security
+[21-Apr-2025 15:05:15 America/Bogota] setting controller status to 500
+[21-Apr-2025 15:05:15 America/Bogota] checking plan security
+[21-Apr-2025 15:05:15 America/Bogota] checking plan security
+[21-Apr-2025 15:05:15 America/Bogota] checking plan security
+[21-Apr-2025 15:05:15 America/Bogota] saving controller to db
+[21-Apr-2025 15:05:15 America/Bogota] calculating controller checksum 2140150b3462ace257d59af424c1ae22
+[21-Apr-2025 15:05:34 America/Bogota] loading controller from db
+[21-Apr-2025 15:05:34 America/Bogota] checking plan security
+[21-Apr-2025 15:05:34 America/Bogota] checking plan security
+[21-Apr-2025 15:05:34 America/Bogota] setting controller status to 700
+[21-Apr-2025 15:05:34 America/Bogota] saving controller to db
+[21-Apr-2025 15:05:34 America/Bogota] calculating controller checksum ce4777c15ce110a7bec440be0871a4b2
+[21-Apr-2025 15:05:34 America/Bogota] loading controller from db
+[21-Apr-2025 15:06:57 America/Bogota] instantiating backup controller 91db907e31cd98a6db9100cc9425bcd4
+[21-Apr-2025 15:06:57 America/Bogota] setting controller status to 100
+[21-Apr-2025 15:06:57 America/Bogota] loading controller plan
+[21-Apr-2025 15:06:57 America/Bogota] setting controller status to 300
+[21-Apr-2025 15:06:57 America/Bogota] applying plan defaults
+[21-Apr-2025 15:06:57 America/Bogota] setting controller status to 400
+[21-Apr-2025 15:06:57 America/Bogota] setting file inclusion to 
+[21-Apr-2025 15:06:57 America/Bogota] checking plan security
+[21-Apr-2025 15:06:57 America/Bogota] setting controller status to 500
+[21-Apr-2025 15:06:57 America/Bogota] checking plan security
+[21-Apr-2025 15:06:57 America/Bogota] checking plan security
+[21-Apr-2025 15:06:57 America/Bogota] checking plan security
+[21-Apr-2025 15:06:57 America/Bogota] saving controller to db
+[21-Apr-2025 15:06:57 America/Bogota] calculating controller checksum 6952d4e2a26542a40df59fd9cbc8cd55
+[21-Apr-2025 15:07:01 America/Bogota] loading controller from db
+[21-Apr-2025 15:07:01 America/Bogota] checking plan security
+[21-Apr-2025 15:07:01 America/Bogota] checking plan security
+[21-Apr-2025 15:07:01 America/Bogota] setting controller status to 700
+[21-Apr-2025 15:07:01 America/Bogota] saving controller to db
+[21-Apr-2025 15:07:01 America/Bogota] calculating controller checksum b1ea03378472afe6022a1d6826386ea2
+[21-Apr-2025 15:07:01 America/Bogota] loading controller from db
+[21-Apr-2025 15:07:01 America/Bogota] setting file inclusion to 1
+[21-Apr-2025 15:07:01 America/Bogota] setting controller status to 800
+[21-Apr-2025 15:07:01 America/Bogota] saving controller to db
+[21-Apr-2025 15:07:01 America/Bogota] calculating controller checksum d5b3d60ac25ae938a25c43d2318c3e08
+[21-Apr-2025 15:07:01 America/Bogota] loading controller from db
+[21-Apr-2025 15:10:41 America/Bogota] setting controller status to 1000
+[21-Apr-2025 15:10:41 America/Bogota] saving controller to db
+[21-Apr-2025 16:43:52 America/Bogota] instantiating backup controller a1ccca5489c7fecbc482592d734818ae
+[21-Apr-2025 16:43:52 America/Bogota] setting controller status to 100
+[21-Apr-2025 16:43:52 America/Bogota] loading controller plan
+[21-Apr-2025 16:43:52 America/Bogota] setting controller status to 300
+[21-Apr-2025 16:43:52 America/Bogota] applying plan defaults
+[21-Apr-2025 16:43:52 America/Bogota] setting controller status to 400
+[21-Apr-2025 16:43:52 America/Bogota] setting file inclusion to 
+[21-Apr-2025 16:43:52 America/Bogota] checking plan security
+[21-Apr-2025 16:43:52 America/Bogota] setting controller status to 500
+[21-Apr-2025 16:43:52 America/Bogota] checking plan security
+[21-Apr-2025 16:43:52 America/Bogota] checking plan security
+[21-Apr-2025 16:43:52 America/Bogota] checking plan security
+[21-Apr-2025 16:43:52 America/Bogota] saving controller to db
+[21-Apr-2025 16:43:52 America/Bogota] calculating controller checksum 5757930421d73a183ffe4d84574fc29a
+[21-Apr-2025 16:43:58 America/Bogota] loading controller from db
+[21-Apr-2025 16:43:58 America/Bogota] checking plan security
+[21-Apr-2025 16:43:58 America/Bogota] checking plan security
+[21-Apr-2025 16:43:58 America/Bogota] setting controller status to 700
+[21-Apr-2025 16:43:58 America/Bogota] saving controller to db
+[21-Apr-2025 16:43:58 America/Bogota] calculating controller checksum e78385fa4327be1d42c10d9e4cadb3b6
+[21-Apr-2025 16:43:58 America/Bogota] loading controller from db
+[21-Apr-2025 16:43:58 America/Bogota] setting file inclusion to 1
+[21-Apr-2025 16:43:58 America/Bogota] setting controller status to 800
+[21-Apr-2025 16:43:58 America/Bogota] saving controller to db
+[21-Apr-2025 16:43:58 America/Bogota] calculating controller checksum 809dac42efa8aabd99e612d47f62ec51
+[21-Apr-2025 16:43:59 America/Bogota] loading controller from db
+[21-Apr-2025 16:48:44 America/Bogota] setting controller status to 1000
+[21-Apr-2025 16:48:44 America/Bogota] saving controller to db
+[21-Apr-2025 21:57:52 America/Bogota] instantiating backup controller b2da0849a9d30a91752d0c7871b8a844
+[21-Apr-2025 21:57:52 America/Bogota] setting controller status to 100
+[21-Apr-2025 21:57:52 America/Bogota] loading controller plan
+[21-Apr-2025 21:57:53 America/Bogota] setting controller status to 300
+[21-Apr-2025 21:57:53 America/Bogota] applying plan defaults
+[21-Apr-2025 21:57:53 America/Bogota] setting controller status to 400
+[21-Apr-2025 21:57:53 America/Bogota] setting file inclusion to 
+[21-Apr-2025 21:57:53 America/Bogota] checking plan security
+[21-Apr-2025 21:57:53 America/Bogota] setting controller status to 500
+[21-Apr-2025 21:57:53 America/Bogota] checking plan security
+[21-Apr-2025 21:57:53 America/Bogota] checking plan security
+[21-Apr-2025 21:57:53 America/Bogota] checking plan security
+[21-Apr-2025 21:57:53 America/Bogota] saving controller to db
+[21-Apr-2025 21:57:53 America/Bogota] calculating controller checksum dd5d74abf19710e395401f027f347103
+[21-Apr-2025 21:57:56 America/Bogota] loading controller from db
+[21-Apr-2025 21:57:56 America/Bogota] checking plan security
+[21-Apr-2025 21:57:56 America/Bogota] checking plan security
+[21-Apr-2025 21:57:56 America/Bogota] setting controller status to 700
+[21-Apr-2025 21:57:56 America/Bogota] saving controller to db
+[21-Apr-2025 21:57:56 America/Bogota] calculating controller checksum a442a2dd5111b49ba6841bbaa48a1752
+[21-Apr-2025 21:57:56 America/Bogota] loading controller from db
+[21-Apr-2025 21:57:56 America/Bogota] setting file inclusion to 1
+[21-Apr-2025 21:57:56 America/Bogota] setting controller status to 800
+[21-Apr-2025 21:57:56 America/Bogota] saving controller to db
+[21-Apr-2025 21:57:56 America/Bogota] calculating controller checksum 2603d369a61da425fb1731f2b4f392fe
+[21-Apr-2025 21:57:57 America/Bogota] loading controller from db
+[21-Apr-2025 22:02:19 America/Bogota] setting controller status to 1000
+[21-Apr-2025 22:02:19 America/Bogota] saving controller to db
+[22-Apr-2025 23:29:40 America/Bogota] instantiating backup controller a69715c05d3a4564460f20cfe1abfb71
+[22-Apr-2025 23:29:40 America/Bogota] setting controller status to 100
+[22-Apr-2025 23:29:40 America/Bogota] loading controller plan
+[22-Apr-2025 23:29:41 America/Bogota] setting controller status to 300
+[22-Apr-2025 23:29:41 America/Bogota] applying plan defaults
+[22-Apr-2025 23:29:41 America/Bogota] setting controller status to 400
+[22-Apr-2025 23:29:41 America/Bogota] setting file inclusion to 
+[22-Apr-2025 23:29:41 America/Bogota] checking plan security
+[22-Apr-2025 23:29:41 America/Bogota] setting controller status to 500
+[22-Apr-2025 23:29:41 America/Bogota] checking plan security
+[22-Apr-2025 23:29:41 America/Bogota] checking plan security
+[22-Apr-2025 23:29:41 America/Bogota] checking plan security
+[22-Apr-2025 23:29:41 America/Bogota] saving controller to db
+[22-Apr-2025 23:29:41 America/Bogota] calculating controller checksum 6ff0fa9418b3404ec04450d818a91f17
+[22-Apr-2025 23:29:45 America/Bogota] loading controller from db
+[22-Apr-2025 23:29:45 America/Bogota] checking plan security
+[22-Apr-2025 23:29:45 America/Bogota] checking plan security
+[22-Apr-2025 23:29:45 America/Bogota] setting controller status to 700
+[22-Apr-2025 23:29:45 America/Bogota] saving controller to db
+[22-Apr-2025 23:29:45 America/Bogota] calculating controller checksum 63c113d828ead85c3e2b81608938ce2b
+[22-Apr-2025 23:29:45 America/Bogota] loading controller from db
+[23-Apr-2025 09:18:39 America/Bogota] instantiating backup controller bd9ebaeadd3def90ef6d83d7dabe8a3d
+[23-Apr-2025 09:18:39 America/Bogota] setting controller status to 100
+[23-Apr-2025 09:18:39 America/Bogota] loading controller plan
+[23-Apr-2025 09:18:39 America/Bogota] setting controller status to 300
+[23-Apr-2025 09:18:39 America/Bogota] applying plan defaults
+[23-Apr-2025 09:18:39 America/Bogota] setting controller status to 400
+[23-Apr-2025 09:18:39 America/Bogota] setting file inclusion to 
+[23-Apr-2025 09:18:39 America/Bogota] checking plan security
+[23-Apr-2025 09:18:39 America/Bogota] setting controller status to 500
+[23-Apr-2025 09:18:39 America/Bogota] checking plan security
+[23-Apr-2025 09:18:39 America/Bogota] checking plan security
+[23-Apr-2025 09:18:39 America/Bogota] checking plan security
+[23-Apr-2025 09:18:39 America/Bogota] saving controller to db
+[23-Apr-2025 09:18:39 America/Bogota] calculating controller checksum a04b391b4053a267e11556b343ad01da
+[23-Apr-2025 13:14:16 America/Bogota] instantiating backup controller 87d283011770c1c97496cf0c65ff394e
+[23-Apr-2025 13:14:16 America/Bogota] setting controller status to 100
+[23-Apr-2025 13:14:16 America/Bogota] loading controller plan
+[23-Apr-2025 13:14:16 America/Bogota] setting controller status to 300
+[23-Apr-2025 13:14:16 America/Bogota] applying plan defaults
+[23-Apr-2025 13:14:16 America/Bogota] setting controller status to 400
+[23-Apr-2025 13:14:16 America/Bogota] setting file inclusion to 
+[23-Apr-2025 13:14:16 America/Bogota] checking plan security
+[23-Apr-2025 13:14:16 America/Bogota] setting controller status to 500
+[23-Apr-2025 13:14:16 America/Bogota] checking plan security
+[23-Apr-2025 13:14:16 America/Bogota] checking plan security
+[23-Apr-2025 13:14:16 America/Bogota] checking plan security
+[23-Apr-2025 13:14:16 America/Bogota] saving controller to db
+[23-Apr-2025 13:14:16 America/Bogota] calculating controller checksum d3c189c9d1d9ba86c38fe79aa947c6e9
+[23-Apr-2025 13:14:20 America/Bogota] loading controller from db
+[23-Apr-2025 13:14:20 America/Bogota] checking plan security
+[23-Apr-2025 13:14:20 America/Bogota] checking plan security
+[23-Apr-2025 13:14:20 America/Bogota] setting controller status to 700
+[23-Apr-2025 13:14:20 America/Bogota] saving controller to db
+[23-Apr-2025 13:14:20 America/Bogota] calculating controller checksum b3787e863d62b5559fe6b2b0ef5df45e
+[23-Apr-2025 13:14:20 America/Bogota] loading controller from db
+[23-Apr-2025 13:30:35 America/Bogota] instantiating backup controller efdb05c56b3ea12c2ec164d6d698ac3b
+[23-Apr-2025 13:30:35 America/Bogota] setting controller status to 100
+[23-Apr-2025 13:30:35 America/Bogota] loading controller plan
+[23-Apr-2025 13:30:35 America/Bogota] setting controller status to 300
+[23-Apr-2025 13:30:35 America/Bogota] applying plan defaults
+[23-Apr-2025 13:30:35 America/Bogota] setting controller status to 400
+[23-Apr-2025 13:30:35 America/Bogota] setting file inclusion to 
+[23-Apr-2025 13:30:35 America/Bogota] checking plan security
+[23-Apr-2025 13:30:35 America/Bogota] setting controller status to 500
+[23-Apr-2025 13:30:35 America/Bogota] checking plan security
+[23-Apr-2025 13:30:35 America/Bogota] checking plan security
+[23-Apr-2025 13:30:35 America/Bogota] checking plan security
+[23-Apr-2025 13:30:35 America/Bogota] saving controller to db
+[23-Apr-2025 13:30:35 America/Bogota] calculating controller checksum dd71f992160fe030c3a394c0daf928ff
+[23-Apr-2025 13:30:42 America/Bogota] loading controller from db
+[23-Apr-2025 13:30:42 America/Bogota] checking plan security
+[23-Apr-2025 13:30:42 America/Bogota] checking plan security
+[23-Apr-2025 13:30:42 America/Bogota] setting controller status to 700
+[23-Apr-2025 13:30:42 America/Bogota] saving controller to db
+[23-Apr-2025 13:30:42 America/Bogota] calculating controller checksum 5a59b57d54a21445832a16425a590f79
+[23-Apr-2025 13:30:42 America/Bogota] loading controller from db
+[23-Apr-2025 13:49:13 America/Bogota] instantiating backup controller f1ebcd90b26508e7de7002bb4c1315b0
+[23-Apr-2025 13:49:14 America/Bogota] setting controller status to 100
+[23-Apr-2025 13:49:14 America/Bogota] loading controller plan
+[23-Apr-2025 13:49:14 America/Bogota] setting controller status to 300
+[23-Apr-2025 13:49:14 America/Bogota] applying plan defaults
+[23-Apr-2025 13:49:14 America/Bogota] setting controller status to 400
+[23-Apr-2025 13:49:14 America/Bogota] setting file inclusion to 
+[23-Apr-2025 13:49:14 America/Bogota] checking plan security
+[23-Apr-2025 13:49:14 America/Bogota] setting controller status to 500
+[23-Apr-2025 13:49:14 America/Bogota] checking plan security
+[23-Apr-2025 13:49:14 America/Bogota] checking plan security
+[23-Apr-2025 13:49:14 America/Bogota] checking plan security
+[23-Apr-2025 13:49:14 America/Bogota] saving controller to db
+[23-Apr-2025 13:49:14 America/Bogota] calculating controller checksum 86d62ba61ac550c22184c6623c47f5f4
+[23-Apr-2025 13:51:25 America/Bogota] loading controller from db
+[23-Apr-2025 13:51:25 America/Bogota] checking plan security
+[23-Apr-2025 13:51:25 America/Bogota] checking plan security
+[23-Apr-2025 13:51:25 America/Bogota] setting controller status to 700
+[23-Apr-2025 13:51:25 America/Bogota] saving controller to db
+[23-Apr-2025 13:51:25 America/Bogota] calculating controller checksum 5d7eb9ed50019cd535f1485841be9210
+[23-Apr-2025 13:51:25 America/Bogota] loading controller from db
+[23-Apr-2025 13:55:59 America/Bogota] instantiating backup controller a466a06a8ced0a461e2cb530933b4fc5
+[23-Apr-2025 13:55:59 America/Bogota] setting controller status to 100
+[23-Apr-2025 13:55:59 America/Bogota] loading controller plan
+[23-Apr-2025 13:56:00 America/Bogota] setting controller status to 300
+[23-Apr-2025 13:56:00 America/Bogota] applying plan defaults
+[23-Apr-2025 13:56:00 America/Bogota] setting controller status to 400
+[23-Apr-2025 13:56:00 America/Bogota] setting file inclusion to 
+[23-Apr-2025 13:56:00 America/Bogota] checking plan security
+[23-Apr-2025 13:56:00 America/Bogota] setting controller status to 500
+[23-Apr-2025 13:56:00 America/Bogota] checking plan security
+[23-Apr-2025 13:56:00 America/Bogota] checking plan security
+[23-Apr-2025 13:56:00 America/Bogota] checking plan security
+[23-Apr-2025 13:56:00 America/Bogota] saving controller to db
+[23-Apr-2025 13:56:00 America/Bogota] calculating controller checksum 9a6f0268af595235ab272ffcd3d575e3
+[23-Apr-2025 13:56:03 America/Bogota] loading controller from db
+[23-Apr-2025 13:56:03 America/Bogota] checking plan security
+[23-Apr-2025 13:56:03 America/Bogota] checking plan security
+[23-Apr-2025 13:56:03 America/Bogota] setting controller status to 700
+[23-Apr-2025 13:56:03 America/Bogota] saving controller to db
+[23-Apr-2025 13:56:03 America/Bogota] calculating controller checksum 2aeeb704d8e8a302b9c221877d375346
+[23-Apr-2025 13:56:03 America/Bogota] loading controller from db
+[23-Apr-2025 13:56:03 America/Bogota] setting file inclusion to 1
+[23-Apr-2025 13:56:03 America/Bogota] setting controller status to 800
+[23-Apr-2025 13:56:03 America/Bogota] saving controller to db
+[23-Apr-2025 13:56:03 America/Bogota] calculating controller checksum 5e1a35665b4dccfea57a0a481f94d933
+[23-Apr-2025 13:56:03 America/Bogota] loading controller from db
+[23-Apr-2025 13:58:46 America/Bogota] Default exception handler: Excepción - Call to undefined method backup_qtype_ddwtos_plugin::add_related_files() Debug: 
+Error code: generalexceptionmessage
+* line 78 of /question/type/ddwtos/backup/moodle2/backup_qtype_ddwtos_plugin.class.php: Error thrown
+* line 74 of /backup/moodle2/backup_plugin.class.php: call to backup_qtype_ddwtos_plugin->define_question_plugin_structure()
+* line 167 of /backup/util/plan/backup_structure_step.class.php: call to backup_plugin->define_plugin_structure()
+* line 2601 of /backup/moodle2/backup_stepslib.php: call to backup_structure_step->add_plugin_structure()
+* line 95 of /backup/util/plan/backup_structure_step.class.php: call to backup_questions_structure_step->define_structure()
+* line 199 of /backup/util/plan/base_task.class.php: call to backup_structure_step->execute()
+* line 191 of /backup/util/plan/base_plan.class.php: call to base_task->execute()
+* line 145 of /backup/util/plan/backup_plan.class.php: call to base_plan->execute()
+* line 567 of /backup/controller/backup_controller.class.php: call to backup_plan->execute()
+* line 136 of /backup/util/ui/backup_ui.class.php: call to backup_controller->execute_plan()
+* line 178 of /backup/backup.php: call to backup_ui->execute()
+
+[23-Apr-2025 13:59:28 America/Bogota] instantiating backup controller abac805f94056ff386102257bc70f3c1
+[23-Apr-2025 13:59:28 America/Bogota] setting controller status to 100
+[23-Apr-2025 13:59:28 America/Bogota] loading controller plan
+[23-Apr-2025 13:59:29 America/Bogota] setting controller status to 300
+[23-Apr-2025 13:59:29 America/Bogota] applying plan defaults
+[23-Apr-2025 13:59:29 America/Bogota] setting controller status to 400
+[23-Apr-2025 13:59:29 America/Bogota] setting file inclusion to 
+[23-Apr-2025 13:59:29 America/Bogota] checking plan security
+[23-Apr-2025 13:59:29 America/Bogota] setting controller status to 500
+[23-Apr-2025 13:59:29 America/Bogota] checking plan security
+[23-Apr-2025 13:59:29 America/Bogota] checking plan security
+[23-Apr-2025 13:59:29 America/Bogota] checking plan security
+[23-Apr-2025 13:59:29 America/Bogota] saving controller to db
+[23-Apr-2025 13:59:29 America/Bogota] calculating controller checksum cc48c20877b9a7e89d74c8c68d73fe01
+[23-Apr-2025 13:59:33 America/Bogota] loading controller from db
+[23-Apr-2025 13:59:33 America/Bogota] checking plan security
+[23-Apr-2025 13:59:33 America/Bogota] checking plan security
+[23-Apr-2025 13:59:33 America/Bogota] setting controller status to 700
+[23-Apr-2025 13:59:33 America/Bogota] saving controller to db
+[23-Apr-2025 13:59:33 America/Bogota] calculating controller checksum e3c0df9156a9acfc5fb9afa669bb4e7d
+[23-Apr-2025 13:59:33 America/Bogota] loading controller from db
+[23-Apr-2025 13:59:33 America/Bogota] setting file inclusion to 1
+[23-Apr-2025 13:59:33 America/Bogota] setting controller status to 800
+[23-Apr-2025 13:59:33 America/Bogota] saving controller to db
+[23-Apr-2025 13:59:33 America/Bogota] calculating controller checksum 4e039c891d9172ca917ba46e6918dc4a
+[23-Apr-2025 13:59:33 America/Bogota] loading controller from db
+[23-Apr-2025 14:03:00 America/Bogota] setting controller status to 1000
+[23-Apr-2025 14:03:00 America/Bogota] saving controller to db
+[23-Apr-2025 14:09:37 America/Bogota] instantiating backup controller 32f6fbfc8040f47c649e12eeb54f7013
+[23-Apr-2025 14:09:37 America/Bogota] setting controller status to 100
+[23-Apr-2025 14:09:37 America/Bogota] loading controller plan
+[23-Apr-2025 14:09:38 America/Bogota] setting controller status to 300
+[23-Apr-2025 14:09:38 America/Bogota] applying plan defaults
+[23-Apr-2025 14:09:38 America/Bogota] setting controller status to 400
+[23-Apr-2025 14:09:38 America/Bogota] setting file inclusion to 
+[23-Apr-2025 14:09:38 America/Bogota] checking plan security
+[23-Apr-2025 14:09:38 America/Bogota] setting controller status to 500
+[23-Apr-2025 14:09:38 America/Bogota] checking plan security
+[23-Apr-2025 14:09:38 America/Bogota] checking plan security
+[23-Apr-2025 14:09:38 America/Bogota] checking plan security
+[23-Apr-2025 14:09:38 America/Bogota] saving controller to db
+[23-Apr-2025 14:09:38 America/Bogota] calculating controller checksum 37119c4f48eb1f28201875c42f651d4c
+[23-Apr-2025 14:09:53 America/Bogota] loading controller from db
+[23-Apr-2025 14:09:53 America/Bogota] checking plan security
+[23-Apr-2025 14:09:53 America/Bogota] checking plan security
+[23-Apr-2025 14:09:53 America/Bogota] setting controller status to 700
+[23-Apr-2025 14:09:53 America/Bogota] saving controller to db
+[23-Apr-2025 14:09:53 America/Bogota] calculating controller checksum 980330eb1d740ccf71e36eb3e5072fa6
+[23-Apr-2025 14:09:53 America/Bogota] loading controller from db
+[23-Apr-2025 14:09:53 America/Bogota] setting file inclusion to 1
+[23-Apr-2025 14:09:53 America/Bogota] setting controller status to 800
+[23-Apr-2025 14:09:53 America/Bogota] saving controller to db
+[23-Apr-2025 14:09:53 America/Bogota] calculating controller checksum a8a59f731a2d0ec26ef29a4ceffea9e0
+[23-Apr-2025 14:09:53 America/Bogota] loading controller from db
+[23-Apr-2025 14:12:38 America/Bogota] Default exception handler: Error al leer de la base de datos Debug: Unknown column 'gs.questionid' in 'IN/ALL/ANY'
+SELECT gs.* 
+             FROM gtds_question_gapfill_settings gs
+             WHERE gs.question = ?
+             AND (gs.questionid, gs.itemid) IN (
+                SELECT questionid, itemid
+                FROM (
+                    SELECT questionid, itemid, MIN(id) as min_id
+                    FROM gtds_question_gapfill_settings
+                    WHERE question = ?
+                    GROUP BY questionid, itemid
+                ) unique_settings
+             )
+-- line 56 of /backup/util/dbops/backup_structure_dbops.class.php: call to mysqli_native_moodle_database->get_recordset_sql()
+-- line 370 of /backup/util/structure/backup_nested_element.class.php: call to backup_structure_dbops::get_iterator()
+-- line 88 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->get_iterator()
+-- line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+-- line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+-- line 79 of /backup/util/structure/backup_optigroup.class.php: call to backup_nested_element->process()
+-- line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_optigroup->process()
+-- line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+-- line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+-- line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+-- line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+-- line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+-- line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+-- line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+-- line 104 of /backup/util/plan/backup_structure_step.class.php: call to backup_nested_element->process()
+-- line 199 of /backup/util/plan/base_task.class.php: call to backup_structure_step->execute()
+-- line 191 of /backup/util/plan/base_plan.class.php: call to base_task->execute()
+-- line 145 of /backup/util/plan/backup_plan.class.php: call to base_plan->execute()
+-- line 567 of /backup/controller/backup_controller.class.php: call to backup_plan->execute()
+-- line 136 of /backup/util/ui/backup_ui.class.php: call to backup_controller->execute_plan()
+-- line 178 of /backup/backup.php: call to backup_ui->execute()
+[array (
+  0 => '2',
+  1 => '2',
+)]
+Error code: dmlreadexception
+* line 497 of /lib/dml/moodle_database.php: dml_read_exception thrown
+* line 293 of /lib/dml/moodle_read_slave_trait.php: call to moodle_database->query_end()
+* line 1303 of /lib/dml/mysqli_native_moodle_database.php: call to mysqli_native_moodle_database->query_end()
+* line 56 of /backup/util/dbops/backup_structure_dbops.class.php: call to mysqli_native_moodle_database->get_recordset_sql()
+* line 370 of /backup/util/structure/backup_nested_element.class.php: call to backup_structure_dbops::get_iterator()
+* line 88 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->get_iterator()
+* line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+* line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+* line 79 of /backup/util/structure/backup_optigroup.class.php: call to backup_nested_element->process()
+* line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_optigroup->process()
+* line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+* line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+* line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+* line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+* line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+* line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+* line 118 of /backup/util/structure/backup_nested_element.class.php: call to backup_nested_element->process()
+* line 104 of /backup/util/plan/backup_structure_step.class.php: call to backup_nested_element->process()
+* line 199 of /backup/util/plan/base_task.class.php: call to backup_structure_step->execute()
+* line 191 of /backup/util/plan/base_plan.class.php: call to base_task->execute()
+* line 145 of /backup/util/plan/backup_plan.class.php: call to base_plan->execute()
+* line 567 of /backup/controller/backup_controller.class.php: call to backup_plan->execute()
+* line 136 of /backup/util/ui/backup_ui.class.php: call to backup_controller->execute_plan()
+* line 178 of /backup/backup.php: call to backup_ui->execute()
+
+[23-Apr-2025 14:13:30 America/Bogota] instantiating backup controller 087319ea559c210d91238ab89a24851d
+[23-Apr-2025 14:13:30 America/Bogota] setting controller status to 100
+[23-Apr-2025 14:13:30 America/Bogota] loading controller plan
+[23-Apr-2025 14:13:30 America/Bogota] setting controller status to 300
+[23-Apr-2025 14:13:30 America/Bogota] applying plan defaults
+[23-Apr-2025 14:13:30 America/Bogota] setting controller status to 400
+[23-Apr-2025 14:13:30 America/Bogota] setting file inclusion to 
+[23-Apr-2025 14:13:30 America/Bogota] checking plan security
+[23-Apr-2025 14:13:30 America/Bogota] setting controller status to 500
+[23-Apr-2025 14:13:30 America/Bogota] checking plan security
+[23-Apr-2025 14:13:30 America/Bogota] checking plan security
+[23-Apr-2025 14:13:30 America/Bogota] checking plan security
+[23-Apr-2025 14:13:30 America/Bogota] saving controller to db
+[23-Apr-2025 14:13:30 America/Bogota] calculating controller checksum cb0698a4f69c5db709af244c27c35084
+[23-Apr-2025 14:13:34 America/Bogota] loading controller from db
+[23-Apr-2025 14:13:34 America/Bogota] checking plan security
+[23-Apr-2025 14:13:34 America/Bogota] checking plan security
+[23-Apr-2025 14:13:34 America/Bogota] setting controller status to 700
+[23-Apr-2025 14:13:34 America/Bogota] saving controller to db
+[23-Apr-2025 14:13:34 America/Bogota] calculating controller checksum 0c17df5cfe992ab06f5b683725a6eae9
+[23-Apr-2025 14:13:34 America/Bogota] loading controller from db
+[23-Apr-2025 14:13:34 America/Bogota] setting file inclusion to 1
+[23-Apr-2025 14:13:34 America/Bogota] setting controller status to 800
+[23-Apr-2025 14:13:34 America/Bogota] saving controller to db
+[23-Apr-2025 14:13:34 America/Bogota] calculating controller checksum 3bf85fab32ed70ad40fd171ac4daa6c0
+[23-Apr-2025 14:13:34 America/Bogota] loading controller from db
+[23-Apr-2025 14:17:03 America/Bogota] setting controller status to 1000
+[23-Apr-2025 14:17:03 America/Bogota] saving controller to db
+[23-Apr-2025 23:40:57 America/Bogota] instantiating backup controller 784d677bf3844c9f16f41b834425464f
+[23-Apr-2025 23:40:57 America/Bogota] setting controller status to 100
+[23-Apr-2025 23:40:57 America/Bogota] loading controller plan
+[23-Apr-2025 23:40:57 America/Bogota] setting controller status to 300
+[23-Apr-2025 23:40:57 America/Bogota] applying plan defaults
+[23-Apr-2025 23:40:57 America/Bogota] setting controller status to 400
+[23-Apr-2025 23:40:57 America/Bogota] setting file inclusion to 
+[23-Apr-2025 23:40:57 America/Bogota] checking plan security
+[23-Apr-2025 23:40:57 America/Bogota] setting controller status to 500
+[23-Apr-2025 23:40:57 America/Bogota] checking plan security
+[23-Apr-2025 23:40:57 America/Bogota] checking plan security
+[23-Apr-2025 23:40:57 America/Bogota] checking plan security
+[23-Apr-2025 23:40:57 America/Bogota] saving controller to db
+[23-Apr-2025 23:40:57 America/Bogota] calculating controller checksum 9a35d75d33574766640187e3e3b59416
+[23-Apr-2025 23:41:01 America/Bogota] loading controller from db
+[23-Apr-2025 23:41:01 America/Bogota] checking plan security
+[23-Apr-2025 23:41:01 America/Bogota] checking plan security
+[23-Apr-2025 23:41:01 America/Bogota] setting controller status to 700
+[23-Apr-2025 23:41:01 America/Bogota] saving controller to db
+[23-Apr-2025 23:41:01 America/Bogota] calculating controller checksum f5f469462d92d1f723b53bef1ae6e1fe
+[23-Apr-2025 23:41:01 America/Bogota] loading controller from db
+[23-Apr-2025 23:41:01 America/Bogota] setting file inclusion to 1
+[23-Apr-2025 23:41:01 America/Bogota] setting controller status to 800
+[23-Apr-2025 23:41:01 America/Bogota] saving controller to db
+[23-Apr-2025 23:41:01 America/Bogota] calculating controller checksum 164e98a0c2ca74f50ecdec999238715c
+[23-Apr-2025 23:41:01 America/Bogota] loading controller from db
+[23-Apr-2025 23:43:29 America/Bogota] setting controller status to 1000
+[23-Apr-2025 23:43:29 America/Bogota] saving controller to db
+[25-Apr-2025 15:07:15 America/Bogota] instantiating backup controller 0ec80a5299ad0ea462fb98277a95d5ed
+[25-Apr-2025 15:07:15 America/Bogota] setting controller status to 100
+[25-Apr-2025 15:07:15 America/Bogota] loading controller plan
+[25-Apr-2025 15:07:15 America/Bogota] setting controller status to 300
+[25-Apr-2025 15:07:15 America/Bogota] applying plan defaults
+[25-Apr-2025 15:07:15 America/Bogota] setting controller status to 400
+[25-Apr-2025 15:07:15 America/Bogota] setting file inclusion to 
+[25-Apr-2025 15:07:15 America/Bogota] checking plan security
+[25-Apr-2025 15:07:15 America/Bogota] setting controller status to 500
+[25-Apr-2025 15:07:15 America/Bogota] checking plan security
+[25-Apr-2025 15:07:15 America/Bogota] checking plan security
+[25-Apr-2025 15:07:15 America/Bogota] checking plan security
+[25-Apr-2025 15:07:15 America/Bogota] saving controller to db
+[25-Apr-2025 15:07:15 America/Bogota] calculating controller checksum 18cd00d6f4a63544b45dc33f79263c17
+[25-Apr-2025 15:07:19 America/Bogota] loading controller from db
+[25-Apr-2025 15:07:19 America/Bogota] checking plan security
+[25-Apr-2025 15:07:19 America/Bogota] checking plan security
+[25-Apr-2025 15:07:19 America/Bogota] setting controller status to 700
+[25-Apr-2025 15:07:19 America/Bogota] saving controller to db
+[25-Apr-2025 15:07:19 America/Bogota] calculating controller checksum 3ac2caeb4054c5dd4add388a48eafacd
+[25-Apr-2025 15:07:19 America/Bogota] loading controller from db
+[25-Apr-2025 21:05:45 America/Bogota] instantiating backup controller 23f7d734873b1ea09c2261641c1e4389
+[25-Apr-2025 21:05:45 America/Bogota] setting controller status to 100
+[25-Apr-2025 21:05:45 America/Bogota] loading controller plan
+[25-Apr-2025 21:05:45 America/Bogota] setting controller status to 300
+[25-Apr-2025 21:05:45 America/Bogota] applying plan defaults
+[25-Apr-2025 21:05:45 America/Bogota] setting controller status to 400
+[25-Apr-2025 21:05:45 America/Bogota] setting file inclusion to 
+[25-Apr-2025 21:05:45 America/Bogota] checking plan security
+[25-Apr-2025 21:05:45 America/Bogota] setting controller status to 500
+[25-Apr-2025 21:05:45 America/Bogota] checking plan security
+[25-Apr-2025 21:05:45 America/Bogota] checking plan security
+[25-Apr-2025 21:05:45 America/Bogota] checking plan security
+[25-Apr-2025 21:05:45 America/Bogota] saving controller to db
+[25-Apr-2025 21:05:45 America/Bogota] calculating controller checksum 41974245e30a467ba75a9621bccb79d9
+[25-Apr-2025 21:06:09 America/Bogota] instantiating backup controller 617539f2b42784629149060c069ad42c
+[25-Apr-2025 21:06:09 America/Bogota] setting controller status to 100
+[25-Apr-2025 21:06:09 America/Bogota] loading controller plan
+[25-Apr-2025 21:06:09 America/Bogota] setting controller status to 300
+[25-Apr-2025 21:06:09 America/Bogota] applying plan defaults
+[25-Apr-2025 21:06:09 America/Bogota] setting controller status to 400
+[25-Apr-2025 21:06:09 America/Bogota] setting file inclusion to 
+[25-Apr-2025 21:06:09 America/Bogota] checking plan security
+[25-Apr-2025 21:06:09 America/Bogota] setting controller status to 500
+[25-Apr-2025 21:06:09 America/Bogota] checking plan security
+[25-Apr-2025 21:06:09 America/Bogota] checking plan security
+[25-Apr-2025 21:06:09 America/Bogota] checking plan security
+[25-Apr-2025 21:06:09 America/Bogota] saving controller to db
+[25-Apr-2025 21:06:09 America/Bogota] calculating controller checksum 36428d5370fea9bdd69b4c1dd910db03
+[25-Apr-2025 21:06:12 America/Bogota] loading controller from db
+[25-Apr-2025 21:06:12 America/Bogota] checking plan security
+[25-Apr-2025 21:06:12 America/Bogota] checking plan security
+[25-Apr-2025 21:06:12 America/Bogota] setting controller status to 700
+[25-Apr-2025 21:06:12 America/Bogota] saving controller to db
+[25-Apr-2025 21:06:12 America/Bogota] calculating controller checksum 5642ca98dc1a4b60640aefcb473a70cc
+[25-Apr-2025 21:06:12 America/Bogota] loading controller from db
+[25-Apr-2025 23:37:57 America/Bogota] instantiating backup controller 2c78c28783db99b6f0f389f9e2daaf5d
+[25-Apr-2025 23:37:57 America/Bogota] setting controller status to 100
+[25-Apr-2025 23:37:57 America/Bogota] loading controller plan
+[25-Apr-2025 23:37:58 America/Bogota] setting controller status to 300
+[25-Apr-2025 23:37:58 America/Bogota] applying plan defaults
+[25-Apr-2025 23:37:58 America/Bogota] setting controller status to 400
+[25-Apr-2025 23:37:58 America/Bogota] setting file inclusion to 
+[25-Apr-2025 23:37:58 America/Bogota] checking plan security
+[25-Apr-2025 23:37:58 America/Bogota] setting controller status to 500
+[25-Apr-2025 23:37:58 America/Bogota] checking plan security
+[25-Apr-2025 23:37:58 America/Bogota] checking plan security
+[25-Apr-2025 23:37:58 America/Bogota] checking plan security
+[25-Apr-2025 23:37:58 America/Bogota] saving controller to db
+[25-Apr-2025 23:37:58 America/Bogota] calculating controller checksum dd8230dcb67980ab187fde4451af6f81
+[25-Apr-2025 23:38:03 America/Bogota] loading controller from db
+[25-Apr-2025 23:38:03 America/Bogota] checking plan security
+[25-Apr-2025 23:38:03 America/Bogota] checking plan security
+[25-Apr-2025 23:38:03 America/Bogota] setting controller status to 700
+[25-Apr-2025 23:38:03 America/Bogota] saving controller to db
+[25-Apr-2025 23:38:03 America/Bogota] calculating controller checksum 9f5f52324be0efb5f38b8fecd1ce28bc
+[25-Apr-2025 23:38:03 America/Bogota] loading controller from db
+[25-Apr-2025 23:38:06 America/Bogota] loading controller from db
+[25-Apr-2025 23:38:06 America/Bogota] loading controller from db
+[26-Apr-2025 00:18:46 America/Bogota] loading controller from db
+[26-Apr-2025 00:18:46 America/Bogota] loading controller from db
+[26-Apr-2025 01:11:20 America/Bogota] instantiating backup controller ea64393774a70cc217a3763262fd80ad
+[26-Apr-2025 01:11:20 America/Bogota] setting controller status to 100
+[26-Apr-2025 01:11:20 America/Bogota] loading controller plan
+[26-Apr-2025 01:11:21 America/Bogota] setting controller status to 300
+[26-Apr-2025 01:11:21 America/Bogota] applying plan defaults
+[26-Apr-2025 01:11:21 America/Bogota] setting controller status to 400
+[26-Apr-2025 01:11:21 America/Bogota] setting file inclusion to 
+[26-Apr-2025 01:11:21 America/Bogota] checking plan security
+[26-Apr-2025 01:11:21 America/Bogota] setting controller status to 500
+[26-Apr-2025 01:11:21 America/Bogota] checking plan security
+[26-Apr-2025 01:11:21 America/Bogota] checking plan security
+[26-Apr-2025 01:11:21 America/Bogota] checking plan security
+[26-Apr-2025 01:11:21 America/Bogota] saving controller to db
+[26-Apr-2025 01:11:21 America/Bogota] calculating controller checksum fb86238007dd2ec97180951475dade8e
+[26-Apr-2025 01:11:24 America/Bogota] loading controller from db
+[26-Apr-2025 01:11:24 America/Bogota] checking plan security
+[26-Apr-2025 01:11:24 America/Bogota] checking plan security
+[26-Apr-2025 01:11:24 America/Bogota] setting controller status to 700
+[26-Apr-2025 01:11:24 America/Bogota] saving controller to db
+[26-Apr-2025 01:11:24 America/Bogota] calculating controller checksum 58c145659895e0a8c7987def9fc53060
+[26-Apr-2025 01:11:24 America/Bogota] loading controller from db
+[26-Apr-2025 01:11:24 America/Bogota] setting file inclusion to 1
+[26-Apr-2025 01:11:24 America/Bogota] setting controller status to 800
+[26-Apr-2025 01:11:24 America/Bogota] saving controller to db
+[26-Apr-2025 01:11:24 America/Bogota] calculating controller checksum 75f86ff33f66cd960d136032f7e7a318
+[26-Apr-2025 01:11:24 America/Bogota] loading controller from db
+[14-Jul-2025 05:54:28 America/Bogota] instantiating restore controller 34f332cf7ad89d5027d7d4b30f608dd9
+[14-Jul-2025 05:54:28 America/Bogota] setting controller status to 100
+[14-Jul-2025 05:54:28 America/Bogota] loading backup info
+[14-Jul-2025 05:54:28 America/Bogota] loading controller plan
+[14-Jul-2025 05:54:28 America/Bogota] setting controller status to 300
+[14-Jul-2025 05:54:28 America/Bogota] applying restore defaults
+[14-Jul-2025 05:54:28 America/Bogota] Unknown setting: questionbank
+[14-Jul-2025 05:54:28 America/Bogota] setting controller status to 400
+[14-Jul-2025 05:54:28 America/Bogota] checking plan security
+[14-Jul-2025 05:54:28 America/Bogota] setting controller status to 500
+[14-Jul-2025 05:54:28 America/Bogota] checking plan security
+[14-Jul-2025 05:54:28 America/Bogota] checking plan security
+[14-Jul-2025 05:54:28 America/Bogota] checking plan security
+[14-Jul-2025 05:54:28 America/Bogota] saving controller to db
+[14-Jul-2025 05:54:28 America/Bogota] calculating controller checksum 6814bf2aa39f835aa8664ccf0a32af94
+[14-Jul-2025 05:54:31 America/Bogota] loading controller from db
+[14-Jul-2025 05:54:31 America/Bogota] checking plan security
+[14-Jul-2025 05:54:31 America/Bogota] checking plan security
+[14-Jul-2025 05:54:31 America/Bogota] checking plan security
+[14-Jul-2025 05:54:31 America/Bogota] saving controller to db
+[14-Jul-2025 05:54:31 America/Bogota] calculating controller checksum 6814bf2aa39f835aa8664ccf0a32af94
+[14-Jul-2025 05:54:37 America/Bogota] loading controller from db
+[14-Jul-2025 05:54:37 America/Bogota] checking plan security
+[14-Jul-2025 05:54:37 America/Bogota] checking plan security
+[14-Jul-2025 05:54:37 America/Bogota] checking plan security
+[14-Jul-2025 05:54:37 America/Bogota] saving controller to db
+[14-Jul-2025 05:54:37 America/Bogota] calculating controller checksum 6814bf2aa39f835aa8664ccf0a32af94
+[14-Jul-2025 05:54:52 America/Bogota] loading controller from db
+[14-Jul-2025 05:54:52 America/Bogota] checking plan security
+[14-Jul-2025 05:54:53 America/Bogota] checking plan security
+[14-Jul-2025 05:54:53 America/Bogota] setting controller status to 600
+[14-Jul-2025 05:54:53 America/Bogota] saving controller to db
+[14-Jul-2025 05:54:53 America/Bogota] calculating controller checksum 8b0964294f8d14c640c0648f1ee3e97d
+[14-Jul-2025 05:54:53 America/Bogota] loading controller from db
+[14-Jul-2025 05:57:32 America/Bogota] loading controller from db
+[14-Jul-2025 05:57:32 America/Bogota] checking plan security
+[14-Jul-2025 05:57:32 America/Bogota] checking plan security
+[14-Jul-2025 06:00:33 America/Bogota] Default exception handler: Error al leer de la base de datos Debug: MySQL server has gone away
+SELECT * FROM gthd_backup_ids_temp WHERE backupid = ? AND itemname = ? AND itemid = ?
+-- line 1687 of /lib/dml/moodle_database.php: call to mysqli_native_moodle_database->get_records_sql()
+-- line 1812 of /backup/util/dbops/restore_dbops.class.php: call to restore_dbops::set_backup_ids_cached()
+-- line 131 of /backup/util/helper/restore_questions_parser_processor.class.php: call to restore_dbops::set_backup_ids_record()
+-- line 150 of /backup/util/xml/parser/processors/grouped_parser_processor.class.php: call to restore_questions_parser_processor->dispatch_chunk()
+-- line 207 of /backup/util/xml/parser/progressive_parser.class.php: call to grouped_parser_processor->after_path()
+-- line 287 of /backup/util/xml/parser/progressive_parser.class.php: call to progressive_parser->inform_end()
+-- line unknown of unknownfile: call to progressive_parser->end_tag()
+-- line 178 of /backup/util/xml/parser/progressive_parser.class.php: call to xml_parse()
+-- line 157 of /backup/util/xml/parser/progressive_parser.class.php: call to progressive_parser->parse()
+-- line 464 of /backup/util/dbops/restore_dbops.class.php: call to progressive_parser->process()
+-- line 177 of /backup/util/helper/restore_prechecks_helper.class.php: call to restore_dbops::load_categories_and_questions_to_tempids()
+-- line 454 of /backup/controller/restore_controller.class.php: call to restore_prechecks_helper::execute_prechecks()
+-- line 997 of /backup/util/ui/restore_ui_stage.class.php: call to restore_controller->execute_precheck()
+-- line 367 of /backup/util/ui/restore_ui.class.php: call to restore_ui_stage_process->process()
+-- line 134 of /backup/restore.php: call to restore_ui->requires_substage()
+[array (
+  0 => '34f332cf7ad89d5027d7d4b30f608dd9',
+  1 => 'question',
+  2 => '168230',
+)]
+Error code: dmlreadexception
+* line 497 of /lib/dml/moodle_database.php: dml_read_exception thrown
+* line 293 of /lib/dml/moodle_read_slave_trait.php: call to moodle_database->query_end()
+* line 1364 of /lib/dml/mysqli_native_moodle_database.php: call to mysqli_native_moodle_database->query_end()
+* line 1687 of /lib/dml/moodle_database.php: call to mysqli_native_moodle_database->get_records_sql()
+* line 1659 of /lib/dml/moodle_database.php: call to moodle_database->get_record_sql()
+* line 1638 of /lib/dml/moodle_database.php: call to moodle_database->get_record_select()
+* line 275 of /backup/util/dbops/restore_dbops.class.php: call to moodle_database->get_record()
+* line 1812 of /backup/util/dbops/restore_dbops.class.php: call to restore_dbops::set_backup_ids_cached()
+* line 131 of /backup/util/helper/restore_questions_parser_processor.class.php: call to restore_dbops::set_backup_ids_record()
+* line 150 of /backup/util/xml/parser/processors/grouped_parser_processor.class.php: call to restore_questions_parser_processor->dispatch_chunk()
+* line 207 of /backup/util/xml/parser/progressive_parser.class.php: call to grouped_parser_processor->after_path()
+* line 287 of /backup/util/xml/parser/progressive_parser.class.php: call to progressive_parser->inform_end()
+* line ? of unknownfile: call to progressive_parser->end_tag()
+* line 178 of /backup/util/xml/parser/progressive_parser.class.php: call to xml_parse()
+* line 157 of /backup/util/xml/parser/progressive_parser.class.php: call to progressive_parser->parse()
+* line 464 of /backup/util/dbops/restore_dbops.class.php: call to progressive_parser->process()
+* line 177 of /backup/util/helper/restore_prechecks_helper.class.php: call to restore_dbops::load_categories_and_questions_to_tempids()
+* line 454 of /backup/controller/restore_controller.class.php: call to restore_prechecks_helper::execute_prechecks()
+* line 997 of /backup/util/ui/restore_ui_stage.class.php: call to restore_controller->execute_precheck()
+* line 367 of /backup/util/ui/restore_ui.class.php: call to restore_ui_stage_process->process()
+* line 134 of /backup/restore.php: call to restore_ui->requires_substage()
+
+[17-Jul-2025 10:30:16 America/Bogota] instantiating backup controller 14629d8da7a46e8c75e71ecddce58e02
+[17-Jul-2025 10:30:16 America/Bogota] setting controller status to 100
+[17-Jul-2025 10:30:16 America/Bogota] loading controller plan
+[17-Jul-2025 10:30:16 America/Bogota] setting controller status to 300
+[17-Jul-2025 10:30:16 America/Bogota] applying plan defaults
+[17-Jul-2025 10:30:16 America/Bogota] setting controller status to 400
+[17-Jul-2025 10:30:16 America/Bogota] setting file inclusion to 
+[17-Jul-2025 10:30:16 America/Bogota] checking plan security
+[17-Jul-2025 10:30:16 America/Bogota] setting controller status to 500
+[17-Jul-2025 10:30:16 America/Bogota] checking plan security
+[17-Jul-2025 10:30:16 America/Bogota] checking plan security
+[17-Jul-2025 10:30:16 America/Bogota] checking plan security
+[17-Jul-2025 10:30:16 America/Bogota] saving controller to db
+[17-Jul-2025 10:30:16 America/Bogota] calculating controller checksum 5ded644196a64f83ec9ca23d7acb295e
+[17-Jul-2025 10:30:20 America/Bogota] loading controller from db
+[17-Jul-2025 10:30:20 America/Bogota] checking plan security
+[17-Jul-2025 10:30:20 America/Bogota] checking plan security
+[17-Jul-2025 10:30:20 America/Bogota] setting controller status to 700
+[17-Jul-2025 10:30:20 America/Bogota] saving controller to db
+[17-Jul-2025 10:30:20 America/Bogota] calculating controller checksum 20ad13205a1449f7a397a70a7524a592
+[17-Jul-2025 10:30:20 America/Bogota] loading controller from db

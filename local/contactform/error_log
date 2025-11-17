@@ -1,0 +1,15 @@
+[08-Oct-2017 01:21:05 America/Bogota] PHP Warning:  Creating default object from empty value in /home/intebcom/public_html/lib/classes/notification.php on line 85
+[09-Oct-2017 03:58:29 America/Bogota] PHP Warning:  Creating default object from empty value in /home/intebcom/public_html/lib/classes/notification.php on line 85
+[08-May-2018 15:41:36 America/Bogota] PHP Notice:  Undefined variable: SESSION in /home/intebcom/public_html/theme/inteb/layout/footer.php on line 141
+[08-May-2018 15:41:36 America/Bogota] PHP Notice:  Trying to get property of non-object in /home/intebcom/public_html/theme/inteb/layout/footer.php on line 141
+[08-May-2018 15:41:36 America/Bogota] PHP Notice:  Undefined index:  in /home/intebcom/public_html/lib/deprecatedlib.php on line 271
+[08-May-2018 15:41:36 America/Bogota] Default exception handler: Excepción - Argument 1 passed to get_user_roles() must be an instance of context, null given, called in [dirroot]/theme/inteb/layout/footer.php on line 143 Debug: 
+Error code: generalexceptionmessage
+* line 2751 of /lib/accesslib.php: TypeError thrown
+* line 143 of /theme/inteb/layout/footer.php: call to get_user_roles()
+* line 45 of /theme/inteb/layout/columns3.php: call to require()
+* line 1261 of /lib/outputrenderers.php: call to include()
+* line 1191 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()
+* line 1845 of /lib/setuplib.php: call to core_renderer->header()
+* line 72 of /local/contactform/index.php: call to bootstrap_renderer->__call()
+

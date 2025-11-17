@@ -1,0 +1,129 @@
+[22-Apr-2025 22:12:32 America/Bogota] PHP Warning:  sha1_file(/home/orioncloudcom/moodle45.orioncloud.com.co/moodledata/cache/core_component.php): Failed to open stream: No such file or directory in /home/orioncloudcom/moodle45.orioncloud.com.co/public_html/lib/classes/component.php on line 425
+[22-Apr-2025 22:12:32 America/Bogota] PHP Warning:  unlink(/home/orioncloudcom/moodle45.orioncloud.com.co/moodledata/cache/core_component.php): No such file or directory in /home/orioncloudcom/moodle45.orioncloud.com.co/public_html/lib/classes/component.php on line 429
+[22-Apr-2025 22:12:32 America/Bogota] PHP Warning:  include(/home/orioncloudcom/moodle45.orioncloud.com.co/moodledata/muc/config.php): Failed to open stream: No such file or directory in /home/orioncloudcom/moodle45.orioncloud.com.co/public_html/cache/classes/config.php on line 322
+[22-Apr-2025 22:12:32 America/Bogota] PHP Warning:  file_get_contents(/home/orioncloudcom/moodle45.orioncloud.com.co/moodledata/muc/config.php): Failed to open stream: No such file or directory in /home/orioncloudcom/moodle45.orioncloud.com.co/public_html/cache/classes/config_writer.php on line 87
+[14-Jul-2025 08:15:37 America/Bogota] Cannot find session record d90563fdb3fa0dbe8d28bc6bd42f655d for user 2, creating new session.
+[23-Jul-2025 07:31:26 America/Bogota] Resetting core_component cache after core upgrade to version 2024100705.06
+[23-Jul-2025 07:32:34 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:34 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:34 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:34 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:34 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:34 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:37 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:37 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:37 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:37 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:37 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:37 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:48 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:48 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:48 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:48 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:48 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:48 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:57 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:57 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:57 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:57 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:57 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[23-Jul-2025 07:32:57 America/Bogota] PHP Deprecated:  is_dir(): Passing null to parameter #1 ($filename) of type string is deprecated in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/lib/classes/plugin_manager.php on line 1051
+[08-Oct-2025 07:52:01 America/Bogota] PHP Warning:  sha1_file(/home/virtualiseredu/moodledata/cache/core_component.php): Failed to open stream: No such file or directory in /home/virtualiseredu/public_html/lib/classes/component.php on line 425
+[08-Oct-2025 07:52:01 America/Bogota] PHP Warning:  unlink(/home/virtualiseredu/moodledata/cache/core_component.php): No such file or directory in /home/virtualiseredu/public_html/lib/classes/component.php on line 429
+[10-Oct-2025 16:53:13 America/Bogota] PHP Warning:  include(/home/virtualiseredu/moodledata/cache/core_component.php): Failed to open stream: No such file or directory in /home/virtualiseredu/public_html/lib/classes/component.php on line 401
+[08-Nov-2025 18:36:36 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 18:36:36 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 18:36:36 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 18:36:36 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 18:36:36 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 18:36:36 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 20:40:44 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 20:40:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[08-Nov-2025 23:06:56 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 23:06:56 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 23:06:56 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 23:06:56 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 23:06:56 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 23:06:56 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[08-Nov-2025 23:07:00 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 23:07:00 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 23:07:00 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 23:07:00 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 23:07:00 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 23:07:00 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[09-Nov-2025 02:20:20 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[09-Nov-2025 02:20:20 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[09-Nov-2025 02:20:20 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[09-Nov-2025 02:20:20 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[09-Nov-2025 02:20:21 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[09-Nov-2025 02:20:21 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[09-Nov-2025 02:20:22 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[09-Nov-2025 02:20:22 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[09-Nov-2025 02:20:22 UTC] PHP Deprecated:  DI\create(): Implicitly marking parameter $className as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/lib/php-di/php-di/src/functions.php on line 33
+[09-Nov-2025 02:20:22 UTC] PHP Deprecated:  DI\autowire(): Implicitly marking parameter $className as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/lib/php-di/php-di/src/functions.php on line 46
+[09-Nov-2025 02:20:22 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[09-Nov-2025 02:20:22 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[09-Nov-2025 02:20:22 UTC] PHP Deprecated:  iomad::get_companies_listing(): Implicitly marking parameter $extraparams as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/local/iomad/lib/iomad.php on line 1666
+[09-Nov-2025 02:20:22 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[09-Nov-2025 02:20:22 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[12-Nov-2025 02:20:20 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[12-Nov-2025 02:20:20 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[12-Nov-2025 02:20:20 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[12-Nov-2025 02:20:20 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[12-Nov-2025 02:20:20 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[12-Nov-2025 02:20:20 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[12-Nov-2025 19:06:58 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[12-Nov-2025 19:06:58 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[12-Nov-2025 19:06:58 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[12-Nov-2025 19:06:58 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[12-Nov-2025 19:06:58 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[12-Nov-2025 19:06:58 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[14-Nov-2025 02:20:25 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[14-Nov-2025 02:20:25 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[14-Nov-2025 02:20:25 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[14-Nov-2025 02:20:25 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  DI\create(): Implicitly marking parameter $className as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/lib/php-di/php-di/src/functions.php on line 33
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  DI\autowire(): Implicitly marking parameter $className as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/lib/php-di/php-di/src/functions.php on line 46
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  iomad::get_companies_listing(): Implicitly marking parameter $extraparams as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/local/iomad/lib/iomad.php on line 1666
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[14-Nov-2025 02:20:26 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670

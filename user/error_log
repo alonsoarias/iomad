@@ -1,0 +1,26 @@
+[14-Jul-2025 06:17:50 America/Bogota] PHP Warning:  Attempt to read property "id" on null in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/course/format/topics/lib.php on line 175
+[14-Jul-2025 07:52:03 America/Bogota] PHP Warning:  Attempt to read property "id" on null in /home/orioncloudcom/demo45.orioncloud.com.co/public_html/course/format/tiles/lib.php on line 216
+[10-Nov-2025 12:58:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[10-Nov-2025 12:58:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[10-Nov-2025 12:58:12 UTC] PHP Deprecated:  DI\create(): Implicitly marking parameter $className as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/lib/php-di/php-di/src/functions.php on line 33
+[10-Nov-2025 12:58:12 UTC] PHP Deprecated:  DI\autowire(): Implicitly marking parameter $className as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/lib/php-di/php-di/src/functions.php on line 46
+[10-Nov-2025 12:58:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[10-Nov-2025 12:58:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[10-Nov-2025 12:58:12 UTC] PHP Deprecated:  iomad::get_companies_listing(): Implicitly marking parameter $extraparams as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/local/iomad/lib/iomad.php on line 1666
+[10-Nov-2025 12:58:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[10-Nov-2025 12:58:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  DI\create(): Implicitly marking parameter $className as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/lib/php-di/php-di/src/functions.php on line 33
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  DI\autowire(): Implicitly marking parameter $className as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/lib/php-di/php-di/src/functions.php on line 46
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  iomad::get_companies_listing(): Implicitly marking parameter $extraparams as nullable is deprecated, the explicit nullable type must be used instead in /home/virtualiseredu/public_html/local/iomad/lib/iomad.php on line 1666
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[11-Nov-2025 13:54:12 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670

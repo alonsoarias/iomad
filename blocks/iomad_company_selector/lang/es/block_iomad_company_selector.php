@@ -15,20 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Block IOMAD company selecto strings.
+ * Strings for component 'block_iomad_company_selector', language 'es'.
  *
  * @package   block_iomad_company_selector
  * @copyright 2021 Derick Turner
- * @author    Derick Turner
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 o posterior
  */
 
-$string['currentcompany'] = 'La empresa actual es';
-$string['currentcompanyname'] = 'Empresa actual, <b>\'{$a}\'</b>';
-$string['iomad_company_selector:addinstance'] = 'Añadir un nuevo bloque de selector de empresa IOMAD';
-$string['iomad_company_selector:myaddinstance'] = 'Añadir un nuevo bloque de selector de empresa IOMAD al panel del usuario';
-$string['nocurrentcompany'] = 'Por favor seleccione una empresa de la lista desplegable';
-$string['pluginname'] = 'iomad - Selector de Empresa';
-$string['privacy:metadata'] = 'El bloque de selector de empresa IOMAD solo muestra datos almacenados en otras ubicaciones.';
-$string['selectacompany'] = 'Seleccionar una Empresa';
-$string['title'] = 'Selección de empresa';
+defined('MOODLE_INTERNAL') || die();
+
+$string['currentcompany'] = 'La compañía actual es';
+$string['currentcompanyname'] = 'Compañía actual, <b>\'{$a}\'</b>';
+$string['iomad_company_selector:addinstance'] = 'Añadir un nuevo bloque selector de compañía de IOMAD';
+$string['iomad_company_selector:myaddinstance'] = 'Añadir un nuevo bloque selector de compañía de IOMAD al escritorio del usuario';
+$string['nocurrentcompany'] = 'Selecciona una compañía del menú desplegable';
+$string['pluginname'] = 'IOMAD - Selector de compañía';
+$string['privacy:metadata'] = 'El bloque selector de compañía de IOMAD solo muestra datos almacenados en otros lugares.';
+$string['selectacompany'] = 'Seleccionar una compañía';
+$string['title'] = 'Selector de compañía';
+

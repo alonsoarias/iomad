@@ -1,0 +1,28 @@
+[08-Oct-2025 13:54:29 America/Bogota] PHP Warning:  include(/home/virtualiseredu/moodledata/cache/core_component.php): Failed to open stream: No such file or directory in /home/virtualiseredu/public_html/lib/classes/component.php on line 401
+[08-Oct-2025 13:54:29 America/Bogota] PHP Warning:  include(/home/virtualiseredu/moodledata/muc/config.php): Failed to open stream: No such file or directory in /home/virtualiseredu/public_html/cache/classes/config.php on line 322
+[08-Oct-2025 13:54:29 America/Bogota] PHP Warning:  include(/home/virtualiseredu/moodledata/cache/core_component.php): Failed to open stream: No such file or directory in /home/virtualiseredu/public_html/lib/classes/component.php on line 401
+[08-Oct-2025 13:54:29 America/Bogota] PHP Warning:  include(/home/virtualiseredu/moodledata/muc/config.php): Failed to open stream: No such file or directory in /home/virtualiseredu/public_html/cache/classes/config.php on line 322
+[08-Nov-2025 23:06:52 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 23:06:52 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 23:06:52 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 23:06:52 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 23:06:52 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 23:06:52 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[08-Nov-2025 23:06:55 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 23:06:55 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[08-Nov-2025 23:06:55 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[08-Nov-2025 23:06:55 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[08-Nov-2025 23:06:55 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[08-Nov-2025 23:06:55 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[12-Nov-2025 02:01:04 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[12-Nov-2025 02:01:04 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[12-Nov-2025 02:01:04 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[12-Nov-2025 02:01:04 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[12-Nov-2025 02:01:04 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[12-Nov-2025 02:01:04 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670
+[13-Nov-2025 18:50:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[13-Nov-2025 18:50:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 433
+[13-Nov-2025 18:50:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 38
+[13-Nov-2025 18:50:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setuplib.php on line 40
+[13-Nov-2025 18:50:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 654
+[13-Nov-2025 18:50:47 UTC] PHP Deprecated:  Constant E_STRICT is deprecated in /home/virtualiseredu/public_html/lib/setup.php on line 670

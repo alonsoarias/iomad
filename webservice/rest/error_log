@@ -1,0 +1,528 @@
+[22-Apr-2025 10:42:49 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 604 of /local/coursetransfer/classes/external/frontend/sites_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\frontend\sites_external::origin_test_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:43:17 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 143 of /local/coursetransfer/classes/external/backend/origin_user_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_user_external::origin_has_user_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:43:17 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 154 of /local/coursetransfer/classes/external/backend/origin_user_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_user_external::origin_has_user_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:43:18 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 168 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:43:18 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 185 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:43:22 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:43:35 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:43:39 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 290 of /local/coursetransfer/classes/external/backend/origin_course_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_course_external::origin_get_course_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:43:48 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:44:45 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 143 of /local/coursetransfer/classes/external/backend/origin_user_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_user_external::origin_has_user_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:44:45 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 154 of /local/coursetransfer/classes/external/backend/origin_user_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_user_external::origin_has_user_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:44:45 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 168 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:44:45 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 185 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:44:50 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:44:56 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:44:59 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 290 of /local/coursetransfer/classes/external/backend/origin_course_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_course_external::origin_get_course_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:01 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 290 of /local/coursetransfer/classes/external/backend/origin_course_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_course_external::origin_get_course_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:08 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:11 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 168 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:11 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 185 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:41 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 143 of /local/coursetransfer/classes/external/backend/origin_user_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_user_external::origin_has_user_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:41 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 154 of /local/coursetransfer/classes/external/backend/origin_user_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_user_external::origin_has_user_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:41 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 168 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:41 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 185 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:44 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:48 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:45:51 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 290 of /local/coursetransfer/classes/external/backend/origin_course_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_course_external::origin_get_course_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:46:31 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 604 of /local/coursetransfer/classes/external/frontend/sites_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\frontend\sites_external::origin_test_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:47:26 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 143 of /local/coursetransfer/classes/external/backend/origin_user_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_user_external::origin_has_user_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:47:26 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 154 of /local/coursetransfer/classes/external/backend/origin_user_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_user_external::origin_has_user_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:47:26 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 168 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:47:26 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 185 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:47:30 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:47:39 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:47:47 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 290 of /local/coursetransfer/classes/external/backend/origin_course_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_course_external::origin_get_course_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:47:51 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 304 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_category_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:47:53 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 168 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:47:53 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 185 of /local/coursetransfer/classes/external/backend/origin_category_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_category_external::origin_get_categories_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:50:14 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 143 of /local/coursetransfer/classes/external/backend/origin_user_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_user_external::origin_has_user_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:50:14 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 154 of /local/coursetransfer/classes/external/backend/origin_user_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_user_external::origin_has_user_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:50:19 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 290 of /local/coursetransfer/classes/external/backend/origin_course_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_course_external::origin_get_course_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:50:26 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 290 of /local/coursetransfer/classes/external/backend/origin_course_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_course_external::origin_get_course_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:50:30 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 290 of /local/coursetransfer/classes/external/backend/origin_course_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_course_external::origin_get_course_detail_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:50:34 America/Bogota] Debugging: Invalid $required parameter value: 'Errors' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 270 of /local/coursetransfer/classes/external/backend/origin_course_backup_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_course_backup_external::origin_backup_course_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:50:34 America/Bogota] Debugging: Invalid $required parameter value: 'Data' .
+                It must be either VALUE_DEFAULT, VALUE_REQUIRED, or VALUE_OPTIONAL in 
+* line 54 of /lib/external/classes/external_description.php: call to debugging()
+* line 47 of /lib/external/classes/external_single_structure.php: call to core_external\external_description->__construct()
+* line 284 of /local/coursetransfer/classes/external/backend/origin_course_backup_external.php: call to core_external\external_single_structure->__construct()
+* line ? of unknownfile: call to local_coursetransfer\external\backend\origin_course_backup_external::origin_backup_course_returns()
+* line 118 of /lib/external/classes/external_api.php: call to call_user_func()
+* line 1411 of /webservice/lib.php: call to core_external\external_api::external_function_info()
+* line 1318 of /webservice/lib.php: call to webservice_base_server->load_function_info()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+
+[22-Apr-2025 10:50:34 America/Bogota] instantiating backup controller e91350e277cd1a4a0984b3db602be5c8
+[22-Apr-2025 10:50:34 America/Bogota] setting controller status to 100
+[22-Apr-2025 10:50:34 America/Bogota] loading controller plan
+[22-Apr-2025 10:50:35 America/Bogota] setting controller status to 300
+[22-Apr-2025 10:50:35 America/Bogota] applying plan defaults
+[22-Apr-2025 10:50:35 America/Bogota] setting controller status to 400
+[22-Apr-2025 10:50:35 America/Bogota] setting file inclusion to 
+[22-Apr-2025 10:50:35 America/Bogota] checking plan security
+[22-Apr-2025 10:50:35 America/Bogota] setting controller status to 700
+[22-Apr-2025 10:50:35 America/Bogota] saving controller to db
+[22-Apr-2025 10:50:35 America/Bogota] calculating controller checksum 77dfe4ef8013e9a27b68c37e6a64883a
+[22-Apr-2025 10:50:35 America/Bogota] loading controller from db
+[22-Apr-2025 10:50:35 America/Bogota] setting controller status to 700
+[22-Apr-2025 10:50:35 America/Bogota] saving controller to db
+[22-Apr-2025 10:50:35 America/Bogota] calculating controller checksum 77dfe4ef8013e9a27b68c37e6a64883a
+[22-Apr-2025 10:50:35 America/Bogota] loading controller from db
+[22-Apr-2025 10:50:35 America/Bogota] setting controller status to 700
+[22-Apr-2025 10:50:35 America/Bogota] saving controller to db
+[22-Apr-2025 10:50:35 America/Bogota] calculating controller checksum 77dfe4ef8013e9a27b68c37e6a64883a
+[22-Apr-2025 10:50:35 America/Bogota] loading controller from db
+[22-Apr-2025 10:50:35 America/Bogota] setting controller execution
+[22-Apr-2025 10:50:35 America/Bogota] saving controller to db
+[22-Apr-2025 10:50:35 America/Bogota] calculating controller checksum 7463f26b95c90d550c2af9e6921d0adf
+[22-Apr-2025 10:50:35 America/Bogota] Debugging: Deprecation: local_coursetransfer\task\create_backup_course_task::set_blocking has been deprecated since 4.4. Blocking tasks are no longer supported. in 
+* line 255 of /lib/classes/deprecation.php: call to debugging()
+* line 136 of /lib/classes/deprecation.php: call to core\deprecation::emit_deprecation_notice()
+* line 134 of /lib/classes/task/task_base.php: call to core\deprecation::emit_deprecation_if_present()
+* line 113 of /local/coursetransfer/classes/coursetransfer_backup.php: call to core\task\task_base->set_blocking()
+* line 191 of /local/coursetransfer/classes/external/backend/origin_course_backup_external.php: call to local_coursetransfer\coursetransfer_backup::create_task_backup_course()
+* line 1507 of /webservice/lib.php: call to local_coursetransfer\external\backend\origin_course_backup_external::origin_backup_course()
+* line 1353 of /webservice/lib.php: call to webservice_base_server->execute()
+* line 44 of /webservice/rest/server.php: call to webservice_base_server->run()
+

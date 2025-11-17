@@ -1,0 +1,76 @@
+$body-bg: #FFFFFF;
+$navbar-height: 80px;
+
+// ============================================
+// COLORES PRIMARIOS ISER (Bandera institucional)
+// ============================================
+$my-rojo: #EB4335; // Rojo corporativo - R:235 G:67 B:53
+$my-rojo-claro: #F38375; // Rojo atenuado
+$my-amarillo: #FCBD05; // Amarillo corporativo - R:252 G:189 B:7
+$my-verde: #1B9E88; // Verde corporativo - R:27 G:158 B:136 (COLOR PRINCIPAL)
+
+// ============================================
+// COLORES SECUNDARIOS ISER
+// ============================================
+$my-orange: #E27C32; // Naranja - R:226 G:124 B:50
+$my-lime: #CFDA4B; // Verde lima - R:207 G:218 B:75
+$my-blue: #5894EF; // Azul - R:88 G:148 B:239
+$my-magenta: #C82260; // Magenta - R:200 G:34 B:96
+
+// ============================================
+// COLORES NEUTRALES
+// ============================================
+$my-oscuro: #003049;
+$my-gris: #646363; // Gris corporativo - R:100 G:100 B:99
+$my-gris2: #B8B9BE;
+$my-negro: #000000; // Negro - R:0 G:0 B:0
+$my-blue2: #27548c; // Mantenido por compatibilidad
+$color-white: #FFFFFF;
+
+// ============================================
+// TIPOGRAFÍA
+// ============================================
+$font-family-sans-serif: 'Arial', sans-serif;
+$font-family-aux: 'Elza', 'Arial', sans-serif;
+$headings-font-family: "Arial", $font-family-sans-serif !default;
+
+// ============================================
+// ASIGNACIÓN DE COLORES DEL SISTEMA
+// ============================================
+$color-primary: #1B9E88; // Verde corporativo ISER
+$color-primary-dimmed: #E8F5F3;
+$color-primary-dark: #158C78;
+
+$color-secondary: #EB4335; // Rojo corporativo ISER
+$color-secondary-dimmed: #F38375;
+$color-secondary-dark: #D93B2E;
+
+$color-terciary: #FCBD05; // Amarillo corporativo ISER
+$color-terciary-dimmed: #FDDB80;
+$color-terciary-dark: #E0A904;
+
+$brand-primary: #1B9E88; // Verde corporativo ISER
+$navbar-header-color: #EB4335; // Rojo corporativo
+
+$color-blue: #5894EF; // Azul secundario
+
+$headings-color: #646363; // Gris corporativo
+
+$nav-drawer-color: #1B9E88; // Verde corporativo ISER
+
+// ============================================
+// COLORES BOOTSTRAP/FRAMEWORK
+// ============================================
+$blue: #5894EF; // Actualizado al azul secundario ISER
+$indigo: #003049;
+$purple: #2a3562;
+$pink: #C82260; // Actualizado al magenta ISER
+$red: #EB4335; // Actualizado al rojo corporativo ISER
+$orange: #E27C32; // Actualizado al naranja secundario ISER
+$yellow: #FCBD05; // Actualizado al amarillo corporativo ISER
+$green: #1B9E88; // Actualizado al verde corporativo ISER
+$teal: #1B9E88; // Actualizado al verde corporativo ISER
+$cyan: #5894EF; // Actualizado al azul secundario ISER
+
+/* extra variables */
+$my-loginfooterheight: 80px;
