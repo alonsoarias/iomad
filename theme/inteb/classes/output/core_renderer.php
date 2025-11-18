@@ -105,6 +105,64 @@ class core_renderer extends \theme_remui\output\core_renderer
     }
 
     /**
+     * The standard tags that should be included in the <head> tag
+     * Includes dynamic CSS for IOMAD company branding colors
+     * Inherited from theme_iomad functionality
+     *
+     * @return string HTML fragment.
+     */
+    public function standard_head_html() {
+        global $DB;
+
+        // Inject additional 'live' CSS for company branding
+        $css = '';
+
+        // Get company colours - IOMAD functionality
+        $companyid = \iomad::get_my_companyid(\context_system::instance(), false);
+        if ($companyid && $company = $DB->get_record('company', array('id' => $companyid))) {
+            // Link color
+            if (!empty($company->linkcolor)) {
+                $css .= 'a {color: ' . $company->linkcolor . ' !important} ';
+            }
+
+            // Heading color (navbar background)
+            if (!empty($company->headingcolor)) {
+                $css .= '.navbar {background-color: ' . $company->headingcolor . ' !important} ';
+                $css .= '#page-header.hasbackground {background-color: ' . $company->headingcolor . ' !important} ';
+            }
+
+            // Main color (body and drawer background)
+            if (!empty($company->maincolor)) {
+                $css .= 'body, #nav-drawer, #theme_remui-drawers-blocks, #theme_remui-drawers-courseindex {background-color: ' . $company->maincolor . ' !important} ';
+            }
+
+            // Background colors for header and content (if defined)
+            if (!empty($company->bgcolor_header)) {
+                $css .= '#page-header {background-color: ' . $company->bgcolor_header . ' !important} ';
+            }
+
+            if (!empty($company->bgcolor_content)) {
+                $css .= '#page-content, .main-inner {background-color: ' . $company->bgcolor_content . ' !important} ';
+            }
+
+            // Custom CSS from company configuration
+            if (!empty($company->customcss)) {
+                $css .= $company->customcss;
+            }
+        }
+
+        // Get parent output
+        $output = parent::standard_head_html();
+
+        // Inject company CSS if available
+        if ($css) {
+            $output .= '<style type="text/css">/* IOMAD Company Branding */' . $css . '</style>';
+        }
+
+        return $output;
+    }
+
+    /**
      * Sobrescribe el método full_header para mostrar avisos generales u otros estilos en el header.
      *
      * @return string
