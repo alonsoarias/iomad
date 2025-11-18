@@ -1,6 +1,17 @@
 /*******************
-Headings
-*******************/
+ * INTEB Custom Styles
+ *
+ * Este archivo combina y optimiza los estilos de:
+ * - theme/inteb/scss/inteb.scss (original)
+ * - theme/inteb/style/custom.css
+ *
+ * Eliminando duplicados y actualizando referencias a RemUI
+ *******************/
+
+/* ==========================================================================
+   1. TIPOGRAFÍA Y HEADINGS
+   ========================================================================== */
+
 h1,
 .h1,
 h2,
@@ -26,6 +37,31 @@ h1.h2.header-heading {
     font-weight: bold !important;
 }
 
+/* Mejorando tamaño de tipografías para lectura */
+.description .course-description-item,
+#page-content {
+    font-size: 0.9775rem;
+    font-weight: 400;
+    line-height: 1.52;
+}
+
+nav.moremenu.navigation.observed,
+.edw-tabs-navigation .nav-tabs .nav-item .nav-link {
+    font-size: 0.9775rem;
+}
+
+li.breadcrumb-item {
+    font-size: 0.8775rem;
+}
+
+.moremenu .nav-link {
+    font-size: 15.6px !important;
+}
+
+/* ==========================================================================
+   2. ENLACES Y NAVEGACIÓN
+   ========================================================================== */
+
 a {
     color: $color-primary;
 }
@@ -34,91 +70,427 @@ a:hover {
     color: $color-secondary;
 }
 
-#top-footer h3 {
-    color: white;
+a.nav-link {
+    font-weight: 600 !important;
 }
 
-.nav-pills {
+.activityinstance a {
+    text-transform: none;
+}
 
+.text-info,
+.users-list-name,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item a {
+    color: $color-primary !important;
+}
+
+/* ==========================================================================
+   3. NAVEGACIÓN - NAV PILLS Y TABS
+   ========================================================================== */
+
+.nav-pills {
     .nav-link.active,
     .show>.nav-link {
-        color: #ffffff; // Uso de blanco directo
-        background-color: $color-primary; // Azul oscuro para el fondo activo
+        color: #ffffff;
+        background-color: $color-primary;
     }
 }
 
 .edw-tabs-navigation .nav-tabs .nav-item .nav-link.active,
 .edw-tabs-navigation .nav-tabs .nav-item .nav-link:hover,
 .edw-tabs-navigation .nav-tabs .nav-item .nav-link:focus {
-    color: $color-primary; // Reemplazado #3972b5 con $color-primary
+    color: $color-primary;
 }
 
 .edw-tabs-navigation .nav-tabs .nav-item .nav-link.active::before {
     border-bottom: 3px solid $color-primary;
 }
 
-.event h3.name,
-.calendar_event_course {
-    color: white;
-    text-shadow: 1px 1px 1px #000;
+/* Nav Pills Custom */
+.nav-pills-custom .nav-link {
+    position: relative;
 }
 
-.event a.card-link {
-    font-weight: bold;
-    border-bottom: 2px dotted;
-    font-size: 107%;
+@media (min-width: 992px) {
+    .nav-pills-custom .nav-link::before {
+        content: '';
+        display: block;
+        border-top: 8px solid transparent;
+        border-left: 10px solid $color-primary;
+        border-bottom: 8px solid transparent;
+        position: absolute;
+        top: 50%;
+        right: -10px;
+        transform: translateY(-50%);
+        opacity: 0;
+    }
 }
 
-/* Personalizaciones Próximos Eventos */
-.block_calendar_upcoming .event {
-    border-left: 2px solid #ccc;
-    padding-left: 5px;
+.nav-pills-custom .nav-link.active::before {
+    opacity: 1;
 }
 
-.block-myoverview [data-region="filter"] .nav-grouping-selector .nav {
-    margin: 10px 17px 16px 17px;
+/* Collapsible Links */
+.collapsible-link,
+.collapsible-link::before,
+.collapsible-link[aria-expanded='true']::before {
+    position: relative;
+    display: block;
+    text-align: left;
 }
 
-.block-myoverview [data-region="filter"] .all-filter-wrapper .nav-display-selector-wrapper .nav-display-selector .nav .nav-item .nav-link [aria-current="true"] {
+.collapsible-link::before {
+    content: '\f107';
+    top: 50%;
+    right: 0.8rem;
+    transform: translateY(-50%);
+    font-family: 'FontAwesome';
+    font-size: 1.1rem;
+}
+
+.collapsible-link[aria-expanded='true']::before {
+    content: '\f106';
+}
+
+/* ==========================================================================
+   4. NAVBAR Y HEADER
+   ========================================================================== */
+
+.navbar-brand {
+    background-color: transparent;
+}
+
+.navbar .primary-navigation .nav-link,
+.navbar .primary-navigation .more-nav>.dropdown>.dropdown-toggle,
+.navbar #usernavigation .nav-link,
+.navbar #usernavigation .more-nav>.dropdown>.dropdown-toggle {
     color: $color-primary;
 }
 
-.block-myoverview [data-region="filter"] .nav-grouping-selector .nav li.nav-item [aria-current="true"]::after {
+.navbar .primary-navigation .nav-link.active {
+    color: $color-primary;
+}
+
+.navbar .primary-navigation .nav-link.active::before {
+    border-bottom-color: $color-primary;
+}
+
+.navbar .primary-navigation .nav-link:hover,
+.navbar .primary-navigation .more-nav>.dropdown>.dropdown-toggle:hover,
+.navbar #usernavigation .nav-link:hover,
+.navbar #usernavigation .more-nav>.dropdown>.dropdown-toggle:hover {
+    color: $color-primary;
+}
+
+.navbar {
+    border-bottom: 5px solid $color-primary;
+    box-shadow: 0px 2px 3px rgba(255, 255, 255, 0.5);
+}
+
+.navbar .primary-navigation .nav-link.active::before,
+.navbar .primary-navigation .dropdown-toggle.active::before,
+.navbar #usernavigation .nav-link.active::before,
+.navbar #usernavigation .dropdown-toggle.active::before {
+    top: 58px;
     border-bottom: 3px solid $color-primary;
 }
 
-.block_calendar_upcoming .event.my-event-urgent {
-    border-color: #f51f25;
+.navbar #usernavigation .userinitials {
+    background-color: $my-blue;
+    color: #ffffff;
 }
 
-.block_calendar_upcoming .event.my-event-priority {
-    border-color: #f89406;
+.navbar .edw-icon {
+    color: $color-primary;
 }
+
+.primary-navigation .nav.more-nav {
+    display: flex;
+}
+
+.navbar [data-key="recentcourses"] {
+    display: none;
+}
+
+/* Format Menutopic */
+#format_menutopic_menu .navbar-brand {
+    display: none !important;
+}
+
+div#navbarmenutopic {
+    padding: 0 16px !important;
+    height: 80px !important;
+}
+
+/* Page Header */
+#page-header.hasbackground.design-1 .header-main-section .category .badge {
+    color: white;
+    background-color: $green;
+}
+
+.position-absolute.w-100.h-100 {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.0) -5%, transparent 120%) !important;
+}
+
+#page-header.hasbackground.design-1 {
+    min-height: 270px !important;
+}
+
+/* ==========================================================================
+   5. FOOTER
+   ========================================================================== */
+
+#page-footer {
+    background-color: $color-secondary;
+}
+
+#page-footer .copyright {
+    background-color: $my-gris;
+    color: $color-primary;
+    text-align: center;
+    min-height: inherit;
+    margin-bottom: 0;
+}
+
+#page-footer .footer-container hr,
+.progress-bar {
+    background-color: $color-primary;
+    border-top: 1px solid $color-white;
+}
+
+/* Top Footer */
+#top-footer {
+    background-color: $color-primary;
+    color: $color-white;
+    margin: 0 -15px;
+}
+
+#top-footer h3 {
+    color: white;
+}
+
+#top-footer .my-about,
+#top-footer h3 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#top-footer h3 {
+    margin-bottom: 15px;
+}
+
+/* Footer Credits */
+.my-credit-footer-wrapper {
+    background-color: $color-lightgray;
+    color: $color-primary;
+    font-size: 15px;
+}
+
+a.my-credit-link,
+a.my-credit-link:hover {
+    color: $color-primary;
+}
+
+/* About Text Content */
+.about-text-content {
+    text-align: justify;
+    padding: 0 15px;
+}
+
+.about-text-content h4.data {
+    color: #ffffff;
+}
+
+.about-text-content a.link-1 {
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   6. BOTONES
+   ========================================================================== */
+
+/* Primary button styling */
+.btn-primary {
+    background-color: $color-secondary;
+    border-color: $color-secondary;
+    color: #ffffff;
+
+    .fa,
+    .edw-icon {
+        color: #ffffff;
+    }
+
+    &:hover {
+        background-color: $color-primary;
+        border-color: $color-primary;
+        color: #ffffff;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active,
+    &:not(:disabled):not(.disabled):active:focus,
+    .show>&.dropdown-toggle {
+        background-color: $color-secondary;
+        border-color: $color-secondary;
+        color: #ffffff;
+    }
+
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $color-primary;
+        border-color: $color-primary;
+        color: #ffffff;
+    }
+}
+
+/* Secondary button styling */
+.btn-secondary {
+    background-color: $color-primary;
+    border-color: $color-primary;
+    color: #ffffff;
+
+    .fa,
+    .edw-icon {
+        color: #ffffff;
+    }
+
+    &:hover {
+        background-color: $color-secondary;
+        border-color: $color-secondary;
+        color: #ffffff;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active,
+    &:not(:disabled):not(.disabled):active:focus,
+    .show>&.dropdown-toggle {
+        background-color: $color-primary;
+        border-color: $color-primary;
+        color: #ffffff;
+    }
+
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $color-secondary;
+        border-color: $color-secondary;
+        color: #ffffff;
+    }
+}
+
+/* Botones Específicos */
+button.btn.btn-primary.icon-no-margin.p-0 {
+    background-color: $color-secondary;
+    border-color: white;
+    color: white;
+
+    &:hover {
+        background-color: $color-secondary;
+        border-color: white;
+        color: white !important;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active,
+    &:not(:disabled):not(.disabled):active:focus,
+    .show>&.dropdown-toggle {
+        background-color: darken($color-secondary, 10%);
+        border-color: white;
+        color: white;
+
+        .fa,
+        .edw-icon {
+            color: white;
+        }
+    }
+}
+
+.btn-floating {
+    border-color: white;
+}
+
+.btn-primary .fa,
+.btn-primary .edw-icon {
+    color: white !important;
+}
+
+/* Outline Buttons */
+.btn-link,
+.btn-link:hover,
+.btn-outline-primary,
+.btn-outline-primary:hover {
+    background-color: #fff;
+}
+
+.btn-link {
+    color: $color-secondary;
+    border-color: $color-primary;
+}
+
+.btn-link:hover {
+    color: $color-primary;
+    border-color: $color-secondary;
+}
+
+.btn-outline-primary {
+    color: $color-secondary;
+    border-color: $color-secondary;
+}
+
+.btn-outline-primary:hover {
+    color: $color-white;
+    background-color: darken($color-secondary, 10%);
+    border-color: darken($color-secondary, 10%);
+}
+
+/* ==========================================================================
+   7. BADGES
+   ========================================================================== */
 
 .badge.badge-danger {
     background-color: #f51f25;
 }
 
-/* END Personalizaciones Próximos Eventos */
-
-.que .formulation {
-    background-color: white;
-    border: 1px solid;
-    border-color: #badae4;
+.badge-info,
+.badge-info:hover,
+.badge-success,
+.badge-succes:hover {
+    color: $color-primary;
+    transition: background-color 0.3s;
 }
 
-.que.informationitem .formulation {
-    background-color: #def2f8;
-    border-color: #badae4;
+.badge-info {
+    background-color: $purple;
 }
 
-.que.informationitem .info {
-    margin-bottom: 5px;
+.badge-info:hover {
+    background-color: $color-primary;
+    color: $color-white;
 }
 
-.activityinstance a {
-    text-transform: none;
+.badge-success {
+    background-color: $green;
 }
+
+.badge-succes:hover {
+    background-color: darken($green, 10%);
+}
+
+span.badge.badge-info {
+    color: white;
+}
+
+span.badge.rounded-pill.bg-secondary.text-dark,
+span.badge.bg-secondary.text-dark {
+    color: white !important;
+}
+
+.block_grade_me .badge {
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   8. BLOQUES (BLOCKS)
+   ========================================================================== */
 
 .inteb-block-header {
     color: $color-primary;
@@ -145,10 +517,6 @@ a:hover {
 
 .block {
     margin: 1px;
-}
-
-section.node-category {
-    margin: 2px;
 }
 
 .block .show>.btn-outline-secondary.dropdown-toggle:focus {
@@ -191,331 +559,80 @@ section.node-category {
     background-color: $color-secondary-dimmed;
 }
 
+/* Iconos para bloques */
 .block h5.card-title:before {
-    font-family: "Font Awesome 6 Free"; // Actualizado para Font Awesome 6
-    font-weight: 900; // Asegura el estilo sólido
-    margin-right: 8px; // Espacio entre el ícono y el texto
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 8px;
 }
 
 /* Iconos para diferentes bloques */
-.block.block_accessreview h5.card-title:before {
-    content: "\f013";
-    /* Icono de configuración */
-}
+.block.block_accessreview h5.card-title:before { content: "\f013"; }
+.block.block_activity_modules h5.card-title:before { content: "\f24d"; }
+.block.block_activity_results h5.card-title:before { content: "\f080"; }
+.block.block_admin_bookmarks h5.card-title:before { content: "\f02e"; }
+.block.block_badges h5.card-title:before { content: "\f02b"; }
+.block.block_blog_menu h5.card-title:before { content: "\f0e6"; }
+.block.block_blog_recent h5.card-title:before { content: "\f1ea"; }
+.block.block_blog_tags h5.card-title:before { content: "\f02c"; }
+.block.block_calendar_month h5.card-title:before { content: "\f073"; }
+.block.block_calendar_upcoming h5.card-title:before { content: "\f017"; }
+.block.block_checklist h5.card-title:before { content: "\f00c"; }
+.block.block_comments h5.card-title:before { content: "\f086"; }
+.block.block_completion_progress h5.card-title:before { content: "\f05d"; }
+.block.block_completionstatus h5.card-title:before { content: "\f058"; }
+.block.block_configurable_reports h5.card-title:before { content: "\f080"; }
+.block.block_dedication h5.card-title:before { content: "\f004"; }
+.block.block_feedback h5.card-title:before { content: "\f0e5"; }
+.block.block_globalsearch h5.card-title:before { content: "\f002"; }
+.block.block_glossary_random h5.card-title:before { content: "\f02d"; }
+.block.block_grade_me h5.card-title:before { content: "\f046"; }
+.block.block_grade_overview h5.card-title:before { content: "\f06a"; }
+.block.block_html h5.card-title:before { content: "\f097"; }
+.block.block_mentees h5.card-title:before { content: "\f501"; }
+.block.block_messageteacher h5.card-title:before { content: "\f27b"; }
+.block.block_mnet_hosts h5.card-title:before { content: "\f0c2"; }
+.block.block_multiblock h5.card-title:before { content: "\f022"; }
+.block.block_mycertificates h5.card-title:before { content: "\f0a3"; }
+.block.block_myoverview h5.card-title:before { content: "\f200"; }
+.block.block_myprofile h5.card-title:before { content: "\f007"; }
+.block.block_navigation h5.card-title:before { content: "\f0e8"; }
+.block.block_news_items h5.card-title:before { content: "\f1ea"; }
+.block.block_online_users h5.card-title:before { content: "\f0c0"; }
+.block.block_private_files h5.card-title:before { content: "\f07c"; }
+.block.block_quiz_results h5.card-title:before { content: "\f080"; }
+.block.block_recent_activity h5.card-title:before { content: "\f073"; }
+.block.block_recentlyaccesseditems h5.card-title:before { content: "\f0ca"; }
+.block.block_remuiblck h5.card-title:before { content: "\f2c9"; }
+.block.block_rss_client h5.card-title:before { content: "\f09e"; }
+.block.block_search_forums h5.card-title:before { content: "\f002"; }
+.block.block_section_links h5.card-title:before { content: "\f0cb"; }
+.block.block_selfcompletion h5.card-title:before { content: "\f058"; }
+.block.block_settings h5.card-title:before { content: "\f013"; }
+.block.block_site_main_menu h5.card-title:before { content: "\f0c9"; }
+.block.block_social_activities h5.card-title:before { content: "\f234"; }
+.block.block_tag_flickr h5.card-title:before { content: "\f16e"; }
+.block.block_tag_youtube h5.card-title:before { content: "\f167"; }
+.block.block_tags h5.card-title:before { content: "\f02c"; }
+.block.block_xp h5.card-title:before { content: "\f091"; }
+.block.block_myprogress h5.card-title:before { content: "\f201"; }
 
-.block.block_activity_modules h5.card-title:before {
-    content: "\f24d";
-    /* Icono de libro */
-}
-
-.block.block_activity_results h5.card-title:before {
-    content: "\f080";
-    /* Icono de gráfico de barras */
-}
-
-.block.block_admin_bookmarks h5.card-title:before {
-    content: "\f02e";
-    /* Icono de marcador */
-}
-
-.block.block_badges h5.card-title:before {
-    content: "\f02b";
-    /* Icono de insignia */
-}
-
-.block.block_blog_menu h5.card-title:before {
-    content: "\f0e6";
-    /* Icono de blog */
-}
-
-.block.block_blog_recent h5.card-title:before {
-    content: "\f1ea";
-    /* Icono de historial */
-}
-
-.block.block_blog_tags h5.card-title:before {
-    content: "\f02c";
-    /* Icono de etiquetas */
-}
-
-.block.block_calendar_month h5.card-title:before {
-    content: "\f073";
-    /* Icono de calendario */
-}
-
-.block.block_calendar_upcoming h5.card-title:before {
-    content: "\f017";
-    /* Icono de calendario para eventos próximos */
-}
-
-.block.block_checklist h5.card-title:before {
-    content: "\f00c";
-    /* Icono de verificación */
-}
-
-.block.block_comments h5.card-title:before {
-    content: "\f086";
-    /* Icono de comentarios */
-}
-
-.block.block_completion_progress h5.card-title:before {
-    content: "\f05d";
-    /* Icono de progreso */
-}
-
-.block.block_completionstatus h5.card-title:before {
-    content: "\f058";
-    /* Icono de check-circle */
-}
-
-.block.block_configurable_reports h5.card-title:before {
-    content: "\f080";
-    /* Icono de pie chart */
-}
-
-.block.block_dedication h5.card-title:before {
-    content: "\f004";
-    /* Icono de corazón */
-}
-
-.block.block_feedback h5.card-title:before {
-    content: "\f0e5";
-    /* Icono de comentarios */
-}
-
-.block.block_globalsearch h5.card-title:before {
-    content: "\f002";
-    /* Icono de búsqueda */
-}
-
-.block.block_glossary_random h5.card-title:before {
-    content: "\f02d";
-    /* Icono de libro abierto */
-}
-
-.block.block_grade_me h5.card-title:before {
-    content: "\f046";
-    /* Icono de gráfico */
-}
-
-.block.block_grade_overview h5.card-title:before {
-    content: "\f06a";
-    /* Icono de ojo */
-}
-
-.block.block_html h5.card-title:before {
-    content: "\f097";
-    /* Icono de código */
-}
-
-.block.block_mentees h5.card-title:before {
-    content: "\f501";
-    /* Icono de user-friends */
-}
-
-.block.block_messageteacher h5.card-title:before {
-    content: "\f27b";
-    /* Icono de sobre */
-}
-
-.block.block_mnet_hosts h5.card-title:before {
-    content: "\f0c2";
-    /* Icono de globo */
-}
-
-.block.block_multiblock h5.card-title:before {
-    content: "\f022";
-    /* Icono de clon */
-}
-
-.block.block_mycertificates h5.card-title:before {
-    content: "\f0a3";
-    /* Icono de certificado */
-}
-
-.block.block_myoverview h5.card-title:before {
-    content: "\f200";
-    /* Icono de dashboard */
-}
-
-.block.block_myprofile h5.card-title:before {
-    content: "\f007";
-    /* Icono de usuario */
-}
-
-.block.block_navigation h5.card-title:before {
-    content: "\f0e8";
-    /* Icono de navegación */
-}
-
-.block.block_news_items h5.card-title:before {
-    content: "\f1ea";
-    /* Icono de periódico */
-}
-
-.block.block_online_users h5.card-title:before {
-    content: "\f0c0";
-    /* Icono de usuarios */
-}
-
-.block.block_private_files h5.card-title:before {
-    content: "\f07c";
-    /* Icono de carpeta abierta */
-}
-
-.block.block_quiz_results h5.card-title:before {
-    content: "\f080";
-    /* Icono de gráfico de barras */
-}
-
-.block.block_recent_activity h5.card-title:before {
-    content: "\f073";
-    /* Icono de historial */
-}
-
-.block.block_recentlyaccesseditems h5.card-title:before {
-    content: "\f0ca";
-    /* Icono de lista */
-}
-
-.block.block_remuiblck h5.card-title:before {
-    content: "\f2c9";
-    /* Icono de layer-group */
-}
-
-.block.block_rss_client h5.card-title:before {
-    content: "\f09e";
-    /* Icono de RSS */
-}
-
-.block.block_search_forums h5.card-title:before {
-    content: "\f002";
-    /* Icono de búsqueda */
-}
-
-.block.block_section_links h5.card-title:before {
-    content: "\f0cb";
-    /* Icono de lista numerada */
-}
-
-.block.block_selfcompletion h5.card-title:before {
-    content: "\f058";
-    /* Icono de check-circle */
-}
-
-.block.block_settings h5.card-title:before {
-    content: "\f013";
-    /* Icono de engranaje */
-}
-
-.block.block_site_main_menu h5.card-title:before {
-    content: "\f0c9";
-    /* Icono de barras */
-}
-
-.block.block_social_activities h5.card-title:before {
-    content: "\f234";
-    /* Icono de usuarios */
-}
-
-.block.block_tag_flickr h5.card-title:before {
-    content: "\f16e";
-    /* Icono de Flickr */
-}
-
-.block.block_tag_youtube h5.card-title:before {
-    content: "\f167";
-    /* Icono de YouTube */
-}
-
-.block.block_tags h5.card-title:before {
-    content: "\f02c";
-    /* Icono de etiquetas */
-}
-
-.block.block_xp h5.card-title:before {
-    content: "\f091";
-    /* Icono de trofeo */
-}
-
-.block.block_myprogress h5.card-title:before {
-    content: "\f201";
-    /* Icono de línea de gráfico */
-}
-
-#block-region-side-pre>section:nth-of-type(7n)>.card-header {
-    background-color: $block-region-side-pre-7;
-    border-radius: 0px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n)>.card-body {
-    background-color: #f5f8ff;
-    border-radius: 0px 0px 24px 24px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 1)>.card-header {
-    background-color: $block-region-side-pre-1;
-    border-radius: 0px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 1)>.card-body {
-    background-color: #f5f8ff;
-    border-radius: 0px 0px 24px 24px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 2)>.card-header {
-    background-color: $block-region-side-pre-2;
-    border-radius: 0px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 2)>.card-body {
-    background-color: #f5f8ff;
-    border-radius: 0px 0px 24px 24px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 3)>.card-header {
-    background-color: $block-region-side-pre-3;
-    border-radius: 0px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 3)>.card-body {
-    background-color: #f5f8ff;
-    border-radius: 0px 0px 24px 24px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 4)>.card-header {
-    background-color: $block-region-side-pre-4;
-    border-radius: 0px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 4)>.card-body {
-    background-color: #f5f8ff;
-    border-radius: 0px 0px 24px 24px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 5)>.card-header {
-    background-color: $block-region-side-pre-5;
-    border-radius: 0px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 5)>.card-body {
-    background-color: #f5f8ff;
-    border-radius: 0px 0px 24px 24px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 6)>.card-header {
-    background-color: $block-region-side-pre-6;
-    border-radius: 0px;
-}
-
-#block-region-side-pre>section:nth-of-type(7n + 6)>.card-body {
-    background-color: #f5f8ff;
-    border-radius: 0px 0px 24px 24px;
-}
-
-#block-region-side-pre .block {
-    border-bottom: 0px;
-}
+/* Colores para bloques en side-pre */
+#block-region-side-pre>section:nth-of-type(7n)>.card-header { background-color: $block-region-side-pre-7; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 1)>.card-header { background-color: $block-region-side-pre-1; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 1)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 2)>.card-header { background-color: $block-region-side-pre-2; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 2)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 3)>.card-header { background-color: $block-region-side-pre-3; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 3)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 4)>.card-header { background-color: $block-region-side-pre-4; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 4)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 5)>.card-header { background-color: $block-region-side-pre-5; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 5)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 6)>.card-header { background-color: $block-region-side-pre-6; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 6)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre .block { border-bottom: 0px; }
 
 .card-header.idigital-block-header {
     background-color: #e8e8e8;
@@ -546,101 +663,60 @@ section.node-category {
     color: white;
 }
 
-.license-notice {
-    display: none;
+/* ==========================================================================
+   9. CALENDAR Y EVENTOS
+   ========================================================================== */
+
+.event h3.name,
+.calendar_event_course {
+    color: white;
+    text-shadow: 1px 1px 1px #000;
 }
 
-.navbar #usernavigation .userinitials {
-    background-color: $my-blue; // Reemplazado con $my-blue
-    color: #ffffff;
-}
-
-/* Mejorando tamaño de tipografías para lectura */
-.description .course-description-item,
-#page-content {
-    font-size: 0.9775rem;
-    font-weight: 400;
-    line-height: 1.52;
-}
-
-/* Mejora en revisión de intentos de cuestionarios
-/TODO::: Traducir a SCSS */
-.que.correct .outcome,
-.que.correct .comment {
-    background-color: #dffae7;
-    border-color: #c7e9d1;
-    color: #0a1f22;
-}
-
-nav.moremenu.navigation.observed {
-    font-size: 0.9775rem;
-}
-
-.edw-tabs-navigation .nav-tabs .nav-item .nav-link {
-    font-size: 0.9775rem;
-}
-
-li.breadcrumb-item {
-    font-size: 0.8775rem;
-}
-
-a.nav-link {
+.event a.card-link {
     font-weight: bold;
+    border-bottom: 2px dotted;
+    font-size: 107%;
 }
 
-.navbar-brand {
-    background-color: transparent;
+/* Personalizaciones Próximos Eventos */
+.block_calendar_upcoming .event {
+    border-left: 2px solid #ccc;
+    padding-left: 5px;
 }
 
-.navbar .primary-navigation .nav-link,
-.navbar .primary-navigation .more-nav>.dropdown>.dropdown-toggle,
-.navbar #usernavigation .nav-link,
-.navbar #usernavigation .more-nav>.dropdown>.dropdown-toggle {
+.block_calendar_upcoming .event.my-event-urgent {
+    border-color: #f51f25;
+}
+
+.block_calendar_upcoming .event.my-event-priority {
+    border-color: #f89406;
+}
+
+/* Calendar Styles */
+.maincalendar .calendarmonth td.today .day-number-circle {
+    color: $color-white;
+    background-color: $color-primary;
+}
+
+/* ==========================================================================
+   10. MY OVERVIEW Y FILTROS
+   ========================================================================== */
+
+section.node-category {
+    margin: 2px;
+}
+
+.block-myoverview [data-region="filter"] .nav-grouping-selector .nav {
+    margin: 10px 17px 16px 17px;
+}
+
+.block-myoverview [data-region="filter"] .all-filter-wrapper .nav-display-selector-wrapper .nav-display-selector .nav .nav-item .nav-link [aria-current="true"] {
     color: $color-primary;
 }
 
-.navbar .primary-navigation .nav-link.active {
-    color: $color-primary; // Reemplazado #366daf con $color-primary
-}
-
-.navbar .primary-navigation .nav-link.active::before {
-    border-bottom-color: $color-primary; // Reemplazado #3972b5 con $color-primary
-}
-
-.navbar .primary-navigation .nav-link:hover,
-.navbar .primary-navigation .more-nav>.dropdown>.dropdown-toggle:hover,
-.navbar #usernavigation .nav-link:hover,
-.navbar #usernavigation .more-nav>.dropdown>.dropdown-toggle:hover {
-    color: $color-primary; // Reemplazado #3972b5 con $color-primary
-}
-
-.navbar {
-    border-bottom: 5px solid $color-primary;
-    /* Borde sólido azul en la parte inferior */
-    box-shadow: 0px 2px 3px rgba(255, 255, 255, 0.5);
-    /* Sombra blanca suave para crear el efecto de filo */
-}
-
-.navbar .primary-navigation .nav-link.active::before,
-.navbar .primary-navigation .dropdown-toggle.active::before,
-.navbar #usernavigation .nav-link.active::before,
-.navbar #usernavigation .dropdown-toggle.active::before {
-    top: 58px;
-    border-bottom: 3px solid $color-primary; // Reemplazado #3972b5 con $color-primary
-}
-
-/* Footer */
-#page-footer {
-    background-color: $color-secondary;
-    /* Reemplazado con $color-secondary */
-}
-
-/* Top Footer */
-#top-footer {
-    background-color: $color-primary;
-    /* Azul oscuro */
-    color: $color-white;
-    margin: 0 -15px;
+.block-myoverview [data-region="filter"] .nav-grouping-selector .nav li.nav-item [aria-current="true"]::after {
+    border-bottom: 3px solid $color-primary;
 }
 
 /* Vista Categorias */
@@ -652,7 +728,6 @@ a.nav-link {
 .dashboard-card .course-info-container .edw-card-design-hd span.categoryname.edw-msg-panel-badge {
     color: #fff;
     background-color: $color-secondary;
-    /* Rojo */
     font-size: .8em;
 }
 
@@ -660,11 +735,41 @@ a.nav-link {
 .categoryname.text-truncate.small-info-semibold {
     color: #fff;
     background-color: $color-secondary;
-    /* Rojo */
     font-size: 0.8em;
 }
 
-/* Nueva regla para courseindex-section-title con clases adicionales */
+/* ==========================================================================
+   11. CUESTIONARIOS (QUIZ)
+   ========================================================================== */
+
+.que .formulation {
+    background-color: white;
+    border: 1px solid;
+    border-color: #badae4;
+}
+
+.que.informationitem .formulation {
+    background-color: #def2f8;
+    border-color: #badae4;
+}
+
+.que.informationitem .info {
+    margin-bottom: 5px;
+}
+
+/* Mejora en revisión de intentos de cuestionarios */
+.que.correct .outcome,
+.que.correct .comment {
+    background-color: #dffae7;
+    border-color: #c7e9d1;
+    color: #0a1f22;
+}
+
+/* ==========================================================================
+   12. COURSEINDEX (DRAWER)
+   ========================================================================== */
+
+/* Nueva regla para courseindex-section-title */
 #theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-section-title {
     padding: 10px 24px;
     color: #ffffff;
@@ -681,170 +786,15 @@ a.nav-link {
     color: #ffffff;
 }
 
-/* Botones */
-
-/* Primary button styling */
-.btn-primary {
-    background-color: $color-secondary; // Rojo para el fondo
-    border-color: $color-secondary; // Rojo para el borde
-    color: #ffffff; // Blanco para el texto
-
-    .fa,
-    .edw-icon {
-        color: #ffffff; // Blanco para los iconos
-    }
-
-    &:hover {
-        background-color: $color-primary; // Azul oscuro en hover
-        border-color: $color-primary; // Azul oscuro para el borde en hover
-        color: #ffffff; // Blanco para el texto en hover
-    }
-
-    &:not(:disabled):not(.disabled):active,
-    &:not(:disabled):not(.disabled).active,
-    &:not(:disabled):not(.disabled):active:focus,
-    .show>&.dropdown-toggle {
-        background-color: $color-secondary; // Rojo en activo
-        border-color: $color-secondary; // Rojo en activo
-        color: #ffffff; // Blanco en activo
-    }
-
-    &:not(:disabled):not(.disabled):focus,
-    &:not(:disabled):not(.disabled).focus {
-        background-color: $color-primary; // Azul oscuro en foco
-        border-color: $color-primary; // Azul oscuro en foco
-        color: #ffffff; // Blanco en foco
-    }
+#theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-item-content .courseindex-sectioncontent .courseindex-item .edw-icon,
+#theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-item-content .courseindex-sectioncontent .courseindex-item .fa-lock {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+    color: #ffffff;
 }
 
-/* Secondary button styling */
-.btn-secondary {
-    background-color: $color-primary; // Azul oscuro para el fondo
-    border-color: $color-primary; // Azul oscuro para el borde
-    color: #ffffff; // Blanco para el texto
-
-    .fa,
-    .edw-icon {
-        color: #ffffff; // Blanco para los iconos
-    }
-
-    &:hover {
-        background-color: $color-secondary; // Rojo en hover
-        border-color: $color-secondary; // Rojo en hover
-        color: #ffffff; // Blanco para el texto en hover
-    }
-
-    &:not(:disabled):not(.disabled):active,
-    &:not(:disabled):not(.disabled).active,
-    &:not(:disabled):not(.disabled):active:focus,
-    .show>&.dropdown-toggle {
-        background-color: $color-primary; // Azul oscuro en activo
-        border-color: $color-primary; // Azul oscuro en activo
-        color: #ffffff; // Blanco en activo
-    }
-
-    &:not(:disabled):not(.disabled):focus,
-    &:not(:disabled):not(.disabled).focus {
-        background-color: $color-secondary; // Rojo en foco
-        border-color: $color-secondary; // Rojo en foco
-        color: #ffffff; // Blanco en foco
-    }
-}
-
-/* Botones Específicos */
-button.btn.btn-primary.icon-no-margin.p-0 {
-    background-color: $color-secondary; // Rojo para el fondo
-    border-color: white; // Color blanco para el borde
-    color: white; // Color del texto
-
-    &:hover {
-        background-color: $color-secondary; // Rojo para el fondo en hover
-        border-color: white; // Mantiene el borde blanco en hover
-        color: white !important; // Color del texto en hover
-    }
-
-    &:not(:disabled):not(.disabled):active,
-    &:not(:disabled):not(.disabled).active,
-    &:not(:disabled):not(.disabled):active:focus,
-    .show>&.dropdown-toggle {
-        background-color: darken($color-secondary, 10%); // Oscurece el color secundario para el estado activo
-        border-color: white; // Mantiene el borde blanco para el estado activo
-        color: white; // Mantiene el texto blanco para mejor visibilidad
-
-        .fa,
-        .edw-icon {
-            color: white; // Mantiene el color de los íconos en blanco
-        }
-    }
-}
-
-.btn-floating {
-    border-color: white;
-}
-
-.btn-primary .fa,
-.btn-primary .edw-icon {
-    color: white !important;
-}
-
-/* Personalizaciones Próximos Eventos */
-
-.block_calendar_upcoming .event {
-    border-left: 2px solid #ccc;
-    padding-left: 5px;
-}
-
-.block_calendar_upcoming .event.my-event-urgent {
-    border-color: #f51f25;
-}
-
-.block_calendar_upcoming .event.my-event-priority {
-    border-color: #f89406;
-}
-
-/* END Personalizaciones Próximos Eventos */
-
-/* Responsive rules */
-
-/* Para tablets y desktops pequeños */
-@media (min-width: 768px) {}
-
-/* Para pantallas un poco más grandes que tablets */
-@media (min-width: 800px) {}
-
-/* Para desktops grandes */
-@media (min-width: 1200px) {}
-
-/* Estilos para dispositivos con un ancho máximo de 993px y una altura mínima de 640px */
-@media (max-width: 993px) {
-    @media (min-height: 640px) {}
-}
-
-/* Para dispositivos móviles (tablets y teléfonos en posición horizontal) */
-@media (max-width: 767px) {}
-
-/* Para pantallas pequeñas */
-@media (max-width: 639px) {}
-
-/* Para dispositivos aún más pequeños */
-@media (max-width: 576px) {}
-
-/* Para teléfonos muy pequeños */
-@media (max-width: 500px) {}
-
-/* Para los teléfonos más pequeños */
-@media (max-width: 479px) {}
-
-/* =========================================
-   INTEB - TAREA 1: Courseindex Colapsado y Cuestionarios Centrados
-   Agregar al final de /theme/inteb/scss/inteb.scss
-   ========================================= */
-
-/* =========================================
-   PARTE 1: Courseindex Collapsed by Default
-   ========================================= */
-
-/* Asegurar que el ícono muestre el estado correcto */
+/* Courseindex Collapsed by Default */
 #theme_remui-drawers-courseindex .courseindex-chevron.collapsed {
     .collapsed-icon {
         display: inline-block !important;
@@ -870,26 +820,155 @@ button.btn.btn-primary.icon-no-margin.p-0 {
     transition: height 0.35s ease;
 }
 
-/* =========================================
-   PARTE 2: Centrado de Cuestionarios mod_quiz
-   IMPORTANTE: Solo centrar botón y descripción
-   ========================================= */
+/* ==========================================================================
+   13. FORMULARIOS Y AUTOCOMPLETADO
+   ========================================================================== */
+
+/* Autocomplete Styles */
+.form-autocomplete-suggestions li:hover,
+.form-autocomplete-suggestions li:focus,
+.form-autocomplete-suggestions li[aria-selected="true"] {
+    padding-left: 12px;
+}
+
+.form-autocomplete-suggestions li:hover {
+    background-color: $color-primary;
+    color: $color-white;
+    border-left: 4px solid $color-primary;
+}
+
+.form-autocomplete-suggestions li:focus {
+    background-color: $color-lightgray-dimmed;
+    color: $color-primary;
+    border-left: 4px solid $color-secondary-dark;
+}
+
+.form-autocomplete-suggestions li[aria-selected="true"] {
+    background-color: $color-primary;
+    color: $color-white;
+    border-left: 4px solid $color-secondary;
+}
+
+/* ==========================================================================
+   14. PAGINACIÓN
+   ========================================================================== */
+
+.page-link,
+.page-link:hover,
+.page-item.active .page-link {
+    color: $color-primary;
+    text-decoration: none;
+}
+
+.page-link:hover {
+    z-index: 2;
+    color: darken($color-primary, 10%);
+    background-color: #e9ecef;
+    border-color: #d5ddea;
+}
+
+.page-item.active .page-link {
+    color: $color-white;
+    background-color: $color-primary;
+    border-color: $color-primary;
+}
+
+/* ==========================================================================
+   15. LOGIN Y CAROUSEL
+   ========================================================================== */
+
+.license-notice {
+    display: none;
+}
+
+/* Estilos base para la página de login */
+.login-page {
+    min-height: 100vh;
+    background-color: var(--color-bg-page);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .login-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        .row {
+            margin: 0;
+            min-height: 100vh;
+        }
+    }
+}
+
+/* Estilos del formulario de login */
+.loginform {
+    display: flex;
+    flex-direction: column;
+    max-width: var(--max-width-form);
+    animation: fadeIn 0.8s ease-out;
+
+    .login-welcome-wrapper {
+        text-align: center;
+        margin-bottom: 2rem;
+
+        h2 {
+            font-size: 1.25rem;
+            color: var(--color-text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+        }
+    }
+}
+
+.login-wrapper {
+    margin: 10%;
+}
+
+.login-logo img.mb-3.img-fluid {
+    width: 50%;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Carousel */
+.carousel-item img {
+    object-fit: cover;
+    width: 100%;
+    height: 100vh;
+    max-height: 1080px;
+}
+
+/* ==========================================================================
+   16. CENTRADO DE CUESTIONARIOS
+   ========================================================================== */
 
 /* Centrar el botón de inicio del quiz */
 #page-mod-quiz-view {
 
-    /* Centrar el div que contiene el botón */
     .quizstartbuttondiv {
         text-align: center !important;
         margin: 2rem auto !important;
 
-        /* Centrar el formulario dentro */
         form {
             display: inline-block !important;
             margin: 0 auto !important;
         }
 
-        /* Asegurar que el botón esté centrado */
         .btn,
         button,
         input[type="submit"],
@@ -899,7 +978,6 @@ button.btn.btn-primary.icon-no-margin.p-0 {
         }
     }
 
-    /* Centrar la descripción del quiz */
     .activity-description {
         text-align: center !important;
         margin: 1.5rem auto !important;
@@ -914,7 +992,6 @@ button.btn.btn-primary.icon-no-margin.p-0 {
         }
     }
 
-    /* Centrar el contenedor principal del quiz intro */
     #intro,
     .generalbox {
         text-align: center !important;
@@ -927,7 +1004,6 @@ button.btn.btn-primary.icon-no-margin.p-0 {
         }
     }
 
-    /* Centrar información del quiz */
     .quizinfo {
         text-align: center !important;
         margin: 2rem auto !important;
@@ -941,7 +1017,6 @@ button.btn.btn-primary.icon-no-margin.p-0 {
         }
     }
 
-    /* Centrar el feedback de calificación */
     #page .quizgradefeedback,
     .generalbox#feedback {
         text-align: center !important;
@@ -985,20 +1060,18 @@ button.btn.btn-primary.icon-no-margin.p-0 {
     }
 }
 
-/* =========================================
-   PARTE 3: Fix para clearfix
-   ========================================= */
-
+/* Fix para clearfix */
 .path-mod-quiz .clearfix::after {
     content: none !important;
     display: table !important;
     clear: both !important;
 }
 
-/* =========================================
-   PARTE 4: Responsive para elementos centrados
-   ========================================= */
+/* ==========================================================================
+   17. RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
 
+/* Responsive para elementos centrados de quiz */
 @media (max-width: 768px) {
     #page-mod-quiz-view {
 
@@ -1021,27 +1094,35 @@ button.btn.btn-primary.icon-no-margin.p-0 {
             }
         }
     }
+
+    .about-text-content {
+        padding: 0 10px;
+    }
 }
 
-/* =========================================
-   FIN DE ESTILOS TAREA 1
-   ========================================= */
-
-.moremenu .nav-link {
-    font-size: 15.6px !important;
+/* Responsive login form */
+@media (max-width: 991.98px) {
+    .loginform {
+        margin: 5%;
+        padding: 1.5rem;
+    }
 }
 
-a.nav-link {
-    font-weight: 600 !important;
+@media (max-width: 768px) {
+    .loginform {
+        .login-welcome-wrapper h2 {
+            font-size: 1.25rem;
+        }
+    }
 }
 
-#theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-item-content .courseindex-sectioncontent .courseindex-item .edw-icon,
-#theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-item-content .courseindex-sectioncontent .courseindex-item .fa-lock {
-    font-size: 18px;
-    height: 18px;
-    width: 18px;
-    color: #ffffff;
-}
-.block_grade_me .badge {
-    color: #ffffff;
+@media (max-width: 480px) {
+    .loginform {
+        margin: 1rem;
+        padding: 1rem;
+
+        .login-logo img {
+            max-width: 150px;
+        }
+    }
 }
