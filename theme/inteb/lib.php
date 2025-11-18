@@ -161,11 +161,11 @@ function theme_inteb_pluginfile($course, $cm, $context, $filearea, $args, $force
 {
     // Activar licencia cuando se sirven archivos
     theme_inteb_license_autoload();
-    
+
     $theme = theme_config::load('inteb');
 
     if ($context->contextlevel == CONTEXT_SYSTEM) {
-        // Serve theme files with prefixed names
+        // Serve theme files with prefixed names (inteb specific)
         if ($filearea === 'ib_personalareaheader') {
             return $theme->setting_file_serve('ib_personalareaheader', $args, $forcedownload, $options);
         }
@@ -180,8 +180,19 @@ function theme_inteb_pluginfile($course, $cm, $context, $filearea, $args, $force
             // Serve the slide image.
             return $theme->setting_file_serve("ib_login_slideimage{$slide_number}", $args, $forcedownload, $options);
         }
+
+        // Support for IOMAD file areas (inherited functionality)
+        // Serve logo, backgroundimage, loginbackgroundimage if they exist in inteb
+        if ($filearea === 'logo' || $filearea === 'backgroundimage' || $filearea === 'loginbackgroundimage') {
+            // By default, theme files must be cache-able by both browsers and proxies.
+            if (!array_key_exists('cacheability', $options)) {
+                $options['cacheability'] = 'public';
+            }
+            return $theme->setting_file_serve($filearea, $args, $forcedownload, $options);
+        }
     }
 
+    // Delegar primero a RemUI, que es el padre principal
     return theme_remui_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, $options);
 }
 
@@ -273,11 +284,35 @@ function theme_inteb_migrate_settings() {
 function theme_inteb_get_setting($setting) {
     // Siempre intentar primero con el prefijo ib_
     $value = get_config('theme_inteb', 'ib_' . $setting);
-    
+
     // Si no se encuentra, intentar con la versión sin prefijo (para compatibilidad con versiones anteriores)
     if ($value === false) {
         $value = get_config('theme_inteb', $setting);
     }
-    
+
     return $value;
+}
+
+/**
+ * Get the current user preferences that are available
+ *
+ * Heredado de theme_iomad para soporte completo de drawers
+ *
+ * @return array[]
+ */
+function theme_inteb_user_preferences(): array {
+    return [
+        'drawer-open-block' => [
+            'type' => PARAM_BOOL,
+            'null' => NULL_NOT_ALLOWED,
+            'default' => false,
+            'permissioncallback' => [core_user::class, 'is_current_user'],
+        ],
+        'drawer-open-index' => [
+            'type' => PARAM_BOOL,
+            'null' => NULL_NOT_ALLOWED,
+            'default' => true,
+            'permissioncallback' => [core_user::class, 'is_current_user'],
+        ],
+    ];
 }
