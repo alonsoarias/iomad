@@ -13,7 +13,10 @@ defined('MOODLE_INTERNAL') || die();
 // Load our license override autoloader
 require_once(__DIR__ . '/classes/license_autoload.php');
 
+// Load parent theme libraries
+// INTEB inherits from both RemUI (primary) and IOMAD (secondary)
 require_once(__DIR__ . '/../remui/lib.php');
+require_once(__DIR__ . '/../iomad/lib.php');
 
 // Ejecutar activación de licencia inmediatamente cuando se carga este archivo
 theme_inteb_license_autoload();

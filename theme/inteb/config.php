@@ -170,7 +170,9 @@ $THEME->layouts = [
     )
 ];
 
-$THEME->parents = ['remui'];
+// Theme inheritance: inteb inherits from both remui (primary) and iomad (secondary)
+// This allows inteb to use features from both parent themes
+$THEME->parents = ['remui', 'iomad'];
 $THEME->enable_dock = false;
 $THEME->isiomadtheme = true;
 $THEME->prescsscallback = 'theme_remui_get_pre_scss';

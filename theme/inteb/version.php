@@ -29,5 +29,7 @@ $plugin->version = 2025012206; // Fecha de la versión: Año, mes, día, increme
 $plugin->requires = 2022041200; // Versión mínima de Moodle requerida.
 $plugin->release   = '4.5.0';
 $plugin->dependencies = [
-    'theme_remui' => 2024102300, // Dependencia del tema padre.
+    'theme_remui' => 2024102300, // Dependencia del tema padre primario (RemUI).
+    'theme_iomad' => 2024100745, // Dependencia del tema padre secundario (IOMAD).
+    'local_iomad' => 2024090401, // Dependencia del plugin local IOMAD (requerido por theme_iomad).
 ];
