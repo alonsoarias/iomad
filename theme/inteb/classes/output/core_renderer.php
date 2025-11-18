@@ -326,8 +326,8 @@ class core_renderer extends \theme_remui\output\core_renderer
         $allowed_urls = [
             'https://virtual.iser.edu.co',
             'http://virtual.iser.edu.co',
-            'https://iser.localhost.com',
-            'http://iser.localhost.com'
+            'https://iomad.localhost.com',
+            'http://iomad.localhost.com'
         ];
 
         return in_array($CFG->wwwroot, $allowed_urls);
