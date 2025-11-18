@@ -148,6 +148,7 @@ $string['compfromraw'] = 'Fecha de inicio';
 $string['comptoraw'] = 'Fecha de finalización';
 $string['couldnotdeletecourse'] = 'No se pudo eliminar el curso';
 $string['couldnotremovecoursefromcompany'] = 'El curso no se pudo eliminar de la empresa.';
+$string['coursecleared'] = 'Curso limpiado';
 $string['currcompanyframeworks'] = 'Marcos asignados';
 $string['currcompanyframeworksmatching'] = 'Marcos asignados que coinciden con \'{$a}\'';
 $string['companyfavicon'] = 'favicon de la empresa';

@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tool_iomadsite', language 'es'.
+ * Language strings.
  *
- * @package   tool_iomadsite
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 o posterior
+ * @package tool_iomadsite
+ * @copyright  2018 E-Learn Design http://www.e-learndesign.co.uk
+ * @author     Howard Miller
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 $string['doit'] = 'De acuerdo. ¡Adelante!';
-$string['explanation'] = 'Herramienta genera datos falsos para un sitio de IOMAD. Sólo puede ser ejecutado por el administrador en modo de depuración. This
- es sólo para sitios de prueba. Destruirá completamente un sitio existente.';
-$string['makesite'] = 'Hacer que IOMAD sea un sitio de desarrollo falso';
+$string['explanation'] = 'Esta herramienta genera datos falsos para un sitio IOMAD. Solo puede ser ejecutada por el administrador en modo de depuración. Esto
+    es solo para sitios de prueba. Destruirá completamente un sitio existente.';
+$string['makesite'] = 'Crear sitio de desarrollo falso de IOMAD';
 $string['notdebugging'] = 'Se requiere el modo de depuración de desarrollador para ejecutar esta herramienta';
-$string['pluginname'] = 'Generador de datos de desarrollo IOMAD';
+$string['pluginname'] = 'IOMAD Generador de datos de desarrollo';
 $string['privacy:metadata'] = 'La herramienta de administración del generador de sitios IOMAD solo muestra datos almacenados en otras ubicaciones.';
