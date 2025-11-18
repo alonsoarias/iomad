@@ -1,13 +1,10 @@
 /**
- * CUSTOM.CSS - DEPRECADO
+ * Custom CSS for INTEB Theme
  *
- * Este archivo ha sido deprecado. Todo su contenido ha sido migrado a:
+ * NOTA: Los estilos personalizados de INTEB se encuentran en:
  * theme/inteb/scss/inteb.scss
  *
- * Por favor, realiza todas las modificaciones de estilos en inteb.scss
- * Este archivo se mantiene vacío para evitar duplicaciones y mejorar
- * el mantenimiento del tema.
- *
- * Fecha de migración: 2024
- * Archivo destino: theme/inteb/scss/inteb.scss
+ * Este archivo se mantiene para compatibilidad, pero todos los estilos
+ * personalizados deben agregarse en inteb.scss para mejor organización
+ * y aprovechamiento de variables SCSS.
  */
