@@ -311,8 +311,8 @@ a.my-credit-link:hover {
 
 /* Primary button styling */
 .btn-primary {
-    background-color: $color-secondary;
-    border-color: $color-secondary;
+    background-color: $color-secondary !important;
+    border-color: $color-secondary !important;
     color: #ffffff;
 
     .fa,
@@ -321,8 +321,8 @@ a.my-credit-link:hover {
     }
 
     &:hover {
-        background-color: $color-primary;
-        border-color: $color-primary;
+        background-color: $color-primary !important;
+        border-color: $color-primary !important;
         color: #ffffff;
     }
 
@@ -330,23 +330,23 @@ a.my-credit-link:hover {
     &:not(:disabled):not(.disabled).active,
     &:not(:disabled):not(.disabled):active:focus,
     .show>&.dropdown-toggle {
-        background-color: $color-secondary;
-        border-color: $color-secondary;
+        background-color: $color-secondary !important;
+        border-color: $color-secondary !important;
         color: #ffffff;
     }
 
     &:not(:disabled):not(.disabled):focus,
     &:not(:disabled):not(.disabled).focus {
-        background-color: $color-primary;
-        border-color: $color-primary;
+        background-color: $color-primary !important;
+        border-color: $color-primary !important;
         color: #ffffff;
     }
 }
 
 /* Secondary button styling */
 .btn-secondary {
-    background-color: $color-primary;
-    border-color: $color-primary;
+    background-color: $color-primary !important;
+    border-color: $color-primary !important;
     color: #ffffff;
 
     .fa,
@@ -355,8 +355,8 @@ a.my-credit-link:hover {
     }
 
     &:hover {
-        background-color: $color-secondary;
-        border-color: $color-secondary;
+        background-color: $color-secondary !important;
+        border-color: $color-secondary !important;
         color: #ffffff;
     }
 
@@ -364,27 +364,27 @@ a.my-credit-link:hover {
     &:not(:disabled):not(.disabled).active,
     &:not(:disabled):not(.disabled):active:focus,
     .show>&.dropdown-toggle {
-        background-color: $color-primary;
-        border-color: $color-primary;
+        background-color: $color-primary !important;
+        border-color: $color-primary !important;
         color: #ffffff;
     }
 
     &:not(:disabled):not(.disabled):focus,
     &:not(:disabled):not(.disabled).focus {
-        background-color: $color-secondary;
-        border-color: $color-secondary;
+        background-color: $color-secondary !important;
+        border-color: $color-secondary !important;
         color: #ffffff;
     }
 }
 
 /* Botones Específicos */
 button.btn.btn-primary.icon-no-margin.p-0 {
-    background-color: $color-secondary;
+    background-color: $color-secondary !important;
     border-color: white;
     color: white;
 
     &:hover {
-        background-color: $color-secondary;
+        background-color: $color-secondary !important;
         border-color: white;
         color: white !important;
     }
@@ -422,18 +422,18 @@ button.btn.btn-primary.icon-no-margin.p-0 {
 }
 
 .btn-link {
-    color: $color-secondary;
-    border-color: $color-primary;
+    color: $color-secondary !important;
+    border-color: $color-primary !important;
 }
 
 .btn-link:hover {
-    color: $color-primary;
-    border-color: $color-secondary;
+    color: $color-primary !important;
+    border-color: $color-secondary !important;
 }
 
 .btn-outline-primary {
-    color: $color-secondary;
-    border-color: $color-secondary;
+    color: $color-secondary !important;
+    border-color: $color-secondary !important;
 }
 
 .btn-outline-primary:hover {
