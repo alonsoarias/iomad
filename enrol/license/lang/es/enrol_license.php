@@ -21,6 +21,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * Strings for component 'enrol_license', language 'es'
+ *
+ * @translator Alonso Arias <soporte@orioncloud.com.co>
+ */
+
 $string['canntenrol'] = 'La inscripción está deshabilitada o inactiva';
 $string['customwelcomemessage'] = 'Mensaje de bienvenida personalizado';
 $string['defaultrole'] = 'Asignación de rol predeterminado';

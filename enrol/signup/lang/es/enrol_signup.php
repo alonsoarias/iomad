@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Strings for component 'enrol_signup', language 'es'
+ *
+ * @translator Alonso Arias <soporte@orioncloud.com.co>
+ */
+
 $string['enrolname'] = 'Registro';
 $string['pluginname'] = 'Registro';
 $string['pluginname_desc'] = 'Inscribe al usuario en el curso cuando se registra en Moodle';
