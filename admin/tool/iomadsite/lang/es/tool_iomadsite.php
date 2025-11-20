@@ -23,10 +23,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['doit'] = 'De acuerdo. ¡Adelante!';
-$string['explanation'] = 'Esta herramienta genera datos falsos para un sitio IOMAD. Solo puede ser ejecutada por el administrador en modo de depuración. Esto
+/**
+ * Strings for component 'tool_iomadsite', language 'es'
+ *
+ * @translator Alonso Arias <soporte@orioncloud.com.co>
+ */
+
+$string['doit'] = 'Ok. ¡Adelante!';
+$string['explanation'] = 'La herramienta genera datos falsos para un sitio IOMAD. Solo puede ser ejecutada por el administrador en modo de depuración. Esto
     es solo para sitios de prueba. Destruirá completamente un sitio existente.';
-$string['makesite'] = 'Crear sitio de desarrollo falso de IOMAD';
-$string['notdebugging'] = 'Se requiere el modo de depuración de desarrollador para ejecutar esta herramienta';
-$string['pluginname'] = 'IOMAD Generador de datos de desarrollo';
-$string['privacy:metadata'] = 'La herramienta de administración del generador de sitios IOMAD solo muestra datos almacenados en otras ubicaciones.';
+$string['makesite'] = 'Crear sitio de desarrollo IOMAD falso';
+$string['notdebugging'] = 'Se requiere el modo de depuración para desarrolladores para ejecutar esta herramienta';
+$string['pluginname'] = 'Generador de datos de desarrollo IOMAD';
+$string['privacy:metadata'] = 'La herramienta administrativa de generador de sitio IOMAD solo muestra datos almacenados en otras ubicaciones.';
