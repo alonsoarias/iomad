@@ -15,12 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'filter_iomad', language 'es'.
+ * Languages configuration for the filter_iomad plugin.
  *
  * @package   filter_iomad
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 o posterior
+ * @copyright  2025 E-Learn Design Ltd https://www.e-learndesign.co.uk
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * Strings for component 'filter_iomad', language 'es'
+ *
+ * @translator Alonso Arias <soporte@orioncloud.com.co>
+ */
 
 $string['filtername'] = 'IOMAD';
