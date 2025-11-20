@@ -15,19 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_iomad_welcome', language 'es'.
+ * Strings for component 'block_iomad_welcome', language 'es'
  *
- * @package   block_iomad_welcome
- * @copyright 2021 Derick Turner
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 o posterior
+ * @translator Alonso Arias <soporte@orioncloud.com.co>
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$string['dashboardtext'] = 'Haz clic aquí para empezar a usar IOMAD';
-$string['iomad_welcome:addinstance'] = 'Añadir un nuevo bloque de bienvenida de IOMAD';
-$string['iomad_welcome:myaddinstance'] = 'Añadir un nuevo bloque de bienvenida de IOMAD al escritorio del usuario';
+$string['dashboardtext'] = 'Haga clic aquí para comenzar a usar IOMAD';
+$string['iomad_welcome:addinstance'] = 'Agregar un nuevo bloque de bienvenida de IOMAD';
+$string['iomad_welcome:myaddinstance'] = 'Agregar un nuevo bloque de bienvenida de IOMAD al panel de control del usuario';
 $string['iomad_welcome:view'] = 'Ver bienvenida de IOMAD';
-$string['message'] = 'Bienvenido a <b>IOMAD</b> de E-Learn Design Limited. IOMAD se gestiona desde su propio panel de control. Sigue el enlace inferior. Comenzarás creando tu primera compañía.';
+$string['message'] = 'Bienvenido a <b>IOMAD</b> de E-Learn Design Limited. IOMAD se controla desde su propio panel de control. Siga el enlace a continuación. Comenzará creando su primera empresa.';
 $string['pluginname'] = 'IOMAD - Bienvenida';
-$string['privacy:metadata'] = 'El bloque de bienvenida de IOMAD solo muestra datos almacenados en otros lugares.';
+$string['privacy:metadata'] = 'El bloque de bienvenida de IOMAD solo muestra datos almacenados en otras ubicaciones.';

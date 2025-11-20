@@ -15,18 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_iomad_link', language 'es'.
+ * Strings for component 'block_iomad_link', language 'es'
  *
- * @package   block_iomad_link
- * @copyright 2021 Derick Turner
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 o posterior
+ * @translator Alonso Arias <soporte@orioncloud.com.co>
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['iomad_link:addinstance'] = 'Añadir un nuevo bloque de enlace al panel de IOMAD';
-$string['iomad_link:myaddinstance'] = 'Añadir un nuevo bloque de enlace al panel de IOMAD al escritorio del usuario';
-$string['iomad_link:view'] = 'Ver enlace al panel de IOMAD';
-$string['link'] = 'Ir al panel de IOMAD';
-$string['pluginname'] = 'IOMAD - Enlace al panel';
-$string['privacy:metadata'] = 'El bloque de enlace al panel de IOMAD solo muestra datos almacenados en otros lugares.';
+$string['iomad_link:addinstance'] = 'Agregar un nuevo bloque de enlace al panel de control de IOMAD';
+$string['iomad_link:myaddinstance'] = 'Agregar un nuevo bloque de enlace al panel de control de IOMAD al panel de control del usuario';
+$string['iomad_link:view'] = 'Ver enlace al panel de control de IOMAD';
+$string['link'] = 'Ir al panel de control de IOMAD';
+$string['pluginname'] = 'IOMAD - Enlace al panel de control';
+$string['privacy:metadata'] = 'El bloque de enlace al panel de control de IOMAD solo muestra datos almacenados en otras ubicaciones.';
