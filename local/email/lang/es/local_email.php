@@ -296,3 +296,231 @@ $string['user_added_to_course_subject'] = 'Agregado a {Course_FullName}';
 $string['user_added_to_course_body'] = '<p>Estimado/a {User_FirstName}</p>
 <br>
 <p>Se le ha otorgado acceso a la capacitación en línea para {Course_FullName}. Por favor visite <a href="{CourseURL}">{CourseURL}</a> para participar en esta capacitación.</p>';
+
+$string['invoice_ordercomplete_subject'] = 'Gracias por su pedido en {Site_ShortName}';
+$string['invoice_ordercomplete_body'] = '<p>Estimado/a {User_FirstName} {User_LastName}</p>
+<p>Su número de referencia de pedido es {Invoice_Reference}</p>
+<p>Gracias por su pedido de lo siguiente:</p>
+<p>{Invoice_Itemized}</p>
+<p>Una vez que esta factura haya sido pagada, se crearán las licencias o las inscripciones por el administrador.</p>';
+
+$string['invoice_ordercomplete_admin_subject'] = 'Orden de comercio electrónico (factura {Invoice_Reference})';
+$string['invoice_ordercomplete_admin_body'] = '<p>Estimado/a administrador/a de comercio electrónico</p>
+<p>El siguiente pedido acaba de ser enviado por {Invoice_FirstName} {Invoice_LastName} de {Invoice_Company}.</br>
+Se les ha enviado una factura por correo electrónico.</p>
+<p>{Invoice_Itemized}</p>';
+
+$string['advertise_classroom_based_course_subject'] = 'Curso {Course_FullName}';
+$string['advertise_classroom_based_course_body'] = '<p>Esto es para informarle sobre el siguiente curso de capacitación presencial:</p>
+<p>{Course_FullName}</p>
+<p>Se realizará en {Classroom_Name}, que está ubicado en</p>
+<p>{Classroom_Address}</br>{Classroom_City} {Classroom_Postcode}</br>
+{Classroom_Country}</br>
+<p>y tiene una capacidad de {Classroom_Capacity}.</p>
+<p>Por favor haga clic en <a href="{CourseURL}">{CourseURL}</a> para obtener más información sobre este curso y reservar en este evento.</p>';
+
+$string['user_signed_up_for_event_subject'] = 'Aviso de asistencia {Course_FullName}';
+$string['user_signed_up_for_event_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>Se ha registrado para la capacitación presencial en {Course_FullName} en el siguiente evento -</p>
+<p>Hora: {Classroom_Time}</br>
+Ubicación: {Classroom_Name}</br>
+Dirección: {Classroom_Address}</br>
+{Classroom_City} {Classroom_Postcode}</br>
+<p>Por favor asegúrese de haber completado todas las tareas previas al curso requeridas antes de la asistencia</p>';
+
+$string['user_signed_up_for_event_reminder_subject'] = 'Recordatorio de asistencia {Course_FullName}';
+$string['user_signed_up_for_event_reminder_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>Esto es para recordarle que se ha registrado para la capacitación presencial en {Course_FullName} en el siguiente evento -</p>
+<p>Hora: {Classroom_Time}</br>
+Ubicación: {Classroom_Name}</br>
+Dirección: {Classroom_Address}</br>{Classroom_City} {Classroom_Postcode}</br>
+<p>Por favor asegúrese de haber completado todas las tareas previas al curso requeridas antes de la asistencia</p>';
+
+$string['user_removed_from_event_subject'] = 'Aviso de cancelación {Course_FullName}';
+$string['user_removed_from_event_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>ha sido marcado/a como que ya no asistirá a la capacitación presencial en {Course_FullName} en el siguiente evento -</p>
+<p>Hora: {Classroom_Time}</br>
+Ubicación: {Classroom_Name}</br>
+Dirección: {Classroom_Address}</br>
+{Classroom_City} {Classroom_Postcode}';
+
+$string['user_signed_up_for_event_teacher_subject'] = 'Aviso de asistencia de usuario {Course_FullName}';
+$string['user_signed_up_for_event_teacher_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>{Approveuser_FirstName} {Approveuser_LastName} se ha registrado para la capacitación presencial en {Course_FullName} en el siguiente evento -</p>
+<p>Hora: {Classroom_Time}</br>
+Ubicación: {Classroom_Name}</br>
+Dirección: {Classroom_Address}</br>
+{Classroom_City} {Classroom_Postcode}</br>';
+
+$string['user_signed_up_to_waitlist_subject'] = 'Agregado a lista de espera para {Course_FullName}';
+$string['user_signed_up_to_waitlist_body'] = '<p>Estimado/a {User_FirstName},</p>
+
+<p>Ha sido agregado/a a la <b>lista de espera</b> para la capacitación presencial en {Course_FullName} en el siguiente evento:</p>
+
+<p>Hora: {Classroom_Time}<br>
+Ubicación: {Classroom_Name}<br>
+Dirección: {Classroom_Address}<br>
+          {Classroom_City} {Classroom_Postcode}<br>
+
+<p>Actualmente no tiene un lugar confirmado, pero será informado/a si esto cambia.</p>';
+$string['user_removed_from_event_teacher_subject'] = 'Aviso de cancelación de usuario {Course_FullName}';
+$string['user_removed_from_event_teacher_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>{Approveuser_FirstName} {Approveuser_LastName} ya no asistirá a la capacitación presencial en {Course_FullName} en el siguiente evento -</p>
+<p>Hora: {Classroom_Time}</br>
+Ubicación: {Classroom_Name}</br>
+Dirección: {Classroom_Address}</br>
+{Classroom_City} {Classroom_Postcode}';
+$string['user_removed_from_event_waitlist_subject'] = 'Aviso de eliminación de lista de espera {Course_FullName}';
+$string['user_removed_from_event_waitlist_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>ha sido eliminado/a de la lista de espera para la capacitación presencial en {Course_FullName} en el siguiente evento -</p>
+<p>Hora: {Classroom_Time}</br>
+Ubicación: {Classroom_Name}</br>
+Dirección: {Classroom_Address}</br>
+{Classroom_City} {Classroom_Postcode}';
+$string['license_allocated_subject'] = 'Acceso al curso {Course_FullName} otorgado';
+$string['license_allocated_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>Se le ha otorgado acceso a la capacitación en línea para {Course_FullName}. Por favor visite <a href="{CourseURL}">{CourseURL}</a> para participar en esta capacitación.</br>
+Una vez que haya ingresado al curso tendrá acceso al mismo durante {License_Length} días. El acceso no utilizado vencerá después de {License_Valid}</p>';
+$string['license_reminder_subject'] = 'Recordatorio: se le ha asignado el curso {Course_FullName}';
+$string['license_reminder_body'] = '<p>Estimado/a {User_FirstName},</p><p>Se le ha otorgado acceso a la capacitación en línea para {Course_FullName}. Por favor visite <a href="{CourseURL}">{CourseURL}</a> para participar en esta capacitación.</br>Una vez que haya ingresado al curso tendrá acceso al mismo durante {License_Length} días. El acceso no utilizado vencerá después de {License_Valid}</p>';
+$string['license_removed_subject'] = 'Acceso al curso {Course_FullName} removido';
+$string['license_removed_body'] = '<p>Su acceso al curso {Course_FullName} ha sido revocado. Si cree que esto es un error, por favor contacte a su gerente de capacitación.</p>';
+$string['password_update_subject'] = 'Notificación de cambio de contraseña para {User_FirstName}';
+$string['password_update_body'] = '<p>Su contraseña ha sido actualizada por el personal administrativo. Su nueva contraseña es</p>
+<p>{User_Newpassword}</p>
+<p>Por favor visite <a href="{LinkURL}">{LinkURL}</a> para cambiarla.</p>';
+$string['course_not_started_warning_subject'] = 'Aviso: El curso {Course_FullName} no ha sido iniciado';
+$string['course_not_started_warning_body'] = '<p>Estimado/a {User_FirstName},</p><p>Todavía no ha iniciado su capacitación en {Course_FullName}. Por favor visite <a href="{CourseURL}">{CourseURL}</a> para rectificar esto.</p>';
+$string['trainingevent_not_selected_subject'] = 'Aviso: Evento de capacitación no seleccionado en el curso {Course_FullName}';
+$string['trainingevent_not_selected_body'] ='<p>Estimado/a {User_FirstName}.</p><p>No se ha registrado en ninguno de los eventos de capacitación disponibles en {Course_FullName}. Por favor visite <a href="{CourseURL}">{CourseURL}</a> para rectificar esto.</p>';
+$string['completion_warn_user_subject'] = 'Aviso: El curso {Course_FullName} no ha sido completado';
+$string['completion_warn_user_body'] ='<p>Estimado/a {User_FirstName},</p>
+<p>Todavía no ha completado su capacitación en {Course_FullName}. Por favor visite <a href="{CourseURL}">{CourseURL}</a> para rectificar esto.</p>';
+$string['completion_warn_manager_subject'] = 'Reporte de falla de finalización de usuario';
+$string['completion_warn_manager_body'] ='<p>Estimado/a {User_FirstName},</p>
+<p>Los siguientes usuarios no han completado su capacitación dentro del plazo normal:</p>
+<p>{Course_ReportText}</p>';
+$string['completion_digest_manager_subject'] = 'Reporte semanal de finalizaciones de cursos de usuarios';
+$string['completion_digest_manager_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>Los siguientes usuarios han completado su capacitación en la última semana:</p>
+<p>{Course_ReportText}</p>';
+$string['expiring_digest_manager_subject'] = 'Reporte semanal de cursos de usuarios por vencer';
+$string['expiring_digest_manager_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>Los siguientes usuarios tienen capacitación por vencer en la próxima semana:</p>
+<p>{Course_ReportText}</p>';
+$string['warning_digest_manager_subject'] = 'Reporte semanal de cursos de usuarios no completados';
+$string['warning_digest_manager_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>Los siguientes usuarios no han completado su capacitación dentro del plazo requerido:</p>
+<p>{Course_ReportText}</p>';
+$string['expiry_warn_user_subject'] = 'Aviso: La acreditación en {Course_FullName} vencerá pronto.';
+$string['expiry_warn_user_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>Su capacitación acreditada en {Course_FullName} vencerá pronto. Por favor gestione la re-acreditación si es apropiado.</p>';
+$string['expiry_warn_manager_subject'] = 'Reporte de vencimiento de acreditación';
+$string['expiry_warn_manager_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>La acreditación de los siguientes usuarios está por vencer:</p>
+<p>{Course_ReportText}</p>';
+$string['expire_subject'] = 'Curso vence';
+$string['expire_body'] = '<p>Esto es para informarle que su capacitación en {Course_FullName} vence pronto.</p>';
+$string['expire_manager_subject'] = 'Reporte de acreditación vencida para {Course_FullName}';
+$string['expire_manager_body'] = '<p>Estimado/a {User_FullName},</p>
+<p>La acreditación de los siguientes usuarios en {Course_FullName} ha vencido:</p>
+<p>{User_ReportText}</p>';
+$string['user_reset_subject'] = 'Los datos de inicio de sesión de su cuenta han sido restablecidos';
+$string['user_reset_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>Se ha creado una nueva cuenta de usuario para usted en el \'Sistema de Gestión de Capacitación\' y se le ha emitido una nueva contraseña temporal.</p>
+<p>Su información de inicio de sesión actual es ahora:<p>
+<p>nombre de usuario: {User_Username}</br>
+contraseña: {User_Newpassword}</br>
+(tendrá que cambiar su contraseña cuando inicie sesión por primera vez)</p>
+<p>Saludos cordiales,</p>
+<p>{Sender_FirstName} {Sender_LastName}</p>';
+$string['user_create_subject'] = 'Se ha creado una nueva cuenta de aprendizaje en línea para usted';
+$string['user_create_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>Se ha creado una nueva cuenta de usuario para usted en {Site_FullName} y se le ha emitido una nueva contraseña temporal.</p>
+<p>Su información de inicio de sesión actual es ahora:<p>
+<p>nombre de usuario: {User_Username}</br>
+contraseña: {User_Newpassword}</br>
+(tendrá que cambiar su contraseña cuando inicie sesión por primera vez)</p>
+<p>Para acceder a su capacitación, inicie sesión en</p>
+<p><a href="{LinkURL}">{LinkURL}</a></p>
+<p>En la mayoría de los programas de correo, esto debería aparecer como un enlace azul en el que se puede hacer clic. Si eso no funciona, copie y pegue la dirección en la barra de direcciones en la parte superior de la ventana de su navegador web.</p>
+<p>Para consultas técnicas, por favor contacte a su equipo de soporte de TI/Mesa de ayuda</p>
+<p>Saludos cordiales,</p>
+<p>{Sender_FirstName} {Sender_LastName}</p>';
+$string['completion_course_supervisor_subject'] = 'Aviso: El curso {Course_FullName} ha sido completado';
+$string['completion_course_supervisor_body'] = '<p>{User_FirstName} {User_LastName} ha completado el curso de capacitación {Course_FullName}. Por favor encuentre adjunta una copia de su certificado para sus registros.</p>
+
+<p>El certificado también está disponible en la sección de Reporte de Usuario en nuestro sistema si necesita una copia en el futuro.</p>';
+$string['completion_course_user_subject'] = 'El curso {Course_FullName} ha sido completado';
+$string['completion_course_user_body'] = '<p>Estimado/a {User_FirstName},</p>
+<p>Felicitaciones por completar el curso de capacitación {Course_FullName}. Por favor encuentre adjunta una copia de su certificado para sus registros.</p>
+
+<p>El certificado también está disponible desde su panel de control si necesita una copia en el futuro.</p>';
+$string['user_programcompleted_subject'] = 'El programa de cursos está completo';
+$string['user_programcompleted_body'] ='<p>Estimado/a {User_FirstName} {User_LastName},</p>
+<p>¡Felicitaciones! Ha completado todos los cursos dentro de su programa de capacitación.</p>';
+$string['completion_warn_supervisor_subject'] = 'Aviso: El curso {Course_FullName} no ha sido completado';
+$string['completion_warn_supervisor_body'] = '<p>{User_FirstName} {User_LastName} no ha completado su capacitación en el curso {Course_FullName} dentro del plazo normal.</p>';
+$string['completion_expiry_warn_supervisor_subject'] = 'Aviso: Vencimiento de capacitación del curso {Course_FullName}';
+$string['completion_expiry_warn_supervisor_body'] = '<p>La capacitación de {User_FirstName} {User_LastName} en el curso {Course_FullName} vencerá en breve. Por favor gestione que retome esta capacitación si es apropiado.</p>';
+$string['licensepoolwarning_subject'] = '90% del conjunto de licencias usado {License_Name}, {License_ID}';
+$string['licensepoolwarning_body'] = '<p>Hola {User_FirstName} {User_LastName}</p>
+<p>Este mensaje es para notificarle que su cuenta de empresa {Company_Name} ha usado el 90% del conjunto de licencias {License_Name}, {License_ID}. No podrá asignar más licencias una vez que alcance el 100% de uso.</p>
+<p>Por favor contacte a su Gerente de Programa para más detalles.</p>';
+$string['licensepoolexpiring_subject'] = 'Alerta: Vencimiento de conjunto de licencias {License_Name} {License_Expirydate}, {License_ID}';
+$string['licensepoolexpiring_body'] = '<p>Hola {User_FirstName} {User_LastName}</p>
+<p>Este mensaje es para notificarle que su cuenta de empresa {Company_Name} que su licencia de programa {License_Name}, {License_ID} vence el {License_Expirydate}. No podrá asignar más licencias a los usuarios una vez que alcance la fecha de vencimiento. Por favor contacte a su Gerente de Programa si tiene más preguntas.</p>';
+$string['user_promoted_subject'] = 'Nuevo rol otorgado';
+$string['user_promoted_body'] = '<p>Hola {User_FirstName} {User_LastName},</p>
+<p>Se le han otorgado privilegios de administrador. Para acceder al conjunto administrativo, herramientas de seguimiento y reportes, por favor haga clic en el siguiente enlace, o copie y pegue el enlace en su navegador, para establecer su contraseña e iniciar sesión {SiteURL}</p>
+<p>En la página de inicio de sesión, haga clic en el botón Activar para activar su cuenta para el primer inicio de sesión.</p>
+<p>Su correo electrónico: {User_Email}</p>';
+$string['user_deleted_subject'] = 'La cuenta ha sido eliminada';
+$string['user_deleted_body'] = '<p>Hola {User_FirstName} {User_LastName},</p>
+<p>Su cuenta ha sido eliminada en {SiteURL}. Ya no tiene acceso a ninguno de sus cursos de capacitación.</p>
+<p>Si cree que esto es un error, por favor contacte a su gerente.</p>
+<p>Su correo electrónico: {User_Email}</p>';
+$string['admin_deleted_subject'] = 'La cuenta ha sido degradada';
+$string['admin_deleted_body'] = '<p>Hola {User_FirstName} {User_LastName},</p>
+<p>Sus privilegios de administrador han sido revocados en {SiteURL}. Ya no tiene acceso para administrar su empresa.</p>
+<p>Su correo electrónico: {User_Email}</p>
+<p>Si cree que esto es un error, por favor contacte a su gerente.</p>';
+$string['user_suspended_subject'] = 'La cuenta ha sido suspendida';
+$string['user_suspended_body'] = '<p>Hola {User_FirstName} {User_LastName},</p>
+<p>Su cuenta ha sido suspendida en {SiteURL}. Ya no tiene acceso a ninguno de sus cursos de capacitación.</p>
+<p>Si cree que esto es un error, por favor contacte a su gerente.</p>
+<p>Su correo electrónico: {User_Email}</p>';
+$string['user_unsuspended_subject'] = 'La cuenta ha sido reactivada';
+$string['user_unsuspended_body'] = '<p>Hola {User_FirstName} {User_LastName},</p>
+<p>Su cuenta ha sido reactivada en {SiteURL}. Ahora tiene acceso a todos sus cursos de capacitación.</p>
+<p>Si tiene más preguntas, por favor contacte a su gerente.</p>
+<p>Su correo electrónico: {User_Email}</p>';
+$string['company_suspended_subject'] = 'La cuenta de empresa ha sido suspendida';
+$string['company_suspended_body'] = '<p>Hola {User_FirstName} {User_LastName},</p>
+<p>Su cuenta de empresa ha sido suspendida en {SiteURL}. Ya no tiene acceso para administrar su empresa.</p>
+<p>Su correo electrónico: {User_Email}</p>
+<p>Si cree que esto es un error, por favor contacte a soporte.</p>';
+$string['company_unsuspended_subject'] = 'La cuenta de empresa ha sido reactivada';
+$string['company_unsuspended_body'] ='<p>Hola {User_FirstName} {User_LastName},</p>
+<p>Su cuenta de empresa ha sido reactivada en {SiteURL}. Ahora tiene acceso para administrar su empresa.</p>
+<p>Su correo electrónico: {User_Email}</p>
+<p>Si tiene más preguntas, por favor contacte a soporte.</p>';
+$string['company_licenseassigned_subject'] = 'Nueva capacitación asignada a {Company_Name}';
+$string['company_licenseassigned_body'] = '<p>Estimado/a {User_FirstName} {User_LastName},</p>
+<p>Se han asignado nuevos cursos a su empresa en {SiteURL}.</p>
+<p>Por favor inicie sesión usando su nombre de usuario {User_Username} para administrar esto.</p>';
+$string['microlearning_nugget_scheduled_name'] = 'Píldora de microaprendizaje programada para usuario';
+$string['microlearning_nugget_scheduled_name_help'] = 'Este correo se envía a un usuario cuando se programa una píldora de microaprendizaje dentro de un hilo de microaprendizaje.';
+$string['microlearning_nugget_scheduled_subject'] = 'Nueva píldora de microaprendizaje para usted.';
+$string['microlearning_nugget_scheduled_body'] = '<p>Hola {User_FirstName}</p>
+<p>Tiene una nueva píldora de microaprendizaje para completar. Puede acceder a ella haciendo clic en <a href="{Nugget_URL}">{Nugget_Name}</a></p>';
+$string['microlearning_nugget_reminder1_name'] = 'Primer recordatorio de píldora de microaprendizaje para usuario';
+$string['microlearning_nugget_reminder1_name_help'] = 'Este correo se envía a un usuario cuando una píldora de microaprendizaje dentro de un hilo de microaprendizaje alcanza el primer recordatorio y aún no ha sido completada.';
+$string['microlearning_nugget_reminder1_subject'] = 'Recordatorio - Nueva píldora de microaprendizaje para usted.';
+$string['microlearning_nugget_reminder1_body'] = '<p>Hola {User_FirstName}</p>
+<p>Todavía no ha completado su píldora de microaprendizaje. Puede acceder a ella haciendo clic en <a href="{Nugget_URL}">{Nugget_Name}</a> o iniciando sesión en el <a href="{SiteURL}">Sitio</a></p>';
+$string['microlearning_nugget_reminder2_name'] = 'Segundo recordatorio de píldora de microaprendizaje para usuario';
+$string['microlearning_nugget_reminder2_name_help'] = 'Este correo se envía a un usuario cuando una píldora de microaprendizaje dentro de un hilo de microaprendizaje alcanza el primer recordatorio y aún no ha sido completada.';
+$string['microlearning_nugget_reminder2_subject'] = 'Recordatorio - Nueva píldora de microaprendizaje para usted.';
+$string['microlearning_nugget_reminder2_body'] = '<p>Hola {User_FirstName}</p>
+<p>Todavía no ha completado su píldora de microaprendizaje. Puede acceder a ella haciendo clic en <a href="{Nugget_URL}">{Nugget_Name}</a> o iniciando sesión en el <a href="{SiteURL}">Sitio</a></p>';
