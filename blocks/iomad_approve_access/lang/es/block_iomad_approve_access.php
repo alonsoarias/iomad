@@ -15,47 +15,44 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_iomad_approve_access', language 'es'.
+ * Strings for component 'block_iomad_approve_access', language 'es'
  *
- * @package   block_iomad_approve_access
- * @copyright 2011 onwards E-Learn Design Limited
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @translator Alonso Arias <soporte@orioncloud.com.co>
  */
 
-defined('MOODLE_INTERNAL') || die();
+$string['iomad_approve_access:addinstance'] = 'Agregar un bloque de aprobación de acceso IOMAD';
+$string['iomad_approve_access:approve'] = 'Aprobar acceso de un usuario a una actividad de aprobación';
+$string['iomad_approve_access:myaddinstance'] = 'Agregar un bloque de aprobación de acceso IOMAD a mi página de moodle';
 
-$string['approvecourse'] = 'Aprobar evento formativo';
-$string['approveusers'] = 'Aprobar eventos formativos';
-$string['approveusers:addinstance'] = 'Añadir una instancia del evento formativo a aprobar';
-$string['approveusers:myaddinstance'] = 'Añadir el bloque de eventos formativos a aprobar a la página';
+$string['approvecourse'] = "Aprobar evento de capacitación";
+$string['approveusers'] = 'Aprobar eventos de capacitación';
+$string['approveusers:addinstance'] = 'Agregar instancia de aprobación de evento de capacitación';
+$string['approveusers:myaddinstance'] = 'Agregar bloque de aprobación de evento de capacitación a la página';
 $string['approveuserstitle'] = 'Gestionar aprobaciones de acceso';
 $string['deny'] = 'Rechazar';
-$string['enrolledcourse'] = 'Curso inscrito';
-$string['fullybooked'] = 'El evento está completo';
-$string['headerconfig'] = 'Configuración de cabecera';
-$string['iomad_approve_access:addinstance'] = 'Añadir un bloque de aprobación de acceso de IOMAD';
-$string['iomad_approve_access:approve'] = 'Aprobar el acceso de un usuario a una actividad que requiere aprobación';
-$string['iomad_approve_access:myaddinstance'] = 'Añadir un bloque de aprobación de acceso de IOMAD a mi página de Moodle';
-$string['lastname'] = 'Apellido';
-$string['manager_approved'] = 'Aprobado por el responsable';
-$string['manager_denied'] = 'Rechazado por el responsable';
-$string['managernotyetapproved'] = ' (El responsable del departamento aún no ha aprobado)';
-$string['name'] = 'Nombre completo';
+$string['enrolledcourse'] = "Curso inscrito";
+$string['fullybooked'] = "Evento lleno";
+$string['headerconfig'] = "Configuración de encabezado";
+$string['lastname'] = "Apellido";
+$string['manager_approved'] = 'Aprobado por el gerente';
+$string['manager_denied'] = 'Rechazado por el gerente';
+$string['managernotyetapproved'] = ' (El gerente de departamento aún no ha aprobado)';
+$string['name'] = "Nombre completo";
 $string['noonetoapprove'] = 'No hay usuarios para aprobar';
-$string['notapproved'] = 'No aprobado';
-$string['pending'] = 'Aprobación pendiente';
-$string['pluginname'] = 'Aprobar eventos formativos de IOMAD';
-$string['privacy:metadata'] = 'El bloque “Aprobar acceso de IOMAD” solo muestra datos almacenados en otros lugares.';
-$string['privacy:metadata:block_iomad_approve_access'] = 'Bloque de aprobación de acceso del gestor IOMAD';
-$string['privacy:metadata:block_iomad_approve_access:activityid'] = 'ID de la actividad';
-$string['privacy:metadata:block_iomad_approve_access:companyid'] = 'ID de la compañía';
-$string['privacy:metadata:block_iomad_approve_access:courseid'] = 'ID del curso';
-$string['privacy:metadata:block_iomad_approve_access:id'] = 'ID de la tabla {block_iomad_approve_access}';
-$string['privacy:metadata:block_iomad_approve_access:manger_ok'] = 'Aprobación del responsable de departamento';
-$string['privacy:metadata:block_iomad_approve_access:tm_ok'] = 'Aprobación del responsable de la compañía';
-$string['privacy:metadata:block_iomad_approve_access:userid'] = 'ID de usuario';
+$string['notapproved'] = "No aprobado";
+$string['pending'] = "Aprobación pendiente";
+$string['pluginname'] = 'Aprobación de eventos de capacitación IOMAD';
+$string['privacy:metadata'] = 'El bloque \'Aprobación de acceso IOMAD\' solo muestra datos almacenados en otras ubicaciones.';
+$string['privacy:metadata:block_iomad_approve_access:id'] = 'Id de la tabla {block_iomad_approve_access}';
+$string['privacy:metadata:block_iomad_approve_access:userid'] = 'Id de usuario';
+$string['privacy:metadata:block_iomad_approve_access:companyid'] = 'Id de empresa';
+$string['privacy:metadata:block_iomad_approve_access:courseid'] = 'Id de curso';
+$string['privacy:metadata:block_iomad_approve_access:activityid'] = 'Id de actividad';
+$string['privacy:metadata:block_iomad_approve_access:tm_ok'] = 'Gerente de empresa aprueba';
+$string['privacy:metadata:block_iomad_approve_access:manger_ok'] = 'Gerente de departamento aprueba';
+$string['privacy:metadata:block_iomad_approve_access'] = 'Bloque de aprobación de acceso del gerente IOMAD';
 $string['request_denied'] = 'Solicitud rechazada';
-$string['request_granted'] = 'Solicitud concedida';
-$string['request_raised'] = 'Solicitud creada';
+$string['request_granted'] = 'Solicitud aprobada';
+$string['request_raised'] = 'Solicitud presentada';
 $string['title'] = 'Aprobar usuarios';
 $string['userstoapprove'] = 'Tienes nuevas solicitudes de aprobación';
