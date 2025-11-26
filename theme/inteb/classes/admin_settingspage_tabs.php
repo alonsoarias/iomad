@@ -66,42 +66,4 @@ class theme_inteb_admin_settingspage_tabs extends theme_boost_admin_settingspage
         $this->tabs[] = $tab;
         return true;
     }
-
-    /**
-     * Generate the HTML output.
-     *
-     * @return string
-     */
-    public function output_html() {
-        global $OUTPUT;
-
-        $activetab = optional_param('activetab', '', PARAM_TEXT);
-        $context = array('tabs' => array());
-        $havesetactive = false;
-
-        foreach ($this->get_tabs() as $tab) {
-            $active = false;
-
-            // Default to first tab it not told otherwise.
-            if (empty($activetab) && !$havesetactive) {
-                $active = true;
-                $havesetactive = true;
-            } else if ($activetab === $tab->name) {
-                $active = true;
-            }
-
-            $context['tabs'][] = array(
-                'name' => $tab->name,
-                'displayname' => $tab->visiblename,
-                'html' => $tab->output_html(),
-                'active' => $active,
-            );
-        }
-
-        if (empty($context['tabs'])) {
-            return '';
-        }
-
-        return $OUTPUT->render_from_template('theme_inteb/admin_setting_tabs', $context);
-    }
 }
