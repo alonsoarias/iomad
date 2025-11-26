@@ -14,105 +14,137 @@
     You should have received a copy of the GNU General Public License
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
- * @package   block_mycourses
- * @copyright 2021 Derick Turner
- * @author    Derick Turner
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-}}
-{{!
-    @template block_mycourses/available-view
+    @template block_mycourses/available-card-view
 
-    This template renders the available view for the mycourses block.
+    This template renders the available courses view for the mycourses block.
+    Redesigned for theme_inteb with modern card layout.
+
+    Context variables required for this template:
+    * availableview - Object containing courses array
+    * nocourses - URL for empty state image
 
     Example context (json):
-    {}
+    {
+        "availableview": {
+            "courses": [
+                {
+                    "id": 1,
+                    "fullname": "Course Name",
+                    "shortname": "CN",
+                    "courseimage": "url",
+                    "viewurl": "url",
+                    "coursecategory": "Category"
+                }
+            ]
+        }
+    }
 }}
-<div id="available-view-{{uniqid}}" data-region="available-view">
+<div id="available-view-{{uniqid}}" data-region="available-view" class="inteb-mycourses-view">
     <div class="tab-content">
         <div class="tab-pane active" id="mycourses_available_view">
             <div id="paged-content-container-{{uniqid}}" data-region="paged-content-container">
                 <div id="paged-content-page" data-page="1">
                     {{#availableview.courses}}
-                        <div class="card-grid mx-0 row row-cols-1 row-cols-sm-2 row-cols-lg-3" data-region="card-deck" role="list">
-                            <div class="col px-0 mb-2">
-                                <div class="card dashboard-card" role="listitem" data-region="course-content" data-course-id="{{{id}}}">
-                                    <div tabindex="-1">
-                                        <div class="card-img dashboard-card-img p-p-4 edw-course-img-wrapper" style='background-image: url("{{{courseimage}}}");'>
-                                            <a href="{{ viewurl }}" class="view-course-url"></a>
-                                            <div class="card-img-icons-wrapper d-flex align-items-center flex-gap-2 ml-auto">
-                                                {{> core_course/favouriteicon }}
-                                                {{^visible}}
-                                                <div class="visibilityicon">
-                                                    <span class="hidden-icon edw-icon edw-icon-Hide visible" aria-hidden="true" title="{{#str}} hiddencourse, theme_remui {{/str}}"></span>
-                                                </div>
-                                                {{/visible}}
-                                            </div>
+                    {{#availableview.courses.0}}
+                    <div class="inteb-course-grid row" data-region="card-deck" role="list">
+                    {{/availableview.courses.0}}
+                        {{#availableview.courses}}
+                        <div class="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4" role="listitem">
+                            <div class="inteb-course-card inteb-available-card card h-100 shadow-sm" data-region="course-content" data-course-id="{{{id}}}">
+                                {{! Course Image }}
+                                <div class="inteb-card-img-wrapper position-relative">
+                                    <a href="{{viewurl}}" class="d-block" tabindex="-1">
+                                        <div class="inteb-card-img" style="background-image: url('{{{courseimage}}}');">
+                                            <div class="inteb-card-overlay"></div>
                                         </div>
+                                    </a>
+                                    {{! New Badge for available courses }}
+                                    <div class="inteb-new-badge position-absolute">
+                                        <span class="badge badge-success">
+                                            <i class="fa fa-star mr-1" aria-hidden="true"></i>
+                                            {{#str}}new{{/str}}
+                                        </span>
                                     </div>
-                                    <div class="card-body course-info-container d-flex flex-column justify-content-between flex-gap-3" id="course-info-container-{{id}}-{{uniqid}}">
-                                        <div class="edw-card-design-hd d-flex flex-column flex-gap-3">
-                                            <div class="d-flex flex-column align-items-start flex-gap-3">
-                                                <span class="categoryname text-truncate small-info-semibold" title="{{{coursecategory}}}">
-                                                    {{{coursecategory}}}
-                                                </span>
-                                                <div class="w-100 text-truncate">
-                                                    {{#showshortname}}
-                                                    <div class="text-muted muted d-flex mb-1 flex-wrap">
-                                                        <span class="sr-only">
-                                                            {{#str}}aria:courseshortname, core_course{{/str}}
-                                                        </span>
-                                                        <div>
-                                                            {{{shortname}}}
-                                                        </div>
-                                                    </div>
-                                                    {{/showshortname}}
-                                                    <a href="{{viewurl}}" class="aalink coursename text-decoration-none ellipsis ellipsis-3 h-semibold-6" title="{{{fullname}}}">
-                                                        <span class="sr-only">
-                                                            {{#str}}aria:coursename, core_course{{/str}}
-                                                        </span>
-                                                        {{{fullname}}}
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="edw-card-design-ft d-flex flex-column align-self-strech flex-gap-5">
-                                            <div class="progress-data-wrapper">
-                                                {{#hasprogress}}
-                                                <div class="card-footer dashboard-card-footer border-0 bg-transparent w-100 p-0 d-flex flex-column flex-gap-0d5">
-                                                    <span class="small-info-regular m-0" title="{{activitydata}}">{{activitydata}}</span>
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: {{progress}}%;" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" title="{{#str}}completepercent, theme_remui,{{progress}}{{/str}}"></div>
-                                                    </div>
-                                                    <div class="progress-text h-semibold-6" title="{{#str}}completepercent, theme_remui,{{progress}}{{/str}}">
-                                                        <span class="sr-only">{{#str}}aria:courseprogress, block_myoverview{{/str}}</span>
-                                                        {{#str}}completepercent, theme_remui, <span class="h-semibold-6 m-0">{{progress}}</span>{{/str}}
-                                                    </div>
-                                                </div>
-                                                {{/hasprogress}}
-                                            </div>
-                                            <a class="btn btn-secondary btn-sm view-course-btn ml-auto" href="{{viewurl}}" title="{{#str}}viewcoursetitle,theme_remui{{/str}}">{{#str}}viewcourse,theme_remui{{/str}}</a>
-                                        </div>
+                                    {{! Visibility and Favorite Icons }}
+                                    <div class="inteb-card-badges position-absolute">
+                                        {{> core_course/favouriteicon }}
+                                        {{^visible}}
+                                        <span class="badge badge-warning" title="{{#str}}hiddenfromstudents{{/str}}">
+                                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                        </span>
+                                        {{/visible}}
                                     </div>
+                                    {{! Category Badge }}
+                                    {{#coursecategory}}
+                                    <div class="inteb-category-badge position-absolute">
+                                        <span class="badge badge-primary text-truncate" title="{{{coursecategory}}}">
+                                            {{{coursecategory}}}
+                                        </span>
+                                    </div>
+                                    {{/coursecategory}}
+                                </div>
+
+                                {{! Card Body }}
+                                <div class="card-body d-flex flex-column">
+                                    {{! Course Title }}
+                                    <h5 class="inteb-course-title mb-2">
+                                        <a href="{{viewurl}}" class="text-dark stretched-link" title="{{{fullname}}}">
+                                            {{{fullname}}}
+                                        </a>
+                                    </h5>
+
+                                    {{! Short name if enabled }}
+                                    {{#showshortname}}
+                                    <p class="text-muted small mb-2">{{{shortname}}}</p>
+                                    {{/showshortname}}
+
+                                    {{! Course Summary }}
+                                    {{#summary}}
+                                    <p class="inteb-course-summary text-muted small mb-0 mt-auto">
+                                        {{{summary}}}
+                                    </p>
+                                    {{/summary}}
+
+                                    {{! Not Started indicator }}
+                                    <div class="inteb-status-indicator mt-auto pt-2">
+                                        <span class="badge badge-light border">
+                                            <i class="fa fa-clock-o mr-1" aria-hidden="true"></i>
+                                            {{#str}}notstarted, block_mycourses{{/str}}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {{! Card Footer }}
+                                <div class="card-footer bg-transparent border-0 pt-0">
+                                    <a href="{{viewurl}}" class="btn btn-success btn-sm btn-block inteb-start-btn">
+                                        <i class="fa fa-rocket mr-1" aria-hidden="true"></i>
+                                        {{#str}}startcourse, block_mycourses{{/str}}
+                                    </a>
                                 </div>
                             </div>
                         </div>
+                        {{/availableview.courses}}
+                    {{#availableview.courses.0}}
+                    </div>
+                    {{/availableview.courses.0}}
                     {{/availableview.courses}}
+
+                    {{! Empty State }}
                     {{^availableview.courses}}
-                        <div class="text-xs-center text-center m-t-3"></div>
-                        <div class="text-xs-center text-center m-t-3">
-                            <img class="empty-placeholder-image-lg"
-                                src="{{nocourses}}"
-                                alt="{{#str}} noavailable, block_mycourses {{/str}}"
-                                role="presentation">
-                            <p class="text-muted m-t-1">{{#str}} noavailable, block_mycourses {{/str}}</p>
+                    <div class="inteb-empty-state text-center py-5">
+                        <div class="inteb-empty-icon mb-3">
+                            <i class="fa fa-book fa-4x text-muted"></i>
                         </div>
-                        <div class="text-xs-center text-center m-t-3"></div>
+                        <h5 class="text-muted mb-2">{{#str}}noavailable, block_mycourses{{/str}}</h5>
+                        <p class="text-muted small">{{#str}}noavailable, block_mycourses{{/str}}</p>
+                    </div>
                     {{/availableview.courses}}
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 {{#js}}
 require(['jquery', 'core/custom_interaction_events'], function($, customEvents) {
     var root = $('#available-view-{{uniqid}}');

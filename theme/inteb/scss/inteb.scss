@@ -1126,3 +1126,358 @@ section.node-category {
         }
     }
 }
+
+/* ==========================================================================
+   18. BLOCK MYCOURSES - INTEB REDESIGN
+   ========================================================================== */
+
+/* Main container */
+.inteb-mycourses-view {
+    .tab-content {
+        overflow: visible;
+    }
+}
+
+/* Course Grid */
+.inteb-course-grid {
+    margin: 0 -0.5rem;
+}
+
+/* Course Card Base Styles */
+.inteb-course-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Image Wrapper */
+    .inteb-card-img-wrapper {
+        overflow: hidden;
+    }
+
+    .inteb-card-img {
+        height: 160px;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: transform 0.4s ease;
+        position: relative;
+    }
+
+    &:hover .inteb-card-img {
+        transform: scale(1.05);
+    }
+
+    /* Overlay */
+    .inteb-card-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.4) 100%);
+        transition: background 0.3s ease;
+    }
+
+    &:hover .inteb-card-overlay {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%);
+    }
+
+    .inteb-completed-overlay {
+        background: linear-gradient(180deg, rgba(40, 167, 69, 0) 50%, rgba(40, 167, 69, 0.3) 100%);
+    }
+
+    /* Badges positioning */
+    .inteb-card-badges {
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+
+        .badge {
+            margin-left: 5px;
+        }
+    }
+
+    .inteb-category-badge {
+        bottom: 10px;
+        left: 10px;
+        z-index: 2;
+
+        .badge {
+            max-width: 180px;
+            font-size: 0.7rem;
+            padding: 0.35em 0.65em;
+        }
+    }
+
+    .inteb-new-badge,
+    .inteb-completed-badge {
+        top: 10px;
+        left: 10px;
+        z-index: 2;
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.4em 0.7em;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    /* Card Body */
+    .card-body {
+        padding: 1rem;
+    }
+
+    /* Course Title */
+    .inteb-course-title {
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.3;
+        margin-bottom: 0.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 2.6em;
+
+        a {
+            color: $color-primary;
+            text-decoration: none;
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: $color-secondary;
+            }
+        }
+    }
+
+    /* Course Summary */
+    .inteb-course-summary {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+
+    /* Progress Wrapper */
+    .inteb-progress-wrapper {
+        padding-top: 0.5rem;
+    }
+
+    .inteb-progress {
+        height: 8px;
+        border-radius: 4px;
+        background-color: #e9ecef;
+        overflow: hidden;
+    }
+
+    .inteb-progress-bar {
+        background: linear-gradient(90deg, $color-primary, $color-secondary);
+        transition: width 0.6s ease;
+    }
+
+    .inteb-progress-completed .progress-bar {
+        background: linear-gradient(90deg, #28a745, #20c997);
+    }
+
+    /* Completion Info */
+    .inteb-completion-info {
+        .inteb-info-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            i {
+                width: 16px;
+                text-align: center;
+            }
+        }
+    }
+
+    /* Certificates */
+    .inteb-certificates {
+        .inteb-cert-link {
+            display: inline-block;
+            transition: transform 0.2s ease;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+
+        .inteb-cert-icon {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+    }
+
+    /* Card Footer */
+    .card-footer {
+        padding: 0 1rem 1rem 1rem;
+    }
+
+    /* Action Buttons */
+    .inteb-continue-btn,
+    .inteb-start-btn,
+    .inteb-review-btn {
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem;
+
+        i {
+            transition: transform 0.3s ease;
+        }
+
+        &:hover i {
+            transform: translateX(3px);
+        }
+    }
+
+    .inteb-continue-btn {
+        background: linear-gradient(135deg, $color-primary, darken($color-primary, 10%));
+        border: none;
+
+        &:hover {
+            background: linear-gradient(135deg, darken($color-primary, 5%), darken($color-primary, 15%));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba($color-primary, 0.4);
+        }
+    }
+
+    .inteb-start-btn {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+
+        &:hover {
+            background: linear-gradient(135deg, #218838, #1aa179);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+        }
+    }
+
+    .inteb-review-btn {
+        border-color: #6c757d;
+        color: #6c757d;
+
+        &:hover {
+            background-color: #6c757d;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+    }
+
+    /* Status Indicator */
+    .inteb-status-indicator {
+        .badge {
+            font-size: 0.75rem;
+        }
+    }
+}
+
+/* Available Card Specific */
+.inteb-available-card {
+    border-left: 4px solid #28a745;
+}
+
+/* Completed Card Specific */
+.inteb-completed-card {
+    border-left: 4px solid #28a745;
+
+    .inteb-card-img::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(40, 167, 69, 0.1);
+    }
+}
+
+/* Empty State */
+.inteb-empty-state {
+    padding: 3rem 1rem;
+
+    .inteb-empty-icon {
+        opacity: 0.5;
+
+        i {
+            color: #adb5bd;
+        }
+    }
+
+    h5 {
+        font-weight: 500;
+    }
+}
+
+/* Responsive Adjustments for block_mycourses */
+@media (max-width: 575.98px) {
+    .inteb-course-card {
+        .inteb-card-img {
+            height: 140px;
+        }
+
+        .inteb-course-title {
+            font-size: 0.95rem;
+        }
+    }
+}
+
+@media (min-width: 1400px) {
+    .inteb-course-grid {
+        .col-xl-3 {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+    }
+}
+
+/* Override block_mycourses default styles */
+.block_mycourses {
+    .inteb-mycourses-view {
+        .progress {
+            width: 100%;
+            background-color: #e9ecef;
+        }
+
+        .progress-bar {
+            background-color: $color-primary;
+        }
+    }
+
+    .nav-tabs {
+        border-bottom: 2px solid #dee2e6;
+        padding-bottom: 0;
+
+        .nav-link {
+            color: $color-primary;
+            font-weight: 500;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s ease;
+
+            &:hover {
+                color: $color-secondary;
+                border-color: transparent;
+            }
+
+            &.active {
+                color: $color-primary;
+                background-color: transparent;
+                border-bottom-color: $color-primary;
+            }
+        }
+    }
+}
