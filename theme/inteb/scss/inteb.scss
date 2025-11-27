@@ -4874,208 +4874,304 @@ body.pagelayout-incourse {
 
 /* ===================================
    Breadcrumb - Chevron/Arrow Style
-   Based on Moove Theme with ISER Branding
+   EXACT COPY from Moove Theme with ISER Branding
 
-   Uses variables from custom_variables.scss:
-   - $color-primary-dimmed: Light green for normal items background
-   - $my-gris-oscuro: Gray for normal text and hover background
-   - $color-primary / $my-verde: Green for current/active item
-   - $color-white: White for text on colored backgrounds
-   - $my-gris-claro: Light gray for no-link items
-   - $font-family-sans-serif: Typography
-
-   IMPORTANT: Uses high specificity to override RemUI/Bootstrap styles
+   Moove colors → ISER variables:
+   - $body-bg (#eef5f9) → $color-primary-dimmed (#E8F5F3)
+   - #2c3f4c → $my-gris-oscuro (#646363)
+   - #96c03d → $color-primary (#1B9E88)
+   - #fff → $color-white (#FFFFFF)
+   - #f7f7f7 → $my-gris-claro (#CFCFCF)
    =================================== */
 
-// High specificity to override RemUI breadcrumb styles
+// Override RemUI/Bootstrap - exact moove implementation
 #page-header #page-navbar,
 #page-navbar {
     .page-header-headings h1 {
         font-size: 1.34375rem;
     }
 
-    // Override RemUI nav wrapper
-    nav {
-        // Base breadcrumb container
-        ol.breadcrumb,
-        .breadcrumb {
-            padding: 0 !important;
-            margin: 0 !important;
-            background-color: transparent !important;
-            border-radius: 0.25em;
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
+    // EXACT MOOVE: Base breadcrumb with initial styles
+    nav ol.breadcrumb,
+    nav .breadcrumb,
+    ol.breadcrumb,
+    .breadcrumb {
+        padding: 0.5em 1em !important;
+        background-color: $color-primary-dimmed !important;
+        border-radius: 0.25em !important;
+        margin-bottom: 0 !important;
+        list-style: none !important;
+
+        &:after {
+            content: "" !important;
+            display: table !important;
+            clear: both !important;
+        }
+
+        // EXACT MOOVE: li base styles
+        li,
+        .breadcrumb-item {
+            display: inline-block !important;
+            float: left !important;
+            margin: 0.5em 0 !important;
 
             &:after {
-                content: "";
-                display: table;
-                clear: both;
+                display: inline-block !important;
+                content: '\00bb' !important;
+                margin: 0 0.6em !important;
+                color: $my-gris-medio !important;
             }
 
-            // Breadcrumb items (using both li and .breadcrumb-item for compatibility)
-            li,
-            .breadcrumb-item {
-                display: inline-block;
-                float: left;
-                position: relative;
+            &:before {
+                content: '' !important;
                 padding: 0 !important;
-                margin: 4px 4px 4px 0 !important;
-                font-family: $font-family-sans-serif;
-                flex-grow: unset !important;
+                display: none !important;
+            }
 
-                // CRITICAL: Hide Bootstrap's default "/" separator
-                &::before {
-                    content: none !important;
-                    display: none !important;
-                    padding: 0 !important;
-                    margin: 0 !important;
-                }
-
-                // Also hide separator on adjacent items (Bootstrap pattern)
-                & + li::before,
-                & + .breadcrumb-item::before {
-                    content: none !important;
-                    display: none !important;
-                }
-
-                // Item content styling (links and spans)
-                > a,
-                > span {
-                    display: inline-block !important;
-                    position: relative;
-                    padding: 0.4em 0.8em 0.4em 1.5em !important;
-                    color: $my-gris-oscuro !important;
-                    background-color: $color-primary-dimmed !important;
-                    border-color: $color-primary-dimmed !important;
-                    text-decoration: none !important;
-                    font-weight: 500 !important;
-                    font-size: 0.875rem !important;
-                    line-height: 1.4;
-
-                    // Inner chevron (inherits background color)
-                    &::after {
-                        content: '' !important;
-                        position: absolute;
-                        top: 0;
-                        left: 100%;
-                        height: 0;
-                        width: 0;
-                        border: 17px solid transparent;
-                        border-right-width: 0;
-                        border-left-width: 10px;
-                        z-index: 2;
-                        border-left-color: inherit;
-                    }
-                }
-
-                // Link hover effect
-                > a:hover {
-                    color: $color-white !important;
-                    background-color: $my-gris-oscuro !important;
-                    border-color: $my-gris-oscuro !important;
-                }
-
-                // No-link items (span without action)
-                > span.no-link,
-                > span:not([class]) {
-                    background-color: $my-gris-claro !important;
-                    border-color: $my-gris-claro !important;
-                }
-
-                // Outer chevron (white separator line)
-                &::after {
-                    content: '' !important;
-                    position: absolute;
-                    top: 0;
-                    left: 100%;
-                    height: 0;
-                    width: 0;
-                    border: 17px solid transparent;
-                    border-right-width: 0;
-                    border-left-width: 10px;
-                    z-index: 1;
-                    transform: translateX(4px);
-                    border-left-color: $color-white !important;
-                    margin: 0 !important;
-                }
-
-                // First item: rounded left corners
-                &:first-of-type,
-                &:first-child {
-                    > a,
-                    > span {
-                        padding-left: 1.2em !important;
-                        border-radius: 0.25em 0 0 0.25em;
-                    }
-                }
-
-                // Last item: current/active styling
-                &:last-of-type,
-                &:last-child {
-                    margin-right: 0 !important;
-
-                    > a,
-                    > span {
-                        color: $color-white !important;
-                        background-color: $color-primary !important;
-                        border-color: $color-primary !important;
-                        padding-right: 1.2em !important;
-                        border-radius: 0 0.25em 0.25em 0;
-                    }
-
-                    // Hide chevron on last item
-                    &::after {
-                        display: none !important;
-                    }
-
-                    > a::after,
-                    > span::after {
-                        display: none !important;
-                    }
-                }
+            .no-link {
+                background-color: $my-gris-claro !important;
+                border-color: $my-gris-claro !important;
             }
         }
     }
 
-    // Firefox fix for dashed borders
+    // EXACT MOOVE: Remove separator from last item
+    nav ol.breadcrumb li:last-of-type::after,
+    nav .breadcrumb li:last-of-type::after,
+    ol.breadcrumb li:last-of-type::after,
+    .breadcrumb li:last-of-type::after,
+    nav ol.breadcrumb .breadcrumb-item:last-of-type::after,
+    nav .breadcrumb .breadcrumb-item:last-of-type::after {
+        display: none !important;
+    }
+
+    // EXACT MOOVE: Base text colors for all items
+    nav ol.breadcrumb li > *,
+    nav .breadcrumb li > *,
+    ol.breadcrumb li > *,
+    .breadcrumb li > *,
+    nav ol.breadcrumb .breadcrumb-item > *,
+    nav .breadcrumb .breadcrumb-item > * {
+        display: inline-block !important;
+        color: $my-gris-oscuro !important;
+    }
+
+    // EXACT MOOVE: Current item text color (green in moove)
+    nav ol.breadcrumb li.current > *,
+    nav .breadcrumb li.current > *,
+    .breadcrumb li.current > * {
+        color: $color-primary !important;
+    }
+
+    // EXACT MOOVE: Hover text color
+    .no-touch nav ol.breadcrumb a:hover,
+    .no-touch nav .breadcrumb a:hover,
+    .no-touch .breadcrumb a:hover {
+        color: $color-primary !important;
+    }
+
+    // EXACT MOOVE: Redesigned breadcrumb with chevron separators
+    nav ol.breadcrumb,
+    nav .breadcrumb,
+    ol.breadcrumb,
+    .breadcrumb {
+        padding: 0 !important;
+        background-color: transparent !important;
+    }
+
+    nav ol.breadcrumb li,
+    nav .breadcrumb li,
+    ol.breadcrumb li,
+    .breadcrumb li,
+    nav ol.breadcrumb .breadcrumb-item,
+    nav .breadcrumb .breadcrumb-item {
+        position: relative !important;
+        padding: 0 !important;
+        margin: 4px 4px 4px 0 !important;
+    }
+
+    nav ol.breadcrumb li::after,
+    nav .breadcrumb li::after,
+    .breadcrumb li::after,
+    nav ol.breadcrumb .breadcrumb-item::after,
+    nav .breadcrumb .breadcrumb-item::after {
+        margin: 0 1em !important;
+    }
+
+    // EXACT MOOVE: All items content styling
+    nav ol.breadcrumb li > *,
+    nav .breadcrumb li > *,
+    ol.breadcrumb li > *,
+    .breadcrumb li > *,
+    nav ol.breadcrumb .breadcrumb-item > *,
+    nav .breadcrumb .breadcrumb-item > * {
+        position: relative !important;
+        padding: 0.4em 0.8em 0.4em 1.5em !important;
+        color: $my-gris-oscuro !important;
+        background-color: $color-primary-dimmed !important;
+        border-color: $color-primary-dimmed !important;
+        text-decoration: none !important;
+        font-family: $font-family-sans-serif !important;
+        font-size: 0.875rem !important;
+    }
+
+    // EXACT MOOVE: Last item margin
+    nav ol.breadcrumb li:last-of-type,
+    nav .breadcrumb li:last-of-type,
+    .breadcrumb li:last-of-type,
+    nav ol.breadcrumb .breadcrumb-item:last-of-type,
+    nav .breadcrumb .breadcrumb-item:last-of-type {
+        margin-right: 0 !important;
+    }
+
+    // EXACT MOOVE: Current/active item styling (ISER green background)
+    nav ol.breadcrumb li.current > *,
+    nav .breadcrumb li.current > *,
+    .breadcrumb li.current > *,
+    nav ol.breadcrumb li:last-of-type > *,
+    nav .breadcrumb li:last-of-type > *,
+    .breadcrumb li:last-of-type > *,
+    nav ol.breadcrumb .breadcrumb-item:last-of-type > *,
+    nav .breadcrumb .breadcrumb-item:last-of-type > * {
+        color: $color-white !important;
+        background-color: $color-primary !important;
+        border-color: $color-primary !important;
+    }
+
+    // EXACT MOOVE: First item rounded left corners
+    nav ol.breadcrumb li:first-of-type > *,
+    nav .breadcrumb li:first-of-type > *,
+    .breadcrumb li:first-of-type > *,
+    nav ol.breadcrumb .breadcrumb-item:first-of-type > *,
+    nav .breadcrumb .breadcrumb-item:first-of-type > * {
+        padding-left: 1.6em !important;
+        border-radius: 0.25em 0 0 0.25em !important;
+    }
+
+    // EXACT MOOVE: Last item rounded right corners
+    nav ol.breadcrumb li:last-of-type > *,
+    nav .breadcrumb li:last-of-type > *,
+    .breadcrumb li:last-of-type > *,
+    nav ol.breadcrumb .breadcrumb-item:last-of-type > *,
+    nav .breadcrumb .breadcrumb-item:last-of-type > * {
+        padding-right: 1.6em !important;
+        border-radius: 0 0.25em 0.25em 0 !important;
+    }
+
+    // EXACT MOOVE: Hover effect on links
+    .no-touch nav ol.breadcrumb a:hover,
+    .no-touch nav .breadcrumb a:hover,
+    .no-touch .breadcrumb a:hover,
+    nav ol.breadcrumb a:hover,
+    nav .breadcrumb a:hover,
+    .breadcrumb a:hover {
+        color: $color-white !important;
+        background-color: $my-gris-oscuro !important;
+        border-color: $my-gris-oscuro !important;
+    }
+
+    // EXACT MOOVE: Chevron/Arrow separator using CSS borders
+    nav ol.breadcrumb li::after,
+    nav ol.breadcrumb li > *::after,
+    nav .breadcrumb li::after,
+    nav .breadcrumb li > *::after,
+    .breadcrumb li::after,
+    .breadcrumb li > *::after,
+    nav ol.breadcrumb .breadcrumb-item::after,
+    nav ol.breadcrumb .breadcrumb-item > *::after,
+    nav .breadcrumb .breadcrumb-item::after,
+    nav .breadcrumb .breadcrumb-item > *::after {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 100% !important;
+        height: 0 !important;
+        width: 0 !important;
+        border: 17px solid transparent !important;
+        border-right-width: 0 !important;
+        border-left-width: 10px !important;
+    }
+
+    // EXACT MOOVE: Outer chevron (white separator line)
+    nav ol.breadcrumb li::after,
+    nav .breadcrumb li::after,
+    .breadcrumb li::after,
+    nav ol.breadcrumb .breadcrumb-item::after,
+    nav .breadcrumb .breadcrumb-item::after {
+        z-index: 1 !important;
+        -webkit-transform: translateX(4px);
+        -moz-transform: translateX(4px);
+        -ms-transform: translateX(4px);
+        -o-transform: translateX(4px);
+        transform: translateX(4px);
+        border-left-color: $color-white !important;
+        margin: 0 !important;
+    }
+
+    // EXACT MOOVE: Inner chevron (inherits item background color)
+    nav ol.breadcrumb li > *::after,
+    nav .breadcrumb li > *::after,
+    .breadcrumb li > *::after,
+    nav ol.breadcrumb .breadcrumb-item > *::after,
+    nav .breadcrumb .breadcrumb-item > *::after {
+        z-index: 2 !important;
+        border-left-color: inherit !important;
+    }
+
+    // EXACT MOOVE: Hide chevron on last item
+    nav ol.breadcrumb li:last-of-type::after,
+    nav ol.breadcrumb li:last-of-type > *::after,
+    nav .breadcrumb li:last-of-type::after,
+    nav .breadcrumb li:last-of-type > *::after,
+    .breadcrumb li:last-of-type::after,
+    .breadcrumb li:last-of-type > *::after,
+    nav ol.breadcrumb .breadcrumb-item:last-of-type::after,
+    nav ol.breadcrumb .breadcrumb-item:last-of-type > *::after,
+    nav .breadcrumb .breadcrumb-item:last-of-type::after,
+    nav .breadcrumb .breadcrumb-item:last-of-type > *::after {
+        display: none !important;
+    }
+
+    // EXACT MOOVE: Firefox fix for dashed borders
     @-moz-document url-prefix() {
         nav ol.breadcrumb li::after,
         nav ol.breadcrumb li > *::after,
-        nav .breadcrumb .breadcrumb-item::after,
-        nav .breadcrumb .breadcrumb-item > *::after {
-            border-left-style: dashed;
+        nav .breadcrumb li::after,
+        nav .breadcrumb li > *::after,
+        .breadcrumb li::after,
+        .breadcrumb li > *::after {
+            border-left-style: dashed !important;
         }
     }
 }
 
-// Right-to-left language support
-.dir-rtl {
-    #page-header #page-navbar,
-    #page-navbar {
-        nav ol.breadcrumb li,
-        nav .breadcrumb .breadcrumb-item {
-            &::after {
-                transform: translateX(-4px);
-                border-right-color: $color-white !important;
-                border-left-color: transparent !important;
-                left: auto;
-                right: 100%;
-                border-right-width: 10px;
-                border-left-width: 0;
-            }
+// EXACT MOOVE: Right-to-left language support
+.dir-rtl #page-header #page-navbar nav ol.breadcrumb li::after,
+.dir-rtl #page-header #page-navbar nav .breadcrumb li::after,
+.dir-rtl #page-navbar nav ol.breadcrumb li::after,
+.dir-rtl #page-navbar nav .breadcrumb li::after,
+.dir-rtl #page-navbar .breadcrumb li::after {
+    -webkit-transform: translateX(-4px);
+    -moz-transform: translateX(-4px);
+    -ms-transform: translateX(-4px);
+    -o-transform: translateX(-4px);
+    transform: translateX(-4px);
+    border-right-color: $color-white !important;
+}
 
-            > a::after,
-            > span::after {
-                left: auto;
-                right: 100%;
-                border-right-width: 10px;
-                border-left-width: 0;
-                border-right-color: inherit;
-                border-left-color: transparent;
-            }
-        }
-    }
+.dir-rtl #page-header #page-navbar nav ol.breadcrumb li::after,
+.dir-rtl #page-header #page-navbar nav ol.breadcrumb li > *::after,
+.dir-rtl #page-header #page-navbar nav .breadcrumb li::after,
+.dir-rtl #page-header #page-navbar nav .breadcrumb li > *::after,
+.dir-rtl #page-navbar nav ol.breadcrumb li::after,
+.dir-rtl #page-navbar nav ol.breadcrumb li > *::after,
+.dir-rtl #page-navbar nav .breadcrumb li::after,
+.dir-rtl #page-navbar nav .breadcrumb li > *::after,
+.dir-rtl #page-navbar .breadcrumb li::after,
+.dir-rtl #page-navbar .breadcrumb li > *::after {
+    left: 95% !important;
+    border-right-width: 12px !important;
+    border-left-width: 0 !important;
 }
 
 // Responsive adjustments for breadcrumb
