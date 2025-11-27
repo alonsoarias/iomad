@@ -195,4 +195,5 @@ $string['sectionprogress'] = 'Progreso de la sección';
 $string['activitiescompleted'] = '{$a->completed} de {$a->total} actividades completadas';
 $string['loadingprogress'] = 'Cargando progreso...';
 $string['errorloadingprogress'] = 'Error al cargar el progreso';
-$string['noactivitieswithtracking'] = 'El curso tiene habilitado el seguimiento de finalización, pero ninguna actividad tiene configuradas las condiciones de finalización. Por favor, configure las condiciones de finalización en cada actividad.';
+$string['noactivitieswithtracking_teacher'] = 'El curso tiene habilitado el seguimiento de finalización, pero ninguna actividad tiene configuradas las condiciones de finalización. Por favor, configure las condiciones de finalización en cada actividad.';
+$string['noactivitieswithtracking_student'] = 'El seguimiento de progreso no está disponible para este curso en este momento.';

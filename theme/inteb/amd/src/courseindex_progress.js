@@ -111,7 +111,8 @@ define(['jquery', 'core/ajax', 'core/log'], function($, Ajax, Log) {
                     // Check if activities have tracking configured
                     if (response.hasactivitiestracking === false) {
                         // Course has completion enabled but activities don't have tracking
-                        showNoActivitiesTrackingMessage();
+                        // Show different message based on user role
+                        showNoActivitiesTrackingMessage(response.caneditcourse);
                     } else {
                         // Normal progress display
                         updateCourseProgressDisplay(response);
@@ -184,9 +185,18 @@ define(['jquery', 'core/ajax', 'core/log'], function($, Ajax, Log) {
 
     /**
      * Show message when course has completion but activities don't have tracking configured
+     * Shows different message based on user role (teacher vs student)
+     *
+     * @param {Boolean} canEditCourse Whether user can edit the course (teacher/manager)
      */
-    var showNoActivitiesTrackingMessage = function() {
-        $('#courseindex-no-activities-tracking').fadeIn(300);
+    var showNoActivitiesTrackingMessage = function(canEditCourse) {
+        if (canEditCourse) {
+            // Show teacher message with instructions to configure activities
+            $('#courseindex-no-activities-tracking-teacher').fadeIn(300);
+        } else {
+            // Show student-friendly message
+            $('#courseindex-no-activities-tracking-student').fadeIn(300);
+        }
     };
 
     /**

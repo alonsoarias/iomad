@@ -38,11 +38,19 @@
     </div>
   </div>
 
-  {{! Message when course has completion but activities don't have tracking configured }}
-  <div class="courseindex-no-activities-tracking" id="courseindex-no-activities-tracking" style="display: none;">
+  {{! Message for teachers when activities don't have tracking configured }}
+  <div class="courseindex-no-activities-tracking courseindex-no-activities-tracking-teacher" id="courseindex-no-activities-tracking-teacher" style="display: none;">
     <div class="no-activities-tracking-message">
       <i class="fa fa-exclamation-triangle"></i>
-      <span>{{#str}}noactivitieswithtracking, theme_inteb{{/str}}</span>
+      <span>{{#str}}noactivitieswithtracking_teacher, theme_inteb{{/str}}</span>
+    </div>
+  </div>
+
+  {{! Message for students when activities don't have tracking configured }}
+  <div class="courseindex-no-activities-tracking courseindex-no-activities-tracking-student" id="courseindex-no-activities-tracking-student" style="display: none;">
+    <div class="no-activities-tracking-message">
+      <i class="fa fa-info-circle"></i>
+      <span>{{#str}}noactivitieswithtracking_student, theme_inteb{{/str}}</span>
     </div>
   </div>
 

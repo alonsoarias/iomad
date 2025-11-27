@@ -95,6 +95,9 @@ class get_course_progress extends external_api {
         // Get progress data
         $progress = course_progress::get_course_progress($course, $USER->id);
 
+        // Check if user can edit course activities (teacher/manager role)
+        $caneditcourse = has_capability('moodle/course:manageactivities', $context);
+
         // Get detailed activity counts
         $completion = new \completion_info($course);
         $completed = 0;
@@ -120,6 +123,7 @@ class get_course_progress extends external_api {
         return [
             'hasprogress' => $progress['hasprogress'],
             'hasactivitiestracking' => $progress['hasactivitiestracking'] ?? true,
+            'caneditcourse' => $caneditcourse,
             'percentage' => $progress['percentage'],
             'completed' => $completed,
             'total' => $total
@@ -135,6 +139,7 @@ class get_course_progress extends external_api {
         return new external_single_structure([
             'hasprogress' => new external_value(PARAM_BOOL, 'Whether the course has progress tracking enabled'),
             'hasactivitiestracking' => new external_value(PARAM_BOOL, 'Whether activities have tracking configured'),
+            'caneditcourse' => new external_value(PARAM_BOOL, 'Whether user can edit course activities'),
             'percentage' => new external_value(PARAM_INT, 'Completion percentage'),
             'completed' => new external_value(PARAM_INT, 'Number of completed activities'),
             'total' => new external_value(PARAM_INT, 'Total number of activities with completion'),
