@@ -104,79 +104,71 @@ $string['abouttitle_default'] = 'Acerca de nosotros';
 $string['abouttext'] = 'Texto de Acerca de';
 $string['abouttextdesc'] = 'Texto para la sección Acerca de en el pie de página. Incluye información institucional y branding GOV.CO.';
 $string['abouttext_default'] = '
-<div class="iser-footer-content">
-    <!-- Información Institucional -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-12 col-md-10 col-lg-8">
-            <p class="mb-2"><strong>Instituto Superior de Educación Rural - ISER</strong></p>
-            <p class="mb-1">Institución de Educación Superior de carácter público</p>
-            <p class="mb-1">Vigilada por el Ministerio de Educación Nacional</p>
-            <p class="mb-0"><strong>NIT:</strong> 890.501.578-4</p>
-        </div>
-    </div>
-
-    <!-- Información de Contacto -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
-            <h4 class="h6 mb-2"><i class="fa fa-map-marker me-2"></i> Dirección</h4>
-            <p class="mb-0 small">Calle 8 # 8-155, Barrio Chapinero<br>Pamplona, Norte de Santander<br>Colombia - A.A. 1031</p>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <h4 class="h6 mb-2"><i class="fa fa-phone me-2"></i> Contacto</h4>
-            <p class="mb-1 small"><strong>PBX:</strong> (607) 568 6868</p>
-            <p class="mb-1 small"><strong>Email:</strong> <a href="mailto:iserpam@iser.edu.co">iserpam@iser.edu.co</a></p>
-            <p class="mb-0 small"><strong>Horario:</strong> Lun-Vie 8:00-12:00 | 14:00-18:00</p>
-        </div>
-    </div>
-
-    <!-- Redes Sociales -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-12 col-md-8">
-            <div class="social-links d-flex justify-content-center gap-3 flex-wrap">
-                <a href="https://www.facebook.com/iser.pamplona" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light" aria-label="Facebook ISER">
-                    <i class="fa fa-facebook"></i> Facebook
-                </a>
-                <a href="https://twitter.com/Iser1956" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light" aria-label="Twitter ISER">
-                    <i class="fa fa-twitter"></i> Twitter
-                </a>
-                <a href="https://www.instagram.com/iser.oficial" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light" aria-label="Instagram ISER">
-                    <i class="fa fa-instagram"></i> Instagram
-                </a>
-                <a href="https://www.youtube.com/@ISER.Oficial" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light" aria-label="YouTube ISER">
-                    <i class="fa fa-youtube-play"></i> YouTube
-                </a>
+<div class="iser-footer-govco">
+    <div class="row justify-content-between">
+        <!-- COLUMNA 1: Logos institucionales y GOV.CO -->
+        <div class="col-12 col-md-4 col-lg-3 mb-4 mb-md-0">
+            <div class="footer-logos-column">
+                <div class="footer-logo-item mb-3">
+                    <a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal ISER">
+                        <img src="/theme/inteb/pix/logo inteb revolutions version blanca.png" alt="Logo ISER" class="footer-logo-iser">
+                    </a>
+                </div>
+                <div class="footer-logo-item mb-3">
+                    <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal GOV.CO">
+                        <img src="/theme/inteb/pix/logo-govco.webp" alt="Logo GOV.CO" class="footer-logo-govco">
+                    </a>
+                </div>
+                <div class="footer-logo-item">
+                    <a href="https://www.colombia.co/" target="_blank" rel="noopener noreferrer" aria-label="Marca País Colombia">
+                        <img src="/theme/inteb/pix/marca_pais.png" alt="Logo Marca País Colombia" class="footer-logo-colombia">
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Enlaces Institucionales -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-12 col-md-10">
-            <div class="institutional-links d-flex justify-content-center gap-3 flex-wrap small">
-                <a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer">Portal ISER</a>
-                <span class="text-muted">|</span>
-                <a href="https://www.iser.edu.co/index.php/transparencia-y-acceso-a-la-informacion-publica/" target="_blank" rel="noopener noreferrer">Transparencia</a>
-                <span class="text-muted">|</span>
-                <a href="https://ww1.iser.edu.co/iser/qrsIG/index.jsp" target="_blank" rel="noopener noreferrer">PQRS</a>
-                <span class="text-muted">|</span>
-                <a href="https://www.iser.edu.co/index.php/atencion-al-ciudadano-y-servicios/" target="_blank" rel="noopener noreferrer">Atención al Ciudadano</a>
-                <span class="text-muted">|</span>
-                <a href="https://www.iser.edu.co/index.php/oferta-academica-2024/" target="_blank" rel="noopener noreferrer">Oferta Académica</a>
+        <!-- COLUMNA 2: Información de contacto -->
+        <div class="col-12 col-md-4 col-lg-5 mb-4 mb-md-0">
+            <div class="footer-info-column">
+                <p class="footer-info-title"><strong>Instituto Superior de Educación Rural - ISER</strong></p>
+                <p class="footer-info-text">Institución de Educación Superior de carácter público<br>Vigilada por el Ministerio de Educación Nacional</p>
+                <p class="footer-info-text"><strong>NIT:</strong> 890.501.578-4</p>
+
+                <p class="footer-info-title mt-3"><strong>Dirección</strong></p>
+                <p class="footer-info-text">Calle 8 # 8-155, Barrio Chapinero<br>Pamplona, Norte de Santander<br>Colombia - A.A. 1031</p>
+
+                <p class="footer-info-title mt-3"><strong>Líneas de atención</strong></p>
+                <p class="footer-info-text"><strong>PBX:</strong> (607) 568 6868</p>
+                <p class="footer-info-text"><strong>Email:</strong> <a href="mailto:iserpam@iser.edu.co">iserpam@iser.edu.co</a></p>
+
+                <p class="footer-info-title mt-3"><strong>Horario de atención</strong></p>
+                <p class="footer-info-text">Lunes a viernes de 8:00 a.m. a 12:00 m.<br>y 2:00 p.m. a 6:00 p.m.</p>
             </div>
         </div>
-    </div>
 
-    <!-- Logos GOV.CO y Marca País -->
-    <div class="row justify-content-center align-items-center mt-4 pt-3 border-top border-light">
-        <div class="col-6 col-md-3 text-center mb-3 mb-md-0">
-            <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal GOV.CO">
-                <img src="https://www.gov.co/assets/images/logo-gov-co-blanco.svg" alt="Logo GOV.CO" style="height: 40px; max-width: 100%;" loading="lazy">
-            </a>
-        </div>
-        <div class="col-6 col-md-3 text-center">
-            <a href="https://www.colombia.co/" target="_blank" rel="noopener noreferrer" aria-label="Marca País Colombia">
-                <img src="https://www.colombia.co/static/img/head/logo-header.svg" alt="Logo Colombia" style="height: 35px; max-width: 100%;" loading="lazy">
-            </a>
+        <!-- COLUMNA 3: Enlaces y redes sociales -->
+        <div class="col-12 col-md-4 col-lg-4">
+            <div class="footer-links-column">
+                <p class="footer-info-title"><strong>Enlaces institucionales</strong></p>
+                <p class="footer-info-text"><a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer">Portal ISER</a></p>
+                <p class="footer-info-text"><a href="https://www.iser.edu.co/index.php/transparencia-y-acceso-a-la-informacion-publica/" target="_blank" rel="noopener noreferrer">Transparencia y acceso a información</a></p>
+                <p class="footer-info-text"><a href="https://ww1.iser.edu.co/iser/qrsIG/index.jsp" target="_blank" rel="noopener noreferrer">PQRS</a></p>
+                <p class="footer-info-text"><a href="https://www.iser.edu.co/index.php/atencion-al-ciudadano-y-servicios/" target="_blank" rel="noopener noreferrer">Atención al ciudadano</a></p>
+                <p class="footer-info-text"><a href="https://www.iser.edu.co/index.php/oferta-academica-2024/" target="_blank" rel="noopener noreferrer">Oferta académica</a></p>
+
+                <p class="footer-info-title mt-3"><strong>Entes de control</strong></p>
+                <p class="footer-info-text"><a href="https://www.mineducacion.gov.co/" target="_blank" rel="noopener noreferrer">Ministerio de Educación Nacional</a></p>
+                <p class="footer-info-text"><a href="https://www.contraloria.gov.co/" target="_blank" rel="noopener noreferrer">Contraloría General de la República</a></p>
+                <p class="footer-info-text"><a href="https://www.procuraduria.gov.co/" target="_blank" rel="noopener noreferrer">Procuraduría General de la Nación</a></p>
+
+                <p class="footer-info-title mt-3"><strong>Síguenos</strong></p>
+                <div class="footer-social-icons">
+                    <a href="https://www.facebook.com/iser.pamplona" target="_blank" rel="noopener noreferrer" aria-label="Facebook ISER" class="footer-social-link"><i class="fa fa-facebook"></i></a>
+                    <a href="https://twitter.com/Iser1956" target="_blank" rel="noopener noreferrer" aria-label="Twitter ISER" class="footer-social-link"><i class="fa fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/iser.oficial" target="_blank" rel="noopener noreferrer" aria-label="Instagram ISER" class="footer-social-link"><i class="fa fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@ISER.Oficial" target="_blank" rel="noopener noreferrer" aria-label="YouTube ISER" class="footer-social-link"><i class="fa fa-youtube-play"></i></a>
+                </div>
+            </div>
         </div>
     </div>
 </div>';
