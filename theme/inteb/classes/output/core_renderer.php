@@ -1,15 +1,32 @@
 <?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
 /**
- * Provides the core rendering functionality for the theme_inteb, aligning Moodle's HTML with Bootstrap expectations.
+ * Core renderer for theme_inteb.
  *
- * This core renderer class extends theme_remui's core renderer, adding specific modifications to enhance and customize
- * the user interface for theme_inteb. Key functionalities include customized login forms, theme settings integration,
- * and dynamic handling of UI elements like carousels and notices based on theme configurations.
+ * Provides the core rendering functionality for the theme_inteb, aligning
+ * Moodle's HTML with Bootstrap expectations. Extends theme_remui's core
+ * renderer with customizations for login forms, theme settings, and
+ * dynamic UI elements.
  *
- * @package    theme_inteb
- * @category   output
- * @author     ...
- * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     theme_inteb
+ * @category    output
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
+ * @author      Alonso Arias <soporteplataformas@iser.edu.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace theme_inteb\output;
