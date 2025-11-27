@@ -16,50 +16,22 @@
 
     @template block_mycourses/completed-card-view
 
-    This template renders the completed courses view for the mycourses block.
+    This template renders the completed courses card view for the mycourses block.
     Redesigned for theme_inteb with modern card layout.
-
-    Context variables required for this template:
-    * completedview - Object containing courses array
-    * nocourses - URL for empty state image
-
-    Example context (json):
-    {
-        "completedview": {
-            "courses": [
-                {
-                    "id": 1,
-                    "fullname": "Course Name",
-                    "shortname": "CN",
-                    "courseimage": "url",
-                    "viewurl": "url",
-                    "coursecategory": "Category",
-                    "timecompleted": "01/01/2024",
-                    "timeexpires": "01/01/2025",
-                    "finalscore": 85,
-                    "hasgrade": true,
-                    "certificates": []
-                }
-            ]
-        }
-    }
 }}
 <div id="completed-view-{{uniqid}}" data-region="completed-view" class="inteb-mycourses-view">
     <div class="tab-content">
         <div class="tab-pane active" id="mycourses_completed_view">
             <div id="paged-content-container-{{uniqid}}" data-region="paged-content-container">
                 <div id="paged-content-page" data-page="1">
-                    {{#completedview.courses}}
-                    {{#completedview.courses.0}}
                     <div class="inteb-course-grid row" data-region="card-deck" role="list">
-                    {{/completedview.courses.0}}
                         {{#completedview.courses}}
                         <div class="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4" role="listitem">
                             <div class="inteb-course-card inteb-completed-card card h-100 shadow-sm" data-region="course-content" data-course-id="{{{id}}}">
                                 {{! Course Image }}
                                 <div class="inteb-card-img-wrapper position-relative">
-                                    <a href="{{viewurl}}" class="d-block" tabindex="-1">
-                                        <div class="inteb-card-img" style="background-image: url('{{{courseimage}}}');">
+                                    <a href="{{{url}}}" class="d-block" tabindex="-1">
+                                        <div class="inteb-card-img" style="background-image: url('{{{image}}}');">
                                             <div class="inteb-card-overlay inteb-completed-overlay"></div>
                                         </div>
                                     </a>
@@ -70,15 +42,14 @@
                                             {{#str}}completed, block_mycourses{{/str}}
                                         </span>
                                     </div>
-                                    {{! Visibility and Favorite Icons }}
+                                    {{! Visibility Badge }}
+                                    {{^visible}}
                                     <div class="inteb-card-badges position-absolute">
-                                        {{> core_course/favouriteicon }}
-                                        {{^visible}}
                                         <span class="badge badge-warning" title="{{#str}}hiddenfromstudents{{/str}}">
                                             <i class="fa fa-eye-slash" aria-hidden="true"></i>
                                         </span>
-                                        {{/visible}}
                                     </div>
+                                    {{/visible}}
                                     {{! Category Badge }}
                                     {{#coursecategory}}
                                     <div class="inteb-category-badge position-absolute">
@@ -93,20 +64,19 @@
                                 <div class="card-body d-flex flex-column">
                                     {{! Course Title }}
                                     <h5 class="inteb-course-title mb-2">
-                                        <a href="{{viewurl}}" class="text-dark stretched-link" title="{{{fullname}}}">
+                                        <a href="{{{url}}}" class="text-dark" title="{{{fullname}}}">
                                             {{{fullname}}}
                                         </a>
                                     </h5>
-
-                                    {{! Short name if enabled }}
-                                    {{#showshortname}}
-                                    <p class="text-muted small mb-2">{{{shortname}}}</p>
-                                    {{/showshortname}}
 
                                     {{! Completion Info }}
                                     <div class="inteb-completion-info mt-auto">
                                         {{! Progress Bar (100%) }}
                                         <div class="inteb-progress-wrapper mb-2">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="small text-muted">{{#str}}progress, block_mycourses{{/str}}</span>
+                                                <span class="small font-weight-bold text-success">100%</span>
+                                            </div>
                                             <div class="progress inteb-progress inteb-progress-completed">
                                                 <div class="progress-bar bg-success"
                                                      role="progressbar"
@@ -153,7 +123,6 @@
                                         {{/hasgrade}}
 
                                         {{! Certificates }}
-                                        {{#certificates}}
                                         {{#certificates.0}}
                                         <div class="inteb-certificates mt-2 pt-2 border-top">
                                             <div class="small text-muted mb-1">
@@ -161,23 +130,20 @@
                                                 {{#str}}downloadcert, block_mycourses{{/str}}:
                                             </div>
                                             <div class="d-flex flex-wrap">
-                                        {{/certificates.0}}
                                                 {{#certificates}}
-                                                <a href="{{certificateurl}}" class="inteb-cert-link mr-2 mb-1" title="{{certificatename}}" target="_blank">
+                                                <a href="{{{certificateurl}}}" class="inteb-cert-link mr-2 mb-1" title="{{certificatename}}" target="_blank">
                                                     <img src="{{certificateimage}}" alt="{{certificatename}}" class="inteb-cert-icon">
                                                 </a>
                                                 {{/certificates}}
-                                        {{#certificates.0}}
                                             </div>
                                         </div>
                                         {{/certificates.0}}
-                                        {{/certificates}}
                                     </div>
                                 </div>
 
                                 {{! Card Footer }}
                                 <div class="card-footer bg-transparent border-0 pt-0">
-                                    <a href="{{viewurl}}" class="btn btn-outline-secondary btn-sm btn-block inteb-review-btn">
+                                    <a href="{{{url}}}" class="btn btn-outline-secondary btn-sm btn-block inteb-review-btn">
                                         <i class="fa fa-eye mr-1" aria-hidden="true"></i>
                                         {{#str}}viewcourse, block_mycourses{{/str}}
                                     </a>
@@ -185,10 +151,7 @@
                             </div>
                         </div>
                         {{/completedview.courses}}
-                    {{#completedview.courses.0}}
                     </div>
-                    {{/completedview.courses.0}}
-                    {{/completedview.courses}}
 
                     {{! Empty State }}
                     {{^completedview.courses}}
@@ -205,13 +168,3 @@
         </div>
     </div>
 </div>
-
-{{#js}}
-require(['jquery', 'core/custom_interaction_events'], function($, customEvents) {
-    var root = $('#completed-view-{{uniqid}}');
-    customEvents.define(root, [customEvents.events.activate]);
-    root.on(customEvents.events.activate, '[data-toggle="btns"] > .btn', function() {
-        root.find('.btn.active').removeClass('active');
-    });
-});
-{{/js}}

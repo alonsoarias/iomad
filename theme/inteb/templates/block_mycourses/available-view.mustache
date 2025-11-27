@@ -1,0 +1,107 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+    @template block_mycourses/available-view
+
+    This template renders the available courses list view for the mycourses block.
+    Redesigned for theme_inteb with modern list layout.
+}}
+<div id="available-view-{{uniqid}}" data-region="available-view" class="inteb-mycourses-view inteb-list-view">
+    <div class="tab-content">
+        <div class="tab-pane active" id="mycourses_available_view">
+            <div id="paged-content-container-{{uniqid}}" data-region="paged-content-container">
+                <div id="page-container-1" data-region="page-container" class="paged-content-page-container" aria-live="polite">
+                    <div id="paged-content-page" data-page="1">
+                        <div class="inteb-course-list" id="{{uniqid}}">
+                            {{#availableview.courses}}
+                            <div class="inteb-list-item inteb-available-item card mb-3 shadow-sm" data-region="course-content" data-course-id="{{{id}}}">
+                                <div class="card-body p-0">
+                                    <div class="row no-gutters">
+                                        {{! Course Image }}
+                                        <div class="col-md-3 col-lg-2">
+                                            <a href="{{{url}}}" class="inteb-list-img-wrapper d-block" tabindex="-1">
+                                                <div class="inteb-list-img" style="background-image: url('{{{image}}}');">
+                                                    <span class="sr-only">{{{fullname}}}</span>
+                                                </div>
+                                                {{! New Badge }}
+                                                <div class="inteb-list-badge position-absolute">
+                                                    <span class="badge badge-success">
+                                                        <i class="fa fa-star mr-1" aria-hidden="true"></i>
+                                                        {{#str}}new{{/str}}
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        </div>
+
+                                        {{! Course Content }}
+                                        <div class="col-md-9 col-lg-10">
+                                            <div class="inteb-list-content p-3">
+                                                <div class="d-flex justify-content-between align-items-start flex-wrap">
+                                                    {{! Course Title }}
+                                                    <div class="inteb-list-title-wrap mb-2">
+                                                        <a href="{{{url}}}" class="inteb-list-title h5 mb-0 text-dark">
+                                                            {{{fullname}}}
+                                                        </a>
+                                                        {{#coursecategory}}
+                                                        <span class="badge badge-light ml-2">{{{coursecategory}}}</span>
+                                                        {{/coursecategory}}
+                                                    </div>
+
+                                                    {{! Action Button }}
+                                                    <div class="inteb-list-action">
+                                                        <a href="{{{url}}}" class="btn btn-success btn-sm">
+                                                            <i class="fa fa-rocket mr-1" aria-hidden="true"></i>
+                                                            {{#str}}startcourse, block_mycourses{{/str}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                {{! Course Summary }}
+                                                {{#summary}}
+                                                <p class="inteb-list-summary text-muted small mb-2">{{{summary}}}</p>
+                                                {{/summary}}
+
+                                                {{! Not Started Status }}
+                                                <div class="inteb-list-status mt-2">
+                                                    <span class="badge badge-light border">
+                                                        <i class="fa fa-clock-o mr-1" aria-hidden="true"></i>
+                                                        {{#str}}notstarted, block_mycourses{{/str}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/availableview.courses}}
+
+                            {{! Empty State }}
+                            {{^availableview.courses}}
+                            <div class="inteb-empty-state text-center py-5">
+                                <div class="inteb-empty-icon mb-3">
+                                    <i class="fa fa-book fa-4x text-muted"></i>
+                                </div>
+                                <h5 class="text-muted mb-2">{{#str}}noavailable, block_mycourses{{/str}}</h5>
+                                <p class="text-muted small">{{#str}}noavailable, block_mycourses{{/str}}</p>
+                            </div>
+                            {{/availableview.courses}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
