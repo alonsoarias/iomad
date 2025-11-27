@@ -15,25 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy provider
+ * Overriden course topics format renderer.
  *
  * @package    theme_moove
- * @copyright  2022 Willian Mano {@link https://conecti.me}
+ * @copyright  2018 Willian Mano - http://conecti.me
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace theme_moove\privacy;
 
-use core_privacy\local\metadata\collection;
-use core_privacy\local\metadata\provider as baseprovider;
-use core_privacy\local\request\user_preference_provider;
-use core_privacy\local\request\writer;
+use \core_privacy\local\metadata\collection;
+use \core_privacy\local\metadata\provider as baseprovider;
+use \core_privacy\local\request\user_preference_provider;
+use \core_privacy\local\request\writer;
+
+defined('MOODLE_INTERNAL') || die();
 
 /**
- * Privacy provider class
+ * The moove theme does not store any data.
  *
- * @package    theme_moove
- * @copyright  2022 Willian Mano {@link https://conecti.me}
+ * @copyright  2018 Willian Mano - http://conecti.me
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements
@@ -57,7 +58,7 @@ class provider implements
      * @param  collection $items The initialised item collection to add items to.
      * @return collection A listing of user data stored through this system.
      */
-    public static function get_metadata(collection $items): collection {
+    public static function get_metadata(collection $items) : collection {
         $items->add_user_preference(self::FONTSIZE, 'privacy:metadata:preference:accessibilitystyles_fontsizeclass');
         $items->add_user_preference(self::SITECOLOR, 'privacy:metadata:preference:accessibilitystyles_sitecolorclass');
         $items->add_user_preference(self::FONTTYPE, 'privacy:metadata:preference:thememoovesettings_fonttype');

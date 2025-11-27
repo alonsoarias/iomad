@@ -44,10 +44,6 @@ $accessibility-sizes: map-merge(
 }
 
 body {
-    &.odafont {
-        font-family: oda, comic sans ms, clfallback, Verdana;
-    }
-
     &.pagelayout-incourse {
         #region-main a:not(.btn),
         .section-navigation > a:not(.btn) {
@@ -95,7 +91,7 @@ body {
             background-image: none !important;
         }
 
-        *:not([class*="mce"]):not([id*="mce"]):not([id*="editor"]):not([class*="card-img"]):not([class*="activityicon"]) {
+        *:not([class*="mce"]):not([id*="mce"]):not([id*="editor"]) {
             /* it works well only with * selector but mce editor gets unusable */
             background-color: #ffffcc !important;
             background-image: none !important;
@@ -157,7 +153,7 @@ body {
             background-image: none !important;
         }
 
-        *:not([class*="mce"]):not([id*="mce"]):not([id*="editor"]):not([class*="card-img"]):not([class*="activityicon"]) {
+        *:not([class*="mce"]):not([id*="mce"]):not([id*="editor"]){
             /* it works well only with * selector but mce editor gets unusable */
             background-color: #99ccff !important;
             background-image: none !important;
@@ -219,7 +215,7 @@ body {
             background-image: none !important;
         }
 
-        *:not([class*="mce"]):not([id*="mce"]):not([id*="editor"]):not([class*="card-img"]):not([class*="activityicon"]) {
+        *:not([class*="mce"]):not([id*="mce"]):not([id*="editor"]){
             /* it works well only with * selector but mce editor gets unusable */
             background-color: #000000 !important;
             background-image: none !important;

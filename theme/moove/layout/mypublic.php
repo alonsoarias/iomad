@@ -15,85 +15,84 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A drawer based layout for the moove theme.
+ * A two column layout for the moove theme.
  *
- * @package    theme_moove
- * @copyright  2022 Willian Mano {@link https://conecti.me}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   theme_moove
+ * @copyright 2017 Willian Mano - http://conecti.me
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-global $DB, $USER, $OUTPUT, $SITE, $PAGE;
+global $DB;
 
 // Get the profile userid.
-$courseid = optional_param('course', 1, PARAM_INT);
 $userid = optional_param('id', $USER->id, PARAM_INT);
-$userid = $userid ?: $USER->id;
-
 $user = $DB->get_record('user', ['id' => $userid], '*', MUST_EXIST);
 
-$primary = new core\navigation\output\primary($PAGE);
-$renderer = $PAGE->get_renderer('core');
-$primarymenu = $primary->export_for_template($renderer);
-$buildregionmainsettings = !$PAGE->include_region_main_settings_in_header_actions() && !$PAGE->has_secondary_navigation();
-// If the settings menu will be included in the header then don't add it here.
-$regionmainsettingsmenu = $buildregionmainsettings ? $OUTPUT->region_main_settings_menu() : false;
+user_preference_allow_ajax_update('drawer-open-nav', PARAM_ALPHA);
+user_preference_allow_ajax_update('sidepre-open', PARAM_ALPHA);
 
-$header = $PAGE->activityheader;
-$headercontent = $header->export_for_template($renderer);
+require_once($CFG->libdir . '/behat/lib.php');
 
-$userimg = new \user_picture($user);
-$userimg->size = 100;
+$hasdrawertoggle = false;
+$navdraweropen = false;
+$draweropenright = false;
 
-$context = \core\context\course::instance(SITEID);
+if (isloggedin()) {
+    $hasdrawertoggle = true;
+    $navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
+    $draweropenright = (get_user_preferences('sidepre-open', 'true') == 'true');
+}
+
+$blockshtml = $OUTPUT->blocks('side-pre');
+$hasblocks = strpos($blockshtml, 'data-block=') !== false;
 
 $extraclasses = [];
-$secondarynavigation = false;
-$overflow = '';
-if ($PAGE->has_secondary_navigation()) {
-    $secondary = $PAGE->secondarynav;
+if ($navdraweropen) {
+    $extraclasses[] = 'drawer-open-left';
+}
 
-    if ($secondary->get_children_key_list()) {
-        $tablistnav = $PAGE->has_tablist_secondary_navigation();
-        $moremenu = new \core\navigation\output\more_menu($PAGE->secondarynav, 'nav-tabs', true, $tablistnav);
-        $secondarynavigation = $moremenu->export_for_template($OUTPUT);
-        $extraclasses[] = 'has-secondarynavigation';
-    }
-
-    $overflowdata = $PAGE->secondarynav->get_overflow_menu_data();
-    if (!is_null($overflowdata)) {
-        $overflow = $overflowdata->export_for_template($OUTPUT);
-    }
+if ($draweropenright && $hasblocks) {
+    $extraclasses[] = 'drawer-open-right';
 }
 
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
-
+$regionmainsettingsmenu = $OUTPUT->region_main_settings_menu();
+$context = context_course::instance(SITEID);
 $templatecontext = [
-    'sitename' => format_string($SITE->shortname, true, ['context' => \core\context\course::instance(SITEID), "escape" => false]),
+    'sitename' => format_string($SITE->shortname, true, ['context' => $context, "escape" => false]),
     'output' => $OUTPUT,
+    'sidepreblocks' => $blockshtml,
+    'hasblocks' => $hasblocks,
     'bodyattributes' => $bodyattributes,
-    'primarymoremenu' => $primarymenu['moremenu'],
-    'secondarymoremenu' => $secondarynavigation ?: false,
-    'mobileprimarynav' => $primarymenu['mobileprimarynav'],
-    'usermenu' => $primarymenu['user'],
-    'langmenu' => $primarymenu['lang'],
+    'hasdrawertoggle' => $hasdrawertoggle,
+    'navdraweropen' => $navdraweropen,
+    'draweropenright' => $draweropenright,
     'regionmainsettingsmenu' => $regionmainsettingsmenu,
-    'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu),
+    'hasregionmainsettingsmenu' => !empty($regionmainsettingsmenu)
 ];
 
-if (user_can_view_profile($user, null, $context)) {
-    $templatecontext['user'] = [
-        'userpicture' => $userimg->get_url($PAGE),
-        'userfullname' => fullname($user),
-        'headerbuttons' => \theme_moove\util\extras::get_mypublic_headerbuttons($context, $courseid, $user),
-        'editprofileurl' => \theme_moove\util\extras::get_mypublic_editprofile_url($user, $courseid),
-        'userdescription' => format_text($user->description, $user->descriptionformat, ['overflowdiv' => true]),
-    ];
-}
+// Improve boost navigation.
+theme_moove_extend_flat_navigation($PAGE->flatnav);
 
-$themesettings = new \theme_moove\util\settings();
+$templatecontext['flatnavigation'] = $PAGE->flatnav;
 
-$templatecontext = array_merge($templatecontext, $themesettings->footer());
+$themesettings = new \theme_moove\util\theme_settings();
+
+$templatecontext = array_merge($templatecontext, $themesettings->footer_items());
+
+$usercourses = \theme_moove\util\extras::user_courses_with_progress($user);
+$templatecontext['hascourses'] = (count($usercourses)) ? true : false;
+$templatecontext['courses'] = array_values($usercourses);
+$templatecontext['user'] = $user;
+$templatecontext['user']->profilepicture = \theme_moove\util\extras::get_user_picture($user, 100);
+$templatecontext['user']->fullname = fullname($user);
+
+$competencyplans = \theme_moove\util\extras::get_user_competency_plans($user);
+$templatecontext['hascompetencyplans'] = (count($competencyplans)) ? true : false;
+$templatecontext['competencyplans'] = $competencyplans;
+
+$templatecontext['headerbuttons'] = \theme_moove\util\extras::get_mypublic_headerbuttons($context, $user);
 
 echo $OUTPUT->render_from_template('theme_moove/mypublic', $templatecontext);

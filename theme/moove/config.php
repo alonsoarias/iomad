@@ -17,170 +17,144 @@
 /**
  * Moove config.
  *
- * @package    theme_moove
- * @copyright  2022 Willian Mano {@link https://conecti.me}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   theme_moove
+ * @copyright 2017 Willian Mano - http://conecti.me
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// This line protects the file from being accessed by a URL directly.
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/lib.php');
 
 $THEME->name = 'moove';
+
 $THEME->sheets = [];
-$THEME->editor_sheets = [];
-$THEME->editor_scss = ['editor'];
-$THEME->usefallback = false;
-$THEME->scss = function($theme) {
-    return theme_moove_get_main_scss_content($theme);
-};
 
 $THEME->layouts = [
-    // Most backwards compatible layout without the blocks.
-    'base' => [
-        'file' => 'drawers.php',
+    // Most backwards compatible layout without the blocks - this is the layout used by default.
+    'base' => array(
+        'file' => 'columns2.php',
         'regions' => [],
-    ],
-    // Standard layout with blocks.
-    'standard' => [
-        'file' => 'drawers.php',
-        'regions' => ['side-pre'],
+    ),
+    // Standard layout with blocks, this is recommended for most pages with general information.
+    'standard' => array(
+        'file' => 'columns2.php',
+        'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
-    ],
+    ),
     // Main course page.
-    'course' => [
+    'course' => array(
         'file' => 'course.php',
-        'regions' => ['side-pre', 'content'],
+        'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
-        'options' => ['langmenu' => true],
-    ],
-    'coursecategory' => [
-        'file' => 'drawers.php',
-        'regions' => ['side-pre'],
+        'options' => array('nonavbar' => false, 'langmenu' => true),
+    ),
+    'coursecategory' => array(
+        'file' => 'columns2.php',
+        'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
-    ],
+    ),
     // Part of course, typical for modules - default page layout if $cm specified in require_login().
-    'incourse' => [
+    'incourse' => array(
         'file' => 'incourse.php',
-        'regions' => ['side-pre'],
+        'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
-    ],
+        'options' => array('nonavbar' => false, 'langmenu' => true),
+    ),
     // The site home page.
-    'frontpage' => [
+    'frontpage' => array(
         'file' => 'frontpage.php',
-        'regions' => ['side-pre'],
+        'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
-        'options' => ['nonavbar' => true],
-    ],
+        'options' => array('nonavbar' => true),
+    ),
     // Server administration scripts.
-    'admin' => [
-        'file' => 'drawers.php',
-        'regions' => ['side-pre'],
+    'admin' => array(
+        'file' => 'columns2.php',
+        'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
-    ],
-    // My courses page.
-    'mycourses' => [
-        'file' => 'drawers.php',
-        'regions' => ['side-pre'],
-        'defaultregion' => 'side-pre',
-        'options' => ['nonavbar' => true],
-    ],
+    ),
     // My dashboard page.
-    'mydashboard' => [
-        'file' => 'drawers.php',
-        'regions' => ['side-pre'],
+    'mydashboard' => array(
+        'file' => 'mydashboard.php',
+        'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
-        'options' => ['nonavbar' => true, 'langmenu' => true],
-    ],
+        'options' => array('nonavbar' => true, 'langmenu' => true),
+    ),
     // My public page.
-    'mypublic' => [
+    'mypublic' => array(
         'file' => 'mypublic.php',
-        'regions' => ['side-pre'],
+        'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
-    ],
-    'login' => [
+        'options' => array('nonavbar' => false, 'langmenu' => true),
+    ),
+    'login' => array(
         'file' => 'login.php',
         'regions' => [],
-        'options' => ['langmenu' => true],
-    ],
+        'options' => array('langmenu' => true),
+    ),
 
-    // Pages that appear in pop-up windows - no navigation, no blocks, no header and bare activity header.
-    'popup' => [
+    // Pages that appear in pop-up windows - no navigation, no blocks, no header.
+    'popup' => array(
         'file' => 'columns1.php',
         'regions' => [],
-        'options' => [
-            'nofooter' => true,
-            'nonavbar' => true,
-            'activityheader' => [
-                'notitle' => true,
-                'nocompletion' => true,
-                'nodescription' => true,
-            ],
-        ],
-    ],
+        'options' => array('nofooter' => true, 'nonavbar' => true),
+    ),
     // No blocks and minimal footer - used for legacy frame layouts only!
-    'frametop' => [
+    'frametop' => array(
         'file' => 'columns1.php',
         'regions' => [],
-        'options' => [
-            'nofooter' => true,
-            'nocoursefooter' => true,
-            'activityheader' => [
-                'nocompletion' => true,
-            ],
-        ],
-    ],
+        'options' => array('nofooter' => true, 'nocoursefooter' => true),
+    ),
     // Embeded pages, like iframe/object embeded in moodleform - it needs as much space as possible.
-    'embedded' => [
+    'embedded' => array(
         'file' => 'embedded.php',
-        'regions' => ['side-pre'],
-        'defaultregion' => 'side-pre',
-    ],
+        'regions' => []
+    ),
     // Used during upgrade and install, and for the 'This site is undergoing maintenance' message.
     // This must not have any blocks, links, or API calls that would lead to database or cache interaction.
     // Please be extremely careful if you are modifying this layout.
-    'maintenance' => [
+    'maintenance' => array(
         'file' => 'maintenance.php',
         'regions' => [],
-    ],
+    ),
     // Should display the content and basic headers only.
-    'print' => [
+    'print' => array(
         'file' => 'columns1.php',
         'regions' => [],
-        'options' => ['nofooter' => true, 'nonavbar' => false, 'noactivityheader' => true],
-    ],
+        'options' => array('nofooter' => true, 'nonavbar' => false),
+    ),
     // The pagelayout used when a redirection is occuring.
-    'redirect' => [
+    'redirect' => array(
         'file' => 'embedded.php',
         'regions' => [],
-    ],
+    ),
     // The pagelayout used for reports.
-    'report' => [
-        'file' => 'drawers.php',
-        'regions' => ['side-pre'],
+    'report' => array(
+        'file' => 'columns2.php',
+        'regions' => array('side-pre'),
         'defaultregion' => 'side-pre',
-    ],
+    ),
     // The pagelayout used for safebrowser and securewindow.
-    'secure' => [
+    'secure' => array(
         'file' => 'secure.php',
-        'regions' => ['side-pre'],
-        'defaultregion' => 'side-pre',
-    ],
+        'regions' => array('side-pre'),
+        'defaultregion' => 'side-pre'
+    )
 ];
 
+$THEME->editor_sheets = [];
 $THEME->parents = ['boost'];
 $THEME->enable_dock = false;
 $THEME->extrascsscallback = 'theme_moove_get_extra_scss';
 $THEME->prescsscallback = 'theme_moove_get_pre_scss';
-$THEME->precompiledcsscallback = 'theme_moove_get_precompiled_css';
 $THEME->yuicssmodules = [];
 $THEME->rendererfactory = 'theme_overridden_renderer_factory';
+$THEME->scss = function($theme) {
+    return theme_moove_get_main_scss_content($theme);
+};
 $THEME->requiredblocks = '';
 $THEME->addblockposition = BLOCK_ADDBLOCK_POSITION_FLATNAV;
-$THEME->iconsystem = \core\output\icon_system::FONTAWESOME;
-$THEME->haseditswitch = true;
-$THEME->usescourseindex = true;
-// By default, all Moodle theme do not need their titles displayed.
-$THEME->activityheaderconfig = [
-    'notitle' => true,
-];
+$THEME->usefallback = false;
+$THEME->iconsystem = \theme_moove\util\icon_system::class;
