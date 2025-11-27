@@ -1915,10 +1915,16 @@ section.node-category {
 
 /* ==========================================================================
    21. BARRA GOV.CO - Barra superior gubernamental
+   Implementación basada en estándares GOV.CO para sitios gubernamentales
    ========================================================================== */
 
-/* Contenedor principal de la barra GOV.CO */
+/* Contenedor principal de la barra GOV.CO - Posicionamiento explícito */
 .gov-navbar-top {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0;
+    right: 0;
+    width: 100%;
     background-color: #045091;
     background-image: linear-gradient(to right, #045091, #096FB7);
     height: 38px;
@@ -1926,6 +1932,7 @@ section.node-category {
     align-items: center;
     z-index: 1031;
     transition: height 0.3s ease-in-out, background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 /* Logo GOV.CO */
@@ -1954,7 +1961,18 @@ section.node-category {
 }
 
 /* Ajuste del navbar principal para compensar la barra GOV.CO */
+/* Se usan múltiples selectores para mayor especificidad y sobreescribir RemUI */
 .navbar.fixed-top {
+    top: 38px !important;
+    position: fixed !important;
+    z-index: 1030;
+}
+
+html body:not(.focusmode) div.navbar.fixed-top:not(.fm-navbar) {
+    top: 38px !important;
+}
+
+div.navbar.fixed-top {
     top: 38px !important;
 }
 
@@ -1969,13 +1987,42 @@ body.pagelayout-login {
 }
 
 body.pagelayout-login .gov-navbar-top {
-    position: fixed;
-    top: 0;
+    position: fixed !important;
+    top: 0 !important;
     left: 0;
     right: 0;
 }
 
-/* Responsive - Ajustes para móviles */
+/* Drawer toggler posicionamiento */
+.drawer-toggles .drawer-toggler {
+    position: fixed;
+    top: calc(118px + 0.7rem);
+    z-index: 2;
+}
+
+/* Responsive - Desktop grande (992px+) */
+@media (min-width: 992px) {
+    body:not(.pagelayout-login) {
+        padding-top: 118px !important;
+    }
+}
+
+/* Responsive - Tablets (991px y menor) */
+@media (max-width: 991px) {
+    body:not(.pagelayout-login) {
+        padding-top: 115px !important;
+    }
+
+    .navbar.fixed-top {
+        top: 38px !important;
+    }
+
+    .drawer-toggles .drawer-toggler {
+        top: calc(115px + 0.7rem);
+    }
+}
+
+/* Responsive - Móviles (768px y menor) */
 @media (max-width: 768px) {
     .gov-navbar-top {
         height: 35px;
@@ -1990,16 +2037,38 @@ body.pagelayout-login .gov-navbar-top {
         height: 28px;
     }
 
-    .navbar.fixed-top {
+    .navbar.fixed-top,
+    html body:not(.focusmode) div.navbar.fixed-top:not(.fm-navbar),
+    div.navbar.fixed-top {
         top: 35px !important;
     }
 
     body:not(.pagelayout-login) {
-        padding-top: 115px !important; /* 35px (GOV bar) + 80px (navbar) */
+        padding-top: 112px !important; /* 35px (GOV bar) + 77px (navbar) */
     }
 
     body.pagelayout-login {
         padding-top: 35px !important;
+    }
+
+    .drawer-toggles .drawer-toggler {
+        top: calc(112px + 0.7rem);
+    }
+}
+
+/* Responsive - Móviles pequeños (576px y menor) */
+@media (max-width: 576px) {
+    body:not(.focusmode) .navbar:not(.fm-navbar) {
+        top: 35px !important;
+        transition: all 0.5s ease;
+    }
+
+    body:not(.pagelayout-login) {
+        padding-top: 108px !important;
+    }
+
+    .drawer-toggles .drawer-toggler {
+        top: calc(108px + 0.7rem);
     }
 }
 
@@ -2008,8 +2077,31 @@ body.pagelayout-login .gov-navbar-top {
     top: 118px !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
     .drawer {
         top: 115px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .drawer {
+        top: 112px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .drawer {
+        top: 108px !important;
+    }
+}
+
+/* Accesibilidad - reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+    .gov-navbar-top,
+    .gov-logo,
+    .gov-logo img,
+    .gov-logo a:hover img,
+    .gov-logo a:focus img {
+        transition: none !important;
     }
 }
