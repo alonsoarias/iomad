@@ -31,8 +31,16 @@ require_once($CFG->dirroot . '/course/lib.php');
 
 global $PAGE;
 
-// Forzar desactivación del siteloader para INTEB
+// Siteloader para INTEB - Verificar configuración propia del tema
 $loaderimage = false;
+if (get_config('theme_inteb', 'ib_enablesiteloader')) {
+    // Obtener imagen personalizada del siteloader o usar la de remui por defecto
+    $loaderimage = \theme_remui\toolbox::setting_file_url('ib_loaderimage', 'ib_loaderimage');
+    if (empty($loaderimage)) {
+        // Fallback a la imagen de remui si no hay imagen personalizada
+        $loaderimage = $CFG->wwwroot . '/theme/remui/pix/siteloader.svg';
+    }
+}
 
 // Add block button in editing mode.
 $addblockbutton = $OUTPUT->addblockbutton();

@@ -169,6 +169,33 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
+    // --- Site Loader Settings ---
+    $page->add(new admin_setting_heading(
+        'theme_inteb/ib_siteloaderheading',
+        get_string('siteloader', 'theme_inteb'),
+        get_string('siteloaderdesc', 'theme_inteb')
+    ));
+
+    // Enable Site Loader
+    $name = 'theme_inteb/ib_enablesiteloader';
+    $title = get_string('enablesiteloader', 'theme_inteb');
+    $description = get_string('enablesiteloaderdesc', 'theme_inteb');
+    $default = 1;
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
+    // Site Loader Image
+    $name = 'theme_inteb/ib_loaderimage';
+    $title = get_string('loaderimage', 'theme_inteb');
+    $description = get_string('loaderimagedesc', 'theme_inteb');
+    $setting = new admin_setting_configstoredfile($name, $title, $description, 'ib_loaderimage', 0, [
+        'subdirs' => 0,
+        'accepted_types' => ['.svg', '.gif', '.png', '.jpg', '.jpeg']
+    ]);
+    $setting->set_updatedcallback('theme_reset_all_caches');
+    $page->add($setting);
+
     $asettings->add_tab($page);
 
     /* =========================================================================

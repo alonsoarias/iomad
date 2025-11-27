@@ -125,3 +125,11 @@ $string['devtools_access_disabled'] = 'El acceso a las herramientas de desarroll
 // Cadenas adicionales para el panel de control
 $string['dashboardpersonalizerinfo'] = 'Información del personalizador del panel';
 $string['defaultheader'] = 'Encabezado predeterminado';
+
+// Cargador del sitio (Site Loader)
+$string['siteloader'] = 'Cargador del sitio';
+$string['siteloaderdesc'] = 'Configura el indicador de carga que se muestra mientras el sitio está cargando.';
+$string['enablesiteloader'] = 'Activar cargador del sitio';
+$string['enablesiteloaderdesc'] = 'Mostrar una animación de carga mientras el sitio se carga completamente.';
+$string['loaderimage'] = 'Imagen del cargador';
+$string['loaderimagedesc'] = 'Sube una imagen personalizada para el cargador (formatos recomendados: SVG o GIF animado). Si no se sube ninguna, se usará el cargador predeterminado.';
