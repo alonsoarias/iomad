@@ -14,7 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Copy/paste prevention JavaScript module.
+ * Copy/paste and screenshot prevention JavaScript module.
  *
  * @module     theme_inteb/prevent_copy_paste
  * @copyright  2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
@@ -31,6 +31,7 @@ define(['jquery'], function($) {
     var PreventCopyPaste = function() {
         this.registerEventListeners();
         this.disableSelection();
+        this.preventScreenshot();
     };
 
     PreventCopyPaste.prototype.registerEventListeners = function() {
@@ -206,6 +207,296 @@ define(['jquery'], function($) {
                 'input::-moz-selection, textarea::-moz-selection, [contenteditable="true"]::-moz-selection, ' +
                 '.editor_atto_content ::-moz-selection, .atto_text ::-moz-selection { ' +
                 'background: #b3d4fc !important; ' +
+                '}' +
+                '</style>';
+            $('head').append(css);
+        }
+    };
+
+    /**
+     * Prevenir capturas de pantalla
+     * Implementa múltiples técnicas para bloquear screenshots
+     */
+    PreventCopyPaste.prototype.preventScreenshot = function() {
+        var self = this;
+
+        // 1. Crear overlay de protección para capturas
+        this.createScreenshotOverlay();
+
+        // 2. Detectar pérdida de foco de ventana (posible captura)
+        $(window).on('blur', function() {
+            self.showScreenshotProtection();
+        });
+
+        $(window).on('focus', function() {
+            self.hideScreenshotProtection();
+        });
+
+        // 3. Detectar cambios de visibilidad de página
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                self.showScreenshotProtection();
+            } else {
+                // Pequeño delay antes de ocultar para evitar capturas rápidas
+                setTimeout(function() {
+                    self.hideScreenshotProtection();
+                }, 300);
+            }
+        });
+
+        // 4. Bloquear tecla PrintScreen y combinaciones de captura
+        $(document).on('keyup keydown', function(e) {
+            var keyCode = e.keyCode || e.which;
+
+            // PrintScreen key
+            if (keyCode === 44) {
+                e.preventDefault();
+                self.showScreenshotWarning();
+                // Limpiar el portapapeles si es posible
+                self.clearClipboard();
+                return false;
+            }
+
+            // Windows + Shift + S (Windows 10/11 Snipping Tool)
+            if (e.metaKey && e.shiftKey && keyCode === 83) {
+                e.preventDefault();
+                self.showScreenshotWarning();
+                return false;
+            }
+
+            // Windows + PrintScreen
+            if (e.metaKey && keyCode === 44) {
+                e.preventDefault();
+                self.showScreenshotWarning();
+                return false;
+            }
+
+            // Alt + PrintScreen
+            if (e.altKey && keyCode === 44) {
+                e.preventDefault();
+                self.showScreenshotWarning();
+                return false;
+            }
+
+            // Cmd + Shift + 3/4/5 (Mac screenshots)
+            if (e.metaKey && e.shiftKey && (keyCode === 51 || keyCode === 52 || keyCode === 53)) {
+                e.preventDefault();
+                self.showScreenshotWarning();
+                return false;
+            }
+
+            // Ctrl + Shift + S (algunas herramientas de captura)
+            if (e.ctrlKey && e.shiftKey && keyCode === 83) {
+                e.preventDefault();
+                self.showScreenshotWarning();
+                return false;
+            }
+        });
+
+        // 5. Intentar bloquear Screen Capture API
+        this.blockScreenCaptureAPI();
+
+        // 6. Agregar CSS de protección anti-captura
+        this.addScreenshotProtectionCSS();
+    };
+
+    /**
+     * Crear overlay de protección
+     */
+    PreventCopyPaste.prototype.createScreenshotOverlay = function() {
+        if ($('#screenshot-protection-overlay').length === 0) {
+            var overlay = $('<div id="screenshot-protection-overlay"></div>');
+            overlay.css({
+                'position': 'fixed',
+                'top': '0',
+                'left': '0',
+                'width': '100%',
+                'height': '100%',
+                'background': 'linear-gradient(135deg, #1B9E88 0%, #158C78 100%)',
+                'z-index': '999999',
+                'display': 'none',
+                'justify-content': 'center',
+                'align-items': 'center',
+                'flex-direction': 'column',
+                'color': '#ffffff',
+                'font-family': 'Verdana, Arial, sans-serif',
+                'text-align': 'center'
+            });
+
+            var content = $('<div class="protection-content"></div>');
+            content.css({
+                'padding': '40px',
+                'background': 'rgba(255,255,255,0.1)',
+                'border-radius': '16px',
+                'backdrop-filter': 'blur(10px)'
+            });
+
+            content.html(
+                '<div style="font-size: 64px; margin-bottom: 20px;">🛡️</div>' +
+                '<h2 style="font-size: 24px; margin-bottom: 10px; font-weight: bold;">Contenido Protegido</h2>' +
+                '<p style="font-size: 16px; opacity: 0.9;">Las capturas de pantalla están deshabilitadas en esta plataforma.</p>' +
+                '<p style="font-size: 14px; opacity: 0.7; margin-top: 15px;">ISER - Instituto Superior de Educación Rural</p>'
+            );
+
+            overlay.append(content);
+            $('body').append(overlay);
+        }
+    };
+
+    /**
+     * Mostrar protección de captura
+     */
+    PreventCopyPaste.prototype.showScreenshotProtection = function() {
+        $('#screenshot-protection-overlay').css('display', 'flex');
+    };
+
+    /**
+     * Ocultar protección de captura
+     */
+    PreventCopyPaste.prototype.hideScreenshotProtection = function() {
+        $('#screenshot-protection-overlay').css('display', 'none');
+    };
+
+    /**
+     * Mostrar advertencia de captura bloqueada
+     */
+    PreventCopyPaste.prototype.showScreenshotWarning = function() {
+        var self = this;
+
+        // Mostrar overlay temporalmente
+        self.showScreenshotProtection();
+
+        // Crear notificación toast si no existe
+        if ($('#screenshot-warning-toast').length === 0) {
+            var toast = $('<div id="screenshot-warning-toast"></div>');
+            toast.css({
+                'position': 'fixed',
+                'bottom': '20px',
+                'right': '20px',
+                'background': '#EB4335',
+                'color': '#ffffff',
+                'padding': '15px 25px',
+                'border-radius': '8px',
+                'font-family': 'Verdana, Arial, sans-serif',
+                'font-size': '14px',
+                'z-index': '9999999',
+                'box-shadow': '0 4px 12px rgba(0,0,0,0.3)',
+                'display': 'none',
+                'animation': 'slideIn 0.3s ease'
+            });
+            toast.html('⚠️ Las capturas de pantalla no están permitidas');
+            $('body').append(toast);
+        }
+
+        // Mostrar toast
+        $('#screenshot-warning-toast').fadeIn(300);
+
+        // Ocultar después de 3 segundos
+        setTimeout(function() {
+            $('#screenshot-warning-toast').fadeOut(300);
+            self.hideScreenshotProtection();
+        }, 3000);
+    };
+
+    /**
+     * Intentar limpiar el portapapeles
+     */
+    PreventCopyPaste.prototype.clearClipboard = function() {
+        try {
+            // Intentar sobrescribir el portapapeles con texto vacío
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText('').catch(function() {
+                    // Silenciar error si no tiene permisos
+                });
+            }
+        } catch (e) {
+            // Silenciar error
+        }
+    };
+
+    /**
+     * Intentar bloquear Screen Capture API
+     */
+    PreventCopyPaste.prototype.blockScreenCaptureAPI = function() {
+        // Intentar sobrescribir getDisplayMedia si está disponible
+        if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+            var originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia.bind(navigator.mediaDevices);
+
+            navigator.mediaDevices.getDisplayMedia = function() {
+                console.warn('Screen capture blocked by ISER security policy');
+                return Promise.reject(new Error('Screen capture is not allowed on this platform'));
+            };
+        }
+
+        // Bloquear también getUserMedia para screen capture
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            var originalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+
+            navigator.mediaDevices.getUserMedia = function(constraints) {
+                // Solo bloquear si se está solicitando captura de pantalla
+                if (constraints && (constraints.video === true ||
+                    (constraints.video && constraints.video.mediaSource === 'screen'))) {
+                    // Permitir cámara/micrófono normal, bloquear screen capture
+                    if (constraints.video && typeof constraints.video === 'object' &&
+                        (constraints.video.mediaSource === 'screen' ||
+                         constraints.video.mediaSource === 'window' ||
+                         constraints.video.mediaSource === 'application')) {
+                        console.warn('Screen capture blocked by ISER security policy');
+                        return Promise.reject(new Error('Screen capture is not allowed'));
+                    }
+                }
+                return originalGetUserMedia(constraints);
+            };
+        }
+    };
+
+    /**
+     * Agregar CSS adicional para protección anti-captura
+     */
+    PreventCopyPaste.prototype.addScreenshotProtectionCSS = function() {
+        if ($('#screenshot-protection-css').length === 0) {
+            var css = '<style id="screenshot-protection-css">' +
+                '/* Animación para toast de advertencia */' +
+                '@keyframes slideIn {' +
+                '    from { transform: translateX(100%); opacity: 0; }' +
+                '    to { transform: translateX(0); opacity: 1; }' +
+                '}' +
+
+                '/* Protección adicional durante impresión */' +
+                '@media print {' +
+                '    body * {' +
+                '        visibility: hidden !important;' +
+                '    }' +
+                '    body::before {' +
+                '        content: "Impresión no permitida - ISER";' +
+                '        visibility: visible !important;' +
+                '        position: fixed;' +
+                '        top: 50%;' +
+                '        left: 50%;' +
+                '        transform: translate(-50%, -50%);' +
+                '        font-size: 24px;' +
+                '        font-family: Verdana, Arial, sans-serif;' +
+                '        color: #1B9E88;' +
+                '    }' +
+                '}' +
+
+                '/* Marca de agua sutil para disuadir capturas */' +
+                'body::after {' +
+                '    content: "";' +
+                '    position: fixed;' +
+                '    top: 0;' +
+                '    left: 0;' +
+                '    width: 100%;' +
+                '    height: 100%;' +
+                '    pointer-events: none;' +
+                '    z-index: 99998;' +
+                '    background: repeating-linear-gradient(' +
+                '        45deg,' +
+                '        transparent,' +
+                '        transparent 200px,' +
+                '        rgba(27, 158, 136, 0.01) 200px,' +
+                '        rgba(27, 158, 136, 0.01) 400px' +
+                '    );' +
                 '}' +
                 '</style>';
             $('head').append(css);
