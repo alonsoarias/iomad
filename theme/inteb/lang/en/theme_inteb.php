@@ -112,6 +112,11 @@ $string['footercolumntitle_desc'] = 'Optional title for column {$a} (leave empty
 // Default content for each column
 $string['footercolumn1_default'] = '<div class="footer-logos-column">
     <div class="footer-logo-item mb-3">
+        <a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer" aria-label="ISER Portal">
+            <img src="/theme/inteb/pix/logo_inverted.webp" alt="ISER Logo" class="footer-logo-iser">
+        </a>
+    </div>
+    <div class="footer-logo-item mb-3">
         <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="GOV.CO Portal">
             <img src="/theme/inteb/pix/logo-govco.webp" alt="GOV.CO Logo" class="footer-logo-govco">
         </a>
