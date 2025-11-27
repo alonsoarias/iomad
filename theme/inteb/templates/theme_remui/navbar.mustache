@@ -14,53 +14,33 @@
     You should have received a copy of the GNU General Public License
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-    Edwiser RemUI
-    @package theme_remui
-    @copyright (c) 2023 WisdmLabs (https://wisdmlabs.com/)
+    Theme INTEB - Child of Edwiser RemUI
+    @package theme_inteb
+    @copyright (c) 2025 IngeWeb <soporte@ingeweb.co>
     @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 }}
 {{!
+    @template theme_inteb/navbar
 
-    @template theme_remui/navbar
-
-    This template renders the top navbar.
-
-    Example context (json):
-    {
-        "output": {
-            "should_display_navbar_logo": true,
-            "get_compact_logo_url": "http://placekitten.com/50/50",
-            "custom_menu": "<li>..</li>",
-            "page_heading_menu": "<li>..</li>",
-            "search_box": "<div><input type='text'></div>",
-            "navbar_plugin_output": "<div class='dropdown'>Messaging</div>",
-            "user_menu": "<div class='dropdown'>John Doe</div>"
-        },
-        "config": {
-            "wwwroot": "#",
-            "homeurl": "/my/"
-        },
-        "sitename": "Moodle Site",
-        "mobileprimarynav": [
-            {
-                "text": "Dashboard",
-                "url": "/my",
-                "isactive": true
-            },
-            {
-                "text": "Site home",
-                "url": "/",
-                "isactive": false
-            },
-            {
-                "text": "My courses",
-                "url": "/course",
-                "isactive": false
-            }
-        ]
-    }
+    This template renders the top navbar with GOV.CO bar.
 }}
-<nav class="navbar fixed-top navbar-expand {{navlayout}}  {{#homepagetransparentheader}}trasnparent-home-nav{{/homepagetransparentheader}}" aria-label="{{#str}}sitemenubar, admin{{/str}}">
+
+<!-- Barra superior GOV.CO -->
+<div class="gov-navbar-top fixed-top">
+    <div class="container">
+        <div class="gov-logo">
+            <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal GOV.CO">
+                <img src="{{config.wwwroot}}/theme/inteb/pix/logo-govco.webp"
+                     alt="Logo GOV.CO"
+                     class="img-fluid"
+                     loading="lazy">
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Navbar principal de Moodle -->
+<nav class="navbar fixed-top navbar-expand {{navlayout}} {{#homepagetransparentheader}}trasnparent-home-nav{{/homepagetransparentheader}}" aria-label="{{#str}}sitemenubar, admin{{/str}}">
 
     <!-- Branding / Logo (Logo completo de la compañía o del tema) -->
     <a href="{{{ config.homeurl }}}" class="navbar-brand d-none d-md-flex align-items-center m-0 aabtn" 

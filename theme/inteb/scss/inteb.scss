@@ -1912,3 +1912,104 @@ section.node-category {
         }
     }
 }
+
+/* ==========================================================================
+   21. BARRA GOV.CO - Barra superior gubernamental
+   ========================================================================== */
+
+/* Contenedor principal de la barra GOV.CO */
+.gov-navbar-top {
+    background-color: #045091;
+    background-image: linear-gradient(to right, #045091, #096FB7);
+    height: 38px;
+    display: flex;
+    align-items: center;
+    z-index: 1031;
+    transition: height 0.3s ease-in-out, background-color 0.3s ease;
+}
+
+/* Logo GOV.CO */
+.gov-logo {
+    height: 32px;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+}
+
+.gov-logo img {
+    height: 32px;
+    width: auto;
+    transition: height 0.2s ease;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.gov-logo a {
+    display: inline-block;
+    text-decoration: none;
+}
+
+.gov-logo a:hover img,
+.gov-logo a:focus img {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transform: scale(1.02);
+}
+
+/* Ajuste del navbar principal para compensar la barra GOV.CO */
+.navbar.fixed-top {
+    top: 38px !important;
+}
+
+/* Ajuste del padding del body para compensar ambas barras */
+body:not(.pagelayout-login) {
+    padding-top: 118px !important; /* 38px (GOV bar) + 80px (navbar) */
+}
+
+/* Ajustes para página de login */
+body.pagelayout-login {
+    padding-top: 38px !important;
+}
+
+body.pagelayout-login .gov-navbar-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+/* Responsive - Ajustes para móviles */
+@media (max-width: 768px) {
+    .gov-navbar-top {
+        height: 35px;
+    }
+
+    .gov-logo {
+        height: 28px;
+        margin: 3px 0;
+    }
+
+    .gov-logo img {
+        height: 28px;
+    }
+
+    .navbar.fixed-top {
+        top: 35px !important;
+    }
+
+    body:not(.pagelayout-login) {
+        padding-top: 115px !important; /* 35px (GOV bar) + 80px (navbar) */
+    }
+
+    body.pagelayout-login {
+        padding-top: 35px !important;
+    }
+}
+
+/* Asegurar que los drawers se ajusten correctamente */
+.drawer {
+    top: 118px !important;
+}
+
+@media (max-width: 768px) {
+    .drawer {
+        top: 115px !important;
+    }
+}
