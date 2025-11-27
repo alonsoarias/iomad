@@ -171,12 +171,10 @@ $string['show'] = 'Show';
 $string['activatelicense'] = 'Activate license';
 $string['licenseactivation'] = 'License activation';
 $string['licenseactivationdesc'] = 'The license is activated automatically.';
-$string['themeinfotext'] = '<div class="alert alert-info">
-<p><strong>INTEB Theme</strong> - Developed for <a href="https://www.iser.edu.co/" target="_blank">Instituto Superior de Educación Rural - ISER</a></p>
+$string['themeinfotext'] = '<p><strong>ISER Theme</strong> - Developed for <a href="https://www.iser.edu.co/" target="_blank">Instituto Superior de Educación Rural - ISER</a></p>
 <p><em>"Ruralities with purpose"</em></p>
 <p>Academic Vice-Rectory - Mauricio Zafra</p>
-<p>Development: Alonso Arias - <a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a></p>
-</div>';
+<p>Development: Alonso Arias - <a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a></p>';
 
 // Messages for unauthorized access
 $string['unauthorized_access'] = 'Unauthorized Access';
