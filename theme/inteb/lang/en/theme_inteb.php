@@ -123,7 +123,7 @@ $string['footercolumn1_default'] = '<div class="footer-logos-column">
     </div>
 </div>
 <p class="mt-3">Instituto Superior de Educación Rural - ISER - is a public Higher Education Institution, supervised by the Ministry of National Education.</p>
-<blockquote>"We train productive and supportive citizens"</blockquote>';
+<blockquote>"Ruralities with purpose"</blockquote>';
 
 $string['footercolumn2_default'] = '<h4>Contact Information</h4>
 <ul>
