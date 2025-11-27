@@ -6,6 +6,15 @@
  * - theme/inteb/style/custom.css
  *
  * Eliminando duplicados y actualizando referencias a RemUI
+ *
+ * IMPORTANTE: Este archivo usa variables definidas en custom_variables.scss
+ * NO usar @import - Moodle compila automáticamente los archivos SCSS
+ *
+ * Variables de marca INTEB disponibles:
+ * - Primarios: $my-verde, $my-amarillo, $my-rojo
+ * - Secundarios: $my-orange, $my-lime, $my-blue, $my-magenta
+ * - Neutrales: $my-gris-claro, $my-gris-medio, $my-gris-oscuro, $my-negro, $my-blanco
+ * - Sistema: $color-primary, $color-secondary, $color-terciary, $color-white
  *******************/
 
 /* ==========================================================================
@@ -91,7 +100,7 @@ a.nav-link {
 .nav-pills {
     .nav-link.active,
     .show>.nav-link {
-        color: #ffffff;
+        color: $color-white;
         background-color: $color-primary;
     }
 }
@@ -197,7 +206,7 @@ a.nav-link {
 
 .navbar #usernavigation .userinitials {
     background-color: $my-blue;
-    color: #ffffff;
+    color: $color-white;
 }
 
 .navbar .edw-icon {
@@ -224,8 +233,8 @@ div#navbarmenutopic {
 
 /* Page Header */
 #page-header.hasbackground.design-1 .header-main-section .category .badge {
-    color: white;
-    background-color: $green;
+    color: $color-white;
+    background-color: $my-verde;
 }
 
 .position-absolute.w-100.h-100 {
@@ -266,7 +275,7 @@ div#navbarmenutopic {
 }
 
 #top-footer h3 {
-    color: white;
+    color: $color-white;
 }
 
 #top-footer .my-about,
@@ -298,11 +307,11 @@ a.my-credit-link:hover {
 }
 
 .about-text-content h4.data {
-    color: #ffffff;
+    color: $color-white;
 }
 
 .about-text-content a.link-1 {
-    color: #ffffff;
+    color: $color-white;
 }
 
 /* ==========================================================================
@@ -313,17 +322,17 @@ a.my-credit-link:hover {
 .btn-primary {
     background-color: $color-secondary !important;
     border-color: $color-secondary !important;
-    color: #ffffff;
+    color: $color-white;
 
     .fa,
     .edw-icon {
-        color: #ffffff;
+        color: $color-white;
     }
 
     &:hover {
         background-color: $color-primary !important;
         border-color: $color-primary !important;
-        color: #ffffff;
+        color: $color-white;
     }
 
     &:not(:disabled):not(.disabled):active,
@@ -332,14 +341,14 @@ a.my-credit-link:hover {
     .show>&.dropdown-toggle {
         background-color: $color-secondary !important;
         border-color: $color-secondary !important;
-        color: #ffffff;
+        color: $color-white;
     }
 
     &:not(:disabled):not(.disabled):focus,
     &:not(:disabled):not(.disabled).focus {
         background-color: $color-primary !important;
         border-color: $color-primary !important;
-        color: #ffffff;
+        color: $color-white;
     }
 }
 
@@ -347,17 +356,17 @@ a.my-credit-link:hover {
 .btn-secondary {
     background-color: $color-primary !important;
     border-color: $color-primary !important;
-    color: #ffffff;
+    color: $color-white;
 
     .fa,
     .edw-icon {
-        color: #ffffff;
+        color: $color-white;
     }
 
     &:hover {
         background-color: $color-secondary !important;
         border-color: $color-secondary !important;
-        color: #ffffff;
+        color: $color-white;
     }
 
     &:not(:disabled):not(.disabled):active,
@@ -366,27 +375,27 @@ a.my-credit-link:hover {
     .show>&.dropdown-toggle {
         background-color: $color-primary !important;
         border-color: $color-primary !important;
-        color: #ffffff;
+        color: $color-white;
     }
 
     &:not(:disabled):not(.disabled):focus,
     &:not(:disabled):not(.disabled).focus {
         background-color: $color-secondary !important;
         border-color: $color-secondary !important;
-        color: #ffffff;
+        color: $color-white;
     }
 }
 
 /* Botones Específicos */
 button.btn.btn-primary.icon-no-margin.p-0 {
     background-color: $color-secondary !important;
-    border-color: white;
-    color: white;
+    border-color: $color-white;
+    color: $color-white;
 
     &:hover {
         background-color: $color-secondary !important;
-        border-color: white;
-        color: white !important;
+        border-color: $color-white;
+        color: $color-white !important;
     }
 
     &:not(:disabled):not(.disabled):active,
@@ -394,23 +403,23 @@ button.btn.btn-primary.icon-no-margin.p-0 {
     &:not(:disabled):not(.disabled):active:focus,
     .show>&.dropdown-toggle {
         background-color: darken($color-secondary, 10%);
-        border-color: white;
-        color: white;
+        border-color: $color-white;
+        color: $color-white;
 
         .fa,
         .edw-icon {
-            color: white;
+            color: $color-white;
         }
     }
 }
 
 .btn-floating {
-    border-color: white;
+    border-color: $color-white;
 }
 
 .btn-primary .fa,
 .btn-primary .edw-icon {
-    color: white !important;
+    color: $color-white !important;
 }
 
 /* Outline Buttons */
@@ -418,7 +427,7 @@ button.btn.btn-primary.icon-no-margin.p-0 {
 .btn-link:hover,
 .btn-outline-primary,
 .btn-outline-primary:hover {
-    background-color: #fff;
+    background-color: $color-white;
 }
 
 .btn-link {
@@ -447,7 +456,7 @@ button.btn.btn-primary.icon-no-margin.p-0 {
    ========================================================================== */
 
 .badge.badge-danger {
-    background-color: #f51f25;
+    background-color: $my-rojo;
 }
 
 .badge-info,
@@ -459,7 +468,7 @@ button.btn.btn-primary.icon-no-margin.p-0 {
 }
 
 .badge-info {
-    background-color: $purple;
+    background-color: $my-magenta;
 }
 
 .badge-info:hover {
@@ -468,24 +477,24 @@ button.btn.btn-primary.icon-no-margin.p-0 {
 }
 
 .badge-success {
-    background-color: $green;
+    background-color: $my-verde;
 }
 
 .badge-succes:hover {
-    background-color: darken($green, 10%);
+    background-color: darken($my-verde, 10%);
 }
 
 span.badge.badge-info {
-    color: white;
+    color: $color-white;
 }
 
 span.badge.rounded-pill.bg-secondary.text-dark,
 span.badge.bg-secondary.text-dark {
-    color: white !important;
+    color: $color-white !important;
 }
 
 .block_grade_me .badge {
-    color: #ffffff;
+    color: $color-white;
 }
 
 /* ==========================================================================
@@ -543,11 +552,11 @@ span.badge.bg-secondary.text-dark {
 
 .block .dropdown-item:focus {
     background-color: $my-oscuro;
-    color: white;
+    color: $color-white;
 }
 
 #block-region-side-pre>section>.card-header>h5.card-title {
-    color: white;
+    color: $color-white;
 }
 
 #sidepreopen-control {
@@ -617,41 +626,41 @@ span.badge.bg-secondary.text-dark {
 .block.block_xp h5.card-title:before { content: "\f091"; }
 .block.block_myprogress h5.card-title:before { content: "\f201"; }
 
-/* Colores para bloques en side-pre */
-#block-region-side-pre>section:nth-of-type(7n)>.card-header { background-color: $block-region-side-pre-7; border-radius: 0px; }
-#block-region-side-pre>section:nth-of-type(7n)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
-#block-region-side-pre>section:nth-of-type(7n + 1)>.card-header { background-color: $block-region-side-pre-1; border-radius: 0px; }
-#block-region-side-pre>section:nth-of-type(7n + 1)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
-#block-region-side-pre>section:nth-of-type(7n + 2)>.card-header { background-color: $block-region-side-pre-2; border-radius: 0px; }
-#block-region-side-pre>section:nth-of-type(7n + 2)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
-#block-region-side-pre>section:nth-of-type(7n + 3)>.card-header { background-color: $block-region-side-pre-3; border-radius: 0px; }
-#block-region-side-pre>section:nth-of-type(7n + 3)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
-#block-region-side-pre>section:nth-of-type(7n + 4)>.card-header { background-color: $block-region-side-pre-4; border-radius: 0px; }
-#block-region-side-pre>section:nth-of-type(7n + 4)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
-#block-region-side-pre>section:nth-of-type(7n + 5)>.card-header { background-color: $block-region-side-pre-5; border-radius: 0px; }
-#block-region-side-pre>section:nth-of-type(7n + 5)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
-#block-region-side-pre>section:nth-of-type(7n + 6)>.card-header { background-color: $block-region-side-pre-6; border-radius: 0px; }
-#block-region-side-pre>section:nth-of-type(7n + 6)>.card-body { background-color: #f5f8ff; border-radius: 0px 0px 24px 24px; }
+/* Colores para bloques en side-pre - Usando paleta INTEB */
+#block-region-side-pre>section:nth-of-type(7n)>.card-header { background-color: $my-gris-oscuro; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n)>.card-body { background-color: $color-lightgray; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 1)>.card-header { background-color: $my-orange; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 1)>.card-body { background-color: $color-lightgray; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 2)>.card-header { background-color: $my-verde; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 2)>.card-body { background-color: $color-lightgray; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 3)>.card-header { background-color: $my-blue; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 3)>.card-body { background-color: $color-lightgray; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 4)>.card-header { background-color: $my-magenta; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 4)>.card-body { background-color: $color-lightgray; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 5)>.card-header { background-color: $my-rojo; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 5)>.card-body { background-color: $color-lightgray; border-radius: 0px 0px 24px 24px; }
+#block-region-side-pre>section:nth-of-type(7n + 6)>.card-header { background-color: $my-amarillo; border-radius: 0px; }
+#block-region-side-pre>section:nth-of-type(7n + 6)>.card-body { background-color: $color-lightgray; border-radius: 0px 0px 24px 24px; }
 #block-region-side-pre .block { border-bottom: 0px; }
 
 .card-header.idigital-block-header {
-    background-color: #e8e8e8;
+    background-color: $color-lightgray;
     border-radius: 24px 24px 0px 0px;
 }
 
 .block .card-title {
-    color: #696969;
+    color: $my-gris-oscuro;
 }
 
 .block .card-body {
-    background-color: white;
+    background-color: $color-white;
     border-radius: 0px 0px 24px 24px;
 }
 
 .block_timeline .block-timeline [data-region="day-filter"] .dropdown-toggle,
 .block_timeline .block-timeline [data-region="view-selector"] .dropdown-toggle {
-    border: 1px solid #d5ddea;
-    color: #1c3d77;
+    border: 1px solid $my-gris-claro;
+    color: $color-primary;
 }
 
 .block_timeline .block-timeline [data-region="timeline-view"] {
@@ -659,8 +668,8 @@ span.badge.bg-secondary.text-dark {
 }
 
 .block button.dropdown-toggle:hover {
-    background-color: #bdbdbc;
-    color: white;
+    background-color: $my-gris-claro;
+    color: $color-white;
 }
 
 /* ==========================================================================
@@ -669,8 +678,8 @@ span.badge.bg-secondary.text-dark {
 
 .event h3.name,
 .calendar_event_course {
-    color: white;
-    text-shadow: 1px 1px 1px #000;
+    color: $color-white;
+    text-shadow: 1px 1px 1px $my-negro;
 }
 
 .event a.card-link {
@@ -681,16 +690,16 @@ span.badge.bg-secondary.text-dark {
 
 /* Personalizaciones Próximos Eventos */
 .block_calendar_upcoming .event {
-    border-left: 2px solid #ccc;
+    border-left: 2px solid $my-gris-claro;
     padding-left: 5px;
 }
 
 .block_calendar_upcoming .event.my-event-urgent {
-    border-color: #f51f25;
+    border-color: $my-rojo;
 }
 
 .block_calendar_upcoming .event.my-event-priority {
-    border-color: #f89406;
+    border-color: $my-orange;
 }
 
 /* Calendar Styles */
@@ -726,14 +735,14 @@ section.node-category {
 .dashboard-card .course-info-container .edw-card-design-hd #block-region-side-pre .block-content-area .table-wrapper .calendartable.calendarmonth th span.categoryname.h-semibold-5,
 #block-region-side-pre .block-content-area .table-wrapper .calendartable.calendarmonth th .dashboard-card .course-info-container .edw-card-design-hd span.categoryname.h-semibold-5,
 .dashboard-card .course-info-container .edw-card-design-hd span.categoryname.edw-msg-panel-badge {
-    color: #fff;
+    color: $color-white;
     background-color: $color-secondary;
     font-size: .8em;
 }
 
 /* Asegurar que las clases categoryname, text-truncate, small-info-semibold se vean bien */
 .categoryname.text-truncate.small-info-semibold {
-    color: #fff;
+    color: $color-white;
     background-color: $color-secondary;
     font-size: 0.8em;
 }
@@ -743,14 +752,14 @@ section.node-category {
    ========================================================================== */
 
 .que .formulation {
-    background-color: white;
+    background-color: $color-white;
     border: 1px solid;
-    border-color: #badae4;
+    border-color: lighten($my-blue, 25%);
 }
 
 .que.informationitem .formulation {
-    background-color: #def2f8;
-    border-color: #badae4;
+    background-color: lighten($my-blue, 35%);
+    border-color: lighten($my-blue, 25%);
 }
 
 .que.informationitem .info {
@@ -760,9 +769,9 @@ section.node-category {
 /* Mejora en revisión de intentos de cuestionarios */
 .que.correct .outcome,
 .que.correct .comment {
-    background-color: #dffae7;
-    border-color: #c7e9d1;
-    color: #0a1f22;
+    background-color: lighten($my-verde, 45%);
+    border-color: lighten($my-verde, 35%);
+    color: $my-negro;
 }
 
 /* ==========================================================================
@@ -772,7 +781,7 @@ section.node-category {
 /* Nueva regla para courseindex-section-title */
 #theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-section-title {
     padding: 10px 24px;
-    color: #ffffff;
+    color: $color-white;
     background-color: $color-primary;
     border-radius: 0;
     justify-content: space-between;
@@ -783,7 +792,7 @@ section.node-category {
     font-size: 24px;
     height: 24px;
     width: 24px;
-    color: #ffffff;
+    color: $color-white;
 }
 
 #theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-item-content .courseindex-sectioncontent .courseindex-item .edw-icon,
@@ -791,7 +800,7 @@ section.node-category {
     font-size: 18px;
     height: 18px;
     width: 18px;
-    color: #ffffff;
+    color: $color-white;
 }
 
 /* Courseindex Collapsed by Default */
@@ -863,8 +872,8 @@ section.node-category {
 .page-link:hover {
     z-index: 2;
     color: darken($color-primary, 10%);
-    background-color: #e9ecef;
-    border-color: #d5ddea;
+    background-color: $color-lightgray;
+    border-color: $my-gris-claro;
 }
 
 .page-item.active .page-link {
@@ -1189,7 +1198,7 @@ section.node-category {
     }
 
     .inteb-completed-overlay {
-        background: linear-gradient(180deg, rgba(40, 167, 69, 0) 50%, rgba(40, 167, 69, 0.3) 100%);
+        background: linear-gradient(180deg, rgba($my-verde, 0) 50%, rgba($my-verde, 0.3) 100%);
     }
 
     /* Badges positioning */
@@ -1274,7 +1283,7 @@ section.node-category {
     .inteb-progress {
         height: 8px;
         border-radius: 4px;
-        background-color: #e9ecef;
+        background-color: $color-lightgray;
         overflow: hidden;
     }
 
@@ -1284,7 +1293,7 @@ section.node-category {
     }
 
     .inteb-progress-completed .progress-bar {
-        background: linear-gradient(90deg, #28a745, #20c997);
+        background: linear-gradient(90deg, $my-verde, $my-lime);
     }
 
     /* Completion Info */
@@ -1354,23 +1363,23 @@ section.node-category {
     }
 
     .inteb-start-btn {
-        background: linear-gradient(135deg, #28a745, #20c997);
+        background: linear-gradient(135deg, $my-verde, $my-lime);
         border: none;
 
         &:hover {
-            background: linear-gradient(135deg, #218838, #1aa179);
+            background: linear-gradient(135deg, darken($my-verde, 10%), darken($my-lime, 10%));
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+            box-shadow: 0 4px 12px rgba($my-verde, 0.4);
         }
     }
 
     .inteb-review-btn {
-        border-color: #6c757d;
-        color: #6c757d;
+        border-color: $my-gris-oscuro;
+        color: $my-gris-oscuro;
 
         &:hover {
-            background-color: #6c757d;
-            color: #fff;
+            background-color: $my-gris-oscuro;
+            color: $color-white;
             transform: translateY(-2px);
         }
     }
@@ -1385,12 +1394,12 @@ section.node-category {
 
 /* Available Card Specific */
 .inteb-available-card {
-    border-left: 4px solid #28a745;
+    border-left: 4px solid $my-verde;
 }
 
 /* Completed Card Specific */
 .inteb-completed-card {
-    border-left: 4px solid #28a745;
+    border-left: 4px solid $my-verde;
 
     .inteb-card-img::after {
         content: '';
@@ -1399,7 +1408,7 @@ section.node-category {
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(40, 167, 69, 0.1);
+        background: rgba($my-verde, 0.1);
     }
 }
 
@@ -1411,7 +1420,7 @@ section.node-category {
         opacity: 0.5;
 
         i {
-            color: #adb5bd;
+            color: $my-gris-medio;
         }
     }
 
@@ -1447,7 +1456,7 @@ section.node-category {
     .inteb-mycourses-view {
         .progress {
             width: 100%;
-            background-color: #e9ecef;
+            background-color: $color-lightgray;
         }
 
         .progress-bar {
@@ -1456,7 +1465,7 @@ section.node-category {
     }
 
     .nav-tabs {
-        border-bottom: 2px solid #dee2e6;
+        border-bottom: 2px solid $my-gris-claro;
         padding-bottom: 0;
 
         .nav-link {
@@ -1605,7 +1614,7 @@ section.node-category {
         .inteb-progress {
             height: 8px;
             border-radius: 4px;
-            background-color: #e9ecef;
+            background-color: $color-lightgray;
             overflow: hidden;
         }
 
@@ -1619,7 +1628,7 @@ section.node-category {
     .inteb-list-completion-info {
         .progress {
             border-radius: 4px;
-            background-color: #e9ecef;
+            background-color: $color-lightgray;
         }
     }
 
@@ -1651,12 +1660,12 @@ section.node-category {
 
 /* Available List Item Specific */
 .inteb-available-item {
-    border-left: 4px solid #28a745;
+    border-left: 4px solid $my-verde;
 }
 
 /* Completed List Item Specific */
 .inteb-completed-item {
-    border-left: 4px solid #28a745;
+    border-left: 4px solid $my-verde;
 
     .inteb-list-img::after {
         content: '';
@@ -1665,7 +1674,7 @@ section.node-category {
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(40, 167, 69, 0.1);
+        background: rgba($my-verde, 0.1);
     }
 }
 

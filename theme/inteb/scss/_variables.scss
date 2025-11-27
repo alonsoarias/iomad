@@ -99,10 +99,12 @@ $carousel-control-color: #fff !default;
 $carousel-control-prev-icon-bg: "data:image/svg+xml;charset=utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'#fff\' viewBox=\'0 0 8 8\'%3E%3Cpath d=\'M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z\'/%3E%3C/svg%3E" !default;
 $carousel-control-next-icon-bg: "data:image/svg+xml;charset=utf8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'#fff\' viewBox=\'0 0 8 8\'%3E%3Cpath d=\'M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z\'/%3E%3C/svg%3E" !default;
 
-$block-region-side-pre-1: #D9651A !default;
-$block-region-side-pre-2: #7AAA18 !default;
-$block-region-side-pre-3: #00BCD4 !default;
-$block-region-side-pre-4: #0268FB !default;
-$block-region-side-pre-5: #31335E !default;
-$block-region-side-pre-6: $color-orange !default;
-$block-region-side-pre-7: #777!default;
+// Colores para bloques en side-pre - Usando paleta INTEB
+// Estos valores son defaults, custom_variables.scss puede sobrescribirlos
+$block-region-side-pre-1: #E27C32 !default; // $my-orange
+$block-region-side-pre-2: #1B9E88 !default; // $my-verde
+$block-region-side-pre-3: #5894EF !default; // $my-blue
+$block-region-side-pre-4: #C82260 !default; // $my-magenta
+$block-region-side-pre-5: #EB4335 !default; // $my-rojo
+$block-region-side-pre-6: #FCBD05 !default; // $my-amarillo
+$block-region-side-pre-7: #646363 !default; // $my-gris-oscuro
