@@ -867,6 +867,63 @@ a.my-credit-link:hover {
 }
 
 /* ==========================================================================
+   6.1 OVERRIDE FINAL DE BOTONES - Previene agrupación incorrecta de SASS
+   Selectores explícitos que no pueden ser combinados por el compilador
+   ========================================================================== */
+
+/* Override explícito para .btn-outline-primary - DEBE ser VERDE */
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary.focus,
+.btn-outline-primary:not(:disabled):not(.disabled):hover,
+.btn-outline-primary:not(:disabled):not(.disabled):focus {
+    background-color: $color-primary !important;
+    background: $color-primary !important;
+    border-color: $color-primary !important;
+    color: $color-white !important;
+    box-shadow: none !important;
+}
+
+/* Override explícito para .btn-secondary - DEBE ser ROJO */
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary.focus,
+.btn-secondary:not(:disabled):not(.disabled):hover,
+.btn-secondary:not(:disabled):not(.disabled):focus {
+    background-color: $color-secondary-dark !important;
+    background: $color-secondary-dark !important;
+    border-color: $color-secondary-dark !important;
+    color: $color-white !important;
+    box-shadow: none !important;
+}
+
+/* Override explícito para .btn-primary - DEBE ser VERDE */
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary.focus,
+.btn-primary:not(:disabled):not(.disabled):hover,
+.btn-primary:not(:disabled):not(.disabled):focus {
+    background-color: $color-primary-dark !important;
+    background: $color-primary-dark !important;
+    border-color: $color-primary-dark !important;
+    color: $color-white !important;
+    box-shadow: none !important;
+}
+
+/* Override para .btn-link - Sin cambio de color en hover */
+.btn-link:hover,
+.btn-link:focus,
+.btn-link.focus,
+.btn-link:not(:disabled):not(.disabled):hover,
+.btn-link:not(:disabled):not(.disabled):focus {
+    color: $color-primary !important;
+    text-decoration: underline !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* ==========================================================================
    7. BADGES
    ========================================================================== */
 
