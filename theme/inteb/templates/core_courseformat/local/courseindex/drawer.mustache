@@ -30,11 +30,19 @@
     <div class="progress-percentage-display" data-region="course-percentage">0%</div>
   </div>
 
-  {{! Message when completion tracking is not enabled }}
+  {{! Message when completion tracking is not enabled at course level }}
   <div class="courseindex-no-tracking" id="courseindex-no-tracking" style="display: none;">
     <div class="no-tracking-message">
       <i class="fa fa-info-circle"></i>
       <span>{{#str}}completionnotenabledcourse, theme_inteb{{/str}}</span>
+    </div>
+  </div>
+
+  {{! Message when course has completion but activities don't have tracking configured }}
+  <div class="courseindex-no-activities-tracking" id="courseindex-no-activities-tracking" style="display: none;">
+    <div class="no-activities-tracking-message">
+      <i class="fa fa-exclamation-triangle"></i>
+      <span>{{#str}}noactivitieswithtracking, theme_inteb{{/str}}</span>
     </div>
   </div>
 

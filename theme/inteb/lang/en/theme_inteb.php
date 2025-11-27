@@ -195,3 +195,4 @@ $string['sectionprogress'] = 'Section progress';
 $string['activitiescompleted'] = '{$a->completed} of {$a->total} activities completed';
 $string['loadingprogress'] = 'Loading progress...';
 $string['errorloadingprogress'] = 'Error loading progress';
+$string['noactivitieswithtracking'] = 'The course has completion tracking enabled, but no activities have been configured with completion conditions. Please configure completion conditions on each activity.';

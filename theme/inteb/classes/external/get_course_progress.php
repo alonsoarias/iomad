@@ -119,6 +119,7 @@ class get_course_progress extends external_api {
 
         return [
             'hasprogress' => $progress['hasprogress'],
+            'hasactivitiestracking' => $progress['hasactivitiestracking'] ?? true,
             'percentage' => $progress['percentage'],
             'completed' => $completed,
             'total' => $total
@@ -132,7 +133,8 @@ class get_course_progress extends external_api {
      */
     public static function execute_returns() {
         return new external_single_structure([
-            'hasprogress' => new external_value(PARAM_BOOL, 'Whether the course has progress tracking'),
+            'hasprogress' => new external_value(PARAM_BOOL, 'Whether the course has progress tracking enabled'),
+            'hasactivitiestracking' => new external_value(PARAM_BOOL, 'Whether activities have tracking configured'),
             'percentage' => new external_value(PARAM_INT, 'Completion percentage'),
             'completed' => new external_value(PARAM_INT, 'Number of completed activities'),
             'total' => new external_value(PARAM_INT, 'Total number of activities with completion'),

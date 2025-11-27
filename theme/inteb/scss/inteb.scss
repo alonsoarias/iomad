@@ -4242,7 +4242,7 @@ $ci-text-secondary: $my-gris-oscuro;
   }
 }
 
-/* No Tracking Message */
+/* No Tracking Message - Course level completion not enabled */
 .courseindex-no-tracking {
   background: $ci-gray-light;
   padding: 1rem;
@@ -4260,6 +4260,35 @@ $ci-text-secondary: $my-gris-oscuro;
       margin-right: 0.75rem;
       color: $ci-warning;
       font-size: 1.25rem;
+    }
+  }
+}
+
+/* No Activities Tracking Message - Course has completion but activities don't */
+.courseindex-no-activities-tracking {
+  background: lighten($ci-warning, 35%);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid $ci-warning;
+
+  .no-activities-tracking-message {
+    display: flex;
+    align-items: flex-start;
+    color: $ci-text;
+    font-size: 0.813rem;
+    line-height: 1.4;
+
+    i {
+      margin-right: 0.75rem;
+      color: $ci-warning;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    span {
+      flex: 1;
     }
   }
 }

@@ -108,9 +108,17 @@ define(['jquery', 'core/ajax', 'core/log'], function($, Ajax, Log) {
             .then(function(response) {
                 Log.debug('courseindex_progress: Course progress loaded', response);
                 if (response && response.hasprogress) {
-                    updateCourseProgressDisplay(response);
-                    showIconLegend();
+                    // Check if activities have tracking configured
+                    if (response.hasactivitiestracking === false) {
+                        // Course has completion enabled but activities don't have tracking
+                        showNoActivitiesTrackingMessage();
+                    } else {
+                        // Normal progress display
+                        updateCourseProgressDisplay(response);
+                        showIconLegend();
+                    }
                 } else {
+                    // Completion tracking not enabled at course level
                     showNoTrackingMessage();
                 }
                 return;
@@ -168,10 +176,17 @@ define(['jquery', 'core/ajax', 'core/log'], function($, Ajax, Log) {
     };
 
     /**
-     * Show message when completion tracking is not enabled
+     * Show message when completion tracking is not enabled at course level
      */
     var showNoTrackingMessage = function() {
         $('#courseindex-no-tracking').fadeIn(300);
+    };
+
+    /**
+     * Show message when course has completion but activities don't have tracking configured
+     */
+    var showNoActivitiesTrackingMessage = function() {
+        $('#courseindex-no-activities-tracking').fadeIn(300);
     };
 
     /**
