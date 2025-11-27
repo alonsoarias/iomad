@@ -1,10 +1,356 @@
 /**
  * Custom CSS for INTEB Theme
  *
- * NOTA: Los estilos personalizados de INTEB se encuentran en:
- * theme/inteb/scss/inteb.scss
+ * Este archivo se carga AL FINAL de todo el CSS y tiene la mayor prioridad.
+ * Aquí se incluyen estilos críticos que deben sobrescribir RemUI/Bootstrap.
  *
- * Este archivo se mantiene para compatibilidad, pero todos los estilos
- * personalizados deben agregarse en inteb.scss para mejor organización
- * y aprovechamiento de variables SCSS.
+ * @package     theme_inteb
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
  */
+
+/* =====================================================
+   BREADCRUMB - Moove Style with ISER Branding
+   CRITICAL: These styles MUST override RemUI/Bootstrap
+   ===================================================== */
+
+/* Hide Bootstrap default separators */
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item::before,
+#page-header #page-navbar nav .breadcrumb .breadcrumb-item::before,
+#page-navbar nav ol.breadcrumb .breadcrumb-item::before,
+#page-navbar nav .breadcrumb .breadcrumb-item::before,
+#page-navbar .breadcrumb .breadcrumb-item::before,
+.breadcrumb .breadcrumb-item::before,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item + .breadcrumb-item::before,
+#page-navbar nav ol.breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    content: none !important;
+    display: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Breadcrumb container */
+#page-header #page-navbar nav ol.breadcrumb,
+#page-header #page-navbar nav .breadcrumb,
+#page-navbar nav ol.breadcrumb,
+#page-navbar nav .breadcrumb,
+#page-navbar .breadcrumb {
+    padding: 0 !important;
+    margin: 0 !important;
+    background-color: transparent !important;
+    border-radius: 0.25em !important;
+    list-style: none !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+/* Breadcrumb items */
+#page-header #page-navbar nav ol.breadcrumb li,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item,
+#page-header #page-navbar nav .breadcrumb li,
+#page-header #page-navbar nav .breadcrumb .breadcrumb-item,
+#page-navbar nav ol.breadcrumb li,
+#page-navbar nav ol.breadcrumb .breadcrumb-item,
+#page-navbar nav .breadcrumb li,
+#page-navbar nav .breadcrumb .breadcrumb-item,
+#page-navbar .breadcrumb li,
+#page-navbar .breadcrumb .breadcrumb-item {
+    display: inline-block !important;
+    float: left !important;
+    position: relative !important;
+    padding: 0 !important;
+    margin: 4px 4px 4px 0 !important;
+    flex-grow: unset !important;
+}
+
+/* Item content (links and spans) - Normal items */
+#page-header #page-navbar nav ol.breadcrumb li > a,
+#page-header #page-navbar nav ol.breadcrumb li > span,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item > a,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item > span,
+#page-header #page-navbar nav .breadcrumb li > a,
+#page-header #page-navbar nav .breadcrumb li > span,
+#page-header #page-navbar nav .breadcrumb .breadcrumb-item > a,
+#page-header #page-navbar nav .breadcrumb .breadcrumb-item > span,
+#page-navbar nav ol.breadcrumb li > a,
+#page-navbar nav ol.breadcrumb li > span,
+#page-navbar nav ol.breadcrumb .breadcrumb-item > a,
+#page-navbar nav ol.breadcrumb .breadcrumb-item > span,
+#page-navbar nav .breadcrumb li > a,
+#page-navbar nav .breadcrumb li > span,
+#page-navbar nav .breadcrumb .breadcrumb-item > a,
+#page-navbar nav .breadcrumb .breadcrumb-item > span,
+#page-navbar .breadcrumb li > a,
+#page-navbar .breadcrumb li > span,
+#page-navbar .breadcrumb .breadcrumb-item > a,
+#page-navbar .breadcrumb .breadcrumb-item > span {
+    display: inline-block !important;
+    position: relative !important;
+    padding: 0.4em 0.8em 0.4em 1.5em !important;
+    color: #646363 !important;
+    background-color: #E8F5F3 !important;
+    border-color: #E8F5F3 !important;
+    text-decoration: none !important;
+    font-family: 'Verdana', 'Arial', sans-serif !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+}
+
+/* First item - rounded left corners */
+#page-header #page-navbar nav ol.breadcrumb li:first-of-type > a,
+#page-header #page-navbar nav ol.breadcrumb li:first-of-type > span,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item:first-of-type > a,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item:first-of-type > span,
+#page-navbar nav ol.breadcrumb li:first-of-type > a,
+#page-navbar nav ol.breadcrumb li:first-of-type > span,
+#page-navbar nav ol.breadcrumb .breadcrumb-item:first-of-type > a,
+#page-navbar nav ol.breadcrumb .breadcrumb-item:first-of-type > span,
+#page-navbar .breadcrumb li:first-of-type > a,
+#page-navbar .breadcrumb li:first-of-type > span,
+#page-navbar .breadcrumb .breadcrumb-item:first-of-type > a,
+#page-navbar .breadcrumb .breadcrumb-item:first-of-type > span {
+    padding-left: 1.6em !important;
+    border-radius: 0.25em 0 0 0.25em !important;
+}
+
+/* Last item - current/active - ISER Green background */
+#page-header #page-navbar nav ol.breadcrumb li:last-of-type > a,
+#page-header #page-navbar nav ol.breadcrumb li:last-of-type > span,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type > a,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type > span,
+#page-navbar nav ol.breadcrumb li:last-of-type > a,
+#page-navbar nav ol.breadcrumb li:last-of-type > span,
+#page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type > a,
+#page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type > span,
+#page-navbar .breadcrumb li:last-of-type > a,
+#page-navbar .breadcrumb li:last-of-type > span,
+#page-navbar .breadcrumb .breadcrumb-item:last-of-type > a,
+#page-navbar .breadcrumb .breadcrumb-item:last-of-type > span {
+    color: #FFFFFF !important;
+    background-color: #1B9E88 !important;
+    border-color: #1B9E88 !important;
+    padding-right: 1.6em !important;
+    border-radius: 0 0.25em 0.25em 0 !important;
+}
+
+/* Hover effect on links */
+#page-header #page-navbar nav ol.breadcrumb li > a:hover,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item > a:hover,
+#page-navbar nav ol.breadcrumb li > a:hover,
+#page-navbar nav ol.breadcrumb .breadcrumb-item > a:hover,
+#page-navbar nav .breadcrumb li > a:hover,
+#page-navbar nav .breadcrumb .breadcrumb-item > a:hover,
+#page-navbar .breadcrumb li > a:hover,
+#page-navbar .breadcrumb .breadcrumb-item > a:hover {
+    color: #FFFFFF !important;
+    background-color: #646363 !important;
+    border-color: #646363 !important;
+}
+
+/* Inner chevron (colored, inherits background) */
+#page-header #page-navbar nav ol.breadcrumb li > a::after,
+#page-header #page-navbar nav ol.breadcrumb li > span::after,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item > a::after,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item > span::after,
+#page-navbar nav ol.breadcrumb li > a::after,
+#page-navbar nav ol.breadcrumb li > span::after,
+#page-navbar nav ol.breadcrumb .breadcrumb-item > a::after,
+#page-navbar nav ol.breadcrumb .breadcrumb-item > span::after,
+#page-navbar .breadcrumb li > a::after,
+#page-navbar .breadcrumb li > span::after,
+#page-navbar .breadcrumb .breadcrumb-item > a::after,
+#page-navbar .breadcrumb .breadcrumb-item > span::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 100% !important;
+    height: 0 !important;
+    width: 0 !important;
+    border: 17px solid transparent !important;
+    border-right-width: 0 !important;
+    border-left-width: 10px !important;
+    z-index: 2 !important;
+    border-left-color: inherit !important;
+}
+
+/* Outer chevron (white separator) */
+#page-header #page-navbar nav ol.breadcrumb li::after,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item::after,
+#page-navbar nav ol.breadcrumb li::after,
+#page-navbar nav ol.breadcrumb .breadcrumb-item::after,
+#page-navbar nav .breadcrumb li::after,
+#page-navbar nav .breadcrumb .breadcrumb-item::after,
+#page-navbar .breadcrumb li::after,
+#page-navbar .breadcrumb .breadcrumb-item::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 100% !important;
+    height: 0 !important;
+    width: 0 !important;
+    border: 17px solid transparent !important;
+    border-right-width: 0 !important;
+    border-left-width: 10px !important;
+    z-index: 1 !important;
+    transform: translateX(4px) !important;
+    border-left-color: #FFFFFF !important;
+    margin: 0 !important;
+}
+
+/* Hide chevrons on last item */
+#page-header #page-navbar nav ol.breadcrumb li:last-of-type::after,
+#page-header #page-navbar nav ol.breadcrumb li:last-of-type > a::after,
+#page-header #page-navbar nav ol.breadcrumb li:last-of-type > span::after,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type::after,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type > a::after,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type > span::after,
+#page-navbar nav ol.breadcrumb li:last-of-type::after,
+#page-navbar nav ol.breadcrumb li:last-of-type > a::after,
+#page-navbar nav ol.breadcrumb li:last-of-type > span::after,
+#page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type::after,
+#page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type > a::after,
+#page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type > span::after,
+#page-navbar .breadcrumb li:last-of-type::after,
+#page-navbar .breadcrumb li:last-of-type > a::after,
+#page-navbar .breadcrumb li:last-of-type > span::after,
+#page-navbar .breadcrumb .breadcrumb-item:last-of-type::after,
+#page-navbar .breadcrumb .breadcrumb-item:last-of-type > a::after,
+#page-navbar .breadcrumb .breadcrumb-item:last-of-type > span::after {
+    display: none !important;
+}
+
+/* Last item margin */
+#page-header #page-navbar nav ol.breadcrumb li:last-of-type,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type,
+#page-navbar nav ol.breadcrumb li:last-of-type,
+#page-navbar nav ol.breadcrumb .breadcrumb-item:last-of-type,
+#page-navbar .breadcrumb li:last-of-type,
+#page-navbar .breadcrumb .breadcrumb-item:last-of-type {
+    margin-right: 0 !important;
+}
+
+/* =====================================================
+   RESPONSIVE - Mobile adjustments
+   ===================================================== */
+
+@media (max-width: 767px) {
+    #page-header #page-navbar nav ol.breadcrumb li > a,
+    #page-header #page-navbar nav ol.breadcrumb li > span,
+    #page-header #page-navbar nav ol.breadcrumb .breadcrumb-item > a,
+    #page-header #page-navbar nav ol.breadcrumb .breadcrumb-item > span,
+    #page-navbar nav ol.breadcrumb li > a,
+    #page-navbar nav ol.breadcrumb li > span,
+    #page-navbar nav ol.breadcrumb .breadcrumb-item > a,
+    #page-navbar nav ol.breadcrumb .breadcrumb-item > span,
+    #page-navbar .breadcrumb li > a,
+    #page-navbar .breadcrumb li > span,
+    #page-navbar .breadcrumb .breadcrumb-item > a,
+    #page-navbar .breadcrumb .breadcrumb-item > span {
+        padding: 0.3em 0.6em 0.3em 1em !important;
+        font-size: 0.75rem !important;
+    }
+
+    #page-header #page-navbar nav ol.breadcrumb li > a::after,
+    #page-header #page-navbar nav ol.breadcrumb li > span::after,
+    #page-navbar nav ol.breadcrumb li > a::after,
+    #page-navbar nav ol.breadcrumb li > span::after,
+    #page-navbar .breadcrumb li > a::after,
+    #page-navbar .breadcrumb li > span::after,
+    #page-header #page-navbar nav ol.breadcrumb li::after,
+    #page-navbar nav ol.breadcrumb li::after,
+    #page-navbar .breadcrumb li::after {
+        border-width: 14px !important;
+        border-right-width: 0 !important;
+        border-left-width: 8px !important;
+    }
+
+    #page-header #page-navbar nav ol.breadcrumb li:first-of-type > a,
+    #page-header #page-navbar nav ol.breadcrumb li:first-of-type > span,
+    #page-navbar nav ol.breadcrumb li:first-of-type > a,
+    #page-navbar nav ol.breadcrumb li:first-of-type > span,
+    #page-navbar .breadcrumb li:first-of-type > a,
+    #page-navbar .breadcrumb li:first-of-type > span {
+        padding-left: 0.8em !important;
+    }
+
+    #page-header #page-navbar nav ol.breadcrumb li:last-of-type > a,
+    #page-header #page-navbar nav ol.breadcrumb li:last-of-type > span,
+    #page-navbar nav ol.breadcrumb li:last-of-type > a,
+    #page-navbar nav ol.breadcrumb li:last-of-type > span,
+    #page-navbar .breadcrumb li:last-of-type > a,
+    #page-navbar .breadcrumb li:last-of-type > span {
+        padding-right: 0.8em !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #page-header #page-navbar nav ol.breadcrumb,
+    #page-navbar nav ol.breadcrumb,
+    #page-navbar .breadcrumb {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+    #page-header #page-navbar nav ol.breadcrumb::-webkit-scrollbar,
+    #page-navbar nav ol.breadcrumb::-webkit-scrollbar,
+    #page-navbar .breadcrumb::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    #page-header #page-navbar nav ol.breadcrumb li,
+    #page-header #page-navbar nav ol.breadcrumb .breadcrumb-item,
+    #page-navbar nav ol.breadcrumb li,
+    #page-navbar nav ol.breadcrumb .breadcrumb-item,
+    #page-navbar .breadcrumb li,
+    #page-navbar .breadcrumb .breadcrumb-item {
+        flex-shrink: 0 !important;
+    }
+
+    #page-header #page-navbar nav ol.breadcrumb li > a,
+    #page-header #page-navbar nav ol.breadcrumb li > span,
+    #page-navbar nav ol.breadcrumb li > a,
+    #page-navbar nav ol.breadcrumb li > span,
+    #page-navbar .breadcrumb li > a,
+    #page-navbar .breadcrumb li > span {
+        padding: 0.25em 0.5em 0.25em 0.8em !important;
+        font-size: 0.688rem !important;
+        max-width: 150px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    #page-header #page-navbar nav ol.breadcrumb li > a::after,
+    #page-header #page-navbar nav ol.breadcrumb li > span::after,
+    #page-navbar nav ol.breadcrumb li > a::after,
+    #page-navbar nav ol.breadcrumb li > span::after,
+    #page-navbar .breadcrumb li > a::after,
+    #page-navbar .breadcrumb li > span::after,
+    #page-header #page-navbar nav ol.breadcrumb li::after,
+    #page-navbar nav ol.breadcrumb li::after,
+    #page-navbar .breadcrumb li::after {
+        border-width: 12px !important;
+        border-right-width: 0 !important;
+        border-left-width: 7px !important;
+    }
+
+    #page-header #page-navbar nav ol.breadcrumb li:first-of-type > a,
+    #page-header #page-navbar nav ol.breadcrumb li:first-of-type > span,
+    #page-navbar nav ol.breadcrumb li:first-of-type > a,
+    #page-navbar nav ol.breadcrumb li:first-of-type > span,
+    #page-navbar .breadcrumb li:first-of-type > a,
+    #page-navbar .breadcrumb li:first-of-type > span {
+        padding-left: 0.5em !important;
+    }
+
+    #page-header #page-navbar nav ol.breadcrumb li:last-of-type > a,
+    #page-header #page-navbar nav ol.breadcrumb li:last-of-type > span,
+    #page-navbar nav ol.breadcrumb li:last-of-type > a,
+    #page-navbar nav ol.breadcrumb li:last-of-type > span,
+    #page-navbar .breadcrumb li:last-of-type > a,
+    #page-navbar .breadcrumb li:last-of-type > span {
+        padding-right: 0.5em !important;
+    }
+}
