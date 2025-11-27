@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,17 +12,20 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-defined('MOODLE_INTERNAL') || die();
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Theme settings for theme_inteb
+ * Theme settings configuration for theme_inteb.
  *
- * @package   theme_inteb
- * @copyright 2025, You Name <your@email.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * This file defines the admin settings pages and options for the INTEB theme.
+ *
+ * @package     theme_inteb
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
+ * @author      Alonso Arias <soporteplataformas@iser.edu.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
 
 // Keep includes from theme_inteb
 require(__DIR__ . '/../remui/settings.php');
