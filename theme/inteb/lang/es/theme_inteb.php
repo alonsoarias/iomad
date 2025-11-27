@@ -142,7 +142,14 @@ $string['footercolumn3_default'] = '<p class="footer-info-title"><strong>Enlaces
 <p class="footer-info-title mt-3"><strong>Entes de control</strong></p>
 <p class="footer-info-text"><a href="https://www.mineducacion.gov.co/" target="_blank" rel="noopener noreferrer">Ministerio de Educación Nacional</a></p>
 <p class="footer-info-text"><a href="https://www.contraloria.gov.co/" target="_blank" rel="noopener noreferrer">Contraloría General de la República</a></p>
-<p class="footer-info-text"><a href="https://www.procuraduria.gov.co/" target="_blank" rel="noopener noreferrer">Procuraduría General de la Nación</a></p>';
+<p class="footer-info-text"><a href="https://www.procuraduria.gov.co/" target="_blank" rel="noopener noreferrer">Procuraduría General de la Nación</a></p>
+<p class="footer-info-title mt-3"><strong>Síguenos</strong></p>
+<div class="footer-social-icons">
+    <a href="https://www.facebook.com/iser.pamplona" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="footer-social-link"><i class="fa fa-facebook"></i></a>
+    <a href="https://twitter.com/Iser1956" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="footer-social-link"><i class="fa fa-twitter"></i></a>
+    <a href="https://www.instagram.com/iser.oficial" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="footer-social-link"><i class="fa fa-instagram"></i></a>
+    <a href="https://www.youtube.com/@ISER.Oficial" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="footer-social-link"><i class="fa fa-youtube-play"></i></a>
+</div>';
 
 $string['footercolumn4_default'] = '<p class="footer-info-title"><strong>Síguenos</strong></p>
 <div class="footer-social-icons">

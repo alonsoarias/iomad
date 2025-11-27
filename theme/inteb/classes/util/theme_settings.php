@@ -66,6 +66,7 @@ class settings {
 
             $columns[] = [
                 'number' => $i,
+                'colclass' => $colclasses[$numcolumns] ?? 'col-12 col-md-4',
                 'title' => $title,
                 'hastitle' => !empty($title),
                 'content' => $content,
