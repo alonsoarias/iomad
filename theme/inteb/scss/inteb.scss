@@ -2518,3 +2518,101 @@ $govco-blue-light: #096FB7;
     }
 }
 
+/* ==========================================================================
+   23. ESTILOS ADICIONALES - Aceptación de términos, badges, wordselect, etc.
+   ========================================================================== */
+
+/* Aceptación términos, cambio orden divs */
+div[role=main] {
+    display: flex;
+    flex-direction: column;
+}
+
+#page-user-policy #page #page-content #region-main > div .noticebox {
+    order: 2;
+}
+/* Fin Aceptación términos */
+
+/* Badge info con colores corporativos */
+span.badge.badge-info {
+    background-color: $my-blue2;
+    color: $color-white;
+}
+
+/* ==========================================================================
+   24. WORDSELECT - Estilos para tipo de pregunta wordselect
+   ========================================================================== */
+
+.que.wordselect .qtext .selectable {
+    display: inline-block !important;
+    cursor: pointer !important;
+    border-radius: 0.25em !important;
+    margin: 2px !important;
+    padding: 1px 3px !important;
+}
+
+.que.wordselect .qtext input[type=checkbox] {
+    display: none !important;
+}
+
+/* Estilo para los elementos seleccionados */
+.que.wordselect .qtext .selected {
+    background-color: $my-gris-claro !important;
+    border: solid thin $my-negro !important;
+    box-shadow: 1px 1px 2px rgba($my-negro, 0.9) !important;
+}
+
+/* Restaurar el flujo normal del texto */
+.que.wordselect .qtext span {
+    float: none !important;
+    clear: none !important;
+    display: inline !important;
+}
+
+/* ==========================================================================
+   25. PÁGINA PRINCIPAL - Ocultar secciones frontales
+   ========================================================================== */
+
+.frontpage-sections.container-fluid.p-0 {
+    display: none;
+}
+
+/* ==========================================================================
+   26. OCULTAMIENTOS ESPECÍFICOS
+   ========================================================================== */
+
+/* Ocultar botón de descargar configuración */
+.singlebutton a[title="Descargar configuración"] {
+    display: none;
+}
+
+/* ==========================================================================
+   27. FOROS - Mostrar texto según contexto
+   ========================================================================== */
+
+/* Mostrar texto corto afuera y solo instrucciones adentro */
+.path-course-view .solo-adentro {
+    display: none !important;
+}
+
+.path-mod-forum .solo-afuera {
+    display: none !important;
+}
+
+/* ==========================================================================
+   28. FOOTER COPYRIGHT - Estilos para sección de copyright
+   ========================================================================== */
+
+#page-footer .copyright {
+    background-color: $my-gris-oscuro;
+    color: $color-white !important;
+    text-align: center;
+    min-height: inherit;
+    margin-bottom: 0;
+
+    .text-muted-footer,
+    small {
+        color: $color-white !important;
+    }
+}
+
