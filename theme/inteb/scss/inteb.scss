@@ -324,6 +324,7 @@ a.my-credit-link:hover {
     background-color: $color-primary !important;
     border-color: $color-primary !important;
     color: $color-white !important;
+    box-shadow: none !important;
 
     .fa,
     .edw-icon {
@@ -331,10 +332,25 @@ a.my-credit-link:hover {
     }
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $color-primary-dark !important;
         border-color: $color-primary-dark !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    /* Override RemUI high-specificity selectors */
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus,
+    &.disabled:not(:disabled):not(.disabled):focus,
+    &:disabled:not(:disabled):not(.disabled):focus {
+        background-color: $color-primary-dark !important;
+        background: $color-primary-dark !important;
+        border-color: $color-primary-dark !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 
     &:not(:disabled):not(.disabled):active,
@@ -358,6 +374,7 @@ a.my-credit-link:hover {
     background-color: $color-secondary !important;
     border-color: $color-secondary !important;
     color: $color-white !important;
+    box-shadow: none !important;
 
     .fa,
     .edw-icon {
@@ -365,10 +382,23 @@ a.my-credit-link:hover {
     }
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $color-secondary-dark !important;
         border-color: $color-secondary-dark !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    /* Override RemUI high-specificity selectors */
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $color-secondary-dark !important;
+        background: $color-secondary-dark !important;
+        border-color: $color-secondary-dark !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 
     &:not(:disabled):not(.disabled):active,
@@ -392,12 +422,25 @@ a.my-credit-link:hover {
     background-color: $my-verde !important;
     border-color: $my-verde !important;
     color: $color-white !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: darken($my-verde, 10%) !important;
         border-color: darken($my-verde, 10%) !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: darken($my-verde, 10%) !important;
+        background: darken($my-verde, 10%) !important;
+        border-color: darken($my-verde, 10%) !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 
     &:not(:disabled):not(.disabled):active,
@@ -412,12 +455,25 @@ a.my-credit-link:hover {
     background-color: $my-rojo !important;
     border-color: $my-rojo !important;
     color: $color-white !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: darken($my-rojo, 10%) !important;
         border-color: darken($my-rojo, 10%) !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: darken($my-rojo, 10%) !important;
+        background: darken($my-rojo, 10%) !important;
+        border-color: darken($my-rojo, 10%) !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 
     &:not(:disabled):not(.disabled):active,
@@ -432,12 +488,25 @@ a.my-credit-link:hover {
     background-color: $color-terciary !important;
     border-color: $color-terciary !important;
     color: $my-negro !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $color-terciary-dark !important;
         border-color: $color-terciary-dark !important;
         color: $my-negro !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $color-terciary-dark !important;
+        background: $color-terciary-dark !important;
+        border-color: $color-terciary-dark !important;
+        color: $my-negro !important;
+        box-shadow: none !important;
     }
 
     &:not(:disabled):not(.disabled):active,
@@ -452,12 +521,25 @@ a.my-credit-link:hover {
     background-color: $my-blue !important;
     border-color: $my-blue !important;
     color: $color-white !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: darken($my-blue, 10%) !important;
         border-color: darken($my-blue, 10%) !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: darken($my-blue, 10%) !important;
+        background: darken($my-blue, 10%) !important;
+        border-color: darken($my-blue, 10%) !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 
     &:not(:disabled):not(.disabled):active,
@@ -472,12 +554,25 @@ a.my-credit-link:hover {
     background-color: $my-gris-claro !important;
     border-color: $my-gris-claro !important;
     color: $my-negro !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: darken($my-gris-claro, 10%) !important;
         border-color: darken($my-gris-claro, 10%) !important;
         color: $my-negro !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: darken($my-gris-claro, 10%) !important;
+        background: darken($my-gris-claro, 10%) !important;
+        border-color: darken($my-gris-claro, 10%) !important;
+        color: $my-negro !important;
+        box-shadow: none !important;
     }
 }
 
@@ -486,12 +581,25 @@ a.my-credit-link:hover {
     background-color: $my-gris-oscuro !important;
     border-color: $my-gris-oscuro !important;
     color: $color-white !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: darken($my-gris-oscuro, 10%) !important;
         border-color: darken($my-gris-oscuro, 10%) !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: darken($my-gris-oscuro, 10%) !important;
+        background: darken($my-gris-oscuro, 10%) !important;
+        border-color: darken($my-gris-oscuro, 10%) !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 }
 
@@ -500,10 +608,22 @@ a.my-credit-link:hover {
     background-color: transparent !important;
     border-color: $color-primary !important;
     color: $color-primary !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $color-primary !important;
+        border-color: $color-primary !important;
+        color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $color-primary !important;
+        background: $color-primary !important;
         border-color: $color-primary !important;
         color: $color-white !important;
     }
@@ -520,12 +640,25 @@ a.my-credit-link:hover {
     background-color: transparent !important;
     border-color: $color-secondary !important;
     color: $color-secondary !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $color-secondary !important;
         border-color: $color-secondary !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $color-secondary !important;
+        background: $color-secondary !important;
+        border-color: $color-secondary !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 
     &:not(:disabled):not(.disabled):active,
@@ -540,12 +673,25 @@ a.my-credit-link:hover {
     background-color: transparent !important;
     border-color: $my-verde !important;
     color: $my-verde !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $my-verde !important;
         border-color: $my-verde !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $my-verde !important;
+        background: $my-verde !important;
+        border-color: $my-verde !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 }
 
@@ -553,12 +699,25 @@ a.my-credit-link:hover {
     background-color: transparent !important;
     border-color: $my-rojo !important;
     color: $my-rojo !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $my-rojo !important;
         border-color: $my-rojo !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $my-rojo !important;
+        background: $my-rojo !important;
+        border-color: $my-rojo !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 }
 
@@ -566,12 +725,25 @@ a.my-credit-link:hover {
     background-color: transparent !important;
     border-color: $color-terciary !important;
     color: darken($color-terciary, 15%) !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $color-terciary !important;
         border-color: $color-terciary !important;
         color: $my-negro !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $color-terciary !important;
+        background: $color-terciary !important;
+        border-color: $color-terciary !important;
+        color: $my-negro !important;
+        box-shadow: none !important;
     }
 }
 
@@ -579,12 +751,25 @@ a.my-credit-link:hover {
     background-color: transparent !important;
     border-color: $my-blue !important;
     color: $my-blue !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $my-blue !important;
         border-color: $my-blue !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $my-blue !important;
+        background: $my-blue !important;
+        border-color: $my-blue !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 }
 
@@ -592,12 +777,25 @@ a.my-credit-link:hover {
     background-color: transparent !important;
     border-color: $my-gris-claro !important;
     color: $my-gris-oscuro !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $my-gris-claro !important;
         border-color: $my-gris-claro !important;
         color: $my-negro !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $my-gris-claro !important;
+        background: $my-gris-claro !important;
+        border-color: $my-gris-claro !important;
+        color: $my-negro !important;
+        box-shadow: none !important;
     }
 }
 
@@ -605,12 +803,25 @@ a.my-credit-link:hover {
     background-color: transparent !important;
     border-color: $my-gris-oscuro !important;
     color: $my-gris-oscuro !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
         background-color: $my-gris-oscuro !important;
         border-color: $my-gris-oscuro !important;
         color: $color-white !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
+        background-color: $my-gris-oscuro !important;
+        background: $my-gris-oscuro !important;
+        border-color: $my-gris-oscuro !important;
+        color: $color-white !important;
+        box-shadow: none !important;
     }
 }
 
@@ -620,9 +831,19 @@ a.my-credit-link:hover {
     border-color: transparent !important;
     color: $color-primary !important;
     text-decoration: none !important;
+    box-shadow: none !important;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &.focus {
+        color: $color-primary-dark !important;
+        text-decoration: underline !important;
+        box-shadow: none !important;
+    }
+
+    &:not(:disabled):not(.disabled):hover,
+    &:not(:disabled):not(.disabled):focus,
+    &:not(:disabled):not(.disabled).focus {
         color: $color-primary-dark !important;
         text-decoration: underline !important;
     }
