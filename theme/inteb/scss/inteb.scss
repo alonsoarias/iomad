@@ -4811,13 +4811,7 @@ body.pagelayout-incourse {
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg,
-            $ci-primary 0%,
-            $ci-success 25%,
-            $ci-lime 50%,
-            $ci-warning 75%,
-            $ci-danger 100%
-        );
+        background: 5px solid $color-primary;
         opacity: 0.8;
     }
 
