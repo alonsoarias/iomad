@@ -146,7 +146,7 @@
     border-color: #646363 !important;
 }
 
-/* Inner chevron (colored, inherits background) */
+/* Inner chevron (colored, matches item background) */
 #page-header #page-navbar nav ol.breadcrumb li > a::after,
 #page-header #page-navbar nav ol.breadcrumb li > span::after,
 #page-header #page-navbar nav ol.breadcrumb .breadcrumb-item > a::after,
@@ -169,7 +169,19 @@
     border-right-width: 0 !important;
     border-left-width: 10px !important;
     z-index: 2 !important;
-    border-left-color: inherit !important;
+    border-left-color: #E8F5F3 !important;
+}
+
+/* Inner chevron hover state */
+#page-header #page-navbar nav ol.breadcrumb li > a:hover::after,
+#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item > a:hover::after,
+#page-navbar nav ol.breadcrumb li > a:hover::after,
+#page-navbar nav ol.breadcrumb .breadcrumb-item > a:hover::after,
+#page-navbar nav .breadcrumb li > a:hover::after,
+#page-navbar nav .breadcrumb .breadcrumb-item > a:hover::after,
+#page-navbar .breadcrumb li > a:hover::after,
+#page-navbar .breadcrumb .breadcrumb-item > a:hover::after {
+    border-left-color: #646363 !important;
 }
 
 /* Outer chevron (white separator) */
