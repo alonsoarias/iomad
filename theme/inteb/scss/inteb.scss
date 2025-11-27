@@ -315,140 +315,334 @@ a.my-credit-link:hover {
 }
 
 /* ==========================================================================
-   6. BOTONES
+   6. BOTONES - Estilos consistentes para modo claro y oscuro
+   Paleta ISER: Primary=Verde, Secondary=Rojo, Terciary=Amarillo
    ========================================================================== */
 
-/* Primary button styling */
+/* ===== BOTÓN PRIMARIO (Verde corporativo) ===== */
 .btn-primary {
-    background-color: $color-secondary !important;
-    border-color: $color-secondary !important;
-    color: $color-white;
-
-    .fa,
-    .edw-icon {
-        color: $color-white;
-    }
-
-    &:hover {
-        background-color: $color-primary !important;
-        border-color: $color-primary !important;
-        color: $color-white;
-    }
-
-    &:not(:disabled):not(.disabled):active,
-    &:not(:disabled):not(.disabled).active,
-    &:not(:disabled):not(.disabled):active:focus,
-    .show>&.dropdown-toggle {
-        background-color: $color-secondary !important;
-        border-color: $color-secondary !important;
-        color: $color-white;
-    }
-
-    &:not(:disabled):not(.disabled):focus,
-    &:not(:disabled):not(.disabled).focus {
-        background-color: $color-primary !important;
-        border-color: $color-primary !important;
-        color: $color-white;
-    }
-}
-
-/* Secondary button styling */
-.btn-secondary {
     background-color: $color-primary !important;
     border-color: $color-primary !important;
-    color: $color-white;
+    color: $color-white !important;
 
     .fa,
     .edw-icon {
-        color: $color-white;
+        color: $color-white !important;
     }
 
-    &:hover {
-        background-color: $color-secondary !important;
-        border-color: $color-secondary !important;
-        color: $color-white;
-    }
-
-    &:not(:disabled):not(.disabled):active,
-    &:not(:disabled):not(.disabled).active,
-    &:not(:disabled):not(.disabled):active:focus,
-    .show>&.dropdown-toggle {
-        background-color: $color-primary !important;
-        border-color: $color-primary !important;
-        color: $color-white;
-    }
-
-    &:not(:disabled):not(.disabled):focus,
-    &:not(:disabled):not(.disabled).focus {
-        background-color: $color-secondary !important;
-        border-color: $color-secondary !important;
-        color: $color-white;
-    }
-}
-
-/* Botones Específicos */
-button.btn.btn-primary.icon-no-margin.p-0 {
-    background-color: $color-secondary !important;
-    border-color: $color-white;
-    color: $color-white;
-
-    &:hover {
-        background-color: $color-secondary !important;
-        border-color: $color-white;
+    &:hover,
+    &:focus {
+        background-color: $color-primary-dark !important;
+        border-color: $color-primary-dark !important;
         color: $color-white !important;
     }
 
     &:not(:disabled):not(.disabled):active,
     &:not(:disabled):not(.disabled).active,
-    &:not(:disabled):not(.disabled):active:focus,
-    .show>&.dropdown-toggle {
-        background-color: darken($color-secondary, 10%);
-        border-color: $color-white;
-        color: $color-white;
+    .show > &.dropdown-toggle {
+        background-color: darken($color-primary, 15%) !important;
+        border-color: darken($color-primary, 15%) !important;
+        color: $color-white !important;
+    }
 
-        .fa,
-        .edw-icon {
-            color: $color-white;
-        }
+    &:disabled,
+    &.disabled {
+        background-color: lighten($color-primary, 20%) !important;
+        border-color: lighten($color-primary, 20%) !important;
+        opacity: 0.65;
     }
 }
 
+/* ===== BOTÓN SECUNDARIO (Rojo corporativo) ===== */
+.btn-secondary {
+    background-color: $color-secondary !important;
+    border-color: $color-secondary !important;
+    color: $color-white !important;
+
+    .fa,
+    .edw-icon {
+        color: $color-white !important;
+    }
+
+    &:hover,
+    &:focus {
+        background-color: $color-secondary-dark !important;
+        border-color: $color-secondary-dark !important;
+        color: $color-white !important;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active,
+    .show > &.dropdown-toggle {
+        background-color: darken($color-secondary, 15%) !important;
+        border-color: darken($color-secondary, 15%) !important;
+        color: $color-white !important;
+    }
+
+    &:disabled,
+    &.disabled {
+        background-color: lighten($color-secondary, 20%) !important;
+        border-color: lighten($color-secondary, 20%) !important;
+        opacity: 0.65;
+    }
+}
+
+/* ===== BOTÓN SUCCESS (Verde) ===== */
+.btn-success {
+    background-color: $my-verde !important;
+    border-color: $my-verde !important;
+    color: $color-white !important;
+
+    &:hover,
+    &:focus {
+        background-color: darken($my-verde, 10%) !important;
+        border-color: darken($my-verde, 10%) !important;
+        color: $color-white !important;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: darken($my-verde, 15%) !important;
+        border-color: darken($my-verde, 15%) !important;
+    }
+}
+
+/* ===== BOTÓN DANGER (Rojo) ===== */
+.btn-danger {
+    background-color: $my-rojo !important;
+    border-color: $my-rojo !important;
+    color: $color-white !important;
+
+    &:hover,
+    &:focus {
+        background-color: darken($my-rojo, 10%) !important;
+        border-color: darken($my-rojo, 10%) !important;
+        color: $color-white !important;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: darken($my-rojo, 15%) !important;
+        border-color: darken($my-rojo, 15%) !important;
+    }
+}
+
+/* ===== BOTÓN WARNING (Amarillo) ===== */
+.btn-warning {
+    background-color: $color-terciary !important;
+    border-color: $color-terciary !important;
+    color: $my-negro !important;
+
+    &:hover,
+    &:focus {
+        background-color: $color-terciary-dark !important;
+        border-color: $color-terciary-dark !important;
+        color: $my-negro !important;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: darken($color-terciary, 15%) !important;
+        border-color: darken($color-terciary, 15%) !important;
+    }
+}
+
+/* ===== BOTÓN INFO (Azul) ===== */
+.btn-info {
+    background-color: $my-blue !important;
+    border-color: $my-blue !important;
+    color: $color-white !important;
+
+    &:hover,
+    &:focus {
+        background-color: darken($my-blue, 10%) !important;
+        border-color: darken($my-blue, 10%) !important;
+        color: $color-white !important;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: darken($my-blue, 15%) !important;
+        border-color: darken($my-blue, 15%) !important;
+    }
+}
+
+/* ===== BOTÓN LIGHT ===== */
+.btn-light {
+    background-color: $my-gris-claro !important;
+    border-color: $my-gris-claro !important;
+    color: $my-negro !important;
+
+    &:hover,
+    &:focus {
+        background-color: darken($my-gris-claro, 10%) !important;
+        border-color: darken($my-gris-claro, 10%) !important;
+        color: $my-negro !important;
+    }
+}
+
+/* ===== BOTÓN DARK ===== */
+.btn-dark {
+    background-color: $my-gris-oscuro !important;
+    border-color: $my-gris-oscuro !important;
+    color: $color-white !important;
+
+    &:hover,
+    &:focus {
+        background-color: darken($my-gris-oscuro, 10%) !important;
+        border-color: darken($my-gris-oscuro, 10%) !important;
+        color: $color-white !important;
+    }
+}
+
+/* ===== BOTONES OUTLINE ===== */
+.btn-outline-primary {
+    background-color: transparent !important;
+    border-color: $color-primary !important;
+    color: $color-primary !important;
+
+    &:hover,
+    &:focus {
+        background-color: $color-primary !important;
+        border-color: $color-primary !important;
+        color: $color-white !important;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: $color-primary-dark !important;
+        border-color: $color-primary-dark !important;
+        color: $color-white !important;
+    }
+}
+
+.btn-outline-secondary {
+    background-color: transparent !important;
+    border-color: $color-secondary !important;
+    color: $color-secondary !important;
+
+    &:hover,
+    &:focus {
+        background-color: $color-secondary !important;
+        border-color: $color-secondary !important;
+        color: $color-white !important;
+    }
+
+    &:not(:disabled):not(.disabled):active,
+    &:not(:disabled):not(.disabled).active {
+        background-color: $color-secondary-dark !important;
+        border-color: $color-secondary-dark !important;
+        color: $color-white !important;
+    }
+}
+
+.btn-outline-success {
+    background-color: transparent !important;
+    border-color: $my-verde !important;
+    color: $my-verde !important;
+
+    &:hover,
+    &:focus {
+        background-color: $my-verde !important;
+        border-color: $my-verde !important;
+        color: $color-white !important;
+    }
+}
+
+.btn-outline-danger {
+    background-color: transparent !important;
+    border-color: $my-rojo !important;
+    color: $my-rojo !important;
+
+    &:hover,
+    &:focus {
+        background-color: $my-rojo !important;
+        border-color: $my-rojo !important;
+        color: $color-white !important;
+    }
+}
+
+.btn-outline-warning {
+    background-color: transparent !important;
+    border-color: $color-terciary !important;
+    color: darken($color-terciary, 15%) !important;
+
+    &:hover,
+    &:focus {
+        background-color: $color-terciary !important;
+        border-color: $color-terciary !important;
+        color: $my-negro !important;
+    }
+}
+
+.btn-outline-info {
+    background-color: transparent !important;
+    border-color: $my-blue !important;
+    color: $my-blue !important;
+
+    &:hover,
+    &:focus {
+        background-color: $my-blue !important;
+        border-color: $my-blue !important;
+        color: $color-white !important;
+    }
+}
+
+.btn-outline-light {
+    background-color: transparent !important;
+    border-color: $my-gris-claro !important;
+    color: $my-gris-oscuro !important;
+
+    &:hover,
+    &:focus {
+        background-color: $my-gris-claro !important;
+        border-color: $my-gris-claro !important;
+        color: $my-negro !important;
+    }
+}
+
+.btn-outline-dark {
+    background-color: transparent !important;
+    border-color: $my-gris-oscuro !important;
+    color: $my-gris-oscuro !important;
+
+    &:hover,
+    &:focus {
+        background-color: $my-gris-oscuro !important;
+        border-color: $my-gris-oscuro !important;
+        color: $color-white !important;
+    }
+}
+
+/* ===== BOTÓN LINK ===== */
+.btn-link {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: $color-primary !important;
+    text-decoration: none !important;
+
+    &:hover,
+    &:focus {
+        color: $color-primary-dark !important;
+        text-decoration: underline !important;
+    }
+}
+
+/* ===== BOTÓN FLOTANTE ===== */
 .btn-floating {
     border-color: $color-white;
-}
-
-.btn-primary .fa,
-.btn-primary .edw-icon {
+    background-color: $color-primary !important;
     color: $color-white !important;
+
+    &:hover {
+        background-color: $color-primary-dark !important;
+    }
 }
 
-/* Outline Buttons */
-.btn-link,
-.btn-link:hover,
-.btn-outline-primary,
-.btn-outline-primary:hover {
-    background-color: $color-white;
-}
-
-.btn-link {
-    color: $color-secondary !important;
-    border-color: $color-primary !important;
-}
-
-.btn-link:hover {
-    color: $color-primary !important;
-    border-color: $color-secondary !important;
-}
-
-.btn-outline-primary {
-    color: $color-secondary !important;
-    border-color: $color-secondary !important;
-}
-
-.btn-outline-primary:hover {
-    color: $color-white;
-    background-color: darken($color-secondary, 10%);
-    border-color: darken($color-secondary, 10%);
+/* ===== ICONOS EN BOTONES ===== */
+.btn .fa,
+.btn .edw-icon {
+    color: inherit !important;
 }
 
 /* ==========================================================================
@@ -1981,6 +2175,15 @@ body:not(.pagelayout-login) {
     padding-top: 118px !important; /* 38px (GOV bar) + 80px (navbar) */
 }
 
+/* Eliminar margin-top duplicado de #page.drawers - RemUI lo añade pero ya tenemos padding en body */
+#page.drawers {
+    margin-top: 0 !important;
+}
+
+#page {
+    margin-top: 0 !important;
+}
+
 /* Ajustes para página de login */
 body.pagelayout-login {
     padding-top: 38px !important;
@@ -2760,37 +2963,156 @@ html[nighteyeplgn="active"] {
         }
     }
 
-    /* ===== BOTONES ===== */
+    /* ===== BOTONES - Mantener colores corporativos en modo oscuro ===== */
     .btn-primary {
         background-color: $color-primary !important;
         border-color: $color-primary !important;
+        color: $color-white !important;
 
         &:hover,
         &:focus {
-            background-color: darken($color-primary, 10%) !important;
-            border-color: darken($color-primary, 10%) !important;
+            background-color: lighten($color-primary, 10%) !important;
+            border-color: lighten($color-primary, 10%) !important;
+            color: $color-white !important;
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active {
+            background-color: lighten($color-primary, 5%) !important;
+            border-color: lighten($color-primary, 5%) !important;
         }
     }
 
     .btn-secondary {
+        background-color: $color-secondary !important;
+        border-color: $color-secondary !important;
+        color: $color-white !important;
+
+        &:hover,
+        &:focus {
+            background-color: lighten($color-secondary, 10%) !important;
+            border-color: lighten($color-secondary, 10%) !important;
+            color: $color-white !important;
+        }
+
+        &:not(:disabled):not(.disabled):active,
+        &:not(:disabled):not(.disabled).active {
+            background-color: lighten($color-secondary, 5%) !important;
+            border-color: lighten($color-secondary, 5%) !important;
+        }
+    }
+
+    .btn-success {
+        background-color: $my-verde !important;
+        border-color: $my-verde !important;
+        color: $color-white !important;
+
+        &:hover,
+        &:focus {
+            background-color: lighten($my-verde, 10%) !important;
+            border-color: lighten($my-verde, 10%) !important;
+        }
+    }
+
+    .btn-danger {
+        background-color: $my-rojo !important;
+        border-color: $my-rojo !important;
+        color: $color-white !important;
+
+        &:hover,
+        &:focus {
+            background-color: lighten($my-rojo, 10%) !important;
+            border-color: lighten($my-rojo, 10%) !important;
+        }
+    }
+
+    .btn-warning {
+        background-color: $color-terciary !important;
+        border-color: $color-terciary !important;
+        color: $my-negro !important;
+
+        &:hover,
+        &:focus {
+            background-color: lighten($color-terciary, 10%) !important;
+            border-color: lighten($color-terciary, 10%) !important;
+        }
+    }
+
+    .btn-info {
+        background-color: $my-blue !important;
+        border-color: $my-blue !important;
+        color: $color-white !important;
+
+        &:hover,
+        &:focus {
+            background-color: lighten($my-blue, 10%) !important;
+            border-color: lighten($my-blue, 10%) !important;
+        }
+    }
+
+    .btn-light {
         background-color: $dark-bg-surface !important;
         border-color: $dark-border-color !important;
         color: $dark-text-primary !important;
 
         &:hover,
         &:focus {
-            background-color: lighten($dark-bg-surface, 5%) !important;
+            background-color: lighten($dark-bg-surface, 10%) !important;
+            border-color: lighten($dark-border-color, 10%) !important;
+        }
+    }
+
+    .btn-dark {
+        background-color: $dark-text-primary !important;
+        border-color: $dark-text-primary !important;
+        color: $dark-bg-primary !important;
+
+        &:hover,
+        &:focus {
+            background-color: darken($dark-text-primary, 10%) !important;
+            border-color: darken($dark-text-primary, 10%) !important;
         }
     }
 
     .btn-outline-primary {
-        color: $dark-link-color !important;
-        border-color: $dark-link-color !important;
+        background-color: transparent !important;
+        border-color: lighten($color-primary, 20%) !important;
+        color: lighten($color-primary, 20%) !important;
 
         &:hover,
         &:focus {
-            background-color: $dark-link-color !important;
-            color: $dark-bg-primary !important;
+            background-color: $color-primary !important;
+            border-color: $color-primary !important;
+            color: $color-white !important;
+        }
+    }
+
+    .btn-outline-secondary {
+        background-color: transparent !important;
+        border-color: lighten($color-secondary, 20%) !important;
+        color: lighten($color-secondary, 20%) !important;
+
+        &:hover,
+        &:focus {
+            background-color: $color-secondary !important;
+            border-color: $color-secondary !important;
+            color: $color-white !important;
+        }
+    }
+
+    .btn-outline-success,
+    .btn-outline-danger,
+    .btn-outline-warning,
+    .btn-outline-info {
+        background-color: transparent !important;
+    }
+
+    .btn-link {
+        color: $dark-link-color !important;
+
+        &:hover,
+        &:focus {
+            color: $dark-link-hover !important;
         }
     }
 
