@@ -4638,11 +4638,9 @@ body.pagelayout-incourse {
 }
 
 /* Courseindex new design base styles */
+/* Nota: height y overflow ya están definidos en _courseindex_progress.scss para #courseindex */
 .courseindex-new-design {
     background: $ci-white;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
 
     #courseindex-content {
         padding: 0.5rem 0;
