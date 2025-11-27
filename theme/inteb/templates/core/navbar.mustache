@@ -64,8 +64,8 @@
         ]
     }
 }}
-<nav aria-label="{{#str}}breadcrumb, core{{/str}}">
-    <ol class="breadcrumb">
+<nav class="breadcrumb-moove-nav" aria-label="{{#str}}breadcrumb, core{{/str}}">
+    <ol class="breadcrumb breadcrumb-moove">
         {{#get_items}}
             {{#has_action}}
                 <li class="breadcrumb-item"><a href="{{{action}}}" {{#get_title}}title="{{get_title}}"{{/get_title}}>{{{text}}}</a></li>
