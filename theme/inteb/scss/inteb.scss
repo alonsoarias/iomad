@@ -4168,13 +4168,18 @@ html[nighteyeplgn="active"] {
 /* ===================================
    Course Index - Complete Redesign
    Professional & Clean Interface (Replicated from compecer theme)
+   Enhanced with ISER Institutional Color Palette
    =================================== */
 
-// Color Variables
-$ci-primary: $color-primary;
-$ci-success: $my-verde;
-$ci-warning: $color-terciary;
-$ci-danger: $color-secondary;
+// Color Variables - ISER Institutional Palette
+$ci-primary: $color-primary;        // Verde ISER #1B9E88
+$ci-success: $my-verde;             // Verde ISER #1B9E88
+$ci-warning: $color-terciary;       // Amarillo ISER #FCBD05
+$ci-danger: $color-secondary;       // Rojo ISER #EB4335
+$ci-blue: $my-blue;                 // Azul secundario #5894EF
+$ci-orange: $my-orange;             // Naranja #E27C32
+$ci-lime: $my-lime;                 // Verde lima #CFDA4B
+$ci-magenta: $my-magenta;           // Magenta #C82260
 $ci-gray-light: $my-gris-claro;
 $ci-gray-medium: $my-gris-medio;
 $ci-gray-dark: $my-gris-oscuro;
@@ -4186,79 +4191,118 @@ $ci-text-secondary: $my-gris-oscuro;
    Course Progress Header
    ============================ */
 .courseindex-progress-header {
-  background: $ci-white;
+  background: linear-gradient(135deg, $ci-white 0%, rgba($ci-primary, 0.03) 100%);
   padding: 1.25rem;
   margin-bottom: 1rem;
-  border-radius: 6px;
-  border: 1px solid $ci-gray-medium;
+  border-radius: 8px;
+  border: 1px solid rgba($ci-primary, 0.15);
+  box-shadow: 0 2px 8px rgba($ci-primary, 0.08);
+  position: relative;
+  overflow: hidden;
+
+  // Accent bar at top
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $ci-primary 0%, $ci-success 50%, $ci-lime 100%);
+  }
 
   .progress-title {
-    color: $ci-text;
+    color: $ci-primary;
     font-size: 0.813rem;
-    font-weight: 600;
+    font-weight: 700;
     margin: 0 0 0.625rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   .progress-bar-wrapper {
     position: relative;
-    background: $ci-gray-light;
-    height: 8px;
-    border-radius: 4px;
+    background: linear-gradient(90deg, rgba($ci-gray-light, 0.8) 0%, rgba($ci-gray-medium, 0.4) 100%);
+    height: 10px;
+    border-radius: 5px;
     overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 
     .progress-bar-fill {
       height: 100%;
       background: $ci-primary;
-      border-radius: 4px;
-      transition: width 0.6s ease;
+      border-radius: 5px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
 
-      // Color states based on progress
+      // Shimmer effect
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: shimmer 2s infinite;
+      }
+
+      // Color states based on progress with gradients
       &.progress-0 {
         width: 0% !important;
         background: $ci-gray-medium;
       }
 
       &.progress-low {
-        background: $ci-danger;
+        background: linear-gradient(90deg, $ci-danger 0%, lighten($ci-danger, 10%) 100%);
       }
 
       &.progress-medium {
-        background: $ci-warning;
+        background: linear-gradient(90deg, $ci-orange 0%, $ci-warning 100%);
       }
 
-      &.progress-high,
+      &.progress-high {
+        background: linear-gradient(90deg, $ci-lime 0%, $ci-success 100%);
+      }
+
       &.progress-complete {
-        background: $ci-success;
+        background: linear-gradient(90deg, $ci-success 0%, darken($ci-success, 5%) 100%);
       }
     }
   }
 
   .progress-percentage-display {
-    color: $ci-text;
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
+    color: $ci-primary;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 0.625rem;
     text-align: right;
   }
 }
 
+@keyframes shimmer {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(200%); }
+}
+
 /* No Tracking Message - Course level completion not enabled */
 .courseindex-no-tracking {
-  background: $ci-gray-light;
+  background: linear-gradient(135deg, rgba($ci-blue, 0.08) 0%, rgba($ci-blue, 0.03) 100%);
   padding: 1rem;
   margin-bottom: 1rem;
-  border-radius: 6px;
-  border-left: 4px solid $ci-warning;
+  border-radius: 8px;
+  border-left: 4px solid $ci-blue;
+  box-shadow: 0 2px 6px rgba($ci-blue, 0.1);
 
   .no-tracking-message {
     display: flex;
     align-items: center;
-    color: $ci-text-secondary;
+    color: $ci-text;
     font-size: 0.875rem;
 
     i {
       margin-right: 0.75rem;
-      color: $ci-warning;
+      color: $ci-blue;
       font-size: 1.25rem;
     }
   }
@@ -4266,22 +4310,40 @@ $ci-text-secondary: $my-gris-oscuro;
 
 /* No Activities Tracking Message - Course has completion but activities don't */
 .courseindex-no-activities-tracking {
-  background: lighten($ci-warning, 35%);
   padding: 1rem;
   margin-bottom: 1rem;
-  border-radius: 6px;
-  border-left: 4px solid $ci-warning;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba($ci-warning, 0.15);
+
+  // Teacher variant - warning style
+  &.courseindex-no-activities-tracking-teacher {
+    background: linear-gradient(135deg, rgba($ci-warning, 0.15) 0%, rgba($ci-orange, 0.08) 100%);
+    border-left: 4px solid $ci-warning;
+
+    .no-activities-tracking-message i {
+      color: $ci-warning;
+    }
+  }
+
+  // Student variant - info style
+  &.courseindex-no-activities-tracking-student {
+    background: linear-gradient(135deg, rgba($ci-blue, 0.08) 0%, rgba($ci-blue, 0.03) 100%);
+    border-left: 4px solid $ci-blue;
+
+    .no-activities-tracking-message i {
+      color: $ci-blue;
+    }
+  }
 
   .no-activities-tracking-message {
     display: flex;
     align-items: flex-start;
     color: $ci-text;
     font-size: 0.813rem;
-    line-height: 1.4;
+    line-height: 1.5;
 
     i {
       margin-right: 0.75rem;
-      color: $ci-warning;
       font-size: 1.25rem;
       flex-shrink: 0;
       margin-top: 0.1rem;
@@ -4297,35 +4359,48 @@ $ci-text-secondary: $my-gris-oscuro;
    Icon Legend
    ============================ */
 .courseindex-icon-legend {
-  background: $ci-white;
+  background: linear-gradient(135deg, $ci-white 0%, rgba($ci-primary, 0.02) 100%);
   padding: 1rem;
   margin-bottom: 1rem;
-  border-radius: 6px;
-  border: 1px solid $ci-gray-medium;
+  border-radius: 8px;
+  border: 1px solid rgba($ci-primary, 0.12);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 
   .legend-title {
     font-size: 0.75rem;
-    font-weight: 600;
-    color: $ci-text-secondary;
+    font-weight: 700;
+    color: $ci-primary;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.625rem;
+    padding-bottom: 0.375rem;
+    border-bottom: 1px dashed rgba($ci-primary, 0.2);
   }
 
   .legend-items {
     display: flex;
-    gap: 1rem;
+    gap: 1.25rem;
     flex-wrap: wrap;
 
     .legend-item {
       display: flex;
       align-items: center;
-      gap: 0.375rem;
+      gap: 0.5rem;
       font-size: 0.813rem;
       color: $ci-text;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: rgba($ci-gray-light, 0.5);
+      }
 
       .legend-icon {
-        font-size: 1rem;
+        font-size: 1.125rem;
+        font-weight: bold;
+        width: 1.5rem;
+        text-align: center;
 
         &.not-started {
           color: $ci-gray-dark;
@@ -4333,10 +4408,12 @@ $ci-text-secondary: $my-gris-oscuro;
 
         &.in-progress {
           color: $ci-warning;
+          text-shadow: 0 0 2px rgba($ci-warning, 0.3);
         }
 
         &.completed {
           color: $ci-success;
+          text-shadow: 0 0 2px rgba($ci-success, 0.3);
         }
       }
     }
@@ -4347,29 +4424,47 @@ $ci-text-secondary: $my-gris-oscuro;
    Course Index Sections
    ============================ */
 .course-index-section {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.625rem;
 
   // Section Header
   .course-index-header {
-    padding: 0.75rem 0.875rem;
-    background: $ci-white;
-    border: 1px solid $ci-gray-light;
-    border-radius: 4px;
-    transition: background 0.15s ease;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, $ci-white 0%, rgba($ci-primary, 0.02) 100%);
+    border: 1px solid rgba($ci-primary, 0.1);
+    border-radius: 6px;
+    transition: all 0.2s ease;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.625rem;
+    position: relative;
 
     &:hover {
-      background: $ci-gray-light;
+      background: linear-gradient(135deg, rgba($ci-primary, 0.05) 0%, rgba($ci-primary, 0.02) 100%);
+      border-color: rgba($ci-primary, 0.2);
+      box-shadow: 0 2px 6px rgba($ci-primary, 0.1);
+
+      .section-title {
+        color: $ci-primary;
+      }
     }
 
     // Current section highlighting
     &.current-section {
-      background: $ci-gray-light;
-      border-left: 3px solid $ci-primary;
-      padding-left: calc(0.875rem - 2px);
+      background: linear-gradient(135deg, rgba($ci-primary, 0.08) 0%, rgba($ci-lime, 0.05) 100%);
+      border-left: 4px solid $ci-primary;
+      border-color: rgba($ci-primary, 0.25);
+      padding-left: calc(1rem - 3px);
+
+      .section-title {
+        color: $ci-primary;
+        font-weight: 600;
+      }
+
+      .section-percentage {
+        background: rgba($ci-primary, 0.15);
+        color: $ci-primary;
+      }
     }
 
     // Dimmed/hidden sections
@@ -4380,17 +4475,22 @@ $ci-text-secondary: $my-gris-oscuro;
     // Toggle icon (chevron)
     .course-index-toggle {
       flex-shrink: 0;
-      color: $ci-text-secondary;
-      font-size: 0.813rem;
-      transition: transform 0.15s ease;
+      color: $ci-primary;
+      font-size: 0.875rem;
+      transition: transform 0.2s ease;
       text-decoration: none;
+      width: 1.25rem;
+      height: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:not(.collapsed) i {
         transform: rotate(180deg);
       }
 
       i {
-        transition: transform 0.15s ease;
+        transition: transform 0.2s ease;
       }
     }
 
@@ -4401,19 +4501,22 @@ $ci-text-secondary: $my-gris-oscuro;
       font-weight: 500;
       color: $ci-text;
       margin: 0;
+      transition: color 0.2s ease;
     }
 
     // Section percentage badge
     .section-percentage {
       flex-shrink: 0;
-      background: $ci-gray-light;
+      background: linear-gradient(135deg, rgba($ci-primary, 0.1) 0%, rgba($ci-lime, 0.08) 100%);
       color: $ci-text;
-      padding: 0.188rem 0.5rem;
-      border-radius: 4px;
+      padding: 0.25rem 0.625rem;
+      border-radius: 12px;
       font-size: 0.75rem;
-      font-weight: 600;
-      min-width: 45px;
+      font-weight: 700;
+      min-width: 48px;
       text-align: center;
+      border: 1px solid rgba($ci-primary, 0.15);
+      transition: all 0.2s ease;
     }
   }
 
@@ -4421,6 +4524,8 @@ $ci-text-secondary: $my-gris-oscuro;
   .course-index-content {
     padding-left: 2rem;
     padding-top: 0.5rem;
+    border-left: 2px solid rgba($ci-primary, 0.1);
+    margin-left: 0.625rem;
 
     .course-index-section-content {
       list-style: none;
@@ -4435,18 +4540,37 @@ $ci-text-secondary: $my-gris-oscuro;
    ============================ */
 .course-index-item {
   padding: 0.625rem 0.875rem;
-  border-radius: 4px;
-  transition: background 0.2s ease;
+  border-radius: 6px;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+  border: 1px solid transparent;
 
   &:hover {
-    background: $ci-gray-light;
+    background: linear-gradient(135deg, rgba($ci-primary, 0.05) 0%, rgba($ci-lime, 0.03) 100%);
+    border-color: rgba($ci-primary, 0.1);
+
+    .course-index-link {
+      color: $ci-primary;
+    }
+
+    .activity-status-icon {
+      transform: scale(1.1);
+    }
   }
 
   &.active {
-    background: lighten($ci-primary, 48%);
+    background: linear-gradient(135deg, rgba($ci-primary, 0.12) 0%, rgba($ci-lime, 0.08) 100%);
+    border-color: rgba($ci-primary, 0.2);
+    border-left: 3px solid $ci-primary;
+    padding-left: calc(0.875rem - 2px);
+
+    .course-index-link {
+      color: $ci-primary;
+      font-weight: 500;
+    }
   }
 
   &.dimmed {
@@ -4456,15 +4580,18 @@ $ci-text-secondary: $my-gris-oscuro;
   // Activity completion icon
   .activity-status-icon {
     flex-shrink: 0;
-    font-size: 1rem;
-    width: 20px;
-    height: 20px;
+    font-size: 1.125rem;
+    width: 22px;
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
 
     &.status-not-started {
       color: $ci-gray-dark;
+      background: rgba($ci-gray-light, 0.5);
 
       &::before {
         content: "○";
@@ -4473,6 +4600,8 @@ $ci-text-secondary: $my-gris-oscuro;
 
     &.status-in-progress {
       color: $ci-warning;
+      background: rgba($ci-warning, 0.15);
+      text-shadow: 0 0 2px rgba($ci-warning, 0.3);
 
       &::before {
         content: "◐";
@@ -4480,8 +4609,10 @@ $ci-text-secondary: $my-gris-oscuro;
     }
 
     &.status-completed {
-      color: $ci-success;
+      color: $ci-white;
+      background: linear-gradient(135deg, $ci-success 0%, darken($ci-success, 5%) 100%);
       font-weight: bold;
+      box-shadow: 0 2px 4px rgba($ci-success, 0.3);
 
       &::before {
         content: "✓";
@@ -4669,9 +4800,47 @@ body.pagelayout-incourse {
 /* Courseindex new design base styles */
 /* Nota: height y overflow ya están definidos en _courseindex_progress.scss para #courseindex */
 .courseindex-new-design {
-    background: $ci-white;
+    background: linear-gradient(180deg, $ci-white 0%, rgba($ci-primary, 0.02) 100%);
+    padding: 0.75rem;
+
+    // Subtle top border with institutional colors
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg,
+            $ci-primary 0%,
+            $ci-success 25%,
+            $ci-lime 50%,
+            $ci-warning 75%,
+            $ci-danger 100%
+        );
+        opacity: 0.8;
+    }
 
     #courseindex-content {
         padding: 0.5rem 0;
+    }
+
+    // Scrollbar styling with institutional colors
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba($ci-gray-light, 0.3);
+        border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, $ci-primary 0%, rgba($ci-primary, 0.6) 100%);
+        border-radius: 3px;
+
+        &:hover {
+            background: linear-gradient(180deg, darken($ci-primary, 10%) 0%, $ci-primary 100%);
+        }
     }
 }
