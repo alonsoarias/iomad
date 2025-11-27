@@ -20,8 +20,145 @@
  */
 
 /* ==========================================================================
-   1. TIPOGRAFÍA Y HEADINGS
+   1. TIPOGRAFÍA Y HEADINGS - ISER Branding
+   Fuentes: Verdana/Arial para digital (según manual de marca ISER)
    ========================================================================== */
+
+/* ---------------------------------------------
+   FORZAR FUENTES GLOBALMENTE
+   Sobrescribe Bootstrap/RemUI defaults
+   --------------------------------------------- */
+
+// Base global - Aplica a todo el documento
+html,
+body {
+    font-family: $font-family-sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// Selector universal para máxima cobertura
+*,
+*::before,
+*::after {
+    font-family: inherit;
+}
+
+// Body y contenedores principales
+body,
+#page,
+#page-wrapper,
+#page-content,
+.pagelayout-standard,
+.pagelayout-course,
+.pagelayout-incourse,
+.pagelayout-admin,
+.pagelayout-mydashboard,
+.pagelayout-mypublic,
+.pagelayout-login,
+.pagelayout-popup,
+.pagelayout-embedded,
+.pagelayout-report,
+.pagelayout-base {
+    font-family: $font-family-sans-serif !important;
+}
+
+// Elementos de formulario
+input,
+textarea,
+select,
+button,
+.btn,
+.form-control,
+.custom-select,
+.input-group-text {
+    font-family: $font-family-sans-serif !important;
+}
+
+// Navegación y menús
+.navbar,
+.nav,
+.nav-link,
+.nav-item,
+.dropdown-menu,
+.dropdown-item,
+.menu,
+.menubar,
+.moremenu,
+.primary-navigation,
+.secondary-navigation,
+#usernavigation {
+    font-family: $font-family-sans-serif !important;
+}
+
+// Tablas
+table,
+.table,
+th,
+td,
+thead,
+tbody,
+tfoot {
+    font-family: $font-family-sans-serif !important;
+}
+
+// Modales y popups
+.modal,
+.modal-content,
+.modal-header,
+.modal-body,
+.modal-footer,
+.popover,
+.popover-body,
+.tooltip,
+.tooltip-inner {
+    font-family: $font-family-sans-serif !important;
+}
+
+// Alertas y mensajes
+.alert,
+.toast,
+.badge,
+.tag {
+    font-family: $font-family-sans-serif !important;
+}
+
+// Cards y bloques
+.card,
+.card-body,
+.card-header,
+.card-footer,
+.block,
+.block-content,
+.block_settings {
+    font-family: $font-family-sans-serif !important;
+}
+
+// Texto y párrafos
+p,
+span,
+div,
+label,
+legend,
+li,
+dt,
+dd {
+    font-family: $font-family-sans-serif;
+}
+
+// Código y preformateado (excepción: usar monospace)
+code,
+pre,
+kbd,
+samp,
+.code-editor,
+.ace_editor {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+}
+
+/* ---------------------------------------------
+   HEADINGS - Títulos con fuente Arial
+   --------------------------------------------- */
 
 h1,
 .h1,
@@ -31,12 +168,12 @@ h3,
 .h3,
 h4,
 .h4,
-.h5,
+h5,
 .h5,
 h6,
 .h6 {
     color: $color-primary;
-    font-family: $headings-font-family;
+    font-family: $headings-font-family !important;
     font-weight: $headings-font-weight;
 }
 
@@ -46,6 +183,106 @@ h1 {
 
 h1.h2.header-heading {
     font-weight: bold !important;
+}
+
+/* ---------------------------------------------
+   OVERRIDE RemUI/Edwiser Typography
+   RemUI usa Inter - Forzamos Verdana/Arial
+   --------------------------------------------- */
+
+// RemUI Typography classes
+.h-bold-1,
+.h-bold-2,
+.h-bold-3,
+.h-bold-4,
+.h-bold-5,
+.h-bold-6,
+.h-semibold-1,
+.h-semibold-2,
+.h-semibold-3,
+.h-semibold-4,
+.h-semibold-5,
+.h-semibold-6,
+.h-regular-1,
+.h-regular-2,
+.h-regular-3,
+.h-regular-4,
+.h-regular-5,
+.h-regular-6 {
+    font-family: $headings-font-family !important;
+}
+
+// RemUI Small text classes
+.small-para-regular,
+.small-para-semibold,
+.small-info-regular,
+.small-info-semibold,
+.smallpara-regular,
+.smallpara-semibold,
+.smallinfo-regular,
+.smallinfo-semibold {
+    font-family: $font-family-sans-serif !important;
+}
+
+// RemUI Dashboard and course elements
+.dashboard-card,
+.dashboard-card-content,
+.course-card,
+.course-card-info,
+.course-info-container,
+.edw-course-card,
+.edw-course-list,
+.edwiser-course-card {
+    font-family: $font-family-sans-serif !important;
+}
+
+// RemUI Activity and content
+.activity-item,
+.activity-instance,
+.activity-content,
+.activity-header,
+.activity-name-area,
+.activityname,
+.instancename,
+.contentwithoutlink,
+.contentwithlink {
+    font-family: $font-family-sans-serif !important;
+}
+
+// RemUI User profile and messages
+.user-profile,
+.userprofile,
+.usermenu,
+.user-info,
+.message-app,
+.message-drawer {
+    font-family: $font-family-sans-serif !important;
+}
+
+// RemUI Sidebar and blocks
+.drawer,
+.drawer-content,
+#theme-block-region,
+.block-region,
+#block-region-side-pre {
+    font-family: $font-family-sans-serif !important;
+}
+
+// RemUI Footer
+#page-footer,
+.footer,
+.footer-content,
+.page-footer {
+    font-family: $font-family-sans-serif !important;
+}
+
+// Edwiser specific elements
+.edw-tabs-navigation,
+.edw-header,
+.edwiser-content,
+[class*="edw-"],
+[class*="edwiser-"] {
+    font-family: $font-family-sans-serif !important;
 }
 
 /* Mejorando tamaño de tipografías para lectura */
