@@ -57,9 +57,22 @@ class course_progress {
      * @return array Array with 'percentage' and 'hasprogress' keys
      */
     public static function get_course_progress($course, $userid = null) {
-        // Check if completion is enabled
+        global $DB;
+
+        // First, verify the course has enablecompletion = 1 in the database
+        $courserecord = $DB->get_record('course', ['id' => $course->id], 'id, enablecompletion');
+        if (empty($courserecord) || empty($courserecord->enablecompletion)) {
+            debugging('course_progress: Course ' . $course->id . ' has enablecompletion = 0 or not set', DEBUG_DEVELOPER);
+            return [
+                'hasprogress' => false,
+                'percentage' => 0
+            ];
+        }
+
+        // Check if completion is enabled using completion_info
         $completion = new completion_info($course);
         if (!$completion->is_enabled()) {
+            debugging('course_progress: completion_info->is_enabled() returned false for course ' . $course->id, DEBUG_DEVELOPER);
             return [
                 'hasprogress' => false,
                 'percentage' => 0
@@ -70,6 +83,8 @@ class course_progress {
         // This ensures we only show the progress header when there's actually something to track
         $modinfo = get_fast_modinfo($course);
         $hasActivitiesWithTracking = false;
+        $activitiesCount = 0;
+        $activitiesWithTrackingCount = 0;
 
         foreach ($modinfo->get_cms() as $cm) {
             // Skip labels and non-visible activities (same logic as section progress)
@@ -77,17 +92,25 @@ class course_progress {
                 continue;
             }
 
+            $activitiesCount++;
+
             // Check if this activity has completion tracking enabled
-            if ($completion->is_enabled($cm) != COMPLETION_TRACKING_NONE) {
+            // is_enabled($cm) returns: COMPLETION_TRACKING_NONE (0), COMPLETION_TRACKING_MANUAL (1), or COMPLETION_TRACKING_AUTOMATIC (2)
+            $trackingType = $completion->is_enabled($cm);
+            if ($trackingType && $trackingType != COMPLETION_TRACKING_NONE) {
                 $hasActivitiesWithTracking = true;
-                break;
+                $activitiesWithTrackingCount++;
             }
         }
 
-        // If no activities with tracking found, return no progress
+        // If course has completion enabled, always show progress header
+        // Even if no activities have tracking yet, show 0% instead of "not enabled" message
+        // This is more consistent with user expectation when they enable completion at course level
         if (!$hasActivitiesWithTracking) {
+            debugging('course_progress: Course ' . $course->id . ' has completion enabled but no activities ' .
+                     'with completion tracking. Showing 0% progress.', DEBUG_DEVELOPER);
             return [
-                'hasprogress' => false,
+                'hasprogress' => true,  // Changed to true - course has completion enabled
                 'percentage' => 0
             ];
         }
@@ -102,6 +125,9 @@ class course_progress {
         } else {
             $percentage = 0;
         }
+
+        debugging('course_progress: Course ' . $course->id . ' has progress. Activities with tracking: ' .
+                 $activitiesWithTrackingCount . ', Percentage: ' . $percentage, DEBUG_DEVELOPER);
 
         return [
             'hasprogress' => true,
