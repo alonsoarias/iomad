@@ -4876,22 +4876,14 @@ body.pagelayout-incourse {
    Breadcrumb - Chevron/Arrow Style
    Based on Moove Theme with ISER Branding
 
-   Color Scheme (ISER Institutional):
-   - Normal items: Light background (#E8F5F3) with dark text (#646363)
-   - Current/active item: Green background (#1B9E88) with white text
-   - Hover: Dark gray background (#646363) with white text
-   - Chevron separators: White (#FFFFFF)
+   Uses variables from custom_variables.scss:
+   - $color-primary-dimmed: Light green for normal items background
+   - $my-gris-oscuro: Gray for normal text and hover background
+   - $color-primary / $my-verde: Green for current/active item
+   - $color-white: White for text on colored backgrounds
+   - $my-gris-claro: Light gray for no-link items
+   - $font-family-sans-serif: Typography
    =================================== */
-
-// ISER Breadcrumb Colors (matching moove structure)
-$breadcrumb-bg-normal: #E8F5F3;          // Light green tint for normal items
-$breadcrumb-text-normal: #646363;         // ISER gray for normal text
-$breadcrumb-bg-current: #1B9E88;          // ISER green for current item
-$breadcrumb-text-current: #FFFFFF;        // White text on current
-$breadcrumb-bg-hover: #646363;            // ISER gray for hover
-$breadcrumb-text-hover: #FFFFFF;          // White text on hover
-$breadcrumb-chevron-color: #FFFFFF;       // White chevrons
-$breadcrumb-no-link-bg: #F7F7F7;          // Light gray for no-link items
 
 // Page navbar breadcrumb container
 #page-navbar {
@@ -4922,14 +4914,14 @@ $breadcrumb-no-link-bg: #F7F7F7;          // Light gray for no-link items
             position: relative;
             padding: 0;
             margin: 4px 4px 4px 0;
-            font-family: 'Verdana', 'Arial', sans-serif;
+            font-family: $font-family-sans-serif;
 
             // Legacy separator - replaced by chevron
             &:after {
                 display: inline-block;
                 content: '\00bb';
                 margin: 0 0.6em;
-                color: #959fa5;
+                color: $my-gris-medio;
             }
 
             &:before {
@@ -4939,8 +4931,8 @@ $breadcrumb-no-link-bg: #F7F7F7;          // Light gray for no-link items
             }
 
             .no-link {
-                background-color: $breadcrumb-no-link-bg;
-                border-color: $breadcrumb-no-link-bg;
+                background-color: $my-gris-claro;
+                border-color: $my-gris-claro;
             }
         }
     }
@@ -4953,15 +4945,15 @@ $breadcrumb-no-link-bg: #F7F7F7;          // Light gray for no-link items
     // Base text colors
     .breadcrumb li > * {
         display: inline-block;
-        color: $breadcrumb-text-normal;
+        color: $my-gris-oscuro;
     }
 
     .breadcrumb li.current > * {
-        color: $breadcrumb-text-current;
+        color: $color-white;
     }
 
     .no-touch .breadcrumb a:hover {
-        color: $breadcrumb-text-hover;
+        color: $color-white;
     }
 
     // Redesigned breadcrumb with chevron separators (moove style)
@@ -4984,9 +4976,9 @@ $breadcrumb-no-link-bg: #F7F7F7;          // Light gray for no-link items
     .breadcrumb li > * {
         position: relative;
         padding: 0.4em 0.8em 0.4em 1.5em;
-        color: $breadcrumb-text-normal;
-        background-color: $breadcrumb-bg-normal;
-        border-color: $breadcrumb-bg-normal;
+        color: $my-gris-oscuro;
+        background-color: $color-primary-dimmed;
+        border-color: $color-primary-dimmed;
         text-decoration: none !important;
         font-weight: 500;
         font-size: 0.875rem;
@@ -4999,9 +4991,9 @@ $breadcrumb-no-link-bg: #F7F7F7;          // Light gray for no-link items
     // Current/active item styling (last item or .current class)
     .breadcrumb li:last-of-type > *,
     .breadcrumb li.current > * {
-        color: $breadcrumb-text-current;
-        background-color: $breadcrumb-bg-current;
-        border-color: $breadcrumb-bg-current;
+        color: $color-white;
+        background-color: $color-primary;
+        border-color: $color-primary;
     }
 
     // First item: rounded left corners
@@ -5019,9 +5011,9 @@ $breadcrumb-no-link-bg: #F7F7F7;          // Light gray for no-link items
     // Hover effect on links (not on current item)
     .no-touch .breadcrumb a:hover,
     .breadcrumb a:hover {
-        color: $breadcrumb-text-hover;
-        background-color: $breadcrumb-bg-hover;
-        border-color: $breadcrumb-bg-hover;
+        color: $color-white;
+        background-color: $my-gris-oscuro;
+        border-color: $my-gris-oscuro;
     }
 
     // Chevron/Arrow separator using CSS borders
@@ -5046,7 +5038,7 @@ $breadcrumb-no-link-bg: #F7F7F7;          // Light gray for no-link items
         -ms-transform: translateX(4px);
         -o-transform: translateX(4px);
         transform: translateX(4px);
-        border-left-color: $breadcrumb-chevron-color;
+        border-left-color: $color-white;
         margin: 0;
     }
 
@@ -5078,7 +5070,7 @@ $breadcrumb-no-link-bg: #F7F7F7;          // Light gray for no-link items
     -ms-transform: translateX(-4px);
     -o-transform: translateX(-4px);
     transform: translateX(-4px);
-    border-right-color: $breadcrumb-chevron-color;
+    border-right-color: $color-white;
 }
 
 .dir-rtl #page-navbar .breadcrumb li::after,
