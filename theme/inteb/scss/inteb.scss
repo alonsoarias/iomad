@@ -2117,9 +2117,65 @@ $govco-blue-primary: #3366CC;
 $govco-blue-dark: #045091;
 $govco-blue-light: #096FB7;
 
-/* Contenedor principal del footer GOV.CO - Diseño 3 columnas */
+/* Contenedor principal del footer GOV.CO - Diseño dinámico de columnas */
 .iser-footer-govco {
     padding: 2rem 0 1rem;
+
+    /* Fila de columnas dinámicas */
+    .footer-columns-row {
+        justify-content: space-between;
+    }
+
+    /* Estilos base para columnas dinámicas */
+    .footer-column {
+        padding: 0 15px;
+    }
+
+    .footer-column-content {
+        height: 100%;
+    }
+
+    .footer-column-title {
+        color: $color-white;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid rgba($color-white, 0.2);
+    }
+
+    .footer-column-body {
+        color: rgba($color-white, 0.9);
+
+        p {
+            margin-bottom: 0.4rem;
+        }
+
+        a {
+            color: rgba($color-white, 0.9);
+            text-decoration: none;
+            transition: color 0.3s ease;
+
+            &:hover,
+            &:focus {
+                color: $color-white;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    /* Ajustes específicos por número de columnas */
+    &.footer-cols-1 {
+        .footer-column {
+            text-align: center;
+        }
+    }
+
+    &.footer-cols-2 {
+        .footer-column:first-child {
+            text-align: center;
+        }
+    }
 
     /* Columna de logos */
     .footer-logos-column {
@@ -2341,6 +2397,20 @@ $govco-blue-light: #096FB7;
 
         .footer-social-icons {
             justify-content: center;
+        }
+
+        /* Columnas dinámicas en móvil */
+        .footer-column {
+            text-align: center;
+            margin-bottom: 1.5rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        .footer-column-title {
+            font-size: 0.95rem;
         }
     }
 }

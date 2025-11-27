@@ -23,27 +23,68 @@ class settings {
     /**
      * Retrieves footer settings for the theme.
      *
-     * This method gathers the 'my_credit' and 'abouttext' settings from the theme configuration
-     * and prepares them for use in the footer template.
+     * This method gathers the footer columns configuration from the theme settings
+     * and prepares them for use in the footer template. GOV.CO compatible design.
      *
      * @return array Context for the footer template with settings data.
      */
     public function footer() {
         $templatecontext = [];
-        
+
         // Retrieve 'my_credit' from the theme settings
         $templatecontext['my_credit'] = get_string('credit', 'theme_inteb');
-        
-        // Comprobar y cargar correctamente abouttitle
-        $templatecontext['abouttitle'] = $this->theme->settings->ib_abouttitle
-            ? $this->theme->settings->ib_abouttitle 
-            : get_string('abouttitle_default', 'theme_inteb'); 
-        
-        // Comprobar y cargar correctamente abouttext
-        $templatecontext['abouttext'] = $this->theme->settings->ib_abouttext
-            ? $this->theme->settings->ib_abouttext 
-            : get_string('abouttext_default', 'theme_inteb');
-        
+
+        // Get number of columns (default: 3)
+        $numcolumns = isset($this->theme->settings->ib_footercolumns)
+            ? (int)$this->theme->settings->ib_footercolumns
+            : 3;
+
+        $templatecontext['footercolumns'] = $numcolumns;
+
+        // Calculate Bootstrap column class based on number of columns
+        $colclasses = [
+            1 => 'col-12',
+            2 => 'col-12 col-md-6',
+            3 => 'col-12 col-md-4',
+            4 => 'col-12 col-md-6 col-lg-3'
+        ];
+        $templatecontext['colclass'] = $colclasses[$numcolumns] ?? 'col-12 col-md-4';
+
+        // Build columns array for mustache iteration
+        $columns = [];
+        for ($i = 1; $i <= $numcolumns; $i++) {
+            $titleKey = 'ib_footercolumntitle' . $i;
+            $contentKey = 'ib_footercolumn' . $i;
+
+            $title = isset($this->theme->settings->$titleKey)
+                ? $this->theme->settings->$titleKey
+                : '';
+
+            $content = isset($this->theme->settings->$contentKey) && !empty($this->theme->settings->$contentKey)
+                ? $this->theme->settings->$contentKey
+                : get_string('footercolumn' . $i . '_default', 'theme_inteb');
+
+            $columns[] = [
+                'number' => $i,
+                'title' => $title,
+                'hastitle' => !empty($title),
+                'content' => $content,
+                'hascontent' => !empty($content),
+                'isfirst' => ($i === 1),
+                'islast' => ($i === $numcolumns)
+            ];
+        }
+
+        $templatecontext['columns'] = $columns;
+        $templatecontext['hascolumns'] = !empty($columns);
+
+        // Keep backward compatibility with old abouttitle/abouttext
+        // (for any templates that still use these variables)
+        if (!empty($columns)) {
+            $templatecontext['abouttitle'] = ' '; // Non-empty to pass mustache condition
+            $templatecontext['abouttext'] = ''; // Will be replaced by columns
+        }
+
         return $templatecontext;
     }
 

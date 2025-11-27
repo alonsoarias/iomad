@@ -307,7 +307,7 @@ if ($ADMIN->fulltree) {
     $asettings->add_tab($page);
 
     /* =========================================================================
-       TAB 4: Footer Settings
+       TAB 4: Footer Settings - GOV.CO Multi-Column Configuration
        ========================================================================= */
     $page = new admin_settingpage('ib_theme_footer', get_string('footersettings', 'theme_inteb'));
 
@@ -323,28 +323,61 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
     $page->add($setting);
 
-    // About Section
+    // Footer Columns Configuration Heading
     $page->add(new admin_setting_heading(
-        'theme_inteb/ib_footeraboutheading',
-        get_string('abouttitle', 'theme_inteb'),
-        ''
+        'theme_inteb/ib_footercolumnsheading',
+        get_string('footercolumnsheading', 'theme_inteb'),
+        get_string('footercolumnsheading_desc', 'theme_inteb')
     ));
 
-    $name = 'theme_inteb/ib_abouttitle';
-    $title = get_string('abouttitle', 'theme_inteb');
-    $description = get_string('abouttitledesc', 'theme_inteb');
-    $default = get_string('abouttitle_default', 'theme_inteb');
-    $setting = new admin_setting_configtext($name, $title, $description, $default);
+    // Number of columns selector (1-4)
+    $name = 'theme_inteb/ib_footercolumns';
+    $title = get_string('footercolumns', 'theme_inteb');
+    $description = get_string('footercolumns_desc', 'theme_inteb');
+    $default = 3;
+    $choices = [
+        1 => '1',
+        2 => '2',
+        3 => '3',
+        4 => '4'
+    ];
+    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
-    $name = 'theme_inteb/ib_abouttext';
-    $title = get_string('abouttext', 'theme_inteb');
-    $description = get_string('abouttextdesc', 'theme_inteb');
-    $default = get_string('abouttext_default', 'theme_inteb');
-    $setting = new admin_setting_confightmleditor($name, $title, $description, $default);
-    $setting->set_updatedcallback('theme_reset_all_caches');
-    $page->add($setting);
+    // Get current number of columns to show appropriate fields
+    $numcolumns = get_config('theme_inteb', 'ib_footercolumns');
+    if ($numcolumns === false) {
+        $numcolumns = 3; // Default
+    }
+
+    // Settings for each column (1 to 4)
+    for ($i = 1; $i <= 4; $i++) {
+        // Column heading
+        $page->add(new admin_setting_heading(
+            'theme_inteb/ib_footercolumn' . $i . '_heading',
+            get_string('footercolumn', 'theme_inteb', $i),
+            ''
+        ));
+
+        // Column title (optional)
+        $name = 'theme_inteb/ib_footercolumntitle' . $i;
+        $title = get_string('footercolumntitle', 'theme_inteb', $i);
+        $description = get_string('footercolumntitle_desc', 'theme_inteb', $i);
+        $default = '';
+        $setting = new admin_setting_configtext($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $page->add($setting);
+
+        // Column content (HTML editor)
+        $name = 'theme_inteb/ib_footercolumn' . $i;
+        $title = get_string('footercolumn', 'theme_inteb', $i);
+        $description = get_string('footercolumn_desc', 'theme_inteb', $i);
+        $default = get_string('footercolumn' . $i . '_default', 'theme_inteb');
+        $setting = new admin_setting_confightmleditor($name, $title, $description, $default);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $page->add($setting);
+    }
 
     $asettings->add_tab($page);
 
