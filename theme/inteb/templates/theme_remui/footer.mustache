@@ -39,35 +39,41 @@
 {{^hidefootersections}}
 <section id="top-footer" class="p-y-1 iser-footer iser-footer-govco">
     <div class="container">
-        {{! Footer con columnas dinámicas GOV.CO }}
-        {{#hascolumns}}
-        <div class="row footer-columns-row footer-cols-{{footercolumns}}">
-            {{#columns}}
-            <div class="{{colclass}} footer-column footer-column-{{number}} mb-4 mb-md-0">
-                <div class="footer-column-content">
-                    {{#hastitle}}
-                    <h4 class="footer-column-title">{{{title}}}</h4>
-                    {{/hastitle}}
-                    {{#hascontent}}
-                    <div class="footer-column-body">{{{content}}}</div>
-                    {{/hascontent}}
+        <div class="col-12">
+            {{! Footer con columnas dinámicas GOV.CO }}
+            {{#hascolumns}}
+            <div class="row justify-content-center">
+                <div class="footer-main-wrapper my-4">
+                    <div class="row footer-columns-row footer-cols-{{footercolumns}}">
+                        {{#columns}}
+                        <div class="{{colclass}} footer-column footer-column-{{number}} mb-4 mb-lg-0">
+                            <div class="footer-column-content">
+                                {{#hastitle}}
+                                <h4 class="footer-column-title">{{{title}}}</h4>
+                                {{/hastitle}}
+                                {{#hascontent}}
+                                <div class="footer-column-body">{{{content}}}</div>
+                                {{/hascontent}}
+                            </div>
+                        </div>
+                        {{/columns}}
+                    </div>
                 </div>
             </div>
-            {{/columns}}
-        </div>
-        {{/hascolumns}}
-        {{^hascolumns}}
-        {{! Fallback para compatibilidad con configuración antigua }}
-        {{#abouttitle}}
-        <div class="row justify-content-center">
-            <div class="my-about my-4 my-after-divider">
-                {{#abouttext}}
-                <div class="about-text-content">{{{abouttext}}}</div>
-                {{/abouttext}}
+            {{/hascolumns}}
+            {{^hascolumns}}
+            {{! Fallback para compatibilidad con configuración antigua }}
+            {{#abouttitle}}
+            <div class="row justify-content-center">
+                <div class="my-about my-4 my-after-divider">
+                    {{#abouttext}}
+                    <div class="about-text-content">{{{abouttext}}}</div>
+                    {{/abouttext}}
+                </div>
             </div>
+            {{/abouttitle}}
+            {{/hascolumns}}
         </div>
-        {{/abouttitle}}
-        {{/hascolumns}}
     </div>
     <div class="floating-buttons-wrapper">
         <button id="gotop" class="btn btn-primary btn-floating d-none"

@@ -112,7 +112,7 @@ $string['footercolumntitle_desc'] = 'Título opcional para la columna {$a} (déj
 // Default content for each column
 $string['footercolumn1_default'] = '<div class="footer-logos-column">
     <div class="footer-logo-item mb-3">
-        <a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal ISER">
+        <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal GOV.CO">
             <img src="/theme/inteb/pix/logo-govco.webp" alt="Logo GOV.CO" class="footer-logo-govco">
         </a>
     </div>
@@ -121,38 +121,41 @@ $string['footercolumn1_default'] = '<div class="footer-logos-column">
             <img src="/theme/inteb/pix/marca_pais.png" alt="Logo Marca País Colombia" class="footer-logo-colombia">
         </a>
     </div>
-</div>';
+</div>
+<p class="mt-3">El Instituto Superior de Educación Rural - ISER - es una Institución de Educación Superior de carácter público, vigilada por el Ministerio de Educación Nacional.</p>
+<blockquote>"Formamos ciudadanos productivos y solidarios"</blockquote>';
 
-$string['footercolumn2_default'] = '<p class="footer-info-title"><strong>Instituto Superior de Educación Rural - ISER</strong></p>
-<p class="footer-info-text">Institución de Educación Superior de carácter público<br>Vigilada por el Ministerio de Educación Nacional</p>
+$string['footercolumn2_default'] = '<h4>Datos de contacto</h4>
+<ul>
+    <li><a href="https://goo.gl/maps/example" target="_blank" rel="noopener">Calle 8 # 8-155, Barrio Chapinero, Pamplona, Norte de Santander - Colombia</a></li>
+    <li><a href="tel:6075686868" target="_blank" rel="noopener">(607) 568 6868</a></li>
+    <li><a href="mailto:iserpam@iser.edu.co" target="_blank" rel="noopener">iserpam@iser.edu.co</a></li>
+</ul>
 <p class="footer-info-text"><strong>NIT:</strong> 890.501.578-4</p>
-<p class="footer-info-title mt-3"><strong>Dirección</strong></p>
-<p class="footer-info-text">Calle 8 # 8-155, Barrio Chapinero<br>Pamplona, Norte de Santander<br>Colombia - A.A. 1031</p>
-<p class="footer-info-title mt-3"><strong>Líneas de atención</strong></p>
-<p class="footer-info-text"><strong>PBX:</strong> (607) 568 6868</p>
-<p class="footer-info-text"><strong>Email:</strong> <a href="mailto:iserpam@iser.edu.co">iserpam@iser.edu.co</a></p>
-<p class="footer-info-title mt-3"><strong>Horario de atención</strong></p>
-<p class="footer-info-text">Lunes a viernes de 8:00 a.m. a 12:00 m. y 2:00 p.m. a 6:00 p.m.</p>';
+<p class="footer-info-text"><strong>Horario:</strong> Lunes a viernes 8:00 a.m. - 12:00 m. y 2:00 p.m. - 6:00 p.m.</p>';
 
-$string['footercolumn3_default'] = '<p class="footer-info-title"><strong>Enlaces institucionales</strong></p>
-<p class="footer-info-text"><a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer">Portal ISER</a></p>
-<p class="footer-info-text"><a href="https://www.iser.edu.co/index.php/transparencia-y-acceso-a-la-informacion-publica/" target="_blank" rel="noopener noreferrer">Transparencia y acceso a información</a></p>
-<p class="footer-info-text"><a href="https://ww1.iser.edu.co/iser/qrsIG/index.jsp" target="_blank" rel="noopener noreferrer">PQRS</a></p>
-<p class="footer-info-text"><a href="https://www.iser.edu.co/index.php/atencion-al-ciudadano-y-servicios/" target="_blank" rel="noopener noreferrer">Atención al ciudadano</a></p>
-<p class="footer-info-title mt-3"><strong>Entes de control</strong></p>
-<p class="footer-info-text"><a href="https://www.mineducacion.gov.co/" target="_blank" rel="noopener noreferrer">Ministerio de Educación Nacional</a></p>
-<p class="footer-info-text"><a href="https://www.contraloria.gov.co/" target="_blank" rel="noopener noreferrer">Contraloría General de la República</a></p>
-<p class="footer-info-text"><a href="https://www.procuraduria.gov.co/" target="_blank" rel="noopener noreferrer">Procuraduría General de la Nación</a></p>
-<p class="footer-info-title mt-3"><strong>Síguenos</strong></p>
-<div class="footer-social-icons">
+$string['footercolumn3_default'] = '<h4>Enlaces de interés</h4>
+<ul>
+    <li><a href="https://www.iser.edu.co/" target="_blank" rel="noopener">Portal ISER</a></li>
+    <li><a href="https://www.mineducacion.gov.co/" target="_blank" rel="noopener">Ministerio de Educación Nacional</a></li>
+    <li><a href="https://www.iser.edu.co/index.php/transparencia-y-acceso-a-la-informacion-publica/" target="_blank" rel="noopener">Transparencia y acceso a información</a></li>
+    <li><a href="https://ww1.iser.edu.co/iser/qrsIG/index.jsp" target="_blank" rel="noopener">PQRS</a></li>
+    <li><a href="https://www.iser.edu.co/index.php/atencion-al-ciudadano-y-servicios/" target="_blank" rel="noopener">Atención al ciudadano</a></li>
+</ul>
+<div class="footer-social-icons mt-3">
     <a href="https://www.facebook.com/iser.pamplona" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="footer-social-link"><i class="fa fa-facebook"></i></a>
     <a href="https://twitter.com/Iser1956" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="footer-social-link"><i class="fa fa-twitter"></i></a>
     <a href="https://www.instagram.com/iser.oficial" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="footer-social-link"><i class="fa fa-instagram"></i></a>
     <a href="https://www.youtube.com/@ISER.Oficial" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="footer-social-link"><i class="fa fa-youtube-play"></i></a>
 </div>';
 
-$string['footercolumn4_default'] = '<p class="footer-info-title"><strong>Síguenos</strong></p>
-<div class="footer-social-icons">
+$string['footercolumn4_default'] = '<h4>Entes de control</h4>
+<ul>
+    <li><a href="https://www.mineducacion.gov.co/" target="_blank" rel="noopener">Ministerio de Educación Nacional</a></li>
+    <li><a href="https://www.contraloria.gov.co/" target="_blank" rel="noopener">Contraloría General de la República</a></li>
+    <li><a href="https://www.procuraduria.gov.co/" target="_blank" rel="noopener">Procuraduría General de la Nación</a></li>
+</ul>
+<div class="footer-social-icons mt-3">
     <a href="https://www.facebook.com/iser.pamplona" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="footer-social-link"><i class="fa fa-facebook"></i></a>
     <a href="https://twitter.com/Iser1956" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="footer-social-link"><i class="fa fa-twitter"></i></a>
     <a href="https://www.instagram.com/iser.oficial" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="footer-social-link"><i class="fa fa-instagram"></i></a>

@@ -2121,9 +2121,15 @@ $govco-blue-light: #096FB7;
 .iser-footer-govco {
     padding: 2rem 0 1rem;
 
+    /* Wrapper principal que ocupa todo el ancho */
+    .footer-main-wrapper {
+        width: 100%;
+    }
+
     /* Fila de columnas dinámicas */
     .footer-columns-row {
         justify-content: space-between;
+        width: 100%;
     }
 
     /* Estilos base para columnas dinámicas */
@@ -2137,7 +2143,7 @@ $govco-blue-light: #096FB7;
 
     .footer-column-title {
         color: $color-white;
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 600;
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
@@ -2149,6 +2155,7 @@ $govco-blue-light: #096FB7;
 
         p {
             margin-bottom: 0.4rem;
+            font-size: 0.9rem;
         }
 
         a {
@@ -2161,6 +2168,41 @@ $govco-blue-light: #096FB7;
                 color: $color-white;
                 text-decoration: underline;
             }
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+
+            li {
+                margin-bottom: 0.4rem;
+                font-size: 0.9rem;
+
+                a {
+                    color: rgba($color-white, 0.9);
+
+                    &:hover,
+                    &:focus {
+                        color: $color-white;
+                    }
+                }
+            }
+        }
+
+        h4 {
+            color: $color-white;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        blockquote {
+            border-left: 3px solid rgba($color-white, 0.3);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: rgba($color-white, 0.8);
         }
     }
 
