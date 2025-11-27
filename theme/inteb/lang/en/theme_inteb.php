@@ -186,3 +186,14 @@ $string['devtools_access_disabled'] = 'Developer tools access is disabled on thi
 // Additional dashboard strings
 $string['dashboardpersonalizerinfo'] = 'Dashboard personalizer info';
 $string['defaultheader'] = 'Default header';
+
+// Courseindex - Progress tracking strings
+$string['courseprogress'] = 'Course progress';
+$string['completionnotenabledcourse'] = 'Completion tracking is not enabled for this course';
+$string['iconlegend'] = 'Icon legend';
+$string['notstarted'] = 'Not started';
+$string['inprogress'] = 'In progress';
+$string['sectionprogress'] = 'Section progress';
+$string['activitiescompleted'] = '{$a->completed} of {$a->total} activities completed';
+$string['loadingprogress'] = 'Loading progress...';
+$string['errorloadingprogress'] = 'Error loading progress';

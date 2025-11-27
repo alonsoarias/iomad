@@ -186,3 +186,14 @@ $string['devtools_access_disabled'] = 'El acceso a las herramientas de desarroll
 // Cadenas adicionales para el panel de control
 $string['dashboardpersonalizerinfo'] = 'Información del personalizador del panel';
 $string['defaultheader'] = 'Encabezado predeterminado';
+
+// Courseindex - Progress tracking strings
+$string['courseprogress'] = 'Progreso del curso';
+$string['completionnotenabledcourse'] = 'El seguimiento de finalización no está habilitado para este curso';
+$string['iconlegend'] = 'Leyenda de iconos';
+$string['notstarted'] = 'No iniciado';
+$string['inprogress'] = 'En progreso';
+$string['sectionprogress'] = 'Progreso de la sección';
+$string['activitiescompleted'] = '{$a->completed} de {$a->total} actividades completadas';
+$string['loadingprogress'] = 'Cargando progreso...';
+$string['errorloadingprogress'] = 'Error al cargar el progreso';
