@@ -85,6 +85,14 @@
                                         </div>
                                     </div>
                                     {{/hasprogress}}
+                                    {{^hasprogress}}
+                                    <div class="inteb-status-indicator mt-auto">
+                                        <span class="badge badge-info">
+                                            <i class="fa fa-check-circle mr-1" aria-hidden="true"></i>
+                                            {{#str}}enrolled, block_mycourses{{/str}}
+                                        </span>
+                                    </div>
+                                    {{/hasprogress}}
                                 </div>
 
                                 {{! Card Footer }}
