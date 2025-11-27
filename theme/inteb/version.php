@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'theme_inteb';
-$plugin->version = 2025112716; // Simplified courseindex styles with ISER colors.
+$plugin->version = 2025112717; // Copy courseindex styles from compecer with ISER colors.
 $plugin->requires = 2022041200; // Versión mínima de Moodle requerida.
 $plugin->release   = '4.6.2';
 $plugin->dependencies = [
