@@ -3572,6 +3572,356 @@ html[nighteyeplgn="active"] {
     }
 }
 
+/* ==========================================================================
+   31. COURSE PAGE HEADER - Estilos para cabecera de página de curso
+   Formato Edwiser con imagen de fondo, gradiente y barra de progreso
+   ========================================================================== */
+
+/* Variables para el header de curso */
+$page-header-min-height: 336px;
+$page-header-padding: 24px;
+$page-header-border-radius: 8px;
+
+/* Header principal con imagen de fondo */
+#page-header {
+    &.hasbackground.design-1 {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-height: $page-header-min-height;
+        padding: $page-header-padding;
+        border-radius: $page-header-border-radius;
+        background-position: center !important;
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+        overflow: hidden;
+
+        /* Eliminar restricción de ancho máximo para diseño full-width */
+        &.header-maxwidth {
+            max-width: none !important;
+            padding-left: $page-header-padding !important;
+            padding-right: $page-header-padding !important;
+        }
+    }
+
+    /* Ocultar breadcrumb navbar en vista de curso con header design-1 */
+    &.hasbackground.design-1 #page-navbar {
+        display: none;
+    }
+}
+
+/* Header wrapper - contenedor principal */
+#page-header .header-wrapper {
+    z-index: 1;
+    position: relative;
+}
+
+/* Dashboard bar wrapper - full width */
+#page-header .dashboard-bar-wrapper {
+    width: 100%;
+}
+
+/* Sección principal del header */
+#page-header .header-main-section {
+    .category {
+        margin-bottom: 8px;
+
+        .badge {
+            color: $color-secondary !important;
+            background-color: $color-white !important;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 4px;
+        }
+    }
+
+    .page-context-header {
+        padding: 0 !important;
+        margin: 0 !important;
+
+        @media (max-width: 576px) {
+            margin-bottom: 8px !important;
+        }
+
+        .page-header-headings {
+            padding: 0 !important;
+
+            .header-heading {
+                &.design-1,
+                &.coursepage {
+                    color: $color-white !important;
+                    font-weight: 700;
+                    font-size: 1.75rem;
+                    margin: 0;
+                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+                    @media (max-width: 768px) {
+                        font-size: 1.5rem;
+                    }
+
+                    @media (max-width: 576px) {
+                        font-size: 1.25rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* Sección secundaria del header - progreso e instructores */
+#page-header .header-sub-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px 32px;
+    margin-top: 16px;
+
+    @media (max-width: 576px) {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    /* Rating e instructor wrapper */
+    .rating-instructor-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    /* Progress y resume wrapper */
+    .progress-resume-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Progressbar con texto */
+    .progressbar-text-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        span {
+            color: $color-white !important;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+    }
+
+    /* Información del instructor */
+    .instructor-info {
+        display: flex;
+        align-items: center;
+        gap: 4px 8px;
+        flex-wrap: wrap;
+
+        .userpicture,
+        .userinitials {
+            width: 24px;
+            height: 24px;
+            border: none;
+            border-radius: 50%;
+        }
+
+        .userinitials {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: $color-primary;
+            color: $color-white;
+        }
+
+        .view-user-profile-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .titles {
+            color: $color-white !important;
+            font-size: 14px;
+        }
+    }
+}
+
+/* Progress bar personalizada para header de curso */
+#page-header .progress {
+    height: 8px;
+    width: 120px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+
+    &.progress-rounded {
+        border-radius: 4px;
+    }
+
+    .progress-bar {
+        background-color: $color-primary !important;
+        transition: width 0.3s ease;
+
+        &.bg-green-600 {
+            background-color: $color-primary !important;
+        }
+    }
+}
+
+/* Rating design en header */
+#page-header .rating-short-design {
+    @media (max-width: 768px) {
+        &.justify-content-around {
+            justify-content: flex-start !important;
+        }
+    }
+
+    .inner {
+        flex-direction: row-reverse;
+        gap: 8px;
+    }
+
+    .stars {
+        color: $color-terciary;
+        font-size: 16px;
+
+        @media (max-width: 576px) {
+            font-size: 14px;
+        }
+    }
+
+    .avgratingstat {
+        color: $color-white;
+        font-size: 16px;
+
+        @media (max-width: 576px) {
+            font-size: 12px;
+        }
+    }
+
+    .avgrating {
+        order: 2;
+        text-align: right;
+        margin-left: 0.25rem;
+    }
+
+    .avgrating,
+    .rnr-link {
+        color: $color-white;
+        font-weight: 700;
+    }
+}
+
+/* Stat container */
+.stat-container {
+    .stat {
+        padding: 4px;
+        border-radius: 4px;
+        background-color: $color-white;
+    }
+}
+
+/* Header actions container */
+#page-header .header-actions-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+
+    .header-action {
+        .btn {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: $color-white !important;
+
+            &:hover,
+            &:focus {
+                background-color: rgba(255, 255, 255, 0.3) !important;
+                border-color: rgba(255, 255, 255, 0.5) !important;
+            }
+        }
+    }
+}
+
+/* Estilos para páginas sin imagen de fondo */
+#page-header:not(.hasbackground) {
+    .header-main-section {
+        .page-header-headings {
+            .header-heading {
+                color: $my-gris-oscuro !important;
+            }
+        }
+
+        .category .badge {
+            background-color: rgba($color-primary, 0.1) !important;
+            color: $color-primary !important;
+        }
+    }
+}
+
+/* Dark mode para course header */
+html[nighteyeplgn="active"] {
+    #page-header {
+        &:not(.hasbackground) {
+            background-color: $dark-bg-secondary !important;
+
+            .header-main-section {
+                .page-header-headings .header-heading {
+                    color: $dark-text-primary !important;
+                }
+
+                .category .badge {
+                    background-color: rgba($color-primary, 0.2) !important;
+                    color: lighten($color-primary, 20%) !important;
+                }
+            }
+        }
+
+        .header-sub-section {
+            .progressbar-text-wrapper span {
+                color: $dark-text-primary !important;
+            }
+        }
+
+        .progress {
+            background-color: rgba($dark-text-primary, 0.2);
+        }
+    }
+}
+
+/* ==========================================================================
+   32. HEADER RESPONSIVE - Ajustes responsivos adicionales
+   ========================================================================== */
+
+/* Ajustes para tablets */
+@media (max-width: 992px) {
+    #page-header.hasbackground.design-1 {
+        min-height: 280px;
+        padding: 20px;
+    }
+}
+
+/* Ajustes para móviles */
+@media (max-width: 576px) {
+    #page-header.hasbackground.design-1 {
+        min-height: 220px;
+        padding: 16px;
+        border-radius: 0;
+    }
+
+    #page-header .header-main-section {
+        .page-context-header .page-header-headings .header-heading {
+            font-size: 1.125rem !important;
+        }
+    }
+
+    #page-header .progress {
+        width: 80px;
+    }
+}
+
 /* ===== PREFER COLOR SCHEME DARK ===== */
 /* Soporte adicional para usuarios con preferencia de sistema */
 @media (prefers-color-scheme: dark) {
