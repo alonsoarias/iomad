@@ -18,9 +18,9 @@
  * Script for applying license override and purging caches
  *
  * @package   theme_inteb
- * @copyright (c) 2025 IngeWeb <soporte@ingeweb.co>
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author    Pedro Arias <soporte@ingeweb.co>
+ * @author      Alonso Arias <soporteplataformas@iser.edu.co>
  */
 
 // Este script está diseñado para ejecutarse desde un navegador web

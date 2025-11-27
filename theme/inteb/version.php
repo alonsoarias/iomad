@@ -18,14 +18,15 @@
  * Plugin version and other meta-data are defined here.
  *
  * @package     theme_inteb
- * @copyright   2024 Soporte IngeWeb <soporte@ingeweb.co>
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
+ * @author      Alonso Arias <soporteplataformas@iser.edu.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'theme_inteb';
-$plugin->version = 2025112713; // Fecha de la versión: Año, mes, día, incremento.
+$plugin->version = 2025112714; // Fecha de la versión: Año, mes, día, incremento.
 $plugin->requires = 2022041200; // Versión mínima de Moodle requerida.
 $plugin->release   = '4.6.0';
 $plugin->dependencies = [

@@ -18,7 +18,7 @@
  * CLI script to migrate settings from old format to new prefixed format.
  *
  * @package    theme_inteb
- * @copyright  2025 IngeWeb <soporte@ingeweb.co>
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

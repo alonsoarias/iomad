@@ -3,9 +3,9 @@
  * Login page layout for theme_inteb
  *
  * @package   theme_inteb
- * @copyright (c) 2025 IngeWeb <soporte@ingeweb.co>
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author    Pedro Arias <soporte@ingeweb.co>
+ * @author      Alonso Arias <soporteplataformas@iser.edu.co>
  */
 
 defined('MOODLE_INTERNAL') || die();

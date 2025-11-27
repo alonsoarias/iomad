@@ -1,21 +1,23 @@
-/*******************
- * INTEB Custom Styles
+/**
+ * INTEB Theme - Main Stylesheet
  *
- * Este archivo combina y optimiza los estilos de:
- * - theme/inteb/scss/inteb.scss (original)
- * - theme/inteb/style/custom.css
+ * Estilos principales del tema INTEB para la plataforma virtual del ISER.
+ * Este archivo combina y optimiza los estilos personalizados del tema.
  *
- * Eliminando duplicados y actualizando referencias a RemUI
+ * @package     theme_inteb
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
+ * @author      Alonso Arias <soporteplataformas@iser.edu.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * IMPORTANTE: Este archivo usa variables definidas en custom_variables.scss
  * NO usar @import - Moodle compila automáticamente los archivos SCSS
  *
- * Variables de marca INTEB disponibles:
- * - Primarios: $my-verde, $my-amarillo, $my-rojo
+ * Variables de marca ISER disponibles:
+ * - Primarios: $my-verde (#1B9E88), $my-amarillo (#FCBD05), $my-rojo (#EB4335)
  * - Secundarios: $my-orange, $my-lime, $my-blue, $my-magenta
  * - Neutrales: $my-gris-claro, $my-gris-medio, $my-gris-oscuro, $my-negro, $my-blanco
  * - Sistema: $color-primary, $color-secondary, $color-terciary, $color-white
- *******************/
+ */
 
 /* ==========================================================================
    1. TIPOGRAFÍA Y HEADINGS

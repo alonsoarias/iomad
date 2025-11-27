@@ -19,7 +19,7 @@
  *
  * @package     theme_inteb
  * @category    upgrade
- * @copyright   2022 Soporte ingeweb <soporte@ingeweb.com>
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

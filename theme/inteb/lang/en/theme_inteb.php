@@ -18,14 +18,14 @@
  * Strings for component 'theme_inteb'
  *
  * @package   theme_inteb
- * @copyright (c) 2025 IngeWeb <soporte@ingeweb.co>
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 // General strings
 $string['pluginname'] = 'INTEB';
 $string['configtitle'] = 'INTEB Theme';
-$string['choosereadme'] = 'INTEB is a child theme of RemUI adapted for INTEB needs.';
+$string['choosereadme'] = 'INTEB is a theme developed by the Academic Vice-Rectory of ISER, under the direction of Academic Vice-Rector Mauricio Zafra. Developed by Alonso Arias (<a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a>).';
 
 // New strings for scheduled tasks
 $string['license_check_task'] = 'INTEB license verification task';

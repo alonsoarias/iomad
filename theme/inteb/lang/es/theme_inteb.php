@@ -18,14 +18,14 @@
  * Strings for component 'theme_inteb'
  *
  * @package   theme_inteb
- * @copyright (c) 2025 IngeWeb <soporte@ingeweb.co>
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 // Cadenas generales
 $string['pluginname'] = 'INTEB';
 $string['configtitle'] = 'Tema INTEB';
-$string['choosereadme'] = 'INTEB es un tema creado por el Ing. Pablo A Pico (<a href="http://ingeweb.co/">IngeWeb</a>) exclusivamente para nuestros clientes.';
+$string['choosereadme'] = 'INTEB es un tema desarrollado por la Vicerrectoría Académica del ISER, bajo la dirección del Vicerrector Académico Mauricio Zafra. Desarrollado por Alonso Arias (<a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a>).';
 
 // Nuevas cadenas para tareas programadas
 $string['license_check_task'] = 'Tarea de verificación de licencia para INTEB';
@@ -171,7 +171,7 @@ $string['show'] = 'Mostrar';
 $string['activatelicense'] = 'Activar licencia';
 $string['licenseactivation'] = 'Activación de licencia';
 $string['licenseactivationdesc'] = 'La licencia se activa automáticamente. Si experimentas problemas, puedes usar el botón a continuación para activarla manualmente.';
-$string['themeinfotext'] = 'Este tema fue creado para <strong>otro proyecto de Moodle</strong> por <a target="_blank" href="http://ingeweb.co/">IngeWeb - Soluciones para triunfar en Internet</a>.';
+$string['themeinfotext'] = 'Este tema fue creado para <strong>otro proyecto de Moodle</strong> por <a target="_blank" href="http://iser.co/">Vicerrectoría Académica ISER - Soluciones para triunfar en Internet</a>.';
 
 // Mensajes para acceso no autorizado
 $string['unauthorized_access'] = 'Acceso no autorizado';

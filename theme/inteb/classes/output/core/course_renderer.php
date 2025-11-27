@@ -9,7 +9,7 @@
  * @package    theme_inteb
  * @category   output
  * @author     Pedro Alonso Arias Balcucho
- * @copyright  2025 Soporte IngeWeb <soporte@ingeweb.co>
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
