@@ -241,6 +241,10 @@ define(['jquery', 'core/ajax', 'core/log'], function($, Ajax, Log) {
         promises[0]
             .then(function(response) {
                 Log.debug('courseindex_progress: Course progress loaded', response);
+
+                // Hide all messages first to ensure only one is shown
+                hideAllMessages();
+
                 if (response && response.hasprogress) {
                     // Check if activities have tracking configured
                     if (response.hasactivitiestracking === false) {
@@ -263,6 +267,18 @@ define(['jquery', 'core/ajax', 'core/log'], function($, Ajax, Log) {
                     Log.error('courseindex_progress: Error loading course progress: ' + error.message);
                 }
             });
+    };
+
+    /**
+     * Hide all courseindex messages and progress elements
+     * Called before showing the appropriate element based on course state
+     */
+    var hideAllMessages = function() {
+        $('#courseindex-progress-header').hide();
+        $('#courseindex-no-tracking').hide();
+        $('#courseindex-no-activities-tracking-teacher').hide();
+        $('#courseindex-no-activities-tracking-student').hide();
+        $('#courseindex-icon-legend').hide();
     };
 
     /**
