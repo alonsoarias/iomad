@@ -37,19 +37,43 @@
     }
 }}
 {{^hidefootersections}}
-<section id="top-footer" class="p-y-1">
+<section id="top-footer" class="p-y-1 iser-footer">
     <div class="container">
         <div class="col-12">
+            {{! Contenido configurable del footer (abouttext) }}
             {{#abouttitle}}
-        <div class="row justify-content-center">
-            <div class="my-about text-center my-4 my-after-divider">
-                <h3>{{{abouttitle}}}</h3>
-                {{#abouttext}}
-                <div class="about-text-content">{{{abouttext}}}</div>
-                {{/abouttext}}
+            <div class="row justify-content-center">
+                <div class="my-about text-center my-4 my-after-divider">
+                    <h3>{{{abouttitle}}}</h3>
+                    {{#abouttext}}
+                    <div class="about-text-content">{{{abouttext}}}</div>
+                    {{/abouttext}}
+                </div>
             </div>
-        </div>
-        {{/abouttitle}}
+            {{/abouttitle}}
+
+            {{! Sección GOV.CO obligatoria - Siempre visible según normativa colombiana }}
+            <div class="govco-footer-section">
+                <div class="row justify-content-center align-items-center pt-3 mt-3 border-top border-light govco-logos-row">
+                    <div class="col-6 col-md-3 text-center mb-3 mb-md-0">
+                        <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal GOV.CO" class="govco-link">
+                            <img src="https://www.gov.co/assets/images/logo-gov-co-blanco.svg"
+                                 alt="Logo GOV.CO"
+                                 class="govco-logo img-fluid"
+                                 loading="lazy"
+                                 onerror="this.src='{{config.wwwroot}}/theme/inteb/pix/logo-govco.webp'">
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-3 text-center">
+                        <a href="https://www.colombia.co/" target="_blank" rel="noopener noreferrer" aria-label="Marca País Colombia" class="govco-link">
+                            <img src="https://www.colombia.co/static/img/head/logo-header.svg"
+                                 alt="Logo Marca País Colombia"
+                                 class="colombia-logo img-fluid"
+                                 loading="lazy">
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="floating-buttons-wrapper">

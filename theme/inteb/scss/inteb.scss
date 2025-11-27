@@ -2283,3 +2283,121 @@ body.pagelayout-login .gov-navbar-top {
         }
     }
 }
+
+/* ==========================================================================
+   23. FOOTER GOV.CO - Sección obligatoria de logos gubernamentales
+   Logos GOV.CO y Marca País Colombia - Siempre visibles según normativa
+   ========================================================================== */
+
+/* Contenedor de la sección GOV.CO en el footer */
+.govco-footer-section {
+    padding: 1rem 0 0.5rem;
+}
+
+/* Fila de logos */
+.govco-logos-row {
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+/* Enlaces de GOV.CO */
+.govco-link {
+    display: inline-block;
+    transition: all 0.3s ease;
+
+    &:hover,
+    &:focus {
+        transform: translateY(-2px);
+        opacity: 0.9;
+    }
+}
+
+/* Logo GOV.CO del footer */
+.govco-logo {
+    height: 40px;
+    max-width: 100%;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+
+    &:hover {
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+}
+
+/* Logo Marca País Colombia */
+.colombia-logo {
+    height: 35px;
+    max-width: 100%;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+
+    &:hover {
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+}
+
+/* Clase adicional para footer ISER */
+#top-footer.iser-footer {
+    .govco-footer-section {
+        border-top: 1px solid rgba($color-white, 0.2);
+    }
+}
+
+/* Responsive - Tablets */
+@media (max-width: 991px) {
+    .govco-logo {
+        height: 35px;
+    }
+
+    .colombia-logo {
+        height: 30px;
+    }
+}
+
+/* Responsive - Móviles */
+@media (max-width: 768px) {
+    .govco-footer-section {
+        padding: 0.75rem 0;
+    }
+
+    .govco-logo {
+        height: 32px;
+    }
+
+    .colombia-logo {
+        height: 28px;
+    }
+
+    .govco-logos-row {
+        padding-top: 0.75rem;
+        margin-top: 0.75rem;
+    }
+}
+
+/* Responsive - Móviles pequeños */
+@media (max-width: 576px) {
+    .govco-footer-section {
+        padding: 0.5rem 0;
+
+        .col-6 {
+            margin-bottom: 0.75rem;
+        }
+    }
+
+    .govco-logo {
+        height: 28px;
+    }
+
+    .colombia-logo {
+        height: 24px;
+    }
+}
+
+/* Accesibilidad - reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+    .govco-link,
+    .govco-logo,
+    .colombia-logo {
+        transition: none !important;
+    }
+}
