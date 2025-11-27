@@ -99,6 +99,21 @@ if (core_userfeedback::should_display_reminder()) {
     core_userfeedback::print_reminder_block();
 }
 
+// Render the mycourses block directly (IOMAD customization).
+if (file_exists($CFG->dirroot . '/blocks/mycourses/block_mycourses.php')) {
+    require_once($CFG->dirroot . '/blocks/mycourses/block_mycourses.php');
+    $mycoursesblock = new block_mycourses();
+    $mycoursesblock->page = $PAGE;
+    $mycoursesblock->instance = new stdClass();
+    $mycoursesblock->instance->id = 0;
+    $mycoursesblock->context = $context;
+    $blockcontent = $mycoursesblock->get_content();
+    if (!empty($blockcontent) && !empty($blockcontent->text)) {
+        echo html_writer::div($blockcontent->text, 'block_mycourses');
+    }
+}
+
+// Also render the default content block region.
 echo $OUTPUT->custom_block_region('content');
 
 echo $OUTPUT->footer();
