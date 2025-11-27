@@ -1,8 +1,8 @@
 {{!
     @template core_courseformat/local/courseindex/drawer
 
-    Course index drawer - Complete Redesign for Theme INTEB
-    Professional and clean interface with simplified progress display
+    Course index drawer - Simplified design for Theme INTEB
+    Clean interface with ISER branding colors
 
     @package     theme_inteb
     @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
@@ -14,9 +14,9 @@
 }}
 <nav id="courseindex" class="courseindex-new-design">
 
-  {{! Course Overall Progress Header - Simplified }}
+  {{! Progress Header }}
   <div class="courseindex-progress-header" id="courseindex-progress-header" style="display: none;">
-    <h3 class="progress-title">{{#str}}courseprogress, theme_inteb{{/str}}</h3>
+    <div class="progress-title">{{#str}}courseprogress, theme_inteb{{/str}}</div>
     <div class="progress-bar-wrapper">
       <div class="progress-bar-fill"
            data-region="course-progress-bar"
@@ -24,13 +24,12 @@
            role="progressbar"
            aria-valuenow="0"
            aria-valuemin="0"
-           aria-valuemax="100">
-      </div>
+           aria-valuemax="100"></div>
     </div>
     <div class="progress-percentage-display" data-region="course-percentage">0%</div>
   </div>
 
-  {{! Message when completion tracking is not enabled }}
+  {{! No Tracking Message }}
   <div class="courseindex-no-tracking" id="courseindex-no-tracking" style="display: none;">
     <div class="no-tracking-message">
       <i class="fa fa-info-circle"></i>
@@ -38,7 +37,7 @@
     </div>
   </div>
 
-  {{! Icon Legend }}
+  {{! Legend }}
   <div class="courseindex-icon-legend" id="courseindex-icon-legend" style="display: none;">
     <div class="legend-title">{{#str}}iconlegend, theme_inteb{{/str}}</div>
     <div class="legend-items">
@@ -57,7 +56,7 @@
     </div>
   </div>
 
-  {{! Sections List }}
+  {{! Sections }}
   <div id="courseindex-content" class="courseindex-content">
     {{> core_courseformat/local/courseindex/placeholders}}
   </div>
@@ -66,7 +65,6 @@
 {{#js}}
 require(['core_courseformat/local/courseindex/drawer', 'theme_inteb/courseindex_progress'], function(component, progressLoader) {
   component.init('courseindex');
-  // Initialize progress loader with course ID
   if (M.cfg && M.cfg.courseId) {
     progressLoader.init(M.cfg.courseId);
   }

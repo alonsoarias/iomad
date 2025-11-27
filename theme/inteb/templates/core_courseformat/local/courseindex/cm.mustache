@@ -1,8 +1,8 @@
 {{!
     @template core_courseformat/local/courseindex/cm
 
-    Course index module entry - Redesigned for Theme INTEB
-    Includes activity status icon (○ not started, ◐ in progress, ✓ completed)
+    Course index module - Simplified design for Theme INTEB
+    Status icons: ○ not started, ◐ in progress, ✓ completed
 
     @package     theme_inteb
     @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
@@ -14,39 +14,26 @@
       "id": "12",
       "name": "Announcements",
       "url": "#",
-      "visible": 1,
       "isactive": 1,
-      "uniqid": "0",
-      "accessvisible": 1,
-      "hascmrestrictions": 0
+      "accessvisible": 1
     }
 }}
-<li class="course-index-item {{#isactive}}active{{/isactive}}
-           {{#hascmrestrictions}}restrictions{{/hascmrestrictions}}
-           {{^accessvisible}}dimmed{{/accessvisible}}
-           {{#indent}} indented {{/indent}}"
+<li class="course-index-item {{#isactive}}active{{/isactive}} {{^accessvisible}}dimmed{{/accessvisible}}"
     id="{{uniqid}}-course-index-cm-{{id}}"
     data-for="cm"
     data-id="{{id}}"
     role="treeitem">
   {{^hasdelegatedsection}}
-
-    {{! Activity status icon - will be populated by JavaScript }}
-    <span class="activity-status-icon status-not-started"
-          data-cm-id="{{id}}"
-          aria-label="{{#str}}notstarted, theme_inteb{{/str}}">
-    </span>
-
-    {{! Activity link }}
+    {{! Status icon }}
+    <span class="activity-status-icon status-not-started" data-cm-id="{{id}}"></span>
+    {{! Link }}
     {{#uservisible}}
       <a class="course-index-link text-truncate"
          {{#url}}href="{{{url}}}"{{/url}}
          {{^url}}href="#{{{anchor}}}" data-anchor="true"{{/url}}
          data-for="cm_name"
          tabindex="-1"
-         title="{{{name}}}">
-        {{{name}}}
-      </a>
+         title="{{{name}}}">{{{name}}}</a>
     {{/uservisible}}
     {{^uservisible}}
       <a class="course-index-link text-truncate"
@@ -54,11 +41,8 @@
          data-for="cm_name"
          tabindex="-1"
          data-anchor="true"
-         title="{{{name}}}">
-        {{{name}}}
-      </a>
+         title="{{{name}}}">{{{name}}}</a>
     {{/uservisible}}
-
   {{/hasdelegatedsection}}
   {{#hasdelegatedsection}}
     {{#sectioninfo}}
