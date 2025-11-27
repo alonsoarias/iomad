@@ -3,6 +3,7 @@
 
     Course index section - Redesigned for Theme INTEB
     Shows section name with percentage badge only (no progress bar)
+    Sections are collapsed by default - user can expand and preferences are saved
 
     @package     theme_inteb
     @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
@@ -37,12 +38,13 @@
        id="course-index-section{{number}}"
        data-for="section_item">
 
-    {{! Toggle icon (chevron) }}
+    {{! Toggle icon (chevron) - Always start collapsed }}
     <a data-toggle="collapse"
        href="#course-index-collapse{{number}}"
-       class="course-index-toggle {{#indexcollapsed}}collapsed{{/indexcollapsed}}"
-       aria-expanded="{{^indexcollapsed}}true{{/indexcollapsed}}{{#indexcollapsed}}false{{/indexcollapsed}}"
+       class="course-index-toggle collapsed"
+       aria-expanded="false"
        aria-controls="course-index-collapse{{number}}"
+       data-section-number="{{number}}"
        tabindex="-1">
       <i class="fa fa-chevron-down"></i>
       <span class="sr-only">{{#str}}toggle section{{/str}}</span>
@@ -61,10 +63,11 @@
 
   </div>
 
-  {{! Section Content (activities list) }}
+  {{! Section Content (activities list) - Always start collapsed }}
   <div id="course-index-collapse{{number}}"
-       class="course-index-content collapse {{^indexcollapsed}}show{{/indexcollapsed}}"
+       class="course-index-content collapse"
        aria-labelledby="course-index-section{{number}}"
+       data-section-number="{{number}}"
        role="group">
     <ul class="course-index-section-content list-unstyled"
         data-for="cmlist"

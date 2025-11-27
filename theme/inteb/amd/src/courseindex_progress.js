@@ -27,6 +27,136 @@ define(['jquery', 'core/ajax', 'core/log'], function($, Ajax, Log) {
     // Cache for activities completion data
     var activitiesCompletionCache = null;
 
+    // Storage key prefix for section collapse state
+    var STORAGE_KEY_PREFIX = 'courseindex_expanded_sections_';
+
+    /**
+     * Get localStorage key for storing expanded sections
+     *
+     * @param {Number} courseId The course ID
+     * @return {String} The storage key
+     */
+    var getStorageKey = function(courseId) {
+        return STORAGE_KEY_PREFIX + courseId;
+    };
+
+    /**
+     * Get expanded sections from localStorage
+     *
+     * @param {Number} courseId The course ID
+     * @return {Array} Array of expanded section numbers
+     */
+    var getExpandedSections = function(courseId) {
+        try {
+            var key = getStorageKey(courseId);
+            var stored = localStorage.getItem(key);
+            if (stored) {
+                return JSON.parse(stored);
+            }
+        } catch (e) {
+            Log.debug('courseindex_progress: Error reading from localStorage', e);
+        }
+        return [];
+    };
+
+    /**
+     * Save expanded sections to localStorage
+     *
+     * @param {Number} courseId The course ID
+     * @param {Array} sections Array of expanded section numbers
+     */
+    var saveExpandedSections = function(courseId, sections) {
+        try {
+            var key = getStorageKey(courseId);
+            localStorage.setItem(key, JSON.stringify(sections));
+        } catch (e) {
+            Log.debug('courseindex_progress: Error saving to localStorage', e);
+        }
+    };
+
+    /**
+     * Add a section to the expanded list
+     *
+     * @param {Number} courseId The course ID
+     * @param {Number} sectionNumber The section number
+     */
+    var addExpandedSection = function(courseId, sectionNumber) {
+        var sections = getExpandedSections(courseId);
+        if (sections.indexOf(sectionNumber) === -1) {
+            sections.push(sectionNumber);
+            saveExpandedSections(courseId, sections);
+            Log.debug('courseindex_progress: Section ' + sectionNumber + ' added to expanded list');
+        }
+    };
+
+    /**
+     * Remove a section from the expanded list
+     *
+     * @param {Number} courseId The course ID
+     * @param {Number} sectionNumber The section number
+     */
+    var removeExpandedSection = function(courseId, sectionNumber) {
+        var sections = getExpandedSections(courseId);
+        var index = sections.indexOf(sectionNumber);
+        if (index > -1) {
+            sections.splice(index, 1);
+            saveExpandedSections(courseId, sections);
+            Log.debug('courseindex_progress: Section ' + sectionNumber + ' removed from expanded list');
+        }
+    };
+
+    /**
+     * Restore expanded sections from localStorage
+     *
+     * @param {Number} courseId The course ID
+     */
+    var restoreExpandedSections = function(courseId) {
+        var expandedSections = getExpandedSections(courseId);
+
+        if (expandedSections.length === 0) {
+            Log.debug('courseindex_progress: No saved expanded sections found');
+            return;
+        }
+
+        Log.debug('courseindex_progress: Restoring ' + expandedSections.length + ' expanded sections');
+
+        expandedSections.forEach(function(sectionNumber) {
+            var $collapseTarget = $('#course-index-collapse' + sectionNumber);
+            var $toggle = $('.course-index-toggle[data-section-number="' + sectionNumber + '"]');
+
+            if ($collapseTarget.length > 0) {
+                // Expand the section without animation for initial load
+                $collapseTarget.addClass('show');
+                $toggle.removeClass('collapsed').attr('aria-expanded', 'true');
+                Log.debug('courseindex_progress: Restored section ' + sectionNumber);
+            }
+        });
+    };
+
+    /**
+     * Setup event listeners for section collapse/expand
+     *
+     * @param {Number} courseId The course ID
+     */
+    var setupSectionCollapseListeners = function(courseId) {
+        // Listen for Bootstrap collapse events on section content
+        $(document).on('shown.bs.collapse', '.course-index-content', function() {
+            var sectionNumber = $(this).data('section-number');
+            if (sectionNumber !== undefined) {
+                addExpandedSection(courseId, parseInt(sectionNumber, 10));
+            }
+        });
+
+        $(document).on('hidden.bs.collapse', '.course-index-content', function() {
+            var sectionNumber = $(this).data('section-number');
+            if (sectionNumber !== undefined) {
+                removeExpandedSection(courseId, parseInt(sectionNumber, 10));
+            }
+        });
+
+        Log.debug('courseindex_progress: Section collapse listeners setup complete');
+    };
+
     /**
      * Initialize the course index progress system
      *
@@ -41,12 +171,16 @@ define(['jquery', 'core/ajax', 'core/log'], function($, Ajax, Log) {
         // Wait for activities to be loaded in the DOM, then load completion states
         waitForActivitiesAndLoad(courseId);
 
-        // Wait for sections to be loaded, then load section percentages
+        // Wait for sections to be loaded, then load section percentages and restore collapsed state
         var checkInterval = setInterval(function() {
             var sections = $('.course-index-section, .courseindex-section-redesign');
             if (sections.length > 0) {
                 clearInterval(checkInterval);
                 loadSectionsProgress(courseId);
+                // Restore user's expanded sections from localStorage
+                restoreExpandedSections(courseId);
+                // Setup listeners for collapse/expand events
+                setupSectionCollapseListeners(courseId);
             }
         }, 500);
 
