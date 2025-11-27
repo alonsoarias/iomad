@@ -170,11 +170,12 @@ $string['show'] = 'Show';
 // License
 $string['activatelicense'] = 'Activate license';
 $string['licenseactivation'] = 'License activation';
-$string['licenseactivationdesc'] = 'The license is activated automatically. If you experience any issues, you can use the button below to activate it manually.';
+$string['licenseactivationdesc'] = 'The license is activated automatically.';
 $string['themeinfotext'] = '<div class="alert alert-info">
-<p>The INTEB theme is a customized adaptation based on Edwiser RemUI.</p>
-<p>This version includes automatic license activation and specific fixes for INTEB.</p>
-<p>Version: 4.5.0</p>
+<p><strong>INTEB Theme</strong> - Developed for <a href="https://www.iser.edu.co/" target="_blank">Instituto Superior de Educación Rural - ISER</a></p>
+<p><em>"Ruralities with purpose"</em></p>
+<p>Academic Vice-Rectory - Mauricio Zafra</p>
+<p>Development: Alonso Arias - <a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a></p>
 </div>';
 
 // Messages for unauthorized access

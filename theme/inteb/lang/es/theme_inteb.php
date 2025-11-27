@@ -170,8 +170,13 @@ $string['show'] = 'Mostrar';
 // Licencia
 $string['activatelicense'] = 'Activar licencia';
 $string['licenseactivation'] = 'Activación de licencia';
-$string['licenseactivationdesc'] = 'La licencia se activa automáticamente. Si experimentas problemas, puedes usar el botón a continuación para activarla manualmente.';
-$string['themeinfotext'] = 'Este tema fue creado para <strong>otro proyecto de Moodle</strong> por <a target="_blank" href="http://iser.co/">Vicerrectoría Académica ISER - Soluciones para triunfar en Internet</a>.';
+$string['licenseactivationdesc'] = 'La licencia se activa automáticamente.';
+$string['themeinfotext'] = '<div class="alert alert-info">
+<p><strong>Tema INTEB</strong> - Desarrollado para el <a href="https://www.iser.edu.co/" target="_blank">Instituto Superior de Educación Rural - ISER</a></p>
+<p><em>"Ruralidades con propósito"</em></p>
+<p>Vicerrectoría Académica - Mauricio Zafra</p>
+<p>Desarrollo: Alonso Arias - <a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a></p>
+</div>';
 
 // Mensajes para acceso no autorizado
 $string['unauthorized_access'] = 'Acceso no autorizado';

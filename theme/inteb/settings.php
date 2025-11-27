@@ -77,19 +77,7 @@ if ($ADMIN->fulltree) {
     $description = get_string('themeinfotext', 'theme_inteb');
     $page->add(new admin_setting_heading($name, $title, $description));
 
-    // License activation link
-    $licenseactivationurl = new moodle_url('/theme/inteb/apply_license.php');
-    $licenseactivationlink = html_writer::link(
-        $licenseactivationurl,
-        get_string('activatelicense', 'theme_inteb'),
-        ['class' => 'btn btn-secondary', 'target' => '_blank']
-    );
-
-    $name = 'theme_inteb/ib_licenseactivation';
-    $title = get_string('licenseactivation', 'theme_inteb');
-    $description = get_string('licenseactivationdesc', 'theme_inteb') . '<br>' . $licenseactivationlink;
-    $setting = new admin_setting_heading($name, $title, $description);
-    $page->add($setting);
+    // License activation is handled automatically in background - no UI needed
 
     // --- Notificaciones Generales ---
     $page->add(new admin_setting_heading(
