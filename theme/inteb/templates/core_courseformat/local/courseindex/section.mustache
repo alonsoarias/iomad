@@ -50,9 +50,11 @@
       <span class="sr-only">{{#str}}toggle section{{/str}}</span>
     </a>
 
-    {{! Section title }}
+    {{! Section title with hyperlink }}
     <h4 class="section-title">
-      {{{title}}}
+      <a href="{{sectionurl}}" class="section-title-link" title="{{{title}}}">
+        {{{title}}}
+      </a>
     </h4>
 
     {{! Section percentage badge }}
