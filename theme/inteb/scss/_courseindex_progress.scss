@@ -78,7 +78,7 @@ $progress-color-success: $color-primary !default;   // Verde ISER > 70%
 
 .progress-details {
     font-size: 0.75rem;
-    color: #666;
+    color: $my-gris-oscuro;
     line-height: 1.2;
 }
 
@@ -129,7 +129,7 @@ $progress-color-success: $color-primary !default;   // Verde ISER > 70%
     }
 
     &.bg-info {
-        background-color: #17a2b8;
+        background-color: $my-blue; // Azul secundario ISER
     }
 }
 
@@ -156,7 +156,7 @@ $progress-color-success: $color-primary !default;   // Verde ISER > 70%
     padding: 0;
     margin: 0.75rem 0 0 0;
     font-size: 0.75rem;
-    color: #666;
+    color: $my-gris-oscuro;
 
     li {
         display: inline-block;
@@ -309,7 +309,7 @@ $progress-color-success: $color-primary !default;   // Verde ISER > 70%
 
     .progress-text {
         font-size: 0.7rem;
-        color: #666;
+        color: $my-gris-oscuro;
         display: block;
         text-align: right;
     }
@@ -387,8 +387,8 @@ $progress-color-success: $color-primary !default;   // Verde ISER > 70%
 // ○ No iniciada
 .activity-status-notstarted {
     .activity-status-indicator {
-        border: 2px solid #ddd;
-        color: #ddd;
+        border: 2px solid $my-gris-claro;
+        color: $my-gris-medio;
 
         &::before {
             content: '○';
@@ -695,7 +695,7 @@ $progress-color-success: $color-primary !default;   // Verde ISER > 70%
 @media print {
     .courseindex-progress-container {
         box-shadow: none;
-        border: 1px solid #ddd;
+        border: 1px solid $my-gris-claro;
     }
 
     .progress-bar::after {
