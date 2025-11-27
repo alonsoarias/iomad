@@ -4856,3 +4856,262 @@ body.pagelayout-incourse {
         }
     }
 }
+
+/* ===================================
+   Breadcrumb - Chevron/Arrow Style
+   ISER Institutional Design
+   =================================== */
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  background: transparent;
+  align-items: stretch;
+  gap: 0;
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    position: relative;
+    background: $my-verde;
+    color: $color-white;
+    padding: 0.5rem 1rem 0.5rem 1.5rem;
+    font-size: 0.813rem;
+    font-weight: 500;
+    margin: 0;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    // First item - rounded left edge
+    &:first-child {
+      padding-left: 1rem;
+      border-radius: 4px 0 0 4px;
+    }
+
+    // Arrow shape using ::after
+    &::after {
+      content: '';
+      position: absolute;
+      right: -12px;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-top: 18px solid transparent;
+      border-bottom: 18px solid transparent;
+      border-left: 12px solid $my-verde;
+      z-index: 2;
+      transition: border-color 0.2s ease;
+    }
+
+    // Remove default Bootstrap separator
+    &::before {
+      display: none !important;
+    }
+
+    // Link styling
+    a {
+      color: $color-white;
+      text-decoration: none;
+      display: block;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &:hover {
+        color: $color-white;
+        text-decoration: none;
+      }
+    }
+
+    // Text styling for active/current item
+    span {
+      display: block;
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    // Hover state
+    &:hover {
+      background: darken($my-verde, 8%);
+
+      &::after {
+        border-left-color: darken($my-verde, 8%);
+      }
+    }
+
+    // Second item onwards - different shade for visual hierarchy
+    &:nth-child(2) {
+      background: darken($my-verde, 5%);
+      margin-left: 8px;
+
+      &::after {
+        border-left-color: darken($my-verde, 5%);
+      }
+
+      &:hover {
+        background: darken($my-verde, 12%);
+
+        &::after {
+          border-left-color: darken($my-verde, 12%);
+        }
+      }
+    }
+
+    // Third item onwards
+    &:nth-child(3) {
+      background: darken($my-verde, 10%);
+      margin-left: 8px;
+
+      &::after {
+        border-left-color: darken($my-verde, 10%);
+      }
+
+      &:hover {
+        background: darken($my-verde, 15%);
+
+        &::after {
+          border-left-color: darken($my-verde, 15%);
+        }
+      }
+    }
+
+    // Fourth item and beyond
+    &:nth-child(n+4) {
+      background: darken($my-verde, 15%);
+      margin-left: 8px;
+
+      &::after {
+        border-left-color: darken($my-verde, 15%);
+      }
+
+      &:hover {
+        background: darken($my-verde, 20%);
+
+        &::after {
+          border-left-color: darken($my-verde, 20%);
+        }
+      }
+    }
+
+    // Last item - no arrow, rounded right edge
+    &:last-child {
+      border-radius: 0 4px 4px 0;
+      padding-right: 1rem;
+
+      &::after {
+        display: none;
+      }
+    }
+
+    // Active/current item styling
+    &.active,
+    &:last-child {
+      background: $my-gris-oscuro;
+      color: $color-white;
+
+      &::after {
+        border-left-color: $my-gris-oscuro;
+      }
+
+      span {
+        color: $color-white;
+      }
+
+      &:hover {
+        background: darken($my-gris-oscuro, 5%);
+
+        &::after {
+          border-left-color: darken($my-gris-oscuro, 5%);
+        }
+      }
+    }
+  }
+}
+
+// Page navbar breadcrumb specific styles
+#page-header #page-navbar {
+  nav {
+    ol.breadcrumb {
+      .breadcrumb-item {
+        a {
+          color: $color-white !important;
+          font-size: inherit;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments for breadcrumb
+@media (max-width: 767px) {
+  .breadcrumb {
+    .breadcrumb-item {
+      padding: 0.375rem 0.75rem 0.375rem 1.25rem;
+      font-size: 0.75rem;
+
+      &:first-child {
+        padding-left: 0.75rem;
+      }
+
+      &::after {
+        right: -10px;
+        border-top-width: 15px;
+        border-bottom-width: 15px;
+        border-left-width: 10px;
+      }
+
+      a, span {
+        max-width: 120px;
+      }
+
+      &:last-child {
+        padding-right: 0.75rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumb {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .breadcrumb-item {
+      flex-shrink: 0;
+      padding: 0.313rem 0.625rem 0.313rem 1rem;
+      font-size: 0.688rem;
+
+      &:first-child {
+        padding-left: 0.625rem;
+      }
+
+      &::after {
+        right: -8px;
+        border-top-width: 13px;
+        border-bottom-width: 13px;
+        border-left-width: 8px;
+      }
+
+      a, span {
+        max-width: 80px;
+      }
+
+      &:last-child {
+        padding-right: 0.625rem;
+      }
+    }
+  }
+}
