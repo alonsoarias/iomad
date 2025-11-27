@@ -37,7 +37,15 @@ use context_course;
 use theme_inteb\util\course_progress;
 
 /**
- * External function to get course overall progress
+ * External function to get course overall progress.
+ *
+ * This class provides a web service to retrieve the overall completion
+ * progress for a course, including the percentage and activity counts.
+ *
+ * @package     theme_inteb
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
+ * @author      Alonso Arias <soporteplataformas@iser.edu.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class get_course_progress extends external_api {
 

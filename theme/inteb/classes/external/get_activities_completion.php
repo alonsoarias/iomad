@@ -39,10 +39,15 @@ use context_course;
 use completion_info;
 
 /**
- * External API for getting activities completion states
+ * External API for getting activities completion states.
+ *
+ * This class provides a web service to retrieve the completion state
+ * for all activities in a course. Returns an array of activity IDs
+ * with their respective completion states (not started, in progress, completed).
  *
  * @package     theme_inteb
- * @copyright   2025 Vicerrectoría Académica ISER
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
+ * @author      Alonso Arias <soporteplataformas@iser.edu.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class get_activities_completion extends external_api {

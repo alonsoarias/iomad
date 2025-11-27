@@ -33,7 +33,16 @@ use completion_info;
 use core_completion\progress;
 
 /**
- * Course progress utility class
+ * Course progress utility class.
+ *
+ * Provides methods to calculate course and section completion progress.
+ * Implementation is based on format_remuiformat for accurate progress
+ * calculation using Moodle's core completion API.
+ *
+ * @package     theme_inteb
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
+ * @author      Alonso Arias <soporteplataformas@iser.edu.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_progress {
 

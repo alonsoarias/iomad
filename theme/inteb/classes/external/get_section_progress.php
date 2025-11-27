@@ -37,7 +37,16 @@ use context_course;
 use theme_inteb\util\course_progress;
 
 /**
- * External function to get section progress
+ * External function to get section progress.
+ *
+ * This class provides a web service to retrieve the completion progress
+ * for a specific section within a course, including the percentage and
+ * activity completion counts.
+ *
+ * @package     theme_inteb
+ * @copyright   2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
+ * @author      Alonso Arias <soporteplataformas@iser.edu.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class get_section_progress extends external_api {
 
