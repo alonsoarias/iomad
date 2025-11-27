@@ -123,7 +123,7 @@ $string['footercolumn1_default'] = '<div class="footer-logos-column">
     </div>
 </div>
 <p class="mt-3">El Instituto Superior de Educación Rural - ISER - es una Institución de Educación Superior de carácter público, vigilada por el Ministerio de Educación Nacional.</p>
-<blockquote>"Formamos ciudadanos productivos y solidarios"</blockquote>';
+<blockquote>"Ruralidades con propósito"</blockquote>';
 
 $string['footercolumn2_default'] = '<h4>Datos de contacto</h4>
 <ul>
