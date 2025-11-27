@@ -128,15 +128,17 @@ tfoot {
     font-family: $font-family-sans-serif !important;
 }
 
-// Texto y párrafos
+// Texto y párrafos - elementos de contenido específicos
+// NOTA: No incluir span, div, i, li para no afectar iconos
 p,
-span,
-div,
 label,
 legend,
-li,
 dt,
-dd {
+dd,
+figcaption,
+blockquote,
+cite,
+address {
     font-family: $font-family-sans-serif;
 }
 
@@ -155,7 +157,7 @@ samp,
    CRÍTICO: No sobrescribir estas fuentes
    --------------------------------------------- */
 
-// FontAwesome icons
+// FontAwesome 6 icons - todos los estilos
 .fa,
 .fas,
 .far,
@@ -165,66 +167,115 @@ samp,
 .fa-solid,
 .fa-regular,
 .fa-light,
+.fa-thin,
 .fa-duotone,
 .fa-brands,
+.fa-sharp,
 [class^="fa-"],
-[class*=" fa-"] {
-    font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Brands', 'FontAwesome' !important;
+[class*=" fa-"],
+i.fa,
+i.fas,
+i.far,
+i.fal,
+i.fab,
+span.fa,
+span.fas,
+span.far,
+span.fal,
+span.fab {
+    font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Brands', 'Font Awesome 5 Free', 'Font Awesome 5 Brands', 'FontAwesome' !important;
+    font-style: normal !important;
 }
 
-// FontAwesome pseudo-elements
+// FontAwesome pseudo-elements (::before y ::after)
 .fa::before,
+.fa::after,
 .fas::before,
+.fas::after,
 .far::before,
+.far::after,
 .fal::before,
+.fal::after,
 .fab::before,
+.fab::after,
+.fad::before,
+.fad::after,
 [class^="fa-"]::before,
-[class*=" fa-"]::before {
-    font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Brands', 'FontAwesome' !important;
+[class^="fa-"]::after,
+[class*=" fa-"]::before,
+[class*=" fa-"]::after {
+    font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Brands', 'Font Awesome 5 Free', 'Font Awesome 5 Brands', 'FontAwesome' !important;
+    font-style: normal !important;
 }
 
-// Remui icon font
+// Remui/Edwiser icon font
 .remui-icon,
 [class^="remui-"],
 [class*=" remui-"],
 .edw-icon,
-[class^="edw-icon"],
-[class*=" edw-icon"] {
-    font-family: 'Remui', sans-serif !important;
+[class^="edw-icon-"],
+[class*=" edw-icon-"],
+i.remui-icon,
+i.edw-icon,
+span.remui-icon,
+span.edw-icon {
+    font-family: 'Remui' !important;
+    font-style: normal !important;
 }
 
-// Moodle core icons
-.icon,
-.iconsmall,
-.iconlarge,
-.navicon,
-.smallicon,
-img.icon,
-i.icon {
-    // Los iconos de imagen no necesitan font-family
-    // Solo asegurar que no se sobrescriban
+// Remui icon pseudo-elements
+.remui-icon::before,
+[class^="remui-"]::before,
+[class*=" remui-"]::before,
+.edw-icon::before,
+[class^="edw-icon-"]::before,
+[class*=" edw-icon-"]::before {
+    font-family: 'Remui' !important;
+    font-style: normal !important;
 }
 
-// Material icons (si se usan)
+// Material icons
 .material-icons,
 .material-icons-outlined,
 .material-icons-round,
-.material-icons-sharp {
+.material-icons-sharp,
+.material-icons-two-tone {
     font-family: 'Material Icons' !important;
+    font-style: normal !important;
 }
 
 // Bootstrap icons
 .bi,
 [class^="bi-"],
-[class*=" bi-"] {
+[class*=" bi-"],
+i.bi,
+span.bi {
     font-family: 'bootstrap-icons' !important;
+    font-style: normal !important;
 }
 
-// Glyphicons (legacy)
+// Glyphicons (legacy Bootstrap 3)
 .glyphicon,
 [class^="glyphicon-"],
 [class*=" glyphicon-"] {
     font-family: 'Glyphicons Halflings' !important;
+    font-style: normal !important;
+}
+
+// Iconos de Moodle (imágenes SVG/PNG) - no necesitan font-family
+// pero aseguramos que no se sobrescriban accidentalmente
+.icon,
+.iconsmall,
+.iconlarge,
+.navicon,
+.smallicon,
+.activityicon,
+.iconhelp,
+img.icon,
+img.iconsmall,
+img.iconlarge,
+svg.icon {
+    font-family: inherit !important;
 }
 
 /* ---------------------------------------------
