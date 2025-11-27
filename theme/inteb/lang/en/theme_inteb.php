@@ -129,11 +129,3 @@ $string['devtools_access_disabled'] = 'Developer tools access is disabled on thi
 // Additional dashboard strings
 $string['dashboardpersonalizerinfo'] = 'Dashboard personalizer info';
 $string['defaultheader'] = 'Default header';
-
-// Site Loader
-$string['siteloader'] = 'Site Loader';
-$string['siteloaderdesc'] = 'Configure the loading indicator that appears while the site is loading.';
-$string['enablesiteloader'] = 'Enable site loader';
-$string['enablesiteloaderdesc'] = 'Show a loading animation while the site is fully loading.';
-$string['loaderimage'] = 'Loader image';
-$string['loaderimagedesc'] = 'Upload a custom image for the loader (recommended formats: SVG or animated GIF). If none is uploaded, the default loader will be used.';

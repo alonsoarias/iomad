@@ -31,15 +31,10 @@ require_once($CFG->dirroot . '/course/lib.php');
 
 global $PAGE;
 
-// Siteloader para INTEB - Verificar configuración propia del tema
+// Siteloader - Usar configuración del tema padre (remui)
 $loaderimage = false;
-if (get_config('theme_inteb', 'ib_enablesiteloader')) {
-    // Obtener imagen personalizada del siteloader o usar la de remui por defecto
-    $loaderimage = \theme_remui\toolbox::setting_file_url('ib_loaderimage', 'ib_loaderimage');
-    if (empty($loaderimage)) {
-        // Fallback a la imagen de remui si no hay imagen personalizada
-        $loaderimage = $CFG->wwwroot . '/theme/remui/pix/siteloader.svg';
-    }
+if (get_config('theme_remui', 'enablesiteloader')) {
+    $loaderimage = \theme_remui\utility::get_site_loader();
 }
 
 // Add block button in editing mode.
