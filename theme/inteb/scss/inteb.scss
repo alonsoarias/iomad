@@ -2616,3 +2616,472 @@ span.badge.badge-info {
     }
 }
 
+/* ==========================================================================
+   29. DARK MODE - Estilos para modo oscuro INTEB
+   Compatible con el sistema de dark mode de RemUI (nighteyeplgn)
+   ========================================================================== */
+
+/* Variables de colores para modo oscuro */
+$dark-bg-primary: #1a1a2e;
+$dark-bg-secondary: #16213e;
+$dark-bg-tertiary: #0f3460;
+$dark-bg-card: #1f2937;
+$dark-bg-surface: #252836;
+$dark-text-primary: #e4e4e7;
+$dark-text-secondary: #a1a1aa;
+$dark-text-muted: #71717a;
+$dark-border-color: #374151;
+$dark-accent-color: #38bdf8;
+$dark-link-color: #60a5fa;
+$dark-link-hover: #93c5fd;
+
+/* Dark mode styles cuando está activo */
+html[nighteyeplgn="active"] {
+
+    /* ===== TIPOGRAFÍA Y COLORES DE TEXTO ===== */
+    body {
+        color: $dark-text-primary;
+    }
+
+    h1, .h1,
+    h2, .h2,
+    h3, .h3,
+    h4, .h4,
+    h5, .h5,
+    h6, .h6 {
+        color: $dark-text-primary !important;
+    }
+
+    p, span, div {
+        color: inherit;
+    }
+
+    a {
+        color: $dark-link-color;
+
+        &:hover,
+        &:focus {
+            color: $dark-link-hover;
+        }
+    }
+
+    /* ===== NAVBAR GOV.CO ===== */
+    .gov-navbar-top {
+        background-color: $dark-bg-tertiary !important;
+        border-bottom-color: $dark-border-color !important;
+
+        .gov-logo img {
+            filter: brightness(1.1);
+        }
+    }
+
+    /* ===== NAVBAR PRINCIPAL ===== */
+    .navbar {
+        background-color: $dark-bg-secondary !important;
+        border-bottom-color: $dark-border-color !important;
+
+        .navbar-brand,
+        .nav-link {
+            color: $dark-text-primary !important;
+        }
+
+        .nav-darkmode .dm-toggle {
+            background-color: $dark-bg-surface !important;
+
+            .edw-icon {
+                color: $dark-text-primary !important;
+            }
+        }
+    }
+
+    /* ===== CARDS Y CONTENEDORES ===== */
+    .card,
+    .card-body,
+    .card-header,
+    .card-footer {
+        background-color: $dark-bg-card !important;
+        border-color: $dark-border-color !important;
+        color: $dark-text-primary !important;
+    }
+
+    .card-title,
+    .card-text {
+        color: $dark-text-primary !important;
+    }
+
+    /* ===== FORMULARIOS ===== */
+    .form-control,
+    .form-select,
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="search"],
+    textarea,
+    select {
+        background-color: $dark-bg-surface !important;
+        border-color: $dark-border-color !important;
+        color: $dark-text-primary !important;
+
+        &::placeholder {
+            color: $dark-text-muted !important;
+        }
+
+        &:focus {
+            border-color: $dark-accent-color !important;
+            box-shadow: 0 0 0 0.2rem rgba($dark-accent-color, 0.25) !important;
+        }
+    }
+
+    /* ===== BOTONES ===== */
+    .btn-primary {
+        background-color: $color-primary !important;
+        border-color: $color-primary !important;
+
+        &:hover,
+        &:focus {
+            background-color: darken($color-primary, 10%) !important;
+            border-color: darken($color-primary, 10%) !important;
+        }
+    }
+
+    .btn-secondary {
+        background-color: $dark-bg-surface !important;
+        border-color: $dark-border-color !important;
+        color: $dark-text-primary !important;
+
+        &:hover,
+        &:focus {
+            background-color: lighten($dark-bg-surface, 5%) !important;
+        }
+    }
+
+    .btn-outline-primary {
+        color: $dark-link-color !important;
+        border-color: $dark-link-color !important;
+
+        &:hover,
+        &:focus {
+            background-color: $dark-link-color !important;
+            color: $dark-bg-primary !important;
+        }
+    }
+
+    /* ===== TABLAS ===== */
+    .table,
+    table {
+        color: $dark-text-primary !important;
+
+        th,
+        td {
+            border-color: $dark-border-color !important;
+            color: $dark-text-primary !important;
+        }
+
+        thead th {
+            background-color: $dark-bg-tertiary !important;
+            color: $dark-text-primary !important;
+        }
+
+        tbody tr {
+            &:nth-of-type(odd) {
+                background-color: rgba($dark-bg-surface, 0.5) !important;
+            }
+
+            &:hover {
+                background-color: $dark-bg-surface !important;
+            }
+        }
+    }
+
+    /* ===== DRAWERS Y SIDEBARS ===== */
+    .drawer,
+    [data-region="drawer"],
+    .drawers {
+        background-color: $dark-bg-secondary !important;
+        border-color: $dark-border-color !important;
+
+        .list-group-item {
+            background-color: transparent !important;
+            color: $dark-text-primary !important;
+            border-color: $dark-border-color !important;
+
+            &:hover,
+            &.active {
+                background-color: $dark-bg-surface !important;
+            }
+        }
+    }
+
+    /* ===== COURSE INDEX ===== */
+    .courseindex {
+        background-color: $dark-bg-secondary !important;
+
+        .courseindex-item {
+            color: $dark-text-primary !important;
+
+            &:hover {
+                background-color: $dark-bg-surface !important;
+            }
+        }
+    }
+
+    /* ===== BREADCRUMBS ===== */
+    .breadcrumb {
+        background-color: transparent !important;
+
+        .breadcrumb-item {
+            color: $dark-text-secondary !important;
+
+            a {
+                color: $dark-link-color !important;
+            }
+
+            &.active {
+                color: $dark-text-primary !important;
+            }
+
+            &::before {
+                color: $dark-text-muted !important;
+            }
+        }
+    }
+
+    /* ===== ALERTS ===== */
+    .alert {
+        border-color: $dark-border-color !important;
+
+        &.alert-info {
+            background-color: rgba($my-blue, 0.2) !important;
+            color: lighten($my-blue, 20%) !important;
+        }
+
+        &.alert-success {
+            background-color: rgba($color-primary, 0.2) !important;
+            color: lighten($color-primary, 20%) !important;
+        }
+
+        &.alert-warning {
+            background-color: rgba($color-terciary, 0.2) !important;
+            color: $color-terciary !important;
+        }
+
+        &.alert-danger {
+            background-color: rgba($color-secondary, 0.2) !important;
+            color: lighten($color-secondary, 20%) !important;
+        }
+    }
+
+    /* ===== DROPDOWNS ===== */
+    .dropdown-menu {
+        background-color: $dark-bg-card !important;
+        border-color: $dark-border-color !important;
+
+        .dropdown-item {
+            color: $dark-text-primary !important;
+
+            &:hover,
+            &:focus {
+                background-color: $dark-bg-surface !important;
+            }
+
+            &.active {
+                background-color: $color-primary !important;
+                color: $color-white !important;
+            }
+        }
+
+        .dropdown-divider {
+            border-color: $dark-border-color !important;
+        }
+    }
+
+    /* ===== MODALS ===== */
+    .modal-content {
+        background-color: $dark-bg-card !important;
+        border-color: $dark-border-color !important;
+        color: $dark-text-primary !important;
+
+        .modal-header,
+        .modal-footer {
+            border-color: $dark-border-color !important;
+        }
+
+        .modal-title {
+            color: $dark-text-primary !important;
+        }
+
+        .close,
+        .btn-close {
+            color: $dark-text-primary !important;
+            filter: invert(1);
+        }
+    }
+
+    /* ===== FOOTER INTEB ===== */
+    .iser-footer,
+    .iser-footer-govco,
+    #top-footer {
+        background-color: $dark-bg-tertiary !important;
+
+        .footer-column-title,
+        .footer-info-title,
+        h4 {
+            color: $dark-text-primary !important;
+            border-bottom-color: rgba($dark-text-primary, 0.2) !important;
+        }
+
+        .footer-column-body,
+        .footer-info-text,
+        p, li {
+            color: $dark-text-secondary !important;
+        }
+
+        a {
+            color: $dark-text-secondary !important;
+
+            &:hover,
+            &:focus {
+                color: $dark-text-primary !important;
+            }
+        }
+
+        .footer-social-link {
+            background-color: rgba($dark-text-primary, 0.1) !important;
+            color: $dark-text-primary !important;
+
+            &:hover,
+            &:focus {
+                background-color: $dark-text-primary !important;
+                color: $dark-bg-tertiary !important;
+            }
+        }
+
+        .footer-logo-govco,
+        .footer-logo-colombia {
+            filter: brightness(1.2);
+        }
+
+        blockquote {
+            border-left-color: rgba($dark-text-primary, 0.3) !important;
+            color: $dark-text-secondary !important;
+        }
+    }
+
+    #page-footer .copyright {
+        background-color: darken($dark-bg-tertiary, 5%) !important;
+
+        .text-muted-footer,
+        small {
+            color: $dark-text-secondary !important;
+        }
+    }
+
+    /* ===== BADGES ===== */
+    .badge {
+        &.badge-primary,
+        &.bg-primary {
+            background-color: $color-primary !important;
+        }
+
+        &.badge-secondary,
+        &.bg-secondary {
+            background-color: $dark-bg-surface !important;
+            color: $dark-text-primary !important;
+        }
+
+        &.badge-info,
+        &.bg-info {
+            background-color: $my-blue2 !important;
+        }
+    }
+
+    /* ===== QUIZ Y PREGUNTAS ===== */
+    .que {
+        background-color: $dark-bg-card !important;
+        border-color: $dark-border-color !important;
+
+        .info,
+        .content,
+        .formulation {
+            color: $dark-text-primary !important;
+        }
+
+        &.wordselect .qtext .selected {
+            background-color: $dark-bg-surface !important;
+            border-color: $dark-text-muted !important;
+        }
+    }
+
+    /* ===== ACTIVITY ICONS ===== */
+    .activityiconcontainer {
+        background-color: $dark-bg-surface !important;
+    }
+
+    /* ===== PAGE CONTENT ===== */
+    #page-content,
+    #region-main,
+    .pagelayout-standard #page.drawers,
+    .pagelayout-mydashboard #page.drawers,
+    .pagelayout-course #page.drawers {
+        background-color: $dark-bg-primary !important;
+    }
+
+    /* ===== GENERAL OVERRIDES ===== */
+    .bg-white,
+    .bg-light {
+        background-color: $dark-bg-card !important;
+    }
+
+    .text-dark {
+        color: $dark-text-primary !important;
+    }
+
+    .text-muted {
+        color: $dark-text-muted !important;
+    }
+
+    .border {
+        border-color: $dark-border-color !important;
+    }
+
+    hr {
+        border-color: $dark-border-color !important;
+    }
+
+    /* ===== SCROLLBAR PERSONALIZADA ===== */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: $dark-bg-secondary;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: $dark-bg-surface;
+        border-radius: 4px;
+
+        &:hover {
+            background: lighten($dark-bg-surface, 10%);
+        }
+    }
+
+    /* ===== SELECTION ===== */
+    ::selection {
+        background-color: rgba($color-primary, 0.3);
+        color: $dark-text-primary;
+    }
+}
+
+/* ===== PREFER COLOR SCHEME DARK ===== */
+/* Soporte adicional para usuarios con preferencia de sistema */
+@media (prefers-color-scheme: dark) {
+    /* Estos estilos solo se aplican si el navegador detecta preferencia de modo oscuro
+       Y el usuario no ha desactivado explícitamente el modo oscuro */
+    html:not([nighteyeplgn="disabled"]) {
+        /* Mantener consistencia visual mínima */
+        color-scheme: dark;
+    }
+}
+
