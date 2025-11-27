@@ -4883,250 +4883,250 @@ body.pagelayout-incourse {
    - $color-white: White for text on colored backgrounds
    - $my-gris-claro: Light gray for no-link items
    - $font-family-sans-serif: Typography
+
+   IMPORTANT: Uses high specificity to override RemUI/Bootstrap styles
    =================================== */
 
-// Page navbar breadcrumb container
+// High specificity to override RemUI breadcrumb styles
+#page-header #page-navbar,
 #page-navbar {
     .page-header-headings h1 {
         font-size: 1.34375rem;
     }
 
-    // Base breadcrumb styles (like moove)
-    .breadcrumb {
-        padding: 0.5em 1em;
-        background-color: transparent;
-        border-radius: 0.25em;
-        margin-bottom: 0;
-        list-style: none;
-        display: flex;
-        flex-wrap: wrap;
+    // Override RemUI nav wrapper
+    nav {
+        // Base breadcrumb container
+        ol.breadcrumb,
+        .breadcrumb {
+            padding: 0 !important;
+            margin: 0 !important;
+            background-color: transparent !important;
+            border-radius: 0.25em;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
 
-        &:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-        li {
-            display: inline-block;
-            float: left;
-            margin: 0.5em 0;
-            position: relative;
-            padding: 0;
-            margin: 4px 4px 4px 0;
-            font-family: $font-family-sans-serif;
-
-            // Legacy separator - replaced by chevron
             &:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            // Breadcrumb items (using both li and .breadcrumb-item for compatibility)
+            li,
+            .breadcrumb-item {
                 display: inline-block;
-                content: '\00bb';
-                margin: 0 0.6em;
-                color: $my-gris-medio;
-            }
+                float: left;
+                position: relative;
+                padding: 0 !important;
+                margin: 4px 4px 4px 0 !important;
+                font-family: $font-family-sans-serif;
+                flex-grow: unset !important;
 
-            &:before {
-                content: '';
-                padding: 0;
-                display: none !important;
-            }
+                // CRITICAL: Hide Bootstrap's default "/" separator
+                &::before {
+                    content: none !important;
+                    display: none !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                }
 
-            .no-link {
-                background-color: $my-gris-claro;
-                border-color: $my-gris-claro;
+                // Also hide separator on adjacent items (Bootstrap pattern)
+                & + li::before,
+                & + .breadcrumb-item::before {
+                    content: none !important;
+                    display: none !important;
+                }
+
+                // Item content styling (links and spans)
+                > a,
+                > span {
+                    display: inline-block !important;
+                    position: relative;
+                    padding: 0.4em 0.8em 0.4em 1.5em !important;
+                    color: $my-gris-oscuro !important;
+                    background-color: $color-primary-dimmed !important;
+                    border-color: $color-primary-dimmed !important;
+                    text-decoration: none !important;
+                    font-weight: 500 !important;
+                    font-size: 0.875rem !important;
+                    line-height: 1.4;
+
+                    // Inner chevron (inherits background color)
+                    &::after {
+                        content: '' !important;
+                        position: absolute;
+                        top: 0;
+                        left: 100%;
+                        height: 0;
+                        width: 0;
+                        border: 17px solid transparent;
+                        border-right-width: 0;
+                        border-left-width: 10px;
+                        z-index: 2;
+                        border-left-color: inherit;
+                    }
+                }
+
+                // Link hover effect
+                > a:hover {
+                    color: $color-white !important;
+                    background-color: $my-gris-oscuro !important;
+                    border-color: $my-gris-oscuro !important;
+                }
+
+                // No-link items (span without action)
+                > span.no-link,
+                > span:not([class]) {
+                    background-color: $my-gris-claro !important;
+                    border-color: $my-gris-claro !important;
+                }
+
+                // Outer chevron (white separator line)
+                &::after {
+                    content: '' !important;
+                    position: absolute;
+                    top: 0;
+                    left: 100%;
+                    height: 0;
+                    width: 0;
+                    border: 17px solid transparent;
+                    border-right-width: 0;
+                    border-left-width: 10px;
+                    z-index: 1;
+                    transform: translateX(4px);
+                    border-left-color: $color-white !important;
+                    margin: 0 !important;
+                }
+
+                // First item: rounded left corners
+                &:first-of-type,
+                &:first-child {
+                    > a,
+                    > span {
+                        padding-left: 1.2em !important;
+                        border-radius: 0.25em 0 0 0.25em;
+                    }
+                }
+
+                // Last item: current/active styling
+                &:last-of-type,
+                &:last-child {
+                    margin-right: 0 !important;
+
+                    > a,
+                    > span {
+                        color: $color-white !important;
+                        background-color: $color-primary !important;
+                        border-color: $color-primary !important;
+                        padding-right: 1.2em !important;
+                        border-radius: 0 0.25em 0.25em 0;
+                    }
+
+                    // Hide chevron on last item
+                    &::after {
+                        display: none !important;
+                    }
+
+                    > a::after,
+                    > span::after {
+                        display: none !important;
+                    }
+                }
             }
         }
-    }
-
-    // Remove separator from last item
-    .breadcrumb li:last-of-type::after {
-        display: none;
-    }
-
-    // Base text colors
-    .breadcrumb li > * {
-        display: inline-block;
-        color: $my-gris-oscuro;
-    }
-
-    .breadcrumb li.current > * {
-        color: $color-white;
-    }
-
-    .no-touch .breadcrumb a:hover {
-        color: $color-white;
-    }
-
-    // Redesigned breadcrumb with chevron separators (moove style)
-    .breadcrumb {
-        padding: 0;
-        background-color: transparent;
-    }
-
-    .breadcrumb li {
-        position: relative;
-        padding: 0;
-        margin: 4px 4px 4px 0;
-    }
-
-    .breadcrumb li::after {
-        margin: 0 1em;
-    }
-
-    // All items styling
-    .breadcrumb li > * {
-        position: relative;
-        padding: 0.4em 0.8em 0.4em 1.5em;
-        color: $my-gris-oscuro;
-        background-color: $color-primary-dimmed;
-        border-color: $color-primary-dimmed;
-        text-decoration: none !important;
-        font-weight: 500;
-        font-size: 0.875rem;
-    }
-
-    .breadcrumb li:last-of-type {
-        margin-right: 0;
-    }
-
-    // Current/active item styling (last item or .current class)
-    .breadcrumb li:last-of-type > *,
-    .breadcrumb li.current > * {
-        color: $color-white;
-        background-color: $color-primary;
-        border-color: $color-primary;
-    }
-
-    // First item: rounded left corners
-    .breadcrumb li:first-of-type > * {
-        padding-left: 1.6em;
-        border-radius: 0.25em 0 0 0.25em;
-    }
-
-    // Last item: rounded right corners
-    .breadcrumb li:last-of-type > * {
-        padding-right: 1.6em;
-        border-radius: 0 0.25em 0.25em 0;
-    }
-
-    // Hover effect on links (not on current item)
-    .no-touch .breadcrumb a:hover,
-    .breadcrumb a:hover {
-        color: $color-white;
-        background-color: $my-gris-oscuro;
-        border-color: $my-gris-oscuro;
-    }
-
-    // Chevron/Arrow separator using CSS borders
-    .breadcrumb li::after,
-    .breadcrumb li > *::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 100%;
-        height: 0;
-        width: 0;
-        border: 17px solid transparent;
-        border-right-width: 0;
-        border-left-width: 10px;
-    }
-
-    // Outer chevron (white separator line)
-    .breadcrumb li::after {
-        z-index: 1;
-        -webkit-transform: translateX(4px);
-        -moz-transform: translateX(4px);
-        -ms-transform: translateX(4px);
-        -o-transform: translateX(4px);
-        transform: translateX(4px);
-        border-left-color: $color-white;
-        margin: 0;
-    }
-
-    // Inner chevron (inherits item background color)
-    .breadcrumb li > *::after {
-        z-index: 2;
-        border-left-color: inherit;
-    }
-
-    // Hide chevron on last item
-    .breadcrumb li:last-of-type::after,
-    .breadcrumb li:last-of-type > *::after {
-        display: none;
     }
 
     // Firefox fix for dashed borders
     @-moz-document url-prefix() {
-        .breadcrumb li::after,
-        .breadcrumb li > *::after {
+        nav ol.breadcrumb li::after,
+        nav ol.breadcrumb li > *::after,
+        nav .breadcrumb .breadcrumb-item::after,
+        nav .breadcrumb .breadcrumb-item > *::after {
             border-left-style: dashed;
         }
     }
 }
 
 // Right-to-left language support
-.dir-rtl #page-navbar .breadcrumb li::after {
-    -webkit-transform: translateX(-4px);
-    -moz-transform: translateX(-4px);
-    -ms-transform: translateX(-4px);
-    -o-transform: translateX(-4px);
-    transform: translateX(-4px);
-    border-right-color: $color-white;
-}
+.dir-rtl {
+    #page-header #page-navbar,
+    #page-navbar {
+        nav ol.breadcrumb li,
+        nav .breadcrumb .breadcrumb-item {
+            &::after {
+                transform: translateX(-4px);
+                border-right-color: $color-white !important;
+                border-left-color: transparent !important;
+                left: auto;
+                right: 100%;
+                border-right-width: 10px;
+                border-left-width: 0;
+            }
 
-.dir-rtl #page-navbar .breadcrumb li::after,
-.dir-rtl #page-navbar .breadcrumb li > *::after {
-    left: 95%;
-    border-right-width: 12px;
-    border-left-width: 0;
-}
-
-// General breadcrumb item styles (for non #page-navbar contexts)
-.breadcrumb-item {
-    // Remove default Bootstrap separator
-    &::before {
-        display: none !important;
-        content: none !important;
-    }
-
-    &+ .breadcrumb-item {
-        padding-left: 0;
-
-        &::before {
-            display: none !important;
-            content: none !important;
+            > a::after,
+            > span::after {
+                left: auto;
+                right: 100%;
+                border-right-width: 10px;
+                border-left-width: 0;
+                border-right-color: inherit;
+                border-left-color: transparent;
+            }
         }
     }
 }
 
 // Responsive adjustments for breadcrumb
 @media (max-width: 767px) {
-    #page-navbar .breadcrumb:not(:empty) {
-        border: none;
-    }
+    #page-header #page-navbar nav ol.breadcrumb,
+    #page-navbar nav ol.breadcrumb {
+        border: none !important;
 
-    #page-navbar .breadcrumb li > * {
-        padding: 0.3em 0.6em 0.3em 1.2em;
-        font-size: 0.75rem;
+        li,
+        .breadcrumb-item {
+            > a,
+            > span {
+                padding: 0.3em 0.6em 0.3em 1em !important;
+                font-size: 0.75rem !important;
 
-        &::after {
-            border-width: 14px;
-            border-right-width: 0;
-            border-left-width: 8px;
+                &::after {
+                    border-width: 14px !important;
+                    border-right-width: 0 !important;
+                    border-left-width: 8px !important;
+                }
+            }
+
+            &::after {
+                border-width: 14px !important;
+                border-right-width: 0 !important;
+                border-left-width: 8px !important;
+            }
+
+            &:first-of-type,
+            &:first-child {
+                > a,
+                > span {
+                    padding-left: 0.8em !important;
+                }
+            }
+
+            &:last-of-type,
+            &:last-child {
+                > a,
+                > span {
+                    padding-right: 0.8em !important;
+                }
+            }
         }
-    }
-
-    #page-navbar .breadcrumb li:first-of-type > * {
-        padding-left: 0.8em;
-    }
-
-    #page-navbar .breadcrumb li:last-of-type > * {
-        padding-right: 0.8em;
     }
 }
 
 @media (max-width: 480px) {
-    #page-navbar .breadcrumb {
-        flex-wrap: nowrap;
+    #page-header #page-navbar nav ol.breadcrumb,
+    #page-navbar nav ol.breadcrumb {
+        flex-wrap: nowrap !important;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
@@ -5136,30 +5136,46 @@ body.pagelayout-incourse {
             display: none;
         }
 
-        li {
+        li,
+        .breadcrumb-item {
             flex-shrink: 0;
 
-            & > * {
-                padding: 0.25em 0.5em 0.25em 1em;
-                font-size: 0.688rem;
+            > a,
+            > span {
+                padding: 0.25em 0.5em 0.25em 0.8em !important;
+                font-size: 0.688rem !important;
                 max-width: 150px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
 
                 &::after {
-                    border-width: 12px;
-                    border-right-width: 0;
-                    border-left-width: 7px;
+                    border-width: 12px !important;
+                    border-right-width: 0 !important;
+                    border-left-width: 7px !important;
                 }
             }
 
-            &:first-of-type > * {
-                padding-left: 0.5em;
+            &::after {
+                border-width: 12px !important;
+                border-right-width: 0 !important;
+                border-left-width: 7px !important;
             }
 
-            &:last-of-type > * {
-                padding-right: 0.5em;
+            &:first-of-type,
+            &:first-child {
+                > a,
+                > span {
+                    padding-left: 0.5em !important;
+                }
+            }
+
+            &:last-of-type,
+            &:last-child {
+                > a,
+                > span {
+                    padding-right: 0.5em !important;
+                }
             }
         }
     }
