@@ -2219,7 +2219,7 @@ $govco-blue-light: #096FB7;
         }
     }
 
-    /* Columna de logos */
+    /* Columna de logos (vertical) */
     .footer-logos-column {
         display: flex;
         flex-direction: column;
@@ -2227,6 +2227,34 @@ $govco-blue-light: #096FB7;
         justify-content: flex-start;
         gap: 20px;
         padding: 10px 0;
+    }
+
+    /* Fila de logos (horizontal) */
+    .footer-logos-row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba($color-white, 0.15);
+        margin-bottom: 1rem;
+    }
+
+    .footer-logo-link {
+        display: inline-block;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+
+        &:hover {
+            transform: scale(1.08);
+            opacity: 0.85;
+        }
+
+        img {
+            display: block;
+            height: auto;
+        }
     }
 
     .footer-logo-item {

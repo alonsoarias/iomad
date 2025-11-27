@@ -110,25 +110,19 @@ $string['footercolumntitle'] = 'Título columna {$a}';
 $string['footercolumntitle_desc'] = 'Título opcional para la columna {$a} (déjelo vacío para no mostrar título).';
 
 // Default content for each column
-$string['footercolumn1_default'] = '<div class="footer-logos-column">
-    <div class="footer-logo-item mb-3">
-        <a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal ISER">
-            <img src="/theme/inteb/pix/logo_inverted.webp" alt="Logo ISER" class="footer-logo-iser">
-        </a>
-    </div>
-    <div class="footer-logo-item mb-3">
-        <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal GOV.CO">
-            <img src="/theme/inteb/pix/logo-govco.webp" alt="Logo GOV.CO" class="footer-logo-govco">
-        </a>
-    </div>
-    <div class="footer-logo-item">
-        <a href="https://www.colombia.co/" target="_blank" rel="noopener noreferrer" aria-label="Marca País Colombia">
-            <img src="/theme/inteb/pix/marca_pais.png" alt="Logo Marca País Colombia" class="footer-logo-colombia">
-        </a>
-    </div>
+$string['footercolumn1_default'] = '<div class="footer-logos-row d-flex flex-wrap align-items-center justify-content-center gap-3 mb-3">
+    <a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal ISER" class="footer-logo-link">
+        <img src="/theme/inteb/pix/logo_inverted.webp" alt="Logo ISER" class="footer-logo-iser">
+    </a>
+    <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="Portal GOV.CO" class="footer-logo-link">
+        <img src="/theme/inteb/pix/logo-govco.webp" alt="Logo GOV.CO" class="footer-logo-govco">
+    </a>
+    <a href="https://www.colombia.co/" target="_blank" rel="noopener noreferrer" aria-label="Marca País Colombia" class="footer-logo-link">
+        <img src="/theme/inteb/pix/marca_pais.png" alt="Logo Marca País Colombia" class="footer-logo-colombia">
+    </a>
 </div>
-<p class="mt-3">El Instituto Superior de Educación Rural - ISER - es una Institución de Educación Superior de carácter público, vigilada por el Ministerio de Educación Nacional.</p>
-<blockquote>"Ruralidades con propósito"</blockquote>';
+<p class="text-center">El Instituto Superior de Educación Rural - ISER - es una Institución de Educación Superior de carácter público, vigilada por el Ministerio de Educación Nacional.</p>
+<blockquote class="text-center">"Ruralidades con propósito"</blockquote>';
 
 $string['footercolumn2_default'] = '<h4>Datos de contacto</h4>
 <ul>

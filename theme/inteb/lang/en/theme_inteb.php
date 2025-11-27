@@ -110,25 +110,19 @@ $string['footercolumntitle'] = 'Column {$a} title';
 $string['footercolumntitle_desc'] = 'Optional title for column {$a} (leave empty to hide title).';
 
 // Default content for each column
-$string['footercolumn1_default'] = '<div class="footer-logos-column">
-    <div class="footer-logo-item mb-3">
-        <a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer" aria-label="ISER Portal">
-            <img src="/theme/inteb/pix/logo_inverted.webp" alt="ISER Logo" class="footer-logo-iser">
-        </a>
-    </div>
-    <div class="footer-logo-item mb-3">
-        <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="GOV.CO Portal">
-            <img src="/theme/inteb/pix/logo-govco.webp" alt="GOV.CO Logo" class="footer-logo-govco">
-        </a>
-    </div>
-    <div class="footer-logo-item">
-        <a href="https://www.colombia.co/" target="_blank" rel="noopener noreferrer" aria-label="Colombia Country Brand">
-            <img src="/theme/inteb/pix/marca_pais.png" alt="Colombia Country Brand Logo" class="footer-logo-colombia">
-        </a>
-    </div>
+$string['footercolumn1_default'] = '<div class="footer-logos-row d-flex flex-wrap align-items-center justify-content-center gap-3 mb-3">
+    <a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer" aria-label="ISER Portal" class="footer-logo-link">
+        <img src="/theme/inteb/pix/logo_inverted.webp" alt="ISER Logo" class="footer-logo-iser">
+    </a>
+    <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="GOV.CO Portal" class="footer-logo-link">
+        <img src="/theme/inteb/pix/logo-govco.webp" alt="GOV.CO Logo" class="footer-logo-govco">
+    </a>
+    <a href="https://www.colombia.co/" target="_blank" rel="noopener noreferrer" aria-label="Colombia Country Brand" class="footer-logo-link">
+        <img src="/theme/inteb/pix/marca_pais.png" alt="Colombia Country Brand Logo" class="footer-logo-colombia">
+    </a>
 </div>
-<p class="mt-3">Instituto Superior de Educación Rural - ISER - is a public Higher Education Institution, supervised by the Ministry of National Education.</p>
-<blockquote>"Ruralities with purpose"</blockquote>';
+<p class="text-center">Instituto Superior de Educación Rural - ISER - is a public Higher Education Institution, supervised by the Ministry of National Education.</p>
+<blockquote class="text-center">"Ruralities with purpose"</blockquote>';
 
 $string['footercolumn2_default'] = '<h4>Contact Information</h4>
 <ul>
