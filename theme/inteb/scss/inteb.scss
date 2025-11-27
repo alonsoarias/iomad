@@ -61,9 +61,7 @@ nav.moremenu.navigation.observed,
     font-size: 0.9775rem;
 }
 
-li.breadcrumb-item {
-    font-size: 0.8775rem;
-}
+// Breadcrumb font-size moved to main breadcrumb section below
 
 .moremenu .nav-link {
     font-size: 15.6px !important;
@@ -90,10 +88,11 @@ a.nav-link {
 }
 
 .text-info,
-.users-list-name,
-#page-header #page-navbar nav ol.breadcrumb .breadcrumb-item a {
+.users-list-name {
     color: $color-primary !important;
 }
+
+// Breadcrumb link colors are now managed in the main breadcrumb section
 
 /* ==========================================================================
    3. NAVEGACIÓN - NAV PILLS Y TABS
@@ -3553,25 +3552,41 @@ html[nighteyeplgn="active"] {
         }
     }
 
-    /* ===== BREADCRUMBS ===== */
-    .breadcrumb {
+    /* ===== BREADCRUMBS (Moove-style with chevrons) ===== */
+    #page-navbar .breadcrumb {
         background-color: transparent !important;
 
-        .breadcrumb-item {
-            color: $dark-text-secondary !important;
-
-            a {
-                color: $dark-link-color !important;
-            }
-
-            &.active {
+        li {
+            // Normal items in dark mode
+            & > * {
+                background-color: $dark-bg-surface !important;
+                border-color: $dark-bg-surface !important;
                 color: $dark-text-primary !important;
             }
 
-            &::before {
-                color: $dark-text-muted !important;
+            // Current/active item in dark mode
+            &:last-of-type > * {
+                background-color: $dark-accent-color !important;
+                border-color: $dark-accent-color !important;
+                color: #1a1a2e !important;
+            }
+
+            // Hover state in dark mode
+            & > a:hover {
+                background-color: $dark-bg-tertiary !important;
+                border-color: $dark-bg-tertiary !important;
+                color: $dark-text-primary !important;
+            }
+
+            // Chevron color in dark mode
+            &::after {
+                border-left-color: $dark-bg-primary !important;
             }
         }
+    }
+
+    .breadcrumb {
+        background-color: transparent !important;
     }
 
     /* ===== ALERTS ===== */
@@ -4859,80 +4874,159 @@ body.pagelayout-incourse {
 
 /* ===================================
    Breadcrumb - Chevron/Arrow Style
-   ISER Institutional Design (Exact Implementation)
+   Based on Moove Theme with ISER Branding
+
+   Color Scheme (ISER Institutional):
+   - Normal items: Light background (#E8F5F3) with dark text (#646363)
+   - Current/active item: Green background (#1B9E88) with white text
+   - Hover: Dark gray background (#646363) with white text
+   - Chevron separators: White (#FFFFFF)
    =================================== */
 
-// Breadcrumb base styles
-.breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0.25rem 0;
-  margin-bottom: 0;
-  list-style: none;
-  background-color: transparent;
-}
+// ISER Breadcrumb Colors (matching moove structure)
+$breadcrumb-bg-normal: #E8F5F3;          // Light green tint for normal items
+$breadcrumb-text-normal: #646363;         // ISER gray for normal text
+$breadcrumb-bg-current: #1B9E88;          // ISER green for current item
+$breadcrumb-text-current: #FFFFFF;        // White text on current
+$breadcrumb-bg-hover: #646363;            // ISER gray for hover
+$breadcrumb-text-hover: #FFFFFF;          // White text on hover
+$breadcrumb-chevron-color: #FFFFFF;       // White chevrons
+$breadcrumb-no-link-bg: #F7F7F7;          // Light gray for no-link items
 
-// Page navbar breadcrumb - Main implementation
+// Page navbar breadcrumb container
 #page-navbar {
-  .breadcrumb {
-    li {
-      font-family: 'Verdana', 'Arial', sans-serif;
+    .page-header-headings h1 {
+        font-size: 1.34375rem;
+    }
 
-      // All direct children (a, span)
-      & > * {
+    // Base breadcrumb styles (like moove)
+    .breadcrumb {
+        padding: 0.5em 1em;
+        background-color: transparent;
+        border-radius: 0.25em;
+        margin-bottom: 0;
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+
+        &:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        li {
+            display: inline-block;
+            float: left;
+            margin: 0.5em 0;
+            position: relative;
+            padding: 0;
+            margin: 4px 4px 4px 0;
+            font-family: 'Verdana', 'Arial', sans-serif;
+
+            // Legacy separator - replaced by chevron
+            &:after {
+                display: inline-block;
+                content: '\00bb';
+                margin: 0 0.6em;
+                color: #959fa5;
+            }
+
+            &:before {
+                content: '';
+                padding: 0;
+                display: none !important;
+            }
+
+            .no-link {
+                background-color: $breadcrumb-no-link-bg;
+                border-color: $breadcrumb-no-link-bg;
+            }
+        }
+    }
+
+    // Remove separator from last item
+    .breadcrumb li:last-of-type::after {
+        display: none;
+    }
+
+    // Base text colors
+    .breadcrumb li > * {
         display: inline-block;
+        color: $breadcrumb-text-normal;
+    }
+
+    .breadcrumb li.current > * {
+        color: $breadcrumb-text-current;
+    }
+
+    .no-touch .breadcrumb a:hover {
+        color: $breadcrumb-text-hover;
+    }
+
+    // Redesigned breadcrumb with chevron separators (moove style)
+    .breadcrumb {
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .breadcrumb li {
+        position: relative;
+        padding: 0;
+        margin: 4px 4px 4px 0;
+    }
+
+    .breadcrumb li::after {
+        margin: 0 1em;
+    }
+
+    // All items styling
+    .breadcrumb li > * {
         position: relative;
         padding: 0.4em 0.8em 0.4em 1.5em;
-        min-height: 34px;
-        padding-top: 4px;
-        padding-bottom: 2px;
-        line-height: 20px;
-        color: $color-white;
-        background-color: $my-verde;
-        border-color: $my-verde;
+        color: $breadcrumb-text-normal;
+        background-color: $breadcrumb-bg-normal;
+        border-color: $breadcrumb-bg-normal;
         text-decoration: none !important;
-        font-weight: 600;
+        font-weight: 500;
+        font-size: 0.875rem;
+    }
 
-        // Arrow using ::after on child elements
-        &::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 100%;
-          height: 0;
-          width: 0;
-          border: 17px solid transparent;
-          border-right-width: 0;
-          border-left-width: 10px;
-          border-width: 16.5px;
-          border-right-width: 0;
-          border-left-width: 10px;
-          z-index: 2;
-          border-left-color: inherit;
-        }
-      }
+    .breadcrumb li:last-of-type {
+        margin-right: 0;
+    }
 
-      // Link specific styles
-      & > a {
-        color: $color-white;
-        text-decoration: none !important;
+    // Current/active item styling (last item or .current class)
+    .breadcrumb li:last-of-type > *,
+    .breadcrumb li.current > * {
+        color: $breadcrumb-text-current;
+        background-color: $breadcrumb-bg-current;
+        border-color: $breadcrumb-bg-current;
+    }
 
-        &:hover {
-          background-color: $my-lime;
-          border-color: $my-lime;
-          color: $color-white;
-        }
-      }
+    // First item: rounded left corners
+    .breadcrumb li:first-of-type > * {
+        padding-left: 1.6em;
+        border-radius: 0.25em 0 0 0.25em;
+    }
 
-      // Span (current/active item) styles
-      & > span {
-        background-color: $my-gris-oscuro;
-        border-color: $my-gris-oscuro;
-        color: $color-white;
-      }
+    // Last item: rounded right corners
+    .breadcrumb li:last-of-type > * {
+        padding-right: 1.6em;
+        border-radius: 0 0.25em 0.25em 0;
+    }
 
-      // Arrow shape using ::after on li
-      &::after {
+    // Hover effect on links (not on current item)
+    .no-touch .breadcrumb a:hover,
+    .breadcrumb a:hover {
+        color: $breadcrumb-text-hover;
+        background-color: $breadcrumb-bg-hover;
+        border-color: $breadcrumb-bg-hover;
+    }
+
+    // Chevron/Arrow separator using CSS borders
+    .breadcrumb li::after,
+    .breadcrumb li > *::after {
         content: '';
         position: absolute;
         top: 0;
@@ -4942,96 +5036,139 @@ body.pagelayout-incourse {
         border: 17px solid transparent;
         border-right-width: 0;
         border-left-width: 10px;
-        border-width: 16.5px;
-        border-right-width: 0;
-        border-left-width: 10px;
-      }
-
-      // Remove default Bootstrap breadcrumb separator
-      &::before {
-        display: none !important;
-        content: none !important;
-      }
-
-      // First item - adjust left padding
-      &:first-child > * {
-        padding-left: 0.8em;
-      }
     }
-  }
+
+    // Outer chevron (white separator line)
+    .breadcrumb li::after {
+        z-index: 1;
+        -webkit-transform: translateX(4px);
+        -moz-transform: translateX(4px);
+        -ms-transform: translateX(4px);
+        -o-transform: translateX(4px);
+        transform: translateX(4px);
+        border-left-color: $breadcrumb-chevron-color;
+        margin: 0;
+    }
+
+    // Inner chevron (inherits item background color)
+    .breadcrumb li > *::after {
+        z-index: 2;
+        border-left-color: inherit;
+    }
+
+    // Hide chevron on last item
+    .breadcrumb li:last-of-type::after,
+    .breadcrumb li:last-of-type > *::after {
+        display: none;
+    }
+
+    // Firefox fix for dashed borders
+    @-moz-document url-prefix() {
+        .breadcrumb li::after,
+        .breadcrumb li > *::after {
+            border-left-style: dashed;
+        }
+    }
+}
+
+// Right-to-left language support
+.dir-rtl #page-navbar .breadcrumb li::after {
+    -webkit-transform: translateX(-4px);
+    -moz-transform: translateX(-4px);
+    -ms-transform: translateX(-4px);
+    -o-transform: translateX(-4px);
+    transform: translateX(-4px);
+    border-right-color: $breadcrumb-chevron-color;
+}
+
+.dir-rtl #page-navbar .breadcrumb li::after,
+.dir-rtl #page-navbar .breadcrumb li > *::after {
+    left: 95%;
+    border-right-width: 12px;
+    border-left-width: 0;
 }
 
 // General breadcrumb item styles (for non #page-navbar contexts)
 .breadcrumb-item {
-  // Remove default Bootstrap separator
-  &::before {
-    display: none !important;
-    content: none !important;
-  }
-
-  &+ .breadcrumb-item {
-    padding-left: 0;
-
+    // Remove default Bootstrap separator
     &::before {
-      display: none !important;
-      content: none !important;
+        display: none !important;
+        content: none !important;
     }
-  }
+
+    &+ .breadcrumb-item {
+        padding-left: 0;
+
+        &::before {
+            display: none !important;
+            content: none !important;
+        }
+    }
 }
 
 // Responsive adjustments for breadcrumb
 @media (max-width: 767px) {
-  #page-navbar .breadcrumb li > * {
-    padding: 0.3em 0.6em 0.3em 1.2em;
-    font-size: 0.75rem;
-    min-height: 28px;
-
-    &::after {
-      border-width: 14px;
-      border-right-width: 0;
-      border-left-width: 8px;
+    #page-navbar .breadcrumb:not(:empty) {
+        border: none;
     }
-  }
 
-  #page-navbar .breadcrumb li:first-child > * {
-    padding-left: 0.6em;
-  }
+    #page-navbar .breadcrumb li > * {
+        padding: 0.3em 0.6em 0.3em 1.2em;
+        font-size: 0.75rem;
+
+        &::after {
+            border-width: 14px;
+            border-right-width: 0;
+            border-left-width: 8px;
+        }
+    }
+
+    #page-navbar .breadcrumb li:first-of-type > * {
+        padding-left: 0.8em;
+    }
+
+    #page-navbar .breadcrumb li:last-of-type > * {
+        padding-right: 0.8em;
+    }
 }
 
 @media (max-width: 480px) {
-  #page-navbar .breadcrumb {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    #page-navbar .breadcrumb {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    li {
-      flex-shrink: 0;
-
-      & > * {
-        padding: 0.25em 0.5em 0.25em 1em;
-        font-size: 0.688rem;
-        min-height: 24px;
-        max-width: 150px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        &::after {
-          border-width: 12px;
-          border-right-width: 0;
-          border-left-width: 7px;
+        &::-webkit-scrollbar {
+            display: none;
         }
-      }
 
-      &:first-child > * {
-        padding-left: 0.5em;
-      }
+        li {
+            flex-shrink: 0;
+
+            & > * {
+                padding: 0.25em 0.5em 0.25em 1em;
+                font-size: 0.688rem;
+                max-width: 150px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+
+                &::after {
+                    border-width: 12px;
+                    border-right-width: 0;
+                    border-left-width: 7px;
+                }
+            }
+
+            &:first-of-type > * {
+                padding-left: 0.5em;
+            }
+
+            &:last-of-type > * {
+                padding-right: 0.5em;
+            }
+        }
     }
-  }
 }
