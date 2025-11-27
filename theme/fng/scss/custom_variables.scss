@@ -1,0 +1,67 @@
+/* Colores oficiales FNG */
+$fng-blue-dark: #045091;     // Azul oscuro institucional
+$fng-yellow: #FEEB17;        // Amarillo institucional
+$fng-orange: #F6B215;        // Naranja institucional 
+$fng-blue-medium: #096FB7;   // Azul medio institucional
+$fng-red: #E20E17;           // Rojo institucional
+$fng-gray: #606060;          // Gris institucional
+
+/* Mantenemos variables del tema original pero adaptadas a la paleta FNG */
+$body-bg: #FFFFFF;
+$navbar-height: 80px;
+
+// Colores principales adaptados a la paleta FNG
+$my-rojo: $fng-red;          // Color secundario principal
+$my-rojo-claro: lighten($fng-red, 10%); // Color secundario atenuado
+$my-amarillo: $fng-yellow;
+
+$my-orange: $fng-orange;
+$my-oscuro: darken($fng-blue-dark, 10%);
+$my-gris: #e8e8e8;
+$my-gris2: #B8B9BE;
+$my-negro: #3D3D3D;
+$my-blue: $fng-blue-medium; // Azul intermedio
+$my-blue2: $fng-blue-dark; // Azul oscuro - Color primario
+$color-white: #FFFFFF;
+
+$font-family-sans-serif: 'Open Sans', sans-serif;
+$font-family-aux: 'Open Sans', sans-serif;
+
+$headings-font-family: "Open Sans", $font-family-sans-serif !default;
+
+// Asignación de colores primarios y secundarios
+$color-primary: $my-blue2; // #045091
+$color-primary-dimmed: lighten($color-primary, 10%);
+$color-primary-dark: darken($color-primary, 10%);
+
+$color-secondary: $fng-orange; // #F6B215
+$color-secondary-dimmed: lighten($color-secondary, 10%);
+$color-secondary-dark: darken($color-secondary, 10%);
+
+$color-terciary: $my-amarillo; // #FEEB17
+$color-terciary-dimmed: lighten($color-terciary, 10%);
+$color-terciary-dark: darken($color-terciary, 10%);
+
+$brand-primary: $my-blue2; // #045091
+$navbar-header-color: $color-secondary; // #F6B215
+
+$color-blue: $fng-blue-medium;
+
+$headings-color: $my-gris;
+
+$nav-drawer-color: $color-primary; // #045091
+
+// Otros colores que se mantienen pero ajustados según nueva paleta
+$blue:    $fng-blue-medium;
+$indigo:  #003049;
+$purple:  #2a3562;
+$pink:    #F5A6E6;
+$red:     $fng-red;
+$orange:  $fng-orange;
+$yellow:  $fng-yellow;
+$green:   #7AAA18;
+$teal:    lighten($fng-blue-medium, 20%);
+$cyan:    $fng-blue-medium;
+
+/* extra variables */
+$my-loginfooterheight: 80px;
