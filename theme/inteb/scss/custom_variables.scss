@@ -18,21 +18,38 @@ $my-blue: #5894EF; // Azul - R:88 G:148 B:239
 $my-magenta: #C82260; // Magenta - R:200 G:34 B:96
 
 // ============================================
-// COLORES NEUTRALES
+// COLORES NEUTRALES ISER
 // ============================================
-$my-oscuro: #003049;
-$my-gris: #646363; // Gris corporativo - R:100 G:100 B:99
-$my-gris2: #B8B9BE;
+$my-gris-claro: #CFCFCF; // Gris claro - R:207 G:207 B:207
+$my-gris-medio: #9C9C9B; // Gris medio - R:156 G:156 B:155
+$my-gris-oscuro: #646363; // Gris oscuro - R:100 G:100 B:99
+$my-gris: #646363; // Alias para compatibilidad
+$my-gris2: #B8B9BE; // Mantenido por compatibilidad
 $my-negro: #000000; // Negro - R:0 G:0 B:0
-$my-blue2: #27548c; // Mantenido por compatibilidad
+$my-blanco: #FFFFFF; // Blanco
 $color-white: #FFFFFF;
 
+// Variables auxiliares (compatibilidad)
+$my-oscuro: #003049;
+$my-blue2: #27548c;
+
 // ============================================
-// TIPOGRAFÍA
+// TIPOGRAFÍA ISER
 // ============================================
-$font-family-sans-serif: 'Arial', sans-serif;
+// Según manual de marca INTEB:
+// - Corporativa (logotipo): Elza (Light, Medium, Bold)
+// - Digital (web, multimedia): Verdana o Arial
+// - Papelería oficial: Arial
+// - Diplomas/certificaciones: Sitka
+// - Piezas gráficas: Myriad Pro
+// Restricción: Máximo 2 tipografías por diseño
+// ============================================
+$font-family-sans-serif: 'Verdana', 'Arial', sans-serif;
 $font-family-aux: 'Elza', 'Arial', sans-serif;
-$headings-font-family: "Arial", $font-family-sans-serif !default;
+$font-family-certificates: 'Sitka', 'Georgia', serif;
+$font-family-graphic: 'Myriad Pro', 'Arial', sans-serif;
+$headings-font-family: 'Arial', $font-family-sans-serif !default;
+$headings-font-weight: 600 !default;
 
 // ============================================
 // ASIGNACIÓN DE COLORES DEL SISTEMA

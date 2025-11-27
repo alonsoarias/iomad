@@ -1,8 +1,13 @@
-$font-family-sans-serif: 'Open Sans',sans-serif !default;
-$font-family-aux: 'Open Sans',sans-serif !default;
+// ============================================
+// TIPOGRAFÍA ISER (según manual de marca INTEB)
+// - Digital: Verdana o Arial
+// - Corporativa: Elza
+// ============================================
+$font-family-sans-serif: 'Verdana', 'Arial', sans-serif !default;
+$font-family-aux: 'Elza', 'Arial', sans-serif !default;
 
-$headings-font-family: 'Open Sans',sans-serif, $font-family-sans-serif !default;
-$headings-font-weight: 400 !default;
+$headings-font-family: 'Arial', $font-family-sans-serif !default;
+$headings-font-weight: 600 !default;
 
 $color-blue: #5AA9E6;
 $color-blue-dimmed: #7FC8F8;
