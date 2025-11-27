@@ -2848,7 +2848,155 @@ span.badge.badge-info {
 }
 
 /* ==========================================================================
-   29. DARK MODE - Estilos para modo oscuro INTEB
+   29. OVERRIDES COLORES REMUI - Reemplazo de colores hardcodeados
+   Sustituye #0051f9 (azul RemUI) por colores corporativos ISER
+   ========================================================================== */
+
+/* Category listings - elementos seleccionados */
+#course-category-listings .listitem[data-selected="1"] {
+    border-left-color: $color-primary !important;
+}
+
+#course-category-listings .listitem[data-selected="1"] > div {
+    background-color: rgba($color-primary, 0.05) !important;
+}
+
+/* Links y elementos con color primario RemUI */
+.text-primary,
+a.text-primary {
+    color: $color-primary !important;
+}
+
+.text-primary:hover,
+a.text-primary:hover {
+    color: $color-primary-dark !important;
+}
+
+/* Backgrounds primarios */
+.bg-primary {
+    background-color: $color-primary !important;
+}
+
+/* Borders primarios */
+.border-primary {
+    border-color: $color-primary !important;
+}
+
+/* Focus rings y outlines */
+.form-control:focus,
+.form-select:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: $color-primary !important;
+    box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25) !important;
+}
+
+/* Checkboxes y radios */
+.form-check-input:checked {
+    background-color: $color-primary !important;
+    border-color: $color-primary !important;
+}
+
+.form-check-input:focus {
+    border-color: $color-primary !important;
+    box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25) !important;
+}
+
+/* Custom switches */
+.custom-control-input:checked ~ .custom-control-label::before,
+.form-switch .form-check-input:checked {
+    background-color: $color-primary !important;
+    border-color: $color-primary !important;
+}
+
+/* Progress bars */
+.progress-bar {
+    background-color: $color-primary !important;
+}
+
+/* List group active items */
+.list-group-item.active {
+    background-color: $color-primary !important;
+    border-color: $color-primary !important;
+}
+
+/* Accordion active */
+.accordion-button:not(.collapsed) {
+    color: $color-primary !important;
+    background-color: rgba($color-primary, 0.1) !important;
+}
+
+.accordion-button:focus {
+    border-color: $color-primary !important;
+    box-shadow: 0 0 0 0.2rem rgba($color-primary, 0.25) !important;
+}
+
+/* Selection highlight */
+::selection {
+    background-color: rgba($color-primary, 0.3) !important;
+}
+
+/* Spinner / Loading */
+.spinner-border.text-primary {
+    color: $color-primary !important;
+}
+
+/* RemUI specific overrides */
+.edw-tabs-navigation .nav-tabs .nav-item .nav-link.active::before,
+.primary-navigation .nav-link.active::before {
+    border-bottom-color: $color-primary !important;
+}
+
+/* Course cards and categories */
+.dashboard-card .categoryname,
+.categoryname.text-truncate {
+    background-color: $color-primary !important;
+}
+
+/* Popover and tooltips */
+.popover-header {
+    background-color: $color-primary !important;
+    color: $color-white !important;
+}
+
+/* Activity completion */
+.activity-completion .btn-success,
+.completioninfo .badge-success {
+    background-color: $color-primary !important;
+    border-color: $color-primary !important;
+}
+
+/* Calendar events */
+.calendar_event_site,
+.calendar_event_course {
+    border-left-color: $color-primary !important;
+}
+
+/* Drag handles and sortable elements */
+.sortable-list .sortable-item.selected,
+.listitem.selected {
+    border-left-color: $color-primary !important;
+}
+
+/* File picker and file manager */
+.fp-navbar .fp-viewbar .fp-vb-icons.checked,
+.filemanager .fp-select.checked {
+    background-color: $color-primary !important;
+}
+
+/* Question bank */
+.questionbankwindow .header {
+    background-color: $color-primary !important;
+}
+
+/* Grading and grades */
+.gradetreebox .column.selected {
+    background-color: rgba($color-primary, 0.1) !important;
+}
+
+/* ==========================================================================
+   30. DARK MODE - Estilos para modo oscuro INTEB
    Compatible con el sistema de dark mode de RemUI (nighteyeplgn)
    ========================================================================== */
 
