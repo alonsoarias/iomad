@@ -27,6 +27,7 @@
 /* ---------------------------------------------
    FORZAR FUENTES GLOBALMENTE
    Sobrescribe Bootstrap/RemUI defaults
+   IMPORTANTE: Excluir fuentes de iconos
    --------------------------------------------- */
 
 // Base global - Aplica a todo el documento
@@ -35,13 +36,6 @@ body {
     font-family: $font-family-sans-serif !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-// Selector universal para máxima cobertura
-*,
-*::before,
-*::after {
-    font-family: inherit;
 }
 
 // Body y contenedores principales
@@ -154,6 +148,83 @@ samp,
 .code-editor,
 .ace_editor {
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+}
+
+/* ---------------------------------------------
+   EXCEPCIONES - Fuentes de Iconos
+   CRÍTICO: No sobrescribir estas fuentes
+   --------------------------------------------- */
+
+// FontAwesome icons
+.fa,
+.fas,
+.far,
+.fal,
+.fad,
+.fab,
+.fa-solid,
+.fa-regular,
+.fa-light,
+.fa-duotone,
+.fa-brands,
+[class^="fa-"],
+[class*=" fa-"] {
+    font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Brands', 'FontAwesome' !important;
+}
+
+// FontAwesome pseudo-elements
+.fa::before,
+.fas::before,
+.far::before,
+.fal::before,
+.fab::before,
+[class^="fa-"]::before,
+[class*=" fa-"]::before {
+    font-family: 'Font Awesome 6 Free', 'Font Awesome 6 Brands', 'FontAwesome' !important;
+}
+
+// Remui icon font
+.remui-icon,
+[class^="remui-"],
+[class*=" remui-"],
+.edw-icon,
+[class^="edw-icon"],
+[class*=" edw-icon"] {
+    font-family: 'Remui', sans-serif !important;
+}
+
+// Moodle core icons
+.icon,
+.iconsmall,
+.iconlarge,
+.navicon,
+.smallicon,
+img.icon,
+i.icon {
+    // Los iconos de imagen no necesitan font-family
+    // Solo asegurar que no se sobrescriban
+}
+
+// Material icons (si se usan)
+.material-icons,
+.material-icons-outlined,
+.material-icons-round,
+.material-icons-sharp {
+    font-family: 'Material Icons' !important;
+}
+
+// Bootstrap icons
+.bi,
+[class^="bi-"],
+[class*=" bi-"] {
+    font-family: 'bootstrap-icons' !important;
+}
+
+// Glyphicons (legacy)
+.glyphicon,
+[class^="glyphicon-"],
+[class*=" glyphicon-"] {
+    font-family: 'Glyphicons Halflings' !important;
 }
 
 /* ---------------------------------------------
