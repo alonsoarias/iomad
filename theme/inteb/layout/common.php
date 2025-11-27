@@ -33,10 +33,10 @@ global $PAGE;
 
 // Siteloader - Usar configuración del tema padre (remui)
 $loaderimage = false;
-if (get_config('theme_remui', 'enablesiteloader')) {
+if(get_config('theme_remui','enablesiteloader')){
+    // Adding loader image before everything else.
     $loaderimage = \theme_remui\utility::get_site_loader();
 }
-
 // Add block button in editing mode.
 $addblockbutton = $OUTPUT->addblockbutton();
 
