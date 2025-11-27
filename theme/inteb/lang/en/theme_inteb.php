@@ -104,79 +104,71 @@ $string['abouttitle_default'] = 'About us';
 $string['abouttext'] = 'About text';
 $string['abouttextdesc'] = 'Text for the About section in the footer. Includes institutional information and GOV.CO branding.';
 $string['abouttext_default'] = '
-<div class="iser-footer-content">
-    <!-- Institutional Information -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-12 col-md-10 col-lg-8">
-            <p class="mb-2"><strong>Instituto Superior de Educación Rural - ISER</strong></p>
-            <p class="mb-1">Public Higher Education Institution</p>
-            <p class="mb-1">Supervised by the Ministry of National Education</p>
-            <p class="mb-0"><strong>NIT:</strong> 890.501.578-4</p>
-        </div>
-    </div>
-
-    <!-- Contact Information -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-12 col-md-6 col-lg-4 mb-3 mb-md-0">
-            <h4 class="h6 mb-2"><i class="fa fa-map-marker me-2"></i> Address</h4>
-            <p class="mb-0 small">Calle 8 # 8-155, Barrio Chapinero<br>Pamplona, Norte de Santander<br>Colombia - P.O. Box 1031</p>
-        </div>
-        <div class="col-12 col-md-6 col-lg-4">
-            <h4 class="h6 mb-2"><i class="fa fa-phone me-2"></i> Contact</h4>
-            <p class="mb-1 small"><strong>PBX:</strong> (607) 568 6868</p>
-            <p class="mb-1 small"><strong>Email:</strong> <a href="mailto:iserpam@iser.edu.co">iserpam@iser.edu.co</a></p>
-            <p class="mb-0 small"><strong>Hours:</strong> Mon-Fri 8:00-12:00 | 14:00-18:00</p>
-        </div>
-    </div>
-
-    <!-- Social Media -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-12 col-md-8">
-            <div class="social-links d-flex justify-content-center gap-3 flex-wrap">
-                <a href="https://www.facebook.com/iser.pamplona" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light" aria-label="Facebook ISER">
-                    <i class="fa fa-facebook"></i> Facebook
-                </a>
-                <a href="https://twitter.com/Iser1956" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light" aria-label="Twitter ISER">
-                    <i class="fa fa-twitter"></i> Twitter
-                </a>
-                <a href="https://www.instagram.com/iser.oficial" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light" aria-label="Instagram ISER">
-                    <i class="fa fa-instagram"></i> Instagram
-                </a>
-                <a href="https://www.youtube.com/@ISER.Oficial" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-light" aria-label="YouTube ISER">
-                    <i class="fa fa-youtube-play"></i> YouTube
-                </a>
+<div class="iser-footer-govco">
+    <div class="row justify-content-between">
+        <!-- COLUMN 1: Institutional and GOV.CO logos -->
+        <div class="col-12 col-md-4 col-lg-3 mb-4 mb-md-0">
+            <div class="footer-logos-column">
+                <div class="footer-logo-item mb-3">
+                    <a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer" aria-label="ISER Portal">
+                        <img src="/theme/inteb/pix/logo inteb revolutions version blanca.png" alt="ISER Logo" class="footer-logo-iser">
+                    </a>
+                </div>
+                <div class="footer-logo-item mb-3">
+                    <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="GOV.CO Portal">
+                        <img src="/theme/inteb/pix/logo-govco.webp" alt="GOV.CO Logo" class="footer-logo-govco">
+                    </a>
+                </div>
+                <div class="footer-logo-item">
+                    <a href="https://www.colombia.co/" target="_blank" rel="noopener noreferrer" aria-label="Colombia Country Brand">
+                        <img src="/theme/inteb/pix/marca_pais.png" alt="Colombia Country Brand Logo" class="footer-logo-colombia">
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Institutional Links -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-12 col-md-10">
-            <div class="institutional-links d-flex justify-content-center gap-3 flex-wrap small">
-                <a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer">ISER Portal</a>
-                <span class="text-muted">|</span>
-                <a href="https://www.iser.edu.co/index.php/transparencia-y-acceso-a-la-informacion-publica/" target="_blank" rel="noopener noreferrer">Transparency</a>
-                <span class="text-muted">|</span>
-                <a href="https://ww1.iser.edu.co/iser/qrsIG/index.jsp" target="_blank" rel="noopener noreferrer">PQRS</a>
-                <span class="text-muted">|</span>
-                <a href="https://www.iser.edu.co/index.php/atencion-al-ciudadano-y-servicios/" target="_blank" rel="noopener noreferrer">Citizen Services</a>
-                <span class="text-muted">|</span>
-                <a href="https://www.iser.edu.co/index.php/oferta-academica-2024/" target="_blank" rel="noopener noreferrer">Academic Programs</a>
+        <!-- COLUMN 2: Contact information -->
+        <div class="col-12 col-md-4 col-lg-5 mb-4 mb-md-0">
+            <div class="footer-info-column">
+                <p class="footer-info-title"><strong>Instituto Superior de Educación Rural - ISER</strong></p>
+                <p class="footer-info-text">Public Higher Education Institution<br>Supervised by the Ministry of National Education</p>
+                <p class="footer-info-text"><strong>NIT:</strong> 890.501.578-4</p>
+
+                <p class="footer-info-title mt-3"><strong>Address</strong></p>
+                <p class="footer-info-text">Calle 8 # 8-155, Barrio Chapinero<br>Pamplona, Norte de Santander<br>Colombia - P.O. Box 1031</p>
+
+                <p class="footer-info-title mt-3"><strong>Contact</strong></p>
+                <p class="footer-info-text"><strong>PBX:</strong> (607) 568 6868</p>
+                <p class="footer-info-text"><strong>Email:</strong> <a href="mailto:iserpam@iser.edu.co">iserpam@iser.edu.co</a></p>
+
+                <p class="footer-info-title mt-3"><strong>Office Hours</strong></p>
+                <p class="footer-info-text">Monday to Friday 8:00 a.m. to 12:00 p.m.<br>and 2:00 p.m. to 6:00 p.m.</p>
             </div>
         </div>
-    </div>
 
-    <!-- GOV.CO Logos and Country Brand -->
-    <div class="row justify-content-center align-items-center mt-4 pt-3 border-top border-light">
-        <div class="col-6 col-md-3 text-center mb-3 mb-md-0">
-            <a href="https://www.gov.co/" target="_blank" rel="noopener noreferrer" aria-label="GOV.CO Portal">
-                <img src="https://www.gov.co/assets/images/logo-gov-co-blanco.svg" alt="GOV.CO Logo" style="height: 40px; max-width: 100%;" loading="lazy">
-            </a>
-        </div>
-        <div class="col-6 col-md-3 text-center">
-            <a href="https://www.colombia.co/" target="_blank" rel="noopener noreferrer" aria-label="Colombia Country Brand">
-                <img src="https://www.colombia.co/static/img/head/logo-header.svg" alt="Colombia Logo" style="height: 35px; max-width: 100%;" loading="lazy">
-            </a>
+        <!-- COLUMN 3: Links and social media -->
+        <div class="col-12 col-md-4 col-lg-4">
+            <div class="footer-links-column">
+                <p class="footer-info-title"><strong>Institutional Links</strong></p>
+                <p class="footer-info-text"><a href="https://www.iser.edu.co/" target="_blank" rel="noopener noreferrer">ISER Portal</a></p>
+                <p class="footer-info-text"><a href="https://www.iser.edu.co/index.php/transparencia-y-acceso-a-la-informacion-publica/" target="_blank" rel="noopener noreferrer">Transparency</a></p>
+                <p class="footer-info-text"><a href="https://ww1.iser.edu.co/iser/qrsIG/index.jsp" target="_blank" rel="noopener noreferrer">PQRS</a></p>
+                <p class="footer-info-text"><a href="https://www.iser.edu.co/index.php/atencion-al-ciudadano-y-servicios/" target="_blank" rel="noopener noreferrer">Citizen Services</a></p>
+                <p class="footer-info-text"><a href="https://www.iser.edu.co/index.php/oferta-academica-2024/" target="_blank" rel="noopener noreferrer">Academic Programs</a></p>
+
+                <p class="footer-info-title mt-3"><strong>Oversight Entities</strong></p>
+                <p class="footer-info-text"><a href="https://www.mineducacion.gov.co/" target="_blank" rel="noopener noreferrer">Ministry of National Education</a></p>
+                <p class="footer-info-text"><a href="https://www.contraloria.gov.co/" target="_blank" rel="noopener noreferrer">Comptroller General of the Republic</a></p>
+                <p class="footer-info-text"><a href="https://www.procuraduria.gov.co/" target="_blank" rel="noopener noreferrer">Attorney General of the Nation</a></p>
+
+                <p class="footer-info-title mt-3"><strong>Follow Us</strong></p>
+                <div class="footer-social-icons">
+                    <a href="https://www.facebook.com/iser.pamplona" target="_blank" rel="noopener noreferrer" aria-label="Facebook ISER" class="footer-social-link"><i class="fa fa-facebook"></i></a>
+                    <a href="https://twitter.com/Iser1956" target="_blank" rel="noopener noreferrer" aria-label="Twitter ISER" class="footer-social-link"><i class="fa fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/iser.oficial" target="_blank" rel="noopener noreferrer" aria-label="Instagram ISER" class="footer-social-link"><i class="fa fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@ISER.Oficial" target="_blank" rel="noopener noreferrer" aria-label="YouTube ISER" class="footer-social-link"><i class="fa fa-youtube-play"></i></a>
+                </div>
+            </div>
         </div>
     </div>
 </div>';
