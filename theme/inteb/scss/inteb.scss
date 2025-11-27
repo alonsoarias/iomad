@@ -1250,58 +1250,8 @@ section.node-category {
 
 /* ==========================================================================
    12. COURSEINDEX (DRAWER)
+   Los estilos de courseindex ahora se importan desde _courseindex_progress.scss
    ========================================================================== */
-
-/* Nueva regla para courseindex-section-title */
-#theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-section-title {
-    padding: 10px 24px;
-    color: $color-white;
-    background-color: $color-primary;
-    border-radius: 0;
-    justify-content: space-between;
-}
-
-#theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-section-title .edw-icon,
-#theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-section-title .fa-lock {
-    font-size: 24px;
-    height: 24px;
-    width: 24px;
-    color: $color-white;
-}
-
-#theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-item-content .courseindex-sectioncontent .courseindex-item .edw-icon,
-#theme_remui-drawers-courseindex .drawercontent #courseindex #courseindex-content .courseindex .courseindex-section .courseindex-item-content .courseindex-sectioncontent .courseindex-item .fa-lock {
-    font-size: 18px;
-    height: 18px;
-    width: 18px;
-    color: $color-white;
-}
-
-/* Courseindex Collapsed by Default */
-#theme_remui-drawers-courseindex .courseindex-chevron.collapsed {
-    .collapsed-icon {
-        display: inline-block !important;
-    }
-
-    .expanded-icon {
-        display: none !important;
-    }
-}
-
-#theme_remui-drawers-courseindex .courseindex-chevron:not(.collapsed) {
-    .collapsed-icon {
-        display: none !important;
-    }
-
-    .expanded-icon {
-        display: inline-block !important;
-    }
-}
-
-/* Transición suave para el colapso/expansión */
-#theme_remui-drawers-courseindex .courseindex-item-content {
-    transition: height 0.35s ease;
-}
 
 /* ==========================================================================
    13. FORMULARIOS Y AUTOCOMPLETADO
@@ -4213,932 +4163,488 @@ html[nighteyeplgn="active"] {
     }
 }
 
-/* ==========================================================================
-   COURSEINDEX - SIMPLIFIED DESIGN WITH ISER COLORS
-   Clean, professional interface following ISER brand guidelines
-   ========================================================================== */
 
-/* ==========================================================================
-   COURSEINDEX PROGRESS STYLES
-   Copied from theme_compecer and adapted to ISER color palette
-   ========================================================================== */
 
-// Variables Locales
-$progress-bg: rgba(0, 0, 0, 0.1);
-$progress-height: 8px;
-$progress-border-radius: 10px;
-$progress-section-height: 6px;
-$progress-animation-duration: 0.6s;
-$progress-shimmer-duration: 2s;
+/* ===================================
+   Course Index - Complete Redesign
+   Professional & Clean Interface (Replicated from compecer theme)
+   =================================== */
 
-// Colores de progreso según porcentaje (ISER palette)
-$progress-color-danger: $color-secondary;  // Rojo ISER < 30%
-$progress-color-warning: $color-terciary;  // Amarillo ISER 30-70%
-$progress-color-success: $color-primary;   // Verde ISER > 70%
+// Color Variables
+$ci-primary: $color-primary;
+$ci-success: $my-verde;
+$ci-warning: $color-terciary;
+$ci-danger: $color-secondary;
+$ci-gray-light: $my-gris-claro;
+$ci-gray-medium: $my-gris-medio;
+$ci-gray-dark: $my-gris-oscuro;
+$ci-white: $color-white;
+$ci-text: $my-negro;
+$ci-text-secondary: $my-gris-oscuro;
 
-// -----------------------------------------------------
-// 1. CONTENEDOR PRINCIPAL DE PROGRESO GLOBAL
-// -----------------------------------------------------
-.courseindex-progress-container {
-    background: linear-gradient(135deg,
-        rgba(255, 255, 255, 0.95),
-        rgba(249, 250, 251, 0.95));
-    border-radius: 12px;
-    padding: 1rem;
-    margin: 0 0.5rem 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid $color-primary;
-    transition: all 0.3s ease;
+/* ============================
+   Course Progress Header
+   ============================ */
+.courseindex-progress-header {
+  background: $ci-white;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: 1px solid $ci-gray-medium;
 
-    &:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-        transform: translateY(-2px);
-    }
+  .progress-title {
+    color: $ci-text;
+    font-size: 0.813rem;
+    font-weight: 600;
+    margin: 0 0 0.625rem 0;
+  }
 
-    &.no-completion {
-        display: none;
-    }
-}
-
-// -----------------------------------------------------
-// 2. HEADER DE PROGRESO GLOBAL
-// -----------------------------------------------------
-.progress-header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-}
-
-.progress-title {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: $color-primary;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin: 0;
-}
-
-.progress-stats {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-}
-
-.progress-percentage {
-    font-size: 1.5rem;
-    color: $color-primary;
-    font-weight: 700;
-    line-height: 1;
-}
-
-.progress-details {
-    font-size: 0.75rem;
-    color: #666;
-    line-height: 1.2;
-}
-
-// -----------------------------------------------------
-// 3. BARRA DE PROGRESO GLOBAL
-// -----------------------------------------------------
-.progress {
-    height: $progress-height;
-    background-color: $progress-bg;
-    border-radius: $progress-border-radius;
-    overflow: hidden;
+  .progress-bar-wrapper {
     position: relative;
-}
-
-.progress-bar {
-    height: 100%;
-    border-radius: $progress-border-radius;
-    transition: width $progress-animation-duration cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
+    background: $ci-gray-light;
+    height: 8px;
+    border-radius: 4px;
     overflow: hidden;
 
-    &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg,
-            transparent,
-            rgba(255, 255, 255, 0.3),
-            transparent);
-        animation: shimmer $progress-shimmer-duration infinite;
-    }
+    .progress-bar-fill {
+      height: 100%;
+      background: $ci-primary;
+      border-radius: 4px;
+      transition: width 0.6s ease;
 
-    &.bg-danger {
-        background-color: $progress-color-danger;
-    }
+      // Color states based on progress
+      &.progress-0 {
+        width: 0% !important;
+        background: $ci-gray-medium;
+      }
 
-    &.bg-warning {
-        background-color: $progress-color-warning;
-    }
+      &.progress-low {
+        background: $ci-danger;
+      }
 
-    &.bg-success {
-        background-color: $progress-color-success;
-    }
+      &.progress-medium {
+        background: $ci-warning;
+      }
 
-    &.bg-info {
-        background-color: #17a2b8;
+      &.progress-high,
+      &.progress-complete {
+        background: $ci-success;
+      }
     }
+  }
+
+  .progress-percentage-display {
+    color: $ci-text;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    text-align: right;
+  }
 }
 
-@keyframes shimmer {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(200%); }
-}
+/* No Tracking Message */
+.courseindex-no-tracking {
+  background: $ci-gray-light;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid $ci-warning;
 
-.progress-rounded {
-    border-radius: $progress-border-radius;
-}
-
-// -----------------------------------------------------
-// 4. LISTA DE ACTIVIDADES (opcional)
-// -----------------------------------------------------
-.progress-activity-list {
-    list-style: none;
-    padding: 0;
-    margin: 0.75rem 0 0 0;
-    font-size: 0.75rem;
-    color: #666;
-
-    li {
-        display: inline-block;
-        margin-right: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        background: rgba($color-primary, 0.1);
-        border-radius: 4px;
-
-        &:last-child {
-            margin-right: 0;
-        }
-    }
-}
-
-// -----------------------------------------------------
-// 5. SECCIÓN CON PROGRESO
-// -----------------------------------------------------
-.course-index-section {
-    margin-bottom: 0.5rem;
-    border-radius: 8px;
-    overflow: hidden;
-    background: $color-white;
-    transition: box-shadow 0.3s ease;
-
-    &:hover {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-}
-
-// -----------------------------------------------------
-// 6. HEADER DE SECCIÓN CON PROGRESO
-// -----------------------------------------------------
-.course-index-header {
+  .no-tracking-message {
     display: flex;
     align-items: center;
-    padding: 0.75rem;
-    background: $color-primary;
-    color: $color-white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    gap: 0.5rem;
+    color: $ci-text-secondary;
+    font-size: 0.875rem;
 
-    &:hover {
-        background-color: darken($color-primary, 5%);
+    i {
+      margin-right: 0.75rem;
+      color: $ci-warning;
+      font-size: 1.25rem;
     }
-
-    .section-toggle {
-        background: none;
-        border: none;
-        color: $color-white;
-        padding: 0;
-        margin: 0;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.5rem;
-        height: 1.5rem;
-        transition: transform 0.3s ease;
-
-        i {
-            transition: transform 0.3s ease;
-            font-size: 1rem;
-        }
-
-        &.collapsed i {
-            transform: rotate(0deg);
-        }
-
-        &:not(.collapsed) i {
-            transform: rotate(90deg);
-        }
-
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        &:focus {
-            outline: 2px solid rgba(255, 255, 255, 0.3);
-            outline-offset: 2px;
-        }
-    }
-
-    .section-link {
-        flex: 1;
-        color: $color-white;
-        font-weight: 500;
-        text-decoration: none;
-        font-size: 0.95rem;
-
-        &:hover {
-            text-decoration: none;
-            color: $color-white;
-        }
-
-        &:focus {
-            outline: 2px solid rgba(255, 255, 255, 0.3);
-            outline-offset: 2px;
-        }
-    }
-
-    .section-progress-badge {
-        font-weight: 600;
-        font-size: 0.875rem;
-        padding: 0.25rem 0.5rem;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-        margin-left: auto;
-        min-width: 3rem;
-        text-align: center;
-        transition: background-color 0.3s ease;
-
-        &:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-    }
+  }
 }
 
-// Section toggle (standalone)
-.course-index-toggle {
-    background: none;
-    border: none;
-    color: $color-white;
-    padding: 0;
-    margin: 0;
+/* ============================
+   Icon Legend
+   ============================ */
+.courseindex-icon-legend {
+  background: $ci-white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: 1px solid $ci-gray-medium;
+
+  .legend-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $ci-text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+
+  .legend-items {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.813rem;
+      color: $ci-text;
+
+      .legend-icon {
+        font-size: 1rem;
+
+        &.not-started {
+          color: $ci-gray-dark;
+        }
+
+        &.in-progress {
+          color: $ci-warning;
+        }
+
+        &.completed {
+          color: $ci-success;
+        }
+      }
+    }
+  }
+}
+
+/* ============================
+   Course Index Sections
+   ============================ */
+.course-index-section {
+  margin-bottom: 0.5rem;
+
+  // Section Header
+  .course-index-header {
+    padding: 0.75rem 0.875rem;
+    background: $ci-white;
+    border: 1px solid $ci-gray-light;
+    border-radius: 4px;
+    transition: background 0.15s ease;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+
+    &:hover {
+      background: $ci-gray-light;
+    }
+
+    // Current section highlighting
+    &.current-section {
+      background: $ci-gray-light;
+      border-left: 3px solid $ci-primary;
+      padding-left: calc(0.875rem - 2px);
+    }
+
+    // Dimmed/hidden sections
+    &.dimmed {
+      opacity: 0.5;
+    }
+
+    // Toggle icon (chevron)
+    .course-index-toggle {
+      flex-shrink: 0;
+      color: $ci-text-secondary;
+      font-size: 0.813rem;
+      transition: transform 0.15s ease;
+      text-decoration: none;
+
+      &:not(.collapsed) i {
+        transform: rotate(180deg);
+      }
+
+      i {
+        transition: transform 0.15s ease;
+      }
+    }
+
+    // Section title
+    .section-title {
+      flex: 1;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: $ci-text;
+      margin: 0;
+    }
+
+    // Section percentage badge
+    .section-percentage {
+      flex-shrink: 0;
+      background: $ci-gray-light;
+      color: $ci-text;
+      padding: 0.188rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      min-width: 45px;
+      text-align: center;
+    }
+  }
+
+  // Section Content (activities list)
+  .course-index-content {
+    padding-left: 2rem;
+    padding-top: 0.5rem;
+
+    .course-index-section-content {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}
+
+/* ============================
+   Course Activities
+   ============================ */
+.course-index-item {
+  padding: 0.625rem 0.875rem;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+
+  &:hover {
+    background: $ci-gray-light;
+  }
+
+  &.active {
+    background: lighten($ci-primary, 48%);
+  }
+
+  &.dimmed {
+    opacity: 0.5;
+  }
+
+  // Activity completion icon
+  .activity-status-icon {
+    flex-shrink: 0;
+    font-size: 1rem;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    transition: transform 0.3s ease;
 
-    i {
-        transition: transform 0.3s ease;
-        font-size: 1rem;
+    &.status-not-started {
+      color: $ci-gray-dark;
+
+      &::before {
+        content: "○";
+      }
     }
 
-    &.collapsed i {
-        transform: rotate(0deg);
+    &.status-in-progress {
+      color: $ci-warning;
+
+      &::before {
+        content: "◐";
+      }
     }
 
-    &:not(.collapsed) i {
-        transform: rotate(180deg);
+    &.status-completed {
+      color: $ci-success;
+      font-weight: bold;
+
+      &::before {
+        content: "✓";
+      }
     }
+  }
+
+  // Activity link
+  .course-index-link {
+    flex: 1;
+    color: $ci-text;
+    text-decoration: none;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    transition: color 0.2s ease;
 
     &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
+      color: $ci-primary;
     }
-
-    &:focus {
-        outline: 2px solid rgba(255, 255, 255, 0.3);
-        outline-offset: 2px;
-    }
+  }
 }
 
-// Section title (standalone)
-.section-title {
-    flex: 1;
-    color: $color-white;
-    font-weight: 500;
-    font-size: 0.95rem;
-    margin: 0;
-}
+/* ============================
+   Responsive Design
+   ============================ */
+@media (max-width: 767px) {
+  .courseindex-progress-header {
+    padding: 1.25rem;
 
-// Section percentage badge (standalone)
-.section-percentage {
-    font-weight: 600;
-    font-size: 0.875rem;
-    padding: 0.25rem 0.5rem;
-    background: $color-terciary;
-    border-radius: 12px;
-    margin-right: 0.5rem;
-    min-width: 3rem;
-    text-align: center;
-    color: $my-negro;
-}
-
-// -----------------------------------------------------
-// 7. CONTENIDO DE SECCIÓN
-// -----------------------------------------------------
-.course-index-content,
-.section-content {
-    padding: 0.75rem;
-    background: $color-white;
-
-    &.collapse:not(.show) {
-        display: none;
+    .progress-title {
+      font-size: 0.813rem;
     }
 
-    &.collapsing {
-        transition: height 0.35s ease;
+    .progress-percentage-display {
+      font-size: 1.125rem;
     }
-}
+  }
 
-// -----------------------------------------------------
-// 8. BARRA DE PROGRESO POR SECCIÓN (mini)
-// -----------------------------------------------------
-.section-progress-bar {
-    margin-bottom: 0.75rem;
-    padding: 0.5rem;
-    background: $my-gris-claro;
-    border-radius: 6px;
+  .courseindex-icon-legend {
+    padding: 0.875rem;
 
-    .progress {
-        height: $progress-section-height;
-        margin-bottom: 0.25rem;
+    .legend-items {
+      gap: 0.75rem;
+
+      .legend-item {
+        font-size: 0.75rem;
+      }
     }
+  }
 
-    .progress-text {
-        font-size: 0.7rem;
-        color: #666;
-        display: block;
-        text-align: right;
+  .course-index-section {
+    .course-index-header {
+      padding: 0.75rem 0.875rem;
+
+      .section-title {
+        font-size: 0.875rem;
+      }
+
+      .section-percentage {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+      }
     }
-}
+  }
 
-// -----------------------------------------------------
-// 9. LISTA DE ACTIVIDADES DE SECCIÓN
-// -----------------------------------------------------
-.course-index-section-content,
-.activity-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-    li {
-        margin-bottom: 0.5rem;
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-}
-
-// -----------------------------------------------------
-// 10. INDICADORES DE ESTADO DE ACTIVIDADES
-// -----------------------------------------------------
-.activity-item {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
+  .course-index-item {
+    padding: 0.5rem 0.75rem;
     gap: 0.5rem;
 
-    &:hover {
-        background-color: $my-gris-claro;
-    }
-
-    .activity-icon {
-        width: 2rem;
-        height: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: $my-gris-claro;
-        flex-shrink: 0;
-
-        i {
-            font-size: 1rem;
-            color: $color-primary;
-        }
-    }
-
-    .activity-name {
-        flex: 1;
-        font-size: 0.875rem;
-        color: $my-gris-oscuro;
-    }
-
-    .activity-status-indicator {
-        width: 1.5rem;
-        height: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-size: 1rem;
-        flex-shrink: 0;
-        transition: all 0.3s ease;
-    }
-}
-
-// Activity item for courseindex
-.course-index-item {
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 0 0.5rem;
-
     .activity-status-icon {
-        width: 1.125rem;
-        height: 1.125rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        font-size: 0.8rem;
-
-        &.status-not-started::before {
-            content: '○';
-            color: $my-gris-medio;
-        }
-
-        &.status-in-progress::before {
-            content: '◐';
-            color: $color-terciary;
-        }
-
-        &.status-completed::before {
-            content: '✓';
-            color: $color-primary;
-            font-weight: bold;
-        }
+      font-size: 0.875rem;
+      width: 18px;
+      height: 18px;
     }
 
     .course-index-link {
-        flex: 1;
-        display: block;
-        padding: 0.5rem 0.75rem;
-        color: $my-gris-oscuro;
-        font-size: 0.8rem;
-        text-decoration: none;
-        border-left: 2px solid transparent;
-        transition: all 0.15s ease;
-
-        &:hover {
-            background-color: rgba($color-secondary, 0.05);
-            color: $color-secondary;
-            border-left-color: $color-terciary;
-        }
-
-        &.active {
-            background-color: rgba($color-secondary, 0.08);
-            color: $color-secondary;
-            border-left-color: $color-terciary;
-            font-weight: 500;
-        }
+      font-size: 0.813rem;
     }
-
-    &.dimmed .course-index-link {
-        opacity: 0.6;
-    }
+  }
 }
 
-// Estados de actividades
-// ○ No iniciada
-.activity-status-notstarted {
-    .activity-status-indicator {
-        border: 2px solid #ddd;
-        color: #ddd;
+/* =============================================================================
+   INVERSIÓN DE DRAWERS - INTEB Theme
+   Course Index → DERECHA
+   Bloques → IZQUIERDA
+   SOLO APLICADO A PÁGINAS DE CURSO (NO DASHBOARD)
+   ============================================================================= */
 
-        &::before {
-            content: '○';
-            font-size: 1.2rem;
-            line-height: 1;
-        }
-    }
-}
+/* Aplicar inversión SOLO en páginas de curso e incourse */
+body.pagelayout-course,
+body.pagelayout-incourse {
 
-// ◐ En progreso
-.activity-status-inprogress {
-    .activity-status-indicator {
-        border: 2px solid $progress-color-warning;
-        color: $progress-color-warning;
-        background: linear-gradient(90deg,
-            $progress-color-warning 50%,
-            transparent 50%);
+    /* Override de Boost: Courseindex a la DERECHA */
+    @include media-breakpoint-up(lg) {
+        #page.drawers {
+            &.show-drawer-right {
+                /* Cuando courseindex está abierto (ahora a la derecha) */
+                margin-right: $drawer-left-width;
+                margin-left: 0;
+                padding-right: 1rem;
+            }
 
-        &::before {
-            content: '◐';
-            font-size: 1.2rem;
-            line-height: 1;
-            color: $progress-color-warning;
-            text-shadow: 1px 0 0 $color-white, -1px 0 0 $color-white;
+            &.show-drawer-left {
+                /* Cuando bloques están abiertos (ahora a la izquierda) */
+                margin-left: $drawer-right-width;
+                margin-right: 0;
+                padding-left: 1rem;
+            }
+
+            &.show-drawer-left.show-drawer-right {
+                /* Ambos abiertos */
+                margin-left: $drawer-right-width;
+                margin-right: $drawer-left-width;
+            }
         }
     }
 
-    .activity-name {
-        font-weight: 500;
-        color: darken($my-gris-oscuro, 10%);
+    /* Drawer Left (ahora BLOQUES) */
+    .drawer-left {
+        left: 0;
+        right: auto;
+        width: $drawer-right-width;
+        box-shadow: 2px 0px 4px rgba(0, 0, 0, 0.15);
     }
-}
 
-// ✓ Completada
-.activity-status-completed {
-    .activity-status-indicator {
-        background-color: $progress-color-success;
-        border: 2px solid $progress-color-success;
-        color: $color-white;
+    /* Drawer Right (ahora COURSEINDEX) */
+    .drawer-right {
+        right: 0;
+        left: auto;
+        width: $drawer-left-width;
+        box-shadow: -2px 0px 4px rgba(0, 0, 0, 0.15);
+    }
 
-        &::before {
-            content: '✓';
-            font-size: 1rem;
-            line-height: 1;
-            font-weight: bold;
+    /* Botones toggle */
+    .drawer-left-toggle {
+        /* Botón para bloques (ahora a la izquierda) */
+        order: 1;
+    }
+
+    .drawer-right-toggle {
+        /* Botón para courseindex (ahora a la derecha) */
+        order: 2;
+        margin-left: auto;
+    }
+
+    /* Ajustes de sombras según posición */
+    &.drawer-open-left [data-region="blocks-column"] {
+        box-shadow: 2px 0px 2px rgba(10, 10, 10, 0.07);
+    }
+
+    &.drawer-open-right #courseindex {
+        box-shadow: -3px 0px 2px rgba(10, 10, 10, 0.07);
+    }
+
+    /* Estados de body */
+    &.drawer-open-left {
+        @include media-breakpoint-up(md) {
+            margin-left: $drawer-right-width;
         }
     }
 
-    .activity-name {
-        color: lighten($my-gris-oscuro, 10%);
-        text-decoration: line-through;
+    &.drawer-open-right {
+        @include media-breakpoint-up(md) {
+            margin-right: $drawer-left-width;
+        }
     }
 
-    &:hover .activity-name {
-        text-decoration: none;
+    /* Courseindex específico a la DERECHA */
+    #courseindex {
+        &.drawer-right {
+            right: 0;
+            left: auto;
+        }
+    }
+
+    /* Bloques específico a la IZQUIERDA */
+    [data-region="blocks-column"] {
+        &.drawer-left {
+            left: 0;
+            right: auto;
+        }
     }
 }
 
-// Sin tracking
-.activity-status-notracking {
-    .activity-status-indicator {
-        display: none;
-    }
-}
-
-// -----------------------------------------------------
-// 11. DRAWER DEL COURSEINDEX
-// -----------------------------------------------------
-#courseindex,
-.course-index-drawer,
+/* Courseindex new design base styles */
 .courseindex-new-design {
-    background: $color-white;
+    background: $ci-white;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-
-    .drawer-header {
-        padding: 1rem;
-        background: $color-primary;
-        color: $color-white;
-        border-bottom: 2px solid darken($color-primary, 10%);
-
-        h5 {
-            margin: 0;
-            font-size: 1.125rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-    }
 
     #courseindex-content {
         padding: 0.5rem 0;
     }
 }
-
-// Course progress header
-.courseindex-progress-header {
-    background: linear-gradient(135deg,
-        rgba(255, 255, 255, 0.95),
-        rgba(249, 250, 251, 0.95));
-    border-radius: 12px;
-    padding: 1rem;
-    margin: 0.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid $color-primary;
-
-    .progress-title {
-        font-size: 0.875rem;
-        font-weight: 700;
-        color: $color-primary;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin: 0 0 0.5rem 0;
-    }
-
-    .progress-bar-wrapper {
-        height: 8px;
-        background-color: rgba($color-primary, 0.2);
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .progress-bar-fill {
-        height: 100%;
-        border-radius: 10px;
-        background-color: $color-primary;
-        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .progress-percentage-display {
-        font-size: 1.5rem;
-        color: $color-primary;
-        font-weight: 700;
-        text-align: center;
-        margin-top: 0.5rem;
-    }
-}
-
-// No tracking message
-.courseindex-no-tracking {
-    padding: 0.75rem;
-    margin: 0.5rem;
-
-    .no-tracking-message {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem;
-        background: rgba($color-primary, 0.1);
-        border-radius: 8px;
-        color: $color-primary;
-        font-size: 0.8rem;
-
-        i { font-size: 1rem; }
-    }
-}
-
-// Icon legend
-.courseindex-icon-legend {
-    padding: 0.75rem;
-    margin: 0 0.5rem 0.75rem;
-    background: $my-gris-claro;
-    border-radius: 8px;
-
-    .legend-title {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: $my-gris-oscuro;
-        margin-bottom: 0.5rem;
-        text-transform: uppercase;
-    }
-
-    .legend-items {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-    }
-
-    .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 0.375rem;
-        font-size: 0.75rem;
-        color: $my-gris-oscuro;
-
-        .legend-icon {
-            font-size: 0.875rem;
-            &.not-started { color: $my-gris-medio; }
-            &.in-progress { color: $color-terciary; }
-            &.completed { color: $color-primary; }
-        }
-    }
-}
-
-// -----------------------------------------------------
-// 12. ESTADOS ESPECIALES
-// -----------------------------------------------------
-.courseindex-progress-loading {
-    .progress-bar {
-        background: linear-gradient(90deg,
-            $my-gris-claro 25%,
-            lighten($my-gris-claro, 3%) 50%,
-            $my-gris-claro 75%);
-        background-size: 200% 100%;
-        animation: loading 1.5s infinite;
-    }
-}
-
-@keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
-
-.courseindex-progress-error {
-    border-left-color: $progress-color-danger;
-
-    .progress-title {
-        color: $progress-color-danger;
-    }
-
-    .progress-bar {
-        background-color: $progress-color-danger;
-    }
-}
-
-.courseindex-progress-empty {
-    opacity: 0.6;
-
-    .progress-percentage {
-        color: $my-gris-oscuro;
-    }
-}
-
-// -----------------------------------------------------
-// 13. ANIMACIONES Y TRANSICIONES
-// -----------------------------------------------------
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.courseindex-progress-container {
-    animation: fadeInUp 0.4s ease-out;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-.progress-percentage.updated {
-    animation: pulse 0.5s ease-in-out;
-}
-
-// -----------------------------------------------------
-// 14. ACCESIBILIDAD
-// -----------------------------------------------------
-.course-index-header .section-toggle:focus-visible,
-.course-index-header .section-link:focus-visible,
-.activity-item:focus-visible {
-    outline: 3px solid $color-primary;
-    outline-offset: 2px;
-}
-
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
-
-// -----------------------------------------------------
-// 15. RESPONSIVE DESIGN
-// -----------------------------------------------------
-@media (max-width: 991px) {
-    .courseindex-progress-container {
-        margin: 0 0.5rem 0.75rem;
-        padding: 0.875rem;
-    }
-
-    .progress-percentage {
-        font-size: 1.35rem;
-    }
-
-    .progress-activity-list li {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.4rem;
-    }
-}
-
-@media (max-width: 767px) {
-    .courseindex-progress-container {
-        margin: 0 0.25rem 0.75rem;
-        padding: 0.75rem;
-    }
-
-    .progress-percentage {
-        font-size: 1.25rem;
-    }
-
-    .progress-details {
-        font-size: 0.7rem;
-    }
-
-    .progress-activity-list {
-        display: none;
-    }
-
-    .course-index-header {
-        padding: 0.625rem;
-        font-size: 0.875rem;
-    }
-
-    .section-progress-badge {
-        font-size: 0.75rem;
-        padding: 0.2rem 0.4rem;
-        min-width: 2.5rem;
-    }
-
-    .activity-item {
-        padding: 0.4rem;
-        font-size: 0.8rem;
-
-        .activity-icon {
-            width: 1.75rem;
-            height: 1.75rem;
-
-            i {
-                font-size: 0.875rem;
-            }
-        }
-
-        .activity-status-indicator {
-            width: 1.25rem;
-            height: 1.25rem;
-            font-size: 0.875rem;
-        }
-    }
-
-    .course-index-item .course-index-link {
-        font-size: 0.75rem;
-        padding: 0.4rem 0.5rem;
-    }
-
-    .courseindex-icon-legend .legend-items {
-        flex-direction: column;
-        gap: 0.375rem;
-    }
-}
-
-@media (max-width: 479px) {
-    .courseindex-progress-container {
-        border-radius: 8px;
-        padding: 0.625rem;
-    }
-
-    .progress-title {
-        font-size: 0.75rem;
-    }
-
-    .progress-percentage {
-        font-size: 1.125rem;
-    }
-
-    .progress-header {
-        gap: 0.375rem;
-        margin-bottom: 0.625rem;
-    }
-
-    .course-index-header .section-link {
-        font-size: 0.8rem;
-    }
-}
-
-// -----------------------------------------------------
-// 16. PRINT STYLES
-// -----------------------------------------------------
-@media print {
-    .courseindex-progress-container {
-        box-shadow: none;
-        border: 1px solid #ddd;
-    }
-
-    .progress-bar::after {
-        display: none;
-    }
-
-    .course-index-header .section-toggle {
-        display: none;
-    }
-
-    .section-content {
-        display: block !important;
-    }
-}
-
-// -----------------------------------------------------
-// 17. ACCESSIBILITY - Reduced motion
-// -----------------------------------------------------
-@media (prefers-reduced-motion: reduce) {
-    .course-index-toggle i,
-    .course-index-item .course-index-link,
-    .progress-bar-fill,
-    .progress-bar,
-    .courseindex-progress-container {
-        transition: none;
-        animation: none;
-    }
-}
-
