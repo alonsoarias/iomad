@@ -23,12 +23,12 @@
  */
 
 // Cadenas generales
-$string['pluginname'] = 'INTEB';
-$string['configtitle'] = 'Tema INTEB';
-$string['choosereadme'] = 'INTEB es un tema desarrollado por la Vicerrectoría Académica del ISER, bajo la dirección del Vicerrector Académico Mauricio Zafra. Desarrollado por Alonso Arias (<a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a>).';
+$string['pluginname'] = 'ISER';
+$string['configtitle'] = 'Tema ISER';
+$string['choosereadme'] = 'ISER es un tema desarrollado por la Vicerrectoría Académica del ISER, bajo la dirección del Vicerrector Académico Mauricio Zafra. Desarrollado por Alonso Arias (<a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a>).';
 
 // Nuevas cadenas para tareas programadas
-$string['license_check_task'] = 'Tarea de verificación de licencia para INTEB';
+$string['license_check_task'] = 'Tarea de verificación de licencia para ISER';
 $string['license_activated'] = 'Licencia activada automáticamente';
 $string['license_activation_automatic'] = 'La licencia ha sido activada automáticamente. No es necesario realizar ninguna acción adicional.';
 
@@ -171,7 +171,7 @@ $string['show'] = 'Mostrar';
 $string['activatelicense'] = 'Activar licencia';
 $string['licenseactivation'] = 'Activación de licencia';
 $string['licenseactivationdesc'] = 'La licencia se activa automáticamente.';
-$string['themeinfotext'] = '<p><strong>Tema INTEB</strong> - Desarrollado para el <a href="https://www.iser.edu.co/" target="_blank">Instituto Superior de Educación Rural - ISER</a></p>
+$string['themeinfotext'] = '<p><strong>Tema ISER</strong> - Desarrollado para el <a href="https://www.iser.edu.co/" target="_blank">Instituto Superior de Educación Rural - ISER</a></p>
 <p><em>"Ruralidades con propósito"</em></p>
 <p>Vicerrectoría Académica - Mauricio Zafra</p>
 <p>Desarrollo: Alonso Arias - <a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a></p>';

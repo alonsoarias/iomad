@@ -23,12 +23,12 @@
  */
 
 // General strings
-$string['pluginname'] = 'INTEB';
-$string['configtitle'] = 'INTEB Theme';
-$string['choosereadme'] = 'INTEB is a theme developed by the Academic Vice-Rectory of ISER, under the direction of Academic Vice-Rector Mauricio Zafra. Developed by Alonso Arias (<a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a>).';
+$string['pluginname'] = 'ISER';
+$string['configtitle'] = 'ISER Theme';
+$string['choosereadme'] = 'ISER is a theme developed by the Academic Vice-Rectory of ISER, under the direction of Academic Vice-Rector Mauricio Zafra. Developed by Alonso Arias (<a href="mailto:soporteplataformas@iser.edu.co">soporteplataformas@iser.edu.co</a>).';
 
 // New strings for scheduled tasks
-$string['license_check_task'] = 'INTEB license verification task';
+$string['license_check_task'] = 'ISER license verification task';
 $string['license_activated'] = 'License automatically activated';
 $string['license_activation_automatic'] = 'The license has been automatically activated. No additional action is required.';
 
