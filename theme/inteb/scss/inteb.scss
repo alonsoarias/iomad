@@ -6137,30 +6137,26 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link):not(.badge):not([
     color: $iser-blanco !important;
     margin: 0 -15px;
 
-    // Textos directos del footer
-    p, span, div, h1, h2, h3, h4, h5, h6, li, blockquote, address {
+    // Textos directos del footer (excluyendo ASW)
+    > p, > span, > div:not(.asw-container):not(.asw-widget),
+    > h1, > h2, > h3, > h4, > h5, > h6, > li, > blockquote, > address,
+    .iser-footer-govco p,
+    .iser-footer-govco span,
+    .iser-footer-govco div:not(.asw-container):not(.asw-widget),
+    .iser-footer-govco h1, .iser-footer-govco h2, .iser-footer-govco h3,
+    .iser-footer-govco h4, .iser-footer-govco h5, .iser-footer-govco h6,
+    .iser-footer-govco li, .iser-footer-govco blockquote, .iser-footer-govco address,
+    .footer-column p, .footer-column span, .footer-column div,
+    .footer-column h1, .footer-column h2, .footer-column h3,
+    .footer-column h4, .footer-column h5, .footer-column h6,
+    .footer-column li {
         color: $iser-blanco !important;
     }
 
-    // Enlaces del footer
-    a:not(.btn):not(.asw-menu-btn):not(.asw-btn) {
-        color: $iser-blanco !important;
-
-        &:hover,
-        &:focus {
-            color: $iser-amarillo !important;
-            text-decoration: underline !important;
-        }
-    }
-}
-
-// Estilos para .iser-footer-govco
-.iser-footer-govco {
-    p, span, div {
-        color: $iser-blanco !important;
-    }
-
-    a:not(.btn):not(.asw-menu-btn):not(.asw-btn) {
+    // Enlaces del footer (excluyendo ASW)
+    > a:not(.btn):not([class*="asw"]),
+    .iser-footer-govco a:not(.btn):not([class*="asw"]),
+    .footer-column a:not(.btn):not([class*="asw"]) {
         color: $iser-blanco !important;
 
         &:hover,
