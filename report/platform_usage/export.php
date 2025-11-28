@@ -17,7 +17,7 @@
 /**
  * Platform Usage Report export handler.
  *
- * @package   local_report_platform_usage
+ * @package   report_platform_usage
  * @copyright 2024 IOMAD
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,7 +29,7 @@ require_login();
 
 // Check capability.
 $context = context_system::instance();
-require_capability('local/report_platform_usage:export', $context);
+require_capability('report/platform_usage:export', $context);
 
 // Require sesskey.
 require_sesskey();
@@ -42,8 +42,8 @@ $type = optional_param('type', 'summary', PARAM_ALPHA);
 $format = optional_param('format', 'excel', PARAM_ALPHA);
 
 // Create report and exporter instances.
-$report = new \local_report_platform_usage\report($companyid, $datefrom, $dateto);
-$exporter = new \local_report_platform_usage\exporter($report, $type);
+$report = new \report_platform_usage\report($companyid, $datefrom, $dateto);
+$exporter = new \report_platform_usage\exporter($report, $type);
 
 // Export.
 $exporter->export($format);

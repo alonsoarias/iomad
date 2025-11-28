@@ -15,17 +15,28 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version information.
+ * Capability definitions.
  *
- * @package   local_report_platform_usage
+ * @package   report_platform_usage
  * @copyright 2024 IOMAD
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->release  = '1.0.0 (Build: 20241128)';
-$plugin->version  = 2024112800;
-$plugin->requires = 2024100700;
-$plugin->component = 'local_report_platform_usage';
-$plugin->maturity = MATURITY_STABLE;
+$capabilities = [
+    'report/platform_usage:view' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+    'report/platform_usage:export' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+];

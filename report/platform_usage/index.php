@@ -17,7 +17,7 @@
 /**
  * Platform Usage Report main page.
  *
- * @package   local_report_platform_usage
+ * @package   report_platform_usage
  * @copyright 2024 IOMAD
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ require_login();
 
 // Check capability.
 $context = context_system::instance();
-require_capability('local/report_platform_usage:view', $context);
+require_capability('report/platform_usage:view', $context);
 
 // Get parameters.
 $companyid = optional_param('companyid', 0, PARAM_INT);
@@ -39,16 +39,16 @@ $dateto = optional_param('dateto', time(), PARAM_INT);
 
 // Page setup.
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/report_platform_usage/index.php'));
+$PAGE->set_url(new moodle_url('/report/platform_usage/index.php'));
 $PAGE->set_pagelayout('report');
-$PAGE->set_title(get_string('pluginname', 'local_report_platform_usage'));
-$PAGE->set_heading(get_string('pluginname', 'local_report_platform_usage'));
+$PAGE->set_title(get_string('pluginname', 'report_platform_usage'));
+$PAGE->set_heading(get_string('pluginname', 'report_platform_usage'));
 
 // Create report instance.
-$report = new \local_report_platform_usage\report($companyid, $datefrom, $dateto);
+$report = new \report_platform_usage\report($companyid, $datefrom, $dateto);
 
 // Get companies for filter.
-$companies = \local_report_platform_usage\report::get_companies();
+$companies = \report_platform_usage\report::get_companies();
 
 // Get report data.
 $loginSummary = $report->get_login_summary();
@@ -60,37 +60,37 @@ $topActivities = $report->get_top_activities(10);
 
 // Output header.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('platformusagereport', 'local_report_platform_usage'));
+echo $OUTPUT->heading(get_string('platformusagereport', 'report_platform_usage'));
 
 // Company filter form.
 echo '<div class="card mb-4">';
 echo '<div class="card-body">';
 echo '<form method="get" action="" class="form-inline">';
 echo '<div class="form-group mr-3 mb-2">';
-echo '<label for="companyid" class="mr-2">' . get_string('company', 'local_report_platform_usage') . ':</label>';
+echo '<label for="companyid" class="mr-2">' . get_string('company', 'report_platform_usage') . ':</label>';
 echo '<select name="companyid" id="companyid" class="form-control">';
-echo '<option value="0">' . get_string('allcompanies', 'local_report_platform_usage') . '</option>';
+echo '<option value="0">' . get_string('allcompanies', 'report_platform_usage') . '</option>';
 foreach ($companies as $id => $name) {
     $selected = ($id == $companyid) ? 'selected' : '';
     echo "<option value=\"{$id}\" {$selected}>" . format_string($name) . '</option>';
 }
 echo '</select>';
 echo '</div>';
-echo '<button type="submit" class="btn btn-primary mb-2 mr-3">' . get_string('filter', 'local_report_platform_usage') . '</button>';
+echo '<button type="submit" class="btn btn-primary mb-2 mr-3">' . get_string('filter', 'report_platform_usage') . '</button>';
 
 // Export buttons.
-if (has_capability('local/report_platform_usage:export', $context)) {
-    $exporturl = new moodle_url('/local/report_platform_usage/export.php', [
+if (has_capability('report/platform_usage:export', $context)) {
+    $exporturl = new moodle_url('/report/platform_usage/export.php', [
         'companyid' => $companyid,
         'datefrom' => $datefrom,
         'dateto' => $dateto,
         'sesskey' => sesskey(),
     ]);
     echo '<a href="' . $exporturl->out() . '&type=summary&format=excel" class="btn btn-success mb-2 mr-2">';
-    echo '<i class="fa fa-download"></i> ' . get_string('exportexcel', 'local_report_platform_usage');
+    echo '<i class="fa fa-download"></i> ' . get_string('exportexcel', 'report_platform_usage');
     echo '</a>';
     echo '<a href="' . $exporturl->out() . '&type=summary&format=csv" class="btn btn-secondary mb-2">';
-    echo '<i class="fa fa-file-text"></i> ' . get_string('exportcsv', 'local_report_platform_usage');
+    echo '<i class="fa fa-file-text"></i> ' . get_string('exportcsv', 'report_platform_usage');
     echo '</a>';
 }
 echo '</form>';
@@ -104,9 +104,9 @@ echo '<div class="row mb-4">';
 echo '<div class="col-md-4 col-sm-6 mb-3">';
 echo '<div class="card h-100 border-primary">';
 echo '<div class="card-body text-center">';
-echo '<h5 class="card-title text-primary">' . get_string('loginstoday', 'local_report_platform_usage') . '</h5>';
+echo '<h5 class="card-title text-primary">' . get_string('loginstoday', 'report_platform_usage') . '</h5>';
 echo '<h2 class="display-4">' . number_format($loginSummary['logins_today']) . '</h2>';
-echo '<p class="text-muted">' . get_string('uniqueuserstoday', 'local_report_platform_usage') . ': <strong>' . number_format($loginSummary['unique_users_today']) . '</strong></p>';
+echo '<p class="text-muted">' . get_string('uniqueuserstoday', 'report_platform_usage') . ': <strong>' . number_format($loginSummary['unique_users_today']) . '</strong></p>';
 echo '</div>';
 echo '</div>';
 echo '</div>';
@@ -115,9 +115,9 @@ echo '</div>';
 echo '<div class="col-md-4 col-sm-6 mb-3">';
 echo '<div class="card h-100 border-success">';
 echo '<div class="card-body text-center">';
-echo '<h5 class="card-title text-success">' . get_string('loginsweek', 'local_report_platform_usage') . '</h5>';
+echo '<h5 class="card-title text-success">' . get_string('loginsweek', 'report_platform_usage') . '</h5>';
 echo '<h2 class="display-4">' . number_format($loginSummary['logins_week']) . '</h2>';
-echo '<p class="text-muted">' . get_string('uniqueusersweek', 'local_report_platform_usage') . ': <strong>' . number_format($loginSummary['unique_users_week']) . '</strong></p>';
+echo '<p class="text-muted">' . get_string('uniqueusersweek', 'report_platform_usage') . ': <strong>' . number_format($loginSummary['unique_users_week']) . '</strong></p>';
 echo '</div>';
 echo '</div>';
 echo '</div>';
@@ -126,9 +126,9 @@ echo '</div>';
 echo '<div class="col-md-4 col-sm-6 mb-3">';
 echo '<div class="card h-100 border-warning">';
 echo '<div class="card-body text-center">';
-echo '<h5 class="card-title text-warning">' . get_string('loginsmonth', 'local_report_platform_usage') . '</h5>';
+echo '<h5 class="card-title text-warning">' . get_string('loginsmonth', 'report_platform_usage') . '</h5>';
 echo '<h2 class="display-4">' . number_format($loginSummary['logins_month']) . '</h2>';
-echo '<p class="text-muted">' . get_string('uniqueusersmonth', 'local_report_platform_usage') . ': <strong>' . number_format($loginSummary['unique_users_month']) . '</strong></p>';
+echo '<p class="text-muted">' . get_string('uniqueusersmonth', 'report_platform_usage') . ': <strong>' . number_format($loginSummary['unique_users_month']) . '</strong></p>';
 echo '</div>';
 echo '</div>';
 echo '</div>';
@@ -141,7 +141,7 @@ echo '<div class="row mb-4">';
 // Daily Logins Line Chart.
 echo '<div class="col-lg-8 mb-3">';
 echo '<div class="card h-100">';
-echo '<div class="card-header"><h5 class="mb-0">' . get_string('dailylogins', 'local_report_platform_usage') . '</h5></div>';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('dailylogins', 'report_platform_usage') . '</h5></div>';
 echo '<div class="card-body">';
 echo '<canvas id="dailyLoginsChart" height="300"></canvas>';
 echo '</div>';
@@ -151,7 +151,7 @@ echo '</div>';
 // User Activity Doughnut Chart.
 echo '<div class="col-lg-4 mb-3">';
 echo '<div class="card h-100">';
-echo '<div class="card-header"><h5 class="mb-0">' . get_string('usersbyactivity', 'local_report_platform_usage') . '</h5></div>';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('usersbyactivity', 'report_platform_usage') . '</h5></div>';
 echo '<div class="card-body">';
 echo '<canvas id="userActivityChart" height="300"></canvas>';
 echo '</div>';
@@ -166,7 +166,7 @@ echo '<div class="row mb-4">';
 // Course Access Trends.
 echo '<div class="col-lg-8 mb-3">';
 echo '<div class="card h-100">';
-echo '<div class="card-header"><h5 class="mb-0">' . get_string('courseaccesstrends', 'local_report_platform_usage') . '</h5></div>';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('courseaccesstrends', 'report_platform_usage') . '</h5></div>';
 echo '<div class="card-body">';
 echo '<canvas id="courseAccessChart" height="300"></canvas>';
 echo '</div>';
@@ -176,7 +176,7 @@ echo '</div>';
 // Top Courses Bar Chart.
 echo '<div class="col-lg-4 mb-3">';
 echo '<div class="card h-100">';
-echo '<div class="card-header"><h5 class="mb-0">' . get_string('topcourses', 'local_report_platform_usage') . '</h5></div>';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('topcourses', 'report_platform_usage') . '</h5></div>';
 echo '<div class="card-body">';
 echo '<canvas id="topCoursesChart" height="300"></canvas>';
 echo '</div>';
@@ -189,17 +189,17 @@ echo '</div>';
 echo '<div class="row mb-4">';
 echo '<div class="col-lg-6 mb-3">';
 echo '<div class="card h-100">';
-echo '<div class="card-header"><h5 class="mb-0">' . get_string('courseusage', 'local_report_platform_usage') . '</h5></div>';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('courseusage', 'report_platform_usage') . '</h5></div>';
 echo '<div class="card-body">';
 if (empty($topCourses)) {
-    echo '<p class="text-muted">' . get_string('nodata', 'local_report_platform_usage') . '</p>';
+    echo '<p class="text-muted">' . get_string('nodata', 'report_platform_usage') . '</p>';
 } else {
     echo '<div class="table-responsive">';
     echo '<table class="table table-striped table-sm">';
     echo '<thead><tr>';
-    echo '<th>' . get_string('coursename', 'local_report_platform_usage') . '</th>';
-    echo '<th class="text-right">' . get_string('courseaccesses', 'local_report_platform_usage') . '</th>';
-    echo '<th class="text-right">' . get_string('uniqueusers', 'local_report_platform_usage') . '</th>';
+    echo '<th>' . get_string('coursename', 'report_platform_usage') . '</th>';
+    echo '<th class="text-right">' . get_string('courseaccesses', 'report_platform_usage') . '</th>';
+    echo '<th class="text-right">' . get_string('uniqueusers', 'report_platform_usage') . '</th>';
     echo '</tr></thead>';
     echo '<tbody>';
     foreach ($topCourses as $course) {
@@ -220,18 +220,18 @@ echo '</div>';
 // Top Activities Table.
 echo '<div class="col-lg-6 mb-3">';
 echo '<div class="card h-100">';
-echo '<div class="card-header"><h5 class="mb-0">' . get_string('topactivities', 'local_report_platform_usage') . '</h5></div>';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('topactivities', 'report_platform_usage') . '</h5></div>';
 echo '<div class="card-body">';
 if (empty($topActivities)) {
-    echo '<p class="text-muted">' . get_string('nodata', 'local_report_platform_usage') . '</p>';
+    echo '<p class="text-muted">' . get_string('nodata', 'report_platform_usage') . '</p>';
 } else {
     echo '<div class="table-responsive">';
     echo '<table class="table table-striped table-sm">';
     echo '<thead><tr>';
-    echo '<th>' . get_string('activityname', 'local_report_platform_usage') . '</th>';
-    echo '<th>' . get_string('activitytype', 'local_report_platform_usage') . '</th>';
-    echo '<th class="text-right">' . get_string('activityaccesses', 'local_report_platform_usage') . '</th>';
-    echo '<th class="text-right">' . get_string('uniqueusers', 'local_report_platform_usage') . '</th>';
+    echo '<th>' . get_string('activityname', 'report_platform_usage') . '</th>';
+    echo '<th>' . get_string('activitytype', 'report_platform_usage') . '</th>';
+    echo '<th class="text-right">' . get_string('activityaccesses', 'report_platform_usage') . '</th>';
+    echo '<th class="text-right">' . get_string('uniqueusers', 'report_platform_usage') . '</th>';
     echo '</tr></thead>';
     echo '<tbody>';
     foreach ($topActivities as $activity) {
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
             labels: <?php echo json_encode($dailyLogins['labels']); ?>,
             datasets: [
                 {
-                    label: '<?php echo get_string('logins', 'local_report_platform_usage'); ?>',
+                    label: '<?php echo get_string('logins', 'report_platform_usage'); ?>',
                     data: <?php echo json_encode($dailyLogins['logins']); ?>,
                     borderColor: 'rgba(54, 162, 235, 1)',
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     tension: 0.3
                 },
                 {
-                    label: '<?php echo get_string('uniqueusers', 'local_report_platform_usage'); ?>',
+                    label: '<?php echo get_string('uniqueusers', 'report_platform_usage'); ?>',
                     data: <?php echo json_encode($dailyLogins['unique_users']); ?>,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -304,8 +304,8 @@ document.addEventListener('DOMContentLoaded', function() {
         type: 'doughnut',
         data: {
             labels: [
-                '<?php echo get_string('activeusers', 'local_report_platform_usage'); ?>',
-                '<?php echo get_string('inactiveusers', 'local_report_platform_usage'); ?>'
+                '<?php echo get_string('activeusers', 'report_platform_usage'); ?>',
+                '<?php echo get_string('inactiveusers', 'report_platform_usage'); ?>'
             ],
             datasets: [{
                 data: [<?php echo $userSummary['active']; ?>, <?php echo $userSummary['inactive']; ?>],
@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data: {
             labels: <?php echo json_encode($courseAccessTrends['labels']); ?>,
             datasets: [{
-                label: '<?php echo get_string('courseaccesses', 'local_report_platform_usage'); ?>',
+                label: '<?php echo get_string('courseaccesses', 'report_platform_usage'); ?>',
                 data: <?php echo json_encode($courseAccessTrends['data']); ?>,
                 borderColor: 'rgba(255, 159, 64, 1)',
                 backgroundColor: 'rgba(255, 159, 64, 0.2)',
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return strlen($c->shortname) > 15 ? substr($c->shortname, 0, 12) . '...' : $c->shortname;
             }, array_values($topCourses))); ?>,
             datasets: [{
-                label: '<?php echo get_string('courseaccesses', 'local_report_platform_usage'); ?>',
+                label: '<?php echo get_string('courseaccesses', 'report_platform_usage'); ?>',
                 data: <?php echo json_encode(array_map(function($c) { return $c->access_count; }, array_values($topCourses))); ?>,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.7)',

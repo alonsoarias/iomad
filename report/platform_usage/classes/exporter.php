@@ -17,12 +17,12 @@
 /**
  * Report exporter class.
  *
- * @package   local_report_platform_usage
+ * @package   report_platform_usage
  * @copyright 2024 IOMAD
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_report_platform_usage;
+namespace report_platform_usage;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -94,9 +94,9 @@ class exporter {
     protected function export_logins(\csv_export_writer $export): void {
         // Headers.
         $headers = [
-            get_string('period', 'local_report_platform_usage'),
-            get_string('logins', 'local_report_platform_usage'),
-            get_string('uniqueusers', 'local_report_platform_usage'),
+            get_string('period', 'report_platform_usage'),
+            get_string('logins', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
         ];
         $export->add_data($headers);
 
@@ -104,9 +104,9 @@ class exporter {
         $summary = $this->report->get_login_summary();
 
         $rows = [
-            [get_string('today', 'local_report_platform_usage'), $summary['logins_today'], $summary['unique_users_today']],
-            [get_string('lastweek', 'local_report_platform_usage'), $summary['logins_week'], $summary['unique_users_week']],
-            [get_string('lastmonth', 'local_report_platform_usage'), $summary['logins_month'], $summary['unique_users_month']],
+            [get_string('today', 'report_platform_usage'), $summary['logins_today'], $summary['unique_users_today']],
+            [get_string('lastweek', 'report_platform_usage'), $summary['logins_week'], $summary['unique_users_week']],
+            [get_string('lastmonth', 'report_platform_usage'), $summary['logins_month'], $summary['unique_users_month']],
         ];
 
         foreach ($rows as $row) {
@@ -122,11 +122,11 @@ class exporter {
     protected function export_courses(\csv_export_writer $export): void {
         // Headers.
         $headers = [
-            get_string('coursename', 'local_report_platform_usage'),
+            get_string('coursename', 'report_platform_usage'),
             'Shortname',
-            get_string('courseaccesses', 'local_report_platform_usage'),
-            get_string('uniqueusers', 'local_report_platform_usage'),
-            get_string('lastaccess', 'local_report_platform_usage'),
+            get_string('courseaccesses', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
+            get_string('lastaccess', 'report_platform_usage'),
         ];
         $export->add_data($headers);
 
@@ -153,11 +153,11 @@ class exporter {
     protected function export_users(\csv_export_writer $export): void {
         // Headers.
         $headers = [
-            get_string('username', 'local_report_platform_usage'),
-            get_string('fullname', 'local_report_platform_usage'),
-            get_string('email', 'local_report_platform_usage'),
-            get_string('logincount', 'local_report_platform_usage'),
-            get_string('lastaccess', 'local_report_platform_usage'),
+            get_string('username', 'report_platform_usage'),
+            get_string('fullname', 'report_platform_usage'),
+            get_string('email', 'report_platform_usage'),
+            get_string('logincount', 'report_platform_usage'),
+            get_string('lastaccess', 'report_platform_usage'),
             'Created',
         ];
         $export->add_data($headers);
@@ -186,9 +186,9 @@ class exporter {
     protected function export_daily(\csv_export_writer $export): void {
         // Headers.
         $headers = [
-            get_string('date', 'local_report_platform_usage'),
-            get_string('logins', 'local_report_platform_usage'),
-            get_string('uniqueusers', 'local_report_platform_usage'),
+            get_string('date', 'report_platform_usage'),
+            get_string('logins', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
         ];
         $export->add_data($headers);
 
@@ -212,35 +212,35 @@ class exporter {
      */
     protected function export_summary(\csv_export_writer $export): void {
         // Login summary section.
-        $export->add_data([get_string('platformaccess', 'local_report_platform_usage')]);
+        $export->add_data([get_string('platformaccess', 'report_platform_usage')]);
         $export->add_data([
-            get_string('period', 'local_report_platform_usage'),
-            get_string('logins', 'local_report_platform_usage'),
-            get_string('uniqueusers', 'local_report_platform_usage'),
+            get_string('period', 'report_platform_usage'),
+            get_string('logins', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
         ]);
 
         $summary = $this->report->get_login_summary();
-        $export->add_data([get_string('today', 'local_report_platform_usage'), $summary['logins_today'], $summary['unique_users_today']]);
-        $export->add_data([get_string('lastweek', 'local_report_platform_usage'), $summary['logins_week'], $summary['unique_users_week']]);
-        $export->add_data([get_string('lastmonth', 'local_report_platform_usage'), $summary['logins_month'], $summary['unique_users_month']]);
+        $export->add_data([get_string('today', 'report_platform_usage'), $summary['logins_today'], $summary['unique_users_today']]);
+        $export->add_data([get_string('lastweek', 'report_platform_usage'), $summary['logins_week'], $summary['unique_users_week']]);
+        $export->add_data([get_string('lastmonth', 'report_platform_usage'), $summary['logins_month'], $summary['unique_users_month']]);
 
         $export->add_data([]); // Empty row.
 
         // User summary.
-        $export->add_data([get_string('usersummary', 'local_report_platform_usage')]);
+        $export->add_data([get_string('usersummary', 'report_platform_usage')]);
         $userSummary = $this->report->get_user_activity_summary();
-        $export->add_data([get_string('totalusers', 'local_report_platform_usage'), $userSummary['total']]);
-        $export->add_data([get_string('activeusers', 'local_report_platform_usage'), $userSummary['active']]);
-        $export->add_data([get_string('inactiveusers', 'local_report_platform_usage'), $userSummary['inactive']]);
+        $export->add_data([get_string('totalusers', 'report_platform_usage'), $userSummary['total']]);
+        $export->add_data([get_string('activeusers', 'report_platform_usage'), $userSummary['active']]);
+        $export->add_data([get_string('inactiveusers', 'report_platform_usage'), $userSummary['inactive']]);
 
         $export->add_data([]); // Empty row.
 
         // Top courses.
-        $export->add_data([get_string('topcourses', 'local_report_platform_usage')]);
+        $export->add_data([get_string('topcourses', 'report_platform_usage')]);
         $export->add_data([
-            get_string('coursename', 'local_report_platform_usage'),
-            get_string('courseaccesses', 'local_report_platform_usage'),
-            get_string('uniqueusers', 'local_report_platform_usage'),
+            get_string('coursename', 'report_platform_usage'),
+            get_string('courseaccesses', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
         ]);
 
         $courses = $this->report->get_top_courses(10);
@@ -251,11 +251,11 @@ class exporter {
         $export->add_data([]); // Empty row.
 
         // Daily logins.
-        $export->add_data([get_string('dailylogins', 'local_report_platform_usage')]);
+        $export->add_data([get_string('dailylogins', 'report_platform_usage')]);
         $export->add_data([
-            get_string('date', 'local_report_platform_usage'),
-            get_string('logins', 'local_report_platform_usage'),
-            get_string('uniqueusers', 'local_report_platform_usage'),
+            get_string('date', 'report_platform_usage'),
+            get_string('logins', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
         ]);
 
         $daily = $this->report->get_daily_data_for_export();

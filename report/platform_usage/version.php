@@ -15,21 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin settings.
+ * Plugin version information.
  *
- * @package   local_report_platform_usage
+ * @package   report_platform_usage
  * @copyright 2024 IOMAD
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-if ($hassiteconfig) {
-    // Add to reports menu.
-    $ADMIN->add('reports', new admin_externalpage(
-        'local_report_platform_usage',
-        get_string('pluginname', 'local_report_platform_usage'),
-        new moodle_url('/local/report_platform_usage/index.php'),
-        'local/report_platform_usage:view'
-    ));
-}
+$plugin->release  = '1.0.0 (Build: 20241128)';
+$plugin->version  = 2024112800;
+$plugin->requires = 2024100700;
+$plugin->component = 'report_platform_usage';
+$plugin->maturity = MATURITY_STABLE;

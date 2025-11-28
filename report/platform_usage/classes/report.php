@@ -17,12 +17,12 @@
 /**
  * Report data handler class.
  *
- * @package   local_report_platform_usage
+ * @package   report_platform_usage
  * @copyright 2024 IOMAD
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_report_platform_usage;
+namespace report_platform_usage;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -435,12 +435,13 @@ class report {
         foreach ($records as $record) {
             $cm = $DB->get_record('course_modules', ['id' => $record->contextinstanceid]);
             if ($cm) {
-                $modinfo = $DB->get_record($record->component, ['id' => $cm->instance]);
+                $modname = str_replace('mod_', '', $record->component);
+                $modinfo = $DB->get_record($modname, ['id' => $cm->instance]);
                 if ($modinfo && isset($modinfo->name)) {
                     $result[] = (object) [
                         'id' => $record->contextinstanceid,
                         'name' => $modinfo->name,
-                        'type' => str_replace('mod_', '', $record->component),
+                        'type' => $modname,
                         'access_count' => $record->access_count,
                         'unique_users' => $record->unique_users,
                     ];

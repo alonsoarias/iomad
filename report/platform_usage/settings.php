@@ -15,28 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy provider implementation.
+ * Plugin settings.
  *
- * @package   local_report_platform_usage
+ * @package   report_platform_usage
  * @copyright 2024 IOMAD
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_report_platform_usage\privacy;
-
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Privacy provider - plugin does not store personal data.
- */
-class provider implements \core_privacy\local\metadata\null_provider {
-
-    /**
-     * Get the reason for the null provider.
-     *
-     * @return string
-     */
-    public static function get_reason(): string {
-        return 'privacy:metadata';
-    }
-}
+// Add link in the reports section.
+$ADMIN->add('reports', new admin_externalpage(
+    'report_platform_usage',
+    get_string('pluginname', 'report_platform_usage'),
+    new moodle_url('/report/platform_usage/index.php'),
+    'report/platform_usage:view'
+));

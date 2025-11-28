@@ -211,7 +211,17 @@ class generator {
             $DB->delete_records_select('local_report_user_logins', "userid $usersql", $userparams);
         }
 
-        // 6. Reset user access fields.
+        // 6. Delete course_modules_completion records for these users.
+        $deleted += $DB->count_records_select('course_modules_completion', "userid $usersql", $userparams);
+        $DB->delete_records_select('course_modules_completion', "userid $usersql", $userparams);
+
+        // 7. Delete course_modules_viewed records for these users.
+        if ($DB->get_manager()->table_exists('course_modules_viewed')) {
+            $deleted += $DB->count_records_select('course_modules_viewed', "userid $usersql", $userparams);
+            $DB->delete_records_select('course_modules_viewed', "userid $usersql", $userparams);
+        }
+
+        // 8. Reset user access fields.
         foreach ($users as $user) {
             $update = new \stdClass();
             $update->id = $user->id;
@@ -699,10 +709,68 @@ class generator {
             $DB->insert_record('logstore_standard_log', (object)$entry);
             $this->stats['activity_access_generated']++;
 
+            // Update completion tracking tables (as Moodle does when viewing an activity).
+            $this->update_activity_completion($user->id, $cm, $timestamp);
+
             return true;
         } catch (\Exception $e) {
             debugging('Error generating activity access record: ' . $e->getMessage(), DEBUG_DEVELOPER);
             return false;
+        }
+    }
+
+    /**
+     * Update activity completion tables when an activity is viewed.
+     * This mimics what Moodle's completion_info::set_module_viewed() does.
+     *
+     * @param int $userid User ID
+     * @param object $cm Course module object
+     * @param int $timestamp Timestamp
+     */
+    protected function update_activity_completion(int $userid, $cm, int $timestamp): void {
+        global $DB;
+
+        // Get or create course_modules_completion record.
+        $existing = $DB->get_record('course_modules_completion', [
+            'coursemoduleid' => $cm->id,
+            'userid' => $userid,
+        ]);
+
+        if ($existing) {
+            // Update existing record - mark as viewed.
+            if ($existing->viewed != 1) {
+                $update = new \stdClass();
+                $update->id = $existing->id;
+                $update->viewed = 1;
+                $update->timemodified = $timestamp;
+                $DB->update_record('course_modules_completion', $update);
+            }
+        } else {
+            // Create new completion record.
+            $record = new \stdClass();
+            $record->coursemoduleid = $cm->id;
+            $record->userid = $userid;
+            $record->completionstate = 0; // Not completed, just viewed.
+            $record->viewed = 1;
+            $record->overrideby = null;
+            $record->timemodified = $timestamp;
+
+            $DB->insert_record('course_modules_completion', $record);
+        }
+
+        // Update course_modules_viewed table (separate tracking table).
+        $existingViewed = $DB->get_record('course_modules_viewed', [
+            'coursemoduleid' => $cm->id,
+            'userid' => $userid,
+        ]);
+
+        if (!$existingViewed) {
+            $viewedRecord = new \stdClass();
+            $viewedRecord->coursemoduleid = $cm->id;
+            $viewedRecord->userid = $userid;
+            $viewedRecord->timecreated = $timestamp;
+
+            $DB->insert_record('course_modules_viewed', $viewedRecord);
         }
     }
 

@@ -17,7 +17,7 @@
 /**
  * English language strings.
  *
- * @package   local_report_platform_usage
+ * @package   report_platform_usage
  * @copyright 2024 IOMAD
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Platform Usage Report';
-$string['report_platform_usage:view'] = 'View platform usage report';
-$string['report_platform_usage:export'] = 'Export platform usage report';
+$string['platform_usage:view'] = 'View platform usage report';
+$string['platform_usage:export'] = 'Export platform usage report';
 $string['platformusagereport'] = 'Platform Usage Report';
 $string['company'] = 'Company';
 $string['allcompanies'] = 'All companies';
