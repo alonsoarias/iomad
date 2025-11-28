@@ -5732,16 +5732,17 @@ $profile-course-img-height-sm: 90px;
     }
 }
 
-// View course button
-.profile-courses-list .view-course-btn {
+// View course button - Profile courses list
+.profile-courses-list .view-course-btn,
+.profile-course-footer .view-course-btn {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     padding: $spacer-sm $spacer-md !important;
     font-size: $font-size-sm !important;
     font-weight: $font-weight-semibold !important;
-    color: $iser-gris-700 !important;
-    background: $iser-gris-200 !important;
+    color: $iser-gris-800 !important;
+    background-color: $iser-gris-200 !important;
     border: 1px solid $iser-gris-300 !important;
     border-radius: $border-radius-md !important;
     text-decoration: none !important;
@@ -5749,10 +5750,12 @@ $profile-course-img-height-sm: 90px;
     white-space: nowrap !important;
     margin-left: auto !important;
 
-    &:hover {
-        background: $iser-verde !important;
+    &:hover,
+    &:focus {
+        background-color: $iser-verde !important;
         color: $iser-blanco !important;
         border-color: $iser-verde !important;
+        text-decoration: none !important;
     }
 }
 
@@ -5818,26 +5821,142 @@ $profile-course-img-height-sm: 90px;
 // ===========================================================================
 
 // Links globales con colores ISER
-a {
-    color: $iser-verde !important;
-    text-decoration: none !important;
-    background-color: transparent !important;
-    transition: color $transition-base !important;
+// IMPORTANTE: Solo aplicar a enlaces de texto, NO a botones ni elementos especiales
+a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link):not(.badge):not([class*="btn-"]) {
+    color: $iser-verde;
+    text-decoration: none;
+    background-color: transparent;
+    transition: color $transition-base;
 
     &:hover,
     &:focus {
-        color: $iser-rojo !important;
-        text-decoration: none !important;
+        color: $iser-rojo;
+        text-decoration: none;
     }
 }
 
-// Excepciones para botones y elementos especiales
-.btn,
-.nav-link,
-.dropdown-item,
-.page-link,
-.badge {
-    a& {
+// Estilos para botones - Asegurar legibilidad
+.btn {
+    color: inherit;
+
+    &.btn-primary {
+        color: $iser-blanco !important;
+        background-color: $iser-verde !important;
+        border-color: $iser-verde !important;
+
+        &:hover,
+        &:focus {
+            color: $iser-blanco !important;
+            background-color: $iser-verde-dark !important;
+            border-color: $iser-verde-dark !important;
+        }
+    }
+
+    &.btn-secondary {
+        color: $iser-gris-800 !important;
+        background-color: $iser-gris-200 !important;
+        border-color: $iser-gris-300 !important;
+
+        &:hover,
+        &:focus {
+            color: $iser-blanco !important;
+            background-color: $iser-verde !important;
+            border-color: $iser-verde !important;
+        }
+    }
+
+    &.btn-outline-primary {
+        color: $iser-verde !important;
+        border-color: $iser-verde !important;
+
+        &:hover,
+        &:focus {
+            color: $iser-blanco !important;
+            background-color: $iser-verde !important;
+        }
+    }
+
+    &.btn-outline-secondary {
+        color: $iser-gris-700 !important;
+        border-color: $iser-gris-400 !important;
+
+        &:hover,
+        &:focus {
+            color: $iser-blanco !important;
+            background-color: $iser-gris-600 !important;
+            border-color: $iser-gris-600 !important;
+        }
+    }
+
+    &.btn-danger {
+        color: $iser-blanco !important;
+        background-color: $iser-rojo !important;
+        border-color: $iser-rojo !important;
+
+        &:hover,
+        &:focus {
+            background-color: $iser-rojo-dark !important;
+            border-color: $iser-rojo-dark !important;
+        }
+    }
+
+    &.btn-warning {
+        color: $iser-gris-900 !important;
+        background-color: $iser-amarillo !important;
+        border-color: $iser-amarillo !important;
+
+        &:hover,
+        &:focus {
+            background-color: $iser-amarillo-dark !important;
+            border-color: $iser-amarillo-dark !important;
+        }
+    }
+
+    &.btn-info {
+        color: $iser-blanco !important;
+        background-color: $iser-azul !important;
+        border-color: $iser-azul !important;
+    }
+
+    &.btn-success {
+        color: $iser-blanco !important;
+        background-color: $color-success !important;
+        border-color: $color-success !important;
+
+        &:hover,
+        &:focus {
+            background-color: $color-success-dark !important;
+            border-color: $color-success-dark !important;
+        }
+    }
+
+    &.btn-link {
+        color: $iser-verde !important;
+
+        &:hover,
+        &:focus {
+            color: $iser-rojo !important;
+        }
+    }
+}
+
+// Footer global - Asegurar legibilidad
+#page-footer,
+.footer,
+footer,
+[class*="footer"] {
+    color: $iser-gris-700 !important;
+
+    a:not(.btn) {
+        color: $iser-verde !important;
+
+        &:hover,
+        &:focus {
+            color: $iser-rojo !important;
+        }
+    }
+
+    p, span, div {
         color: inherit !important;
     }
 }
