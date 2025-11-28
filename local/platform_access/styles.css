@@ -1,0 +1,32 @@
+/* Platform Access Generator styles */
+
+.path-local-platform_access .progress-container {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.path-local-platform_access .generaltable {
+    margin-top: 20px;
+}
+
+.path-local-platform_access .generaltable td:first-child {
+    font-weight: bold;
+    width: 300px;
+}
+
+.path-local-platform_access .alert-success {
+    margin-top: 20px;
+}
+
+.path-local-platform_access #id_generaloptions {
+    margin-bottom: 20px;
+}
+
+.path-local-platform_access .form-description {
+    background-color: #e7f3fe;
+    border-left: 4px solid #2196F3;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+}

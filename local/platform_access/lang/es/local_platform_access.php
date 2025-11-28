@@ -1,0 +1,66 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Spanish language strings.
+ *
+ * @package   local_platform_access
+ * @copyright 2024 IOMAD
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+$string['pluginname'] = 'Generador de Accesos a Plataforma';
+$string['platform_access:generate'] = 'Generar registros de acceso a plataforma';
+$string['platform_access:view'] = 'Ver generador de accesos a plataforma';
+$string['generateaccess'] = 'Generar Registros de Acceso';
+$string['generateaccessdesc'] = 'Esta herramienta genera registros de inicio de sesion y acceso a cursos para todos los usuarios de la plataforma. Es util para propositos de prueba y demostracion.';
+$string['generatelogins'] = 'Generar registros de inicio de sesion';
+$string['generatecourseaccess'] = 'Generar registros de acceso a cursos';
+$string['datefrom'] = 'Fecha desde';
+$string['dateto'] = 'Fecha hasta';
+$string['generatebutton'] = 'Generar Registros de Acceso';
+$string['generating'] = 'Generando registros de acceso...';
+$string['success'] = 'Registros de acceso generados exitosamente';
+$string['error'] = 'Error al generar registros de acceso';
+$string['totalusers'] = 'Total de usuarios procesados';
+$string['totallogins'] = 'Total de registros de inicio de sesion generados';
+$string['totalcourseaccess'] = 'Total de registros de acceso a cursos generados';
+$string['confirmgenerate'] = 'Esta seguro de que desea generar registros de acceso? Esto insertara registros en la base de datos.';
+$string['loginsperuser'] = 'Inicios de sesion por usuario';
+$string['courseaccessperuser'] = 'Accesos a cursos por usuario';
+$string['randomize'] = 'Aleatorizar marcas de tiempo';
+$string['randomizedesc'] = 'Si esta habilitado, las marcas de tiempo se distribuiran aleatoriamente dentro del rango de fechas especificado.';
+$string['includeadmins'] = 'Incluir usuarios administradores';
+$string['includeguests'] = 'Incluir usuarios invitados';
+$string['onlyactiveusers'] = 'Solo usuarios activos (no suspendidos/eliminados)';
+$string['processinguser'] = 'Procesando usuario: {$a}';
+$string['nousers'] = 'No se encontraron usuarios que coincidan con los criterios';
+$string['nocourses'] = 'No se encontraron cursos';
+$string['summary'] = 'Resumen de Generacion';
+$string['usersprocessed'] = 'Usuarios procesados: {$a}';
+$string['loginsgenerated'] = 'Registros de inicio de sesion generados: {$a}';
+$string['courseaccessgenerated'] = 'Registros de acceso a cursos generados: {$a}';
+$string['lastaccessupdated'] = 'Ultimo acceso de usuario actualizado: {$a}';
+$string['timecompleted'] = 'Tiempo completado: {$a} segundos';
+$string['specifycourses'] = 'Cursos especificos (dejar vacio para todos)';
+$string['specifyusers'] = 'Usuarios especificos (dejar vacio para todos)';
+$string['accesstype'] = 'Tipo de acceso a generar';
+$string['loginonly'] = 'Solo registros de inicio de sesion';
+$string['courseonly'] = 'Solo registros de acceso a cursos';
+$string['both'] = 'Ambos: inicio de sesion y acceso a cursos';
+$string['privacy:metadata'] = 'El plugin Generador de Accesos a Plataforma no almacena ningun dato personal.';
