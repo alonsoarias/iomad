@@ -15,17 +15,35 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version information.
+ * AJAX endpoint for Platform Usage Report.
  *
  * @package   report_platform_usage
  * @copyright 2024 IOMAD
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+define('AJAX_SCRIPT', true);
 
-$plugin->release  = '1.1.0 (Build: 20241128)';
-$plugin->version  = 2024112801;
-$plugin->requires = 2024100700;
-$plugin->component = 'report_platform_usage';
-$plugin->maturity = MATURITY_STABLE;
+require_once(__DIR__ . '/../../config.php');
+
+// Require login.
+require_login();
+
+// Check capability.
+$context = context_system::instance();
+require_capability('report/platform_usage:view', $context);
+
+// Get parameters.
+$companyid = optional_param('companyid', 0, PARAM_INT);
+$datefrom = optional_param('datefrom', strtotime('-30 days midnight'), PARAM_INT);
+$dateto = optional_param('dateto', time(), PARAM_INT);
+
+// Create report instance.
+$report = new \report_platform_usage\report($companyid, $datefrom, $dateto);
+
+// Get all data.
+$data = $report->get_all_data();
+
+// Return JSON response.
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode($data);

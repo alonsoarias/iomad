@@ -411,7 +411,7 @@ class report {
 
         list($usersql, $userparams) = $this->get_user_sql('l.userid');
 
-        $sql = "SELECT l.contextinstanceid, l.component,
+        $sql = "SELECT l.contextinstanceid, l.component, l.courseid,
                        COUNT(*) as access_count,
                        COUNT(DISTINCT l.userid) as unique_users
                 FROM {logstore_standard_log} l
@@ -419,7 +419,7 @@ class report {
                   AND l.target = 'course_module'
                   AND l.timecreated BETWEEN :datefrom AND :dateto
                   AND $usersql
-                GROUP BY l.contextinstanceid, l.component
+                GROUP BY l.contextinstanceid, l.component, l.courseid
                 ORDER BY access_count DESC
                 LIMIT $limit";
 
@@ -437,11 +437,16 @@ class report {
             if ($cm) {
                 $modname = str_replace('mod_', '', $record->component);
                 $modinfo = $DB->get_record($modname, ['id' => $cm->instance]);
+                $course = $DB->get_record('course', ['id' => $record->courseid], 'id, fullname, shortname');
                 if ($modinfo && isset($modinfo->name)) {
                     $result[] = (object) [
                         'id' => $record->contextinstanceid,
                         'name' => $modinfo->name,
                         'type' => $modname,
+                        'type_name' => self::get_module_name($modname),
+                        'course_id' => $record->courseid,
+                        'course_name' => $course ? $course->fullname : '',
+                        'course_shortname' => $course ? $course->shortname : '',
                         'access_count' => $record->access_count,
                         'unique_users' => $record->unique_users,
                     ];
@@ -450,6 +455,38 @@ class report {
         }
 
         return $result;
+    }
+
+    /**
+     * Get human-readable module name.
+     *
+     * @param string $modname Module name (e.g., 'assign', 'forum')
+     * @return string Human-readable name
+     */
+    public static function get_module_name(string $modname): string {
+        // Try to get the plugin name from language strings.
+        $pluginname = get_string('pluginname', 'mod_' . $modname);
+        if (strpos($pluginname, '[[') === false) {
+            return $pluginname;
+        }
+        // Fallback to capitalized module name.
+        return ucfirst($modname);
+    }
+
+    /**
+     * Get all report data for AJAX.
+     *
+     * @return array All report data
+     */
+    public function get_all_data(): array {
+        return [
+            'login_summary' => $this->get_login_summary(),
+            'user_summary' => $this->get_user_activity_summary(),
+            'daily_logins' => $this->get_daily_logins(30),
+            'course_access_trends' => $this->get_course_access_trends(30),
+            'top_courses' => array_values($this->get_top_courses(10)),
+            'top_activities' => $this->get_top_activities(10),
+        ];
     }
 
     /**
