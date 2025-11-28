@@ -10,36 +10,63 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$body-bg: #FFFFFF;
-$navbar-height: 80px;
-
 // ============================================
 // COLORES PRIMARIOS ISER (Bandera institucional)
 // ============================================
-$my-rojo: #EB4335; // Rojo corporativo - R:235 G:67 B:53
-$my-rojo-claro: #F38375; // Rojo atenuado
-$my-amarillo: #FCBD05; // Amarillo corporativo - R:252 G:189 B:7
-$my-verde: #1B9E88; // Verde corporativo - R:27 G:158 B:136 (COLOR PRINCIPAL)
+$iser-verde: #1B9E88;       // Verde corporativo - R:27 G:158 B:136 (COLOR PRINCIPAL)
+$iser-verde-dark: #158C78;  // Verde oscuro
+$iser-verde-light: #E8F5F3; // Verde claro/dimmed
+$iser-amarillo: #FCBD05;    // Amarillo corporativo - R:252 G:189 B:7
+$iser-amarillo-dark: #E0A904;
+$iser-amarillo-light: #FDDB80;
+$iser-rojo: #EB4335;        // Rojo corporativo - R:235 G:67 B:53
+$iser-rojo-dark: #D93B2E;
+$iser-rojo-light: #F38375;  // Rojo atenuado
+
+// Aliases para compatibilidad
+$my-verde: $iser-verde;
+$my-amarillo: $iser-amarillo;
+$my-rojo: $iser-rojo;
+$my-rojo-claro: $iser-rojo-light;
 
 // ============================================
 // COLORES SECUNDARIOS ISER
 // ============================================
-$my-orange: #E27C32; // Naranja - R:226 G:124 B:50
-$my-lime: #CFDA4B; // Verde lima - R:207 G:218 B:75
-$my-blue: #5894EF; // Azul - R:88 G:148 B:239
-$my-magenta: #C82260; // Magenta - R:200 G:34 B:96
+$iser-naranja: #E27C32;     // Naranja - R:226 G:124 B:50
+$iser-lima: #CFDA4B;        // Verde lima - R:207 G:218 B:75
+$iser-azul: #5894EF;        // Azul - R:88 G:148 B:239
+$iser-magenta: #C82260;     // Magenta - R:200 G:34 B:96
+
+// Aliases para compatibilidad
+$my-orange: $iser-naranja;
+$my-lime: $iser-lima;
+$my-blue: $iser-azul;
+$my-magenta: $iser-magenta;
 
 // ============================================
 // COLORES NEUTRALES ISER
 // ============================================
-$my-gris-claro: #CFCFCF; // Gris claro - R:207 G:207 B:207
-$my-gris-medio: #9C9C9B; // Gris medio - R:156 G:156 B:155
-$my-gris-oscuro: #646363; // Gris oscuro - R:100 G:100 B:99
-$my-gris: #646363; // Alias para compatibilidad
-$my-gris2: #B8B9BE; // Mantenido por compatibilidad
-$my-negro: #000000; // Negro - R:0 G:0 B:0
-$my-blanco: #FFFFFF; // Blanco
-$color-white: #FFFFFF;
+$iser-blanco: #FFFFFF;
+$iser-negro: #000000;
+$iser-gris-100: #f8f9fa;    // Muy claro
+$iser-gris-200: #e9ecef;    // Claro
+$iser-gris-300: #dee2e6;    // Borde claro
+$iser-gris-400: #ced4da;    // Borde
+$iser-gris-500: #adb5bd;    // Medio
+$iser-gris-600: #6c757d;    // Texto secundario
+$iser-gris-700: #495057;    // Texto
+$iser-gris-800: #343a40;    // Oscuro
+$iser-gris-900: #212529;    // Muy oscuro / Texto principal
+
+// Aliases para compatibilidad
+$my-gris-claro: #CFCFCF;
+$my-gris-medio: #9C9C9B;
+$my-gris-oscuro: #646363;
+$my-gris: $my-gris-oscuro;
+$my-gris2: #B8B9BE;
+$my-negro: $iser-negro;
+$my-blanco: $iser-blanco;
+$color-white: $iser-blanco;
 
 // Variables auxiliares (compatibilidad)
 $my-oscuro: #003049;
@@ -65,42 +92,141 @@ $headings-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', A
 $headings-font-weight: 600 !default;
 
 // ============================================
+// ESPACIADO Y TAMAÑOS
+// ============================================
+$spacer-xs: 0.25rem;        // 4px
+$spacer-sm: 0.5rem;         // 8px
+$spacer-md: 1rem;           // 16px
+$spacer-lg: 1.5rem;         // 24px
+$spacer-xl: 2rem;           // 32px
+$spacer-xxl: 3rem;          // 48px
+
+// ============================================
+// BORDER RADIUS
+// ============================================
+$border-radius-sm: 4px;
+$border-radius-md: 6px;
+$border-radius-lg: 8px;
+$border-radius-xl: 12px;
+$border-radius-pill: 50px;
+$border-radius-circle: 50%;
+
+// ============================================
+// SOMBRAS
+// ============================================
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+$shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.12);
+$shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+$shadow-primary: 0 4px 12px rgba($iser-verde, 0.3);
+
+// ============================================
+// TRANSICIONES
+// ============================================
+$transition-fast: 0.15s ease;
+$transition-base: 0.2s ease;
+$transition-slow: 0.3s ease;
+$transition-slower: 0.4s ease;
+
+// ============================================
+// BREAKPOINTS RESPONSIVE
+// ============================================
+$breakpoint-xs: 0;
+$breakpoint-mobile: 480px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
+
+// ============================================
+// TAMAÑOS DE FUENTE
+// ============================================
+$font-size-xs: 0.75rem;     // 12px
+$font-size-sm: 0.813rem;    // 13px
+$font-size-base: 1rem;      // 16px
+$font-size-md: 0.875rem;    // 14px
+$font-size-lg: 1.125rem;    // 18px
+$font-size-xl: 1.25rem;     // 20px
+$font-size-xxl: 1.5rem;     // 24px
+
+// ============================================
+// PESOS DE FUENTE
+// ============================================
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// ============================================
+// ALTURAS DE LÍNEA
+// ============================================
+$line-height-tight: 1.2;
+$line-height-base: 1.4;
+$line-height-relaxed: 1.6;
+
+// ============================================
+// TAMAÑOS DE COMPONENTES
+// ============================================
+$navbar-height: 80px;
+$card-image-height: 180px;
+$card-image-height-md: 160px;
+$card-image-height-sm: 140px;
+$avatar-size-sm: 28px;
+$avatar-size-md: 40px;
+$avatar-size-lg: 60px;
+$progress-height: 8px;
+$card-min-width: 320px;
+$card-min-width-md: 280px;
+
+// ============================================
+// LAYOUT
+// ============================================
+$body-bg: $iser-blanco;
+$my-loginfooterheight: 80px;
+
+// ============================================
 // ASIGNACIÓN DE COLORES DEL SISTEMA
 // ============================================
-$color-primary: #1B9E88; // Verde corporativo ISER
-$color-primary-dimmed: #E8F5F3;
-$color-primary-dark: #158C78;
+$color-primary: $iser-verde;
+$color-primary-dimmed: $iser-verde-light;
+$color-primary-dark: $iser-verde-dark;
 
-$color-secondary: #EB4335; // Rojo corporativo ISER
-$color-secondary-dimmed: #F38375;
-$color-secondary-dark: #D93B2E;
+$color-secondary: $iser-rojo;
+$color-secondary-dimmed: $iser-rojo-light;
+$color-secondary-dark: $iser-rojo-dark;
 
-$color-terciary: #FCBD05; // Amarillo corporativo ISER
-$color-terciary-dimmed: #FDDB80;
-$color-terciary-dark: #E0A904;
+$color-terciary: $iser-amarillo;
+$color-terciary-dimmed: $iser-amarillo-light;
+$color-terciary-dark: $iser-amarillo-dark;
 
-$brand-primary: #1B9E88; // Verde corporativo ISER
-$navbar-header-color: #EB4335; // Rojo corporativo
-
-$color-blue: #5894EF; // Azul secundario
-
-$headings-color: #646363; // Gris corporativo
-
-$nav-drawer-color: #1B9E88; // Verde corporativo ISER
+$brand-primary: $iser-verde;
+$navbar-header-color: $iser-rojo;
+$color-blue: $iser-azul;
+$headings-color: $my-gris-oscuro;
+$nav-drawer-color: $iser-verde;
 
 // ============================================
 // COLORES BOOTSTRAP/FRAMEWORK
 // ============================================
-$blue: #5894EF; // Actualizado al azul secundario ISER
+$blue: $iser-azul;
 $indigo: #003049;
 $purple: #2a3562;
-$pink: #C82260; // Actualizado al magenta ISER
-$red: #EB4335; // Actualizado al rojo corporativo ISER
-$orange: #E27C32; // Actualizado al naranja secundario ISER
-$yellow: #FCBD05; // Actualizado al amarillo corporativo ISER
-$green: #1B9E88; // Actualizado al verde corporativo ISER
-$teal: #1B9E88; // Actualizado al verde corporativo ISER
-$cyan: #5894EF; // Actualizado al azul secundario ISER
+$pink: $iser-magenta;
+$red: $iser-rojo;
+$orange: $iser-naranja;
+$yellow: $iser-amarillo;
+$green: $iser-verde;
+$teal: $iser-verde;
+$cyan: $iser-azul;
 
-/* extra variables */
-$my-loginfooterheight: 80px;
+// ============================================
+// COLORES DE ESTADO
+// ============================================
+$color-success: #28a745;
+$color-success-dark: #1e7e34;
+$color-warning: $iser-amarillo;
+$color-danger: $iser-rojo;
+$color-info: $iser-azul;

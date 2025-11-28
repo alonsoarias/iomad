@@ -11,12 +11,59 @@
  *
  * IMPORTANTE: Este archivo usa variables definidas en custom_variables.scss
  * NO usar @import - Moodle compila automáticamente los archivos SCSS
+ * NO usar valores hardcodeados - usar siempre las variables definidas
  *
- * Variables de marca ISER disponibles:
- * - Primarios: $my-verde (#1B9E88), $my-amarillo (#FCBD05), $my-rojo (#EB4335)
- * - Secundarios: $my-orange, $my-lime, $my-blue, $my-magenta
- * - Neutrales: $my-gris-claro, $my-gris-medio, $my-gris-oscuro, $my-negro, $my-blanco
- * - Sistema: $color-primary, $color-secondary, $color-terciary, $color-white
+ * Variables ISER disponibles (custom_variables.scss):
+ *
+ * COLORES PRIMARIOS:
+ * - $iser-verde, $iser-verde-dark, $iser-verde-light
+ * - $iser-amarillo, $iser-amarillo-dark, $iser-amarillo-light
+ * - $iser-rojo, $iser-rojo-dark, $iser-rojo-light
+ *
+ * COLORES SECUNDARIOS:
+ * - $iser-naranja, $iser-lima, $iser-azul, $iser-magenta
+ *
+ * COLORES NEUTRALES:
+ * - $iser-blanco, $iser-negro
+ * - $iser-gris-100 a $iser-gris-900
+ *
+ * ESPACIADO:
+ * - $spacer-xs (4px), $spacer-sm (8px), $spacer-md (16px)
+ * - $spacer-lg (24px), $spacer-xl (32px), $spacer-xxl (48px)
+ *
+ * BORDER RADIUS:
+ * - $border-radius-sm (4px), $border-radius-md (6px)
+ * - $border-radius-lg (8px), $border-radius-xl (12px)
+ * - $border-radius-pill (50px), $border-radius-circle (50%)
+ *
+ * SOMBRAS:
+ * - $shadow-sm, $shadow-md, $shadow-lg, $shadow-xl
+ * - $shadow-hover, $shadow-primary
+ *
+ * TRANSICIONES:
+ * - $transition-fast (0.15s), $transition-base (0.2s)
+ * - $transition-slow (0.3s), $transition-slower (0.4s)
+ *
+ * BREAKPOINTS:
+ * - $breakpoint-mobile (480px), $breakpoint-sm (576px)
+ * - $breakpoint-md (768px), $breakpoint-lg (992px)
+ * - $breakpoint-xl (1200px), $breakpoint-xxl (1400px)
+ *
+ * TIPOGRAFÍA:
+ * - $font-size-xs, $font-size-sm, $font-size-base, $font-size-md
+ * - $font-size-lg, $font-size-xl, $font-size-xxl
+ * - $font-weight-light, $font-weight-normal, $font-weight-medium
+ * - $font-weight-semibold, $font-weight-bold
+ * - $line-height-tight, $line-height-base, $line-height-relaxed
+ *
+ * COMPONENTES:
+ * - $card-image-height, $card-image-height-md, $card-image-height-sm
+ * - $avatar-size-sm, $avatar-size-md, $avatar-size-lg
+ * - $progress-height, $card-min-width, $card-min-width-md
+ *
+ * COLORES DE ESTADO:
+ * - $color-success, $color-success-dark
+ * - $color-warning, $color-danger, $color-info
  */
 
 /* ==========================================================================
@@ -5461,23 +5508,24 @@ body.pagelayout-incourse {
 // ===========================================================================
 // PROFILE COURSES - CARD GRID DESIGN
 // Redesigned to match the mycourses block card layout
+// Todas las variables definidas en custom_variables.scss
 // ===========================================================================
 
 .profile-courses-section {
-    padding: 1rem 0 !important;
+    padding: $spacer-md 0 !important;
 }
 
 // No courses message
 .profile-no-courses {
     display: flex !important;
     align-items: center !important;
-    padding: 1.5rem !important;
-    border-radius: 8px !important;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-    border: 1px solid #dee2e6 !important;
+    padding: $spacer-lg !important;
+    border-radius: $border-radius-lg !important;
+    background: linear-gradient(135deg, $iser-gris-100 0%, $iser-gris-200 100%) !important;
+    border: 1px solid $iser-gris-300 !important;
 
     i {
-        font-size: 1.25rem !important;
+        font-size: $font-size-xl !important;
         color: $iser-verde !important;
     }
 }
@@ -5485,22 +5533,22 @@ body.pagelayout-incourse {
 // Course cards grid container
 .profile-courses-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
-    gap: 1.5rem !important;
-    padding: 0.5rem !important;
+    grid-template-columns: repeat(auto-fill, minmax($card-min-width, 1fr)) !important;
+    gap: $spacer-lg !important;
+    padding: $spacer-sm !important;
 }
 
 // Individual course card
 .profile-course-card {
-    background: #ffffff !important;
-    border-radius: 12px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    background: $iser-blanco !important;
+    border-radius: $border-radius-xl !important;
+    box-shadow: $shadow-md !important;
     overflow: hidden !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    transition: transform $transition-slow, box-shadow $transition-slow !important;
 
     &:hover {
         transform: translateY(-4px) !important;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+        box-shadow: $shadow-hover !important;
     }
 }
 
@@ -5513,7 +5561,7 @@ body.pagelayout-incourse {
 // Course image section
 .profile-course-card-img {
     position: relative !important;
-    height: 180px !important;
+    height: $card-image-height !important;
     overflow: hidden !important;
 }
 
@@ -5529,7 +5577,7 @@ body.pagelayout-incourse {
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
-    transition: transform 0.4s ease !important;
+    transition: transform $transition-slower !important;
 
     .profile-course-card:hover & {
         transform: scale(1.05) !important;
@@ -5542,9 +5590,9 @@ body.pagelayout-incourse {
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
-    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 100%) !important;
+    background: linear-gradient(to bottom, transparent 0%, rgba($iser-negro, 0.3) 100%) !important;
     opacity: 0 !important;
-    transition: opacity 0.3s ease !important;
+    transition: opacity $transition-slow !important;
 
     .profile-course-card:hover & {
         opacity: 1 !important;
@@ -5554,20 +5602,20 @@ body.pagelayout-incourse {
 // Course body section
 .profile-course-card-body {
     flex: 1 !important;
-    padding: 1rem 1.25rem !important;
+    padding: $spacer-md $spacer-md + $spacer-xs !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 0.5rem !important;
+    gap: $spacer-sm !important;
 }
 
 // Category badge
 .profile-course-card-category {
-    margin-bottom: 0.25rem !important;
+    margin-bottom: $spacer-xs !important;
 
     .category-name {
         display: inline-block !important;
-        font-size: 0.75rem !important;
-        font-weight: 600 !important;
+        font-size: $font-size-xs !important;
+        font-weight: $font-weight-semibold !important;
         color: $iser-verde !important;
         text-transform: uppercase !important;
         letter-spacing: 0.5px !important;
@@ -5577,7 +5625,7 @@ body.pagelayout-incourse {
 
 // Course title
 .profile-course-card-title {
-    margin-bottom: 0.5rem !important;
+    margin-bottom: $spacer-sm !important;
 
     .course-title-link {
         display: -webkit-box !important;
@@ -5585,12 +5633,12 @@ body.pagelayout-incourse {
         -webkit-box-orient: vertical !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
-        font-size: 1rem !important;
-        font-weight: 600 !important;
-        line-height: 1.4 !important;
-        color: #212529 !important;
+        font-size: $font-size-base !important;
+        font-weight: $font-weight-semibold !important;
+        line-height: $line-height-base !important;
+        color: $iser-gris-900 !important;
         text-decoration: none !important;
-        transition: color 0.2s ease !important;
+        transition: color $transition-base !important;
 
         &:hover {
             color: $iser-verde !important;
@@ -5603,17 +5651,17 @@ body.pagelayout-incourse {
 .profile-course-card-instructor {
     display: flex !important;
     align-items: center !important;
-    gap: 0.5rem !important;
+    gap: $spacer-sm !important;
     margin-top: auto !important;
-    padding-top: 0.5rem !important;
+    padding-top: $spacer-sm !important;
 
     .instructor-link {
         display: flex !important;
         align-items: center !important;
-        gap: 0.5rem !important;
+        gap: $spacer-sm !important;
         text-decoration: none !important;
-        color: #6c757d !important;
-        transition: color 0.2s ease !important;
+        color: $iser-gris-600 !important;
+        transition: color $transition-base !important;
 
         &:hover {
             color: $iser-verde !important;
@@ -5621,16 +5669,16 @@ body.pagelayout-incourse {
     }
 
     .instructor-avatar {
-        width: 28px !important;
-        height: 28px !important;
-        border-radius: 50% !important;
+        width: $avatar-size-sm !important;
+        height: $avatar-size-sm !important;
+        border-radius: $border-radius-circle !important;
         object-fit: cover !important;
-        border: 2px solid #e9ecef !important;
+        border: 2px solid $iser-gris-200 !important;
     }
 
     .instructor-name {
-        font-size: 0.813rem !important;
-        font-weight: 500 !important;
+        font-size: $font-size-sm !important;
+        font-weight: $font-weight-medium !important;
         max-width: 150px !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
@@ -5638,57 +5686,57 @@ body.pagelayout-incourse {
     }
 
     .instructor-count {
-        font-size: 0.75rem !important;
-        font-weight: 600 !important;
-        color: #ffffff !important;
+        font-size: $font-size-xs !important;
+        font-weight: $font-weight-semibold !important;
+        color: $iser-blanco !important;
         background-color: $iser-verde !important;
-        padding: 0.125rem 0.5rem !important;
-        border-radius: 12px !important;
+        padding: $spacer-xs / 2 $spacer-sm !important;
+        border-radius: $border-radius-xl !important;
     }
 }
 
 // Course footer section
 .profile-course-card-footer {
-    padding: 1rem 1.25rem !important;
-    border-top: 1px solid #f0f0f0 !important;
-    background-color: #fafafa !important;
+    padding: $spacer-md $spacer-md + $spacer-xs !important;
+    border-top: 1px solid $iser-gris-100 !important;
+    background-color: $iser-gris-100 !important;
 }
 
 // Progress section
 .profile-course-card-progress {
-    margin-bottom: 1rem !important;
+    margin-bottom: $spacer-md !important;
 
     .progress-info {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        margin-bottom: 0.5rem !important;
+        margin-bottom: $spacer-sm !important;
 
         .progress-label {
-            font-size: 0.75rem !important;
-            color: #6c757d !important;
+            font-size: $font-size-xs !important;
+            color: $iser-gris-600 !important;
         }
 
         .progress-percentage {
-            font-size: 0.875rem !important;
-            font-weight: 700 !important;
+            font-size: $font-size-md !important;
+            font-weight: $font-weight-bold !important;
             color: $iser-verde !important;
         }
     }
 
     .progress {
-        height: 8px !important;
-        border-radius: 4px !important;
-        background-color: #e9ecef !important;
+        height: $progress-height !important;
+        border-radius: $border-radius-sm !important;
+        background-color: $iser-gris-200 !important;
         overflow: hidden !important;
 
         .progress-bar {
-            background: linear-gradient(90deg, $iser-verde 0%, darken($iser-verde, 10%) 100%) !important;
-            border-radius: 4px !important;
+            background: linear-gradient(90deg, $iser-verde 0%, $iser-verde-dark 100%) !important;
+            border-radius: $border-radius-sm !important;
             transition: width 0.6s ease !important;
 
             &.bg-success {
-                background: linear-gradient(90deg, #28a745 0%, #1e7e34 100%) !important;
+                background: linear-gradient(90deg, $color-success 0%, $color-success-dark 100%) !important;
             }
         }
     }
@@ -5702,61 +5750,61 @@ body.pagelayout-incourse {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 0.5rem 1.25rem !important;
-        font-size: 0.813rem !important;
-        font-weight: 600 !important;
-        color: #ffffff !important;
+        padding: $spacer-sm $spacer-md + $spacer-xs !important;
+        font-size: $font-size-sm !important;
+        font-weight: $font-weight-semibold !important;
+        color: $iser-blanco !important;
         background: $iser-verde !important;
         border: none !important;
-        border-radius: 6px !important;
+        border-radius: $border-radius-md !important;
         text-decoration: none !important;
-        transition: all 0.2s ease !important;
+        transition: all $transition-base !important;
 
         &:hover {
-            background: darken($iser-verde, 8%) !important;
+            background: $iser-verde-dark !important;
             transform: translateY(-1px) !important;
-            box-shadow: 0 4px 12px rgba(27, 158, 136, 0.3) !important;
+            box-shadow: $shadow-primary !important;
         }
 
         i {
-            font-size: 0.875rem !important;
+            font-size: $font-size-md !important;
         }
     }
 }
 
 // Responsive adjustments for profile courses grid
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-md) {
     .profile-courses-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
-        gap: 1rem !important;
+        grid-template-columns: repeat(auto-fill, minmax($card-min-width-md, 1fr)) !important;
+        gap: $spacer-md !important;
     }
 
     .profile-course-card-img {
-        height: 160px !important;
+        height: $card-image-height-md !important;
     }
 
     .profile-course-card-body {
-        padding: 0.875rem 1rem !important;
+        padding: $spacer-md - $spacer-xs / 2 $spacer-md !important;
     }
 
     .profile-course-card-footer {
-        padding: 0.875rem 1rem !important;
+        padding: $spacer-md - $spacer-xs / 2 $spacer-md !important;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: $breakpoint-mobile) {
     .profile-courses-grid {
         grid-template-columns: 1fr !important;
-        gap: 1rem !important;
+        gap: $spacer-md !important;
         padding: 0 !important;
     }
 
     .profile-course-card-img {
-        height: 140px !important;
+        height: $card-image-height-sm !important;
     }
 
     .profile-course-card-title .course-title-link {
-        font-size: 0.938rem !important;
+        font-size: $font-size-base - 0.062rem !important;
     }
 
     .profile-course-card-action .view-course-btn {
