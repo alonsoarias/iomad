@@ -17,7 +17,7 @@
     @template block_mycourses/available-card-view
 
     This template renders the available courses card view for the mycourses block.
-    Redesigned for theme_inteb with modern card layout.
+    Redesigned for theme_inteb - Consistent with profile courses design.
 }}
 <div id="available-view-{{uniqid}}" data-region="available-view" class="inteb-mycourses-view">
     <div class="tab-content">
@@ -35,8 +35,8 @@
                                             <div class="inteb-card-overlay"></div>
                                         </div>
                                     </a>
-                                    {{! New Badge for available courses }}
-                                    <div class="inteb-new-badge position-absolute">
+                                    {{! New Badge }}
+                                    <div class="inteb-card-badges position-absolute" style="top: 10px; left: 10px;">
                                         <span class="badge badge-success">
                                             <i class="fa fa-star mr-1" aria-hidden="true"></i>
                                             {{#str}}new{{/str}}
@@ -44,7 +44,7 @@
                                     </div>
                                     {{! Visibility Badge }}
                                     {{^visible}}
-                                    <div class="inteb-card-badges position-absolute">
+                                    <div class="inteb-visibility-badge position-absolute" style="top: 10px; right: 10px;">
                                         <span class="badge badge-warning" title="{{#str}}hiddenfromstudents{{/str}}">
                                             <i class="fa fa-eye-slash" aria-hidden="true"></i>
                                         </span>
@@ -74,12 +74,24 @@
                                     <p class="inteb-course-summary text-muted small mb-2">{{{summary}}}</p>
                                     {{/summary}}
 
-                                    {{! Not Started indicator }}
-                                    <div class="inteb-status-indicator mt-auto">
-                                        <span class="badge badge-light border">
-                                            <i class="fa fa-clock-o mr-1" aria-hidden="true"></i>
-                                            {{#str}}notstarted, block_mycourses{{/str}}
-                                        </span>
+                                    {{! Progress Section - Not Started (0%) }}
+                                    <div class="inteb-progress-wrapper mt-auto">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <span class="small text-muted">
+                                                <i class="fa fa-clock-o mr-1" aria-hidden="true"></i>
+                                                {{#str}}notstarted, block_mycourses{{/str}}
+                                            </span>
+                                            <span class="small font-weight-bold text-muted">0%</span>
+                                        </div>
+                                        <div class="progress inteb-progress" style="height: 8px;">
+                                            <div class="progress-bar inteb-progress-bar bg-secondary"
+                                                 role="progressbar"
+                                                 style="width: 0%;"
+                                                 aria-valuenow="0"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 

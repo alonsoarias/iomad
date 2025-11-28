@@ -17,7 +17,7 @@
     @template block_mycourses/inprogress-card-view
 
     This template renders the inprogress card view for the mycourses block.
-    Redesigned for theme_inteb with modern card layout.
+    Redesigned for theme_inteb - Consistent with profile courses design.
 }}
 <div id="inprogress-view-{{uniqid}}" data-region="inprogress-view" class="inteb-mycourses-view">
     <div class="tab-content">
@@ -27,7 +27,7 @@
                     <div class="inteb-course-grid row" data-region="card-deck" role="list">
                         {{#inprogressview.courses}}
                         <div class="col-12 col-sm-6 col-lg-4 col-xl-3 mb-4" role="listitem">
-                            <div class="inteb-course-card card h-100 shadow-sm" data-region="course-content" data-course-id="{{{id}}}">
+                            <div class="inteb-course-card inteb-inprogress-card card h-100 shadow-sm" data-region="course-content" data-course-id="{{{id}}}">
                                 {{! Course Image }}
                                 <div class="inteb-card-img-wrapper position-relative">
                                     <a href="{{{url}}}" class="d-block" tabindex="-1">
@@ -35,9 +35,24 @@
                                             <div class="inteb-card-overlay"></div>
                                         </div>
                                     </a>
+                                    {{! Progress Badge }}
+                                    <div class="inteb-card-badges position-absolute" style="top: 10px; left: 10px;">
+                                        {{#hasprogress}}
+                                        <span class="badge badge-primary">
+                                            <i class="fa fa-spinner fa-spin mr-1" aria-hidden="true"></i>
+                                            {{progress}}%
+                                        </span>
+                                        {{/hasprogress}}
+                                        {{^hasprogress}}
+                                        <span class="badge badge-info">
+                                            <i class="fa fa-play mr-1" aria-hidden="true"></i>
+                                            {{#str}}inprogress, block_mycourses{{/str}}
+                                        </span>
+                                        {{/hasprogress}}
+                                    </div>
                                     {{! Visibility Badge }}
                                     {{^visible}}
-                                    <div class="inteb-card-badges position-absolute">
+                                    <div class="inteb-visibility-badge position-absolute" style="top: 10px; right: 10px;">
                                         <span class="badge badge-warning" title="{{#str}}hiddenfromstudents{{/str}}">
                                             <i class="fa fa-eye-slash" aria-hidden="true"></i>
                                         </span>
@@ -68,31 +83,23 @@
                                     {{/summary}}
 
                                     {{! Progress Section }}
-                                    {{#hasprogress}}
                                     <div class="inteb-progress-wrapper mt-auto">
                                         <div class="d-flex justify-content-between align-items-center mb-1">
                                             <span class="small text-muted">{{#str}}progress, block_mycourses{{/str}}</span>
-                                            <span class="small font-weight-bold text-primary">{{progress}}%</span>
+                                            <span class="small font-weight-bold text-primary">
+                                                {{#hasprogress}}{{progress}}{{/hasprogress}}{{^hasprogress}}0{{/hasprogress}}%
+                                            </span>
                                         </div>
-                                        <div class="progress inteb-progress" title="{{progresstooltip}}">
+                                        <div class="progress inteb-progress" style="height: 8px;" title="{{progresstooltip}}">
                                             <div class="progress-bar inteb-progress-bar"
                                                  role="progressbar"
-                                                 style="width: {{progress}}%;"
-                                                 aria-valuenow="{{progress}}"
+                                                 style="width: {{#hasprogress}}{{progress}}{{/hasprogress}}{{^hasprogress}}0{{/hasprogress}}%;"
+                                                 aria-valuenow="{{#hasprogress}}{{progress}}{{/hasprogress}}{{^hasprogress}}0{{/hasprogress}}"
                                                  aria-valuemin="0"
                                                  aria-valuemax="100">
                                             </div>
                                         </div>
                                     </div>
-                                    {{/hasprogress}}
-                                    {{^hasprogress}}
-                                    <div class="inteb-status-indicator mt-auto">
-                                        <span class="badge badge-info">
-                                            <i class="fa fa-check-circle mr-1" aria-hidden="true"></i>
-                                            {{#str}}enrolled, block_mycourses{{/str}}
-                                        </span>
-                                    </div>
-                                    {{/hasprogress}}
                                 </div>
 
                                 {{! Card Footer }}

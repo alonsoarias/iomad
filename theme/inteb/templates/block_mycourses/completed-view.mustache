@@ -17,7 +17,7 @@
     @template block_mycourses/completed-view
 
     This template renders the completed courses list view for the mycourses block.
-    Redesigned for theme_inteb with modern list layout.
+    Redesigned for theme_inteb - Consistent with profile courses design.
 }}
 <div id="completed-view-{{uniqid}}" data-region="completed-view" class="inteb-mycourses-view inteb-list-view">
     <div class="tab-content">
@@ -30,18 +30,18 @@
                             <div class="inteb-list-item inteb-completed-item card mb-3 shadow-sm" data-region="course-content" data-course-id="{{{id}}}">
                                 <div class="card-body p-0">
                                     <div class="row no-gutters">
-                                        {{! Course Image }}
+                                        {{! Course Image - Left Column }}
                                         <div class="col-md-3 col-lg-2">
                                             {{^visible}}
-                                            <div class="inteb-list-img-wrapper dimmed_text position-relative">
+                                            <div class="inteb-list-img-wrapper d-block position-relative dimmed_text">
                                             {{/visible}}
                                             {{#visible}}
-                                            <a href="{{{url}}}" class="inteb-list-img-wrapper d-block position-relative" tabindex="-1">
+                                            <a href="{{{url}}}" class="inteb-list-img-wrapper d-block position-relative" tabindex="-1" title="{{{fullname}}}">
                                             {{/visible}}
                                                 <div class="inteb-list-img" style="background-image: url('{{{image}}}');">
                                                     <span class="sr-only">{{{fullname}}}</span>
                                                 </div>
-                                                {{! Completed Badge }}
+                                                {{! Completed Badge Overlay }}
                                                 <div class="inteb-list-badge position-absolute">
                                                     <span class="badge badge-success">
                                                         <i class="fa fa-check-circle mr-1" aria-hidden="true"></i>
@@ -56,29 +56,28 @@
                                             {{/visible}}
                                         </div>
 
-                                        {{! Course Content }}
+                                        {{! Course Content - Right Column }}
                                         <div class="col-md-9 col-lg-10">
                                             <div class="inteb-list-content p-3">
+                                                {{! Top Row: Title/Category and Action Button }}
                                                 <div class="d-flex justify-content-between align-items-start flex-wrap">
-                                                    {{! Course Title }}
                                                     <div class="inteb-list-title-wrap mb-2">
+                                                        {{! Visibility Warning }}
                                                         {{^visible}}
-                                                        <div class="dimmed_text">
-                                                            <span class="badge badge-warning mr-2" title="{{#str}}hiddenfromstudents{{/str}}">
-                                                                <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                                                            </span>
+                                                        <span class="badge badge-warning mr-2" title="{{#str}}hiddenfromstudents{{/str}}">
+                                                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                                                        </span>
                                                         {{/visible}}
+                                                        {{! Course Title }}
                                                         {{#visible}}
-                                                        <a href="{{{url}}}" class="inteb-list-title h5 mb-0 text-dark">
-                                                        {{/visible}}
+                                                        <a href="{{{url}}}" class="inteb-list-title h5 mb-0 text-dark" title="{{{fullname}}}">
                                                             {{{fullname}}}
-                                                        {{#visible}}
                                                         </a>
                                                         {{/visible}}
                                                         {{^visible}}
-                                                        </div>
+                                                        <span class="inteb-list-title h5 mb-0 text-muted">{{{fullname}}}</span>
                                                         {{/visible}}
-
+                                                        {{! Category Badge }}
                                                         {{#coursecategory}}
                                                         <span class="badge badge-light ml-2">{{{coursecategory}}}</span>
                                                         {{/coursecategory}}
@@ -98,64 +97,67 @@
                                                 <p class="inteb-list-summary text-muted small mb-2">{{{summary}}}</p>
                                                 {{/summary}}
 
-                                                {{! Completion Info Row }}
-                                                <div class="inteb-list-completion-info mt-2">
-                                                    <div class="row">
-                                                        {{! Progress }}
-                                                        <div class="col-md-3 mb-2 mb-md-0">
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="progress inteb-progress flex-grow-1 mr-2" style="height: 8px;">
-                                                                    <div class="progress-bar bg-success"
-                                                                         role="progressbar"
-                                                                         style="width: 100%;"
-                                                                         aria-valuenow="100"
-                                                                         aria-valuemin="0"
-                                                                         aria-valuemax="100">
-                                                                    </div>
-                                                                </div>
-                                                                <span class="small font-weight-bold text-success">100%</span>
-                                                            </div>
+                                                {{! Progress Section - Completed (100%) }}
+                                                <div class="inteb-list-progress mt-2">
+                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                        <span class="small text-muted">{{#str}}progress, block_mycourses{{/str}}</span>
+                                                        <span class="small font-weight-bold text-success">100%</span>
+                                                    </div>
+                                                    <div class="progress inteb-progress" style="height: 8px;">
+                                                        <div class="progress-bar inteb-progress-bar bg-success"
+                                                             role="progressbar"
+                                                             style="width: 100%;"
+                                                             aria-valuenow="100"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100">
                                                         </div>
+                                                    </div>
+                                                </div>
 
+                                                {{! Completion Details Row }}
+                                                <div class="inteb-list-completion-details mt-2 pt-2 border-top">
+                                                    <div class="d-flex flex-wrap align-items-center">
                                                         {{! Completion Date }}
                                                         {{#timecompleted}}
-                                                        <div class="col-md-3 mb-2 mb-md-0">
-                                                            <div class="small">
+                                                        <div class="mr-4 mb-1">
+                                                            <span class="small">
                                                                 <i class="fa fa-calendar-check-o text-success mr-1" aria-hidden="true"></i>
                                                                 <span class="text-muted">{{#str}}timecompleted, local_report_completion{{/str}}:</span>
                                                                 <strong>{{timecompleted}}</strong>
-                                                            </div>
+                                                            </span>
                                                         </div>
                                                         {{/timecompleted}}
 
                                                         {{! Expiry Date }}
                                                         {{#timeexpires}}
-                                                        <div class="col-md-3 mb-2 mb-md-0">
-                                                            <div class="small">
+                                                        <div class="mr-4 mb-1">
+                                                            <span class="small">
                                                                 <i class="fa fa-clock-o text-warning mr-1" aria-hidden="true"></i>
                                                                 <span class="text-muted">{{#str}}timeexpires, local_report_completion{{/str}}:</span>
                                                                 <strong>{{timeexpires}}</strong>
-                                                            </div>
+                                                            </span>
                                                         </div>
                                                         {{/timeexpires}}
 
                                                         {{! Final Score }}
-                                                        <div class="col-md-3 mb-2 mb-md-0">
-                                                            {{#hasgrade}}
-                                                            <div class="small">
+                                                        {{#hasgrade}}
+                                                        <div class="mr-4 mb-1">
+                                                            <span class="small">
                                                                 <i class="fa fa-star text-primary mr-1" aria-hidden="true"></i>
                                                                 <span class="text-muted">{{#str}}finalscore, block_mycourses{{/str}}:</span>
                                                                 <strong class="text-primary">{{finalscore}}%</strong>
-                                                            </div>
-                                                            {{/hasgrade}}
-                                                            {{^hasgrade}}
-                                                            <div class="small">
+                                                            </span>
+                                                        </div>
+                                                        {{/hasgrade}}
+                                                        {{^hasgrade}}
+                                                        <div class="mr-4 mb-1">
+                                                            <span class="small">
                                                                 <i class="fa fa-check text-success mr-1" aria-hidden="true"></i>
                                                                 <span class="text-muted">{{#str}}result, block_mycourses{{/str}}:</span>
                                                                 <strong class="text-success">{{finalscore}}</strong>
-                                                            </div>
-                                                            {{/hasgrade}}
+                                                            </span>
                                                         </div>
+                                                        {{/hasgrade}}
                                                     </div>
 
                                                     {{! Certificates }}
