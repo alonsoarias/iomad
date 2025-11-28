@@ -48,11 +48,13 @@ if ($mform->is_cancelled()) {
 } else if ($data = $mform->get_data()) {
     // Redirect to processing page.
     $params = [
+        'companyid' => $data->companyid,
         'accesstype' => $data->accesstype,
         'datefrom' => $data->datefrom,
         'dateto' => $data->dateto,
         'loginsperuser' => $data->loginsperuser,
         'courseaccessperuser' => $data->courseaccessperuser,
+        'activityaccesspercourse' => $data->activityaccesspercourse,
         'randomize' => $data->randomize,
         'includeadmins' => $data->includeadmins,
         'onlyactive' => $data->onlyactive,

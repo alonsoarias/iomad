@@ -36,11 +36,13 @@ require_capability('local/platform_access:generate', $context);
 require_sesskey();
 
 // Get parameters.
+$companyid = required_param('companyid', PARAM_INT);
 $accesstype = required_param('accesstype', PARAM_ALPHA);
 $datefrom = required_param('datefrom', PARAM_INT);
 $dateto = required_param('dateto', PARAM_INT);
 $loginsperuser = required_param('loginsperuser', PARAM_INT);
 $courseaccessperuser = required_param('courseaccessperuser', PARAM_INT);
+$activityaccesspercourse = required_param('activityaccesspercourse', PARAM_INT);
 $randomize = required_param('randomize', PARAM_INT);
 $includeadmins = required_param('includeadmins', PARAM_INT);
 $onlyactive = required_param('onlyactive', PARAM_INT);
@@ -59,11 +61,13 @@ echo $OUTPUT->heading(get_string('generating', 'local_platform_access'));
 // Confirmation check.
 if (!$confirm) {
     $confirmurl = new moodle_url('/local/platform_access/generate.php', [
+        'companyid' => $companyid,
         'accesstype' => $accesstype,
         'datefrom' => $datefrom,
         'dateto' => $dateto,
         'loginsperuser' => $loginsperuser,
         'courseaccessperuser' => $courseaccessperuser,
+        'activityaccesspercourse' => $activityaccesspercourse,
         'randomize' => $randomize,
         'includeadmins' => $includeadmins,
         'onlyactive' => $onlyactive,
@@ -86,10 +90,12 @@ raise_memory_limit(MEMORY_HUGE);
 
 // Create generator.
 $options = [
+    'companyid' => $companyid,
     'datefrom' => $datefrom,
     'dateto' => $dateto,
     'loginsperuser' => $loginsperuser,
     'courseaccessperuser' => $courseaccessperuser,
+    'activityaccesspercourse' => $activityaccesspercourse,
     'randomize' => (bool) $randomize,
     'includeadmins' => (bool) $includeadmins,
     'onlyactive' => (bool) $onlyactive,
@@ -117,7 +123,6 @@ echo html_writer::start_tag('div', ['class' => 'progress-container']);
 $currentuser = 0;
 $progresscallback = function($user, $stats) use ($progressbar, $totalusers, &$currentuser) {
     $currentuser++;
-    $percent = ($currentuser / $totalusers) * 100;
     $progressbar->update($currentuser, $totalusers,
         get_string('processinguser', 'local_platform_access', fullname($user))
     );
@@ -134,11 +139,12 @@ $table = new html_table();
 $table->attributes['class'] = 'generaltable';
 $table->head = [get_string('status'), get_string('value', 'scorm')];
 $table->data = [
-    [get_string('usersprocessed', 'local_platform_access', ''), $stats['users_processed']],
-    [get_string('loginsgenerated', 'local_platform_access', ''), $stats['logins_generated']],
-    [get_string('courseaccessgenerated', 'local_platform_access', ''), $stats['course_access_generated']],
-    [get_string('lastaccessupdated', 'local_platform_access', ''), $stats['lastaccess_updated']],
-    [get_string('timecompleted', 'local_platform_access', ''), $stats['time_elapsed'] ?? 0],
+    [get_string('usersprocessed', 'local_platform_access'), $stats['users_processed']],
+    [get_string('loginsgenerated', 'local_platform_access'), $stats['logins_generated']],
+    [get_string('courseaccessgenerated', 'local_platform_access'), $stats['course_access_generated']],
+    [get_string('activityaccessgenerated', 'local_platform_access'), $stats['activity_access_generated']],
+    [get_string('lastaccessupdated', 'local_platform_access'), $stats['lastaccess_updated']],
+    [get_string('timecompleted', 'local_platform_access'), $stats['time_elapsed'] ?? 0],
 ];
 
 echo html_writer::table($table);

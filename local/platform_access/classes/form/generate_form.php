@@ -45,14 +45,25 @@ class generate_form extends \moodleform {
         // Description.
         $mform->addElement('static', 'description', '', get_string('generateaccessdesc', 'local_platform_access'));
 
+        // Company selector.
+        $companies = \local_platform_access\generator::get_companies();
+        $companyoptions = [0 => get_string('all', 'local_platform_access')];
+        foreach ($companies as $company) {
+            $companyoptions[$company->id] = $company->name . ' (' . $company->shortname . ')';
+        }
+        $mform->addElement('select', 'companyid', get_string('company', 'local_platform_access'), $companyoptions);
+        $mform->setDefault('companyid', 0);
+        $mform->addHelpButton('companyid', 'company', 'local_platform_access');
+
         // Access type.
         $accesstypes = [
-            'both' => get_string('both', 'local_platform_access'),
+            'all' => get_string('all_access', 'local_platform_access'),
             'login' => get_string('loginonly', 'local_platform_access'),
             'course' => get_string('courseonly', 'local_platform_access'),
+            'activity' => get_string('activityonly', 'local_platform_access'),
         ];
         $mform->addElement('select', 'accesstype', get_string('accesstype', 'local_platform_access'), $accesstypes);
-        $mform->setDefault('accesstype', 'both');
+        $mform->setDefault('accesstype', 'all');
 
         // Date range.
         $mform->addElement('date_selector', 'datefrom', get_string('datefrom', 'local_platform_access'));
@@ -72,6 +83,12 @@ class generate_form extends \moodleform {
         $mform->setType('courseaccessperuser', PARAM_INT);
         $mform->setDefault('courseaccessperuser', 1);
         $mform->addRule('courseaccessperuser', null, 'numeric', null, 'client');
+
+        // Activity access per course.
+        $mform->addElement('text', 'activityaccesspercourse', get_string('activityaccesspercourse', 'local_platform_access'));
+        $mform->setType('activityaccesspercourse', PARAM_INT);
+        $mform->setDefault('activityaccesspercourse', 1);
+        $mform->addRule('activityaccesspercourse', null, 'numeric', null, 'client');
 
         // Randomize timestamps.
         $mform->addElement('advcheckbox', 'randomize', get_string('randomize', 'local_platform_access'));
@@ -110,6 +127,10 @@ class generate_form extends \moodleform {
 
         if ($data['courseaccessperuser'] < 0) {
             $errors['courseaccessperuser'] = get_string('error');
+        }
+
+        if ($data['activityaccesspercourse'] < 0) {
+            $errors['activityaccesspercourse'] = get_string('error');
         }
 
         return $errors;

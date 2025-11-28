@@ -43,6 +43,9 @@ class generator {
     /** @var int Number of course accesses per user */
     protected $courseaccessperuser;
 
+    /** @var int Number of activity accesses per course */
+    protected $activityaccesspercourse;
+
     /** @var bool Whether to randomize timestamps */
     protected $randomize;
 
@@ -52,14 +55,18 @@ class generator {
     /** @var bool Only active users */
     protected $onlyactive;
 
-    /** @var string Access type: 'login', 'course', 'both' */
+    /** @var string Access type: 'login', 'course', 'activity', 'all' */
     protected $accesstype;
+
+    /** @var int Company ID (0 = all companies) */
+    protected $companyid;
 
     /** @var array Statistics */
     protected $stats = [
         'users_processed' => 0,
         'logins_generated' => 0,
         'course_access_generated' => 0,
+        'activity_access_generated' => 0,
         'lastaccess_updated' => 0,
     ];
 
@@ -73,10 +80,12 @@ class generator {
         $this->dateto = $options['dateto'] ?? time();
         $this->loginsperuser = $options['loginsperuser'] ?? 1;
         $this->courseaccessperuser = $options['courseaccessperuser'] ?? 1;
+        $this->activityaccesspercourse = $options['activityaccesspercourse'] ?? 1;
         $this->randomize = $options['randomize'] ?? true;
         $this->includeadmins = $options['includeadmins'] ?? false;
         $this->onlyactive = $options['onlyactive'] ?? true;
-        $this->accesstype = $options['accesstype'] ?? 'both';
+        $this->accesstype = $options['accesstype'] ?? 'all';
+        $this->companyid = $options['companyid'] ?? 0;
     }
 
     /**
@@ -101,66 +110,109 @@ class generator {
     }
 
     /**
-     * Get users to process.
+     * Get all companies.
+     *
+     * @return array Array of company objects
+     */
+    public static function get_companies(): array {
+        global $DB;
+
+        return $DB->get_records('company', ['suspended' => 0], 'name ASC', 'id, name, shortname');
+    }
+
+    /**
+     * Get users to process (filtered by company if set).
      *
      * @return array Array of user objects
      */
     public function get_users(): array {
         global $DB;
 
-        $conditions = [];
         $params = [];
 
-        // Only active users (not deleted, not suspended).
-        if ($this->onlyactive) {
-            $conditions[] = 'deleted = 0';
-            $conditions[] = 'suspended = 0';
-        }
+        // Base query for users in a company.
+        if ($this->companyid > 0) {
+            $sql = "SELECT DISTINCT u.*
+                    FROM {user} u
+                    JOIN {company_users} cu ON cu.userid = u.id
+                    WHERE cu.companyid = :companyid";
+            $params['companyid'] = $this->companyid;
 
-        // Exclude guest user.
-        $conditions[] = 'id <> :guestid';
-        $params['guestid'] = 1; // Guest user is usually ID 1.
+            // Only active users in company.
+            if ($this->onlyactive) {
+                $sql .= " AND cu.suspended = 0";
+            }
+        } else {
+            // All users from all companies.
+            $sql = "SELECT DISTINCT u.*
+                    FROM {user} u
+                    JOIN {company_users} cu ON cu.userid = u.id
+                    WHERE 1=1";
 
-        // Exclude admin users if not included.
-        if (!$this->includeadmins) {
-            $adminids = get_admins();
-            if (!empty($adminids)) {
-                $adminidlist = implode(',', array_keys($adminids));
-                $conditions[] = "id NOT IN ($adminidlist)";
+            if ($this->onlyactive) {
+                $sql .= " AND cu.suspended = 0";
             }
         }
 
-        // Exclude users with username 'guest'.
-        $conditions[] = "username <> 'guest'";
+        // Only active users (not deleted, not suspended in Moodle).
+        if ($this->onlyactive) {
+            $sql .= " AND u.deleted = 0 AND u.suspended = 0";
+        }
 
-        $where = implode(' AND ', $conditions);
+        // Exclude guest user.
+        $sql .= " AND u.id > 1 AND u.username <> 'guest'";
 
-        return $DB->get_records_select('user', $where, $params, 'id ASC');
+        // Exclude admin users if not included.
+        if (!$this->includeadmins) {
+            $adminids = array_keys(get_admins());
+            if (!empty($adminids)) {
+                list($insql, $inparams) = $DB->get_in_or_equal($adminids, SQL_PARAMS_NAMED, 'admin', false);
+                $sql .= " AND u.id $insql";
+                $params = array_merge($params, $inparams);
+            }
+        }
+
+        $sql .= " ORDER BY u.id ASC";
+
+        return $DB->get_records_sql($sql, $params);
     }
 
     /**
-     * Get courses to process.
+     * Get courses for a company.
      *
      * @return array Array of course objects
      */
-    public function get_courses(): array {
+    public function get_company_courses(): array {
         global $DB;
 
-        // Get all visible courses except site course (id=1).
-        return $DB->get_records_select(
-            'course',
-            'id > 1 AND visible = 1',
-            [],
-            'id ASC',
-            'id, fullname, shortname, category'
-        );
+        if ($this->companyid > 0) {
+            // Get courses associated with the company.
+            $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname, c.category
+                    FROM {course} c
+                    JOIN {company_course} cc ON cc.courseid = c.id
+                    WHERE cc.companyid = :companyid
+                    AND c.id > 1
+                    AND c.visible = 1
+                    ORDER BY c.id ASC";
+
+            return $DB->get_records_sql($sql, ['companyid' => $this->companyid]);
+        } else {
+            // Get all visible courses.
+            return $DB->get_records_select(
+                'course',
+                'id > 1 AND visible = 1',
+                [],
+                'id ASC',
+                'id, fullname, shortname, category'
+            );
+        }
     }
 
     /**
      * Get courses where a user is enrolled.
      *
      * @param int $userid User ID
-     * @return array Array of course IDs
+     * @return array Array of course objects
      */
     public function get_user_courses(int $userid): array {
         global $DB;
@@ -176,6 +228,42 @@ class generator {
                 ORDER BY c.id ASC";
 
         return $DB->get_records_sql($sql, ['userid' => $userid]);
+    }
+
+    /**
+     * Get course modules (activities) for a course.
+     *
+     * @param int $courseid Course ID
+     * @return array Array of course module objects
+     */
+    public function get_course_modules(int $courseid): array {
+        global $DB;
+
+        $sql = "SELECT cm.id, cm.course, cm.module, cm.instance, m.name as modname
+                FROM {course_modules} cm
+                JOIN {modules} m ON m.id = cm.module
+                WHERE cm.course = :courseid
+                AND cm.visible = 1
+                AND cm.deletioninprogress = 0
+                ORDER BY cm.id ASC";
+
+        return $DB->get_records_sql($sql, ['courseid' => $courseid]);
+    }
+
+    /**
+     * Get activity instance name.
+     *
+     * @param object $cm Course module object
+     * @return string Activity name
+     */
+    protected function get_activity_name($cm): string {
+        global $DB;
+
+        $table = $cm->modname;
+        if ($instance = $DB->get_record($table, ['id' => $cm->instance], 'id, name')) {
+            return $instance->name;
+        }
+        return 'Activity ' . $cm->id;
     }
 
     /**
@@ -326,7 +414,15 @@ class generator {
         global $DB;
 
         $ip = $this->get_random_ip();
-        $coursecontext = \context_course::instance($course->id);
+
+        try {
+            $coursecontext = \context_course::instance($course->id, IGNORE_MISSING);
+            if (!$coursecontext) {
+                return false;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
 
         // Insert into logstore_standard_log.
         $logrecord = new \stdClass();
@@ -361,6 +457,66 @@ class generator {
             return true;
         } catch (\Exception $e) {
             debugging('Error generating course access record: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            return false;
+        }
+    }
+
+    /**
+     * Generate activity access record for a user.
+     *
+     * @param object $user User object
+     * @param object $course Course object
+     * @param object $cm Course module object
+     * @param int $timestamp Timestamp for the access
+     * @return bool Success
+     */
+    public function generate_activity_access_record($user, $course, $cm, int $timestamp): bool {
+        global $DB;
+
+        $ip = $this->get_random_ip();
+
+        try {
+            $cmcontext = \context_module::instance($cm->id, IGNORE_MISSING);
+            if (!$cmcontext) {
+                return false;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        // Build event name based on module type.
+        $eventname = '\\mod_' . $cm->modname . '\\event\\course_module_viewed';
+
+        // Insert into logstore_standard_log.
+        $logrecord = new \stdClass();
+        $logrecord->eventname = $eventname;
+        $logrecord->component = 'mod_' . $cm->modname;
+        $logrecord->action = 'viewed';
+        $logrecord->target = 'course_module';
+        $logrecord->objecttable = $cm->modname;
+        $logrecord->objectid = $cm->instance;
+        $logrecord->crud = 'r';
+        $logrecord->edulevel = 2; // LEVEL_PARTICIPATING
+        $logrecord->contextid = $cmcontext->id;
+        $logrecord->contextlevel = CONTEXT_MODULE;
+        $logrecord->contextinstanceid = $cm->id;
+        $logrecord->userid = $user->id;
+        $logrecord->courseid = $course->id;
+        $logrecord->relateduserid = null;
+        $logrecord->anonymous = 0;
+        $logrecord->other = 'N;';
+        $logrecord->timecreated = $timestamp;
+        $logrecord->origin = 'web';
+        $logrecord->ip = $ip;
+        $logrecord->realuserid = null;
+
+        try {
+            $DB->insert_record('logstore_standard_log', $logrecord);
+            $this->stats['activity_access_generated']++;
+
+            return true;
+        } catch (\Exception $e) {
+            debugging('Error generating activity access record: ' . $e->getMessage(), DEBUG_DEVELOPER);
             return false;
         }
     }
@@ -405,14 +561,22 @@ class generator {
     public function run(?callable $progresscallback = null): array {
         $starttime = time();
 
-        // Get users.
+        // Get users from the company.
         $users = $this->get_users();
         if (empty($users)) {
             return $this->stats;
         }
 
-        // Get all courses (for users without specific enrollments).
-        $allcourses = $this->get_courses();
+        // Get courses for the company.
+        $companycourses = $this->get_company_courses();
+
+        // Pre-fetch course modules for activity access.
+        $coursemodules = [];
+        if ($this->accesstype === 'activity' || $this->accesstype === 'all') {
+            foreach ($companycourses as $course) {
+                $coursemodules[$course->id] = $this->get_course_modules($course->id);
+            }
+        }
 
         foreach ($users as $user) {
             $this->stats['users_processed']++;
@@ -422,25 +586,42 @@ class generator {
             }
 
             // Generate login records.
-            if ($this->accesstype === 'login' || $this->accesstype === 'both') {
+            if ($this->accesstype === 'login' || $this->accesstype === 'all') {
                 for ($i = 0; $i < $this->loginsperuser; $i++) {
                     $timestamp = $this->get_random_timestamp();
                     $this->generate_login_record($user, $timestamp);
                 }
             }
 
+            // Get courses where user is enrolled (or use company courses).
+            $usercourses = $this->get_user_courses($user->id);
+            if (empty($usercourses)) {
+                $usercourses = $companycourses;
+            }
+
             // Generate course access records.
-            if ($this->accesstype === 'course' || $this->accesstype === 'both') {
-                // Get courses where user is enrolled.
-                $usercourses = $this->get_user_courses($user->id);
-
-                // If user has no enrollments, use all courses.
-                $courses = !empty($usercourses) ? $usercourses : $allcourses;
-
-                foreach ($courses as $course) {
+            if ($this->accesstype === 'course' || $this->accesstype === 'all') {
+                foreach ($usercourses as $course) {
                     for ($i = 0; $i < $this->courseaccessperuser; $i++) {
                         $timestamp = $this->get_random_timestamp();
                         $this->generate_course_access_record($user, $course, $timestamp);
+                    }
+                }
+            }
+
+            // Generate activity access records.
+            if ($this->accesstype === 'activity' || $this->accesstype === 'all') {
+                foreach ($usercourses as $course) {
+                    if (!isset($coursemodules[$course->id])) {
+                        $coursemodules[$course->id] = $this->get_course_modules($course->id);
+                    }
+
+                    $modules = $coursemodules[$course->id];
+                    foreach ($modules as $cm) {
+                        for ($i = 0; $i < $this->activityaccesspercourse; $i++) {
+                            $timestamp = $this->get_random_timestamp();
+                            $this->generate_activity_access_record($user, $course, $cm, $timestamp);
+                        }
                     }
                 }
             }
