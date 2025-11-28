@@ -5811,3 +5811,146 @@ body.pagelayout-incourse {
         width: 100% !important;
     }
 }
+
+// ===========================================================================
+// DRAWER / SIDEBAR NAVIGATION - ISER Branding
+// Sobrescribe los estilos de RemUI para usar colores ISER
+// ===========================================================================
+
+// Links globales con colores ISER
+a {
+    color: $iser-verde !important;
+    text-decoration: none !important;
+    background-color: transparent !important;
+    transition: color $transition-base !important;
+
+    &:hover,
+    &:focus {
+        color: $iser-rojo !important;
+        text-decoration: none !important;
+    }
+}
+
+// Excepciones para botones y elementos especiales
+.btn,
+.nav-link,
+.dropdown-item,
+.page-link,
+.badge {
+    a& {
+        color: inherit !important;
+    }
+}
+
+// Drawer lateral izquierdo
+.drawer.drawer-left {
+    .drawercontent {
+        .list-group {
+            .list-group-item {
+                color: $iser-gris-600 !important;
+                padding: $spacer-md $spacer-lg !important;
+                border: unset !important;
+                font-weight: $font-weight-semibold !important;
+                font-size: $font-size-base !important;
+                line-height: $spacer-lg !important;
+                background-color: $iser-blanco !important;
+                transition: all $transition-base !important;
+
+                &.active {
+                    background-color: $iser-verde !important;
+                    color: $iser-blanco !important;
+                    border-color: $iser-verde !important;
+                    box-shadow: none !important;
+                }
+
+                &:hover,
+                &:focus {
+                    background-color: $iser-verde-light !important;
+                    color: $iser-verde !important;
+                    box-shadow: none !important;
+                }
+            }
+
+            a.home {
+                display: block !important;
+            }
+        }
+    }
+}
+
+// Drawer primary (panel de navegación principal)
+.drawer-primary {
+    .drawercontent {
+        .list-group {
+            .list-group-item {
+                border-left: 0 !important;
+                border-right: 0 !important;
+            }
+        }
+    }
+}
+
+// List group items general
+.list-group-item {
+    position: relative !important;
+    display: block !important;
+    padding: $spacer-sm + $spacer-xs $spacer-md + $spacer-xs !important;
+    background-color: $iser-blanco !important;
+    border: 1px solid rgba($iser-negro, 0.125) !important;
+
+    & + .list-group-item {
+        border-top-width: 0 !important;
+
+        &.active {
+            margin-top: -1px !important;
+            border-top-width: 1px !important;
+        }
+    }
+
+    &.active {
+        z-index: 2 !important;
+        color: $iser-blanco !important;
+        background-color: $iser-verde !important;
+        border-color: $iser-verde !important;
+    }
+}
+
+.list-group-item-action {
+    width: 100% !important;
+    color: $iser-gris-700 !important;
+    text-align: inherit !important;
+
+    &:hover,
+    &:focus {
+        z-index: 1 !important;
+        color: $iser-gris-700 !important;
+        text-decoration: none !important;
+        background-color: $iser-gris-100 !important;
+    }
+}
+
+// Scrollbar personalizada con colores ISER
+* {
+    scrollbar-width: thin !important;
+    scrollbar-color: $iser-gris-300 $iser-gris-100 !important;
+}
+
+*::-webkit-scrollbar {
+    width: 8px !important;
+    height: 8px !important;
+}
+
+*::-webkit-scrollbar-track {
+    background: $iser-gris-100 !important;
+    border-radius: $border-radius-sm !important;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: $iser-gris-400 !important;
+    border-radius: $border-radius-sm !important;
+    border: 2px solid $iser-gris-100 !important;
+
+    &:hover {
+        background-color: $iser-gris-500 !important;
+    }
+}
