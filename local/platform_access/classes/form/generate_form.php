@@ -108,36 +108,30 @@ class generate_form extends \moodleform {
         $mform->addElement('header', 'accesscounts', get_string('accesscounts', 'local_platform_access'));
 
         // Logins per user (min-max).
-        $loginsgroup = [];
-        $loginsgroup[] = $mform->createElement('text', 'loginsmin', '', ['size' => 5]);
-        $loginsgroup[] = $mform->createElement('static', 'loginssep', '', ' - ');
-        $loginsgroup[] = $mform->createElement('text', 'loginsmax', '', ['size' => 5]);
-        $mform->addGroup($loginsgroup, 'loginsgroup', get_string('loginsperuser', 'local_platform_access'), ' ', false);
+        $mform->addElement('text', 'loginsmin', get_string('loginsperuser', 'local_platform_access') . ' (min)', ['size' => 5]);
         $mform->setType('loginsmin', PARAM_INT);
-        $mform->setType('loginsmax', PARAM_INT);
         $mform->setDefault('loginsmin', 1);
+
+        $mform->addElement('text', 'loginsmax', get_string('loginsperuser', 'local_platform_access') . ' (max)', ['size' => 5]);
+        $mform->setType('loginsmax', PARAM_INT);
         $mform->setDefault('loginsmax', 5);
 
         // Course access per user (min-max).
-        $coursegroup = [];
-        $coursegroup[] = $mform->createElement('text', 'courseaccessmin', '', ['size' => 5]);
-        $coursegroup[] = $mform->createElement('static', 'courseaccesssep', '', ' - ');
-        $coursegroup[] = $mform->createElement('text', 'courseaccessmax', '', ['size' => 5]);
-        $mform->addGroup($coursegroup, 'coursegroup', get_string('courseaccessperuser', 'local_platform_access'), ' ', false);
+        $mform->addElement('text', 'courseaccessmin', get_string('courseaccessperuser', 'local_platform_access') . ' (min)', ['size' => 5]);
         $mform->setType('courseaccessmin', PARAM_INT);
-        $mform->setType('courseaccessmax', PARAM_INT);
         $mform->setDefault('courseaccessmin', 1);
+
+        $mform->addElement('text', 'courseaccessmax', get_string('courseaccessperuser', 'local_platform_access') . ' (max)', ['size' => 5]);
+        $mform->setType('courseaccessmax', PARAM_INT);
         $mform->setDefault('courseaccessmax', 3);
 
         // Activity access per course (min-max).
-        $activitygroup = [];
-        $activitygroup[] = $mform->createElement('text', 'activityaccessmin', '', ['size' => 5]);
-        $activitygroup[] = $mform->createElement('static', 'activityaccesssep', '', ' - ');
-        $activitygroup[] = $mform->createElement('text', 'activityaccessmax', '', ['size' => 5]);
-        $mform->addGroup($activitygroup, 'activitygroup', get_string('activityaccesspercourse', 'local_platform_access'), ' ', false);
+        $mform->addElement('text', 'activityaccessmin', get_string('activityaccesspercourse', 'local_platform_access') . ' (min)', ['size' => 5]);
         $mform->setType('activityaccessmin', PARAM_INT);
-        $mform->setType('activityaccessmax', PARAM_INT);
         $mform->setDefault('activityaccessmin', 1);
+
+        $mform->addElement('text', 'activityaccessmax', get_string('activityaccesspercourse', 'local_platform_access') . ' (max)', ['size' => 5]);
+        $mform->setType('activityaccessmax', PARAM_INT);
         $mform->setDefault('activityaccessmax', 2);
 
         // Submit button.
@@ -159,27 +153,27 @@ class generate_form extends \moodleform {
         }
 
         if ($data['loginsmin'] < 0 || $data['loginsmax'] < 0) {
-            $errors['loginsgroup'] = get_string('error');
+            $errors['loginsmin'] = get_string('error');
         }
 
         if ($data['loginsmin'] > $data['loginsmax']) {
-            $errors['loginsgroup'] = get_string('minmaxerror', 'local_platform_access');
+            $errors['loginsmax'] = get_string('minmaxerror', 'local_platform_access');
         }
 
         if ($data['courseaccessmin'] < 0 || $data['courseaccessmax'] < 0) {
-            $errors['coursegroup'] = get_string('error');
+            $errors['courseaccessmin'] = get_string('error');
         }
 
         if ($data['courseaccessmin'] > $data['courseaccessmax']) {
-            $errors['coursegroup'] = get_string('minmaxerror', 'local_platform_access');
+            $errors['courseaccessmax'] = get_string('minmaxerror', 'local_platform_access');
         }
 
         if ($data['activityaccessmin'] < 0 || $data['activityaccessmax'] < 0) {
-            $errors['activitygroup'] = get_string('error');
+            $errors['activityaccessmin'] = get_string('error');
         }
 
         if ($data['activityaccessmin'] > $data['activityaccessmax']) {
-            $errors['activitygroup'] = get_string('minmaxerror', 'local_platform_access');
+            $errors['activityaccessmax'] = get_string('minmaxerror', 'local_platform_access');
         }
 
         return $errors;

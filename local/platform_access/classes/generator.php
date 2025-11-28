@@ -94,17 +94,18 @@ class generator {
     public function __construct(array $options = []) {
         $this->datefrom = $options['datefrom'] ?? strtotime('2025-11-15');
         $this->dateto = $options['dateto'] ?? time();
-        $this->loginsmin = $options['loginsmin'] ?? 1;
-        $this->loginsmax = $options['loginsmax'] ?? 5;
-        $this->courseaccessmin = $options['courseaccessmin'] ?? 1;
-        $this->courseaccessmax = $options['courseaccessmax'] ?? 3;
-        $this->activityaccessmin = $options['activityaccessmin'] ?? 1;
-        $this->activityaccessmax = $options['activityaccessmax'] ?? 2;
+        // Ensure minimum values are at least 1.
+        $this->loginsmin = max(1, intval($options['loginsmin'] ?? 1));
+        $this->loginsmax = max($this->loginsmin, intval($options['loginsmax'] ?? 5));
+        $this->courseaccessmin = max(1, intval($options['courseaccessmin'] ?? 1));
+        $this->courseaccessmax = max($this->courseaccessmin, intval($options['courseaccessmax'] ?? 3));
+        $this->activityaccessmin = max(1, intval($options['activityaccessmin'] ?? 1));
+        $this->activityaccessmax = max($this->activityaccessmin, intval($options['activityaccessmax'] ?? 2));
         $this->randomize = $options['randomize'] ?? true;
         $this->includeadmins = $options['includeadmins'] ?? false;
         $this->onlyactive = $options['onlyactive'] ?? true;
         $this->accesstype = $options['accesstype'] ?? 'all';
-        $this->companyid = $options['companyid'] ?? 0;
+        $this->companyid = intval($options['companyid'] ?? 0);
         $this->updateusercreated = $options['updateusercreated'] ?? true;
         $this->usercreateddate = $options['usercreateddate'] ?? strtotime('2025-11-15');
     }
@@ -165,8 +166,13 @@ class generator {
 
         $params = [];
 
-        // Base query for users in a company.
-        if ($this->companyid > 0) {
+        // Check if company_users table exists and has records.
+        $companyusersexists = $DB->get_manager()->table_exists('company_users');
+        $hascompanyusers = $companyusersexists && $DB->count_records('company_users') > 0;
+
+        // Base query for users.
+        if ($this->companyid > 0 && $hascompanyusers) {
+            // Specific company selected.
             $sql = "SELECT DISTINCT u.*
                     FROM {user} u
                     JOIN {company_users} cu ON cu.userid = u.id
@@ -177,7 +183,7 @@ class generator {
             if ($this->onlyactive) {
                 $sql .= " AND cu.suspended = 0";
             }
-        } else {
+        } else if ($hascompanyusers) {
             // All users from all companies.
             $sql = "SELECT DISTINCT u.*
                     FROM {user} u
@@ -187,6 +193,11 @@ class generator {
             if ($this->onlyactive) {
                 $sql .= " AND cu.suspended = 0";
             }
+        } else {
+            // Fallback: get all users if no company_users records exist.
+            $sql = "SELECT u.*
+                    FROM {user} u
+                    WHERE 1=1";
         }
 
         // Only active users (not deleted, not suspended in Moodle).
@@ -194,7 +205,7 @@ class generator {
             $sql .= " AND u.deleted = 0 AND u.suspended = 0";
         }
 
-        // Exclude guest user.
+        // Exclude guest user and admin user.
         $sql .= " AND u.id > 1 AND u.username <> 'guest'";
 
         // Exclude admin users if not included.
@@ -255,7 +266,11 @@ class generator {
     public function get_company_courses(): array {
         global $DB;
 
-        if ($this->companyid > 0) {
+        // Check if company_course table exists and has records.
+        $companycourseexists = $DB->get_manager()->table_exists('company_course');
+        $hascompanycourses = $companycourseexists && $DB->count_records('company_course') > 0;
+
+        if ($this->companyid > 0 && $hascompanycourses) {
             // Get courses associated with the company.
             $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname, c.category
                     FROM {course} c
@@ -267,7 +282,7 @@ class generator {
 
             return $DB->get_records_sql($sql, ['companyid' => $this->companyid]);
         } else {
-            // Get all visible courses.
+            // Get all visible courses (fallback).
             return $DB->get_records_select(
                 'course',
                 'id > 1 AND visible = 1',
@@ -321,6 +336,16 @@ class generator {
     }
 
     /**
+     * Check if logstore_standard_log table exists.
+     *
+     * @return bool
+     */
+    protected function logstore_exists(): bool {
+        global $DB;
+        return $DB->get_manager()->table_exists('logstore_standard_log');
+    }
+
+    /**
      * Generate login record for a user.
      *
      * @param object $user User object
@@ -329,6 +354,11 @@ class generator {
      */
     public function generate_login_record($user, int $timestamp): bool {
         global $DB;
+
+        // Verify logstore table exists.
+        if (!$this->logstore_exists()) {
+            return false;
+        }
 
         $ip = $this->get_random_ip();
         $systemcontext = \context_system::instance();
@@ -347,7 +377,7 @@ class generator {
         $logrecord->contextlevel = CONTEXT_SYSTEM;
         $logrecord->contextinstanceid = 0;
         $logrecord->userid = $user->id;
-        $logrecord->courseid = 0;
+        $logrecord->courseid = null; // Null for system-level events.
         $logrecord->relateduserid = null;
         $logrecord->anonymous = 0;
         $logrecord->other = serialize(['username' => $user->username]);
@@ -467,6 +497,11 @@ class generator {
     public function generate_course_access_record($user, $course, int $timestamp): bool {
         global $DB;
 
+        // Verify logstore table exists.
+        if (!$this->logstore_exists()) {
+            return false;
+        }
+
         $ip = $this->get_random_ip();
 
         try {
@@ -526,6 +561,11 @@ class generator {
      */
     public function generate_activity_access_record($user, $course, $cm, int $timestamp): bool {
         global $DB;
+
+        // Verify logstore table exists.
+        if (!$this->logstore_exists()) {
+            return false;
+        }
 
         $ip = $this->get_random_ip();
 
