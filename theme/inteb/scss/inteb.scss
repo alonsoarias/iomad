@@ -6131,60 +6131,132 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link):not(.badge):not([
     }
 }
 
-// Footer global - Asegurar textos blancos (excluyendo ASW)
-#top-footer:not(.asw-container):not(.asw-menu):not(.asw-footer) {
+// Footer global - Asegurar textos blancos
+#top-footer {
     background-color: $iser-verde !important;
     color: $iser-blanco !important;
     margin: 0 -15px;
-}
 
-// Enlaces del footer en blanco (excluyendo completamente ASW)
-#top-footer:not(.asw-container) a:not(.btn):not([class*="asw"]),
-.iser-footer-govco:not(.asw-container) a:not(.btn):not([class*="asw"]) {
-    color: $iser-blanco !important;
+    // Textos directos del footer
+    p, span, div, h1, h2, h3, h4, h5, h6, li, blockquote, address {
+        color: $iser-blanco !important;
+    }
 
-    &:hover,
-    &:focus {
-        color: $iser-amarillo !important;
-        text-decoration: underline !important;
+    // Enlaces del footer
+    a:not(.btn):not(.asw-menu-btn):not(.asw-btn) {
+        color: $iser-blanco !important;
+
+        &:hover,
+        &:focus {
+            color: $iser-amarillo !important;
+            text-decoration: underline !important;
+        }
     }
 }
 
-// Textos del footer en blanco (excluyendo ASW)
-#top-footer:not(.asw-container):not([class*="asw"]),
-#top-footer:not(.asw-container) p:not([class*="asw"]),
-#top-footer:not(.asw-container) span:not([class*="asw"]),
-#top-footer:not(.asw-container) div:not([class*="asw"]),
-#top-footer:not(.asw-container) h1:not([class*="asw"]),
-#top-footer:not(.asw-container) h2:not([class*="asw"]),
-#top-footer:not(.asw-container) h3:not([class*="asw"]),
-#top-footer:not(.asw-container) h4:not([class*="asw"]),
-#top-footer:not(.asw-container) h5:not([class*="asw"]),
-#top-footer:not(.asw-container) h6:not([class*="asw"]),
-#top-footer:not(.asw-container) li:not([class*="asw"]),
-.iser-footer-govco:not(.asw-container):not([class*="asw"]),
-.iser-footer-govco:not(.asw-container) p:not([class*="asw"]),
-.iser-footer-govco:not(.asw-container) span:not([class*="asw"]),
-.iser-footer-govco:not(.asw-container) div:not([class*="asw"]) {
-    color: $iser-blanco !important;
-}
+// Estilos para .iser-footer-govco
+.iser-footer-govco {
+    p, span, div {
+        color: $iser-blanco !important;
+    }
 
-// Proteger widget ASW de estilos del footer
-.asw-container,
-.asw-container *,
-.asw-menu,
-.asw-menu *,
-.asw-widget,
-.asw-widget *,
-[class*="asw-"] {
-    color: unset !important;
+    a:not(.btn):not(.asw-menu-btn):not(.asw-btn) {
+        color: $iser-blanco !important;
+
+        &:hover,
+        &:focus {
+            color: $iser-amarillo !important;
+            text-decoration: underline !important;
+        }
+    }
 }
 
 // ===========================================================================
-// ACCESSIBILITY WIDGET (ASW) - Posicionamiento basico
+// ACCESSIBILITY WIDGET (ASW) - Restaurar estilos originales del tema padre
 // ===========================================================================
-.asw-container .asw-menu {
-    top: 120px !important;
+// Estos estilos tienen mayor especificidad para sobrescribir cualquier herencia
+
+.asw-container {
+    // Restaurar colores de iconos
+    .edw-icon {
+        font-size: 24px !important;
+        width: 24px !important;
+        height: 24px !important;
+        color: #343A40 !important;
+    }
+
+    .asw-menu {
+        top: 120px !important;
+
+        // Header del menu
+        .asw-menu-header {
+            background-color: #212426 !important;
+
+            .asw-menu-title {
+                color: #fff !important;
+            }
+
+            .asw-menu-setting,
+            .asw-menu-reset,
+            .asw-menu-close {
+                .edw-icon {
+                    color: #fff !important;
+                }
+            }
+
+            .dropdown-item {
+                color: #4C5A73 !important;
+            }
+        }
+
+        // Contenido del menu
+        .asw-menu-content {
+            background: #D9DEE3 !important;
+
+            .asw-card-title,
+            .asw-adjust-font,
+            .asw-translate,
+            .asw-label,
+            .asw-amount {
+                color: #343A40 !important;
+            }
+
+            #asw-language {
+                color: #343A40 !important;
+                background-color: #fff !important;
+            }
+
+            .asw-btn {
+                .edw-icon,
+                .asw-translate {
+                    color: #343A40 !important;
+                }
+            }
+        }
+
+        // Footer del menu
+        .asw-footer {
+            background: #343A40 !important;
+
+            .feedback-heading,
+            .aw_feedbackcollection-wrapper {
+                color: #fff !important;
+            }
+        }
+    }
+}
+
+// Boton flotante ASW
+.floating-buttons-wrapper {
+    .asw-widget {
+        .asw-menu-btn {
+            background: #343A40 !important;
+
+            .edw-icon.edw-icon-Accessibility {
+                color: #fff !important;
+            }
+        }
+    }
 }
 
 // Drawer lateral izquierdo
