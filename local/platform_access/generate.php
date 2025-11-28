@@ -40,12 +40,17 @@ $companyid = required_param('companyid', PARAM_INT);
 $accesstype = required_param('accesstype', PARAM_ALPHA);
 $datefrom = required_param('datefrom', PARAM_INT);
 $dateto = required_param('dateto', PARAM_INT);
-$loginsperuser = required_param('loginsperuser', PARAM_INT);
-$courseaccessperuser = required_param('courseaccessperuser', PARAM_INT);
-$activityaccesspercourse = required_param('activityaccesspercourse', PARAM_INT);
+$loginsmin = required_param('loginsmin', PARAM_INT);
+$loginsmax = required_param('loginsmax', PARAM_INT);
+$courseaccessmin = required_param('courseaccessmin', PARAM_INT);
+$courseaccessmax = required_param('courseaccessmax', PARAM_INT);
+$activityaccessmin = required_param('activityaccessmin', PARAM_INT);
+$activityaccessmax = required_param('activityaccessmax', PARAM_INT);
 $randomize = required_param('randomize', PARAM_INT);
 $includeadmins = required_param('includeadmins', PARAM_INT);
 $onlyactive = required_param('onlyactive', PARAM_INT);
+$updateusercreated = required_param('updateusercreated', PARAM_INT);
+$usercreateddate = required_param('usercreateddate', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_INT);
 
 // Page setup.
@@ -65,12 +70,17 @@ if (!$confirm) {
         'accesstype' => $accesstype,
         'datefrom' => $datefrom,
         'dateto' => $dateto,
-        'loginsperuser' => $loginsperuser,
-        'courseaccessperuser' => $courseaccessperuser,
-        'activityaccesspercourse' => $activityaccesspercourse,
+        'loginsmin' => $loginsmin,
+        'loginsmax' => $loginsmax,
+        'courseaccessmin' => $courseaccessmin,
+        'courseaccessmax' => $courseaccessmax,
+        'activityaccessmin' => $activityaccessmin,
+        'activityaccessmax' => $activityaccessmax,
         'randomize' => $randomize,
         'includeadmins' => $includeadmins,
         'onlyactive' => $onlyactive,
+        'updateusercreated' => $updateusercreated,
+        'usercreateddate' => $usercreateddate,
         'sesskey' => sesskey(),
         'confirm' => 1,
     ]);
@@ -93,12 +103,17 @@ $options = [
     'companyid' => $companyid,
     'datefrom' => $datefrom,
     'dateto' => $dateto,
-    'loginsperuser' => $loginsperuser,
-    'courseaccessperuser' => $courseaccessperuser,
-    'activityaccesspercourse' => $activityaccesspercourse,
+    'loginsmin' => $loginsmin,
+    'loginsmax' => $loginsmax,
+    'courseaccessmin' => $courseaccessmin,
+    'courseaccessmax' => $courseaccessmax,
+    'activityaccessmin' => $activityaccessmin,
+    'activityaccessmax' => $activityaccessmax,
     'randomize' => (bool) $randomize,
     'includeadmins' => (bool) $includeadmins,
     'onlyactive' => (bool) $onlyactive,
+    'updateusercreated' => (bool) $updateusercreated,
+    'usercreateddate' => $usercreateddate,
     'accesstype' => $accesstype,
 ];
 
@@ -140,6 +155,7 @@ $table->attributes['class'] = 'generaltable';
 $table->head = [get_string('status'), get_string('value', 'scorm')];
 $table->data = [
     [get_string('usersprocessed', 'local_platform_access'), $stats['users_processed']],
+    [get_string('usersupdated', 'local_platform_access'), $stats['users_updated'] ?? 0],
     [get_string('loginsgenerated', 'local_platform_access'), $stats['logins_generated']],
     [get_string('courseaccessgenerated', 'local_platform_access'), $stats['course_access_generated']],
     [get_string('activityaccessgenerated', 'local_platform_access'), $stats['activity_access_generated']],

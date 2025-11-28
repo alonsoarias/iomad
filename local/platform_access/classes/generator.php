@@ -37,14 +37,23 @@ class generator {
     /** @var int Date to timestamp */
     protected $dateto;
 
-    /** @var int Number of logins per user */
-    protected $loginsperuser;
+    /** @var int Minimum logins per user */
+    protected $loginsmin;
 
-    /** @var int Number of course accesses per user */
-    protected $courseaccessperuser;
+    /** @var int Maximum logins per user */
+    protected $loginsmax;
 
-    /** @var int Number of activity accesses per course */
-    protected $activityaccesspercourse;
+    /** @var int Minimum course accesses per user */
+    protected $courseaccessmin;
+
+    /** @var int Maximum course accesses per user */
+    protected $courseaccessmax;
+
+    /** @var int Minimum activity accesses per course */
+    protected $activityaccessmin;
+
+    /** @var int Maximum activity accesses per course */
+    protected $activityaccessmax;
 
     /** @var bool Whether to randomize timestamps */
     protected $randomize;
@@ -61,9 +70,16 @@ class generator {
     /** @var int Company ID (0 = all companies) */
     protected $companyid;
 
+    /** @var bool Update user creation date */
+    protected $updateusercreated;
+
+    /** @var int User creation date timestamp */
+    protected $usercreateddate;
+
     /** @var array Statistics */
     protected $stats = [
         'users_processed' => 0,
+        'users_updated' => 0,
         'logins_generated' => 0,
         'course_access_generated' => 0,
         'activity_access_generated' => 0,
@@ -76,16 +92,35 @@ class generator {
      * @param array $options Options for generation
      */
     public function __construct(array $options = []) {
-        $this->datefrom = $options['datefrom'] ?? strtotime('-30 days');
+        $this->datefrom = $options['datefrom'] ?? strtotime('2025-11-15');
         $this->dateto = $options['dateto'] ?? time();
-        $this->loginsperuser = $options['loginsperuser'] ?? 1;
-        $this->courseaccessperuser = $options['courseaccessperuser'] ?? 1;
-        $this->activityaccesspercourse = $options['activityaccesspercourse'] ?? 1;
+        $this->loginsmin = $options['loginsmin'] ?? 1;
+        $this->loginsmax = $options['loginsmax'] ?? 5;
+        $this->courseaccessmin = $options['courseaccessmin'] ?? 1;
+        $this->courseaccessmax = $options['courseaccessmax'] ?? 3;
+        $this->activityaccessmin = $options['activityaccessmin'] ?? 1;
+        $this->activityaccessmax = $options['activityaccessmax'] ?? 2;
         $this->randomize = $options['randomize'] ?? true;
         $this->includeadmins = $options['includeadmins'] ?? false;
         $this->onlyactive = $options['onlyactive'] ?? true;
         $this->accesstype = $options['accesstype'] ?? 'all';
         $this->companyid = $options['companyid'] ?? 0;
+        $this->updateusercreated = $options['updateusercreated'] ?? true;
+        $this->usercreateddate = $options['usercreateddate'] ?? strtotime('2025-11-15');
+    }
+
+    /**
+     * Get a random number between min and max.
+     *
+     * @param int $min Minimum value
+     * @param int $max Maximum value
+     * @return int Random number
+     */
+    protected function get_random_count(int $min, int $max): int {
+        if ($min >= $max) {
+            return $min;
+        }
+        return rand($min, $max);
     }
 
     /**
@@ -178,6 +213,41 @@ class generator {
     }
 
     /**
+     * Update user creation date.
+     *
+     * @param object $user User object
+     * @return bool Success
+     */
+    public function update_user_created_date($user): bool {
+        global $DB;
+
+        if (!$this->updateusercreated) {
+            return false;
+        }
+
+        try {
+            // Update user table.
+            $update = new \stdClass();
+            $update->id = $user->id;
+            $update->timecreated = $this->usercreateddate;
+            $DB->update_record('user', $update);
+
+            // Update local_report_user_logins if exists.
+            if ($DB->get_manager()->table_exists('local_report_user_logins')) {
+                if ($record = $DB->get_record('local_report_user_logins', ['userid' => $user->id])) {
+                    $DB->set_field('local_report_user_logins', 'created', $this->usercreateddate, ['id' => $record->id]);
+                }
+            }
+
+            $this->stats['users_updated']++;
+            return true;
+        } catch (\Exception $e) {
+            debugging('Error updating user created date: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            return false;
+        }
+    }
+
+    /**
      * Get courses for a company.
      *
      * @return array Array of course objects
@@ -251,22 +321,6 @@ class generator {
     }
 
     /**
-     * Get activity instance name.
-     *
-     * @param object $cm Course module object
-     * @return string Activity name
-     */
-    protected function get_activity_name($cm): string {
-        global $DB;
-
-        $table = $cm->modname;
-        if ($instance = $DB->get_record($table, ['id' => $cm->instance], 'id, name')) {
-            return $instance->name;
-        }
-        return 'Activity ' . $cm->id;
-    }
-
-    /**
      * Generate login record for a user.
      *
      * @param object $user User object
@@ -337,8 +391,8 @@ class generator {
         $update = new \stdClass();
         $update->id = $userid;
 
-        // Update firstaccess if not set.
-        if (empty($user->firstaccess)) {
+        // Update firstaccess if not set or if timestamp is earlier.
+        if (empty($user->firstaccess) || $timestamp < $user->firstaccess) {
             $update->firstaccess = $timestamp;
         }
 
@@ -349,8 +403,8 @@ class generator {
         }
 
         // Update login times.
-        if ($timestamp > $user->currentlogin) {
-            $update->lastlogin = $user->currentlogin;
+        if (empty($user->currentlogin) || $timestamp > $user->currentlogin) {
+            $update->lastlogin = $user->currentlogin ?: $timestamp;
             $update->currentlogin = $timestamp;
             $update->lastip = $ip;
         }
@@ -383,7 +437,7 @@ class generator {
                 $update->firstlogin = $timestamp;
             }
 
-            if ($timestamp > $current->lastlogin) {
+            if (empty($current->lastlogin) || $timestamp > $current->lastlogin) {
                 $update->lastlogin = $timestamp;
             }
 
@@ -392,7 +446,7 @@ class generator {
             // Create new record.
             $record = new \stdClass();
             $record->userid = $user->id;
-            $record->created = $user->timecreated;
+            $record->created = $this->updateusercreated ? $this->usercreateddate : $user->timecreated;
             $record->firstlogin = $timestamp;
             $record->lastlogin = $timestamp;
             $record->logincount = 1;
@@ -585,9 +639,15 @@ class generator {
                 $progresscallback($user, $this->stats);
             }
 
-            // Generate login records.
+            // Update user creation date first.
+            if ($this->updateusercreated) {
+                $this->update_user_created_date($user);
+            }
+
+            // Generate random number of login records.
             if ($this->accesstype === 'login' || $this->accesstype === 'all') {
-                for ($i = 0; $i < $this->loginsperuser; $i++) {
+                $numlogins = $this->get_random_count($this->loginsmin, $this->loginsmax);
+                for ($i = 0; $i < $numlogins; $i++) {
                     $timestamp = $this->get_random_timestamp();
                     $this->generate_login_record($user, $timestamp);
                 }
@@ -599,17 +659,18 @@ class generator {
                 $usercourses = $companycourses;
             }
 
-            // Generate course access records.
+            // Generate random number of course access records.
             if ($this->accesstype === 'course' || $this->accesstype === 'all') {
                 foreach ($usercourses as $course) {
-                    for ($i = 0; $i < $this->courseaccessperuser; $i++) {
+                    $numaccess = $this->get_random_count($this->courseaccessmin, $this->courseaccessmax);
+                    for ($i = 0; $i < $numaccess; $i++) {
                         $timestamp = $this->get_random_timestamp();
                         $this->generate_course_access_record($user, $course, $timestamp);
                     }
                 }
             }
 
-            // Generate activity access records.
+            // Generate random number of activity access records.
             if ($this->accesstype === 'activity' || $this->accesstype === 'all') {
                 foreach ($usercourses as $course) {
                     if (!isset($coursemodules[$course->id])) {
@@ -618,7 +679,8 @@ class generator {
 
                     $modules = $coursemodules[$course->id];
                     foreach ($modules as $cm) {
-                        for ($i = 0; $i < $this->activityaccesspercourse; $i++) {
+                        $numaccess = $this->get_random_count($this->activityaccessmin, $this->activityaccessmax);
+                        for ($i = 0; $i < $numaccess; $i++) {
                             $timestamp = $this->get_random_timestamp();
                             $this->generate_activity_access_record($user, $course, $cm, $timestamp);
                         }
