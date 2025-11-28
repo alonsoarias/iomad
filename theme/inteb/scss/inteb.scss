@@ -6131,25 +6131,51 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link):not(.badge):not([
     }
 }
 
-// Footer global - Asegurar legibilidad
+// Footer global - Asegurar textos blancos
+#top-footer {
+    background-color: $iser-verde !important;
+    color: $iser-blanco !important;
+    margin: 0 -15px;
+}
+
 #page-footer,
 .footer,
 footer,
 [class*="footer"] {
     color: $iser-gris-700 !important;
+}
 
-    a:not(.btn) {
-        color: $iser-verde !important;
+// Enlaces del footer en blanco
+#page-footer a:not(.btn),
+.footer a:not(.btn),
+footer a:not(.btn),
+[class*="footer"] a:not(.btn) {
+    color: $iser-blanco !important;
 
-        &:hover,
-        &:focus {
-            color: $iser-rojo !important;
-        }
+    &:hover,
+    &:focus {
+        color: $iser-amarillo !important;
+        text-decoration: underline !important;
     }
+}
 
-    p, span, div {
-        color: inherit !important;
-    }
+// Textos del footer en blanco
+#top-footer,
+#top-footer p,
+#top-footer span,
+#top-footer div,
+#top-footer h1,
+#top-footer h2,
+#top-footer h3,
+#top-footer h4,
+#top-footer h5,
+#top-footer h6,
+#top-footer li,
+.iser-footer-govco,
+.iser-footer-govco p,
+.iser-footer-govco span,
+.iser-footer-govco div {
+    color: $iser-blanco !important;
 }
 
 // Drawer lateral izquierdo
@@ -6265,78 +6291,3 @@ footer,
     }
 }
 
-// ===========================================================================
-// ACCESSIBILITY WIDGET (ASW) - ISER Branding
-// Estilos para el widget de accesibilidad
-// ===========================================================================
-
-$asw-menu-width: 505px;
-$asw-menu-top: 120px;
-$asw-menu-bottom: 60px;
-$asw-menu-right: 70px;
-
-.asw-container {
-    .asw-menu {
-        top: $asw-menu-top !important;
-        bottom: $asw-menu-bottom !important;
-        left: unset !important;
-        right: $asw-menu-right !important;
-        height: calc(100% - #{$asw-menu-top + 30px}) !important;
-        border-radius: $border-radius-xl + $border-radius-sm !important;
-        border: 1px solid $iser-gris-300 !important;
-        width: $asw-menu-width !important;
-        background-color: $iser-blanco !important;
-        box-shadow: $shadow-xl !important;
-    }
-
-    .asw-menu-header {
-        background-color: $iser-verde !important;
-        color: $iser-blanco !important;
-        border-radius: $border-radius-xl + $border-radius-sm $border-radius-xl + $border-radius-sm 0 0 !important;
-    }
-
-    .asw-menu-btn,
-    .asw-btn {
-        background-color: $iser-verde !important;
-        color: $iser-blanco !important;
-        border-radius: $border-radius-lg !important;
-        transition: all $transition-base !important;
-
-        &:hover,
-        &:focus {
-            background-color: $iser-verde-dark !important;
-            box-shadow: $shadow-primary !important;
-        }
-
-        &.asw-selected,
-        &.active {
-            background-color: $iser-verde-dark !important;
-            border-color: $iser-verde-dark !important;
-        }
-    }
-
-    .asw-items {
-        .asw-item {
-            border-radius: $border-radius-lg !important;
-            transition: all $transition-base !important;
-
-            &:hover {
-                background-color: $iser-verde-light !important;
-            }
-
-            &.asw-selected {
-                background-color: $iser-verde !important;
-                color: $iser-blanco !important;
-            }
-        }
-    }
-
-    // Responsive para el menú de accesibilidad
-    @media (max-width: $breakpoint-md) {
-        .asw-menu {
-            width: calc(100% - #{$spacer-xl}) !important;
-            right: $spacer-md !important;
-            left: $spacer-md !important;
-        }
-    }
-}
