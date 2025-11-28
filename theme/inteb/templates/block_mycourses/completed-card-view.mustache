@@ -39,7 +39,7 @@
                                     <div class="inteb-card-badges position-absolute" style="top: 10px; left: 10px;">
                                         <span class="badge badge-success">
                                             <i class="fa fa-check-circle mr-1" aria-hidden="true"></i>
-                                            {{#str}}mycourses_completed, theme_inteb{{/str}}
+                                            {{#str}}completed, block_mycourses{{/str}}
                                         </span>
                                     </div>
                                     {{! Visibility Badge }}
@@ -72,7 +72,7 @@
                                     {{! Progress Section - Completed (100%) }}
                                     <div class="inteb-progress-wrapper mb-2">
                                         <div class="d-flex justify-content-between align-items-center mb-1">
-                                            <span class="small text-muted">{{#str}}mycourses_progress, theme_inteb{{/str}}</span>
+                                            <span class="small text-muted">{{#str}}progress, block_mycourses{{/str}}</span>
                                             <span class="small font-weight-bold text-success">100%</span>
                                         </div>
                                         <div class="progress inteb-progress" style="height: 8px;">
@@ -92,7 +92,7 @@
                                         {{#timecompleted}}
                                         <div class="inteb-info-row small mb-1">
                                             <i class="fa fa-calendar-check-o text-success mr-1" aria-hidden="true"></i>
-                                            <span class="text-muted">{{#str}}mycourses_timecompleted, theme_inteb{{/str}}:</span>
+                                            <span class="text-muted">{{#str}}completedon, block_mycourses{{/str}}:</span>
                                             <strong class="ml-1">{{timecompleted}}</strong>
                                         </div>
                                         {{/timecompleted}}
@@ -101,7 +101,7 @@
                                         {{#timeexpires}}
                                         <div class="inteb-info-row small mb-1">
                                             <i class="fa fa-clock-o text-warning mr-1" aria-hidden="true"></i>
-                                            <span class="text-muted">{{#str}}mycourses_timeexpires, theme_inteb{{/str}}:</span>
+                                            <span class="text-muted">{{#str}}expireson, block_mycourses{{/str}}:</span>
                                             <strong class="ml-1">{{timeexpires}}</strong>
                                         </div>
                                         {{/timeexpires}}
@@ -127,7 +127,7 @@
                                         <div class="inteb-certificates mt-2 pt-2 border-top">
                                             <div class="small text-muted mb-1">
                                                 <i class="fa fa-certificate mr-1" aria-hidden="true"></i>
-                                                {{#str}}mycourses_downloadcert, theme_inteb{{/str}}:
+                                                {{#str}}downloadcert, block_mycourses{{/str}}:
                                             </div>
                                             <div class="d-flex flex-wrap">
                                                 {{#certificates}}
@@ -145,7 +145,7 @@
                                 <div class="card-footer bg-transparent border-0 pt-0">
                                     <a href="{{{url}}}" class="btn btn-outline-secondary btn-sm btn-block inteb-review-btn">
                                         <i class="fa fa-eye mr-1" aria-hidden="true"></i>
-                                        {{#str}}mycourses_viewcourse, theme_inteb{{/str}}
+                                        {{#str}}viewcourse, block_mycourses{{/str}}
                                     </a>
                                 </div>
                             </div>
@@ -159,8 +159,8 @@
                         <div class="inteb-empty-icon mb-3">
                             <i class="fa fa-trophy fa-4x text-muted"></i>
                         </div>
-                        <h5 class="text-muted mb-2">{{#str}}mycourses_nocompleted, theme_inteb{{/str}}</h5>
-                        <p class="text-muted small">{{#str}}mycourses_nocompleted, theme_inteb{{/str}}</p>
+                        <h5 class="text-muted mb-2">{{#str}}nocompleted, block_mycourses{{/str}}</h5>
+                        <p class="text-muted small">{{#str}}nocompleted, block_mycourses{{/str}}</p>
                     </div>
                     {{/completedview.courses}}
                 </div>

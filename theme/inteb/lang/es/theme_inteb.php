@@ -198,19 +198,8 @@ $string['errorloadingprogress'] = 'Error al cargar el progreso';
 $string['noactivitieswithtracking_teacher'] = 'El curso tiene habilitado el seguimiento de finalización, pero ninguna actividad tiene configuradas las condiciones de finalización. Por favor, configure las condiciones de finalización en cada actividad.';
 $string['noactivitieswithtracking_student'] = 'El seguimiento de progreso no está disponible para este curso en este momento.';
 
-// My courses block - Course listing strings
-$string['mycourses_progress'] = 'Progreso';
-$string['mycourses_completed'] = 'Completado';
+// My courses block - Additional strings for theme templates
 $string['mycourses_new'] = 'Nuevo';
 $string['mycourses_continue'] = 'Continuar';
-$string['mycourses_startcourse'] = 'Iniciar curso';
-$string['mycourses_viewcourse'] = 'Ver curso';
-$string['mycourses_enrolled'] = 'Inscrito';
-$string['mycourses_noinprogress'] = 'No hay cursos en progreso';
-$string['mycourses_nocompleted'] = 'No hay cursos completados';
-$string['mycourses_noavailable'] = 'No hay cursos disponibles';
-$string['mycourses_downloadcert'] = 'Descargar certificado';
 $string['mycourses_finalscore'] = 'Calificación final';
 $string['mycourses_result'] = 'Resultado';
-$string['mycourses_timecompleted'] = 'Completado el';
-$string['mycourses_timeexpires'] = 'Expira el';

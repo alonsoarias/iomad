@@ -198,19 +198,8 @@ $string['errorloadingprogress'] = 'Error loading progress';
 $string['noactivitieswithtracking_teacher'] = 'The course has completion tracking enabled, but no activities have been configured with completion conditions. Please configure completion conditions on each activity.';
 $string['noactivitieswithtracking_student'] = 'Progress tracking is not available for this course at this time.';
 
-// My courses block - Course listing strings
-$string['mycourses_progress'] = 'Progress';
-$string['mycourses_completed'] = 'Completed';
+// My courses block - Additional strings for theme templates
 $string['mycourses_new'] = 'New';
 $string['mycourses_continue'] = 'Continue';
-$string['mycourses_startcourse'] = 'Start course';
-$string['mycourses_viewcourse'] = 'View course';
-$string['mycourses_enrolled'] = 'Enrolled';
-$string['mycourses_noinprogress'] = 'No courses in progress';
-$string['mycourses_nocompleted'] = 'No completed courses';
-$string['mycourses_noavailable'] = 'No available courses';
-$string['mycourses_downloadcert'] = 'Download certificate';
 $string['mycourses_finalscore'] = 'Final score';
 $string['mycourses_result'] = 'Result';
-$string['mycourses_timecompleted'] = 'Completed on';
-$string['mycourses_timeexpires'] = 'Expires on';
