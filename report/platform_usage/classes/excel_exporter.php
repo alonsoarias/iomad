@@ -1,0 +1,750 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Enhanced Excel exporter with charts using PHPSpreadsheet.
+ *
+ * @package   report_platform_usage
+ * @copyright 2024 IOMAD
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace report_platform_usage;
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once($GLOBALS['CFG']->libdir . '/phpspreadsheet/vendor/autoload.php');
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Chart\Chart;
+use PhpOffice\PhpSpreadsheet\Chart\DataSeries;
+use PhpOffice\PhpSpreadsheet\Chart\DataSeriesValues;
+use PhpOffice\PhpSpreadsheet\Chart\Legend;
+use PhpOffice\PhpSpreadsheet\Chart\PlotArea;
+use PhpOffice\PhpSpreadsheet\Chart\Title;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+
+/**
+ * Class for exporting reports to Excel with embedded charts.
+ */
+class excel_exporter {
+
+    /** @var report Report instance */
+    protected $report;
+
+    /** @var Spreadsheet Spreadsheet instance */
+    protected $spreadsheet;
+
+    /** @var array Style definitions */
+    protected $styles;
+
+    /** @var array Sheet names for internal use */
+    protected $sheetNames;
+
+    /**
+     * Constructor.
+     *
+     * @param report $report Report instance
+     */
+    public function __construct(report $report) {
+        $this->report = $report;
+        $this->spreadsheet = new Spreadsheet();
+        $this->initStyles();
+        $this->initSheetNames();
+    }
+
+    /**
+     * Initialize sheet names (use fixed names for chart compatibility).
+     */
+    protected function initSheetNames(): void {
+        $this->sheetNames = [
+            'summary' => 'Summary',
+            'daily' => 'Daily Logins',
+            'courses' => 'Courses',
+            'activities' => 'Activities',
+            'users' => 'Users',
+        ];
+    }
+
+    /**
+     * Initialize style definitions.
+     */
+    protected function initStyles(): void {
+        $this->styles = [
+            'header' => [
+                'font' => [
+                    'bold' => true,
+                    'color' => ['rgb' => 'FFFFFF'],
+                    'size' => 12,
+                ],
+                'fill' => [
+                    'fillType' => Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => '4472C4'],
+                ],
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                ],
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => ['rgb' => '000000'],
+                    ],
+                ],
+            ],
+            'title' => [
+                'font' => [
+                    'bold' => true,
+                    'size' => 16,
+                    'color' => ['rgb' => '2F5496'],
+                ],
+            ],
+            'subtitle' => [
+                'font' => [
+                    'bold' => true,
+                    'size' => 14,
+                    'color' => ['rgb' => '4472C4'],
+                ],
+            ],
+            'data' => [
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color' => ['rgb' => 'CCCCCC'],
+                    ],
+                ],
+                'alignment' => [
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                ],
+            ],
+            'highlight' => [
+                'fill' => [
+                    'fillType' => Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'E2EFDA'],
+                ],
+            ],
+            'number' => [
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_RIGHT,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Export complete report to Excel.
+     */
+    public function export(): void {
+        // Remove default sheet.
+        $this->spreadsheet->removeSheetByIndex(0);
+
+        // Create sheets.
+        $this->createSummarySheet();
+        $this->createDailyLoginsSheet();
+        $this->createCoursesSheet();
+        $this->createActivitiesSheet();
+        $this->createUsersSheet();
+
+        // Set first sheet as active.
+        $this->spreadsheet->setActiveSheetIndex(0);
+
+        // Set document properties.
+        $this->spreadsheet->getProperties()
+            ->setCreator('IOMAD Platform')
+            ->setTitle(get_string('reporttitle', 'report_platform_usage'))
+            ->setSubject(get_string('reporttitle', 'report_platform_usage'))
+            ->setDescription('Platform usage report generated by IOMAD');
+
+        // Output file.
+        $filename = 'platform_usage_report_' . date('Ymd_His') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer = new Xlsx($this->spreadsheet);
+        $writer->setIncludeCharts(true);
+        $writer->save('php://output');
+        exit;
+    }
+
+    /**
+     * Create summary sheet with overview and charts.
+     */
+    protected function createSummarySheet(): void {
+        $sheet = $this->spreadsheet->createSheet();
+        $sheet->setTitle($this->sheetNames['summary']);
+
+        // Report header.
+        $sheet->setCellValue('A1', get_string('reporttitle', 'report_platform_usage'));
+        $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
+        $sheet->mergeCells('A1:F1');
+
+        // Company and date range info.
+        $sheet->setCellValue('A2', get_string('company', 'report_platform_usage') . ': ' . $this->report->get_company_name());
+        $sheet->setCellValue('A3', get_string('daterange', 'report_platform_usage') . ': ' . $this->report->get_date_range());
+        $sheet->setCellValue('A4', get_string('generateddate', 'report_platform_usage') . ': ' . userdate(time()));
+
+        // Login summary section.
+        $row = 6;
+        $sheet->setCellValue("A{$row}", get_string('loginsummary', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['subtitle']);
+        $sheet->mergeCells("A{$row}:C{$row}");
+
+        $row++;
+        $headers = [
+            get_string('period', 'report_platform_usage'),
+            get_string('logins', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, "A{$row}");
+        $sheet->getStyle("A{$row}:C{$row}")->applyFromArray($this->styles['header']);
+
+        $summary = $this->report->get_login_summary();
+        $dataRows = [
+            [get_string('today', 'report_platform_usage'), $summary['logins_today'], $summary['unique_users_today']],
+            [get_string('lastweek', 'report_platform_usage'), $summary['logins_week'], $summary['unique_users_week']],
+            [get_string('lastmonth', 'report_platform_usage'), $summary['logins_month'], $summary['unique_users_month']],
+        ];
+
+        $row++;
+        $loginDataStart = $row;
+        foreach ($dataRows as $dataRow) {
+            $sheet->fromArray($dataRow, null, "A{$row}");
+            $sheet->getStyle("A{$row}:C{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("B{$row}:C{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+        $loginDataEnd = $row - 1;
+
+        // User summary section.
+        $row += 2;
+        $sheet->setCellValue("A{$row}", get_string('usersummary', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['subtitle']);
+        $sheet->mergeCells("A{$row}:C{$row}");
+
+        $userSummary = $this->report->get_user_activity_summary();
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('totalusers', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $userSummary['total']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('activeusers', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $userSummary['active']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['highlight']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('inactiveusers', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $userSummary['inactive']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+
+        // Create login summary bar chart.
+        $this->createLoginSummaryChart($sheet, $loginDataStart, $loginDataEnd);
+
+        // Create user activity pie chart.
+        $this->createUserActivityChart($sheet, $userSummary);
+
+        // Top 5 courses section.
+        $row += 3;
+        $sheet->setCellValue("A{$row}", get_string('topcourses', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['subtitle']);
+        $sheet->mergeCells("A{$row}:D{$row}");
+
+        $row++;
+        $headers = [
+            get_string('coursename', 'report_platform_usage'),
+            get_string('shortname', 'report_platform_usage'),
+            get_string('courseaccesses', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, "A{$row}");
+        $sheet->getStyle("A{$row}:D{$row}")->applyFromArray($this->styles['header']);
+
+        $courses = $this->report->get_top_courses(5);
+        $row++;
+        foreach ($courses as $course) {
+            $sheet->fromArray([
+                $course->fullname,
+                $course->shortname,
+                $course->access_count,
+                $course->unique_users,
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:D{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("C{$row}:D{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+
+        // Top 5 activities section.
+        $row += 2;
+        $sheet->setCellValue("A{$row}", get_string('topactivities', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['subtitle']);
+        $sheet->mergeCells("A{$row}:E{$row}");
+
+        $row++;
+        $headers = [
+            get_string('activityname', 'report_platform_usage'),
+            get_string('activitytype', 'report_platform_usage'),
+            get_string('coursename', 'report_platform_usage'),
+            get_string('courseaccesses', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, "A{$row}");
+        $sheet->getStyle("A{$row}:E{$row}")->applyFromArray($this->styles['header']);
+
+        $activities = $this->report->get_top_activities(5);
+        $row++;
+        foreach ($activities as $activity) {
+            $sheet->fromArray([
+                $activity->name,
+                $activity->type_name,
+                $activity->course_name,
+                $activity->access_count,
+                $activity->unique_users,
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:E{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("D{$row}:E{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+
+        // Auto-size columns.
+        foreach (range('A', 'F') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Create login summary bar chart.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet Worksheet
+     * @param int $dataStart Start row
+     * @param int $dataEnd End row
+     */
+    protected function createLoginSummaryChart($sheet, int $dataStart, int $dataEnd): void {
+        $sheetName = $this->sheetNames['summary'];
+        // Data series for logins.
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\$7", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\$7", null, 1),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$A\${$dataStart}:\$A\${$dataEnd}", null, 3),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$B\${$dataStart}:\$B\${$dataEnd}", null, 3),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$C\${$dataStart}:\$C\${$dataEnd}", null, 3),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_BARCHART,
+            DataSeries::GROUPING_CLUSTERED,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+        $series->setPlotDirection(DataSeries::DIRECTION_COL);
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_RIGHT, null, false);
+        $title = new Title(get_string('loginsummary', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'loginSummaryChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('E6');
+        $chart->setBottomRightPosition('L18');
+
+        $sheet->addChart($chart);
+    }
+
+    /**
+     * Create user activity pie chart.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet Worksheet
+     * @param array $userSummary User summary data
+     */
+    protected function createUserActivityChart($sheet, array $userSummary): void {
+        $sheetName = $this->sheetNames['summary'];
+        // Create temporary data for pie chart.
+        $sheet->setCellValue('N6', get_string('activeusers', 'report_platform_usage'));
+        $sheet->setCellValue('O6', $userSummary['active']);
+        $sheet->setCellValue('N7', get_string('inactiveusers', 'report_platform_usage'));
+        $sheet->setCellValue('O7', $userSummary['inactive']);
+        $sheet->getColumnDimension('N')->setVisible(false);
+        $sheet->getColumnDimension('O')->setVisible(false);
+
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$N\$6:\$N\$7", null, 2),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$N\$6:\$N\$7", null, 2),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$O\$6:\$O\$7", null, 2),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_PIECHART,
+            null,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_RIGHT, null, false);
+        $title = new Title(get_string('usersummary', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'userActivityChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('E19');
+        $chart->setBottomRightPosition('L31');
+
+        $sheet->addChart($chart);
+    }
+
+    /**
+     * Create daily logins sheet with chart.
+     */
+    protected function createDailyLoginsSheet(): void {
+        $sheet = $this->spreadsheet->createSheet();
+        $sheet->setTitle($this->sheetNames['daily']);
+
+        // Header.
+        $sheet->setCellValue('A1', get_string('dailylogins', 'report_platform_usage'));
+        $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
+        $sheet->mergeCells('A1:C1');
+
+        // Column headers.
+        $headers = [
+            get_string('date', 'report_platform_usage'),
+            get_string('logins', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, 'A3');
+        $sheet->getStyle('A3:C3')->applyFromArray($this->styles['header']);
+
+        // Get daily data.
+        $dailyData = $this->report->get_daily_logins(30);
+        $row = 4;
+        $dataStart = $row;
+
+        for ($i = 0; $i < count($dailyData['labels']); $i++) {
+            $sheet->fromArray([
+                $dailyData['labels'][$i],
+                $dailyData['logins'][$i],
+                $dailyData['unique_users'][$i],
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:C{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("B{$row}:C{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+        $dataEnd = $row - 1;
+
+        // Create line chart.
+        $this->createDailyLoginsChart($sheet, $dataStart, $dataEnd);
+
+        // Auto-size columns.
+        foreach (range('A', 'C') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Create daily logins line chart.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet Worksheet
+     * @param int $dataStart Start row
+     * @param int $dataEnd End row
+     */
+    protected function createDailyLoginsChart($sheet, int $dataStart, int $dataEnd): void {
+        $sheetName = $this->sheetNames['daily'];
+
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\$3", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\$3", null, 1),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$A\${$dataStart}:\$A\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$B\${$dataStart}:\$B\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$C\${$dataStart}:\$C\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_LINECHART,
+            DataSeries::GROUPING_STANDARD,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_BOTTOM, null, false);
+        $title = new Title(get_string('dailylogins', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'dailyLoginsChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('E3');
+        $chart->setBottomRightPosition('O20');
+
+        $sheet->addChart($chart);
+    }
+
+    /**
+     * Create courses sheet with details.
+     */
+    protected function createCoursesSheet(): void {
+        $sheet = $this->spreadsheet->createSheet();
+        $sheet->setTitle($this->sheetNames['courses']);
+
+        // Header.
+        $sheet->setCellValue('A1', get_string('courseaccessdetails', 'report_platform_usage'));
+        $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
+        $sheet->mergeCells('A1:F1');
+
+        // Column headers.
+        $headers = [
+            get_string('coursename', 'report_platform_usage'),
+            get_string('shortname', 'report_platform_usage'),
+            get_string('courseaccesses', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
+            get_string('lastaccess', 'report_platform_usage'),
+            get_string('avgaccessperuser', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, 'A3');
+        $sheet->getStyle('A3:F3')->applyFromArray($this->styles['header']);
+
+        // Get course data.
+        $courses = $this->report->get_course_access_details();
+        $row = 4;
+        $dataStart = $row;
+
+        foreach ($courses as $course) {
+            $avgAccess = $course->unique_users > 0 ? round($course->access_count / $course->unique_users, 2) : 0;
+            $sheet->fromArray([
+                $course->fullname,
+                $course->shortname,
+                $course->access_count,
+                $course->unique_users,
+                userdate($course->last_access, '%d/%m/%Y %H:%M'),
+                $avgAccess,
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:F{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("C{$row}:D{$row}")->applyFromArray($this->styles['number']);
+            $sheet->getStyle("F{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+        $dataEnd = $row - 1;
+
+        // Add totals row.
+        if ($dataEnd >= $dataStart) {
+            $sheet->setCellValue("A{$row}", get_string('total', 'report_platform_usage'));
+            $sheet->setCellValue("C{$row}", "=SUM(C{$dataStart}:C{$dataEnd})");
+            $sheet->setCellValue("D{$row}", "=SUM(D{$dataStart}:D{$dataEnd})");
+            $sheet->getStyle("A{$row}:F{$row}")->applyFromArray($this->styles['header']);
+        }
+
+        // Create course access bar chart.
+        if ($dataEnd >= $dataStart && $dataEnd - $dataStart < 20) {
+            $this->createCoursesChart($sheet, $dataStart, min($dataEnd, $dataStart + 9));
+        }
+
+        // Auto-size columns.
+        foreach (range('A', 'F') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Create courses access chart.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet Worksheet
+     * @param int $dataStart Start row
+     * @param int $dataEnd End row
+     */
+    protected function createCoursesChart($sheet, int $dataStart, int $dataEnd): void {
+        $sheetName = $this->sheetNames['courses'];
+
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\$3", null, 1),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\${$dataStart}:\$B\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$C\${$dataStart}:\$C\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_BARCHART,
+            DataSeries::GROUPING_STANDARD,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+        $series->setPlotDirection(DataSeries::DIRECTION_BAR);
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_RIGHT, null, false);
+        $title = new Title(get_string('topcourses', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'coursesChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('H3');
+        $chart->setBottomRightPosition('O18');
+
+        $sheet->addChart($chart);
+    }
+
+    /**
+     * Create activities sheet with details.
+     */
+    protected function createActivitiesSheet(): void {
+        $sheet = $this->spreadsheet->createSheet();
+        $sheet->setTitle($this->sheetNames['activities']);
+
+        // Header.
+        $sheet->setCellValue('A1', get_string('activityaccessdetails', 'report_platform_usage'));
+        $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
+        $sheet->mergeCells('A1:F1');
+
+        // Column headers.
+        $headers = [
+            get_string('activityname', 'report_platform_usage'),
+            get_string('activitytype', 'report_platform_usage'),
+            get_string('coursename', 'report_platform_usage'),
+            get_string('courseaccesses', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
+            get_string('avgaccessperuser', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, 'A3');
+        $sheet->getStyle('A3:F3')->applyFromArray($this->styles['header']);
+
+        // Get activity data.
+        $activities = $this->report->get_top_activities(50);
+        $row = 4;
+
+        foreach ($activities as $activity) {
+            $avgAccess = $activity->unique_users > 0 ? round($activity->access_count / $activity->unique_users, 2) : 0;
+            $sheet->fromArray([
+                $activity->name,
+                $activity->type_name,
+                $activity->course_name,
+                $activity->access_count,
+                $activity->unique_users,
+                $avgAccess,
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:F{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("D{$row}:E{$row}")->applyFromArray($this->styles['number']);
+            $sheet->getStyle("F{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+
+        // Auto-size columns.
+        foreach (range('A', 'F') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Create users sheet with details.
+     */
+    protected function createUsersSheet(): void {
+        $sheet = $this->spreadsheet->createSheet();
+        $sheet->setTitle($this->sheetNames['users']);
+
+        // Header.
+        $sheet->setCellValue('A1', get_string('userdetails', 'report_platform_usage'));
+        $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
+        $sheet->mergeCells('A1:G1');
+
+        // Column headers.
+        $headers = [
+            get_string('username', 'report_platform_usage'),
+            get_string('fullname', 'report_platform_usage'),
+            get_string('email', 'report_platform_usage'),
+            get_string('logincount', 'report_platform_usage'),
+            get_string('lastaccess', 'report_platform_usage'),
+            get_string('created', 'report_platform_usage'),
+            get_string('status', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, 'A3');
+        $sheet->getStyle('A3:G3')->applyFromArray($this->styles['header']);
+
+        // Get user data.
+        $users = $this->report->get_user_login_details();
+        $row = 4;
+        $activeThreshold = strtotime('-30 days');
+
+        foreach ($users as $user) {
+            $isActive = $user->lastaccess >= $activeThreshold;
+            $status = $isActive ? get_string('active', 'report_platform_usage') : get_string('inactive', 'report_platform_usage');
+
+            $sheet->fromArray([
+                $user->username,
+                fullname($user),
+                $user->email,
+                $user->login_count,
+                $user->lastaccess ? userdate($user->lastaccess, '%d/%m/%Y %H:%M') : '-',
+                userdate($user->timecreated, '%d/%m/%Y'),
+                $status,
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:G{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("D{$row}")->applyFromArray($this->styles['number']);
+
+            if ($isActive) {
+                $sheet->getStyle("G{$row}")->getFont()->getColor()->setRGB('006600');
+            } else {
+                $sheet->getStyle("G{$row}")->getFont()->getColor()->setRGB('CC0000');
+            }
+
+            $row++;
+        }
+
+        // Auto-size columns.
+        foreach (range('A', 'G') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+}

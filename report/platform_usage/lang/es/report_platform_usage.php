@@ -112,3 +112,21 @@ $string['viewdetails'] = 'Ver detalles';
 $string['period'] = 'Periodo';
 $string['accesscount'] = 'Cantidad de Accesos';
 $string['usercount'] = 'Cantidad de Usuarios';
+
+// Excel export strings.
+$string['reporttitle'] = 'Reporte de Uso de Plataforma';
+$string['daterange'] = 'Rango de Fechas';
+$string['generateddate'] = 'Fecha de Generacion';
+$string['loginsummary'] = 'Resumen de Ingresos';
+$string['shortname'] = 'Nombre Corto';
+$string['courses'] = 'Cursos';
+$string['activities'] = 'Actividades';
+$string['users'] = 'Usuarios';
+$string['courseaccessdetails'] = 'Detalles de Acceso a Cursos';
+$string['activityaccessdetails'] = 'Detalles de Acceso a Actividades';
+$string['avgaccessperuser'] = 'Prom. Accesos/Usuario';
+$string['total'] = 'Total';
+$string['created'] = 'Creado';
+$string['status'] = 'Estado';
+$string['active'] = 'Activo';
+$string['inactive'] = 'Inactivo';

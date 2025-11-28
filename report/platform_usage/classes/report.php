@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Report data handler class.
+ * Report data handler class with caching support.
  *
  * @package   report_platform_usage
  * @copyright 2024 IOMAD
@@ -27,7 +27,7 @@ namespace report_platform_usage;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Class to handle report data retrieval.
+ * Class to handle report data retrieval with MUC caching.
  */
 class report {
 
@@ -43,21 +43,84 @@ class report {
     /** @var array Cached user IDs for the company */
     protected $userids = null;
 
+    /** @var \cache Cache instance for report data */
+    protected $cache;
+
+    /** @var \cache Cache instance for company users */
+    protected $usercache;
+
+    /** @var bool Whether to use cache */
+    protected $usecache;
+
     /**
      * Constructor.
      *
      * @param int $companyid Company ID (0 for all companies)
      * @param int $datefrom Start date timestamp
      * @param int $dateto End date timestamp
+     * @param bool $usecache Whether to use cache (default true)
      */
-    public function __construct(int $companyid = 0, int $datefrom = 0, int $dateto = 0) {
+    public function __construct(int $companyid = 0, int $datefrom = 0, int $dateto = 0, bool $usecache = true) {
         $this->companyid = $companyid;
         $this->datefrom = $datefrom ?: strtotime('-30 days midnight');
         $this->dateto = $dateto ?: time();
+        $this->usecache = $usecache;
+
+        // Initialize caches.
+        if ($this->usecache) {
+            $this->cache = \cache::make('report_platform_usage', 'reportdata');
+            $this->usercache = \cache::make('report_platform_usage', 'companyusers');
+        }
     }
 
     /**
-     * Get company user IDs.
+     * Get cache key for current parameters.
+     *
+     * @param string $type Data type
+     * @return string Cache key
+     */
+    protected function get_cache_key(string $type): string {
+        // Round timestamps to reduce cache variations.
+        $datefromround = floor($this->datefrom / 3600) * 3600;
+        $datetoround = floor($this->dateto / 3600) * 3600;
+        return "{$type}_{$this->companyid}_{$datefromround}_{$datetoround}";
+    }
+
+    /**
+     * Get data from cache or compute.
+     *
+     * @param string $type Cache key type
+     * @param callable $callback Function to compute data if not cached
+     * @return mixed Cached or computed data
+     */
+    protected function get_cached_data(string $type, callable $callback) {
+        if (!$this->usecache) {
+            return $callback();
+        }
+
+        $key = $this->get_cache_key($type);
+        $data = $this->cache->get($key);
+
+        if ($data === false) {
+            $data = $callback();
+            $this->cache->set($key, $data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Purge all cached data for this report.
+     */
+    public function purge_cache(): void {
+        if ($this->usecache) {
+            $this->cache->purge();
+            $this->usercache->purge();
+        }
+    }
+
+    /**
+     * Get company user IDs with caching.
      *
      * @return array User IDs
      */
@@ -68,8 +131,17 @@ class report {
             return $this->userids;
         }
 
+        // Try cache first.
+        if ($this->usecache) {
+            $cachekey = 'company_' . $this->companyid;
+            $cached = $this->usercache->get($cachekey);
+            if ($cached !== false) {
+                $this->userids = $cached;
+                return $this->userids;
+            }
+        }
+
         if ($this->companyid > 0) {
-            // Check if company_users table exists.
             $dbman = $DB->get_manager();
             if ($dbman->table_exists('company_users')) {
                 $this->userids = $DB->get_fieldset_select(
@@ -82,12 +154,17 @@ class report {
                 $this->userids = [];
             }
         } else {
-            // All users.
             $this->userids = $DB->get_fieldset_select(
                 'user',
                 'id',
                 'deleted = 0 AND id > 1'
             );
+        }
+
+        // Store in cache.
+        if ($this->usecache) {
+            $cachekey = 'company_' . $this->companyid;
+            $this->usercache->set($cachekey, $this->userids);
         }
 
         return $this->userids;
@@ -112,21 +189,28 @@ class report {
     }
 
     /**
-     * Get login statistics summary.
+     * Get login statistics summary (cached).
      *
      * @return array Statistics
      */
     public function get_login_summary(): array {
+        return $this->get_cached_data('login_summary', function() {
+            return $this->compute_login_summary();
+        });
+    }
+
+    /**
+     * Compute login statistics summary.
+     *
+     * @return array Statistics
+     */
+    protected function compute_login_summary(): array {
         global $DB;
 
-        $now = time();
         $todaystart = strtotime('today midnight');
         $weekstart = strtotime('-7 days midnight');
         $monthstart = strtotime('-30 days midnight');
 
-        list($usersql, $userparams) = $this->get_user_sql('userid');
-
-        // Check if logstore table exists.
         $dbman = $DB->get_manager();
         if (!$dbman->table_exists('logstore_standard_log')) {
             return [
@@ -139,76 +223,73 @@ class report {
             ];
         }
 
-        // Logins today.
-        $loginstoday = $DB->count_records_select(
-            'logstore_standard_log',
-            "eventname = :event AND timecreated >= :time AND $usersql",
-            array_merge(['event' => '\\core\\event\\user_loggedin', 'time' => $todaystart], $userparams)
-        );
+        $userids = $this->get_company_userids();
+        if (empty($userids)) {
+            return [
+                'logins_today' => 0,
+                'logins_week' => 0,
+                'logins_month' => 0,
+                'unique_users_today' => 0,
+                'unique_users_week' => 0,
+                'unique_users_month' => 0,
+            ];
+        }
 
-        // Unique users today.
-        $uniquetoday = $DB->count_records_sql(
-            "SELECT COUNT(DISTINCT userid)
-             FROM {logstore_standard_log}
-             WHERE eventname = :event AND timecreated >= :time AND $usersql",
-            array_merge(['event' => '\\core\\event\\user_loggedin', 'time' => $todaystart], $userparams)
-        );
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
-        // Logins last 7 days.
-        $userparams2 = [];
-        list($usersql2, $userparams2) = $this->get_user_sql('userid');
-        $loginsweek = $DB->count_records_select(
-            'logstore_standard_log',
-            "eventname = :event AND timecreated >= :time AND $usersql2",
-            array_merge(['event' => '\\core\\event\\user_loggedin', 'time' => $weekstart], $userparams2)
-        );
+        // Single query for all time periods.
+        $sql = "SELECT
+                    SUM(CASE WHEN timecreated >= :today THEN 1 ELSE 0 END) as logins_today,
+                    COUNT(DISTINCT CASE WHEN timecreated >= :today2 THEN userid END) as unique_today,
+                    SUM(CASE WHEN timecreated >= :week THEN 1 ELSE 0 END) as logins_week,
+                    COUNT(DISTINCT CASE WHEN timecreated >= :week2 THEN userid END) as unique_week,
+                    SUM(CASE WHEN timecreated >= :month THEN 1 ELSE 0 END) as logins_month,
+                    COUNT(DISTINCT CASE WHEN timecreated >= :month2 THEN userid END) as unique_month
+                FROM {logstore_standard_log}
+                WHERE eventname = :event
+                  AND userid $usersql";
 
-        // Unique users last 7 days.
-        $userparams3 = [];
-        list($usersql3, $userparams3) = $this->get_user_sql('userid');
-        $uniqueweek = $DB->count_records_sql(
-            "SELECT COUNT(DISTINCT userid)
-             FROM {logstore_standard_log}
-             WHERE eventname = :event AND timecreated >= :time AND $usersql3",
-            array_merge(['event' => '\\core\\event\\user_loggedin', 'time' => $weekstart], $userparams3)
-        );
+        $params = array_merge([
+            'event' => '\\core\\event\\user_loggedin',
+            'today' => $todaystart,
+            'today2' => $todaystart,
+            'week' => $weekstart,
+            'week2' => $weekstart,
+            'month' => $monthstart,
+            'month2' => $monthstart,
+        ], $userparams);
 
-        // Logins last 30 days.
-        $userparams4 = [];
-        list($usersql4, $userparams4) = $this->get_user_sql('userid');
-        $loginsmonth = $DB->count_records_select(
-            'logstore_standard_log',
-            "eventname = :event AND timecreated >= :time AND $usersql4",
-            array_merge(['event' => '\\core\\event\\user_loggedin', 'time' => $monthstart], $userparams4)
-        );
-
-        // Unique users last 30 days.
-        $userparams5 = [];
-        list($usersql5, $userparams5) = $this->get_user_sql('userid');
-        $uniquemonth = $DB->count_records_sql(
-            "SELECT COUNT(DISTINCT userid)
-             FROM {logstore_standard_log}
-             WHERE eventname = :event AND timecreated >= :time AND $usersql5",
-            array_merge(['event' => '\\core\\event\\user_loggedin', 'time' => $monthstart], $userparams5)
-        );
+        $result = $DB->get_record_sql($sql, $params);
 
         return [
-            'logins_today' => $loginstoday,
-            'logins_week' => $loginsweek,
-            'logins_month' => $loginsmonth,
-            'unique_users_today' => $uniquetoday,
-            'unique_users_week' => $uniqueweek,
-            'unique_users_month' => $uniquemonth,
+            'logins_today' => (int) ($result->logins_today ?? 0),
+            'logins_week' => (int) ($result->logins_week ?? 0),
+            'logins_month' => (int) ($result->logins_month ?? 0),
+            'unique_users_today' => (int) ($result->unique_today ?? 0),
+            'unique_users_week' => (int) ($result->unique_week ?? 0),
+            'unique_users_month' => (int) ($result->unique_month ?? 0),
         ];
     }
 
     /**
-     * Get daily login data for chart.
+     * Get daily login data for chart (cached).
      *
      * @param int $days Number of days to show
      * @return array [labels, logins, unique_users]
      */
     public function get_daily_logins(int $days = 30): array {
+        return $this->get_cached_data("daily_logins_{$days}", function() use ($days) {
+            return $this->compute_daily_logins($days);
+        });
+    }
+
+    /**
+     * Compute daily login data.
+     *
+     * @param int $days Number of days
+     * @return array
+     */
+    protected function compute_daily_logins(int $days): array {
         global $DB;
 
         $dbman = $DB->get_manager();
@@ -240,7 +321,6 @@ class report {
         $logins = [];
         $uniqueusers = [];
 
-        // Fill in all dates.
         for ($i = $days; $i >= 0; $i--) {
             $date = date('Y-m-d', strtotime("-{$i} days"));
             $labels[] = date('d M', strtotime($date));
@@ -263,27 +343,32 @@ class report {
     }
 
     /**
-     * Get user activity summary.
+     * Get user activity summary (cached).
      *
      * @return array [total, active, inactive]
      */
     public function get_user_activity_summary(): array {
+        return $this->get_cached_data('user_activity', function() {
+            return $this->compute_user_activity_summary();
+        });
+    }
+
+    /**
+     * Compute user activity summary.
+     *
+     * @return array
+     */
+    protected function compute_user_activity_summary(): array {
         global $DB;
 
         $userids = $this->get_company_userids();
         $total = count($userids);
 
         if ($total == 0) {
-            return [
-                'total' => 0,
-                'active' => 0,
-                'inactive' => 0,
-            ];
+            return ['total' => 0, 'active' => 0, 'inactive' => 0];
         }
 
-        // Consider active if logged in within last 30 days.
         $activeThreshold = strtotime('-30 days');
-
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
         $active = $DB->count_records_select(
@@ -300,12 +385,24 @@ class report {
     }
 
     /**
-     * Get top courses by access.
+     * Get top courses by access (cached).
      *
      * @param int $limit Number of courses to return
      * @return array Course data
      */
     public function get_top_courses(int $limit = 10): array {
+        return $this->get_cached_data("top_courses_{$limit}", function() use ($limit) {
+            return $this->compute_top_courses($limit);
+        });
+    }
+
+    /**
+     * Compute top courses.
+     *
+     * @param int $limit
+     * @return array
+     */
+    protected function compute_top_courses(int $limit): array {
         global $DB;
 
         $dbman = $DB->get_manager();
@@ -339,12 +436,24 @@ class report {
     }
 
     /**
-     * Get course access trends.
+     * Get course access trends (cached).
      *
      * @param int $days Number of days
      * @return array [labels, data]
      */
     public function get_course_access_trends(int $days = 30): array {
+        return $this->get_cached_data("course_trends_{$days}", function() use ($days) {
+            return $this->compute_course_access_trends($days);
+        });
+    }
+
+    /**
+     * Compute course access trends.
+     *
+     * @param int $days
+     * @return array
+     */
+    protected function compute_course_access_trends(int $days): array {
         global $DB;
 
         $dbman = $DB->get_manager();
@@ -376,7 +485,6 @@ class report {
         $labels = [];
         $data = [];
 
-        // Fill in all dates.
         for ($i = $days; $i >= 0; $i--) {
             $date = date('Y-m-d', strtotime("-{$i} days"));
             $labels[] = date('d M', strtotime($date));
@@ -396,12 +504,24 @@ class report {
     }
 
     /**
-     * Get top activities by access.
+     * Get top activities by access (cached).
      *
      * @param int $limit Number of activities to return
      * @return array Activity data
      */
     public function get_top_activities(int $limit = 10): array {
+        return $this->get_cached_data("top_activities_{$limit}", function() use ($limit) {
+            return $this->compute_top_activities($limit);
+        });
+    }
+
+    /**
+     * Compute top activities.
+     *
+     * @param int $limit
+     * @return array
+     */
+    protected function compute_top_activities(int $limit): array {
         global $DB;
 
         $dbman = $DB->get_manager();
@@ -430,7 +550,6 @@ class report {
 
         $records = $DB->get_records_sql($sql, $params);
 
-        // Get activity names.
         $result = [];
         foreach ($records as $record) {
             $cm = $DB->get_record('course_modules', ['id' => $record->contextinstanceid]);
@@ -464,17 +583,15 @@ class report {
      * @return string Human-readable name
      */
     public static function get_module_name(string $modname): string {
-        // Try to get the plugin name from language strings.
         $pluginname = get_string('pluginname', 'mod_' . $modname);
         if (strpos($pluginname, '[[') === false) {
             return $pluginname;
         }
-        // Fallback to capitalized module name.
         return ucfirst($modname);
     }
 
     /**
-     * Get all report data for AJAX.
+     * Get all report data for AJAX (cached).
      *
      * @return array All report data
      */
@@ -504,7 +621,6 @@ class report {
 
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
-        // Check if logstore exists.
         $dbman = $DB->get_manager();
         $hasLogstore = $dbman->table_exists('logstore_standard_log');
 
@@ -626,5 +742,30 @@ class report {
         }
 
         return $DB->get_records_menu('company', null, 'name ASC', 'id, name');
+    }
+
+    /**
+     * Get company name.
+     *
+     * @return string Company name or 'All Companies'
+     */
+    public function get_company_name(): string {
+        global $DB;
+
+        if ($this->companyid == 0) {
+            return get_string('allcompanies', 'report_platform_usage');
+        }
+
+        $company = $DB->get_record('company', ['id' => $this->companyid], 'name');
+        return $company ? $company->name : '';
+    }
+
+    /**
+     * Get date range as formatted string.
+     *
+     * @return string Date range
+     */
+    public function get_date_range(): string {
+        return userdate($this->datefrom, '%d/%m/%Y') . ' - ' . userdate($this->dateto, '%d/%m/%Y');
     }
 }

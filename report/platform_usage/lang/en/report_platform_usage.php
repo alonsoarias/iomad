@@ -112,3 +112,21 @@ $string['viewdetails'] = 'View details';
 $string['period'] = 'Period';
 $string['accesscount'] = 'Access Count';
 $string['usercount'] = 'User Count';
+
+// Excel export strings.
+$string['reporttitle'] = 'Platform Usage Report';
+$string['daterange'] = 'Date Range';
+$string['generateddate'] = 'Generated Date';
+$string['loginsummary'] = 'Login Summary';
+$string['shortname'] = 'Short Name';
+$string['courses'] = 'Courses';
+$string['activities'] = 'Activities';
+$string['users'] = 'Users';
+$string['courseaccessdetails'] = 'Course Access Details';
+$string['activityaccessdetails'] = 'Activity Access Details';
+$string['avgaccessperuser'] = 'Avg. Access/User';
+$string['total'] = 'Total';
+$string['created'] = 'Created';
+$string['status'] = 'Status';
+$string['active'] = 'Active';
+$string['inactive'] = 'Inactive';

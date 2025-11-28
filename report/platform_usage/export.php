@@ -41,9 +41,16 @@ $dateto = optional_param('dateto', time(), PARAM_INT);
 $type = optional_param('type', 'summary', PARAM_ALPHA);
 $format = optional_param('format', 'excel', PARAM_ALPHA);
 
-// Create report and exporter instances.
-$report = new \report_platform_usage\report($companyid, $datefrom, $dateto);
-$exporter = new \report_platform_usage\exporter($report, $type);
+// Create report instance (disable cache for export to get fresh data).
+$report = new \report_platform_usage\report($companyid, $datefrom, $dateto, false);
 
-// Export.
-$exporter->export($format);
+// Export based on format.
+if ($format === 'excel' && $type === 'summary') {
+    // Use enhanced Excel exporter with charts for summary.
+    $exporter = new \report_platform_usage\excel_exporter($report);
+    $exporter->export();
+} else {
+    // Use standard exporter for CSV or specific data types.
+    $exporter = new \report_platform_usage\exporter($report, $type);
+    $exporter->export($format);
+}

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version information.
+ * Cache definitions for report_platform_usage.
  *
  * @package   report_platform_usage
  * @copyright 2024 IOMAD
@@ -24,8 +24,23 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->release  = '1.2.0 (Build: 20241128)';
-$plugin->version  = 2024112802;
-$plugin->requires = 2024100700;
-$plugin->component = 'report_platform_usage';
-$plugin->maturity = MATURITY_STABLE;
+$definitions = [
+    // Cache for report data.
+    'reportdata' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => false,
+        'ttl' => 300, // 5 minutes TTL.
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 10,
+    ],
+    // Cache for user lists by company.
+    'companyusers' => [
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'ttl' => 600, // 10 minutes TTL.
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 50,
+    ],
+];
