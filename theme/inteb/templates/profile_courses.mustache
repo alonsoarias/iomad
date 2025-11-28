@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     Theme INTEB - Child of Edwiser RemUI
-    Profile courses tab - Card grid design following mycourses block
+    Profile courses tab - List view design following mycourses block
     @package theme_inteb
     @copyright (c) 2025 Vicerrectoría Académica ISER <vicerrectoria@iser.edu.co>
     @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -21,7 +21,7 @@
 {{!
     @template theme_inteb/profile_courses
 
-    Profile courses with card grid layout.
+    Profile courses with list layout (similar to mycourses block list view).
 }}
 <section class="profile-courses-section">
     <div class="container-fluid px-0">
@@ -32,37 +32,35 @@
         </div>
         {{/ hascourses }}
         {{# hascourses }}
-        <div class="profile-courses-grid">
+        <ul class="profile-courses-list list-group m-0">
             {{# courses }}
-            <div class="profile-course-card" data-course-id="{{ id }}">
-                <div class="profile-course-card-inner">
-                    {{! Course Image }}
-                    <div class="profile-course-card-img">
-                        <a href="{{ link }}" class="profile-course-card-img-link" title="{{{fullname}}}">
-                            <div class="profile-course-card-image" style="background-image: url({{{ courseimage }}});"></div>
-                            <div class="profile-course-card-overlay"></div>
-                        </a>
-                    </div>
+            <li class="profile-course-list-item list-group-item d-flex" data-course-id="{{ id }}">
+                {{! Course Image - Left Side }}
+                <div class="profile-course-img-wrapper">
+                    <a href="{{ link }}" class="profile-course-img-link" title="{{{fullname}}}">
+                        <div class="profile-course-img" style="background-image: url({{{ courseimage }}});"></div>
+                    </a>
+                </div>
 
-                    {{! Course Content }}
-                    <div class="profile-course-card-body">
+                {{! Course Content - Right Side }}
+                <div class="profile-course-body">
+                    {{! Header: Category and Course Name }}
+                    <div class="profile-course-header">
                         {{! Category }}
-                        <div class="profile-course-card-category">
-                            <span class="category-name text-truncate" title="{{{categoryname}}}">
+                        <div class="profile-course-category">
+                            <span class="category-badge" title="{{{categoryname}}}">
                                 {{{categoryname}}}
                             </span>
                         </div>
 
                         {{! Course Name }}
-                        <div class="profile-course-card-title">
-                            <a href="{{ link }}" class="course-title-link" title="{{{fullname}}}">
-                                {{{ fullname }}}
-                            </a>
-                        </div>
+                        <a href="{{ link }}" class="profile-course-title" title="{{{fullname}}}">
+                            {{{ fullname }}}
+                        </a>
 
                         {{! Instructor Info }}
                         {{#instructor}}
-                        <div class="profile-course-card-instructor">
+                        <div class="profile-course-instructor">
                             <a href="{{ url }}" class="instructor-link" title="{{{name}}}">
                                 <img src="{{ picture }}" class="instructor-avatar" alt="{{ name }}" loading="lazy"/>
                                 <span class="instructor-name">{{{name}}}</span>
@@ -74,16 +72,13 @@
                         {{/instructor}}
                     </div>
 
-                    {{! Course Footer - Progress and Action }}
-                    <div class="profile-course-card-footer">
+                    {{! Footer: Progress and Action Button }}
+                    <div class="profile-course-footer">
                         {{# enablecompletion }}
-                        <div class="profile-course-card-progress">
-                            <div class="progress-info">
-                                <span class="progress-label">{{activitydata}}</span>
-                                <span class="progress-percentage">{{#progress}}{{progress}}{{/progress}}{{^progress}}0{{/progress}}%</span>
-                            </div>
-                            <div class="progress" title="{{#str}}completepercent, theme_remui,{{progress}}{{/str}}">
-                                <div class="progress-bar {{#progress}}{{#isHighProgress}}bg-success{{/isHighProgress}}{{/progress}}"
+                        <div class="profile-course-progress">
+                            <span class="progress-label">{{activitydata}}</span>
+                            <div class="progress">
+                                <div class="progress-bar"
                                      role="progressbar"
                                      style="width: {{#progress}}{{progress}}{{/progress}}{{^progress}}0{{/progress}}%"
                                      aria-valuenow="{{progress}}"
@@ -91,19 +86,17 @@
                                      aria-valuemax="100">
                                 </div>
                             </div>
+                            <span class="progress-percentage">{{#progress}}{{progress}}{{/progress}}{{^progress}}0{{/progress}}%</span>
                         </div>
                         {{/ enablecompletion }}
-                        <div class="profile-course-card-action">
-                            <a class="btn btn-primary btn-sm view-course-btn" href="{{ link }}" title="{{#str}}viewcoursetitle,theme_remui{{/str}}">
-                                <i class="fa fa-eye mr-1"></i>
-                                {{#str}}viewcourse,theme_remui{{/str}}
-                            </a>
-                        </div>
+                        <a class="btn btn-secondary btn-sm view-course-btn" href="{{ link }}" title="{{#str}}viewcoursetitle,theme_remui{{/str}}">
+                            {{#str}}viewcourse,theme_remui{{/str}}
+                        </a>
                     </div>
                 </div>
-            </div>
+            </li>
             {{/ courses }}
-        </div>
+        </ul>
         {{/ hascourses }}
     </div>
 </section>
