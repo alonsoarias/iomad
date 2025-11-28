@@ -346,7 +346,33 @@ class generator {
     }
 
     /**
-     * Generate login record for a user.
+     * Convert event data to log entry format (same as Moodle's buffered_writer).
+     *
+     * @param \core\event\base $event The event object
+     * @param int $timestamp Custom timestamp
+     * @param string $ip IP address
+     * @return array Log entry data
+     */
+    protected function event_to_log_entry(\core\event\base $event, int $timestamp, string $ip): array {
+        // Get event data the same way Moodle does.
+        $entry = $event->get_data();
+
+        // Serialize the 'other' field as Moodle does.
+        $entry['other'] = serialize($entry['other']);
+
+        // Override timestamp with our custom one.
+        $entry['timecreated'] = $timestamp;
+
+        // Add request info.
+        $entry['origin'] = 'web';
+        $entry['ip'] = $ip;
+        $entry['realuserid'] = null;
+
+        return $entry;
+    }
+
+    /**
+     * Generate login record for a user using native Moodle event.
      *
      * @param object $user User object
      * @param int $timestamp Timestamp for the login
@@ -361,33 +387,22 @@ class generator {
         }
 
         $ip = $this->get_random_ip();
-        $systemcontext = \context_system::instance();
-
-        // Insert into logstore_standard_log.
-        $logrecord = new \stdClass();
-        $logrecord->eventname = '\\core\\event\\user_loggedin';
-        $logrecord->component = 'core';
-        $logrecord->action = 'loggedin';
-        $logrecord->target = 'user';
-        $logrecord->objecttable = 'user';
-        $logrecord->objectid = $user->id;
-        $logrecord->crud = 'r';
-        $logrecord->edulevel = 0; // LEVEL_OTHER
-        $logrecord->contextid = $systemcontext->id;
-        $logrecord->contextlevel = CONTEXT_SYSTEM;
-        $logrecord->contextinstanceid = 0;
-        $logrecord->userid = $user->id;
-        $logrecord->courseid = null; // Null for system-level events.
-        $logrecord->relateduserid = null;
-        $logrecord->anonymous = 0;
-        $logrecord->other = serialize(['username' => $user->username]);
-        $logrecord->timecreated = $timestamp;
-        $logrecord->origin = 'web';
-        $logrecord->ip = $ip;
-        $logrecord->realuserid = null;
 
         try {
-            $DB->insert_record('logstore_standard_log', $logrecord);
+            // Create the event using Moodle's native event class.
+            $event = \core\event\user_loggedin::create([
+                'userid' => $user->id,
+                'objectid' => $user->id,
+                'other' => [
+                    'username' => $user->username,
+                ],
+            ]);
+
+            // Convert to log entry with custom timestamp.
+            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
+
+            // Insert into logstore.
+            $DB->insert_record('logstore_standard_log', (object)$entry);
             $this->stats['logins_generated']++;
 
             // Update user table.
@@ -487,7 +502,7 @@ class generator {
     }
 
     /**
-     * Generate course access record for a user.
+     * Generate course access record for a user using native Moodle event.
      *
      * @param object $user User object
      * @param object $course Course object
@@ -509,35 +524,18 @@ class generator {
             if (!$coursecontext) {
                 return false;
             }
-        } catch (\Exception $e) {
-            return false;
-        }
 
-        // Insert into logstore_standard_log.
-        $logrecord = new \stdClass();
-        $logrecord->eventname = '\\core\\event\\course_viewed';
-        $logrecord->component = 'core';
-        $logrecord->action = 'viewed';
-        $logrecord->target = 'course';
-        $logrecord->objecttable = null;
-        $logrecord->objectid = null;
-        $logrecord->crud = 'r';
-        $logrecord->edulevel = 2; // LEVEL_PARTICIPATING
-        $logrecord->contextid = $coursecontext->id;
-        $logrecord->contextlevel = CONTEXT_COURSE;
-        $logrecord->contextinstanceid = $course->id;
-        $logrecord->userid = $user->id;
-        $logrecord->courseid = $course->id;
-        $logrecord->relateduserid = null;
-        $logrecord->anonymous = 0;
-        $logrecord->other = 'N;';
-        $logrecord->timecreated = $timestamp;
-        $logrecord->origin = 'web';
-        $logrecord->ip = $ip;
-        $logrecord->realuserid = null;
+            // Create the event using Moodle's native event class.
+            $event = \core\event\course_viewed::create([
+                'userid' => $user->id,
+                'context' => $coursecontext,
+            ]);
 
-        try {
-            $DB->insert_record('logstore_standard_log', $logrecord);
+            // Convert to log entry with custom timestamp.
+            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
+
+            // Insert into logstore.
+            $DB->insert_record('logstore_standard_log', (object)$entry);
             $this->stats['course_access_generated']++;
 
             // Update user_lastaccess table.
@@ -551,7 +549,7 @@ class generator {
     }
 
     /**
-     * Generate activity access record for a user.
+     * Generate activity access record for a user using native Moodle event when available.
      *
      * @param object $user User object
      * @param object $course Course object
@@ -574,38 +572,49 @@ class generator {
             if (!$cmcontext) {
                 return false;
             }
-        } catch (\Exception $e) {
-            return false;
-        }
 
-        // Build event name based on module type.
-        $eventname = '\\mod_' . $cm->modname . '\\event\\course_module_viewed';
+            // Build event class name based on module type.
+            $eventclass = '\\mod_' . $cm->modname . '\\event\\course_module_viewed';
 
-        // Insert into logstore_standard_log.
-        $logrecord = new \stdClass();
-        $logrecord->eventname = $eventname;
-        $logrecord->component = 'mod_' . $cm->modname;
-        $logrecord->action = 'viewed';
-        $logrecord->target = 'course_module';
-        $logrecord->objecttable = $cm->modname;
-        $logrecord->objectid = $cm->instance;
-        $logrecord->crud = 'r';
-        $logrecord->edulevel = 2; // LEVEL_PARTICIPATING
-        $logrecord->contextid = $cmcontext->id;
-        $logrecord->contextlevel = CONTEXT_MODULE;
-        $logrecord->contextinstanceid = $cm->id;
-        $logrecord->userid = $user->id;
-        $logrecord->courseid = $course->id;
-        $logrecord->relateduserid = null;
-        $logrecord->anonymous = 0;
-        $logrecord->other = 'N;';
-        $logrecord->timecreated = $timestamp;
-        $logrecord->origin = 'web';
-        $logrecord->ip = $ip;
-        $logrecord->realuserid = null;
+            // Check if the event class exists for this module.
+            if (class_exists($eventclass)) {
+                // Create the event using the module's native event class.
+                $event = $eventclass::create([
+                    'userid' => $user->id,
+                    'context' => $cmcontext,
+                    'objectid' => $cm->instance,
+                ]);
 
-        try {
-            $DB->insert_record('logstore_standard_log', $logrecord);
+                // Convert to log entry with custom timestamp.
+                $entry = $this->event_to_log_entry($event, $timestamp, $ip);
+            } else {
+                // Fallback: create log entry manually for modules without the event class.
+                $entry = [
+                    'eventname' => $eventclass,
+                    'component' => 'mod_' . $cm->modname,
+                    'action' => 'viewed',
+                    'target' => 'course_module',
+                    'objecttable' => $cm->modname,
+                    'objectid' => $cm->instance,
+                    'crud' => 'r',
+                    'edulevel' => \core\event\base::LEVEL_PARTICIPATING,
+                    'contextid' => $cmcontext->id,
+                    'contextlevel' => CONTEXT_MODULE,
+                    'contextinstanceid' => $cm->id,
+                    'userid' => $user->id,
+                    'courseid' => $course->id,
+                    'relateduserid' => null,
+                    'anonymous' => 0,
+                    'other' => 'N;',
+                    'timecreated' => $timestamp,
+                    'origin' => 'web',
+                    'ip' => $ip,
+                    'realuserid' => null,
+                ];
+            }
+
+            // Insert into logstore.
+            $DB->insert_record('logstore_standard_log', (object)$entry);
             $this->stats['activity_access_generated']++;
 
             return true;
