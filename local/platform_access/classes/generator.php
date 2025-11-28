@@ -83,6 +83,7 @@ class generator {
     protected $stats = [
         'users_processed' => 0,
         'users_updated' => 0,
+        'users_without_enrollments' => 0,
         'logins_generated' => 0,
         'course_access_generated' => 0,
         'activity_access_generated' => 0,
@@ -386,7 +387,7 @@ class generator {
     }
 
     /**
-     * Get courses where a user is enrolled.
+     * Get courses where a user is enrolled AND belong to the company.
      *
      * @param int $userid User ID
      * @return array Array of course objects
@@ -394,17 +395,39 @@ class generator {
     public function get_user_courses(int $userid): array {
         global $DB;
 
-        $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname
-                FROM {course} c
-                JOIN {enrol} e ON e.courseid = c.id
-                JOIN {user_enrolments} ue ON ue.enrolid = e.id
-                WHERE ue.userid = :userid
-                AND c.id > 1
-                AND c.visible = 1
-                AND ue.status = 0
-                ORDER BY c.id ASC";
+        // Check if company_course table exists.
+        $companycourseexists = $DB->get_manager()->table_exists('company_course');
+        $hascompanycourses = $companycourseexists && $DB->count_records('company_course') > 0;
 
-        return $DB->get_records_sql($sql, ['userid' => $userid]);
+        if ($this->companyid > 0 && $hascompanycourses) {
+            // Get courses where user is enrolled AND course belongs to the company.
+            $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname
+                    FROM {course} c
+                    JOIN {enrol} e ON e.courseid = c.id
+                    JOIN {user_enrolments} ue ON ue.enrolid = e.id
+                    JOIN {company_course} cc ON cc.courseid = c.id
+                    WHERE ue.userid = :userid
+                    AND cc.companyid = :companyid
+                    AND c.id > 1
+                    AND c.visible = 1
+                    AND ue.status = 0
+                    ORDER BY c.id ASC";
+
+            return $DB->get_records_sql($sql, ['userid' => $userid, 'companyid' => $this->companyid]);
+        } else {
+            // Without company filter, get all enrolled courses.
+            $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname
+                    FROM {course} c
+                    JOIN {enrol} e ON e.courseid = c.id
+                    JOIN {user_enrolments} ue ON ue.enrolid = e.id
+                    WHERE ue.userid = :userid
+                    AND c.id > 1
+                    AND c.visible = 1
+                    AND ue.status = 0
+                    ORDER BY c.id ASC";
+
+            return $DB->get_records_sql($sql, ['userid' => $userid]);
+        }
     }
 
     /**
@@ -857,39 +880,43 @@ class generator {
                 }
             }
 
-            // Get courses where user is enrolled (or use company courses).
+            // Get courses where user is enrolled (and belong to company if companyid is set).
+            // Only generate access records for courses where user is actually enrolled.
             $usercourses = $this->get_user_courses($user->id);
-            if (empty($usercourses)) {
-                $usercourses = $companycourses;
-            }
 
-            // Generate random number of course access records.
-            if ($this->accesstype === 'course' || $this->accesstype === 'all') {
-                foreach ($usercourses as $course) {
-                    $numaccess = $this->get_random_count($this->courseaccessmin, $this->courseaccessmax);
-                    for ($i = 0; $i < $numaccess; $i++) {
-                        $timestamp = $this->get_random_timestamp();
-                        $this->generate_course_access_record($user, $course, $timestamp);
-                    }
-                }
-            }
-
-            // Generate random number of activity access records.
-            if ($this->accesstype === 'activity' || $this->accesstype === 'all') {
-                foreach ($usercourses as $course) {
-                    if (!isset($coursemodules[$course->id])) {
-                        $coursemodules[$course->id] = $this->get_course_modules($course->id);
-                    }
-
-                    $modules = $coursemodules[$course->id];
-                    foreach ($modules as $cm) {
-                        $numaccess = $this->get_random_count($this->activityaccessmin, $this->activityaccessmax);
+            // Skip course/activity access if user is not enrolled in any courses.
+            if (!empty($usercourses)) {
+                // Generate random number of course access records.
+                if ($this->accesstype === 'course' || $this->accesstype === 'all') {
+                    foreach ($usercourses as $course) {
+                        $numaccess = $this->get_random_count($this->courseaccessmin, $this->courseaccessmax);
                         for ($i = 0; $i < $numaccess; $i++) {
                             $timestamp = $this->get_random_timestamp();
-                            $this->generate_activity_access_record($user, $course, $cm, $timestamp);
+                            $this->generate_course_access_record($user, $course, $timestamp);
                         }
                     }
                 }
+
+                // Generate random number of activity access records.
+                if ($this->accesstype === 'activity' || $this->accesstype === 'all') {
+                    foreach ($usercourses as $course) {
+                        if (!isset($coursemodules[$course->id])) {
+                            $coursemodules[$course->id] = $this->get_course_modules($course->id);
+                        }
+
+                        $modules = $coursemodules[$course->id];
+                        foreach ($modules as $cm) {
+                            $numaccess = $this->get_random_count($this->activityaccessmin, $this->activityaccessmax);
+                            for ($i = 0; $i < $numaccess; $i++) {
+                                $timestamp = $this->get_random_timestamp();
+                                $this->generate_activity_access_record($user, $course, $cm, $timestamp);
+                            }
+                        }
+                    }
+                }
+            } else {
+                // User has no course enrollments in company courses.
+                $this->stats['users_without_enrollments']++;
             }
         }
 

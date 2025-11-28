@@ -159,6 +159,7 @@ $table->head = [get_string('status'), get_string('value', 'scorm')];
 $table->data = [
     [get_string('usersprocessed', 'local_platform_access'), $stats['users_processed']],
     [get_string('usersupdated', 'local_platform_access'), $stats['users_updated'] ?? 0],
+    [get_string('userswithoutenrollments', 'local_platform_access'), $stats['users_without_enrollments'] ?? 0],
     [get_string('recordsdeleted', 'local_platform_access'), $stats['records_deleted'] ?? 0],
     [get_string('loginsgenerated', 'local_platform_access'), $stats['logins_generated']],
     [get_string('courseaccessgenerated', 'local_platform_access'), $stats['course_access_generated']],
