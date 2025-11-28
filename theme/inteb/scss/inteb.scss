@@ -6131,26 +6131,16 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link):not(.badge):not([
     }
 }
 
-// Footer global - Asegurar textos blancos
-#top-footer {
+// Footer global - Asegurar textos blancos (excluyendo ASW)
+#top-footer:not(.asw-container):not(.asw-menu):not(.asw-footer) {
     background-color: $iser-verde !important;
     color: $iser-blanco !important;
     margin: 0 -15px;
 }
 
-#page-footer,
-.footer:not(.asw-footer),
-footer:not(.asw-container *),
-[class*="footer"]:not(.asw-container):not(.asw-container *):not([class*="asw"]) {
-    color: $iser-gris-700 !important;
-}
-
-// Enlaces del footer en blanco (excluyendo ASW)
-#page-footer a:not(.btn),
-.footer:not(.asw-footer) a:not(.btn),
-footer:not(.asw-container *) a:not(.btn),
-#top-footer a:not(.btn),
-.iser-footer-govco a:not(.btn) {
+// Enlaces del footer en blanco (excluyendo completamente ASW)
+#top-footer:not(.asw-container) a:not(.btn):not([class*="asw"]),
+.iser-footer-govco:not(.asw-container) a:not(.btn):not([class*="asw"]) {
     color: $iser-blanco !important;
 
     &:hover,
@@ -6160,23 +6150,34 @@ footer:not(.asw-container *) a:not(.btn),
     }
 }
 
-// Textos del footer en blanco
-#top-footer,
-#top-footer p,
-#top-footer span,
-#top-footer div,
-#top-footer h1,
-#top-footer h2,
-#top-footer h3,
-#top-footer h4,
-#top-footer h5,
-#top-footer h6,
-#top-footer li,
-.iser-footer-govco,
-.iser-footer-govco p,
-.iser-footer-govco span,
-.iser-footer-govco div {
+// Textos del footer en blanco (excluyendo ASW)
+#top-footer:not(.asw-container):not([class*="asw"]),
+#top-footer:not(.asw-container) p:not([class*="asw"]),
+#top-footer:not(.asw-container) span:not([class*="asw"]),
+#top-footer:not(.asw-container) div:not([class*="asw"]),
+#top-footer:not(.asw-container) h1:not([class*="asw"]),
+#top-footer:not(.asw-container) h2:not([class*="asw"]),
+#top-footer:not(.asw-container) h3:not([class*="asw"]),
+#top-footer:not(.asw-container) h4:not([class*="asw"]),
+#top-footer:not(.asw-container) h5:not([class*="asw"]),
+#top-footer:not(.asw-container) h6:not([class*="asw"]),
+#top-footer:not(.asw-container) li:not([class*="asw"]),
+.iser-footer-govco:not(.asw-container):not([class*="asw"]),
+.iser-footer-govco:not(.asw-container) p:not([class*="asw"]),
+.iser-footer-govco:not(.asw-container) span:not([class*="asw"]),
+.iser-footer-govco:not(.asw-container) div:not([class*="asw"]) {
     color: $iser-blanco !important;
+}
+
+// Proteger widget ASW de estilos del footer
+.asw-container,
+.asw-container *,
+.asw-menu,
+.asw-menu *,
+.asw-widget,
+.asw-widget *,
+[class*="asw-"] {
+    color: unset !important;
 }
 
 // ===========================================================================
