@@ -50,6 +50,7 @@ if ($mform->is_cancelled()) {
     $params = [
         'companyid' => $data->companyid,
         'accesstype' => $data->accesstype,
+        'cleanbeforegenerate' => $data->cleanbeforegenerate,
         'datefrom' => $data->datefrom,
         'dateto' => $data->dateto,
         'loginsmin' => $data->loginsmin,

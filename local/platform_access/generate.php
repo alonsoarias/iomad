@@ -38,6 +38,7 @@ require_sesskey();
 // Get parameters.
 $companyid = required_param('companyid', PARAM_INT);
 $accesstype = required_param('accesstype', PARAM_ALPHA);
+$cleanbeforegenerate = required_param('cleanbeforegenerate', PARAM_INT);
 $datefrom = required_param('datefrom', PARAM_INT);
 $dateto = required_param('dateto', PARAM_INT);
 $loginsmin = required_param('loginsmin', PARAM_INT);
@@ -68,6 +69,7 @@ if (!$confirm) {
     $confirmurl = new moodle_url('/local/platform_access/generate.php', [
         'companyid' => $companyid,
         'accesstype' => $accesstype,
+        'cleanbeforegenerate' => $cleanbeforegenerate,
         'datefrom' => $datefrom,
         'dateto' => $dateto,
         'loginsmin' => $loginsmin,
@@ -114,6 +116,7 @@ $options = [
     'onlyactive' => (bool) $onlyactive,
     'updateusercreated' => (bool) $updateusercreated,
     'usercreateddate' => $usercreateddate,
+    'cleanbeforegenerate' => (bool) $cleanbeforegenerate,
     'accesstype' => $accesstype,
 ];
 
@@ -156,6 +159,7 @@ $table->head = [get_string('status'), get_string('value', 'scorm')];
 $table->data = [
     [get_string('usersprocessed', 'local_platform_access'), $stats['users_processed']],
     [get_string('usersupdated', 'local_platform_access'), $stats['users_updated'] ?? 0],
+    [get_string('recordsdeleted', 'local_platform_access'), $stats['records_deleted'] ?? 0],
     [get_string('loginsgenerated', 'local_platform_access'), $stats['logins_generated']],
     [get_string('courseaccessgenerated', 'local_platform_access'), $stats['course_access_generated']],
     [get_string('activityaccessgenerated', 'local_platform_access'), $stats['activity_access_generated']],

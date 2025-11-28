@@ -80,3 +80,6 @@ $string['daterange'] = 'Rango de Fechas';
 $string['accesscounts'] = 'Cantidad de Accesos (Rangos Aleatorios)';
 $string['minmaxerror'] = 'El valor minimo debe ser menor o igual al valor maximo';
 $string['usersupdated'] = 'Fecha de creacion de usuarios actualizada';
+$string['cleanbeforegenerate'] = 'Limpiar registros existentes antes de generar';
+$string['cleanbeforegenerate_help'] = 'Si esta habilitado, todos los registros de acceso existentes (inicios de sesion, vistas de cursos, vistas de actividades) para los usuarios seleccionados seran eliminados antes de generar nuevos registros. Esto incluye restablecer los campos de acceso del usuario (firstaccess, lastaccess, lastlogin, currentlogin).';
+$string['recordsdeleted'] = 'Registros existentes eliminados';

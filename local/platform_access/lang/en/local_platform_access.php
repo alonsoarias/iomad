@@ -80,3 +80,6 @@ $string['daterange'] = 'Date Range';
 $string['accesscounts'] = 'Access Counts (Random Ranges)';
 $string['minmaxerror'] = 'Minimum value must be less than or equal to maximum value';
 $string['usersupdated'] = 'Users creation date updated';
+$string['cleanbeforegenerate'] = 'Clean existing records before generating';
+$string['cleanbeforegenerate_help'] = 'If enabled, all existing access records (logins, course views, activity views) for the selected users will be deleted before generating new records. This includes resetting user access fields (firstaccess, lastaccess, lastlogin, currentlogin).';
+$string['recordsdeleted'] = 'Existing records deleted';

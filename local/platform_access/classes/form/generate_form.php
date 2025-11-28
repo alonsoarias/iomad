@@ -68,6 +68,11 @@ class generate_form extends \moodleform {
         $mform->addElement('select', 'accesstype', get_string('accesstype', 'local_platform_access'), $accesstypes);
         $mform->setDefault('accesstype', 'all');
 
+        // Clean existing records before generating.
+        $mform->addElement('advcheckbox', 'cleanbeforegenerate', get_string('cleanbeforegenerate', 'local_platform_access'));
+        $mform->setDefault('cleanbeforegenerate', 1);
+        $mform->addHelpButton('cleanbeforegenerate', 'cleanbeforegenerate', 'local_platform_access');
+
         // Header: User settings.
         $mform->addElement('header', 'usersettings', get_string('usersettings', 'local_platform_access'));
 

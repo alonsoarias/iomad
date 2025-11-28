@@ -76,6 +76,9 @@ class generator {
     /** @var int User creation date timestamp */
     protected $usercreateddate;
 
+    /** @var bool Clean existing records before generating */
+    protected $cleanbeforegenerate;
+
     /** @var array Statistics */
     protected $stats = [
         'users_processed' => 0,
@@ -84,6 +87,7 @@ class generator {
         'course_access_generated' => 0,
         'activity_access_generated' => 0,
         'lastaccess_updated' => 0,
+        'records_deleted' => 0,
     ];
 
     /**
@@ -108,6 +112,7 @@ class generator {
         $this->companyid = intval($options['companyid'] ?? 0);
         $this->updateusercreated = $options['updateusercreated'] ?? true;
         $this->usercreateddate = $options['usercreateddate'] ?? strtotime('2025-11-15');
+        $this->cleanbeforegenerate = $options['cleanbeforegenerate'] ?? true;
     }
 
     /**
@@ -143,6 +148,83 @@ class generator {
      */
     protected function get_random_ip(): string {
         return rand(1, 255) . '.' . rand(0, 255) . '.' . rand(0, 255) . '.' . rand(1, 254);
+    }
+
+    /**
+     * Clean existing access records before generating new ones.
+     *
+     * @param array $users Array of user objects to clean records for
+     * @return int Number of records deleted
+     */
+    public function clean_existing_records(array $users): int {
+        global $DB;
+
+        if (empty($users)) {
+            return 0;
+        }
+
+        $deleted = 0;
+        $userids = array_keys($users);
+
+        // Get user IDs for SQL.
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        // 1. Delete login events from logstore_standard_log.
+        if ($this->logstore_exists()) {
+            $deleted += $DB->count_records_select('logstore_standard_log',
+                "eventname = :eventname AND userid $usersql",
+                array_merge(['eventname' => '\\core\\event\\user_loggedin'], $userparams)
+            );
+            $DB->delete_records_select('logstore_standard_log',
+                "eventname = :eventname AND userid $usersql",
+                array_merge(['eventname' => '\\core\\event\\user_loggedin'], $userparams)
+            );
+
+            // 2. Delete course_viewed events.
+            $deleted += $DB->count_records_select('logstore_standard_log',
+                "eventname = :eventname AND userid $usersql",
+                array_merge(['eventname' => '\\core\\event\\course_viewed'], $userparams)
+            );
+            $DB->delete_records_select('logstore_standard_log',
+                "eventname = :eventname AND userid $usersql",
+                array_merge(['eventname' => '\\core\\event\\course_viewed'], $userparams)
+            );
+
+            // 3. Delete course_module_viewed events (all module types).
+            $deleted += $DB->count_records_select('logstore_standard_log',
+                "eventname LIKE :eventname AND userid $usersql",
+                array_merge(['eventname' => '%\\event\\course_module_viewed'], $userparams)
+            );
+            $DB->delete_records_select('logstore_standard_log',
+                "eventname LIKE :eventname AND userid $usersql",
+                array_merge(['eventname' => '%\\event\\course_module_viewed'], $userparams)
+            );
+        }
+
+        // 4. Delete/truncate user_lastaccess records for these users.
+        $deleted += $DB->count_records_select('user_lastaccess', "userid $usersql", $userparams);
+        $DB->delete_records_select('user_lastaccess', "userid $usersql", $userparams);
+
+        // 5. Delete local_report_user_logins records for these users.
+        if ($DB->get_manager()->table_exists('local_report_user_logins')) {
+            $deleted += $DB->count_records_select('local_report_user_logins', "userid $usersql", $userparams);
+            $DB->delete_records_select('local_report_user_logins', "userid $usersql", $userparams);
+        }
+
+        // 6. Reset user access fields.
+        foreach ($users as $user) {
+            $update = new \stdClass();
+            $update->id = $user->id;
+            $update->firstaccess = 0;
+            $update->lastaccess = 0;
+            $update->lastlogin = 0;
+            $update->currentlogin = 0;
+            $update->lastip = '';
+            $DB->update_record('user', $update);
+        }
+
+        $this->stats['records_deleted'] = $deleted;
+        return $deleted;
     }
 
     /**
@@ -668,6 +750,11 @@ class generator {
         $users = $this->get_users();
         if (empty($users)) {
             return $this->stats;
+        }
+
+        // Clean existing records before generating new ones.
+        if ($this->cleanbeforegenerate) {
+            $this->clean_existing_records($users);
         }
 
         // Get courses for the company.
