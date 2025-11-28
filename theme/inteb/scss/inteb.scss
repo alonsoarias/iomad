@@ -6139,17 +6139,18 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):not(.page-link):not(.badge):not([
 }
 
 #page-footer,
-.footer,
-footer,
-[class*="footer"] {
+.footer:not(.asw-footer),
+footer:not(.asw-container *),
+[class*="footer"]:not(.asw-container):not(.asw-container *):not([class*="asw"]) {
     color: $iser-gris-700 !important;
 }
 
-// Enlaces del footer en blanco
+// Enlaces del footer en blanco (excluyendo ASW)
 #page-footer a:not(.btn),
-.footer a:not(.btn),
-footer a:not(.btn),
-[class*="footer"] a:not(.btn) {
+.footer:not(.asw-footer) a:not(.btn),
+footer:not(.asw-container *) a:not(.btn),
+#top-footer a:not(.btn),
+.iser-footer-govco a:not(.btn) {
     color: $iser-blanco !important;
 
     &:hover,
@@ -6176,6 +6177,13 @@ footer a:not(.btn),
 .iser-footer-govco span,
 .iser-footer-govco div {
     color: $iser-blanco !important;
+}
+
+// ===========================================================================
+// ACCESSIBILITY WIDGET (ASW) - Posicionamiento basico
+// ===========================================================================
+.asw-container .asw-menu {
+    top: 120px !important;
 }
 
 // Drawer lateral izquierdo
