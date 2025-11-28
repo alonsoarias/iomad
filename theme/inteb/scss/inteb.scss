@@ -5457,3 +5457,309 @@ body.pagelayout-incourse {
     right: 100% !important;
     transform: scaleX(-1) !important;
 }
+
+// ===========================================================================
+// PROFILE COURSES - CARD GRID DESIGN
+// Redesigned to match the mycourses block card layout
+// ===========================================================================
+
+.profile-courses-section {
+    padding: 1rem 0 !important;
+}
+
+// No courses message
+.profile-no-courses {
+    display: flex !important;
+    align-items: center !important;
+    padding: 1.5rem !important;
+    border-radius: 8px !important;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    border: 1px solid #dee2e6 !important;
+
+    i {
+        font-size: 1.25rem !important;
+        color: $iser-verde !important;
+    }
+}
+
+// Course cards grid container
+.profile-courses-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+    gap: 1.5rem !important;
+    padding: 0.5rem !important;
+}
+
+// Individual course card
+.profile-course-card {
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    overflow: hidden !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+
+    &:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+    }
+}
+
+.profile-course-card-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+// Course image section
+.profile-course-card-img {
+    position: relative !important;
+    height: 180px !important;
+    overflow: hidden !important;
+}
+
+.profile-course-card-img-link {
+    display: block !important;
+    height: 100% !important;
+    text-decoration: none !important;
+}
+
+.profile-course-card-image {
+    width: 100% !important;
+    height: 100% !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    transition: transform 0.4s ease !important;
+
+    .profile-course-card:hover & {
+        transform: scale(1.05) !important;
+    }
+}
+
+.profile-course-card-overlay {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.3) 100%) !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+
+    .profile-course-card:hover & {
+        opacity: 1 !important;
+    }
+}
+
+// Course body section
+.profile-course-card-body {
+    flex: 1 !important;
+    padding: 1rem 1.25rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+}
+
+// Category badge
+.profile-course-card-category {
+    margin-bottom: 0.25rem !important;
+
+    .category-name {
+        display: inline-block !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        color: $iser-verde !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        max-width: 100% !important;
+    }
+}
+
+// Course title
+.profile-course-card-title {
+    margin-bottom: 0.5rem !important;
+
+    .course-title-link {
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        line-height: 1.4 !important;
+        color: #212529 !important;
+        text-decoration: none !important;
+        transition: color 0.2s ease !important;
+
+        &:hover {
+            color: $iser-verde !important;
+            text-decoration: none !important;
+        }
+    }
+}
+
+// Instructor section
+.profile-course-card-instructor {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    margin-top: auto !important;
+    padding-top: 0.5rem !important;
+
+    .instructor-link {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        text-decoration: none !important;
+        color: #6c757d !important;
+        transition: color 0.2s ease !important;
+
+        &:hover {
+            color: $iser-verde !important;
+        }
+    }
+
+    .instructor-avatar {
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+        border: 2px solid #e9ecef !important;
+    }
+
+    .instructor-name {
+        font-size: 0.813rem !important;
+        font-weight: 500 !important;
+        max-width: 150px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    .instructor-count {
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        color: #ffffff !important;
+        background-color: $iser-verde !important;
+        padding: 0.125rem 0.5rem !important;
+        border-radius: 12px !important;
+    }
+}
+
+// Course footer section
+.profile-course-card-footer {
+    padding: 1rem 1.25rem !important;
+    border-top: 1px solid #f0f0f0 !important;
+    background-color: #fafafa !important;
+}
+
+// Progress section
+.profile-course-card-progress {
+    margin-bottom: 1rem !important;
+
+    .progress-info {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 0.5rem !important;
+
+        .progress-label {
+            font-size: 0.75rem !important;
+            color: #6c757d !important;
+        }
+
+        .progress-percentage {
+            font-size: 0.875rem !important;
+            font-weight: 700 !important;
+            color: $iser-verde !important;
+        }
+    }
+
+    .progress {
+        height: 8px !important;
+        border-radius: 4px !important;
+        background-color: #e9ecef !important;
+        overflow: hidden !important;
+
+        .progress-bar {
+            background: linear-gradient(90deg, $iser-verde 0%, darken($iser-verde, 10%) 100%) !important;
+            border-radius: 4px !important;
+            transition: width 0.6s ease !important;
+
+            &.bg-success {
+                background: linear-gradient(90deg, #28a745 0%, #1e7e34 100%) !important;
+            }
+        }
+    }
+}
+
+// View course button
+.profile-course-card-action {
+    text-align: right !important;
+
+    .view-course-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0.5rem 1.25rem !important;
+        font-size: 0.813rem !important;
+        font-weight: 600 !important;
+        color: #ffffff !important;
+        background: $iser-verde !important;
+        border: none !important;
+        border-radius: 6px !important;
+        text-decoration: none !important;
+        transition: all 0.2s ease !important;
+
+        &:hover {
+            background: darken($iser-verde, 8%) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(27, 158, 136, 0.3) !important;
+        }
+
+        i {
+            font-size: 0.875rem !important;
+        }
+    }
+}
+
+// Responsive adjustments for profile courses grid
+@media (max-width: 768px) {
+    .profile-courses-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+        gap: 1rem !important;
+    }
+
+    .profile-course-card-img {
+        height: 160px !important;
+    }
+
+    .profile-course-card-body {
+        padding: 0.875rem 1rem !important;
+    }
+
+    .profile-course-card-footer {
+        padding: 0.875rem 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-courses-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 0 !important;
+    }
+
+    .profile-course-card-img {
+        height: 140px !important;
+    }
+
+    .profile-course-card-title .course-title-link {
+        font-size: 0.938rem !important;
+    }
+
+    .profile-course-card-action .view-course-btn {
+        width: 100% !important;
+    }
+}
