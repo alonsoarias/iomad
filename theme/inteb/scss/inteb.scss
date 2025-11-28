@@ -5816,6 +5816,197 @@ $profile-course-img-height-sm: 90px;
 }
 
 // ===========================================================================
+// PROFILE COURSES - NEW LIST VIEW DESIGN (Mycourses Block Style)
+// Integrates with inteb-list-* classes for consistent styling
+// ===========================================================================
+
+.profile-courses-section.inteb-mycourses-view {
+    padding: $spacer-md 0 !important;
+
+    // Container for new list
+    .profile-courses-list-new {
+        padding: 0 !important;
+    }
+
+    // Profile course card - extends inteb-list-item
+    .profile-course-card {
+        border-left: 4px solid $iser-verde !important;
+        border-radius: $border-radius-lg !important;
+
+        &:hover {
+            border-left-color: $iser-verde-dark !important;
+        }
+    }
+
+    // Instructor styling within list
+    .inteb-list-instructor {
+        a {
+            color: $iser-gris-600 !important;
+            text-decoration: none !important;
+            transition: color $transition-base !important;
+
+            &:hover {
+                color: $iser-verde !important;
+            }
+
+            img {
+                border: 2px solid $iser-gris-200 !important;
+            }
+        }
+    }
+
+    // Empty state styling
+    .inteb-empty-state {
+        background: linear-gradient(135deg, $iser-gris-100 0%, $iser-gris-200 100%) !important;
+        border-radius: $border-radius-lg !important;
+        border: 1px dashed $iser-gris-300 !important;
+
+        .inteb-empty-icon {
+            i {
+                color: $iser-verde !important;
+                opacity: 0.5 !important;
+            }
+        }
+    }
+
+    // Badge positioning within image wrapper
+    .inteb-list-img-wrapper {
+        .inteb-list-badge {
+            top: $spacer-sm !important;
+            left: $spacer-sm !important;
+            z-index: 2 !important;
+
+            .badge {
+                font-size: $font-size-xs !important;
+                padding: $spacer-xs $spacer-sm !important;
+                box-shadow: $shadow-sm !important;
+            }
+        }
+    }
+
+    // Progress bar colors for profile courses
+    .inteb-list-progress {
+        .inteb-progress {
+            background-color: $iser-gris-200 !important;
+            border-radius: $border-radius-sm !important;
+        }
+
+        .inteb-progress-bar {
+            background: linear-gradient(90deg, $iser-verde 0%, $iser-verde-dark 100%) !important;
+            border-radius: $border-radius-sm !important;
+
+            &.bg-success {
+                background: linear-gradient(90deg, $iser-verde 0%, darken($iser-verde, 10%) 100%) !important;
+            }
+        }
+    }
+
+    // Status badges
+    .inteb-list-status {
+        .badge {
+            font-size: $font-size-xs !important;
+            padding: $spacer-xs $spacer-sm !important;
+        }
+    }
+
+    // Action buttons - use ISER colors
+    .inteb-list-action {
+        .btn-success {
+            background-color: $iser-verde !important;
+            border-color: $iser-verde !important;
+
+            &:hover,
+            &:focus {
+                background-color: $iser-verde-dark !important;
+                border-color: $iser-verde-dark !important;
+            }
+        }
+
+        .btn-primary {
+            background-color: $iser-verde !important;
+            border-color: $iser-verde !important;
+
+            &:hover,
+            &:focus {
+                background-color: $iser-verde-dark !important;
+                border-color: $iser-verde-dark !important;
+            }
+        }
+
+        .btn-outline-secondary {
+            color: $iser-gris-700 !important;
+            border-color: $iser-gris-400 !important;
+
+            &:hover,
+            &:focus {
+                background-color: $iser-verde !important;
+                border-color: $iser-verde !important;
+                color: $iser-blanco !important;
+            }
+        }
+    }
+}
+
+// Responsive adjustments for profile courses list view
+@media (max-width: $breakpoint-md) {
+    .profile-courses-section.inteb-mycourses-view {
+        .profile-course-card {
+            .inteb-list-content {
+                padding: $spacer-sm !important;
+            }
+        }
+    }
+}
+
+@media (max-width: $breakpoint-mobile) {
+    .profile-courses-section.inteb-mycourses-view {
+        .profile-course-card {
+            border-left: none !important;
+            border-top: 4px solid $iser-verde !important;
+
+            .row.no-gutters {
+                flex-direction: column !important;
+            }
+
+            .col-md-3,
+            .col-lg-2 {
+                max-width: 100% !important;
+                flex: 0 0 100% !important;
+            }
+
+            .col-md-9,
+            .col-lg-10 {
+                max-width: 100% !important;
+                flex: 0 0 100% !important;
+            }
+
+            .inteb-list-img-wrapper {
+                min-height: 160px !important;
+                border-radius: $border-radius-lg $border-radius-lg 0 0 !important;
+            }
+
+            .inteb-list-content {
+                padding: $spacer-md !important;
+            }
+
+            .inteb-list-title-wrap {
+                width: 100% !important;
+                padding-right: 0 !important;
+            }
+
+            .inteb-list-action {
+                width: 100% !important;
+                margin-top: $spacer-sm !important;
+
+                .btn {
+                    width: 100% !important;
+                }
+            }
+        }
+    }
+}
+
+// ===========================================================================
 // DRAWER / SIDEBAR NAVIGATION - ISER Branding
 // Sobrescribe los estilos de RemUI para usar colores ISER
 // ===========================================================================

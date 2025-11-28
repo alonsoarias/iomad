@@ -1,0 +1,199 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    Theme INTEB - Child of Edwiser RemUI
+    Profile courses tab - Redesigned with mycourses block list view style
+    @package theme_inteb
+    @copyright (c) 2025 Vicerrectoria Academica ISER <vicerrectoria@iser.edu.co>
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+
+}}
+{{!
+    @template theme_inteb/theme_remui/profile_courses
+
+    Profile courses redesigned with mycourses block list view layout.
+    Uses inteb-list-* classes for consistent styling.
+}}
+<section class="profile-courses-section inteb-mycourses-view inteb-list-view">
+    <div class="container-fluid px-0">
+        {{^ hascourses }}
+        <div class="inteb-empty-state text-center py-5">
+            <div class="inteb-empty-icon mb-3">
+                <i class="fa fa-graduation-cap fa-4x text-muted"></i>
+            </div>
+            <h5 class="text-muted mb-2">{{# str }} notenrolledanycourse, theme_remui {{/ str }}</h5>
+            <p class="text-muted small">{{# str }} notenrolledanycourse, theme_remui {{/ str }}</p>
+        </div>
+        {{/ hascourses }}
+
+        {{# hascourses }}
+        <div class="inteb-course-list profile-courses-list-new">
+            {{# courses }}
+            <div class="inteb-list-item profile-course-card card mb-3 shadow-sm" data-region="course-content" data-course-id="{{ id }}">
+                <div class="card-body p-0">
+                    <div class="row no-gutters">
+                        {{! Course Image - Left Column }}
+                        <div class="col-md-3 col-lg-2">
+                            <a href="{{ link }}" class="inteb-list-img-wrapper d-block position-relative" tabindex="-1" title="{{{fullname}}}">
+                                <div class="inteb-list-img" style="background-image: url('{{{ courseimage }}}');">
+                                    <span class="sr-only">{{{fullname}}}</span>
+                                </div>
+                                {{! Progress Badge Overlay }}
+                                {{# enablecompletion }}
+                                <div class="inteb-list-badge position-absolute">
+                                    {{# progress }}
+                                    {{# iscompleted }}
+                                    <span class="badge badge-success">
+                                        <i class="fa fa-check-circle mr-1" aria-hidden="true"></i>
+                                        {{#str}}completed, block_mycourses{{/str}}
+                                    </span>
+                                    {{/ iscompleted }}
+                                    {{^ iscompleted }}
+                                    {{# isinprogress }}
+                                    <span class="badge badge-primary">
+                                        <i class="fa fa-spinner mr-1" aria-hidden="true"></i>
+                                        {{progress}}%
+                                    </span>
+                                    {{/ isinprogress }}
+                                    {{^ isinprogress }}
+                                    <span class="badge badge-info">
+                                        <i class="fa fa-star mr-1" aria-hidden="true"></i>
+                                        {{#str}}new{{/str}}
+                                    </span>
+                                    {{/ isinprogress }}
+                                    {{/ iscompleted }}
+                                    {{/ progress }}
+                                    {{^ progress }}
+                                    <span class="badge badge-info">
+                                        <i class="fa fa-star mr-1" aria-hidden="true"></i>
+                                        {{#str}}new{{/str}}
+                                    </span>
+                                    {{/ progress }}
+                                    {{/ enablecompletion }}
+                                </div>
+                            </a>
+                        </div>
+
+                        {{! Course Content - Right Column }}
+                        <div class="col-md-9 col-lg-10">
+                            <div class="inteb-list-content p-3">
+                                {{! Top Row: Title/Category and Action Button }}
+                                <div class="d-flex justify-content-between align-items-start flex-wrap">
+                                    <div class="inteb-list-title-wrap mb-2">
+                                        {{! Course Title }}
+                                        <a href="{{ link }}" class="inteb-list-title h5 mb-0 text-dark" title="{{{fullname}}}">
+                                            {{{ fullname }}}
+                                        </a>
+                                        {{! Category Badge }}
+                                        {{# categoryname }}
+                                        <span class="badge badge-light ml-2">{{{categoryname}}}</span>
+                                        {{/ categoryname }}
+                                    </div>
+
+                                    {{! Action Button }}
+                                    <div class="inteb-list-action">
+                                        {{# enablecompletion }}
+                                        {{# progress }}
+                                        {{# iscompleted }}
+                                        <a href="{{ link }}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fa fa-eye mr-1" aria-hidden="true"></i>
+                                            {{#str}}viewcourse, block_mycourses{{/str}}
+                                        </a>
+                                        {{/ iscompleted }}
+                                        {{^ iscompleted }}
+                                        {{# isinprogress }}
+                                        <a href="{{ link }}" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-play-circle mr-1" aria-hidden="true"></i>
+                                            {{#str}}continue, core{{/str}}
+                                        </a>
+                                        {{/ isinprogress }}
+                                        {{^ isinprogress }}
+                                        <a href="{{ link }}" class="btn btn-success btn-sm">
+                                            <i class="fa fa-rocket mr-1" aria-hidden="true"></i>
+                                            {{#str}}startcourse, block_mycourses{{/str}}
+                                        </a>
+                                        {{/ isinprogress }}
+                                        {{/ iscompleted }}
+                                        {{/ progress }}
+                                        {{^ progress }}
+                                        <a href="{{ link }}" class="btn btn-success btn-sm">
+                                            <i class="fa fa-rocket mr-1" aria-hidden="true"></i>
+                                            {{#str}}startcourse, block_mycourses{{/str}}
+                                        </a>
+                                        {{/ progress }}
+                                        {{/ enablecompletion }}
+                                        {{^ enablecompletion }}
+                                        <a href="{{ link }}" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-external-link mr-1" aria-hidden="true"></i>
+                                            {{#str}}viewcourse, theme_remui{{/str}}
+                                        </a>
+                                        {{/ enablecompletion }}
+                                    </div>
+                                </div>
+
+                                {{! Instructor Info }}
+                                {{#instructor}}
+                                <div class="inteb-list-instructor mb-2">
+                                    <a href="{{ url }}" class="d-inline-flex align-items-center text-muted small" title="{{{name}}}">
+                                        <img src="{{ picture }}" class="rounded-circle mr-2" alt="{{ name }}" width="24" height="24" loading="lazy" style="object-fit: cover;"/>
+                                        <span>{{{name}}}</span>
+                                    </a>
+                                    {{#instructorcount}}
+                                    <span class="badge badge-secondary ml-1">+{{instructorcount}}</span>
+                                    {{/instructorcount}}
+                                </div>
+                                {{/instructor}}
+
+                                {{! Progress Section }}
+                                {{# enablecompletion }}
+                                <div class="inteb-list-progress mt-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="small text-muted">
+                                            {{# activitydata }}{{{ activitydata }}}{{/ activitydata }}
+                                            {{^ activitydata }}{{#str}}progress, block_mycourses{{/str}}{{/ activitydata }}
+                                        </span>
+                                        <span class="small font-weight-bold {{# iscompleted }}text-success{{/ iscompleted }}{{^ iscompleted }}text-primary{{/ iscompleted }}">
+                                            {{#progress}}{{progress}}{{/progress}}{{^progress}}0{{/progress}}%
+                                        </span>
+                                    </div>
+                                    <div class="progress inteb-progress" style="height: 8px;">
+                                        <div class="progress-bar inteb-progress-bar {{# iscompleted }}bg-success{{/ iscompleted }}"
+                                             role="progressbar"
+                                             style="width: {{#progress}}{{progress}}{{/progress}}{{^progress}}0{{/progress}}%;"
+                                             aria-valuenow="{{#progress}}{{progress}}{{/progress}}{{^progress}}0{{/progress}}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/ enablecompletion }}
+
+                                {{! Status for courses without completion tracking }}
+                                {{^ enablecompletion }}
+                                <div class="inteb-list-status mt-2">
+                                    <span class="badge badge-light border">
+                                        <i class="fa fa-check-circle mr-1 text-success" aria-hidden="true"></i>
+                                        {{#str}}enrolled, block_mycourses{{/str}}
+                                    </span>
+                                </div>
+                                {{/ enablecompletion }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/ courses }}
+        </div>
+        {{/ hascourses }}
+    </div>
+</section>
