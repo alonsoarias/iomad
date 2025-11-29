@@ -789,6 +789,11 @@ class generator {
                 continue;
             }
 
+            // Skip if no timestamps recorded.
+            if (empty($data['timestamps'])) {
+                continue;
+            }
+
             $user = $users[$userid];
             $update = new \stdClass();
             $update->id = $userid;
@@ -796,7 +801,7 @@ class generator {
             // Determine first and last timestamps.
             $mintimestamp = min($data['timestamps']);
             $maxtimestamp = max($data['timestamps']);
-            $lastip = $data['lastip'];
+            $lastip = $data['lastip'] ?: $this->get_random_ip();
 
             if (empty($user->firstaccess) || $mintimestamp < $user->firstaccess) {
                 $update->firstaccess = $mintimestamp;
@@ -825,6 +830,11 @@ class generator {
         }
 
         foreach ($logindata as $userid => $data) {
+            // Skip if no timestamps recorded.
+            if (empty($data['timestamps'])) {
+                continue;
+            }
+
             $mintimestamp = min($data['timestamps']);
             $maxtimestamp = max($data['timestamps']);
             $count = count($data['timestamps']);
