@@ -348,10 +348,10 @@ class generator {
     }
 
     /**
-     * Clean existing access records.
+     * Clean existing access records using TRUNCATE for maximum speed.
      */
     public function clean_existing_records(array $users): int {
-        global $DB;
+        global $DB, $CFG;
 
         if (empty($users)) {
             return 0;
@@ -361,76 +361,58 @@ class generator {
         $userids = array_keys($users);
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
+        // Get table prefix.
+        $prefix = $CFG->prefix;
+
+        // Truncate logstore_standard_log (fastest method).
         if ($this->logstore_exists()) {
-            // Delete all relevant events in fewer queries.
-            $events = [
-                '\\core\\event\\user_loggedin',
-                '\\core\\event\\course_viewed',
-                '\\core\\event\\dashboard_viewed',
-                '\\core\\event\\user_loggedout',
-            ];
-            foreach ($events as $event) {
-                $count = $DB->count_records_select('logstore_standard_log',
-                    "eventname = :eventname AND userid $usersql",
-                    array_merge(['eventname' => $event], $userparams));
+            $count = $DB->count_records('logstore_standard_log');
+            if ($count > 0) {
                 $deleted += $count;
-                if ($count > 0) {
-                    $DB->delete_records_select('logstore_standard_log',
-                        "eventname = :eventname AND userid $usersql",
-                        array_merge(['eventname' => $event], $userparams));
-                }
-            }
-
-            // Module viewed events.
-            $count = $DB->count_records_select('logstore_standard_log',
-                "eventname LIKE :eventname AND userid $usersql",
-                array_merge(['eventname' => '%\\event\\course_module_viewed'], $userparams));
-            $deleted += $count;
-            if ($count > 0) {
-                $DB->delete_records_select('logstore_standard_log',
-                    "eventname LIKE :eventname AND userid $usersql",
-                    array_merge(['eventname' => '%\\event\\course_module_viewed'], $userparams));
-            }
-
-            // Course completed events.
-            $count = $DB->count_records_select('logstore_standard_log',
-                "eventname = :eventname AND relateduserid $usersql",
-                array_merge(['eventname' => '\\core\\event\\course_completed'], $userparams));
-            $deleted += $count;
-            if ($count > 0) {
-                $DB->delete_records_select('logstore_standard_log',
-                    "eventname = :eventname AND relateduserid $usersql",
-                    array_merge(['eventname' => '\\core\\event\\course_completed'], $userparams));
+                $DB->execute("TRUNCATE TABLE {$prefix}logstore_standard_log");
             }
         }
 
-        // Delete from other tables.
-        $tables = ['user_lastaccess', 'course_modules_completion', 'course_completions'];
-        foreach ($tables as $table) {
-            $count = $DB->count_records_select($table, "userid $usersql", $userparams);
+        // Truncate user_lastaccess.
+        $count = $DB->count_records('user_lastaccess');
+        if ($count > 0) {
             $deleted += $count;
-            if ($count > 0) {
-                $DB->delete_records_select($table, "userid $usersql", $userparams);
-            }
+            $DB->execute("TRUNCATE TABLE {$prefix}user_lastaccess");
         }
 
+        // Truncate course_modules_completion.
+        $count = $DB->count_records('course_modules_completion');
+        if ($count > 0) {
+            $deleted += $count;
+            $DB->execute("TRUNCATE TABLE {$prefix}course_modules_completion");
+        }
+
+        // Truncate course_completions.
+        $count = $DB->count_records('course_completions');
+        if ($count > 0) {
+            $deleted += $count;
+            $DB->execute("TRUNCATE TABLE {$prefix}course_completions");
+        }
+
+        // Truncate local_report_user_logins if exists.
         if ($this->report_logins_exists()) {
-            $count = $DB->count_records_select('local_report_user_logins', "userid $usersql", $userparams);
-            $deleted += $count;
+            $count = $DB->count_records('local_report_user_logins');
             if ($count > 0) {
-                $DB->delete_records_select('local_report_user_logins', "userid $usersql", $userparams);
+                $deleted += $count;
+                $DB->execute("TRUNCATE TABLE {$prefix}local_report_user_logins");
             }
         }
 
+        // Truncate course_modules_viewed if exists.
         if ($this->cmviewed_exists()) {
-            $count = $DB->count_records_select('course_modules_viewed', "userid $usersql", $userparams);
-            $deleted += $count;
+            $count = $DB->count_records('course_modules_viewed');
             if ($count > 0) {
-                $DB->delete_records_select('course_modules_viewed', "userid $usersql", $userparams);
+                $deleted += $count;
+                $DB->execute("TRUNCATE TABLE {$prefix}course_modules_viewed");
             }
         }
 
-        // Bulk reset user access fields.
+        // Bulk reset user access fields for selected users.
         $DB->execute("UPDATE {user} SET firstaccess = 0, lastaccess = 0, lastlogin = 0, currentlogin = 0, lastip = '' WHERE id $usersql", $userparams);
 
         $this->stats['records_deleted'] = $deleted;
