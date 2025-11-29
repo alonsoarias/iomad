@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Access records generator class.
+ * Access records generator class - Optimized with bulk inserts.
  *
  * @package   local_platform_access
  * @copyright 2024 IOMAD
@@ -27,9 +27,12 @@ namespace local_platform_access;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Class to generate access records for users.
+ * Class to generate access records for users with bulk insert optimization.
  */
 class generator {
+
+    /** @var int Batch size for bulk inserts */
+    const BATCH_SIZE = 500;
 
     /** @var int Date from timestamp */
     protected $datefrom;
@@ -109,6 +112,42 @@ class generator {
         'records_deleted' => 0,
     ];
 
+    /** @var array Buffer for log records */
+    protected $logbuffer = [];
+
+    /** @var array Buffer for user_lastaccess records */
+    protected $lastaccessbuffer = [];
+
+    /** @var array Buffer for course_completions records */
+    protected $completionbuffer = [];
+
+    /** @var array Buffer for course_modules_completion records */
+    protected $cmcompletionbuffer = [];
+
+    /** @var array Buffer for course_modules_viewed records */
+    protected $cmviewedbuffer = [];
+
+    /** @var array Cache for user enrollments */
+    protected $userenrollmentscache = [];
+
+    /** @var array Cache for course contexts */
+    protected $coursecontextscache = [];
+
+    /** @var array Cache for module contexts */
+    protected $modulecontextscache = [];
+
+    /** @var array Cache for user contexts */
+    protected $usercontextscache = [];
+
+    /** @var bool Logstore exists flag */
+    protected $logstoreexists = null;
+
+    /** @var bool course_modules_viewed table exists */
+    protected $cmviewedexists = null;
+
+    /** @var bool local_report_user_logins table exists */
+    protected $reportloginsexists = null;
+
     /**
      * Constructor.
      *
@@ -117,7 +156,6 @@ class generator {
     public function __construct(array $options = []) {
         $this->datefrom = $options['datefrom'] ?? strtotime('2025-11-15');
         $this->dateto = $options['dateto'] ?? time();
-        // Ensure minimum values are at least 1.
         $this->loginsmin = max(1, intval($options['loginsmin'] ?? 1));
         $this->loginsmax = max($this->loginsmin, intval($options['loginsmax'] ?? 5));
         $this->courseaccessmin = max(1, intval($options['courseaccessmin'] ?? 1));
@@ -141,44 +179,176 @@ class generator {
 
     /**
      * Get a random number between min and max.
-     *
-     * @param int $min Minimum value
-     * @param int $max Maximum value
-     * @return int Random number
      */
     protected function get_random_count(int $min, int $max): int {
-        if ($min >= $max) {
-            return $min;
-        }
-        return rand($min, $max);
+        return ($min >= $max) ? $min : rand($min, $max);
     }
 
     /**
-     * Generate a random timestamp between datefrom and dateto.
-     *
-     * @return int Timestamp
+     * Generate a random timestamp.
      */
     protected function get_random_timestamp(): int {
-        if ($this->randomize) {
-            return rand($this->datefrom, $this->dateto);
-        }
-        return $this->dateto;
+        return $this->randomize ? rand($this->datefrom, $this->dateto) : $this->dateto;
     }
 
     /**
      * Generate a random IP address.
-     *
-     * @return string IP address
      */
     protected function get_random_ip(): string {
         return rand(1, 255) . '.' . rand(0, 255) . '.' . rand(0, 255) . '.' . rand(1, 254);
     }
 
     /**
-     * Clean existing access records before generating new ones.
-     *
-     * @param array $users Array of user objects to clean records for
-     * @return int Number of records deleted
+     * Check if logstore table exists (cached).
+     */
+    protected function logstore_exists(): bool {
+        global $DB;
+        if ($this->logstoreexists === null) {
+            $this->logstoreexists = $DB->get_manager()->table_exists('logstore_standard_log');
+        }
+        return $this->logstoreexists;
+    }
+
+    /**
+     * Check if course_modules_viewed table exists (cached).
+     */
+    protected function cmviewed_exists(): bool {
+        global $DB;
+        if ($this->cmviewedexists === null) {
+            $this->cmviewedexists = $DB->get_manager()->table_exists('course_modules_viewed');
+        }
+        return $this->cmviewedexists;
+    }
+
+    /**
+     * Check if local_report_user_logins table exists (cached).
+     */
+    protected function report_logins_exists(): bool {
+        global $DB;
+        if ($this->reportloginsexists === null) {
+            $this->reportloginsexists = $DB->get_manager()->table_exists('local_report_user_logins');
+        }
+        return $this->reportloginsexists;
+    }
+
+    /**
+     * Flush log buffer to database.
+     */
+    protected function flush_log_buffer(): void {
+        global $DB;
+        if (!empty($this->logbuffer) && $this->logstore_exists()) {
+            $DB->insert_records('logstore_standard_log', $this->logbuffer);
+            $this->logbuffer = [];
+        }
+    }
+
+    /**
+     * Add record to log buffer and flush if full.
+     */
+    protected function add_to_log_buffer(array $record): void {
+        $this->logbuffer[] = (object)$record;
+        if (count($this->logbuffer) >= self::BATCH_SIZE) {
+            $this->flush_log_buffer();
+        }
+    }
+
+    /**
+     * Get course context (cached).
+     */
+    protected function get_course_context(int $courseid): ?\context_course {
+        if (!isset($this->coursecontextscache[$courseid])) {
+            $this->coursecontextscache[$courseid] = \context_course::instance($courseid, IGNORE_MISSING);
+        }
+        return $this->coursecontextscache[$courseid];
+    }
+
+    /**
+     * Get module context (cached).
+     */
+    protected function get_module_context(int $cmid): ?\context_module {
+        if (!isset($this->modulecontextscache[$cmid])) {
+            $this->modulecontextscache[$cmid] = \context_module::instance($cmid, IGNORE_MISSING);
+        }
+        return $this->modulecontextscache[$cmid];
+    }
+
+    /**
+     * Get user context (cached).
+     */
+    protected function get_user_context(int $userid): ?\context_user {
+        if (!isset($this->usercontextscache[$userid])) {
+            $this->usercontextscache[$userid] = \context_user::instance($userid, IGNORE_MISSING);
+        }
+        return $this->usercontextscache[$userid];
+    }
+
+    /**
+     * Pre-load all user enrollments for the company.
+     */
+    protected function preload_user_enrollments(array $userids): void {
+        global $DB;
+
+        if (empty($userids)) {
+            return;
+        }
+
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        $companycourseexists = $DB->get_manager()->table_exists('company_course');
+        $hascompanycourses = $companycourseexists && $DB->count_records('company_course') > 0;
+
+        if ($this->companyid > 0 && $hascompanycourses) {
+            $sql = "SELECT DISTINCT ue.userid, c.id as courseid, c.fullname, c.shortname
+                    FROM {course} c
+                    JOIN {enrol} e ON e.courseid = c.id
+                    JOIN {user_enrolments} ue ON ue.enrolid = e.id
+                    JOIN {company_course} cc ON cc.courseid = c.id
+                    WHERE ue.userid $usersql
+                    AND cc.companyid = :companyid
+                    AND c.id > 1 AND c.visible = 1 AND ue.status = 0
+                    ORDER BY ue.userid, c.id";
+            $params = array_merge($userparams, ['companyid' => $this->companyid]);
+        } else {
+            $sql = "SELECT DISTINCT ue.userid, c.id as courseid, c.fullname, c.shortname
+                    FROM {course} c
+                    JOIN {enrol} e ON e.courseid = c.id
+                    JOIN {user_enrolments} ue ON ue.enrolid = e.id
+                    WHERE ue.userid $usersql
+                    AND c.id > 1 AND c.visible = 1 AND ue.status = 0
+                    ORDER BY ue.userid, c.id";
+            $params = $userparams;
+        }
+
+        $records = $DB->get_recordset_sql($sql, $params);
+        foreach ($records as $record) {
+            if (!isset($this->userenrollmentscache[$record->userid])) {
+                $this->userenrollmentscache[$record->userid] = [];
+            }
+            $this->userenrollmentscache[$record->userid][$record->courseid] = (object)[
+                'id' => $record->courseid,
+                'fullname' => $record->fullname,
+                'shortname' => $record->shortname,
+            ];
+        }
+        $records->close();
+
+        // Initialize empty arrays for users without enrollments.
+        foreach ($userids as $userid) {
+            if (!isset($this->userenrollmentscache[$userid])) {
+                $this->userenrollmentscache[$userid] = [];
+            }
+        }
+    }
+
+    /**
+     * Get user courses from cache.
+     */
+    protected function get_user_courses_cached(int $userid): array {
+        return $this->userenrollmentscache[$userid] ?? [];
+    }
+
+    /**
+     * Clean existing access records.
      */
     public function clean_existing_records(array $users): int {
         global $DB;
@@ -189,107 +359,79 @@ class generator {
 
         $deleted = 0;
         $userids = array_keys($users);
-
-        // Get user IDs for SQL.
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
-        // 1. Delete login events from logstore_standard_log.
         if ($this->logstore_exists()) {
-            $deleted += $DB->count_records_select('logstore_standard_log',
-                "eventname = :eventname AND userid $usersql",
-                array_merge(['eventname' => '\\core\\event\\user_loggedin'], $userparams)
-            );
-            $DB->delete_records_select('logstore_standard_log',
-                "eventname = :eventname AND userid $usersql",
-                array_merge(['eventname' => '\\core\\event\\user_loggedin'], $userparams)
-            );
+            // Delete all relevant events in fewer queries.
+            $events = [
+                '\\core\\event\\user_loggedin',
+                '\\core\\event\\course_viewed',
+                '\\core\\event\\dashboard_viewed',
+                '\\core\\event\\user_loggedout',
+            ];
+            foreach ($events as $event) {
+                $count = $DB->count_records_select('logstore_standard_log',
+                    "eventname = :eventname AND userid $usersql",
+                    array_merge(['eventname' => $event], $userparams));
+                $deleted += $count;
+                if ($count > 0) {
+                    $DB->delete_records_select('logstore_standard_log',
+                        "eventname = :eventname AND userid $usersql",
+                        array_merge(['eventname' => $event], $userparams));
+                }
+            }
 
-            // 2. Delete course_viewed events.
-            $deleted += $DB->count_records_select('logstore_standard_log',
-                "eventname = :eventname AND userid $usersql",
-                array_merge(['eventname' => '\\core\\event\\course_viewed'], $userparams)
-            );
-            $DB->delete_records_select('logstore_standard_log',
-                "eventname = :eventname AND userid $usersql",
-                array_merge(['eventname' => '\\core\\event\\course_viewed'], $userparams)
-            );
-
-            // 3. Delete course_module_viewed events (all module types).
-            $deleted += $DB->count_records_select('logstore_standard_log',
+            // Module viewed events.
+            $count = $DB->count_records_select('logstore_standard_log',
                 "eventname LIKE :eventname AND userid $usersql",
-                array_merge(['eventname' => '%\\event\\course_module_viewed'], $userparams)
-            );
-            $DB->delete_records_select('logstore_standard_log',
-                "eventname LIKE :eventname AND userid $usersql",
-                array_merge(['eventname' => '%\\event\\course_module_viewed'], $userparams)
-            );
+                array_merge(['eventname' => '%\\event\\course_module_viewed'], $userparams));
+            $deleted += $count;
+            if ($count > 0) {
+                $DB->delete_records_select('logstore_standard_log',
+                    "eventname LIKE :eventname AND userid $usersql",
+                    array_merge(['eventname' => '%\\event\\course_module_viewed'], $userparams));
+            }
 
-            // 4. Delete dashboard_viewed events.
-            $deleted += $DB->count_records_select('logstore_standard_log',
-                "eventname = :eventname AND userid $usersql",
-                array_merge(['eventname' => '\\core\\event\\dashboard_viewed'], $userparams)
-            );
-            $DB->delete_records_select('logstore_standard_log',
-                "eventname = :eventname AND userid $usersql",
-                array_merge(['eventname' => '\\core\\event\\dashboard_viewed'], $userparams)
-            );
-
-            // 5. Delete user_loggedout events.
-            $deleted += $DB->count_records_select('logstore_standard_log',
-                "eventname = :eventname AND userid $usersql",
-                array_merge(['eventname' => '\\core\\event\\user_loggedout'], $userparams)
-            );
-            $DB->delete_records_select('logstore_standard_log',
-                "eventname = :eventname AND userid $usersql",
-                array_merge(['eventname' => '\\core\\event\\user_loggedout'], $userparams)
-            );
-
-            // 6. Delete course_completed events.
-            $deleted += $DB->count_records_select('logstore_standard_log',
+            // Course completed events.
+            $count = $DB->count_records_select('logstore_standard_log',
                 "eventname = :eventname AND relateduserid $usersql",
-                array_merge(['eventname' => '\\core\\event\\course_completed'], $userparams)
-            );
-            $DB->delete_records_select('logstore_standard_log',
-                "eventname = :eventname AND relateduserid $usersql",
-                array_merge(['eventname' => '\\core\\event\\course_completed'], $userparams)
-            );
+                array_merge(['eventname' => '\\core\\event\\course_completed'], $userparams));
+            $deleted += $count;
+            if ($count > 0) {
+                $DB->delete_records_select('logstore_standard_log',
+                    "eventname = :eventname AND relateduserid $usersql",
+                    array_merge(['eventname' => '\\core\\event\\course_completed'], $userparams));
+            }
         }
 
-        // 4. Delete/truncate user_lastaccess records for these users.
-        $deleted += $DB->count_records_select('user_lastaccess', "userid $usersql", $userparams);
-        $DB->delete_records_select('user_lastaccess', "userid $usersql", $userparams);
-
-        // 5. Delete local_report_user_logins records for these users.
-        if ($DB->get_manager()->table_exists('local_report_user_logins')) {
-            $deleted += $DB->count_records_select('local_report_user_logins', "userid $usersql", $userparams);
-            $DB->delete_records_select('local_report_user_logins', "userid $usersql", $userparams);
+        // Delete from other tables.
+        $tables = ['user_lastaccess', 'course_modules_completion', 'course_completions'];
+        foreach ($tables as $table) {
+            $count = $DB->count_records_select($table, "userid $usersql", $userparams);
+            $deleted += $count;
+            if ($count > 0) {
+                $DB->delete_records_select($table, "userid $usersql", $userparams);
+            }
         }
 
-        // 9. Delete course_modules_completion records for these users.
-        $deleted += $DB->count_records_select('course_modules_completion', "userid $usersql", $userparams);
-        $DB->delete_records_select('course_modules_completion', "userid $usersql", $userparams);
-
-        // 10. Delete course_completions records for these users.
-        $deleted += $DB->count_records_select('course_completions', "userid $usersql", $userparams);
-        $DB->delete_records_select('course_completions', "userid $usersql", $userparams);
-
-        // 7. Delete course_modules_viewed records for these users.
-        if ($DB->get_manager()->table_exists('course_modules_viewed')) {
-            $deleted += $DB->count_records_select('course_modules_viewed', "userid $usersql", $userparams);
-            $DB->delete_records_select('course_modules_viewed', "userid $usersql", $userparams);
+        if ($this->report_logins_exists()) {
+            $count = $DB->count_records_select('local_report_user_logins', "userid $usersql", $userparams);
+            $deleted += $count;
+            if ($count > 0) {
+                $DB->delete_records_select('local_report_user_logins', "userid $usersql", $userparams);
+            }
         }
 
-        // 8. Reset user access fields.
-        foreach ($users as $user) {
-            $update = new \stdClass();
-            $update->id = $user->id;
-            $update->firstaccess = 0;
-            $update->lastaccess = 0;
-            $update->lastlogin = 0;
-            $update->currentlogin = 0;
-            $update->lastip = '';
-            $DB->update_record('user', $update);
+        if ($this->cmviewed_exists()) {
+            $count = $DB->count_records_select('course_modules_viewed', "userid $usersql", $userparams);
+            $deleted += $count;
+            if ($count > 0) {
+                $DB->delete_records_select('course_modules_viewed', "userid $usersql", $userparams);
+            }
         }
+
+        // Bulk reset user access fields.
+        $DB->execute("UPDATE {user} SET firstaccess = 0, lastaccess = 0, lastlogin = 0, currentlogin = 0, lastip = '' WHERE id $usersql", $userparams);
 
         $this->stats['records_deleted'] = $deleted;
         return $deleted;
@@ -297,68 +439,45 @@ class generator {
 
     /**
      * Get all companies.
-     *
-     * @return array Array of company objects
      */
     public static function get_companies(): array {
         global $DB;
-
         return $DB->get_records('company', ['suspended' => 0], 'name ASC', 'id, name, shortname');
     }
 
     /**
-     * Get users to process (filtered by company if set).
-     *
-     * @return array Array of user objects
+     * Get users to process.
      */
     public function get_users(): array {
         global $DB;
 
         $params = [];
-
-        // Check if company_users table exists and has records.
         $companyusersexists = $DB->get_manager()->table_exists('company_users');
         $hascompanyusers = $companyusersexists && $DB->count_records('company_users') > 0;
 
-        // Base query for users.
         if ($this->companyid > 0 && $hascompanyusers) {
-            // Specific company selected.
-            $sql = "SELECT DISTINCT u.*
-                    FROM {user} u
+            $sql = "SELECT DISTINCT u.* FROM {user} u
                     JOIN {company_users} cu ON cu.userid = u.id
                     WHERE cu.companyid = :companyid";
             $params['companyid'] = $this->companyid;
-
-            // Only active users in company.
             if ($this->onlyactive) {
                 $sql .= " AND cu.suspended = 0";
             }
         } else if ($hascompanyusers) {
-            // All users from all companies.
-            $sql = "SELECT DISTINCT u.*
-                    FROM {user} u
-                    JOIN {company_users} cu ON cu.userid = u.id
-                    WHERE 1=1";
-
+            $sql = "SELECT DISTINCT u.* FROM {user} u
+                    JOIN {company_users} cu ON cu.userid = u.id WHERE 1=1";
             if ($this->onlyactive) {
                 $sql .= " AND cu.suspended = 0";
             }
         } else {
-            // Fallback: get all users if no company_users records exist.
-            $sql = "SELECT u.*
-                    FROM {user} u
-                    WHERE 1=1";
+            $sql = "SELECT u.* FROM {user} u WHERE 1=1";
         }
 
-        // Only active users (not deleted, not suspended in Moodle).
         if ($this->onlyactive) {
             $sql .= " AND u.deleted = 0 AND u.suspended = 0";
         }
-
-        // Exclude guest user and admin user.
         $sql .= " AND u.id > 1 AND u.username <> 'guest'";
 
-        // Exclude admin users if not included.
         if (!$this->includeadmins) {
             $adminids = array_keys(get_admins());
             if (!empty($adminids)) {
@@ -369,704 +488,448 @@ class generator {
         }
 
         $sql .= " ORDER BY u.id ASC";
-
         return $DB->get_records_sql($sql, $params);
     }
 
     /**
-     * Update user creation date.
-     *
-     * @param object $user User object
-     * @return bool Success
-     */
-    public function update_user_created_date($user): bool {
-        global $DB;
-
-        if (!$this->updateusercreated) {
-            return false;
-        }
-
-        try {
-            // Update user table.
-            $update = new \stdClass();
-            $update->id = $user->id;
-            $update->timecreated = $this->usercreateddate;
-            $DB->update_record('user', $update);
-
-            // Update local_report_user_logins if exists.
-            if ($DB->get_manager()->table_exists('local_report_user_logins')) {
-                if ($record = $DB->get_record('local_report_user_logins', ['userid' => $user->id])) {
-                    $DB->set_field('local_report_user_logins', 'created', $this->usercreateddate, ['id' => $record->id]);
-                }
-            }
-
-            $this->stats['users_updated']++;
-            return true;
-        } catch (\Exception $e) {
-            debugging('Error updating user created date: ' . $e->getMessage(), DEBUG_DEVELOPER);
-            return false;
-        }
-    }
-
-    /**
-     * Get courses for a company.
-     *
-     * @return array Array of course objects
-     */
-    public function get_company_courses(): array {
-        global $DB;
-
-        // Check if company_course table exists and has records.
-        $companycourseexists = $DB->get_manager()->table_exists('company_course');
-        $hascompanycourses = $companycourseexists && $DB->count_records('company_course') > 0;
-
-        if ($this->companyid > 0 && $hascompanycourses) {
-            // Get courses associated with the company.
-            $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname, c.category
-                    FROM {course} c
-                    JOIN {company_course} cc ON cc.courseid = c.id
-                    WHERE cc.companyid = :companyid
-                    AND c.id > 1
-                    AND c.visible = 1
-                    ORDER BY c.id ASC";
-
-            return $DB->get_records_sql($sql, ['companyid' => $this->companyid]);
-        } else {
-            // Get all visible courses (fallback).
-            return $DB->get_records_select(
-                'course',
-                'id > 1 AND visible = 1',
-                [],
-                'id ASC',
-                'id, fullname, shortname, category'
-            );
-        }
-    }
-
-    /**
-     * Get courses where a user is enrolled AND belong to the company.
-     *
-     * @param int $userid User ID
-     * @return array Array of course objects
-     */
-    public function get_user_courses(int $userid): array {
-        global $DB;
-
-        // Check if company_course table exists.
-        $companycourseexists = $DB->get_manager()->table_exists('company_course');
-        $hascompanycourses = $companycourseexists && $DB->count_records('company_course') > 0;
-
-        if ($this->companyid > 0 && $hascompanycourses) {
-            // Get courses where user is enrolled AND course belongs to the company.
-            $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname
-                    FROM {course} c
-                    JOIN {enrol} e ON e.courseid = c.id
-                    JOIN {user_enrolments} ue ON ue.enrolid = e.id
-                    JOIN {company_course} cc ON cc.courseid = c.id
-                    WHERE ue.userid = :userid
-                    AND cc.companyid = :companyid
-                    AND c.id > 1
-                    AND c.visible = 1
-                    AND ue.status = 0
-                    ORDER BY c.id ASC";
-
-            return $DB->get_records_sql($sql, ['userid' => $userid, 'companyid' => $this->companyid]);
-        } else {
-            // Without company filter, get all enrolled courses.
-            $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname
-                    FROM {course} c
-                    JOIN {enrol} e ON e.courseid = c.id
-                    JOIN {user_enrolments} ue ON ue.enrolid = e.id
-                    WHERE ue.userid = :userid
-                    AND c.id > 1
-                    AND c.visible = 1
-                    AND ue.status = 0
-                    ORDER BY c.id ASC";
-
-            return $DB->get_records_sql($sql, ['userid' => $userid]);
-        }
-    }
-
-    /**
-     * Get course modules (activities) for a course.
-     *
-     * @param int $courseid Course ID
-     * @return array Array of course module objects
+     * Get course modules for a course.
      */
     public function get_course_modules(int $courseid): array {
         global $DB;
-
-        $sql = "SELECT cm.id, cm.course, cm.module, cm.instance, m.name as modname
-                FROM {course_modules} cm
-                JOIN {modules} m ON m.id = cm.module
-                WHERE cm.course = :courseid
-                AND cm.visible = 1
-                AND cm.deletioninprogress = 0
-                ORDER BY cm.id ASC";
-
-        return $DB->get_records_sql($sql, ['courseid' => $courseid]);
+        return $DB->get_records_sql(
+            "SELECT cm.id, cm.course, cm.module, cm.instance, m.name as modname
+             FROM {course_modules} cm
+             JOIN {modules} m ON m.id = cm.module
+             WHERE cm.course = :courseid AND cm.visible = 1 AND cm.deletioninprogress = 0
+             ORDER BY cm.id ASC",
+            ['courseid' => $courseid]
+        );
     }
 
     /**
-     * Check if logstore_standard_log table exists.
-     *
-     * @return bool
+     * Build a log entry directly (without creating Moodle event object).
      */
-    protected function logstore_exists(): bool {
-        global $DB;
-        return $DB->get_manager()->table_exists('logstore_standard_log');
-    }
+    protected function build_log_entry(string $eventname, string $component, string $action,
+        string $target, int $contextid, int $contextlevel, int $contextinstanceid,
+        int $userid, int $courseid, int $timestamp, string $ip,
+        ?int $objectid = null, ?string $objecttable = null, ?int $relateduserid = null,
+        $other = null): array {
 
-    /**
-     * Convert event data to log entry format (same as Moodle's buffered_writer).
-     *
-     * @param \core\event\base $event The event object
-     * @param int $timestamp Custom timestamp
-     * @param string $ip IP address
-     * @return array Log entry data
-     */
-    protected function event_to_log_entry(\core\event\base $event, int $timestamp, string $ip): array {
-        // Get event data the same way Moodle does.
-        $entry = $event->get_data();
-
-        // Serialize the 'other' field as Moodle does.
-        $entry['other'] = serialize($entry['other']);
-
-        // Override timestamp with our custom one.
-        $entry['timecreated'] = $timestamp;
-
-        // Add request info.
-        $entry['origin'] = 'web';
-        $entry['ip'] = $ip;
-        $entry['realuserid'] = null;
-
-        return $entry;
-    }
-
-    /**
-     * Generate login record for a user using native Moodle event.
-     *
-     * @param object $user User object
-     * @param int $timestamp Timestamp for the login
-     * @return bool Success
-     */
-    public function generate_login_record($user, int $timestamp): bool {
-        global $DB;
-
-        // Verify logstore table exists.
-        if (!$this->logstore_exists()) {
-            return false;
-        }
-
-        $ip = $this->get_random_ip();
-
-        try {
-            // Create the event using Moodle's native event class.
-            $event = \core\event\user_loggedin::create([
-                'userid' => $user->id,
-                'objectid' => $user->id,
-                'other' => [
-                    'username' => $user->username,
-                ],
-            ]);
-
-            // Convert to log entry with custom timestamp.
-            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
-
-            // Insert into logstore.
-            $DB->insert_record('logstore_standard_log', (object)$entry);
-            $this->stats['logins_generated']++;
-
-            // Update user table.
-            $this->update_user_login_info($user->id, $timestamp, $ip);
-
-            // Update local_report_user_logins if it exists.
-            $this->update_report_user_logins($user, $timestamp);
-
-            return true;
-        } catch (\Exception $e) {
-            debugging('Error generating login record: ' . $e->getMessage(), DEBUG_DEVELOPER);
-            return false;
-        }
-    }
-
-    /**
-     * Update user login information.
-     *
-     * @param int $userid User ID
-     * @param int $timestamp Timestamp
-     * @param string $ip IP address
-     */
-    protected function update_user_login_info(int $userid, int $timestamp, string $ip): void {
-        global $DB;
-
-        $user = $DB->get_record('user', ['id' => $userid]);
-        if (!$user) {
-            return;
-        }
-
-        $update = new \stdClass();
-        $update->id = $userid;
-
-        // Update firstaccess if not set or if timestamp is earlier.
-        if (empty($user->firstaccess) || $timestamp < $user->firstaccess) {
-            $update->firstaccess = $timestamp;
-        }
-
-        // Update lastaccess if this timestamp is newer.
-        if ($timestamp > $user->lastaccess) {
-            $update->lastaccess = $timestamp;
-            $this->stats['lastaccess_updated']++;
-        }
-
-        // Update login times.
-        if (empty($user->currentlogin) || $timestamp > $user->currentlogin) {
-            $update->lastlogin = $user->currentlogin ?: $timestamp;
-            $update->currentlogin = $timestamp;
-            $update->lastip = $ip;
-        }
-
-        $DB->update_record('user', $update);
-    }
-
-    /**
-     * Update local_report_user_logins table.
-     *
-     * @param object $user User object
-     * @param int $timestamp Timestamp
-     */
-    protected function update_report_user_logins($user, int $timestamp): void {
-        global $DB;
-
-        // Check if table exists.
-        if (!$DB->get_manager()->table_exists('local_report_user_logins')) {
-            return;
-        }
-
-        if ($current = $DB->get_record('local_report_user_logins', ['userid' => $user->id])) {
-            // Update existing record.
-            $update = new \stdClass();
-            $update->id = $current->id;
-            $update->logincount = $current->logincount + 1;
-            $update->modifiedtime = time();
-
-            if (empty($current->firstlogin) || $timestamp < $current->firstlogin) {
-                $update->firstlogin = $timestamp;
-            }
-
-            if (empty($current->lastlogin) || $timestamp > $current->lastlogin) {
-                $update->lastlogin = $timestamp;
-            }
-
-            $DB->update_record('local_report_user_logins', $update);
-        } else {
-            // Create new record.
-            $record = new \stdClass();
-            $record->userid = $user->id;
-            $record->created = $this->updateusercreated ? $this->usercreateddate : $user->timecreated;
-            $record->firstlogin = $timestamp;
-            $record->lastlogin = $timestamp;
-            $record->logincount = 1;
-            $record->modifiedtime = time();
-
-            $DB->insert_record('local_report_user_logins', $record);
-        }
-    }
-
-    /**
-     * Generate course access record for a user using native Moodle event.
-     *
-     * @param object $user User object
-     * @param object $course Course object
-     * @param int $timestamp Timestamp for the access
-     * @return bool Success
-     */
-    public function generate_course_access_record($user, $course, int $timestamp): bool {
-        global $DB;
-
-        // Verify logstore table exists.
-        if (!$this->logstore_exists()) {
-            return false;
-        }
-
-        $ip = $this->get_random_ip();
-
-        try {
-            $coursecontext = \context_course::instance($course->id, IGNORE_MISSING);
-            if (!$coursecontext) {
-                return false;
-            }
-
-            // Create the event using Moodle's native event class.
-            $event = \core\event\course_viewed::create([
-                'userid' => $user->id,
-                'context' => $coursecontext,
-            ]);
-
-            // Convert to log entry with custom timestamp.
-            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
-
-            // Insert into logstore.
-            $DB->insert_record('logstore_standard_log', (object)$entry);
-            $this->stats['course_access_generated']++;
-
-            // Update user_lastaccess table.
-            $this->update_user_lastaccess($user->id, $course->id, $timestamp);
-
-            return true;
-        } catch (\Exception $e) {
-            debugging('Error generating course access record: ' . $e->getMessage(), DEBUG_DEVELOPER);
-            return false;
-        }
-    }
-
-    /**
-     * Generate activity access record for a user using native Moodle event when available.
-     *
-     * @param object $user User object
-     * @param object $course Course object
-     * @param object $cm Course module object
-     * @param int $timestamp Timestamp for the access
-     * @return bool Success
-     */
-    public function generate_activity_access_record($user, $course, $cm, int $timestamp): bool {
-        global $DB;
-
-        // Verify logstore table exists.
-        if (!$this->logstore_exists()) {
-            return false;
-        }
-
-        $ip = $this->get_random_ip();
-
-        try {
-            $cmcontext = \context_module::instance($cm->id, IGNORE_MISSING);
-            if (!$cmcontext) {
-                return false;
-            }
-
-            // Build event class name based on module type.
-            $eventclass = '\\mod_' . $cm->modname . '\\event\\course_module_viewed';
-
-            // Check if the event class exists for this module.
-            if (class_exists($eventclass)) {
-                // Create the event using the module's native event class.
-                $event = $eventclass::create([
-                    'userid' => $user->id,
-                    'context' => $cmcontext,
-                    'objectid' => $cm->instance,
-                ]);
-
-                // Convert to log entry with custom timestamp.
-                $entry = $this->event_to_log_entry($event, $timestamp, $ip);
-            } else {
-                // Fallback: create log entry manually for modules without the event class.
-                $entry = [
-                    'eventname' => $eventclass,
-                    'component' => 'mod_' . $cm->modname,
-                    'action' => 'viewed',
-                    'target' => 'course_module',
-                    'objecttable' => $cm->modname,
-                    'objectid' => $cm->instance,
-                    'crud' => 'r',
-                    'edulevel' => \core\event\base::LEVEL_PARTICIPATING,
-                    'contextid' => $cmcontext->id,
-                    'contextlevel' => CONTEXT_MODULE,
-                    'contextinstanceid' => $cm->id,
-                    'userid' => $user->id,
-                    'courseid' => $course->id,
-                    'relateduserid' => null,
-                    'anonymous' => 0,
-                    'other' => 'N;',
-                    'timecreated' => $timestamp,
-                    'origin' => 'web',
-                    'ip' => $ip,
-                    'realuserid' => null,
-                ];
-            }
-
-            // Insert into logstore.
-            $DB->insert_record('logstore_standard_log', (object)$entry);
-            $this->stats['activity_access_generated']++;
-
-            // Update completion tracking tables (as Moodle does when viewing an activity).
-            $this->update_activity_completion($user->id, $cm, $timestamp);
-
-            return true;
-        } catch (\Exception $e) {
-            debugging('Error generating activity access record: ' . $e->getMessage(), DEBUG_DEVELOPER);
-            return false;
-        }
-    }
-
-    /**
-     * Update activity completion tables when an activity is viewed.
-     * This mimics what Moodle's completion_info::set_module_viewed() does.
-     *
-     * @param int $userid User ID
-     * @param object $cm Course module object
-     * @param int $timestamp Timestamp
-     */
-    protected function update_activity_completion(int $userid, $cm, int $timestamp): void {
-        global $DB;
-
-        // Get or create course_modules_completion record.
-        $existing = $DB->get_record('course_modules_completion', [
-            'coursemoduleid' => $cm->id,
-            'userid' => $userid,
-        ]);
-
-        if ($existing) {
-            // Update existing record - mark as viewed.
-            if ($existing->viewed != 1) {
-                $update = new \stdClass();
-                $update->id = $existing->id;
-                $update->viewed = 1;
-                $update->timemodified = $timestamp;
-                $DB->update_record('course_modules_completion', $update);
-            }
-        } else {
-            // Create new completion record.
-            $record = new \stdClass();
-            $record->coursemoduleid = $cm->id;
-            $record->userid = $userid;
-            $record->completionstate = 0; // Not completed, just viewed.
-            $record->viewed = 1;
-            $record->overrideby = null;
-            $record->timemodified = $timestamp;
-
-            $DB->insert_record('course_modules_completion', $record);
-        }
-
-        // Update course_modules_viewed table (separate tracking table).
-        $existingViewed = $DB->get_record('course_modules_viewed', [
-            'coursemoduleid' => $cm->id,
-            'userid' => $userid,
-        ]);
-
-        if (!$existingViewed) {
-            $viewedRecord = new \stdClass();
-            $viewedRecord->coursemoduleid = $cm->id;
-            $viewedRecord->userid = $userid;
-            $viewedRecord->timecreated = $timestamp;
-
-            $DB->insert_record('course_modules_viewed', $viewedRecord);
-        }
-    }
-
-    /**
-     * Update user_lastaccess table.
-     *
-     * @param int $userid User ID
-     * @param int $courseid Course ID
-     * @param int $timestamp Timestamp
-     */
-    protected function update_user_lastaccess(int $userid, int $courseid, int $timestamp): void {
-        global $DB;
-
-        $existing = $DB->get_record('user_lastaccess', [
+        return [
+            'eventname' => $eventname,
+            'component' => $component,
+            'action' => $action,
+            'target' => $target,
+            'objecttable' => $objecttable,
+            'objectid' => $objectid,
+            'crud' => 'r',
+            'edulevel' => 0,
+            'contextid' => $contextid,
+            'contextlevel' => $contextlevel,
+            'contextinstanceid' => $contextinstanceid,
             'userid' => $userid,
             'courseid' => $courseid,
-        ]);
+            'relateduserid' => $relateduserid,
+            'anonymous' => 0,
+            'other' => $other !== null ? serialize($other) : 'N;',
+            'timecreated' => $timestamp,
+            'origin' => 'web',
+            'ip' => $ip,
+            'realuserid' => null,
+        ];
+    }
 
-        if ($existing) {
-            // Update only if new timestamp is newer.
-            if ($timestamp > $existing->timeaccess) {
-                $DB->set_field('user_lastaccess', 'timeaccess', $timestamp, ['id' => $existing->id]);
-            }
-        } else {
-            // Insert new record.
-            $record = new \stdClass();
-            $record->userid = $userid;
-            $record->courseid = $courseid;
-            $record->timeaccess = $timestamp;
+    /**
+     * Generate login record (buffered).
+     */
+    protected function buffer_login_record($user, int $timestamp, string $ip): void {
+        $context = \context_system::instance();
 
-            $DB->insert_record('user_lastaccess', $record);
+        $entry = $this->build_log_entry(
+            '\\core\\event\\user_loggedin', 'core', 'loggedin', 'user',
+            $context->id, CONTEXT_SYSTEM, 0,
+            $user->id, 0, $timestamp, $ip,
+            $user->id, 'user', null,
+            ['username' => $user->username]
+        );
+
+        $this->add_to_log_buffer($entry);
+        $this->stats['logins_generated']++;
+    }
+
+    /**
+     * Generate dashboard access record (buffered).
+     */
+    protected function buffer_dashboard_record($user, int $timestamp, string $ip): void {
+        $context = $this->get_user_context($user->id);
+        if (!$context) {
+            return;
+        }
+
+        $entry = $this->build_log_entry(
+            '\\core\\event\\dashboard_viewed', 'core', 'viewed', 'dashboard',
+            $context->id, CONTEXT_USER, $user->id,
+            $user->id, 0, $timestamp, $ip
+        );
+
+        $this->add_to_log_buffer($entry);
+        $this->stats['dashboard_access_generated']++;
+    }
+
+    /**
+     * Generate logout record (buffered).
+     */
+    protected function buffer_logout_record($user, int $timestamp, string $ip): void {
+        $context = \context_system::instance();
+
+        $entry = $this->build_log_entry(
+            '\\core\\event\\user_loggedout', 'core', 'loggedout', 'user',
+            $context->id, CONTEXT_SYSTEM, 0,
+            $user->id, 0, $timestamp, $ip,
+            $user->id, 'user', null,
+            ['sessionid' => md5(uniqid(rand(), true))]
+        );
+
+        $this->add_to_log_buffer($entry);
+        $this->stats['logouts_generated']++;
+    }
+
+    /**
+     * Generate course access record (buffered).
+     */
+    protected function buffer_course_access_record($user, $course, int $timestamp, string $ip): void {
+        $context = $this->get_course_context($course->id);
+        if (!$context) {
+            return;
+        }
+
+        $entry = $this->build_log_entry(
+            '\\core\\event\\course_viewed', 'core', 'viewed', 'course',
+            $context->id, CONTEXT_COURSE, $course->id,
+            $user->id, $course->id, $timestamp, $ip
+        );
+
+        $this->add_to_log_buffer($entry);
+        $this->stats['course_access_generated']++;
+
+        // Buffer lastaccess update.
+        $key = $user->id . '_' . $course->id;
+        if (!isset($this->lastaccessbuffer[$key]) || $timestamp > $this->lastaccessbuffer[$key]['timestamp']) {
+            $this->lastaccessbuffer[$key] = [
+                'userid' => $user->id,
+                'courseid' => $course->id,
+                'timestamp' => $timestamp,
+            ];
         }
     }
 
     /**
-     * Generate dashboard access record for a user.
-     *
-     * @param object $user User object
-     * @param int $timestamp Timestamp for the access
-     * @return bool Success
+     * Generate activity access record (buffered).
      */
-    public function generate_dashboard_access_record($user, int $timestamp): bool {
-        global $DB;
-
-        if (!$this->logstore_exists()) {
-            return false;
+    protected function buffer_activity_access_record($user, $course, $cm, int $timestamp, string $ip): void {
+        $context = $this->get_module_context($cm->id);
+        if (!$context) {
+            return;
         }
 
-        $ip = $this->get_random_ip();
+        $eventclass = '\\mod_' . $cm->modname . '\\event\\course_module_viewed';
 
-        try {
-            $usercontext = \context_user::instance($user->id, IGNORE_MISSING);
-            if (!$usercontext) {
-                return false;
-            }
+        $entry = $this->build_log_entry(
+            $eventclass, 'mod_' . $cm->modname, 'viewed', 'course_module',
+            $context->id, CONTEXT_MODULE, $cm->id,
+            $user->id, $course->id, $timestamp, $ip,
+            $cm->instance, $cm->modname
+        );
 
-            // Create the event using Moodle's native event class.
-            $event = \core\event\dashboard_viewed::create([
+        $this->add_to_log_buffer($entry);
+        $this->stats['activity_access_generated']++;
+
+        // Buffer completion record.
+        $key = $user->id . '_' . $cm->id;
+        if (!isset($this->cmcompletionbuffer[$key])) {
+            $this->cmcompletionbuffer[$key] = [
+                'coursemoduleid' => $cm->id,
                 'userid' => $user->id,
-                'context' => $usercontext,
-            ]);
+                'completionstate' => 0,
+                'viewed' => 1,
+                'overrideby' => null,
+                'timemodified' => $timestamp,
+            ];
+        }
 
-            // Convert to log entry with custom timestamp.
-            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
-
-            // Insert into logstore.
-            $DB->insert_record('logstore_standard_log', (object)$entry);
-            $this->stats['dashboard_access_generated']++;
-
-            return true;
-        } catch (\Exception $e) {
-            debugging('Error generating dashboard access record: ' . $e->getMessage(), DEBUG_DEVELOPER);
-            return false;
+        // Buffer viewed record.
+        if ($this->cmviewed_exists() && !isset($this->cmviewedbuffer[$key])) {
+            $this->cmviewedbuffer[$key] = [
+                'coursemoduleid' => $cm->id,
+                'userid' => $user->id,
+                'timecreated' => $timestamp,
+            ];
         }
     }
 
     /**
-     * Generate logout record for a user.
-     *
-     * @param object $user User object
-     * @param int $timestamp Timestamp for the logout
-     * @return bool Success
+     * Generate course completion record (buffered).
      */
-    public function generate_logout_record($user, int $timestamp): bool {
-        global $DB;
-
-        if (!$this->logstore_exists()) {
-            return false;
+    protected function buffer_course_completion($user, $course, int $timestamp, string $ip): void {
+        $context = $this->get_course_context($course->id);
+        if (!$context) {
+            return;
         }
 
-        $ip = $this->get_random_ip();
+        $key = $user->id . '_' . $course->id;
+        $this->completionbuffer[$key] = [
+            'userid' => $user->id,
+            'course' => $course->id,
+            'timeenrolled' => $timestamp - 86400 * 7,
+            'timestarted' => $timestamp - 86400,
+            'timecompleted' => $timestamp,
+            'reaggregate' => 0,
+        ];
 
-        try {
-            // Create the event using Moodle's native event class.
-            $event = \core\event\user_loggedout::create([
-                'userid' => $user->id,
-                'objectid' => $user->id,
-                'other' => [
-                    'sessionid' => md5(uniqid(rand(), true)),
-                ],
-            ]);
-
-            // Convert to log entry with custom timestamp.
-            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
-
-            // Insert into logstore.
-            $DB->insert_record('logstore_standard_log', (object)$entry);
-            $this->stats['logouts_generated']++;
-
-            return true;
-        } catch (\Exception $e) {
-            debugging('Error generating logout record: ' . $e->getMessage(), DEBUG_DEVELOPER);
-            return false;
-        }
+        // Log entry will be created in flush_completion_buffer.
+        $this->stats['completions_generated']++;
     }
 
     /**
-     * Generate course completion record for a user.
-     *
-     * @param object $user User object
-     * @param object $course Course object
-     * @param int $timestamp Timestamp for the completion
-     * @return bool Success
+     * Flush user lastaccess buffer.
      */
-    public function generate_course_completion($user, $course, int $timestamp): bool {
+    protected function flush_lastaccess_buffer(): void {
         global $DB;
 
-        if (!$this->logstore_exists()) {
-            return false;
+        if (empty($this->lastaccessbuffer)) {
+            return;
         }
 
-        $ip = $this->get_random_ip();
+        // Get existing records.
+        $keys = [];
+        foreach ($this->lastaccessbuffer as $data) {
+            $keys[] = ['userid' => $data['userid'], 'courseid' => $data['courseid']];
+        }
 
-        try {
-            // Create or update course_completions record.
-            $completion = new \stdClass();
-            $completion->userid = $user->id;
-            $completion->course = $course->id;
-            $completion->timeenrolled = $timestamp - 86400 * 7; // 7 days before completion.
-            $completion->timestarted = $timestamp - 86400; // 1 day before completion.
-            $completion->timecompleted = $timestamp;
-            $completion->reaggregate = 0;
-
-            $existing = $DB->get_record('course_completions', [
-                'userid' => $user->id,
-                'course' => $course->id,
+        // Insert or update.
+        foreach ($this->lastaccessbuffer as $key => $data) {
+            $existing = $DB->get_record('user_lastaccess', [
+                'userid' => $data['userid'],
+                'courseid' => $data['courseid'],
             ]);
 
             if ($existing) {
-                $completion->id = $existing->id;
-                $DB->update_record('course_completions', $completion);
+                if ($data['timestamp'] > $existing->timeaccess) {
+                    $DB->set_field('user_lastaccess', 'timeaccess', $data['timestamp'], ['id' => $existing->id]);
+                }
             } else {
-                $completion->id = $DB->insert_record('course_completions', $completion);
+                $DB->insert_record('user_lastaccess', (object)[
+                    'userid' => $data['userid'],
+                    'courseid' => $data['courseid'],
+                    'timeaccess' => $data['timestamp'],
+                ]);
             }
+        }
 
-            // Create the course_completed event.
-            $coursecontext = \context_course::instance($course->id, IGNORE_MISSING);
-            if (!$coursecontext) {
-                return false;
+        $this->lastaccessbuffer = [];
+    }
+
+    /**
+     * Flush completion buffers.
+     */
+    protected function flush_completion_buffers(): void {
+        global $DB;
+
+        // Flush course_modules_completion.
+        if (!empty($this->cmcompletionbuffer)) {
+            $records = [];
+            foreach ($this->cmcompletionbuffer as $data) {
+                $records[] = (object)$data;
             }
+            $DB->insert_records('course_modules_completion', $records);
+            $this->cmcompletionbuffer = [];
+        }
 
-            $event = \core\event\course_completed::create([
-                'objectid' => $completion->id,
-                'relateduserid' => $user->id,
-                'context' => $coursecontext,
-                'courseid' => $course->id,
-                'other' => [
-                    'relateduserid' => $user->id,
-                ],
-            ]);
+        // Flush course_modules_viewed.
+        if (!empty($this->cmviewedbuffer) && $this->cmviewed_exists()) {
+            $records = [];
+            foreach ($this->cmviewedbuffer as $data) {
+                $records[] = (object)$data;
+            }
+            $DB->insert_records('course_modules_viewed', $records);
+            $this->cmviewedbuffer = [];
+        }
 
-            // Convert to log entry with custom timestamp.
-            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
+        // Flush course_completions and create log entries.
+        if (!empty($this->completionbuffer)) {
+            foreach ($this->completionbuffer as $data) {
+                $id = $DB->insert_record('course_completions', (object)$data);
 
-            // Insert into logstore.
-            $DB->insert_record('logstore_standard_log', (object)$entry);
-            $this->stats['completions_generated']++;
-
-            return true;
-        } catch (\Exception $e) {
-            debugging('Error generating course completion: ' . $e->getMessage(), DEBUG_DEVELOPER);
-            return false;
+                // Create log entry for completion.
+                $context = $this->get_course_context($data['course']);
+                if ($context) {
+                    $ip = $this->get_random_ip();
+                    $entry = $this->build_log_entry(
+                        '\\core\\event\\course_completed', 'core', 'completed', 'course',
+                        $context->id, CONTEXT_COURSE, $data['course'],
+                        $data['userid'], $data['course'], $data['timecompleted'], $ip,
+                        $id, 'course_completions', $data['userid'],
+                        ['relateduserid' => $data['userid']]
+                    );
+                    $this->add_to_log_buffer($entry);
+                }
+            }
+            $this->completionbuffer = [];
         }
     }
 
     /**
-     * Run the generation process.
-     *
-     * @param callable|null $progresscallback Callback for progress updates
-     * @return array Statistics
+     * Update user access info in bulk.
+     */
+    protected function update_users_access_info(array $users, array $logindata): void {
+        global $DB;
+
+        foreach ($logindata as $userid => $data) {
+            if (!isset($users[$userid])) {
+                continue;
+            }
+
+            $user = $users[$userid];
+            $update = new \stdClass();
+            $update->id = $userid;
+
+            // Determine first and last timestamps.
+            $mintimestamp = min($data['timestamps']);
+            $maxtimestamp = max($data['timestamps']);
+            $lastip = $data['lastip'];
+
+            if (empty($user->firstaccess) || $mintimestamp < $user->firstaccess) {
+                $update->firstaccess = $mintimestamp;
+            }
+            if ($maxtimestamp > $user->lastaccess) {
+                $update->lastaccess = $maxtimestamp;
+                $this->stats['lastaccess_updated']++;
+            }
+
+            $update->lastlogin = $user->currentlogin ?: $maxtimestamp;
+            $update->currentlogin = $maxtimestamp;
+            $update->lastip = $lastip;
+
+            $DB->update_record('user', $update);
+        }
+    }
+
+    /**
+     * Update local_report_user_logins in bulk.
+     */
+    protected function update_report_user_logins_bulk(array $users, array $logindata): void {
+        global $DB;
+
+        if (!$this->report_logins_exists()) {
+            return;
+        }
+
+        foreach ($logindata as $userid => $data) {
+            $mintimestamp = min($data['timestamps']);
+            $maxtimestamp = max($data['timestamps']);
+            $count = count($data['timestamps']);
+
+            $existing = $DB->get_record('local_report_user_logins', ['userid' => $userid]);
+
+            if ($existing) {
+                $update = new \stdClass();
+                $update->id = $existing->id;
+                $update->logincount = $existing->logincount + $count;
+                $update->modifiedtime = time();
+
+                if (empty($existing->firstlogin) || $mintimestamp < $existing->firstlogin) {
+                    $update->firstlogin = $mintimestamp;
+                }
+                if (empty($existing->lastlogin) || $maxtimestamp > $existing->lastlogin) {
+                    $update->lastlogin = $maxtimestamp;
+                }
+
+                $DB->update_record('local_report_user_logins', $update);
+            } else {
+                $user = $users[$userid] ?? null;
+                $created = $this->updateusercreated ? $this->usercreateddate : ($user ? $user->timecreated : time());
+
+                $DB->insert_record('local_report_user_logins', (object)[
+                    'userid' => $userid,
+                    'created' => $created,
+                    'firstlogin' => $mintimestamp,
+                    'lastlogin' => $maxtimestamp,
+                    'logincount' => $count,
+                    'modifiedtime' => time(),
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Update user creation dates in bulk.
+     */
+    protected function update_user_created_dates_bulk(array $users): void {
+        global $DB;
+
+        if (!$this->updateusercreated) {
+            return;
+        }
+
+        $userids = array_keys($users);
+        if (empty($userids)) {
+            return;
+        }
+
+        list($usersql, $params) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+        $params['timecreated'] = $this->usercreateddate;
+
+        $DB->execute("UPDATE {user} SET timecreated = :timecreated WHERE id $usersql", $params);
+        $this->stats['users_updated'] = count($userids);
+
+        // Update local_report_user_logins if exists.
+        if ($this->report_logins_exists()) {
+            $DB->execute("UPDATE {local_report_user_logins} SET created = :timecreated WHERE userid $usersql", $params);
+        }
+    }
+
+    /**
+     * Run the generation process with optimizations.
      */
     public function run(?callable $progresscallback = null): array {
         $starttime = time();
 
-        // Get users from the company.
         $users = $this->get_users();
         if (empty($users)) {
             return $this->stats;
         }
 
-        // Clean existing records before generating new ones.
+        $userids = array_keys($users);
+
+        // Clean existing records.
         if ($this->cleanbeforegenerate) {
             $this->clean_existing_records($users);
         }
 
-        // Get courses for the company.
-        $companycourses = $this->get_company_courses();
+        // Pre-load user enrollments.
+        $this->preload_user_enrollments($userids);
 
-        // Pre-fetch course modules for activity access.
+        // Pre-load course modules.
         $coursemodules = [];
         if ($this->accesstype === 'activity' || $this->accesstype === 'all') {
-            foreach ($companycourses as $course) {
-                $coursemodules[$course->id] = $this->get_course_modules($course->id);
+            $allcourseids = [];
+            foreach ($this->userenrollmentscache as $courses) {
+                foreach ($courses as $course) {
+                    $allcourseids[$course->id] = true;
+                }
+            }
+            foreach (array_keys($allcourseids) as $courseid) {
+                $coursemodules[$courseid] = $this->get_course_modules($courseid);
             }
         }
 
+        // Update user creation dates in bulk.
+        $this->update_user_created_dates_bulk($users);
+
+        // Track login data for bulk user update.
+        $logindata = [];
+
+        // Process users.
         foreach ($users as $user) {
             $this->stats['users_processed']++;
 
@@ -1074,82 +937,79 @@ class generator {
                 $progresscallback($user, $this->stats);
             }
 
-            // Update user creation date first.
-            if ($this->updateusercreated) {
-                $this->update_user_created_date($user);
-            }
-
-            // Generate random number of login records.
+            // Generate logins.
             if ($this->accesstype === 'login' || $this->accesstype === 'all') {
                 $numlogins = $this->get_random_count($this->loginsmin, $this->loginsmax);
+                $logindata[$user->id] = ['timestamps' => [], 'lastip' => ''];
+
                 for ($i = 0; $i < $numlogins; $i++) {
                     $timestamp = $this->get_random_timestamp();
-                    $this->generate_login_record($user, $timestamp);
+                    $ip = $this->get_random_ip();
 
-                    // Generate dashboard access after login (70% probability).
+                    $this->buffer_login_record($user, $timestamp, $ip);
+                    $logindata[$user->id]['timestamps'][] = $timestamp;
+                    $logindata[$user->id]['lastip'] = $ip;
+
                     if ($this->generatedashboard && rand(1, 100) <= 70) {
-                        $dashboardtime = $timestamp + rand(5, 60); // 5-60 seconds after login.
-                        $this->generate_dashboard_access_record($user, $dashboardtime);
+                        $this->buffer_dashboard_record($user, $timestamp + rand(5, 60), $ip);
                     }
 
-                    // Generate logout record if enabled (50% probability).
                     if ($this->generatelogouts && rand(1, 100) <= 50) {
-                        $logouttime = $timestamp + rand(300, 7200); // 5 min - 2 hours after login.
-                        $this->generate_logout_record($user, $logouttime);
+                        $this->buffer_logout_record($user, $timestamp + rand(300, 7200), $ip);
                     }
                 }
             }
 
-            // Get courses where user is enrolled (and belong to company if companyid is set).
-            // Only generate access records for courses where user is actually enrolled.
-            $usercourses = $this->get_user_courses($user->id);
+            // Get user courses.
+            $usercourses = $this->get_user_courses_cached($user->id);
 
-            // Skip course/activity access if user is not enrolled in any courses.
             if (!empty($usercourses)) {
-                // Generate random number of course access records.
+                // Generate course access.
                 if ($this->accesstype === 'course' || $this->accesstype === 'all') {
                     foreach ($usercourses as $course) {
                         $numaccess = $this->get_random_count($this->courseaccessmin, $this->courseaccessmax);
                         for ($i = 0; $i < $numaccess; $i++) {
-                            $timestamp = $this->get_random_timestamp();
-                            $this->generate_course_access_record($user, $course, $timestamp);
+                            $this->buffer_course_access_record($user, $course, $this->get_random_timestamp(), $this->get_random_ip());
                         }
                     }
                 }
 
-                // Generate random number of activity access records.
+                // Generate activity access.
                 if ($this->accesstype === 'activity' || $this->accesstype === 'all') {
                     foreach ($usercourses as $course) {
-                        if (!isset($coursemodules[$course->id])) {
-                            $coursemodules[$course->id] = $this->get_course_modules($course->id);
-                        }
-
-                        $modules = $coursemodules[$course->id];
+                        $modules = $coursemodules[$course->id] ?? [];
                         foreach ($modules as $cm) {
                             $numaccess = $this->get_random_count($this->activityaccessmin, $this->activityaccessmax);
                             for ($i = 0; $i < $numaccess; $i++) {
-                                $timestamp = $this->get_random_timestamp();
-                                $this->generate_activity_access_record($user, $course, $cm, $timestamp);
+                                $this->buffer_activity_access_record($user, $course, $cm, $this->get_random_timestamp(), $this->get_random_ip());
                             }
                         }
                     }
                 }
 
-                // Generate course completions if enabled.
+                // Generate completions.
                 if ($this->generatecompletions) {
                     $completionpercent = $this->get_random_count($this->completionpercentmin, $this->completionpercentmax);
                     foreach ($usercourses as $course) {
-                        // Each user completes a random percentage of their courses.
                         if (rand(1, 100) <= $completionpercent) {
-                            $timestamp = $this->get_random_timestamp();
-                            $this->generate_course_completion($user, $course, $timestamp);
+                            $this->buffer_course_completion($user, $course, $this->get_random_timestamp(), $this->get_random_ip());
                         }
                     }
                 }
             } else {
-                // User has no course enrollments in company courses.
                 $this->stats['users_without_enrollments']++;
             }
+        }
+
+        // Flush all buffers.
+        $this->flush_log_buffer();
+        $this->flush_lastaccess_buffer();
+        $this->flush_completion_buffers();
+
+        // Update user access info in bulk.
+        if (!empty($logindata)) {
+            $this->update_users_access_info($users, $logindata);
+            $this->update_report_user_logins_bulk($users, $logindata);
         }
 
         $this->stats['time_elapsed'] = time() - $starttime;
@@ -1159,8 +1019,6 @@ class generator {
 
     /**
      * Get statistics.
-     *
-     * @return array Statistics
      */
     public function get_stats(): array {
         return $this->stats;
