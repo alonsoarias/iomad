@@ -52,6 +52,11 @@ $includeadmins = required_param('includeadmins', PARAM_INT);
 $onlyactive = required_param('onlyactive', PARAM_INT);
 $updateusercreated = required_param('updateusercreated', PARAM_INT);
 $usercreateddate = required_param('usercreateddate', PARAM_INT);
+$generatedashboard = optional_param('generatedashboard', 1, PARAM_INT);
+$generatelogouts = optional_param('generatelogouts', 0, PARAM_INT);
+$generatecompletions = optional_param('generatecompletions', 0, PARAM_INT);
+$completionpercentmin = optional_param('completionpercentmin', 50, PARAM_INT);
+$completionpercentmax = optional_param('completionpercentmax', 100, PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_INT);
 
 // Page setup.
@@ -83,6 +88,11 @@ if (!$confirm) {
         'onlyactive' => $onlyactive,
         'updateusercreated' => $updateusercreated,
         'usercreateddate' => $usercreateddate,
+        'generatedashboard' => $generatedashboard,
+        'generatelogouts' => $generatelogouts,
+        'generatecompletions' => $generatecompletions,
+        'completionpercentmin' => $completionpercentmin,
+        'completionpercentmax' => $completionpercentmax,
         'sesskey' => sesskey(),
         'confirm' => 1,
     ]);
@@ -118,6 +128,11 @@ $options = [
     'usercreateddate' => $usercreateddate,
     'cleanbeforegenerate' => (bool) $cleanbeforegenerate,
     'accesstype' => $accesstype,
+    'generatedashboard' => (bool) $generatedashboard,
+    'generatelogouts' => (bool) $generatelogouts,
+    'generatecompletions' => (bool) $generatecompletions,
+    'completionpercentmin' => $completionpercentmin,
+    'completionpercentmax' => $completionpercentmax,
 ];
 
 $generator = new \local_platform_access\generator($options);
@@ -164,6 +179,9 @@ $table->data = [
     [get_string('loginsgenerated', 'local_platform_access'), $stats['logins_generated']],
     [get_string('courseaccessgenerated', 'local_platform_access'), $stats['course_access_generated']],
     [get_string('activityaccessgenerated', 'local_platform_access'), $stats['activity_access_generated']],
+    [get_string('dashboardaccessgenerated', 'local_platform_access'), $stats['dashboard_access_generated'] ?? 0],
+    [get_string('logoutsgenerated', 'local_platform_access'), $stats['logouts_generated'] ?? 0],
+    [get_string('completionsgenerated', 'local_platform_access'), $stats['completions_generated'] ?? 0],
     [get_string('lastaccessupdated', 'local_platform_access'), $stats['lastaccess_updated']],
     [get_string('timecompleted', 'local_platform_access'), $stats['time_elapsed'] ?? 0],
 ];

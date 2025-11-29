@@ -84,3 +84,17 @@ $string['cleanbeforegenerate'] = 'Limpiar registros existentes antes de generar'
 $string['cleanbeforegenerate_help'] = 'Si esta habilitado, todos los registros de acceso existentes (inicios de sesion, vistas de cursos, vistas de actividades) para los usuarios seleccionados seran eliminados antes de generar nuevos registros. Esto incluye restablecer los campos de acceso del usuario (firstaccess, lastaccess, lastlogin, currentlogin).';
 $string['recordsdeleted'] = 'Registros existentes eliminados';
 $string['userswithoutenrollments'] = 'Usuarios sin matriculas en cursos';
+
+// Advanced events.
+$string['advancedevents'] = 'Eventos Avanzados';
+$string['generatedashboard'] = 'Generar registros de acceso al panel';
+$string['generatedashboard_help'] = 'Si esta habilitado, se generaran eventos de acceso al panel/area personal despues de cada inicio de sesion (con 70% de probabilidad).';
+$string['generatelogouts'] = 'Generar registros de cierre de sesion';
+$string['generatelogouts_help'] = 'Si esta habilitado, se generaran eventos de cierre de sesion para el 50% de las sesiones de inicio con una duracion realista (5 min - 2 horas).';
+$string['generatecompletions'] = 'Generar registros de finalizacion de cursos';
+$string['generatecompletions_help'] = 'Si esta habilitado, se generaran registros de finalizacion de cursos para un porcentaje de cursos basado en el rango de porcentaje de finalizacion especificado a continuacion.';
+$string['completionpercent'] = 'Porcentaje de finalizacion';
+$string['percentageerror'] = 'El porcentaje debe estar entre 0 y 100';
+$string['dashboardaccessgenerated'] = 'Registros de acceso al panel generados';
+$string['logoutsgenerated'] = 'Registros de cierre de sesion generados';
+$string['completionsgenerated'] = 'Finalizaciones de cursos generadas';

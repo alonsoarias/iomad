@@ -130,3 +130,25 @@ $string['created'] = 'Creado';
 $string['status'] = 'Estado';
 $string['active'] = 'Activo';
 $string['inactive'] = 'Inactivo';
+
+// Engagement metrics.
+$string['completions'] = 'Completados';
+$string['completionsmonth'] = 'Completados (30 dias)';
+$string['completionsweek'] = 'Completados (7 dias)';
+$string['completionstoday'] = 'Completados hoy';
+$string['totalcompletions'] = 'Total completados';
+$string['completiontrends'] = 'Tendencias de Finalizacion de Cursos';
+
+// Dashboard access metrics.
+$string['dashboardusers'] = 'Usuarios del panel (30 dias)';
+$string['dashboardweek'] = 'Usuarios del panel (7 dias)';
+$string['dashboardtoday'] = 'Hoy';
+
+// Session metrics.
+$string['avgsessionduration'] = 'Duracion promedio de sesion';
+$string['totalsessions'] = 'Total de sesiones';
+
+// Logout metrics.
+$string['logoutsmonth'] = 'Cierres de sesion (30 dias)';
+$string['logoutsweek'] = 'Cierres de sesion (7 dias)';
+$string['logoutstoday'] = 'Cierres de sesion hoy';

@@ -64,8 +64,12 @@ if ($mform->is_cancelled()) {
         'onlyactive' => $data->onlyactive,
         'updateusercreated' => $data->updateusercreated,
         'usercreateddate' => $data->usercreateddate,
+        'generatedashboard' => $data->generatedashboard ?? 1,
+        'generatelogouts' => $data->generatelogouts ?? 0,
+        'generatecompletions' => $data->generatecompletions ?? 0,
+        'completionpercentmin' => $data->completionpercentmin ?? 50,
+        'completionpercentmax' => $data->completionpercentmax ?? 100,
         'sesskey' => sesskey(),
-        'confirm' => 1,
     ];
     redirect(new moodle_url('/local/platform_access/generate.php', $params));
 }
