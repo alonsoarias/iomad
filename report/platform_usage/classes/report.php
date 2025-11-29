@@ -603,6 +603,10 @@ class report {
             'course_access_trends' => $this->get_course_access_trends(30),
             'top_courses' => array_values($this->get_top_courses(10)),
             'top_activities' => $this->get_top_activities(10),
+            'completions_summary' => $this->get_course_completions_summary(),
+            'dashboard_access' => $this->get_dashboard_access(),
+            'completion_trends' => $this->get_completion_trends(30),
+            'logout_summary' => $this->get_logout_summary(),
         ];
     }
 
@@ -726,6 +730,247 @@ class report {
         ], $userparams);
 
         return $DB->get_records_sql($sql, $params);
+    }
+
+    /**
+     * Get course completions summary (cached).
+     *
+     * @return array Completion statistics
+     */
+    public function get_course_completions_summary(): array {
+        return $this->get_cached_data('completions_summary', function() {
+            return $this->compute_course_completions_summary();
+        });
+    }
+
+    /**
+     * Compute course completions summary.
+     *
+     * @return array
+     */
+    protected function compute_course_completions_summary(): array {
+        global $DB;
+
+        $userids = $this->get_company_userids();
+        if (empty($userids)) {
+            return [
+                'completions_today' => 0,
+                'completions_week' => 0,
+                'completions_month' => 0,
+                'total_completions' => 0,
+            ];
+        }
+
+        $todaystart = strtotime('today midnight');
+        $weekstart = strtotime('-7 days midnight');
+        $monthstart = strtotime('-30 days midnight');
+
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        $sql = "SELECT
+                    SUM(CASE WHEN timecompleted >= :today THEN 1 ELSE 0 END) as completions_today,
+                    SUM(CASE WHEN timecompleted >= :week THEN 1 ELSE 0 END) as completions_week,
+                    SUM(CASE WHEN timecompleted >= :month THEN 1 ELSE 0 END) as completions_month,
+                    COUNT(*) as total_completions
+                FROM {course_completions}
+                WHERE userid $usersql
+                  AND timecompleted IS NOT NULL";
+
+        $params = array_merge([
+            'today' => $todaystart,
+            'week' => $weekstart,
+            'month' => $monthstart,
+        ], $userparams);
+
+        $result = $DB->get_record_sql($sql, $params);
+
+        return [
+            'completions_today' => (int) ($result->completions_today ?? 0),
+            'completions_week' => (int) ($result->completions_week ?? 0),
+            'completions_month' => (int) ($result->completions_month ?? 0),
+            'total_completions' => (int) ($result->total_completions ?? 0),
+        ];
+    }
+
+    /**
+     * Get dashboard access statistics (cached).
+     *
+     * @return array Dashboard access stats
+     */
+    public function get_dashboard_access(): array {
+        return $this->get_cached_data('dashboard_access', function() {
+            return $this->compute_dashboard_access();
+        });
+    }
+
+    /**
+     * Compute dashboard access statistics.
+     *
+     * @return array
+     */
+    protected function compute_dashboard_access(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('logstore_standard_log')) {
+            return ['today' => 0, 'week' => 0, 'month' => 0];
+        }
+
+        $todaystart = strtotime('today midnight');
+        $weekstart = strtotime('-7 days midnight');
+        $monthstart = strtotime('-30 days midnight');
+
+        $userids = $this->get_company_userids();
+        if (empty($userids)) {
+            return ['today' => 0, 'week' => 0, 'month' => 0];
+        }
+
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        $sql = "SELECT
+                    COUNT(DISTINCT CASE WHEN timecreated >= :today THEN userid END) as today,
+                    COUNT(DISTINCT CASE WHEN timecreated >= :week THEN userid END) as week,
+                    COUNT(DISTINCT CASE WHEN timecreated >= :month THEN userid END) as month
+                FROM {logstore_standard_log}
+                WHERE eventname = :event
+                  AND userid $usersql";
+
+        $params = array_merge([
+            'event' => '\\core\\event\\dashboard_viewed',
+            'today' => $todaystart,
+            'week' => $weekstart,
+            'month' => $monthstart,
+        ], $userparams);
+
+        $result = $DB->get_record_sql($sql, $params);
+
+        return [
+            'today' => (int) ($result->today ?? 0),
+            'week' => (int) ($result->week ?? 0),
+            'month' => (int) ($result->month ?? 0),
+        ];
+    }
+
+    /**
+     * Get completion trends over time (cached).
+     *
+     * @param int $days Number of days
+     * @return array [labels, data]
+     */
+    public function get_completion_trends(int $days = 30): array {
+        return $this->get_cached_data("completion_trends_{$days}", function() use ($days) {
+            return $this->compute_completion_trends($days);
+        });
+    }
+
+    /**
+     * Compute completion trends.
+     *
+     * @param int $days
+     * @return array
+     */
+    protected function compute_completion_trends(int $days): array {
+        global $DB;
+
+        $starttime = strtotime("-{$days} days midnight");
+        $userids = $this->get_company_userids();
+
+        if (empty($userids)) {
+            return ['labels' => [], 'data' => []];
+        }
+
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        $sql = "SELECT DATE(FROM_UNIXTIME(timecompleted)) as completion_date,
+                       COUNT(*) as completion_count
+                FROM {course_completions}
+                WHERE userid $usersql
+                  AND timecompleted >= :starttime
+                  AND timecompleted IS NOT NULL
+                GROUP BY DATE(FROM_UNIXTIME(timecompleted))
+                ORDER BY completion_date ASC";
+
+        $params = array_merge(['starttime' => $starttime], $userparams);
+        $records = $DB->get_records_sql($sql, $params);
+
+        $labels = [];
+        $data = [];
+
+        for ($i = $days; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-{$i} days"));
+            $labels[] = date('d M', strtotime($date));
+            $data[$date] = 0;
+        }
+
+        foreach ($records as $record) {
+            if (isset($data[$record->completion_date])) {
+                $data[$record->completion_date] = (int) $record->completion_count;
+            }
+        }
+
+        return [
+            'labels' => $labels,
+            'data' => array_values($data),
+        ];
+    }
+
+    /**
+     * Get logout statistics (cached).
+     *
+     * @return array Logout statistics
+     */
+    public function get_logout_summary(): array {
+        return $this->get_cached_data('logout_summary', function() {
+            return $this->compute_logout_summary();
+        });
+    }
+
+    /**
+     * Compute logout statistics.
+     *
+     * @return array
+     */
+    protected function compute_logout_summary(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('logstore_standard_log')) {
+            return ['logouts_today' => 0, 'logouts_week' => 0, 'logouts_month' => 0];
+        }
+
+        $todaystart = strtotime('today midnight');
+        $weekstart = strtotime('-7 days midnight');
+        $monthstart = strtotime('-30 days midnight');
+
+        $userids = $this->get_company_userids();
+        if (empty($userids)) {
+            return ['logouts_today' => 0, 'logouts_week' => 0, 'logouts_month' => 0];
+        }
+
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        $sql = "SELECT
+                    SUM(CASE WHEN timecreated >= :today THEN 1 ELSE 0 END) as logouts_today,
+                    SUM(CASE WHEN timecreated >= :week THEN 1 ELSE 0 END) as logouts_week,
+                    SUM(CASE WHEN timecreated >= :month THEN 1 ELSE 0 END) as logouts_month
+                FROM {logstore_standard_log}
+                WHERE eventname = :event
+                  AND userid $usersql";
+
+        $params = array_merge([
+            'event' => '\\core\\event\\user_loggedout',
+            'today' => $todaystart,
+            'week' => $weekstart,
+            'month' => $monthstart,
+        ], $userparams);
+
+        $result = $DB->get_record_sql($sql, $params);
+
+        return [
+            'logouts_today' => (int) ($result->logouts_today ?? 0),
+            'logouts_week' => (int) ($result->logouts_week ?? 0),
+            'logouts_month' => (int) ($result->logouts_month ?? 0),
+        ];
     }
 
     /**

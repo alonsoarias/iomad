@@ -84,3 +84,17 @@ $string['cleanbeforegenerate'] = 'Clean existing records before generating';
 $string['cleanbeforegenerate_help'] = 'If enabled, all existing access records (logins, course views, activity views) for the selected users will be deleted before generating new records. This includes resetting user access fields (firstaccess, lastaccess, lastlogin, currentlogin).';
 $string['recordsdeleted'] = 'Existing records deleted';
 $string['userswithoutenrollments'] = 'Users without course enrollments';
+
+// Advanced events.
+$string['advancedevents'] = 'Advanced Events';
+$string['generatedashboard'] = 'Generate dashboard access records';
+$string['generatedashboard_help'] = 'If enabled, dashboard/area personal access events will be generated after each login (with 70% probability).';
+$string['generatelogouts'] = 'Generate logout records';
+$string['generatelogouts_help'] = 'If enabled, logout events will be generated for 50% of login sessions with a realistic session duration (5 min - 2 hours).';
+$string['generatecompletions'] = 'Generate course completion records';
+$string['generatecompletions_help'] = 'If enabled, course completion records will be generated for a percentage of courses based on the completion percentage range specified below.';
+$string['completionpercent'] = 'Completion percentage';
+$string['percentageerror'] = 'Percentage must be between 0 and 100';
+$string['dashboardaccessgenerated'] = 'Dashboard access records generated';
+$string['logoutsgenerated'] = 'Logout records generated';
+$string['completionsgenerated'] = 'Course completions generated';

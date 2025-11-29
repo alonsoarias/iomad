@@ -139,6 +139,35 @@ class generate_form extends \moodleform {
         $mform->setType('activityaccessmax', PARAM_INT);
         $mform->setDefault('activityaccessmax', 2);
 
+        // Header: Advanced Events.
+        $mform->addElement('header', 'advancedevents', get_string('advancedevents', 'local_platform_access'));
+
+        // Generate dashboard access.
+        $mform->addElement('advcheckbox', 'generatedashboard', get_string('generatedashboard', 'local_platform_access'));
+        $mform->setDefault('generatedashboard', 1);
+        $mform->addHelpButton('generatedashboard', 'generatedashboard', 'local_platform_access');
+
+        // Generate logouts.
+        $mform->addElement('advcheckbox', 'generatelogouts', get_string('generatelogouts', 'local_platform_access'));
+        $mform->setDefault('generatelogouts', 0);
+        $mform->addHelpButton('generatelogouts', 'generatelogouts', 'local_platform_access');
+
+        // Generate course completions.
+        $mform->addElement('advcheckbox', 'generatecompletions', get_string('generatecompletions', 'local_platform_access'));
+        $mform->setDefault('generatecompletions', 0);
+        $mform->addHelpButton('generatecompletions', 'generatecompletions', 'local_platform_access');
+
+        // Completion percentage (min-max).
+        $mform->addElement('text', 'completionpercentmin', get_string('completionpercent', 'local_platform_access') . ' (min %)', ['size' => 5]);
+        $mform->setType('completionpercentmin', PARAM_INT);
+        $mform->setDefault('completionpercentmin', 50);
+        $mform->disabledIf('completionpercentmin', 'generatecompletions', 'notchecked');
+
+        $mform->addElement('text', 'completionpercentmax', get_string('completionpercent', 'local_platform_access') . ' (max %)', ['size' => 5]);
+        $mform->setType('completionpercentmax', PARAM_INT);
+        $mform->setDefault('completionpercentmax', 100);
+        $mform->disabledIf('completionpercentmax', 'generatecompletions', 'notchecked');
+
         // Submit button.
         $this->add_action_buttons(true, get_string('generatebutton', 'local_platform_access'));
     }
@@ -179,6 +208,19 @@ class generate_form extends \moodleform {
 
         if ($data['activityaccessmin'] > $data['activityaccessmax']) {
             $errors['activityaccessmax'] = get_string('minmaxerror', 'local_platform_access');
+        }
+
+        // Validate completion percentage range.
+        if (!empty($data['generatecompletions'])) {
+            if ($data['completionpercentmin'] < 0 || $data['completionpercentmin'] > 100) {
+                $errors['completionpercentmin'] = get_string('percentageerror', 'local_platform_access');
+            }
+            if ($data['completionpercentmax'] < 0 || $data['completionpercentmax'] > 100) {
+                $errors['completionpercentmax'] = get_string('percentageerror', 'local_platform_access');
+            }
+            if ($data['completionpercentmin'] > $data['completionpercentmax']) {
+                $errors['completionpercentmax'] = get_string('minmaxerror', 'local_platform_access');
+            }
         }
 
         return $errors;

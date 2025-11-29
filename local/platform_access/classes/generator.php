@@ -79,6 +79,21 @@ class generator {
     /** @var bool Clean existing records before generating */
     protected $cleanbeforegenerate;
 
+    /** @var bool Generate dashboard access records */
+    protected $generatedashboard;
+
+    /** @var bool Generate logout records */
+    protected $generatelogouts;
+
+    /** @var bool Generate course completion records */
+    protected $generatecompletions;
+
+    /** @var int Minimum completion percentage */
+    protected $completionpercentmin;
+
+    /** @var int Maximum completion percentage */
+    protected $completionpercentmax;
+
     /** @var array Statistics */
     protected $stats = [
         'users_processed' => 0,
@@ -87,6 +102,9 @@ class generator {
         'logins_generated' => 0,
         'course_access_generated' => 0,
         'activity_access_generated' => 0,
+        'dashboard_access_generated' => 0,
+        'logouts_generated' => 0,
+        'completions_generated' => 0,
         'lastaccess_updated' => 0,
         'records_deleted' => 0,
     ];
@@ -114,6 +132,11 @@ class generator {
         $this->updateusercreated = $options['updateusercreated'] ?? true;
         $this->usercreateddate = $options['usercreateddate'] ?? strtotime('2025-11-15');
         $this->cleanbeforegenerate = $options['cleanbeforegenerate'] ?? true;
+        $this->generatedashboard = $options['generatedashboard'] ?? true;
+        $this->generatelogouts = $options['generatelogouts'] ?? false;
+        $this->generatecompletions = $options['generatecompletions'] ?? false;
+        $this->completionpercentmin = max(0, min(100, intval($options['completionpercentmin'] ?? 50)));
+        $this->completionpercentmax = max($this->completionpercentmin, min(100, intval($options['completionpercentmax'] ?? 100)));
     }
 
     /**
@@ -200,6 +223,36 @@ class generator {
                 "eventname LIKE :eventname AND userid $usersql",
                 array_merge(['eventname' => '%\\event\\course_module_viewed'], $userparams)
             );
+
+            // 4. Delete dashboard_viewed events.
+            $deleted += $DB->count_records_select('logstore_standard_log',
+                "eventname = :eventname AND userid $usersql",
+                array_merge(['eventname' => '\\core\\event\\dashboard_viewed'], $userparams)
+            );
+            $DB->delete_records_select('logstore_standard_log',
+                "eventname = :eventname AND userid $usersql",
+                array_merge(['eventname' => '\\core\\event\\dashboard_viewed'], $userparams)
+            );
+
+            // 5. Delete user_loggedout events.
+            $deleted += $DB->count_records_select('logstore_standard_log',
+                "eventname = :eventname AND userid $usersql",
+                array_merge(['eventname' => '\\core\\event\\user_loggedout'], $userparams)
+            );
+            $DB->delete_records_select('logstore_standard_log',
+                "eventname = :eventname AND userid $usersql",
+                array_merge(['eventname' => '\\core\\event\\user_loggedout'], $userparams)
+            );
+
+            // 6. Delete course_completed events.
+            $deleted += $DB->count_records_select('logstore_standard_log',
+                "eventname = :eventname AND relateduserid $usersql",
+                array_merge(['eventname' => '\\core\\event\\course_completed'], $userparams)
+            );
+            $DB->delete_records_select('logstore_standard_log',
+                "eventname = :eventname AND relateduserid $usersql",
+                array_merge(['eventname' => '\\core\\event\\course_completed'], $userparams)
+            );
         }
 
         // 4. Delete/truncate user_lastaccess records for these users.
@@ -212,9 +265,13 @@ class generator {
             $DB->delete_records_select('local_report_user_logins', "userid $usersql", $userparams);
         }
 
-        // 6. Delete course_modules_completion records for these users.
+        // 9. Delete course_modules_completion records for these users.
         $deleted += $DB->count_records_select('course_modules_completion', "userid $usersql", $userparams);
         $DB->delete_records_select('course_modules_completion', "userid $usersql", $userparams);
+
+        // 10. Delete course_completions records for these users.
+        $deleted += $DB->count_records_select('course_completions', "userid $usersql", $userparams);
+        $DB->delete_records_select('course_completions', "userid $usersql", $userparams);
 
         // 7. Delete course_modules_viewed records for these users.
         if ($DB->get_manager()->table_exists('course_modules_viewed')) {
@@ -829,6 +886,157 @@ class generator {
     }
 
     /**
+     * Generate dashboard access record for a user.
+     *
+     * @param object $user User object
+     * @param int $timestamp Timestamp for the access
+     * @return bool Success
+     */
+    public function generate_dashboard_access_record($user, int $timestamp): bool {
+        global $DB;
+
+        if (!$this->logstore_exists()) {
+            return false;
+        }
+
+        $ip = $this->get_random_ip();
+
+        try {
+            $usercontext = \context_user::instance($user->id, IGNORE_MISSING);
+            if (!$usercontext) {
+                return false;
+            }
+
+            // Create the event using Moodle's native event class.
+            $event = \core\event\dashboard_viewed::create([
+                'userid' => $user->id,
+                'context' => $usercontext,
+            ]);
+
+            // Convert to log entry with custom timestamp.
+            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
+
+            // Insert into logstore.
+            $DB->insert_record('logstore_standard_log', (object)$entry);
+            $this->stats['dashboard_access_generated']++;
+
+            return true;
+        } catch (\Exception $e) {
+            debugging('Error generating dashboard access record: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            return false;
+        }
+    }
+
+    /**
+     * Generate logout record for a user.
+     *
+     * @param object $user User object
+     * @param int $timestamp Timestamp for the logout
+     * @return bool Success
+     */
+    public function generate_logout_record($user, int $timestamp): bool {
+        global $DB;
+
+        if (!$this->logstore_exists()) {
+            return false;
+        }
+
+        $ip = $this->get_random_ip();
+
+        try {
+            // Create the event using Moodle's native event class.
+            $event = \core\event\user_loggedout::create([
+                'userid' => $user->id,
+                'objectid' => $user->id,
+                'other' => [
+                    'sessionid' => md5(uniqid(rand(), true)),
+                ],
+            ]);
+
+            // Convert to log entry with custom timestamp.
+            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
+
+            // Insert into logstore.
+            $DB->insert_record('logstore_standard_log', (object)$entry);
+            $this->stats['logouts_generated']++;
+
+            return true;
+        } catch (\Exception $e) {
+            debugging('Error generating logout record: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            return false;
+        }
+    }
+
+    /**
+     * Generate course completion record for a user.
+     *
+     * @param object $user User object
+     * @param object $course Course object
+     * @param int $timestamp Timestamp for the completion
+     * @return bool Success
+     */
+    public function generate_course_completion($user, $course, int $timestamp): bool {
+        global $DB;
+
+        if (!$this->logstore_exists()) {
+            return false;
+        }
+
+        $ip = $this->get_random_ip();
+
+        try {
+            // Create or update course_completions record.
+            $completion = new \stdClass();
+            $completion->userid = $user->id;
+            $completion->course = $course->id;
+            $completion->timeenrolled = $timestamp - 86400 * 7; // 7 days before completion.
+            $completion->timestarted = $timestamp - 86400; // 1 day before completion.
+            $completion->timecompleted = $timestamp;
+            $completion->reaggregate = 0;
+
+            $existing = $DB->get_record('course_completions', [
+                'userid' => $user->id,
+                'course' => $course->id,
+            ]);
+
+            if ($existing) {
+                $completion->id = $existing->id;
+                $DB->update_record('course_completions', $completion);
+            } else {
+                $completion->id = $DB->insert_record('course_completions', $completion);
+            }
+
+            // Create the course_completed event.
+            $coursecontext = \context_course::instance($course->id, IGNORE_MISSING);
+            if (!$coursecontext) {
+                return false;
+            }
+
+            $event = \core\event\course_completed::create([
+                'objectid' => $completion->id,
+                'relateduserid' => $user->id,
+                'context' => $coursecontext,
+                'courseid' => $course->id,
+                'other' => [
+                    'relateduserid' => $user->id,
+                ],
+            ]);
+
+            // Convert to log entry with custom timestamp.
+            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
+
+            // Insert into logstore.
+            $DB->insert_record('logstore_standard_log', (object)$entry);
+            $this->stats['completions_generated']++;
+
+            return true;
+        } catch (\Exception $e) {
+            debugging('Error generating course completion: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            return false;
+        }
+    }
+
+    /**
      * Run the generation process.
      *
      * @param callable|null $progresscallback Callback for progress updates
@@ -877,6 +1085,18 @@ class generator {
                 for ($i = 0; $i < $numlogins; $i++) {
                     $timestamp = $this->get_random_timestamp();
                     $this->generate_login_record($user, $timestamp);
+
+                    // Generate dashboard access after login (70% probability).
+                    if ($this->generatedashboard && rand(1, 100) <= 70) {
+                        $dashboardtime = $timestamp + rand(5, 60); // 5-60 seconds after login.
+                        $this->generate_dashboard_access_record($user, $dashboardtime);
+                    }
+
+                    // Generate logout record if enabled (50% probability).
+                    if ($this->generatelogouts && rand(1, 100) <= 50) {
+                        $logouttime = $timestamp + rand(300, 7200); // 5 min - 2 hours after login.
+                        $this->generate_logout_record($user, $logouttime);
+                    }
                 }
             }
 
@@ -911,6 +1131,18 @@ class generator {
                                 $timestamp = $this->get_random_timestamp();
                                 $this->generate_activity_access_record($user, $course, $cm, $timestamp);
                             }
+                        }
+                    }
+                }
+
+                // Generate course completions if enabled.
+                if ($this->generatecompletions) {
+                    $completionpercent = $this->get_random_count($this->completionpercentmin, $this->completionpercentmax);
+                    foreach ($usercourses as $course) {
+                        // Each user completes a random percentage of their courses.
+                        if (rand(1, 100) <= $completionpercent) {
+                            $timestamp = $this->get_random_timestamp();
+                            $this->generate_course_completion($user, $course, $timestamp);
                         }
                     }
                 }

@@ -57,6 +57,9 @@ $dailyLogins = $report->get_daily_logins(30);
 $courseAccessTrends = $report->get_course_access_trends(30);
 $topCourses = $report->get_top_courses(10);
 $topActivities = $report->get_top_activities(10);
+$completionsSummary = $report->get_course_completions_summary();
+$dashboardAccess = $report->get_dashboard_access();
+$completionTrends = $report->get_completion_trends(30);
 
 // Language strings for JavaScript.
 $jsstrings = [
@@ -71,6 +74,7 @@ $jsstrings = [
     'activityname' => get_string('activityname', 'report_platform_usage'),
     'activitytype' => get_string('activitytype', 'report_platform_usage'),
     'activityaccesses' => get_string('activityaccesses', 'report_platform_usage'),
+    'completions' => get_string('completions', 'report_platform_usage'),
 ];
 
 // Output header.
@@ -156,6 +160,55 @@ echo '</div>';
 
 echo '</div>';
 
+// Engagement metrics row.
+echo '<div class="row mb-4">';
+
+// Course Completions card.
+echo '<div class="col-md-3 col-sm-6 mb-3">';
+echo '<div class="card h-100 border-info">';
+echo '<div class="card-body text-center">';
+echo '<h5 class="card-title text-info">' . get_string('completionsmonth', 'report_platform_usage') . '</h5>';
+echo '<h2 class="display-4" id="completions-month">' . number_format($completionsSummary['completions_month']) . '</h2>';
+echo '<p class="text-muted">' . get_string('totalcompletions', 'report_platform_usage') . ': <strong id="total-completions">' . number_format($completionsSummary['total_completions']) . '</strong></p>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
+// Dashboard Access card.
+echo '<div class="col-md-3 col-sm-6 mb-3">';
+echo '<div class="card h-100 border-secondary">';
+echo '<div class="card-body text-center">';
+echo '<h5 class="card-title text-secondary">' . get_string('dashboardusers', 'report_platform_usage') . '</h5>';
+echo '<h2 class="display-4" id="dashboard-month">' . number_format($dashboardAccess['month']) . '</h2>';
+echo '<p class="text-muted">' . get_string('dashboardtoday', 'report_platform_usage') . ': <strong id="dashboard-today">' . number_format($dashboardAccess['today']) . '</strong></p>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
+// Completions Today card.
+echo '<div class="col-md-3 col-sm-6 mb-3">';
+echo '<div class="card h-100 border-dark">';
+echo '<div class="card-body text-center">';
+echo '<h5 class="card-title text-dark">' . get_string('completionstoday', 'report_platform_usage') . '</h5>';
+echo '<h2 class="display-4" id="completions-today">' . number_format($completionsSummary['completions_today']) . '</h2>';
+echo '<p class="text-muted">' . get_string('completionsweek', 'report_platform_usage') . ': <strong id="completions-week">' . number_format($completionsSummary['completions_week']) . '</strong></p>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
+// Dashboard Week card.
+echo '<div class="col-md-3 col-sm-6 mb-3">';
+echo '<div class="card h-100 border-danger">';
+echo '<div class="card-body text-center">';
+echo '<h5 class="card-title text-danger">' . get_string('dashboardweek', 'report_platform_usage') . '</h5>';
+echo '<h2 class="display-4" id="dashboard-week">' . number_format($dashboardAccess['week']) . '</h2>';
+echo '<p class="text-muted">' . get_string('dashboardtoday', 'report_platform_usage') . ': <strong>' . number_format($dashboardAccess['today']) . '</strong></p>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
+echo '</div>';
+
 // Charts row 1: Daily Logins and User Activity.
 echo '<div class="row mb-4">';
 
@@ -200,6 +253,21 @@ echo '<div class="card h-100">';
 echo '<div class="card-header"><h5 class="mb-0">' . get_string('topcourses', 'report_platform_usage') . '</h5></div>';
 echo '<div class="card-body">';
 echo '<canvas id="topCoursesChart" height="300"></canvas>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
+echo '</div>';
+
+// Charts row 3: Completion Trends.
+echo '<div class="row mb-4">';
+
+// Completion Trends Chart.
+echo '<div class="col-lg-12 mb-3">';
+echo '<div class="card h-100">';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('completiontrends', 'report_platform_usage') . '</h5></div>';
+echo '<div class="card-body">';
+echo '<canvas id="completionTrendsChart" height="200"></canvas>';
 echo '</div>';
 echo '</div>';
 echo '</div>';
@@ -292,7 +360,10 @@ document.addEventListener('DOMContentLoaded', function() {
         daily_logins: <?php echo json_encode($dailyLogins); ?>,
         course_access_trends: <?php echo json_encode($courseAccessTrends); ?>,
         top_courses: <?php echo json_encode(array_values($topCourses)); ?>,
-        top_activities: <?php echo json_encode($topActivities); ?>
+        top_activities: <?php echo json_encode($topActivities); ?>,
+        completions_summary: <?php echo json_encode($completionsSummary); ?>,
+        dashboard_access: <?php echo json_encode($dashboardAccess); ?>,
+        completion_trends: <?php echo json_encode($completionTrends); ?>
     };
 
     // Chart instances.
@@ -415,6 +486,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 scales: { x: { beginAtZero: true } }
             }
         });
+
+        // Completion Trends Line Chart.
+        var completionTrendsCtx = document.getElementById('completionTrendsChart').getContext('2d');
+        charts.completionTrends = new Chart(completionTrendsCtx, {
+            type: 'line',
+            data: {
+                labels: data.completion_trends.labels,
+                datasets: [{
+                    label: STRINGS.completions,
+                    data: data.completion_trends.data,
+                    borderColor: 'rgba(23, 162, 184, 1)',
+                    backgroundColor: 'rgba(23, 162, 184, 0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
     }
 
     /**
@@ -442,6 +536,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         charts.topCourses.data.datasets[0].data = data.top_courses.map(function(c) { return c.access_count; });
         charts.topCourses.update();
+
+        // Update Completion Trends chart.
+        if (data.completion_trends) {
+            charts.completionTrends.data.labels = data.completion_trends.labels;
+            charts.completionTrends.data.datasets[0].data = data.completion_trends.data;
+            charts.completionTrends.update();
+        }
     }
 
     /**
@@ -454,6 +555,21 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('unique-week').textContent = numberFormat(data.login_summary.unique_users_week);
         document.getElementById('logins-month').textContent = numberFormat(data.login_summary.logins_month);
         document.getElementById('unique-month').textContent = numberFormat(data.login_summary.unique_users_month);
+
+        // Update completions cards.
+        if (data.completions_summary) {
+            document.getElementById('completions-month').textContent = numberFormat(data.completions_summary.completions_month);
+            document.getElementById('total-completions').textContent = numberFormat(data.completions_summary.total_completions);
+            document.getElementById('completions-today').textContent = numberFormat(data.completions_summary.completions_today);
+            document.getElementById('completions-week').textContent = numberFormat(data.completions_summary.completions_week);
+        }
+
+        // Update dashboard cards.
+        if (data.dashboard_access) {
+            document.getElementById('dashboard-month').textContent = numberFormat(data.dashboard_access.month);
+            document.getElementById('dashboard-today').textContent = numberFormat(data.dashboard_access.today);
+            document.getElementById('dashboard-week').textContent = numberFormat(data.dashboard_access.week);
+        }
     }
 
     /**
