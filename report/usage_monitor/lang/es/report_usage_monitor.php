@@ -208,6 +208,22 @@ $string['days_to_threshold_disk_desc'] = 'Días proyectados hasta alcanzar el um
 $string['days_to_threshold_users'] = 'Días hasta umbral de usuarios';
 $string['days_to_threshold_users_desc'] = 'Días proyectados hasta alcanzar el umbral de advertencia de usuarios';
 
+// API v2 strings
+$string['api_system_health'] = 'Estado del Sistema';
+$string['api_system_health_desc'] = 'Obtiene el estado completo del sistema incluyendo disco, usuarios, alertas y acciones recomendadas.';
+$string['api_trend_analysis'] = 'Análisis de Tendencias';
+$string['api_trend_analysis_desc'] = 'Obtiene el análisis histórico de tendencias para métricas de disco y usuarios.';
+$string['api_update_configuration'] = 'Actualizar Configuración';
+$string['api_update_configuration_desc'] = 'Actualiza la configuración del plugin incluyendo umbrales y notificaciones.';
+$string['status_healthy'] = 'Saludable';
+$string['status_warning'] = 'Advertencia';
+$string['status_critical'] = 'Crítico';
+$string['configuration_update_failed'] = 'Error al actualizar la configuración';
+$string['no_data_available'] = 'No hay datos disponibles';
+$string['trend_up'] = 'En aumento';
+$string['trend_down'] = 'En descenso';
+$string['trend_stable'] = 'Estable';
+
 // Email templates
 $string['messagehtml_userlimit'] = '<!DOCTYPE html>
 <html lang="es">

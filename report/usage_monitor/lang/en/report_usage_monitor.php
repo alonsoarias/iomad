@@ -208,6 +208,22 @@ $string['days_to_threshold_disk_desc'] = 'Projected days until reaching the disk
 $string['days_to_threshold_users'] = 'Days until user threshold';
 $string['days_to_threshold_users_desc'] = 'Projected days until reaching the user warning threshold';
 
+// API v2 strings
+$string['api_system_health'] = 'System Health';
+$string['api_system_health_desc'] = 'Get comprehensive system health status including disk, users, alerts and recommended actions.';
+$string['api_trend_analysis'] = 'Trend Analysis';
+$string['api_trend_analysis_desc'] = 'Get historical trend analysis for disk and user metrics.';
+$string['api_update_configuration'] = 'Update Configuration';
+$string['api_update_configuration_desc'] = 'Update plugin configuration settings including thresholds and notifications.';
+$string['status_healthy'] = 'Healthy';
+$string['status_warning'] = 'Warning';
+$string['status_critical'] = 'Critical';
+$string['configuration_update_failed'] = 'Configuration update failed';
+$string['no_data_available'] = 'No data available';
+$string['trend_up'] = 'Increasing';
+$string['trend_down'] = 'Decreasing';
+$string['trend_stable'] = 'Stable';
+
 // Email templates
 $string['messagehtml_userlimit'] = '<!DOCTYPE html>
 <html lang="en">

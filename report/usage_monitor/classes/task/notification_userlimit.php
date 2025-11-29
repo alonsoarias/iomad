@@ -18,240 +18,122 @@ namespace report_usage_monitor\task;
 
 defined('MOODLE_INTERNAL') || die();
 
+use report_usage_monitor\notification_helper;
+
 /**
- * Tarea programada para notificar sobre el límite de usuarios.
- * 
+ * Scheduled task for user limit notification.
+ *
  * @package     report_usage_monitor
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
+ * @copyright   2025 Soporte IngeWeb <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class notification_userlimit extends \core\task\scheduled_task
-{
+class notification_userlimit extends \core\task\scheduled_task {
+
     /**
-     * Devuelve el nombre de la tarea.
+     * Returns task name.
      *
      * @return string
      */
-    public function get_name()
-    {
+    public function get_name(): string {
         return get_string('processuserlimitnotificationtask', 'report_usage_monitor');
     }
 
     /**
-     * Ejecuta la tarea programada.
+     * Execute the scheduled task.
      *
      * @return bool
      */
-    public function execute()
-    {
+    public function execute(): bool {
         global $CFG;
         require_once($CFG->dirroot . '/report/usage_monitor/locallib.php');
 
-        if (debugging('', DEBUG_DEVELOPER)) {
-            mtrace("Iniciando tarea de notificación de límite de usuarios...");
-        }
+        mtrace("Starting user limit notification task...");
 
-        // Procesar la notificación de límite de usuarios
-        $result = $this->notify_user_limit();
+        $result = $this->process_user_notification();
 
-        if (debugging('', DEBUG_DEVELOPER)) {
-            mtrace("Tarea de notificación de límite de usuarios completada.");
-        }
-        
+        mtrace("User limit notification task completed.");
+
         return $result;
     }
 
     /**
-     * Gestiona el proceso de notificación del límite de usuarios.
+     * Process user limit notification.
      *
      * @return bool
      */
-    private function notify_user_limit()
-    {
-        global $DB, $CFG;
-        
-        // Obtener configuraciones del plugin
-        $reportconfig = get_config('report_usage_monitor');
-        
-        // Obtener el umbral de usuarios configurado
-        $user_threshold = (int)($reportconfig->max_daily_users_threshold ?? 100);
-        
-        // Nivel de advertencia configurado (default: 90%)
-        $warning_level = !empty($reportconfig->users_warning_level) ? $reportconfig->users_warning_level : 90;
+    private function process_user_notification(): bool {
+        global $DB;
 
-        if (debugging('', DEBUG_DEVELOPER)) {
-            mtrace("Umbral de usuarios: $user_threshold");
-            mtrace("Nivel de advertencia: $warning_level%");
+        $config = get_config('report_usage_monitor');
+        $user_threshold = (int)($config->max_daily_users_threshold ?? 100);
+        $warning_level = (int)($config->users_warning_level ?? 90);
+
+        // Validate threshold.
+        if ($user_threshold <= 0) {
+            mtrace("  User threshold not configured. Skipping notification.");
+            return true;
         }
 
-        // REFACTORIZADO: Consulta optimizada para obtener usuarios activos del último día
-        // Utilizamos la función refactorizada que trabaja directamente con timestamps
-        $sql = "SELECT COUNT(DISTINCT userid) AS conteo_accesos_unicos, 
-                       UNIX_TIMESTAMP(DATE(FROM_UNIXTIME(timecreated))) AS timestamp_fecha
+        mtrace("  User threshold: {$user_threshold}");
+        mtrace("  Warning level: {$warning_level}%");
+
+        // Get recent user activity.
+        $sql = "SELECT COUNT(DISTINCT userid) AS user_count,
+                       UNIX_TIMESTAMP(DATE(FROM_UNIXTIME(timecreated))) AS timestamp_date
                 FROM {logstore_standard_log}
                 WHERE action = 'loggedin'
                   AND timecreated > :start_time
-                GROUP BY timestamp_fecha
-                ORDER BY timestamp_fecha DESC
+                GROUP BY timestamp_date
+                ORDER BY timestamp_date DESC
                 LIMIT 1";
-                
-        $params = [
-            'start_time' => strtotime('-1 day')
-        ];
-        
-        $lastday_users_record = $DB->get_record_sql($sql, $params);
-        
-        // Verificar si hay datos de usuarios
-        if (!$lastday_users_record) {
-            if (debugging('', DEBUG_DEVELOPER)) {
-                mtrace("No se encontraron datos de usuarios para el último día.");
-            }
+
+        $record = $DB->get_record_sql($sql, ['start_time' => strtotime('-1 day')]);
+
+        if (!$record) {
+            mtrace("  No user activity data found for the last day.");
             return true;
         }
-        
-        // Calcular porcentaje de uso
-        $users_count = (int)$lastday_users_record->conteo_accesos_unicos;
-        $users_percent = calculate_threshold_percentage($users_count, $user_threshold);
-        $fecha_timestamp = $lastday_users_record->timestamp_fecha;
-        
-        // Verificar que el timestamp sea válido
-        if (!is_numeric($fecha_timestamp) || $fecha_timestamp <= 0) {
-            debugging('notify_user_limit: Timestamp inválido obtenido: ' . var_export($fecha_timestamp, true), DEBUG_DEVELOPER);
-            $fecha_timestamp = time(); // Usar timestamp actual como fallback
-        }
-        
-        if (debugging('', DEBUG_DEVELOPER)) {
-            // CORRECCIÓN: Usar date() directamente en lugar de format_timestamp_date()
-            mtrace("Usuarios únicos: $users_count, Porcentaje: $users_percent%, Fecha: " . date('d/m/Y', $fecha_timestamp));
-        }
-        
-        // Verificar si el porcentaje supera el nivel de advertencia configurado
-        if ($users_percent < $warning_level) {
-            if (debugging('', DEBUG_DEVELOPER)) {
-                mtrace("El uso de usuarios ($users_percent%) está por debajo del nivel de advertencia ($warning_level%). No se enviará notificación.");
-            }
+
+        $user_count = (int)$record->user_count;
+        $timestamp = (int)$record->timestamp_date;
+        $percentage = ($user_count / $user_threshold) * 100;
+
+        mtrace("  Users today: {$user_count} / {$user_threshold} ({$percentage}%)");
+
+        // Check if below warning level.
+        if ($percentage < $warning_level) {
+            mtrace("  Usage ({$percentage}%) is below warning level ({$warning_level}%). No notification needed.");
             return true;
         }
-        
-        // Determinar si es necesario enviar notificación ahora
-        $notification_interval = $this->calculate_notification_interval($users_percent);
-        $last_notification_time = get_config('report_usage_monitor', 'last_notificationusers_time') ?: 0;
+
+        // Check notification interval.
+        $interval = notification_helper::calculate_notification_interval($percentage, 'users');
+        $last_notification = (int)get_config('report_usage_monitor', 'last_notificationusers_time');
         $current_time = time();
-        
-        if (debugging('', DEBUG_DEVELOPER)) {
-            mtrace("Intervalo de notificación: $notification_interval segundos, Última notificación: $last_notification_time");
-            $time_since_last = $current_time - $last_notification_time;
-            mtrace("Tiempo transcurrido desde la última notificación: $time_since_last segundos");
-        }
-        
-        // Verificar si ha pasado suficiente tiempo desde la última notificación
-        if ($current_time - $last_notification_time < $notification_interval) {
-            if (debugging('', DEBUG_DEVELOPER)) {
-                mtrace("No ha pasado el intervalo de notificación.");
-                $time_remaining = ($last_notification_time + $notification_interval) - $current_time;
-                mtrace("Próxima notificación posible en: " . format_time($time_remaining));
-            }
+        $time_since_last = $current_time - $last_notification;
+
+        mtrace("  Notification interval: " . format_time($interval));
+        mtrace("  Time since last notification: " . format_time($time_since_last));
+
+        if ($time_since_last < $interval) {
+            $next_possible = ($last_notification + $interval) - $current_time;
+            mtrace("  Too soon for next notification. Next possible in: " . format_time($next_possible));
             return true;
         }
-        
-        // Llegados a este punto, debemos enviar la notificación
-        if (debugging('', DEBUG_DEVELOPER)) {
-            mtrace("Enviando notificación de límite de usuarios...");
-        }
-        
-        // REFACTORIZADO: Ahora pasamos el timestamp directamente, 
-        // la función email_notify_user_limit se encargará de formatearlo
-        $result = email_notify_user_limit($users_count, $fecha_timestamp, $users_percent);
-        
-        // Actualizar tiempo de última notificación
+
+        // Send notification.
+        mtrace("  Sending user limit notification...");
+
+        $email_data = notification_helper::build_user_email_data($user_count, $timestamp, $percentage);
+        $result = notification_helper::send_notification('users', $email_data);
+
         if ($result) {
             set_config('last_notificationusers_time', $current_time, 'report_usage_monitor');
-            
-            // Registrar la notificación en el historial
-            $this->log_notification($users_percent, $users_count, $user_threshold);
-            
-            if (debugging('', DEBUG_DEVELOPER)) {
-                mtrace("Notificación enviada con éxito.");
-            }
+            mtrace("  Notification sent successfully.");
         } else {
-            if (debugging('', DEBUG_DEVELOPER)) {
-                mtrace("Error al enviar la notificación por email.");
-            }
+            mtrace("  ERROR: Failed to send notification.");
         }
-        
+
         return $result;
-    }
-
-    /**
-     * Calcula el intervalo de notificación basado en el porcentaje de uso de usuarios.
-     * 
-     * @param float $users_percent Porcentaje de uso de usuarios.
-     * @return int Intervalo en segundos entre notificaciones.
-     */
-    private function calculate_notification_interval($users_percent)
-    {
-        // Validación del parámetro
-        if (!is_numeric($users_percent)) {
-            debugging('calculate_notification_interval: Porcentaje no numérico: ' . var_export($users_percent, true), DEBUG_DEVELOPER);
-            return PHP_INT_MAX; // No notificar en caso de error
-        }
-
-        $thresholds = [
-            100 => 24 * 60 * 60,     // 1 día cuando se supera el 100%
-            90 => 3 * 24 * 60 * 60,  // 3 días cuando se supera el 90%
-            80 => 7 * 24 * 60 * 60   // 1 semana cuando se supera el 80%
-        ];
-
-        foreach ($thresholds as $threshold => $interval) {
-            if ($users_percent >= $threshold) {
-                return $interval;
-            }
-        }
-
-        return PHP_INT_MAX; // No notification if under lowest threshold
-    }
-    
-    /**
-     * Registra información sobre la notificación enviada.
-     * 
-     * @param float $users_percent Porcentaje de uso de usuarios.
-     * @param int $users_count Conteo de usuarios.
-     * @param int $user_threshold Umbral de usuarios.
-     * @return bool
-     */
-    private function log_notification($users_percent, $users_count, $user_threshold)
-    {
-        global $DB;
-        
-        // Verificar si existe la tabla para almacenar el historial
-        if ($DB->get_manager()->table_exists('report_usage_monitor_history')) {
-            $record = new \stdClass();
-            $record->type = 'users';
-            $record->percentage = $users_percent;
-            $record->value = $users_count;
-            $record->threshold = $user_threshold;
-            $record->timecreated = time();
-            
-            // Usar transacción para garantizar consistencia
-            $transaction = $DB->start_delegated_transaction();
-            
-            try {
-                $DB->insert_record('report_usage_monitor_history', $record);
-                $transaction->allow_commit();
-                
-                if (debugging('', DEBUG_DEVELOPER)) {
-                    mtrace("Notificación registrada en el historial.");
-                }
-                return true;
-            } catch (\Exception $e) {
-                $transaction->rollback($e);
-                if (debugging('', DEBUG_DEVELOPER)) {
-                    mtrace("Error al registrar la notificación: " . $e->getMessage());
-                }
-                return false;
-            }
-        }
-        
-        return false;
     }
 }
