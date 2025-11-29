@@ -231,257 +231,197 @@ $string['messagehtml_userlimit'] = '<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alerta de Límite de Usuarios - {$a->sitename}</title>
-    <style>
-        body {
-            font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-        .container {
-            max-width: 650px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-            background-color: #e74c3c;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 600;
-        }
-        .alert-badge {
-            display: inline-block;
-            background-color: white;
-            color: #e74c3c;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-        .content {
-            padding: 20px 30px;
-        }
-        .section {
-            margin-bottom: 25px;
-        }
-        .section-title {
-            font-size: 18px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #eee;
-            font-weight: 600;
-        }
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        .info-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .info-table td:first-child {
-            font-weight: 500;
-            width: 40%;
-            color: #555;
-        }
-        .info-table td:last-child {
-            font-weight: 600;
-        }
-        .progress-container {
-            background-color: #f5f5f5;
-            border-radius: 20px;
-            height: 25px;
-            width: 100%;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            border-radius: 20px;
-            background: linear-gradient(to right, #3498db, #e74c3c);
-            text-align: center;
-            line-height: 25px;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            transition: width 0.5s ease;
-        }
-        .warning-level-high {
-            background: linear-gradient(to right, #e74c3c, #c0392b);
-        }
-        .warning-level-medium {
-            background: linear-gradient(to right, #f39c12, #e67e22);
-        }
-        .warning-level-low {
-            background: linear-gradient(to right, #2ecc71, #27ae60);
-        }
-        .cta-button {
-            display: inline-block;
-            background-color: #3498db;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 10px;
-            text-align: center;
-        }
-        .cta-button:hover {
-            background-color: #2980b9;
-        }
-        .historical-data {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .historical-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        .historical-table th {
-            background-color: #e8e8e8;
-            font-weight: 600;
-            text-align: left;
-            padding: 10px;
-        }
-        .historical-table td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .historical-table tr:last-child td {
-            border-bottom: none;
-        }
-        .footer {
-            background-color: #ecf0f1;
-            padding: 15px;
-            text-align: center;
-            color: #7f8c8d;
-            font-size: 12px;
-        }
-        .platform-info {
-            border-left: 4px solid #3498db;
-            padding: 10px 15px;
-            background-color: #f8f9fa;
-            margin: 15px 0;
-        }
-        @media only screen and (max-width: 600px) {
-            .container {
-                width: 100%;
-                border-radius: 0;
-            }
-            .content {
-                padding: 15px;
-            }
-        }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Límite de Usuarios Diarios Excedido</h1>
-            <div class="alert-badge">{$a->percentaje}% del límite</div>
-        </div>
-        
-        <div class="content">
-            <p>La plataforma <a href="{$a->siteurl}" style="color: #3498db; font-weight: bold;">{$a->sitename}</a> ha superado el umbral de usuarios diarios establecido.</p>
-            
-            <div class="section">
-                <h2 class="section-title">Resumen de la Alerta</h2>
-                
-                <div class="progress-container">
-                    <div class="progress-bar warning-level-high" style="width: {$a->percentaje}%;">
-                        {$a->percentaje}%
-                    </div>
-                </div>
-                
-                <table class="info-table">
+<body style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color: #f4f4f4;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f4f4f4;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <!-- Header -->
                     <tr>
-                        <td>Fecha:</td>
-                        <td>{$a->lastday}</td>
+                        <td style="background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%); padding: 30px 20px; text-align: center;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <span style="font-size: 40px;">&#9888;</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #ffffff; font-size: 24px; font-weight: bold; padding-top: 10px;">
+                                        Alerta de Límite de Usuarios
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 15px;">
+                                        <span style="display: inline-block; background-color: #ffffff; color: #c0392b; padding: 8px 20px; border-radius: 25px; font-weight: bold; font-size: 18px;">
+                                            {$a->percentaje}% del límite alcanzado
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
+
+                    <!-- Urgency Banner -->
                     <tr>
-                        <td>Usuarios activos:</td>
-                        <td>{$a->numberofusers}</td>
+                        <td style="background-color: #fff3cd; padding: 15px 20px; border-left: 4px solid #ffc107;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="font-size: 14px; color: #856404;">
+                                        <strong>&#9889; ATENCIÓN REQUERIDA:</strong> La plataforma <strong>{$a->sitename}</strong> ha superado el umbral de usuarios diarios. Se recomienda revisar inmediatamente.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
+
+                    <!-- Main Content -->
                     <tr>
-                        <td>Límite configurado:</td>
-                        <td>{$a->threshold} usuarios</td>
+                        <td style="padding: 25px 30px;">
+                            <!-- Alert Summary -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #3498db;">
+                                        &#128202; Resumen de la Alerta
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Progress Bar -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 20px;">
+                                <tr>
+                                    <td style="background-color: #ecf0f1; border-radius: 10px; padding: 3px;">
+                                        <table role="presentation" width="{$a->percentaje}%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="background: linear-gradient(90deg, #e74c3c, #c0392b); color: #ffffff; text-align: center; padding: 10px 0; border-radius: 8px; font-weight: bold; font-size: 14px;">
+                                                    {$a->percentaje}%
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Key Metrics Table -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; width: 50%; border-bottom: 1px solid #e0e0e0;">Fecha del Reporte:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{$a->lastday}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">Usuarios Activos Hoy:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #e74c3c; font-size: 16px; border-bottom: 1px solid #e0e0e0;">{$a->numberofusers} usuarios</td>
+                                </tr>
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">Límite Configurado:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{$a->threshold} usuarios</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555;">Usuarios en Exceso:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #c0392b;">{$a->excess_users} usuarios</td>
+                                </tr>
+                            </table>
+
+                            <!-- Projection Box -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px;">
+                                <tr>
+                                    <td style="padding: 20px; color: #ffffff;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="font-size: 16px; font-weight: bold; padding-bottom: 10px;">
+                                                    &#128200; Proyección de Crecimiento
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; line-height: 1.5;">
+                                                    De mantenerse la tendencia actual, se estima que en <strong>{$a->days_to_critical} días</strong> la plataforma alcanzará el <strong>{$a->critical_threshold}%</strong> del límite configurado. Considere aumentar su cuota de usuarios.
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Platform Information -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #3498db;">
+                                        &#128421; Información de la Plataforma
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; width: 50%; border-bottom: 1px solid #e0e0e0;">Versión de Moodle:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{$a->moodle_release}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">Total de Cursos:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{$a->courses_count}</td>
+                                </tr>
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">Copias por Curso:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{$a->backup_auto_max_kept}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555;">Uso de Disco:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50;">{$a->diskusage} / {$a->quotadisk} ({$a->disk_percent}%)</td>
+                                </tr>
+                            </table>
+
+                            <!-- Historical Data -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #3498db;">
+                                        &#128197; Historial Reciente (Últimos 7 Días)
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #34495e;">
+                                    <th style="padding: 12px 15px; font-weight: 600; color: #ffffff; text-align: left;">Fecha</th>
+                                    <th style="padding: 12px 15px; font-weight: 600; color: #ffffff; text-align: left;">Usuarios Activos</th>
+                                    <th style="padding: 12px 15px; font-weight: 600; color: #ffffff; text-align: left;">% del Límite</th>
+                                </tr>
+                                {$a->historical_data_rows}
+                            </table>
+
+                            <!-- CTA Button -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 30px;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{$a->referer}" style="display: inline-block; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: #ffffff; padding: 14px 35px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                                            &#128202; Ver Panel de Control
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
+
+                    <!-- Footer -->
                     <tr>
-                        <td>Exceso:</td>
-                        <td>{$a->excess_users} usuarios ({$a->percentaje}%)</td>
+                        <td style="background-color: #2c3e50; padding: 20px; text-align: center;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="color: #bdc3c7; font-size: 12px; padding-bottom: 10px;">
+                                        Este mensaje fue generado automáticamente por <strong style="color: #3498db;">Usage Report</strong> de <a href="https://ingeweb.co/" style="color: #3498db; text-decoration: none;">ingeweb.co</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #95a5a6; font-size: 11px; font-style: italic;">
+                                        * Se contabilizan usuarios distintos que se autenticaron en la fecha indicada. Usuarios que se autentican más de una vez solo cuentan una vez.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                 </table>
-            </div>
-            
-            <div class="section">
-                <h2 class="section-title">Información de la Plataforma</h2>
-                <table class="info-table">
-                    <tr>
-                        <td>Versión de Moodle:</td>
-                        <td>{$a->moodle_release} ({$a->moodle_version})</td>
-                    </tr>
-                    <tr>
-                        <td>Cursos totales:</td>
-                        <td>{$a->courses_count}</td>
-                    </tr>
-                    <tr>
-                        <td>Copias de seguridad por curso:</td>
-                        <td>{$a->backup_auto_max_kept}</td>
-                    </tr>
-                    <tr>
-                        <td>Espacio en disco:</td>
-                        <td>{$a->diskusage} / {$a->quotadisk} ({$a->disk_percent}%)</td>
-                    </tr>
-                </table>
-                
-                <div class="platform-info">
-                    <p><strong>Proyección:</strong> De mantenerse la tendencia actual, se estima que en {$a->days_to_critical} días se alcanzará el {$a->critical_threshold}% del límite.</p>
-                </div>
-            </div>
-            
-            <div class="section historical-data">
-                <h2 class="section-title">Historial Reciente de Usuarios</h2>
-                <table class="historical-table">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Usuarios Activos</th>
-                            <th>% del Límite</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Datos dinámicos del historial -->
-                        {$a->historical_data_rows}
-                    </tbody>
-                </table>
-            </div>
-            
-            <div style="text-align: center;">
-                <a href="{$a->referer}" class="cta-button">Ver Panel de Control</a>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>Este mensaje ha sido generado automáticamente por "Usage Report" de <a href="https://ingeweb.co/" style="color: #3498db;">ingeweb.co</a></p>
-            <p><em>*Se contabilizan usuarios distintos que se autenticaron en la fecha indicada. Usuarios que se autentican más de una vez solo cuentan una vez.</em></p>
-        </div>
-    </div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>';
 
@@ -491,360 +431,264 @@ $string['messagehtml_diskusage'] = '<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alerta de Espacio en Disco - {$a->sitename}</title>
-    <style>
-        body {
-            font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-        .container {
-            max-width: 650px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-            background-color: #e67e22;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 600;
-        }
-        .alert-badge {
-            display: inline-block;
-            background-color: white;
-            color: #e67e22;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-        .content {
-            padding: 20px 30px;
-        }
-        .section {
-            margin-bottom: 25px;
-        }
-        .section-title {
-            font-size: 18px;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #eee;
-            font-weight: 600;
-        }
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        .info-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .info-table td:first-child {
-            font-weight: 500;
-            width: 40%;
-            color: #555;
-        }
-        .info-table td:last-child {
-            font-weight: 600;
-        }
-        .progress-container {
-            background-color: #f5f5f5;
-            border-radius: 20px;
-            height: 25px;
-            width: 100%;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            border-radius: 20px;
-            background: linear-gradient(to right, #3498db, #e67e22);
-            text-align: center;
-            line-height: 25px;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            transition: width 0.5s ease;
-        }
-        .warning-level-high {
-            background: linear-gradient(to right, #e74c3c, #c0392b);
-        }
-        .warning-level-medium {
-            background: linear-gradient(to right, #f39c12, #e67e22);
-        }
-        .warning-level-low {
-            background: linear-gradient(to right, #2ecc71, #27ae60);
-        }
-        .cta-button {
-            display: inline-block;
-            background-color: #3498db;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 10px;
-            text-align: center;
-        }
-        .cta-button:hover {
-            background-color: #2980b9;
-        }
-        .directory-chart {
-            margin: 20px 0;
-            width: 100%;
-        }
-        .directory-chart-title {
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-        .directory-bar {
-            height: 35px;
-            display: flex;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .directory-label {
-            width: 150px;
-            background-color: #34495e;
-            color: white;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            font-size: 14px;
-        }
-        .directory-value {
-            flex-grow: 1;
-            background-color: #3498db;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            color: white;
-            font-weight: 600;
-            position: relative;
-        }
-        .directory-value-text {
-            position: relative;
-            z-index: 2;
-        }
-        .directory-value-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .top-items {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-        }
-        .top-items-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        .top-items-table th {
-            background-color: #e8e8e8;
-            font-weight: 600;
-            text-align: left;
-            padding: 10px;
-        }
-        .top-items-table td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .top-items-table tr:last-child td {
-            border-bottom: none;
-        }
-        .footer {
-            background-color: #ecf0f1;
-            padding: 15px;
-            text-align: center;
-            color: #7f8c8d;
-            font-size: 12px;
-        }
-        .recommendation {
-            background-color: #e8f4fd;
-            border-left: 4px solid #3498db;
-            padding: 10px 15px;
-            margin: 15px 0;
-        }
-        .recommendation h3 {
-            margin-top: 0;
-            color: #2980b9;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        .recommendation ul {
-            margin-bottom: 0;
-            padding-left: 20px;
-        }
-        .recommendation li {
-            margin-bottom: 5px;
-        }
-        @media only screen and (max-width: 600px) {
-            .container {
-                width: 100%;
-                border-radius: 0;
-            }
-            .content {
-                padding: 15px;
-            }
-            .directory-label {
-                width: 100px;
-            }
-        }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Alerta de Espacio en Disco</h1>
-            <div class="alert-badge">{$a->percentage}% utilizado</div>
-        </div>
-        
-        <div class="content">
-            <p>La plataforma <a href="{$a->siteurl}" style="color: #3498db; font-weight: bold;">{$a->sitename}</a> ha superado el {$a->percentage}% del espacio en disco asignado.</p>
-            
-            <div class="section">
-                <h2 class="section-title">Resumen de Uso de Disco</h2>
-                
-                <div class="progress-container">
-                    <div class="progress-bar {$a->warning_level_class}" style="width: {$a->percentage}%;">
-                        {$a->percentage}%
-                    </div>
-                </div>
-                
-                <table class="info-table">
+<body style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color: #f4f4f4;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f4f4f4;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <!-- Header -->
                     <tr>
-                        <td>Fecha:</td>
-                        <td>{$a->lastday}</td>
+                        <td style="background: linear-gradient(135deg, #d35400 0%, #e67e22 100%); padding: 30px 20px; text-align: center;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <span style="font-size: 40px;">&#128190;</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #ffffff; font-size: 24px; font-weight: bold; padding-top: 10px;">
+                                        Alerta de Espacio en Disco
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 15px;">
+                                        <span style="display: inline-block; background-color: #ffffff; color: #d35400; padding: 8px 20px; border-radius: 25px; font-weight: bold; font-size: 18px;">
+                                            {$a->percentage}% de la cuota utilizada
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
+
+                    <!-- Urgency Banner -->
                     <tr>
-                        <td>Espacio utilizado:</td>
-                        <td>{$a->diskusage}</td>
+                        <td style="background-color: #ffeaa7; padding: 15px 20px; border-left: 4px solid #fdcb6e;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="font-size: 14px; color: #6c5c00;">
+                                        <strong>&#128680; ADVERTENCIA DE DISCO:</strong> La plataforma <strong>{$a->sitename}</strong> ha superado el <strong>{$a->percentage}%</strong> del espacio en disco asignado. Revise las recomendaciones a continuación.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
+
+                    <!-- Main Content -->
                     <tr>
-                        <td>Cuota asignada:</td>
-                        <td>{$a->quotadisk}</td>
+                        <td style="padding: 25px 30px;">
+                            <!-- Disk Usage Summary -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #e67e22;">
+                                        &#128202; Resumen de Uso de Disco
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Progress Bar -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 20px;">
+                                <tr>
+                                    <td style="background-color: #ecf0f1; border-radius: 10px; padding: 3px;">
+                                        <table role="presentation" width="{$a->percentage}%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="background: linear-gradient(90deg, #e67e22, #d35400); color: #ffffff; text-align: center; padding: 10px 0; border-radius: 8px; font-weight: bold; font-size: 14px;">
+                                                    {$a->percentage}%
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Key Metrics Table -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; width: 50%; border-bottom: 1px solid #e0e0e0;">Fecha del Reporte:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{$a->lastday}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">Espacio Utilizado:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #e67e22; font-size: 16px; border-bottom: 1px solid #e0e0e0;">{$a->diskusage}</td>
+                                </tr>
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">Cuota Asignada:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{$a->quotadisk}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555;">Espacio Disponible:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #27ae60;">{$a->available_space} ({$a->available_percent}%)</td>
+                                </tr>
+                            </table>
+
+                            <!-- Space Distribution -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #e67e22;">
+                                        &#128193; Distribución del Espacio por Categoría
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Distribution Bars -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <!-- Database -->
+                                <tr>
+                                    <td style="padding: 5px 0;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td width="120" style="padding: 10px; background-color: #9b59b6; color: #ffffff; font-weight: 600; font-size: 13px; border-radius: 5px 0 0 5px;">Base de Datos</td>
+                                                <td style="padding: 10px 15px; background-color: #e8e8e8; border-radius: 0 5px 5px 0;">
+                                                    <strong>{$a->databasesize}</strong> <span style="color: #777;">({$a->db_percent}%)</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- Files -->
+                                <tr>
+                                    <td style="padding: 5px 0;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td width="120" style="padding: 10px; background-color: #27ae60; color: #ffffff; font-weight: 600; font-size: 13px; border-radius: 5px 0 0 5px;">Archivos (filedir)</td>
+                                                <td style="padding: 10px 15px; background-color: #e8e8e8; border-radius: 0 5px 5px 0;">
+                                                    <strong>{$a->filedir_size}</strong> <span style="color: #777;">({$a->filedir_percent}%)</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- Cache -->
+                                <tr>
+                                    <td style="padding: 5px 0;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td width="120" style="padding: 10px; background-color: #e67e22; color: #ffffff; font-weight: 600; font-size: 13px; border-radius: 5px 0 0 5px;">Caché</td>
+                                                <td style="padding: 10px 15px; background-color: #e8e8e8; border-radius: 0 5px 5px 0;">
+                                                    <strong>{$a->cache_size}</strong> <span style="color: #777;">({$a->cache_percent}%)</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- Others -->
+                                <tr>
+                                    <td style="padding: 5px 0;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td width="120" style="padding: 10px; background-color: #7f8c8d; color: #ffffff; font-weight: 600; font-size: 13px; border-radius: 5px 0 0 5px;">Otros</td>
+                                                <td style="padding: 10px 15px; background-color: #e8e8e8; border-radius: 0 5px 5px 0;">
+                                                    <strong>{$a->other_size}</strong> <span style="color: #777;">({$a->other_percent}%)</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Platform Information -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #e67e22;">
+                                        &#128421; Información de la Plataforma
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; width: 50%; border-bottom: 1px solid #e0e0e0;">Versión de Moodle:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{$a->moodle_release}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">Total de Cursos:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{$a->coursescount}</td>
+                                </tr>
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">Copias por Curso:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{$a->backupcount}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555;">Usuarios Activos:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50;">{$a->numberofusers} / {$a->threshold} ({$a->user_percent}%)</td>
+                                </tr>
+                            </table>
+
+                            <!-- Largest Courses -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #e67e22;">
+                                        &#128218; Cursos que Más Espacio Ocupan
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #34495e;">
+                                    <th style="padding: 12px 15px; font-weight: 600; color: #ffffff; text-align: left;">Curso</th>
+                                    <th style="padding: 12px 15px; font-weight: 600; color: #ffffff; text-align: left;">Tamaño</th>
+                                    <th style="padding: 12px 15px; font-weight: 600; color: #ffffff; text-align: left;">% del Total</th>
+                                </tr>
+                                {$a->top_courses_rows}
+                            </table>
+
+                            <!-- Recommendations Box -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; background-color: #e8f6f3; border-radius: 8px; border-left: 4px solid #1abc9c;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="font-size: 16px; font-weight: bold; color: #16a085; padding-bottom: 12px;">
+                                                    &#128161; Recomendaciones para Liberar Espacio
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; color: #2c3e50; line-height: 1.8;">
+                                                    &#8226; <strong>Reducir copias:</strong> Disminuir el número de copias automáticas por curso (actualmente: {$a->backupcount})<br>
+                                                    &#8226; <strong>Limpiar archivos:</strong> Eliminar archivos antiguos sin uso mediante la herramienta de limpieza<br>
+                                                    &#8226; <strong>Revisar cursos:</strong> Archivar o limpiar los cursos más grandes listados arriba<br>
+                                                    &#8226; <strong>Purgar caché:</strong> Limpiar la caché del sistema para liberar espacio temporal
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- CTA Button -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 30px;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{$a->referer}" style="display: inline-block; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: #ffffff; padding: 14px 35px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                                            &#128202; Ver Panel de Control
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
+
+                    <!-- Footer -->
                     <tr>
-                        <td>Espacio disponible:</td>
-                        <td>{$a->available_space} ({$a->available_percent}%)</td>
+                        <td style="background-color: #2c3e50; padding: 20px; text-align: center;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="color: #bdc3c7; font-size: 12px; padding-bottom: 10px;">
+                                        Este mensaje fue generado automáticamente por <strong style="color: #3498db;">Usage Report</strong> de <a href="https://ingeweb.co/" style="color: #3498db; text-decoration: none;">ingeweb.co</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #95a5a6; font-size: 11px; font-style: italic;">
+                                        Si necesita asistencia técnica, por favor no responda a este correo y contacte a su administrador de hosting.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                 </table>
-            </div>
-            
-            <div class="section">
-                <h2 class="section-title">Distribución del Espacio</h2>
-                
-                <div class="directory-chart">
-                    <div class="directory-chart-title">Uso por directorio</div>
-                    <!-- Barra visual para cada directorio -->
-                    <div class="directory-bar">
-                        <div class="directory-label">Base de datos</div>
-                        <div class="directory-value" style="background-color: #9b59b6;">
-                            <div class="directory-value-bar" style="width: {$a->db_percent}%;"></div>
-                            <span class="directory-value-text">{$a->databasesize} ({$a->db_percent}%)</span>
-                        </div>
-                    </div>
-                    <div class="directory-bar">
-                        <div class="directory-label">Archivos (filedir)</div>
-                        <div class="directory-value" style="background-color: #2ecc71;">
-                            <div class="directory-value-bar" style="width: {$a->filedir_percent}%;"></div>
-                            <span class="directory-value-text">{$a->filedir_size} ({$a->filedir_percent}%)</span>
-                        </div>
-                    </div>
-                    <div class="directory-bar">
-                        <div class="directory-label">Caché</div>
-                        <div class="directory-value" style="background-color: #e67e22;">
-                            <div class="directory-value-bar" style="width: {$a->cache_percent}%;"></div>
-                            <span class="directory-value-text">{$a->cache_size} ({$a->cache_percent}%)</span>
-                        </div>
-                    </div>
-                    <div class="directory-bar">
-                        <div class="directory-label">Otros</div>
-                        <div class="directory-value" style="background-color: #95a5a6;">
-                            <div class="directory-value-bar" style="width: {$a->other_percent}%;"></div>
-                            <span class="directory-value-text">{$a->other_size} ({$a->other_percent}%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2 class="section-title">Información de la Plataforma</h2>
-                <table class="info-table">
-                    <tr>
-                        <td>Versión de Moodle:</td>
-                        <td>{$a->moodle_release} ({$a->moodle_version})</td>
-                    </tr>
-                    <tr>
-                        <td>Cursos totales:</td>
-                        <td>{$a->coursescount}</td>
-                    </tr>
-                    <tr>
-                        <td>Copias de seguridad por curso:</td>
-                        <td>{$a->backupcount}</td>
-                    </tr>
-                    <tr>
-                        <td>Usuarios activos:</td>
-                        <td>{$a->numberofusers} / {$a->threshold} ({$a->user_percent}%)</td>
-                    </tr>
-                </table>
-            </div>
-            
-            <div class="section top-items">
-                <h2 class="section-title">Cursos que más espacio ocupan</h2>
-                <table class="top-items-table">
-                    <thead>
-                        <tr>
-                            <th>Curso</th>
-                            <th>Tamaño</th>
-                            <th>% del Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Datos dinámicos de los cursos -->
-                        {$a->top_courses_rows}
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="recommendation">
-                <h3>Recomendaciones para liberar espacio</h3>
-                <ul>
-                    <li>Reducir el número de copias de seguridad automáticas por curso (actualmente: {$a->backupcount})</li>
-                    <li>Eliminar archivos antiguos sin uso mediante la herramienta de limpieza de archivos</li>
-                    <li>Revisar y limpiar los cursos más grandes identificados en la tabla anterior</li>
-                    <li>Purgar la caché del sistema para liberar espacio temporal</li>
-                </ul>
-            </div>
-            
-            <div style="text-align: center;">
-                <a href="{$a->referer}" class="cta-button">Ver Panel de Control</a>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>Este mensaje ha sido generado automáticamente por "Usage Report" de <a href="https://ingeweb.co/" style="color: #3498db;">ingeweb.co</a></p>
-            <p>Si necesita asistencia técnica, por favor no responda a este correo y contacte a su administrador de hosting.</p>
-        </div>
-    </div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>';

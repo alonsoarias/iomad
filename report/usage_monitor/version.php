@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025112901;  // Major refactoring: API v2, notification helper, threshold improvements
+$plugin->version   = 2025112902;  // API v2, notification improvements, email templates enhancement
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '5.0.0';     // Major release with API v2 and refactored notifications
+$plugin->release   = '4.5.5';     // Enhanced notifications and API v2
 $plugin->maturity  = MATURITY_STABLE;
