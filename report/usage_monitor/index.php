@@ -167,7 +167,7 @@ foreach ($userdaily_recordstop as $record) {
 }
 
 $totalcourses    = $DB->count_records('course');
-$activeusers = $DB->count_records('user', ['deleted' => 0, 'suspended' => 0]) - 1;
+$activeusers = max(0, $DB->count_records('user', ['deleted' => 0, 'suspended' => 0]) - 1);
 $suspendedusers = $DB->count_records('user', ['deleted' => 0, 'suspended' => 1]);
 $registeredusers = $activeusers + $suspendedusers;
 $backup_max_kept = get_config('backup', 'backup_auto_max_kept') ?? 0;
@@ -202,9 +202,9 @@ if (count($daily_data) < 30) {
         $date_key = date('Y-m-d', $date);
         $all_dates[$date_key] = date('d/m/Y', $date);
     }
-    
+
     $combined_data = [];
-    $last_value = null;
+    $last_value = 0; // Inicializado a 0 para evitar valores null en el gráfico
     
     foreach ($all_dates as $date_key => $formatted_date) {
         if (isset($daily_data[$date_key])) {
@@ -236,8 +236,16 @@ echo '</div>';
 echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
 ?>
 
-<!-- Cargar librería Chart.js (ejemplo CDN) -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Cargar librería Chart.js desde CDN con integridad SRI -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+        integrity="sha384-ou7Y5K0brTcjRJOxCdEfzCLjGdKfMJJF1nQV5WVQY5aQWibFlOvVuVz4gXKQSd+E"
+        crossorigin="anonymous"></script>
+<script>
+    // Verificar si Chart.js cargó correctamente
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js no pudo cargarse desde el CDN');
+    }
+</script>
 
 <div class="container-fluid mt-4">
     <!-- SECCIÓN A: Tarjetas resumen (disco, usuarios, max 90d) -->
@@ -480,14 +488,14 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
                     <!-- Nav Tabs -->
                     <ul class="nav nav-tabs" id="last10daysTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="tabla10-tab" data-toggle="tab"
+                            <a class="nav-link active" id="tabla10-tab" data-bs-toggle="tab" data-toggle="tab"
                                 href="#tabla10" role="tab" aria-controls="tabla10"
                                 aria-selected="true">
                                 <?php echo get_string('usertable', 'report_usage_monitor'); ?>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="grafica10-tab" data-toggle="tab"
+                            <a class="nav-link" id="grafica10-tab" data-bs-toggle="tab" data-toggle="tab"
                                 href="#grafica10" role="tab" aria-controls="grafica10"
                                 aria-selected="false">
                                 <?php echo get_string('userchart', 'report_usage_monitor'); ?>
