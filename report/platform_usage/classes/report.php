@@ -607,6 +607,10 @@ class report {
             'dashboard_access' => $this->get_dashboard_access(),
             'completion_trends' => $this->get_completion_trends(30),
             'logout_summary' => $this->get_logout_summary(),
+            // New metrics: Session duration and security.
+            'session_duration' => $this->get_session_duration_stats(),
+            'failed_logins' => $this->get_failed_login_summary(),
+            'daily_sessions' => $this->get_daily_sessions(30),
         ];
     }
 
@@ -1012,5 +1016,341 @@ class report {
      */
     public function get_date_range(): string {
         return userdate($this->datefrom, '%d/%m/%Y') . ' - ' . userdate($this->dateto, '%d/%m/%Y');
+    }
+
+    /**
+     * Get failed login statistics (cached).
+     * SECURITY FEATURE: Monitor failed login attempts.
+     *
+     * @return array Failed login statistics
+     */
+    public function get_failed_login_summary(): array {
+        return $this->get_cached_data('failed_logins', function() {
+            return $this->compute_failed_login_summary();
+        });
+    }
+
+    /**
+     * Compute failed login statistics.
+     *
+     * @return array
+     */
+    protected function compute_failed_login_summary(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('logstore_standard_log')) {
+            return [
+                'failed_today' => 0,
+                'failed_week' => 0,
+                'failed_month' => 0,
+                'by_reason' => [],
+            ];
+        }
+
+        $todaystart = strtotime('today midnight');
+        $weekstart = strtotime('-7 days midnight');
+        $monthstart = strtotime('-30 days midnight');
+
+        $userids = $this->get_company_userids();
+
+        // For failed logins, we may want to check all or filter by company users
+        // Failed logins may have userid=0 for non-existent users.
+        if (!empty($userids)) {
+            list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+            $userfilter = "AND (userid $usersql OR userid = 0)";
+        } else {
+            $userfilter = "";
+            $userparams = [];
+        }
+
+        $sql = "SELECT
+                    SUM(CASE WHEN timecreated >= :today THEN 1 ELSE 0 END) as failed_today,
+                    SUM(CASE WHEN timecreated >= :week THEN 1 ELSE 0 END) as failed_week,
+                    SUM(CASE WHEN timecreated >= :month THEN 1 ELSE 0 END) as failed_month
+                FROM {logstore_standard_log}
+                WHERE eventname = :event
+                  $userfilter";
+
+        $params = array_merge([
+            'event' => '\\core\\event\\user_login_failed',
+            'today' => $todaystart,
+            'week' => $weekstart,
+            'month' => $monthstart,
+        ], $userparams);
+
+        $result = $DB->get_record_sql($sql, $params);
+
+        // Get breakdown by reason.
+        $byreason = $this->get_failed_logins_by_reason();
+
+        return [
+            'failed_today' => (int) ($result->failed_today ?? 0),
+            'failed_week' => (int) ($result->failed_week ?? 0),
+            'failed_month' => (int) ($result->failed_month ?? 0),
+            'by_reason' => $byreason,
+        ];
+    }
+
+    /**
+     * Get failed logins breakdown by reason.
+     *
+     * @return array
+     */
+    protected function get_failed_logins_by_reason(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('logstore_standard_log')) {
+            return [];
+        }
+
+        $monthstart = strtotime('-30 days midnight');
+
+        $sql = "SELECT other, COUNT(*) as count
+                FROM {logstore_standard_log}
+                WHERE eventname = :event
+                  AND timecreated >= :month
+                GROUP BY other";
+
+        $params = [
+            'event' => '\\core\\event\\user_login_failed',
+            'month' => $monthstart,
+        ];
+
+        $records = $DB->get_records_sql($sql, $params);
+
+        $reasons = [
+            1 => ['label' => get_string('failedloginreason1', 'report_platform_usage'), 'count' => 0],
+            2 => ['label' => get_string('failedloginreason2', 'report_platform_usage'), 'count' => 0],
+            3 => ['label' => get_string('failedloginreason3', 'report_platform_usage'), 'count' => 0],
+            4 => ['label' => get_string('failedloginreason4', 'report_platform_usage'), 'count' => 0],
+            5 => ['label' => get_string('failedloginreason5', 'report_platform_usage'), 'count' => 0],
+        ];
+
+        foreach ($records as $record) {
+            $other = @unserialize($record->other);
+            if ($other && isset($other['reason'])) {
+                $reason = (int) $other['reason'];
+                if (isset($reasons[$reason])) {
+                    $reasons[$reason]['count'] += (int) $record->count;
+                }
+            }
+        }
+
+        return $reasons;
+    }
+
+    /**
+     * Get session duration statistics (cached).
+     * HIGH PRIORITY: Estimate session duration based on login/logout events.
+     *
+     * @return array Session duration statistics
+     */
+    public function get_session_duration_stats(): array {
+        return $this->get_cached_data('session_duration', function() {
+            return $this->compute_session_duration_stats();
+        });
+    }
+
+    /**
+     * Compute session duration statistics.
+     *
+     * @return array
+     */
+    protected function compute_session_duration_stats(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('logstore_standard_log')) {
+            return [
+                'avg_minutes' => 0,
+                'total_sessions' => 0,
+                'sessions_with_logout' => 0,
+                'estimated_sessions' => 0,
+            ];
+        }
+
+        $monthstart = strtotime('-30 days midnight');
+        $userids = $this->get_company_userids();
+
+        if (empty($userids)) {
+            return [
+                'avg_minutes' => 0,
+                'total_sessions' => 0,
+                'sessions_with_logout' => 0,
+                'estimated_sessions' => 0,
+            ];
+        }
+
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        // Count total logins (sessions).
+        $loginsql = "SELECT COUNT(*) as total_logins
+                     FROM {logstore_standard_log}
+                     WHERE eventname = :login_event
+                       AND timecreated >= :month
+                       AND userid $usersql";
+
+        $loginparams = array_merge([
+            'login_event' => '\\core\\event\\user_loggedin',
+            'month' => $monthstart,
+        ], $userparams);
+
+        $logins = $DB->get_record_sql($loginsql, $loginparams);
+        $totalsessions = (int) ($logins->total_logins ?? 0);
+
+        // Count logouts.
+        $logoutsql = "SELECT COUNT(*) as total_logouts
+                      FROM {logstore_standard_log}
+                      WHERE eventname = :logout_event
+                        AND timecreated >= :month
+                        AND userid $usersql";
+
+        $logoutparams = array_merge([
+            'logout_event' => '\\core\\event\\user_loggedout',
+            'month' => $monthstart,
+        ], $userparams);
+
+        $logouts = $DB->get_record_sql($logoutsql, $logoutparams);
+        $sessionswithlout = (int) ($logouts->total_logouts ?? 0);
+
+        // Calculate average session duration for sessions with logout events.
+        // We match login-logout pairs by userid and find time difference.
+        $durationsql = "SELECT AVG(LEAST(logout_time - login_time, 14400)) / 60 as avg_duration
+                        FROM (
+                            SELECT l1.userid,
+                                   l1.timecreated as login_time,
+                                   MIN(l2.timecreated) as logout_time
+                            FROM {logstore_standard_log} l1
+                            JOIN {logstore_standard_log} l2
+                                ON l1.userid = l2.userid
+                                AND l2.eventname = :logout_event
+                                AND l2.timecreated > l1.timecreated
+                                AND l2.timecreated < l1.timecreated + 28800
+                            WHERE l1.eventname = :login_event
+                              AND l1.timecreated >= :month
+                              AND l1.userid $usersql
+                            GROUP BY l1.id, l1.userid, l1.timecreated
+                        ) sessions";
+
+        $durationparams = array_merge([
+            'login_event' => '\\core\\event\\user_loggedin',
+            'logout_event' => '\\core\\event\\user_loggedout',
+            'month' => $monthstart,
+        ], $userparams);
+
+        try {
+            $duration = $DB->get_record_sql($durationsql, $durationparams);
+            $avgminutes = round((float) ($duration->avg_duration ?? 30), 1);
+        } catch (\Exception $e) {
+            // Fallback if subquery not supported.
+            $avgminutes = 30; // Default assumption.
+        }
+
+        // If no logout data, estimate from session timeout config.
+        if ($sessionswithlout == 0 && $totalsessions > 0) {
+            $avgminutes = 30; // Default session estimate.
+        }
+
+        return [
+            'avg_minutes' => $avgminutes,
+            'total_sessions' => $totalsessions,
+            'sessions_with_logout' => $sessionswithlout,
+            'estimated_sessions' => $totalsessions - $sessionswithlout,
+        ];
+    }
+
+    /**
+     * Get daily session statistics.
+     *
+     * @param int $days Number of days
+     * @return array [labels, sessions, unique_users]
+     */
+    public function get_daily_sessions(int $days = 30): array {
+        return $this->get_cached_data("daily_sessions_{$days}", function() use ($days) {
+            return $this->compute_daily_sessions($days);
+        });
+    }
+
+    /**
+     * Compute daily session statistics.
+     *
+     * @param int $days
+     * @return array
+     */
+    protected function compute_daily_sessions(int $days): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('logstore_standard_log')) {
+            return ['labels' => [], 'sessions' => [], 'logouts' => []];
+        }
+
+        $starttime = strtotime("-{$days} days midnight");
+        list($usersql, $userparams) = $this->get_user_sql('userid');
+
+        // Get daily logins (sessions).
+        $loginsql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as session_date,
+                            COUNT(*) as session_count
+                     FROM {logstore_standard_log}
+                     WHERE eventname = :event
+                       AND timecreated >= :starttime
+                       AND $usersql
+                     GROUP BY DATE(FROM_UNIXTIME(timecreated))
+                     ORDER BY session_date ASC";
+
+        $loginparams = array_merge([
+            'event' => '\\core\\event\\user_loggedin',
+            'starttime' => $starttime,
+        ], $userparams);
+
+        $loginrecords = $DB->get_records_sql($loginsql, $loginparams);
+
+        // Get daily logouts.
+        $logoutsql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as session_date,
+                             COUNT(*) as logout_count
+                      FROM {logstore_standard_log}
+                      WHERE eventname = :event
+                        AND timecreated >= :starttime
+                        AND $usersql
+                      GROUP BY DATE(FROM_UNIXTIME(timecreated))
+                      ORDER BY session_date ASC";
+
+        $logoutparams = array_merge([
+            'event' => '\\core\\event\\user_loggedout',
+            'starttime' => $starttime,
+        ], $userparams);
+
+        $logoutrecords = $DB->get_records_sql($logoutsql, $logoutparams);
+
+        $labels = [];
+        $sessions = [];
+        $logouts = [];
+
+        for ($i = $days; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-{$i} days"));
+            $labels[] = date('d M', strtotime($date));
+            $sessions[$date] = 0;
+            $logouts[$date] = 0;
+        }
+
+        foreach ($loginrecords as $record) {
+            if (isset($sessions[$record->session_date])) {
+                $sessions[$record->session_date] = (int) $record->session_count;
+            }
+        }
+
+        foreach ($logoutrecords as $record) {
+            if (isset($logouts[$record->session_date])) {
+                $logouts[$record->session_date] = (int) $record->logout_count;
+            }
+        }
+
+        return [
+            'labels' => $labels,
+            'sessions' => array_values($sessions),
+            'logouts' => array_values($logouts),
+        ];
     }
 }

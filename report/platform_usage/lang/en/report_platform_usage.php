@@ -152,3 +152,30 @@ $string['totalsessions'] = 'Total sessions';
 $string['logoutsmonth'] = 'Logouts (30 days)';
 $string['logoutsweek'] = 'Logouts (7 days)';
 $string['logoutstoday'] = 'Logouts today';
+
+// Session duration metrics (HIGH PRIORITY).
+$string['sessionduration'] = 'Session Duration';
+$string['avgsessionminutes'] = 'Avg. session (minutes)';
+$string['sessionswithlogout'] = 'Sessions with logout';
+$string['estimatedsessions'] = 'Estimated sessions';
+$string['sessiontracking'] = 'Session Tracking';
+
+// Security metrics - Failed logins (MEDIUM PRIORITY).
+$string['securitymetrics'] = 'Security Metrics';
+$string['failedlogins'] = 'Failed Login Attempts';
+$string['failedloginstoday'] = 'Failed logins today';
+$string['failedloginsweek'] = 'Failed logins (7 days)';
+$string['failedloginsmonth'] = 'Failed logins (30 days)';
+$string['failedloginsbyreason'] = 'Failed logins by reason';
+
+// Failed login reasons.
+$string['failedloginreason1'] = 'User does not exist';
+$string['failedloginreason2'] = 'User is suspended';
+$string['failedloginreason3'] = 'Wrong password';
+$string['failedloginreason4'] = 'User is locked out';
+$string['failedloginreason5'] = 'User is not authorized';
+
+// Daily sessions.
+$string['dailysessions'] = 'Daily Sessions';
+$string['sessions'] = 'Sessions';
+$string['logouts'] = 'Logouts';

@@ -168,6 +168,46 @@ class generate_form extends \moodleform {
         $mform->setDefault('completionpercentmax', 100);
         $mform->disabledIf('completionpercentmax', 'generatecompletions', 'notchecked');
 
+        // Header: Session Duration Tracking (HIGH PRIORITY).
+        $mform->addElement('header', 'sessionduration', get_string('sessionduration', 'local_platform_access'));
+        $mform->setExpanded('sessionduration', true);
+
+        // Enable session duration tracking.
+        $mform->addElement('advcheckbox', 'calculatesessionduration', get_string('calculatesessionduration', 'local_platform_access'));
+        $mform->setDefault('calculatesessionduration', 1);
+        $mform->addHelpButton('calculatesessionduration', 'calculatesessionduration', 'local_platform_access');
+
+        // Session duration min (in minutes).
+        $mform->addElement('text', 'sessiondurationmin', get_string('sessiondurationminutes', 'local_platform_access') . ' (min)', ['size' => 5]);
+        $mform->setType('sessiondurationmin', PARAM_INT);
+        $mform->setDefault('sessiondurationmin', 10);
+        $mform->disabledIf('sessiondurationmin', 'calculatesessionduration', 'notchecked');
+
+        // Session duration max (in minutes).
+        $mform->addElement('text', 'sessiondurationmax', get_string('sessiondurationminutes', 'local_platform_access') . ' (max)', ['size' => 5]);
+        $mform->setType('sessiondurationmax', PARAM_INT);
+        $mform->setDefault('sessiondurationmax', 120);
+        $mform->disabledIf('sessiondurationmax', 'calculatesessionduration', 'notchecked');
+
+        // Header: Security Monitoring (MEDIUM PRIORITY).
+        $mform->addElement('header', 'securitymonitoring', get_string('securitymonitoring', 'local_platform_access'));
+
+        // Generate failed login attempts.
+        $mform->addElement('advcheckbox', 'generatefailedlogins', get_string('generatefailedlogins', 'local_platform_access'));
+        $mform->setDefault('generatefailedlogins', 1);
+        $mform->addHelpButton('generatefailedlogins', 'generatefailedlogins', 'local_platform_access');
+
+        // Failed logins per user (min-max).
+        $mform->addElement('text', 'failedloginsmin', get_string('failedloginsperuser', 'local_platform_access') . ' (min)', ['size' => 5]);
+        $mform->setType('failedloginsmin', PARAM_INT);
+        $mform->setDefault('failedloginsmin', 0);
+        $mform->disabledIf('failedloginsmin', 'generatefailedlogins', 'notchecked');
+
+        $mform->addElement('text', 'failedloginsmax', get_string('failedloginsperuser', 'local_platform_access') . ' (max)', ['size' => 5]);
+        $mform->setType('failedloginsmax', PARAM_INT);
+        $mform->setDefault('failedloginsmax', 3);
+        $mform->disabledIf('failedloginsmax', 'generatefailedlogins', 'notchecked');
+
         // Submit button.
         $this->add_action_buttons(true, get_string('generatebutton', 'local_platform_access'));
     }
@@ -220,6 +260,29 @@ class generate_form extends \moodleform {
             }
             if ($data['completionpercentmin'] > $data['completionpercentmax']) {
                 $errors['completionpercentmax'] = get_string('minmaxerror', 'local_platform_access');
+            }
+        }
+
+        // Validate session duration range.
+        if (!empty($data['calculatesessionduration'])) {
+            if ($data['sessiondurationmin'] < 1) {
+                $errors['sessiondurationmin'] = get_string('sessiondurationminerror', 'local_platform_access');
+            }
+            if ($data['sessiondurationmax'] < $data['sessiondurationmin']) {
+                $errors['sessiondurationmax'] = get_string('minmaxerror', 'local_platform_access');
+            }
+            if ($data['sessiondurationmax'] > 480) { // Max 8 hours.
+                $errors['sessiondurationmax'] = get_string('sessiondurationmaxerror', 'local_platform_access');
+            }
+        }
+
+        // Validate failed logins range.
+        if (!empty($data['generatefailedlogins'])) {
+            if ($data['failedloginsmin'] < 0) {
+                $errors['failedloginsmin'] = get_string('error');
+            }
+            if ($data['failedloginsmax'] < $data['failedloginsmin']) {
+                $errors['failedloginsmax'] = get_string('minmaxerror', 'local_platform_access');
             }
         }
 

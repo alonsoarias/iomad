@@ -84,3 +84,42 @@ $string['cleanbeforegenerate'] = 'Limpiar registros existentes antes de generar'
 $string['cleanbeforegenerate_help'] = 'Si esta habilitado, todos los registros de acceso existentes (inicios de sesion, vistas de cursos, vistas de actividades) para los usuarios seleccionados seran eliminados antes de generar nuevos registros. Esto incluye restablecer los campos de acceso del usuario (firstaccess, lastaccess, lastlogin, currentlogin).';
 $string['recordsdeleted'] = 'Registros existentes eliminados';
 $string['userswithoutenrollments'] = 'Usuarios sin matriculas en cursos';
+
+// Eventos avanzados.
+$string['advancedevents'] = 'Eventos Avanzados';
+$string['generatedashboard'] = 'Generar registros de acceso al tablero';
+$string['generatedashboard_help'] = 'Si esta habilitado, se generaran eventos de acceso al tablero/area personal despues de cada inicio de sesion (con 70% de probabilidad).';
+$string['generatelogouts'] = 'Generar registros de cierre de sesion';
+$string['generatelogouts_help'] = 'Si esta habilitado, se generaran eventos de cierre de sesion para el 50% de las sesiones de inicio de sesion con una duracion de sesion realista (5 min - 2 horas).';
+$string['generatecompletions'] = 'Generar registros de finalizacion de cursos';
+$string['generatecompletions_help'] = 'Si esta habilitado, se generaran registros de finalizacion de cursos para un porcentaje de cursos basado en el rango de porcentaje de finalizacion especificado.';
+$string['completionpercent'] = 'Porcentaje de finalizacion';
+$string['percentageerror'] = 'El porcentaje debe estar entre 0 y 100';
+$string['dashboardaccessgenerated'] = 'Registros de acceso al tablero generados';
+$string['logoutsgenerated'] = 'Registros de cierre de sesion generados';
+$string['completionsgenerated'] = 'Finalizaciones de cursos generadas';
+
+// Seguimiento de Duracion de Sesion (ALTA PRIORIDAD).
+$string['sessionduration'] = 'Seguimiento de Duracion de Sesion';
+$string['calculatesessionduration'] = 'Rastrear duracion de sesion';
+$string['calculatesessionduration_help'] = 'Cuando esta habilitado, genera sesiones realistas con seguimiento de duracion. Cada inicio de sesion se emparejara con un evento de cierre de sesion en un tiempo calculado, permitiendo metricas precisas de duracion de sesion. Esto es esencial para analiticas de engagement.';
+$string['sessiondurationminutes'] = 'Duracion de sesion (minutos)';
+$string['sessiondurationminerror'] = 'La duracion minima de sesion debe ser de al menos 1 minuto';
+$string['sessiondurationmaxerror'] = 'La duracion maxima de sesion no puede exceder 480 minutos (8 horas)';
+$string['sessionswithdurations'] = 'Sesiones con seguimiento de duracion';
+$string['avgsessionduration'] = 'Duracion promedio de sesion (minutos)';
+$string['totalsessionminutes'] = 'Tiempo total de sesion (minutos)';
+
+// Monitoreo de Seguridad (PRIORIDAD MEDIA).
+$string['securitymonitoring'] = 'Monitoreo de Seguridad';
+$string['generatefailedlogins'] = 'Generar intentos de inicio de sesion fallidos';
+$string['generatefailedlogins_help'] = 'Cuando esta habilitado, genera eventos de inicio de sesion fallidos para monitoreo y reportes de seguridad. Los inicios de sesion fallidos incluyen varias razones como contrasena incorrecta (80%), usuario no encontrado, usuario suspendido, usuario bloqueado, etc.';
+$string['failedloginsperuser'] = 'Inicios de sesion fallidos por usuario';
+$string['failedloginsgenerated'] = 'Registros de inicio de sesion fallidos generados';
+
+// Razones de inicio de sesion fallido.
+$string['failedloginreason1'] = 'El usuario no existe';
+$string['failedloginreason2'] = 'Usuario suspendido';
+$string['failedloginreason3'] = 'Contrasena incorrecta';
+$string['failedloginreason4'] = 'Usuario bloqueado';
+$string['failedloginreason5'] = 'Usuario no autorizado';

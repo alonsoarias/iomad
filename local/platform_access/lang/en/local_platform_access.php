@@ -98,3 +98,28 @@ $string['percentageerror'] = 'Percentage must be between 0 and 100';
 $string['dashboardaccessgenerated'] = 'Dashboard access records generated';
 $string['logoutsgenerated'] = 'Logout records generated';
 $string['completionsgenerated'] = 'Course completions generated';
+
+// Session Duration Tracking (HIGH PRIORITY).
+$string['sessionduration'] = 'Session Duration Tracking';
+$string['calculatesessionduration'] = 'Track session duration';
+$string['calculatesessionduration_help'] = 'When enabled, generates realistic sessions with proper duration tracking. Each login will be paired with a logout event at a calculated time, allowing accurate session duration metrics. This is essential for engagement analytics.';
+$string['sessiondurationminutes'] = 'Session duration (minutes)';
+$string['sessiondurationminerror'] = 'Minimum session duration must be at least 1 minute';
+$string['sessiondurationmaxerror'] = 'Maximum session duration cannot exceed 480 minutes (8 hours)';
+$string['sessionswithdurations'] = 'Sessions with duration tracking';
+$string['avgsessionduration'] = 'Average session duration (minutes)';
+$string['totalsessionminutes'] = 'Total session time (minutes)';
+
+// Security Monitoring (MEDIUM PRIORITY).
+$string['securitymonitoring'] = 'Security Monitoring';
+$string['generatefailedlogins'] = 'Generate failed login attempts';
+$string['generatefailedlogins_help'] = 'When enabled, generates failed login events for security monitoring and reporting. Failed logins include various reasons such as wrong password (80%), user not found, user suspended, user locked out, etc.';
+$string['failedloginsperuser'] = 'Failed logins per user';
+$string['failedloginsgenerated'] = 'Failed login records generated';
+
+// Failed login reasons.
+$string['failedloginreason1'] = 'User does not exist';
+$string['failedloginreason2'] = 'User is suspended';
+$string['failedloginreason3'] = 'Wrong password';
+$string['failedloginreason4'] = 'User is locked out';
+$string['failedloginreason5'] = 'User is not authorized';

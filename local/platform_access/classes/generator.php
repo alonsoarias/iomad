@@ -94,6 +94,27 @@ class generator {
     /** @var int Maximum completion percentage */
     protected $completionpercentmax;
 
+    /** @var bool Generate failed login attempts */
+    protected $generatefailedlogins;
+
+    /** @var int Minimum failed logins per day */
+    protected $failedloginsmin;
+
+    /** @var int Maximum failed logins per day */
+    protected $failedloginsmax;
+
+    /** @var bool Calculate and track session duration */
+    protected $calculatesessionduration;
+
+    /** @var int Minimum session duration in minutes */
+    protected $sessiondurationmin;
+
+    /** @var int Maximum session duration in minutes */
+    protected $sessiondurationmax;
+
+    /** @var array Session tracking for duration calculation */
+    protected $sessiondurations = [];
+
     /** @var array Statistics */
     protected $stats = [
         'users_processed' => 0,
@@ -107,6 +128,10 @@ class generator {
         'completions_generated' => 0,
         'lastaccess_updated' => 0,
         'records_deleted' => 0,
+        'failed_logins_generated' => 0,
+        'sessions_with_duration' => 0,
+        'total_session_minutes' => 0,
+        'avg_session_minutes' => 0,
     ];
 
     /**
@@ -137,6 +162,16 @@ class generator {
         $this->generatecompletions = $options['generatecompletions'] ?? false;
         $this->completionpercentmin = max(0, min(100, intval($options['completionpercentmin'] ?? 50)));
         $this->completionpercentmax = max($this->completionpercentmin, min(100, intval($options['completionpercentmax'] ?? 100)));
+
+        // Failed login settings (for security monitoring).
+        $this->generatefailedlogins = $options['generatefailedlogins'] ?? true;
+        $this->failedloginsmin = max(0, intval($options['failedloginsmin'] ?? 0));
+        $this->failedloginsmax = max($this->failedloginsmin, intval($options['failedloginsmax'] ?? 3));
+
+        // Session duration tracking settings.
+        $this->calculatesessionduration = $options['calculatesessionduration'] ?? true;
+        $this->sessiondurationmin = max(5, intval($options['sessiondurationmin'] ?? 10)); // Minimum 5 minutes.
+        $this->sessiondurationmax = max($this->sessiondurationmin, intval($options['sessiondurationmax'] ?? 120)); // Max 2 hours default.
     }
 
     /**
@@ -253,6 +288,34 @@ class generator {
                 "eventname = :eventname AND relateduserid $usersql",
                 array_merge(['eventname' => '\\core\\event\\course_completed'], $userparams)
             );
+
+            // 7. Delete user_login_failed events.
+            $deleted += $DB->count_records_select('logstore_standard_log',
+                "eventname = :eventname AND userid $usersql",
+                array_merge(['eventname' => '\\core\\event\\user_login_failed'], $userparams)
+            );
+            $DB->delete_records_select('logstore_standard_log',
+                "eventname = :eventname AND userid $usersql",
+                array_merge(['eventname' => '\\core\\event\\user_login_failed'], $userparams)
+            );
+
+            // Also delete failed logins where userid is 0 but username matches our users.
+            $usernames = [];
+            foreach ($users as $user) {
+                $usernames[] = $user->username;
+            }
+            if (!empty($usernames)) {
+                foreach ($usernames as $username) {
+                    $deleted += $DB->count_records_select('logstore_standard_log',
+                        "eventname = :eventname AND other LIKE :username",
+                        ['eventname' => '\\core\\event\\user_login_failed', 'username' => '%' . $username . '%']
+                    );
+                    $DB->delete_records_select('logstore_standard_log',
+                        "eventname = :eventname AND other LIKE :username",
+                        ['eventname' => '\\core\\event\\user_login_failed', 'username' => '%' . $username . '%']
+                    );
+                }
+            }
         }
 
         // 4. Delete/truncate user_lastaccess records for these users.
@@ -968,6 +1031,103 @@ class generator {
     }
 
     /**
+     * Generate failed login record for a user (for security monitoring).
+     *
+     * @param object $user User object
+     * @param int $timestamp Timestamp for the failed login
+     * @param int $reason Failure reason (1=user not exist, 2=suspended, 3=wrong password, 4=locked out, 5=not authorized)
+     * @return bool Success
+     */
+    public function generate_failed_login_record($user, int $timestamp, int $reason = 3): bool {
+        global $DB;
+
+        if (!$this->logstore_exists()) {
+            return false;
+        }
+
+        $ip = $this->get_random_ip();
+
+        try {
+            // Create the event using Moodle's native event class.
+            $event = \core\event\user_login_failed::create([
+                'userid' => $user->id, // The actual user ID if known.
+                'other' => [
+                    'username' => $user->username,
+                    'reason' => $reason,
+                ],
+            ]);
+
+            // Convert to log entry with custom timestamp.
+            $entry = $this->event_to_log_entry($event, $timestamp, $ip);
+
+            // Insert into logstore.
+            $DB->insert_record('logstore_standard_log', (object)$entry);
+            $this->stats['failed_logins_generated']++;
+
+            return true;
+        } catch (\Exception $e) {
+            debugging('Error generating failed login record: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            return false;
+        }
+    }
+
+    /**
+     * Generate a session with proper duration tracking.
+     * Creates login, activities during session, and logout with realistic timing.
+     *
+     * @param object $user User object
+     * @param int $logintime Login timestamp
+     * @param int $sessionduration Session duration in seconds
+     * @return array Session info with events generated
+     */
+    public function generate_session_with_duration($user, int $logintime, int $sessionduration): array {
+        $sessioninfo = [
+            'login_time' => $logintime,
+            'logout_time' => $logintime + $sessionduration,
+            'duration_minutes' => round($sessionduration / 60, 1),
+            'events' => [],
+        ];
+
+        // Generate login.
+        if ($this->generate_login_record($user, $logintime)) {
+            $sessioninfo['events'][] = 'login';
+        }
+
+        // Generate dashboard access shortly after login (5-60 seconds).
+        if ($this->generatedashboard && rand(1, 100) <= 80) {
+            $dashboardtime = $logintime + rand(5, 60);
+            if ($dashboardtime < $sessioninfo['logout_time']) {
+                $this->generate_dashboard_access_record($user, $dashboardtime);
+                $sessioninfo['events'][] = 'dashboard';
+            }
+        }
+
+        // Generate logout at the end of session.
+        if ($this->generate_logout_record($user, $sessioninfo['logout_time'])) {
+            $sessioninfo['events'][] = 'logout';
+        }
+
+        // Track session duration for statistics.
+        $this->sessiondurations[] = $sessioninfo['duration_minutes'];
+        $this->stats['sessions_with_duration']++;
+        $this->stats['total_session_minutes'] += $sessioninfo['duration_minutes'];
+
+        return $sessioninfo;
+    }
+
+    /**
+     * Calculate and update average session duration statistics.
+     */
+    protected function calculate_session_stats(): void {
+        if ($this->stats['sessions_with_duration'] > 0) {
+            $this->stats['avg_session_minutes'] = round(
+                $this->stats['total_session_minutes'] / $this->stats['sessions_with_duration'],
+                1
+            );
+        }
+    }
+
+    /**
      * Generate course completion record for a user.
      *
      * @param object $user User object
@@ -1084,18 +1244,41 @@ class generator {
                 $numlogins = $this->get_random_count($this->loginsmin, $this->loginsmax);
                 for ($i = 0; $i < $numlogins; $i++) {
                     $timestamp = $this->get_random_timestamp();
-                    $this->generate_login_record($user, $timestamp);
 
-                    // Generate dashboard access after login (70% probability).
-                    if ($this->generatedashboard && rand(1, 100) <= 70) {
-                        $dashboardtime = $timestamp + rand(5, 60); // 5-60 seconds after login.
-                        $this->generate_dashboard_access_record($user, $dashboardtime);
+                    // Use session duration tracking if enabled.
+                    if ($this->calculatesessionduration) {
+                        // Calculate session duration in seconds.
+                        $sessiondurationminutes = $this->get_random_count($this->sessiondurationmin, $this->sessiondurationmax);
+                        $sessiondurationseconds = $sessiondurationminutes * 60;
+
+                        // Generate complete session with duration tracking.
+                        $this->generate_session_with_duration($user, $timestamp, $sessiondurationseconds);
+                    } else {
+                        // Original behavior without session duration tracking.
+                        $this->generate_login_record($user, $timestamp);
+
+                        // Generate dashboard access after login (70% probability).
+                        if ($this->generatedashboard && rand(1, 100) <= 70) {
+                            $dashboardtime = $timestamp + rand(5, 60); // 5-60 seconds after login.
+                            $this->generate_dashboard_access_record($user, $dashboardtime);
+                        }
+
+                        // Generate logout record if enabled (50% probability).
+                        if ($this->generatelogouts && rand(1, 100) <= 50) {
+                            $logouttime = $timestamp + rand(300, 7200); // 5 min - 2 hours after login.
+                            $this->generate_logout_record($user, $logouttime);
+                        }
                     }
+                }
 
-                    // Generate logout record if enabled (50% probability).
-                    if ($this->generatelogouts && rand(1, 100) <= 50) {
-                        $logouttime = $timestamp + rand(300, 7200); // 5 min - 2 hours after login.
-                        $this->generate_logout_record($user, $logouttime);
+                // Generate failed login attempts if enabled (for security monitoring).
+                if ($this->generatefailedlogins && $this->failedloginsmax > 0) {
+                    $numfailedlogins = $this->get_random_count($this->failedloginsmin, $this->failedloginsmax);
+                    for ($i = 0; $i < $numfailedlogins; $i++) {
+                        $timestamp = $this->get_random_timestamp();
+                        // Random failure reason: 1=user not exist, 2=suspended, 3=wrong password (most common), 4=locked, 5=not authorized.
+                        $reason = (rand(1, 100) <= 80) ? 3 : rand(1, 5); // 80% wrong password, 20% other reasons.
+                        $this->generate_failed_login_record($user, $timestamp, $reason);
                     }
                 }
             }
@@ -1152,6 +1335,9 @@ class generator {
             }
         }
 
+        // Calculate final session duration statistics.
+        $this->calculate_session_stats();
+
         $this->stats['time_elapsed'] = time() - $starttime;
 
         return $this->stats;
@@ -1164,5 +1350,35 @@ class generator {
      */
     public function get_stats(): array {
         return $this->stats;
+    }
+
+    /**
+     * Get session duration statistics.
+     *
+     * @return array Session duration stats [min, max, avg, median, total_sessions]
+     */
+    public function get_session_duration_stats(): array {
+        if (empty($this->sessiondurations)) {
+            return [
+                'min' => 0,
+                'max' => 0,
+                'avg' => 0,
+                'median' => 0,
+                'total_sessions' => 0,
+            ];
+        }
+
+        $sorted = $this->sessiondurations;
+        sort($sorted);
+        $count = count($sorted);
+        $middle = floor($count / 2);
+
+        return [
+            'min' => min($sorted),
+            'max' => max($sorted),
+            'avg' => round(array_sum($sorted) / $count, 1),
+            'median' => ($count % 2) ? $sorted[$middle] : ($sorted[$middle - 1] + $sorted[$middle]) / 2,
+            'total_sessions' => $count,
+        ];
     }
 }

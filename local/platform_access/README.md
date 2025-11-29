@@ -1,523 +1,389 @@
-# Local Platform Access - Análisis y Documentación
+# Local Platform Access - Documentacion Exhaustiva
 
 ## Resumen del Plugin
 
 **Nombre:** `local_platform_access`
-**Versión:** 1.6.0 (Build: 20241128)
-**Tipo:** Plugin local de generación de datos de prueba
-**Ubicación:** `/local/platform_access/`
+**Version:** 1.3.0 (Build: 20251129)
+**Tipo:** Plugin local de generacion de datos
+**Ubicacion:** `/local/platform_access/`
 
-### Descripción
+### Descripcion
 
-Este plugin es un **generador de datos de acceso** para propósitos de prueba y demostración. **NO es un observador de eventos** - en su lugar, genera registros sintéticos directamente en las tablas de Moodle para simular actividad de usuarios.
-
-### Funcionalidad Actual
-
-El plugin permite a administradores generar registros de:
-- **Logins de usuarios** (`\core\event\user_loggedin`)
-- **Accesos a cursos** (`\core\event\course_viewed`)
-- **Accesos a actividades** (`\mod_*\event\course_module_viewed`)
+Este plugin genera registros de acceso a la plataforma Moodle/IOMAD para usuarios. Permite crear datos historicos de logins, accesos a cursos, actividades, dashboard, logouts, completados de cursos, **logins fallidos** y **sesiones con duracion**.
 
 ---
 
-## Arquitectura del Sistema de Eventos de Moodle
+## Sistema de Eventos de Moodle
 
-### Clase Base de Eventos
-Todos los eventos de Moodle heredan de `\core\event\base` (`lib/classes/event/base.php`).
+### Arquitectura de Eventos
 
-**Propiedades principales:**
-- `eventname`: Nombre completo del evento (ej: `\core\event\user_loggedin`)
-- `component`: Componente que genera el evento (ej: `core`, `mod_quiz`)
-- `action`: Acción realizada (ej: `loggedin`, `viewed`)
-- `target`: Objeto afectado (ej: `user`, `course_module`)
-- `crud`: Tipo de operación (`c`=create, `r`=read, `u`=update, `d`=delete)
-- `edulevel`: Nivel educativo (0=OTHER, 1=TEACHING, 2=PARTICIPATING)
-- `userid`: ID del usuario que realizó la acción
-- `courseid`: ID del curso relacionado
-- `contextid`: ID del contexto
-- `timecreated`: Timestamp del evento
+Los eventos de Moodle se basan en la clase abstracta `\core\event\base` ubicada en `/lib/classes/event/base.php`. Cada evento hereda de esta clase e implementa metodos especificos.
 
-### Tabla de Almacenamiento
-Los eventos se almacenan en `logstore_standard_log` con la siguiente estructura:
+### Propiedades Clave de Eventos
 
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| id | INT | ID único |
-| eventname | VARCHAR(255) | Nombre completo del evento |
-| component | VARCHAR(100) | Componente origen |
-| action | VARCHAR(100) | Acción realizada |
-| target | VARCHAR(100) | Objeto afectado |
-| objecttable | VARCHAR(50) | Tabla del objeto |
-| objectid | INT | ID del objeto |
-| crud | CHAR(1) | Tipo de operación |
-| edulevel | TINYINT | Nivel educativo |
-| contextid | INT | ID del contexto |
-| contextlevel | INT | Nivel de contexto |
-| contextinstanceid | INT | ID de instancia del contexto |
-| userid | INT | ID del usuario |
-| courseid | INT | ID del curso |
-| relateduserid | INT | ID de usuario relacionado |
-| anonymous | TINYINT | Si el evento es anónimo |
-| other | TEXT | Datos adicionales serializados |
-| timecreated | INT | Timestamp de creación |
-| origin | VARCHAR(10) | Origen (web, cli, cron, ws) |
-| ip | VARCHAR(45) | Dirección IP |
-| realuserid | INT | ID real cuando login-as |
+| Propiedad | Tipo | Descripcion |
+|-----------|------|-------------|
+| `eventname` | string | Nombre completo del evento (ej: `\core\event\user_loggedin`) |
+| `component` | string | Componente que dispara el evento |
+| `action` | string | Accion realizada (ej: `loggedin`, `viewed`) |
+| `target` | string | Objetivo de la accion |
+| `objecttable` | string | Tabla donde se almacena el objeto |
+| `objectid` | int | ID del objeto relacionado |
+| `crud` | string | Tipo de operacion: c=create, r=read, u=update, d=delete |
+| `edulevel` | int | Nivel educativo: 0=other, 1=teaching, 2=participating |
+| `userid` | int | ID del usuario que realiza la accion |
+| `timecreated` | int | Timestamp del evento |
+
+### Eventos Generados por el Plugin
+
+| Evento | Clase | Descripcion | Cuando se Dispara |
+|--------|-------|-------------|-------------------|
+| Login | `\core\event\user_loggedin` | Usuario inicia sesion | Al hacer login |
+| Logout | `\core\event\user_loggedout` | Usuario cierra sesion | Al hacer logout |
+| Login Fallido | `\core\event\user_login_failed` | Intento de login fallido | Al fallar autenticacion |
+| Dashboard | `\core\event\dashboard_viewed` | Usuario ve su dashboard | Al acceder a area personal |
+| Curso Visto | `\core\event\course_viewed` | Usuario accede a un curso | Al entrar a un curso |
+| Actividad Vista | `\mod_*\event\course_module_viewed` | Usuario ve una actividad | Al acceder a cualquier actividad |
+| Curso Completado | `\core\event\course_completed` | Usuario completa un curso | Al cumplir criterios de completado |
+
+### Almacenamiento de Eventos
+
+Los eventos se almacenan en la tabla `{logstore_standard_log}` con los siguientes campos relevantes:
+
+```sql
+CREATE TABLE logstore_standard_log (
+    id BIGINT,
+    eventname VARCHAR(255),   -- Nombre del evento
+    component VARCHAR(100),   -- Componente
+    action VARCHAR(100),      -- Accion
+    target VARCHAR(100),      -- Objetivo
+    objecttable VARCHAR(50),  -- Tabla del objeto
+    objectid BIGINT,          -- ID del objeto
+    crud CHAR(1),             -- Tipo operacion
+    edulevel TINYINT,         -- Nivel educativo
+    contextid BIGINT,         -- ID del contexto
+    contextlevel BIGINT,      -- Nivel del contexto
+    contextinstanceid BIGINT, -- ID instancia del contexto
+    userid BIGINT,            -- Usuario que realiza accion
+    courseid BIGINT,          -- Curso relacionado
+    relateduserid BIGINT,     -- Usuario relacionado
+    anonymous TINYINT,        -- Es anonimo
+    other TEXT,               -- Datos adicionales serializados
+    timecreated BIGINT,       -- Timestamp
+    origin VARCHAR(10),       -- Origen: web, cli, ws
+    ip VARCHAR(45),           -- Direccion IP
+    realuserid BIGINT         -- Usuario real (si hay suplantacion)
+);
+```
 
 ---
 
-## Análisis del Código Actual
-
-### Estructura de Archivos
+## Estructura del Plugin
 
 ```
 local/platform_access/
-├── classes/
-│   ├── form/
-│   │   └── generate_form.php     # Formulario de configuración
-│   ├── generator.php             # Clase principal de generación
-│   └── privacy/
-│       └── provider.php          # Proveedor de privacidad
-├── db/
-│   └── access.php                # Capacidades del plugin
-├── lang/
-│   ├── en/
-│   │   └── local_platform_access.php  # Strings en inglés
-│   └── es/
-│       └── local_platform_access.php  # Strings en español
-├── generate.php                  # Página de procesamiento
-├── index.php                     # Página principal
-├── settings.php                  # Configuración del plugin
-├── styles.css                    # Estilos CSS
-└── version.php                   # Información de versión
-```
-
-### Clase `generator.php` - Análisis Detallado
-
-#### Propiedades de Configuración
-```php
-protected $datefrom;              // Timestamp inicio
-protected $dateto;                // Timestamp fin
-protected $loginsmin;             // Logins mínimos por usuario
-protected $loginsmax;             // Logins máximos por usuario
-protected $courseaccessmin;       // Accesos mínimos a curso
-protected $courseaccessmax;       // Accesos máximos a curso
-protected $activityaccessmin;     // Accesos mínimos a actividad
-protected $activityaccessmax;     // Accesos máximos a actividad
-protected $randomize;             // Aleatorizar timestamps
-protected $includeadmins;         // Incluir administradores
-protected $onlyactive;            // Solo usuarios activos
-protected $accesstype;            // Tipo: login/course/activity/all
-protected $companyid;             // ID de compañía (IOMAD)
-protected $updateusercreated;     // Actualizar fecha creación
-protected $cleanbeforegenerate;   // Limpiar antes de generar
-```
-
-#### Métodos Principales
-
-| Método | Línea | Descripción |
-|--------|-------|-------------|
-| `__construct()` | 99 | Inicializa opciones de generación |
-| `get_users()` | 257 | Obtiene usuarios filtrados por compañía |
-| `get_user_courses()` | 395 | Obtiene cursos donde el usuario está matriculado |
-| `get_course_modules()` | 439 | Obtiene módulos de un curso |
-| `generate_login_record()` | 496 | Genera registro de login |
-| `generate_course_access_record()` | 627 | Genera registro de acceso a curso |
-| `generate_activity_access_record()` | 675 | Genera registro de acceso a actividad |
-| `clean_existing_records()` | 160 | Limpia registros existentes |
-| `run()` | 837 | Ejecuta el proceso de generación |
-
-### Eventos Generados Actualmente
-
-| Evento | Clase | Descripción |
-|--------|-------|-------------|
-| Login | `\core\event\user_loggedin` | Usuario inicia sesión |
-| Curso visto | `\core\event\course_viewed` | Usuario ve un curso |
-| Actividad vista | `\mod_*\event\course_module_viewed` | Usuario ve una actividad |
-
-### Tablas Afectadas
-
-1. **`logstore_standard_log`** - Registros de eventos
-2. **`user`** - Campos: firstaccess, lastaccess, lastlogin, currentlogin, lastip
-3. **`user_lastaccess`** - Último acceso por usuario/curso
-4. **`local_report_user_logins`** - Estadísticas de login (si existe)
-5. **`course_modules_completion`** - Tracking de completado
-6. **`course_modules_viewed`** - Tracking de visualización
-
----
-
-## Eventos de Moodle NO Capturados/Generados
-
-### Eventos de Navegación
-| Evento | Clase | Uso |
-|--------|-------|-----|
-| Dashboard visto | `\core\event\dashboard_viewed` | Usuario accede a "Área personal" |
-| Perfil visto | `\core\event\user_profile_viewed` | Usuario ve un perfil |
-| Lista de cursos | `\core\event\course_category_viewed` | Usuario ve categoría |
-
-### Eventos de Interacción
-| Evento | Clase | Uso |
-|--------|-------|-----|
-| Usuario calificado | `\core\event\user_graded` | Calificación asignada |
-| Curso completado | `\core\event\course_completed` | Completado de curso |
-| Módulo completado | `\core\event\course_module_completion_updated` | Completado de actividad |
-| Intento de quiz | `\mod_quiz\event\attempt_started` | Inicio de intento |
-| Quiz enviado | `\mod_quiz\event\attempt_submitted` | Envío de intento |
-| Foro visto | `\mod_forum\event\discussion_viewed` | Ver discusión |
-| Post creado | `\mod_forum\event\post_created` | Crear mensaje |
-| Tarea enviada | `\mod_assign\event\submission_created` | Enviar tarea |
-| Archivo subido | `\core\event\assessable_uploaded` | Subir archivo |
-
-### Eventos de Autenticación
-| Evento | Clase | Uso |
-|--------|-------|-----|
-| Login fallido | `\core\event\user_login_failed` | Intento fallido |
-| Logout | `\core\event\user_loggedout` | Cierre de sesión |
-| Login como | `\core\event\user_loggedinas` | Admin como usuario |
-
----
-
-## Mejoras Propuestas
-
-### 1. Agregar Generación de Evento Dashboard Viewed
-
-**Archivo:** `classes/generator.php`
-**Ubicación:** Después de generar logins (línea ~880)
-
-```php
-/**
- * Generate dashboard access record.
- *
- * @param object $user User object
- * @param int $timestamp Timestamp for the access
- * @return bool Success
- */
-public function generate_dashboard_access_record($user, int $timestamp): bool {
-    global $DB;
-
-    if (!$this->logstore_exists()) {
-        return false;
-    }
-
-    $ip = $this->get_random_ip();
-
-    try {
-        $event = \core\event\dashboard_viewed::create([
-            'userid' => $user->id,
-            'context' => \context_user::instance($user->id),
-        ]);
-
-        $entry = $this->event_to_log_entry($event, $timestamp, $ip);
-        $DB->insert_record('logstore_standard_log', (object)$entry);
-        $this->stats['dashboard_access_generated']++;
-
-        return true;
-    } catch (\Exception $e) {
-        debugging('Error generating dashboard access: ' . $e->getMessage(), DEBUG_DEVELOPER);
-        return false;
-    }
-}
-```
-
-### 2. Agregar Generación de Logout
-
-**Archivo:** `classes/generator.php`
-
-```php
-/**
- * Generate logout record.
- *
- * @param object $user User object
- * @param int $timestamp Timestamp (should be after last login)
- * @return bool Success
- */
-public function generate_logout_record($user, int $timestamp): bool {
-    global $DB;
-
-    if (!$this->logstore_exists()) {
-        return false;
-    }
-
-    $ip = $this->get_random_ip();
-
-    try {
-        $event = \core\event\user_loggedout::create([
-            'userid' => $user->id,
-            'objectid' => $user->id,
-            'other' => ['sessionid' => sesskey()],
-        ]);
-
-        $entry = $this->event_to_log_entry($event, $timestamp, $ip);
-        $DB->insert_record('logstore_standard_log', (object)$entry);
-        $this->stats['logouts_generated']++;
-
-        return true;
-    } catch (\Exception $e) {
-        return false;
-    }
-}
-```
-
-### 3. Agregar Generación de Course Completed
-
-**Archivo:** `classes/generator.php`
-
-```php
-/**
- * Generate course completion record.
- *
- * @param object $user User object
- * @param object $course Course object
- * @param int $timestamp Timestamp
- * @return bool Success
- */
-public function generate_course_completion($user, $course, int $timestamp): bool {
-    global $DB;
-
-    // Verificar que el curso tiene completion habilitado
-    if (!$course->enablecompletion) {
-        return false;
-    }
-
-    try {
-        // Crear registro de completado
-        $completion = new \stdClass();
-        $completion->userid = $user->id;
-        $completion->course = $course->id;
-        $completion->timeenrolled = $timestamp - 86400; // Un día antes
-        $completion->timestarted = $timestamp - 3600;   // Una hora antes
-        $completion->timecompleted = $timestamp;
-
-        $existing = $DB->get_record('course_completions', [
-            'userid' => $user->id,
-            'course' => $course->id,
-        ]);
-
-        if ($existing) {
-            $completion->id = $existing->id;
-            $DB->update_record('course_completions', $completion);
-        } else {
-            $completion->id = $DB->insert_record('course_completions', $completion);
-        }
-
-        // Disparar evento
-        $event = \core\event\course_completed::create_from_completion($completion);
-        $entry = $this->event_to_log_entry($event, $timestamp, $this->get_random_ip());
-        $DB->insert_record('logstore_standard_log', (object)$entry);
-
-        $this->stats['completions_generated']++;
-        return true;
-    } catch (\Exception $e) {
-        return false;
-    }
-}
-```
-
-### 4. Agregar Opciones en el Formulario
-
-**Archivo:** `classes/form/generate_form.php`
-**Ubicación:** Después de línea 110
-
-```php
-// Header: Advanced events
-$mform->addElement('header', 'advancedevents', get_string('advancedevents', 'local_platform_access'));
-
-// Generate dashboard access
-$mform->addElement('advcheckbox', 'generatedashboard',
-    get_string('generatedashboard', 'local_platform_access'));
-$mform->setDefault('generatedashboard', 1);
-
-// Generate logouts
-$mform->addElement('advcheckbox', 'generatelogouts',
-    get_string('generatelogouts', 'local_platform_access'));
-$mform->setDefault('generatelogouts', 0);
-
-// Generate course completions
-$mform->addElement('advcheckbox', 'generatecompletions',
-    get_string('generatecompletions', 'local_platform_access'));
-$mform->setDefault('generatecompletions', 0);
-$mform->addHelpButton('generatecompletions', 'generatecompletions', 'local_platform_access');
-
-// Completion percentage (min-max)
-$mform->addElement('text', 'completionpercentmin',
-    get_string('completionpercent', 'local_platform_access') . ' (min)', ['size' => 5]);
-$mform->setType('completionpercentmin', PARAM_INT);
-$mform->setDefault('completionpercentmin', 50);
-$mform->disabledIf('completionpercentmin', 'generatecompletions', 'notchecked');
-
-$mform->addElement('text', 'completionpercentmax',
-    get_string('completionpercent', 'local_platform_access') . ' (max)', ['size' => 5]);
-$mform->setType('completionpercentmax', PARAM_INT);
-$mform->setDefault('completionpercentmax', 100);
-$mform->disabledIf('completionpercentmax', 'generatecompletions', 'notchecked');
-```
-
-### 5. Strings de Idioma Adicionales
-
-**Archivo:** `lang/en/local_platform_access.php`
-
-```php
-$string['advancedevents'] = 'Advanced Events';
-$string['generatedashboard'] = 'Generate dashboard access records';
-$string['generatelogouts'] = 'Generate logout records';
-$string['generatecompletions'] = 'Generate course completion records';
-$string['generatecompletions_help'] = 'If enabled, random course completions will be generated for users based on the percentage range specified.';
-$string['completionpercent'] = 'Completion percentage';
-$string['dashboardaccessgenerated'] = 'Dashboard access records generated';
-$string['logoutsgenerated'] = 'Logout records generated';
-$string['completionsgenerated'] = 'Course completions generated';
-```
-
-### 6. Mejora: Distribución Temporal Realista
-
-**Problema:** Actualmente los timestamps son completamente aleatorios.
-
-**Solución:** Crear sesiones realistas con secuencia temporal lógica.
-
-```php
-/**
- * Generate a realistic session for a user.
- *
- * @param object $user User object
- * @param int $sessionstart Session start timestamp
- * @return array Array of generated records
- */
-public function generate_realistic_session($user, int $sessionstart): array {
-    $records = [];
-    $currenttime = $sessionstart;
-
-    // 1. Login
-    $this->generate_login_record($user, $currenttime);
-    $currenttime += rand(5, 30); // 5-30 segundos para cargar
-
-    // 2. Dashboard (70% probabilidad)
-    if (rand(1, 100) <= 70) {
-        $this->generate_dashboard_access_record($user, $currenttime);
-        $currenttime += rand(30, 300); // 30 segundos a 5 minutos
-    }
-
-    // 3. Acceder a cursos
-    $usercourses = $this->get_user_courses($user->id);
-    $coursesToAccess = rand(1, min(3, count($usercourses)));
-    $selectedCourses = array_rand($usercourses, min($coursesToAccess, count($usercourses)));
-
-    if (!is_array($selectedCourses)) {
-        $selectedCourses = [$selectedCourses];
-    }
-
-    foreach ($selectedCourses as $courseKey) {
-        $course = $usercourses[$courseKey];
-        $currenttime += rand(60, 600); // 1-10 minutos entre cursos
-
-        $this->generate_course_access_record($user, $course, $currenttime);
-
-        // Acceder a actividades del curso
-        $modules = $this->get_course_modules($course->id);
-        $activitiesToAccess = rand(1, min(5, count($modules)));
-
-        for ($i = 0; $i < $activitiesToAccess && !empty($modules); $i++) {
-            $cmKey = array_rand($modules);
-            $cm = $modules[$cmKey];
-            unset($modules[$cmKey]);
-
-            $currenttime += rand(120, 1800); // 2-30 minutos por actividad
-            $this->generate_activity_access_record($user, $course, $cm, $currenttime);
-        }
-    }
-
-    // 4. Logout (50% probabilidad)
-    if (rand(1, 100) <= 50) {
-        $currenttime += rand(60, 300);
-        $this->generate_logout_record($user, $currenttime);
-    }
-
-    return $records;
-}
++-- classes/
+|   +-- generator.php           # Clase principal de generacion
+|   +-- form/
+|   |   +-- generate_form.php   # Formulario de configuracion
+|   +-- privacy/
+|       +-- provider.php        # Proveedor de privacidad GDPR
++-- db/
+|   +-- access.php              # Capacidades del plugin
++-- lang/
+|   +-- en/
+|   |   +-- local_platform_access.php  # Strings ingles
+|   +-- es/
+|       +-- local_platform_access.php  # Strings espanol
++-- generate.php                # Pagina de generacion
++-- index.php                   # Pagina principal
++-- settings.php                # Configuracion del plugin
++-- styles.css                  # Estilos CSS
++-- version.php                 # Informacion de version
 ```
 
 ---
 
-## Capacidades Definidas
+## Funcionalidades Implementadas
 
-| Capacidad | Riesgo | Tipo | Descripción |
-|-----------|--------|------|-------------|
-| `local/platform_access:generate` | CONFIG, DATALOSS | write | Generar registros |
-| `local/platform_access:view` | PERSONAL | read | Ver generador |
+### 1. Generacion de Logins
+- Crea eventos `user_loggedin` en logstore
+- Actualiza campos de usuario: `firstaccess`, `lastaccess`, `lastlogin`, `currentlogin`, `lastip`
+- Actualiza tabla `local_report_user_logins` si existe
+
+### 2. Generacion de Acceso a Cursos
+- Crea eventos `course_viewed`
+- Solo para cursos donde el usuario esta inscrito
+- Actualiza tabla `user_lastaccess`
+
+### 3. Generacion de Acceso a Actividades
+- Crea eventos `course_module_viewed` usando clases nativas de cada modulo
+- Fallback para modulos sin clase de evento propia
+- Actualiza tablas `course_modules_completion` y `course_modules_viewed`
+
+### 4. Generacion de Dashboard Access
+- Crea eventos `dashboard_viewed`
+- 70-80% de probabilidad despues de cada login
+
+### 5. Generacion de Logouts
+- Crea eventos `user_loggedout`
+- Permite calcular duracion de sesiones
+
+### 6. Generacion de Completados de Curso
+- Crea registros en `course_completions`
+- Crea eventos `course_completed`
+- Porcentaje configurable de completados
+
+### 7. **NUEVO: Duracion de Sesion (ALTA PRIORIDAD)**
+- Genera sesiones completas login-logout con duracion realista
+- Duracion configurable (min/max en minutos)
+- Tracking de estadisticas de sesion:
+  - Total de sesiones con duracion
+  - Duracion promedio
+  - Total de minutos de sesion
+  - Estadisticas min/max/mediana
+
+### 8. **NUEVO: Logins Fallidos (PRIORIDAD MEDIA)**
+- Genera eventos `user_login_failed` para monitoreo de seguridad
+- Razones de fallo configurables:
+  - 1: Usuario no existe
+  - 2: Usuario suspendido
+  - 3: Contrasena incorrecta (80% de casos)
+  - 4: Usuario bloqueado
+  - 5: Usuario no autorizado
 
 ---
 
-## Diagrama de Flujo
+## Configuracion del Generador
 
+### Opciones Basicas
+
+| Opcion | Tipo | Default | Descripcion |
+|--------|------|---------|-------------|
+| `companyid` | int | 0 | ID de compania (0 = todas) |
+| `datefrom` | timestamp | Nov 15 2025 | Fecha inicio de generacion |
+| `dateto` | timestamp | now() | Fecha fin de generacion |
+| `accesstype` | string | 'all' | Tipo: login, course, activity, all |
+| `cleanbeforegenerate` | bool | true | TRUNCAR datos antes de generar |
+| `randomize` | bool | true | Aleatorizar timestamps |
+
+### Opciones de Usuario
+
+| Opcion | Tipo | Default | Descripcion |
+|--------|------|---------|-------------|
+| `onlyactive` | bool | true | Solo usuarios activos |
+| `includeadmins` | bool | false | Incluir administradores |
+| `updateusercreated` | bool | true | Actualizar fecha creacion |
+| `usercreateddate` | timestamp | Nov 15 2025 | Nueva fecha de creacion |
+
+### Rangos de Acceso
+
+| Opcion | Min | Max | Descripcion |
+|--------|-----|-----|-------------|
+| `loginsmin/max` | 1 | 5 | Logins por usuario |
+| `courseaccessmin/max` | 1 | 3 | Accesos a curso por usuario |
+| `activityaccessmin/max` | 1 | 2 | Accesos a actividad por curso |
+
+### Eventos Avanzados
+
+| Opcion | Default | Descripcion |
+|--------|---------|-------------|
+| `generatedashboard` | true | Generar acceso a dashboard |
+| `generatelogouts` | false | Generar eventos de logout |
+| `generatecompletions` | false | Generar completados |
+| `completionpercentmin/max` | 50-100 | % de completados |
+
+### **NUEVA: Duracion de Sesion**
+
+| Opcion | Default | Descripcion |
+|--------|---------|-------------|
+| `calculatesessionduration` | true | Habilitar tracking de duracion |
+| `sessiondurationmin` | 10 | Duracion minima (minutos) |
+| `sessiondurationmax` | 120 | Duracion maxima (minutos) |
+
+### **NUEVA: Seguridad**
+
+| Opcion | Default | Descripcion |
+|--------|---------|-------------|
+| `generatefailedlogins` | true | Generar logins fallidos |
+| `failedloginsmin` | 0 | Minimo por usuario |
+| `failedloginsmax` | 3 | Maximo por usuario |
+
+---
+
+## Estadisticas Generadas
+
+El metodo `run()` retorna un array con las siguientes estadisticas:
+
+```php
+$stats = [
+    'users_processed' => 150,          // Usuarios procesados
+    'users_updated' => 145,            // Fechas de creacion actualizadas
+    'users_without_enrollments' => 5,  // Sin matriculas
+    'logins_generated' => 450,         // Eventos de login
+    'course_access_generated' => 800,  // Accesos a cursos
+    'activity_access_generated' => 1200, // Accesos a actividades
+    'dashboard_access_generated' => 350, // Accesos a dashboard
+    'logouts_generated' => 400,        // Eventos de logout
+    'completions_generated' => 120,    // Completados de curso
+    'lastaccess_updated' => 145,       // Lastaccess actualizados
+    'records_deleted' => 5000,         // Registros eliminados
+    'failed_logins_generated' => 75,   // NUEVO: Logins fallidos
+    'sessions_with_duration' => 400,   // NUEVO: Sesiones con duracion
+    'total_session_minutes' => 24000,  // NUEVO: Total minutos sesion
+    'avg_session_minutes' => 60.0,     // NUEVO: Promedio duracion
+    'time_elapsed' => 45,              // Segundos de ejecucion
+];
 ```
-┌─────────────────┐
-│   index.php     │ ◄── Usuario accede
-│  (Formulario)   │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  generate.php   │ ◄── Procesa formulario
-│  (Ejecución)    │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│   generator     │
-│     class       │
-└────────┬────────┘
-         │
-    ┌────┴────┐
-    │         │
-    ▼         ▼
-┌───────┐ ┌───────┐
-│ clean │ │ get   │
-│records│ │ users │
-└───┬───┘ └───┬───┘
-    │         │
-    ▼         ▼
-┌───────────────────────┐
-│   Por cada usuario:   │
-│  ├─ generate_login    │
-│  ├─ generate_course   │
-│  └─ generate_activity │
-└───────────┬───────────┘
-            │
-            ▼
-┌───────────────────────┐
-│ Actualizar tablas:    │
-│  ├─ logstore_log      │
-│  ├─ user              │
-│  ├─ user_lastaccess   │
-│  └─ course_modules_*  │
-└───────────────────────┘
+
+---
+
+## Limpieza de Datos (TRUNCAR)
+
+Cuando `cleanbeforegenerate = true`, el plugin elimina:
+
+1. Eventos de logstore_standard_log:
+   - `user_loggedin`
+   - `user_loggedout`
+   - `user_login_failed` (NUEVO)
+   - `course_viewed`
+   - `course_module_viewed` (todos los modulos)
+   - `dashboard_viewed`
+   - `course_completed`
+
+2. Tablas de tracking:
+   - `user_lastaccess`
+   - `local_report_user_logins`
+   - `course_modules_completion`
+   - `course_completions`
+   - `course_modules_viewed`
+
+3. Campos de usuario:
+   - `firstaccess = 0`
+   - `lastaccess = 0`
+   - `lastlogin = 0`
+   - `currentlogin = 0`
+   - `lastip = ''`
+
+---
+
+## Uso Programatico
+
+```php
+// Crear instancia del generador.
+$generator = new \local_platform_access\generator([
+    'companyid' => 1,
+    'datefrom' => strtotime('2025-11-15'),
+    'dateto' => time(),
+    'loginsmin' => 2,
+    'loginsmax' => 10,
+    'cleanbeforegenerate' => true,
+    'generatedashboard' => true,
+    'generatelogouts' => true,
+    'generatecompletions' => true,
+    // Nuevas opciones de sesion.
+    'calculatesessionduration' => true,
+    'sessiondurationmin' => 15,
+    'sessiondurationmax' => 90,
+    // Nuevas opciones de seguridad.
+    'generatefailedlogins' => true,
+    'failedloginsmin' => 0,
+    'failedloginsmax' => 2,
+]);
+
+// Ejecutar generacion.
+$stats = $generator->run(function($user, $stats) {
+    echo "Procesando: {$user->username}\n";
+});
+
+// Obtener estadisticas de sesion.
+$sessionStats = $generator->get_session_duration_stats();
+// Retorna: ['min' => 15, 'max' => 88, 'avg' => 45.3, 'median' => 42, 'total_sessions' => 400]
 ```
+
+---
+
+## Capacidades
+
+| Capacidad | Descripcion | Rol Default |
+|-----------|-------------|-------------|
+| `local/platform_access:generate` | Generar registros de acceso | manager |
+| `local/platform_access:view` | Ver el generador | manager |
+
+---
+
+## Compatibilidad
+
+### IOMAD
+- Detecta automaticamente tablas `company_users` y `company_course`
+- Filtra usuarios y cursos por compania
+- Solo genera accesos a cursos donde el usuario esta inscrito Y pertenecen a la compania
+
+### Moodle Estandar
+- Funciona sin las tablas de IOMAD
+- Procesa todos los usuarios activos
+- Genera accesos a todos los cursos donde el usuario esta inscrito
 
 ---
 
 ## Consideraciones de Rendimiento
 
-1. **Incrementa límites:** El plugin usa `core_php_time_limit::raise(0)` y `raise_memory_limit(MEMORY_HUGE)`
-2. **Procesamiento por lotes:** Se procesa usuario por usuario con callback de progreso
-3. **Índices en logstore:** Asegúrate de que los índices de `logstore_standard_log` estén optimizados
+1. **Procesamiento por lotes**: Procesa un usuario a la vez para evitar memory overflow
+2. **Pre-fetch de datos**: Carga cursos y modulos al inicio
+3. **Transacciones**: Inserta registros individualmente (sin batch insert)
+4. **Tiempo estimado**: ~0.3s por usuario con configuracion default
+
+### Recomendaciones
+
+- Para > 1000 usuarios, ejecutar en CLI o aumentar `max_execution_time`
+- Usar `cleanbeforegenerate = true` para evitar duplicados
+- Ajustar rangos de acceso segun tamano de la BD
 
 ---
 
-## Notas de Seguridad
+## Generacion Incremental
 
-- El plugin requiere capacidad `local/platform_access:generate` que tiene riesgo `RISK_CONFIG | RISK_DATALOSS`
-- Solo accesible para roles con capacidad de administrador
-- Requiere sesskey para prevenir CSRF
-- Los registros generados son idénticos a los reales (sin marca especial)
+El plugin soporta generacion incremental:
+
+1. **Fecha inicio**: Especificar `datefrom` (ej: 15 noviembre)
+2. **Fecha fin**: Especificar `dateto` hasta el dia actual
+3. **Incremento gradual**: Los timestamps se distribuyen uniformemente
+4. **Tendencia realista**: Valores dentro de rangos configurables
 
 ---
 
-## Conclusión
+## Mejoras Implementadas (v1.3.0)
 
-El plugin `local_platform_access` cumple su función como generador de datos de prueba, pero podría mejorarse significativamente:
+### ALTA PRIORIDAD: Duracion de Sesion
+- Tracking completo de duracion de sesion
+- Generacion de pares login-logout realistas
+- Estadisticas de sesion (min, max, avg, mediana)
+- Metodo `get_session_duration_stats()`
 
-1. **Agregar más tipos de eventos** (dashboard, logout, completions)
-2. **Mejorar realismo temporal** (sesiones secuenciales)
-3. **Agregar opciones granulares** en el formulario
-4. **Incluir métricas de calificaciones** generadas
+### PRIORIDAD MEDIA: Logins Fallidos
+- Eventos `user_login_failed` para seguridad
+- 5 tipos de razones de fallo
+- Distribucion realista (80% password incorrecto)
+- Limpieza automatica en truncar
 
-Estas mejoras harían que los datos de prueba sean más representativos de uso real de la plataforma.
+---
+
+## Changelog
+
+### v1.3.0 (2025-11-29)
+- Agregado: Tracking de duracion de sesion por usuario
+- Agregado: Generacion de logins fallidos (seguridad)
+- Agregado: Metodo `get_session_duration_stats()`
+- Agregado: Metodo `generate_session_with_duration()`
+- Agregado: Metodo `generate_failed_login_record()`
+- Agregado: Limpieza de eventos `user_login_failed`
+- Mejorado: Formulario con secciones expandibles
+- Mejorado: Strings en ingles y espanol
+
+### v1.2.0 (2025-11-28)
+- Agregado: Generacion de eventos de dashboard, logout y completions
+- Agregado: Opcion para truncar tablas antes de generar
+- Mejorado: Solo genera accesos a cursos donde usuario esta inscrito
+
+### v1.0.0 (2025-11-27)
+- Version inicial con generacion de logins, cursos y actividades

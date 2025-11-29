@@ -130,3 +130,52 @@ $string['created'] = 'Creado';
 $string['status'] = 'Estado';
 $string['active'] = 'Activo';
 $string['inactive'] = 'Inactivo';
+
+// Metricas de engagement.
+$string['completions'] = 'Finalizaciones';
+$string['completionsmonth'] = 'Finalizaciones (30 dias)';
+$string['completionsweek'] = 'Finalizaciones (7 dias)';
+$string['completionstoday'] = 'Finalizaciones hoy';
+$string['totalcompletions'] = 'Total de finalizaciones';
+$string['completiontrends'] = 'Tendencias de Finalizacion de Cursos';
+
+// Metricas de acceso al tablero.
+$string['dashboardusers'] = 'Usuarios del tablero (30 dias)';
+$string['dashboardweek'] = 'Usuarios del tablero (7 dias)';
+$string['dashboardtoday'] = 'Hoy';
+
+// Metricas de sesion.
+$string['avgsessionduration'] = 'Duracion promedio de sesion';
+$string['totalsessions'] = 'Total de sesiones';
+
+// Metricas de cierre de sesion.
+$string['logoutsmonth'] = 'Cierres de sesion (30 dias)';
+$string['logoutsweek'] = 'Cierres de sesion (7 dias)';
+$string['logoutstoday'] = 'Cierres de sesion hoy';
+
+// Metricas de duracion de sesion (ALTA PRIORIDAD).
+$string['sessionduration'] = 'Duracion de Sesion';
+$string['avgsessionminutes'] = 'Sesion promedio (minutos)';
+$string['sessionswithlogout'] = 'Sesiones con cierre';
+$string['estimatedsessions'] = 'Sesiones estimadas';
+$string['sessiontracking'] = 'Seguimiento de Sesiones';
+
+// Metricas de seguridad - Logins fallidos (PRIORIDAD MEDIA).
+$string['securitymetrics'] = 'Metricas de Seguridad';
+$string['failedlogins'] = 'Intentos de Inicio de Sesion Fallidos';
+$string['failedloginstoday'] = 'Inicios fallidos hoy';
+$string['failedloginsweek'] = 'Inicios fallidos (7 dias)';
+$string['failedloginsmonth'] = 'Inicios fallidos (30 dias)';
+$string['failedloginsbyreason'] = 'Inicios fallidos por razon';
+
+// Razones de inicio de sesion fallido.
+$string['failedloginreason1'] = 'El usuario no existe';
+$string['failedloginreason2'] = 'Usuario suspendido';
+$string['failedloginreason3'] = 'Contrasena incorrecta';
+$string['failedloginreason4'] = 'Usuario bloqueado';
+$string['failedloginreason5'] = 'Usuario no autorizado';
+
+// Sesiones diarias.
+$string['dailysessions'] = 'Sesiones Diarias';
+$string['sessions'] = 'Sesiones';
+$string['logouts'] = 'Cierres de sesion';
