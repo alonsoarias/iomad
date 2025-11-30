@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113002;  // Fix SQL queries, dynamic chart updates, coursesize button, cleanup old records
+$plugin->version   = 2025113003;  // Fix coursesize plugin detection
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.10';    // Bug fixes: SQL duplicate keys, float conversion, dynamic threshold charts
+$plugin->release   = '4.5.11';    // Fix report_coursesize plugin detection method
 $plugin->maturity  = MATURITY_STABLE;

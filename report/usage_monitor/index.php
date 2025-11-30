@@ -411,8 +411,9 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
 
             <!-- Segunda tabla: Cursos más grandes -->
             <?php
-            // Check if report_coursesize plugin is installed
-            $coursesize_installed = \core_plugin_manager::instance()->get_plugin_info('report', 'coursesize') !== null;
+            // Check if report_coursesize plugin is installed using reliable method
+            $reportplugins = \core_plugin_manager::instance()->get_plugins_of_type('report');
+            $coursesize_installed = isset($reportplugins['coursesize']);
             ?>
             <div class="card shadow-sm">
                 <div class="card-header">
