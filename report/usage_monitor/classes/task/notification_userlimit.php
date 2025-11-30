@@ -77,17 +77,18 @@ class notification_userlimit extends \core\task\scheduled_task {
         mtrace("  User threshold: {$user_threshold}");
         mtrace("  Warning level: {$warning_level}%");
 
-        // Get recent user activity.
+        // Get recent user activity using portable timestamp arithmetic.
+        $yesterday_start = strtotime('yesterday midnight');
         $sql = "SELECT COUNT(DISTINCT userid) AS user_count,
-                       UNIX_TIMESTAMP(DATE(FROM_UNIXTIME(timecreated))) AS timestamp_date
+                       (timecreated - (timecreated % 86400)) AS timestamp_date
                 FROM {logstore_standard_log}
                 WHERE action = 'loggedin'
-                  AND timecreated > :start_time
-                GROUP BY timestamp_date
-                ORDER BY timestamp_date DESC
-                LIMIT 1";
+                  AND timecreated >= :start_time
+                GROUP BY (timecreated - (timecreated % 86400))
+                ORDER BY timestamp_date DESC";
 
-        $record = $DB->get_record_sql($sql, ['start_time' => strtotime('-1 day')]);
+        $records = $DB->get_records_sql($sql, ['start_time' => $yesterday_start], 0, 1);
+        $record = reset($records);
 
         if (!$record) {
             mtrace("  No user activity data found for the last day.");

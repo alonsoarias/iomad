@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025112903;  // Dashboard fixes: Bootstrap 5 tabs, Chart.js SRI
+$plugin->version   = 2025112904;  // Fix config names, portable SQL, remove api-documentation
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.6';     // Dashboard compatibility fixes for Moodle 4.x
+$plugin->release   = '4.5.7';     // Task fixes and PostgreSQL compatibility
 $plugin->maturity  = MATURITY_STABLE;

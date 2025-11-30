@@ -124,8 +124,7 @@ $string['configenable_api'] = 'Habilitar acceso API para que sistemas externos o
 $string['subjectemail1'] = 'Límite de usuarios diarios superado plataforma:';
 $string['subjectemail2'] = 'Alerta de espacio en disco plataforma:';
 
-// API documentation strings
-$string['api_documentation'] = 'Documentación de API';
+// API strings
 $string['get_usage_data'] = 'Obtener datos de uso';
 $string['get_usage_data_desc'] = 'Recupera datos precalculados de uso de disco y usuarios con mínima sobrecarga.';
 $string['set_usage_thresholds'] = 'Configurar umbrales de uso';

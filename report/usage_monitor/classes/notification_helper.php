@@ -134,18 +134,18 @@ class notification_helper {
 
         $config = get_config('report_usage_monitor');
         $threshold = (int)($config->max_daily_users_threshold ?? 100);
-        $time_start = strtotime("-{$days} days");
+        $time_start = strtotime("-{$days} days midnight");
 
-        $sql = "SELECT UNIX_TIMESTAMP(DATE(FROM_UNIXTIME(timecreated))) AS timestamp_fecha,
+        // Using portable timestamp arithmetic for cross-database compatibility.
+        $sql = "SELECT (timecreated - (timecreated % 86400)) AS timestamp_fecha,
                        COUNT(DISTINCT userid) AS conteo_accesos_unicos
                 FROM {logstore_standard_log}
                 WHERE action = 'loggedin'
                   AND timecreated > :start_time
-                GROUP BY timestamp_fecha
-                ORDER BY timestamp_fecha DESC
-                LIMIT :limit";
+                GROUP BY (timecreated - (timecreated % 86400))
+                ORDER BY timestamp_fecha DESC";
 
-        $records = $DB->get_records_sql($sql, ['start_time' => $time_start, 'limit' => $days]);
+        $records = $DB->get_records_sql($sql, ['start_time' => $time_start], 0, $days);
 
         $rows = '';
         foreach ($records as $record) {
