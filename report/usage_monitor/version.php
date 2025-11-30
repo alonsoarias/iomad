@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113005;  // Fix SQL LIMIT parameter issue for MySQL/MariaDB
+$plugin->version   = 2025113006;  // Reorganize dashboard with tabs and fix Chart.js loading
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.13';    // Fix SQL LIMIT parameter compatibility and improve platform_usage labels
+$plugin->release   = '4.5.14';    // Complete dashboard reorganization with tabbed interface
 $plugin->maturity  = MATURITY_STABLE;
