@@ -78,6 +78,38 @@ $string['critical90'] = 'Critical (90%)';
 $string['limit100'] = 'Limit (100%)';
 $string['percent_of_threshold'] = '% of threshold';
 
+// Notification status section
+$string['notification_status'] = 'Notification Status';
+$string['last_disk_notification'] = 'Last disk notification';
+$string['last_user_notification'] = 'Last user notification';
+$string['next_possible_notification'] = 'Next possible in';
+$string['no_notification_sent'] = 'No notification sent yet';
+$string['notifications_disabled'] = 'Notifications disabled';
+$string['email_not_configured'] = 'Email not configured';
+
+// Task status section
+$string['task_status'] = 'Task Execution Status';
+$string['task_name'] = 'Task';
+$string['last_run'] = 'Last run';
+$string['next_run'] = 'Next scheduled';
+$string['task_never_run'] = 'Never run';
+$string['task_disabled'] = 'Disabled';
+
+// Active alerts section
+$string['active_alerts'] = 'Active Alerts';
+$string['alert_disk_critical'] = 'Disk space critical ({$a}%)';
+$string['alert_disk_warning'] = 'Disk space warning ({$a}%)';
+$string['alert_users_critical'] = 'Daily users critical ({$a}%)';
+$string['alert_users_warning'] = 'Daily users warning ({$a}%)';
+$string['no_active_alerts'] = 'No active alerts - All systems normal';
+
+// Quick actions
+$string['quick_actions'] = 'Quick Actions';
+$string['go_to_settings'] = 'Plugin Settings';
+$string['purge_cache'] = 'Purge Cache';
+$string['run_tasks'] = 'Scheduled Tasks';
+$string['file_cleanup'] = 'File Cleanup';
+
 // Recommendation tips
 $string['space_saving_tips'] = 'Tips to save disk space:';
 $string['tip_backups'] = 'Reduce the number of automatic backups per course (currently: {$a})';

@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025112905;  // Fix notification email sending, remove api-documentation page
+$plugin->version   = 2025113001;  // Use admin data for notifications, add dashboard status sections
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.8';     // Notification system fixes
+$plugin->release   = '4.5.9';     // Enhanced dashboard with alerts, notifications and tasks status
 $plugin->maturity  = MATURITY_STABLE;

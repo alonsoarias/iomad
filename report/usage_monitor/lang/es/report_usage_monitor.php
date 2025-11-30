@@ -78,6 +78,38 @@ $string['critical90'] = 'Crítico (90%)';
 $string['limit100'] = 'Límite (100%)';
 $string['percent_of_threshold'] = '% del umbral';
 
+// Notification status section
+$string['notification_status'] = 'Estado de Notificaciones';
+$string['last_disk_notification'] = 'Última notificación de disco';
+$string['last_user_notification'] = 'Última notificación de usuarios';
+$string['next_possible_notification'] = 'Próxima posible en';
+$string['no_notification_sent'] = 'Sin notificaciones enviadas';
+$string['notifications_disabled'] = 'Notificaciones deshabilitadas';
+$string['email_not_configured'] = 'Email no configurado';
+
+// Task status section
+$string['task_status'] = 'Estado de Tareas Programadas';
+$string['task_name'] = 'Tarea';
+$string['last_run'] = 'Última ejecución';
+$string['next_run'] = 'Próxima ejecución';
+$string['task_never_run'] = 'Nunca ejecutada';
+$string['task_disabled'] = 'Deshabilitada';
+
+// Active alerts section
+$string['active_alerts'] = 'Alertas Activas';
+$string['alert_disk_critical'] = 'Espacio en disco crítico ({$a}%)';
+$string['alert_disk_warning'] = 'Advertencia de espacio en disco ({$a}%)';
+$string['alert_users_critical'] = 'Usuarios diarios en nivel crítico ({$a}%)';
+$string['alert_users_warning'] = 'Advertencia de usuarios diarios ({$a}%)';
+$string['no_active_alerts'] = 'Sin alertas activas - Todos los sistemas normales';
+
+// Quick actions
+$string['quick_actions'] = 'Acciones Rápidas';
+$string['go_to_settings'] = 'Configuración del Plugin';
+$string['purge_cache'] = 'Purgar Caché';
+$string['run_tasks'] = 'Tareas Programadas';
+$string['file_cleanup'] = 'Limpieza de Archivos';
+
 // Recommendation tips
 $string['space_saving_tips'] = 'Consejos para ahorrar espacio en disco:';
 $string['tip_backups'] = 'Reducir el número de copias de seguridad automáticas por curso (actualmente: {$a})';

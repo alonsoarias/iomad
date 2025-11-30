@@ -385,28 +385,17 @@ class notification_helper {
 
         $message_html = get_string($template_key, 'report_usage_monitor', $data);
 
-        // Create a complete user object for email_to_user.
-        // Moodle requires specific properties for email delivery to work.
-        $user = new \stdClass();
-        $user->id = -99;
+        // Get primary site administrator as base for recipient user object.
+        // This ensures all required Moodle user properties are properly set.
+        $admin = get_admin();
+        if (!$admin) {
+            debugging('notification_helper::send_notification - No admin user found', DEBUG_DEVELOPER);
+            return false;
+        }
+
+        // Clone admin user and override email with configured recipient.
+        $user = clone $admin;
         $user->email = $to_email;
-        $user->username = 'usage_monitor_recipient';
-        $user->firstname = 'Platform';
-        $user->lastname = 'Administrator';
-        $user->maildisplay = 1;
-        $user->mailformat = 1;
-        $user->maildigest = 0;
-        $user->autosubscribe = 0;
-        $user->trackforums = 0;
-        $user->deleted = 0;
-        $user->suspended = 0;
-        $user->confirmed = 1;
-        $user->auth = 'manual';
-        $user->lang = $CFG->lang ?? 'en';
-        $user->timezone = $CFG->timezone ?? '99';
-        $user->firstaccess = 0;
-        $user->lastaccess = 0;
-        $user->emailstop = 0;
 
         // Get noreply user as sender (more reliable than support user).
         $from = \core_user::get_noreply_user();
