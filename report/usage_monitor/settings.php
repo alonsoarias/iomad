@@ -181,11 +181,3 @@ $ADMIN->add('reports', new admin_externalpage(
     get_string('pluginname', 'report_usage_monitor'),
     new moodle_url('/report/usage_monitor/index.php')
 ));
-
-// Agregar página para documentación de la API
-// Agregamos la página también a 'reports' en lugar de 'reportplugins' que no existe
-$ADMIN->add('reports', new admin_externalpage(
-    'report_usage_monitor_api',
-    get_string('api_documentation', 'report_usage_monitor'),
-    new moodle_url('/report/usage_monitor/api-documentation.php')
-));

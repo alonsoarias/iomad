@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025112904;  // Fix config names, portable SQL, remove api-documentation
+$plugin->version   = 2025112905;  // Fix notification email sending, remove api-documentation page
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.7';     // Task fixes and PostgreSQL compatibility
+$plugin->release   = '4.5.8';     // Notification system fixes
 $plugin->maturity  = MATURITY_STABLE;

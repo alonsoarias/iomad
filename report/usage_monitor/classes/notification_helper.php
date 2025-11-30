@@ -364,7 +364,7 @@ class notification_helper {
      * @return bool Success status
      */
     public static function send_notification(string $type, \stdClass $data): bool {
-        global $DB, $CFG;
+        global $DB, $CFG, $SITE;
 
         $config = get_config('report_usage_monitor');
         $to_email = $config->email ?? '';
@@ -385,25 +385,39 @@ class notification_helper {
 
         $message_html = get_string($template_key, 'report_usage_monitor', $data);
 
-        // Create dummy user for email_to_user.
+        // Create a complete user object for email_to_user.
+        // Moodle requires specific properties for email delivery to work.
         $user = new \stdClass();
-        $user->id = -1;
+        $user->id = -99;
         $user->email = $to_email;
+        $user->username = 'usage_monitor_recipient';
+        $user->firstname = 'Platform';
+        $user->lastname = 'Administrator';
+        $user->maildisplay = 1;
         $user->mailformat = 1;
+        $user->maildigest = 0;
+        $user->autosubscribe = 0;
+        $user->trackforums = 0;
         $user->deleted = 0;
-        $user->auth = 'manual';
         $user->suspended = 0;
-        $user->firstname = 'Admin';
-        $user->lastname = 'User';
+        $user->confirmed = 1;
+        $user->auth = 'manual';
+        $user->lang = $CFG->lang ?? 'en';
+        $user->timezone = $CFG->timezone ?? '99';
+        $user->firstaccess = 0;
+        $user->lastaccess = 0;
+        $user->emailstop = 0;
 
-        // Get support user as sender.
-        $from = \core_user::get_support_user();
+        // Get noreply user as sender (more reliable than support user).
+        $from = \core_user::get_noreply_user();
+        $from->firstname = format_string($SITE->shortname);
+        $from->lastname = 'Usage Monitor';
 
         // Strip HTML for plain text version.
-        $message_text = html_to_text($message_html);
+        $message_text = html_to_text($message_html, 0, false);
 
-        // Send email.
-        $result = email_to_user($user, $from, $subject, $message_text, $message_html);
+        // Send email using Moodle's email function.
+        $result = email_to_user($user, $from, $subject, $message_text, $message_html, '', '', true);
 
         if ($result) {
             self::log_notification($type, $data);
