@@ -1,0 +1,274 @@
+{{!
+    Email template for disk usage notification
+
+    @package    report_usage_monitor
+    @copyright  2025 Soporte IngeWeb <soporte@ingeweb.co>
+    @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{#str}}subjectemail2, report_usage_monitor{{/str}} - {{sitename}}</title>
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color: #f4f4f4;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f4f4f4;">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #d35400 0%, #e67e22 100%); padding: 30px 20px; text-align: center;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <span style="font-size: 40px;">&#128190;</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #ffffff; font-size: 24px; font-weight: bold; padding-top: 10px;">
+                                        {{#str}}email_diskusage_title, report_usage_monitor{{/str}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 15px;">
+                                        <span style="display: inline-block; background-color: #ffffff; color: #d35400; padding: 8px 20px; border-radius: 25px; font-weight: bold; font-size: 18px;">
+                                            {{percentage}}% {{#str}}email_of_quota_used, report_usage_monitor{{/str}}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Urgency banner -->
+                    <tr>
+                        <td style="background-color: #ffeaa7; padding: 15px 20px; border-left: 4px solid #fdcb6e;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="font-size: 14px; color: #6c5c00;">
+                                        <strong>&#128680; {{#str}}email_disk_warning, report_usage_monitor{{/str}}:</strong> {{#str}}email_diskusage_urgency, report_usage_monitor, {{percentage}}{{/str}} <strong>{{sitename}}</strong>.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Main content -->
+                    <tr>
+                        <td style="padding: 25px 30px;">
+                            <!-- Disk usage summary -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #e67e22;">
+                                        &#128202; {{#str}}email_disk_summary, report_usage_monitor{{/str}}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Progress bar -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 20px;">
+                                <tr>
+                                    <td style="background-color: #ecf0f1; border-radius: 10px; padding: 3px;">
+                                        <table role="presentation" width="{{percentage}}%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="background: linear-gradient(90deg, #e67e22, #d35400); color: #ffffff; text-align: center; padding: 10px 0; border-radius: 8px; font-weight: bold; font-size: 14px;">
+                                                    {{percentage}}%
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Key metrics table -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; width: 50%; border-bottom: 1px solid #e0e0e0;">{{#str}}email_report_date, report_usage_monitor{{/str}}:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{{lastday}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">{{#str}}email_used_space, report_usage_monitor{{/str}}:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #e67e22; font-size: 16px; border-bottom: 1px solid #e0e0e0;">{{diskusage}}</td>
+                                </tr>
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">{{#str}}email_assigned_quota, report_usage_monitor{{/str}}:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{{quotadisk}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555;">{{#str}}email_available_space, report_usage_monitor{{/str}}:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #27ae60;">{{available_space}} ({{available_percent}}%)</td>
+                                </tr>
+                            </table>
+
+                            <!-- Space distribution -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #e67e22;">
+                                        &#128193; {{#str}}email_space_distribution, report_usage_monitor{{/str}}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Distribution bars -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <!-- Database -->
+                                <tr>
+                                    <td style="padding: 5px 0;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td width="120" style="padding: 10px; background-color: #9b59b6; color: #ffffff; font-weight: 600; font-size: 13px; border-radius: 5px 0 0 5px;">{{#str}}database, report_usage_monitor{{/str}}</td>
+                                                <td style="padding: 10px 15px; background-color: #e8e8e8; border-radius: 0 5px 5px 0;">
+                                                    <strong>{{databasesize}}</strong> <span style="color: #777;">({{db_percent}}%)</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- Files -->
+                                <tr>
+                                    <td style="padding: 5px 0;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td width="120" style="padding: 10px; background-color: #27ae60; color: #ffffff; font-weight: 600; font-size: 13px; border-radius: 5px 0 0 5px;">{{#str}}files_dir, report_usage_monitor{{/str}}</td>
+                                                <td style="padding: 10px 15px; background-color: #e8e8e8; border-radius: 0 5px 5px 0;">
+                                                    <strong>{{filedir_size}}</strong> <span style="color: #777;">({{filedir_percent}}%)</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- Cache -->
+                                <tr>
+                                    <td style="padding: 5px 0;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td width="120" style="padding: 10px; background-color: #e67e22; color: #ffffff; font-weight: 600; font-size: 13px; border-radius: 5px 0 0 5px;">{{#str}}cache, report_usage_monitor{{/str}}</td>
+                                                <td style="padding: 10px 15px; background-color: #e8e8e8; border-radius: 0 5px 5px 0;">
+                                                    <strong>{{cache_size}}</strong> <span style="color: #777;">({{cache_percent}}%)</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- Others -->
+                                <tr>
+                                    <td style="padding: 5px 0;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td width="120" style="padding: 10px; background-color: #7f8c8d; color: #ffffff; font-weight: 600; font-size: 13px; border-radius: 5px 0 0 5px;">{{#str}}others, report_usage_monitor{{/str}}</td>
+                                                <td style="padding: 10px 15px; background-color: #e8e8e8; border-radius: 0 5px 5px 0;">
+                                                    <strong>{{other_size}}</strong> <span style="color: #777;">({{other_percent}}%)</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Platform information -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #e67e22;">
+                                        &#128421; {{#str}}email_platform_info, report_usage_monitor{{/str}}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; width: 50%; border-bottom: 1px solid #e0e0e0;">{{#str}}moodle_version, report_usage_monitor{{/str}}:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{{moodle_release}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">{{#str}}total_courses, report_usage_monitor{{/str}}:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{{coursescount}}</td>
+                                </tr>
+                                <tr style="background-color: #f8f9fa;">
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555; border-bottom: 1px solid #e0e0e0;">{{#str}}backup_per_course, report_usage_monitor{{/str}}:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50; border-bottom: 1px solid #e0e0e0;">{{backupcount}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 15px; font-weight: 500; color: #555555;">{{#str}}email_active_users, report_usage_monitor{{/str}}:</td>
+                                    <td style="padding: 12px 15px; font-weight: 600; color: #2c3e50;">{{numberofusers}} / {{threshold}} ({{user_percent}}%)</td>
+                                </tr>
+                            </table>
+
+                            <!-- Largest courses -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px;">
+                                <tr>
+                                    <td style="font-size: 18px; font-weight: bold; color: #2c3e50; padding-bottom: 15px; border-bottom: 2px solid #e67e22;">
+                                        &#128218; {{#str}}largest_courses, report_usage_monitor{{/str}}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #34495e;">
+                                    <th style="padding: 12px 15px; font-weight: 600; color: #ffffff; text-align: left;">{{#str}}course, report_usage_monitor{{/str}}</th>
+                                    <th style="padding: 12px 15px; font-weight: 600; color: #ffffff; text-align: left;">{{#str}}size, report_usage_monitor{{/str}}</th>
+                                    <th style="padding: 12px 15px; font-weight: 600; color: #ffffff; text-align: left;">{{#str}}email_percent_of_total, report_usage_monitor{{/str}}</th>
+                                </tr>
+                                {{{top_courses_rows}}}
+                            </table>
+
+                            <!-- Recommendations box -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom: 25px; background-color: #e8f6f3; border-radius: 8px; border-left: 4px solid #1abc9c;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="font-size: 16px; font-weight: bold; color: #16a085; padding-bottom: 12px;">
+                                                    &#128161; {{#str}}email_recommendations_title, report_usage_monitor{{/str}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 14px; color: #2c3e50; line-height: 1.8;">
+                                                    &#8226; <strong>{{#str}}email_rec_backups, report_usage_monitor{{/str}}:</strong> {{#str}}email_rec_backups_desc, report_usage_monitor, {{backupcount}}{{/str}}<br>
+                                                    &#8226; <strong>{{#str}}email_rec_files, report_usage_monitor{{/str}}:</strong> {{#str}}email_rec_files_desc, report_usage_monitor{{/str}}<br>
+                                                    &#8226; <strong>{{#str}}email_rec_courses, report_usage_monitor{{/str}}:</strong> {{#str}}email_rec_courses_desc, report_usage_monitor{{/str}}<br>
+                                                    &#8226; <strong>{{#str}}email_rec_cache, report_usage_monitor{{/str}}:</strong> {{#str}}email_rec_cache_desc, report_usage_monitor{{/str}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- CTA button -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top: 30px;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{{referer}}" style="display: inline-block; background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: #ffffff; padding: 14px 35px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                                            &#128202; {{#str}}email_view_dashboard, report_usage_monitor{{/str}}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #2c3e50; padding: 20px; text-align: center;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="color: #bdc3c7; font-size: 12px; padding-bottom: 10px;">
+                                        {{#str}}email_auto_generated, report_usage_monitor{{/str}} <strong style="color: #3498db;">Usage Monitor</strong> {{#str}}email_from, report_usage_monitor{{/str}} <a href="https://ingeweb.co/" style="color: #3498db; text-decoration: none;">ingeweb.co</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #95a5a6; font-size: 11px; font-style: italic;">
+                                        * {{#str}}email_disk_disclaimer, report_usage_monitor{{/str}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

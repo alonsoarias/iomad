@@ -359,6 +359,42 @@ class notification_helper {
     }
 
     /**
+     * Render an email template using Mustache.
+     *
+     * @param string $template_name Full template name (e.g., 'report_usage_monitor/email_userlimit')
+     * @param \stdClass $data Template data
+     * @return string Rendered HTML
+     */
+    public static function render_email_template(string $template_name, \stdClass $data): string {
+        global $PAGE, $OUTPUT, $CFG;
+
+        // Ensure PAGE is set up for CLI context.
+        if (!isset($PAGE->context) || $PAGE->context === null) {
+            $PAGE->set_context(\context_system::instance());
+        }
+
+        // Convert data object to array for Mustache.
+        $context = (array)$data;
+
+        try {
+            // Use the global OUTPUT renderer to render the template.
+            $html = $OUTPUT->render_from_template($template_name, $context);
+        } catch (\Exception $e) {
+            // Fallback to legacy language string templates if Mustache fails.
+            debugging('notification_helper::render_email_template - Template error: ' . $e->getMessage(), DEBUG_DEVELOPER);
+
+            // Determine legacy template key from template name.
+            if (strpos($template_name, 'email_diskusage') !== false) {
+                $html = get_string('messagehtml_diskusage', 'report_usage_monitor', $data);
+            } else {
+                $html = get_string('messagehtml_userlimit', 'report_usage_monitor', $data);
+            }
+        }
+
+        return $html;
+    }
+
+    /**
      * Send notification email.
      *
      * @param string $type Notification type (disk, users)
@@ -366,7 +402,7 @@ class notification_helper {
      * @return bool Success status
      */
     public static function send_notification(string $type, \stdClass $data): bool {
-        global $DB, $CFG, $SITE;
+        global $DB, $CFG, $SITE, $PAGE, $OUTPUT;
 
         $config = get_config('report_usage_monitor');
         $to_email = $config->email ?? '';
@@ -379,13 +415,17 @@ class notification_helper {
         // Get email template.
         if ($type === 'disk') {
             $subject = get_string('subjectemail2', 'report_usage_monitor') . ' ' . $data->sitename;
-            $template_key = 'messagehtml_diskusage';
+            $template_name = 'report_usage_monitor/email_diskusage';
         } else {
             $subject = get_string('subjectemail1', 'report_usage_monitor') . ' ' . $data->sitename;
-            $template_key = 'messagehtml_userlimit';
+            $template_name = 'report_usage_monitor/email_userlimit';
         }
 
-        $message_html = get_string($template_key, 'report_usage_monitor', $data);
+        // Add language code for email template.
+        $data->lang = current_language();
+
+        // Render Mustache template.
+        $message_html = self::render_email_template($template_name, $data);
 
         // Get primary site administrator as base for recipient user object.
         // This ensures all required Moodle user properties are properly set.

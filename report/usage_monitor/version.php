@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113010;  // Extract CSS to external file with dark mode support
+$plugin->version   = 2025113011;  // Mustache templates for email notifications
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.18';    // Separate styles.css, dark mode support, improved language strings
+$plugin->release   = '4.5.19';    // Email templates moved to Mustache, EN/ES strings updated
 $plugin->maturity  = MATURITY_STABLE;

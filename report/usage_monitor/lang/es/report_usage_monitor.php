@@ -277,7 +277,54 @@ $string['days_to_threshold_disk_desc'] = 'Días proyectados hasta alcanzar el um
 $string['days_to_threshold_users'] = 'Días hasta umbral de usuarios';
 $string['days_to_threshold_users_desc'] = 'Días proyectados hasta alcanzar el umbral de advertencia de usuarios';
 
-// Email templates
+// Email template strings for Mustache templates.
+// User limit email strings.
+$string['email_userlimit_title'] = 'Alerta de límite de usuarios diarios';
+$string['email_of_limit'] = 'del límite alcanzado';
+$string['email_attention_required'] = 'Atención requerida';
+$string['email_userlimit_urgency'] = 'La plataforma ha superado el umbral de usuarios diarios. Se recomienda revisión inmediata para';
+$string['email_alert_summary'] = 'Resumen de la alerta';
+$string['email_report_date'] = 'Fecha del reporte';
+$string['email_active_users_today'] = 'Usuarios activos hoy';
+$string['email_configured_limit'] = 'Límite configurado';
+$string['email_users_over_limit'] = 'Usuarios en exceso';
+$string['email_users'] = 'usuarios';
+$string['email_growth_projection'] = 'Proyección de crecimiento';
+$string['email_projection_text'] = 'De mantenerse la tendencia actual, se estima que en';
+$string['email_days'] = 'días';
+$string['email_projection_will_reach'] = 'la plataforma alcanzará el';
+$string['email_platform_info'] = 'Información de la plataforma';
+$string['email_recent_history'] = 'Historial reciente de usuarios (últimos 7 días)';
+$string['email_active_users'] = 'Usuarios activos';
+$string['email_percent_of_limit'] = '% del límite';
+$string['email_view_dashboard'] = 'Ver panel de control';
+$string['email_auto_generated'] = 'Este mensaje fue generado automáticamente por';
+$string['email_from'] = 'de';
+$string['email_users_disclaimer'] = 'Se contabilizan usuarios distintos que se autenticaron en la fecha indicada. Usuarios que se autentican más de una vez solo cuentan una vez.';
+
+// Disk usage email strings.
+$string['email_diskusage_title'] = 'Alerta de espacio en disco';
+$string['email_of_quota_used'] = 'de la cuota utilizada';
+$string['email_disk_warning'] = 'Advertencia de espacio en disco';
+$string['email_diskusage_urgency'] = 'ha superado el {$a}% del espacio en disco asignado. Revise las recomendaciones a continuación para la plataforma';
+$string['email_disk_summary'] = 'Resumen de uso de disco';
+$string['email_used_space'] = 'Espacio utilizado';
+$string['email_assigned_quota'] = 'Cuota asignada';
+$string['email_available_space'] = 'Espacio disponible';
+$string['email_space_distribution'] = 'Distribución del espacio por categoría';
+$string['email_percent_of_total'] = '% del total';
+$string['email_recommendations_title'] = 'Recomendaciones para liberar espacio';
+$string['email_rec_backups'] = 'Reducir copias';
+$string['email_rec_backups_desc'] = 'Disminuir el número de copias automáticas por curso (actualmente: {$a})';
+$string['email_rec_files'] = 'Limpiar archivos';
+$string['email_rec_files_desc'] = 'Eliminar archivos antiguos sin uso mediante la herramienta de limpieza';
+$string['email_rec_courses'] = 'Revisar cursos';
+$string['email_rec_courses_desc'] = 'Archivar o limpiar los cursos más grandes listados arriba';
+$string['email_rec_cache'] = 'Purgar caché';
+$string['email_rec_cache_desc'] = 'Limpiar la caché del sistema para liberar espacio temporal';
+$string['email_disk_disclaimer'] = 'Si necesita asistencia técnica, por favor no responda a este correo y contacte a su administrador de hosting.';
+
+// Legacy email templates (kept for backwards compatibility).
 $string['messagehtml_userlimit'] = '<!DOCTYPE html>
 <html lang="es">
 <head>
