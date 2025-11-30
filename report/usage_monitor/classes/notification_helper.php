@@ -100,7 +100,7 @@ class notification_helper {
         }
 
         if ($type === 'disk') {
-            // Use string keys to avoid float to int implicit conversion
+            // Use string keys to avoid float to int implicit conversion.
             $thresholds = [
                 '99.9' => 12 * 3600,     // 12 hours for critical (>99.9%)
                 '98.5' => 24 * 3600,     // 1 day for very high (>98.5%)
@@ -116,7 +116,7 @@ class notification_helper {
         }
 
         foreach ($thresholds as $threshold => $interval) {
-            // Cast string key back to float for comparison
+            // Cast string key back to float for comparison.
             if ($percentage >= (float)$threshold) {
                 return $interval;
             }
@@ -143,33 +143,6 @@ class notification_helper {
     }
 
     /**
-     * Generate user history data rows for email.
-     *
-     * @deprecated Use get_user_history_data() and Mustache templates instead
-     * @param int $days Number of days to include
-     * @return string HTML table rows
-     */
-    public static function get_user_history_rows(int $days = 7): string {
-        $data = self::get_user_history_data($days);
-
-        if (empty($data)) {
-            return '<tr><td colspan="3" style="text-align: center;">No data available</td></tr>';
-        }
-
-        $rows = '';
-        foreach ($data as $row) {
-            $color = $row['percent'] >= 90 ? '#e74c3c' : ($row['percent'] >= 70 ? '#f39c12' : '#27ae60');
-            $rows .= "<tr>
-                <td>{$row['fecha']}</td>
-                <td>{$row['usuarios']}</td>
-                <td style=\"color: {$color}; font-weight: bold;\">{$row['percent']}%</td>
-            </tr>";
-        }
-
-        return $rows;
-    }
-
-    /**
      * Get top courses as structured data array.
      *
      * @param int $limit Number of courses to include
@@ -183,37 +156,6 @@ class notification_helper {
         $courses = get_largest_courses($limit);
 
         return get_top_courses_data($courses);
-    }
-
-    /**
-     * Generate top courses rows for email.
-     *
-     * @deprecated Use get_top_courses_data() and Mustache templates instead
-     * @param int $limit Number of courses to include
-     * @return string HTML table rows
-     */
-    public static function get_top_courses_rows(int $limit = 5): string {
-        $data = self::get_top_courses_data($limit);
-
-        if (empty($data)) {
-            return '<tr><td colspan="3" style="text-align: center;">No data available</td></tr>';
-        }
-
-        $rows = '';
-        foreach ($data as $row) {
-            $name = $row['fullname'];
-            if (strlen($name) > 40) {
-                $name = substr($name, 0, 37) . '...';
-            }
-
-            $rows .= "<tr>
-                <td>{$name}</td>
-                <td>{$row['totalsize']}</td>
-                <td>{$row['percentage']}%</td>
-            </tr>";
-        }
-
-        return $rows;
     }
 
     /**
@@ -279,8 +221,6 @@ class notification_helper {
         // Top courses - structured data for Mustache.
         $data->top_courses = self::get_top_courses_data(5);
         $data->has_top_courses = !empty($data->top_courses);
-        // Keep legacy HTML rows for backwards compatibility.
-        $data->top_courses_rows = self::get_top_courses_rows(5);
 
         return $data;
     }
@@ -341,8 +281,6 @@ class notification_helper {
         // Historical data - structured for Mustache.
         $data->user_history = self::get_user_history_data(7);
         $data->has_user_history = !empty($data->user_history);
-        // Keep legacy HTML rows for backwards compatibility.
-        $data->historical_data_rows = self::get_user_history_rows(7);
 
         return $data;
     }
@@ -469,7 +407,7 @@ class notification_helper {
      * @return string Rendered HTML
      */
     public static function render_email_template(string $template_name, \stdClass $data): string {
-        global $PAGE, $OUTPUT, $CFG;
+        global $PAGE, $OUTPUT;
 
         // Ensure PAGE is set up for CLI context.
         if (!isset($PAGE->context) || $PAGE->context === null) {
@@ -483,113 +421,11 @@ class notification_helper {
             // Use the global OUTPUT renderer to render the template.
             $html = $OUTPUT->render_from_template($template_name, $context);
         } catch (\Exception $e) {
-            // Fallback to legacy language string templates if Mustache fails.
+            // Log error and return empty string.
             debugging('notification_helper::render_email_template - Template error: ' . $e->getMessage(), DEBUG_DEVELOPER);
-
-            // Determine legacy template key from alert type.
-            if (!empty($data->alert_disk) && empty($data->alert_users)) {
-                $html = get_string('messagehtml_diskusage', 'report_usage_monitor', $data);
-            } else {
-                $html = get_string('messagehtml_userlimit', 'report_usage_monitor', $data);
-            }
+            $html = '';
         }
 
         return $html;
-    }
-
-    /**
-     * Send notification email.
-     *
-     * @param string $type Notification type (disk, users)
-     * @param \stdClass $data Email data
-     * @return bool Success status
-     */
-    public static function send_notification(string $type, \stdClass $data): bool {
-        global $DB, $CFG, $SITE, $PAGE, $OUTPUT;
-
-        $config = get_config('report_usage_monitor');
-        $to_email = $config->email ?? '';
-
-        if (empty($to_email) || !filter_var($to_email, FILTER_VALIDATE_EMAIL)) {
-            debugging('notification_helper::send_notification - Invalid email address', DEBUG_DEVELOPER);
-            return false;
-        }
-
-        // Build unified email data.
-        $unified_data = self::build_unified_email_data($type,
-            ($type === 'disk') ? $data : null,
-            ($type === 'users') ? $data : null
-        );
-
-        // Subject line.
-        $subject = get_string('email_notification_subject', 'report_usage_monitor') . ' ' . $unified_data->sitename;
-
-        // Render unified Mustache template.
-        $message_html = self::render_email_template('report_usage_monitor/email_notification', $unified_data);
-
-        // Get primary site administrator as base for recipient user object.
-        // This ensures all required Moodle user properties are properly set.
-        $admin = get_admin();
-        if (!$admin) {
-            debugging('notification_helper::send_notification - No admin user found', DEBUG_DEVELOPER);
-            return false;
-        }
-
-        // Clone admin user and override email with configured recipient.
-        $user = clone $admin;
-        $user->email = $to_email;
-
-        // Get noreply user as sender (more reliable than support user).
-        $from = \core_user::get_noreply_user();
-        $from->firstname = format_string($SITE->shortname);
-        $from->lastname = 'Usage Monitor';
-
-        // Strip HTML for plain text version.
-        $message_text = html_to_text($message_html, 0, false);
-
-        // Send email using Moodle's email function.
-        $result = email_to_user($user, $from, $subject, $message_text, $message_html, '', '', true);
-
-        if ($result) {
-            self::log_notification($type, $data);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Log notification to history table.
-     *
-     * @param string $type Notification type
-     * @param \stdClass $data Notification data
-     */
-    private static function log_notification(string $type, \stdClass $data): void {
-        global $DB;
-
-        if (!$DB->get_manager()->table_exists('report_usage_monitor_history')) {
-            return;
-        }
-
-        $record = new \stdClass();
-        $record->type = $type;
-
-        if ($type === 'disk') {
-            $record->percentage = $data->percentage;
-            $config = get_config('report_usage_monitor');
-            $record->value = ((int)($config->totalusagereadable ?? 0)) + ((int)($config->totalusagereadabledb ?? 0));
-            $record->threshold = ((int)($config->disk_quota ?? 10)) * 1024 * 1024 * 1024;
-        } else {
-            $record->percentage = $data->percentaje;
-            $record->value = $data->numberofusers;
-            $record->threshold = $data->threshold;
-        }
-
-        $record->timecreated = time();
-
-        try {
-            $DB->insert_record('report_usage_monitor_history', $record);
-        } catch (\Exception $e) {
-            debugging('notification_helper::log_notification - ' . $e->getMessage(), DEBUG_DEVELOPER);
-        }
     }
 }
