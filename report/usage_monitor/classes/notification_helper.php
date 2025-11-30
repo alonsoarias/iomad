@@ -100,22 +100,24 @@ class notification_helper {
         }
 
         if ($type === 'disk') {
+            // Use string keys to avoid float to int implicit conversion
             $thresholds = [
-                99.9 => 12 * 3600,     // 12 hours for critical (>99.9%)
-                98.5 => 24 * 3600,     // 1 day for very high (>98.5%)
-                95 => 2 * 86400,       // 2 days for high (>95%)
-                90 => 5 * 86400,       // 5 days for warning (>90%)
+                '99.9' => 12 * 3600,     // 12 hours for critical (>99.9%)
+                '98.5' => 24 * 3600,     // 1 day for very high (>98.5%)
+                '95' => 2 * 86400,       // 2 days for high (>95%)
+                '90' => 5 * 86400,       // 5 days for warning (>90%)
             ];
         } else {
             $thresholds = [
-                100 => 24 * 3600,      // 1 day when exceeded
-                90 => 3 * 86400,       // 3 days when >90%
-                80 => 7 * 86400,       // 1 week when >80%
+                '100' => 24 * 3600,      // 1 day when exceeded
+                '90' => 3 * 86400,       // 3 days when >90%
+                '80' => 7 * 86400,       // 1 week when >80%
             ];
         }
 
         foreach ($thresholds as $threshold => $interval) {
-            if ($percentage >= $threshold) {
+            // Cast string key back to float for comparison
+            if ($percentage >= (float)$threshold) {
                 return $interval;
             }
         }

@@ -145,17 +145,24 @@ class users_daily extends \core\task\scheduled_task
             // Para report_usage_monitor_history tabla
             if ($DB->get_manager()->table_exists('report_usage_monitor_history')) {
                 $oldHistoryCount = $DB->count_records_select('report_usage_monitor_history', 'timecreated < ?', [$sixMonthsAgo]);
-                
+
                 if ($oldHistoryCount > 0) {
                     $DB->delete_records_select('report_usage_monitor_history', 'timecreated < ?', [$sixMonthsAgo]);
-                    
+
                     if (debugging('', DEBUG_DEVELOPER)) {
                         mtrace("Removed $oldHistoryCount records older than 6 months from report_usage_monitor_history.");
                     }
                 }
             }
-            
+
             $transaction->allow_commit();
+
+            // Clean up old records from Top 10 users table (report_usage_monitor)
+            // This runs outside the main transaction to avoid conflicts
+            $cleaned_top_records = cleanup_old_top_records();
+            if ($cleaned_top_records > 0 && debugging('', DEBUG_DEVELOPER)) {
+                mtrace("Cleaned up $cleaned_top_records old records from Top 10 users table.");
+            }
             
         } catch (Exception $e) {
             $transaction->rollback($e);

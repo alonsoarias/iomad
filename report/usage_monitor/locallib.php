@@ -35,13 +35,15 @@ function report_user_daily_sql()
     $today_start = strtotime('today midnight');
     $ten_days_ago = strtotime('-10 days midnight');
     $yesterday_end = $today_start - 1;
-    
-    return "SELECT (timecreated - (timecreated % 86400)) as timestamp_fecha, 
+
+    // Use CONCAT to create unique first column for get_records_sql compatibility
+    return "SELECT CONCAT('day_', (timecreated - (timecreated % 86400))) as unique_key,
+                   (timecreated - (timecreated % 86400)) as timestamp_fecha,
                    COUNT(DISTINCT userid) as conteo_accesos_unicos
             FROM {logstore_standard_log}
-            WHERE action = 'loggedin' 
+            WHERE action = 'loggedin'
               AND timecreated BETWEEN $ten_days_ago AND $yesterday_end
-            GROUP BY timestamp_fecha 
+            GROUP BY (timecreated - (timecreated % 86400))
             ORDER BY timestamp_fecha DESC";
 }
 
@@ -53,8 +55,9 @@ function report_user_daily_sql()
  */
 function report_user_daily_top_sql()
 {
-    return "SELECT fecha as timestamp_fecha, cantidad_usuarios 
-            FROM {report_usage_monitor}  
+    // Include id as first column to ensure unique keys for get_records_sql
+    return "SELECT id, fecha as timestamp_fecha, cantidad_usuarios
+            FROM {report_usage_monitor}
             ORDER BY cantidad_usuarios DESC, fecha DESC";
 }
 
@@ -126,46 +129,91 @@ function update_min_top_sql($fecha, $usuarios, $min)
 function insert_top_sql($fecha, $cantidad_usuarios)
 {
     global $DB;
-    
+
     // Validar que el timestamp sea válido
     if (!is_numeric($fecha) || $fecha <= 0) {
         debugging('insert_top_sql: Timestamp inválido proporcionado: ' . var_export($fecha, true), DEBUG_DEVELOPER);
         return;
     }
-    
+
     // Iniciar transacción para asegurar consistencia
     $transaction = $DB->start_delegated_transaction();
-    
+
     try {
         // Insert the new record
         $DB->execute(
-            "INSERT INTO {report_usage_monitor} (fecha, cantidad_usuarios) 
+            "INSERT INTO {report_usage_monitor} (fecha, cantidad_usuarios)
              VALUES (?, ?)",
             [$fecha, $cantidad_usuarios]
         );
-        
+
         // Count records and remove excess
         $count = $DB->count_records('report_usage_monitor');
         if ($count > 10) {
             // Get the IDs of the oldest records based on fecha column
             $sql = "SELECT id FROM {report_usage_monitor} ORDER BY fecha ASC LIMIT " . ($count - 10);
             $records = $DB->get_records_sql($sql);
-            
+
             if (!empty($records)) {
                 $ids = array_keys($records);
                 // Delete the oldest records
                 $DB->delete_records_list('report_usage_monitor', 'id', $ids);
-                
+
                 if (debugging('', DEBUG_DEVELOPER)) {
                     mtrace("Removed " . count($ids) . " old records to maintain 10 record limit.");
                 }
             }
         }
-        
+
         $transaction->allow_commit();
     } catch (Exception $e) {
         $transaction->rollback($e);
         debugging('insert_top_sql: Error al insertar registro: ' . $e->getMessage(), DEBUG_DEVELOPER);
+    }
+}
+
+/**
+ * Clean up old stale records from the Top 10 users table.
+ * Removes records older than 6 months to keep data relevant.
+ *
+ * @return int Number of records deleted
+ */
+function cleanup_old_top_records()
+{
+    global $DB;
+
+    // 6 months in seconds: 6 * 30 * 24 * 60 * 60 = 15552000
+    $six_months_ago = time() - (6 * 30 * 86400);
+
+    $transaction = $DB->start_delegated_transaction();
+
+    try {
+        // Count records before deletion for logging
+        $old_records = $DB->count_records_select(
+            'report_usage_monitor',
+            'fecha < ?',
+            [$six_months_ago]
+        );
+
+        if ($old_records > 0) {
+            // Delete records older than 6 months
+            $DB->delete_records_select(
+                'report_usage_monitor',
+                'fecha < ?',
+                [$six_months_ago]
+            );
+
+            if (debugging('', DEBUG_DEVELOPER)) {
+                mtrace("Cleaned up {$old_records} old records from Top 10 users table (older than 6 months).");
+            }
+        }
+
+        $transaction->allow_commit();
+        return $old_records;
+    } catch (Exception $e) {
+        $transaction->rollback($e);
+        debugging('cleanup_old_top_records: Error al limpiar registros: ' . $e->getMessage(), DEBUG_DEVELOPER);
+        return 0;
     }
 }
 

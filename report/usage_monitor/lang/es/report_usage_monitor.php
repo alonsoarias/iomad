@@ -110,6 +110,11 @@ $string['purge_cache'] = 'Purgar Caché';
 $string['run_tasks'] = 'Tareas Programadas';
 $string['file_cleanup'] = 'Limpieza de Archivos';
 
+// Show more courses
+$string['show_more_courses'] = 'Mostrar más cursos';
+$string['install_coursesize'] = 'Instale el plugin report_coursesize para un análisis detallado del tamaño de cursos';
+$string['coursesize_plugin_url'] = 'https://moodle.org/plugins/report_coursesize';
+
 // Recommendation tips
 $string['space_saving_tips'] = 'Consejos para ahorrar espacio en disco:';
 $string['tip_backups'] = 'Reducir el número de copias de seguridad automáticas por curso (actualmente: {$a})';

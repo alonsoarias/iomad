@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113001;  // Use admin data for notifications, add dashboard status sections
+$plugin->version   = 2025113002;  // Fix SQL queries, dynamic chart updates, coursesize button, cleanup old records
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.9';     // Enhanced dashboard with alerts, notifications and tasks status
+$plugin->release   = '4.5.10';    // Bug fixes: SQL duplicate keys, float conversion, dynamic threshold charts
 $plugin->maturity  = MATURITY_STABLE;

@@ -173,47 +173,11 @@ $registeredusers = $activeusers + $suspendedusers;
 $backup_max_kept = get_config('backup', 'backup_auto_max_kept') ?? 0;
 
 $month_ago = time() - (30 * 24 * 60 * 60);
-$sql = "SELECT timecreated, value, percentage
+$sql = "SELECT id, timecreated, value, percentage
         FROM {report_usage_monitor_history}
         WHERE type = 'disk' AND timecreated > ?
         ORDER BY timecreated ASC";
 $disk_history = $DB->get_records_sql($sql, [$month_ago]);
-
-// Get notification status data
-$last_disk_notification_ts = (int)get_config('report_usage_monitor', 'last_notificationdisk_time');
-$last_user_notification_ts = (int)get_config('report_usage_monitor', 'last_notificationusers_time');
-$notification_email = $reportconfig->email ?? '';
-
-// Calculate next possible notification time using notification_helper
-require_once($CFG->dirroot . '/report/usage_monitor/classes/notification_helper.php');
-$disk_interval = \report_usage_monitor\notification_helper::calculate_notification_interval($disk_percent, 'disk');
-$user_interval = \report_usage_monitor\notification_helper::calculate_notification_interval($users_percent, 'users');
-
-$next_disk_notification = ($last_disk_notification_ts > 0) ? $last_disk_notification_ts + $disk_interval : 0;
-$next_user_notification = ($last_user_notification_ts > 0) ? $last_user_notification_ts + $user_interval : 0;
-
-// Get scheduled tasks status
-$tasks_info = [];
-$task_classes = [
-    'calculate_disk_usage' => '\\report_usage_monitor\\task\\calculate_disk_usage',
-    'get_last_users' => '\\report_usage_monitor\\task\\get_last_users',
-    'get_last_users_90days' => '\\report_usage_monitor\\task\\get_last_users_90days',
-    'get_last_users_connected' => '\\report_usage_monitor\\task\\get_last_users_connected',
-    'notification_disk' => '\\report_usage_monitor\\task\\notification_disk',
-    'notification_userlimit' => '\\report_usage_monitor\\task\\notification_userlimit',
-];
-
-foreach ($task_classes as $key => $classname) {
-    $task = \core\task\manager::get_scheduled_task($classname);
-    if ($task) {
-        $tasks_info[$key] = [
-            'name' => $task->get_name(),
-            'lastruntime' => $task->get_last_run_time(),
-            'nextruntime' => $task->get_next_run_time(),
-            'disabled' => $task->get_disabled(),
-        ];
-    }
-}
 
 $disk_history_labels = [];
 $disk_history_data = [];
@@ -223,10 +187,17 @@ $daily_data = [];
 foreach ($disk_history as $record) {
     if (is_numeric($record->timecreated) && $record->timecreated > 0) {
         $date_key = date('Y-m-d', (int)$record->timecreated);
-        
+
+        // Recalculate percentage based on current quota (not stored percentage)
+        // This ensures the graph reflects the current threshold settings
+        $current_percentage = ($quotadisk_bytes > 0)
+            ? round(($record->value / $quotadisk_bytes) * 100, 1)
+            : 0;
+
         $daily_data[$date_key] = [
             'label' => date('d/m/Y', (int)$record->timecreated),
-            'percentage' => round($record->percentage, 1)
+            'percentage' => $current_percentage,
+            'value' => $record->value
         ];
     }
 }
@@ -365,184 +336,6 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
         </div>
     </div><!-- fin row tarjetas -->
 
-    <!-- SECCIÓN: Alertas Activas y Acciones Rápidas -->
-    <div class="row mb-4">
-        <!-- Alertas Activas -->
-        <div class="col-md-8">
-            <div class="card shadow-sm h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><?php echo get_string('active_alerts', 'report_usage_monitor'); ?></h5>
-                    <?php if ($disk_percent >= 70 || $users_percent >= 70): ?>
-                        <span class="badge bg-danger rounded-pill"><?php echo (($disk_percent >= 70 ? 1 : 0) + ($users_percent >= 70 ? 1 : 0)); ?></span>
-                    <?php endif; ?>
-                </div>
-                <div class="card-body">
-                    <?php
-                    $has_alerts = false;
-                    if ($disk_percent >= 90):
-                        $has_alerts = true;
-                    ?>
-                        <div class="alert alert-danger d-flex align-items-center mb-2" role="alert">
-                            <i class="fa fa-exclamation-triangle me-2"></i>
-                            <div><?php echo get_string('alert_disk_critical', 'report_usage_monitor', round($disk_percent, 1)); ?></div>
-                        </div>
-                    <?php elseif ($disk_percent >= 70):
-                        $has_alerts = true;
-                    ?>
-                        <div class="alert alert-warning d-flex align-items-center mb-2" role="alert">
-                            <i class="fa fa-exclamation-circle me-2"></i>
-                            <div><?php echo get_string('alert_disk_warning', 'report_usage_monitor', round($disk_percent, 1)); ?></div>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if ($users_percent >= 90):
-                        $has_alerts = true;
-                    ?>
-                        <div class="alert alert-danger d-flex align-items-center mb-2" role="alert">
-                            <i class="fa fa-users me-2"></i>
-                            <div><?php echo get_string('alert_users_critical', 'report_usage_monitor', round($users_percent, 1)); ?></div>
-                        </div>
-                    <?php elseif ($users_percent >= 70):
-                        $has_alerts = true;
-                    ?>
-                        <div class="alert alert-warning d-flex align-items-center mb-2" role="alert">
-                            <i class="fa fa-user-plus me-2"></i>
-                            <div><?php echo get_string('alert_users_warning', 'report_usage_monitor', round($users_percent, 1)); ?></div>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (!$has_alerts): ?>
-                        <div class="alert alert-success d-flex align-items-center mb-0" role="alert">
-                            <i class="fa fa-check-circle me-2"></i>
-                            <div><?php echo get_string('no_active_alerts', 'report_usage_monitor'); ?></div>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-
-        <!-- Acciones Rápidas -->
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header">
-                    <h5 class="mb-0"><?php echo get_string('quick_actions', 'report_usage_monitor'); ?></h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="<?php echo $CFG->wwwroot; ?>/admin/settings.php?section=report_usage_monitor" class="btn btn-outline-primary btn-sm">
-                            <i class="fa fa-cog me-1"></i> <?php echo get_string('go_to_settings', 'report_usage_monitor'); ?>
-                        </a>
-                        <a href="<?php echo $CFG->wwwroot; ?>/admin/tool/task/scheduledtasks.php?filterbycomponent=report_usage_monitor" class="btn btn-outline-secondary btn-sm">
-                            <i class="fa fa-clock-o me-1"></i> <?php echo get_string('run_tasks', 'report_usage_monitor'); ?>
-                        </a>
-                        <a href="<?php echo $CFG->wwwroot; ?>/admin/purgecaches.php" class="btn btn-outline-warning btn-sm">
-                            <i class="fa fa-trash me-1"></i> <?php echo get_string('purge_cache', 'report_usage_monitor'); ?>
-                        </a>
-                        <a href="<?php echo $CFG->wwwroot; ?>/report/filetrash/index.php" class="btn btn-outline-info btn-sm">
-                            <i class="fa fa-folder-open me-1"></i> <?php echo get_string('file_cleanup', 'report_usage_monitor'); ?>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!-- fin row alertas y acciones -->
-
-    <!-- SECCIÓN: Estado de Notificaciones y Tareas -->
-    <div class="row mb-4">
-        <!-- Estado de Notificaciones -->
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header">
-                    <h5 class="mb-0"><?php echo get_string('notification_status', 'report_usage_monitor'); ?></h5>
-                </div>
-                <div class="card-body">
-                    <?php if (empty($notification_email)): ?>
-                        <div class="alert alert-secondary mb-0">
-                            <i class="fa fa-envelope-o me-2"></i>
-                            <?php echo get_string('email_not_configured', 'report_usage_monitor'); ?>
-                        </div>
-                    <?php else: ?>
-                        <table class="table table-sm table-borderless mb-0">
-                            <tr>
-                                <td class="text-muted"><?php echo get_string('last_disk_notification', 'report_usage_monitor'); ?>:</td>
-                                <td class="text-end">
-                                    <?php if ($last_disk_notification_ts > 0): ?>
-                                        <strong><?php echo date('d/m/Y H:i', $last_disk_notification_ts); ?></strong>
-                                    <?php else: ?>
-                                        <span class="text-muted"><?php echo get_string('no_notification_sent', 'report_usage_monitor'); ?></span>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                            <?php if ($next_disk_notification > time() && $disk_percent >= 70): ?>
-                            <tr>
-                                <td class="text-muted ps-3"><small><?php echo get_string('next_possible_notification', 'report_usage_monitor'); ?>:</small></td>
-                                <td class="text-end"><small class="text-info"><?php echo format_time($next_disk_notification - time()); ?></small></td>
-                            </tr>
-                            <?php endif; ?>
-                            <tr>
-                                <td class="text-muted"><?php echo get_string('last_user_notification', 'report_usage_monitor'); ?>:</td>
-                                <td class="text-end">
-                                    <?php if ($last_user_notification_ts > 0): ?>
-                                        <strong><?php echo date('d/m/Y H:i', $last_user_notification_ts); ?></strong>
-                                    <?php else: ?>
-                                        <span class="text-muted"><?php echo get_string('no_notification_sent', 'report_usage_monitor'); ?></span>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                            <?php if ($next_user_notification > time() && $users_percent >= 70): ?>
-                            <tr>
-                                <td class="text-muted ps-3"><small><?php echo get_string('next_possible_notification', 'report_usage_monitor'); ?>:</small></td>
-                                <td class="text-end"><small class="text-info"><?php echo format_time($next_user_notification - time()); ?></small></td>
-                            </tr>
-                            <?php endif; ?>
-                        </table>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-
-        <!-- Estado de Tareas -->
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header">
-                    <h5 class="mb-0"><?php echo get_string('task_status', 'report_usage_monitor'); ?></h5>
-                </div>
-                <div class="card-body p-0">
-                    <table class="table table-sm table-striped mb-0">
-                        <thead>
-                            <tr>
-                                <th><?php echo get_string('task_name', 'report_usage_monitor'); ?></th>
-                                <th class="text-end"><?php echo get_string('last_run', 'report_usage_monitor'); ?></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($tasks_info as $key => $task): ?>
-                            <tr>
-                                <td>
-                                    <?php if ($task['disabled']): ?>
-                                        <span class="text-muted"><i class="fa fa-pause-circle me-1"></i><?php echo $task['name']; ?></span>
-                                    <?php else: ?>
-                                        <?php echo $task['name']; ?>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="text-end">
-                                    <?php if ($task['disabled']): ?>
-                                        <span class="badge bg-secondary"><?php echo get_string('task_disabled', 'report_usage_monitor'); ?></span>
-                                    <?php elseif ($task['lastruntime'] > 0): ?>
-                                        <small><?php echo date('d/m H:i', $task['lastruntime']); ?></small>
-                                    <?php else: ?>
-                                        <span class="text-muted small"><?php echo get_string('task_never_run', 'report_usage_monitor'); ?></span>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div><!-- fin row notificaciones y tareas -->
-
     <!-- SECCIÓN B: Distribución disco (gráfica + tablas) -->
     <div class="row">
         <!-- Columna izquierda: Gráfico doughnut Chart.js -->
@@ -617,6 +410,10 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
             </div>
 
             <!-- Segunda tabla: Cursos más grandes -->
+            <?php
+            // Check if report_coursesize plugin is installed
+            $coursesize_installed = \core_plugin_manager::instance()->get_plugin_info('report', 'coursesize') !== null;
+            ?>
             <div class="card shadow-sm">
                 <div class="card-header">
                     <h5 class="mb-0">
@@ -657,6 +454,22 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
                         </tbody>
                     </table>
                 </div>
+                <?php if (!empty($largest_courses)): ?>
+                <div class="card-footer text-center">
+                    <?php if ($coursesize_installed): ?>
+                        <a href="<?php echo $CFG->wwwroot; ?>/report/coursesize/index.php" class="btn btn-sm btn-outline-primary">
+                            <i class="fa fa-search-plus me-1"></i>
+                            <?php echo get_string('show_more_courses', 'report_usage_monitor'); ?>
+                        </a>
+                    <?php else: ?>
+                        <a href="<?php echo get_string('coursesize_plugin_url', 'report_usage_monitor'); ?>"
+                           target="_blank" class="btn btn-sm btn-outline-secondary">
+                            <i class="fa fa-download me-1"></i>
+                            <?php echo get_string('install_coursesize', 'report_usage_monitor'); ?>
+                        </a>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div><!-- fin row -->
