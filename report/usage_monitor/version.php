@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113015;  // Task frequency matches original disk/user timing
+$plugin->version   = 2025113016;  // User notifications at 8 AM, disk follows interval logic
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.23';    // Combined task runs at disk frequency, internal logic controls intervals
+$plugin->release   = '4.5.24';    // User alerts at 8 AM only, disk alerts follow original pattern
 $plugin->maturity  = MATURITY_STABLE;

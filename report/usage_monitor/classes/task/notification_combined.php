@@ -185,6 +185,8 @@ class notification_combined extends \core\task\scheduled_task {
     /**
      * Check user limit threshold and determine if notification should be sent.
      *
+     * User notifications are only sent at 8 AM to maintain the original schedule.
+     *
      * @param object $config Plugin configuration
      * @return array Array with 'should_notify' boolean and 'data' object
      */
@@ -192,6 +194,13 @@ class notification_combined extends \core\task\scheduled_task {
         global $DB;
 
         $result = ['should_notify' => false, 'data' => null];
+
+        // User notifications are only checked at 8 AM (between 8:00 and 8:59).
+        $current_hour = (int)date('G');
+        if ($current_hour !== 8) {
+            mtrace("  [Users] Current hour is {$current_hour}. User notifications only at 8 AM. Skipping.");
+            return $result;
+        }
 
         $user_threshold = (int)($config->max_daily_users_threshold ?? 100);
         $warning_level = (int)($config->users_warning_level ?? 90);
