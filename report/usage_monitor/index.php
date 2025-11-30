@@ -245,30 +245,30 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
     <!-- MAIN TABBED CONTENT -->
     <ul class="nav nav-tabs mb-3" id="dashboardTabs" role="tablist">
         <li class="nav-item">
-            <button class="nav-link active" id="disk-tab" data-bs-toggle="tab" data-bs-target="#disk-content" type="button" role="tab">
+            <a class="nav-link active" id="disk-tab" data-toggle="tab" data-bs-toggle="tab" href="#disk-content" role="tab" aria-controls="disk-content" aria-selected="true">
                 <?php echo get_string('diskusage', 'report_usage_monitor'); ?>
-            </button>
+            </a>
         </li>
         <li class="nav-item">
-            <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users-content" type="button" role="tab">
+            <a class="nav-link" id="users-tab" data-toggle="tab" data-bs-toggle="tab" href="#users-content" role="tab" aria-controls="users-content" aria-selected="false">
                 <?php echo get_string('users_today_card', 'report_usage_monitor'); ?>
-            </button>
+            </a>
         </li>
         <li class="nav-item">
-            <button class="nav-link" id="courses-tab" data-bs-toggle="tab" data-bs-target="#courses-content" type="button" role="tab">
+            <a class="nav-link" id="courses-tab" data-toggle="tab" data-bs-toggle="tab" href="#courses-content" role="tab" aria-controls="courses-content" aria-selected="false">
                 <?php echo get_string('course_access_trends', 'report_usage_monitor'); ?>
-            </button>
+            </a>
         </li>
         <li class="nav-item">
-            <button class="nav-link" id="system-tab" data-bs-toggle="tab" data-bs-target="#system-content" type="button" role="tab">
+            <a class="nav-link" id="system-tab" data-toggle="tab" data-bs-toggle="tab" href="#system-content" role="tab" aria-controls="system-content" aria-selected="false">
                 <?php echo get_string('system_info', 'report_usage_monitor'); ?>
-            </button>
+            </a>
         </li>
     </ul>
 
     <div class="tab-content" id="dashboardTabContent">
         <!-- DISK TAB -->
-        <div class="tab-pane fade show active" id="disk-content" role="tabpanel">
+        <div class="tab-pane fade show active" id="disk-content" role="tabpanel" aria-labelledby="disk-tab">
             <div class="row">
                 <!-- Disk Distribution Chart -->
                 <div class="col-lg-5 mb-4">
@@ -386,7 +386,7 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
         </div>
 
         <!-- USERS TAB -->
-        <div class="tab-pane fade" id="users-content" role="tabpanel">
+        <div class="tab-pane fade" id="users-content" role="tabpanel" aria-labelledby="users-tab">
             <div class="row">
                 <!-- Last 10 Days Chart -->
                 <div class="col-lg-8 mb-4">
@@ -470,7 +470,7 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
         </div>
 
         <!-- COURSES TAB -->
-        <div class="tab-pane fade" id="courses-content" role="tabpanel">
+        <div class="tab-pane fade" id="courses-content" role="tabpanel" aria-labelledby="courses-tab">
             <!-- Course Access Summary -->
             <div class="row mb-4">
                 <div class="col-md-3 col-6 mb-2">
@@ -583,7 +583,7 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
         </div>
 
         <!-- SYSTEM TAB -->
-        <div class="tab-pane fade" id="system-content" role="tabpanel">
+        <div class="tab-pane fade" id="system-content" role="tabpanel" aria-labelledby="system-tab">
             <div class="row">
                 <!-- System Info -->
                 <div class="col-lg-6 mb-4">
@@ -1013,18 +1013,83 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
         });
     }, 150);
 
+    // Listen for both Bootstrap 4 and 5 tab events
     document.addEventListener('shown.bs.tab', handleTabResize);
+    document.addEventListener('shown.tab', handleTabResize);
 
     // Also handle window resize with debounce
     window.addEventListener('resize', handleTabResize);
+
+    // Manual tab handling fallback (for when Bootstrap tabs don't work)
+    function initManualTabs() {
+        var tabLinks = document.querySelectorAll('#dashboardTabs .nav-link');
+        var tabPanes = document.querySelectorAll('#dashboardTabContent .tab-pane');
+
+        tabLinks.forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Get target pane ID
+                var targetId = this.getAttribute('href');
+                if (!targetId) return;
+
+                // Remove active from all tabs
+                tabLinks.forEach(function(l) {
+                    l.classList.remove('active');
+                    l.setAttribute('aria-selected', 'false');
+                });
+
+                // Remove active/show from all panes
+                tabPanes.forEach(function(p) {
+                    p.classList.remove('show', 'active');
+                });
+
+                // Activate clicked tab
+                this.classList.add('active');
+                this.setAttribute('aria-selected', 'true');
+
+                // Show target pane
+                var targetPane = document.querySelector(targetId);
+                if (targetPane) {
+                    targetPane.classList.add('show', 'active');
+                }
+
+                // Trigger resize for charts after a short delay
+                setTimeout(handleTabResize, 100);
+            });
+        });
+    }
+
+    // Initialize manual tabs after DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initManualTabs);
+    } else {
+        initManualTabs();
+    }
 })();
 </script>
 
 <style>
 .usage-monitor-dashboard .card { transition: box-shadow 0.2s; }
 .usage-monitor-dashboard .card:hover { box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1) !important; }
-.usage-monitor-dashboard .nav-tabs .nav-link { color: #495057; }
-.usage-monitor-dashboard .nav-tabs .nav-link.active { font-weight: 600; }
+.usage-monitor-dashboard .nav-tabs .nav-link {
+    color: #495057;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+}
+.usage-monitor-dashboard .nav-tabs .nav-link:hover {
+    border-color: #e9ecef #e9ecef #dee2e6;
+    background-color: #f8f9fa;
+}
+.usage-monitor-dashboard .nav-tabs .nav-link.active {
+    font-weight: 600;
+    color: #495057;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
 .usage-monitor-dashboard .table th { font-weight: 600; font-size: 0.85rem; }
 .usage-monitor-dashboard .table td { font-size: 0.9rem; }
 .usage-monitor-dashboard .badge { font-weight: 500; }
