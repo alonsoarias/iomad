@@ -278,7 +278,7 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
                         </div>
                         <div class="card-body">
                             <?php if ($disk_usage_bytes > 0): ?>
-                                <div style="height: 280px; position: relative;">
+                                <div class="chart-container chart-md">
                                     <canvas id="chart-doughnut"></canvas>
                                 </div>
                             <?php else: ?>
@@ -377,7 +377,7 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
                     <h6 class="mb-0"><?php echo get_string('disk_usage_history', 'report_usage_monitor'); ?></h6>
                 </div>
                 <div class="card-body">
-                    <div style="height: 250px; position: relative;">
+                    <div class="chart-container chart-sm">
                         <canvas id="chart-disk-history"></canvas>
                     </div>
                 </div>
@@ -396,7 +396,7 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
                         </div>
                         <div class="card-body">
                             <?php if (!empty($last10daysLabels)): ?>
-                                <div style="height: 300px; position: relative;">
+                                <div class="chart-container chart-lg">
                                     <canvas id="chart-users-10days"></canvas>
                                 </div>
                             <?php else: ?>
@@ -516,7 +516,7 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
                         </div>
                         <div class="card-body">
                             <?php if (!empty($access_trends_labels)): ?>
-                                <div style="height: 250px; position: relative;">
+                                <div class="chart-container chart-sm">
                                     <canvas id="chart-access-trends"></canvas>
                                 </div>
                             <?php else: ?>
@@ -534,7 +534,7 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
                         </div>
                         <div class="card-body">
                             <?php if (!empty($completion_trends_labels)): ?>
-                                <div style="height: 250px; position: relative;">
+                                <div class="chart-container chart-sm">
                                     <canvas id="chart-completion-trends"></canvas>
                                 </div>
                             <?php else: ?>
@@ -746,14 +746,39 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
         check();
     }
 
-    // Initialize a chart safely
+    // Initialize a chart safely with fixed dimensions
     function initChart(canvasId, config) {
         var canvas = document.getElementById(canvasId);
         if (!canvas) return null;
 
+        var container = canvas.parentElement;
+        if (!container) return null;
+
         // Destroy existing chart if any
         if (charts[canvasId]) {
             charts[canvasId].destroy();
+            charts[canvasId] = null;
+        }
+
+        // Get container dimensions
+        var containerHeight = container.offsetHeight || 250;
+        var containerWidth = container.offsetWidth || 400;
+
+        // Set canvas dimensions explicitly
+        canvas.style.width = containerWidth + 'px';
+        canvas.style.height = containerHeight + 'px';
+        canvas.width = containerWidth;
+        canvas.height = containerHeight;
+
+        // Ensure responsive is true but aspect ratio is false
+        if (!config.options) config.options = {};
+        config.options.responsive = true;
+        config.options.maintainAspectRatio = false;
+        config.options.animation = { duration: 300 };
+
+        // Add resize delay to prevent loops
+        if (!config.options.resizeDelay) {
+            config.options.resizeDelay = 100;
         }
 
         try {
@@ -964,14 +989,34 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
         waitForChartJS(initCharts);
     }
 
-    // Handle tab changes to resize charts
-    document.addEventListener('shown.bs.tab', function(e) {
+    // Debounce function
+    function debounce(func, wait) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                func.apply(context, args);
+            }, wait);
+        };
+    }
+
+    // Handle tab changes to resize charts (with debounce)
+    var handleTabResize = debounce(function() {
         Object.keys(charts).forEach(function(key) {
-            if (charts[key]) {
-                charts[key].resize();
+            if (charts[key] && charts[key].canvas) {
+                var container = charts[key].canvas.parentElement;
+                if (container && container.offsetWidth > 0) {
+                    charts[key].resize();
+                }
             }
         });
-    });
+    }, 150);
+
+    document.addEventListener('shown.bs.tab', handleTabResize);
+
+    // Also handle window resize with debounce
+    window.addEventListener('resize', handleTabResize);
 })();
 </script>
 
@@ -983,6 +1028,22 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
 .usage-monitor-dashboard .table th { font-weight: 600; font-size: 0.85rem; }
 .usage-monitor-dashboard .table td { font-size: 0.9rem; }
 .usage-monitor-dashboard .badge { font-weight: 500; }
+
+/* Chart containers - critical for preventing infinite resize */
+.usage-monitor-dashboard .chart-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+.usage-monitor-dashboard .chart-container.chart-sm { height: 250px !important; max-height: 250px !important; }
+.usage-monitor-dashboard .chart-container.chart-md { height: 280px !important; max-height: 280px !important; }
+.usage-monitor-dashboard .chart-container.chart-lg { height: 300px !important; max-height: 300px !important; }
+.usage-monitor-dashboard .chart-container canvas {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: inherit !important;
+}
 </style>
 
 <?php

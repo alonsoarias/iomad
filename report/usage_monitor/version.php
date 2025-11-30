@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113006;  // Reorganize dashboard with tabs and fix Chart.js loading
+$plugin->version   = 2025113007;  // Fix chart container sizing and prevent resize loops
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.14';    // Complete dashboard reorganization with tabbed interface
+$plugin->release   = '4.5.15';    // Fix chart sizing with proper CSS constraints and debounce
 $plugin->maturity  = MATURITY_STABLE;
