@@ -1,0 +1,657 @@
+/**
+ * Usage Monitor Dashboard Styles
+ *
+ * @package    report_usage_monitor
+ * @copyright  2025 Soporte IngeWeb <soporte@ingeweb.co>
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/* ============================================
+   CSS VARIABLES - Light Theme (Default)
+   ============================================ */
+:root {
+    --um-primary: #0d6efd;
+    --um-primary-hover: #0b5ed7;
+    --um-success: #198754;
+    --um-info: #0dcaf0;
+    --um-warning: #ffc107;
+    --um-danger: #dc3545;
+    --um-secondary: #6c757d;
+    --um-light: #f8f9fa;
+    --um-dark: #212529;
+
+    --um-card-bg: #ffffff;
+    --um-card-border: rgba(0, 0, 0, 0.125);
+    --um-card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --um-card-shadow-hover: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+
+    --um-text-primary: #212529;
+    --um-text-secondary: #6c757d;
+    --um-text-muted: #adb5bd;
+    --um-text-on-color: #ffffff;
+
+    --um-bg-body: #f8f9fa;
+    --um-bg-light: #f8f9fa;
+    --um-bg-table-hover: rgba(0, 123, 255, 0.03);
+
+    --um-border-color: #dee2e6;
+    --um-border-light: #e9ecef;
+
+    --um-tab-active: #0d6efd;
+    --um-tab-text: #495057;
+    --um-tab-hover-bg: transparent;
+
+    --um-progress-bg: #e9ecef;
+
+    --um-alert-info-bg: #cfe2ff;
+    --um-alert-info-text: #084298;
+    --um-alert-success-bg: #d1e7dd;
+    --um-alert-success-text: #0f5132;
+    --um-alert-warning-bg: #fff3cd;
+    --um-alert-warning-text: #664d03;
+    --um-alert-danger-bg: #f8d7da;
+    --um-alert-danger-text: #842029;
+}
+
+/* ============================================
+   DARK THEME SUPPORT
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --um-primary: #6ea8fe;
+        --um-primary-hover: #8bb9fe;
+        --um-success: #75b798;
+        --um-info: #6edff6;
+        --um-warning: #ffda6a;
+        --um-danger: #ea868f;
+        --um-secondary: #a7acb1;
+        --um-light: #343a40;
+        --um-dark: #f8f9fa;
+
+        --um-card-bg: #2b3035;
+        --um-card-border: rgba(255, 255, 255, 0.1);
+        --um-card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+        --um-card-shadow-hover: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+
+        --um-text-primary: #e9ecef;
+        --um-text-secondary: #adb5bd;
+        --um-text-muted: #6c757d;
+        --um-text-on-color: #ffffff;
+
+        --um-bg-body: #1a1d20;
+        --um-bg-light: #343a40;
+        --um-bg-table-hover: rgba(110, 168, 254, 0.1);
+
+        --um-border-color: #495057;
+        --um-border-light: #3d4349;
+
+        --um-tab-active: #6ea8fe;
+        --um-tab-text: #e9ecef;
+        --um-tab-hover-bg: rgba(255, 255, 255, 0.05);
+
+        --um-progress-bg: #495057;
+
+        --um-alert-info-bg: #032830;
+        --um-alert-info-text: #6edff6;
+        --um-alert-success-bg: #051b11;
+        --um-alert-success-text: #75b798;
+        --um-alert-warning-bg: #332701;
+        --um-alert-warning-text: #ffda6a;
+        --um-alert-danger-bg: #2c0b0e;
+        --um-alert-danger-text: #ea868f;
+    }
+}
+
+/* Moodle/Boost dark theme class support */
+body.theme-dark .usage-monitor-dashboard,
+body.dark-mode .usage-monitor-dashboard,
+body[data-theme="dark"] .usage-monitor-dashboard,
+.theme-boost-dark .usage-monitor-dashboard {
+    --um-primary: #6ea8fe;
+    --um-primary-hover: #8bb9fe;
+    --um-success: #75b798;
+    --um-info: #6edff6;
+    --um-warning: #ffda6a;
+    --um-danger: #ea868f;
+    --um-secondary: #a7acb1;
+    --um-light: #343a40;
+    --um-dark: #f8f9fa;
+
+    --um-card-bg: #2b3035;
+    --um-card-border: rgba(255, 255, 255, 0.1);
+    --um-card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+    --um-card-shadow-hover: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+
+    --um-text-primary: #e9ecef;
+    --um-text-secondary: #adb5bd;
+    --um-text-muted: #6c757d;
+
+    --um-bg-body: #1a1d20;
+    --um-bg-light: #343a40;
+    --um-bg-table-hover: rgba(110, 168, 254, 0.1);
+
+    --um-border-color: #495057;
+    --um-border-light: #3d4349;
+
+    --um-tab-active: #6ea8fe;
+    --um-tab-text: #e9ecef;
+    --um-tab-hover-bg: rgba(255, 255, 255, 0.05);
+
+    --um-progress-bg: #495057;
+
+    --um-alert-info-bg: #032830;
+    --um-alert-info-text: #6edff6;
+    --um-alert-success-bg: #051b11;
+    --um-alert-success-text: #75b798;
+    --um-alert-warning-bg: #332701;
+    --um-alert-warning-text: #ffda6a;
+    --um-alert-danger-bg: #2c0b0e;
+    --um-alert-danger-text: #ea868f;
+}
+
+/* ============================================
+   BASE CONTAINER
+   ============================================ */
+.usage-monitor-dashboard {
+    color: var(--um-text-primary);
+}
+
+/* ============================================
+   CARD STYLES
+   ============================================ */
+.usage-monitor-dashboard .card {
+    background-color: var(--um-card-bg);
+    border: 1px solid var(--um-card-border);
+    border-radius: 0.5rem;
+    box-shadow: var(--um-card-shadow);
+    transition: box-shadow 0.2s ease-in-out, transform 0.15s ease-in-out;
+}
+
+.usage-monitor-dashboard .card:hover {
+    box-shadow: var(--um-card-shadow-hover);
+}
+
+.usage-monitor-dashboard .card-header {
+    background-color: var(--um-card-bg);
+    border-bottom: 1px solid var(--um-border-light);
+    padding: 0.875rem 1.25rem;
+}
+
+.usage-monitor-dashboard .card-header h6 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--um-text-primary);
+    margin: 0;
+}
+
+.usage-monitor-dashboard .card-body {
+    padding: 1.25rem;
+}
+
+.usage-monitor-dashboard .card-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--um-text-secondary);
+}
+
+/* ============================================
+   STATUS CARDS (Top row)
+   ============================================ */
+.usage-monitor-dashboard .status-card .h5 {
+    color: var(--um-text-primary);
+    font-weight: 600;
+}
+
+/* ============================================
+   METRIC CARDS (Colored summary cards)
+   ============================================ */
+.usage-monitor-dashboard .metric-card {
+    cursor: help;
+    transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    border: none;
+}
+
+.usage-monitor-dashboard .metric-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.usage-monitor-dashboard .metric-card .card-body {
+    padding: 1rem;
+}
+
+.usage-monitor-dashboard .metric-card .h4,
+.usage-monitor-dashboard .metric-card h4 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+    color: var(--um-text-on-color);
+}
+
+.usage-monitor-dashboard .metric-card .small {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.usage-monitor-dashboard .metric-card .opacity-75 {
+    opacity: 0.9 !important;
+}
+
+.usage-monitor-dashboard .metric-card .opacity-50 {
+    opacity: 0.7 !important;
+}
+
+/* Colored card backgrounds with proper text contrast */
+.usage-monitor-dashboard .card.bg-primary {
+    background-color: var(--um-primary) !important;
+    color: var(--um-text-on-color);
+}
+
+.usage-monitor-dashboard .card.bg-success {
+    background-color: var(--um-success) !important;
+    color: var(--um-text-on-color);
+}
+
+.usage-monitor-dashboard .card.bg-info {
+    background-color: #0891b2 !important;
+    color: var(--um-text-on-color);
+}
+
+.usage-monitor-dashboard .card.bg-secondary {
+    background-color: var(--um-secondary) !important;
+    color: var(--um-text-on-color);
+}
+
+.usage-monitor-dashboard .card.bg-warning {
+    background-color: var(--um-warning) !important;
+    color: #212529;
+}
+
+.usage-monitor-dashboard .card.bg-danger {
+    background-color: var(--um-danger) !important;
+    color: var(--um-text-on-color);
+}
+
+/* ============================================
+   NAVIGATION TABS
+   ============================================ */
+.usage-monitor-dashboard .nav-tabs {
+    border-bottom: 2px solid var(--um-border-color);
+    margin-bottom: 1.5rem;
+}
+
+.usage-monitor-dashboard .nav-tabs .nav-item {
+    margin-bottom: -2px;
+}
+
+.usage-monitor-dashboard .nav-tabs .nav-link {
+    color: var(--um-text-secondary);
+    cursor: pointer;
+    border: none;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    padding: 0.875rem 1.5rem;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    background-color: transparent;
+}
+
+.usage-monitor-dashboard .nav-tabs .nav-link:hover {
+    color: var(--um-tab-active);
+    border-bottom-color: var(--um-border-color);
+    background-color: var(--um-tab-hover-bg);
+}
+
+.usage-monitor-dashboard .nav-tabs .nav-link.active {
+    font-weight: 600;
+    color: var(--um-tab-active);
+    background-color: transparent;
+    border-bottom: 3px solid var(--um-tab-active);
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+.usage-monitor-dashboard .table {
+    margin-bottom: 0;
+    color: var(--um-text-primary);
+}
+
+.usage-monitor-dashboard .table th {
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--um-text-secondary);
+    border-top: none;
+    border-bottom: 2px solid var(--um-border-color);
+    padding: 0.875rem 1rem;
+    background-color: var(--um-bg-light);
+}
+
+.usage-monitor-dashboard .table td {
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    border-color: var(--um-border-light);
+    color: var(--um-text-primary);
+}
+
+.usage-monitor-dashboard .table-hover tbody tr:hover {
+    background-color: var(--um-bg-table-hover);
+}
+
+.usage-monitor-dashboard .table-light,
+.usage-monitor-dashboard .table-light th {
+    background-color: var(--um-bg-light);
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.usage-monitor-dashboard .badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.4em 0.7em;
+    border-radius: 0.375rem;
+}
+
+.usage-monitor-dashboard .badge.bg-success {
+    background-color: var(--um-success) !important;
+    color: var(--um-text-on-color);
+}
+
+.usage-monitor-dashboard .badge.bg-warning {
+    background-color: var(--um-warning) !important;
+    color: #212529;
+}
+
+.usage-monitor-dashboard .badge.bg-danger {
+    background-color: var(--um-danger) !important;
+    color: var(--um-text-on-color);
+}
+
+/* ============================================
+   PROGRESS BARS
+   ============================================ */
+.usage-monitor-dashboard .progress {
+    border-radius: 0.5rem;
+    background-color: var(--um-progress-bg);
+    height: 0.5rem;
+}
+
+.usage-monitor-dashboard .progress-bar {
+    border-radius: 0.5rem;
+    transition: width 0.3s ease;
+}
+
+.usage-monitor-dashboard .progress-bar.bg-success {
+    background-color: var(--um-success) !important;
+}
+
+.usage-monitor-dashboard .progress-bar.bg-warning {
+    background-color: var(--um-warning) !important;
+}
+
+.usage-monitor-dashboard .progress-bar.bg-danger {
+    background-color: var(--um-danger) !important;
+}
+
+/* ============================================
+   TOOLTIP ICONS
+   ============================================ */
+.usage-monitor-dashboard .tooltip-icon {
+    cursor: help;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+    margin-left: 0.375rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.usage-monitor-dashboard .tooltip-icon:hover {
+    opacity: 1;
+}
+
+.usage-monitor-dashboard .tooltip-icon i,
+.usage-monitor-dashboard .tooltip-icon .fa {
+    font-size: 0.85em;
+    color: var(--um-primary);
+}
+
+/* Info icons in metric cards */
+.usage-monitor-dashboard .metric-card .fa-info-circle {
+    opacity: 0.7;
+    font-size: 0.75rem;
+}
+
+/* ============================================
+   CHART CONTAINERS
+   ============================================ */
+.usage-monitor-dashboard .chart-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.usage-monitor-dashboard .chart-container.chart-sm {
+    height: 250px !important;
+    max-height: 250px !important;
+}
+
+.usage-monitor-dashboard .chart-container.chart-md {
+    height: 280px !important;
+    max-height: 280px !important;
+}
+
+.usage-monitor-dashboard .chart-container.chart-lg {
+    height: 320px !important;
+    max-height: 320px !important;
+}
+
+.usage-monitor-dashboard .chart-container canvas {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: inherit !important;
+}
+
+/* ============================================
+   ALERTS
+   ============================================ */
+.usage-monitor-dashboard .alert {
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 0.9rem;
+    padding: 1rem 1.25rem;
+}
+
+.usage-monitor-dashboard .alert-info {
+    background-color: var(--um-alert-info-bg);
+    color: var(--um-alert-info-text);
+}
+
+.usage-monitor-dashboard .alert-success {
+    background-color: var(--um-alert-success-bg);
+    color: var(--um-alert-success-text);
+}
+
+.usage-monitor-dashboard .alert-warning {
+    background-color: var(--um-alert-warning-bg);
+    color: var(--um-alert-warning-text);
+}
+
+.usage-monitor-dashboard .alert-danger {
+    background-color: var(--um-alert-danger-bg);
+    color: var(--um-alert-danger-text);
+}
+
+/* ============================================
+   SYSTEM INFO BOXES
+   ============================================ */
+.usage-monitor-dashboard .info-box {
+    background-color: var(--um-bg-light);
+    border: 1px solid var(--um-border-light);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.usage-monitor-dashboard .info-box .text-muted {
+    color: var(--um-text-secondary) !important;
+}
+
+.usage-monitor-dashboard .bg-light {
+    background-color: var(--um-bg-light) !important;
+}
+
+/* ============================================
+   TEXT UTILITIES
+   ============================================ */
+.usage-monitor-dashboard .text-muted {
+    color: var(--um-text-secondary) !important;
+}
+
+.usage-monitor-dashboard .text-primary {
+    color: var(--um-primary) !important;
+}
+
+.usage-monitor-dashboard .text-success {
+    color: var(--um-success) !important;
+}
+
+.usage-monitor-dashboard .text-danger {
+    color: var(--um-danger) !important;
+}
+
+.usage-monitor-dashboard .text-warning {
+    color: var(--um-warning) !important;
+}
+
+.usage-monitor-dashboard a {
+    color: var(--um-primary);
+    text-decoration: none;
+}
+
+.usage-monitor-dashboard a:hover {
+    color: var(--um-primary-hover);
+    text-decoration: underline;
+}
+
+/* ============================================
+   DISCLAIMER BANNER
+   ============================================ */
+.usage-monitor-dashboard .disclaimer-banner {
+    background-color: var(--um-alert-info-bg);
+    color: var(--um-alert-info-text);
+    border-radius: 0.375rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.usage-monitor-dashboard .disclaimer-banner a {
+    color: var(--um-primary);
+    font-weight: 500;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+@media (max-width: 991.98px) {
+    .usage-monitor-dashboard .nav-tabs .nav-link {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .usage-monitor-dashboard .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .usage-monitor-dashboard .nav-tabs .nav-link {
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .usage-monitor-dashboard .metric-card .h4 {
+        font-size: 1.25rem;
+    }
+
+    .usage-monitor-dashboard .card-header h6 {
+        font-size: 0.875rem;
+    }
+
+    .usage-monitor-dashboard .card-body {
+        padding: 1rem;
+    }
+
+    .usage-monitor-dashboard .chart-container.chart-sm,
+    .usage-monitor-dashboard .chart-container.chart-md,
+    .usage-monitor-dashboard .chart-container.chart-lg {
+        height: 220px !important;
+        max-height: 220px !important;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    .usage-monitor-dashboard {
+        color: #000 !important;
+    }
+
+    .usage-monitor-dashboard .card {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
+        break-inside: avoid;
+    }
+
+    .usage-monitor-dashboard .nav-tabs {
+        display: none !important;
+    }
+
+    .usage-monitor-dashboard .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+
+    .usage-monitor-dashboard .tab-pane.fade {
+        opacity: 1 !important;
+    }
+
+    .usage-monitor-dashboard .metric-card {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .usage-monitor-dashboard .chart-container {
+        break-inside: avoid;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.usage-monitor-dashboard .nav-tabs .nav-link:focus,
+.usage-monitor-dashboard a:focus,
+.usage-monitor-dashboard .btn:focus {
+    outline: 2px solid var(--um-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .usage-monitor-dashboard .card,
+    .usage-monitor-dashboard .metric-card,
+    .usage-monitor-dashboard .nav-tabs .nav-link,
+    .usage-monitor-dashboard .progress-bar {
+        transition: none;
+    }
+}
