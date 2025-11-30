@@ -982,3 +982,213 @@ function email_notify_disk_limit($quotadisk, $disk_usage, $disk_percent, $userAc
 
     return $result;
 }
+
+/**
+ * Get course access trends for the last N days.
+ * Counts unique course views grouped by day.
+ *
+ * @param int $days Number of days to analyze
+ * @return array Array with dates as keys and access counts as values
+ */
+function get_course_access_trends($days = 30) {
+    global $DB;
+
+    $days_ago = time() - ($days * 86400);
+
+    $sql = "SELECT (timecreated - (timecreated % 86400)) as fecha,
+                   COUNT(*) as total_accesses,
+                   COUNT(DISTINCT userid) as unique_users,
+                   COUNT(DISTINCT courseid) as unique_courses
+            FROM {logstore_standard_log}
+            WHERE target = 'course'
+              AND action = 'viewed'
+              AND timecreated >= :days_ago
+              AND courseid != :siteid
+            GROUP BY (timecreated - (timecreated % 86400))
+            ORDER BY fecha ASC";
+
+    $records = $DB->get_records_sql($sql, ['days_ago' => $days_ago, 'siteid' => SITEID]);
+
+    $trends = [];
+    foreach ($records as $record) {
+        if (is_numeric($record->fecha) && $record->fecha > 0) {
+            $trends[] = (object)[
+                'fecha' => (int)$record->fecha,
+                'fecha_formateada' => date('d/m/Y', (int)$record->fecha),
+                'total_accesses' => (int)$record->total_accesses,
+                'unique_users' => (int)$record->unique_users,
+                'unique_courses' => (int)$record->unique_courses
+            ];
+        }
+    }
+
+    return $trends;
+}
+
+/**
+ * Get most accessed courses.
+ *
+ * @param int $limit Number of courses to return
+ * @param int $days Number of days to analyze
+ * @return array Array of course objects with access counts
+ */
+function get_most_accessed_courses($limit = 10, $days = 30) {
+    global $DB;
+
+    $days_ago = time() - ($days * 86400);
+
+    $sql = "SELECT l.courseid, c.fullname, c.shortname,
+                   COUNT(*) as total_accesses,
+                   COUNT(DISTINCT l.userid) as unique_users
+            FROM {logstore_standard_log} l
+            JOIN {course} c ON c.id = l.courseid
+            WHERE l.target = 'course'
+              AND l.action = 'viewed'
+              AND l.timecreated >= :days_ago
+              AND l.courseid != :siteid
+            GROUP BY l.courseid, c.fullname, c.shortname
+            ORDER BY total_accesses DESC
+            LIMIT :limit";
+
+    $records = $DB->get_records_sql($sql, [
+        'days_ago' => $days_ago,
+        'siteid' => SITEID,
+        'limit' => $limit
+    ]);
+
+    $courses = [];
+    foreach ($records as $record) {
+        $courses[] = (object)[
+            'id' => $record->courseid,
+            'fullname' => $record->fullname,
+            'shortname' => $record->shortname,
+            'total_accesses' => (int)$record->total_accesses,
+            'unique_users' => (int)$record->unique_users
+        ];
+    }
+
+    return $courses;
+}
+
+/**
+ * Get course completion trends for the last N days.
+ * Counts course completions grouped by day.
+ *
+ * @param int $days Number of days to analyze
+ * @return array Array with completion trend data
+ */
+function get_course_completion_trends($days = 30) {
+    global $DB;
+
+    $days_ago = time() - ($days * 86400);
+
+    $sql = "SELECT (timecompleted - (timecompleted % 86400)) as fecha,
+                   COUNT(*) as completions,
+                   COUNT(DISTINCT course) as unique_courses,
+                   COUNT(DISTINCT userid) as unique_users
+            FROM {course_completions}
+            WHERE timecompleted IS NOT NULL
+              AND timecompleted >= :days_ago
+            GROUP BY (timecompleted - (timecompleted % 86400))
+            ORDER BY fecha ASC";
+
+    $records = $DB->get_records_sql($sql, ['days_ago' => $days_ago]);
+
+    $trends = [];
+    foreach ($records as $record) {
+        if (is_numeric($record->fecha) && $record->fecha > 0) {
+            $trends[] = (object)[
+                'fecha' => (int)$record->fecha,
+                'fecha_formateada' => date('d/m/Y', (int)$record->fecha),
+                'completions' => (int)$record->completions,
+                'unique_courses' => (int)$record->unique_courses,
+                'unique_users' => (int)$record->unique_users
+            ];
+        }
+    }
+
+    return $trends;
+}
+
+/**
+ * Get summary statistics for course completions.
+ *
+ * @param int $days Number of days to analyze
+ * @return object Object with completion summary statistics
+ */
+function get_completion_summary($days = 30) {
+    global $DB;
+
+    $days_ago = time() - ($days * 86400);
+
+    // Total completions in period
+    $total_completions = $DB->count_records_select(
+        'course_completions',
+        'timecompleted IS NOT NULL AND timecompleted >= ?',
+        [$days_ago]
+    );
+
+    // Average completions per day
+    $avg_per_day = round($total_completions / $days, 1);
+
+    // Total courses with at least one completion
+    $sql = "SELECT COUNT(DISTINCT course)
+            FROM {course_completions}
+            WHERE timecompleted IS NOT NULL AND timecompleted >= ?";
+    $courses_with_completions = $DB->count_records_sql($sql, [$days_ago]);
+
+    // Total users who completed at least one course
+    $sql = "SELECT COUNT(DISTINCT userid)
+            FROM {course_completions}
+            WHERE timecompleted IS NOT NULL AND timecompleted >= ?";
+    $users_with_completions = $DB->count_records_sql($sql, [$days_ago]);
+
+    return (object)[
+        'total_completions' => $total_completions,
+        'avg_per_day' => $avg_per_day,
+        'courses_with_completions' => $courses_with_completions,
+        'users_with_completions' => $users_with_completions,
+        'period_days' => $days
+    ];
+}
+
+/**
+ * Get summary statistics for course access.
+ *
+ * @param int $days Number of days to analyze
+ * @return object Object with access summary statistics
+ */
+function get_access_summary($days = 30) {
+    global $DB;
+
+    $days_ago = time() - ($days * 86400);
+
+    $sql = "SELECT COUNT(*) as total_accesses,
+                   COUNT(DISTINCT userid) as unique_users,
+                   COUNT(DISTINCT courseid) as unique_courses
+            FROM {logstore_standard_log}
+            WHERE target = 'course'
+              AND action = 'viewed'
+              AND timecreated >= :days_ago
+              AND courseid != :siteid";
+
+    $result = $DB->get_record_sql($sql, ['days_ago' => $days_ago, 'siteid' => SITEID]);
+
+    if (!$result) {
+        return (object)[
+            'total_accesses' => 0,
+            'unique_users' => 0,
+            'unique_courses' => 0,
+            'avg_per_day' => 0,
+            'period_days' => $days
+        ];
+    }
+
+    return (object)[
+        'total_accesses' => (int)$result->total_accesses,
+        'unique_users' => (int)$result->unique_users,
+        'unique_courses' => (int)$result->unique_courses,
+        'avg_per_day' => round($result->total_accesses / $days, 1),
+        'period_days' => $days
+    ];
+}

@@ -115,6 +115,27 @@ $string['show_more_courses'] = 'Mostrar más cursos';
 $string['install_coursesize'] = 'Instale el plugin report_coursesize para un análisis detallado del tamaño de cursos';
 $string['coursesize_plugin_url'] = 'https://moodle.org/plugins/report_coursesize';
 
+// Course access and completion sections
+$string['course_access_trends'] = 'Tendencias de Acceso a Cursos';
+$string['most_accessed_courses'] = 'Cursos más Accedidos';
+$string['course_completion_trends'] = 'Tendencias de Finalización de Cursos';
+$string['total_accesses'] = 'Total de Accesos';
+$string['unique_users'] = 'Usuarios Únicos';
+$string['unique_courses'] = 'Cursos Únicos';
+$string['completions'] = 'Finalizaciones';
+$string['avg_per_day'] = 'Prom. por Día';
+$string['last_30_days'] = 'Últimos 30 Días';
+$string['no_data_available'] = 'Sin datos disponibles';
+$string['access_summary'] = 'Resumen de Accesos';
+$string['completion_summary'] = 'Resumen de Finalizaciones';
+$string['users_completed'] = 'Usuarios con Finalizaciones';
+$string['courses_with_completions'] = 'Cursos con Finalizaciones';
+$string['total_completions'] = 'Total de Finalizaciones';
+$string['access_chart'] = 'Gráfico de Accesos';
+$string['completion_chart'] = 'Gráfico de Finalizaciones';
+$string['access_table'] = 'Tabla de Accesos';
+$string['completion_table'] = 'Tabla de Finalizaciones';
+
 // Recommendation tips
 $string['space_saving_tips'] = 'Consejos para ahorrar espacio en disco:';
 $string['tip_backups'] = 'Reducir el número de copias de seguridad automáticas por curso (actualmente: {$a})';

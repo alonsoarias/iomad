@@ -234,6 +234,31 @@ foreach ($daily_data as $data) {
     $disk_history_data[] = $data['percentage'];
 }
 
+// Fetch data for new sections: Course Access Trends, Most Accessed Courses, Course Completion Trends
+$course_access_trends = get_course_access_trends(30);
+$most_accessed_courses = get_most_accessed_courses(10, 30);
+$course_completion_trends = get_course_completion_trends(30);
+$access_summary = get_access_summary(30);
+$completion_summary = get_completion_summary(30);
+
+// Prepare data for course access trends chart
+$access_trends_labels = [];
+$access_trends_data = [];
+$access_trends_users = [];
+foreach ($course_access_trends as $trend) {
+    $access_trends_labels[] = $trend->fecha_formateada;
+    $access_trends_data[] = $trend->total_accesses;
+    $access_trends_users[] = $trend->unique_users;
+}
+
+// Prepare data for course completion trends chart
+$completion_trends_labels = [];
+$completion_trends_data = [];
+foreach ($course_completion_trends as $trend) {
+    $completion_trends_labels[] = $trend->fecha_formateada;
+    $completion_trends_data[] = $trend->completions;
+}
+
 echo $OUTPUT->header();
 
 echo '<div class="alert alert-info mb-2 text-center small">';
@@ -381,18 +406,22 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
                             $total_bytes = $disk_usage_bytes;
                             if (!empty($dir_analysis) && $total_bytes > 0):
                                 $directories = [
-                                    'database' => get_string('database', 'report_usage_monitor'),
-                                    'filedir'  => get_string('files_dir', 'report_usage_monitor'),
-                                    'cache'    => get_string('cache', 'report_usage_monitor'),
-                                    'others'   => get_string('others', 'report_usage_monitor'),
+                                    'database' => ['label' => get_string('database', 'report_usage_monitor'), 'size' => (int)($dir_analysis['database'] ?? 0)],
+                                    'filedir'  => ['label' => get_string('files_dir', 'report_usage_monitor'), 'size' => (int)($dir_analysis['filedir'] ?? 0)],
+                                    'cache'    => ['label' => get_string('cache', 'report_usage_monitor'), 'size' => (int)($dir_analysis['cache'] ?? 0)],
+                                    'others'   => ['label' => get_string('others', 'report_usage_monitor'), 'size' => (int)($dir_analysis['others'] ?? 0)],
                                 ];
-                                foreach ($directories as $key => $label):
-                                    $sub_bytes = (int)($dir_analysis[$key] ?? 0);
+                                // Sort directories by size in descending order
+                                uasort($directories, function($a, $b) {
+                                    return $b['size'] - $a['size'];
+                                });
+                                foreach ($directories as $key => $dir_data):
+                                    $sub_bytes = $dir_data['size'];
                                     $sub_gb    = display_size_in_gb($sub_bytes, 2);
                                     $percent   = round(($sub_bytes / $total_bytes) * 100, 2);
                             ?>
                                     <tr>
-                                        <td><?php echo $label; ?></td>
+                                        <td><?php echo $dir_data['label']; ?></td>
                                         <td><?php echo $sub_gb . ' GB'; ?></td>
                                         <td><?php echo $percent; ?>%</td>
                                     </tr>
@@ -458,7 +487,7 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
                 <?php if (!empty($largest_courses)): ?>
                 <div class="card-footer text-center">
                     <?php if ($coursesize_installed): ?>
-                        <a href="<?php echo $CFG->wwwroot; ?>/report/coursesize/index.php" class="btn btn-sm btn-outline-primary">
+                        <a href="<?php echo $CFG->wwwroot; ?>/report/coursesize/index.php" target="_blank" class="btn btn-sm btn-outline-primary">
                             <i class="fa fa-search-plus me-1"></i>
                             <?php echo get_string('show_more_courses', 'report_usage_monitor'); ?>
                         </a>
@@ -623,6 +652,167 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
             </div>
         </div>
     </div><!-- fin row top 10 usuarios diarios -->
+
+    <!-- SECCIÓN: Tendencias de Acceso a Cursos -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><?php echo get_string('course_access_trends', 'report_usage_monitor'); ?></h5>
+                    <span class="badge bg-primary rounded-pill">
+                        <?php echo get_string('last_30_days', 'report_usage_monitor'); ?>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <!-- Summary Cards -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body p-3 text-center">
+                                    <div class="small text-muted"><?php echo get_string('total_accesses', 'report_usage_monitor'); ?></div>
+                                    <div class="h4 mb-0"><?php echo number_format($access_summary->total_accesses); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body p-3 text-center">
+                                    <div class="small text-muted"><?php echo get_string('unique_users', 'report_usage_monitor'); ?></div>
+                                    <div class="h4 mb-0"><?php echo number_format($access_summary->unique_users); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body p-3 text-center">
+                                    <div class="small text-muted"><?php echo get_string('unique_courses', 'report_usage_monitor'); ?></div>
+                                    <div class="h4 mb-0"><?php echo number_format($access_summary->unique_courses); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body p-3 text-center">
+                                    <div class="small text-muted"><?php echo get_string('avg_per_day', 'report_usage_monitor'); ?></div>
+                                    <div class="h4 mb-0"><?php echo number_format($access_summary->avg_per_day, 1); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chart -->
+                    <?php if (!empty($access_trends_labels)): ?>
+                        <canvas id="chartjs-access-trends" style="height: 250px;"></canvas>
+                    <?php else: ?>
+                        <div class="alert alert-info text-center">
+                            <?php echo get_string('no_data_available', 'report_usage_monitor'); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN: Cursos más Accedidos -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0"><?php echo get_string('most_accessed_courses', 'report_usage_monitor'); ?></h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th><?php echo get_string('course', 'report_usage_monitor'); ?></th>
+                                <th class="text-center"><?php echo get_string('total_accesses', 'report_usage_monitor'); ?></th>
+                                <th class="text-center"><?php echo get_string('unique_users', 'report_usage_monitor'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($most_accessed_courses)): ?>
+                                <?php foreach ($most_accessed_courses as $course): ?>
+                                    <tr>
+                                        <td>
+                                            <a href="<?php echo $CFG->wwwroot . '/course/view.php?id=' . $course->id; ?>">
+                                                <?php echo format_string($course->fullname) . ' (' . $course->shortname . ')'; ?>
+                                            </a>
+                                        </td>
+                                        <td class="text-center"><?php echo number_format($course->total_accesses); ?></td>
+                                        <td class="text-center"><?php echo number_format($course->unique_users); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        <?php echo get_string('no_data_available', 'report_usage_monitor'); ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN: Tendencias de Finalización de Cursos -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><?php echo get_string('course_completion_trends', 'report_usage_monitor'); ?></h5>
+                    <span class="badge bg-success rounded-pill">
+                        <?php echo get_string('last_30_days', 'report_usage_monitor'); ?>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <!-- Summary Cards -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body p-3 text-center">
+                                    <div class="small text-muted"><?php echo get_string('total_completions', 'report_usage_monitor'); ?></div>
+                                    <div class="h4 mb-0"><?php echo number_format($completion_summary->total_completions); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body p-3 text-center">
+                                    <div class="small text-muted"><?php echo get_string('users_completed', 'report_usage_monitor'); ?></div>
+                                    <div class="h4 mb-0"><?php echo number_format($completion_summary->users_with_completions); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body p-3 text-center">
+                                    <div class="small text-muted"><?php echo get_string('courses_with_completions', 'report_usage_monitor'); ?></div>
+                                    <div class="h4 mb-0"><?php echo number_format($completion_summary->courses_with_completions); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-light">
+                                <div class="card-body p-3 text-center">
+                                    <div class="small text-muted"><?php echo get_string('avg_per_day', 'report_usage_monitor'); ?></div>
+                                    <div class="h4 mb-0"><?php echo number_format($completion_summary->avg_per_day, 1); ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chart -->
+                    <?php if (!empty($completion_trends_labels)): ?>
+                        <canvas id="chartjs-completion-trends" style="height: 250px;"></canvas>
+                    <?php else: ?>
+                        <div class="alert alert-info text-center">
+                            <?php echo get_string('no_data_available', 'report_usage_monitor'); ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- SECCIÓN E: Info sistema + recomendaciones -->
     <div class="row">
@@ -953,6 +1143,127 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
                                 }
                             }
                         },
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+
+        // ========== Gráfico Line (Tendencias de Acceso a Cursos) ==========
+        var accessTrendsCtx = document.getElementById("chartjs-access-trends");
+        if (accessTrendsCtx && <?php echo !empty($access_trends_labels) ? 'true' : 'false'; ?>) {
+            new Chart(accessTrendsCtx, {
+                type: "line",
+                data: {
+                    labels: <?php echo json_encode($access_trends_labels); ?>,
+                    datasets: [{
+                        label: "<?php echo get_string('total_accesses', 'report_usage_monitor'); ?>",
+                        fill: true,
+                        backgroundColor: "rgba(0, 123, 255, 0.1)",
+                        borderColor: "#007bff",
+                        data: <?php echo json_encode($access_trends_data); ?>,
+                        tension: 0.2,
+                        yAxisID: 'accesses'
+                    },
+                    {
+                        label: "<?php echo get_string('unique_users', 'report_usage_monitor'); ?>",
+                        fill: false,
+                        borderColor: "#28a745",
+                        data: <?php echo json_encode($access_trends_users); ?>,
+                        tension: 0.2,
+                        yAxisID: 'users'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        x: {
+                            grid: {
+                                color: "rgba(0,0,0,0.05)"
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        },
+                        accesses: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true,
+                            grid: {
+                                color: "rgba(0,0,0,0.05)"
+                            },
+                            title: {
+                                display: true,
+                                text: '<?php echo get_string('total_accesses', 'report_usage_monitor'); ?>'
+                            }
+                        },
+                        users: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            title: {
+                                display: true,
+                                text: '<?php echo get_string('unique_users', 'report_usage_monitor'); ?>'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+
+        // ========== Gráfico Line (Tendencias de Finalización de Cursos) ==========
+        var completionTrendsCtx = document.getElementById("chartjs-completion-trends");
+        if (completionTrendsCtx && <?php echo !empty($completion_trends_labels) ? 'true' : 'false'; ?>) {
+            new Chart(completionTrendsCtx, {
+                type: "line",
+                data: {
+                    labels: <?php echo json_encode($completion_trends_labels); ?>,
+                    datasets: [{
+                        label: "<?php echo get_string('completions', 'report_usage_monitor'); ?>",
+                        fill: true,
+                        backgroundColor: "rgba(40, 167, 69, 0.1)",
+                        borderColor: "#28a745",
+                        data: <?php echo json_encode($completion_trends_data); ?>,
+                        tension: 0.2
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        x: {
+                            grid: {
+                                color: "rgba(0,0,0,0.05)"
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: "rgba(0,0,0,0.05)"
+                            },
+                            title: {
+                                display: true,
+                                text: '<?php echo get_string('completions', 'report_usage_monitor'); ?>'
+                            }
+                        }
+                    },
+                    plugins: {
                         legend: {
                             position: 'top'
                         }

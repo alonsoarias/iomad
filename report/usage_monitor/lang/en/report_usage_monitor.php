@@ -115,6 +115,27 @@ $string['show_more_courses'] = 'Show more courses';
 $string['install_coursesize'] = 'Install report_coursesize plugin for detailed course size analysis';
 $string['coursesize_plugin_url'] = 'https://moodle.org/plugins/report_coursesize';
 
+// Course access and completion sections
+$string['course_access_trends'] = 'Course Access Trends';
+$string['most_accessed_courses'] = 'Most Accessed Courses';
+$string['course_completion_trends'] = 'Course Completion Trends';
+$string['total_accesses'] = 'Total Accesses';
+$string['unique_users'] = 'Unique Users';
+$string['unique_courses'] = 'Unique Courses';
+$string['completions'] = 'Completions';
+$string['avg_per_day'] = 'Avg. per Day';
+$string['last_30_days'] = 'Last 30 Days';
+$string['no_data_available'] = 'No data available';
+$string['access_summary'] = 'Access Summary';
+$string['completion_summary'] = 'Completion Summary';
+$string['users_completed'] = 'Users with Completions';
+$string['courses_with_completions'] = 'Courses with Completions';
+$string['total_completions'] = 'Total Completions';
+$string['access_chart'] = 'Access Chart';
+$string['completion_chart'] = 'Completion Chart';
+$string['access_table'] = 'Access Table';
+$string['completion_table'] = 'Completion Table';
+
 // Recommendation tips
 $string['space_saving_tips'] = 'Tips to save disk space:';
 $string['tip_backups'] = 'Reduce the number of automatic backups per course (currently: {$a})';
