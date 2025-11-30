@@ -71,6 +71,25 @@ if (empty($dir_analysis) || !is_array($dir_analysis)) {
     $dir_analysis = ['database' => 0, 'filedir' => 0, 'cache' => 0, 'others' => 0];
 }
 
+// Prepare directories for template
+$directories = [];
+if (!empty($dir_analysis) && $disk_usage_bytes > 0) {
+    $dir_items = [
+        'database' => ['label' => get_string('database', 'report_usage_monitor'), 'size' => (int)($dir_analysis['database'] ?? 0)],
+        'filedir'  => ['label' => get_string('files_dir', 'report_usage_monitor'), 'size' => (int)($dir_analysis['filedir'] ?? 0)],
+        'cache'    => ['label' => get_string('cache', 'report_usage_monitor'), 'size' => (int)($dir_analysis['cache'] ?? 0)],
+        'others'   => ['label' => get_string('others', 'report_usage_monitor'), 'size' => (int)($dir_analysis['others'] ?? 0)],
+    ];
+    uasort($dir_items, function($a, $b) { return $b['size'] - $a['size']; });
+    foreach ($dir_items as $dir_data) {
+        $directories[] = [
+            'label' => $dir_data['label'],
+            'size_formatted' => display_size_in_gb($dir_data['size'], 2),
+            'percent' => round(($dir_data['size'] / $disk_usage_bytes) * 100, 1)
+        ];
+    }
+}
+
 // Largest courses
 $largest_courses_json = $reportconfig->largest_courses ?? '[]';
 $largest_courses = json_decode($largest_courses_json);
@@ -78,24 +97,39 @@ if (empty($largest_courses)) {
     $largest_courses = get_largest_courses(5);
 }
 
+// Format largest courses for template
+$largest_courses_formatted = [];
+foreach ($largest_courses as $course) {
+    $largest_courses_formatted[] = [
+        'id' => $course->id,
+        'fullname' => format_string($course->fullname),
+        'course_url' => $CFG->wwwroot . '/course/view.php?id=' . $course->id,
+        'totalsize_formatted' => display_size($course->totalsize),
+        'backupcount' => $course->backupcount
+    ];
+}
+
 // Users daily (last 10 days)
 $userdaily_records = $DB->get_records_sql(report_user_daily_sql());
 $formatted_userdaily_records = [];
 foreach ($userdaily_records as $record) {
-    $obj = new stdClass();
-    $obj->conteo_accesos_unicos = $record->conteo_accesos_unicos;
-    $obj->fecha_formateada = is_numeric($record->timestamp_fecha) ? date('d/m/Y', (int)$record->timestamp_fecha) : date('d/m/Y');
-    $formatted_userdaily_records[] = $obj;
+    $formatted_userdaily_records[] = [
+        'conteo_accesos_unicos' => $record->conteo_accesos_unicos,
+        'fecha_formateada' => is_numeric($record->timestamp_fecha) ? date('d/m/Y', (int)$record->timestamp_fecha) : date('d/m/Y')
+    ];
 }
 
 // Top users daily
 $userdaily_recordstop = $DB->get_records_sql(report_user_daily_top_sql());
 $formatted_userdaily_recordstop = [];
 foreach ($userdaily_recordstop as $record) {
-    $obj = new stdClass();
-    $obj->cantidad_usuarios = $record->cantidad_usuarios;
-    $obj->fecha_formateada = is_numeric($record->timestamp_fecha) ? date('d/m/Y', (int)$record->timestamp_fecha) : date('d/m/Y');
-    $formatted_userdaily_recordstop[] = $obj;
+    $percent = ($max_users_threshold > 0) ? round(($record->cantidad_usuarios / $max_users_threshold) * 100, 1) : 0;
+    $formatted_userdaily_recordstop[] = [
+        'cantidad_usuarios' => $record->cantidad_usuarios,
+        'fecha_formateada' => is_numeric($record->timestamp_fecha) ? date('d/m/Y', (int)$record->timestamp_fecha) : date('d/m/Y'),
+        'percent' => $percent,
+        'percent_class' => ($percent >= 90) ? 'text-danger fw-bold' : (($percent >= 70) ? 'text-warning' : '')
+    ];
 }
 
 // System info
@@ -156,10 +190,10 @@ $last10daysLabels = [];
 $last10daysData = [];
 $last10daysDataRaw = [];
 foreach ($formatted_userdaily_records as $day) {
-    $last10daysLabels[] = $day->fecha_formateada;
-    $percent = ($max_users_threshold > 0) ? min(100, round(($day->conteo_accesos_unicos / $max_users_threshold) * 100, 1)) : 0;
+    $last10daysLabels[] = $day['fecha_formateada'];
+    $percent = ($max_users_threshold > 0) ? min(100, round(($day['conteo_accesos_unicos'] / $max_users_threshold) * 100, 1)) : 0;
     $last10daysData[] = $percent;
-    $last10daysDataRaw[] = (int)$day->conteo_accesos_unicos;
+    $last10daysDataRaw[] = (int)$day['conteo_accesos_unicos'];
 }
 
 // Doughnut chart data
@@ -180,6 +214,82 @@ $doughnutData = [
 $reportplugins = \core_plugin_manager::instance()->get_plugins_of_type('report');
 $coursesize_installed = isset($reportplugins['coursesize']);
 
+// Format most accessed courses for template
+$most_accessed_formatted = [];
+$rank = 1;
+foreach ($most_accessed_courses as $course) {
+    $most_accessed_formatted[] = [
+        'rank' => $rank++,
+        'id' => $course->id,
+        'fullname' => format_string($course->fullname),
+        'shortname' => $course->shortname,
+        'course_url' => $CFG->wwwroot . '/course/view.php?id=' . $course->id,
+        'total_accesses_formatted' => number_format($course->total_accesses),
+        'unique_users_formatted' => number_format($course->unique_users)
+    ];
+}
+
+// ============================================================
+// PREPARE TEMPLATE CONTEXT
+// ============================================================
+
+$templatecontext = [
+    // Disk data
+    'disk_usage_gb' => $disk_usage_gb,
+    'quotadisk_gb' => $quotadisk_gb,
+    'disk_percent' => round($disk_percent, 1),
+    'disk_percent_capped' => min($disk_percent, 100),
+    'disk_warning_class' => $disk_warning_class,
+    'lastexec_disk' => $lastexec_disk,
+    'has_disk_data' => ($disk_usage_bytes > 0),
+    'has_disk_history' => !empty($disk_history_labels),
+    'directories' => $directories,
+    'largest_courses' => $largest_courses_formatted,
+
+    // Users data
+    'users_today' => $users_today,
+    'max_users_threshold' => $max_users_threshold,
+    'users_percent' => round($users_percent, 1),
+    'users_percent_capped' => min($users_percent, 100),
+    'users_warning_class' => $users_warning_class,
+    'lastexec_users' => $lastexec_users,
+    'max_90_days_users' => $max_90_days_users,
+    'max_90_days_date' => $max_90_days_date,
+    'has_users_data' => !empty($last10daysLabels),
+    'userdaily_records' => $formatted_userdaily_records,
+    'userdaily_top' => $formatted_userdaily_recordstop,
+
+    // Course data
+    'has_access_trends' => !empty($access_trends_labels),
+    'has_completion_trends' => !empty($completion_trends_labels),
+    'most_accessed_courses' => $most_accessed_formatted,
+    'access_summary' => [
+        'total_accesses_formatted' => number_format($access_summary->total_accesses),
+        'unique_users_formatted' => number_format($access_summary->unique_users),
+        'unique_courses_formatted' => number_format($access_summary->unique_courses)
+    ],
+    'completion_summary' => [
+        'total_completions_formatted' => number_format($completion_summary->total_completions)
+    ],
+
+    // System info
+    'moodle_release' => $CFG->release,
+    'totalcourses' => $totalcourses,
+    'activeusers' => $activeusers,
+    'suspendedusers' => $suspendedusers,
+    'backup_max_kept' => $backup_max_kept,
+
+    // Recommendations
+    'disk_warning' => ($disk_percent > 70),
+    'disk_alert_class' => ($disk_percent > 90) ? 'danger' : 'warning',
+    'users_warning' => ($users_percent > 70),
+    'users_alert_class' => ($users_percent > 90) ? 'danger' : 'warning',
+
+    // Plugin info
+    'coursesize_installed' => $coursesize_installed,
+    'coursesize_url' => $CFG->wwwroot . '/report/coursesize/index.php'
+];
+
 // ============================================================
 // OUTPUT
 // ============================================================
@@ -190,526 +300,12 @@ $PAGE->requires->css('/report/usage_monitor/styles.css');
 echo $OUTPUT->header();
 echo '<div class="alert alert-info mb-2 text-center small disclaimer-banner">' . get_string('exclusivedisclaimer', 'report_usage_monitor') . '</div>';
 echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
+
+// Render the dashboard template
+echo $OUTPUT->render_from_template('report_usage_monitor/dashboard', $templatecontext);
+
+// Chart.js and JavaScript
 ?>
-
-<div class="container-fluid usage-monitor-dashboard">
-    <!-- STATUS CARDS ROW -->
-    <div class="row mb-4">
-        <!-- Disk Usage Card -->
-        <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="card-title mb-0 text-muted">
-                            <?php echo get_string('diskusage', 'report_usage_monitor'); ?>
-                            <span class="tooltip-icon" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_disk_usage', 'report_usage_monitor'); ?>">
-                                <i class="fa fa-question-circle text-info"></i>
-                            </span>
-                        </h6>
-                        <span class="badge <?php echo $disk_warning_class; ?> rounded-pill"><?php echo round($disk_percent, 1); ?>%</span>
-                    </div>
-                    <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar <?php echo $disk_warning_class; ?>" style="width: <?php echo min($disk_percent, 100); ?>%;"></div>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="h5 mb-0"><?php echo $disk_usage_gb . ' / ' . $quotadisk_gb; ?> GB</span>
-                    </div>
-                    <small class="text-muted"><?php echo get_string('lastexecutioncalculate', 'report_usage_monitor', $lastexec_disk); ?></small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Users Today Card -->
-        <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="card-title mb-0 text-muted">
-                            <?php echo get_string('users_today_card', 'report_usage_monitor'); ?>
-                            <span class="tooltip-icon" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_users_today', 'report_usage_monitor'); ?>">
-                                <i class="fa fa-question-circle text-info"></i>
-                            </span>
-                        </h6>
-                        <span class="badge <?php echo $users_warning_class; ?> rounded-pill"><?php echo round($users_percent, 1); ?>%</span>
-                    </div>
-                    <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar <?php echo $users_warning_class; ?>" style="width: <?php echo min($users_percent, 100); ?>%;"></div>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span class="h5 mb-0"><?php echo $users_today . ' / ' . $max_users_threshold; ?></span>
-                    </div>
-                    <small class="text-muted"><?php echo get_string('lastexecution', 'report_usage_monitor', $lastexec_users); ?></small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Max 90 Days Card -->
-        <div class="col-lg-4 col-md-12 mb-3">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="card-title mb-2 text-muted">
-                        <?php echo get_string('max_userdaily_for_90_days', 'report_usage_monitor'); ?>
-                        <span class="tooltip-icon" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_max_90_days', 'report_usage_monitor'); ?>">
-                            <i class="fa fa-question-circle text-info"></i>
-                        </span>
-                    </h6>
-                    <div class="h4 mb-1"><?php echo $max_90_days_users; ?> <small class="text-muted">/ <?php echo $max_users_threshold; ?></small></div>
-                    <small class="text-muted"><?php echo get_string('date', 'report_usage_monitor'); ?>: <?php echo $max_90_days_date; ?></small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MAIN TABBED CONTENT -->
-    <ul class="nav nav-tabs mb-3" id="dashboardTabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="disk-tab" data-toggle="tab" data-bs-toggle="tab" href="#disk-content" role="tab" aria-controls="disk-content" aria-selected="true">
-                <?php echo get_string('diskusage', 'report_usage_monitor'); ?>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="users-tab" data-toggle="tab" data-bs-toggle="tab" href="#users-content" role="tab" aria-controls="users-content" aria-selected="false">
-                <?php echo get_string('users_today_card', 'report_usage_monitor'); ?>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="courses-tab" data-toggle="tab" data-bs-toggle="tab" href="#courses-content" role="tab" aria-controls="courses-content" aria-selected="false">
-                <?php echo get_string('course_access_trends', 'report_usage_monitor'); ?>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="system-tab" data-toggle="tab" data-bs-toggle="tab" href="#system-content" role="tab" aria-controls="system-content" aria-selected="false">
-                <?php echo get_string('system_info', 'report_usage_monitor'); ?>
-            </a>
-        </li>
-    </ul>
-
-    <div class="tab-content" id="dashboardTabContent">
-        <!-- DISK TAB -->
-        <div class="tab-pane fade show active" id="disk-content" role="tabpanel" aria-labelledby="disk-tab">
-            <div class="row">
-                <!-- Disk Distribution Chart -->
-                <div class="col-lg-5 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0"><?php echo get_string('disk_usage_distribution', 'report_usage_monitor'); ?></h6>
-                        </div>
-                        <div class="card-body">
-                            <?php if ($disk_usage_bytes > 0): ?>
-                                <div class="chart-container chart-md">
-                                    <canvas id="chart-doughnut"></canvas>
-                                </div>
-                            <?php else: ?>
-                                <div class="alert alert-info mb-0"><?php echo get_string('notcalculatedyet', 'report_usage_monitor'); ?></div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Disk Tables -->
-                <div class="col-lg-7 mb-4">
-                    <!-- Usage by Directory -->
-                    <div class="card shadow-sm mb-3">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0"><?php echo get_string('disk_usage_by_directory', 'report_usage_monitor'); ?></h6>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-sm table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th><?php echo get_string('directory', 'report_usage_monitor'); ?></th>
-                                        <th class="text-end"><?php echo get_string('size', 'report_usage_monitor'); ?></th>
-                                        <th class="text-end"><?php echo get_string('percentage', 'report_usage_monitor'); ?></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if (!empty($dir_analysis) && $disk_usage_bytes > 0):
-                                        $directories = [
-                                            'database' => ['label' => get_string('database', 'report_usage_monitor'), 'size' => (int)($dir_analysis['database'] ?? 0)],
-                                            'filedir'  => ['label' => get_string('files_dir', 'report_usage_monitor'), 'size' => (int)($dir_analysis['filedir'] ?? 0)],
-                                            'cache'    => ['label' => get_string('cache', 'report_usage_monitor'), 'size' => (int)($dir_analysis['cache'] ?? 0)],
-                                            'others'   => ['label' => get_string('others', 'report_usage_monitor'), 'size' => (int)($dir_analysis['others'] ?? 0)],
-                                        ];
-                                        uasort($directories, function($a, $b) { return $b['size'] - $a['size']; });
-                                        foreach ($directories as $dir_data):
-                                            $percent = round(($dir_data['size'] / $disk_usage_bytes) * 100, 1);
-                                    ?>
-                                        <tr>
-                                            <td><?php echo $dir_data['label']; ?></td>
-                                            <td class="text-end"><?php echo display_size_in_gb($dir_data['size'], 2); ?> GB</td>
-                                            <td class="text-end"><?php echo $percent; ?>%</td>
-                                        </tr>
-                                    <?php endforeach; else: ?>
-                                        <tr><td colspan="3" class="text-center text-muted"><?php echo get_string('notcalculatedyet', 'report_usage_monitor'); ?></td></tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Largest Courses -->
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><?php echo get_string('largest_courses', 'report_usage_monitor'); ?></h6>
-                            <?php if ($coursesize_installed): ?>
-                                <a href="<?php echo $CFG->wwwroot; ?>/report/coursesize/index.php" target="_blank" class="btn btn-sm btn-outline-primary">
-                                    <?php echo get_string('show_more_courses', 'report_usage_monitor'); ?>
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-sm table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th><?php echo get_string('course', 'report_usage_monitor'); ?></th>
-                                        <th class="text-end"><?php echo get_string('size', 'report_usage_monitor'); ?></th>
-                                        <th class="text-end"><?php echo get_string('backup_count', 'report_usage_monitor'); ?></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (!empty($largest_courses)): foreach ($largest_courses as $course): ?>
-                                        <tr>
-                                            <td>
-                                                <a href="<?php echo $CFG->wwwroot . '/course/view.php?id=' . $course->id; ?>" class="text-truncate d-inline-block" style="max-width: 250px;">
-                                                    <?php echo format_string($course->fullname); ?>
-                                                </a>
-                                            </td>
-                                            <td class="text-end"><?php echo display_size($course->totalsize); ?></td>
-                                            <td class="text-end"><?php echo $course->backupcount; ?></td>
-                                        </tr>
-                                    <?php endforeach; else: ?>
-                                        <tr><td colspan="3" class="text-center text-muted"><?php echo get_string('notcalculatedyet', 'report_usage_monitor'); ?></td></tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Disk History Chart -->
-            <?php if (!empty($disk_history_labels)): ?>
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h6 class="mb-0"><?php echo get_string('disk_usage_history', 'report_usage_monitor'); ?></h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-container chart-sm">
-                        <canvas id="chart-disk-history"></canvas>
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
-        </div>
-
-        <!-- USERS TAB -->
-        <div class="tab-pane fade" id="users-content" role="tabpanel" aria-labelledby="users-tab">
-            <div class="row">
-                <!-- Last 10 Days Chart -->
-                <div class="col-lg-8 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0"><?php echo get_string('lastusers', 'report_usage_monitor'); ?></h6>
-                        </div>
-                        <div class="card-body">
-                            <?php if (!empty($last10daysLabels)): ?>
-                                <div class="chart-container chart-lg">
-                                    <canvas id="chart-users-10days"></canvas>
-                                </div>
-                            <?php else: ?>
-                                <div class="alert alert-info mb-0"><?php echo get_string('notcalculatedyet', 'report_usage_monitor'); ?></div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Last 10 Days Table -->
-                <div class="col-lg-4 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0"><?php echo get_string('usertable', 'report_usage_monitor'); ?></h6>
-                        </div>
-                        <div class="table-responsive" style="max-height: 340px; overflow-y: auto;">
-                            <table class="table table-sm table-hover mb-0">
-                                <thead class="table-light sticky-top">
-                                    <tr>
-                                        <th><?php echo get_string('date', 'report_usage_monitor'); ?></th>
-                                        <th class="text-end"><?php echo get_string('usersquantity', 'report_usage_monitor'); ?></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (!empty($formatted_userdaily_records)): foreach ($formatted_userdaily_records as $daylog): ?>
-                                        <tr>
-                                            <td><?php echo $daylog->fecha_formateada; ?></td>
-                                            <td class="text-end"><?php echo $daylog->conteo_accesos_unicos; ?></td>
-                                        </tr>
-                                    <?php endforeach; else: ?>
-                                        <tr><td colspan="2" class="text-center text-muted"><?php echo get_string('notcalculatedyet', 'report_usage_monitor'); ?></td></tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Top 10 Users Daily -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h6 class="mb-0"><?php echo get_string('topuser', 'report_usage_monitor'); ?></h6>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th><?php echo get_string('date', 'report_usage_monitor'); ?></th>
-                                <th class="text-end"><?php echo get_string('usersquantity', 'report_usage_monitor'); ?></th>
-                                <th class="text-end"><?php echo get_string('percentage', 'report_usage_monitor'); ?></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (!empty($formatted_userdaily_recordstop)): foreach ($formatted_userdaily_recordstop as $log):
-                                $percent = ($max_users_threshold > 0) ? round(($log->cantidad_usuarios / $max_users_threshold) * 100, 1) : 0;
-                                $class = ($percent >= 90) ? 'text-danger fw-bold' : (($percent >= 70) ? 'text-warning' : '');
-                            ?>
-                                <tr>
-                                    <td><?php echo $log->fecha_formateada; ?></td>
-                                    <td class="text-end"><?php echo $log->cantidad_usuarios; ?></td>
-                                    <td class="text-end <?php echo $class; ?>"><?php echo $percent; ?>%</td>
-                                </tr>
-                            <?php endforeach; else: ?>
-                                <tr><td colspan="3" class="text-center text-muted"><?php echo get_string('notcalculatedyet', 'report_usage_monitor'); ?></td></tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- COURSES TAB -->
-        <div class="tab-pane fade" id="courses-content" role="tabpanel" aria-labelledby="courses-tab">
-            <!-- Course Access Summary -->
-            <div class="row mb-4">
-                <div class="col-md-3 col-6 mb-2">
-                    <div class="card bg-primary text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_total_accesses', 'report_usage_monitor'); ?>">
-                        <div class="card-body py-3 text-center">
-                            <div class="small opacity-75">
-                                <?php echo get_string('total_accesses', 'report_usage_monitor'); ?>
-                                <i class="fa fa-info-circle ms-1"></i>
-                            </div>
-                            <div class="h4 mb-0"><?php echo number_format($access_summary->total_accesses); ?></div>
-                            <div class="small opacity-50"><?php echo get_string('last_30_days', 'report_usage_monitor'); ?></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <div class="card bg-success text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_unique_users', 'report_usage_monitor'); ?>">
-                        <div class="card-body py-3 text-center">
-                            <div class="small opacity-75">
-                                <?php echo get_string('unique_users', 'report_usage_monitor'); ?>
-                                <i class="fa fa-info-circle ms-1"></i>
-                            </div>
-                            <div class="h4 mb-0"><?php echo number_format($access_summary->unique_users); ?></div>
-                            <div class="small opacity-50"><?php echo get_string('last_30_days', 'report_usage_monitor'); ?></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <div class="card bg-info text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_total_completions', 'report_usage_monitor'); ?>">
-                        <div class="card-body py-3 text-center">
-                            <div class="small opacity-75">
-                                <?php echo get_string('total_completions', 'report_usage_monitor'); ?>
-                                <i class="fa fa-info-circle ms-1"></i>
-                            </div>
-                            <div class="h4 mb-0"><?php echo number_format($completion_summary->total_completions); ?></div>
-                            <div class="small opacity-50"><?php echo get_string('last_30_days', 'report_usage_monitor'); ?></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 mb-2">
-                    <div class="card bg-secondary text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_unique_courses', 'report_usage_monitor'); ?>">
-                        <div class="card-body py-3 text-center">
-                            <div class="small opacity-75">
-                                <?php echo get_string('unique_courses', 'report_usage_monitor'); ?>
-                                <i class="fa fa-info-circle ms-1"></i>
-                            </div>
-                            <div class="h4 mb-0"><?php echo number_format($access_summary->unique_courses); ?></div>
-                            <div class="small opacity-50"><?php echo get_string('last_30_days', 'report_usage_monitor'); ?></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- Access Trends Chart -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0"><?php echo get_string('course_access_trends', 'report_usage_monitor'); ?></h6>
-                        </div>
-                        <div class="card-body">
-                            <?php if (!empty($access_trends_labels)): ?>
-                                <div class="chart-container chart-sm">
-                                    <canvas id="chart-access-trends"></canvas>
-                                </div>
-                            <?php else: ?>
-                                <div class="alert alert-info mb-0"><?php echo get_string('no_data_available', 'report_usage_monitor'); ?></div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Completion Trends Chart -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0"><?php echo get_string('course_completion_trends', 'report_usage_monitor'); ?></h6>
-                        </div>
-                        <div class="card-body">
-                            <?php if (!empty($completion_trends_labels)): ?>
-                                <div class="chart-container chart-sm">
-                                    <canvas id="chart-completion-trends"></canvas>
-                                </div>
-                            <?php else: ?>
-                                <div class="alert alert-info mb-0"><?php echo get_string('no_data_available', 'report_usage_monitor'); ?></div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Most Accessed Courses Table -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h6 class="mb-0"><?php echo get_string('most_accessed_courses', 'report_usage_monitor'); ?></h6>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th><?php echo get_string('course', 'report_usage_monitor'); ?></th>
-                                <th class="text-end"><?php echo get_string('total_accesses', 'report_usage_monitor'); ?></th>
-                                <th class="text-end"><?php echo get_string('unique_users', 'report_usage_monitor'); ?></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (!empty($most_accessed_courses)): $i = 1; foreach ($most_accessed_courses as $course): ?>
-                                <tr>
-                                    <td><?php echo $i++; ?></td>
-                                    <td>
-                                        <a href="<?php echo $CFG->wwwroot . '/course/view.php?id=' . $course->id; ?>">
-                                            <?php echo format_string($course->fullname); ?>
-                                        </a>
-                                        <small class="text-muted d-block"><?php echo $course->shortname; ?></small>
-                                    </td>
-                                    <td class="text-end"><?php echo number_format($course->total_accesses); ?></td>
-                                    <td class="text-end"><?php echo number_format($course->unique_users); ?></td>
-                                </tr>
-                            <?php endforeach; else: ?>
-                                <tr><td colspan="4" class="text-center text-muted"><?php echo get_string('no_data_available', 'report_usage_monitor'); ?></td></tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- SYSTEM TAB -->
-        <div class="tab-pane fade" id="system-content" role="tabpanel" aria-labelledby="system-tab">
-            <div class="row">
-                <!-- System Info -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0"><?php echo get_string('system_info', 'report_usage_monitor'); ?></h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-6">
-                                    <div class="p-3 bg-light rounded">
-                                        <small class="text-muted d-block"><?php echo get_string('moodle_version', 'report_usage_monitor'); ?></small>
-                                        <strong><?php echo $CFG->release; ?></strong>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="p-3 bg-light rounded">
-                                        <small class="text-muted d-block"><?php echo get_string('total_courses', 'report_usage_monitor'); ?></small>
-                                        <strong><?php echo $totalcourses; ?></strong>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="p-3 bg-light rounded">
-                                        <small class="text-muted d-block"><?php echo get_string('active_users', 'report_usage_monitor'); ?></small>
-                                        <strong><?php echo $activeusers; ?></strong>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="p-3 bg-light rounded">
-                                        <small class="text-muted d-block"><?php echo get_string('suspended_users', 'report_usage_monitor'); ?></small>
-                                        <strong><?php echo $suspendedusers; ?></strong>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="p-3 bg-light rounded">
-                                        <small class="text-muted d-block"><?php echo get_string('backup_per_course', 'report_usage_monitor'); ?></small>
-                                        <strong><?php echo $backup_max_kept; ?></strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recommendations -->
-                <div class="col-lg-6 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0"><?php echo get_string('recommendations', 'report_usage_monitor'); ?></h6>
-                        </div>
-                        <div class="card-body">
-                            <?php if ($disk_percent > 70): ?>
-                                <div class="alert alert-<?php echo ($disk_percent > 90) ? 'danger' : 'warning'; ?> mb-3">
-                                    <strong><?php echo get_string('space_saving_tips', 'report_usage_monitor'); ?></strong>
-                                    <ul class="mb-0 mt-2 small">
-                                        <li><?php echo get_string('tip_backups', 'report_usage_monitor', $backup_max_kept); ?></li>
-                                        <li><?php echo get_string('tip_files', 'report_usage_monitor'); ?></li>
-                                        <li><?php echo get_string('tip_cache', 'report_usage_monitor'); ?></li>
-                                    </ul>
-                                </div>
-                            <?php else: ?>
-                                <div class="alert alert-success mb-3">
-                                    <i class="fa fa-check-circle me-2"></i><?php echo get_string('disk_usage_ok', 'report_usage_monitor'); ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ($users_percent > 70): ?>
-                                <div class="alert alert-<?php echo ($users_percent > 90) ? 'danger' : 'warning'; ?> mb-0">
-                                    <strong><?php echo get_string('user_limit_tips', 'report_usage_monitor'); ?></strong>
-                                    <ul class="mb-0 mt-2 small">
-                                        <li><?php echo get_string('tip_user_inactive', 'report_usage_monitor'); ?></li>
-                                        <li><?php echo get_string('tip_user_limit', 'report_usage_monitor'); ?></li>
-                                    </ul>
-                                </div>
-                            <?php else: ?>
-                                <div class="alert alert-success mb-0">
-                                    <i class="fa fa-check-circle me-2"></i><?php echo get_string('user_count_ok', 'report_usage_monitor'); ?>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Credits -->
-<div class="mt-4 text-center text-muted small">
-    <?php echo get_string('reportinfotext', 'report_usage_monitor'); ?>
-</div>
-
 <!-- Chart.js CDN with integrity check -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
@@ -1125,8 +721,6 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
     }
 })();
 </script>
-
-<!-- Styles loaded from /report/usage_monitor/styles.css -->
 
 <?php
 echo $OUTPUT->footer();

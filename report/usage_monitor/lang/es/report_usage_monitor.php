@@ -277,6 +277,20 @@ $string['days_to_threshold_disk_desc'] = 'Días proyectados hasta alcanzar el um
 $string['days_to_threshold_users'] = 'Días hasta umbral de usuarios';
 $string['days_to_threshold_users_desc'] = 'Días proyectados hasta alcanzar el umbral de advertencia de usuarios';
 
+// Unified email template strings.
+$string['email_notification_title'] = 'Alerta de Usage Monitor';
+$string['email_notification_subject'] = 'Alerta de uso en plataforma';
+$string['email_users_alert'] = 'Usuarios';
+$string['email_disk_alert'] = 'Disco';
+$string['email_thresholds_exceeded'] = 'Se han superado uno o más umbrales de uso en su plataforma. Por favor revise los detalles a continuación.';
+$string['email_userlimit_section'] = 'Límite de usuarios diarios superado';
+$string['email_diskusage_section'] = 'Alerta de uso de espacio en disco';
+$string['email_rec_users'] = 'Revisar usuarios';
+$string['email_rec_users_desc'] = 'Considere limpiar las cuentas de usuario inactivas que no han iniciado sesión durante mucho tiempo';
+$string['email_rec_quota'] = 'Aumentar cuota';
+$string['email_rec_quota_desc'] = 'Si el número de usuarios se acerca constantemente al límite, considere aumentar su cuota';
+$string['email_general_disclaimer'] = 'Esta es una notificación automática. Para asistencia técnica, por favor contacte a su administrador de hosting.';
+
 // Email template strings for Mustache templates.
 // User limit email strings.
 $string['email_userlimit_title'] = 'Alerta de límite de usuarios diarios';

@@ -1,0 +1,526 @@
+{{!
+    Dashboard template for Usage Monitor
+
+    @package    report_usage_monitor
+    @copyright  2025 Soporte IngeWeb <soporte@ingeweb.co>
+    @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+
+<div class="container-fluid usage-monitor-dashboard">
+    <!-- STATUS CARDS ROW -->
+    <div class="row mb-4">
+        <!-- Disk Usage Card -->
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="card-title mb-0 text-muted">
+                            {{#str}}diskusage, report_usage_monitor{{/str}}
+                            <span class="tooltip-icon" data-toggle="tooltip" data-bs-toggle="tooltip" title="{{#str}}tooltip_disk_usage, report_usage_monitor{{/str}}">
+                                <i class="fa fa-question-circle text-info"></i>
+                            </span>
+                        </h6>
+                        <span class="badge {{disk_warning_class}} rounded-pill">{{disk_percent}}%</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar {{disk_warning_class}}" style="width: {{disk_percent_capped}}%;"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="h5 mb-0">{{disk_usage_gb}} / {{quotadisk_gb}} GB</span>
+                    </div>
+                    <small class="text-muted">{{#str}}lastexecutioncalculate, report_usage_monitor, {{lastexec_disk}}{{/str}}</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Today Card -->
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="card-title mb-0 text-muted">
+                            {{#str}}users_today_card, report_usage_monitor{{/str}}
+                            <span class="tooltip-icon" data-toggle="tooltip" data-bs-toggle="tooltip" title="{{#str}}tooltip_users_today, report_usage_monitor{{/str}}">
+                                <i class="fa fa-question-circle text-info"></i>
+                            </span>
+                        </h6>
+                        <span class="badge {{users_warning_class}} rounded-pill">{{users_percent}}%</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar {{users_warning_class}}" style="width: {{users_percent_capped}}%;"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="h5 mb-0">{{users_today}} / {{max_users_threshold}}</span>
+                    </div>
+                    <small class="text-muted">{{#str}}lastexecution, report_usage_monitor, {{lastexec_users}}{{/str}}</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Max 90 Days Card -->
+        <div class="col-lg-4 col-md-12 mb-3">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="card-title mb-2 text-muted">
+                        {{#str}}max_userdaily_for_90_days, report_usage_monitor{{/str}}
+                        <span class="tooltip-icon" data-toggle="tooltip" data-bs-toggle="tooltip" title="{{#str}}tooltip_max_90_days, report_usage_monitor{{/str}}">
+                            <i class="fa fa-question-circle text-info"></i>
+                        </span>
+                    </h6>
+                    <div class="h4 mb-1">{{max_90_days_users}} <small class="text-muted">/ {{max_users_threshold}}</small></div>
+                    <small class="text-muted">{{#str}}date, report_usage_monitor{{/str}}: {{max_90_days_date}}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN TABBED CONTENT -->
+    <ul class="nav nav-tabs mb-3" id="dashboardTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="disk-tab" data-toggle="tab" data-bs-toggle="tab" href="#disk-content" role="tab" aria-controls="disk-content" aria-selected="true">
+                {{#str}}diskusage, report_usage_monitor{{/str}}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="users-tab" data-toggle="tab" data-bs-toggle="tab" href="#users-content" role="tab" aria-controls="users-content" aria-selected="false">
+                {{#str}}users_today_card, report_usage_monitor{{/str}}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="courses-tab" data-toggle="tab" data-bs-toggle="tab" href="#courses-content" role="tab" aria-controls="courses-content" aria-selected="false">
+                {{#str}}course_access_trends, report_usage_monitor{{/str}}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="system-tab" data-toggle="tab" data-bs-toggle="tab" href="#system-content" role="tab" aria-controls="system-content" aria-selected="false">
+                {{#str}}system_info, report_usage_monitor{{/str}}
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="dashboardTabContent">
+        <!-- DISK TAB -->
+        <div class="tab-pane fade show active" id="disk-content" role="tabpanel" aria-labelledby="disk-tab">
+            <div class="row">
+                <!-- Disk Distribution Chart -->
+                <div class="col-lg-5 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">{{#str}}disk_usage_distribution, report_usage_monitor{{/str}}</h6>
+                        </div>
+                        <div class="card-body">
+                            {{#has_disk_data}}
+                            <div class="chart-container chart-md">
+                                <canvas id="chart-doughnut"></canvas>
+                            </div>
+                            {{/has_disk_data}}
+                            {{^has_disk_data}}
+                            <div class="alert alert-info mb-0">{{#str}}notcalculatedyet, report_usage_monitor{{/str}}</div>
+                            {{/has_disk_data}}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disk Tables -->
+                <div class="col-lg-7 mb-4">
+                    <!-- Usage by Directory -->
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">{{#str}}disk_usage_by_directory, report_usage_monitor{{/str}}</h6>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>{{#str}}directory, report_usage_monitor{{/str}}</th>
+                                        <th class="text-end">{{#str}}size, report_usage_monitor{{/str}}</th>
+                                        <th class="text-end">{{#str}}percentage, report_usage_monitor{{/str}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#directories}}
+                                    <tr>
+                                        <td>{{label}}</td>
+                                        <td class="text-end">{{size_formatted}} GB</td>
+                                        <td class="text-end">{{percent}}%</td>
+                                    </tr>
+                                    {{/directories}}
+                                    {{^directories}}
+                                    <tr><td colspan="3" class="text-center text-muted">{{#str}}notcalculatedyet, report_usage_monitor{{/str}}</td></tr>
+                                    {{/directories}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Largest Courses -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">{{#str}}largest_courses, report_usage_monitor{{/str}}</h6>
+                            {{#coursesize_installed}}
+                            <a href="{{coursesize_url}}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                {{#str}}show_more_courses, report_usage_monitor{{/str}}
+                            </a>
+                            {{/coursesize_installed}}
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>{{#str}}course, report_usage_monitor{{/str}}</th>
+                                        <th class="text-end">{{#str}}size, report_usage_monitor{{/str}}</th>
+                                        <th class="text-end">{{#str}}backup_count, report_usage_monitor{{/str}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#largest_courses}}
+                                    <tr>
+                                        <td>
+                                            <a href="{{course_url}}" class="text-truncate d-inline-block" style="max-width: 250px;">
+                                                {{fullname}}
+                                            </a>
+                                        </td>
+                                        <td class="text-end">{{totalsize_formatted}}</td>
+                                        <td class="text-end">{{backupcount}}</td>
+                                    </tr>
+                                    {{/largest_courses}}
+                                    {{^largest_courses}}
+                                    <tr><td colspan="3" class="text-center text-muted">{{#str}}notcalculatedyet, report_usage_monitor{{/str}}</td></tr>
+                                    {{/largest_courses}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disk History Chart -->
+            {{#has_disk_history}}
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">{{#str}}disk_usage_history, report_usage_monitor{{/str}}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container chart-sm">
+                        <canvas id="chart-disk-history"></canvas>
+                    </div>
+                </div>
+            </div>
+            {{/has_disk_history}}
+        </div>
+
+        <!-- USERS TAB -->
+        <div class="tab-pane fade" id="users-content" role="tabpanel" aria-labelledby="users-tab">
+            <div class="row">
+                <!-- Last 10 Days Chart -->
+                <div class="col-lg-8 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">{{#str}}lastusers, report_usage_monitor{{/str}}</h6>
+                        </div>
+                        <div class="card-body">
+                            {{#has_users_data}}
+                            <div class="chart-container chart-lg">
+                                <canvas id="chart-users-10days"></canvas>
+                            </div>
+                            {{/has_users_data}}
+                            {{^has_users_data}}
+                            <div class="alert alert-info mb-0">{{#str}}notcalculatedyet, report_usage_monitor{{/str}}</div>
+                            {{/has_users_data}}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Last 10 Days Table -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">{{#str}}usertable, report_usage_monitor{{/str}}</h6>
+                        </div>
+                        <div class="table-responsive" style="max-height: 340px; overflow-y: auto;">
+                            <table class="table table-sm table-hover mb-0">
+                                <thead class="table-light sticky-top">
+                                    <tr>
+                                        <th>{{#str}}date, report_usage_monitor{{/str}}</th>
+                                        <th class="text-end">{{#str}}usersquantity, report_usage_monitor{{/str}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#userdaily_records}}
+                                    <tr>
+                                        <td>{{fecha_formateada}}</td>
+                                        <td class="text-end">{{conteo_accesos_unicos}}</td>
+                                    </tr>
+                                    {{/userdaily_records}}
+                                    {{^userdaily_records}}
+                                    <tr><td colspan="2" class="text-center text-muted">{{#str}}notcalculatedyet, report_usage_monitor{{/str}}</td></tr>
+                                    {{/userdaily_records}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top 10 Users Daily -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">{{#str}}topuser, report_usage_monitor{{/str}}</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{{#str}}date, report_usage_monitor{{/str}}</th>
+                                <th class="text-end">{{#str}}usersquantity, report_usage_monitor{{/str}}</th>
+                                <th class="text-end">{{#str}}percentage, report_usage_monitor{{/str}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#userdaily_top}}
+                            <tr>
+                                <td>{{fecha_formateada}}</td>
+                                <td class="text-end">{{cantidad_usuarios}}</td>
+                                <td class="text-end {{percent_class}}">{{percent}}%</td>
+                            </tr>
+                            {{/userdaily_top}}
+                            {{^userdaily_top}}
+                            <tr><td colspan="3" class="text-center text-muted">{{#str}}notcalculatedyet, report_usage_monitor{{/str}}</td></tr>
+                            {{/userdaily_top}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- COURSES TAB -->
+        <div class="tab-pane fade" id="courses-content" role="tabpanel" aria-labelledby="courses-tab">
+            <!-- Course Access Summary -->
+            <div class="row mb-4">
+                <div class="col-md-3 col-6 mb-2">
+                    <div class="card bg-primary text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="{{#str}}tooltip_total_accesses, report_usage_monitor{{/str}}">
+                        <div class="card-body py-3 text-center">
+                            <div class="small opacity-75">
+                                {{#str}}total_accesses, report_usage_monitor{{/str}}
+                                <i class="fa fa-info-circle ms-1"></i>
+                            </div>
+                            <div class="h4 mb-0">{{access_summary.total_accesses_formatted}}</div>
+                            <div class="small opacity-50">{{#str}}last_30_days, report_usage_monitor{{/str}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-2">
+                    <div class="card bg-success text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="{{#str}}tooltip_unique_users, report_usage_monitor{{/str}}">
+                        <div class="card-body py-3 text-center">
+                            <div class="small opacity-75">
+                                {{#str}}unique_users, report_usage_monitor{{/str}}
+                                <i class="fa fa-info-circle ms-1"></i>
+                            </div>
+                            <div class="h4 mb-0">{{access_summary.unique_users_formatted}}</div>
+                            <div class="small opacity-50">{{#str}}last_30_days, report_usage_monitor{{/str}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-2">
+                    <div class="card bg-info text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="{{#str}}tooltip_total_completions, report_usage_monitor{{/str}}">
+                        <div class="card-body py-3 text-center">
+                            <div class="small opacity-75">
+                                {{#str}}total_completions, report_usage_monitor{{/str}}
+                                <i class="fa fa-info-circle ms-1"></i>
+                            </div>
+                            <div class="h4 mb-0">{{completion_summary.total_completions_formatted}}</div>
+                            <div class="small opacity-50">{{#str}}last_30_days, report_usage_monitor{{/str}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 mb-2">
+                    <div class="card bg-secondary text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="{{#str}}tooltip_unique_courses, report_usage_monitor{{/str}}">
+                        <div class="card-body py-3 text-center">
+                            <div class="small opacity-75">
+                                {{#str}}unique_courses, report_usage_monitor{{/str}}
+                                <i class="fa fa-info-circle ms-1"></i>
+                            </div>
+                            <div class="h4 mb-0">{{access_summary.unique_courses_formatted}}</div>
+                            <div class="small opacity-50">{{#str}}last_30_days, report_usage_monitor{{/str}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Access Trends Chart -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">{{#str}}course_access_trends, report_usage_monitor{{/str}}</h6>
+                        </div>
+                        <div class="card-body">
+                            {{#has_access_trends}}
+                            <div class="chart-container chart-sm">
+                                <canvas id="chart-access-trends"></canvas>
+                            </div>
+                            {{/has_access_trends}}
+                            {{^has_access_trends}}
+                            <div class="alert alert-info mb-0">{{#str}}no_data_available, report_usage_monitor{{/str}}</div>
+                            {{/has_access_trends}}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completion Trends Chart -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">{{#str}}course_completion_trends, report_usage_monitor{{/str}}</h6>
+                        </div>
+                        <div class="card-body">
+                            {{#has_completion_trends}}
+                            <div class="chart-container chart-sm">
+                                <canvas id="chart-completion-trends"></canvas>
+                            </div>
+                            {{/has_completion_trends}}
+                            {{^has_completion_trends}}
+                            <div class="alert alert-info mb-0">{{#str}}no_data_available, report_usage_monitor{{/str}}</div>
+                            {{/has_completion_trends}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Most Accessed Courses Table -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">{{#str}}most_accessed_courses, report_usage_monitor{{/str}}</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>{{#str}}course, report_usage_monitor{{/str}}</th>
+                                <th class="text-end">{{#str}}total_accesses, report_usage_monitor{{/str}}</th>
+                                <th class="text-end">{{#str}}unique_users, report_usage_monitor{{/str}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#most_accessed_courses}}
+                            <tr>
+                                <td>{{rank}}</td>
+                                <td>
+                                    <a href="{{course_url}}">{{fullname}}</a>
+                                    <small class="text-muted d-block">{{shortname}}</small>
+                                </td>
+                                <td class="text-end">{{total_accesses_formatted}}</td>
+                                <td class="text-end">{{unique_users_formatted}}</td>
+                            </tr>
+                            {{/most_accessed_courses}}
+                            {{^most_accessed_courses}}
+                            <tr><td colspan="4" class="text-center text-muted">{{#str}}no_data_available, report_usage_monitor{{/str}}</td></tr>
+                            {{/most_accessed_courses}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SYSTEM TAB -->
+        <div class="tab-pane fade" id="system-content" role="tabpanel" aria-labelledby="system-tab">
+            <div class="row">
+                <!-- System Info -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">{{#str}}system_info, report_usage_monitor{{/str}}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded">
+                                        <small class="text-muted d-block">{{#str}}moodle_version, report_usage_monitor{{/str}}</small>
+                                        <strong>{{moodle_release}}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded">
+                                        <small class="text-muted d-block">{{#str}}total_courses, report_usage_monitor{{/str}}</small>
+                                        <strong>{{totalcourses}}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded">
+                                        <small class="text-muted d-block">{{#str}}active_users, report_usage_monitor{{/str}}</small>
+                                        <strong>{{activeusers}}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded">
+                                        <small class="text-muted d-block">{{#str}}suspended_users, report_usage_monitor{{/str}}</small>
+                                        <strong>{{suspendedusers}}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded">
+                                        <small class="text-muted d-block">{{#str}}backup_per_course, report_usage_monitor{{/str}}</small>
+                                        <strong>{{backup_max_kept}}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">{{#str}}recommendations, report_usage_monitor{{/str}}</h6>
+                        </div>
+                        <div class="card-body">
+                            {{#disk_warning}}
+                            <div class="alert alert-{{disk_alert_class}} mb-3">
+                                <strong>{{#str}}space_saving_tips, report_usage_monitor{{/str}}</strong>
+                                <ul class="mb-0 mt-2 small">
+                                    <li>{{#str}}tip_backups, report_usage_monitor, {{backup_max_kept}}{{/str}}</li>
+                                    <li>{{#str}}tip_files, report_usage_monitor{{/str}}</li>
+                                    <li>{{#str}}tip_cache, report_usage_monitor{{/str}}</li>
+                                </ul>
+                            </div>
+                            {{/disk_warning}}
+                            {{^disk_warning}}
+                            <div class="alert alert-success mb-3">
+                                <i class="fa fa-check-circle me-2"></i>{{#str}}disk_usage_ok, report_usage_monitor{{/str}}
+                            </div>
+                            {{/disk_warning}}
+
+                            {{#users_warning}}
+                            <div class="alert alert-{{users_alert_class}} mb-0">
+                                <strong>{{#str}}user_limit_tips, report_usage_monitor{{/str}}</strong>
+                                <ul class="mb-0 mt-2 small">
+                                    <li>{{#str}}tip_user_inactive, report_usage_monitor{{/str}}</li>
+                                    <li>{{#str}}tip_user_limit, report_usage_monitor{{/str}}</li>
+                                </ul>
+                            </div>
+                            {{/users_warning}}
+                            {{^users_warning}}
+                            <div class="alert alert-success mb-0">
+                                <i class="fa fa-check-circle me-2"></i>{{#str}}user_count_ok, report_usage_monitor{{/str}}
+                            </div>
+                            {{/users_warning}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Credits -->
+<div class="mt-4 text-center text-muted small">
+    {{#str}}reportinfotext, report_usage_monitor{{/str}}
+</div>
+
+{{#js}}
+require(['jquery'], function($) {
+    // Chart.js initialization will be handled by AMD module
+});
+{{/js}}

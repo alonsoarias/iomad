@@ -359,9 +359,88 @@ class notification_helper {
     }
 
     /**
+     * Build unified email data for notification.
+     *
+     * @param string $type Notification type (disk, users, or both)
+     * @param \stdClass|null $disk_data Disk notification data
+     * @param \stdClass|null $user_data User notification data
+     * @return \stdClass Unified email data
+     */
+    public static function build_unified_email_data(
+        string $type,
+        ?\stdClass $disk_data = null,
+        ?\stdClass $user_data = null
+    ): \stdClass {
+        global $CFG, $SITE, $DB;
+
+        $config = get_config('report_usage_monitor');
+        $data = new \stdClass();
+
+        // Common data.
+        $data->lang = current_language();
+        $data->sitename = format_string($SITE->fullname);
+        $data->siteurl = $CFG->wwwroot;
+        $data->dashboard_url = $CFG->wwwroot . '/report/usage_monitor/index.php';
+        $data->report_date = date('d/m/Y H:i');
+        $data->moodle_release = $CFG->release;
+        $data->courses_count = $DB->count_records('course');
+        $data->backup_count = get_config('backup', 'backup_auto_max_kept') ?? 0;
+
+        // Alert flags.
+        $data->alert_users = ($type === 'users' || $type === 'both');
+        $data->alert_disk = ($type === 'disk' || $type === 'both');
+        $data->has_recommendations = true;
+
+        // Header colors based on alert type.
+        if ($data->alert_users && $data->alert_disk) {
+            $data->header_color_start = '#8e44ad';
+            $data->header_color_end = '#9b59b6';
+        } else if ($data->alert_users) {
+            $data->header_color_start = '#c0392b';
+            $data->header_color_end = '#e74c3c';
+        } else {
+            $data->header_color_start = '#d35400';
+            $data->header_color_end = '#e67e22';
+        }
+
+        // User data.
+        if ($data->alert_users && $user_data) {
+            $data->users_today = $user_data->numberofusers ?? 0;
+            $data->user_threshold = $user_data->threshold ?? 100;
+            $data->user_percent = round($user_data->percentaje ?? 0, 1);
+            $data->user_percent_capped = min(100, $data->user_percent);
+            $data->excess_users = max(0, $data->users_today - $data->user_threshold);
+            $data->user_history_rows = $user_data->historical_data_rows ?? '';
+            $data->has_user_history = !empty($data->user_history_rows);
+        }
+
+        // Disk data.
+        if ($data->alert_disk && $disk_data) {
+            $data->disk_usage = $disk_data->diskusage ?? '0 B';
+            $data->disk_quota = $disk_data->quotadisk ?? '0 B';
+            $data->disk_percent = round($disk_data->percentage ?? 0, 1);
+            $data->disk_percent_capped = min(100, $data->disk_percent);
+            $data->available_space = $disk_data->available_space ?? '0 B';
+            $data->available_percent = $disk_data->available_percent ?? 0;
+            $data->database_size = $disk_data->databasesize ?? '0 B';
+            $data->database_percent = $disk_data->db_percent ?? 0;
+            $data->filedir_size = $disk_data->filedir_size ?? '0 B';
+            $data->filedir_percent = $disk_data->filedir_percent ?? 0;
+            $data->cache_size = $disk_data->cache_size ?? '0 B';
+            $data->cache_percent = $disk_data->cache_percent ?? 0;
+            $data->other_size = $disk_data->other_size ?? '0 B';
+            $data->other_percent = $disk_data->other_percent ?? 0;
+            $data->top_courses_rows = $disk_data->top_courses_rows ?? '';
+            $data->has_top_courses = !empty($data->top_courses_rows);
+        }
+
+        return $data;
+    }
+
+    /**
      * Render an email template using Mustache.
      *
-     * @param string $template_name Full template name (e.g., 'report_usage_monitor/email_userlimit')
+     * @param string $template_name Full template name (e.g., 'report_usage_monitor/email_notification')
      * @param \stdClass $data Template data
      * @return string Rendered HTML
      */
@@ -383,8 +462,8 @@ class notification_helper {
             // Fallback to legacy language string templates if Mustache fails.
             debugging('notification_helper::render_email_template - Template error: ' . $e->getMessage(), DEBUG_DEVELOPER);
 
-            // Determine legacy template key from template name.
-            if (strpos($template_name, 'email_diskusage') !== false) {
+            // Determine legacy template key from alert type.
+            if (!empty($data->alert_disk) && empty($data->alert_users)) {
                 $html = get_string('messagehtml_diskusage', 'report_usage_monitor', $data);
             } else {
                 $html = get_string('messagehtml_userlimit', 'report_usage_monitor', $data);
@@ -412,20 +491,17 @@ class notification_helper {
             return false;
         }
 
-        // Get email template.
-        if ($type === 'disk') {
-            $subject = get_string('subjectemail2', 'report_usage_monitor') . ' ' . $data->sitename;
-            $template_name = 'report_usage_monitor/email_diskusage';
-        } else {
-            $subject = get_string('subjectemail1', 'report_usage_monitor') . ' ' . $data->sitename;
-            $template_name = 'report_usage_monitor/email_userlimit';
-        }
+        // Build unified email data.
+        $unified_data = self::build_unified_email_data($type,
+            ($type === 'disk') ? $data : null,
+            ($type === 'users') ? $data : null
+        );
 
-        // Add language code for email template.
-        $data->lang = current_language();
+        // Subject line.
+        $subject = get_string('email_notification_subject', 'report_usage_monitor') . ' ' . $unified_data->sitename;
 
-        // Render Mustache template.
-        $message_html = self::render_email_template($template_name, $data);
+        // Render unified Mustache template.
+        $message_html = self::render_email_template('report_usage_monitor/email_notification', $unified_data);
 
         // Get primary site administrator as base for recipient user object.
         // This ensures all required Moodle user properties are properly set.
