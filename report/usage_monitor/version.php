@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113004;  // Add course access and completion trends
+$plugin->version   = 2025113005;  // Fix SQL LIMIT parameter issue for MySQL/MariaDB
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.12';    // Add course access trends, most accessed courses, and completion trends
+$plugin->release   = '4.5.13';    // Fix SQL LIMIT parameter compatibility and improve platform_usage labels
 $plugin->maturity  = MATURITY_STABLE;

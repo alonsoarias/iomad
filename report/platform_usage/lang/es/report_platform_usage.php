@@ -53,15 +53,15 @@ $string['uniqueuserstoday'] = 'Usuarios unicos hoy';
 $string['uniqueusersweek'] = 'Usuarios unicos ultimos 7 dias';
 $string['uniqueusersmonth'] = 'Usuarios unicos ultimos 30 dias';
 $string['totalusers'] = 'Total de usuarios';
-$string['activeusers'] = 'Usuarios activos';
-$string['inactiveusers'] = 'Usuarios inactivos';
+$string['activeusers'] = 'Usuarios activos (ingreso en ultimos 30 dias)';
+$string['inactiveusers'] = 'Usuarios sin actividad reciente (sin ingreso en 30 dias)';
 
 // Charts titles.
 $string['logintrends'] = 'Tendencias de Ingreso';
 $string['dailylogins'] = 'Ingresos Diarios';
 $string['weeklylogins'] = 'Ingresos Semanales';
 $string['monthlylogins'] = 'Ingresos Mensuales';
-$string['usersbyactivity'] = 'Usuarios por Estado de Actividad';
+$string['usersbyactivity'] = 'Usuarios por Actividad de Ingreso Reciente';
 $string['courseusage'] = 'Uso de Cursos';
 $string['topcourses'] = 'Cursos mas Accedidos';
 $string['courseaccesstrends'] = 'Tendencias de Acceso a Cursos';

@@ -775,9 +775,9 @@ function generate_historical_data_html($limit = 10, $max_threshold = 100) {
               AND timecreated > :limit_days_ago
             GROUP BY (timecreated - (timecreated % 86400))
             ORDER BY fecha DESC
-            LIMIT :limit";
-    
-    $records = $DB->get_records_sql($sql, ['limit_days_ago' => $limit_days_ago, 'limit' => $limit]);
+            LIMIT " . (int)$limit;
+
+    $records = $DB->get_records_sql($sql, ['limit_days_ago' => $limit_days_ago]);
     
     foreach ($records as $record) {
         // Validar que la fecha sea un timestamp válido
@@ -1048,12 +1048,11 @@ function get_most_accessed_courses($limit = 10, $days = 30) {
               AND l.courseid != :siteid
             GROUP BY l.courseid, c.fullname, c.shortname
             ORDER BY total_accesses DESC
-            LIMIT :limit";
+            LIMIT " . (int)$limit;
 
     $records = $DB->get_records_sql($sql, [
         'days_ago' => $days_ago,
-        'siteid' => SITEID,
-        'limit' => $limit
+        'siteid' => SITEID
     ]);
 
     $courses = [];

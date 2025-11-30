@@ -53,15 +53,15 @@ $string['uniqueuserstoday'] = 'Unique users today';
 $string['uniqueusersweek'] = 'Unique users last 7 days';
 $string['uniqueusersmonth'] = 'Unique users last 30 days';
 $string['totalusers'] = 'Total users';
-$string['activeusers'] = 'Active users';
-$string['inactiveusers'] = 'Inactive users';
+$string['activeusers'] = 'Active users (logged in last 30 days)';
+$string['inactiveusers'] = 'Users without recent activity (no login in 30 days)';
 
 // Charts titles.
 $string['logintrends'] = 'Login Trends';
 $string['dailylogins'] = 'Daily Logins';
 $string['weeklylogins'] = 'Weekly Logins';
 $string['monthlylogins'] = 'Monthly Logins';
-$string['usersbyactivity'] = 'Users by Activity Status';
+$string['usersbyactivity'] = 'Users by Recent Login Activity';
 $string['courseusage'] = 'Course Usage';
 $string['topcourses'] = 'Top Courses by Access';
 $string['courseaccesstrends'] = 'Course Access Trends';
