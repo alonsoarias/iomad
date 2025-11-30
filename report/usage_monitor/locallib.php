@@ -753,22 +753,21 @@ function project_limit_date($current_value, $threshold_value, $growth_rate) {
 }
 
 /**
- * Genera filas HTML para los datos históricos de usuarios
+ * Obtiene datos históricos de usuarios como array estructurado.
+ * Reemplaza generate_historical_data_html para separar datos de presentación.
  *
  * @param int $limit Número de registros a incluir
  * @param int $max_threshold Umbral máximo de usuarios
- * @return string HTML generado para las filas de la tabla
+ * @return array Array de objetos con datos históricos
  */
-function generate_historical_data_html($limit = 10, $max_threshold = 100) {
+function get_historical_user_data($limit = 10, $max_threshold = 100) {
     global $DB;
-    
-    $html = '';
-    
+
     // Calcular timestamps para el rango de fechas
     $limit_days_ago = time() - ($limit * 86400);
-    
+
     // Consulta optimizada usando aritmética de timestamps para agrupación por día
-    $sql = "SELECT (timecreated - (timecreated % 86400)) as fecha, 
+    $sql = "SELECT (timecreated - (timecreated % 86400)) as fecha,
                    COUNT(DISTINCT userid) as usuarios
             FROM {logstore_standard_log}
             WHERE action = 'loggedin'
@@ -778,114 +777,222 @@ function generate_historical_data_html($limit = 10, $max_threshold = 100) {
             LIMIT " . (int)$limit;
 
     $records = $DB->get_records_sql($sql, ['limit_days_ago' => $limit_days_ago]);
-    
+
+    $data = [];
     foreach ($records as $record) {
         // Validar que la fecha sea un timestamp válido
         if (!is_numeric($record->fecha) || $record->fecha <= 0) {
             continue; // Saltar registros con fechas inválidas
         }
-        
+
         $percent = round(($record->usuarios / $max_threshold) * 100, 1);
-        $class = $percent < 70 ? '' : ($percent < 90 ? 'text-warning' : 'text-danger');
-        $formatted_date = is_numeric($record->fecha) && $record->fecha > 0 ? 
-                         date('d/m/Y', (int)$record->fecha) : 
-                         date('d/m/Y'); // Fecha actual como fallback
-        
+        $percent_class = $percent < 70 ? '' : ($percent < 90 ? 'text-warning' : 'text-danger');
+        $formatted_date = date('d/m/Y', (int)$record->fecha);
+
+        $data[] = [
+            'fecha' => $formatted_date,
+            'usuarios' => $record->usuarios,
+            'percent' => $percent,
+            'percent_class' => $percent_class
+        ];
+    }
+
+    return $data;
+}
+
+/**
+ * Obtiene datos de los cursos más grandes como array estructurado.
+ * Reemplaza generate_top_courses_html para separar datos de presentación.
+ *
+ * @param array $courses Arreglo con los datos de los cursos
+ * @return array Array de objetos con datos de cursos
+ */
+function get_top_courses_data($courses) {
+    $data = [];
+
+    foreach ($courses as $course) {
+        $data[] = [
+            'fullname' => format_string($course->fullname),
+            'shortname' => $course->shortname,
+            'totalsize' => display_size($course->totalsize),
+            'percentage' => $course->percentage
+        ];
+    }
+
+    return $data;
+}
+
+/**
+ * Genera filas HTML para los datos históricos de usuarios
+ * @deprecated Use get_historical_user_data() y Mustache templates en su lugar
+ *
+ * @param int $limit Número de registros a incluir
+ * @param int $max_threshold Umbral máximo de usuarios
+ * @return string HTML generado para las filas de la tabla
+ */
+function generate_historical_data_html($limit = 10, $max_threshold = 100) {
+    $data = get_historical_user_data($limit, $max_threshold);
+
+    $html = '';
+    foreach ($data as $row) {
         $html .= '<tr>';
-        $html .= '<td>' . $formatted_date . '</td>';
-        $html .= '<td>' . $record->usuarios . '</td>';
-        $html .= '<td class="' . $class . '">' . $percent . '%</td>';
+        $html .= '<td>' . $row['fecha'] . '</td>';
+        $html .= '<td>' . $row['usuarios'] . '</td>';
+        $html .= '<td class="' . $row['percent_class'] . '">' . $row['percent'] . '%</td>';
         $html .= '</tr>';
     }
-    
+
     return $html;
 }
 
 /**
  * Genera filas HTML para la tabla de cursos más grandes
+ * @deprecated Use get_top_courses_data() y Mustache templates en su lugar
  *
  * @param array $courses Arreglo con los datos de los cursos
  * @return string HTML generado para las filas de la tabla
  */
 function generate_top_courses_html($courses) {
+    $data = get_top_courses_data($courses);
+
     $html = '';
-    
-    foreach ($courses as $course) {
+    foreach ($data as $row) {
         $html .= '<tr>';
-        $html .= '<td>' . format_string($course->fullname) . ' (' . $course->shortname . ')</td>';
-        $html .= '<td>' . display_size($course->totalsize) . '</td>';
-        $html .= '<td>' . $course->percentage . '%</td>';
+        $html .= '<td>' . $row['fullname'] . ' (' . $row['shortname'] . ')</td>';
+        $html .= '<td>' . $row['totalsize'] . '</td>';
+        $html .= '<td>' . $row['percentage'] . '%</td>';
         $html .= '</tr>';
     }
-    
+
     return $html;
 }
 
 /**
- * Envía una notificación por correo cuando se supera el límite de usuarios diarios.
+ * Envía una notificación unificada por correo cuando se supera algún umbral.
+ * Usa template Mustache para renderizar el email.
  *
- * Versión mejorada que incluye más información y un diseño visual mejorado.
- *
- * @param int $numberofusers Número de usuarios únicos que accedieron al sistema.
- * @param string $fecha Fecha para la que se superó el umbral.
- * @param float $percentage Porcentaje de uso en relación con el umbral.
+ * @param string $type Tipo de alerta: 'users', 'disk', o 'both'
+ * @param array $user_data Datos de usuarios (opcional)
+ * @param array $disk_data Datos de disco (opcional)
  * @return bool Devuelve true si el correo se envió correctamente, false en caso contrario.
  */
-function email_notify_user_limit($numberofusers, $fecha, $percentage)
-{
-    global $CFG, $DB;
-
-    // Validar el timestamp
-    if (!is_numeric($fecha)) {
-        debugging('email_notify_user_limit: Timestamp inválido proporcionado: ' . var_export($fecha, true), DEBUG_DEVELOPER);
-        $fecha = time(); // Usar tiempo actual como fallback
-    }
+function email_notify($type, $user_data = null, $disk_data = null) {
+    global $CFG, $DB, $PAGE, $OUTPUT;
 
     $site = get_site();
     $reportconfig = get_config('report_usage_monitor');
+    $to_email = get_config('report_usage_monitor', 'email');
 
-    // Información básica
-    $a = new stdClass();
-    $a->sitename = format_string($site->fullname);
-    $a->threshold = $reportconfig->max_daily_users_threshold;
-    $a->numberofusers = $numberofusers;
-    $a->lastday = is_numeric($fecha) && $fecha > 0 ? 
-                 date('d/m/Y', (int)$fecha) : 
-                 date('d/m/Y'); // Fecha actual como fallback
-    $a->referer = $CFG->wwwroot . '/report/usage_monitor/index.php';
-    $a->siteurl = $CFG->wwwroot;
-    $a->percentaje = round($percentage, 2);
-    $a->excess_users = max(0, $numberofusers - $a->threshold);
+    if (empty($to_email) || !filter_var($to_email, FILTER_VALIDATE_EMAIL)) {
+        debugging('email_notify: Dirección de email inválida', DEBUG_DEVELOPER);
+        return false;
+    }
 
-    // Información del sistema
-    $a->moodle_version = $CFG->version;
-    $a->moodle_release = $CFG->release;
-    $a->courses_count = $DB->count_records('course');
-    $a->backup_auto_max_kept = get_config('backup', 'backup_auto_max_kept');
+    // Asegurar contexto para CLI
+    if (!isset($PAGE->context) || $PAGE->context === null) {
+        $PAGE->set_context(\context_system::instance());
+    }
 
-    // Información de disco
-    $quotadisk = ((int) $reportconfig->disk_quota * 1024) * 1024 * 1024;
-    $disk_usage = ((int) $reportconfig->totalusagereadable + (int) $reportconfig->totalusagereadabledb) ?: 0;
-    $a->diskusage = display_size($disk_usage);
-    $a->quotadisk = display_size($quotadisk);
-    $a->disk_percent = round(calculate_threshold_percentage($disk_usage, $quotadisk), 2);
+    // Datos comunes
+    $context = [
+        'lang' => current_language(),
+        'sitename' => format_string($site->fullname),
+        'siteurl' => $CFG->wwwroot,
+        'dashboard_url' => $CFG->wwwroot . '/report/usage_monitor/index.php',
+        'report_date' => date('d/m/Y H:i'),
+        'moodle_release' => $CFG->release,
+        'courses_count' => $DB->count_records('course'),
+        'backup_count' => get_config('backup', 'backup_auto_max_kept') ?? 0,
+        'alert_users' => ($type === 'users' || $type === 'both'),
+        'alert_disk' => ($type === 'disk' || $type === 'both'),
+        'has_recommendations' => true,
+    ];
 
-    // Proyecciones y análisis
-    $growth_rate = calculate_growth_rate('users');
-    $a->days_to_critical = project_limit_date($numberofusers, $a->threshold * 1.2, $growth_rate);
-    $a->critical_threshold = 120;
+    // Colores del header según tipo de alerta
+    if ($context['alert_users'] && $context['alert_disk']) {
+        $context['header_color_start'] = '#8e44ad';
+        $context['header_color_end'] = '#9b59b6';
+    } else if ($context['alert_users']) {
+        $context['header_color_start'] = '#c0392b';
+        $context['header_color_end'] = '#e74c3c';
+    } else {
+        $context['header_color_start'] = '#d35400';
+        $context['header_color_end'] = '#e67e22';
+    }
 
-    // Datos históricos
-    $a->historical_data_rows = generate_historical_data_html(7, $a->threshold);
+    // Datos de usuarios
+    if ($context['alert_users'] && $user_data) {
+        $threshold = $user_data['threshold'] ?? $reportconfig->max_daily_users_threshold ?? 100;
+        $users_today = $user_data['users_today'] ?? 0;
+        $user_percent = ($threshold > 0) ? round(($users_today / $threshold) * 100, 1) : 0;
+
+        $context['users_today'] = $users_today;
+        $context['user_threshold'] = $threshold;
+        $context['user_percent'] = $user_percent;
+        $context['user_percent_capped'] = min(100, $user_percent);
+        $context['excess_users'] = max(0, $users_today - $threshold);
+
+        // Historial de usuarios (datos estructurados para Mustache)
+        $context['user_history'] = get_historical_user_data(7, $threshold);
+        $context['has_user_history'] = !empty($context['user_history']);
+    }
+
+    // Datos de disco
+    if ($context['alert_disk'] && $disk_data) {
+        $disk_usage = $disk_data['disk_usage'] ?? 0;
+        $quotadisk = $disk_data['quotadisk'] ?? 0;
+        $disk_percent = ($quotadisk > 0) ? round(($disk_usage / $quotadisk) * 100, 1) : 0;
+
+        $context['disk_usage'] = display_size($disk_usage);
+        $context['disk_quota'] = display_size($quotadisk);
+        $context['disk_percent'] = $disk_percent;
+        $context['disk_percent_capped'] = min(100, $disk_percent);
+        $context['available_space'] = display_size($quotadisk - $disk_usage);
+        $context['available_percent'] = round(100 - $disk_percent, 1);
+
+        // Análisis por directorios
+        $dir_analysis = $disk_data['dir_analysis'] ?? [];
+        if (!empty($dir_analysis) && $disk_usage > 0) {
+            $context['database_size'] = display_size($dir_analysis['database'] ?? 0);
+            $context['database_percent'] = round((($dir_analysis['database'] ?? 0) / $disk_usage) * 100, 1);
+            $context['filedir_size'] = display_size($dir_analysis['filedir'] ?? 0);
+            $context['filedir_percent'] = round((($dir_analysis['filedir'] ?? 0) / $disk_usage) * 100, 1);
+            $context['cache_size'] = display_size($dir_analysis['cache'] ?? 0);
+            $context['cache_percent'] = round((($dir_analysis['cache'] ?? 0) / $disk_usage) * 100, 1);
+            $context['other_size'] = display_size($dir_analysis['others'] ?? 0);
+            $context['other_percent'] = round((($dir_analysis['others'] ?? 0) / $disk_usage) * 100, 1);
+        }
+
+        // Cursos más grandes (datos estructurados para Mustache)
+        $largest_courses = $disk_data['largest_courses'] ?? [];
+        if (empty($largest_courses)) {
+            $largest_courses = get_largest_courses(5);
+        }
+        $context['top_courses'] = get_top_courses_data($largest_courses);
+        $context['has_top_courses'] = !empty($context['top_courses']);
+    }
+
+    // Renderizar template Mustache
+    try {
+        $messagehtml = $OUTPUT->render_from_template('report_usage_monitor/email_notification', $context);
+    } catch (\Exception $e) {
+        debugging('email_notify: Error al renderizar template - ' . $e->getMessage(), DEBUG_DEVELOPER);
+        // Fallback a templates legacy si Mustache falla
+        if ($context['alert_disk'] && !$context['alert_users']) {
+            $messagehtml = get_string('messagehtml_diskusage', 'report_usage_monitor', (object)$context);
+        } else {
+            $messagehtml = get_string('messagehtml_userlimit', 'report_usage_monitor', (object)$context);
+        }
+    }
+
+    $messagetext = html_to_text($messagehtml);
 
     // Generar direcciones de correo
-    $toemail = generate_email_user(get_config('report_usage_monitor', 'email'), '');
+    $toemail = generate_email_user($to_email, '');
     $fromemail = generate_email_user($CFG->noreplyaddress, format_string($CFG->supportname));
 
-    // Preparar el correo
-    $subject = get_string('subjectemail1', 'report_usage_monitor') . " {$a->sitename}";
-    $messagehtml = get_string('messagehtml_userlimit', 'report_usage_monitor', $a);
-    $messagetext = html_to_text($messagehtml);
+    // Subject
+    $subject = get_string('email_notification_subject', 'report_usage_monitor') . ' ' . $context['sitename'];
 
     // Enviar el correo
     $previous_noemailever = $CFG->noemailever ?? false;
@@ -897,10 +1004,30 @@ function email_notify_user_limit($numberofusers, $fecha, $percentage)
 }
 
 /**
- * Envía una notificación por correo sobre el uso del espacio en disco.
+ * Envía una notificación por correo cuando se supera el límite de usuarios diarios.
+ * @deprecated Use email_notify('users', $user_data) en su lugar
  *
- * Versión mejorada que incluye análisis detallado del espacio por directorios,
- * información sobre los cursos más grandes y recomendaciones.
+ * @param int $numberofusers Número de usuarios únicos que accedieron al sistema.
+ * @param string $fecha Fecha para la que se superó el umbral.
+ * @param float $percentage Porcentaje de uso en relación con el umbral.
+ * @return bool Devuelve true si el correo se envió correctamente, false en caso contrario.
+ */
+function email_notify_user_limit($numberofusers, $fecha, $percentage) {
+    $reportconfig = get_config('report_usage_monitor');
+
+    $user_data = [
+        'users_today' => $numberofusers,
+        'threshold' => $reportconfig->max_daily_users_threshold ?? 100,
+        'fecha' => $fecha,
+        'percentage' => $percentage
+    ];
+
+    return email_notify('users', $user_data, null);
+}
+
+/**
+ * Envía una notificación por correo sobre el uso del espacio en disco.
+ * @deprecated Use email_notify('disk', null, $disk_data) en su lugar
  *
  * @param int $quotadisk Cuota total de disco asignada, en bytes.
  * @param int $disk_usage Uso actual del disco, en bytes.
@@ -908,38 +1035,9 @@ function email_notify_user_limit($numberofusers, $fecha, $percentage)
  * @param int $userAccessCount Número de usuarios activos.
  * @return bool Devuelve true si el correo se envió correctamente, false en caso contrario.
  */
-function email_notify_disk_limit($quotadisk, $disk_usage, $disk_percent, $userAccessCount)
-{
-    global $CFG, $DB;
-
-    $site = get_site();
+function email_notify_disk_limit($quotadisk, $disk_usage, $disk_percent, $userAccessCount) {
+    global $CFG;
     $reportconfig = get_config('report_usage_monitor');
-
-    // Información básica
-    $a = new stdClass();
-    $a->sitename = format_string($site->fullname);
-    $a->quotadisk = display_size($quotadisk);
-    $a->diskusage = display_size($disk_usage);
-    $a->percentage = round($disk_percent, 2);
-    $a->databasesize = display_size($reportconfig->totalusagereadabledb);
-    $a->available_space = display_size($quotadisk - $disk_usage);
-    $a->available_percent = round(100 - $disk_percent, 2);
-    
-    // Clase de nivel de advertencia
-    $a->warning_level_class = $disk_percent < 70 ? 'warning-level-low' : 
-                            ($disk_percent < 90 ? 'warning-level-medium' : 'warning-level-high');
-
-    // Información del sistema
-    $a->backupcount = get_config('backup', 'backup_auto_max_kept');
-    $a->threshold = $reportconfig->max_daily_users_threshold;
-    $a->numberofusers = $userAccessCount;
-    $a->referer = $CFG->wwwroot . '/report/usage_monitor/index.php';
-    $a->siteurl = $CFG->wwwroot;
-    $a->lastday = date('d/m/Y', time());
-    $a->coursescount = $DB->count_records('course');
-    $a->user_percent = round(calculate_threshold_percentage($userAccessCount, $a->threshold), 2);
-    $a->moodle_version = $CFG->version;
-    $a->moodle_release = $CFG->release;
 
     // Análisis por directorios
     $dir_analysis_json = $reportconfig->dir_analysis ?? '{}';
@@ -947,15 +1045,6 @@ function email_notify_disk_limit($quotadisk, $disk_usage, $disk_percent, $userAc
     if (empty($dir_analysis) || !is_array($dir_analysis)) {
         $dir_analysis = analyze_disk_usage_by_directory($CFG->dataroot);
     }
-    
-    // Formateamos los tamaños y calculamos porcentajes
-    $a->db_percent = round(($dir_analysis['database'] / $disk_usage) * 100, 2);
-    $a->filedir_size = display_size($dir_analysis['filedir']);
-    $a->filedir_percent = round(($dir_analysis['filedir'] / $disk_usage) * 100, 2);
-    $a->cache_size = display_size($dir_analysis['cache']);
-    $a->cache_percent = round(($dir_analysis['cache'] / $disk_usage) * 100, 2);
-    $a->other_size = display_size($dir_analysis['others']);
-    $a->other_percent = round(($dir_analysis['others'] / $disk_usage) * 100, 2);
 
     // Cursos más grandes
     $largest_courses_json = $reportconfig->largest_courses ?? '[]';
@@ -963,24 +1052,16 @@ function email_notify_disk_limit($quotadisk, $disk_usage, $disk_percent, $userAc
     if (empty($largest_courses)) {
         $largest_courses = get_largest_courses(5);
     }
-    $a->top_courses_rows = generate_top_courses_html($largest_courses);
 
-    // Generar direcciones de correo
-    $toemail = generate_email_user(get_config('report_usage_monitor', 'email'), '');
-    $fromemail = generate_email_user($CFG->noreplyaddress, format_string($CFG->supportname));
+    $disk_data = [
+        'disk_usage' => $disk_usage,
+        'quotadisk' => $quotadisk,
+        'percentage' => $disk_percent,
+        'dir_analysis' => $dir_analysis,
+        'largest_courses' => $largest_courses
+    ];
 
-    // Preparar el correo
-    $subject = get_string('subjectemail2', 'report_usage_monitor') . " {$a->sitename}";
-    $messagehtml = get_string('messagehtml_diskusage', 'report_usage_monitor', $a);
-    $messagetext = html_to_text($messagehtml);
-
-    // Enviar el correo
-    $previous_noemailever = $CFG->noemailever ?? false;
-    $CFG->noemailever = false;
-    $result = email_to_user($toemail, $fromemail, $subject, $messagetext, $messagehtml, '', '', true, $fromemail->email);
-    $CFG->noemailever = $previous_noemailever;
-
-    return $result;
+    return email_notify('disk', null, $disk_data);
 }
 
 /**

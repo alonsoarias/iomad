@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113012;  // Unified email template and dashboard Mustache
+$plugin->version   = 2025113013;  // Separate data from presentation, unified email with Mustache loops
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.20';    // Unified email notification, dashboard Mustache template
+$plugin->release   = '4.5.21';    // Refactor data functions, use Mustache loops for email tables
 $plugin->maturity  = MATURITY_STABLE;

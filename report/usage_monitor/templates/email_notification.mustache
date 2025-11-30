@@ -145,7 +145,13 @@
                                     <th style="padding: 10px 12px; font-weight: 600; color: #ffffff; text-align: left; font-size: 13px;">{{#str}}email_active_users, report_usage_monitor{{/str}}</th>
                                     <th style="padding: 10px 12px; font-weight: 600; color: #ffffff; text-align: left; font-size: 13px;">{{#str}}email_percent_of_limit, report_usage_monitor{{/str}}</th>
                                 </tr>
-                                {{{user_history_rows}}}
+                                {{#user_history}}
+                                <tr>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e0e0e0; font-size: 13px;">{{fecha}}</td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e0e0e0; font-size: 13px;">{{usuarios}}</td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e0e0e0; font-size: 13px; {{#percent_class}}color: #e74c3c; font-weight: bold;{{/percent_class}}">{{percent}}%</td>
+                                </tr>
+                                {{/user_history}}
                             </table>
                             {{/has_user_history}}
                             {{/alert_users}}
@@ -265,7 +271,13 @@
                                     <th style="padding: 10px 12px; font-weight: 600; color: #ffffff; text-align: left; font-size: 13px;">{{#str}}size, report_usage_monitor{{/str}}</th>
                                     <th style="padding: 10px 12px; font-weight: 600; color: #ffffff; text-align: left; font-size: 13px;">{{#str}}email_percent_of_total, report_usage_monitor{{/str}}</th>
                                 </tr>
-                                {{{top_courses_rows}}}
+                                {{#top_courses}}
+                                <tr>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e0e0e0; font-size: 13px;">{{fullname}} ({{shortname}})</td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e0e0e0; font-size: 13px;">{{totalsize}}</td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e0e0e0; font-size: 13px;">{{percentage}}%</td>
+                                </tr>
+                                {{/top_courses}}
                             </table>
                             {{/has_top_courses}}
                             {{/alert_disk}}

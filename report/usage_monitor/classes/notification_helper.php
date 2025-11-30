@@ -126,76 +126,90 @@ class notification_helper {
     }
 
     /**
+     * Get user history as structured data array.
+     *
+     * @param int $days Number of days to include
+     * @return array Array of user history data
+     */
+    public static function get_user_history_data(int $days = 7): array {
+        global $CFG;
+
+        require_once($CFG->dirroot . '/report/usage_monitor/locallib.php');
+
+        $config = get_config('report_usage_monitor');
+        $threshold = (int)($config->max_daily_users_threshold ?? 100);
+
+        return get_historical_user_data($days, $threshold);
+    }
+
+    /**
      * Generate user history data rows for email.
      *
+     * @deprecated Use get_user_history_data() and Mustache templates instead
      * @param int $days Number of days to include
      * @return string HTML table rows
      */
     public static function get_user_history_rows(int $days = 7): string {
-        global $DB;
+        $data = self::get_user_history_data($days);
 
-        $config = get_config('report_usage_monitor');
-        $threshold = (int)($config->max_daily_users_threshold ?? 100);
-        $time_start = strtotime("-{$days} days midnight");
-
-        // Using portable timestamp arithmetic for cross-database compatibility.
-        $sql = "SELECT (timecreated - (timecreated % 86400)) AS timestamp_fecha,
-                       COUNT(DISTINCT userid) AS conteo_accesos_unicos
-                FROM {logstore_standard_log}
-                WHERE action = 'loggedin'
-                  AND timecreated > :start_time
-                GROUP BY (timecreated - (timecreated % 86400))
-                ORDER BY timestamp_fecha DESC";
-
-        $records = $DB->get_records_sql($sql, ['start_time' => $time_start], 0, $days);
+        if (empty($data)) {
+            return '<tr><td colspan="3" style="text-align: center;">No data available</td></tr>';
+        }
 
         $rows = '';
-        foreach ($records as $record) {
-            $date = date('d/m/Y', $record->timestamp_fecha);
-            $users = (int)$record->conteo_accesos_unicos;
-            $percent = $threshold > 0 ? round(($users / $threshold) * 100, 1) : 0;
-            $color = $percent >= 90 ? '#e74c3c' : ($percent >= 70 ? '#f39c12' : '#27ae60');
-
+        foreach ($data as $row) {
+            $color = $row['percent'] >= 90 ? '#e74c3c' : ($row['percent'] >= 70 ? '#f39c12' : '#27ae60');
             $rows .= "<tr>
-                <td>{$date}</td>
-                <td>{$users}</td>
-                <td style=\"color: {$color}; font-weight: bold;\">{$percent}%</td>
+                <td>{$row['fecha']}</td>
+                <td>{$row['usuarios']}</td>
+                <td style=\"color: {$color}; font-weight: bold;\">{$row['percent']}%</td>
             </tr>";
         }
 
-        return $rows ?: '<tr><td colspan="3" style="text-align: center;">No data available</td></tr>';
+        return $rows;
     }
 
     /**
-     * Generate top courses rows for email.
+     * Get top courses as structured data array.
      *
      * @param int $limit Number of courses to include
-     * @return string HTML table rows
+     * @return array Array of course data
      */
-    public static function get_top_courses_rows(int $limit = 5): string {
-        global $DB, $CFG;
+    public static function get_top_courses_data(int $limit = 5): array {
+        global $CFG;
 
         require_once($CFG->dirroot . '/report/usage_monitor/locallib.php');
 
         $courses = get_largest_courses($limit);
 
-        if (empty($courses)) {
+        return get_top_courses_data($courses);
+    }
+
+    /**
+     * Generate top courses rows for email.
+     *
+     * @deprecated Use get_top_courses_data() and Mustache templates instead
+     * @param int $limit Number of courses to include
+     * @return string HTML table rows
+     */
+    public static function get_top_courses_rows(int $limit = 5): string {
+        $data = self::get_top_courses_data($limit);
+
+        if (empty($data)) {
             return '<tr><td colspan="3" style="text-align: center;">No data available</td></tr>';
         }
 
         $rows = '';
-        foreach ($courses as $course) {
-            $name = format_string($course->fullname);
+        foreach ($data as $row) {
+            $name = $row['fullname'];
             if (strlen($name) > 40) {
                 $name = substr($name, 0, 37) . '...';
             }
-            $size = display_size($course->totalsize);
-            $percent = $course->percentage ?? 0;
 
             $rows .= "<tr>
                 <td>{$name}</td>
-                <td>{$size}</td>
-                <td>{$percent}%</td>
+                <td>{$row['totalsize']}</td>
+                <td>{$row['percentage']}%</td>
             </tr>";
         }
 
@@ -262,7 +276,10 @@ class notification_helper {
         $data->threshold = $user_threshold;
         $data->user_percent = $user_percent;
 
-        // Top courses.
+        // Top courses - structured data for Mustache.
+        $data->top_courses = self::get_top_courses_data(5);
+        $data->has_top_courses = !empty($data->top_courses);
+        // Keep legacy HTML rows for backwards compatibility.
         $data->top_courses_rows = self::get_top_courses_rows(5);
 
         return $data;
@@ -321,7 +338,10 @@ class notification_helper {
         $data->quotadisk = display_size($disk_quota);
         $data->disk_percent = $disk_percent;
 
-        // Historical data.
+        // Historical data - structured for Mustache.
+        $data->user_history = self::get_user_history_data(7);
+        $data->has_user_history = !empty($data->user_history);
+        // Keep legacy HTML rows for backwards compatibility.
         $data->historical_data_rows = self::get_user_history_rows(7);
 
         return $data;
@@ -410,8 +430,10 @@ class notification_helper {
             $data->user_percent = round($user_data->percentaje ?? 0, 1);
             $data->user_percent_capped = min(100, $data->user_percent);
             $data->excess_users = max(0, $data->users_today - $data->user_threshold);
-            $data->user_history_rows = $user_data->historical_data_rows ?? '';
-            $data->has_user_history = !empty($data->user_history_rows);
+
+            // Structured data for Mustache loops.
+            $data->user_history = self::get_user_history_data(7);
+            $data->has_user_history = !empty($data->user_history);
         }
 
         // Disk data.
@@ -430,8 +452,10 @@ class notification_helper {
             $data->cache_percent = $disk_data->cache_percent ?? 0;
             $data->other_size = $disk_data->other_size ?? '0 B';
             $data->other_percent = $disk_data->other_percent ?? 0;
-            $data->top_courses_rows = $disk_data->top_courses_rows ?? '';
-            $data->has_top_courses = !empty($data->top_courses_rows);
+
+            // Structured data for Mustache loops.
+            $data->top_courses = self::get_top_courses_data(5);
+            $data->has_top_courses = !empty($data->top_courses);
         }
 
         return $data;
