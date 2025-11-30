@@ -236,16 +236,8 @@ echo '</div>';
 echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
 ?>
 
-<!-- Cargar librería Chart.js desde CDN con integridad SRI -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
-        integrity="sha384-ou7Y5K0brTcjRJOxCdEfzCLjGdKfMJJF1nQV5WVQY5aQWibFlOvVuVz4gXKQSd+E"
-        crossorigin="anonymous"></script>
-<script>
-    // Verificar si Chart.js cargó correctamente
-    if (typeof Chart === 'undefined') {
-        console.error('Chart.js no pudo cargarse desde el CDN');
-    }
-</script>
+<!-- Cargar librería Chart.js desde CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <div class="container-fluid mt-4">
     <!-- SECCIÓN A: Tarjetas resumen (disco, usuarios, max 90d) -->
