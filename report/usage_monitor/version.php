@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113014;  // Unified notification task, removed legacy code
+$plugin->version   = 2025113015;  // Task frequency matches original disk/user timing
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.22';    // Unified notifications: single task for disk/user alerts
+$plugin->release   = '4.5.23';    // Combined task runs at disk frequency, internal logic controls intervals
 $plugin->maturity  = MATURITY_STABLE;

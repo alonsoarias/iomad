@@ -52,11 +52,13 @@ $tasks = [
     ],
     // Unified task for processing notifications (disk and user limits).
     // Sends a single notification when either or both thresholds are exceeded.
+    // Runs at same frequency as disk calculation to maintain original notification timing.
+    // Internal interval logic controls actual notification sending for each type.
     [
         'classname' => 'report_usage_monitor\task\notification_combined',
         'blocking' => 0,
         'minute' => '0',
-        'hour' => '8', // Once daily at 8 AM.
+        'hour' => $du_command_available ? '*/6' : '*/12', // Match disk task frequency.
         'day' => '*',
         'month' => '*',
         'dayofweek' => '*'
