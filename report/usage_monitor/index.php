@@ -197,7 +197,12 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="card-title mb-0 text-muted"><?php echo get_string('diskusage', 'report_usage_monitor'); ?></h6>
+                        <h6 class="card-title mb-0 text-muted">
+                            <?php echo get_string('diskusage', 'report_usage_monitor'); ?>
+                            <span class="tooltip-icon" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_disk_usage', 'report_usage_monitor'); ?>">
+                                <i class="fa fa-question-circle text-info"></i>
+                            </span>
+                        </h6>
                         <span class="badge <?php echo $disk_warning_class; ?> rounded-pill"><?php echo round($disk_percent, 1); ?>%</span>
                     </div>
                     <div class="progress mb-2" style="height: 8px;">
@@ -216,7 +221,12 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="card-title mb-0 text-muted"><?php echo get_string('users_today_card', 'report_usage_monitor'); ?></h6>
+                        <h6 class="card-title mb-0 text-muted">
+                            <?php echo get_string('users_today_card', 'report_usage_monitor'); ?>
+                            <span class="tooltip-icon" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_users_today', 'report_usage_monitor'); ?>">
+                                <i class="fa fa-question-circle text-info"></i>
+                            </span>
+                        </h6>
                         <span class="badge <?php echo $users_warning_class; ?> rounded-pill"><?php echo round($users_percent, 1); ?>%</span>
                     </div>
                     <div class="progress mb-2" style="height: 8px;">
@@ -234,7 +244,12 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
         <div class="col-lg-4 col-md-12 mb-3">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
-                    <h6 class="card-title mb-2 text-muted"><?php echo get_string('max_userdaily_for_90_days', 'report_usage_monitor'); ?></h6>
+                    <h6 class="card-title mb-2 text-muted">
+                        <?php echo get_string('max_userdaily_for_90_days', 'report_usage_monitor'); ?>
+                        <span class="tooltip-icon" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_max_90_days', 'report_usage_monitor'); ?>">
+                            <i class="fa fa-question-circle text-info"></i>
+                        </span>
+                    </h6>
                     <div class="h4 mb-1"><?php echo $max_90_days_users; ?> <small class="text-muted">/ <?php echo $max_users_threshold; ?></small></div>
                     <small class="text-muted"><?php echo get_string('date', 'report_usage_monitor'); ?>: <?php echo $max_90_days_date; ?></small>
                 </div>
@@ -474,34 +489,50 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
             <!-- Course Access Summary -->
             <div class="row mb-4">
                 <div class="col-md-3 col-6 mb-2">
-                    <div class="card bg-primary text-white">
+                    <div class="card bg-primary text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_total_accesses', 'report_usage_monitor'); ?>">
                         <div class="card-body py-3 text-center">
-                            <div class="small opacity-75"><?php echo get_string('total_accesses', 'report_usage_monitor'); ?></div>
+                            <div class="small opacity-75">
+                                <?php echo get_string('total_accesses', 'report_usage_monitor'); ?>
+                                <i class="fa fa-info-circle ms-1"></i>
+                            </div>
                             <div class="h4 mb-0"><?php echo number_format($access_summary->total_accesses); ?></div>
+                            <div class="small opacity-50"><?php echo get_string('last_30_days', 'report_usage_monitor'); ?></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 mb-2">
-                    <div class="card bg-success text-white">
+                    <div class="card bg-success text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_unique_users', 'report_usage_monitor'); ?>">
                         <div class="card-body py-3 text-center">
-                            <div class="small opacity-75"><?php echo get_string('unique_users', 'report_usage_monitor'); ?></div>
+                            <div class="small opacity-75">
+                                <?php echo get_string('unique_users', 'report_usage_monitor'); ?>
+                                <i class="fa fa-info-circle ms-1"></i>
+                            </div>
                             <div class="h4 mb-0"><?php echo number_format($access_summary->unique_users); ?></div>
+                            <div class="small opacity-50"><?php echo get_string('last_30_days', 'report_usage_monitor'); ?></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 mb-2">
-                    <div class="card bg-info text-white">
+                    <div class="card bg-info text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_total_completions', 'report_usage_monitor'); ?>">
                         <div class="card-body py-3 text-center">
-                            <div class="small opacity-75"><?php echo get_string('total_completions', 'report_usage_monitor'); ?></div>
+                            <div class="small opacity-75">
+                                <?php echo get_string('total_completions', 'report_usage_monitor'); ?>
+                                <i class="fa fa-info-circle ms-1"></i>
+                            </div>
                             <div class="h4 mb-0"><?php echo number_format($completion_summary->total_completions); ?></div>
+                            <div class="small opacity-50"><?php echo get_string('last_30_days', 'report_usage_monitor'); ?></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 mb-2">
-                    <div class="card bg-secondary text-white">
+                    <div class="card bg-secondary text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="<?php echo get_string('tooltip_unique_courses', 'report_usage_monitor'); ?>">
                         <div class="card-body py-3 text-center">
-                            <div class="small opacity-75"><?php echo get_string('unique_courses', 'report_usage_monitor'); ?></div>
+                            <div class="small opacity-75">
+                                <?php echo get_string('unique_courses', 'report_usage_monitor'); ?>
+                                <i class="fa fa-info-circle ms-1"></i>
+                            </div>
                             <div class="h4 mb-0"><?php echo number_format($access_summary->unique_courses); ?></div>
+                            <div class="small opacity-50"><?php echo get_string('last_30_days', 'report_usage_monitor'); ?></div>
                         </div>
                     </div>
                 </div>
@@ -1066,33 +1097,160 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
     } else {
         initManualTabs();
     }
+
+    // Initialize tooltips (Bootstrap 4 and 5 compatible)
+    function initTooltips() {
+        // Try Bootstrap 5 first
+        if (typeof bootstrap !== 'undefined' && typeof bootstrap.Tooltip !== 'undefined') {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function(el) {
+                new bootstrap.Tooltip(el, { placement: 'top', html: false });
+            });
+        }
+        // Try Bootstrap 4 / jQuery
+        else if (typeof jQuery !== 'undefined' && typeof jQuery.fn.tooltip !== 'undefined') {
+            jQuery('[data-toggle="tooltip"]').tooltip({ placement: 'top', html: false });
+        }
+        // Fallback: Use native title attributes (already set)
+    }
+
+    // Initialize tooltips after DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTooltips);
+    } else {
+        setTimeout(initTooltips, 100);
+    }
 })();
 </script>
 
 <style>
-.usage-monitor-dashboard .card { transition: box-shadow 0.2s; }
-.usage-monitor-dashboard .card:hover { box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1) !important; }
-.usage-monitor-dashboard .nav-tabs .nav-link {
+/* ============================================
+   USAGE MONITOR DASHBOARD STYLES
+   ============================================ */
+
+/* Base card styles */
+.usage-monitor-dashboard .card {
+    transition: box-shadow 0.2s ease-in-out;
+    border-radius: 0.5rem;
+}
+.usage-monitor-dashboard .card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1) !important;
+}
+.usage-monitor-dashboard .card-header {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 0.875rem 1.25rem;
+}
+.usage-monitor-dashboard .card-header h6 {
+    font-size: 0.95rem;
+    font-weight: 600;
     color: #495057;
+}
+.usage-monitor-dashboard .card-body {
+    padding: 1.25rem;
+}
+
+/* Status cards at top */
+.usage-monitor-dashboard .card-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+/* Navigation tabs */
+.usage-monitor-dashboard .nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+}
+.usage-monitor-dashboard .nav-tabs .nav-link {
+    color: #6c757d;
     cursor: pointer;
-    border: 1px solid transparent;
-    border-top-left-radius: 0.25rem;
-    border-top-right-radius: 0.25rem;
-    padding: 0.5rem 1rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 0.75rem 1.25rem;
+    font-weight: 500;
+    margin-bottom: -2px;
+    transition: color 0.15s, border-color 0.15s;
 }
 .usage-monitor-dashboard .nav-tabs .nav-link:hover {
-    border-color: #e9ecef #e9ecef #dee2e6;
-    background-color: #f8f9fa;
+    color: #495057;
+    border-bottom-color: #adb5bd;
+    background-color: transparent;
 }
 .usage-monitor-dashboard .nav-tabs .nav-link.active {
     font-weight: 600;
-    color: #495057;
-    background-color: #fff;
-    border-color: #dee2e6 #dee2e6 #fff;
+    color: #007bff;
+    background-color: transparent;
+    border-bottom: 2px solid #007bff;
 }
-.usage-monitor-dashboard .table th { font-weight: 600; font-size: 0.85rem; }
-.usage-monitor-dashboard .table td { font-size: 0.9rem; }
-.usage-monitor-dashboard .badge { font-weight: 500; }
+
+/* Tables */
+.usage-monitor-dashboard .table {
+    margin-bottom: 0;
+}
+.usage-monitor-dashboard .table th {
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #6c757d;
+    border-top: none;
+    padding: 0.75rem 1rem;
+}
+.usage-monitor-dashboard .table td {
+    font-size: 0.9rem;
+    padding: 0.625rem 1rem;
+    vertical-align: middle;
+}
+.usage-monitor-dashboard .table-hover tbody tr:hover {
+    background-color: rgba(0,123,255,0.03);
+}
+
+/* Badges */
+.usage-monitor-dashboard .badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+}
+
+/* Progress bars */
+.usage-monitor-dashboard .progress {
+    border-radius: 0.5rem;
+    background-color: #e9ecef;
+}
+.usage-monitor-dashboard .progress-bar {
+    border-radius: 0.5rem;
+}
+
+/* Metric summary cards (courses tab) */
+.usage-monitor-dashboard .metric-card {
+    cursor: help;
+    transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.usage-monitor-dashboard .metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+.usage-monitor-dashboard .metric-card .card-body {
+    padding: 1rem;
+}
+.usage-monitor-dashboard .metric-card .h4 {
+    font-weight: 700;
+    margin: 0.25rem 0;
+}
+
+/* Tooltip icons */
+.usage-monitor-dashboard .tooltip-icon {
+    cursor: help;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+    margin-left: 0.25rem;
+}
+.usage-monitor-dashboard .tooltip-icon:hover {
+    opacity: 1;
+}
+.usage-monitor-dashboard .tooltip-icon i {
+    font-size: 0.85em;
+}
 
 /* Chart containers - critical for preventing infinite resize */
 .usage-monitor-dashboard .chart-container {
@@ -1100,14 +1258,78 @@ echo $OUTPUT->heading(get_string('dashboard_title', 'report_usage_monitor'));
     width: 100%;
     overflow: hidden;
 }
-.usage-monitor-dashboard .chart-container.chart-sm { height: 250px !important; max-height: 250px !important; }
-.usage-monitor-dashboard .chart-container.chart-md { height: 280px !important; max-height: 280px !important; }
-.usage-monitor-dashboard .chart-container.chart-lg { height: 300px !important; max-height: 300px !important; }
+.usage-monitor-dashboard .chart-container.chart-sm {
+    height: 250px !important;
+    max-height: 250px !important;
+}
+.usage-monitor-dashboard .chart-container.chart-md {
+    height: 280px !important;
+    max-height: 280px !important;
+}
+.usage-monitor-dashboard .chart-container.chart-lg {
+    height: 300px !important;
+    max-height: 300px !important;
+}
 .usage-monitor-dashboard .chart-container canvas {
     display: block !important;
     width: 100% !important;
     height: 100% !important;
     max-height: inherit !important;
+}
+
+/* Alerts and info boxes */
+.usage-monitor-dashboard .alert {
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 0.9rem;
+}
+.usage-monitor-dashboard .alert-info {
+    background-color: #e7f3ff;
+    color: #0c5460;
+}
+.usage-monitor-dashboard .alert-success {
+    background-color: #d4edda;
+}
+.usage-monitor-dashboard .alert-warning {
+    background-color: #fff3cd;
+}
+.usage-monitor-dashboard .alert-danger {
+    background-color: #f8d7da;
+}
+
+/* System info boxes */
+.usage-monitor-dashboard .bg-light.rounded {
+    background-color: #f8f9fa !important;
+    border: 1px solid #e9ecef;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .usage-monitor-dashboard .nav-tabs .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    .usage-monitor-dashboard .metric-card .h4 {
+        font-size: 1.25rem;
+    }
+    .usage-monitor-dashboard .card-header h6 {
+        font-size: 0.875rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .usage-monitor-dashboard .card {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6;
+    }
+    .usage-monitor-dashboard .nav-tabs {
+        display: none;
+    }
+    .usage-monitor-dashboard .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+    }
 }
 </style>
 

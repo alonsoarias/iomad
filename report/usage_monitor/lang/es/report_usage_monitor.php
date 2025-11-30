@@ -121,7 +121,7 @@ $string['most_accessed_courses'] = 'Cursos más Accedidos';
 $string['course_completion_trends'] = 'Tendencias de Finalización de Cursos';
 $string['total_accesses'] = 'Total de Accesos';
 $string['unique_users'] = 'Usuarios Únicos';
-$string['unique_courses'] = 'Cursos Únicos';
+$string['unique_courses'] = 'Cursos Accedidos';
 $string['completions'] = 'Finalizaciones';
 $string['avg_per_day'] = 'Prom. por Día';
 $string['last_30_days'] = 'Últimos 30 Días';
@@ -135,6 +135,18 @@ $string['access_chart'] = 'Gráfico de Accesos';
 $string['completion_chart'] = 'Gráfico de Finalizaciones';
 $string['access_table'] = 'Tabla de Accesos';
 $string['completion_table'] = 'Tabla de Finalizaciones';
+
+// Tooltips for metrics explanation
+$string['tooltip_total_accesses'] = 'Número total de veces que se accedió a los cursos en los últimos 30 días. Incluye múltiples visitas del mismo usuario.';
+$string['tooltip_unique_users'] = 'Número de usuarios diferentes que accedieron al menos a un curso en los últimos 30 días.';
+$string['tooltip_unique_courses'] = 'Número de cursos diferentes que fueron accedidos al menos una vez en los últimos 30 días. Este NO es el total de cursos en la plataforma.';
+$string['tooltip_total_completions'] = 'Número total de finalizaciones de cursos registradas en los últimos 30 días.';
+$string['tooltip_users_completed'] = 'Número de usuarios diferentes que completaron al menos un curso en los últimos 30 días.';
+$string['tooltip_courses_with_completions'] = 'Número de cursos diferentes que tuvieron al menos una finalización en los últimos 30 días.';
+$string['tooltip_avg_per_day'] = 'Promedio de accesos o finalizaciones por día durante los últimos 30 días.';
+$string['tooltip_disk_usage'] = 'Espacio en disco actualmente utilizado comparado con su cuota asignada.';
+$string['tooltip_users_today'] = 'Número de usuarios únicos que iniciaron sesión hoy comparado con su límite diario de usuarios.';
+$string['tooltip_max_90_days'] = 'El número más alto de inicios de sesión únicos diarios registrados en los últimos 90 días.';
 
 // Recommendation tips
 $string['space_saving_tips'] = 'Consejos para ahorrar espacio en disco:';

@@ -121,7 +121,7 @@ $string['most_accessed_courses'] = 'Most Accessed Courses';
 $string['course_completion_trends'] = 'Course Completion Trends';
 $string['total_accesses'] = 'Total Accesses';
 $string['unique_users'] = 'Unique Users';
-$string['unique_courses'] = 'Unique Courses';
+$string['unique_courses'] = 'Courses Accessed';
 $string['completions'] = 'Completions';
 $string['avg_per_day'] = 'Avg. per Day';
 $string['last_30_days'] = 'Last 30 Days';
@@ -135,6 +135,18 @@ $string['access_chart'] = 'Access Chart';
 $string['completion_chart'] = 'Completion Chart';
 $string['access_table'] = 'Access Table';
 $string['completion_table'] = 'Completion Table';
+
+// Tooltips for metrics explanation
+$string['tooltip_total_accesses'] = 'Total number of times courses were viewed in the last 30 days. Includes multiple visits by the same user.';
+$string['tooltip_unique_users'] = 'Number of different users who accessed at least one course in the last 30 days.';
+$string['tooltip_unique_courses'] = 'Number of different courses that were accessed at least once in the last 30 days. This is NOT the total number of courses on the platform.';
+$string['tooltip_total_completions'] = 'Total number of course completions registered in the last 30 days.';
+$string['tooltip_users_completed'] = 'Number of different users who completed at least one course in the last 30 days.';
+$string['tooltip_courses_with_completions'] = 'Number of different courses that had at least one completion in the last 30 days.';
+$string['tooltip_avg_per_day'] = 'Average number of accesses or completions per day during the last 30 days.';
+$string['tooltip_disk_usage'] = 'Current disk space used compared to your allocated quota.';
+$string['tooltip_users_today'] = 'Number of unique users who logged in today compared to your daily user limit.';
+$string['tooltip_max_90_days'] = 'The highest number of daily unique logins recorded in the last 90 days.';
 
 // Recommendation tips
 $string['space_saving_tips'] = 'Tips to save disk space:';

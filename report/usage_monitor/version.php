@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113008;  // Fix tabs compatibility and add manual fallback
+$plugin->version   = 2025113009;  // Add metric tooltips and improve dashboard readability
 $plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.16';    // Fix Bootstrap tabs with dual compatibility and manual fallback
+$plugin->release   = '4.5.17';    // Add tooltips, clarify metrics labels, refactor CSS styles
 $plugin->maturity  = MATURITY_STABLE;
