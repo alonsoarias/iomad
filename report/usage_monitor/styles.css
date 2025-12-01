@@ -220,6 +220,8 @@
 .usage-monitor-dashboard .table {
     margin-bottom: 0;
     color: var(--um-text-primary);
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .usage-monitor-dashboard .table th {
@@ -232,23 +234,69 @@
     border-bottom: 2px solid var(--um-border-color);
     padding: 0.875rem 1rem;
     background-color: var(--um-bg-light);
+    white-space: nowrap;
 }
 
 .usage-monitor-dashboard .table td {
-    font-size: 0.9rem;
-    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    padding: 0.875rem 1rem;
     vertical-align: middle;
     border-color: var(--um-border-light);
     color: var(--um-text-primary);
+    border-bottom: 1px solid var(--um-border-light);
+}
+
+.usage-monitor-dashboard .table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 .usage-monitor-dashboard .table-hover tbody tr:hover {
     background-color: var(--um-bg-table-hover);
 }
 
+.usage-monitor-dashboard .table-hover tbody tr:hover td {
+    background-color: transparent;
+}
+
 .usage-monitor-dashboard .table-light,
 .usage-monitor-dashboard .table-light th {
     background-color: var(--um-bg-light);
+}
+
+/* Table alignment utilities */
+.usage-monitor-dashboard .table .text-end {
+    text-align: right !important;
+}
+
+.usage-monitor-dashboard .table .text-center {
+    text-align: center !important;
+}
+
+/* Table numeric columns */
+.usage-monitor-dashboard .table td.text-end {
+    font-variant-numeric: tabular-nums;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Table responsive wrapper */
+.usage-monitor-dashboard .table-responsive {
+    border-radius: 0 0 0.5rem 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Table with fixed layout for better alignment */
+.usage-monitor-dashboard .table-fixed {
+    table-layout: fixed;
+}
+
+/* Table row ranking badge */
+.usage-monitor-dashboard .table .badge.bg-light {
+    background-color: #f1f3f4 !important;
+    color: var(--um-text-primary);
+    font-weight: 600;
+    min-width: 28px;
+    padding: 0.35em 0.5em;
 }
 
 /* ============================================
@@ -337,21 +385,27 @@
     position: relative;
     width: 100%;
     overflow: hidden;
+    padding: 0.5rem;
+    background-color: var(--um-card-bg);
+    border-radius: 0.375rem;
 }
 
 .usage-monitor-dashboard .chart-container.chart-sm {
     height: 250px !important;
     max-height: 250px !important;
+    min-height: 200px;
 }
 
 .usage-monitor-dashboard .chart-container.chart-md {
     height: 280px !important;
     max-height: 280px !important;
+    min-height: 220px;
 }
 
 .usage-monitor-dashboard .chart-container.chart-lg {
     height: 320px !important;
     max-height: 320px !important;
+    min-height: 260px;
 }
 
 .usage-monitor-dashboard .chart-container canvas {
@@ -359,6 +413,16 @@
     width: 100% !important;
     height: 100% !important;
     max-height: inherit !important;
+}
+
+/* Chart wrapper for better spacing */
+.usage-monitor-dashboard .card-body > .chart-container {
+    margin: -0.25rem;
+}
+
+/* Ensure charts in cards have proper spacing */
+.usage-monitor-dashboard .card .chart-container {
+    background: transparent;
 }
 
 /* ============================================
@@ -542,6 +606,118 @@
 }
 
 /* ============================================
+   DEDICATION SECTION SPECIFIC STYLES
+   ============================================ */
+/* Progress bar in dedication table */
+.usage-monitor-dashboard .table td .progress {
+    background-color: var(--um-progress-bg);
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.usage-monitor-dashboard .table td .progress-bar {
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+/* Dedication percentage cell */
+.usage-monitor-dashboard .table .d-flex.align-items-center {
+    gap: 0.5rem;
+}
+
+.usage-monitor-dashboard .table .d-flex .progress {
+    flex-shrink: 0;
+}
+
+/* Course name in dedication table */
+.usage-monitor-dashboard .table td a.text-decoration-none {
+    font-weight: 500;
+    color: var(--um-primary);
+    transition: color 0.15s ease;
+}
+
+.usage-monitor-dashboard .table td a.text-decoration-none:hover {
+    color: var(--um-primary-hover);
+    text-decoration: underline !important;
+}
+
+/* Strong text in table cells */
+.usage-monitor-dashboard .table td strong {
+    font-weight: 600;
+    color: var(--um-text-primary);
+}
+
+/* Dedication summary cards spacing */
+#dedication-content .metric-card {
+    min-height: 100px;
+}
+
+#dedication-content .row.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Description card at bottom */
+#dedication-content .card.mt-3 {
+    background-color: var(--um-bg-light);
+    border: 1px dashed var(--um-border-color);
+}
+
+#dedication-content .card.mt-3 .fa-lightbulb {
+    color: var(--um-warning);
+}
+
+/* ============================================
+   EQUAL HEIGHT CARDS IN ROWS
+   ============================================ */
+.usage-monitor-dashboard .row > [class*="col-"] > .card {
+    height: 100%;
+}
+
+.usage-monitor-dashboard .row > [class*="col-"] > .card.h-100 {
+    display: flex;
+    flex-direction: column;
+}
+
+.usage-monitor-dashboard .row > [class*="col-"] > .card.h-100 > .card-body {
+    flex: 1 1 auto;
+}
+
+/* ============================================
+   IMPROVED METRIC CARDS GRID
+   ============================================ */
+.usage-monitor-dashboard .row.mb-4 > [class*="col-"] {
+    display: flex;
+}
+
+.usage-monitor-dashboard .row.mb-4 > [class*="col-"] > .metric-card {
+    width: 100%;
+}
+
+/* ============================================
+   COURSE LIST STYLES
+   ============================================ */
+.usage-monitor-dashboard .table td .d-block {
+    line-height: 1.3;
+    margin-top: 0.125rem;
+}
+
+.usage-monitor-dashboard .table td small.text-muted {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+/* Course link truncation */
+.usage-monitor-dashboard .table td a.text-truncate {
+    display: inline-block;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+/* ============================================
    ACCESSIBILITY
    ============================================ */
 .usage-monitor-dashboard .nav-tabs .nav-link:focus,
@@ -557,5 +733,40 @@
     .usage-monitor-dashboard .nav-tabs .nav-link,
     .usage-monitor-dashboard .progress-bar {
         transition: none;
+    }
+}
+
+/* ============================================
+   ADDITIONAL RESPONSIVE FIXES
+   ============================================ */
+@media (min-width: 992px) {
+    .usage-monitor-dashboard .table td a.text-truncate {
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .usage-monitor-dashboard .table th,
+    .usage-monitor-dashboard .table td {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.8125rem;
+    }
+
+    .usage-monitor-dashboard .table td a.text-truncate {
+        max-width: 150px;
+    }
+
+    .usage-monitor-dashboard .metric-card .h4,
+    .usage-monitor-dashboard .metric-card h4 {
+        font-size: 1.125rem;
+    }
+
+    .usage-monitor-dashboard .metric-card .card-body {
+        padding: 0.75rem;
+    }
+
+    /* Hide some columns on very small screens */
+    .usage-monitor-dashboard .table .hide-xs {
+        display: none;
     }
 }

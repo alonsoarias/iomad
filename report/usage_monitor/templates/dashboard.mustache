@@ -405,7 +405,7 @@
                     <table class="table table-sm table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>#</th>
+                                <th class="text-center" style="width: 50px;">#</th>
                                 <th>{{#str}}course, report_usage_monitor{{/str}}</th>
                                 <th class="text-end">{{#str}}total_accesses, report_usage_monitor{{/str}}</th>
                                 <th class="text-end">{{#str}}unique_users, report_usage_monitor{{/str}}</th>
@@ -414,17 +414,23 @@
                         <tbody>
                             {{#most_accessed_courses}}
                             <tr>
-                                <td>{{rank}}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-light text-dark border">{{rank}}</span>
+                                </td>
                                 <td>
-                                    <a href="{{course_url}}">{{fullname}}</a>
+                                    <a href="{{course_url}}" class="text-decoration-none">{{fullname}}</a>
                                     <small class="text-muted d-block">{{shortname}}</small>
                                 </td>
-                                <td class="text-end">{{total_accesses_formatted}}</td>
+                                <td class="text-end"><strong>{{total_accesses_formatted}}</strong></td>
                                 <td class="text-end">{{unique_users_formatted}}</td>
                             </tr>
                             {{/most_accessed_courses}}
                             {{^most_accessed_courses}}
-                            <tr><td colspan="4" class="text-center text-muted">{{#str}}no_data_available, report_usage_monitor{{/str}}</td></tr>
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    <i class="fa fa-info-circle me-2"></i>{{#str}}no_data_available, report_usage_monitor{{/str}}
+                                </td>
+                            </tr>
                             {{/most_accessed_courses}}
                         </tbody>
                     </table>
@@ -464,7 +470,7 @@
                                 <i class="fa fa-info-circle ms-1"></i>
                             </div>
                             <div class="h4 mb-0">{{session_limit_formatted}}</div>
-                            <div class="small opacity-50">{{period_days}} {{#str}}email_days, report_usage_monitor{{/str}}</div>
+                            <div class="small opacity-50">{{#str}}last_30_days, report_usage_monitor{{/str}}</div>
                         </div>
                     </div>
                 </div>
