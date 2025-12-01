@@ -69,8 +69,8 @@ $string['moodle_version'] = 'Versión de Moodle';
 $string['total_courses'] = 'Total de cursos';
 $string['backup_per_course'] = 'Copias por curso';
 $string['registered_users'] = 'Usuarios registrados';
-$string['active_users'] = 'activos';
-$string['suspended_users'] = 'suspendidos';
+$string['active_users'] = 'Usuarios activos';
+$string['suspended_users'] = 'Usuarios suspendidos';
 $string['recommendations'] = 'Recomendaciones';
 
 // Warning levels and indicator labels.
