@@ -98,7 +98,32 @@ if ($ADMIN->fulltree) {
         90,
         $useroptions
     ));
-    
+
+    // Sección de configuraciones de dedicación.
+    $settings->add(new admin_setting_heading(
+        'report_usage_monitor/dedicationsettings',
+        get_string('dedicationsettings', 'report_usage_monitor'),
+        get_string('dedicationsettingsinfo', 'report_usage_monitor')
+    ));
+
+    // Opciones para límite de sesión de dedicación (en minutos).
+    $sessionlimitoptions = [
+        900 => '15 ' . get_string('minutes'),      // 15 minutes
+        1800 => '30 ' . get_string('minutes'),     // 30 minutes
+        2700 => '45 ' . get_string('minutes'),     // 45 minutes
+        3600 => '1 ' . get_string('hour'),         // 1 hour (default)
+        5400 => '1.5 ' . get_string('hours'),      // 1.5 hours
+        7200 => '2 ' . get_string('hours'),        // 2 hours
+    ];
+
+    $settings->add(new admin_setting_configselect(
+        'report_usage_monitor/dedication_session_limit',
+        get_string('dedication_session_limit', 'report_usage_monitor'),
+        get_string('configdedication_session_limit', 'report_usage_monitor'),
+        3600,
+        $sessionlimitoptions
+    ));
+
     // Configuración para el comando 'du'
     if (function_exists('shell_exec')) {
         // Intentar detectar automáticamente la ruta de 'du' en sistemas Linux

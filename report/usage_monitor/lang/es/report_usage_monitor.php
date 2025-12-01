@@ -339,7 +339,7 @@ $string['email_rec_cache'] = 'Purgar caché';
 $string['email_rec_cache_desc'] = 'Limpiar la caché del sistema para liberar espacio temporal';
 $string['email_disk_disclaimer'] = 'Si necesita asistencia técnica, por favor no responda a este correo y contacte a su administrador de hosting.';
 
-// Course dedication section (block_dedication integration).
+// Course dedication section.
 $string['top_courses_dedication'] = 'Top de cursos por dedicación estudiantil';
 $string['top_courses_dedication_desc'] = 'Cursos con el mayor porcentaje de tiempo de dedicación estudiantil';
 $string['dedication_time'] = 'Tiempo de dedicación';
@@ -351,12 +351,14 @@ $string['dedication_percent'] = '% de dedicación';
 $string['dedication_per_student'] = 'Prom. por estudiante';
 $string['tooltip_dedication'] = 'El tiempo de dedicación se calcula basándose en la actividad de sesión del usuario en el curso. Una sesión termina cuando no hay actividad durante el límite de sesión configurado.';
 $string['tooltip_dedication_percent'] = 'El porcentaje de dedicación representa cuánto tiempo dedican los estudiantes a este curso en comparación con otros.';
-$string['no_dedication_data'] = 'No hay datos de dedicación disponibles. Asegúrese de que el plugin block_dedication esté instalado y configurado.';
-$string['block_dedication_not_installed'] = 'El plugin block_dedication es requerido para esta funcionalidad.';
+$string['no_dedication_data'] = 'No hay datos de dedicación disponibles. No se registró actividad en el período seleccionado.';
 $string['view_dedication_report'] = 'Ver reporte completo de dedicación';
 $string['hours'] = 'horas';
 $string['minutes'] = 'minutos';
 $string['seconds'] = 'segundos';
 $string['dedication_session_limit'] = 'Límite de sesión';
+$string['configdedication_session_limit'] = 'Tiempo máximo de inactividad antes de que una sesión se considere cerrada. Límites más largos pueden sobreestimar el tiempo de dedicación.';
 $string['dedication_last_calculated'] = 'Último cálculo';
 $string['course_dedication_rank'] = 'Posición';
+$string['dedicationsettings'] = 'Configuración de dedicación';
+$string['dedicationsettingsinfo'] = 'Configure cómo se calcula el tiempo de dedicación de los estudiantes.';

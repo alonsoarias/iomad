@@ -1036,45 +1036,36 @@ function get_access_summary($days = 30) {
 }
 
 /**
- * Check if block_dedication plugin is installed.
+ * Get the session limit for dedication calculation.
+ * Uses plugin's own setting, independent of block_dedication.
  *
- * @return bool True if block_dedication is installed and available
+ * @return int Session limit in seconds
  */
-function is_block_dedication_installed() {
-    global $CFG;
-    return file_exists($CFG->dirroot . '/blocks/dedication/classes/lib/manager.php');
+function get_dedication_session_limit() {
+    $sessionlimit = get_config('report_usage_monitor', 'dedication_session_limit');
+    // Default to 1 hour if not configured.
+    return !empty($sessionlimit) ? (int)$sessionlimit : HOURSECS;
 }
 
 /**
  * Get top courses by student dedication time.
- * Integrates with block_dedication plugin to calculate dedication metrics.
+ * Independent implementation based on session activity analysis.
  *
  * @param int $limit Number of courses to return
  * @param int $days Number of days to analyze (default 90)
  * @return array Array of courses with dedication data
  */
 function get_top_courses_by_dedication($limit = 10, $days = 90) {
-    global $DB, $CFG;
+    global $DB;
 
-    // Check if block_dedication is installed
-    if (!is_block_dedication_installed()) {
-        return [];
-    }
+    // Get session limit from our own config.
+    $sessionlimit = get_dedication_session_limit();
 
-    require_once($CFG->dirroot . '/blocks/dedication/classes/lib/manager.php');
-    require_once($CFG->dirroot . '/blocks/dedication/classes/lib/utils.php');
-
-    // Get session limit from block_dedication config
-    $session_limit = get_config('block_dedication', 'session_limit');
-    if (empty($session_limit)) {
-        $session_limit = HOURSECS; // Default 1 hour
-    }
-
-    // Calculate time range
+    // Calculate time range.
     $mintime = time() - ($days * DAYSECS);
     $maxtime = time();
 
-    // Get all visible courses with enrollments
+    // Get all visible courses with enrollments.
     $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname, c.startdate
             FROM {course} c
             JOIN {enrol} e ON e.courseid = c.id
@@ -1089,12 +1080,12 @@ function get_top_courses_by_dedication($limit = 10, $days = 90) {
         return [];
     }
 
-    $course_dedication_data = [];
-    $total_platform_dedication = 0;
+    $coursededicationdata = [];
+    $totalplatformdedication = 0;
 
     foreach ($courses as $course) {
-        // Get enrolled students count
-        $enrolled_students = $DB->count_records_sql(
+        // Get enrolled students count.
+        $enrolledstudents = $DB->count_records_sql(
             "SELECT COUNT(DISTINCT ue.userid)
              FROM {user_enrolments} ue
              JOIN {enrol} e ON e.id = ue.enrolid
@@ -1105,38 +1096,38 @@ function get_top_courses_by_dedication($limit = 10, $days = 90) {
             ['courseid' => $course->id]
         );
 
-        if ($enrolled_students == 0) {
+        if ($enrolledstudents == 0) {
             continue;
         }
 
-        // Calculate total dedication for this course using block_dedication logic
-        $course_mintime = max($mintime, $course->startdate ?: $mintime);
-        $total_dedication = get_course_total_dedication($course->id, $course_mintime, $maxtime, $session_limit);
+        // Calculate total dedication for this course.
+        $coursemintime = max($mintime, $course->startdate ?: $mintime);
+        $totaldedication = get_course_total_dedication($course->id, $coursemintime, $maxtime, $sessionlimit);
 
-        if ($total_dedication > 0) {
-            $course_dedication_data[$course->id] = [
+        if ($totaldedication > 0) {
+            $coursededicationdata[$course->id] = [
                 'course' => $course,
-                'total_dedication' => $total_dedication,
-                'enrolled_students' => $enrolled_students,
-                'avg_dedication_per_student' => $enrolled_students > 0 ? round($total_dedication / $enrolled_students) : 0
+                'total_dedication' => $totaldedication,
+                'enrolled_students' => $enrolledstudents,
+                'avg_dedication_per_student' => $enrolledstudents > 0 ? round($totaldedication / $enrolledstudents) : 0
             ];
-            $total_platform_dedication += $total_dedication;
+            $totalplatformdedication += $totaldedication;
         }
     }
 
-    // Sort by total dedication descending
-    uasort($course_dedication_data, function($a, $b) {
+    // Sort by total dedication descending.
+    uasort($coursededicationdata, function($a, $b) {
         return $b['total_dedication'] - $a['total_dedication'];
     });
 
-    // Take top N courses and calculate percentages
-    $top_courses = array_slice($course_dedication_data, 0, $limit, true);
+    // Take top N courses and calculate percentages.
+    $topcourses = array_slice($coursededicationdata, 0, $limit, true);
 
     $result = [];
     $rank = 1;
-    foreach ($top_courses as $courseid => $data) {
-        $dedication_percent = $total_platform_dedication > 0
-            ? round(($data['total_dedication'] / $total_platform_dedication) * 100, 1)
+    foreach ($topcourses as $courseid => $data) {
+        $dedicationpercent = $totalplatformdedication > 0
+            ? round(($data['total_dedication'] / $totalplatformdedication) * 100, 1)
             : 0;
 
         $result[] = (object)[
@@ -1149,7 +1140,7 @@ function get_top_courses_by_dedication($limit = 10, $days = 90) {
             'enrolled_students' => $data['enrolled_students'],
             'avg_dedication_per_student' => $data['avg_dedication_per_student'],
             'avg_dedication_formatted' => format_dedication_time($data['avg_dedication_per_student']),
-            'dedication_percent' => $dedication_percent
+            'dedication_percent' => $dedicationpercent
         ];
     }
 
@@ -1158,23 +1149,25 @@ function get_top_courses_by_dedication($limit = 10, $days = 90) {
 
 /**
  * Calculate total dedication time for a course.
- * Uses block_dedication logic to calculate session-based dedication.
+ * Uses session-based calculation: a session ends when user is inactive
+ * for more than the session limit.
  *
  * @param int $courseid Course ID
  * @param int $mintime Start timestamp
  * @param int $maxtime End timestamp
- * @param int $session_limit Session limit in seconds
+ * @param int $sessionlimit Session limit in seconds
  * @return int Total dedication time in seconds
  */
-function get_course_total_dedication($courseid, $mintime, $maxtime, $session_limit) {
+function get_course_total_dedication($courseid, $mintime, $maxtime, $sessionlimit) {
     global $DB;
 
-    // Get all log events for this course
+    // Get all log events for this course ordered by user and time.
     $sql = "SELECT userid, timecreated
             FROM {logstore_standard_log}
             WHERE courseid = :courseid
               AND timecreated >= :mintime
               AND timecreated <= :maxtime
+              AND userid > 0
               AND origin != 'cli'
             ORDER BY userid, timecreated ASC";
 
@@ -1188,41 +1181,41 @@ function get_course_total_dedication($courseid, $mintime, $maxtime, $session_lim
         return 0;
     }
 
-    $total_dedication = 0;
-    $current_user = null;
-    $session_start = null;
-    $previous_time = null;
+    $totaldedication = 0;
+    $currentuser = null;
+    $sessionstart = null;
+    $previoustime = null;
 
     foreach ($events as $event) {
-        if ($current_user !== $event->userid) {
-            // New user - close previous session if exists
-            if ($previous_time !== null && $session_start !== null) {
-                $total_dedication += ($previous_time - $session_start);
+        if ($currentuser !== $event->userid) {
+            // New user - close previous session if exists.
+            if ($previoustime !== null && $sessionstart !== null) {
+                $totaldedication += ($previoustime - $sessionstart);
             }
-            $current_user = $event->userid;
-            $session_start = $event->timecreated;
-            $previous_time = $event->timecreated;
+            $currentuser = $event->userid;
+            $sessionstart = $event->timecreated;
+            $previoustime = $event->timecreated;
             continue;
         }
 
-        // Same user - check if still in session
-        $time_diff = $event->timecreated - $previous_time;
+        // Same user - check if still in session.
+        $timediff = $event->timecreated - $previoustime;
 
-        if ($time_diff > $session_limit) {
-            // Session ended - add dedication and start new session
-            $total_dedication += ($previous_time - $session_start);
-            $session_start = $event->timecreated;
+        if ($timediff > $sessionlimit) {
+            // Session ended - add dedication and start new session.
+            $totaldedication += ($previoustime - $sessionstart);
+            $sessionstart = $event->timecreated;
         }
 
-        $previous_time = $event->timecreated;
+        $previoustime = $event->timecreated;
     }
 
-    // Close last session
-    if ($previous_time !== null && $session_start !== null) {
-        $total_dedication += ($previous_time - $session_start);
+    // Close last session.
+    if ($previoustime !== null && $sessionstart !== null) {
+        $totaldedication += ($previoustime - $sessionstart);
     }
 
-    return $total_dedication;
+    return $totaldedication;
 }
 
 /**
@@ -1248,37 +1241,24 @@ function format_dedication_time($seconds) {
 
 /**
  * Get dedication summary statistics.
+ * Independent implementation - does not require block_dedication.
  *
  * @param int $days Number of days to analyze
  * @return object Summary statistics object
  */
 function get_dedication_summary($days = 90) {
-    global $DB, $CFG;
+    global $DB;
 
-    if (!is_block_dedication_installed()) {
-        return (object)[
-            'is_available' => false,
-            'total_dedication' => 0,
-            'unique_courses' => 0,
-            'unique_users' => 0,
-            'avg_per_user' => 0,
-            'session_limit' => 0
-        ];
-    }
-
-    $session_limit = get_config('block_dedication', 'session_limit');
-    if (empty($session_limit)) {
-        $session_limit = HOURSECS;
-    }
-
+    $sessionlimit = get_dedication_session_limit();
     $mintime = time() - ($days * DAYSECS);
 
-    // Count unique users and courses with activity
+    // Count unique users and courses with activity.
     $sql = "SELECT COUNT(DISTINCT userid) as unique_users,
                    COUNT(DISTINCT courseid) as unique_courses
             FROM {logstore_standard_log}
             WHERE timecreated >= :mintime
               AND courseid != :siteid
+              AND userid > 0
               AND origin != 'cli'";
 
     $stats = $DB->get_record_sql($sql, ['mintime' => $mintime, 'siteid' => SITEID]);
@@ -1287,8 +1267,8 @@ function get_dedication_summary($days = 90) {
         'is_available' => true,
         'unique_courses' => (int)($stats->unique_courses ?? 0),
         'unique_users' => (int)($stats->unique_users ?? 0),
-        'session_limit' => $session_limit,
-        'session_limit_formatted' => format_dedication_time($session_limit),
+        'session_limit' => $sessionlimit,
+        'session_limit_formatted' => format_dedication_time($sessionlimit),
         'period_days' => $days
     ];
 }

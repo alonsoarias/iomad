@@ -440,7 +440,6 @@
 
         <!-- DEDICATION TAB -->
         <div class="tab-pane fade" id="dedication-content" role="tabpanel" aria-labelledby="dedication-tab">
-            {{#dedication_available}}
             <!-- Dedication Summary -->
             {{#dedication_summary}}
             <div class="row mb-4">
@@ -543,14 +542,6 @@
                     </small>
                 </div>
             </div>
-            {{/dedication_available}}
-
-            {{^dedication_available}}
-            <div class="alert alert-warning">
-                <i class="fa fa-exclamation-triangle me-2"></i>
-                {{#str}}block_dedication_not_installed, report_usage_monitor{{/str}}
-            </div>
-            {{/dedication_available}}
         </div>
 
         <!-- SYSTEM TAB -->
