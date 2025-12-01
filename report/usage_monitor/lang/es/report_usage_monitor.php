@@ -117,6 +117,7 @@ $string['install_coursesize'] = 'Instale el plugin report_coursesize para un an�
 $string['coursesize_plugin_url'] = 'https://moodle.org/plugins/report_coursesize';
 
 // Course access and completion sections.
+$string['course_activity'] = 'Actividad de cursos';
 $string['course_access_trends'] = 'Tendencias de acceso a cursos';
 $string['most_accessed_courses'] = 'Cursos más accedidos';
 $string['course_completion_trends'] = 'Tendencias de finalización de cursos';

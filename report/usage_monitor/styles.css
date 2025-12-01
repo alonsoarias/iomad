@@ -648,25 +648,6 @@
     color: var(--um-text-primary);
 }
 
-/* Dedication summary cards spacing */
-#dedication-content .metric-card {
-    min-height: 100px;
-}
-
-#dedication-content .row.mb-4 {
-    margin-bottom: 1.5rem !important;
-}
-
-/* Description card at bottom */
-#dedication-content .card.mt-3 {
-    background-color: var(--um-bg-light);
-    border: 1px dashed var(--um-border-color);
-}
-
-#dedication-content .card.mt-3 .fa-lightbulb {
-    color: var(--um-warning);
-}
-
 /* ============================================
    EQUAL HEIGHT CARDS IN ROWS
    ============================================ */

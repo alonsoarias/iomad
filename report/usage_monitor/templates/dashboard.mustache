@@ -92,12 +92,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" id="courses-tab" data-toggle="tab" data-bs-toggle="tab" href="#courses-content" role="tab" aria-controls="courses-content" aria-selected="false">
-                {{#str}}course_access_trends, report_usage_monitor{{/str}}
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="dedication-tab" data-toggle="tab" data-bs-toggle="tab" href="#dedication-content" role="tab" aria-controls="dedication-content" aria-selected="false">
-                {{#str}}top_courses_dedication, report_usage_monitor{{/str}}
+                {{#str}}course_activity, report_usage_monitor{{/str}}
             </a>
         </li>
         <li class="nav-item">
@@ -397,7 +392,7 @@
             </div>
 
             <!-- Most Accessed Courses Table -->
-            <div class="card shadow-sm">
+            <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white">
                     <h6 class="mb-0">{{#str}}most_accessed_courses, report_usage_monitor{{/str}}</h6>
                 </div>
@@ -436,45 +431,6 @@
                     </table>
                 </div>
             </div>
-        </div>
-
-        <!-- DEDICATION TAB -->
-        <div class="tab-pane fade" id="dedication-content" role="tabpanel" aria-labelledby="dedication-tab">
-            <!-- Dedication Summary -->
-            {{#dedication_summary}}
-            <div class="row mb-4">
-                <div class="col-md-4 col-6 mb-2">
-                    <div class="card bg-primary text-white metric-card">
-                        <div class="card-body py-3 text-center">
-                            <div class="small opacity-75">{{#str}}unique_courses, report_usage_monitor{{/str}}</div>
-                            <div class="h4 mb-0">{{unique_courses}}</div>
-                            <div class="small opacity-50">{{#str}}last_30_days, report_usage_monitor{{/str}}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-6 mb-2">
-                    <div class="card bg-success text-white metric-card">
-                        <div class="card-body py-3 text-center">
-                            <div class="small opacity-75">{{#str}}active_students, report_usage_monitor{{/str}}</div>
-                            <div class="h4 mb-0">{{unique_users}}</div>
-                            <div class="small opacity-50">{{#str}}last_30_days, report_usage_monitor{{/str}}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-12 mb-2">
-                    <div class="card bg-info text-white metric-card" data-toggle="tooltip" data-bs-toggle="tooltip" title="{{#str}}tooltip_dedication, report_usage_monitor{{/str}}">
-                        <div class="card-body py-3 text-center">
-                            <div class="small opacity-75">
-                                {{#str}}dedication_session_limit, report_usage_monitor{{/str}}
-                                <i class="fa fa-info-circle ms-1"></i>
-                            </div>
-                            <div class="h4 mb-0">{{session_limit_formatted}}</div>
-                            <div class="small opacity-50">{{#str}}last_30_days, report_usage_monitor{{/str}}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/dedication_summary}}
 
             <!-- Top Courses by Dedication Table -->
             <div class="card shadow-sm">
@@ -490,7 +446,7 @@
                     <table class="table table-sm table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th class="text-center" style="width: 50px;">{{#str}}course_dedication_rank, report_usage_monitor{{/str}}</th>
+                                <th class="text-center" style="width: 50px;">#</th>
                                 <th>{{#str}}course, report_usage_monitor{{/str}}</th>
                                 <th class="text-end">{{#str}}total_dedication, report_usage_monitor{{/str}}</th>
                                 <th class="text-end">{{#str}}enrolled_students, report_usage_monitor{{/str}}</th>
@@ -530,16 +486,6 @@
                             {{/top_courses_dedication}}
                         </tbody>
                     </table>
-                </div>
-            </div>
-
-            <!-- Description Card -->
-            <div class="card shadow-sm mt-3">
-                <div class="card-body">
-                    <small class="text-muted">
-                        <i class="fa fa-lightbulb me-1"></i>
-                        {{#str}}top_courses_dedication_desc, report_usage_monitor{{/str}}
-                    </small>
                 </div>
             </div>
         </div>
