@@ -974,6 +974,299 @@ class report {
     }
 
     /**
+     * Get top courses by dedication time.
+     *
+     * @param int $limit Number of courses to return
+     * @param int $days Number of days to analyze
+     * @return array Course dedication data
+     */
+    public function get_top_courses_dedication(int $limit = 10, int $days = 90): array {
+        return $this->get_cached_data("dedication_{$limit}_{$days}", function() use ($limit, $days) {
+            return $this->compute_top_courses_dedication($limit, $days);
+        });
+    }
+
+    /**
+     * Compute top courses by dedication.
+     *
+     * @param int $limit
+     * @param int $days
+     * @return array
+     */
+    protected function compute_top_courses_dedication(int $limit, int $days): array {
+        global $DB;
+
+        $sessionlimit = get_config('report_usage_monitor', 'dedication_session_limit');
+        $sessionlimit = !empty($sessionlimit) ? (int)$sessionlimit : HOURSECS;
+
+        $mintime = time() - ($days * DAYSECS);
+        $maxtime = time();
+
+        // Get courses with enrollments.
+        $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname, c.startdate
+                FROM {course} c
+                JOIN {enrol} e ON e.courseid = c.id
+                JOIN {user_enrolments} ue ON ue.enrolid = e.id
+                WHERE c.id != :siteid AND c.visible = 1
+                ORDER BY c.fullname ASC";
+
+        $courses = $DB->get_records_sql($sql, ['siteid' => SITEID]);
+
+        if (empty($courses)) {
+            return [];
+        }
+
+        $userids = $this->get_company_userids();
+        $coursededicationdata = [];
+        $totalplatformdedication = 0;
+
+        foreach ($courses as $course) {
+            $enrolledstudents = $this->count_course_students($course->id, $userids);
+
+            if ($enrolledstudents == 0) {
+                continue;
+            }
+
+            $coursemintime = max($mintime, $course->startdate ?: $mintime);
+            $totaldedication = $this->calculate_course_dedication($course->id, $coursemintime, $maxtime, $sessionlimit, $userids);
+
+            if ($totaldedication > 0) {
+                $coursededicationdata[$course->id] = [
+                    'course' => $course,
+                    'total_dedication' => $totaldedication,
+                    'enrolled_students' => $enrolledstudents,
+                    'avg_dedication_per_student' => $enrolledstudents > 0 ? round($totaldedication / $enrolledstudents) : 0
+                ];
+                $totalplatformdedication += $totaldedication;
+            }
+        }
+
+        uasort($coursededicationdata, function($a, $b) {
+            return $b['total_dedication'] - $a['total_dedication'];
+        });
+
+        $topcourses = array_slice($coursededicationdata, 0, $limit, true);
+
+        $result = [];
+        $rank = 1;
+        foreach ($topcourses as $courseid => $data) {
+            $dedicationpercent = $totalplatformdedication > 0
+                ? round(($data['total_dedication'] / $totalplatformdedication) * 100, 1)
+                : 0;
+
+            $result[] = [
+                'rank' => $rank++,
+                'id' => $courseid,
+                'fullname' => format_string($data['course']->fullname),
+                'shortname' => $data['course']->shortname,
+                'total_dedication' => $data['total_dedication'],
+                'total_dedication_formatted' => $this->format_dedication_time($data['total_dedication']),
+                'enrolled_students' => $data['enrolled_students'],
+                'avg_dedication_formatted' => $this->format_dedication_time($data['avg_dedication_per_student']),
+                'dedication_percent' => $dedicationpercent
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Count students in a course filtered by company.
+     *
+     * @param int $courseid
+     * @param array $userids
+     * @return int
+     */
+    protected function count_course_students(int $courseid, array $userids): int {
+        global $DB;
+
+        if (empty($userids)) {
+            return 0;
+        }
+
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        $sql = "SELECT COUNT(DISTINCT ue.userid)
+                FROM {user_enrolments} ue
+                JOIN {enrol} e ON e.id = ue.enrolid
+                JOIN {user} u ON u.id = ue.userid
+                WHERE e.courseid = :courseid
+                  AND u.deleted = 0
+                  AND u.suspended = 0
+                  AND ue.userid $usersql";
+
+        return (int)$DB->count_records_sql($sql, array_merge(['courseid' => $courseid], $userparams));
+    }
+
+    /**
+     * Calculate total dedication time for a course.
+     *
+     * @param int $courseid
+     * @param int $mintime
+     * @param int $maxtime
+     * @param int $sessionlimit
+     * @param array $userids
+     * @return int
+     */
+    protected function calculate_course_dedication(int $courseid, int $mintime, int $maxtime, int $sessionlimit, array $userids): int {
+        global $DB;
+
+        if (empty($userids)) {
+            return 0;
+        }
+
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        $sql = "SELECT userid, timecreated
+                FROM {logstore_standard_log}
+                WHERE courseid = :courseid
+                  AND timecreated >= :mintime
+                  AND timecreated <= :maxtime
+                  AND userid > 0
+                  AND origin != 'cli'
+                  AND userid $usersql
+                ORDER BY userid, timecreated ASC";
+
+        $params = array_merge([
+            'courseid' => $courseid,
+            'mintime' => $mintime,
+            'maxtime' => $maxtime
+        ], $userparams);
+
+        $events = $DB->get_records_sql($sql, $params);
+
+        if (empty($events)) {
+            return 0;
+        }
+
+        $totaldedication = 0;
+        $currentuser = null;
+        $sessionstart = null;
+        $previoustime = null;
+
+        foreach ($events as $event) {
+            if ($currentuser !== $event->userid) {
+                if ($previoustime !== null && $sessionstart !== null) {
+                    $totaldedication += ($previoustime - $sessionstart);
+                }
+                $currentuser = $event->userid;
+                $sessionstart = $event->timecreated;
+                $previoustime = $event->timecreated;
+                continue;
+            }
+
+            $timediff = $event->timecreated - $previoustime;
+            if ($timediff > $sessionlimit) {
+                $totaldedication += ($previoustime - $sessionstart);
+                $sessionstart = $event->timecreated;
+            }
+
+            $previoustime = $event->timecreated;
+        }
+
+        if ($previoustime !== null && $sessionstart !== null) {
+            $totaldedication += ($previoustime - $sessionstart);
+        }
+
+        return $totaldedication;
+    }
+
+    /**
+     * Format dedication time into a readable string.
+     *
+     * @param int $seconds
+     * @return string
+     */
+    protected function format_dedication_time(int $seconds): string {
+        if ($seconds < 60) {
+            return $seconds . 's';
+        }
+
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+
+        if ($hours > 0) {
+            return $hours . 'h ' . $minutes . 'm';
+        }
+
+        return $minutes . 'm';
+    }
+
+    /**
+     * Get daily users statistics.
+     *
+     * @param int $days Number of days
+     * @return array Daily user data
+     */
+    public function get_daily_users(int $days = 10): array {
+        return $this->get_cached_data("daily_users_{$days}", function() use ($days) {
+            return $this->compute_daily_users($days);
+        });
+    }
+
+    /**
+     * Compute daily users.
+     *
+     * @param int $days
+     * @return array
+     */
+    protected function compute_daily_users(int $days): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('logstore_standard_log')) {
+            return ['labels' => [], 'data' => [], 'records' => []];
+        }
+
+        $starttime = strtotime("-{$days} days midnight");
+        list($usersql, $userparams) = $this->get_user_sql('userid');
+
+        $sql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as login_date,
+                       COUNT(DISTINCT userid) as unique_users
+                FROM {logstore_standard_log}
+                WHERE eventname = :event
+                  AND timecreated >= :starttime
+                  AND $usersql
+                GROUP BY DATE(FROM_UNIXTIME(timecreated))
+                ORDER BY login_date ASC";
+
+        $params = array_merge([
+            'event' => '\\core\\event\\user_loggedin',
+            'starttime' => $starttime,
+        ], $userparams);
+
+        $records = $DB->get_records_sql($sql, $params);
+
+        $labels = [];
+        $data = [];
+        $tablerecords = [];
+
+        for ($i = $days; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-{$i} days"));
+            $labels[] = date('d M', strtotime($date));
+            $data[$date] = 0;
+        }
+
+        foreach ($records as $record) {
+            if (isset($data[$record->login_date])) {
+                $data[$record->login_date] = (int) $record->unique_users;
+                $tablerecords[] = [
+                    'fecha_formateada' => date('d/m/Y', strtotime($record->login_date)),
+                    'cantidad_usuarios' => (int) $record->unique_users
+                ];
+            }
+        }
+
+        $tablerecords = array_reverse($tablerecords);
+
+        return [
+            'labels' => $labels,
+            'data' => array_values($data),
+            'records' => array_slice($tablerecords, 0, 10)
+        ];
+    }
+
+    /**
      * Get list of companies.
      *
      * @return array Company list

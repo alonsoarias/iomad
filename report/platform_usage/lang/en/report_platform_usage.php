@@ -152,3 +152,14 @@ $string['totalsessions'] = 'Total sessions';
 $string['logoutsmonth'] = 'Logouts (30 days)';
 $string['logoutsweek'] = 'Logouts (7 days)';
 $string['logoutstoday'] = 'Logouts today';
+
+// Daily users.
+$string['dailyusers'] = 'Daily Users (last 10 days)';
+$string['dailyuserstable'] = 'Daily Users History';
+
+// Dedication metrics.
+$string['topdedication'] = 'Top Courses by Dedication';
+$string['dedicationdetails'] = 'Dedication Details';
+$string['totaldedication'] = 'Total Dedication';
+$string['enrolledusers'] = 'Enrolled Users';
+$string['dedicationpercent'] = 'Dedication %';

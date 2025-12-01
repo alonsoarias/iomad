@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->release  = '1.4.0 (Build: 20251129)';
-$plugin->version  = 2025112901;
+$plugin->release  = '1.5.0 (Build: 20251201)';
+$plugin->version  = 2025120101;
 $plugin->requires = 2024100700;
 $plugin->component = 'report_platform_usage';
 $plugin->maturity = MATURITY_STABLE;

@@ -152,3 +152,14 @@ $string['totalsessions'] = 'Total de sesiones';
 $string['logoutsmonth'] = 'Cierres de sesion (30 dias)';
 $string['logoutsweek'] = 'Cierres de sesion (7 dias)';
 $string['logoutstoday'] = 'Cierres de sesion hoy';
+
+// Daily users.
+$string['dailyusers'] = 'Usuarios Diarios (ultimos 10 dias)';
+$string['dailyuserstable'] = 'Historial de Usuarios Diarios';
+
+// Dedication metrics.
+$string['topdedication'] = 'Cursos con Mayor Dedicacion';
+$string['dedicationdetails'] = 'Detalles de Dedicacion';
+$string['totaldedication'] = 'Dedicacion Total';
+$string['enrolledusers'] = 'Usuarios Matriculados';
+$string['dedicationpercent'] = '% de Dedicacion';

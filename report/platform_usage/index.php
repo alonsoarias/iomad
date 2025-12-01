@@ -60,6 +60,8 @@ $topActivities = $report->get_top_activities(10);
 $completionsSummary = $report->get_course_completions_summary();
 $dashboardAccess = $report->get_dashboard_access();
 $completionTrends = $report->get_completion_trends(30);
+$dailyUsers = $report->get_daily_users(10);
+$topDedication = $report->get_top_courses_dedication(10);
 
 // Language strings for JavaScript.
 $jsstrings = [
@@ -75,6 +77,8 @@ $jsstrings = [
     'activitytype' => get_string('activitytype', 'report_platform_usage'),
     'activityaccesses' => get_string('activityaccesses', 'report_platform_usage'),
     'completions' => get_string('completions', 'report_platform_usage'),
+    'dailyusers' => get_string('dailyusers', 'report_platform_usage'),
+    'dedicationpercent' => get_string('dedicationpercent', 'report_platform_usage'),
 ];
 
 // Output header.
@@ -341,6 +345,96 @@ echo '</div>';
 
 echo '</div>';
 
+// Daily Users row.
+echo '<div class="row mb-4">';
+
+// Daily Users Chart.
+echo '<div class="col-lg-8 mb-3">';
+echo '<div class="card h-100">';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('dailyusers', 'report_platform_usage') . '</h5></div>';
+echo '<div class="card-body">';
+echo '<canvas id="dailyUsersChart" height="300"></canvas>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
+// Daily Users Table.
+echo '<div class="col-lg-4 mb-3">';
+echo '<div class="card h-100">';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('dailyuserstable', 'report_platform_usage') . '</h5></div>';
+echo '<div class="card-body" id="daily-users-table">';
+if (empty($dailyUsers['records'])) {
+    echo '<p class="text-muted">' . get_string('nodata', 'report_platform_usage') . '</p>';
+} else {
+    echo '<div class="table-responsive">';
+    echo '<table class="table table-striped table-sm">';
+    echo '<thead><tr>';
+    echo '<th>' . get_string('date', 'report_platform_usage') . '</th>';
+    echo '<th class="text-right">' . get_string('uniqueusers', 'report_platform_usage') . '</th>';
+    echo '</tr></thead>';
+    echo '<tbody>';
+    foreach ($dailyUsers['records'] as $record) {
+        echo '<tr>';
+        echo '<td>' . $record['fecha_formateada'] . '</td>';
+        echo '<td class="text-right">' . number_format($record['cantidad_usuarios']) . '</td>';
+        echo '</tr>';
+    }
+    echo '</tbody></table></div>';
+}
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
+echo '</div>';
+
+// Dedication row.
+echo '<div class="row mb-4">';
+
+// Dedication Chart.
+echo '<div class="col-lg-6 mb-3">';
+echo '<div class="card h-100">';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('topdedication', 'report_platform_usage') . '</h5></div>';
+echo '<div class="card-body">';
+echo '<canvas id="dedicationChart" height="300"></canvas>';
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
+// Dedication Table.
+echo '<div class="col-lg-6 mb-3">';
+echo '<div class="card h-100">';
+echo '<div class="card-header"><h5 class="mb-0">' . get_string('dedicationdetails', 'report_platform_usage') . '</h5></div>';
+echo '<div class="card-body" id="dedication-table">';
+if (empty($topDedication)) {
+    echo '<p class="text-muted">' . get_string('nodata', 'report_platform_usage') . '</p>';
+} else {
+    echo '<div class="table-responsive">';
+    echo '<table class="table table-striped table-sm">';
+    echo '<thead><tr>';
+    echo '<th class="text-center" style="width:40px">#</th>';
+    echo '<th>' . get_string('coursename', 'report_platform_usage') . '</th>';
+    echo '<th class="text-right">' . get_string('totaldedication', 'report_platform_usage') . '</th>';
+    echo '<th class="text-right">' . get_string('enrolledusers', 'report_platform_usage') . '</th>';
+    echo '<th class="text-right">' . get_string('dedicationpercent', 'report_platform_usage') . '</th>';
+    echo '</tr></thead>';
+    echo '<tbody>';
+    foreach ($topDedication as $course) {
+        echo '<tr>';
+        echo '<td class="text-center">' . $course['rank'] . '</td>';
+        echo '<td>' . $course['fullname'] . '</td>';
+        echo '<td class="text-right">' . $course['total_dedication_formatted'] . '</td>';
+        echo '<td class="text-right">' . number_format($course['enrolled_students']) . '</td>';
+        echo '<td class="text-right">' . $course['dedication_percent'] . '%</td>';
+        echo '</tr>';
+    }
+    echo '</tbody></table></div>';
+}
+echo '</div>';
+echo '</div>';
+echo '</div>';
+
+echo '</div>';
+
 // Chart.js and AJAX initialization.
 $ajaxurl = $CFG->wwwroot . '/report/platform_usage/ajax.php';
 ?>
@@ -363,7 +457,9 @@ document.addEventListener('DOMContentLoaded', function() {
         top_activities: <?php echo json_encode($topActivities); ?>,
         completions_summary: <?php echo json_encode($completionsSummary); ?>,
         dashboard_access: <?php echo json_encode($dashboardAccess); ?>,
-        completion_trends: <?php echo json_encode($completionTrends); ?>
+        completion_trends: <?php echo json_encode($completionTrends); ?>,
+        daily_users: <?php echo json_encode($dailyUsers); ?>,
+        top_dedication: <?php echo json_encode($topDedication); ?>
     };
 
     // Chart instances.
@@ -509,6 +605,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 scales: { y: { beginAtZero: true } }
             }
         });
+
+        // Daily Users Chart.
+        var dailyUsersCtx = document.getElementById('dailyUsersChart').getContext('2d');
+        charts.dailyUsers = new Chart(dailyUsersCtx, {
+            type: 'line',
+            data: {
+                labels: data.daily_users.labels,
+                datasets: [{
+                    label: STRINGS.dailyusers,
+                    data: data.daily_users.data,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Dedication Chart (horizontal bar).
+        if (data.top_dedication && data.top_dedication.length > 0) {
+            var dedicationCtx = document.getElementById('dedicationChart').getContext('2d');
+            charts.dedication = new Chart(dedicationCtx, {
+                type: 'bar',
+                data: {
+                    labels: data.top_dedication.map(function(c) {
+                        return c.shortname && c.shortname.length > 15 ? c.shortname.substring(0, 12) + '...' : (c.shortname || '');
+                    }),
+                    datasets: [{
+                        label: STRINGS.dedicationpercent,
+                        data: data.top_dedication.map(function(c) { return c.dedication_percent; }),
+                        backgroundColor: 'rgba(13, 110, 253, 0.7)',
+                        borderColor: 'rgba(13, 110, 253, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) { return value + '%'; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 
     /**
