@@ -109,9 +109,10 @@ if ($ADMIN->fulltree) {
             
             if (!empty($pathToDu) && file_exists($pathToDu) && is_executable($pathToDu)) {
                 $defaultPathToDu = $pathToDu;
-                
-                // Actualizar la configuración global si no está ya configurada
-                if (empty(get_config('pathtodu'))) {
+
+                // Actualizar la configuración global si no está ya configurada.
+                // Use empty string as first parameter to get/set global Moodle config.
+                if (empty(get_config('', 'pathtodu'))) {
                     set_config('pathtodu', $defaultPathToDu);
                 }
             } else {

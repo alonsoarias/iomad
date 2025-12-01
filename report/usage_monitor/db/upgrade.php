@@ -80,8 +80,20 @@ function xmldb_report_usage_monitor_upgrade($oldversion) {
             $transaction = $DB->start_delegated_transaction();
             try {
                 // Update fecha field from date format to timestamp.
-                $sql = "UPDATE {report_usage_monitor} SET fecha = (UNIX_TIMESTAMP(STR_TO_DATE(fecha, '%d/%m/%Y')))";
-                $DB->execute($sql);
+                // Use PHP-based conversion for cross-database compatibility (MySQL, PostgreSQL, etc.).
+                $records = $DB->get_records('report_usage_monitor', [], '', 'id, fecha');
+                foreach ($records as $record) {
+                    if (!is_numeric($record->fecha) && preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $record->fecha, $matches)) {
+                        // Convert dd/mm/yyyy format to Unix timestamp.
+                        $day = (int) $matches[1];
+                        $month = (int) $matches[2];
+                        $year = (int) $matches[3];
+                        $timestamp = mktime(0, 0, 0, $month, $day, $year);
+                        if ($timestamp !== false) {
+                            $DB->set_field('report_usage_monitor', 'fecha', $timestamp, ['id' => $record->id]);
+                        }
+                    }
+                }
                 $transaction->allow_commit();
             } catch (Exception $e) {
                 $transaction->rollback($e);

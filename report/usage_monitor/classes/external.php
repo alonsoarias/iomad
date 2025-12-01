@@ -692,7 +692,7 @@ class report_usage_monitor_external extends external_api {
             if ($result['success']) {
                 $transaction->allow_commit();
             } else {
-                $transaction->rollback(new moodle_exception('thresholds_update_failed', 'report_usage_monitor'));
+                $transaction->rollback(new \moodle_exception('thresholds_update_failed', 'report_usage_monitor'));
             }
         } catch (Exception $e) {
             $transaction->rollback($e);
