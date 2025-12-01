@@ -163,3 +163,32 @@ $string['dedicationdetails'] = 'Detalles de Dedicacion';
 $string['totaldedication'] = 'Dedicacion Total';
 $string['enrolledusers'] = 'Usuarios Matriculados';
 $string['dedicationpercent'] = '% de Dedicacion';
+
+// Section descriptions.
+$string['logintrends_desc'] = 'Tendencias de ingresos diarios y usuarios unicos de los ultimos 30 dias';
+$string['usersbyactivity_desc'] = 'Distribucion de usuarios activos vs inactivos (umbral de 30 dias)';
+$string['coursetrends_desc'] = 'Tendencias de acceso a cursos durante el periodo seleccionado';
+$string['dedication_desc'] = 'Tiempo dedicado por estudiantes en cada curso basado en actividad de sesion';
+$string['topcourses_desc'] = 'Cursos ordenados por cantidad de accesos con metricas de dedicacion';
+$string['topactivities_desc'] = 'Actividades mas accedidas en todos los cursos';
+$string['completiontrends_desc'] = 'Tendencias de finalizacion de cursos de los ultimos 30 dias';
+
+// Daily metrics.
+$string['average'] = 'Promedio';
+$string['maximum'] = 'Maximo';
+
+// Export descriptions.
+$string['export_report_desc'] = 'Reporte de Uso de Plataforma - Analisis integral de la actividad de la plataforma';
+$string['export_logins_desc'] = 'Resumen de Ingresos: Total de ingresos y usuarios unicos para hoy, ultimos 7 dias y ultimos 30 dias. Un ingreso se cuenta cada vez que un usuario se autentica exitosamente en la plataforma.';
+$string['export_users_desc'] = 'Resumen de Actividad de Usuarios: Total de usuarios registrados, usuarios activos (ingresaron en los ultimos 30 dias) e inactivos. Un usuario activo es aquel que ha accedido a la plataforma en los ultimos 30 dias.';
+$string['export_courses_desc'] = 'Detalles de Acceso a Cursos: Cursos ordenados por vistas totales, usuarios unicos que accedieron y tiempo de dedicacion. El conteo de accesos representa las veces que los usuarios vieron la pagina del curso.';
+$string['export_activities_desc'] = 'Detalles de Acceso a Actividades: Actividades mas accedidas (tareas, foros, cuestionarios, etc.) con conteos de vistas y participacion de usuarios. Ayuda a identificar que materiales de aprendizaje son mas utilizados.';
+$string['export_daily_desc'] = 'Historial de Ingresos Diarios: Desglose dia por dia de ingresos y usuarios unicos. Util para identificar patrones de uso y periodos de mayor actividad.';
+$string['export_completions_desc'] = 'Resumen de Finalizacion de Cursos: Cantidad de cursos completados en diferentes periodos. Una finalizacion se registra cuando un usuario cumple todos los criterios de finalizacion del curso.';
+$string['export_dedication_desc'] = 'Analisis de Dedicacion a Cursos: Tiempo dedicado por estudiantes en cada curso basado en analisis de sesiones. Una sesion termina cuando el usuario esta inactivo por mas de 1 hora. Muestra tiempo total de dedicacion y distribucion porcentual entre cursos.';
+$string['export_dailyusers_desc'] = 'Usuarios Unicos Diarios: Registro historico de conteos de usuarios unicos por dia. Ayuda a rastrear tendencias de participacion y crecimiento de la plataforma.';
+$string['generated_by'] = 'Generado por';
+$string['filter_company'] = 'Filtro - Compania';
+$string['filter_daterange'] = 'Filtro - Rango de Fechas';
+$string['metric_explanation'] = 'Explicacion de Metrica';
+$string['data_section'] = 'Seccion de Datos';

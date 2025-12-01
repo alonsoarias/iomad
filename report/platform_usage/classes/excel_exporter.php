@@ -80,6 +80,7 @@ class excel_exporter {
             'courses' => 'Courses',
             'activities' => 'Activities',
             'users' => 'Users',
+            'dedication' => 'Dedication',
         ];
     }
 
@@ -145,6 +146,38 @@ class excel_exporter {
                     'horizontal' => Alignment::HORIZONTAL_RIGHT,
                 ],
             ],
+            'description' => [
+                'font' => [
+                    'italic' => true,
+                    'color' => ['rgb' => '666666'],
+                    'size' => 10,
+                ],
+                'fill' => [
+                    'fillType' => Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'F8F9FA'],
+                ],
+                'alignment' => [
+                    'wrapText' => true,
+                    'vertical' => Alignment::VERTICAL_TOP,
+                ],
+            ],
+            'section_header' => [
+                'font' => [
+                    'bold' => true,
+                    'size' => 11,
+                    'color' => ['rgb' => '495057'],
+                ],
+                'fill' => [
+                    'fillType' => Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'E9ECEF'],
+                ],
+                'borders' => [
+                    'bottom' => [
+                        'borderStyle' => Border::BORDER_MEDIUM,
+                        'color' => ['rgb' => '4472C4'],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -160,6 +193,7 @@ class excel_exporter {
         $this->createDailyLoginsSheet();
         $this->createCoursesSheet();
         $this->createActivitiesSheet();
+        $this->createDedicationSheet();
         $this->createUsersSheet();
 
         // Set first sheet as active.
@@ -197,16 +231,29 @@ class excel_exporter {
         $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
         $sheet->mergeCells('A1:F1');
 
+        // Report description.
+        $sheet->setCellValue('A2', get_string('export_report_desc', 'report_platform_usage'));
+        $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
+        $sheet->mergeCells('A2:F2');
+        $sheet->getRowDimension(2)->setRowHeight(30);
+
         // Company and date range info.
-        $sheet->setCellValue('A2', get_string('company', 'report_platform_usage') . ': ' . $this->report->get_company_name());
-        $sheet->setCellValue('A3', get_string('daterange', 'report_platform_usage') . ': ' . $this->report->get_date_range());
-        $sheet->setCellValue('A4', get_string('generateddate', 'report_platform_usage') . ': ' . userdate(time()));
+        $sheet->setCellValue('A3', get_string('filter_company', 'report_platform_usage') . ': ' . $this->report->get_company_name());
+        $sheet->setCellValue('A4', get_string('filter_daterange', 'report_platform_usage') . ': ' . $this->report->get_date_range());
+        $sheet->setCellValue('A5', get_string('generateddate', 'report_platform_usage') . ': ' . userdate(time(), '%d/%m/%Y %H:%M'));
 
         // Login summary section.
-        $row = 6;
+        $row = 7;
         $sheet->setCellValue("A{$row}", get_string('loginsummary', 'report_platform_usage'));
         $sheet->getStyle("A{$row}")->applyFromArray($this->styles['subtitle']);
         $sheet->mergeCells("A{$row}:C{$row}");
+
+        // Login section description.
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('export_logins_desc', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['description']);
+        $sheet->mergeCells("A{$row}:C{$row}");
+        $sheet->getRowDimension($row)->setRowHeight(40);
 
         $row++;
         $headers = [
@@ -240,6 +287,13 @@ class excel_exporter {
         $sheet->getStyle("A{$row}")->applyFromArray($this->styles['subtitle']);
         $sheet->mergeCells("A{$row}:C{$row}");
 
+        // User section description.
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('export_users_desc', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['description']);
+        $sheet->mergeCells("A{$row}:C{$row}");
+        $sheet->getRowDimension($row)->setRowHeight(40);
+
         $userSummary = $this->report->get_user_activity_summary();
         $row++;
         $sheet->setCellValue("A{$row}", get_string('totalusers', 'report_platform_usage'));
@@ -260,6 +314,37 @@ class excel_exporter {
 
         // Create user activity pie chart.
         $this->createUserActivityChart($sheet, $userSummary);
+
+        // Completions section.
+        $row += 3;
+        $sheet->setCellValue("A{$row}", get_string('completions', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['subtitle']);
+        $sheet->mergeCells("A{$row}:C{$row}");
+
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('export_completions_desc', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['description']);
+        $sheet->mergeCells("A{$row}:C{$row}");
+        $sheet->getRowDimension($row)->setRowHeight(40);
+
+        $completions = $this->report->get_course_completions_summary();
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('completionstoday', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['completions_today']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('completionsweek', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['completions_week']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('completionsmonth', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['completions_month']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('totalcompletions', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['total_completions']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['highlight']);
 
         // Top 5 courses section.
         $row += 3;
@@ -442,18 +527,24 @@ class excel_exporter {
         $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
         $sheet->mergeCells('A1:C1');
 
+        // Description.
+        $sheet->setCellValue('A2', get_string('export_daily_desc', 'report_platform_usage'));
+        $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
+        $sheet->mergeCells('A2:C2');
+        $sheet->getRowDimension(2)->setRowHeight(40);
+
         // Column headers.
         $headers = [
             get_string('date', 'report_platform_usage'),
             get_string('logins', 'report_platform_usage'),
             get_string('uniqueusers', 'report_platform_usage'),
         ];
-        $sheet->fromArray($headers, null, 'A3');
-        $sheet->getStyle('A3:C3')->applyFromArray($this->styles['header']);
+        $sheet->fromArray($headers, null, 'A4');
+        $sheet->getStyle('A4:C4')->applyFromArray($this->styles['header']);
 
         // Get daily data.
         $dailyData = $this->report->get_daily_logins(30);
-        $row = 4;
+        $row = 5;
         $dataStart = $row;
 
         for ($i = 0; $i < count($dailyData['labels']); $i++) {
@@ -488,8 +579,8 @@ class excel_exporter {
         $sheetName = $this->sheetNames['daily'];
 
         $dataSeriesLabels = [
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\$3", null, 1),
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\$3", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\$4", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\$4", null, 1),
         ];
         $xAxisTickValues = [
             new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$A\${$dataStart}:\$A\${$dataEnd}", null, $dataEnd - $dataStart + 1),
@@ -537,6 +628,12 @@ class excel_exporter {
         $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
         $sheet->mergeCells('A1:F1');
 
+        // Description.
+        $sheet->setCellValue('A2', get_string('export_courses_desc', 'report_platform_usage'));
+        $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
+        $sheet->mergeCells('A2:F2');
+        $sheet->getRowDimension(2)->setRowHeight(40);
+
         // Column headers.
         $headers = [
             get_string('coursename', 'report_platform_usage'),
@@ -546,12 +643,12 @@ class excel_exporter {
             get_string('lastaccess', 'report_platform_usage'),
             get_string('avgaccessperuser', 'report_platform_usage'),
         ];
-        $sheet->fromArray($headers, null, 'A3');
-        $sheet->getStyle('A3:F3')->applyFromArray($this->styles['header']);
+        $sheet->fromArray($headers, null, 'A4');
+        $sheet->getStyle('A4:F4')->applyFromArray($this->styles['header']);
 
         // Get course data.
         $courses = $this->report->get_course_access_details();
-        $row = 4;
+        $row = 5;
         $dataStart = $row;
 
         foreach ($courses as $course) {
@@ -601,7 +698,7 @@ class excel_exporter {
         $sheetName = $this->sheetNames['courses'];
 
         $dataSeriesLabels = [
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\$3", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\$4", null, 1),
         ];
         $xAxisTickValues = [
             new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\${$dataStart}:\$B\${$dataEnd}", null, $dataEnd - $dataStart + 1),
@@ -649,6 +746,12 @@ class excel_exporter {
         $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
         $sheet->mergeCells('A1:F1');
 
+        // Description.
+        $sheet->setCellValue('A2', get_string('export_activities_desc', 'report_platform_usage'));
+        $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
+        $sheet->mergeCells('A2:F2');
+        $sheet->getRowDimension(2)->setRowHeight(40);
+
         // Column headers.
         $headers = [
             get_string('activityname', 'report_platform_usage'),
@@ -658,12 +761,12 @@ class excel_exporter {
             get_string('uniqueusers', 'report_platform_usage'),
             get_string('avgaccessperuser', 'report_platform_usage'),
         ];
-        $sheet->fromArray($headers, null, 'A3');
-        $sheet->getStyle('A3:F3')->applyFromArray($this->styles['header']);
+        $sheet->fromArray($headers, null, 'A4');
+        $sheet->getStyle('A4:F4')->applyFromArray($this->styles['header']);
 
         // Get activity data.
         $activities = $this->report->get_top_activities(50);
-        $row = 4;
+        $row = 5;
 
         foreach ($activities as $activity) {
             $avgAccess = $activity->unique_users > 0 ? round($activity->access_count / $activity->unique_users, 2) : 0;
@@ -699,6 +802,12 @@ class excel_exporter {
         $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
         $sheet->mergeCells('A1:G1');
 
+        // Description.
+        $sheet->setCellValue('A2', get_string('export_users_desc', 'report_platform_usage'));
+        $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
+        $sheet->mergeCells('A2:G2');
+        $sheet->getRowDimension(2)->setRowHeight(40);
+
         // Column headers.
         $headers = [
             get_string('username', 'report_platform_usage'),
@@ -709,12 +818,12 @@ class excel_exporter {
             get_string('created', 'report_platform_usage'),
             get_string('status', 'report_platform_usage'),
         ];
-        $sheet->fromArray($headers, null, 'A3');
-        $sheet->getStyle('A3:G3')->applyFromArray($this->styles['header']);
+        $sheet->fromArray($headers, null, 'A4');
+        $sheet->getStyle('A4:G4')->applyFromArray($this->styles['header']);
 
         // Get user data.
         $users = $this->report->get_user_login_details();
-        $row = 4;
+        $row = 5;
         $activeThreshold = strtotime('-30 days');
 
         foreach ($users as $user) {
@@ -746,5 +855,114 @@ class excel_exporter {
         foreach (range('A', 'G') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
+    }
+
+    /**
+     * Create dedication sheet with course dedication details.
+     */
+    protected function createDedicationSheet(): void {
+        $sheet = $this->spreadsheet->createSheet();
+        $sheet->setTitle($this->sheetNames['dedication']);
+
+        // Header.
+        $sheet->setCellValue('A1', get_string('topdedication', 'report_platform_usage'));
+        $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
+        $sheet->mergeCells('A1:F1');
+
+        // Description.
+        $sheet->setCellValue('A2', get_string('export_dedication_desc', 'report_platform_usage'));
+        $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
+        $sheet->mergeCells('A2:F2');
+        $sheet->getRowDimension(2)->setRowHeight(50);
+
+        // Column headers.
+        $headers = [
+            '#',
+            get_string('coursename', 'report_platform_usage'),
+            get_string('shortname', 'report_platform_usage'),
+            get_string('totaldedication', 'report_platform_usage'),
+            get_string('enrolledusers', 'report_platform_usage'),
+            get_string('dedicationpercent', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, 'A4');
+        $sheet->getStyle('A4:F4')->applyFromArray($this->styles['header']);
+
+        // Get dedication data.
+        $dedication = $this->report->get_top_courses_dedication(50);
+        $row = 5;
+        $dataStart = $row;
+
+        foreach ($dedication as $course) {
+            $sheet->fromArray([
+                $course['rank'],
+                $course['fullname'],
+                $course['shortname'],
+                $course['total_dedication_formatted'],
+                $course['enrolled_students'],
+                $course['dedication_percent'] . '%',
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:F{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("A{$row}")->applyFromArray($this->styles['number']);
+            $sheet->getStyle("E{$row}:F{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+        $dataEnd = $row - 1;
+
+        // Create dedication bar chart if we have data.
+        if ($dataEnd >= $dataStart && $dataEnd - $dataStart < 15) {
+            $this->createDedicationChart($sheet, $dataStart, min($dataEnd, $dataStart + 9));
+        }
+
+        // Auto-size columns.
+        foreach (range('A', 'F') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Create dedication bar chart.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet Worksheet
+     * @param int $dataStart Start row
+     * @param int $dataEnd End row
+     */
+    protected function createDedicationChart($sheet, int $dataStart, int $dataEnd): void {
+        $sheetName = $this->sheetNames['dedication'];
+
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$F\$4", null, 1),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\${$dataStart}:\$C\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$F\${$dataStart}:\$F\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_BARCHART,
+            DataSeries::GROUPING_STANDARD,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+        $series->setPlotDirection(DataSeries::DIRECTION_BAR);
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_RIGHT, null, false);
+        $title = new Title(get_string('topdedication', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'dedicationChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('H4');
+        $chart->setBottomRightPosition('O18');
+
+        $sheet->addChart($chart);
     }
 }
