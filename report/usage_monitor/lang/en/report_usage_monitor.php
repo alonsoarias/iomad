@@ -343,6 +343,7 @@ $string['email_disk_disclaimer'] = 'If you need technical assistance, please do 
 // Course dedication section.
 $string['top_courses_dedication'] = 'Top courses by student dedication';
 $string['top_courses_dedication_desc'] = 'Courses with the highest percentage of student dedication time';
+$string['dedication_details'] = 'Dedication details';
 $string['dedication_time'] = 'Dedication time';
 $string['avg_dedication'] = 'Average dedication';
 $string['total_dedication'] = 'Total dedication';

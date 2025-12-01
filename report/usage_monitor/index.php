@@ -238,6 +238,10 @@ $top_courses_dedication = [];
 $dedication_summary = get_dedication_summary(90);
 $top_courses_dedication_raw = get_top_courses_by_dedication(10, 90);
 
+// Prepare chart data for dedication
+$dedication_chart_labels = [];
+$dedication_chart_data = [];
+
 // Format for template.
 foreach ($top_courses_dedication_raw as $course) {
     $top_courses_dedication[] = [
@@ -251,6 +255,10 @@ foreach ($top_courses_dedication_raw as $course) {
         'enrolled_students' => $course->enrolled_students,
         'dedication_percent' => $course->dedication_percent
     ];
+
+    // For chart - use shortname for labels (cleaner)
+    $dedication_chart_labels[] = $course->shortname;
+    $dedication_chart_data[] = (float)$course->dedication_percent;
 }
 
 // ============================================================
@@ -374,6 +382,11 @@ echo $OUTPUT->render_from_template('report_usage_monitor/dashboard', $templateco
             labels: <?php echo json_encode($completion_trends_labels); ?>,
             data: <?php echo json_encode($completion_trends_data); ?>,
             hasData: <?php echo !empty($completion_trends_labels) ? 'true' : 'false'; ?>
+        },
+        dedication: {
+            labels: <?php echo json_encode($dedication_chart_labels); ?>,
+            data: <?php echo json_encode($dedication_chart_data); ?>,
+            hasData: <?php echo !empty($dedication_chart_labels) ? 'true' : 'false'; ?>
         }
     };
 
@@ -386,7 +399,8 @@ echo $OUTPUT->render_from_template('report_usage_monitor/dashboard', $templateco
         limit100: '<?php echo get_string('limit100', 'report_usage_monitor'); ?>',
         percentThreshold: '<?php echo get_string('percent_of_threshold', 'report_usage_monitor'); ?>',
         totalAccesses: '<?php echo get_string('total_accesses', 'report_usage_monitor'); ?>',
-        completions: '<?php echo get_string('completions', 'report_usage_monitor'); ?>'
+        completions: '<?php echo get_string('completions', 'report_usage_monitor'); ?>',
+        dedicationPercent: '<?php echo get_string('dedication_percent', 'report_usage_monitor'); ?>'
     };
 
     // Chart instances storage
@@ -638,6 +652,48 @@ echo $OUTPUT->render_from_template('report_usage_monitor/dashboard', $templateco
                     maintainAspectRatio: false,
                     scales: {
                         y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Dedication chart (horizontal bar)
+        if (chartConfig.dedication.hasData) {
+            initChart('chart-dedication', {
+                type: 'bar',
+                data: {
+                    labels: chartConfig.dedication.labels,
+                    datasets: [{
+                        label: strings.dedicationPercent,
+                        data: chartConfig.dedication.data,
+                        backgroundColor: '#0d6efd',
+                        borderColor: '#0d6efd',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    return ctx.parsed.x + '%';
+                                }
+                            }
+                        }
                     }
                 }
             });

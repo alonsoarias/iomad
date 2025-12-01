@@ -432,11 +432,32 @@
                 </div>
             </div>
 
+            <!-- Course Dedication Chart -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">{{#str}}top_courses_dedication, report_usage_monitor{{/str}}</h6>
+                        </div>
+                        <div class="card-body">
+                            {{#has_dedication_data}}
+                            <div class="chart-container chart-sm">
+                                <canvas id="chart-dedication"></canvas>
+                            </div>
+                            {{/has_dedication_data}}
+                            {{^has_dedication_data}}
+                            <div class="alert alert-info mb-0">{{#str}}no_dedication_data, report_usage_monitor{{/str}}</div>
+                            {{/has_dedication_data}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Top Courses by Dedication Table -->
-            <div class="card shadow-sm">
+            <div class="card">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">
-                        {{#str}}top_courses_dedication, report_usage_monitor{{/str}}
+                        {{#str}}dedication_details, report_usage_monitor{{/str}}
                         <span class="tooltip-icon ms-1" data-toggle="tooltip" data-bs-toggle="tooltip" title="{{#str}}tooltip_dedication_percent, report_usage_monitor{{/str}}">
                             <i class="fa fa-question-circle text-info"></i>
                         </span>
