@@ -365,3 +365,11 @@ $string['dedication_last_calculated'] = 'Último cálculo';
 $string['course_dedication_rank'] = 'Posición';
 $string['dedicationsettings'] = 'Configuración de dedicación';
 $string['dedicationsettingsinfo'] = 'Configure cómo se calcula el tiempo de dedicación de los estudiantes.';
+
+// Unidades de tiempo (singular).
+$string['hour'] = 'hora';
+
+// Campos adicionales de API.
+$string['daily_users'] = 'Usuarios diarios';
+$string['max_90_days'] = 'Máximo de usuarios diarios (90 días)';
+$string['max_90_days_date'] = 'Fecha del máximo de usuarios diarios';
