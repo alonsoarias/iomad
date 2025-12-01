@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,11 +15,14 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Local functions.
+ * Local library functions for the usage monitor plugin.
+ *
+ * This file contains utility functions for disk usage calculations,
+ * user statistics, course analysis, and data formatting.
  *
  * @package     report_usage_monitor
- * @category    admin
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -15,24 +15,28 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Tarea programada para el uso del disco, para ejecutar los informes programados.
+ * Scheduled task to calculate recently connected users.
+ *
+ * This task calculates the ranking of users who have recently
+ * accessed the platform.
  *
  * @package     report_usage_monitor
- * @category    admin
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
+ * @category    task
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 
 namespace report_usage_monitor\task;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Tarea para calcular los usuarios conectados recientemente.
+ * Last users calculation task class.
+ *
+ * @package     report_usage_monitor
  */
-class last_users extends \core\task\scheduled_task
-{
+class last_users extends \core\task\scheduled_task {
     public function get_name()
     {
         return get_string('getlastusersconnected', 'report_usage_monitor');

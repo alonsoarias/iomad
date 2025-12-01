@@ -8,23 +8,25 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
+ * Plugin version and other meta-data are defined here.
+ *
  * @package     report_usage_monitor
- * @category    admin
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025113016;  // User notifications at 8 AM, disk follows interval logic
-$plugin->requires  = 2020061500;  // Minimum Moodle version - Moodle 3.9
-$plugin->release   = '4.5.24';    // User alerts at 8 AM only, disk alerts follow original pattern
+$plugin->version   = 2025120100;
+$plugin->requires  = 2022112800;  // Moodle 4.1 LTS.
+$plugin->release   = '4.5.25';
 $plugin->maturity  = MATURITY_STABLE;

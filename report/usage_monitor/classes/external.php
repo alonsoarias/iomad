@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,14 +12,19 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * API externa para obtener estadísticas del plugin.
+ * External API for the usage monitor plugin.
  *
- * @package    report_usage_monitor
- * @copyright  2025 Soporte IngeWeb <soporte@ingeweb.co>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * This file defines the external web service functions for the plugin,
+ * allowing external systems to retrieve usage statistics and configure thresholds.
+ *
+ * @package     report_usage_monitor
+ * @category    external
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -28,26 +33,34 @@ require_once($CFG->libdir . '/externallib.php');
 require_once($CFG->dirroot . '/report/usage_monitor/locallib.php');
 
 /**
- * Clase de API externa para el plugin report_usage_monitor
+ * External API class for report_usage_monitor plugin.
+ *
+ * Provides web service methods for retrieving usage statistics,
+ * notification history, and configuring usage thresholds.
+ *
+ * @package     report_usage_monitor
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class report_usage_monitor_external extends external_api {
 
     /**
-     * Devuelve la definición de parámetros para get_monitor_stats.
+     * Returns the parameter definition for get_monitor_stats.
      *
-     * @return external_function_parameters
+     * @return external_function_parameters The parameters definition.
      */
     public static function get_monitor_stats_parameters() {
         return new external_function_parameters([]);
     }
 
     /**
-     * Devuelve las estadísticas actuales de uso para integración con sistemas externos.
+     * Returns current usage statistics for external system integration.
      *
-     * @return array Conjunto de estadísticas
+     * @return array Array of usage statistics.
      */
     public static function get_monitor_stats() {
-        global $DB, $CFG;
+        global $DB, $CFG, $SITE;
         
         // Verificar permisos
         $context = context_system::instance();

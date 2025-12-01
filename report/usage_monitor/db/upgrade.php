@@ -8,83 +8,79 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Definición de pasos de actualización del complemento.
+ * Plugin upgrade steps are defined here.
  *
  * @package     report_usage_monitor
  * @category    upgrade
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Actualiza el complemento report_usage_monitor.
+ * Execute report_usage_monitor upgrade from the given old version.
  *
- * @param int $oldversion La versión antigua del complemento
- * @return bool
+ * @param int $oldversion The old version of the plugin.
+ * @return bool True on success.
  */
-function xmldb_report_usage_monitor_upgrade($oldversion)
-{
+function xmldb_report_usage_monitor_upgrade($oldversion) {
     global $DB, $CFG;
     require_once($CFG->dirroot . '/report/usage_monitor/locallib.php');
     $dbman = $DB->get_manager();
 
-    // Función de actualización.
     if ($oldversion < 2022090200) {
-        // Define la tabla report_usage_monitor que se creará.
+        // Define table report_usage_monitor to be created.
         $table = new xmldb_table('report_usage_monitor');
 
-        // Agrega campos a la tabla report_usage_monitor.
-        // Cambiado a XMLDB_TYPE_INTEGER para almacenar timestamps correctamente
+        // Adding fields to table report_usage_monitor.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('fecha', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('cantidad_usuarios', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
 
-        // Agrega claves a la tabla report_usage_monitor.
+        // Adding keys to table report_usage_monitor.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
-        // Crea la tabla report_usage_monitor de forma condicional.
+        // Conditionally create table report_usage_monitor.
         try {
             if (!$dbman->table_exists($table)) {
                 $dbman->create_table($table);
             }
         } catch (Exception $e) {
-            echo "Error generado: $e";
+            debugging('Error creating table report_usage_monitor: ' . $e->getMessage(), DEBUG_DEVELOPER);
         }
 
-        // Punto de guardado de la versión 2022090200.
+        // Savepoint reached.
         upgrade_plugin_savepoint(true, 2022090200, 'report', 'usage_monitor');
     }
 
     if ($oldversion < 2022103100) {
-        // Verificar primero el tipo de datos en la columna fecha
-        // para evitar errores al intentar convertir timestamps existentes
+        // Check the data type in the fecha column to avoid errors when converting existing timestamps.
         $records = $DB->get_records('report_usage_monitor', [], '', 'id, fecha');
-        $needs_conversion = false;
-        
+        $needsconversion = false;
+
         foreach ($records as $record) {
-            // Si hay algún registro con fecha en formato de texto (no numérico),
-            // necesitamos hacer la conversión
+            // If there is any record with date in text format (not numeric), we need to convert.
             if (!is_numeric($record->fecha) && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $record->fecha)) {
-                $needs_conversion = true;
+                $needsconversion = true;
                 break;
             }
         }
-        
-        if ($needs_conversion) {
-            // Iniciamos una transacción para asegurar la consistencia de datos
+
+        if ($needsconversion) {
+            // Start transaction to ensure data consistency.
             $transaction = $DB->start_delegated_transaction();
             try {
-                // Se actualiza el campo fecha en el informe report_usage_monitor de tipo fecha a timestamp.
-                $sql = "UPDATE {report_usage_monitor} set fecha=(UNIX_TIMESTAMP(STR_TO_DATE(fecha, '%d/%m/%Y')))";
+                // Update fecha field from date format to timestamp.
+                $sql = "UPDATE {report_usage_monitor} SET fecha = (UNIX_TIMESTAMP(STR_TO_DATE(fecha, '%d/%m/%Y')))";
                 $DB->execute($sql);
                 $transaction->allow_commit();
             } catch (Exception $e) {
@@ -92,131 +88,89 @@ function xmldb_report_usage_monitor_upgrade($oldversion)
                 throw $e;
             }
         }
-        
-        // Asegurarnos de que el campo fecha sea INTEGER
+
+        // Ensure fecha field is INTEGER.
         $table = new xmldb_table('report_usage_monitor');
         $field = new xmldb_field('fecha', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
-        
+
         if ($dbman->field_exists($table, $field)) {
             $dbman->change_field_type($table, $field);
         }
-        
-        // Punto de guardado de la versión 2022103100.
+
+        // Savepoint reached.
         upgrade_plugin_savepoint(true, 2022103100, 'report', 'usage_monitor');
     }
-    
-    // Nueva actualización para corregir manejo de fechas
+
     if ($oldversion < 2025030403) {
-        // Asegurarse de que la columna fecha en report_usage_monitor sea INTEGER
+        // Ensure fecha column in report_usage_monitor is INTEGER.
         $table = new xmldb_table('report_usage_monitor');
-        
-        // Identificar índices comunes por convención de nombres
+
+        // Identify common indices by naming convention.
         $indices = [
             'idx_fecha' => new xmldb_index('idx_fecha', XMLDB_INDEX_NOTUNIQUE, ['fecha']),
-            'mdl_repousagmoni_fec_ix' => new xmldb_index('mdl_repousagmoni_fec_ix', XMLDB_INDEX_NOTUNIQUE, ['fecha'])
+            'mdl_repousagmoni_fec_ix' => new xmldb_index('mdl_repousagmoni_fec_ix', XMLDB_INDEX_NOTUNIQUE, ['fecha']),
         ];
-        
-        // Eliminar todos los índices relacionados con fecha
+
+        // Drop all fecha-related indices.
         foreach ($indices as $indexname => $index) {
             if ($dbman->index_exists($table, $index)) {
                 $dbman->drop_index($table, $index);
-                if (debugging('', DEBUG_DEVELOPER)) {
-                    mtrace("Eliminado índice $indexname en tabla report_usage_monitor");
-                }
+                mtrace("Dropped index {$indexname} on table report_usage_monitor");
             }
         }
-        
-        // Ahora cambiar el tipo de campo
+
+        // Now change the field type.
         $field = new xmldb_field('fecha', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
         if ($dbman->field_exists($table, $field)) {
             try {
                 $dbman->change_field_type($table, $field);
-                if (debugging('', DEBUG_DEVELOPER)) {
-                    mtrace("Cambiado tipo de campo fecha a INTEGER en tabla report_usage_monitor");
-                }
+                mtrace("Changed fecha field type to INTEGER in table report_usage_monitor");
             } catch (Exception $e) {
-                debugging("Error al cambiar el tipo de campo: " . $e->getMessage(), DEBUG_DEVELOPER);
+                debugging("Error changing field type: " . $e->getMessage(), DEBUG_DEVELOPER);
             }
         }
-        
-        // Recrear el índice principal
+
+        // Recreate the main index.
         $index = new xmldb_index('idx_fecha', XMLDB_INDEX_NOTUNIQUE, ['fecha']);
         if (!$dbman->index_exists($table, $index)) {
             $dbman->add_index($table, $index);
-            if (debugging('', DEBUG_DEVELOPER)) {
-                mtrace("Recreado índice idx_fecha en tabla report_usage_monitor");
-            }
-        }
-        
-        // Verificar y corregir cualquier dato inválido en la tabla
-        $transaction = $DB->start_delegated_transaction();
-        try {
-            // Encontrar registros con fechas no numéricas o inválidas
-            $records = $DB->get_records_sql("SELECT id, fecha FROM {report_usage_monitor} WHERE fecha IS NULL OR fecha <= 0");
-            
-            foreach ($records as $record) {
-                // Usar la fecha actual como fallback para cualquier fecha inválida
-                $DB->set_field('report_usage_monitor', 'fecha', time(), ['id' => $record->id]);
-                if (debugging('', DEBUG_DEVELOPER)) {
-                    mtrace("Actualizado registro con ID {$record->id} con fecha inválida {$record->fecha} a timestamp actual");
-                }
-            }
-            
-            $transaction->allow_commit();
-        } catch (Exception $e) {
-            $transaction->rollback($e);
-            debugging("Error al corregir fechas inválidas: " . $e->getMessage(), DEBUG_DEVELOPER);
+            mtrace("Recreated idx_fecha index on table report_usage_monitor");
         }
 
-        // Verificar y actualizar datos existentes para asegurar que sean timestamps UNIX válidos
+        // Fix any invalid data in the table.
         $transaction = $DB->start_delegated_transaction();
         try {
-            // Obtener todos los registros para verificación
+            // Find records with null or invalid dates.
+            $records = $DB->get_records_sql(
+                "SELECT id, fecha FROM {report_usage_monitor} WHERE fecha IS NULL OR fecha <= 0"
+            );
+
+            foreach ($records as $record) {
+                // Use current date as fallback for any invalid date.
+                $DB->set_field('report_usage_monitor', 'fecha', time(), ['id' => $record->id]);
+                mtrace("Updated record ID {$record->id} with invalid fecha to current timestamp");
+            }
+
+            // Verify and update existing data to ensure they are valid UNIX timestamps.
             $allrecords = $DB->get_records('report_usage_monitor');
             foreach ($allrecords as $record) {
-                // Si la fecha parece ser un formato o no un timestamp válido
-                if (!is_numeric($record->fecha) || $record->fecha < 946684800) { // 01/01/2000
-                    // Intentar convertir formatos de fecha comunes a timestamp
-                    $timestamp = strtotime(date('Y-m-d', time())); // Fallback a hoy
+                // If the date appears to be a format or not a valid timestamp.
+                if (!is_numeric($record->fecha) || $record->fecha < 946684800) { // 01/01/2000.
+                    $timestamp = strtotime(date('Y-m-d', time()));
                     $DB->set_field('report_usage_monitor', 'fecha', $timestamp, ['id' => $record->id]);
-                    
-                    if (debugging('', DEBUG_DEVELOPER)) {
-                        mtrace("Actualizado registro con ID {$record->id}, fecha {$record->fecha} a timestamp {$timestamp}");
-                    }
+                    mtrace("Updated record ID {$record->id}, fecha {$record->fecha} to timestamp {$timestamp}");
                 }
             }
+
             $transaction->allow_commit();
         } catch (Exception $e) {
             $transaction->rollback($e);
-            debugging("Error al actualizar fechas: " . $e->getMessage(), DEBUG_DEVELOPER);
+            debugging("Error fixing invalid dates: " . $e->getMessage(), DEBUG_DEVELOPER);
         }
-        
-        // Punto de guardado para la versión de corrección de fechas
+
+        // Savepoint reached.
         upgrade_plugin_savepoint(true, 2025030403, 'report', 'usage_monitor');
     }
 
     return true;
-}
-
-// Funciones adicionales en upgrade.php (sin cambios)
-function upgrade_show_recommended_notification()
-{
-    global $OUTPUT;
-    echo $OUTPUT->notification(
-        get_string('pathtodurecommendation', 'report_usage_monitor'), // Mostramos un mensaje de recomendación. Este texto será traducido según el idioma del usuario.
-        'info' // Se muestra una notificación informativa.
-    );
-    echo $OUTPUT->notification(
-        get_string('pathtodunote', 'report_usage_monitor'), // Mostramos una nota adicional. Este texto será traducido según el idioma del usuario.
-        'info' // Se muestra una notificación informativa.
-    );
-}
-
-function upgrade_show_warning_notification()
-{
-    global $OUTPUT;
-    echo $OUTPUT->notification(
-        get_string('activateshellexec', 'report_usage_monitor'), // Mostramos un mensaje de advertencia. Este texto será traducido según el idioma del usuario.
-        'warning' // Se muestra una notificación de advertencia.
-    );
 }

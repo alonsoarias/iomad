@@ -15,24 +15,28 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Tarea programada para calcular los usuarios principales en los últimos 90 días.
+ * Scheduled task to calculate peak users in the last 90 days.
+ *
+ * This task calculates the maximum number of unique daily users
+ * over the last 90 days period.
  *
  * @package     report_usage_monitor
- * @category    admin
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
+ * @category    task
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 
 namespace report_usage_monitor\task;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Tarea para calcular los usuarios principales en los últimos 90 días.
+ * Peak users (90 days) calculation task class.
+ *
+ * @package     report_usage_monitor
  */
-class users_daily_90_days extends \core\task\scheduled_task
-{
+class users_daily_90_days extends \core\task\scheduled_task {
     public function get_name()
     {
         return get_string('getlastusers90days', 'report_usage_monitor');

@@ -14,6 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+/**
+ * Unified scheduled task for usage monitor notifications.
+ *
+ * This task handles both disk usage and user limit notifications in a single
+ * unified notification. When either or both thresholds are exceeded, a single
+ * email is sent containing all relevant alerts. User notifications are only
+ * processed at 8 AM; disk notifications follow interval-based logic.
+ *
+ * @package     report_usage_monitor
+ * @category    task
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace report_usage_monitor\task;
 
 defined('MOODLE_INTERNAL') || die();
@@ -21,11 +36,9 @@ defined('MOODLE_INTERNAL') || die();
 use report_usage_monitor\notification_helper;
 
 /**
- * Unified scheduled task for usage monitor notifications.
+ * Combined notification task class.
  *
- * This task handles both disk usage and user limit notifications in a single
- * unified notification. When either or both thresholds are exceeded, a single
- * email is sent containing all relevant alerts.
+ * Processes both disk and user threshold alerts and sends unified notifications.
  *
  * @package     report_usage_monitor
  * @copyright   2025 Soporte IngeWeb <soporte@ingeweb.co>

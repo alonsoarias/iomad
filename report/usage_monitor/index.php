@@ -15,11 +15,15 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Usage Monitor Report main dashboard
+ * Usage Monitor Report main dashboard page.
  *
- * @package    report_usage_monitor
- * @copyright  2023 Soporte IngeWeb <soporte@ingeweb.co>
- * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * This is the main entry point for the usage monitor report,
+ * displaying disk usage, user statistics, and various metrics.
+ *
+ * @package     report_usage_monitor
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once('../../config.php');

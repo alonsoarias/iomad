@@ -15,11 +15,15 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin administration pages are defined here.
+ * Plugin administration settings page.
+ *
+ * This file defines all admin settings for the usage monitor plugin,
+ * including thresholds, notifications, and API configuration.
  *
  * @package     report_usage_monitor
  * @category    admin
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

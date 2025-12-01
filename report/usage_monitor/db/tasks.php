@@ -15,19 +15,24 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Scheduled tasks definition for report_usage_monitor.
+ * Scheduled tasks definition for the usage monitor plugin.
+ *
+ * This file defines all scheduled tasks for calculating disk usage,
+ * user statistics, and sending notifications.
  *
  * @package     report_usage_monitor
- * @category    admin
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
+ * @category    task
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
+
 global $CFG;
 
 // Check if 'du' command is available for faster disk calculations.
-$du_command_available = !empty($CFG->pathtodu) && is_executable(trim($CFG->pathtodu));
+$ducommandavailable = !empty($CFG->pathtodu) && is_executable(trim($CFG->pathtodu));
 
 $tasks = [
     // Task to calculate disk usage.
@@ -35,12 +40,12 @@ $tasks = [
         'classname' => 'report_usage_monitor\task\disk_usage',
         'blocking' => 0,
         'minute' => '0',
-        'hour' => $du_command_available ? '*/6' : '12', // Every 6 hours if 'du' is available, otherwise every 12 hours.
+        'hour' => $ducommandavailable ? '*/6' : '12',
         'day' => '*',
         'month' => '*',
-        'dayofweek' => '*'
+        'dayofweek' => '*',
     ],
-    // Task to calculate recently connected users.
+    // Task to calculate recently connected users ranking.
     [
         'classname' => 'report_usage_monitor\task\last_users',
         'blocking' => 0,
@@ -48,20 +53,20 @@ $tasks = [
         'hour' => '*/2',
         'day' => '*',
         'month' => '*',
-        'dayofweek' => '*'
+        'dayofweek' => '*',
     ],
     // Unified task for processing notifications (disk and user limits).
     // Sends a single notification when either or both thresholds are exceeded.
     // Runs at same frequency as disk calculation to maintain original notification timing.
-    // Internal interval logic controls actual notification sending for each type.
+    // User notifications are only sent at 8 AM; disk notifications follow interval logic.
     [
         'classname' => 'report_usage_monitor\task\notification_combined',
         'blocking' => 0,
         'minute' => '0',
-        'hour' => $du_command_available ? '*/6' : '*/12', // Match disk task frequency.
+        'hour' => $ducommandavailable ? '*/6' : '*/12',
         'day' => '*',
         'month' => '*',
-        'dayofweek' => '*'
+        'dayofweek' => '*',
     ],
     // Task to calculate peak users in the last 90 days.
     [
@@ -71,7 +76,7 @@ $tasks = [
         'hour' => '0',
         'day' => '*',
         'month' => '*',
-        'dayofweek' => '*'
+        'dayofweek' => '*',
     ],
     // Task to calculate daily users.
     [
@@ -81,6 +86,6 @@ $tasks = [
         'hour' => '0',
         'day' => '*',
         'month' => '*',
-        'dayofweek' => '*'
-    ]
+        'dayofweek' => '*',
+    ],
 ];

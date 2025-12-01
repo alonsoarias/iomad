@@ -15,20 +15,27 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Código que se ejecuta antes de eliminar las tablas y los datos durante la desinstalación del complemento.
+ * Code that is executed before the tables and data are dropped during plugin uninstall.
  *
  * @package     report_usage_monitor
  * @category    upgrade
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 o posterior
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Procedimiento de desinstalación personalizado.
+ * Custom uninstallation procedure.
+ *
+ * Cleans up all plugin configuration settings before uninstall.
+ *
+ * @return bool True on success.
  */
 function xmldb_report_usage_monitor_uninstall() {
+    // Remove all plugin configuration settings.
+    unset_all_config('report_usage_monitor');
 
     return true;
 }

@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,54 +12,59 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * External services definition for report_usage_monitor.
+ * External services definition for the usage monitor plugin.
  *
- * @package    report_usage_monitor
- * @copyright  2025 Soporte IngeWeb <soporte@ingeweb.co>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * This file defines web service functions and the external API service
+ * for integration with external systems.
+ *
+ * @package     report_usage_monitor
+ * @category    webservice
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $functions = [
     'report_usage_monitor_get_monitor_stats' => [
-        'classname'     => 'report_usage_monitor_external',
-        'methodname'    => 'get_monitor_stats',
-        'classpath'     => 'report/usage_monitor/classes/external.php',
-        'description'   => 'Gets current system usage statistics.',
-        'type'          => 'read',
-        'capabilities'  => 'report/usage_monitor:view',
-        'ajax'          => true,
+        'classname' => 'report_usage_monitor_external',
+        'methodname' => 'get_monitor_stats',
+        'classpath' => 'report/usage_monitor/classes/external.php',
+        'description' => 'Gets current system usage statistics including disk and user metrics.',
+        'type' => 'read',
+        'capabilities' => 'report/usage_monitor:view',
+        'ajax' => true,
     ],
     'report_usage_monitor_get_notification_history' => [
-        'classname'     => 'report_usage_monitor_external',
-        'methodname'    => 'get_notification_history',
-        'classpath'     => 'report/usage_monitor/classes/external.php',
-        'description'   => 'Gets notification history.',
-        'type'          => 'read',
-        'capabilities'  => 'report/usage_monitor:view',
-        'ajax'          => true,
+        'classname' => 'report_usage_monitor_external',
+        'methodname' => 'get_notification_history',
+        'classpath' => 'report/usage_monitor/classes/external.php',
+        'description' => 'Gets the history of sent notifications.',
+        'type' => 'read',
+        'capabilities' => 'report/usage_monitor:view',
+        'ajax' => true,
     ],
     'report_usage_monitor_get_usage_data' => [
-        'classname'     => 'report_usage_monitor_external',
-        'methodname'    => 'get_usage_data',
-        'classpath'     => 'report/usage_monitor/classes/external.php',
-        'description'   => 'Gets precalculated usage data.',
-        'type'          => 'read',
-        'capabilities'  => 'report/usage_monitor:view',
-        'ajax'          => true,
+        'classname' => 'report_usage_monitor_external',
+        'methodname' => 'get_usage_data',
+        'classpath' => 'report/usage_monitor/classes/external.php',
+        'description' => 'Gets precalculated usage data for lightweight API consumption.',
+        'type' => 'read',
+        'capabilities' => 'report/usage_monitor:view',
+        'ajax' => true,
     ],
     'report_usage_monitor_set_usage_thresholds' => [
-        'classname'     => 'report_usage_monitor_external',
-        'methodname'    => 'set_usage_thresholds',
-        'classpath'     => 'report/usage_monitor/classes/external.php',
-        'description'   => 'Sets usage thresholds.',
-        'type'          => 'write',
-        'capabilities'  => 'report/usage_monitor:manage',
-        'ajax'          => true,
+        'classname' => 'report_usage_monitor_external',
+        'methodname' => 'set_usage_thresholds',
+        'classpath' => 'report/usage_monitor/classes/external.php',
+        'description' => 'Sets the usage thresholds for users and disk space.',
+        'type' => 'write',
+        'capabilities' => 'report/usage_monitor:manage',
+        'ajax' => true,
     ],
 ];
 

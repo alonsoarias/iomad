@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * English language strings for report_usage_monitor.
+ * English language strings for the usage monitor plugin.
  *
  * @package     report_usage_monitor
  * @category    string
- * @copyright   2025 Soporte IngeWeb <soporte@ingeweb.co>
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

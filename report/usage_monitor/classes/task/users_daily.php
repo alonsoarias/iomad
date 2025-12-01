@@ -15,11 +15,15 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Tarea programada para calcular el top de accesos únicos diarios.
+ * Scheduled task to calculate daily unique user accesses.
+ *
+ * This task calculates the number of unique users who accessed
+ * the platform each day.
  *
  * @package     report_usage_monitor
- * @category    admin
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
+ * @category    task
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,8 +31,12 @@ namespace report_usage_monitor\task;
 
 defined('MOODLE_INTERNAL') || die();
 
-class users_daily extends \core\task\scheduled_task
-{
+/**
+ * Daily users calculation task class.
+ *
+ * @package     report_usage_monitor
+ */
+class users_daily extends \core\task\scheduled_task {
     public function get_name()
     {
         return get_string('getlastusers', 'report_usage_monitor');

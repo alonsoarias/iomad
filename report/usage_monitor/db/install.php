@@ -15,41 +15,48 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Páginas de administración del plugin se definen aquí.
+ * Plugin installation script.
+ *
+ * This script is executed during plugin installation and displays
+ * notifications to the user based on server capabilities.
  *
  * @package     report_usage_monitor
- * @category    admin
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 o posterior
+ * @category    upgrade
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
+
 /**
- * Configura el script de instalación.
- * Esta función se ejecuta durante la instalación del complemento y muestra notificaciones al usuario según las capacidades del servidor.
- * @return void
+ * Execute plugin installation procedures.
+ *
+ * Displays notifications about the 'du' command availability
+ * and shell_exec function status.
+ *
+ * @return bool True on success.
  */
-function xmldb_report_usage_monitor_install()
-{
+function xmldb_report_usage_monitor_install() {
     global $OUTPUT;
 
-    // Comprobamos si la función shell_exec está disponible en el servidor.
-    // Si está disponible, mostramos recomendaciones y notas relacionadas con la ruta 'du'.
+    // Check if shell_exec function is available on the server.
     if (function_exists('shell_exec')) {
         echo $OUTPUT->notification(
-            get_string('pathtodurecommendation', 'report_usage_monitor'), // Mostramos un mensaje de recomendación. Este texto será traducido según el idioma del usuario.
-            'info' // Se muestra una notificación informativa.
+            get_string('pathtodurecommendation', 'report_usage_monitor'),
+            'info'
         );
         echo $OUTPUT->notification(
-            get_string('pathtodunote', 'report_usage_monitor'), // Mostramos una nota adicional. Este texto será traducido según el idioma del usuario.
-            'info' // Se muestra una notificación informativa.
+            get_string('pathtodunote', 'report_usage_monitor'),
+            'info'
         );
     } else {
-        // Si la función shell_exec no está disponible, mostramos una advertencia al usuario.
+        // If shell_exec is not available, show a warning.
         echo $OUTPUT->notification(
-            get_string('activateshellexec', 'report_usage_monitor'), // Mostramos un mensaje de advertencia. Este texto será traducido según el idioma del usuario.
-            'warning' // Se muestra una notificación de advertencia.
+            get_string('activateshellexec', 'report_usage_monitor'),
+            'warning'
         );
     }
+
     return true;
 }

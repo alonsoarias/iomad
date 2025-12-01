@@ -15,11 +15,15 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Tarea programada para calcular el uso del disco.
+ * Scheduled task to calculate disk usage.
+ *
+ * This task calculates total disk usage including database size,
+ * moodledata directory, and analyzes disk usage by directory.
  *
  * @package     report_usage_monitor
- * @category    admin
- * @copyright   2023 Soporte IngeWeb <soporte@ingeweb.co>
+ * @category    task
+ * @author      Alonso Arias <soporte@ingeweb.co>
+ * @copyright   2025 Alonso Arias <soporte@ingeweb.co>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,8 +31,12 @@ namespace report_usage_monitor\task;
 
 defined('MOODLE_INTERNAL') || die();
 
-class disk_usage extends \core\task\scheduled_task
-{
+/**
+ * Disk usage calculation task class.
+ *
+ * @package     report_usage_monitor
+ */
+class disk_usage extends \core\task\scheduled_task {
     public function get_name()
     {
         return get_string('calculatediskusagetask', 'report_usage_monitor');
