@@ -26,31 +26,31 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// Plugin general strings
-$string['pluginname'] = 'Usage Report';
+// Plugin general strings.
+$string['pluginname'] = 'Monitor de uso';
 $string['reportinfotext'] = 'Este plugin ha sido creado para otro caso de éxito de <strong>IngeWeb</strong>. Visítenos en <a target="_blank" href="http://ingeweb.co/">IngeWeb - Soluciones para triunfar en Internet</a>.';
 $string['exclusivedisclaimer'] = 'Este plugin hace parte y es de uso exclusivo del servicio de hosting para Moodle proporcionado por <a target="_blank" href="http://ingeweb.co/">IngeWeb</a>.';
 
-// Dashboard strings
-$string['dashboard'] = 'Panel de Control';
-$string['dashboard_title'] = 'Panel de Control de Uso';
+// Dashboard strings.
+$string['dashboard'] = 'Panel de control';
+$string['dashboard_title'] = 'Monitor de uso';
 $string['diskusage'] = 'Uso del disco';
-$string['users_today_card'] = 'Usuarios Diarios Hoy';
-$string['max_userdaily_for_90_days'] = 'Máximo de usuarios diarios en los últimos 90 días';
+$string['users_today_card'] = 'Usuarios diarios';
+$string['max_userdaily_for_90_days'] = 'Pico de usuarios diarios (90 días)';
 $string['notcalculatedyet'] = 'Aún no calculado';
-$string['lastexecution'] = 'Última ejecución de cálculo de usuarios diarios: {$a}';
-$string['lastexecutioncalculate'] = 'Último cálculo de espacio en disco: {$a}';
-$string['users_today'] = 'Cantidad de usuarios diarios el día de hoy: {$a}';
+$string['lastexecution'] = 'Último cálculo: {$a}';
+$string['lastexecutioncalculate'] = 'Último cálculo: {$a}';
+$string['users_today'] = 'Usuarios diarios hoy: {$a}';
 $string['date'] = 'Fecha';
 $string['last_calculation'] = 'Último cálculo';
-$string['usersquantity'] = 'Cantidad de usuarios diarios';
-$string['disk_usage_distribution'] = 'Distribución de Uso de Disco';
-$string['disk_usage_history'] = 'Historial de Uso de Disco (Últimos 30 Días)';
-$string['percentage_used'] = 'Porcentaje Utilizado';
+$string['usersquantity'] = 'Cantidad de usuarios';
+$string['disk_usage_distribution'] = 'Distribución de uso de disco';
+$string['disk_usage_history'] = 'Historial de uso de disco (últimos 30 días)';
+$string['percentage_used'] = 'Porcentaje utilizado';
 
-// Dashboard sections
-$string['disk_usage_by_directory'] = 'Uso de Disco por Directorio';
-$string['largest_courses'] = 'Cursos más Grandes';
+// Dashboard sections.
+$string['disk_usage_by_directory'] = 'Uso de disco por directorio';
+$string['largest_courses'] = 'Cursos más grandes';
 $string['database'] = 'Base de datos';
 $string['files_dir'] = 'Archivos (filedir)';
 $string['cache'] = 'Caché';
@@ -59,28 +59,28 @@ $string['directory'] = 'Directorio';
 $string['size'] = 'Tamaño';
 $string['percentage'] = 'Porcentaje';
 $string['course'] = 'Curso';
-$string['backup_count'] = 'Número de Copias';
+$string['backup_count'] = 'Copias de seguridad';
 $string['topuser'] = 'Top 10 usuarios diarios';
-$string['lastusers'] = 'Usuarios diarios de los últimos 10 días';
-$string['usertable'] = 'Tabla de top usuarios';
-$string['userchart'] = 'Graficar top usuarios';
-$string['system_info'] = 'Información del Sistema';
+$string['lastusers'] = 'Usuarios diarios (últimos 10 días)';
+$string['usertable'] = 'Tabla de usuarios';
+$string['userchart'] = 'Gráfico de usuarios';
+$string['system_info'] = 'Información del sistema';
 $string['moodle_version'] = 'Versión de Moodle';
-$string['total_courses'] = 'Total de Cursos';
-$string['backup_per_course'] = 'Copias de Seguridad por Curso';
-$string['registered_users'] = 'Usuarios Registrados';
-$string['active_users'] = 'usuarios activos';
-$string['suspended_users'] = 'usuarios suspendidos';
+$string['total_courses'] = 'Total de cursos';
+$string['backup_per_course'] = 'Copias por curso';
+$string['registered_users'] = 'Usuarios registrados';
+$string['active_users'] = 'activos';
+$string['suspended_users'] = 'suspendidos';
 $string['recommendations'] = 'Recomendaciones';
 
-// Warning levels and indicator labels
+// Warning levels and indicator labels.
 $string['warning70'] = 'Advertencia (70%)';
 $string['critical90'] = 'Crítico (90%)';
 $string['limit100'] = 'Límite (100%)';
-$string['percent_of_threshold'] = '% del umbral';
+$string['percent_of_threshold'] = '% del límite';
 
-// Notification status section
-$string['notification_status'] = 'Estado de Notificaciones';
+// Notification status section.
+$string['notification_status'] = 'Estado de notificaciones';
 $string['last_disk_notification'] = 'Última notificación de disco';
 $string['last_user_notification'] = 'Última notificación de usuarios';
 $string['next_possible_notification'] = 'Próxima posible en';
@@ -88,56 +88,56 @@ $string['no_notification_sent'] = 'Sin notificaciones enviadas';
 $string['notifications_disabled'] = 'Notificaciones deshabilitadas';
 $string['email_not_configured'] = 'Email no configurado';
 
-// Task status section
-$string['task_status'] = 'Estado de Tareas Programadas';
+// Task status section.
+$string['task_status'] = 'Estado de tareas programadas';
 $string['task_name'] = 'Tarea';
 $string['last_run'] = 'Última ejecución';
 $string['next_run'] = 'Próxima ejecución';
 $string['task_never_run'] = 'Nunca ejecutada';
 $string['task_disabled'] = 'Deshabilitada';
 
-// Active alerts section
-$string['active_alerts'] = 'Alertas Activas';
+// Active alerts section.
+$string['active_alerts'] = 'Alertas activas';
 $string['alert_disk_critical'] = 'Espacio en disco crítico ({$a}%)';
 $string['alert_disk_warning'] = 'Advertencia de espacio en disco ({$a}%)';
 $string['alert_users_critical'] = 'Usuarios diarios en nivel crítico ({$a}%)';
 $string['alert_users_warning'] = 'Advertencia de usuarios diarios ({$a}%)';
 $string['no_active_alerts'] = 'Sin alertas activas - Todos los sistemas normales';
 
-// Quick actions
-$string['quick_actions'] = 'Acciones Rápidas';
-$string['go_to_settings'] = 'Configuración del Plugin';
-$string['purge_cache'] = 'Purgar Caché';
-$string['run_tasks'] = 'Tareas Programadas';
-$string['file_cleanup'] = 'Limpieza de Archivos';
+// Quick actions.
+$string['quick_actions'] = 'Acciones rápidas';
+$string['go_to_settings'] = 'Configuración del plugin';
+$string['purge_cache'] = 'Purgar caché';
+$string['run_tasks'] = 'Tareas programadas';
+$string['file_cleanup'] = 'Limpieza de archivos';
 
-// Show more courses
-$string['show_more_courses'] = 'Mostrar más cursos';
+// Show more courses.
+$string['show_more_courses'] = 'Ver más cursos';
 $string['install_coursesize'] = 'Instale el plugin report_coursesize para un análisis detallado del tamaño de cursos';
 $string['coursesize_plugin_url'] = 'https://moodle.org/plugins/report_coursesize';
 
-// Course access and completion sections
-$string['course_access_trends'] = 'Tendencias de Acceso a Cursos';
-$string['most_accessed_courses'] = 'Cursos más Accedidos';
-$string['course_completion_trends'] = 'Tendencias de Finalización de Cursos';
-$string['total_accesses'] = 'Total de Accesos';
-$string['unique_users'] = 'Usuarios Únicos';
-$string['unique_courses'] = 'Cursos Accedidos';
+// Course access and completion sections.
+$string['course_access_trends'] = 'Tendencias de acceso a cursos';
+$string['most_accessed_courses'] = 'Cursos más accedidos';
+$string['course_completion_trends'] = 'Tendencias de finalización de cursos';
+$string['total_accesses'] = 'Total de accesos';
+$string['unique_users'] = 'Usuarios únicos';
+$string['unique_courses'] = 'Cursos accedidos';
 $string['completions'] = 'Finalizaciones';
-$string['avg_per_day'] = 'Prom. por Día';
-$string['last_30_days'] = 'Últimos 30 Días';
+$string['avg_per_day'] = 'Prom. por día';
+$string['last_30_days'] = 'Últimos 30 días';
 $string['no_data_available'] = 'Sin datos disponibles';
-$string['access_summary'] = 'Resumen de Accesos';
-$string['completion_summary'] = 'Resumen de Finalizaciones';
-$string['users_completed'] = 'Usuarios con Finalizaciones';
-$string['courses_with_completions'] = 'Cursos con Finalizaciones';
-$string['total_completions'] = 'Total de Finalizaciones';
-$string['access_chart'] = 'Gráfico de Accesos';
-$string['completion_chart'] = 'Gráfico de Finalizaciones';
-$string['access_table'] = 'Tabla de Accesos';
-$string['completion_table'] = 'Tabla de Finalizaciones';
+$string['access_summary'] = 'Resumen de accesos';
+$string['completion_summary'] = 'Resumen de finalizaciones';
+$string['users_completed'] = 'Usuarios con finalizaciones';
+$string['courses_with_completions'] = 'Cursos con finalizaciones';
+$string['total_completions'] = 'Total de finalizaciones';
+$string['access_chart'] = 'Gráfico de accesos';
+$string['completion_chart'] = 'Gráfico de finalizaciones';
+$string['access_table'] = 'Tabla de accesos';
+$string['completion_table'] = 'Tabla de finalizaciones';
 
-// Tooltips for metrics explanation
+// Tooltips for metrics explanation.
 $string['tooltip_total_accesses'] = 'Número total de veces que se accedió a los cursos en los últimos 30 días. Incluye múltiples visitas del mismo usuario.';
 $string['tooltip_unique_users'] = 'Número de usuarios diferentes que accedieron al menos a un curso en los últimos 30 días.';
 $string['tooltip_unique_courses'] = 'Número de cursos diferentes que fueron accedidos al menos una vez en los últimos 30 días. Este NO es el total de cursos en la plataforma.';
@@ -149,7 +149,7 @@ $string['tooltip_disk_usage'] = 'Espacio en disco actualmente utilizado comparad
 $string['tooltip_users_today'] = 'Número de usuarios únicos que iniciaron sesión hoy comparado con su límite diario de usuarios.';
 $string['tooltip_max_90_days'] = 'El número más alto de inicios de sesión únicos diarios registrados en los últimos 90 días.';
 
-// Recommendation tips
+// Recommendation tips.
 $string['space_saving_tips'] = 'Consejos para ahorrar espacio en disco:';
 $string['tip_backups'] = 'Reducir el número de copias de seguridad automáticas por curso (actualmente: {$a})';
 $string['tip_files'] = 'Limpiar archivos antiguos sin uso mediante la herramienta de limpieza de archivos';
@@ -161,22 +161,22 @@ $string['user_limit_tips'] = 'Consejos para gestionar el límite de usuarios:';
 $string['tip_user_inactive'] = 'Considere limpiar las cuentas de usuario inactivas que no han iniciado sesión durante mucho tiempo.';
 $string['tip_user_limit'] = 'Si el número de usuarios se acerca constantemente al límite, considere aumentar su cuota.';
 
-// Task strings
-$string['calculatediskusagetask'] = 'Tarea para calcular el uso del disco';
-$string['getlastusers'] = 'Tarea para calcular el top de accesos unicos';
-$string['getlastusers90days'] = 'Tarea para obtener el top de usuarios en los últimos 90 días';
-$string['getlastusersconnected'] = 'Tarea para calcular la cantidad de usuarios diarios de hoy';
+// Scheduled tasks.
+$string['calculatediskusagetask'] = 'Calcular uso de disco';
+$string['getlastusers'] = 'Calcular ranking de accesos únicos';
+$string['getlastusers90days'] = 'Obtener pico de usuarios (90 días)';
+$string['getlastusersconnected'] = 'Calcular usuarios diarios';
 $string['processusersdailytask'] = 'Procesar estadísticas de usuarios diarios';
 $string['processcombinednotificationtask'] = 'Procesar notificaciones del monitor de uso';
 
-// Settings strings
-$string['mainsettings'] = 'Configuraciones principales';
-$string['email'] = 'Email para notificaciones';
-$string['configemail'] = 'Dirección de correo donde desea enviar las notificaciones.';
+// Settings.
+$string['mainsettings'] = 'Configuración principal';
+$string['email'] = 'Email de notificaciones';
+$string['configemail'] = 'Dirección de correo donde desea recibir las notificaciones.';
 $string['max_daily_users_threshold'] = 'Límite de usuarios';
-$string['configmax_daily_users_threshold'] = 'Establezca el límite de usuarios.';
+$string['configmax_daily_users_threshold'] = 'Número máximo de usuarios diarios permitidos.';
 $string['disk_quota'] = 'Cuota de disco';
-$string['configdisk_quota'] = 'Cuota de disco en gigabytes';
+$string['configdisk_quota'] = 'Cuota de disco en gigabytes.';
 $string['notificationsettings'] = 'Configuración de notificaciones';
 $string['notificationsettingsinfo'] = 'Configure cuándo y cómo se envían las notificaciones.';
 $string['disk_warning_level'] = 'Nivel de advertencia de disco';
@@ -184,10 +184,10 @@ $string['configdisk_warning_level'] = 'Porcentaje de uso de disco que activa las
 $string['users_warning_level'] = 'Nivel de advertencia de usuarios';
 $string['configusers_warning_level'] = 'Porcentaje del límite de usuarios que activa las advertencias.';
 $string['pathtodu'] = 'Ruta al comando du';
-$string['configpathtodu'] = 'Configura la ruta al comando du (uso de disco). Esto es necesario para calcular el uso de disco. <strong>Este ajuste se refleja en las rutas del sistema de Moodle</strong>)';
+$string['configpathtodu'] = 'Configura la ruta al comando du (uso de disco). Esto es necesario para calcular el uso de disco. <strong>Este ajuste se refleja en las rutas del sistema de Moodle</strong>.';
 $string['pathtodurecommendation'] = 'Recomendamos que revise y configure la ruta a \'du\' en las Rutas del sistema de Moodle. Puede encontrar esta configuración en Administración del sitio > Servidor > Rutas del sistema. <a target="_blank" href="settings.php?section=systempaths#id_s__pathtodu">Haga clic aquí para ir a Rutas del sistema</a>.';
-$string['pathtodunote'] = 'Nota: El path a \'du\' se detectará automáticamente solo si este plugin se encuentra en un sistema Linux y si se logra detectar la ubicación de \'du\'.';
-$string['activateshellexec'] = 'La función shell_exec no está activa en este servidor. Para utilizar la detección automática del camino a du, debes habilitar shell_exec en la configuración de tu servidor.';
+$string['pathtodunote'] = 'Nota: La ruta a \'du\' se detectará automáticamente solo si este plugin se encuentra en un sistema Linux y si se logra detectar la ubicación de \'du\'.';
+$string['activateshellexec'] = 'La función shell_exec no está activa en este servidor. Para utilizar la detección automática de la ruta a du, debe habilitar shell_exec en la configuración del servidor.';
 $string['enable_api'] = 'Habilitar API';
 $string['configenable_api'] = 'Habilitar acceso API para que sistemas externos obtengan información de uso.';
 
@@ -338,3 +338,25 @@ $string['email_rec_courses_desc'] = 'Archivar o limpiar los cursos más grandes 
 $string['email_rec_cache'] = 'Purgar caché';
 $string['email_rec_cache_desc'] = 'Limpiar la caché del sistema para liberar espacio temporal';
 $string['email_disk_disclaimer'] = 'Si necesita asistencia técnica, por favor no responda a este correo y contacte a su administrador de hosting.';
+
+// Course dedication section (block_dedication integration).
+$string['top_courses_dedication'] = 'Top de cursos por dedicación estudiantil';
+$string['top_courses_dedication_desc'] = 'Cursos con el mayor porcentaje de tiempo de dedicación estudiantil';
+$string['dedication_time'] = 'Tiempo de dedicación';
+$string['avg_dedication'] = 'Dedicación promedio';
+$string['total_dedication'] = 'Dedicación total';
+$string['enrolled_students'] = 'Estudiantes matriculados';
+$string['active_students'] = 'Estudiantes activos';
+$string['dedication_percent'] = '% de dedicación';
+$string['dedication_per_student'] = 'Prom. por estudiante';
+$string['tooltip_dedication'] = 'El tiempo de dedicación se calcula basándose en la actividad de sesión del usuario en el curso. Una sesión termina cuando no hay actividad durante el límite de sesión configurado.';
+$string['tooltip_dedication_percent'] = 'El porcentaje de dedicación representa cuánto tiempo dedican los estudiantes a este curso en comparación con otros.';
+$string['no_dedication_data'] = 'No hay datos de dedicación disponibles. Asegúrese de que el plugin block_dedication esté instalado y configurado.';
+$string['block_dedication_not_installed'] = 'El plugin block_dedication es requerido para esta funcionalidad.';
+$string['view_dedication_report'] = 'Ver reporte completo de dedicación';
+$string['hours'] = 'horas';
+$string['minutes'] = 'minutos';
+$string['seconds'] = 'segundos';
+$string['dedication_session_limit'] = 'Límite de sesión';
+$string['dedication_last_calculated'] = 'Último cálculo';
+$string['course_dedication_rank'] = 'Posición';

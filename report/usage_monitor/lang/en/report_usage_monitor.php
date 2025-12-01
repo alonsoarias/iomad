@@ -338,3 +338,25 @@ $string['email_rec_courses_desc'] = 'Archive or clean up the largest courses lis
 $string['email_rec_cache'] = 'Purge cache';
 $string['email_rec_cache_desc'] = 'Clear the system cache to free up temporary space';
 $string['email_disk_disclaimer'] = 'If you need technical assistance, please do not reply to this email and contact your hosting administrator.';
+
+// Course dedication section (block_dedication integration).
+$string['top_courses_dedication'] = 'Top courses by student dedication';
+$string['top_courses_dedication_desc'] = 'Courses with the highest percentage of student dedication time';
+$string['dedication_time'] = 'Dedication time';
+$string['avg_dedication'] = 'Average dedication';
+$string['total_dedication'] = 'Total dedication';
+$string['enrolled_students'] = 'Enrolled students';
+$string['active_students'] = 'Active students';
+$string['dedication_percent'] = 'Dedication %';
+$string['dedication_per_student'] = 'Avg. per student';
+$string['tooltip_dedication'] = 'Dedication time is calculated based on user session activity in the course. A session ends when there is no activity for the configured session limit.';
+$string['tooltip_dedication_percent'] = 'Percentage of dedication represents how much time students dedicate to this course compared to others.';
+$string['no_dedication_data'] = 'No dedication data available. Make sure block_dedication plugin is installed and configured.';
+$string['block_dedication_not_installed'] = 'The block_dedication plugin is required for this feature.';
+$string['view_dedication_report'] = 'View full dedication report';
+$string['hours'] = 'hours';
+$string['minutes'] = 'minutes';
+$string['seconds'] = 'seconds';
+$string['dedication_session_limit'] = 'Session limit';
+$string['dedication_last_calculated'] = 'Last calculated';
+$string['course_dedication_rank'] = 'Rank';

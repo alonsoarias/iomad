@@ -233,6 +233,31 @@ foreach ($most_accessed_courses as $course) {
     ];
 }
 
+// Course dedication data (block_dedication integration)
+$dedication_available = is_block_dedication_installed();
+$top_courses_dedication = [];
+$dedication_summary = null;
+
+if ($dedication_available) {
+    $top_courses_dedication_raw = get_top_courses_by_dedication(10, 90);
+    $dedication_summary = get_dedication_summary(90);
+
+    // Format for template
+    foreach ($top_courses_dedication_raw as $course) {
+        $top_courses_dedication[] = [
+            'rank' => $course->rank,
+            'id' => $course->id,
+            'fullname' => $course->fullname,
+            'shortname' => $course->shortname,
+            'course_url' => $CFG->wwwroot . '/course/view.php?id=' . $course->id,
+            'total_dedication_formatted' => $course->total_dedication_formatted,
+            'avg_dedication_formatted' => $course->avg_dedication_formatted,
+            'enrolled_students' => $course->enrolled_students,
+            'dedication_percent' => $course->dedication_percent
+        ];
+    }
+}
+
 // ============================================================
 // PREPARE TEMPLATE CONTEXT
 // ============================================================
@@ -291,7 +316,18 @@ $templatecontext = [
 
     // Plugin info
     'coursesize_installed' => $coursesize_installed,
-    'coursesize_url' => $CFG->wwwroot . '/report/coursesize/index.php'
+    'coursesize_url' => $CFG->wwwroot . '/report/coursesize/index.php',
+
+    // Course dedication data
+    'dedication_available' => $dedication_available,
+    'has_dedication_data' => !empty($top_courses_dedication),
+    'top_courses_dedication' => $top_courses_dedication,
+    'dedication_summary' => $dedication_summary ? [
+        'unique_courses' => $dedication_summary->unique_courses,
+        'unique_users' => $dedication_summary->unique_users,
+        'session_limit_formatted' => $dedication_summary->session_limit_formatted ?? '',
+        'period_days' => $dedication_summary->period_days ?? 90
+    ] : null
 ];
 
 // ============================================================
