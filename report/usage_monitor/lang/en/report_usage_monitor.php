@@ -78,6 +78,7 @@ $string['warning70'] = 'Warning (70%)';
 $string['critical90'] = 'Critical (90%)';
 $string['limit100'] = 'Limit (100%)';
 $string['percent_of_threshold'] = '% of limit';
+$string['warning_threshold'] = 'Warning threshold';
 
 // Notifications.
 $string['notification_status'] = 'Notification status';

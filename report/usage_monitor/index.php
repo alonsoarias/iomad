@@ -38,6 +38,10 @@ admin_externalpage_setup('report_usage_monitor', '', null, '', ['pagelayout' => 
 
 $reportconfig = get_config('report_usage_monitor');
 
+// Get configured threshold values
+$disk_warning_level = (int)($reportconfig->disk_warning_level ?? 90);
+$users_warning_level = (int)($reportconfig->users_warning_level ?? 90);
+
 // Disk usage data
 $disk_usage_bytes = (int)($reportconfig->totalusagereadable ?? 0) + (int)($reportconfig->totalusagereadabledb ?? 0);
 $quotadisk_bytes  = ((int)($reportconfig->disk_quota ?? 0)) * 1024 * 1024 * 1024;
@@ -45,13 +49,13 @@ $disk_usage_gb = !empty($reportconfig->disk_usage_gb) ? $reportconfig->disk_usag
 $quotadisk_gb = !empty($reportconfig->quotadisk_gb) ? $reportconfig->quotadisk_gb : display_size_in_gb($quotadisk_bytes, 2);
 $disk_percent = !empty($reportconfig->disk_percent) ? (float)$reportconfig->disk_percent :
     (($quotadisk_bytes > 0) ? ($disk_usage_bytes / $quotadisk_bytes * 100) : 0);
-$disk_warning_class = ($disk_percent < 70) ? 'bg-success' : (($disk_percent < 90) ? 'bg-warning' : 'bg-danger');
+$disk_warning_class = ($disk_percent < $disk_warning_level) ? 'bg-success' : 'bg-danger';
 
 // Users data
 $users_today = (int)($reportconfig->totalusersdaily ?? 0);
 $max_users_threshold = (int)($reportconfig->max_daily_users_threshold ?? 100);
 $users_percent = ($max_users_threshold > 0) ? ($users_today / $max_users_threshold * 100) : 0;
-$users_warning_class = ($users_percent < 70) ? 'bg-success' : (($users_percent < 90) ? 'bg-warning' : 'bg-danger');
+$users_warning_class = ($users_percent < $users_warning_level) ? 'bg-success' : 'bg-danger';
 
 // Last execution timestamps
 $lastexec_disk_ts = !empty($reportconfig->lastexecutioncalculate) ? $reportconfig->lastexecutioncalculate : 0;
@@ -132,7 +136,7 @@ foreach ($userdaily_recordstop as $record) {
         'cantidad_usuarios' => $record->cantidad_usuarios,
         'fecha_formateada' => is_numeric($record->timestamp_fecha) ? date('d/m/Y', (int)$record->timestamp_fecha) : date('d/m/Y'),
         'percent' => $percent,
-        'percent_class' => ($percent >= 90) ? 'text-danger fw-bold' : (($percent >= 70) ? 'text-warning' : '')
+        'percent_class' => ($percent >= $users_warning_level) ? 'text-danger fw-bold' : ''
     ];
 }
 
@@ -311,11 +315,15 @@ $templatecontext = [
     'suspendedusers' => $suspendedusers,
     'backup_max_kept' => $backup_max_kept,
 
-    // Recommendations
-    'disk_warning' => ($disk_percent > 70),
-    'disk_alert_class' => ($disk_percent > 90) ? 'danger' : 'warning',
-    'users_warning' => ($users_percent > 70),
-    'users_alert_class' => ($users_percent > 90) ? 'danger' : 'warning',
+    // Recommendations (using configured thresholds)
+    'disk_warning' => ($disk_percent >= $disk_warning_level),
+    'disk_alert_class' => 'danger',
+    'users_warning' => ($users_percent >= $users_warning_level),
+    'users_alert_class' => 'danger',
+
+    // Threshold values for display
+    'disk_warning_level' => $disk_warning_level,
+    'users_warning_level' => $users_warning_level,
 
     // Plugin info
     'coursesize_installed' => $coursesize_installed,
@@ -357,6 +365,10 @@ echo $OUTPUT->render_from_template('report_usage_monitor/dashboard', $templateco
 
     // Chart configuration
     var chartConfig = {
+        thresholds: {
+            disk: <?php echo $disk_warning_level; ?>,
+            users: <?php echo $users_warning_level; ?>
+        },
         doughnut: {
             labels: <?php echo json_encode($doughnutLabels); ?>,
             data: <?php echo json_encode($doughnutData); ?>,
@@ -394,8 +406,7 @@ echo $OUTPUT->render_from_template('report_usage_monitor/dashboard', $templateco
     var strings = {
         usersQuantity: '<?php echo get_string('usersquantity', 'report_usage_monitor'); ?>',
         percentUsed: '<?php echo get_string('percentage_used', 'report_usage_monitor'); ?>',
-        warning70: '<?php echo get_string('warning70', 'report_usage_monitor'); ?>',
-        critical90: '<?php echo get_string('critical90', 'report_usage_monitor'); ?>',
+        warningThreshold: '<?php echo get_string('warning_threshold', 'report_usage_monitor'); ?>',
         limit100: '<?php echo get_string('limit100', 'report_usage_monitor'); ?>',
         percentThreshold: '<?php echo get_string('percent_of_threshold', 'report_usage_monitor'); ?>',
         totalAccesses: '<?php echo get_string('total_accesses', 'report_usage_monitor'); ?>',
@@ -468,20 +479,12 @@ echo $OUTPUT->render_from_template('report_usage_monitor/dashboard', $templateco
         }
     }
 
-    // Create threshold lines dataset
-    function createThresholdLines(count) {
+    // Create threshold lines dataset with dynamic threshold value
+    function createThresholdLines(count, thresholdValue) {
         return [
             {
-                label: strings.warning70,
-                data: Array(count).fill(70),
-                borderColor: '#ffc107',
-                borderDash: [5, 5],
-                pointRadius: 0,
-                fill: false
-            },
-            {
-                label: strings.critical90,
-                data: Array(count).fill(90),
+                label: strings.warningThreshold + ' (' + thresholdValue + '%)',
+                data: Array(count).fill(thresholdValue),
                 borderColor: '#dc3545',
                 borderDash: [5, 5],
                 pointRadius: 0,
@@ -538,7 +541,7 @@ echo $OUTPUT->render_from_template('report_usage_monitor/dashboard', $templateco
                 backgroundColor: 'rgba(0, 123, 255, 0.1)',
                 fill: true,
                 tension: 0.2
-            }].concat(createThresholdLines(chartConfig.diskHistory.labels.length));
+            }].concat(createThresholdLines(chartConfig.diskHistory.labels.length, chartConfig.thresholds.disk));
 
             initChart('chart-disk-history', {
                 type: 'line',
@@ -572,7 +575,7 @@ echo $OUTPUT->render_from_template('report_usage_monitor/dashboard', $templateco
                 backgroundColor: 'rgba(0, 123, 255, 0.1)',
                 fill: true,
                 tension: 0.2
-            }].concat(createThresholdLines(chartConfig.users10days.labels.length));
+            }].concat(createThresholdLines(chartConfig.users10days.labels.length, chartConfig.thresholds.users));
 
             initChart('chart-users-10days', {
                 type: 'line',

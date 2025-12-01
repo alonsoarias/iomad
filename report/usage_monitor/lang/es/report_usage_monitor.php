@@ -78,6 +78,7 @@ $string['warning70'] = 'Advertencia (70%)';
 $string['critical90'] = 'Crítico (90%)';
 $string['limit100'] = 'Límite (100%)';
 $string['percent_of_threshold'] = '% del límite';
+$string['warning_threshold'] = 'Umbral de advertencia';
 
 // Notification status section.
 $string['notification_status'] = 'Estado de notificaciones';
