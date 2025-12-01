@@ -37,9 +37,14 @@ defined('MOODLE_INTERNAL') || die();
  * @package     report_usage_monitor
  */
 class users_daily extends \core\task\scheduled_task {
-    public function get_name()
-    {
-        return get_string('getlastusers', 'report_usage_monitor');
+
+    /**
+     * Get the name of this task.
+     *
+     * @return string The task name.
+     */
+    public function get_name() {
+        return get_string('processusersdailytask', 'report_usage_monitor');
     }
 
     public function execute()

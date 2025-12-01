@@ -166,6 +166,7 @@ $string['calculatediskusagetask'] = 'Calculate disk usage';
 $string['getlastusers'] = 'Calculate unique access ranking';
 $string['getlastusers90days'] = 'Get top users in the last 90 days';
 $string['getlastusersconnected'] = 'Calculate daily users';
+$string['processusersdailytask'] = 'Process daily users statistics';
 $string['processcombinednotificationtask'] = 'Process usage monitor notifications';
 
 // Settings.

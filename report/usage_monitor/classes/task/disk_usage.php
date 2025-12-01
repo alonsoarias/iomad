@@ -73,7 +73,8 @@ class disk_usage extends \core\task\scheduled_task {
         
         // Obtener umbrales y calcular porcentaje de uso
         $reportconfig = get_config('report_usage_monitor');
-        $quotadisk_bytes = ((int) $reportconfig->disk_quota * 1024) * 1024 * 1024;
+        // Use constant to avoid potential overflow on 32-bit systems.
+        $quotadisk_bytes = (int) $reportconfig->disk_quota * 1073741824; // 1 GB = 1024^3 bytes.
         $total_disk_usage = $totalusagereadable + $totalusagereadabledb;
         
         // Precomputar el porcentaje y la clase de advertencia

@@ -72,7 +72,8 @@ class report_usage_monitor_external extends external_api {
         
         // Calcular uso de disco
         $disk_usage = ((int) $reportconfig->totalusagereadable + (int) $reportconfig->totalusagereadabledb) ?: 0;
-        $quotadisk = ((int) $reportconfig->disk_quota * 1024) * 1024 * 1024;
+        // Use constant to avoid potential overflow on 32-bit systems.
+        $quotadisk = (int) $reportconfig->disk_quota * 1073741824; // 1 GB = 1024^3 bytes.
         $disk_percent = calculate_threshold_percentage($disk_usage, $quotadisk);
         
         // Calcular uso de usuarios
@@ -138,27 +139,27 @@ class report_usage_monitor_external extends external_api {
                     'database' => array(
                         'bytes' => $dir_analysis['database'],
                         'readable' => display_size($dir_analysis['database']),
-                        'percentage' => round(($dir_analysis['database'] / $disk_usage) * 100, 2)
+                        'percentage' => $disk_usage > 0 ? round(($dir_analysis['database'] / $disk_usage) * 100, 2) : 0
                     ),
                     'filedir' => array(
                         'bytes' => $dir_analysis['filedir'],
                         'readable' => display_size($dir_analysis['filedir']),
-                        'percentage' => round(($dir_analysis['filedir'] / $disk_usage) * 100, 2)
+                        'percentage' => $disk_usage > 0 ? round(($dir_analysis['filedir'] / $disk_usage) * 100, 2) : 0
                     ),
                     'cache' => array(
                         'bytes' => $dir_analysis['cache'],
                         'readable' => display_size($dir_analysis['cache']),
-                        'percentage' => round(($dir_analysis['cache'] / $disk_usage) * 100, 2)
+                        'percentage' => $disk_usage > 0 ? round(($dir_analysis['cache'] / $disk_usage) * 100, 2) : 0
                     ),
                     'backup' => array(
                         'bytes' => $dir_analysis['backup'] ?? 0,
                         'readable' => display_size($dir_analysis['backup'] ?? 0),
-                        'percentage' => round((($dir_analysis['backup'] ?? 0) / $disk_usage) * 100, 2)
+                        'percentage' => $disk_usage > 0 ? round((($dir_analysis['backup'] ?? 0) / $disk_usage) * 100, 2) : 0
                     ),
                     'others' => array(
                         'bytes' => $dir_analysis['others'],
                         'readable' => display_size($dir_analysis['others']),
-                        'percentage' => round(($dir_analysis['others'] / $disk_usage) * 100, 2)
+                        'percentage' => $disk_usage > 0 ? round(($dir_analysis['others'] / $disk_usage) * 100, 2) : 0
                     )
                 )
             ),
@@ -476,7 +477,8 @@ class report_usage_monitor_external extends external_api {
         
         // Datos de uso de disco
         $disk_usage = ((int) $reportconfig->totalusagereadable + (int) $reportconfig->totalusagereadabledb) ?: 0;
-        $quotadisk = ((int) $reportconfig->disk_quota * 1024) * 1024 * 1024;
+        // Use constant to avoid potential overflow on 32-bit systems.
+        $quotadisk = (int) $reportconfig->disk_quota * 1073741824; // 1 GB = 1024^3 bytes.
         $disk_percent = calculate_threshold_percentage($disk_usage, $quotadisk);
         
         // Datos de usuarios

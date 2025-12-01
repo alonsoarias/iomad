@@ -166,6 +166,7 @@ $string['calculatediskusagetask'] = 'Tarea para calcular el uso del disco';
 $string['getlastusers'] = 'Tarea para calcular el top de accesos unicos';
 $string['getlastusers90days'] = 'Tarea para obtener el top de usuarios en los últimos 90 días';
 $string['getlastusersconnected'] = 'Tarea para calcular la cantidad de usuarios diarios de hoy';
+$string['processusersdailytask'] = 'Procesar estadísticas de usuarios diarios';
 $string['processcombinednotificationtask'] = 'Procesar notificaciones del monitor de uso';
 
 // Settings strings
