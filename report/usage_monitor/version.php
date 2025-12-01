@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_usage_monitor';
-$plugin->version   = 2025120101;
+$plugin->version   = 2025120102;
 $plugin->requires  = 2022112800;  // Moodle 4.1 LTS.
-$plugin->release   = '4.5.26';
+$plugin->release   = '4.5.27';
 $plugin->maturity  = MATURITY_STABLE;

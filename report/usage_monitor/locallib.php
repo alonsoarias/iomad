@@ -334,7 +334,8 @@ function generate_email_user($email, $name = '', $id = -99)
         $emailuser->email = '';
     }
     $name = format_text($name, FORMAT_HTML, array('trusted' => false, 'noclean' => false));
-    $emailuser->firstname = trim(filter_var($name, FILTER_SANITIZE_STRING));
+    // Use htmlspecialchars instead of deprecated FILTER_SANITIZE_STRING (removed in PHP 8.2).
+    $emailuser->firstname = trim(htmlspecialchars($name, ENT_QUOTES, 'UTF-8'));
     $emailuser->lastname = '';
     $emailuser->maildisplay = true;
     $emailuser->mailformat = 1; // 0 (zero) text-only emails, 1 (one) for HTML emails.

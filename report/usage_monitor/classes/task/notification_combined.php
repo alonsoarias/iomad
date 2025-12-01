@@ -153,7 +153,8 @@ class notification_combined extends \core\task\scheduled_task {
         $result = ['should_notify' => false, 'data' => null];
 
         // Calculate disk metrics.
-        $quota_bytes = ((int)($config->disk_quota ?? 10)) * 1024 * 1024 * 1024;
+        // Use constant to avoid potential overflow on 32-bit systems.
+        $quota_bytes = (int)($config->disk_quota ?? 10) * 1073741824; // 1 GB = 1024^3 bytes.
         $usage_bytes = ((int)($config->totalusagereadable ?? 0)) + ((int)($config->totalusagereadabledb ?? 0));
 
         // Validate quota.
@@ -357,7 +358,8 @@ class notification_combined extends \core\task\scheduled_task {
             $record->type = 'disk';
             $record->percentage = $disk_data->percentage;
             $record->value = ((int)($config->totalusagereadable ?? 0)) + ((int)($config->totalusagereadabledb ?? 0));
-            $record->threshold = ((int)($config->disk_quota ?? 10)) * 1024 * 1024 * 1024;
+            // Use constant to avoid potential overflow on 32-bit systems.
+            $record->threshold = (int)($config->disk_quota ?? 10) * 1073741824; // 1 GB = 1024^3 bytes.
             $record->timecreated = $current_time;
 
             try {

@@ -243,7 +243,8 @@ class notification_helper {
 
         // Disk info.
         $disk_usage = ((int)($config->totalusagereadable ?? 0)) + ((int)($config->totalusagereadabledb ?? 0));
-        $disk_quota = ((int)($config->disk_quota ?? 10)) * 1024 * 1024 * 1024;
+        // Use constant to avoid potential overflow on 32-bit systems.
+        $disk_quota = (int)($config->disk_quota ?? 10) * 1073741824; // 1 GB = 1024^3 bytes.
         $disk_percent = $disk_quota > 0 ? round(($disk_usage / $disk_quota) * 100, 1) : 0;
 
         $excess = max(0, $user_count - $user_threshold);
