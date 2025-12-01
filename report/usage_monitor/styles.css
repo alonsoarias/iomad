@@ -1,5 +1,5 @@
 /**
- * Usage Monitor Dashboard Styles
+ * Usage Monitor Dashboard Styles - Minimal Version
  *
  * @package    report_usage_monitor
  * @copyright  2025 Soporte IngeWeb <soporte@ingeweb.co>
@@ -7,347 +7,200 @@
  */
 
 /* ============================================
-   CSS VARIABLES - Light Theme (Default)
-   ============================================ */
-:root {
-    --um-primary: #0d6efd;
-    --um-primary-hover: #0b5ed7;
-    --um-success: #198754;
-    --um-info: #0dcaf0;
-    --um-warning: #ffc107;
-    --um-danger: #dc3545;
-    --um-secondary: #6c757d;
-    --um-light: #f8f9fa;
-    --um-dark: #212529;
-
-    --um-card-bg: #ffffff;
-    --um-card-border: rgba(0, 0, 0, 0.125);
-    --um-card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    --um-card-shadow-hover: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-
-    --um-text-primary: #212529;
-    --um-text-secondary: #6c757d;
-    --um-text-muted: #adb5bd;
-    --um-text-on-color: #ffffff;
-
-    --um-bg-body: #f8f9fa;
-    --um-bg-light: #f8f9fa;
-    --um-bg-table-hover: rgba(0, 123, 255, 0.03);
-
-    --um-border-color: #dee2e6;
-    --um-border-light: #e9ecef;
-
-    --um-tab-active: #0d6efd;
-    --um-tab-text: #495057;
-    --um-tab-hover-bg: transparent;
-
-    --um-progress-bg: #e9ecef;
-
-    --um-alert-info-bg: #cfe2ff;
-    --um-alert-info-text: #084298;
-    --um-alert-success-bg: #d1e7dd;
-    --um-alert-success-text: #0f5132;
-    --um-alert-warning-bg: #fff3cd;
-    --um-alert-warning-text: #664d03;
-    --um-alert-danger-bg: #f8d7da;
-    --um-alert-danger-text: #842029;
-}
-
-/* ============================================
-   BASE CONTAINER
+   BASE STYLES
    ============================================ */
 .usage-monitor-dashboard {
-    color: var(--um-text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 /* ============================================
-   CARD STYLES
+   CARDS - Simple flat design
    ============================================ */
 .usage-monitor-dashboard .card {
-    background-color: var(--um-card-bg);
-    border: 1px solid var(--um-card-border);
-    border-radius: 0.5rem;
-    box-shadow: var(--um-card-shadow);
-    transition: box-shadow 0.2s ease-in-out, transform 0.15s ease-in-out;
-}
-
-.usage-monitor-dashboard .card:hover {
-    box-shadow: var(--um-card-shadow-hover);
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    background: #fff;
 }
 
 .usage-monitor-dashboard .card-header {
-    background-color: var(--um-card-bg);
-    border-bottom: 1px solid var(--um-border-light);
-    padding: 0.875rem 1.25rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.75rem 1rem;
 }
 
 .usage-monitor-dashboard .card-header h6 {
-    font-size: 0.95rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    color: var(--um-text-primary);
     margin: 0;
 }
 
 .usage-monitor-dashboard .card-body {
-    padding: 1.25rem;
-}
-
-.usage-monitor-dashboard .card-title {
-    font-size: 0.875rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    color: var(--um-text-secondary);
+    padding: 1rem;
 }
 
 /* ============================================
-   STATUS CARDS (Top row)
-   ============================================ */
-.usage-monitor-dashboard .status-card .h5 {
-    color: var(--um-text-primary);
-    font-weight: 600;
-}
-
-/* ============================================
-   METRIC CARDS (Colored summary cards)
+   METRIC CARDS - Simple colored cards
    ============================================ */
 .usage-monitor-dashboard .metric-card {
-    cursor: help;
-    transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     border: none;
-}
-
-.usage-monitor-dashboard .metric-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
-}
-
-.usage-monitor-dashboard .metric-card .card-body {
-    padding: 1rem;
 }
 
 .usage-monitor-dashboard .metric-card .h4,
 .usage-monitor-dashboard .metric-card h4 {
-    font-weight: 700;
-    font-size: 1.5rem;
-    margin: 0.5rem 0;
-    color: var(--um-text-on-color);
-}
-
-.usage-monitor-dashboard .metric-card .small {
-    color: rgba(255, 255, 255, 0.85);
-}
-
-.usage-monitor-dashboard .metric-card .opacity-75 {
-    opacity: 0.9 !important;
-}
-
-.usage-monitor-dashboard .metric-card .opacity-50 {
-    opacity: 0.7 !important;
-}
-
-/* Colored card backgrounds with proper text contrast */
-.usage-monitor-dashboard .card.bg-primary {
-    background-color: var(--um-primary) !important;
-    color: var(--um-text-on-color);
-}
-
-.usage-monitor-dashboard .card.bg-success {
-    background-color: var(--um-success) !important;
-    color: var(--um-text-on-color);
-}
-
-.usage-monitor-dashboard .card.bg-info {
-    background-color: #0891b2 !important;
-    color: var(--um-text-on-color);
-}
-
-.usage-monitor-dashboard .card.bg-secondary {
-    background-color: var(--um-secondary) !important;
-    color: var(--um-text-on-color);
-}
-
-.usage-monitor-dashboard .card.bg-warning {
-    background-color: var(--um-warning) !important;
-    color: #212529;
-}
-
-.usage-monitor-dashboard .card.bg-danger {
-    background-color: var(--um-danger) !important;
-    color: var(--um-text-on-color);
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin: 0.25rem 0;
 }
 
 /* ============================================
-   NAVIGATION TABS
+   NAVIGATION TABS - Simple underline style
    ============================================ */
 .usage-monitor-dashboard .nav-tabs {
-    border-bottom: 2px solid var(--um-border-color);
-    margin-bottom: 1.5rem;
-}
-
-.usage-monitor-dashboard .nav-tabs .nav-item {
-    margin-bottom: -2px;
+    border-bottom: 1px solid #dee2e6;
 }
 
 .usage-monitor-dashboard .nav-tabs .nav-link {
-    color: var(--um-text-secondary);
-    cursor: pointer;
+    color: #495057;
     border: none;
-    border-bottom: 3px solid transparent;
+    border-bottom: 2px solid transparent;
     border-radius: 0;
-    padding: 0.875rem 1.5rem;
-    font-weight: 500;
-    font-size: 0.95rem;
-    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
-    background-color: transparent;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
 }
 
 .usage-monitor-dashboard .nav-tabs .nav-link:hover {
-    color: var(--um-tab-active);
-    border-bottom-color: var(--um-border-color);
-    background-color: var(--um-tab-hover-bg);
+    color: #0d6efd;
+    border-bottom-color: #dee2e6;
 }
 
 .usage-monitor-dashboard .nav-tabs .nav-link.active {
+    color: #0d6efd;
     font-weight: 600;
-    color: var(--um-tab-active);
-    background-color: transparent;
-    border-bottom: 3px solid var(--um-tab-active);
+    border-bottom: 2px solid #0d6efd;
+    background: transparent;
 }
 
 /* ============================================
-   TABLES
+   TABLES - Clean and readable
    ============================================ */
 .usage-monitor-dashboard .table {
     margin-bottom: 0;
-    color: var(--um-text-primary);
-    border-collapse: separate;
-    border-spacing: 0;
+    font-size: 0.875rem;
 }
 
 .usage-monitor-dashboard .table th {
     font-weight: 600;
     font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--um-text-secondary);
-    border-top: none;
-    border-bottom: 2px solid var(--um-border-color);
-    padding: 0.875rem 1rem;
-    background-color: var(--um-bg-light);
+    letter-spacing: 0.03em;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.75rem;
     white-space: nowrap;
 }
 
 .usage-monitor-dashboard .table td {
-    font-size: 0.875rem;
-    padding: 0.875rem 1rem;
+    padding: 0.75rem;
     vertical-align: middle;
-    border-color: var(--um-border-light);
-    color: var(--um-text-primary);
-    border-bottom: 1px solid var(--um-border-light);
+    border-bottom: 1px solid #e9ecef;
 }
 
 .usage-monitor-dashboard .table tbody tr:last-child td {
     border-bottom: none;
 }
 
-.usage-monitor-dashboard .table-hover tbody tr:hover {
-    background-color: var(--um-bg-table-hover);
-}
-
-.usage-monitor-dashboard .table-hover tbody tr:hover td {
-    background-color: transparent;
-}
-
-.usage-monitor-dashboard .table-light,
-.usage-monitor-dashboard .table-light th {
-    background-color: var(--um-bg-light);
-}
-
-/* Table alignment utilities */
+/* Numeric alignment */
 .usage-monitor-dashboard .table .text-end {
-    text-align: right !important;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
 }
 
 .usage-monitor-dashboard .table .text-center {
-    text-align: center !important;
+    text-align: center;
 }
 
-/* Table numeric columns */
-.usage-monitor-dashboard .table td.text-end {
-    font-variant-numeric: tabular-nums;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-/* Table responsive wrapper */
-.usage-monitor-dashboard .table-responsive {
-    border-radius: 0 0 0.5rem 0.5rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Table with fixed layout for better alignment */
-.usage-monitor-dashboard .table-fixed {
-    table-layout: fixed;
-}
-
-/* Table row ranking badge */
+/* Table ranking badge */
 .usage-monitor-dashboard .table .badge.bg-light {
-    background-color: #f1f3f4 !important;
-    color: var(--um-text-primary);
-    font-weight: 600;
-    min-width: 28px;
-    padding: 0.35em 0.5em;
-}
-
-/* ============================================
-   BADGES
-   ============================================ */
-.usage-monitor-dashboard .badge {
-    font-weight: 500;
-    font-size: 0.75rem;
-    padding: 0.4em 0.7em;
-    border-radius: 0.375rem;
-}
-
-.usage-monitor-dashboard .badge.bg-success {
-    background-color: var(--um-success) !important;
-    color: var(--um-text-on-color);
-}
-
-.usage-monitor-dashboard .badge.bg-warning {
-    background-color: var(--um-warning) !important;
+    background-color: #e9ecef !important;
     color: #212529;
-}
-
-.usage-monitor-dashboard .badge.bg-danger {
-    background-color: var(--um-danger) !important;
-    color: var(--um-text-on-color);
+    font-weight: 600;
+    padding: 0.25em 0.5em;
 }
 
 /* ============================================
-   PROGRESS BARS
+   PROGRESS BARS - Simple style
    ============================================ */
 .usage-monitor-dashboard .progress {
-    border-radius: 0.5rem;
-    background-color: var(--um-progress-bg);
+    border-radius: 0.25rem;
+    background-color: #e9ecef;
     height: 0.5rem;
 }
 
 .usage-monitor-dashboard .progress-bar {
-    border-radius: 0.5rem;
-    transition: width 0.3s ease;
+    border-radius: 0.25rem;
 }
 
-.usage-monitor-dashboard .progress-bar.bg-success {
-    background-color: var(--um-success) !important;
+/* Small progress in tables */
+.usage-monitor-dashboard .table td .progress {
+    height: 6px;
 }
 
-.usage-monitor-dashboard .progress-bar.bg-warning {
-    background-color: var(--um-warning) !important;
+/* ============================================
+   BADGES - Simple flat badges
+   ============================================ */
+.usage-monitor-dashboard .badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.35em 0.6em;
+    border-radius: 0.25rem;
 }
 
-.usage-monitor-dashboard .progress-bar.bg-danger {
-    background-color: var(--um-danger) !important;
+/* ============================================
+   CHART CONTAINERS - Fixed dimensions
+   ============================================ */
+.usage-monitor-dashboard .chart-container {
+    position: relative;
+    width: 100%;
+}
+
+.usage-monitor-dashboard .chart-container.chart-sm {
+    height: 220px;
+}
+
+.usage-monitor-dashboard .chart-container.chart-md {
+    height: 250px;
+}
+
+.usage-monitor-dashboard .chart-container.chart-lg {
+    height: 280px;
+}
+
+.usage-monitor-dashboard .chart-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* ============================================
+   ALERTS - Standard Bootstrap alerts
+   ============================================ */
+.usage-monitor-dashboard .alert {
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+.usage-monitor-dashboard a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.usage-monitor-dashboard a:hover {
+    text-decoration: underline;
 }
 
 /* ============================================
@@ -356,214 +209,52 @@
 .usage-monitor-dashboard .tooltip-icon {
     cursor: help;
     opacity: 0.6;
-    transition: opacity 0.15s ease;
-    margin-left: 0.375rem;
-    display: inline-flex;
-    align-items: center;
+    margin-left: 0.25rem;
 }
 
 .usage-monitor-dashboard .tooltip-icon:hover {
     opacity: 1;
 }
 
-.usage-monitor-dashboard .tooltip-icon i,
-.usage-monitor-dashboard .tooltip-icon .fa {
-    font-size: 0.85em;
-    color: var(--um-primary);
-}
-
-/* Info icons in metric cards */
-.usage-monitor-dashboard .metric-card .fa-info-circle {
-    opacity: 0.7;
-    font-size: 0.75rem;
-}
-
-/* ============================================
-   CHART CONTAINERS
-   ============================================ */
-.usage-monitor-dashboard .chart-container {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    padding: 0.5rem;
-    background-color: var(--um-card-bg);
-    border-radius: 0.375rem;
-}
-
-.usage-monitor-dashboard .chart-container.chart-sm {
-    height: 250px !important;
-    max-height: 250px !important;
-    min-height: 200px;
-}
-
-.usage-monitor-dashboard .chart-container.chart-md {
-    height: 280px !important;
-    max-height: 280px !important;
-    min-height: 220px;
-}
-
-.usage-monitor-dashboard .chart-container.chart-lg {
-    height: 320px !important;
-    max-height: 320px !important;
-    min-height: 260px;
-}
-
-.usage-monitor-dashboard .chart-container canvas {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-    max-height: inherit !important;
-}
-
-/* Chart wrapper for better spacing */
-.usage-monitor-dashboard .card-body > .chart-container {
-    margin: -0.25rem;
-}
-
-/* Ensure charts in cards have proper spacing */
-.usage-monitor-dashboard .card .chart-container {
-    background: transparent;
-}
-
-/* ============================================
-   ALERTS
-   ============================================ */
-.usage-monitor-dashboard .alert {
-    border-radius: 0.5rem;
-    border: none;
-    font-size: 0.9rem;
-    padding: 1rem 1.25rem;
-}
-
-.usage-monitor-dashboard .alert-info {
-    background-color: var(--um-alert-info-bg);
-    color: var(--um-alert-info-text);
-}
-
-.usage-monitor-dashboard .alert-success {
-    background-color: var(--um-alert-success-bg);
-    color: var(--um-alert-success-text);
-}
-
-.usage-monitor-dashboard .alert-warning {
-    background-color: var(--um-alert-warning-bg);
-    color: var(--um-alert-warning-text);
-}
-
-.usage-monitor-dashboard .alert-danger {
-    background-color: var(--um-alert-danger-bg);
-    color: var(--um-alert-danger-text);
-}
-
-/* ============================================
-   SYSTEM INFO BOXES
-   ============================================ */
-.usage-monitor-dashboard .info-box {
-    background-color: var(--um-bg-light);
-    border: 1px solid var(--um-border-light);
-    border-radius: 0.5rem;
-    padding: 1rem;
-}
-
-.usage-monitor-dashboard .info-box .text-muted {
-    color: var(--um-text-secondary) !important;
-}
-
-.usage-monitor-dashboard .bg-light {
-    background-color: var(--um-bg-light) !important;
-}
-
-/* ============================================
-   TEXT UTILITIES
-   ============================================ */
-.usage-monitor-dashboard .text-muted {
-    color: var(--um-text-secondary) !important;
-}
-
-.usage-monitor-dashboard .text-primary {
-    color: var(--um-primary) !important;
-}
-
-.usage-monitor-dashboard .text-success {
-    color: var(--um-success) !important;
-}
-
-.usage-monitor-dashboard .text-danger {
-    color: var(--um-danger) !important;
-}
-
-.usage-monitor-dashboard .text-warning {
-    color: var(--um-warning) !important;
-}
-
-.usage-monitor-dashboard a {
-    color: var(--um-primary);
-    text-decoration: none;
-}
-
-.usage-monitor-dashboard a:hover {
-    color: var(--um-primary-hover);
-    text-decoration: underline;
-}
-
 /* ============================================
    DISCLAIMER BANNER
    ============================================ */
-.usage-monitor-dashboard .disclaimer-banner {
-    background-color: var(--um-alert-info-bg);
-    color: var(--um-alert-info-text);
-    border-radius: 0.375rem;
-    padding: 0.625rem 1rem;
-    font-size: 0.85rem;
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-.usage-monitor-dashboard .disclaimer-banner a {
-    color: var(--um-primary);
-    font-weight: 500;
+.disclaimer-banner {
+    font-size: 0.8rem;
 }
 
 /* ============================================
-   RESPONSIVE ADJUSTMENTS
+   RESPONSIVE
    ============================================ */
-@media (max-width: 991.98px) {
-    .usage-monitor-dashboard .nav-tabs .nav-link {
-        padding: 0.625rem 1rem;
-        font-size: 0.875rem;
-    }
-}
-
 @media (max-width: 767.98px) {
     .usage-monitor-dashboard .nav-tabs {
         flex-wrap: nowrap;
         overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
     }
 
     .usage-monitor-dashboard .nav-tabs .nav-link {
-        padding: 0.5rem 0.875rem;
+        padding: 0.5rem 0.75rem;
         font-size: 0.8rem;
         white-space: nowrap;
     }
 
-    .usage-monitor-dashboard .metric-card .h4 {
-        font-size: 1.25rem;
-    }
-
-    .usage-monitor-dashboard .card-header h6 {
-        font-size: 0.875rem;
-    }
-
-    .usage-monitor-dashboard .card-body {
-        padding: 1rem;
+    .usage-monitor-dashboard .metric-card .h4,
+    .usage-monitor-dashboard .metric-card h4 {
+        font-size: 1rem;
     }
 
     .usage-monitor-dashboard .chart-container.chart-sm,
     .usage-monitor-dashboard .chart-container.chart-md,
     .usage-monitor-dashboard .chart-container.chart-lg {
-        height: 220px !important;
-        max-height: 220px !important;
+        height: 200px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .usage-monitor-dashboard .table th,
+    .usage-monitor-dashboard .table td {
+        padding: 0.5rem;
+        font-size: 0.8rem;
     }
 }
 
@@ -571,183 +262,17 @@
    PRINT STYLES
    ============================================ */
 @media print {
-    .usage-monitor-dashboard {
-        color: #000 !important;
-    }
-
     .usage-monitor-dashboard .card {
-        box-shadow: none !important;
-        border: 1px solid #dee2e6 !important;
+        border: 1px solid #dee2e6;
         break-inside: avoid;
     }
 
     .usage-monitor-dashboard .nav-tabs {
-        display: none !important;
+        display: none;
     }
 
     .usage-monitor-dashboard .tab-pane {
-        display: block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-
-    .usage-monitor-dashboard .tab-pane.fade {
-        opacity: 1 !important;
-    }
-
-    .usage-monitor-dashboard .metric-card {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .usage-monitor-dashboard .chart-container {
-        break-inside: avoid;
-    }
-}
-
-/* ============================================
-   DEDICATION SECTION SPECIFIC STYLES
-   ============================================ */
-/* Progress bar in dedication table */
-.usage-monitor-dashboard .table td .progress {
-    background-color: var(--um-progress-bg);
-    height: 6px;
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-.usage-monitor-dashboard .table td .progress-bar {
-    border-radius: 3px;
-    transition: width 0.4s ease;
-}
-
-/* Dedication percentage cell */
-.usage-monitor-dashboard .table .d-flex.align-items-center {
-    gap: 0.5rem;
-}
-
-.usage-monitor-dashboard .table .d-flex .progress {
-    flex-shrink: 0;
-}
-
-/* Course name in dedication table */
-.usage-monitor-dashboard .table td a.text-decoration-none {
-    font-weight: 500;
-    color: var(--um-primary);
-    transition: color 0.15s ease;
-}
-
-.usage-monitor-dashboard .table td a.text-decoration-none:hover {
-    color: var(--um-primary-hover);
-    text-decoration: underline !important;
-}
-
-/* Strong text in table cells */
-.usage-monitor-dashboard .table td strong {
-    font-weight: 600;
-    color: var(--um-text-primary);
-}
-
-/* ============================================
-   EQUAL HEIGHT CARDS IN ROWS
-   ============================================ */
-.usage-monitor-dashboard .row > [class*="col-"] > .card {
-    height: 100%;
-}
-
-.usage-monitor-dashboard .row > [class*="col-"] > .card.h-100 {
-    display: flex;
-    flex-direction: column;
-}
-
-.usage-monitor-dashboard .row > [class*="col-"] > .card.h-100 > .card-body {
-    flex: 1 1 auto;
-}
-
-/* ============================================
-   IMPROVED METRIC CARDS GRID
-   ============================================ */
-.usage-monitor-dashboard .row.mb-4 > [class*="col-"] {
-    display: flex;
-}
-
-.usage-monitor-dashboard .row.mb-4 > [class*="col-"] > .metric-card {
-    width: 100%;
-}
-
-/* ============================================
-   COURSE LIST STYLES
-   ============================================ */
-.usage-monitor-dashboard .table td .d-block {
-    line-height: 1.3;
-    margin-top: 0.125rem;
-}
-
-.usage-monitor-dashboard .table td small.text-muted {
-    font-size: 0.75rem;
-    opacity: 0.8;
-}
-
-/* Course link truncation */
-.usage-monitor-dashboard .table td a.text-truncate {
-    display: inline-block;
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: middle;
-}
-
-/* ============================================
-   ACCESSIBILITY
-   ============================================ */
-.usage-monitor-dashboard .nav-tabs .nav-link:focus,
-.usage-monitor-dashboard a:focus,
-.usage-monitor-dashboard .btn:focus {
-    outline: 2px solid var(--um-primary);
-    outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .usage-monitor-dashboard .card,
-    .usage-monitor-dashboard .metric-card,
-    .usage-monitor-dashboard .nav-tabs .nav-link,
-    .usage-monitor-dashboard .progress-bar {
-        transition: none;
-    }
-}
-
-/* ============================================
-   ADDITIONAL RESPONSIVE FIXES
-   ============================================ */
-@media (min-width: 992px) {
-    .usage-monitor-dashboard .table td a.text-truncate {
-        max-width: 280px;
-    }
-}
-
-@media (max-width: 575.98px) {
-    .usage-monitor-dashboard .table th,
-    .usage-monitor-dashboard .table td {
-        padding: 0.625rem 0.75rem;
-        font-size: 0.8125rem;
-    }
-
-    .usage-monitor-dashboard .table td a.text-truncate {
-        max-width: 150px;
-    }
-
-    .usage-monitor-dashboard .metric-card .h4,
-    .usage-monitor-dashboard .metric-card h4 {
-        font-size: 1.125rem;
-    }
-
-    .usage-monitor-dashboard .metric-card .card-body {
-        padding: 0.75rem;
-    }
-
-    /* Hide some columns on very small screens */
-    .usage-monitor-dashboard .table .hide-xs {
-        display: none;
+        display: block;
+        opacity: 1;
     }
 }
