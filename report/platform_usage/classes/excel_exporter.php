@@ -77,6 +77,8 @@ class excel_exporter {
         $this->sheetNames = [
             'summary' => 'Summary',
             'daily' => 'Daily Logins',
+            'dailyusers' => 'Daily Users',
+            'completions' => 'Completions',
             'courses' => 'Courses',
             'activities' => 'Activities',
             'users' => 'Users',
@@ -191,6 +193,8 @@ class excel_exporter {
         // Create sheets.
         $this->createSummarySheet();
         $this->createDailyLoginsSheet();
+        $this->createDailyUsersSheet();
+        $this->createCompletionsSheet();
         $this->createCoursesSheet();
         $this->createActivitiesSheet();
         $this->createDedicationSheet();
@@ -226,8 +230,12 @@ class excel_exporter {
         $sheet = $this->spreadsheet->createSheet();
         $sheet->setTitle($this->sheetNames['summary']);
 
-        // Report header.
-        $sheet->setCellValue('A1', get_string('reporttitle', 'report_platform_usage'));
+        // Report header - different title for course context.
+        if ($this->report->is_course_context()) {
+            $sheet->setCellValue('A1', get_string('coursereport', 'report_platform_usage'));
+        } else {
+            $sheet->setCellValue('A1', get_string('reporttitle', 'report_platform_usage'));
+        }
         $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
         $sheet->mergeCells('A1:F1');
 
@@ -237,8 +245,13 @@ class excel_exporter {
         $sheet->mergeCells('A2:F2');
         $sheet->getRowDimension(2)->setRowHeight(30);
 
-        // Company and date range info.
-        $sheet->setCellValue('A3', get_string('filter_company', 'report_platform_usage') . ': ' . $this->report->get_company_name());
+        // Context info - company or course.
+        if ($this->report->is_course_context()) {
+            $course = get_course($this->report->get_course_id());
+            $sheet->setCellValue('A3', get_string('coursename', 'report_platform_usage') . ': ' . format_string($course->fullname));
+        } else {
+            $sheet->setCellValue('A3', get_string('filter_company', 'report_platform_usage') . ': ' . $this->report->get_company_name());
+        }
         $sheet->setCellValue('A4', get_string('filter_daterange', 'report_platform_usage') . ': ' . $this->report->get_date_range());
         $sheet->setCellValue('A5', get_string('generateddate', 'report_platform_usage') . ': ' . userdate(time(), '%d/%m/%Y %H:%M'));
 
@@ -612,6 +625,250 @@ class excel_exporter {
 
         $chart->setTopLeftPosition('E3');
         $chart->setBottomRightPosition('O20');
+
+        $sheet->addChart($chart);
+    }
+
+    /**
+     * Create daily users sheet with chart.
+     */
+    protected function createDailyUsersSheet(): void {
+        $sheet = $this->spreadsheet->createSheet();
+        $sheet->setTitle($this->sheetNames['dailyusers']);
+
+        // Header.
+        $sheet->setCellValue('A1', get_string('dailyusers', 'report_platform_usage'));
+        $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
+        $sheet->mergeCells('A1:B1');
+
+        // Description.
+        $sheet->setCellValue('A2', get_string('export_dailyusers_desc', 'report_platform_usage'));
+        $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
+        $sheet->mergeCells('A2:B2');
+        $sheet->getRowDimension(2)->setRowHeight(40);
+
+        // Column headers.
+        $headers = [
+            get_string('date', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, 'A4');
+        $sheet->getStyle('A4:B4')->applyFromArray($this->styles['header']);
+
+        // Get daily users data.
+        $dailyUsers = $this->report->get_daily_users(30);
+        $row = 5;
+        $dataStart = $row;
+
+        for ($i = 0; $i < count($dailyUsers['labels']); $i++) {
+            $sheet->fromArray([
+                $dailyUsers['labels'][$i],
+                $dailyUsers['data'][$i],
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("B{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+        $dataEnd = $row - 1;
+
+        // Add statistics.
+        $totalUsers = array_sum($dailyUsers['data']);
+        $avgUsers = count($dailyUsers['data']) > 0 ? round($totalUsers / count($dailyUsers['data']), 1) : 0;
+        $maxUsers = !empty($dailyUsers['data']) ? max($dailyUsers['data']) : 0;
+
+        $row += 2;
+        $sheet->setCellValue("A{$row}", get_string('average', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $avgUsers);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('maximum', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $maxUsers);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['highlight']);
+
+        // Create line chart.
+        if ($dataEnd >= $dataStart) {
+            $this->createDailyUsersChart($sheet, $dataStart, $dataEnd);
+        }
+
+        // Auto-size columns.
+        foreach (range('A', 'B') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Create daily users line chart.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet Worksheet
+     * @param int $dataStart Start row
+     * @param int $dataEnd End row
+     */
+    protected function createDailyUsersChart($sheet, int $dataStart, int $dataEnd): void {
+        $sheetName = $this->sheetNames['dailyusers'];
+
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\$4", null, 1),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$A\${$dataStart}:\$A\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$B\${$dataStart}:\$B\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_LINECHART,
+            DataSeries::GROUPING_STANDARD,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_BOTTOM, null, false);
+        $title = new Title(get_string('dailyusers', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'dailyUsersChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('D3');
+        $chart->setBottomRightPosition('N18');
+
+        $sheet->addChart($chart);
+    }
+
+    /**
+     * Create completions sheet with chart.
+     */
+    protected function createCompletionsSheet(): void {
+        $sheet = $this->spreadsheet->createSheet();
+        $sheet->setTitle($this->sheetNames['completions']);
+
+        // Header.
+        $sheet->setCellValue('A1', get_string('completiontrends', 'report_platform_usage'));
+        $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
+        $sheet->mergeCells('A1:B1');
+
+        // Description.
+        $sheet->setCellValue('A2', get_string('export_completions_desc', 'report_platform_usage'));
+        $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
+        $sheet->mergeCells('A2:B2');
+        $sheet->getRowDimension(2)->setRowHeight(50);
+
+        // Summary section.
+        $sheet->setCellValue('A4', get_string('summary', 'report_platform_usage'));
+        $sheet->getStyle('A4')->applyFromArray($this->styles['subtitle']);
+        $sheet->mergeCells('A4:B4');
+
+        $completions = $this->report->get_course_completions_summary();
+        $row = 5;
+        $sheet->setCellValue("A{$row}", get_string('completionstoday', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['completions_today']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('completionsweek', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['completions_week']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('completionsmonth', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['completions_month']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('totalcompletions', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['total_completions']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['highlight']);
+
+        // Daily trends section.
+        $row += 3;
+        $sheet->setCellValue("A{$row}", get_string('completiontrends_desc', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['description']);
+        $sheet->mergeCells("A{$row}:B{$row}");
+        $row++;
+
+        // Column headers.
+        $headers = [
+            get_string('date', 'report_platform_usage'),
+            get_string('completions', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, "A{$row}");
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['header']);
+        $row++;
+
+        // Get completion trends data.
+        $trends = $this->report->get_completion_trends(30);
+        $dataStart = $row;
+
+        for ($i = 0; $i < count($trends['labels']); $i++) {
+            $sheet->fromArray([
+                $trends['labels'][$i],
+                $trends['data'][$i],
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("B{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+        $dataEnd = $row - 1;
+
+        // Create line chart.
+        if ($dataEnd >= $dataStart) {
+            $this->createCompletionsChart($sheet, $dataStart, $dataEnd);
+        }
+
+        // Auto-size columns.
+        foreach (range('A', 'B') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Create completions trend line chart.
+     *
+     * @param \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $sheet Worksheet
+     * @param int $dataStart Start row
+     * @param int $dataEnd End row
+     */
+    protected function createCompletionsChart($sheet, int $dataStart, int $dataEnd): void {
+        $sheetName = $this->sheetNames['completions'];
+
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\$12", null, 1),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$A\${$dataStart}:\$A\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$B\${$dataStart}:\$B\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_LINECHART,
+            DataSeries::GROUPING_STANDARD,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_BOTTOM, null, false);
+        $title = new Title(get_string('completiontrends', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'completionsChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('D3');
+        $chart->setBottomRightPosition('N18');
 
         $sheet->addChart($chart);
     }
