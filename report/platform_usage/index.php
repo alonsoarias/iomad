@@ -25,27 +25,55 @@
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-// Require login.
-require_login();
-
-// Check capability.
-$context = context_system::instance();
-require_capability('report/platform_usage:view', $context);
-
 // Get parameters.
+$courseid = optional_param('courseid', 0, PARAM_INT);
 $companyid = optional_param('companyid', 0, PARAM_INT);
 $datefrom = optional_param('datefrom', strtotime('-30 days midnight'), PARAM_INT);
 $dateto = optional_param('dateto', time(), PARAM_INT);
 
+// Determine context based on course ID.
+if ($courseid > 0) {
+    // Course context - require course login.
+    $course = get_course($courseid);
+    require_login($course);
+    $context = context_course::instance($courseid);
+    $incoursecontext = true;
+} else {
+    // System context - require login.
+    require_login();
+    $context = context_system::instance();
+    $incoursecontext = false;
+    $course = null;
+}
+
+// Check capability.
+require_capability('report/platform_usage:view', $context);
+
 // Page setup.
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/report/platform_usage/index.php'));
+$pageurl = new moodle_url('/report/platform_usage/index.php');
+if ($courseid > 0) {
+    $pageurl->param('courseid', $courseid);
+}
+$PAGE->set_url($pageurl);
 $PAGE->set_pagelayout('report');
-$PAGE->set_title(get_string('pluginname', 'report_platform_usage'));
-$PAGE->set_heading(get_string('pluginname', 'report_platform_usage'));
 
-// Create report instance.
-$report = new \report_platform_usage\report($companyid, $datefrom, $dateto);
+// Set page title based on context.
+if ($incoursecontext) {
+    $pagetitle = get_string('coursereport', 'report_platform_usage') . ': ' . format_string($course->shortname);
+    $PAGE->set_title($pagetitle);
+    $PAGE->set_heading($pagetitle);
+    $PAGE->navbar->add(get_string('pluginname', 'report_platform_usage'));
+} else {
+    $PAGE->set_title(get_string('pluginname', 'report_platform_usage'));
+    $PAGE->set_heading(get_string('pluginname', 'report_platform_usage'));
+}
+
+// Add CSS.
+$PAGE->requires->css('/report/platform_usage/styles.css');
+
+// Create report instance with course ID.
+$report = new \report_platform_usage\report($companyid, $datefrom, $dateto, true, $courseid);
 
 // Get companies for filter.
 $companies = \report_platform_usage\report::get_companies();
@@ -83,48 +111,90 @@ $jsstrings = [
 
 // Output header.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('platformusagereport', 'report_platform_usage'));
 
-// Company filter form.
-echo '<div class="card mb-4">';
-echo '<div class="card-body">';
-echo '<div class="d-flex flex-wrap align-items-center">';
-echo '<div class="form-group mr-3 mb-2">';
-echo '<label for="companyid" class="mr-2">' . get_string('company', 'report_platform_usage') . ':</label>';
-echo '<select name="companyid" id="companyid" class="form-control">';
-echo '<option value="0">' . get_string('allcompanies', 'report_platform_usage') . '</option>';
-foreach ($companies as $id => $name) {
-    $selected = ($id == $companyid) ? 'selected' : '';
-    echo "<option value=\"{$id}\" {$selected}>" . format_string($name) . '</option>';
+// Start report wrapper with custom class.
+echo '<div class="report-platform-usage">';
+
+// Show appropriate heading based on context.
+if ($incoursecontext) {
+    echo $OUTPUT->heading(get_string('coursereport', 'report_platform_usage'));
+    echo '<p class="lead text-muted mb-4">' . get_string('coursereport_desc', 'report_platform_usage') . '</p>';
+} else {
+    echo $OUTPUT->heading(get_string('platformusagereport', 'report_platform_usage'));
 }
-echo '</select>';
-echo '</div>';
 
-// Loading indicator.
-echo '<div id="loading-indicator" class="mb-2 mr-3" style="display: none;">';
-echo '<span class="spinner-border spinner-border-sm text-primary" role="status"></span>';
-echo ' <span class="text-muted">' . get_string('loadingreport', 'report_platform_usage') . '</span>';
-echo '</div>';
+// Company filter form (only show in system context).
+if (!$incoursecontext) {
+    echo '<div class="card mb-4 filter-section">';
+    echo '<div class="card-body">';
+    echo '<div class="d-flex flex-wrap align-items-center">';
+    echo '<div class="form-group mr-3 mb-2">';
+    echo '<label for="companyid" class="mr-2">' . get_string('company', 'report_platform_usage') . ':</label>';
+    echo '<select name="companyid" id="companyid" class="form-control">';
+    echo '<option value="0">' . get_string('allcompanies', 'report_platform_usage') . '</option>';
+    foreach ($companies as $id => $name) {
+        $selected = ($id == $companyid) ? 'selected' : '';
+        echo "<option value=\"{$id}\" {$selected}>" . format_string($name) . '</option>';
+    }
+    echo '</select>';
+    echo '</div>';
 
-// Export buttons.
-if (has_capability('report/platform_usage:export', $context)) {
-    $exporturl = new moodle_url('/report/platform_usage/export.php', [
-        'datefrom' => $datefrom,
-        'dateto' => $dateto,
-        'sesskey' => sesskey(),
-    ]);
-    echo '<div class="ml-auto">';
-    echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=excel" id="export-excel" class="btn btn-success mb-2 mr-2">';
-    echo '<i class="fa fa-download"></i> ' . get_string('exportexcel', 'report_platform_usage');
-    echo '</a>';
-    echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=csv" id="export-csv" class="btn btn-secondary mb-2">';
-    echo '<i class="fa fa-file-text"></i> ' . get_string('exportcsv', 'report_platform_usage');
-    echo '</a>';
+    // Loading indicator.
+    echo '<div id="loading-indicator" class="mb-2 mr-3" style="display: none;">';
+    echo '<span class="spinner-border spinner-border-sm text-primary" role="status"></span>';
+    echo ' <span class="text-muted">' . get_string('loadingreport', 'report_platform_usage') . '</span>';
+    echo '</div>';
+
+    // Export buttons.
+    if (has_capability('report/platform_usage:export', $context)) {
+        $exporturl = new moodle_url('/report/platform_usage/export.php', [
+            'datefrom' => $datefrom,
+            'dateto' => $dateto,
+            'sesskey' => sesskey(),
+        ]);
+        echo '<div class="ml-auto">';
+        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=excel" id="export-excel" class="btn btn-success btn-export mb-2 mr-2">';
+        echo '<i class="fa fa-download"></i> ' . get_string('exportexcel', 'report_platform_usage');
+        echo '</a>';
+        echo '<a href="' . $exporturl->out() . '&companyid=' . $companyid . '&type=summary&format=csv" id="export-csv" class="btn btn-secondary btn-export mb-2">';
+        echo '<i class="fa fa-file-text"></i> ' . get_string('exportcsv', 'report_platform_usage');
+        echo '</a>';
+        echo '</div>';
+    }
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+} else {
+    // Course context - show course info and export buttons.
+    echo '<div class="card mb-4 bg-light">';
+    echo '<div class="card-body">';
+    echo '<div class="d-flex flex-wrap align-items-center justify-content-between">';
+    echo '<div>';
+    echo '<h5 class="mb-1"><i class="fa fa-book mr-2"></i>' . format_string($course->fullname) . '</h5>';
+    echo '<small class="text-muted">' . format_string($course->shortname) . '</small>';
+    echo '</div>';
+
+    // Export buttons for course context.
+    if (has_capability('report/platform_usage:export', $context)) {
+        $exporturl = new moodle_url('/report/platform_usage/export.php', [
+            'courseid' => $courseid,
+            'datefrom' => $datefrom,
+            'dateto' => $dateto,
+            'sesskey' => sesskey(),
+        ]);
+        echo '<div>';
+        echo '<a href="' . $exporturl->out() . '&type=summary&format=excel" class="btn btn-success btn-export mr-2">';
+        echo '<i class="fa fa-download"></i> ' . get_string('exportexcel', 'report_platform_usage');
+        echo '</a>';
+        echo '<a href="' . $exporturl->out() . '&type=summary&format=csv" class="btn btn-secondary btn-export">';
+        echo '<i class="fa fa-file-text"></i> ' . get_string('exportcsv', 'report_platform_usage');
+        echo '</a>';
+        echo '</div>';
+    }
+    echo '</div>';
+    echo '</div>';
     echo '</div>';
 }
-echo '</div>';
-echo '</div>';
-echo '</div>';
 
 // Consolidated Summary Cards - 4 key metrics.
 echo '<div class="row mb-4">';
@@ -816,5 +886,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <?php
+
+// Close report wrapper div.
+echo '</div>';
 
 echo $OUTPUT->footer();

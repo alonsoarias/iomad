@@ -34,6 +34,9 @@ class report {
     /** @var int Company ID filter */
     protected $companyid;
 
+    /** @var int Course ID filter (0 for all courses) */
+    protected $courseid;
+
     /** @var int Date from timestamp */
     protected $datefrom;
 
@@ -59,9 +62,11 @@ class report {
      * @param int $datefrom Start date timestamp
      * @param int $dateto End date timestamp
      * @param bool $usecache Whether to use cache (default true)
+     * @param int $courseid Course ID (0 for all courses)
      */
-    public function __construct(int $companyid = 0, int $datefrom = 0, int $dateto = 0, bool $usecache = true) {
+    public function __construct(int $companyid = 0, int $datefrom = 0, int $dateto = 0, bool $usecache = true, int $courseid = 0) {
         $this->companyid = $companyid;
+        $this->courseid = $courseid;
         $this->datefrom = $datefrom ?: strtotime('-30 days midnight');
         $this->dateto = $dateto ?: time();
         $this->usecache = $usecache;
@@ -74,6 +79,24 @@ class report {
     }
 
     /**
+     * Check if report is in course context.
+     *
+     * @return bool
+     */
+    public function is_course_context(): bool {
+        return $this->courseid > 0;
+    }
+
+    /**
+     * Get the course ID.
+     *
+     * @return int
+     */
+    public function get_course_id(): int {
+        return $this->courseid;
+    }
+
+    /**
      * Get cache key for current parameters.
      *
      * @param string $type Data type
@@ -83,7 +106,7 @@ class report {
         // Round timestamps to reduce cache variations.
         $datefromround = floor($this->datefrom / 3600) * 3600;
         $datetoround = floor($this->dateto / 3600) * 3600;
-        return "{$type}_{$this->companyid}_{$datefromround}_{$datetoround}";
+        return "{$type}_{$this->companyid}_{$this->courseid}_{$datefromround}_{$datetoround}";
     }
 
     /**
@@ -179,13 +202,62 @@ class report {
     protected function get_user_sql(string $userfield = 'userid'): array {
         global $DB;
 
-        $userids = $this->get_company_userids();
+        // If course context, get enrolled users for that course.
+        if ($this->courseid > 0) {
+            $userids = $this->get_course_enrolled_userids();
+        } else {
+            $userids = $this->get_company_userids();
+        }
+
         if (empty($userids)) {
             return ['1=0', []];
         }
 
         list($sql, $params) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
         return ["$userfield $sql", $params];
+    }
+
+    /**
+     * Get SQL conditions for course filtering (for log queries).
+     *
+     * @param string $coursefield The field name for course ID
+     * @return array [sql, params]
+     */
+    protected function get_course_sql(string $coursefield = 'courseid'): array {
+        if ($this->courseid > 0) {
+            return ["$coursefield = :filtercourseid", ['filtercourseid' => $this->courseid]];
+        }
+        return ['1=1', []];
+    }
+
+    /**
+     * Get enrolled user IDs for the current course.
+     *
+     * @return array User IDs
+     */
+    protected function get_course_enrolled_userids(): array {
+        global $DB;
+
+        if ($this->courseid <= 0) {
+            return $this->get_company_userids();
+        }
+
+        $context = \context_course::instance($this->courseid, IGNORE_MISSING);
+        if (!$context) {
+            return [];
+        }
+
+        // Get enrolled users.
+        $enrolledusers = get_enrolled_users($context, '', 0, 'u.id', null, 0, 0, true);
+        $userids = array_keys($enrolledusers);
+
+        // If company filter is also set, intersect with company users.
+        if ($this->companyid > 0) {
+            $companyuserids = $this->get_company_userids();
+            $userids = array_intersect($userids, $companyuserids);
+        }
+
+        return $userids;
     }
 
     /**

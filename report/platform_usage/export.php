@@ -24,25 +24,32 @@
 
 require_once(__DIR__ . '/../../config.php');
 
-// Require login.
-require_login();
-
-// Check capability.
-$context = context_system::instance();
-require_capability('report/platform_usage:export', $context);
-
-// Require sesskey.
-require_sesskey();
-
 // Get parameters.
+$courseid = optional_param('courseid', 0, PARAM_INT);
 $companyid = optional_param('companyid', 0, PARAM_INT);
 $datefrom = optional_param('datefrom', strtotime('-30 days midnight'), PARAM_INT);
 $dateto = optional_param('dateto', time(), PARAM_INT);
 $type = optional_param('type', 'summary', PARAM_ALPHA);
 $format = optional_param('format', 'excel', PARAM_ALPHA);
 
+// Determine context based on course ID.
+if ($courseid > 0) {
+    $course = get_course($courseid);
+    require_login($course);
+    $context = context_course::instance($courseid);
+} else {
+    require_login();
+    $context = context_system::instance();
+}
+
+// Check capability.
+require_capability('report/platform_usage:export', $context);
+
+// Require sesskey.
+require_sesskey();
+
 // Create report instance (disable cache for export to get fresh data).
-$report = new \report_platform_usage\report($companyid, $datefrom, $dateto, false);
+$report = new \report_platform_usage\report($companyid, $datefrom, $dateto, false, $courseid);
 
 // Export based on format.
 if ($format === 'excel' && $type === 'summary') {

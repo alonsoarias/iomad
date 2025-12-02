@@ -33,9 +33,9 @@ defined('MOODLE_INTERNAL') || die();
  */
 function report_platform_usage_extend_navigation_course($navigation, $course, $context) {
     if (has_capability('report/platform_usage:view', $context)) {
-        $url = new moodle_url('/report/platform_usage/index.php');
+        $url = new moodle_url('/report/platform_usage/index.php', ['courseid' => $course->id]);
         $navigation->add(
-            get_string('pluginname', 'report_platform_usage'),
+            get_string('coursereport', 'report_platform_usage'),
             $url,
             navigation_node::TYPE_SETTING,
             null,
@@ -70,9 +70,9 @@ function report_platform_usage_extend_settings_navigation(settings_navigation $s
         if ($course->id != SITEID && has_capability('report/platform_usage:view', $context)) {
             $node = $settingsnav->get('coursereports');
             if ($node) {
-                $url = new moodle_url('/report/platform_usage/index.php');
+                $url = new moodle_url('/report/platform_usage/index.php', ['courseid' => $course->id]);
                 $node->add(
-                    get_string('pluginname', 'report_platform_usage'),
+                    get_string('coursereport', 'report_platform_usage'),
                     $url,
                     navigation_node::TYPE_SETTING,
                     null,

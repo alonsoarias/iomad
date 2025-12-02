@@ -164,6 +164,15 @@ $string['totaldedication'] = 'Dedicacion Total';
 $string['enrolledusers'] = 'Usuarios Matriculados';
 $string['dedicationpercent'] = '% de Dedicacion';
 
+// Course report strings.
+$string['coursereport'] = 'Reporte de Uso del Curso';
+$string['coursereport_desc'] = 'Estadisticas detalladas de uso de este curso, incluyendo actividad de usuarios, participacion y metricas de dedicacion.';
+$string['courseenrolledusers'] = 'Usuarios matriculados';
+$string['courseactiveusers'] = 'Usuarios activos (curso)';
+$string['courseinactiveusers'] = 'Usuarios inactivos (curso)';
+$string['courselogins'] = 'Accesos al curso';
+$string['coursecompletions'] = 'Finalizaciones del curso';
+
 // Section descriptions.
 $string['logintrends_desc'] = 'Tendencias de ingresos diarios y usuarios unicos de los ultimos 30 dias';
 $string['usersbyactivity_desc'] = 'Distribucion de usuarios activos vs inactivos (umbral de 30 dias)';
