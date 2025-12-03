@@ -908,9 +908,12 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function initCharts(data) {
         // Daily Logins Line Chart (with unique users).
-        var dailyLoginsCtx = document.getElementById('dailyLoginsChart').getContext('2d');
-        var loginsGradient = createGradient(dailyLoginsCtx, 'rgba(99, 102, 241, 0.2)', 'rgba(99, 102, 241, 0.01)');
-        var usersGradient = createGradient(dailyLoginsCtx, 'rgba(16, 185, 129, 0.2)', 'rgba(16, 185, 129, 0.01)');
+        var dailyLoginsCanvas = document.getElementById('dailyLoginsChart');
+        if (!dailyLoginsCanvas) return;
+
+        var dailyLoginsCtx = dailyLoginsCanvas.getContext('2d');
+        var loginsGradient = createGradient(dailyLoginsCtx, 'rgba(99, 102, 241, 0.15)', 'rgba(99, 102, 241, 0.02)');
+        var usersGradient = createGradient(dailyLoginsCtx, 'rgba(16, 185, 129, 0.15)', 'rgba(16, 185, 129, 0.02)');
 
         charts.dailyLogins = new Chart(dailyLoginsCtx, {
             type: 'line',
@@ -924,8 +927,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         backgroundColor: loginsGradient,
                         fill: true,
                         tension: 0.4,
-                        borderWidth: 2.5,
-                        pointRadius: 0,
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointBackgroundColor: COLORS.brand.primary,
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
                         pointHoverRadius: 6,
                         pointHoverBackgroundColor: COLORS.brand.primary,
                         pointHoverBorderColor: '#ffffff',
@@ -938,8 +944,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         backgroundColor: usersGradient,
                         fill: true,
                         tension: 0.4,
-                        borderWidth: 2.5,
-                        pointRadius: 0,
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointBackgroundColor: COLORS.success.primary,
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
                         pointHoverRadius: 6,
                         pointHoverBackgroundColor: COLORS.success.primary,
                         pointHoverBorderColor: '#ffffff',
@@ -949,117 +958,129 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
+                aspectRatio: 2.5,
                 interaction: { intersect: false, mode: 'index' },
                 plugins: {
                     legend: {
                         position: 'top',
                         align: 'end',
-                        labels: { boxWidth: 8, boxHeight: 8 }
+                        labels: { boxWidth: 12, boxHeight: 12, padding: 15 }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        grid: { color: COLORS.gray[100], drawBorder: false },
-                        ticks: { padding: 8 }
+                        grid: { color: COLORS.gray[200], drawBorder: false },
+                        ticks: { padding: 10 }
                     },
                     x: {
                         grid: { display: false },
-                        ticks: { padding: 8, maxRotation: 0 }
+                        ticks: { padding: 10, maxRotation: 45 }
                     }
                 }
             }
         });
 
         // User Activity Doughnut Chart.
-        var userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
-        var activeUsers, inactiveUsers;
-        if (inCourseContext && data.course_stats) {
-            activeUsers = data.course_stats.active_users || 0;
-            inactiveUsers = data.course_stats.inactive_users || 0;
-        } else {
-            activeUsers = data.user_summary.active || 0;
-            inactiveUsers = data.user_summary.inactive || 0;
-        }
-        charts.userActivity = new Chart(userActivityCtx, {
-            type: 'doughnut',
-            data: {
-                labels: [STRINGS.activeusers, STRINGS.inactiveusers],
-                datasets: [{
-                    data: [activeUsers, inactiveUsers],
-                    backgroundColor: [COLORS.success.primary, COLORS.error.primary],
-                    borderColor: ['#ffffff', '#ffffff'],
-                    borderWidth: 3,
-                    hoverOffset: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '70%',
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { boxWidth: 12, boxHeight: 12, padding: 20 }
+        var userActivityCanvas = document.getElementById('userActivityChart');
+        if (userActivityCanvas) {
+            var userActivityCtx = userActivityCanvas.getContext('2d');
+            var activeUsers, inactiveUsers;
+            if (inCourseContext && data.course_stats) {
+                activeUsers = data.course_stats.active_users || 0;
+                inactiveUsers = data.course_stats.inactive_users || 0;
+            } else {
+                activeUsers = data.user_summary.active || 0;
+                inactiveUsers = data.user_summary.inactive || 0;
+            }
+            charts.userActivity = new Chart(userActivityCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [STRINGS.activeusers, STRINGS.inactiveusers],
+                    datasets: [{
+                        data: [activeUsers, inactiveUsers],
+                        backgroundColor: [COLORS.success.primary, COLORS.error.primary],
+                        borderColor: ['#ffffff', '#ffffff'],
+                        borderWidth: 3,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1.2,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 12, boxHeight: 12, padding: 15 }
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
         // Course Access Trends Line Chart.
-        var courseAccessCtx = document.getElementById('courseAccessChart').getContext('2d');
-        var accessGradient = createGradient(courseAccessCtx, 'rgba(245, 158, 11, 0.2)', 'rgba(245, 158, 11, 0.01)');
+        var courseAccessCanvas = document.getElementById('courseAccessChart');
+        if (courseAccessCanvas) {
+            var courseAccessCtx = courseAccessCanvas.getContext('2d');
+            var accessGradient = createGradient(courseAccessCtx, 'rgba(245, 158, 11, 0.15)', 'rgba(245, 158, 11, 0.02)');
 
-        charts.courseAccess = new Chart(courseAccessCtx, {
-            type: 'line',
-            data: {
-                labels: data.course_access_trends.labels,
-                datasets: [{
-                    label: STRINGS.courseaccesses,
-                    data: data.course_access_trends.data,
-                    borderColor: COLORS.warning.primary,
-                    backgroundColor: accessGradient,
-                    fill: true,
-                    tension: 0.4,
-                    borderWidth: 2.5,
-                    pointRadius: 0,
-                    pointHoverRadius: 6,
-                    pointHoverBackgroundColor: COLORS.warning.primary,
-                    pointHoverBorderColor: '#ffffff',
-                    pointHoverBorderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { intersect: false, mode: 'index' },
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        align: 'end',
-                        labels: { boxWidth: 8, boxHeight: 8 }
-                    }
+            charts.courseAccess = new Chart(courseAccessCtx, {
+                type: 'line',
+                data: {
+                    labels: data.course_access_trends.labels,
+                    datasets: [{
+                        label: STRINGS.courseaccesses,
+                        data: data.course_access_trends.data,
+                        borderColor: COLORS.warning.primary,
+                        backgroundColor: accessGradient,
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointBackgroundColor: COLORS.warning.primary,
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 6,
+                        pointHoverBackgroundColor: COLORS.warning.primary,
+                        pointHoverBorderColor: '#ffffff',
+                        pointHoverBorderWidth: 2
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: COLORS.gray[100], drawBorder: false },
-                        ticks: { padding: 8 }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 2.5,
+                    interaction: { intersect: false, mode: 'index' },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                            labels: { boxWidth: 12, boxHeight: 12, padding: 15 }
+                        }
                     },
-                    x: {
-                        grid: { display: false },
-                        ticks: { padding: 8, maxRotation: 0 }
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: COLORS.gray[200], drawBorder: false },
+                            ticks: { padding: 10 }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { padding: 10, maxRotation: 45 }
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
 
         // Completion Trends Line Chart (only if canvas exists - has data).
         var completionTrendsCanvas = document.getElementById('completionTrendsChart');
         if (completionTrendsCanvas && data.completion_trends && data.completion_trends.labels) {
             var completionTrendsCtx = completionTrendsCanvas.getContext('2d');
-            var completionGradient = createGradient(completionTrendsCtx, 'rgba(6, 182, 212, 0.2)', 'rgba(6, 182, 212, 0.01)');
+            var completionGradient = createGradient(completionTrendsCtx, 'rgba(6, 182, 212, 0.15)', 'rgba(6, 182, 212, 0.02)');
 
             charts.completionTrends = new Chart(completionTrendsCtx, {
                 type: 'line',
@@ -1072,8 +1093,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         backgroundColor: completionGradient,
                         fill: true,
                         tension: 0.4,
-                        borderWidth: 2.5,
-                        pointRadius: 0,
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointBackgroundColor: COLORS.info.primary,
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
                         pointHoverRadius: 6,
                         pointHoverBackgroundColor: COLORS.info.primary,
                         pointHoverBorderColor: '#ffffff',
@@ -1082,24 +1106,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
+                    aspectRatio: 3,
                     interaction: { intersect: false, mode: 'index' },
                     plugins: {
                         legend: {
                             position: 'top',
                             align: 'end',
-                            labels: { boxWidth: 8, boxHeight: 8 }
+                            labels: { boxWidth: 12, boxHeight: 12, padding: 15 }
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: { color: COLORS.gray[100], drawBorder: false },
-                            ticks: { padding: 8 }
+                            grid: { color: COLORS.gray[200], drawBorder: false },
+                            ticks: { padding: 10 }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { padding: 8, maxRotation: 0 }
+                            ticks: { padding: 10, maxRotation: 45 }
                         }
                     }
                 }
@@ -1107,8 +1132,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Dedication Chart (horizontal bar).
-        if (data.top_dedication && data.top_dedication.length > 0) {
-            var dedicationCtx = document.getElementById('dedicationChart').getContext('2d');
+        var dedicationCanvas = document.getElementById('dedicationChart');
+        if (dedicationCanvas && data.top_dedication && data.top_dedication.length > 0) {
+            var dedicationCtx = dedicationCanvas.getContext('2d');
             charts.dedication = new Chart(dedicationCtx, {
                 type: 'bar',
                 data: {
@@ -1128,7 +1154,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 options: {
                     indexAxis: 'y',
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
+                    aspectRatio: 2.5,
                     plugins: {
                         legend: { display: false }
                     },
@@ -1136,15 +1163,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         x: {
                             beginAtZero: true,
                             max: 100,
-                            grid: { color: COLORS.gray[100], drawBorder: false },
+                            grid: { color: COLORS.gray[200], drawBorder: false },
                             ticks: {
                                 callback: function(value) { return value + '%'; },
-                                padding: 8
+                                padding: 10
                             }
                         },
                         y: {
                             grid: { display: false },
-                            ticks: { padding: 8 }
+                            ticks: { padding: 10 }
                         }
                     }
                 }

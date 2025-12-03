@@ -1020,16 +1020,46 @@
 .report-platform-usage .chart-container {
     position: relative;
     width: 100%;
+    min-height: 200px;
 }
 
+/* Canvas wrapper for proper Chart.js rendering */
 .report-platform-usage .card-body canvas {
-    max-height: 300px;
+    display: block !important;
     width: 100% !important;
+    height: auto !important;
+}
+
+/* Specific chart heights based on canvas height attribute */
+.report-platform-usage .card-body canvas[height="280"] {
+    min-height: 280px;
+    max-height: 280px;
+}
+
+.report-platform-usage .card-body canvas[height="260"] {
+    min-height: 260px;
+    max-height: 260px;
+}
+
+.report-platform-usage .card-body canvas[height="200"] {
+    min-height: 200px;
+    max-height: 200px;
+}
+
+.report-platform-usage .card-body canvas[height="180"] {
+    min-height: 180px;
+    max-height: 180px;
 }
 
 /* Chart card specific styling */
 .report-platform-usage .chart-card .card-body {
     padding: var(--rpu-space-4);
+}
+
+/* Ensure card body with canvas has proper height */
+.report-platform-usage .card-body:has(canvas) {
+    position: relative;
+    min-height: 180px;
 }
 
 /* ===========================================
