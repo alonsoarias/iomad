@@ -849,9 +849,21 @@ document.addEventListener('DOMContentLoaded', function() {
     /**
      * Initialize all charts.
      */
-    function initCharts(data) {
-        // Daily Logins Line Chart (with unique users).
-        var dailyLoginsCtx = document.getElementById('dailyLoginsChart').getContext('2d');
+function initCharts(data) {
+    // PASO 1: Destruir gráficos existentes para evitar duplicados
+    if (typeof charts !== 'undefined') {
+        Object.keys(charts).forEach(function(key) {
+            if (charts[key] && typeof charts[key].destroy === 'function') {
+                charts[key].destroy();
+            }
+        });
+        charts = {};
+    }
+
+    // PASO 2: Daily Logins Line Chart (with unique users)
+    var dailyLoginsCanvas = document.getElementById('dailyLoginsChart');
+    if (dailyLoginsCanvas && data.daily_logins && data.daily_logins.labels) {
+        var dailyLoginsCtx = dailyLoginsCanvas.getContext('2d');
         charts.dailyLogins = new Chart(dailyLoginsCtx, {
             type: 'line',
             data: {
@@ -883,9 +895,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 scales: { y: { beginAtZero: true } }
             }
         });
+    }
 
-        // User Activity Doughnut Chart.
-        var userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
+    // PASO 3: User Activity Doughnut Chart
+    var userActivityCanvas = document.getElementById('userActivityChart');
+    if (userActivityCanvas) {
+        var userActivityCtx = userActivityCanvas.getContext('2d');
         var activeUsers, inactiveUsers;
         if (inCourseContext && data.course_stats) {
             activeUsers = data.course_stats.active_users || 0;
@@ -910,9 +925,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: { legend: { position: 'bottom' } }
             }
         });
+    }
 
-        // Course Access Trends Line Chart.
-        var courseAccessCtx = document.getElementById('courseAccessChart').getContext('2d');
+    // PASO 4: Course Access Trends Line Chart
+    var courseAccessCanvas = document.getElementById('courseAccessChart');
+    if (courseAccessCanvas && data.course_access_trends && data.course_access_trends.labels) {
+        var courseAccessCtx = courseAccessCanvas.getContext('2d');
         charts.courseAccess = new Chart(courseAccessCtx, {
             type: 'line',
             data: {
@@ -934,117 +952,86 @@ document.addEventListener('DOMContentLoaded', function() {
                 scales: { y: { beginAtZero: true } }
             }
         });
+    }
 
-        // Completion Trends Line Chart (only if canvas exists - has data).
-        var completionTrendsCanvas = document.getElementById('completionTrendsChart');
-        if (completionTrendsCanvas && data.completion_trends && data.completion_trends.labels) {
-            var completionTrendsCtx = completionTrendsCanvas.getContext('2d');
-            charts.completionTrends = new Chart(completionTrendsCtx, {
-                type: 'line',
-                data: {
-                    labels: data.completion_trends.labels,
-                    datasets: [{
-                        label: STRINGS.completions,
-                        data: data.completion_trends.data,
-                        borderColor: COLORS.info.primary,
-                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { intersect: false, mode: 'index' },
-                    plugins: { legend: { position: 'top' } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-        }
+    // PASO 5: Completion Trends Line Chart (only if canvas exists - has data)
+    var completionTrendsCanvas = document.getElementById('completionTrendsChart');
+    if (completionTrendsCanvas && data.completion_trends && data.completion_trends.labels) {
+        var completionTrendsCtx = completionTrendsCanvas.getContext('2d');
+        charts.completionTrends = new Chart(completionTrendsCtx, {
+            type: 'line',
+            data: {
+                labels: data.completion_trends.labels,
+                datasets: [{
+                    label: STRINGS.completions,
+                    data: data.completion_trends.data,
+                    borderColor: COLORS.info.primary,
+                    backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
 
-        // Dedication Chart (horizontal bar).
-        if (data.top_dedication && data.top_dedication.length > 0) {
-            var dedicationCtx = document.getElementById('dedicationChart').getContext('2d');
-            charts.dedication = new Chart(dedicationCtx, {
-                type: 'bar',
-                data: {
-                    labels: data.top_dedication.map(function(c) {
-                        return c.shortname && c.shortname.length > 18 ? c.shortname.substring(0, 15) + '...' : (c.shortname || c.fullname.substring(0, 15));
+    // PASO 6: Dedication Chart (horizontal bar)
+    var dedicationCanvas = document.getElementById('dedicationChart');
+    if (dedicationCanvas && data.top_dedication && data.top_dedication.length > 0) {
+        var dedicationCtx = dedicationCanvas.getContext('2d');
+        charts.dedication = new Chart(dedicationCtx, {
+            type: 'bar',
+            data: {
+                labels: data.top_dedication.map(function(c) {
+                    return c.shortname && c.shortname.length > 18 ? 
+                        c.shortname.substring(0, 15) + '...' : 
+                        (c.shortname || c.fullname.substring(0, 15));
+                }),
+                datasets: [{
+                    label: STRINGS.dedicationpercent,
+                    data: data.top_dedication.map(function(c) { 
+                        return c.dedication_percent; 
                     }),
-                    datasets: [{
-                        label: STRINGS.dedicationpercent,
-                        data: data.top_dedication.map(function(c) { return c.dedication_percent; }),
-                        backgroundColor: COLORS.brand.primary,
-                        borderColor: COLORS.brand.primaryDark,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: { callback: function(value) { return value + '%'; } }
+                    backgroundColor: COLORS.brand.primary,
+                    borderColor: COLORS.brand.primaryDark,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { 
+                            callback: function(value) { 
+                                return value + '%'; 
+                            } 
                         }
                     }
                 }
-            });
-        }
+            }
+        });
     }
+}
 
     /**
      * Update all charts with new data.
      */
-    function updateCharts(data) {
-        // Update Daily Logins chart.
-        if (charts.dailyLogins) {
-            charts.dailyLogins.data.labels = data.daily_logins.labels;
-            charts.dailyLogins.data.datasets[0].data = data.daily_logins.logins;
-            charts.dailyLogins.data.datasets[1].data = data.daily_logins.unique_users;
-            charts.dailyLogins.update();
-        }
-
-        // Update User Activity chart.
-        if (charts.userActivity) {
-            var activeUsers, inactiveUsers;
-            if (inCourseContext && data.course_stats) {
-                activeUsers = data.course_stats.active_users || 0;
-                inactiveUsers = data.course_stats.inactive_users || 0;
-            } else {
-                activeUsers = data.user_summary.active || 0;
-                inactiveUsers = data.user_summary.inactive || 0;
-            }
-            charts.userActivity.data.datasets[0].data = [activeUsers, inactiveUsers];
-            charts.userActivity.update();
-        }
-
-        // Update Course Access Trends chart.
-        if (charts.courseAccess) {
-            charts.courseAccess.data.labels = data.course_access_trends.labels;
-            charts.courseAccess.data.datasets[0].data = data.course_access_trends.data;
-            charts.courseAccess.update();
-        }
-
-        // Update Completion Trends chart.
-        if (charts.completionTrends && data.completion_trends) {
-            charts.completionTrends.data.labels = data.completion_trends.labels;
-            charts.completionTrends.data.datasets[0].data = data.completion_trends.data;
-            charts.completionTrends.update();
-        }
-
-        // Update Dedication chart.
-        if (charts.dedication && data.top_dedication) {
-            charts.dedication.data.labels = data.top_dedication.map(function(c) {
-                return c.shortname && c.shortname.length > 18 ? c.shortname.substring(0, 15) + '...' : (c.shortname || c.fullname.substring(0, 15));
-            });
-            charts.dedication.data.datasets[0].data = data.top_dedication.map(function(c) { return c.dedication_percent; });
-            charts.dedication.update();
-        }
-    }
+function updateCharts(data) {
+    // CRÍTICO: En lugar de actualizar, destruir y recrear
+    // Esto evita problemas de sincronización y referencias perdidas
+    initCharts(data);
+}
 
     /**
      * Update summary cards.

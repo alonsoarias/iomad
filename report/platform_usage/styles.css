@@ -1035,13 +1035,15 @@
     position: relative;
     width: 100%;
     min-height: 200px;
+    max-height: 400px; /* AGREGADO: limita altura máxima */
 }
 
 /* Canvas wrapper for proper Chart.js rendering */
 .report-platform-usage .card-body canvas {
     display: block !important;
     width: 100% !important;
-    height: auto !important;
+    height: 100% !important; /* CAMBIADO: de 'auto' a '100%' */
+    max-height: 100%; /* AGREGADO: respeta el contenedor */
 }
 
 /* Specific chart heights based on canvas height attribute */
@@ -1073,9 +1075,10 @@
 /* Ensure card body with canvas has proper height */
 .report-platform-usage .card-body:has(canvas) {
     position: relative;
-    min-height: 180px;
+    min-height: 200px;
+    max-height: 400px; /* AGREGADO: limita altura máxima */
+    overflow: hidden; /* AGREGADO: previene desbordamiento */
 }
-
 /* ===========================================
    Dividers & Separators
    =========================================== */
