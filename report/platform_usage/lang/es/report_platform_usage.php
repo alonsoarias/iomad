@@ -24,189 +24,181 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// Información del plugin.
-$string['pluginname'] = 'Reporte de Uso de Plataforma';
-$string['platform_usage:view'] = 'Ver reporte de uso de plataforma';
-$string['platform_usage:export'] = 'Exportar reporte de uso de plataforma';
-$string['platformusagereport'] = 'Reporte de Uso de Plataforma';
+// Plugin principal.
+$string['pluginname'] = 'Reporte de uso de plataforma';
+$string['platform_usage:view'] = 'Ver el reporte de uso de plataforma';
+$string['platform_usage:export'] = 'Exportar el reporte de uso de plataforma';
+$string['platformusagereport'] = 'Reporte de uso de plataforma';
+$string['reporttitle'] = 'Reporte de uso de plataforma';
 
-// Filtro de compañía.
-$string['company'] = 'Compañía';
-$string['allcompanies'] = 'Todas las compañías';
-$string['selectcompany'] = 'Seleccione una compañía';
-$string['filter'] = 'Aplicar filtro';
-
-// Opciones de exportación.
-$string['exportexcel'] = 'Exportar a Excel';
-$string['exportcsv'] = 'Exportar a CSV';
+// Filtros.
+$string['company'] = 'Empresa';
+$string['allcompanies'] = 'Todas las empresas';
+$string['selectcompany'] = 'Seleccionar empresa';
+$string['filter'] = 'Aplicar filtros';
+$string['filter_company'] = 'Empresa';
+$string['filter_daterange'] = 'Rango de fechas';
 
 // Períodos de tiempo.
 $string['today'] = 'Hoy';
 $string['lastweek'] = 'Últimos 7 días';
 $string['lastmonth'] = 'Últimos 30 días';
 $string['lastquarter'] = 'Últimos 90 días';
-$string['lastyear'] = 'Último año';
-$string['custom'] = 'Rango de fechas personalizado';
+$string['lastyear'] = 'Últimos 365 días';
+$string['custom'] = 'Rango personalizado';
 $string['datefrom'] = 'Desde';
 $string['dateto'] = 'Hasta';
+$string['daterange'] = 'Rango de fechas';
 
-// Estadísticas de inicio de sesión.
+// Exportación.
+$string['exportexcel'] = 'Descargar Excel';
+$string['exportcsv'] = 'Descargar CSV';
+
+// Métricas de ingreso.
 $string['loginstoday'] = 'Ingresos hoy';
-$string['loginsweek'] = 'Ingresos en los últimos 7 días';
-$string['loginsmonth'] = 'Ingresos en los últimos 30 días';
+$string['loginsweek'] = 'Ingresos (7 días)';
+$string['loginsmonth'] = 'Ingresos (30 días)';
 $string['uniqueuserstoday'] = 'Usuarios únicos hoy';
-$string['uniqueusersweek'] = 'Usuarios únicos en los últimos 7 días';
-$string['uniqueusersmonth'] = 'Usuarios únicos en los últimos 30 días';
+$string['uniqueusersweek'] = 'Usuarios únicos (7 días)';
+$string['uniqueusersmonth'] = 'Usuarios únicos (30 días)';
+$string['loginsummary'] = 'Resumen de ingresos';
+$string['logintrends'] = 'Tendencia de ingresos';
+$string['dailylogins'] = 'Ingresos diarios';
+$string['weeklylogins'] = 'Ingresos semanales';
+$string['monthlylogins'] = 'Ingresos mensuales';
 
-// Estadísticas de usuarios.
-$string['totalusers'] = 'Total de usuarios registrados';
-$string['activeusers'] = 'Usuarios activos (acceso en los últimos 30 días)';
-$string['inactiveusers'] = 'Usuarios inactivos (sin acceso en los últimos 30 días)';
+// Métricas de usuarios.
+$string['totalusers'] = 'Total de usuarios';
+$string['activeusers'] = 'Usuarios activos';
+$string['inactiveusers'] = 'Usuarios inactivos';
+$string['usersummary'] = 'Resumen de usuarios';
+$string['usersbyactivity'] = 'Usuarios por actividad';
+$string['userdetails'] = 'Detalle de usuarios';
+$string['usercount'] = 'Usuarios';
+$string['dailyusers'] = 'Usuarios únicos diarios';
+$string['dailyuserstable'] = 'Usuarios diarios';
 
-// Títulos de gráficos.
-$string['logintrends'] = 'Tendencias de Ingreso';
-$string['dailylogins'] = 'Ingresos Diarios';
-$string['weeklylogins'] = 'Ingresos Semanales';
-$string['monthlylogins'] = 'Ingresos Mensuales';
-$string['usersbyactivity'] = 'Usuarios por Estado de Actividad';
-$string['courseusage'] = 'Uso de Cursos';
-$string['topcourses'] = 'Cursos Más Accedidos';
-$string['courseaccesstrends'] = 'Tendencias de Acceso a Cursos';
-$string['activityusage'] = 'Uso de Actividades';
-$string['topactivities'] = 'Actividades Más Accedidas';
+// Métricas de cursos.
+$string['courses'] = 'Cursos';
+$string['coursename'] = 'Curso';
+$string['courseaccesses'] = 'Accesos';
+$string['courseusage'] = 'Uso de cursos';
+$string['topcourses'] = 'Cursos más accedidos';
+$string['courseaccesstrends'] = 'Tendencia de accesos';
+$string['courseaccessdetails'] = 'Detalle de accesos a cursos';
+$string['coursesummary'] = 'Resumen de cursos';
+$string['courseaccess'] = 'Acceso a cursos';
+
+// Métricas de actividades.
+$string['activities'] = 'Actividades';
+$string['activityname'] = 'Actividad';
+$string['activitytype'] = 'Tipo';
+$string['activityaccesses'] = 'Vistas';
+$string['activityusage'] = 'Uso de actividades';
+$string['topactivities'] = 'Actividades más accedidas';
+$string['activityaccessdetails'] = 'Detalle de actividades';
+$string['activityaccess'] = 'Acceso a actividades';
+
+// Métricas de finalización.
+$string['completions'] = 'Finalizaciones';
+$string['completionstoday'] = 'Hoy';
+$string['completionsweek'] = 'Últimos 7 días';
+$string['completionsmonth'] = 'Últimos 30 días';
+$string['totalcompletions'] = 'Total';
+$string['completiontrends'] = 'Tendencia de finalizaciones';
+
+// Métricas de dedicación.
+$string['topdedication'] = 'Cursos por dedicación';
+$string['dedicationdetails'] = 'Detalle de dedicación';
+$string['totaldedication'] = 'Tiempo total';
+$string['enrolledusers'] = 'Matriculados';
+$string['dedicationpercent'] = 'Porcentaje';
+
+// Métricas de sesión.
+$string['avgsessionduration'] = 'Duración promedio de sesión';
+$string['totalsessions'] = 'Total de sesiones';
+$string['logoutstoday'] = 'Cierres de sesión hoy';
+$string['logoutsweek'] = 'Cierres de sesión (7 días)';
+$string['logoutsmonth'] = 'Cierres de sesión (30 días)';
+
+// Métricas de panel.
+$string['dashboardusers'] = 'Usuarios del panel (30 días)';
+$string['dashboardweek'] = 'Usuarios del panel (7 días)';
+$string['dashboardtoday'] = 'Usuarios del panel hoy';
 
 // Encabezados de tabla.
 $string['date'] = 'Fecha';
 $string['logins'] = 'Ingresos';
 $string['uniqueusers'] = 'Usuarios únicos';
-$string['coursename'] = 'Nombre del curso';
-$string['courseaccesses'] = 'Accesos al curso';
-$string['activityname'] = 'Nombre de la actividad';
-$string['activitytype'] = 'Tipo de actividad';
-$string['activityaccesses'] = 'Accesos a la actividad';
-$string['username'] = 'Nombre de usuario';
-$string['fullname'] = 'Nombre completo';
-$string['email'] = 'Correo electrónico';
+$string['username'] = 'Usuario';
+$string['fullname'] = 'Nombre';
+$string['email'] = 'Correo';
 $string['lastaccess'] = 'Último acceso';
-$string['logincount'] = 'Cantidad de ingresos';
+$string['logincount'] = 'Ingresos';
+$string['shortname'] = 'Nombre corto';
+$string['avgaccessperuser'] = 'Prom. por usuario';
 
-// Secciones de resumen.
+// Estados.
+$string['status'] = 'Estado';
+$string['active'] = 'Activo';
+$string['inactive'] = 'Inactivo';
+$string['total'] = 'Total';
+$string['created'] = 'Creado';
+
+// Estadísticas.
 $string['summary'] = 'Resumen';
-$string['platformsummary'] = 'Resumen de Plataforma';
-$string['coursesummary'] = 'Resumen de Cursos';
-$string['usersummary'] = 'Resumen de Usuarios';
+$string['platformsummary'] = 'Vista general de la plataforma';
+$string['platformaccess'] = 'Acceso a la plataforma';
+$string['average'] = 'Promedio';
+$string['maximum'] = 'Máximo';
+$string['period'] = 'Período';
+$string['accesscount'] = 'Accesos';
 
-// Secciones del reporte.
-$string['platformaccess'] = 'Acceso a la Plataforma';
-$string['courseaccess'] = 'Acceso a Cursos';
-$string['activityaccess'] = 'Acceso a Actividades';
-$string['userdetails'] = 'Detalles de Usuarios';
+// Reporte de curso.
+$string['coursereport'] = 'Reporte de uso del curso';
+$string['coursereport_desc'] = 'Estadísticas de uso del curso: actividad, participación y dedicación.';
+$string['courseenrolledusers'] = 'Usuarios matriculados';
+$string['courseactiveusers'] = 'Usuarios activos';
+$string['courseinactiveusers'] = 'Usuarios inactivos';
+$string['courselogins'] = 'Accesos al curso';
+$string['coursecompletions'] = 'Finalizaciones';
 
-// Mensajes y notificaciones.
-$string['nodata'] = 'No hay datos disponibles para los filtros seleccionados';
-$string['nodataforperiod'] = 'No hay datos disponibles para el período seleccionado';
-$string['selectcompanyfirst'] = 'Por favor, seleccione una compañía para ver el reporte';
-$string['loadingreport'] = 'Cargando datos del reporte...';
-
-// Privacidad.
-$string['privacy:metadata'] = 'El plugin Reporte de Uso de Plataforma no almacena ningún dato personal.';
+// Mensajes.
+$string['nodata'] = 'No hay datos disponibles para los filtros seleccionados.';
+$string['nodataforperiod'] = 'No hay datos disponibles para este período.';
+$string['selectcompanyfirst'] = 'Seleccione una empresa para ver el reporte.';
+$string['loadingreport'] = 'Cargando...';
 
 // Navegación.
 $string['backtoreport'] = 'Volver al reporte';
 $string['viewdetails'] = 'Ver detalles';
+$string['generateddate'] = 'Generado';
+$string['generated_by'] = 'Generado por';
 
-// Etiquetas de gráficos.
-$string['period'] = 'Período';
-$string['accesscount'] = 'Cantidad de accesos';
-$string['usercount'] = 'Cantidad de usuarios';
+// Privacidad.
+$string['privacy:metadata'] = 'Este plugin no almacena datos personales.';
 
-// Exportación a Excel.
-$string['reporttitle'] = 'Reporte de Uso de Plataforma';
-$string['daterange'] = 'Rango de fechas';
-$string['generateddate'] = 'Generado el';
-$string['loginsummary'] = 'Resumen de Ingresos';
-$string['shortname'] = 'Nombre corto';
-$string['courses'] = 'Cursos';
-$string['activities'] = 'Actividades';
-$string['users'] = 'Usuarios';
-$string['courseaccessdetails'] = 'Detalles de Acceso a Cursos';
-$string['activityaccessdetails'] = 'Detalles de Acceso a Actividades';
-$string['avgaccessperuser'] = 'Promedio de accesos por usuario';
-$string['total'] = 'Total';
-$string['created'] = 'Fecha de creación';
-$string['status'] = 'Estado';
-$string['active'] = 'Activo';
-$string['inactive'] = 'Inactivo';
-
-// Finalizaciones de cursos.
-$string['completions'] = 'Finalizaciones';
-$string['completionsmonth'] = 'Finalizaciones (últimos 30 días)';
-$string['completionsweek'] = 'Finalizaciones (últimos 7 días)';
-$string['completionstoday'] = 'Finalizaciones hoy';
-$string['totalcompletions'] = 'Total de finalizaciones';
-$string['completiontrends'] = 'Tendencias de Finalización';
-
-// Acceso al panel de control.
-$string['dashboardusers'] = 'Usuarios del panel (últimos 30 días)';
-$string['dashboardweek'] = 'Usuarios del panel (últimos 7 días)';
-$string['dashboardtoday'] = 'Hoy';
-
-// Métricas de sesión.
-$string['avgsessionduration'] = 'Duración promedio de sesión';
-$string['totalsessions'] = 'Total de sesiones';
-
-// Métricas de cierre de sesión.
-$string['logoutsmonth'] = 'Cierres de sesión (últimos 30 días)';
-$string['logoutsweek'] = 'Cierres de sesión (últimos 7 días)';
-$string['logoutstoday'] = 'Cierres de sesión hoy';
-
-// Usuarios diarios.
-$string['dailyusers'] = 'Usuarios Únicos Diarios';
-$string['dailyuserstable'] = 'Historial de Usuarios Diarios';
-
-// Métricas de dedicación.
-$string['topdedication'] = 'Cursos con Mayor Tiempo de Dedicación';
-$string['dedicationdetails'] = 'Detalles de Dedicación';
-$string['totaldedication'] = 'Tiempo total de dedicación';
-$string['enrolledusers'] = 'Usuarios matriculados';
-$string['dedicationpercent'] = 'Porcentaje de dedicación';
-
-// Reporte de curso.
-$string['coursereport'] = 'Reporte de Uso del Curso';
-$string['coursereport_desc'] = 'Estadísticas detalladas de uso de este curso, incluyendo actividad de usuarios, métricas de participación y análisis del tiempo de dedicación.';
-$string['courseenrolledusers'] = 'Usuarios matriculados';
-$string['courseactiveusers'] = 'Usuarios activos en el curso';
-$string['courseinactiveusers'] = 'Usuarios inactivos en el curso';
-$string['courselogins'] = 'Accesos al curso';
-$string['coursecompletions'] = 'Finalizaciones del curso';
-
-// Descripciones de secciones.
-$string['logintrends_desc'] = 'Tendencias de ingresos diarios y conteos de usuarios únicos durante los últimos 30 días.';
-$string['usersbyactivity_desc'] = 'Distribución de usuarios por estado de actividad (activos vs. inactivos según umbral de 30 días).';
-$string['coursetrends_desc'] = 'Tendencias de acceso a cursos durante el período seleccionado.';
-$string['dedication_desc'] = 'Tiempo dedicado por estudiantes en cada curso, calculado a partir de los registros de actividad de sesión.';
-$string['topcourses_desc'] = 'Cursos ordenados por cantidad de accesos, con métricas de tiempo de dedicación.';
-$string['topactivities_desc'] = 'Actividades de aprendizaje más accedidas en todos los cursos.';
-$string['completiontrends_desc'] = 'Tendencias de finalización de cursos durante los últimos 30 días.';
-
-// Estadísticas.
-$string['average'] = 'Promedio';
-$string['maximum'] = 'Máximo';
+// Descripciones de secciones para la interfaz.
+$string['logintrends_desc'] = 'Actividad de ingresos en los últimos 30 días';
+$string['usersbyactivity_desc'] = 'Usuarios activos vs inactivos (umbral de 30 días)';
+$string['coursetrends_desc'] = 'Accesos a cursos en el período seleccionado';
+$string['dedication_desc'] = 'Tiempo dedicado por curso según actividad de sesión';
+$string['topcourses_desc'] = 'Cursos ordenados por cantidad de accesos';
+$string['topactivities_desc'] = 'Actividades de aprendizaje más vistas';
+$string['completiontrends_desc'] = 'Finalizaciones de cursos en 30 días';
 
 // Descripciones de exportación.
-$string['export_report_desc'] = 'Análisis integral del uso de la plataforma con métricas detalladas de actividad y datos de participación de usuarios.';
-$string['export_logins_desc'] = 'Resumen de Ingresos: Total de ingresos y usuarios únicos para hoy, los últimos 7 días y los últimos 30 días. Cada autenticación exitosa a la plataforma cuenta como un ingreso.';
-$string['export_users_desc'] = 'Resumen de Actividad de Usuarios: Total de usuarios registrados, usuarios activos (ingresaron en los últimos 30 días) e inactivos. Los usuarios activos son aquellos que accedieron a la plataforma en los últimos 30 días.';
-$string['export_courses_desc'] = 'Detalles de Acceso a Cursos: Cursos ordenados por vistas totales, usuarios únicos y tiempo de dedicación. El conteo de accesos representa las veces que los usuarios vieron cada página del curso.';
-$string['export_activities_desc'] = 'Detalles de Acceso a Actividades: Actividades de aprendizaje más accedidas (tareas, foros, cuestionarios, etc.) con conteos de vistas y participación de usuarios únicos. Identifica qué materiales de aprendizaje son más utilizados.';
-$string['export_daily_desc'] = 'Historial de Ingresos Diarios: Desglose día por día de ingresos a la plataforma y usuarios únicos. Útil para identificar patrones de uso y períodos de mayor actividad.';
-$string['export_completions_desc'] = 'Resumen de Finalización de Cursos: Cantidad de cursos finalizados en diferentes períodos. Una finalización se registra cuando un usuario cumple todos los criterios de finalización del curso.';
-$string['export_dedication_desc'] = 'Análisis de Dedicación a Cursos: Tiempo dedicado por estudiantes en cada curso según la actividad de sesión. Las sesiones terminan después de 1 hora de inactividad. Muestra el tiempo total de dedicación y la distribución porcentual entre cursos.';
-$string['export_dailyusers_desc'] = 'Usuarios Únicos Diarios: Registro histórico de conteos de usuarios únicos por día. Permite seguir las tendencias de participación y el crecimiento de la plataforma a lo largo del tiempo.';
+$string['export_report_desc'] = 'Análisis de uso de plataforma con métricas de actividad y participación.';
+$string['export_logins_desc'] = 'Total de ingresos y usuarios únicos por período. Cada autenticación cuenta como un ingreso.';
+$string['export_users_desc'] = 'Usuarios registrados, activos (acceso en 30 días) e inactivos.';
+$string['export_courses_desc'] = 'Cursos ordenados por vistas, usuarios únicos y tiempo de dedicación.';
+$string['export_activities_desc'] = 'Actividades más accedidas con conteo de vistas y participación.';
+$string['export_daily_desc'] = 'Desglose diario de ingresos para análisis de patrones.';
+$string['export_completions_desc'] = 'Finalizaciones de cursos por período. Se registran al cumplir los criterios.';
+$string['export_dedication_desc'] = 'Tiempo por curso basado en sesiones. Las sesiones terminan tras 1 hora de inactividad.';
+$string['export_dailyusers_desc'] = 'Conteo diario de usuarios únicos para seguimiento de tendencias.';
 
-// Etiquetas de filtros.
-$string['generated_by'] = 'Generado por';
-$string['filter_company'] = 'Filtro de compañía';
-$string['filter_daterange'] = 'Filtro de rango de fechas';
+// Varios.
 $string['metric_explanation'] = 'Explicación de la métrica';
 $string['data_section'] = 'Sección de datos';
+$string['users'] = 'Usuarios';
