@@ -204,10 +204,10 @@ if (!$incoursecontext) {
     echo '</div>';
     echo '</div>';
 } else {
-    // Course context - show course info and export buttons.
+    // Course context - show course info, date filters, and export buttons.
     echo '<div class="card mb-4 bg-light">';
     echo '<div class="card-body">';
-    echo '<div class="d-flex flex-wrap align-items-center justify-content-between">';
+    echo '<div class="d-flex flex-wrap align-items-center justify-content-between mb-3">';
     echo '<div>';
     echo '<h5 class="mb-1"><i class="fa fa-book mr-2"></i>' . format_string($course->fullname) . '</h5>';
     echo '<small class="text-muted">' . format_string($course->shortname) . '</small>';
@@ -222,15 +222,37 @@ if (!$incoursecontext) {
             'sesskey' => sesskey(),
         ]);
         echo '<div>';
-        echo '<a href="' . $exporturl->out() . '&type=summary&format=excel" class="btn btn-success btn-export mr-2">';
+        echo '<a href="' . $exporturl->out() . '&type=summary&format=excel" id="export-excel-course" class="btn btn-success btn-export mr-2">';
         echo '<i class="fa fa-download"></i> ' . get_string('exportexcel', 'report_platform_usage');
         echo '</a>';
-        echo '<a href="' . $exporturl->out() . '&type=summary&format=csv" class="btn btn-secondary btn-export">';
+        echo '<a href="' . $exporturl->out() . '&type=summary&format=csv" id="export-csv-course" class="btn btn-secondary btn-export">';
         echo '<i class="fa fa-file-text"></i> ' . get_string('exportcsv', 'report_platform_usage');
         echo '</a>';
         echo '</div>';
     }
     echo '</div>';
+
+    // Date filter row for course context.
+    echo '<div class="d-flex flex-wrap align-items-center">';
+    echo '<div class="form-group mr-3 mb-2">';
+    echo '<label for="course-datefrom" class="mr-2">' . get_string('datefrom', 'report_platform_usage') . ':</label>';
+    echo '<input type="date" id="course-datefrom" class="form-control" value="' . date('Y-m-d', $datefrom) . '">';
+    echo '</div>';
+    echo '<div class="form-group mr-3 mb-2">';
+    echo '<label for="course-dateto" class="mr-2">' . get_string('dateto', 'report_platform_usage') . ':</label>';
+    echo '<input type="date" id="course-dateto" class="form-control" value="' . date('Y-m-d', $dateto) . '">';
+    echo '</div>';
+    echo '<div class="form-group mr-3 mb-2">';
+    echo '<button type="button" id="apply-course-filter" class="btn btn-primary">';
+    echo '<i class="fa fa-filter"></i> ' . get_string('filter', 'report_platform_usage');
+    echo '</button>';
+    echo '</div>';
+    echo '<div id="course-loading-indicator" class="mb-2 mr-3" style="display: none;">';
+    echo '<span class="spinner-border spinner-border-sm text-primary" role="status"></span>';
+    echo ' <span class="text-muted">' . get_string('loadingreport', 'report_platform_usage') . '</span>';
+    echo '</div>';
+    echo '</div>';
+
     echo '</div>';
     echo '</div>';
 }
@@ -661,10 +683,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // AJAX URL.
     var AJAX_URL = '<?php echo $ajaxurl; ?>';
 
+    // Context flag.
+    var inCourseContext = <?php echo $incoursecontext ? 'true' : 'false'; ?>;
+    var courseId = <?php echo (int)$courseid; ?>;
+
     // Initial data.
     var currentData = {
         login_summary: <?php echo json_encode($loginSummary); ?>,
         user_summary: <?php echo json_encode($userSummary); ?>,
+        course_stats: <?php echo json_encode($courseStats); ?>,
         daily_logins: <?php echo json_encode($dailyLogins); ?>,
         course_access_trends: <?php echo json_encode($courseAccessTrends); ?>,
         top_courses: <?php echo json_encode(array_values($topCourses)); ?>,
@@ -689,6 +716,17 @@ document.addEventListener('DOMContentLoaded', function() {
             var companyId = this.value;
             loadReportData(companyId);
             updateExportLinks(companyId);
+        });
+    }
+
+    // Course context date filter event.
+    var courseFilterBtn = document.getElementById('apply-course-filter');
+    if (courseFilterBtn) {
+        courseFilterBtn.addEventListener('click', function() {
+            var datefrom = document.getElementById('course-datefrom').value;
+            var dateto = document.getElementById('course-dateto').value;
+            loadCourseReportData(datefrom, dateto);
+            updateCourseExportLinks(datefrom, dateto);
         });
     }
 
@@ -731,13 +769,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // User Activity Doughnut Chart.
+        // In course context, use course_stats; in platform context, use user_summary.
         var userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
+        var activeUsers, inactiveUsers;
+        if (inCourseContext && data.course_stats) {
+            activeUsers = data.course_stats.active_users || 0;
+            inactiveUsers = data.course_stats.inactive_users || 0;
+        } else {
+            activeUsers = data.user_summary.active || 0;
+            inactiveUsers = data.user_summary.inactive || 0;
+        }
         charts.userActivity = new Chart(userActivityCtx, {
             type: 'doughnut',
             data: {
                 labels: [STRINGS.activeusers, STRINGS.inactiveusers],
                 datasets: [{
-                    data: [data.user_summary.active, data.user_summary.inactive],
+                    data: [activeUsers, inactiveUsers],
                     backgroundColor: ['#28a745', '#dc3545'],
                     hoverOffset: 4
                 }]
@@ -847,7 +894,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update User Activity chart.
         if (charts.userActivity) {
-            charts.userActivity.data.datasets[0].data = [data.user_summary.active, data.user_summary.inactive];
+            var activeUsers, inactiveUsers;
+            if (inCourseContext && data.course_stats) {
+                activeUsers = data.course_stats.active_users || 0;
+                inactiveUsers = data.course_stats.inactive_users || 0;
+            } else {
+                activeUsers = data.user_summary.active || 0;
+                inactiveUsers = data.user_summary.inactive || 0;
+            }
+            charts.userActivity.data.datasets[0].data = [activeUsers, inactiveUsers];
             charts.userActivity.update();
         }
 
@@ -1011,6 +1066,78 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (csvLink) {
             var url = csvLink.href.replace(/companyid=\d+/, 'companyid=' + companyId);
+            csvLink.href = url;
+        }
+    }
+
+    /**
+     * Load course report data via AJAX.
+     */
+    function loadCourseReportData(datefrom, dateto) {
+        var loading = document.getElementById('course-loading-indicator');
+        if (loading) {
+            loading.style.display = 'inline-block';
+        }
+
+        var datefromTs = new Date(datefrom).getTime() / 1000;
+        var datetoTs = new Date(dateto).getTime() / 1000 + 86399; // End of day
+
+        var url = AJAX_URL + '?courseid=' + courseId + '&datefrom=' + Math.floor(datefromTs) + '&dateto=' + Math.floor(datetoTs);
+
+        fetch(url)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                currentData = data;
+                updateSummaryCards(data);
+                updateCharts(data);
+                updateTables(data);
+                updateCourseCards(data);
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+            })
+            .catch(function(error) {
+                console.error('Error loading course report data:', error);
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+            });
+    }
+
+    /**
+     * Update course-specific summary cards.
+     */
+    function updateCourseCards(data) {
+        if (!inCourseContext || !data.course_stats) {
+            return;
+        }
+
+        // Update course accesses.
+        updateElement('course-accesses', numberFormat(data.course_stats.accesses || 0));
+    }
+
+    /**
+     * Update course export links with new date range.
+     */
+    function updateCourseExportLinks(datefrom, dateto) {
+        var excelLink = document.getElementById('export-excel-course');
+        var csvLink = document.getElementById('export-csv-course');
+
+        var datefromTs = new Date(datefrom).getTime() / 1000;
+        var datetoTs = new Date(dateto).getTime() / 1000 + 86399;
+
+        if (excelLink) {
+            var url = excelLink.href
+                .replace(/datefrom=\d+/, 'datefrom=' + Math.floor(datefromTs))
+                .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
+            excelLink.href = url;
+        }
+        if (csvLink) {
+            var url = csvLink.href
+                .replace(/datefrom=\d+/, 'datefrom=' + Math.floor(datefromTs))
+                .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
             csvLink.href = url;
         }
     }

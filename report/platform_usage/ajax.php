@@ -26,23 +26,36 @@ define('AJAX_SCRIPT', true);
 
 require_once(__DIR__ . '/../../config.php');
 
-// Require login.
-require_login();
-
-// Check capability.
-$context = context_system::instance();
-require_capability('report/platform_usage:view', $context);
-
 // Get parameters.
+$courseid = optional_param('courseid', 0, PARAM_INT);
 $companyid = optional_param('companyid', 0, PARAM_INT);
 $datefrom = optional_param('datefrom', strtotime('-30 days midnight'), PARAM_INT);
 $dateto = optional_param('dateto', time(), PARAM_INT);
 
-// Create report instance.
-$report = new \report_platform_usage\report($companyid, $datefrom, $dateto);
+// Determine context and require login.
+if ($courseid > 0) {
+    $course = get_course($courseid);
+    require_login($course);
+    $context = context_course::instance($courseid);
+} else {
+    require_login();
+    $context = context_system::instance();
+}
+
+// Check capability.
+require_capability('report/platform_usage:view', $context);
+
+// Create report instance with course ID.
+$report = new \report_platform_usage\report($companyid, $datefrom, $dateto, true, $courseid);
 
 // Get all data.
 $data = $report->get_all_data();
+
+// Add course-specific data if in course context.
+if ($courseid > 0) {
+    $data['course_stats'] = $report->get_course_statistics();
+    $data['top_dedication'] = $report->get_top_courses_dedication(10);
+}
 
 // Return JSON response.
 header('Content-Type: application/json; charset=utf-8');

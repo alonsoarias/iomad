@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version information.
+ * Scheduled tasks for report_platform_usage.
  *
  * @package   report_platform_usage
  * @copyright 2024 IOMAD
@@ -24,8 +24,15 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->release  = '2.4.0 (Build: 20251203)';
-$plugin->version  = 2025120305;
-$plugin->requires = 2024100700;
-$plugin->component = 'report_platform_usage';
-$plugin->maturity = MATURITY_STABLE;
+$tasks = [
+    [
+        'classname' => 'report_platform_usage\task\dedication_collector',
+        'blocking' => 0,
+        'minute' => '30',
+        'hour' => '1',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+        'disabled' => false
+    ],
+];

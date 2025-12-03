@@ -255,3 +255,6 @@ $string['tooltip_topactivities'] = 'Most accessed activities ranked by number of
 $string['tooltip_completiontrends'] = 'Daily course completions over the last 30 days.';
 $string['tooltip_dailyuserstable'] = 'Recent daily unique user counts.';
 $string['tooltip_dedicationchart'] = 'Top courses ranked by total time dedication.';
+
+// Scheduled task.
+$string['task_collect_dedication'] = 'Collect dedication time data';

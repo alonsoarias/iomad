@@ -1256,7 +1256,8 @@ class report {
 
     /**
      * Calculate total dedication time for a course.
-     * Based on block_dedication calculation logic.
+     * First tries to use pre-calculated data from the scheduled task,
+     * then falls back to on-the-fly calculation from log data.
      *
      * @param int $courseid
      * @param int $mintime
@@ -1271,6 +1272,103 @@ class report {
         if (empty($userids)) {
             return 0;
         }
+
+        // First, try to use pre-calculated data from the dedication table.
+        $dbman = $DB->get_manager();
+        if ($dbman->table_exists('report_platform_usage_ded')) {
+            $precalculated = $this->get_precalculated_dedication($courseid, $mintime, $maxtime, $userids);
+            if ($precalculated > 0) {
+                return $precalculated;
+            }
+        }
+
+        // Also check block_dedication table if it exists.
+        if ($dbman->table_exists('block_dedication')) {
+            $blockdedication = $this->get_block_dedication_data($courseid, $mintime, $maxtime, $userids);
+            if ($blockdedication > 0) {
+                return $blockdedication;
+            }
+        }
+
+        // Fall back to on-the-fly calculation from log data.
+        return $this->calculate_dedication_from_logs($courseid, $mintime, $maxtime, $sessionlimit, $userids);
+    }
+
+    /**
+     * Get pre-calculated dedication from report_platform_usage_ded table.
+     *
+     * @param int $courseid
+     * @param int $mintime
+     * @param int $maxtime
+     * @param array $userids
+     * @return int Total dedication time in seconds
+     */
+    protected function get_precalculated_dedication(int $courseid, int $mintime, int $maxtime, array $userids): int {
+        global $DB;
+
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        $sql = "SELECT SUM(timespent) as total
+                FROM {report_platform_usage_ded}
+                WHERE courseid = :courseid
+                  AND timestart >= :mintime
+                  AND timestart <= :maxtime
+                  AND userid $usersql";
+
+        $params = array_merge([
+            'courseid' => $courseid,
+            'mintime' => $mintime,
+            'maxtime' => $maxtime
+        ], $userparams);
+
+        $result = $DB->get_field_sql($sql, $params);
+        return (int) $result;
+    }
+
+    /**
+     * Get dedication from block_dedication table if it exists.
+     *
+     * @param int $courseid
+     * @param int $mintime
+     * @param int $maxtime
+     * @param array $userids
+     * @return int Total dedication time in seconds
+     */
+    protected function get_block_dedication_data(int $courseid, int $mintime, int $maxtime, array $userids): int {
+        global $DB;
+
+        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
+
+        $sql = "SELECT SUM(timespent) as total
+                FROM {block_dedication}
+                WHERE courseid = :courseid
+                  AND timestart >= :mintime
+                  AND timestart <= :maxtime
+                  AND userid $usersql";
+
+        $params = array_merge([
+            'courseid' => $courseid,
+            'mintime' => $mintime,
+            'maxtime' => $maxtime
+        ], $userparams);
+
+        $result = $DB->get_field_sql($sql, $params);
+        return (int) $result;
+    }
+
+    /**
+     * Calculate dedication time from log data (on-the-fly calculation).
+     * Based on block_dedication calculation logic.
+     *
+     * @param int $courseid
+     * @param int $mintime
+     * @param int $maxtime
+     * @param int $sessionlimit
+     * @param array $userids
+     * @return int Total dedication time in seconds
+     */
+    protected function calculate_dedication_from_logs(int $courseid, int $mintime, int $maxtime, int $sessionlimit, array $userids): int {
+        global $DB;
 
         // Get ignore sessions limit setting (minimum session duration).
         $ignoresessionslimit = get_config('report_platform_usage', 'ignore_sessions_limit');

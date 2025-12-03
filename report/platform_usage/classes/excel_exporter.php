@@ -450,10 +450,12 @@ class excel_exporter {
      */
     protected function createLoginSummaryChart($sheet, int $dataStart, int $dataEnd): void {
         $sheetName = $this->sheetNames['summary'];
+        // Header row is 2 rows before data start (row 9 when data starts at row 10).
+        $headerRow = $dataStart - 1;
         // Data series for logins.
         $dataSeriesLabels = [
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\$7", null, 1),
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\$7", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\${$headerRow}", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\${$headerRow}", null, 1),
         ];
         $xAxisTickValues = [
             new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$A\${$dataStart}:\$A\${$dataEnd}", null, 3),
@@ -850,9 +852,11 @@ class excel_exporter {
      */
     protected function createCompletionsChart($sheet, int $dataStart, int $dataEnd): void {
         $sheetName = $this->sheetNames['completions'];
+        // Header row is 1 row before data start.
+        $headerRow = $dataStart - 1;
 
         $dataSeriesLabels = [
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\$12", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\${$headerRow}", null, 1),
         ];
         $xAxisTickValues = [
             new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$A\${$dataStart}:\$A\${$dataEnd}", null, $dataEnd - $dataStart + 1),
