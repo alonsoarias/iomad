@@ -483,6 +483,7 @@ class report {
         }
 
         list($usersql, $userparams) = $this->get_user_sql('l.userid');
+        list($coursesql, $courseparams) = $this->get_course_sql('l.courseid');
 
         $sql = "SELECT c.id, c.shortname, c.fullname,
                        COUNT(*) as access_count,
@@ -494,6 +495,7 @@ class report {
                   AND l.courseid IS NOT NULL
                   AND l.courseid > 1
                   AND $usersql
+                  AND $coursesql
                 GROUP BY c.id, c.shortname, c.fullname
                 ORDER BY access_count DESC
                 LIMIT $limit";
@@ -502,7 +504,7 @@ class report {
             'event' => '\\core\\event\\course_viewed',
             'datefrom' => $this->datefrom,
             'dateto' => $this->dateto,
-        ], $userparams);
+        ], $userparams, $courseparams);
 
         return $DB->get_records_sql($sql, $params);
     }
@@ -535,6 +537,7 @@ class report {
 
         $starttime = strtotime("-{$days} days midnight");
         list($usersql, $userparams) = $this->get_user_sql('userid');
+        list($coursesql, $courseparams) = $this->get_course_sql('courseid');
 
         $sql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as access_date,
                        COUNT(*) as access_count
@@ -544,13 +547,14 @@ class report {
                   AND courseid IS NOT NULL
                   AND courseid > 1
                   AND $usersql
+                  AND $coursesql
                 GROUP BY DATE(FROM_UNIXTIME(timecreated))
                 ORDER BY access_date ASC";
 
         $params = array_merge([
             'event' => '\\core\\event\\course_viewed',
             'starttime' => $starttime,
-        ], $userparams);
+        ], $userparams, $courseparams);
 
         $records = $DB->get_records_sql($sql, $params);
 
@@ -602,6 +606,7 @@ class report {
         }
 
         list($usersql, $userparams) = $this->get_user_sql('l.userid');
+        list($coursesql, $courseparams) = $this->get_course_sql('l.courseid');
 
         $sql = "SELECT l.contextinstanceid, l.component, l.courseid,
                        COUNT(*) as access_count,
@@ -611,6 +616,7 @@ class report {
                   AND l.target = 'course_module'
                   AND l.timecreated BETWEEN :datefrom AND :dateto
                   AND $usersql
+                  AND $coursesql
                 GROUP BY l.contextinstanceid, l.component, l.courseid
                 ORDER BY access_count DESC
                 LIMIT $limit";
@@ -618,7 +624,7 @@ class report {
         $params = array_merge([
             'datefrom' => $this->datefrom,
             'dateto' => $this->dateto,
-        ], $userparams);
+        ], $userparams, $courseparams);
 
         $records = $DB->get_records_sql($sql, $params);
 
@@ -1068,21 +1074,28 @@ class report {
     protected function compute_top_courses_dedication(int $limit, int $days): array {
         global $DB;
 
-        $sessionlimit = get_config('report_usage_monitor', 'dedication_session_limit');
+        $sessionlimit = get_config('report_platform_usage', 'session_limit');
         $sessionlimit = !empty($sessionlimit) ? (int)$sessionlimit : HOURSECS;
 
         $mintime = time() - ($days * DAYSECS);
         $maxtime = time();
 
-        // Get courses with enrollments.
+        // Get courses with enrollments (filter by course if in course context).
+        $params = ['siteid' => SITEID];
+        $coursefilter = '';
+        if ($this->courseid > 0) {
+            $coursefilter = 'AND c.id = :filtercourseid';
+            $params['filtercourseid'] = $this->courseid;
+        }
+
         $sql = "SELECT DISTINCT c.id, c.fullname, c.shortname, c.startdate
                 FROM {course} c
                 JOIN {enrol} e ON e.courseid = c.id
                 JOIN {user_enrolments} ue ON ue.enrolid = e.id
-                WHERE c.id != :siteid AND c.visible = 1
+                WHERE c.id != :siteid AND c.visible = 1 $coursefilter
                 ORDER BY c.fullname ASC";
 
-        $courses = $DB->get_records_sql($sql, ['siteid' => SITEID]);
+        $courses = $DB->get_records_sql($sql, $params);
 
         if (empty($courses)) {
             return [];
@@ -1335,6 +1348,81 @@ class report {
             'labels' => $labels,
             'data' => array_values($data),
             'records' => array_slice($tablerecords, 0, 10)
+        ];
+    }
+
+    /**
+     * Get course-specific statistics (for course context).
+     *
+     * @return array Course statistics
+     */
+    public function get_course_statistics(): array {
+        global $DB;
+
+        if ($this->courseid <= 0) {
+            return [];
+        }
+
+        $course = $DB->get_record('course', ['id' => $this->courseid], 'id, fullname, shortname, startdate');
+        if (!$course) {
+            return [];
+        }
+
+        $context = \context_course::instance($this->courseid, IGNORE_MISSING);
+        if (!$context) {
+            return [];
+        }
+
+        // Get enrolled users count.
+        $enrolledcount = count_enrolled_users($context);
+
+        // Get active users (accessed in last 30 days).
+        $activeThreshold = strtotime('-30 days');
+        $enrolledusers = get_enrolled_users($context, '', 0, 'u.id, u.lastaccess', null, 0, 0, true);
+        $activecount = 0;
+        foreach ($enrolledusers as $user) {
+            if ($user->lastaccess >= $activeThreshold) {
+                $activecount++;
+            }
+        }
+
+        // Get course completions.
+        $completions = $DB->count_records_select(
+            'course_completions',
+            'course = :courseid AND timecompleted IS NOT NULL',
+            ['courseid' => $this->courseid]
+        );
+
+        // Get course accesses in period.
+        $dbman = $DB->get_manager();
+        $accesses = 0;
+        if ($dbman->table_exists('logstore_standard_log')) {
+            $accesses = $DB->count_records_select(
+                'logstore_standard_log',
+                "eventname = :event AND courseid = :courseid AND timecreated BETWEEN :datefrom AND :dateto",
+                [
+                    'event' => '\\core\\event\\course_viewed',
+                    'courseid' => $this->courseid,
+                    'datefrom' => $this->datefrom,
+                    'dateto' => $this->dateto
+                ]
+            );
+        }
+
+        // Get course dedication.
+        $dedicationData = $this->get_top_courses_dedication(1);
+        $dedication = !empty($dedicationData) ? $dedicationData[0] : null;
+
+        return [
+            'course' => $course,
+            'enrolled_users' => $enrolledcount,
+            'active_users' => $activecount,
+            'inactive_users' => $enrolledcount - $activecount,
+            'completions' => $completions,
+            'accesses' => $accesses,
+            'total_dedication' => $dedication ? $dedication['total_dedication'] : 0,
+            'total_dedication_formatted' => $dedication ? $dedication['total_dedication_formatted'] : '0m',
+            'avg_dedication_formatted' => $dedication ? $dedication['avg_dedication_formatted'] : '0m',
         ];
     }
 

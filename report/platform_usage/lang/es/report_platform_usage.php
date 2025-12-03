@@ -202,3 +202,14 @@ $string['export_dailyusers_desc'] = 'Conteo diario de usuarios únicos para segu
 $string['metric_explanation'] = 'Explicación de la métrica';
 $string['data_section'] = 'Sección de datos';
 $string['users'] = 'Usuarios';
+
+// Configuración.
+$string['settings'] = 'Configuración del reporte';
+$string['setting_session_limit'] = 'Tiempo de sesión';
+$string['setting_session_limit_desc'] = 'Tiempo máximo entre acciones para considerar que pertenecen a una misma sesión. Se usa para calcular la dedicación.';
+$string['setting_default_period'] = 'Período predeterminado';
+$string['setting_default_period_desc'] = 'Rango de tiempo predeterminado para los datos del reporte cuando no se seleccionan fechas.';
+$string['setting_top_items_limit'] = 'Límite de elementos';
+$string['setting_top_items_limit_desc'] = 'Cantidad de elementos a mostrar en las listas de cursos y actividades.';
+$string['setting_enable_cache'] = 'Usar caché';
+$string['setting_enable_cache_desc'] = 'Almacenar datos del reporte en caché para mejorar el rendimiento. Desactivar solo para depuración.';

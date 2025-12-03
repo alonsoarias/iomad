@@ -202,3 +202,14 @@ $string['export_dailyusers_desc'] = 'Daily unique user counts for tracking engag
 $string['metric_explanation'] = 'Metric explanation';
 $string['data_section'] = 'Data section';
 $string['users'] = 'Users';
+
+// Settings.
+$string['settings'] = 'Platform usage settings';
+$string['setting_session_limit'] = 'Session timeout';
+$string['setting_session_limit_desc'] = 'Maximum time between actions to consider them part of the same session. Used for calculating time dedication.';
+$string['setting_default_period'] = 'Default time period';
+$string['setting_default_period_desc'] = 'Default time range for report data when no custom dates are selected.';
+$string['setting_top_items_limit'] = 'Top items limit';
+$string['setting_top_items_limit_desc'] = 'Number of items to display in course and activity rankings.';
+$string['setting_enable_cache'] = 'Enable cache';
+$string['setting_enable_cache_desc'] = 'Store report data in cache to improve performance. Disable only for debugging.';

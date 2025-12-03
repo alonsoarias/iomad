@@ -91,6 +91,9 @@ $completionTrends = $report->get_completion_trends(30);
 $dailyUsers = $report->get_daily_users(10);
 $topDedication = $report->get_top_courses_dedication(10);
 
+// Get course-specific statistics if in course context.
+$courseStats = $incoursecontext ? $report->get_course_statistics() : [];
+
 // Language strings for JavaScript.
 $jsstrings = [
     'logins' => get_string('logins', 'report_platform_usage'),
@@ -196,123 +199,226 @@ if (!$incoursecontext) {
     echo '</div>';
 }
 
-// Consolidated Summary Cards - 4 key metrics.
+// Consolidated Summary Cards - 4 key metrics (different for course context).
 echo '<div class="row mb-4">';
 
-// Platform Access Summary card - combines logins.
-echo '<div class="col-lg-3 col-md-6 mb-3">';
-echo '<div class="card h-100 border-primary">';
-echo '<div class="card-header bg-primary text-white py-2">';
-echo '<h6 class="mb-0"><i class="fa fa-sign-in mr-2"></i>' . get_string('platformaccess', 'report_platform_usage') . '</h6>';
-echo '</div>';
-echo '<div class="card-body">';
-echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-echo '<span class="text-muted small">' . get_string('today', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-primary" id="logins-today">' . number_format($loginSummary['logins_today']) . '</span>';
-echo '</div>';
-echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-echo '<span class="text-muted small">' . get_string('lastweek', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-info" id="logins-week">' . number_format($loginSummary['logins_week']) . '</span>';
-echo '</div>';
-echo '<div class="d-flex justify-content-between align-items-center">';
-echo '<span class="text-muted small">' . get_string('lastmonth', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-secondary" id="logins-month">' . number_format($loginSummary['logins_month']) . '</span>';
-echo '</div>';
-echo '<hr class="my-2">';
-echo '<div class="text-center">';
-echo '<small class="text-muted">' . get_string('uniqueusersmonth', 'report_platform_usage') . '</small>';
-echo '<h4 class="text-primary mb-0" id="unique-month">' . number_format($loginSummary['unique_users_month']) . '</h4>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
+if ($incoursecontext && !empty($courseStats)) {
+    // Course Context: Show course-specific metrics.
 
-// User Activity Summary card.
-echo '<div class="col-lg-3 col-md-6 mb-3">';
-echo '<div class="card h-100 border-success">';
-echo '<div class="card-header bg-success text-white py-2">';
-echo '<h6 class="mb-0"><i class="fa fa-users mr-2"></i>' . get_string('usersummary', 'report_platform_usage') . '</h6>';
-echo '</div>';
-echo '<div class="card-body">';
-echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-echo '<span class="text-muted small">' . get_string('totalusers', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-secondary" id="total-users">' . number_format($userSummary['total']) . '</span>';
-echo '</div>';
-echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-echo '<span class="text-success small">' . get_string('active', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-success" id="active-users">' . number_format($userSummary['active']) . '</span>';
-echo '</div>';
-echo '<div class="d-flex justify-content-between align-items-center">';
-echo '<span class="text-danger small">' . get_string('inactive', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-danger" id="inactive-users">' . number_format($userSummary['inactive']) . '</span>';
-echo '</div>';
-echo '<hr class="my-2">';
-echo '<div class="text-center">';
-echo '<small class="text-muted">' . get_string('dashboardusers', 'report_platform_usage') . '</small>';
-echo '<h4 class="text-success mb-0" id="dashboard-month">' . number_format($dashboardAccess['month']) . '</h4>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
+    // Course Access card.
+    echo '<div class="col-lg-3 col-md-6 mb-3">';
+    echo '<div class="card h-100 border-primary">';
+    echo '<div class="card-header bg-primary text-white py-2">';
+    echo '<h6 class="mb-0"><i class="fa fa-sign-in mr-2"></i>' . get_string('courseaccess', 'report_platform_usage') . '</h6>';
+    echo '</div>';
+    echo '<div class="card-body">';
+    echo '<div class="d-flex justify-content-between align-items-center mb-3">';
+    echo '<span class="text-muted">' . get_string('courseaccesses', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-primary badge-lg" id="course-accesses">' . number_format($courseStats['accesses']) . '</span>';
+    echo '</div>';
+    echo '<hr class="my-2">';
+    echo '<div class="text-center">';
+    echo '<small class="text-muted">' . get_string('totaldedication', 'report_platform_usage') . '</small>';
+    echo '<h4 class="text-primary mb-0">' . $courseStats['total_dedication_formatted'] . '</h4>';
+    echo '<small class="text-muted">' . get_string('avgaccessperuser', 'report_platform_usage') . ': ' . $courseStats['avg_dedication_formatted'] . '</small>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
 
-// Course Completions Summary card.
-echo '<div class="col-lg-3 col-md-6 mb-3">';
-echo '<div class="card h-100 border-info">';
-echo '<div class="card-header bg-info text-white py-2">';
-echo '<h6 class="mb-0"><i class="fa fa-graduation-cap mr-2"></i>' . get_string('completions', 'report_platform_usage') . '</h6>';
-echo '</div>';
-echo '<div class="card-body">';
-echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-echo '<span class="text-muted small">' . get_string('today', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-info" id="completions-today">' . number_format($completionsSummary['completions_today']) . '</span>';
-echo '</div>';
-echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-echo '<span class="text-muted small">' . get_string('lastweek', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-primary" id="completions-week">' . number_format($completionsSummary['completions_week']) . '</span>';
-echo '</div>';
-echo '<div class="d-flex justify-content-between align-items-center">';
-echo '<span class="text-muted small">' . get_string('lastmonth', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-secondary" id="completions-month">' . number_format($completionsSummary['completions_month']) . '</span>';
-echo '</div>';
-echo '<hr class="my-2">';
-echo '<div class="text-center">';
-echo '<small class="text-muted">' . get_string('totalcompletions', 'report_platform_usage') . '</small>';
-echo '<h4 class="text-info mb-0" id="total-completions">' . number_format($completionsSummary['total_completions']) . '</h4>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
+    // Course Users card.
+    echo '<div class="col-lg-3 col-md-6 mb-3">';
+    echo '<div class="card h-100 border-success">';
+    echo '<div class="card-header bg-success text-white py-2">';
+    echo '<h6 class="mb-0"><i class="fa fa-users mr-2"></i>' . get_string('courseenrolledusers', 'report_platform_usage') . '</h6>';
+    echo '</div>';
+    echo '<div class="card-body">';
+    echo '<div class="d-flex justify-content-between align-items-center mb-2">';
+    echo '<span class="text-muted small">' . get_string('enrolledusers', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-secondary">' . number_format($courseStats['enrolled_users']) . '</span>';
+    echo '</div>';
+    echo '<div class="d-flex justify-content-between align-items-center mb-2">';
+    echo '<span class="text-success small">' . get_string('active', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-success">' . number_format($courseStats['active_users']) . '</span>';
+    echo '</div>';
+    echo '<div class="d-flex justify-content-between align-items-center">';
+    echo '<span class="text-danger small">' . get_string('inactive', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-danger">' . number_format($courseStats['inactive_users']) . '</span>';
+    echo '</div>';
+    echo '<hr class="my-2">';
+    $activePercent = $courseStats['enrolled_users'] > 0 ? round(($courseStats['active_users'] / $courseStats['enrolled_users']) * 100) : 0;
+    echo '<div class="progress" style="height: 20px;">';
+    echo '<div class="progress-bar bg-success" role="progressbar" style="width: ' . $activePercent . '%" aria-valuenow="' . $activePercent . '" aria-valuemin="0" aria-valuemax="100">' . $activePercent . '% ' . get_string('active', 'report_platform_usage') . '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
 
-// Daily Users Summary card.
-$maxDailyUsers = !empty($dailyUsers['data']) ? max($dailyUsers['data']) : 0;
-$avgDailyUsers = !empty($dailyUsers['data']) ? round(array_sum($dailyUsers['data']) / count($dailyUsers['data'])) : 0;
-$todayUsers = !empty($dailyUsers['data']) ? end($dailyUsers['data']) : 0;
-echo '<div class="col-lg-3 col-md-6 mb-3">';
-echo '<div class="card h-100 border-warning">';
-echo '<div class="card-header bg-warning text-dark py-2">';
-echo '<h6 class="mb-0"><i class="fa fa-calendar mr-2"></i>' . get_string('dailyusers', 'report_platform_usage') . '</h6>';
-echo '</div>';
-echo '<div class="card-body">';
-echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-echo '<span class="text-muted small">' . get_string('today', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-warning" id="daily-today">' . number_format($todayUsers) . '</span>';
-echo '</div>';
-echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-echo '<span class="text-muted small">' . get_string('average', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-secondary" id="daily-avg">' . number_format($avgDailyUsers) . '</span>';
-echo '</div>';
-echo '<div class="d-flex justify-content-between align-items-center">';
-echo '<span class="text-muted small">' . get_string('maximum', 'report_platform_usage') . '</span>';
-echo '<span class="badge badge-dark" id="daily-max">' . number_format($maxDailyUsers) . '</span>';
-echo '</div>';
-echo '<hr class="my-2">';
-echo '<div class="text-center">';
-echo '<small class="text-muted">' . get_string('uniqueusersweek', 'report_platform_usage') . '</small>';
-echo '<h4 class="text-warning mb-0" id="unique-week">' . number_format($loginSummary['unique_users_week']) . '</h4>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
+    // Course Completions card.
+    echo '<div class="col-lg-3 col-md-6 mb-3">';
+    echo '<div class="card h-100 border-info">';
+    echo '<div class="card-header bg-info text-white py-2">';
+    echo '<h6 class="mb-0"><i class="fa fa-graduation-cap mr-2"></i>' . get_string('coursecompletions', 'report_platform_usage') . '</h6>';
+    echo '</div>';
+    echo '<div class="card-body">';
+    echo '<div class="text-center mb-3">';
+    echo '<h2 class="text-info mb-0">' . number_format($courseStats['completions']) . '</h2>';
+    echo '<small class="text-muted">' . get_string('totalcompletions', 'report_platform_usage') . '</small>';
+    echo '</div>';
+    echo '<hr class="my-2">';
+    $completionPercent = $courseStats['enrolled_users'] > 0 ? round(($courseStats['completions'] / $courseStats['enrolled_users']) * 100) : 0;
+    echo '<div class="progress" style="height: 20px;">';
+    echo '<div class="progress-bar bg-info" role="progressbar" style="width: ' . $completionPercent . '%" aria-valuenow="' . $completionPercent . '" aria-valuemin="0" aria-valuemax="100">' . $completionPercent . '%</div>';
+    echo '</div>';
+    echo '<small class="text-muted text-center d-block mt-1">' . get_string('completions', 'report_platform_usage') . ' / ' . get_string('enrolledusers', 'report_platform_usage') . '</small>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+
+    // Course Activity card (top activities preview).
+    echo '<div class="col-lg-3 col-md-6 mb-3">';
+    echo '<div class="card h-100 border-warning">';
+    echo '<div class="card-header bg-warning text-dark py-2">';
+    echo '<h6 class="mb-0"><i class="fa fa-tasks mr-2"></i>' . get_string('activities', 'report_platform_usage') . '</h6>';
+    echo '</div>';
+    echo '<div class="card-body p-2">';
+    if (empty($topActivities)) {
+        echo '<p class="text-muted text-center">' . get_string('nodata', 'report_platform_usage') . '</p>';
+    } else {
+        echo '<div class="list-group list-group-flush small">';
+        $actCount = 0;
+        foreach ($topActivities as $activity) {
+            if ($actCount >= 4) break;
+            echo '<div class="list-group-item d-flex justify-content-between align-items-center px-1 py-1">';
+            echo '<span class="text-truncate" style="max-width: 140px;" title="' . format_string($activity->name) . '">' . format_string(mb_strimwidth($activity->name, 0, 20, '...')) . '</span>';
+            echo '<span class="badge badge-warning">' . number_format($activity->access_count) . '</span>';
+            echo '</div>';
+            $actCount++;
+        }
+        echo '</div>';
+    }
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+
+} else {
+    // System Context: Show platform-wide metrics.
+
+    // Platform Access Summary card - combines logins.
+    echo '<div class="col-lg-3 col-md-6 mb-3">';
+    echo '<div class="card h-100 border-primary">';
+    echo '<div class="card-header bg-primary text-white py-2">';
+    echo '<h6 class="mb-0"><i class="fa fa-sign-in mr-2"></i>' . get_string('platformaccess', 'report_platform_usage') . '</h6>';
+    echo '</div>';
+    echo '<div class="card-body">';
+    echo '<div class="d-flex justify-content-between align-items-center mb-2">';
+    echo '<span class="text-muted small">' . get_string('today', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-primary" id="logins-today">' . number_format($loginSummary['logins_today']) . '</span>';
+    echo '</div>';
+    echo '<div class="d-flex justify-content-between align-items-center mb-2">';
+    echo '<span class="text-muted small">' . get_string('lastweek', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-info" id="logins-week">' . number_format($loginSummary['logins_week']) . '</span>';
+    echo '</div>';
+    echo '<div class="d-flex justify-content-between align-items-center">';
+    echo '<span class="text-muted small">' . get_string('lastmonth', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-secondary" id="logins-month">' . number_format($loginSummary['logins_month']) . '</span>';
+    echo '</div>';
+    echo '<hr class="my-2">';
+    echo '<div class="text-center">';
+    echo '<small class="text-muted">' . get_string('uniqueusersmonth', 'report_platform_usage') . '</small>';
+    echo '<h4 class="text-primary mb-0" id="unique-month">' . number_format($loginSummary['unique_users_month']) . '</h4>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+
+    // User Activity Summary card.
+    echo '<div class="col-lg-3 col-md-6 mb-3">';
+    echo '<div class="card h-100 border-success">';
+    echo '<div class="card-header bg-success text-white py-2">';
+    echo '<h6 class="mb-0"><i class="fa fa-users mr-2"></i>' . get_string('usersummary', 'report_platform_usage') . '</h6>';
+    echo '</div>';
+    echo '<div class="card-body">';
+    echo '<div class="d-flex justify-content-between align-items-center mb-2">';
+    echo '<span class="text-muted small">' . get_string('totalusers', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-secondary" id="total-users">' . number_format($userSummary['total']) . '</span>';
+    echo '</div>';
+    echo '<div class="d-flex justify-content-between align-items-center mb-2">';
+    echo '<span class="text-success small">' . get_string('active', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-success" id="active-users">' . number_format($userSummary['active']) . '</span>';
+    echo '</div>';
+    echo '<div class="d-flex justify-content-between align-items-center">';
+    echo '<span class="text-danger small">' . get_string('inactive', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-danger" id="inactive-users">' . number_format($userSummary['inactive']) . '</span>';
+    echo '</div>';
+    echo '<hr class="my-2">';
+    echo '<div class="text-center">';
+    echo '<small class="text-muted">' . get_string('dashboardusers', 'report_platform_usage') . '</small>';
+    echo '<h4 class="text-success mb-0" id="dashboard-month">' . number_format($dashboardAccess['month']) . '</h4>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+
+    // Course Completions Summary card.
+    echo '<div class="col-lg-3 col-md-6 mb-3">';
+    echo '<div class="card h-100 border-info">';
+    echo '<div class="card-header bg-info text-white py-2">';
+    echo '<h6 class="mb-0"><i class="fa fa-graduation-cap mr-2"></i>' . get_string('completions', 'report_platform_usage') . '</h6>';
+    echo '</div>';
+    echo '<div class="card-body">';
+    echo '<div class="d-flex justify-content-between align-items-center mb-2">';
+    echo '<span class="text-muted small">' . get_string('today', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-info" id="completions-today">' . number_format($completionsSummary['completions_today']) . '</span>';
+    echo '</div>';
+    echo '<div class="d-flex justify-content-between align-items-center mb-2">';
+    echo '<span class="text-muted small">' . get_string('lastweek', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-primary" id="completions-week">' . number_format($completionsSummary['completions_week']) . '</span>';
+    echo '</div>';
+    echo '<div class="d-flex justify-content-between align-items-center">';
+    echo '<span class="text-muted small">' . get_string('lastmonth', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-secondary" id="completions-month">' . number_format($completionsSummary['completions_month']) . '</span>';
+    echo '</div>';
+    echo '<hr class="my-2">';
+    echo '<div class="text-center">';
+    echo '<small class="text-muted">' . get_string('totalcompletions', 'report_platform_usage') . '</small>';
+    echo '<h4 class="text-info mb-0" id="total-completions">' . number_format($completionsSummary['total_completions']) . '</h4>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+
+    // Daily Users Summary card.
+    $maxDailyUsers = !empty($dailyUsers['data']) ? max($dailyUsers['data']) : 0;
+    $avgDailyUsers = !empty($dailyUsers['data']) ? round(array_sum($dailyUsers['data']) / count($dailyUsers['data'])) : 0;
+    $todayUsers = !empty($dailyUsers['data']) ? end($dailyUsers['data']) : 0;
+    echo '<div class="col-lg-3 col-md-6 mb-3">';
+    echo '<div class="card h-100 border-warning">';
+    echo '<div class="card-header bg-warning text-dark py-2">';
+    echo '<h6 class="mb-0"><i class="fa fa-calendar mr-2"></i>' . get_string('dailyusers', 'report_platform_usage') . '</h6>';
+    echo '</div>';
+    echo '<div class="card-body">';
+    echo '<div class="d-flex justify-content-between align-items-center mb-2">';
+    echo '<span class="text-muted small">' . get_string('today', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-warning" id="daily-today">' . number_format($todayUsers) . '</span>';
+    echo '</div>';
+    echo '<div class="d-flex justify-content-between align-items-center mb-2">';
+    echo '<span class="text-muted small">' . get_string('average', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-secondary" id="daily-avg">' . number_format($avgDailyUsers) . '</span>';
+    echo '</div>';
+    echo '<div class="d-flex justify-content-between align-items-center">';
+    echo '<span class="text-muted small">' . get_string('maximum', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-dark" id="daily-max">' . number_format($maxDailyUsers) . '</span>';
+    echo '</div>';
+    echo '<hr class="my-2">';
+    echo '<div class="text-center">';
+    echo '<small class="text-muted">' . get_string('uniqueusersweek', 'report_platform_usage') . '</small>';
+    echo '<h4 class="text-warning mb-0" id="unique-week">' . number_format($loginSummary['unique_users_week']) . '</h4>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+}
 
 echo '</div>';
 
@@ -381,48 +487,51 @@ echo '</div>';
 // Section 3: Combined Data Tables.
 echo '<div class="row mb-4">';
 
-// Top Courses Table with Dedication.
-echo '<div class="col-lg-6 mb-3">';
-echo '<div class="card h-100">';
-echo '<div class="card-header bg-light">';
-echo '<h5 class="mb-0"><i class="fa fa-trophy mr-2"></i>' . get_string('topcourses', 'report_platform_usage') . '</h5>';
-echo '<small class="text-muted">' . get_string('topcourses_desc', 'report_platform_usage') . '</small>';
-echo '</div>';
-echo '<div class="card-body" id="top-courses-table">';
-if (empty($topCourses)) {
-    echo '<p class="text-muted">' . get_string('nodata', 'report_platform_usage') . '</p>';
-} else {
-    // Merge course access data with dedication data.
-    $courseMap = [];
-    foreach ($topDedication as $ded) {
-        $courseMap[$ded['id']] = $ded;
+if (!$incoursecontext) {
+    // System context: Show Top Courses Table with Dedication.
+    echo '<div class="col-lg-6 mb-3">';
+    echo '<div class="card h-100">';
+    echo '<div class="card-header bg-light">';
+    echo '<h5 class="mb-0"><i class="fa fa-trophy mr-2"></i>' . get_string('topcourses', 'report_platform_usage') . '</h5>';
+    echo '<small class="text-muted">' . get_string('topcourses_desc', 'report_platform_usage') . '</small>';
+    echo '</div>';
+    echo '<div class="card-body" id="top-courses-table">';
+    if (empty($topCourses)) {
+        echo '<p class="text-muted">' . get_string('nodata', 'report_platform_usage') . '</p>';
+    } else {
+        // Merge course access data with dedication data.
+        $courseMap = [];
+        foreach ($topDedication as $ded) {
+            $courseMap[$ded['id']] = $ded;
+        }
+        echo '<div class="table-responsive">';
+        echo '<table class="table table-striped table-sm">';
+        echo '<thead class="thead-light"><tr>';
+        echo '<th>' . get_string('coursename', 'report_platform_usage') . '</th>';
+        echo '<th class="text-right">' . get_string('courseaccesses', 'report_platform_usage') . '</th>';
+        echo '<th class="text-right">' . get_string('uniqueusers', 'report_platform_usage') . '</th>';
+        echo '<th class="text-right">' . get_string('totaldedication', 'report_platform_usage') . '</th>';
+        echo '</tr></thead>';
+        echo '<tbody>';
+        foreach ($topCourses as $courseitem) {
+            $dedication = isset($courseMap[$courseitem->id]) ? $courseMap[$courseitem->id]['total_dedication_formatted'] : '-';
+            echo '<tr>';
+            echo '<td><span title="' . format_string($courseitem->fullname) . '">' . format_string(mb_strimwidth($courseitem->fullname, 0, 35, '...')) . '</span></td>';
+            echo '<td class="text-right">' . number_format($courseitem->access_count) . '</td>';
+            echo '<td class="text-right">' . number_format($courseitem->unique_users) . '</td>';
+            echo '<td class="text-right"><span class="badge badge-info">' . $dedication . '</span></td>';
+            echo '</tr>';
+        }
+        echo '</tbody></table></div>';
     }
-    echo '<div class="table-responsive">';
-    echo '<table class="table table-striped table-sm">';
-    echo '<thead class="thead-light"><tr>';
-    echo '<th>' . get_string('coursename', 'report_platform_usage') . '</th>';
-    echo '<th class="text-right">' . get_string('courseaccesses', 'report_platform_usage') . '</th>';
-    echo '<th class="text-right">' . get_string('uniqueusers', 'report_platform_usage') . '</th>';
-    echo '<th class="text-right">' . get_string('totaldedication', 'report_platform_usage') . '</th>';
-    echo '</tr></thead>';
-    echo '<tbody>';
-    foreach ($topCourses as $course) {
-        $dedication = isset($courseMap[$course->id]) ? $courseMap[$course->id]['total_dedication_formatted'] : '-';
-        echo '<tr>';
-        echo '<td><span title="' . format_string($course->fullname) . '">' . format_string(mb_strimwidth($course->fullname, 0, 35, '...')) . '</span></td>';
-        echo '<td class="text-right">' . number_format($course->access_count) . '</td>';
-        echo '<td class="text-right">' . number_format($course->unique_users) . '</td>';
-        echo '<td class="text-right"><span class="badge badge-info">' . $dedication . '</span></td>';
-        echo '</tr>';
-    }
-    echo '</tbody></table></div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
 }
-echo '</div>';
-echo '</div>';
-echo '</div>';
 
-// Top Activities Table.
-echo '<div class="col-lg-6 mb-3">';
+// Top Activities Table (full width in course context).
+$activityColClass = $incoursecontext ? 'col-lg-12' : 'col-lg-6';
+echo '<div class="' . $activityColClass . ' mb-3">';
 echo '<div class="card h-100">';
 echo '<div class="card-header bg-light">';
 echo '<h5 class="mb-0"><i class="fa fa-tasks mr-2"></i>' . get_string('topactivities', 'report_platform_usage') . '</h5>';
@@ -443,7 +552,7 @@ if (empty($topActivities)) {
     echo '<tbody>';
     foreach ($topActivities as $activity) {
         echo '<tr>';
-        echo '<td><span title="' . format_string($activity->course_name) . '">' . format_string(mb_strimwidth($activity->name, 0, 30, '...')) . '</span></td>';
+        echo '<td><span title="' . format_string($activity->name) . '">' . format_string(mb_strimwidth($activity->name, 0, 50, '...')) . '</span></td>';
         echo '<td><span class="badge badge-secondary">' . $activity->type_name . '</span></td>';
         echo '<td class="text-right">' . number_format($activity->access_count) . '</td>';
         echo '<td class="text-right">' . number_format($activity->unique_users) . '</td>';
@@ -537,12 +646,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize charts.
     initCharts(currentData);
 
-    // Company filter change event - automatic AJAX loading.
-    document.getElementById('companyid').addEventListener('change', function() {
-        var companyId = this.value;
-        loadReportData(companyId);
-        updateExportLinks(companyId);
-    });
+    // Company filter change event - automatic AJAX loading (only in system context).
+    var companyFilter = document.getElementById('companyid');
+    if (companyFilter) {
+        companyFilter.addEventListener('change', function() {
+            var companyId = this.value;
+            loadReportData(companyId);
+            updateExportLinks(companyId);
+        });
+    }
 
     /**
      * Initialize all charts.
