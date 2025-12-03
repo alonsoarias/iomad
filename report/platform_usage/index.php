@@ -1175,6 +1175,8 @@ function updateCharts(data) {
                 updateCharts(data);
                 updateTables(data);
                 loading.style.display = 'none';
+                // Refresh tooltips after dynamic content update.
+                document.dispatchEvent(new Event('tooltipsNeedRefresh'));
             })
             .catch(function(error) {
                 console.error('Error loading report data:', error);
@@ -1235,6 +1237,8 @@ function updateCharts(data) {
                 if (loading) {
                     loading.style.display = 'none';
                 }
+                // Refresh tooltips after dynamic content update.
+                document.dispatchEvent(new Event('tooltipsNeedRefresh'));
             })
             .catch(function(error) {
                 console.error('Error loading course report data:', error);
@@ -1353,6 +1357,29 @@ function updateCharts(data) {
             updateCourseExportLinks(datefrom, dateto);
         });
     }
+
+    // Initialize Bootstrap tooltips.
+    function initTooltips() {
+        if (typeof jQuery !== 'undefined' && typeof jQuery.fn.tooltip !== 'undefined') {
+            jQuery('[data-toggle="tooltip"]').tooltip({
+                container: 'body',
+                html: true,
+                trigger: 'hover focus',
+                delay: { show: 100, hide: 100 }
+            });
+        }
+    }
+
+    // Initialize tooltips on page load.
+    initTooltips();
+
+    // Re-initialize tooltips after AJAX updates.
+    document.addEventListener('tooltipsNeedRefresh', function() {
+        if (typeof jQuery !== 'undefined' && typeof jQuery.fn.tooltip !== 'undefined') {
+            jQuery('[data-toggle="tooltip"]').tooltip('dispose');
+        }
+        initTooltips();
+    });
 });
 </script>
 <?php
