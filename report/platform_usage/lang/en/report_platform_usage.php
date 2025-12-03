@@ -121,11 +121,6 @@ $string['logoutstoday'] = 'Logouts today';
 $string['logoutsweek'] = 'Logouts (7 days)';
 $string['logoutsmonth'] = 'Logouts (30 days)';
 
-// Dashboard metrics.
-$string['dashboardusers'] = 'Dashboard users (30 days)';
-$string['dashboardweek'] = 'Dashboard users (7 days)';
-$string['dashboardtoday'] = 'Dashboard users today';
-
 // Table headers.
 $string['date'] = 'Date';
 $string['logins'] = 'Logins';
@@ -231,7 +226,6 @@ $string['tooltip_usersummary'] = 'Breakdown of users by their activity status on
 $string['tooltip_totalusers'] = 'Total number of registered users in the selected scope.';
 $string['tooltip_activeusers'] = 'Users who accessed the platform within the last 30 days.';
 $string['tooltip_inactiveusers'] = 'Users with no platform access in the last 30 days.';
-$string['tooltip_dashboardusers'] = 'Number of users who accessed their dashboard this month.';
 $string['tooltip_completions'] = 'Number of courses completed by users during the selected period.';
 $string['tooltip_completionstoday'] = 'Courses completed today.';
 $string['tooltip_completionsweek'] = 'Courses completed in the last 7 days.';

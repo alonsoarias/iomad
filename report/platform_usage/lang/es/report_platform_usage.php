@@ -121,11 +121,6 @@ $string['logoutstoday'] = 'Cierres de sesión hoy';
 $string['logoutsweek'] = 'Cierres de sesión (7 días)';
 $string['logoutsmonth'] = 'Cierres de sesión (30 días)';
 
-// Métricas de panel.
-$string['dashboardusers'] = 'Usuarios del panel (30 días)';
-$string['dashboardweek'] = 'Usuarios del panel (7 días)';
-$string['dashboardtoday'] = 'Usuarios del panel hoy';
-
 // Encabezados de tabla.
 $string['date'] = 'Fecha';
 $string['logins'] = 'Ingresos';
@@ -230,7 +225,6 @@ $string['tooltip_usersummary'] = 'Desglose de usuarios según su estado de activ
 $string['tooltip_totalusers'] = 'Total de usuarios registrados en el ámbito seleccionado.';
 $string['tooltip_activeusers'] = 'Usuarios que accedieron a la plataforma en los últimos 30 días.';
 $string['tooltip_inactiveusers'] = 'Usuarios sin acceso a la plataforma en los últimos 30 días.';
-$string['tooltip_dashboardusers'] = 'Cantidad de usuarios que accedieron a su panel este mes.';
 $string['tooltip_completions'] = 'Cantidad de cursos completados por los usuarios durante el período seleccionado.';
 $string['tooltip_completionstoday'] = 'Cursos completados hoy.';
 $string['tooltip_completionsweek'] = 'Cursos completados en los últimos 7 días.';

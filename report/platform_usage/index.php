@@ -94,7 +94,6 @@ $courseAccessTrends = $report->get_course_access_trends(30);
 $topCourses = $report->get_top_courses(10);
 $topActivities = $report->get_top_activities(10);
 $completionsSummary = $report->get_course_completions_summary();
-$dashboardAccess = $report->get_dashboard_access();
 $completionTrends = $report->get_completion_trends(30);
 $dailyUsers = $report->get_daily_users(10);
 $topDedication = $report->get_top_courses_dedication(10);
@@ -131,7 +130,6 @@ $tooltips = [
     'totalusers' => get_string('tooltip_totalusers', 'report_platform_usage'),
     'activeusers' => get_string('tooltip_activeusers', 'report_platform_usage'),
     'inactiveusers' => get_string('tooltip_inactiveusers', 'report_platform_usage'),
-    'dashboardusers' => get_string('tooltip_dashboardusers', 'report_platform_usage'),
     'completions' => get_string('tooltip_completions', 'report_platform_usage'),
     'completionstoday' => get_string('tooltip_completionstoday', 'report_platform_usage'),
     'completionsweek' => get_string('tooltip_completionsweek', 'report_platform_usage'),
@@ -437,9 +435,10 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '<span class="badge badge-danger" id="inactive-users">' . number_format($userSummary['inactive']) . '</span>';
     echo '</div>';
     echo '<hr class="my-2">';
-    echo '<div class="text-center">';
-    echo '<small class="text-muted" data-toggle="tooltip" title="' . $tooltips['dashboardusers'] . '">' . get_string('dashboardusers', 'report_platform_usage') . ' <i class="fa fa-info-circle"></i></small>';
-    echo '<h4 class="text-success mb-0" id="dashboard-month">' . number_format($dashboardAccess['month']) . '</h4>';
+    // Show active users percentage.
+    $activePercent = $userSummary['total'] > 0 ? round(($userSummary['active'] / $userSummary['total']) * 100) : 0;
+    echo '<div class="progress" style="height: 20px;">';
+    echo '<div class="progress-bar bg-success" role="progressbar" style="width: ' . $activePercent . '%" aria-valuenow="' . $activePercent . '" aria-valuemin="0" aria-valuemax="100">' . $activePercent . '% ' . get_string('active', 'report_platform_usage') . '</div>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
@@ -771,7 +770,6 @@ document.addEventListener('DOMContentLoaded', function() {
         top_courses: <?php echo json_encode(array_values($topCourses)); ?>,
         top_activities: <?php echo json_encode($topActivities); ?>,
         completions_summary: <?php echo json_encode($completionsSummary); ?>,
-        dashboard_access: <?php echo json_encode($dashboardAccess); ?>,
         completion_trends: <?php echo json_encode($completionTrends); ?>,
         daily_users: <?php echo json_encode($dailyUsers); ?>,
         top_dedication: <?php echo json_encode($topDedication); ?>
@@ -1043,11 +1041,6 @@ document.addEventListener('DOMContentLoaded', function() {
             updateElement('completions-week', numberFormat(data.completions_summary.completions_week));
             updateElement('completions-month', numberFormat(data.completions_summary.completions_month));
             updateElement('total-completions', numberFormat(data.completions_summary.total_completions));
-        }
-
-        // Dashboard card.
-        if (data.dashboard_access) {
-            updateElement('dashboard-month', numberFormat(data.dashboard_access.month));
         }
 
         // Daily Users card.

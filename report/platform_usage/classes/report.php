@@ -735,7 +735,6 @@ class report {
             'top_courses' => array_values($this->get_top_courses(10)),
             'top_activities' => $this->get_top_activities(10),
             'completions_summary' => $this->get_course_completions_summary(),
-            'dashboard_access' => $this->get_dashboard_access(),
             'completion_trends' => $this->get_completion_trends(30),
             'logout_summary' => $this->get_logout_summary(),
         ];
@@ -929,65 +928,6 @@ class report {
             'completions_week' => (int) ($result->completions_week ?? 0),
             'completions_month' => (int) ($result->completions_month ?? 0),
             'total_completions' => (int) ($result->total_completions ?? 0),
-        ];
-    }
-
-    /**
-     * Get dashboard access statistics (cached).
-     *
-     * @return array Dashboard access stats
-     */
-    public function get_dashboard_access(): array {
-        return $this->get_cached_data('dashboard_access', function() {
-            return $this->compute_dashboard_access();
-        });
-    }
-
-    /**
-     * Compute dashboard access statistics.
-     *
-     * @return array
-     */
-    protected function compute_dashboard_access(): array {
-        global $DB;
-
-        $dbman = $DB->get_manager();
-        if (!$dbman->table_exists('logstore_standard_log')) {
-            return ['today' => 0, 'week' => 0, 'month' => 0];
-        }
-
-        $todaystart = strtotime('today midnight');
-        $weekstart = strtotime('-7 days midnight');
-        $monthstart = strtotime('-30 days midnight');
-
-        $userids = $this->get_company_userids();
-        if (empty($userids)) {
-            return ['today' => 0, 'week' => 0, 'month' => 0];
-        }
-
-        list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
-
-        $sql = "SELECT
-                    COUNT(DISTINCT CASE WHEN timecreated >= :today THEN userid END) as today,
-                    COUNT(DISTINCT CASE WHEN timecreated >= :week THEN userid END) as week,
-                    COUNT(DISTINCT CASE WHEN timecreated >= :month THEN userid END) as month
-                FROM {logstore_standard_log}
-                WHERE eventname = :event
-                  AND userid $usersql";
-
-        $params = array_merge([
-            'event' => '\\core\\event\\dashboard_viewed',
-            'today' => $todaystart,
-            'week' => $weekstart,
-            'month' => $monthstart,
-        ], $userparams);
-
-        $result = $DB->get_record_sql($sql, $params);
-
-        return [
-            'today' => (int) ($result->today ?? 0),
-            'week' => (int) ($result->week ?? 0),
-            'month' => (int) ($result->month ?? 0),
         ];
     }
 
