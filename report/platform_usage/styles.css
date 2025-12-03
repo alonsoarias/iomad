@@ -513,7 +513,7 @@
 .report-platform-usage .card-body h3.text-warning { color: var(--rpu-warning-600) !important; }
 
 /* ===========================================
-   Badges - Modern Soft Style
+   Badges - High Contrast Solid Style
    =========================================== */
 .report-platform-usage .badge {
     display: inline-flex;
@@ -521,60 +521,74 @@
     justify-content: center;
     padding: var(--rpu-space-1) var(--rpu-space-2-5);
     font-size: var(--rpu-text-xs);
-    font-weight: var(--rpu-font-semibold);
+    font-weight: var(--rpu-font-bold);
     border-radius: var(--rpu-radius-md);
     min-width: 1.75rem;
     font-variant-numeric: tabular-nums;
     letter-spacing: var(--rpu-tracking-wide);
     transition: all var(--rpu-transition);
+    text-shadow: none;
 }
 
 .report-platform-usage .badge-primary {
-    background: linear-gradient(135deg, var(--rpu-brand-100), var(--rpu-brand-50));
-    color: var(--rpu-brand-700);
-    border: 1px solid var(--rpu-brand-200);
+    background: linear-gradient(135deg, var(--rpu-brand-600), var(--rpu-brand-500));
+    color: #ffffff;
+    border: 1px solid var(--rpu-brand-700);
+    box-shadow: 0 1px 2px rgba(99, 102, 241, 0.2);
 }
 
 .report-platform-usage .badge-secondary {
-    background: linear-gradient(135deg, var(--rpu-gray-100), var(--rpu-gray-50));
-    color: var(--rpu-gray-700);
-    border: 1px solid var(--rpu-gray-200);
+    background: linear-gradient(135deg, var(--rpu-gray-600), var(--rpu-gray-500));
+    color: #ffffff;
+    border: 1px solid var(--rpu-gray-700);
+    box-shadow: 0 1px 2px rgba(100, 116, 139, 0.2);
 }
 
 .report-platform-usage .badge-success {
-    background: linear-gradient(135deg, var(--rpu-success-100), var(--rpu-success-50));
-    color: var(--rpu-success-700);
-    border: 1px solid var(--rpu-success-200);
+    background: linear-gradient(135deg, var(--rpu-success-600), var(--rpu-success-500));
+    color: #ffffff;
+    border: 1px solid var(--rpu-success-700);
+    box-shadow: 0 1px 2px rgba(16, 185, 129, 0.2);
 }
 
 .report-platform-usage .badge-warning {
-    background: linear-gradient(135deg, var(--rpu-warning-100), var(--rpu-warning-50));
-    color: var(--rpu-warning-700);
-    border: 1px solid var(--rpu-warning-200);
+    background: linear-gradient(135deg, var(--rpu-warning-600), var(--rpu-warning-500));
+    color: #ffffff;
+    border: 1px solid var(--rpu-warning-700);
+    box-shadow: 0 1px 2px rgba(245, 158, 11, 0.2);
 }
 
 .report-platform-usage .badge-danger {
-    background: linear-gradient(135deg, var(--rpu-error-100), var(--rpu-error-50));
-    color: var(--rpu-error-700);
-    border: 1px solid var(--rpu-error-200);
+    background: linear-gradient(135deg, var(--rpu-error-600), var(--rpu-error-500));
+    color: #ffffff;
+    border: 1px solid var(--rpu-error-700);
+    box-shadow: 0 1px 2px rgba(244, 63, 94, 0.2);
 }
 
 .report-platform-usage .badge-info {
-    background: linear-gradient(135deg, var(--rpu-info-100), var(--rpu-info-50));
-    color: var(--rpu-info-700);
-    border: 1px solid var(--rpu-info-200);
+    background: linear-gradient(135deg, var(--rpu-info-600), var(--rpu-info-500));
+    color: #ffffff;
+    border: 1px solid var(--rpu-info-700);
+    box-shadow: 0 1px 2px rgba(6, 182, 212, 0.2);
 }
 
 .report-platform-usage .badge-dark {
-    background: linear-gradient(135deg, var(--rpu-gray-800), var(--rpu-gray-700));
-    color: white;
-    border: 1px solid var(--rpu-gray-600);
+    background: linear-gradient(135deg, var(--rpu-gray-900), var(--rpu-gray-800));
+    color: #ffffff;
+    border: 1px solid var(--rpu-gray-950);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.3);
 }
 
 .report-platform-usage .badge-lg {
     padding: var(--rpu-space-1-5) var(--rpu-space-3);
     font-size: var(--rpu-text-sm);
     border-radius: var(--rpu-radius-lg);
+}
+
+/* Badge hover effects */
+.report-platform-usage .badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 /* ===========================================
