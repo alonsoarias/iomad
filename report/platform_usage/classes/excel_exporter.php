@@ -1675,6 +1675,7 @@ class excel_exporter {
         // Get activity data.
         $activities = $this->report->get_top_activities(50);
         $row = 5;
+        $dataStart = $row;
 
         foreach ($activities as $activity) {
             $avgAccess = $activity->unique_users > 0 ? round($activity->access_count / $activity->unique_users, 2) : 0;
@@ -1689,11 +1690,62 @@ class excel_exporter {
             $sheet->getStyle("C{$row}:E{$row}")->applyFromArray($this->styles['number']);
             $row++;
         }
+        $dataEnd = $row - 1;
+
+        // Add activities bar chart if there's data (top 10 for chart clarity).
+        if (count($activities) > 0) {
+            $chartEnd = min($dataStart + 9, $dataEnd); // Top 10 activities for chart.
+            $this->createCourseActivitiesChart($sheet, $dataStart, $chartEnd);
+        }
 
         // Auto-size columns.
         foreach (range('A', 'E') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
+    }
+
+    /**
+     * Create course activities horizontal bar chart.
+     */
+    protected function createCourseActivitiesChart($sheet, int $dataStart, int $dataEnd): void {
+        // Get the actual sheet name for chart references.
+        $sheetName = $this->sheetNames['course_activities'];
+
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\$4", null, 1),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$A\${$dataStart}:\$A\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$C\${$dataStart}:\$C\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_BARCHART,
+            DataSeries::GROUPING_STANDARD,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+        $series->setPlotDirection(DataSeries::DIRECTION_BAR);
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_BOTTOM, null, false);
+        $title = new Title(get_string('topactivities', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'activitiesBarChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('G3');
+        $chart->setBottomRightPosition('P18');
+
+        $sheet->addChart($chart);
     }
 
     /**
@@ -1733,6 +1785,9 @@ class excel_exporter {
         $sheet->setCellValue("B{$row}", $completionRate . '%');
         $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
 
+        // Add completion pie chart.
+        $this->createCourseCompletionChart($sheet, $courseStats);
+
         // Completion trends.
         $row += 3;
         $sheet->setCellValue("A{$row}", get_string('completiontrends', 'report_platform_usage'));
@@ -1747,6 +1802,7 @@ class excel_exporter {
         $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['header']);
 
         $row++;
+        $dataStart = $row;
         $trends = $this->report->get_completion_trends(30);
         foreach ($trends['labels'] as $i => $label) {
             $sheet->fromArray([
@@ -1757,11 +1813,115 @@ class excel_exporter {
             $sheet->getStyle("B{$row}")->applyFromArray($this->styles['number']);
             $row++;
         }
+        $dataEnd = $row - 1;
+
+        // Add completion trends line chart if there's data.
+        if ($dataEnd >= $dataStart) {
+            $this->createCourseCompletionTrendsChart($sheet, $dataStart, $dataEnd);
+        }
 
         // Auto-size columns.
         foreach (range('A', 'C') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
+    }
+
+    /**
+     * Create course completion pie chart.
+     */
+    protected function createCourseCompletionChart($sheet, array $courseStats): void {
+        // Get the actual sheet name for chart references.
+        $sheetName = $this->sheetNames['course_completions'];
+
+        // Prepare data for pie chart.
+        $completed = $courseStats['completions'];
+        $notCompleted = max(0, $courseStats['enrolled_users'] - $courseStats['completions']);
+
+        // Create temporary data for pie chart.
+        $sheet->setCellValue('D4', get_string('completed', 'report_platform_usage'));
+        $sheet->setCellValue('E4', $completed);
+        $sheet->setCellValue('D5', get_string('notcompleted', 'report_platform_usage'));
+        $sheet->setCellValue('E5', $notCompleted);
+        $sheet->getColumnDimension('D')->setVisible(false);
+        $sheet->getColumnDimension('E')->setVisible(false);
+
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$D\$4:\$D\$5", null, 2),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$D\$4:\$D\$5", null, 2),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$E\$4:\$E\$5", null, 2),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_PIECHART,
+            null,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_RIGHT, null, false);
+        $title = new Title(get_string('completionrate', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'completionPieChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('F3');
+        $chart->setBottomRightPosition('L10');
+
+        $sheet->addChart($chart);
+    }
+
+    /**
+     * Create course completion trends line chart.
+     */
+    protected function createCourseCompletionTrendsChart($sheet, int $dataStart, int $dataEnd): void {
+        // Get the actual sheet name for chart references.
+        $sheetName = $this->sheetNames['course_completions'];
+
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\$" . ($dataStart - 1), null, 1),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$A\${$dataStart}:\$A\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$B\${$dataStart}:\$B\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_LINECHART,
+            DataSeries::GROUPING_STANDARD,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_BOTTOM, null, false);
+        $title = new Title(get_string('completiontrends', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'completionTrendsChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('D' . ($dataStart - 1));
+        $chart->setBottomRightPosition('L' . ($dataStart + 14));
+
+        $sheet->addChart($chart);
     }
 
     /**

@@ -254,6 +254,13 @@ $string['tooltip_topactivities'] = 'Actividades más accedidas ordenadas por can
 $string['tooltip_completiontrends'] = 'Finalizaciones de cursos diarias en los últimos 30 días.';
 $string['tooltip_dailyuserstable'] = 'Conteos recientes de usuarios únicos diarios.';
 $string['tooltip_dedicationchart'] = 'Cursos con mayor dedicación ordenados por tiempo total.';
+$string['tooltip_courseaccesstrends'] = 'Tendencia diaria de accesos al curso y usuarios únicos durante el período seleccionado.';
+$string['tooltip_coursededicationsummary'] = 'Resumen del tiempo dedicado al curso por todos los usuarios matriculados.';
+$string['tooltip_coursecompletionpercent'] = 'Porcentaje de usuarios matriculados que han completado el curso.';
+$string['tooltip_activepercent'] = 'Porcentaje de usuarios matriculados que accedieron a la plataforma en los últimos 30 días.';
+$string['tooltip_courseactivities'] = 'Actividades más vistas dentro de este curso.';
+$string['tooltip_accesshistory'] = 'Patrón de acceso diario a este curso.';
+$string['tooltip_userdedicationlist'] = 'Tiempo dedicado por cada usuario matriculado en este curso.';
 
 // Tarea programada.
 $string['task_collect_dedication'] = 'Recolectar datos de tiempo de dedicación';

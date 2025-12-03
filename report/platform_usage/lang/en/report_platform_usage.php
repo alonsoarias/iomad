@@ -255,6 +255,13 @@ $string['tooltip_topactivities'] = 'Most accessed activities ranked by number of
 $string['tooltip_completiontrends'] = 'Daily course completions over the last 30 days.';
 $string['tooltip_dailyuserstable'] = 'Recent daily unique user counts.';
 $string['tooltip_dedicationchart'] = 'Top courses ranked by total time dedication.';
+$string['tooltip_courseaccesstrends'] = 'Daily trend of course accesses and unique users over the selected time period.';
+$string['tooltip_coursededicationsummary'] = 'Summary of time spent in the course by all enrolled users.';
+$string['tooltip_coursecompletionpercent'] = 'Percentage of enrolled users who have completed the course.';
+$string['tooltip_activepercent'] = 'Percentage of enrolled users who accessed the platform in the last 30 days.';
+$string['tooltip_courseactivities'] = 'Most viewed activities within this course.';
+$string['tooltip_accesshistory'] = 'Daily access pattern for this course.';
+$string['tooltip_userdedicationlist'] = 'Time spent by each enrolled user in this course.';
 
 // Scheduled task.
 $string['task_collect_dedication'] = 'Collect dedication time data';
