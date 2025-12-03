@@ -1,20 +1,35 @@
 /**
- * Platform Usage Report - Professional UX Design
+ * Platform Usage Report - Premium Enterprise Dashboard
  *
- * Modern, formal design with excellent UX patterns.
- * Features: Clean typography, subtle animations, comprehensive tooltips,
- * accessibility support, and responsive layouts.
+ * Modern, professional design with enterprise-grade UX patterns.
+ * Features: Sophisticated color palette, glass-morphism effects,
+ * smooth micro-interactions, comprehensive accessibility support,
+ * and responsive mobile-first layouts.
  *
  * @package   report_platform_usage
+ * @version   3.0.0
  * @copyright 2024 IOMAD
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /* ===========================================
-   CSS Custom Properties (Design Tokens)
+   CSS Custom Properties (Design System)
    =========================================== */
 .report-platform-usage {
-    /* Primary Palette - Professional Blue */
+    /* Brand Colors - Corporate Navy/Indigo Theme */
+    --rpu-brand-50: #eef2ff;
+    --rpu-brand-100: #e0e7ff;
+    --rpu-brand-200: #c7d2fe;
+    --rpu-brand-300: #a5b4fc;
+    --rpu-brand-400: #818cf8;
+    --rpu-brand-500: #6366f1;
+    --rpu-brand-600: #4f46e5;
+    --rpu-brand-700: #4338ca;
+    --rpu-brand-800: #3730a3;
+    --rpu-brand-900: #312e81;
+    --rpu-brand-950: #1e1b4b;
+
+    /* Primary Palette - Professional Slate Blue */
     --rpu-primary-50: #f0f9ff;
     --rpu-primary-100: #e0f2fe;
     --rpu-primary-200: #bae6fd;
@@ -26,23 +41,26 @@
     --rpu-primary-800: #075985;
     --rpu-primary-900: #0c4a6e;
 
-    /* Neutral Palette - Sophisticated Grays */
+    /* Neutral Palette - Warm Slate Grays */
     --rpu-gray-25: #fcfcfd;
-    --rpu-gray-50: #f9fafb;
-    --rpu-gray-100: #f2f4f7;
-    --rpu-gray-200: #eaecf0;
-    --rpu-gray-300: #d0d5dd;
-    --rpu-gray-400: #98a2b3;
-    --rpu-gray-500: #667085;
-    --rpu-gray-600: #475467;
-    --rpu-gray-700: #344054;
-    --rpu-gray-800: #1d2939;
-    --rpu-gray-900: #101828;
+    --rpu-gray-50: #f8fafc;
+    --rpu-gray-100: #f1f5f9;
+    --rpu-gray-200: #e2e8f0;
+    --rpu-gray-300: #cbd5e1;
+    --rpu-gray-400: #94a3b8;
+    --rpu-gray-500: #64748b;
+    --rpu-gray-600: #475569;
+    --rpu-gray-700: #334155;
+    --rpu-gray-800: #1e293b;
+    --rpu-gray-900: #0f172a;
+    --rpu-gray-950: #020617;
 
-    /* Success - Green */
+    /* Success - Emerald */
     --rpu-success-50: #ecfdf5;
     --rpu-success-100: #d1fae5;
     --rpu-success-200: #a7f3d0;
+    --rpu-success-300: #6ee7b7;
+    --rpu-success-400: #34d399;
     --rpu-success-500: #10b981;
     --rpu-success-600: #059669;
     --rpu-success-700: #047857;
@@ -50,40 +68,68 @@
     /* Warning - Amber */
     --rpu-warning-50: #fffbeb;
     --rpu-warning-100: #fef3c7;
+    --rpu-warning-200: #fde68a;
+    --rpu-warning-300: #fcd34d;
+    --rpu-warning-400: #fbbf24;
     --rpu-warning-500: #f59e0b;
     --rpu-warning-600: #d97706;
     --rpu-warning-700: #b45309;
 
-    /* Error - Red */
-    --rpu-error-50: #fef2f2;
-    --rpu-error-100: #fee2e2;
-    --rpu-error-500: #ef4444;
-    --rpu-error-600: #dc2626;
-    --rpu-error-700: #b91c1c;
+    /* Error - Rose */
+    --rpu-error-50: #fff1f2;
+    --rpu-error-100: #ffe4e6;
+    --rpu-error-200: #fecdd3;
+    --rpu-error-300: #fda4af;
+    --rpu-error-400: #fb7185;
+    --rpu-error-500: #f43f5e;
+    --rpu-error-600: #e11d48;
+    --rpu-error-700: #be123c;
 
-    /* Info - Cyan */
+    /* Info - Sky */
     --rpu-info-50: #ecfeff;
     --rpu-info-100: #cffafe;
+    --rpu-info-200: #a5f3fc;
+    --rpu-info-300: #67e8f9;
+    --rpu-info-400: #22d3ee;
     --rpu-info-500: #06b6d4;
     --rpu-info-600: #0891b2;
     --rpu-info-700: #0e7490;
 
-    /* Spacing Scale */
+    /* Semantic Colors */
+    --rpu-background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+    --rpu-surface: #ffffff;
+    --rpu-surface-elevated: #ffffff;
+    --rpu-border: #e2e8f0;
+    --rpu-border-light: #f1f5f9;
+
+    /* Spacing Scale (8px base) */
     --rpu-space-0: 0;
+    --rpu-space-px: 1px;
+    --rpu-space-0-5: 0.125rem;
     --rpu-space-1: 0.25rem;
+    --rpu-space-1-5: 0.375rem;
     --rpu-space-2: 0.5rem;
+    --rpu-space-2-5: 0.625rem;
     --rpu-space-3: 0.75rem;
+    --rpu-space-3-5: 0.875rem;
     --rpu-space-4: 1rem;
     --rpu-space-5: 1.25rem;
     --rpu-space-6: 1.5rem;
+    --rpu-space-7: 1.75rem;
     --rpu-space-8: 2rem;
+    --rpu-space-9: 2.25rem;
     --rpu-space-10: 2.5rem;
+    --rpu-space-11: 2.75rem;
     --rpu-space-12: 3rem;
+    --rpu-space-14: 3.5rem;
+    --rpu-space-16: 4rem;
 
-    /* Typography */
-    --rpu-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    --rpu-font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', Consolas, monospace;
+    /* Typography - System UI with Inter fallback */
+    --rpu-font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --rpu-font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
 
+    /* Font Sizes */
+    --rpu-text-2xs: 0.625rem;
     --rpu-text-xs: 0.75rem;
     --rpu-text-sm: 0.875rem;
     --rpu-text-base: 1rem;
@@ -92,41 +138,88 @@
     --rpu-text-2xl: 1.5rem;
     --rpu-text-3xl: 1.875rem;
     --rpu-text-4xl: 2.25rem;
+    --rpu-text-5xl: 3rem;
 
+    /* Line Heights */
+    --rpu-leading-none: 1;
     --rpu-leading-tight: 1.25;
+    --rpu-leading-snug: 1.375;
     --rpu-leading-normal: 1.5;
     --rpu-leading-relaxed: 1.625;
+    --rpu-leading-loose: 2;
+
+    /* Font Weights */
+    --rpu-font-normal: 400;
+    --rpu-font-medium: 500;
+    --rpu-font-semibold: 600;
+    --rpu-font-bold: 700;
+    --rpu-font-extrabold: 800;
+
+    /* Letter Spacing */
+    --rpu-tracking-tighter: -0.05em;
+    --rpu-tracking-tight: -0.025em;
+    --rpu-tracking-normal: 0;
+    --rpu-tracking-wide: 0.025em;
+    --rpu-tracking-wider: 0.05em;
+    --rpu-tracking-widest: 0.1em;
 
     /* Border Radius */
-    --rpu-radius-sm: 0.375rem;
-    --rpu-radius: 0.5rem;
-    --rpu-radius-md: 0.625rem;
+    --rpu-radius-none: 0;
+    --rpu-radius-sm: 0.25rem;
+    --rpu-radius: 0.375rem;
+    --rpu-radius-md: 0.5rem;
     --rpu-radius-lg: 0.75rem;
     --rpu-radius-xl: 1rem;
     --rpu-radius-2xl: 1.25rem;
+    --rpu-radius-3xl: 1.5rem;
     --rpu-radius-full: 9999px;
 
-    /* Shadows - Layered for depth */
-    --rpu-shadow-xs: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-    --rpu-shadow-sm: 0 1px 3px 0 rgba(16, 24, 40, 0.1), 0 1px 2px -1px rgba(16, 24, 40, 0.1);
-    --rpu-shadow: 0 4px 6px -1px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.1);
-    --rpu-shadow-md: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
-    --rpu-shadow-lg: 0 20px 24px -4px rgba(16, 24, 40, 0.08), 0 8px 8px -4px rgba(16, 24, 40, 0.03);
-    --rpu-shadow-xl: 0 24px 48px -12px rgba(16, 24, 40, 0.18);
-    --rpu-shadow-ring: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    /* Shadows - Layered for depth perception */
+    --rpu-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --rpu-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+    --rpu-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+    --rpu-shadow-md: 0 12px 16px -4px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    --rpu-shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.07), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    --rpu-shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    --rpu-shadow-2xl: 0 35px 60px -15px rgba(0, 0, 0, 0.2);
+    --rpu-shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+    --rpu-shadow-ring: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    --rpu-shadow-ring-success: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    --rpu-shadow-ring-error: 0 0 0 3px rgba(244, 63, 94, 0.15);
+
+    /* Card specific shadows */
+    --rpu-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+    --rpu-card-shadow-hover: 0 10px 40px -10px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
 
     /* Transitions */
-    --rpu-transition-fast: 100ms cubic-bezier(0.4, 0, 0.2, 1);
-    --rpu-transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-    --rpu-transition-slow: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-    --rpu-transition-bounce: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    --rpu-ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+    --rpu-ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --rpu-ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --rpu-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --rpu-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --rpu-ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    --rpu-duration-75: 75ms;
+    --rpu-duration-100: 100ms;
+    --rpu-duration-150: 150ms;
+    --rpu-duration-200: 200ms;
+    --rpu-duration-300: 300ms;
+    --rpu-duration-500: 500ms;
+    --rpu-duration-700: 700ms;
+
+    --rpu-transition-fast: 100ms var(--rpu-ease-default);
+    --rpu-transition: 150ms var(--rpu-ease-default);
+    --rpu-transition-slow: 200ms var(--rpu-ease-default);
+    --rpu-transition-slower: 300ms var(--rpu-ease-default);
 
     /* Z-Index Scale */
     --rpu-z-dropdown: 1000;
     --rpu-z-sticky: 1020;
     --rpu-z-fixed: 1030;
-    --rpu-z-modal: 1040;
-    --rpu-z-tooltip: 1050;
+    --rpu-z-modal-backdrop: 1040;
+    --rpu-z-modal: 1050;
+    --rpu-z-popover: 1060;
+    --rpu-z-tooltip: 1070;
 }
 
 /* ===========================================
@@ -137,11 +230,13 @@
     font-size: var(--rpu-text-sm);
     line-height: var(--rpu-leading-normal);
     color: var(--rpu-gray-700);
-    background: linear-gradient(180deg, var(--rpu-gray-50) 0%, var(--rpu-gray-100) 100%);
+    background: var(--rpu-background);
     min-height: 100vh;
     padding: var(--rpu-space-6) var(--rpu-space-8);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
 .report-platform-usage *,
@@ -155,24 +250,24 @@
    =========================================== */
 .report-platform-usage h1 {
     font-size: var(--rpu-text-2xl);
-    font-weight: 700;
+    font-weight: var(--rpu-font-bold);
     color: var(--rpu-gray-900);
     margin: 0 0 var(--rpu-space-2) 0;
-    letter-spacing: -0.025em;
+    letter-spacing: var(--rpu-tracking-tight);
     line-height: var(--rpu-leading-tight);
 }
 
 .report-platform-usage h2 {
     font-size: var(--rpu-text-xl);
-    font-weight: 600;
+    font-weight: var(--rpu-font-semibold);
     color: var(--rpu-gray-800);
     margin: var(--rpu-space-8) 0 var(--rpu-space-4) 0;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--rpu-tracking-tight);
 }
 
 .report-platform-usage h3 {
     font-size: var(--rpu-text-lg);
-    font-weight: 600;
+    font-weight: var(--rpu-font-semibold);
     color: var(--rpu-gray-800);
     margin: 0 0 var(--rpu-space-3) 0;
 }
@@ -181,7 +276,7 @@
 .report-platform-usage h5,
 .report-platform-usage h6 {
     font-size: var(--rpu-text-base);
-    font-weight: 600;
+    font-weight: var(--rpu-font-semibold);
     color: var(--rpu-gray-700);
     margin: 0 0 var(--rpu-space-2) 0;
 }
@@ -194,7 +289,7 @@
 .report-platform-usage .lead {
     font-size: var(--rpu-text-base);
     color: var(--rpu-gray-500);
-    font-weight: 400;
+    font-weight: var(--rpu-font-normal);
     margin-bottom: var(--rpu-space-6);
 }
 
@@ -206,7 +301,7 @@
 
 /* Text utilities */
 .report-platform-usage .text-muted { color: var(--rpu-gray-500) !important; }
-.report-platform-usage .text-primary { color: var(--rpu-primary-600) !important; }
+.report-platform-usage .text-primary { color: var(--rpu-brand-600) !important; }
 .report-platform-usage .text-success { color: var(--rpu-success-600) !important; }
 .report-platform-usage .text-warning { color: var(--rpu-warning-600) !important; }
 .report-platform-usage .text-danger { color: var(--rpu-error-600) !important; }
@@ -228,20 +323,22 @@
 }
 
 .report-platform-usage .dashboard-header h1 i {
-    color: var(--rpu-primary-500);
+    color: var(--rpu-brand-500);
     font-size: var(--rpu-text-2xl);
 }
 
 /* ===========================================
-   Filter Section - Modern Panel
+   Filter Section - Glass Morphism Panel
    =========================================== */
 .report-platform-usage .filter-section {
-    background: white;
-    border: 1px solid var(--rpu-gray-200);
-    border-radius: var(--rpu-radius-xl);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--rpu-radius-2xl);
     padding: var(--rpu-space-5) var(--rpu-space-6);
     margin-bottom: var(--rpu-space-6);
-    box-shadow: var(--rpu-shadow-sm);
+    box-shadow: var(--rpu-shadow-sm), 0 0 0 1px rgba(0, 0, 0, 0.02);
 }
 
 .report-platform-usage .filter-section .card-body {
@@ -254,50 +351,77 @@
 
 .report-platform-usage .filter-section label {
     font-size: var(--rpu-text-xs);
-    font-weight: 600;
+    font-weight: var(--rpu-font-semibold);
     color: var(--rpu-gray-600);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: var(--rpu-space-1);
+    letter-spacing: var(--rpu-tracking-wider);
+    margin-bottom: var(--rpu-space-1-5);
     display: block;
 }
 
 /* ===========================================
-   Cards - Clean Professional Style
+   Cards - Premium Clean Style
    =========================================== */
 .report-platform-usage .card {
-    background: white;
-    border: 1px solid var(--rpu-gray-200);
+    background: var(--rpu-surface);
+    border: 1px solid var(--rpu-border);
     border-radius: var(--rpu-radius-xl);
-    box-shadow: var(--rpu-shadow-sm);
+    box-shadow: var(--rpu-card-shadow);
     margin-bottom: var(--rpu-space-6);
     overflow: hidden;
-    transition: box-shadow var(--rpu-transition), transform var(--rpu-transition);
+    transition:
+        box-shadow var(--rpu-transition-slow),
+        transform var(--rpu-duration-200) var(--rpu-ease-out),
+        border-color var(--rpu-transition);
+    position: relative;
+}
+
+.report-platform-usage .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+    transition: background var(--rpu-transition);
 }
 
 .report-platform-usage .card:hover {
-    box-shadow: var(--rpu-shadow-md);
+    box-shadow: var(--rpu-card-shadow-hover);
+    transform: translateY(-2px);
+    border-color: var(--rpu-gray-300);
 }
 
 /* Card with colored top accent */
-.report-platform-usage .card.border-primary { border-color: var(--rpu-gray-200); border-top: 3px solid var(--rpu-primary-500); }
-.report-platform-usage .card.border-success { border-color: var(--rpu-gray-200); border-top: 3px solid var(--rpu-success-500); }
-.report-platform-usage .card.border-warning { border-color: var(--rpu-gray-200); border-top: 3px solid var(--rpu-warning-500); }
-.report-platform-usage .card.border-info { border-color: var(--rpu-gray-200); border-top: 3px solid var(--rpu-info-500); }
-.report-platform-usage .card.border-danger { border-color: var(--rpu-gray-200); border-top: 3px solid var(--rpu-error-500); }
+.report-platform-usage .card.border-primary::before { background: linear-gradient(90deg, var(--rpu-brand-500), var(--rpu-brand-400)); }
+.report-platform-usage .card.border-success::before { background: linear-gradient(90deg, var(--rpu-success-500), var(--rpu-success-400)); }
+.report-platform-usage .card.border-warning::before { background: linear-gradient(90deg, var(--rpu-warning-500), var(--rpu-warning-400)); }
+.report-platform-usage .card.border-info::before { background: linear-gradient(90deg, var(--rpu-info-500), var(--rpu-info-400)); }
+.report-platform-usage .card.border-danger::before { background: linear-gradient(90deg, var(--rpu-error-500), var(--rpu-error-400)); }
 
-/* Card Header - Clean minimal style */
+.report-platform-usage .card.border-primary,
+.report-platform-usage .card.border-success,
+.report-platform-usage .card.border-warning,
+.report-platform-usage .card.border-info,
+.report-platform-usage .card.border-danger {
+    border-color: var(--rpu-gray-200);
+    border-top-color: transparent;
+}
+
+/* Card Header - Minimal elegant style */
 .report-platform-usage .card-header {
     padding: var(--rpu-space-4) var(--rpu-space-5);
-    background: var(--rpu-gray-25);
-    border-bottom: 1px solid var(--rpu-gray-100);
+    background: linear-gradient(to bottom, var(--rpu-gray-50), var(--rpu-gray-25));
+    border-bottom: 1px solid var(--rpu-border-light);
+    position: relative;
 }
 
 .report-platform-usage .card-header h5,
 .report-platform-usage .card-header h6 {
     font-size: var(--rpu-text-sm);
-    font-weight: 600;
-    color: var(--rpu-gray-700);
+    font-weight: var(--rpu-font-semibold);
+    color: var(--rpu-gray-800);
     margin: 0;
     display: flex;
     align-items: center;
@@ -309,17 +433,17 @@
     margin-top: var(--rpu-space-1);
     font-size: var(--rpu-text-xs);
     color: var(--rpu-gray-500);
-    font-weight: 400;
+    font-weight: var(--rpu-font-normal);
 }
 
-/* Remove Bootstrap colored headers - use accent border instead */
+/* Override Bootstrap colored headers */
 .report-platform-usage .card-header.bg-primary,
 .report-platform-usage .card-header.bg-success,
 .report-platform-usage .card-header.bg-warning,
 .report-platform-usage .card-header.bg-info,
 .report-platform-usage .card-header.bg-danger {
-    background: var(--rpu-gray-25) !important;
-    color: var(--rpu-gray-700) !important;
+    background: linear-gradient(to bottom, var(--rpu-gray-50), var(--rpu-gray-25)) !important;
+    color: var(--rpu-gray-800) !important;
 }
 
 .report-platform-usage .card-header.bg-primary h6,
@@ -329,7 +453,7 @@
 .report-platform-usage .card-header.bg-danger h6,
 .report-platform-usage .card-header.text-white h6,
 .report-platform-usage .card-header.text-dark h6 {
-    color: var(--rpu-gray-700) !important;
+    color: var(--rpu-gray-800) !important;
 }
 
 /* Card Body */
@@ -350,33 +474,34 @@
 .report-platform-usage .card-body h4:not(.card-title),
 .report-platform-usage .card-body h2 {
     font-size: var(--rpu-text-3xl);
-    font-weight: 700;
+    font-weight: var(--rpu-font-bold);
     color: var(--rpu-gray-900);
     margin: 0;
-    line-height: 1;
+    line-height: var(--rpu-leading-none);
     font-variant-numeric: tabular-nums;
+    letter-spacing: var(--rpu-tracking-tight);
 }
 
 .report-platform-usage .card-body h3 {
     font-size: var(--rpu-text-2xl);
-    font-weight: 700;
+    font-weight: var(--rpu-font-bold);
     margin: 0;
-    line-height: 1;
+    line-height: var(--rpu-leading-none);
 }
 
 .report-platform-usage .metric-label {
     font-size: var(--rpu-text-xs);
-    font-weight: 500;
+    font-weight: var(--rpu-font-medium);
     color: var(--rpu-gray-500);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: var(--rpu-tracking-wider);
     margin-top: var(--rpu-space-2);
 }
 
 /* Color variants for metric values */
 .report-platform-usage .card-body h4.text-primary,
 .report-platform-usage .card-body h2.text-primary,
-.report-platform-usage .card-body h3.text-primary { color: var(--rpu-primary-600) !important; }
+.report-platform-usage .card-body h3.text-primary { color: var(--rpu-brand-600) !important; }
 .report-platform-usage .card-body h4.text-success,
 .report-platform-usage .card-body h2.text-success,
 .report-platform-usage .card-body h3.text-success { color: var(--rpu-success-600) !important; }
@@ -388,91 +513,125 @@
 .report-platform-usage .card-body h3.text-warning { color: var(--rpu-warning-600) !important; }
 
 /* ===========================================
-   Badges - Modern pill style
+   Badges - Modern Soft Style
    =========================================== */
 .report-platform-usage .badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--rpu-space-1) var(--rpu-space-3);
+    padding: var(--rpu-space-1) var(--rpu-space-2-5);
     font-size: var(--rpu-text-xs);
-    font-weight: 600;
-    border-radius: var(--rpu-radius-full);
-    min-width: 2rem;
+    font-weight: var(--rpu-font-semibold);
+    border-radius: var(--rpu-radius-md);
+    min-width: 1.75rem;
     font-variant-numeric: tabular-nums;
+    letter-spacing: var(--rpu-tracking-wide);
+    transition: all var(--rpu-transition);
 }
 
 .report-platform-usage .badge-primary {
-    background: var(--rpu-primary-100);
-    color: var(--rpu-primary-700);
+    background: linear-gradient(135deg, var(--rpu-brand-100), var(--rpu-brand-50));
+    color: var(--rpu-brand-700);
+    border: 1px solid var(--rpu-brand-200);
 }
+
 .report-platform-usage .badge-secondary {
-    background: var(--rpu-gray-100);
+    background: linear-gradient(135deg, var(--rpu-gray-100), var(--rpu-gray-50));
     color: var(--rpu-gray-700);
+    border: 1px solid var(--rpu-gray-200);
 }
+
 .report-platform-usage .badge-success {
-    background: var(--rpu-success-100);
+    background: linear-gradient(135deg, var(--rpu-success-100), var(--rpu-success-50));
     color: var(--rpu-success-700);
+    border: 1px solid var(--rpu-success-200);
 }
+
 .report-platform-usage .badge-warning {
-    background: var(--rpu-warning-100);
+    background: linear-gradient(135deg, var(--rpu-warning-100), var(--rpu-warning-50));
     color: var(--rpu-warning-700);
+    border: 1px solid var(--rpu-warning-200);
 }
+
 .report-platform-usage .badge-danger {
-    background: var(--rpu-error-100);
+    background: linear-gradient(135deg, var(--rpu-error-100), var(--rpu-error-50));
     color: var(--rpu-error-700);
+    border: 1px solid var(--rpu-error-200);
 }
+
 .report-platform-usage .badge-info {
-    background: var(--rpu-info-100);
+    background: linear-gradient(135deg, var(--rpu-info-100), var(--rpu-info-50));
     color: var(--rpu-info-700);
+    border: 1px solid var(--rpu-info-200);
+}
+
+.report-platform-usage .badge-dark {
+    background: linear-gradient(135deg, var(--rpu-gray-800), var(--rpu-gray-700));
+    color: white;
+    border: 1px solid var(--rpu-gray-600);
 }
 
 .report-platform-usage .badge-lg {
-    padding: var(--rpu-space-2) var(--rpu-space-4);
+    padding: var(--rpu-space-1-5) var(--rpu-space-3);
     font-size: var(--rpu-text-sm);
+    border-radius: var(--rpu-radius-lg);
 }
 
 /* ===========================================
-   Progress Bars - Smooth animations
+   Progress Bars - Smooth Gradient Style
    =========================================== */
 .report-platform-usage .progress {
     height: 8px;
     background: var(--rpu-gray-100);
     border-radius: var(--rpu-radius-full);
     overflow: hidden;
+    box-shadow: var(--rpu-shadow-inner);
 }
 
 .report-platform-usage .progress-bar {
-    background: var(--rpu-primary-500);
+    background: linear-gradient(90deg, var(--rpu-brand-500), var(--rpu-brand-400));
     border-radius: var(--rpu-radius-full);
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.8s var(--rpu-ease-out);
     font-size: var(--rpu-text-xs);
-    font-weight: 600;
+    font-weight: var(--rpu-font-semibold);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     min-height: 8px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.report-platform-usage .progress-bar.bg-success { background: var(--rpu-success-500); }
-.report-platform-usage .progress-bar.bg-warning { background: var(--rpu-warning-500); }
-.report-platform-usage .progress-bar.bg-info { background: var(--rpu-info-500); }
-.report-platform-usage .progress-bar.bg-danger { background: var(--rpu-error-500); }
+.report-platform-usage .progress-bar.bg-success {
+    background: linear-gradient(90deg, var(--rpu-success-500), var(--rpu-success-400));
+}
+.report-platform-usage .progress-bar.bg-warning {
+    background: linear-gradient(90deg, var(--rpu-warning-500), var(--rpu-warning-400));
+}
+.report-platform-usage .progress-bar.bg-info {
+    background: linear-gradient(90deg, var(--rpu-info-500), var(--rpu-info-400));
+}
+.report-platform-usage .progress-bar.bg-danger {
+    background: linear-gradient(90deg, var(--rpu-error-500), var(--rpu-error-400));
+}
 
 /* Large progress bar with text */
 .report-platform-usage .progress[style*="height: 20px"],
 .report-platform-usage .progress[style*="height:20px"] {
-    height: 24px !important;
+    height: 26px !important;
+    border-radius: var(--rpu-radius-lg);
 }
 
 .report-platform-usage .progress[style*="height: 20px"] .progress-bar,
 .report-platform-usage .progress[style*="height:20px"] .progress-bar {
-    min-height: 24px;
+    min-height: 26px;
+    border-radius: var(--rpu-radius-md);
+    font-size: var(--rpu-text-xs);
+    padding: 0 var(--rpu-space-2);
 }
 
 /* ===========================================
-   Tables - Clean data presentation
+   Tables - Premium Data Presentation
    =========================================== */
 .report-platform-usage .table {
     width: 100%;
@@ -485,13 +644,16 @@
     padding: var(--rpu-space-3) var(--rpu-space-4);
     text-align: left;
     font-size: var(--rpu-text-xs);
-    font-weight: 600;
+    font-weight: var(--rpu-font-semibold);
     color: var(--rpu-gray-500);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: var(--rpu-gray-50);
+    letter-spacing: var(--rpu-tracking-wider);
+    background: linear-gradient(to bottom, var(--rpu-gray-50), var(--rpu-gray-100));
     border-bottom: 2px solid var(--rpu-gray-200);
     white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .report-platform-usage .table td {
@@ -499,14 +661,15 @@
     color: var(--rpu-gray-700);
     border-bottom: 1px solid var(--rpu-gray-100);
     vertical-align: middle;
+    transition: background-color var(--rpu-transition-fast);
 }
 
 .report-platform-usage .table tbody tr {
-    transition: background-color var(--rpu-transition);
+    transition: background-color var(--rpu-transition-fast);
 }
 
 .report-platform-usage .table tbody tr:hover {
-    background: var(--rpu-gray-50);
+    background: linear-gradient(to right, var(--rpu-brand-50), transparent);
 }
 
 .report-platform-usage .table tbody tr:last-child td {
@@ -514,13 +677,14 @@
 }
 
 .report-platform-usage .table a {
-    color: var(--rpu-primary-600);
-    font-weight: 500;
+    color: var(--rpu-brand-600);
+    font-weight: var(--rpu-font-medium);
     text-decoration: none;
+    transition: color var(--rpu-transition);
 }
 
 .report-platform-usage .table a:hover {
-    color: var(--rpu-primary-700);
+    color: var(--rpu-brand-700);
     text-decoration: underline;
 }
 
@@ -533,31 +697,78 @@
     font-size: var(--rpu-text-xs);
 }
 
+/* Striped table rows */
+.report-platform-usage .table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--rpu-gray-25);
+}
+
+.report-platform-usage .table-striped tbody tr:nth-of-type(odd):hover {
+    background: linear-gradient(to right, var(--rpu-brand-50), var(--rpu-gray-25));
+}
+
 /* Table wrapper for responsiveness */
 .report-platform-usage .table-responsive {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     border-radius: var(--rpu-radius-lg);
+    scrollbar-width: thin;
+    scrollbar-color: var(--rpu-gray-300) var(--rpu-gray-100);
+}
+
+.report-platform-usage .table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+
+.report-platform-usage .table-responsive::-webkit-scrollbar-track {
+    background: var(--rpu-gray-100);
+    border-radius: var(--rpu-radius-full);
+}
+
+.report-platform-usage .table-responsive::-webkit-scrollbar-thumb {
+    background: var(--rpu-gray-300);
+    border-radius: var(--rpu-radius-full);
+}
+
+.report-platform-usage .table-responsive::-webkit-scrollbar-thumb:hover {
+    background: var(--rpu-gray-400);
 }
 
 /* ===========================================
-   Buttons - Professional actions
+   Buttons - Enterprise Actions
    =========================================== */
 .report-platform-usage .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--rpu-space-2);
-    padding: var(--rpu-space-2) var(--rpu-space-4);
+    padding: var(--rpu-space-2-5) var(--rpu-space-4);
     font-size: var(--rpu-text-sm);
-    font-weight: 500;
+    font-weight: var(--rpu-font-medium);
     line-height: var(--rpu-leading-normal);
-    border-radius: var(--rpu-radius-md);
+    border-radius: var(--rpu-radius-lg);
     border: 1px solid transparent;
     cursor: pointer;
     transition: all var(--rpu-transition);
     text-decoration: none;
     white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+
+.report-platform-usage .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity var(--rpu-transition);
+}
+
+.report-platform-usage .btn:hover::before {
+    opacity: 1;
 }
 
 .report-platform-usage .btn:hover {
@@ -577,17 +788,17 @@
 
 /* Primary Button */
 .report-platform-usage .btn-primary {
-    background: linear-gradient(180deg, var(--rpu-primary-500) 0%, var(--rpu-primary-600) 100%);
-    border-color: var(--rpu-primary-600);
+    background: linear-gradient(180deg, var(--rpu-brand-500) 0%, var(--rpu-brand-600) 100%);
+    border-color: var(--rpu-brand-600);
     color: white;
-    box-shadow: var(--rpu-shadow-xs), inset 0 1px 0 rgba(255,255,255,0.1);
+    box-shadow: var(--rpu-shadow-sm), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
 .report-platform-usage .btn-primary:hover {
-    background: linear-gradient(180deg, var(--rpu-primary-600) 0%, var(--rpu-primary-700) 100%);
-    border-color: var(--rpu-primary-700);
+    background: linear-gradient(180deg, var(--rpu-brand-600) 0%, var(--rpu-brand-700) 100%);
+    border-color: var(--rpu-brand-700);
     color: white;
-    box-shadow: var(--rpu-shadow-sm), inset 0 1px 0 rgba(255,255,255,0.1);
+    box-shadow: var(--rpu-shadow), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
 /* Secondary Button */
@@ -609,11 +820,12 @@
     background: linear-gradient(180deg, var(--rpu-success-500) 0%, var(--rpu-success-600) 100%);
     border-color: var(--rpu-success-600);
     color: white;
-    box-shadow: var(--rpu-shadow-xs), inset 0 1px 0 rgba(255,255,255,0.1);
+    box-shadow: var(--rpu-shadow-sm), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
 .report-platform-usage .btn-success:hover {
     background: linear-gradient(180deg, var(--rpu-success-600) 0%, var(--rpu-success-700) 100%);
+    border-color: var(--rpu-success-700);
     color: white;
 }
 
@@ -623,7 +835,7 @@
     border: 1px solid var(--rpu-gray-200);
     color: var(--rpu-gray-600);
     box-shadow: var(--rpu-shadow-xs);
-    font-weight: 500;
+    font-weight: var(--rpu-font-medium);
 }
 
 .report-platform-usage .btn-export:hover {
@@ -638,29 +850,34 @@
 }
 
 /* ===========================================
-   Form Controls - Refined inputs
+   Form Controls - Refined Inputs
    =========================================== */
 .report-platform-usage .form-control {
     width: 100%;
-    padding: var(--rpu-space-2) var(--rpu-space-3);
+    padding: var(--rpu-space-2-5) var(--rpu-space-3);
     font-size: var(--rpu-text-sm);
     font-family: var(--rpu-font-sans);
     color: var(--rpu-gray-800);
     background: white;
     border: 1px solid var(--rpu-gray-300);
-    border-radius: var(--rpu-radius-md);
-    transition: border-color var(--rpu-transition), box-shadow var(--rpu-transition);
+    border-radius: var(--rpu-radius-lg);
+    transition:
+        border-color var(--rpu-transition),
+        box-shadow var(--rpu-transition),
+        background-color var(--rpu-transition);
     line-height: var(--rpu-leading-normal);
 }
 
 .report-platform-usage .form-control:hover {
     border-color: var(--rpu-gray-400);
+    background-color: var(--rpu-gray-25);
 }
 
 .report-platform-usage .form-control:focus {
     outline: none;
-    border-color: var(--rpu-primary-500);
+    border-color: var(--rpu-brand-500);
     box-shadow: var(--rpu-shadow-ring);
+    background-color: white;
 }
 
 .report-platform-usage .form-control::placeholder {
@@ -671,7 +888,7 @@
 .report-platform-usage select.form-control {
     cursor: pointer;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667085' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     background-position: right var(--rpu-space-3) center;
     background-repeat: no-repeat;
     background-size: 1.25em 1.25em;
@@ -684,7 +901,7 @@
 }
 
 /* ===========================================
-   Tooltips - Custom beautiful tooltips
+   Tooltips - Custom Beautiful Tooltips
    =========================================== */
 .report-platform-usage [data-toggle="tooltip"],
 .report-platform-usage [data-tooltip] {
@@ -696,8 +913,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border-radius: var(--rpu-radius-full);
     background: var(--rpu-gray-100);
     color: var(--rpu-gray-500);
@@ -708,8 +925,9 @@
 }
 
 .report-platform-usage .tooltip-icon:hover {
-    background: var(--rpu-primary-100);
-    color: var(--rpu-primary-600);
+    background: var(--rpu-brand-100);
+    color: var(--rpu-brand-600);
+    transform: scale(1.1);
 }
 
 /* Question mark tooltip in headers */
@@ -717,15 +935,16 @@
 .report-platform-usage .card-header .fa-info-circle {
     font-size: 14px;
     color: var(--rpu-gray-400);
-    opacity: 0.7;
+    opacity: 0.8;
     transition: all var(--rpu-transition);
     cursor: help;
 }
 
 .report-platform-usage .card-header .fa-question-circle:hover,
 .report-platform-usage .card-header .fa-info-circle:hover {
-    color: var(--rpu-primary-500);
+    color: var(--rpu-brand-500);
     opacity: 1;
+    transform: scale(1.1);
 }
 
 /* Inline tooltip indicators */
@@ -733,10 +952,11 @@
     color: var(--rpu-gray-400);
     font-size: 12px;
     cursor: help;
+    transition: all var(--rpu-transition);
 }
 
 .report-platform-usage .fa-info-circle:hover {
-    color: var(--rpu-primary-500);
+    color: var(--rpu-brand-500);
 }
 
 /* Bootstrap tooltip overrides */
@@ -749,10 +969,11 @@
     color: white;
     padding: var(--rpu-space-2) var(--rpu-space-3);
     font-size: var(--rpu-text-xs);
-    border-radius: var(--rpu-radius);
-    max-width: 280px;
+    border-radius: var(--rpu-radius-md);
+    max-width: 300px;
     text-align: left;
-    box-shadow: var(--rpu-shadow-lg);
+    box-shadow: var(--rpu-shadow-xl);
+    line-height: var(--rpu-leading-relaxed);
 }
 
 .tooltip.bs-tooltip-top .arrow::before,
@@ -766,7 +987,7 @@
 }
 
 /* ===========================================
-   List Groups - Clean item lists
+   List Groups - Clean Item Lists
    =========================================== */
 .report-platform-usage .list-group {
     border-radius: var(--rpu-radius-lg);
@@ -778,7 +999,7 @@
     border: none;
     border-bottom: 1px solid var(--rpu-gray-100);
     background: transparent;
-    transition: background-color var(--rpu-transition);
+    transition: all var(--rpu-transition-fast);
 }
 
 .report-platform-usage .list-group-item:last-child {
@@ -786,7 +1007,7 @@
 }
 
 .report-platform-usage .list-group-item:hover {
-    background: var(--rpu-gray-50);
+    background: linear-gradient(to right, var(--rpu-brand-50), transparent);
 }
 
 .report-platform-usage .list-group-flush .list-group-item {
@@ -794,7 +1015,7 @@
 }
 
 /* ===========================================
-   Charts - Clean containers
+   Charts - Premium Containers
    =========================================== */
 .report-platform-usage .chart-container {
     position: relative;
@@ -817,7 +1038,7 @@
 .report-platform-usage hr {
     border: none;
     height: 1px;
-    background: var(--rpu-gray-100);
+    background: linear-gradient(to right, transparent, var(--rpu-gray-200), transparent);
     margin: var(--rpu-space-4) 0;
 }
 
@@ -833,15 +1054,15 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: var(--rpu-gray-200);
+    background: linear-gradient(to right, transparent, var(--rpu-gray-200), transparent);
 }
 
 .report-platform-usage .divider span {
     font-size: var(--rpu-text-xs);
-    font-weight: 500;
+    font-weight: var(--rpu-font-medium);
     color: var(--rpu-gray-500);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: var(--rpu-tracking-wider);
 }
 
 /* ===========================================
@@ -882,15 +1103,20 @@
 }
 
 .report-platform-usage .spinner-border-sm {
-    width: 1rem;
-    height: 1rem;
+    width: 1.125rem;
+    height: 1.125rem;
     border-width: 2px;
-    color: var(--rpu-primary-500);
+    color: var(--rpu-brand-500);
 }
 
 @keyframes rpu-pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
+}
+
+@keyframes rpu-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .report-platform-usage .loading-pulse {
@@ -902,12 +1128,12 @@
    =========================================== */
 .report-platform-usage .empty-state {
     text-align: center;
-    padding: var(--rpu-space-10) var(--rpu-space-6);
+    padding: var(--rpu-space-12) var(--rpu-space-6);
     color: var(--rpu-gray-500);
 }
 
 .report-platform-usage .empty-state i {
-    font-size: 3rem;
+    font-size: 3.5rem;
     color: var(--rpu-gray-300);
     margin-bottom: var(--rpu-space-4);
 }
@@ -922,7 +1148,7 @@
    =========================================== */
 .report-platform-usage .alert {
     padding: var(--rpu-space-4) var(--rpu-space-5);
-    border-radius: var(--rpu-radius-lg);
+    border-radius: var(--rpu-radius-xl);
     margin-bottom: var(--rpu-space-4);
     border: 1px solid transparent;
     display: flex;
@@ -931,26 +1157,26 @@
 }
 
 .report-platform-usage .alert-info {
-    background: var(--rpu-primary-50);
-    border-color: var(--rpu-primary-100);
-    color: var(--rpu-primary-700);
+    background: linear-gradient(135deg, var(--rpu-brand-50), white);
+    border-color: var(--rpu-brand-200);
+    color: var(--rpu-brand-700);
 }
 
 .report-platform-usage .alert-success {
-    background: var(--rpu-success-50);
-    border-color: var(--rpu-success-100);
+    background: linear-gradient(135deg, var(--rpu-success-50), white);
+    border-color: var(--rpu-success-200);
     color: var(--rpu-success-700);
 }
 
 .report-platform-usage .alert-warning {
-    background: var(--rpu-warning-50);
-    border-color: var(--rpu-warning-100);
+    background: linear-gradient(135deg, var(--rpu-warning-50), white);
+    border-color: var(--rpu-warning-200);
     color: var(--rpu-warning-700);
 }
 
 .report-platform-usage .alert-danger {
-    background: var(--rpu-error-50);
-    border-color: var(--rpu-error-100);
+    background: linear-gradient(135deg, var(--rpu-error-50), white);
+    border-color: var(--rpu-error-200);
     color: var(--rpu-error-700);
 }
 
@@ -983,43 +1209,43 @@
    Course Context Specific Styles
    =========================================== */
 .report-platform-usage .course-header {
-    background: linear-gradient(135deg, var(--rpu-primary-50) 0%, var(--rpu-primary-100) 100%);
-    border: 1px solid var(--rpu-primary-200);
-    border-radius: var(--rpu-radius-xl);
+    background: linear-gradient(135deg, var(--rpu-brand-50) 0%, var(--rpu-brand-100) 100%);
+    border: 1px solid var(--rpu-brand-200);
+    border-radius: var(--rpu-radius-2xl);
     padding: var(--rpu-space-5) var(--rpu-space-6);
     margin-bottom: var(--rpu-space-6);
 }
 
 .report-platform-usage .course-header h5 {
-    color: var(--rpu-primary-700);
+    color: var(--rpu-brand-700);
     margin: 0 0 var(--rpu-space-1) 0;
-    font-weight: 600;
+    font-weight: var(--rpu-font-semibold);
 }
 
 .report-platform-usage .course-header small {
-    color: var(--rpu-primary-600);
+    color: var(--rpu-brand-600);
 }
 
 /* Course dedication summary */
 .report-platform-usage .dedication-summary {
-    background: linear-gradient(135deg, var(--rpu-primary-50) 0%, white 100%);
-    border: 1px solid var(--rpu-primary-100);
-    border-radius: var(--rpu-radius-xl);
+    background: linear-gradient(135deg, var(--rpu-brand-50) 0%, white 100%);
+    border: 1px solid var(--rpu-brand-100);
+    border-radius: var(--rpu-radius-2xl);
     padding: var(--rpu-space-6);
     text-align: center;
 }
 
 .report-platform-usage .dedication-summary h3 {
-    color: var(--rpu-primary-600);
+    color: var(--rpu-brand-600);
     font-size: var(--rpu-text-3xl);
     margin-bottom: var(--rpu-space-1);
 }
 
 /* ===========================================
-   Background utilities
+   Background Utilities
    =========================================== */
 .report-platform-usage .bg-light {
-    background: var(--rpu-gray-50) !important;
+    background: linear-gradient(to bottom, var(--rpu-gray-50), var(--rpu-gray-25)) !important;
 }
 
 .report-platform-usage .bg-white {
@@ -1027,7 +1253,7 @@
 }
 
 /* ===========================================
-   Icons
+   Icons - Consistent Styling
    =========================================== */
 .report-platform-usage .card-header i,
 .report-platform-usage .card-header .fa {
@@ -1035,10 +1261,11 @@
     font-size: var(--rpu-text-base);
     width: 1.25rem;
     text-align: center;
+    transition: color var(--rpu-transition);
 }
 
 /* Icon colors based on card type */
-.report-platform-usage .card.border-primary .card-header i:first-child { color: var(--rpu-primary-500); }
+.report-platform-usage .card.border-primary .card-header i:first-child { color: var(--rpu-brand-500); }
 .report-platform-usage .card.border-success .card-header i:first-child { color: var(--rpu-success-500); }
 .report-platform-usage .card.border-warning .card-header i:first-child { color: var(--rpu-warning-500); }
 .report-platform-usage .card.border-info .card-header i:first-child { color: var(--rpu-info-500); }
@@ -1109,6 +1336,10 @@
     .report-platform-usage .btn-export {
         margin-bottom: var(--rpu-space-2);
     }
+
+    .report-platform-usage .card:hover {
+        transform: none;
+    }
 }
 
 @media (max-width: 576px) {
@@ -1118,6 +1349,11 @@
 
     .report-platform-usage .card-body canvas {
         max-height: 200px;
+    }
+
+    .report-platform-usage .badge {
+        font-size: var(--rpu-text-2xs);
+        padding: var(--rpu-space-0-5) var(--rpu-space-2);
     }
 }
 
@@ -1144,6 +1380,11 @@
         border: 1px solid var(--rpu-gray-300);
         break-inside: avoid;
         page-break-inside: avoid;
+    }
+
+    .report-platform-usage .card:hover {
+        transform: none;
+        box-shadow: none;
     }
 
     .report-platform-usage .row {
@@ -1184,13 +1425,17 @@
     .report-platform-usage .btn {
         border-width: 2px;
     }
+
+    .report-platform-usage .badge {
+        border-width: 2px;
+    }
 }
 
 /* Focus visible for keyboard navigation */
 .report-platform-usage a:focus-visible,
 .report-platform-usage button:focus-visible,
 .report-platform-usage [tabindex]:focus-visible {
-    outline: 2px solid var(--rpu-primary-500);
+    outline: 2px solid var(--rpu-brand-500);
     outline-offset: 2px;
     border-radius: var(--rpu-radius-sm);
 }
@@ -1209,26 +1454,130 @@
 }
 
 /* ===========================================
-   Dark Mode Support (optional)
+   Dark Mode Support (System Preference)
    =========================================== */
 @media (prefers-color-scheme: dark) {
     .report-platform-usage.dark-mode-enabled {
-        --rpu-gray-25: #1a1a2e;
-        --rpu-gray-50: #16162a;
-        --rpu-gray-100: #1f1f3a;
-        --rpu-gray-200: #2d2d4a;
-        --rpu-gray-300: #3d3d5c;
-        --rpu-gray-400: #6b6b8d;
-        --rpu-gray-500: #9898b5;
-        --rpu-gray-600: #b5b5cc;
-        --rpu-gray-700: #d1d1e0;
-        --rpu-gray-800: #e8e8f0;
-        --rpu-gray-900: #f5f5f9;
+        --rpu-gray-25: #0f172a;
+        --rpu-gray-50: #1e293b;
+        --rpu-gray-100: #334155;
+        --rpu-gray-200: #475569;
+        --rpu-gray-300: #64748b;
+        --rpu-gray-400: #94a3b8;
+        --rpu-gray-500: #cbd5e1;
+        --rpu-gray-600: #e2e8f0;
+        --rpu-gray-700: #f1f5f9;
+        --rpu-gray-800: #f8fafc;
+        --rpu-gray-900: #ffffff;
 
-        background: var(--rpu-gray-50);
+        --rpu-background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        --rpu-surface: #1e293b;
+        --rpu-border: #334155;
+
+        background: var(--rpu-background);
     }
 
     .report-platform-usage.dark-mode-enabled .card {
-        background: var(--rpu-gray-100);
+        background: var(--rpu-surface);
+        border-color: var(--rpu-border);
     }
+
+    .report-platform-usage.dark-mode-enabled .filter-section {
+        background: rgba(30, 41, 59, 0.95);
+        border-color: rgba(51, 65, 85, 0.5);
+    }
+}
+
+/* ===========================================
+   Animation Keyframes
+   =========================================== */
+@keyframes rpu-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rpu-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rpu-scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Apply entrance animations */
+.report-platform-usage .card {
+    animation: rpu-fade-in 0.3s var(--rpu-ease-out) forwards;
+}
+
+.report-platform-usage .row .col-lg-3:nth-child(1) .card { animation-delay: 0.05s; }
+.report-platform-usage .row .col-lg-3:nth-child(2) .card { animation-delay: 0.1s; }
+.report-platform-usage .row .col-lg-3:nth-child(3) .card { animation-delay: 0.15s; }
+.report-platform-usage .row .col-lg-3:nth-child(4) .card { animation-delay: 0.2s; }
+
+/* ===========================================
+   Custom Scrollbar
+   =========================================== */
+.report-platform-usage {
+    scrollbar-width: thin;
+    scrollbar-color: var(--rpu-gray-300) var(--rpu-gray-100);
+}
+
+.report-platform-usage::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.report-platform-usage::-webkit-scrollbar-track {
+    background: var(--rpu-gray-100);
+    border-radius: var(--rpu-radius-full);
+}
+
+.report-platform-usage::-webkit-scrollbar-thumb {
+    background: var(--rpu-gray-300);
+    border-radius: var(--rpu-radius-full);
+}
+
+.report-platform-usage::-webkit-scrollbar-thumb:hover {
+    background: var(--rpu-gray-400);
+}
+
+/* ===========================================
+   Utility Classes
+   =========================================== */
+.report-platform-usage .text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.report-platform-usage .text-center { text-align: center; }
+.report-platform-usage .text-right { text-align: right; }
+.report-platform-usage .text-left { text-align: left; }
+
+.report-platform-usage .font-mono {
+    font-family: var(--rpu-font-mono);
+}
+
+.report-platform-usage .tabular-nums {
+    font-variant-numeric: tabular-nums;
 }
