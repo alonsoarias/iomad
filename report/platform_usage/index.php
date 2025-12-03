@@ -552,6 +552,7 @@ echo '<div class="row mb-4">';
 
 if (!$incoursecontext) {
     // Course Access and Completion Trends (Combined chart) - Only in global context.
+    $hasCourseAccessData = !empty($courseAccessTrends['data']) && array_sum($courseAccessTrends['data']) > 0;
     echo '<div class="col-lg-6 mb-3">';
     echo '<div class="card h-100">';
     echo '<div class="card-header bg-light">';
@@ -559,7 +560,16 @@ if (!$incoursecontext) {
     echo '<small class="text-muted">' . get_string('coursetrends_desc', 'report_platform_usage') . '</small>';
     echo '</div>';
     echo '<div class="card-body">';
-    echo '<canvas id="courseAccessChart" height="260"></canvas>';
+    if ($hasCourseAccessData) {
+        echo '<canvas id="courseAccessChart" height="260"></canvas>';
+    } else {
+        echo '<div class="d-flex align-items-center justify-content-center" style="height: 260px;">';
+        echo '<div class="text-center text-muted">';
+        echo '<i class="fa fa-info-circle fa-3x mb-3"></i>';
+        echo '<p>' . get_string('nodata', 'report_platform_usage') . '</p>';
+        echo '</div>';
+        echo '</div>';
+    }
     echo '</div>';
     echo '</div>';
     echo '</div>';
@@ -572,7 +582,16 @@ if (!$incoursecontext) {
     echo '<small class="text-muted">' . get_string('dedication_desc', 'report_platform_usage') . '</small>';
     echo '</div>';
     echo '<div class="card-body">';
-    echo '<canvas id="dedicationChart" height="260"></canvas>';
+    if (!empty($topDedication)) {
+        echo '<canvas id="dedicationChart" height="260"></canvas>';
+    } else {
+        echo '<div class="d-flex align-items-center justify-content-center" style="height: 260px;">';
+        echo '<div class="text-center text-muted">';
+        echo '<i class="fa fa-info-circle fa-3x mb-3"></i>';
+        echo '<p>' . get_string('nodata', 'report_platform_usage') . '</p>';
+        echo '</div>';
+        echo '</div>';
+    }
     echo '</div>';
     echo '</div>';
     echo '</div>';
@@ -585,20 +604,29 @@ if (!$incoursecontext) {
     echo '<small class="text-muted">' . get_string('coursededication_desc', 'report_platform_usage') . '</small>';
     echo '</div>';
     echo '<div class="card-body">';
-    echo '<div class="row">';
-    echo '<div class="col-md-4 text-center">';
-    echo '<h3 class="text-primary">' . $courseStats['total_dedication_formatted'] . '</h3>';
-    echo '<p class="text-muted">' . get_string('totaldedication', 'report_platform_usage') . '</p>';
-    echo '</div>';
-    echo '<div class="col-md-4 text-center">';
-    echo '<h3 class="text-success">' . $courseStats['avg_dedication_formatted'] . '</h3>';
-    echo '<p class="text-muted">' . get_string('avgdedicationperuser', 'report_platform_usage') . '</p>';
-    echo '</div>';
-    echo '<div class="col-md-4 text-center">';
-    echo '<h3 class="text-info">' . number_format($courseStats['enrolled_users']) . '</h3>';
-    echo '<p class="text-muted">' . get_string('enrolledusers', 'report_platform_usage') . '</p>';
-    echo '</div>';
-    echo '</div>';
+    if (!empty($courseStats) && isset($courseStats['total_dedication_formatted'])) {
+        echo '<div class="row">';
+        echo '<div class="col-md-4 text-center">';
+        echo '<h3 class="text-primary">' . $courseStats['total_dedication_formatted'] . '</h3>';
+        echo '<p class="text-muted">' . get_string('totaldedication', 'report_platform_usage') . '</p>';
+        echo '</div>';
+        echo '<div class="col-md-4 text-center">';
+        echo '<h3 class="text-success">' . $courseStats['avg_dedication_formatted'] . '</h3>';
+        echo '<p class="text-muted">' . get_string('avgdedicationperuser', 'report_platform_usage') . '</p>';
+        echo '</div>';
+        echo '<div class="col-md-4 text-center">';
+        echo '<h3 class="text-info">' . number_format($courseStats['enrolled_users'] ?? 0) . '</h3>';
+        echo '<p class="text-muted">' . get_string('enrolledusers', 'report_platform_usage') . '</p>';
+        echo '</div>';
+        echo '</div>';
+    } else {
+        echo '<div class="d-flex align-items-center justify-content-center" style="height: 150px;">';
+        echo '<div class="text-center text-muted">';
+        echo '<i class="fa fa-info-circle fa-3x mb-3"></i>';
+        echo '<p>' . get_string('nodata', 'report_platform_usage') . '</p>';
+        echo '</div>';
+        echo '</div>';
+    }
     echo '</div>';
     echo '</div>';
     echo '</div>';
