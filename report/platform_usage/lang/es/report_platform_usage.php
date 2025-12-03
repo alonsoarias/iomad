@@ -254,3 +254,30 @@ $string['tooltip_topactivities'] = 'Actividades más accedidas ordenadas por can
 $string['tooltip_completiontrends'] = 'Finalizaciones de cursos diarias en los últimos 30 días.';
 $string['tooltip_dailyuserstable'] = 'Conteos recientes de usuarios únicos diarios.';
 $string['tooltip_dedicationchart'] = 'Cursos con mayor dedicación ordenados por tiempo total.';
+
+// Tarea programada.
+$string['task_collect_dedication'] = 'Recolectar datos de tiempo de dedicación';
+
+// Cadenas contextuales (curso vs plataforma).
+$string['courseaccesstrends'] = 'Tendencia de accesos al curso';
+$string['courseaccesstrends_desc'] = 'Accesos diarios al curso y usuarios únicos durante el período seleccionado.';
+$string['courseenrolledusers_desc'] = 'Distribución de usuarios matriculados según su estado de actividad.';
+$string['coursededicationsummary'] = 'Resumen de dedicación del curso';
+$string['coursededication_desc'] = 'Resumen de métricas de tiempo de dedicación para este curso.';
+$string['avgdedicationperuser'] = 'Promedio por usuario';
+$string['topcourseaccess'] = 'Principales accesos al curso';
+$string['coursecompletiontrends'] = 'Tendencia de finalizaciones del curso';
+$string['coursecompletiontrends_desc'] = 'Finalizaciones diarias de este curso durante el período seleccionado.';
+$string['coursedailyusers'] = 'Usuarios diarios del curso';
+
+// Hojas detalladas de exportación.
+$string['courseusersdetails'] = 'Detalle de usuarios matriculados';
+$string['courseusersdetails_desc'] = 'Desglose detallado de todos los usuarios matriculados incluyendo estado de finalización, tiempo de dedicación y último acceso.';
+$string['courseaccesshistory'] = 'Historial de acceso al curso';
+$string['courseaccesshistory_desc'] = 'Tendencias de acceso diario para este curso.';
+$string['userdedication'] = 'Dedicación del usuario';
+$string['lastcourseaccess'] = 'Último acceso al curso';
+$string['completionstatus'] = 'Estado de finalización';
+$string['notcompleted'] = 'No completado';
+$string['completed'] = 'Completado';
+$string['never'] = 'Nunca';
