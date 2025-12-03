@@ -2,12 +2,14 @@
  * Platform Usage Report - Dashboard JavaScript Module
  *
  * @module     report_platform_usage/dashboard
- * @package    report_platform_usage
  * @copyright  2024 IOMAD
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'],
-    function($, Ajax, Notification, Str, Templates) {
+
+/* global Chart */
+
+define(['jquery', 'core/ajax', 'core/notification'],
+    function($, Ajax, Notification) {
     'use strict';
 
     /**
@@ -66,6 +68,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Initialize the dashboard
+         *
          * @param {Object} config Configuration object
          * @param {Object} initialData Initial report data
          * @param {Object} strings Language strings
@@ -109,7 +112,6 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
          * Initialize Bootstrap tooltips
          */
         initTooltips: function() {
-            var self = this;
             // Initialize all tooltips
             $('[data-toggle="tooltip"]').tooltip({
                 container: 'body',
@@ -159,6 +161,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Initialize all charts
+         *
          * @param {Object} data Report data
          */
         initCharts: function(data) {
@@ -190,6 +193,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Create Daily Logins Line Chart
+         *
+         * @param {Object} data Report data
          */
         createDailyLoginsChart: function(data) {
             var canvas = document.getElementById('dailyLoginsChart');
@@ -224,15 +229,17 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: { intersect: false, mode: 'index' },
-                    plugins: { legend: { position: 'top' } },
-                    scales: { y: { beginAtZero: true } }
+                    interaction: {intersect: false, mode: 'index'},
+                    plugins: {legend: {position: 'top'}},
+                    scales: {y: {beginAtZero: true}}
                 }
             });
         },
 
         /**
          * Create User Activity Doughnut Chart
+         *
+         * @param {Object} data Report data
          */
         createUserActivityChart: function(data) {
             var canvas = document.getElementById('userActivityChart');
@@ -240,7 +247,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
                 return;
             }
 
-            var activeUsers, inactiveUsers;
+            var activeUsers;
+            var inactiveUsers;
             if (this.config.inCourseContext && data.course_stats) {
                 activeUsers = data.course_stats.active_users || 0;
                 inactiveUsers = data.course_stats.inactive_users || 0;
@@ -268,13 +276,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
+                    plugins: {legend: {position: 'bottom'}}
                 }
             });
         },
 
         /**
          * Create Course Access Trends Chart
+         *
+         * @param {Object} data Report data
          */
         createCourseAccessChart: function(data) {
             var canvas = document.getElementById('courseAccessChart');
@@ -299,15 +309,17 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: { intersect: false, mode: 'index' },
-                    plugins: { legend: { position: 'top' } },
-                    scales: { y: { beginAtZero: true } }
+                    interaction: {intersect: false, mode: 'index'},
+                    plugins: {legend: {position: 'top'}},
+                    scales: {y: {beginAtZero: true}}
                 }
             });
         },
 
         /**
          * Create Completion Trends Chart
+         *
+         * @param {Object} data Report data
          */
         createCompletionTrendsChart: function(data) {
             var canvas = document.getElementById('completionTrendsChart');
@@ -332,15 +344,17 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: { intersect: false, mode: 'index' },
-                    plugins: { legend: { position: 'top' } },
-                    scales: { y: { beginAtZero: true } }
+                    interaction: {intersect: false, mode: 'index'},
+                    plugins: {legend: {position: 'top'}},
+                    scales: {y: {beginAtZero: true}}
                 }
             });
         },
 
         /**
          * Create Dedication Chart (horizontal bar)
+         *
+         * @param {Object} data Report data
          */
         createDedicationChart: function(data) {
             var canvas = document.getElementById('dedicationChart');
@@ -370,7 +384,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: {legend: {display: false}},
                     scales: {
                         x: {
                             beginAtZero: true,
@@ -388,6 +402,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Load report data via AJAX
+         *
          * @param {number} companyId Company ID
          * @param {string} datefrom Date from
          * @param {string} dateto Date to
@@ -424,6 +439,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Load course report data via AJAX
+         *
          * @param {string} datefrom Date from
          * @param {string} dateto Date to
          */
@@ -451,7 +467,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
                 self.updateTables(data);
                 self.updateCourseExportLinks(datefrom, dateto);
             }).fail(function(jqXHR, textStatus, errorThrown) {
-                Notification.exception({message: 'Error loading course report data: ' + errorThrown});
+                Notification.exception({message: 'Error loading course data: ' + errorThrown});
             }).always(function() {
                 $loading.hide();
             });
@@ -459,6 +475,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Update summary cards with new data
+         *
          * @param {Object} data Report data
          */
         updateSummaryCards: function(data) {
@@ -478,17 +495,24 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
             // Completions card
             if (data.completions_summary) {
-                this.updateElement('completions-today', this.formatNumber(data.completions_summary.completions_today));
-                this.updateElement('completions-week', this.formatNumber(data.completions_summary.completions_week));
-                this.updateElement('completions-month', this.formatNumber(data.completions_summary.completions_month));
-                this.updateElement('total-completions', this.formatNumber(data.completions_summary.total_completions));
+                this.updateElement('completions-today',
+                    this.formatNumber(data.completions_summary.completions_today));
+                this.updateElement('completions-week',
+                    this.formatNumber(data.completions_summary.completions_week));
+                this.updateElement('completions-month',
+                    this.formatNumber(data.completions_summary.completions_month));
+                this.updateElement('total-completions',
+                    this.formatNumber(data.completions_summary.total_completions));
             }
 
             // Daily Users card
             if (data.daily_users && data.daily_users.data) {
                 var maxDaily = Math.max.apply(null, data.daily_users.data) || 0;
+                var sum = data.daily_users.data.reduce(function(a, b) {
+                    return a + b;
+                }, 0);
                 var avgDaily = data.daily_users.data.length > 0 ?
-                    Math.round(data.daily_users.data.reduce(function(a, b) { return a + b; }, 0) / data.daily_users.data.length) : 0;
+                    Math.round(sum / data.daily_users.data.length) : 0;
                 var todayDaily = data.daily_users.data[data.daily_users.data.length - 1] || 0;
                 this.updateElement('daily-today', this.formatNumber(todayDaily));
                 this.updateElement('daily-avg', this.formatNumber(avgDaily));
@@ -503,6 +527,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Update tables with new data
+         *
          * @param {Object} data Report data
          */
         updateTables: function(data) {
@@ -518,6 +543,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Update courses table
+         *
          * @param {Array} courses List of courses
          */
         updateCoursesTable: function(courses) {
@@ -538,13 +564,14 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
             html += '<th class="text-right">' + (this.strings.uniqueusers || 'Unique users') + '</th>';
             html += '</tr></thead><tbody>';
 
+            var self = this;
             courses.forEach(function(course) {
                 html += '<tr>';
-                html += '<td>' + this.escapeHtml(course.fullname) + '</td>';
-                html += '<td class="text-right">' + this.formatNumber(course.access_count) + '</td>';
-                html += '<td class="text-right">' + this.formatNumber(course.unique_users) + '</td>';
+                html += '<td>' + self.escapeHtml(course.fullname) + '</td>';
+                html += '<td class="text-right">' + self.formatNumber(course.access_count) + '</td>';
+                html += '<td class="text-right">' + self.formatNumber(course.unique_users) + '</td>';
                 html += '</tr>';
-            }, this);
+            });
 
             html += '</tbody></table></div>';
             $container.html(html);
@@ -552,6 +579,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Update activities table
+         *
          * @param {Array} activities List of activities
          */
         updateActivitiesTable: function(activities) {
@@ -573,14 +601,16 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
             html += '<th class="text-right">' + (this.strings.uniqueusers || 'Unique users') + '</th>';
             html += '</tr></thead><tbody>';
 
+            var self = this;
             activities.forEach(function(activity) {
                 html += '<tr>';
-                html += '<td>' + this.escapeHtml(activity.name) + '</td>';
-                html += '<td><span class="badge badge-secondary">' + this.escapeHtml(activity.type_name || activity.type) + '</span></td>';
-                html += '<td class="text-right">' + this.formatNumber(activity.access_count) + '</td>';
-                html += '<td class="text-right">' + this.formatNumber(activity.unique_users) + '</td>';
+                html += '<td>' + self.escapeHtml(activity.name) + '</td>';
+                html += '<td><span class="badge badge-secondary">';
+                html += self.escapeHtml(activity.type_name || activity.type) + '</span></td>';
+                html += '<td class="text-right">' + self.formatNumber(activity.access_count) + '</td>';
+                html += '<td class="text-right">' + self.formatNumber(activity.unique_users) + '</td>';
                 html += '</tr>';
-            }, this);
+            });
 
             html += '</tbody></table></div>';
             $container.html(html);
@@ -588,6 +618,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Update daily users table
+         *
          * @param {Object} dailyUsers Daily users data
          */
         updateDailyUsersTable: function(dailyUsers) {
@@ -608,12 +639,14 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
             html += '<th class="text-right">' + (this.strings.uniqueusers || 'Unique users') + '</th>';
             html += '</tr></thead><tbody>';
 
+            var self = this;
             dailyUsers.records.forEach(function(record) {
                 html += '<tr>';
                 html += '<td>' + record.fecha_formateada + '</td>';
-                html += '<td class="text-right"><span class="badge badge-primary">' + this.formatNumber(record.cantidad_usuarios) + '</span></td>';
+                html += '<td class="text-right"><span class="badge badge-primary">';
+                html += self.formatNumber(record.cantidad_usuarios) + '</span></td>';
                 html += '</tr>';
-            }, this);
+            });
 
             html += '</tbody></table></div>';
             $container.html(html);
@@ -621,6 +654,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Update export links with current filters
+         *
          * @param {number} companyId Company ID
          * @param {string} datefrom Date from
          * @param {string} dateto Date to
@@ -641,6 +675,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Update course export links with current filters
+         *
          * @param {string} datefrom Date from
          * @param {string} dateto Date to
          */
@@ -659,6 +694,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Update element text content
+         *
          * @param {string} id Element ID
          * @param {string} value New value
          */
@@ -671,6 +707,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Format number with thousands separator
+         *
          * @param {number} num Number to format
          * @returns {string} Formatted number
          */
@@ -683,6 +720,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
 
         /**
          * Escape HTML special characters
+         *
          * @param {string} text Text to escape
          * @returns {string} Escaped text
          */
@@ -699,6 +737,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
     return {
         /**
          * Initialize the dashboard module
+         *
          * @param {Object} config Configuration
          * @param {Object} initialData Initial data
          * @param {Object} strings Language strings
