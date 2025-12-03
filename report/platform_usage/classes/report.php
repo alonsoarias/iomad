@@ -737,6 +737,7 @@ class report {
             'completions_summary' => $this->get_course_completions_summary(),
             'completion_trends' => $this->get_completion_trends(30),
             'logout_summary' => $this->get_logout_summary(),
+            'daily_users' => $this->get_daily_users(10),
         ];
     }
 

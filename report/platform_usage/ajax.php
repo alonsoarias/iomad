@@ -56,10 +56,12 @@ $report = new \report_platform_usage\report($companyid, $datefrom, $dateto, true
 // Get all data.
 $data = $report->get_all_data();
 
+// Add top dedication data (needed for both contexts).
+$data['top_dedication'] = $report->get_top_courses_dedication(10);
+
 // Add course-specific data if in course context.
 if ($courseid > 0) {
     $data['course_stats'] = $report->get_course_statistics();
-    $data['top_dedication'] = $report->get_top_courses_dedication(10);
 }
 
 // Return JSON response.
