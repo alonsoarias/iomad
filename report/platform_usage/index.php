@@ -487,8 +487,13 @@ echo '<div class="row mb-4">';
 echo '<div class="col-lg-8 mb-3">';
 echo '<div class="card h-100">';
 echo '<div class="card-header bg-light">';
-echo '<h5 class="mb-0"><i class="fa fa-line-chart mr-2"></i>' . get_string('logintrends', 'report_platform_usage') . '</h5>';
-echo '<small class="text-muted">' . get_string('logintrends_desc', 'report_platform_usage') . '</small>';
+if ($incoursecontext) {
+    echo '<h5 class="mb-0"><i class="fa fa-line-chart mr-2"></i>' . get_string('courseaccesstrends', 'report_platform_usage') . '</h5>';
+    echo '<small class="text-muted">' . get_string('courseaccesstrends_desc', 'report_platform_usage') . '</small>';
+} else {
+    echo '<h5 class="mb-0"><i class="fa fa-line-chart mr-2"></i>' . get_string('logintrends', 'report_platform_usage') . '</h5>';
+    echo '<small class="text-muted">' . get_string('logintrends_desc', 'report_platform_usage') . '</small>';
+}
 echo '</div>';
 echo '<div class="card-body">';
 echo '<canvas id="dailyLoginsChart" height="280"></canvas>';
@@ -500,8 +505,13 @@ echo '</div>';
 echo '<div class="col-lg-4 mb-3">';
 echo '<div class="card h-100">';
 echo '<div class="card-header bg-light">';
-echo '<h5 class="mb-0"><i class="fa fa-pie-chart mr-2"></i>' . get_string('usersbyactivity', 'report_platform_usage') . '</h5>';
-echo '<small class="text-muted">' . get_string('usersbyactivity_desc', 'report_platform_usage') . '</small>';
+if ($incoursecontext) {
+    echo '<h5 class="mb-0"><i class="fa fa-pie-chart mr-2"></i>' . get_string('courseenrolledusers', 'report_platform_usage') . '</h5>';
+    echo '<small class="text-muted">' . get_string('courseenrolledusers_desc', 'report_platform_usage') . '</small>';
+} else {
+    echo '<h5 class="mb-0"><i class="fa fa-pie-chart mr-2"></i>' . get_string('usersbyactivity', 'report_platform_usage') . '</h5>';
+    echo '<small class="text-muted">' . get_string('usersbyactivity_desc', 'report_platform_usage') . '</small>';
+}
 echo '</div>';
 echo '<div class="card-body">';
 echo '<canvas id="userActivityChart" height="200"></canvas>';
@@ -514,31 +524,59 @@ echo '</div>';
 // Section 2: Course Analysis (Access + Dedication combined).
 echo '<div class="row mb-4">';
 
-// Course Access and Completion Trends (Combined chart).
-echo '<div class="col-lg-6 mb-3">';
-echo '<div class="card h-100">';
-echo '<div class="card-header bg-light">';
-echo '<h5 class="mb-0"><i class="fa fa-book mr-2"></i>' . get_string('courseaccesstrends', 'report_platform_usage') . '</h5>';
-echo '<small class="text-muted">' . get_string('coursetrends_desc', 'report_platform_usage') . '</small>';
-echo '</div>';
-echo '<div class="card-body">';
-echo '<canvas id="courseAccessChart" height="260"></canvas>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
+if (!$incoursecontext) {
+    // Course Access and Completion Trends (Combined chart) - Only in global context.
+    echo '<div class="col-lg-6 mb-3">';
+    echo '<div class="card h-100">';
+    echo '<div class="card-header bg-light">';
+    echo '<h5 class="mb-0"><i class="fa fa-book mr-2"></i>' . get_string('topcourseaccess', 'report_platform_usage') . '</h5>';
+    echo '<small class="text-muted">' . get_string('coursetrends_desc', 'report_platform_usage') . '</small>';
+    echo '</div>';
+    echo '<div class="card-body">';
+    echo '<canvas id="courseAccessChart" height="260"></canvas>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
 
-// Course Dedication Chart.
-echo '<div class="col-lg-6 mb-3">';
-echo '<div class="card h-100">';
-echo '<div class="card-header bg-light">';
-echo '<h5 class="mb-0"><i class="fa fa-clock-o mr-2"></i>' . get_string('topdedication', 'report_platform_usage') . '</h5>';
-echo '<small class="text-muted">' . get_string('dedication_desc', 'report_platform_usage') . '</small>';
-echo '</div>';
-echo '<div class="card-body">';
-echo '<canvas id="dedicationChart" height="260"></canvas>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
+    // Course Dedication Chart - Only in global context.
+    echo '<div class="col-lg-6 mb-3">';
+    echo '<div class="card h-100">';
+    echo '<div class="card-header bg-light">';
+    echo '<h5 class="mb-0"><i class="fa fa-clock-o mr-2"></i>' . get_string('topdedication', 'report_platform_usage') . '</h5>';
+    echo '<small class="text-muted">' . get_string('dedication_desc', 'report_platform_usage') . '</small>';
+    echo '</div>';
+    echo '<div class="card-body">';
+    echo '<canvas id="dedicationChart" height="260"></canvas>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+} else {
+    // In course context, show course dedication summary.
+    echo '<div class="col-lg-12 mb-3">';
+    echo '<div class="card h-100">';
+    echo '<div class="card-header bg-light">';
+    echo '<h5 class="mb-0"><i class="fa fa-clock-o mr-2"></i>' . get_string('coursededicationsummary', 'report_platform_usage') . '</h5>';
+    echo '<small class="text-muted">' . get_string('coursededication_desc', 'report_platform_usage') . '</small>';
+    echo '</div>';
+    echo '<div class="card-body">';
+    echo '<div class="row">';
+    echo '<div class="col-md-4 text-center">';
+    echo '<h3 class="text-primary">' . $courseStats['total_dedication_formatted'] . '</h3>';
+    echo '<p class="text-muted">' . get_string('totaldedication', 'report_platform_usage') . '</p>';
+    echo '</div>';
+    echo '<div class="col-md-4 text-center">';
+    echo '<h3 class="text-success">' . $courseStats['avg_dedication_formatted'] . '</h3>';
+    echo '<p class="text-muted">' . get_string('avgdedicationperuser', 'report_platform_usage') . '</p>';
+    echo '</div>';
+    echo '<div class="col-md-4 text-center">';
+    echo '<h3 class="text-info">' . number_format($courseStats['enrolled_users']) . '</h3>';
+    echo '<p class="text-muted">' . get_string('enrolledusers', 'report_platform_usage') . '</p>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+}
 
 echo '</div>';
 
@@ -631,8 +669,13 @@ echo '<div class="row mb-4">';
 echo '<div class="col-lg-8 mb-3">';
 echo '<div class="card h-100">';
 echo '<div class="card-header bg-light">';
-echo '<h5 class="mb-0"><i class="fa fa-check-circle mr-2"></i>' . get_string('completiontrends', 'report_platform_usage') . '</h5>';
-echo '<small class="text-muted">' . get_string('completiontrends_desc', 'report_platform_usage') . '</small>';
+if ($incoursecontext) {
+    echo '<h5 class="mb-0"><i class="fa fa-check-circle mr-2"></i>' . get_string('coursecompletiontrends', 'report_platform_usage') . '</h5>';
+    echo '<small class="text-muted">' . get_string('coursecompletiontrends_desc', 'report_platform_usage') . '</small>';
+} else {
+    echo '<h5 class="mb-0"><i class="fa fa-check-circle mr-2"></i>' . get_string('completiontrends', 'report_platform_usage') . '</h5>';
+    echo '<small class="text-muted">' . get_string('completiontrends_desc', 'report_platform_usage') . '</small>';
+}
 echo '</div>';
 echo '<div class="card-body">';
 echo '<canvas id="completionTrendsChart" height="180"></canvas>';
@@ -644,7 +687,11 @@ echo '</div>';
 echo '<div class="col-lg-4 mb-3">';
 echo '<div class="card h-100">';
 echo '<div class="card-header bg-light">';
-echo '<h5 class="mb-0"><i class="fa fa-calendar-check-o mr-2"></i>' . get_string('dailyuserstable', 'report_platform_usage') . '</h5>';
+if ($incoursecontext) {
+    echo '<h5 class="mb-0"><i class="fa fa-calendar-check-o mr-2"></i>' . get_string('coursedailyusers', 'report_platform_usage') . '</h5>';
+} else {
+    echo '<h5 class="mb-0"><i class="fa fa-calendar-check-o mr-2"></i>' . get_string('dailyuserstable', 'report_platform_usage') . '</h5>';
+}
 echo '</div>';
 echo '<div class="card-body p-0" id="daily-users-table">';
 if (empty($dailyUsers['records'])) {

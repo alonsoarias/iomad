@@ -1721,4 +1721,264 @@ class report {
     public function get_date_range(): string {
         return userdate($this->datefrom, '%d/%m/%Y') . ' - ' . userdate($this->dateto, '%d/%m/%Y');
     }
+
+    /**
+     * Get detailed user data for the course context.
+     * Returns all enrolled users with their completion status, dedication time, and last access.
+     *
+     * @return array Array of user data with details
+     */
+    public function get_course_users_details(): array {
+        global $DB;
+
+        if ($this->courseid <= 0) {
+            return [];
+        }
+
+        $context = \context_course::instance($this->courseid, IGNORE_MISSING);
+        if (!$context) {
+            return [];
+        }
+
+        // Get enrolled users.
+        $enrolledusers = get_enrolled_users($context, '', 0, 'u.id, u.username, u.firstname, u.lastname, u.email, u.lastaccess');
+
+        if (empty($enrolledusers)) {
+            return [];
+        }
+
+        // Get completions for this course.
+        $completions = $DB->get_records('course_completions', ['course' => $this->courseid], '', 'userid, timecompleted');
+        $completionmap = [];
+        foreach ($completions as $completion) {
+            $completionmap[$completion->userid] = $completion->timecompleted;
+        }
+
+        // Get last course access for each user.
+        $sql = "SELECT userid, MAX(timecreated) as lastaccess
+                FROM {logstore_standard_log}
+                WHERE courseid = :courseid
+                  AND eventname = :event
+                  AND userid > 0
+                GROUP BY userid";
+        $lastaccesses = $DB->get_records_sql($sql, [
+            'courseid' => $this->courseid,
+            'event' => '\\core\\event\\course_viewed'
+        ]);
+        $accessmap = [];
+        foreach ($lastaccesses as $access) {
+            $accessmap[$access->userid] = $access->lastaccess;
+        }
+
+        // Calculate dedication for each user.
+        $sessionlimit = get_config('report_platform_usage', 'session_limit');
+        $sessionlimit = !empty($sessionlimit) ? (int)$sessionlimit : HOURSECS;
+
+        $result = [];
+        $activeThreshold = strtotime('-30 days');
+
+        foreach ($enrolledusers as $user) {
+            // Calculate user dedication for this course.
+            $dedication = $this->calculate_user_course_dedication($user->id, $sessionlimit);
+
+            $lastCourseAccess = isset($accessmap[$user->id]) ? $accessmap[$user->id] : 0;
+            $isCompleted = isset($completionmap[$user->id]) && $completionmap[$user->id];
+            $completionDate = $isCompleted ? $completionmap[$user->id] : null;
+            $isActive = $user->lastaccess >= $activeThreshold;
+
+            $result[] = [
+                'id' => $user->id,
+                'username' => $user->username,
+                'firstname' => $user->firstname,
+                'lastname' => $user->lastname,
+                'fullname' => fullname($user),
+                'email' => $user->email,
+                'is_active' => $isActive,
+                'last_platform_access' => $user->lastaccess,
+                'last_course_access' => $lastCourseAccess,
+                'is_completed' => $isCompleted,
+                'completion_date' => $completionDate,
+                'dedication_seconds' => $dedication,
+                'dedication_formatted' => $this->format_dedication_time($dedication),
+            ];
+        }
+
+        // Sort by fullname.
+        usort($result, function($a, $b) {
+            return strcasecmp($a['fullname'], $b['fullname']);
+        });
+
+        return $result;
+    }
+
+    /**
+     * Calculate dedication time for a specific user in the course.
+     *
+     * @param int $userid User ID
+     * @param int $sessionlimit Session timeout in seconds
+     * @return int Total dedication time in seconds
+     */
+    protected function calculate_user_course_dedication(int $userid, int $sessionlimit): int {
+        global $DB;
+
+        if ($this->courseid <= 0) {
+            return 0;
+        }
+
+        // Try pre-calculated data first.
+        $dbman = $DB->get_manager();
+        if ($dbman->table_exists('report_platform_usage_ded')) {
+            $sql = "SELECT SUM(timespent) as total
+                    FROM {report_platform_usage_ded}
+                    WHERE courseid = :courseid
+                      AND userid = :userid
+                      AND timestart >= :mintime
+                      AND timestart <= :maxtime";
+            $result = $DB->get_field_sql($sql, [
+                'courseid' => $this->courseid,
+                'userid' => $userid,
+                'mintime' => $this->datefrom,
+                'maxtime' => $this->dateto
+            ]);
+            if ($result > 0) {
+                return (int) $result;
+            }
+        }
+
+        // Try block_dedication table.
+        if ($dbman->table_exists('block_dedication')) {
+            $sql = "SELECT SUM(timespent) as total
+                    FROM {block_dedication}
+                    WHERE courseid = :courseid
+                      AND userid = :userid
+                      AND timestart >= :mintime
+                      AND timestart <= :maxtime";
+            $result = $DB->get_field_sql($sql, [
+                'courseid' => $this->courseid,
+                'userid' => $userid,
+                'mintime' => $this->datefrom,
+                'maxtime' => $this->dateto
+            ]);
+            if ($result > 0) {
+                return (int) $result;
+            }
+        }
+
+        // Calculate from logs.
+        $ignoresessionslimit = get_config('report_platform_usage', 'ignore_sessions_limit');
+        $ignoresessionslimit = !empty($ignoresessionslimit) ? (int)$ignoresessionslimit : MINSECS;
+
+        $sql = "SELECT timecreated
+                FROM {logstore_standard_log}
+                WHERE courseid = :courseid
+                  AND userid = :userid
+                  AND timecreated >= :mintime
+                  AND timecreated <= :maxtime
+                  AND origin != 'cli'
+                ORDER BY timecreated ASC";
+
+        $events = $DB->get_records_sql($sql, [
+            'courseid' => $this->courseid,
+            'userid' => $userid,
+            'mintime' => $this->datefrom,
+            'maxtime' => $this->dateto
+        ]);
+
+        if (empty($events)) {
+            return 0;
+        }
+
+        $totaldedication = 0;
+        $sessionstart = null;
+        $previoustime = null;
+
+        foreach ($events as $event) {
+            if ($sessionstart === null) {
+                $sessionstart = $event->timecreated;
+                $previoustime = $event->timecreated;
+                continue;
+            }
+
+            $timediff = $event->timecreated - $previoustime;
+            if ($timediff > $sessionlimit) {
+                $sessionduration = $previoustime - $sessionstart;
+                if ($sessionduration > $ignoresessionslimit) {
+                    $totaldedication += $sessionduration;
+                }
+                $sessionstart = $event->timecreated;
+            }
+            $previoustime = $event->timecreated;
+        }
+
+        // Finalize last session.
+        if ($previoustime !== null && $sessionstart !== null) {
+            $sessionduration = $previoustime - $sessionstart;
+            if ($sessionduration > $ignoresessionslimit) {
+                $totaldedication += $sessionduration;
+            }
+        }
+
+        return $totaldedication;
+    }
+
+    /**
+     * Get course access history (daily accesses for the course).
+     *
+     * @param int $days Number of days to retrieve
+     * @return array Daily access data
+     */
+    public function get_course_access_history(int $days = 30): array {
+        global $DB;
+
+        if ($this->courseid <= 0) {
+            return ['labels' => [], 'accesses' => [], 'unique_users' => []];
+        }
+
+        $startdate = strtotime("-{$days} days midnight");
+        $enddate = time();
+
+        $sql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as access_date,
+                       COUNT(*) as access_count,
+                       COUNT(DISTINCT userid) as unique_users
+                FROM {logstore_standard_log}
+                WHERE courseid = :courseid
+                  AND eventname = :event
+                  AND timecreated >= :startdate
+                  AND timecreated <= :enddate
+                GROUP BY DATE(FROM_UNIXTIME(timecreated))
+                ORDER BY access_date ASC";
+
+        $records = $DB->get_records_sql($sql, [
+            'courseid' => $this->courseid,
+            'event' => '\\core\\event\\course_viewed',
+            'startdate' => $startdate,
+            'enddate' => $enddate
+        ]);
+
+        $labels = [];
+        $accesses = [];
+        $uniqueUsers = [];
+
+        // Initialize all days.
+        for ($i = $days - 1; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-{$i} days"));
+            $labels[] = date('d/m', strtotime($date));
+            $accesses[$date] = 0;
+            $uniqueUsers[$date] = 0;
+        }
+
+        // Fill in actual data.
+        foreach ($records as $record) {
+            if (isset($accesses[$record->access_date])) {
+                $accesses[$record->access_date] = (int)$record->access_count;
+                $uniqueUsers[$record->access_date] = (int)$record->unique_users;
+            }
+        }
+
+        return [
+            'labels' => $labels,
+            'accesses' => array_values($accesses),
+            'unique_users' => array_values($uniqueUsers)
+        ];
+    }
 }

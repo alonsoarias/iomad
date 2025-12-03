@@ -192,8 +192,10 @@ class excel_exporter {
 
         // Create sheets based on context.
         if ($this->report->is_course_context()) {
-            // Course-specific export.
+            // Course-specific export with detailed user data.
             $this->createCourseSummarySheet();
+            $this->createCourseUsersDetailSheet();
+            $this->createCourseAccessHistorySheet();
             $this->createCourseActivitiesSheet();
             $this->createCourseCompletionsSheet();
             $this->createCourseDedicationSheet();
@@ -1352,6 +1354,214 @@ class excel_exporter {
 
         $chart->setTopLeftPosition('D8');
         $chart->setBottomRightPosition('F18');
+
+        $sheet->addChart($chart);
+    }
+
+    /**
+     * Create detailed users sheet for course context.
+     */
+    protected function createCourseUsersDetailSheet(): void {
+        $sheet = $this->spreadsheet->createSheet();
+        $sheet->setTitle('Enrolled Users');
+
+        // Header.
+        $sheet->setCellValue('A1', get_string('courseusersdetails', 'report_platform_usage'));
+        $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
+        $sheet->mergeCells('A1:H1');
+
+        // Description.
+        $sheet->setCellValue('A2', get_string('courseusersdetails_desc', 'report_platform_usage'));
+        $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
+        $sheet->mergeCells('A2:H2');
+        $sheet->getRowDimension(2)->setRowHeight(40);
+
+        // Column headers.
+        $headers = [
+            get_string('fullname', 'report_platform_usage'),
+            get_string('username', 'report_platform_usage'),
+            get_string('email', 'report_platform_usage'),
+            get_string('status', 'report_platform_usage'),
+            get_string('completionstatus', 'report_platform_usage'),
+            get_string('lastcourseaccess', 'report_platform_usage'),
+            get_string('userdedication', 'report_platform_usage'),
+            get_string('lastaccess', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, 'A4');
+        $sheet->getStyle('A4:H4')->applyFromArray($this->styles['header']);
+
+        // Get user data.
+        $users = $this->report->get_course_users_details();
+        $row = 5;
+        $completedCount = 0;
+        $activeCount = 0;
+
+        foreach ($users as $user) {
+            $status = $user['is_active'] ? get_string('active', 'report_platform_usage') : get_string('inactive', 'report_platform_usage');
+            $completionStatus = $user['is_completed']
+                ? get_string('completed', 'report_platform_usage') . ' (' . userdate($user['completion_date'], '%d/%m/%Y') . ')'
+                : get_string('notcompleted', 'report_platform_usage');
+            $lastCourseAccess = $user['last_course_access'] ? userdate($user['last_course_access'], '%d/%m/%Y %H:%M') : get_string('never', 'report_platform_usage');
+            $lastPlatformAccess = $user['last_platform_access'] ? userdate($user['last_platform_access'], '%d/%m/%Y %H:%M') : get_string('never', 'report_platform_usage');
+
+            $sheet->fromArray([
+                $user['fullname'],
+                $user['username'],
+                $user['email'],
+                $status,
+                $completionStatus,
+                $lastCourseAccess,
+                $user['dedication_formatted'],
+                $lastPlatformAccess,
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:H{$row}")->applyFromArray($this->styles['data']);
+
+            // Color code status.
+            if ($user['is_active']) {
+                $sheet->getStyle("D{$row}")->getFont()->getColor()->setRGB('006600');
+                $activeCount++;
+            } else {
+                $sheet->getStyle("D{$row}")->getFont()->getColor()->setRGB('CC0000');
+            }
+
+            // Color code completion.
+            if ($user['is_completed']) {
+                $sheet->getStyle("E{$row}")->getFont()->getColor()->setRGB('006600');
+                $completedCount++;
+            }
+
+            $row++;
+        }
+
+        // Add summary row.
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('summary', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['subtitle']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('totalusers', 'report_platform_usage') . ': ' . count($users));
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('activeusers', 'report_platform_usage') . ': ' . $activeCount);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('totalcompletions', 'report_platform_usage') . ': ' . $completedCount);
+
+        // Auto-size columns.
+        foreach (range('A', 'H') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Create course access history sheet.
+     */
+    protected function createCourseAccessHistorySheet(): void {
+        $sheet = $this->spreadsheet->createSheet();
+        $sheet->setTitle('Access History');
+
+        // Header.
+        $sheet->setCellValue('A1', get_string('courseaccesshistory', 'report_platform_usage'));
+        $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
+        $sheet->mergeCells('A1:C1');
+
+        // Description.
+        $sheet->setCellValue('A2', get_string('courseaccesshistory_desc', 'report_platform_usage'));
+        $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
+        $sheet->mergeCells('A2:C2');
+        $sheet->getRowDimension(2)->setRowHeight(40);
+
+        // Column headers.
+        $headers = [
+            get_string('date', 'report_platform_usage'),
+            get_string('courseaccesses', 'report_platform_usage'),
+            get_string('uniqueusers', 'report_platform_usage'),
+        ];
+        $sheet->fromArray($headers, null, 'A4');
+        $sheet->getStyle('A4:C4')->applyFromArray($this->styles['header']);
+
+        // Get access history data.
+        $accessHistory = $this->report->get_course_access_history(30);
+        $row = 5;
+        $dataStart = $row;
+
+        for ($i = 0; $i < count($accessHistory['labels']); $i++) {
+            $sheet->fromArray([
+                $accessHistory['labels'][$i],
+                $accessHistory['accesses'][$i],
+                $accessHistory['unique_users'][$i],
+            ], null, "A{$row}");
+            $sheet->getStyle("A{$row}:C{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("B{$row}:C{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+        $dataEnd = $row - 1;
+
+        // Add summary.
+        $row++;
+        $totalAccesses = array_sum($accessHistory['accesses']);
+        $avgAccesses = count($accessHistory['accesses']) > 0 ? round($totalAccesses / count($accessHistory['accesses']), 1) : 0;
+        $maxAccesses = !empty($accessHistory['accesses']) ? max($accessHistory['accesses']) : 0;
+
+        $sheet->setCellValue("A{$row}", get_string('total', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $totalAccesses);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['highlight']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('average', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $avgAccesses);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('maximum', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $maxAccesses);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+
+        // Create chart if we have data.
+        if ($dataEnd >= $dataStart) {
+            $this->createCourseAccessHistoryChart($sheet, $dataStart, $dataEnd);
+        }
+
+        // Auto-size columns.
+        foreach (range('A', 'C') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+    }
+
+    /**
+     * Create course access history line chart.
+     */
+    protected function createCourseAccessHistoryChart($sheet, int $dataStart, int $dataEnd): void {
+        $dataSeriesLabels = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'Access History'!\$B\$4", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'Access History'!\$C\$4", null, 1),
+        ];
+        $xAxisTickValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'Access History'!\$A\${$dataStart}:\$A\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+        $dataSeriesValues = [
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'Access History'!\$B\${$dataStart}:\$B\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'Access History'!\$C\${$dataStart}:\$C\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+        ];
+
+        $series = new DataSeries(
+            DataSeries::TYPE_LINECHART,
+            DataSeries::GROUPING_STANDARD,
+            range(0, count($dataSeriesValues) - 1),
+            $dataSeriesLabels,
+            $xAxisTickValues,
+            $dataSeriesValues
+        );
+
+        $plotArea = new PlotArea(null, [$series]);
+        $legend = new Legend(Legend::POSITION_BOTTOM, null, false);
+        $title = new Title(get_string('courseaccesstrends', 'report_platform_usage'));
+
+        $chart = new Chart(
+            'accessHistoryChart',
+            $title,
+            $legend,
+            $plotArea
+        );
+
+        $chart->setTopLeftPosition('E3');
+        $chart->setBottomRightPosition('N18');
 
         $sheet->addChart($chart);
     }

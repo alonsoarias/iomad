@@ -258,3 +258,26 @@ $string['tooltip_dedicationchart'] = 'Top courses ranked by total time dedicatio
 
 // Scheduled task.
 $string['task_collect_dedication'] = 'Collect dedication time data';
+
+// Context-aware strings (course vs platform).
+$string['courseaccesstrends_desc'] = 'Daily course accesses and unique users over the selected period.';
+$string['courseenrolledusers_desc'] = 'Distribution of enrolled users by activity status.';
+$string['coursededicationsummary'] = 'Course dedication summary';
+$string['coursededication_desc'] = 'Summary of time dedication metrics for this course.';
+$string['avgdedicationperuser'] = 'Average per user';
+$string['topcourseaccess'] = 'Top course access';
+$string['coursecompletiontrends'] = 'Course completion trends';
+$string['coursecompletiontrends_desc'] = 'Daily completions for this course over the selected period.';
+$string['coursedailyusers'] = 'Course daily users';
+
+// Export detailed sheets.
+$string['courseusersdetails'] = 'Enrolled users details';
+$string['courseusersdetails_desc'] = 'Detailed breakdown of all enrolled users including completion status, dedication time, and last access.';
+$string['courseaccesshistory'] = 'Course access history';
+$string['courseaccesshistory_desc'] = 'Daily access trends for this course.';
+$string['userdedication'] = 'User dedication';
+$string['lastcourseaccess'] = 'Last course access';
+$string['completionstatus'] = 'Completion status';
+$string['notcompleted'] = 'Not completed';
+$string['completed'] = 'Completed';
+$string['never'] = 'Never';
