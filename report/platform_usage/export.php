@@ -48,6 +48,11 @@ require_capability('report/platform_usage:export', $context);
 // Require sesskey.
 require_sesskey();
 
+// Reset company filter if IOMAD is not installed.
+if (!\report_platform_usage\report::is_iomad_installed()) {
+    $companyid = 0;
+}
+
 // Create report instance (disable cache for export to get fresh data).
 $report = new \report_platform_usage\report($companyid, $datefrom, $dateto, false, $courseid);
 

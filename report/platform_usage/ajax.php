@@ -45,6 +45,11 @@ if ($courseid > 0) {
 // Check capability.
 require_capability('report/platform_usage:view', $context);
 
+// Reset company filter if IOMAD is not installed.
+if (!\report_platform_usage\report::is_iomad_installed()) {
+    $companyid = 0;
+}
+
 // Create report instance with course ID.
 $report = new \report_platform_usage\report($companyid, $datefrom, $dateto, true, $courseid);
 

@@ -1682,15 +1682,33 @@ class report {
     }
 
     /**
+     * Check if IOMAD is installed.
+     * IOMAD is detected by the presence of the 'company' table.
+     *
+     * @return bool True if IOMAD is installed
+     */
+    public static function is_iomad_installed(): bool {
+        global $DB;
+        static $iomadinstalled = null;
+
+        if ($iomadinstalled === null) {
+            $dbman = $DB->get_manager();
+            $iomadinstalled = $dbman->table_exists('company') && $dbman->table_exists('company_users');
+        }
+
+        return $iomadinstalled;
+    }
+
+    /**
      * Get list of companies.
+     * Returns empty array if IOMAD is not installed.
      *
      * @return array Company list
      */
     public static function get_companies(): array {
         global $DB;
 
-        $dbman = $DB->get_manager();
-        if (!$dbman->table_exists('company')) {
+        if (!self::is_iomad_installed()) {
             return [];
         }
 
@@ -1699,11 +1717,16 @@ class report {
 
     /**
      * Get company name.
+     * Returns empty string if IOMAD is not installed.
      *
-     * @return string Company name or 'All Companies'
+     * @return string Company name or 'All Companies' or empty string
      */
     public function get_company_name(): string {
         global $DB;
+
+        if (!self::is_iomad_installed()) {
+            return '';
+        }
 
         if ($this->companyid == 0) {
             return get_string('allcompanies', 'report_platform_usage');

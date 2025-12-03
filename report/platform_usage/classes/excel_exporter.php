@@ -262,14 +262,19 @@ class excel_exporter {
         $sheet->getRowDimension(2)->setRowHeight(30);
 
         // Context info - company or course.
+        $infoRow = 3;
         if ($this->report->is_course_context()) {
             $course = get_course($this->report->get_course_id());
-            $sheet->setCellValue('A3', get_string('coursename', 'report_platform_usage') . ': ' . format_string($course->fullname));
-        } else {
-            $sheet->setCellValue('A3', get_string('filter_company', 'report_platform_usage') . ': ' . $this->report->get_company_name());
+            $sheet->setCellValue("A{$infoRow}", get_string('coursename', 'report_platform_usage') . ': ' . format_string($course->fullname));
+            $infoRow++;
+        } else if (report::is_iomad_installed()) {
+            // Only show company filter if IOMAD is installed.
+            $sheet->setCellValue("A{$infoRow}", get_string('filter_company', 'report_platform_usage') . ': ' . $this->report->get_company_name());
+            $infoRow++;
         }
-        $sheet->setCellValue('A4', get_string('filter_daterange', 'report_platform_usage') . ': ' . $this->report->get_date_range());
-        $sheet->setCellValue('A5', get_string('generateddate', 'report_platform_usage') . ': ' . userdate(time(), '%d/%m/%Y %H:%M'));
+        $sheet->setCellValue("A{$infoRow}", get_string('filter_daterange', 'report_platform_usage') . ': ' . $this->report->get_date_range());
+        $infoRow++;
+        $sheet->setCellValue("A{$infoRow}", get_string('generateddate', 'report_platform_usage') . ': ' . userdate(time(), '%d/%m/%Y %H:%M'));
 
         // Login summary section.
         $row = 7;

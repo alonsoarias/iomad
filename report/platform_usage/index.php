@@ -72,11 +72,19 @@ if ($incoursecontext) {
 // Add CSS.
 $PAGE->requires->css('/report/platform_usage/styles.css');
 
+// Check if IOMAD is installed.
+$isiomad = \report_platform_usage\report::is_iomad_installed();
+
+// Reset company filter if IOMAD is not installed.
+if (!$isiomad) {
+    $companyid = 0;
+}
+
 // Create report instance with course ID.
 $report = new \report_platform_usage\report($companyid, $datefrom, $dateto, true, $courseid);
 
-// Get companies for filter.
-$companies = \report_platform_usage\report::get_companies();
+// Get companies for filter (only if IOMAD is installed).
+$companies = $isiomad ? \report_platform_usage\report::get_companies() : [];
 
 // Get initial report data.
 $loginSummary = $report->get_login_summary();
@@ -162,21 +170,25 @@ if ($incoursecontext) {
     echo $OUTPUT->heading(get_string('platformusagereport', 'report_platform_usage'));
 }
 
-// Company filter form (only show in system context).
+// Filter form (only show in system context).
 if (!$incoursecontext) {
     echo '<div class="card mb-4 filter-section">';
     echo '<div class="card-body">';
     echo '<div class="d-flex flex-wrap align-items-center">';
-    echo '<div class="form-group mr-3 mb-2">';
-    echo '<label for="companyid" class="mr-2">' . get_string('company', 'report_platform_usage') . ':</label>';
-    echo '<select name="companyid" id="companyid" class="form-control">';
-    echo '<option value="0">' . get_string('allcompanies', 'report_platform_usage') . '</option>';
-    foreach ($companies as $id => $name) {
-        $selected = ($id == $companyid) ? 'selected' : '';
-        echo "<option value=\"{$id}\" {$selected}>" . format_string($name) . '</option>';
+
+    // Company filter (only show if IOMAD is installed).
+    if ($isiomad && !empty($companies)) {
+        echo '<div class="form-group mr-3 mb-2">';
+        echo '<label for="companyid" class="mr-2">' . get_string('company', 'report_platform_usage') . ':</label>';
+        echo '<select name="companyid" id="companyid" class="form-control">';
+        echo '<option value="0">' . get_string('allcompanies', 'report_platform_usage') . '</option>';
+        foreach ($companies as $id => $name) {
+            $selected = ($id == $companyid) ? 'selected' : '';
+            echo "<option value=\"{$id}\" {$selected}>" . format_string($name) . '</option>';
+        }
+        echo '</select>';
+        echo '</div>';
     }
-    echo '</select>';
-    echo '</div>';
 
     // Loading indicator.
     echo '<div id="loading-indicator" class="mb-2 mr-3" style="display: none;">';
