@@ -1542,54 +1542,72 @@ class excel_exporter {
         $sheet->mergeCells('A2:C2');
         $sheet->getRowDimension(2)->setRowHeight(40);
 
-        // Column headers.
-        $headers = [
-            get_string('date', 'report_platform_usage'),
-            get_string('courseaccesses', 'report_platform_usage'),
-            get_string('uniqueusers', 'report_platform_usage'),
-        ];
-        $sheet->fromArray($headers, null, 'A4');
-        $sheet->getStyle('A4:C4')->applyFromArray($this->styles['header']);
-
         // Get access history data.
         $accessHistory = $this->report->get_course_access_history(30);
-        $row = 5;
-        $dataStart = $row;
 
-        for ($i = 0; $i < count($accessHistory['labels']); $i++) {
-            $sheet->fromArray([
-                $accessHistory['labels'][$i],
-                $accessHistory['accesses'][$i],
-                $accessHistory['unique_users'][$i],
-            ], null, "A{$row}");
-            $sheet->getStyle("A{$row}:C{$row}")->applyFromArray($this->styles['data']);
-            $sheet->getStyle("B{$row}:C{$row}")->applyFromArray($this->styles['number']);
-            $row++;
+        // Check if there's any access data.
+        $hasAccessData = false;
+        if (!empty($accessHistory['accesses'])) {
+            foreach ($accessHistory['accesses'] as $value) {
+                if ($value > 0) {
+                    $hasAccessData = true;
+                    break;
+                }
+            }
         }
-        $dataEnd = $row - 1;
 
-        // Add summary.
-        $row++;
-        $totalAccesses = array_sum($accessHistory['accesses']);
-        $avgAccesses = count($accessHistory['accesses']) > 0 ? round($totalAccesses / count($accessHistory['accesses']), 1) : 0;
-        $maxAccesses = !empty($accessHistory['accesses']) ? max($accessHistory['accesses']) : 0;
+        if ($hasAccessData && !empty($accessHistory['labels'])) {
+            // Column headers.
+            $headers = [
+                get_string('date', 'report_platform_usage'),
+                get_string('courseaccesses', 'report_platform_usage'),
+                get_string('uniqueusers', 'report_platform_usage'),
+            ];
+            $sheet->fromArray($headers, null, 'A4');
+            $sheet->getStyle('A4:C4')->applyFromArray($this->styles['header']);
 
-        $sheet->setCellValue("A{$row}", get_string('total', 'report_platform_usage'));
-        $sheet->setCellValue("B{$row}", $totalAccesses);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['highlight']);
-        $row++;
-        $sheet->setCellValue("A{$row}", get_string('average', 'report_platform_usage'));
-        $sheet->setCellValue("B{$row}", $avgAccesses);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
-        $row++;
-        $sheet->setCellValue("A{$row}", get_string('maximum', 'report_platform_usage'));
-        $sheet->setCellValue("B{$row}", $maxAccesses);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+            $row = 5;
+            $dataStart = $row;
 
-        // Create chart if we have data.
-        if ($dataEnd >= $dataStart) {
-            $this->createCourseAccessHistoryChart($sheet, $dataStart, $dataEnd);
+            for ($i = 0; $i < count($accessHistory['labels']); $i++) {
+                $sheet->fromArray([
+                    $accessHistory['labels'][$i],
+                    $accessHistory['accesses'][$i],
+                    $accessHistory['unique_users'][$i],
+                ], null, "A{$row}");
+                $sheet->getStyle("A{$row}:C{$row}")->applyFromArray($this->styles['data']);
+                $sheet->getStyle("B{$row}:C{$row}")->applyFromArray($this->styles['number']);
+                $row++;
+            }
+            $dataEnd = $row - 1;
+
+            // Add summary.
+            $row++;
+            $totalAccesses = array_sum($accessHistory['accesses']);
+            $avgAccesses = count($accessHistory['accesses']) > 0 ? round($totalAccesses / count($accessHistory['accesses']), 1) : 0;
+            $maxAccesses = !empty($accessHistory['accesses']) ? max($accessHistory['accesses']) : 0;
+
+            $sheet->setCellValue("A{$row}", get_string('total', 'report_platform_usage'));
+            $sheet->setCellValue("B{$row}", $totalAccesses);
+            $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+            $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['highlight']);
+            $row++;
+            $sheet->setCellValue("A{$row}", get_string('average', 'report_platform_usage'));
+            $sheet->setCellValue("B{$row}", $avgAccesses);
+            $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+            $row++;
+            $sheet->setCellValue("A{$row}", get_string('maximum', 'report_platform_usage'));
+            $sheet->setCellValue("B{$row}", $maxAccesses);
+            $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+            // Create chart if we have data.
+            if ($dataEnd >= $dataStart) {
+                $this->createCourseAccessHistoryChart($sheet, $dataStart, $dataEnd);
+            }
+        } else {
+            // No access data - show informative message.
+            $sheet->setCellValue('A4', get_string('nodata', 'report_platform_usage'));
+            $sheet->getStyle('A4')->applyFromArray($this->styles['description']);
+            $sheet->mergeCells('A4:C4');
         }
 
         // Auto-size columns.
@@ -1785,39 +1803,62 @@ class excel_exporter {
         $sheet->setCellValue("B{$row}", $completionRate . '%');
         $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
 
-        // Add completion pie chart.
-        $this->createCourseCompletionChart($sheet, $courseStats);
+        // Add completion pie chart only if there are enrolled users.
+        if ($courseStats['enrolled_users'] > 0) {
+            $this->createCourseCompletionChart($sheet, $courseStats);
+        }
 
-        // Completion trends.
+        // Get completion trends data.
+        $trends = $this->report->get_completion_trends(30);
+
+        // Check if there's any actual completion data in trends.
+        $hasCompletionData = false;
+        if (!empty($trends['data'])) {
+            foreach ($trends['data'] as $value) {
+                if ($value > 0) {
+                    $hasCompletionData = true;
+                    break;
+                }
+            }
+        }
+
+        // Completion trends section - only show if there's data.
         $row += 3;
         $sheet->setCellValue("A{$row}", get_string('completiontrends', 'report_platform_usage'));
         $sheet->getStyle("A{$row}")->applyFromArray($this->styles['subtitle']);
 
-        $row++;
-        $headers = [
-            get_string('date', 'report_platform_usage'),
-            get_string('completions', 'report_platform_usage'),
-        ];
-        $sheet->fromArray($headers, null, "A{$row}");
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['header']);
-
-        $row++;
-        $dataStart = $row;
-        $trends = $this->report->get_completion_trends(30);
-        foreach ($trends['labels'] as $i => $label) {
-            $sheet->fromArray([
-                $label,
-                $trends['data'][$i],
-            ], null, "A{$row}");
-            $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
-            $sheet->getStyle("B{$row}")->applyFromArray($this->styles['number']);
+        if ($hasCompletionData && !empty($trends['labels'])) {
             $row++;
-        }
-        $dataEnd = $row - 1;
+            $headers = [
+                get_string('date', 'report_platform_usage'),
+                get_string('completions', 'report_platform_usage'),
+            ];
+            $sheet->fromArray($headers, null, "A{$row}");
+            $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['header']);
 
-        // Add completion trends line chart if there's data.
-        if ($dataEnd >= $dataStart) {
-            $this->createCourseCompletionTrendsChart($sheet, $dataStart, $dataEnd);
+            $row++;
+            $dataStart = $row;
+            foreach ($trends['labels'] as $i => $label) {
+                $sheet->fromArray([
+                    $label,
+                    $trends['data'][$i],
+                ], null, "A{$row}");
+                $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+                $sheet->getStyle("B{$row}")->applyFromArray($this->styles['number']);
+                $row++;
+            }
+            $dataEnd = $row - 1;
+
+            // Add completion trends line chart.
+            if ($dataEnd >= $dataStart) {
+                $this->createCourseCompletionTrendsChart($sheet, $dataStart, $dataEnd);
+            }
+        } else {
+            // No completion data available - show informative message.
+            $row++;
+            $sheet->setCellValue("A{$row}", get_string('nodata', 'report_platform_usage'));
+            $sheet->getStyle("A{$row}")->applyFromArray($this->styles['description']);
+            $sheet->mergeCells("A{$row}:C{$row}");
         }
 
         // Auto-size columns.
