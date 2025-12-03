@@ -1185,13 +1185,14 @@ class report {
 
     /**
      * Calculate total dedication time for a course.
+     * Based on block_dedication calculation logic.
      *
      * @param int $courseid
      * @param int $mintime
      * @param int $maxtime
      * @param int $sessionlimit
      * @param array $userids
-     * @return int
+     * @return int Total dedication time in seconds
      */
     protected function calculate_course_dedication(int $courseid, int $mintime, int $maxtime, int $sessionlimit, array $userids): int {
         global $DB;
@@ -1199,6 +1200,10 @@ class report {
         if (empty($userids)) {
             return 0;
         }
+
+        // Get ignore sessions limit setting (minimum session duration).
+        $ignoresessionslimit = get_config('report_platform_usage', 'ignore_sessions_limit');
+        $ignoresessionslimit = !empty($ignoresessionslimit) ? (int)$ignoresessionslimit : MINSECS;
 
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
@@ -1230,9 +1235,14 @@ class report {
         $previoustime = null;
 
         foreach ($events as $event) {
+            // User change - finalize previous user's session.
             if ($currentuser !== $event->userid) {
                 if ($previoustime !== null && $sessionstart !== null) {
-                    $totaldedication += ($previoustime - $sessionstart);
+                    $sessionduration = $previoustime - $sessionstart;
+                    // Only count session if longer than minimum duration.
+                    if ($sessionduration > $ignoresessionslimit) {
+                        $totaldedication += $sessionduration;
+                    }
                 }
                 $currentuser = $event->userid;
                 $sessionstart = $event->timecreated;
@@ -1240,17 +1250,28 @@ class report {
                 continue;
             }
 
+            // Check if this event is part of the same session.
             $timediff = $event->timecreated - $previoustime;
             if ($timediff > $sessionlimit) {
-                $totaldedication += ($previoustime - $sessionstart);
+                // Session ended - calculate duration and start new session.
+                $sessionduration = $previoustime - $sessionstart;
+                // Only count session if longer than minimum duration.
+                if ($sessionduration > $ignoresessionslimit) {
+                    $totaldedication += $sessionduration;
+                }
                 $sessionstart = $event->timecreated;
             }
 
             $previoustime = $event->timecreated;
         }
 
+        // Finalize last session.
         if ($previoustime !== null && $sessionstart !== null) {
-            $totaldedication += ($previoustime - $sessionstart);
+            $sessionduration = $previoustime - $sessionstart;
+            // Only count session if longer than minimum duration.
+            if ($sessionduration > $ignoresessionslimit) {
+                $totaldedication += $sessionduration;
+            }
         }
 
         return $totaldedication;
@@ -1258,23 +1279,65 @@ class report {
 
     /**
      * Format dedication time into a readable string.
+     * Based on block_dedication format_dedication function.
      *
-     * @param int $seconds
-     * @return string
+     * @param int $totalsecs Total seconds
+     * @return string Formatted time string
      */
-    protected function format_dedication_time(int $seconds): string {
-        if ($seconds < 60) {
-            return $seconds . 's';
+    protected function format_dedication_time(int $totalsecs): string {
+        if (empty($totalsecs)) {
+            return get_string('none');
         }
 
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds % 3600) / 60);
+        $totalsecs = abs($totalsecs);
 
-        if ($hours > 0) {
-            return $hours . 'h ' . $minutes . 'm';
+        $hours = floor($totalsecs / HOURSECS);
+        $remainder = $totalsecs - ($hours * HOURSECS);
+        $mins = floor($remainder / MINSECS);
+        $secs = round($remainder - ($mins * MINSECS), 2);
+
+        $str = new \stdClass();
+        $str->hour = get_string('hour');
+        $str->hours = get_string('hours');
+        $str->min = get_string('min');
+        $str->mins = get_string('mins');
+        $str->sec = get_string('sec');
+        $str->secs = get_string('secs');
+
+        $ss = ($secs == 1) ? $str->sec : $str->secs;
+        $sm = ($mins == 1) ? $str->min : $str->mins;
+        $sh = ($hours == 1) ? $str->hour : $str->hours;
+
+        $ohours = '';
+        $omins = '';
+        $osecs = '';
+
+        if ($hours) {
+            $ohours = $hours . ' ' . $sh;
+        }
+        if ($mins) {
+            $omins = $mins . ' ' . $sm;
+        }
+        if ($secs) {
+            $osecs = $secs . ' ' . $ss;
         }
 
-        return $minutes . 'm';
+        if ($hours) {
+            return trim($ohours . ' ' . $omins);
+        }
+        if ($mins) {
+            if ($mins < 15) {
+                // If less than 15min, show seconds value as well.
+                return trim($omins . ' ' . $osecs);
+            } else {
+                // If over 15min, just display minute value.
+                return trim($omins);
+            }
+        }
+        if ($secs) {
+            return $osecs;
+        }
+        return get_string('none');
     }
 
     /**

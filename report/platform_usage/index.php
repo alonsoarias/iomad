@@ -112,6 +112,42 @@ $jsstrings = [
     'dedicationpercent' => get_string('dedicationpercent', 'report_platform_usage'),
 ];
 
+// Tooltip strings.
+$tooltips = [
+    'platformaccess' => get_string('tooltip_platformaccess', 'report_platform_usage'),
+    'loginstoday' => get_string('tooltip_loginstoday', 'report_platform_usage'),
+    'loginsweek' => get_string('tooltip_loginsweek', 'report_platform_usage'),
+    'loginsmonth' => get_string('tooltip_loginsmonth', 'report_platform_usage'),
+    'uniqueusers' => get_string('tooltip_uniqueusers', 'report_platform_usage'),
+    'usersummary' => get_string('tooltip_usersummary', 'report_platform_usage'),
+    'totalusers' => get_string('tooltip_totalusers', 'report_platform_usage'),
+    'activeusers' => get_string('tooltip_activeusers', 'report_platform_usage'),
+    'inactiveusers' => get_string('tooltip_inactiveusers', 'report_platform_usage'),
+    'dashboardusers' => get_string('tooltip_dashboardusers', 'report_platform_usage'),
+    'completions' => get_string('tooltip_completions', 'report_platform_usage'),
+    'completionstoday' => get_string('tooltip_completionstoday', 'report_platform_usage'),
+    'completionsweek' => get_string('tooltip_completionsweek', 'report_platform_usage'),
+    'completionsmonth' => get_string('tooltip_completionsmonth', 'report_platform_usage'),
+    'totalcompletions' => get_string('tooltip_totalcompletions', 'report_platform_usage'),
+    'dailyusers' => get_string('tooltip_dailyusers', 'report_platform_usage'),
+    'avgdaily' => get_string('tooltip_avgdaily', 'report_platform_usage'),
+    'maxdaily' => get_string('tooltip_maxdaily', 'report_platform_usage'),
+    'dailylogins' => get_string('tooltip_dailylogins', 'report_platform_usage'),
+    'courseaccess' => get_string('tooltip_courseaccess', 'report_platform_usage'),
+    'courseaccesses' => get_string('tooltip_courseaccesses', 'report_platform_usage'),
+    'enrolledusers' => get_string('tooltip_enrolledusers', 'report_platform_usage'),
+    'courseactiveusers' => get_string('tooltip_courseactiveusers', 'report_platform_usage'),
+    'courseinactiveusers' => get_string('tooltip_courseinactiveusers', 'report_platform_usage'),
+    'coursecompletions' => get_string('tooltip_coursecompletions', 'report_platform_usage'),
+    'totaldedication' => get_string('tooltip_totaldedication', 'report_platform_usage'),
+    'avgdedication' => get_string('tooltip_avgdedication', 'report_platform_usage'),
+    'topcourses' => get_string('tooltip_topcourses', 'report_platform_usage'),
+    'topactivities' => get_string('tooltip_topactivities', 'report_platform_usage'),
+    'completiontrends' => get_string('tooltip_completiontrends', 'report_platform_usage'),
+    'dailyuserstable' => get_string('tooltip_dailyuserstable', 'report_platform_usage'),
+    'dedicationchart' => get_string('tooltip_dedicationchart', 'report_platform_usage'),
+];
+
 // Output header.
 echo $OUTPUT->header();
 
@@ -209,18 +245,18 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-primary">';
     echo '<div class="card-header bg-primary text-white py-2">';
-    echo '<h6 class="mb-0"><i class="fa fa-sign-in mr-2"></i>' . get_string('courseaccess', 'report_platform_usage') . '</h6>';
+    echo '<h6 class="mb-0 d-flex justify-content-between align-items-center"><span><i class="fa fa-sign-in mr-2"></i>' . get_string('courseaccess', 'report_platform_usage') . '</span><i class="fa fa-question-circle ml-2" data-toggle="tooltip" title="' . $tooltips['courseaccess'] . '"></i></h6>';
     echo '</div>';
     echo '<div class="card-body">';
     echo '<div class="d-flex justify-content-between align-items-center mb-3">';
-    echo '<span class="text-muted">' . get_string('courseaccesses', 'report_platform_usage') . '</span>';
+    echo '<span class="text-muted" data-toggle="tooltip" title="' . $tooltips['courseaccesses'] . '">' . get_string('courseaccesses', 'report_platform_usage') . ' <i class="fa fa-info-circle small"></i></span>';
     echo '<span class="badge badge-primary badge-lg" id="course-accesses">' . number_format($courseStats['accesses']) . '</span>';
     echo '</div>';
     echo '<hr class="my-2">';
     echo '<div class="text-center">';
-    echo '<small class="text-muted">' . get_string('totaldedication', 'report_platform_usage') . '</small>';
+    echo '<small class="text-muted" data-toggle="tooltip" title="' . $tooltips['totaldedication'] . '">' . get_string('totaldedication', 'report_platform_usage') . ' <i class="fa fa-info-circle"></i></small>';
     echo '<h4 class="text-primary mb-0">' . $courseStats['total_dedication_formatted'] . '</h4>';
-    echo '<small class="text-muted">' . get_string('avgaccessperuser', 'report_platform_usage') . ': ' . $courseStats['avg_dedication_formatted'] . '</small>';
+    echo '<small class="text-muted" data-toggle="tooltip" title="' . $tooltips['avgdedication'] . '">' . get_string('avgaccessperuser', 'report_platform_usage') . ': ' . $courseStats['avg_dedication_formatted'] . '</small>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
@@ -230,19 +266,19 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-success">';
     echo '<div class="card-header bg-success text-white py-2">';
-    echo '<h6 class="mb-0"><i class="fa fa-users mr-2"></i>' . get_string('courseenrolledusers', 'report_platform_usage') . '</h6>';
+    echo '<h6 class="mb-0 d-flex justify-content-between align-items-center"><span><i class="fa fa-users mr-2"></i>' . get_string('courseenrolledusers', 'report_platform_usage') . '</span><i class="fa fa-question-circle ml-2" data-toggle="tooltip" title="' . $tooltips['enrolledusers'] . '"></i></h6>';
     echo '</div>';
     echo '<div class="card-body">';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small">' . get_string('enrolledusers', 'report_platform_usage') . '</span>';
+    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['enrolledusers'] . '">' . get_string('enrolledusers', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-secondary">' . number_format($courseStats['enrolled_users']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-success small">' . get_string('active', 'report_platform_usage') . '</span>';
+    echo '<span class="text-success small" data-toggle="tooltip" title="' . $tooltips['courseactiveusers'] . '">' . get_string('active', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-success">' . number_format($courseStats['active_users']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center">';
-    echo '<span class="text-danger small">' . get_string('inactive', 'report_platform_usage') . '</span>';
+    echo '<span class="text-danger small" data-toggle="tooltip" title="' . $tooltips['courseinactiveusers'] . '">' . get_string('inactive', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-danger">' . number_format($courseStats['inactive_users']) . '</span>';
     echo '</div>';
     echo '<hr class="my-2">';
@@ -258,7 +294,7 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-info">';
     echo '<div class="card-header bg-info text-white py-2">';
-    echo '<h6 class="mb-0"><i class="fa fa-graduation-cap mr-2"></i>' . get_string('coursecompletions', 'report_platform_usage') . '</h6>';
+    echo '<h6 class="mb-0 d-flex justify-content-between align-items-center"><span><i class="fa fa-graduation-cap mr-2"></i>' . get_string('coursecompletions', 'report_platform_usage') . '</span><i class="fa fa-question-circle ml-2" data-toggle="tooltip" title="' . $tooltips['coursecompletions'] . '"></i></h6>';
     echo '</div>';
     echo '<div class="card-body">';
     echo '<div class="text-center mb-3">';
@@ -279,7 +315,7 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-warning">';
     echo '<div class="card-header bg-warning text-dark py-2">';
-    echo '<h6 class="mb-0"><i class="fa fa-tasks mr-2"></i>' . get_string('activities', 'report_platform_usage') . '</h6>';
+    echo '<h6 class="mb-0 d-flex justify-content-between align-items-center"><span><i class="fa fa-tasks mr-2"></i>' . get_string('activities', 'report_platform_usage') . '</span><i class="fa fa-question-circle ml-2" data-toggle="tooltip" title="' . $tooltips['topactivities'] . '"></i></h6>';
     echo '</div>';
     echo '<div class="card-body p-2">';
     if (empty($topActivities)) {
@@ -308,24 +344,24 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-primary">';
     echo '<div class="card-header bg-primary text-white py-2">';
-    echo '<h6 class="mb-0"><i class="fa fa-sign-in mr-2"></i>' . get_string('platformaccess', 'report_platform_usage') . '</h6>';
+    echo '<h6 class="mb-0 d-flex justify-content-between align-items-center"><span><i class="fa fa-sign-in mr-2"></i>' . get_string('platformaccess', 'report_platform_usage') . '</span><i class="fa fa-question-circle ml-2" data-toggle="tooltip" title="' . $tooltips['platformaccess'] . '"></i></h6>';
     echo '</div>';
     echo '<div class="card-body">';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small">' . get_string('today', 'report_platform_usage') . '</span>';
+    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['loginstoday'] . '">' . get_string('today', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-primary" id="logins-today">' . number_format($loginSummary['logins_today']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small">' . get_string('lastweek', 'report_platform_usage') . '</span>';
+    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['loginsweek'] . '">' . get_string('lastweek', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-info" id="logins-week">' . number_format($loginSummary['logins_week']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center">';
-    echo '<span class="text-muted small">' . get_string('lastmonth', 'report_platform_usage') . '</span>';
+    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['loginsmonth'] . '">' . get_string('lastmonth', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-secondary" id="logins-month">' . number_format($loginSummary['logins_month']) . '</span>';
     echo '</div>';
     echo '<hr class="my-2">';
     echo '<div class="text-center">';
-    echo '<small class="text-muted">' . get_string('uniqueusersmonth', 'report_platform_usage') . '</small>';
+    echo '<small class="text-muted" data-toggle="tooltip" title="' . $tooltips['uniqueusers'] . '">' . get_string('uniqueusersmonth', 'report_platform_usage') . ' <i class="fa fa-info-circle"></i></small>';
     echo '<h4 class="text-primary mb-0" id="unique-month">' . number_format($loginSummary['unique_users_month']) . '</h4>';
     echo '</div>';
     echo '</div>';
@@ -336,24 +372,24 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-success">';
     echo '<div class="card-header bg-success text-white py-2">';
-    echo '<h6 class="mb-0"><i class="fa fa-users mr-2"></i>' . get_string('usersummary', 'report_platform_usage') . '</h6>';
+    echo '<h6 class="mb-0 d-flex justify-content-between align-items-center"><span><i class="fa fa-users mr-2"></i>' . get_string('usersummary', 'report_platform_usage') . '</span><i class="fa fa-question-circle ml-2" data-toggle="tooltip" title="' . $tooltips['usersummary'] . '"></i></h6>';
     echo '</div>';
     echo '<div class="card-body">';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small">' . get_string('totalusers', 'report_platform_usage') . '</span>';
+    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['totalusers'] . '">' . get_string('totalusers', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-secondary" id="total-users">' . number_format($userSummary['total']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-success small">' . get_string('active', 'report_platform_usage') . '</span>';
+    echo '<span class="text-success small" data-toggle="tooltip" title="' . $tooltips['activeusers'] . '">' . get_string('active', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-success" id="active-users">' . number_format($userSummary['active']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center">';
-    echo '<span class="text-danger small">' . get_string('inactive', 'report_platform_usage') . '</span>';
+    echo '<span class="text-danger small" data-toggle="tooltip" title="' . $tooltips['inactiveusers'] . '">' . get_string('inactive', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-danger" id="inactive-users">' . number_format($userSummary['inactive']) . '</span>';
     echo '</div>';
     echo '<hr class="my-2">';
     echo '<div class="text-center">';
-    echo '<small class="text-muted">' . get_string('dashboardusers', 'report_platform_usage') . '</small>';
+    echo '<small class="text-muted" data-toggle="tooltip" title="' . $tooltips['dashboardusers'] . '">' . get_string('dashboardusers', 'report_platform_usage') . ' <i class="fa fa-info-circle"></i></small>';
     echo '<h4 class="text-success mb-0" id="dashboard-month">' . number_format($dashboardAccess['month']) . '</h4>';
     echo '</div>';
     echo '</div>';
@@ -364,24 +400,24 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-info">';
     echo '<div class="card-header bg-info text-white py-2">';
-    echo '<h6 class="mb-0"><i class="fa fa-graduation-cap mr-2"></i>' . get_string('completions', 'report_platform_usage') . '</h6>';
+    echo '<h6 class="mb-0 d-flex justify-content-between align-items-center"><span><i class="fa fa-graduation-cap mr-2"></i>' . get_string('completions', 'report_platform_usage') . '</span><i class="fa fa-question-circle ml-2" data-toggle="tooltip" title="' . $tooltips['completions'] . '"></i></h6>';
     echo '</div>';
     echo '<div class="card-body">';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small">' . get_string('today', 'report_platform_usage') . '</span>';
+    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['completionstoday'] . '">' . get_string('today', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-info" id="completions-today">' . number_format($completionsSummary['completions_today']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small">' . get_string('lastweek', 'report_platform_usage') . '</span>';
+    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['completionsweek'] . '">' . get_string('lastweek', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-primary" id="completions-week">' . number_format($completionsSummary['completions_week']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center">';
-    echo '<span class="text-muted small">' . get_string('lastmonth', 'report_platform_usage') . '</span>';
+    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['completionsmonth'] . '">' . get_string('lastmonth', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-secondary" id="completions-month">' . number_format($completionsSummary['completions_month']) . '</span>';
     echo '</div>';
     echo '<hr class="my-2">';
     echo '<div class="text-center">';
-    echo '<small class="text-muted">' . get_string('totalcompletions', 'report_platform_usage') . '</small>';
+    echo '<small class="text-muted" data-toggle="tooltip" title="' . $tooltips['totalcompletions'] . '">' . get_string('totalcompletions', 'report_platform_usage') . ' <i class="fa fa-info-circle"></i></small>';
     echo '<h4 class="text-info mb-0" id="total-completions">' . number_format($completionsSummary['total_completions']) . '</h4>';
     echo '</div>';
     echo '</div>';
@@ -395,7 +431,7 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-warning">';
     echo '<div class="card-header bg-warning text-dark py-2">';
-    echo '<h6 class="mb-0"><i class="fa fa-calendar mr-2"></i>' . get_string('dailyusers', 'report_platform_usage') . '</h6>';
+    echo '<h6 class="mb-0 d-flex justify-content-between align-items-center"><span><i class="fa fa-calendar mr-2"></i>' . get_string('dailyusers', 'report_platform_usage') . '</span><i class="fa fa-question-circle ml-2" data-toggle="tooltip" title="' . $tooltips['dailyusers'] . '"></i></h6>';
     echo '</div>';
     echo '<div class="card-body">';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';

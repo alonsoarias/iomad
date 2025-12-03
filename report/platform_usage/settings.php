@@ -46,6 +46,15 @@ if ($hassiteconfig) {
         MINSECS  // Min unit: minutes.
     ));
 
+    // Minimum session duration (ignore shorter sessions).
+    $settings->add(new admin_setting_configduration(
+        'report_platform_usage/ignore_sessions_limit',
+        get_string('setting_ignore_sessions_limit', 'report_platform_usage'),
+        get_string('setting_ignore_sessions_limit_desc', 'report_platform_usage'),
+        MINSECS, // Default: 1 minute.
+        1  // Min unit: seconds.
+    ));
+
     // Default time period for reports.
     $settings->add(new admin_setting_configselect(
         'report_platform_usage/default_period',
