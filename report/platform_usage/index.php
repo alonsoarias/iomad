@@ -704,7 +704,26 @@ if ($incoursecontext) {
 }
 echo '</div>';
 echo '<div class="card-body">';
-echo '<canvas id="completionTrendsChart" height="180"></canvas>';
+// Check if there's completion data.
+$hasCompletionData = false;
+if (!empty($completionTrends['data'])) {
+    foreach ($completionTrends['data'] as $value) {
+        if ($value > 0) {
+            $hasCompletionData = true;
+            break;
+        }
+    }
+}
+if ($hasCompletionData) {
+    echo '<canvas id="completionTrendsChart" height="180"></canvas>';
+} else {
+    echo '<div class="d-flex align-items-center justify-content-center" style="height: 180px;">';
+    echo '<div class="text-center text-muted">';
+    echo '<i class="fa fa-info-circle fa-3x mb-3"></i>';
+    echo '<p>' . get_string('nodata', 'report_platform_usage') . '</p>';
+    echo '</div>';
+    echo '</div>';
+}
 echo '</div>';
 echo '</div>';
 echo '</div>';
@@ -907,29 +926,32 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Completion Trends Line Chart.
-        var completionTrendsCtx = document.getElementById('completionTrendsChart').getContext('2d');
-        charts.completionTrends = new Chart(completionTrendsCtx, {
-            type: 'line',
-            data: {
-                labels: data.completion_trends.labels,
-                datasets: [{
-                    label: STRINGS.completions,
-                    data: data.completion_trends.data,
-                    borderColor: 'rgba(23, 162, 184, 1)',
-                    backgroundColor: 'rgba(23, 162, 184, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: { intersect: false, mode: 'index' },
-                plugins: { legend: { position: 'top' } },
-                scales: { y: { beginAtZero: true } }
-            }
-        });
+        // Completion Trends Line Chart (only if canvas exists - has data).
+        var completionTrendsCanvas = document.getElementById('completionTrendsChart');
+        if (completionTrendsCanvas && data.completion_trends && data.completion_trends.labels) {
+            var completionTrendsCtx = completionTrendsCanvas.getContext('2d');
+            charts.completionTrends = new Chart(completionTrendsCtx, {
+                type: 'line',
+                data: {
+                    labels: data.completion_trends.labels,
+                    datasets: [{
+                        label: STRINGS.completions,
+                        data: data.completion_trends.data,
+                        borderColor: 'rgba(23, 162, 184, 1)',
+                        backgroundColor: 'rgba(23, 162, 184, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { intersect: false, mode: 'index' },
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
 
         // Dedication Chart (horizontal bar).
         if (data.top_dedication && data.top_dedication.length > 0) {
