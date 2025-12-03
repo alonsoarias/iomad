@@ -281,3 +281,38 @@ $string['completionstatus'] = 'Estado de finalización';
 $string['notcompleted'] = 'No completado';
 $string['completed'] = 'Completado';
 $string['never'] = 'Nunca';
+
+// Nombres de hojas Excel (contexto plataforma).
+$string['sheet_summary'] = 'Resumen';
+$string['sheet_daily_logins'] = 'Ingresos Diarios';
+$string['sheet_daily_users'] = 'Usuarios Diarios';
+$string['sheet_completions'] = 'Finalizaciones';
+$string['sheet_courses'] = 'Cursos';
+$string['sheet_activities'] = 'Actividades';
+$string['sheet_users'] = 'Usuarios';
+$string['sheet_dedication'] = 'Dedicación';
+
+// Nombres de hojas Excel (contexto curso).
+$string['sheet_course_summary'] = 'Resumen del Curso';
+$string['sheet_enrolled_users'] = 'Usuarios Matriculados';
+$string['sheet_access_history'] = 'Historial de Accesos';
+$string['sheet_course_activities'] = 'Actividades del Curso';
+$string['sheet_course_completions'] = 'Finalizaciones del Curso';
+$string['sheet_course_dedication'] = 'Dedicación del Curso';
+
+// Información adicional del Excel.
+$string['export_generated_by'] = 'Reporte generado por IOMAD Platform';
+$string['export_date_format'] = '%d/%m/%Y %H:%M';
+$string['export_period_info'] = 'Período del reporte';
+$string['export_total_records'] = 'Total de registros';
+$string['export_data_notes'] = 'Notas sobre los datos';
+$string['export_login_note'] = 'Cada evento de ingreso se cuenta por separado. Un usuario puede tener múltiples ingresos por día.';
+$string['export_dedication_note'] = 'El tiempo se calcula basándose en sesiones de actividad. Las sesiones terminan después de {$a} de inactividad.';
+$string['export_completion_note'] = 'Las finalizaciones se registran cuando se cumplen todos los criterios de finalización del curso.';
+$string['export_active_note'] = 'Los usuarios activos son aquellos que accedieron a la plataforma en los últimos 30 días.';
+$string['percentage'] = 'Porcentaje';
+$string['variation'] = 'Variación';
+$string['trend'] = 'Tendencia';
+$string['increasing'] = 'En aumento';
+$string['decreasing'] = 'En descenso';
+$string['stable'] = 'Estable';

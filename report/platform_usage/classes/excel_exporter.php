@@ -71,19 +71,61 @@ class excel_exporter {
     }
 
     /**
-     * Initialize sheet names (use fixed names for chart compatibility).
+     * Initialize sheet names using language strings for proper localization.
+     * Names are sanitized to comply with Excel's 31-character limit.
      */
     protected function initSheetNames(): void {
         $this->sheetNames = [
-            'summary' => 'Summary',
-            'daily' => 'Daily Logins',
-            'dailyusers' => 'Daily Users',
-            'completions' => 'Completions',
-            'courses' => 'Courses',
-            'activities' => 'Activities',
-            'users' => 'Users',
-            'dedication' => 'Dedication',
+            // Platform context sheets.
+            'summary' => $this->sanitizeSheetName(get_string('sheet_summary', 'report_platform_usage')),
+            'daily' => $this->sanitizeSheetName(get_string('sheet_daily_logins', 'report_platform_usage')),
+            'dailyusers' => $this->sanitizeSheetName(get_string('sheet_daily_users', 'report_platform_usage')),
+            'completions' => $this->sanitizeSheetName(get_string('sheet_completions', 'report_platform_usage')),
+            'courses' => $this->sanitizeSheetName(get_string('sheet_courses', 'report_platform_usage')),
+            'activities' => $this->sanitizeSheetName(get_string('sheet_activities', 'report_platform_usage')),
+            'users' => $this->sanitizeSheetName(get_string('sheet_users', 'report_platform_usage')),
+            'dedication' => $this->sanitizeSheetName(get_string('sheet_dedication', 'report_platform_usage')),
+            // Course context sheets.
+            'course_summary' => $this->sanitizeSheetName(get_string('sheet_course_summary', 'report_platform_usage')),
+            'enrolled_users' => $this->sanitizeSheetName(get_string('sheet_enrolled_users', 'report_platform_usage')),
+            'access_history' => $this->sanitizeSheetName(get_string('sheet_access_history', 'report_platform_usage')),
+            'course_activities' => $this->sanitizeSheetName(get_string('sheet_course_activities', 'report_platform_usage')),
+            'course_completions' => $this->sanitizeSheetName(get_string('sheet_course_completions', 'report_platform_usage')),
+            'course_dedication' => $this->sanitizeSheetName(get_string('sheet_course_dedication', 'report_platform_usage')),
         ];
+    }
+
+    /**
+     * Sanitize sheet name for Excel compatibility.
+     * Excel sheet names have a 31 character limit and cannot contain certain characters.
+     *
+     * @param string $name The sheet name to sanitize
+     * @return string The sanitized sheet name
+     */
+    protected function sanitizeSheetName(string $name): string {
+        // Remove invalid characters: \ / ? * [ ] :
+        $name = preg_replace('/[\\\\\\/\\?\\*\\[\\]\\:]/', '', $name);
+        // Trim and limit to 31 characters.
+        $name = mb_substr(trim($name), 0, 31);
+        return $name;
+    }
+
+    /**
+     * Format time in seconds to a human-readable string.
+     *
+     * @param int $seconds Time in seconds
+     * @return string Formatted time string (e.g., "1 hour", "30 mins")
+     */
+    protected function formatTimeForDisplay(int $seconds): string {
+        if ($seconds >= HOURSECS) {
+            $hours = floor($seconds / HOURSECS);
+            return $hours . ' ' . ($hours == 1 ? get_string('hour') : get_string('hours'));
+        } else if ($seconds >= MINSECS) {
+            $mins = floor($seconds / MINSECS);
+            return $mins . ' ' . ($mins == 1 ? get_string('min') : get_string('mins'));
+        } else {
+            return $seconds . ' ' . ($seconds == 1 ? get_string('sec') : get_string('secs'));
+        }
     }
 
     /**
@@ -439,6 +481,26 @@ class excel_exporter {
             ], null, "A{$row}");
             $sheet->getStyle("A{$row}:E{$row}")->applyFromArray($this->styles['data']);
             $sheet->getStyle("D{$row}:E{$row}")->applyFromArray($this->styles['number']);
+            $row++;
+        }
+
+        // Data interpretation notes section.
+        $row += 3;
+        $sheet->setCellValue("A{$row}", get_string('export_data_notes', 'report_platform_usage'));
+        $sheet->getStyle("A{$row}")->applyFromArray($this->styles['subtitle']);
+        $sheet->mergeCells("A{$row}:F{$row}");
+
+        $row++;
+        $notes = [
+            get_string('export_login_note', 'report_platform_usage'),
+            get_string('export_active_note', 'report_platform_usage'),
+            get_string('export_completion_note', 'report_platform_usage'),
+        ];
+        foreach ($notes as $note) {
+            $sheet->setCellValue("A{$row}", '• ' . $note);
+            $sheet->getStyle("A{$row}")->applyFromArray($this->styles['description']);
+            $sheet->mergeCells("A{$row}:F{$row}");
+            $sheet->getRowDimension($row)->setRowHeight(25);
             $row++;
         }
 
@@ -1151,8 +1213,12 @@ class excel_exporter {
         $sheet->getStyle('A1')->applyFromArray($this->styles['title']);
         $sheet->mergeCells('A1:F1');
 
-        // Description.
-        $sheet->setCellValue('A2', get_string('export_dedication_desc', 'report_platform_usage'));
+        // Description with session timeout info.
+        $sessionlimit = get_config('report_platform_usage', 'session_limit');
+        $sessionlimit = !empty($sessionlimit) ? (int)$sessionlimit : HOURSECS;
+        $sessionlimitFormatted = $this->formatTimeForDisplay($sessionlimit);
+        $description = get_string('export_dedication_note', 'report_platform_usage', $sessionlimitFormatted);
+        $sheet->setCellValue('A2', $description);
         $sheet->getStyle('A2')->applyFromArray($this->styles['description']);
         $sheet->mergeCells('A2:F2');
         $sheet->getRowDimension(2)->setRowHeight(50);
@@ -1253,7 +1319,7 @@ class excel_exporter {
      */
     protected function createCourseSummarySheet(): void {
         $sheet = $this->spreadsheet->createSheet();
-        $sheet->setTitle('Course Summary');
+        $sheet->setTitle($this->sheetNames['course_summary']);
 
         $courseStats = $this->report->get_course_statistics();
         $course = get_course($this->report->get_course_id());
@@ -1319,6 +1385,9 @@ class excel_exporter {
      * Create course user pie chart.
      */
     protected function createCourseUserChart($sheet, array $courseStats): void {
+        // Get the actual sheet name for chart references.
+        $sheetName = $this->sheetNames['course_summary'];
+
         // Create temporary data for pie chart.
         $sheet->setCellValue('G8', get_string('activeusers', 'report_platform_usage'));
         $sheet->setCellValue('H8', $courseStats['active_users']);
@@ -1328,13 +1397,13 @@ class excel_exporter {
         $sheet->getColumnDimension('H')->setVisible(false);
 
         $dataSeriesLabels = [
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'Course Summary'!\$G\$8:\$G\$9", null, 2),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$G\$8:\$G\$9", null, 2),
         ];
         $xAxisTickValues = [
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'Course Summary'!\$G\$8:\$G\$9", null, 2),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$G\$8:\$G\$9", null, 2),
         ];
         $dataSeriesValues = [
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'Course Summary'!\$H\$8:\$H\$9", null, 2),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$H\$8:\$H\$9", null, 2),
         ];
 
         $series = new DataSeries(
@@ -1368,7 +1437,7 @@ class excel_exporter {
      */
     protected function createCourseUsersDetailSheet(): void {
         $sheet = $this->spreadsheet->createSheet();
-        $sheet->setTitle('Enrolled Users');
+        $sheet->setTitle($this->sheetNames['enrolled_users']);
 
         // Header.
         $sheet->setCellValue('A1', get_string('courseusersdetails', 'report_platform_usage'));
@@ -1460,7 +1529,7 @@ class excel_exporter {
      */
     protected function createCourseAccessHistorySheet(): void {
         $sheet = $this->spreadsheet->createSheet();
-        $sheet->setTitle('Access History');
+        $sheet->setTitle($this->sheetNames['access_history']);
 
         // Header.
         $sheet->setCellValue('A1', get_string('courseaccesshistory', 'report_platform_usage'));
@@ -1533,16 +1602,19 @@ class excel_exporter {
      * Create course access history line chart.
      */
     protected function createCourseAccessHistoryChart($sheet, int $dataStart, int $dataEnd): void {
+        // Get the actual sheet name for chart references.
+        $sheetName = $this->sheetNames['access_history'];
+
         $dataSeriesLabels = [
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'Access History'!\$B\$4", null, 1),
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'Access History'!\$C\$4", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$B\$4", null, 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$C\$4", null, 1),
         ];
         $xAxisTickValues = [
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'Access History'!\$A\${$dataStart}:\$A\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_STRING, "'{$sheetName}'!\$A\${$dataStart}:\$A\${$dataEnd}", null, $dataEnd - $dataStart + 1),
         ];
         $dataSeriesValues = [
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'Access History'!\$B\${$dataStart}:\$B\${$dataEnd}", null, $dataEnd - $dataStart + 1),
-            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'Access History'!\$C\${$dataStart}:\$C\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$B\${$dataStart}:\$B\${$dataEnd}", null, $dataEnd - $dataStart + 1),
+            new DataSeriesValues(DataSeriesValues::DATASERIES_TYPE_NUMBER, "'{$sheetName}'!\$C\${$dataStart}:\$C\${$dataEnd}", null, $dataEnd - $dataStart + 1),
         ];
 
         $series = new DataSeries(
@@ -1576,7 +1648,7 @@ class excel_exporter {
      */
     protected function createCourseActivitiesSheet(): void {
         $sheet = $this->spreadsheet->createSheet();
-        $sheet->setTitle('Course Activities');
+        $sheet->setTitle($this->sheetNames['course_activities']);
 
         // Header.
         $sheet->setCellValue('A1', get_string('topactivities', 'report_platform_usage'));
@@ -1629,7 +1701,7 @@ class excel_exporter {
      */
     protected function createCourseCompletionsSheet(): void {
         $sheet = $this->spreadsheet->createSheet();
-        $sheet->setTitle('Course Completions');
+        $sheet->setTitle($this->sheetNames['course_completions']);
 
         $courseStats = $this->report->get_course_statistics();
 
@@ -1697,7 +1769,7 @@ class excel_exporter {
      */
     protected function createCourseDedicationSheet(): void {
         $sheet = $this->spreadsheet->createSheet();
-        $sheet->setTitle('Course Dedication');
+        $sheet->setTitle($this->sheetNames['course_dedication']);
 
         $courseStats = $this->report->get_course_statistics();
 
