@@ -779,64 +779,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var inCourseContext = <?php echo $incoursecontext ? 'true' : 'false'; ?>;
     var courseId = <?php echo (int)$courseid; ?>;
 
-    // Initial data.
-    var currentData = {
-        login_summary: <?php echo json_encode($loginSummary); ?>,
-        user_summary: <?php echo json_encode($userSummary); ?>,
-        course_stats: <?php echo json_encode($courseStats); ?>,
-        daily_logins: <?php echo json_encode($dailyLogins); ?>,
-        course_access_trends: <?php echo json_encode($courseAccessTrends); ?>,
-        top_courses: <?php echo json_encode(array_values($topCourses)); ?>,
-        top_activities: <?php echo json_encode($topActivities); ?>,
-        completions_summary: <?php echo json_encode($completionsSummary); ?>,
-        completion_trends: <?php echo json_encode($completionTrends); ?>,
-        daily_users: <?php echo json_encode($dailyUsers); ?>,
-        top_dedication: <?php echo json_encode($topDedication); ?>
-    };
-
-    // Chart instances.
-    var charts = {};
-
-    // Initialize charts.
-    initCharts(currentData);
-
-    // Global context filter event (company + dates).
-    var globalFilterBtn = document.getElementById('apply-global-filter');
-    if (globalFilterBtn) {
-        globalFilterBtn.addEventListener('click', function() {
-            var companyFilter = document.getElementById('companyid');
-            var companyId = companyFilter ? companyFilter.value : 0;
-            var datefrom = document.getElementById('global-datefrom').value;
-            var dateto = document.getElementById('global-dateto').value;
-            loadGlobalReportData(companyId, datefrom, dateto);
-            updateGlobalExportLinks(companyId, datefrom, dateto);
-        });
-    }
-
-    // Company filter change event - triggers filter automatically.
-    var companyFilter = document.getElementById('companyid');
-    if (companyFilter) {
-        companyFilter.addEventListener('change', function() {
-            var companyId = this.value;
-            var datefrom = document.getElementById('global-datefrom').value;
-            var dateto = document.getElementById('global-dateto').value;
-            loadGlobalReportData(companyId, datefrom, dateto);
-            updateGlobalExportLinks(companyId, datefrom, dateto);
-        });
-    }
-
-    // Course context date filter event.
-    var courseFilterBtn = document.getElementById('apply-course-filter');
-    if (courseFilterBtn) {
-        courseFilterBtn.addEventListener('click', function() {
-            var datefrom = document.getElementById('course-datefrom').value;
-            var dateto = document.getElementById('course-dateto').value;
-            loadCourseReportData(datefrom, dateto);
-            updateCourseExportLinks(datefrom, dateto);
-        });
-    }
-
-    // Chart.js global configuration for premium styling
+    // Chart.js global configuration for premium styling (must be before initCharts)
     Chart.defaults.font.family = "'Inter', system-ui, -apple-system, sans-serif";
     Chart.defaults.font.size = 12;
     Chart.defaults.color = '#64748b';
@@ -908,13 +851,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function initCharts(data) {
         // Daily Logins Line Chart (with unique users).
-        var dailyLoginsCanvas = document.getElementById('dailyLoginsChart');
-        if (!dailyLoginsCanvas) return;
-
-        var dailyLoginsCtx = dailyLoginsCanvas.getContext('2d');
-        var loginsGradient = createGradient(dailyLoginsCtx, 'rgba(99, 102, 241, 0.15)', 'rgba(99, 102, 241, 0.02)');
-        var usersGradient = createGradient(dailyLoginsCtx, 'rgba(16, 185, 129, 0.15)', 'rgba(16, 185, 129, 0.02)');
-
+        var dailyLoginsCtx = document.getElementById('dailyLoginsChart').getContext('2d');
         charts.dailyLogins = new Chart(dailyLoginsCtx, {
             type: 'line',
             data: {
@@ -924,164 +861,84 @@ document.addEventListener('DOMContentLoaded', function() {
                         label: STRINGS.logins,
                         data: data.daily_logins.logins,
                         borderColor: COLORS.brand.primary,
-                        backgroundColor: loginsGradient,
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
                         fill: true,
-                        tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 3,
-                        pointBackgroundColor: COLORS.brand.primary,
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 6,
-                        pointHoverBackgroundColor: COLORS.brand.primary,
-                        pointHoverBorderColor: '#ffffff',
-                        pointHoverBorderWidth: 2
+                        tension: 0.4
                     },
                     {
                         label: STRINGS.uniqueusers,
                         data: data.daily_logins.unique_users,
                         borderColor: COLORS.success.primary,
-                        backgroundColor: usersGradient,
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         fill: true,
-                        tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 3,
-                        pointBackgroundColor: COLORS.success.primary,
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 6,
-                        pointHoverBackgroundColor: COLORS.success.primary,
-                        pointHoverBorderColor: '#ffffff',
-                        pointHoverBorderWidth: 2
+                        tension: 0.4
                     }
                 ]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 2.5,
+                maintainAspectRatio: false,
                 interaction: { intersect: false, mode: 'index' },
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        align: 'end',
-                        labels: { boxWidth: 12, boxHeight: 12, padding: 15 }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: COLORS.gray[200], drawBorder: false },
-                        ticks: { padding: 10 }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { padding: 10, maxRotation: 45 }
-                    }
-                }
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true } }
             }
         });
 
         // User Activity Doughnut Chart.
-        var userActivityCanvas = document.getElementById('userActivityChart');
-        if (userActivityCanvas) {
-            var userActivityCtx = userActivityCanvas.getContext('2d');
-            var activeUsers, inactiveUsers;
-            if (inCourseContext && data.course_stats) {
-                activeUsers = data.course_stats.active_users || 0;
-                inactiveUsers = data.course_stats.inactive_users || 0;
-            } else {
-                activeUsers = data.user_summary.active || 0;
-                inactiveUsers = data.user_summary.inactive || 0;
-            }
-            charts.userActivity = new Chart(userActivityCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: [STRINGS.activeusers, STRINGS.inactiveusers],
-                    datasets: [{
-                        data: [activeUsers, inactiveUsers],
-                        backgroundColor: [COLORS.success.primary, COLORS.error.primary],
-                        borderColor: ['#ffffff', '#ffffff'],
-                        borderWidth: 3,
-                        hoverOffset: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 1.2,
-                    cutout: '65%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { boxWidth: 12, boxHeight: 12, padding: 15 }
-                        }
-                    }
-                }
-            });
+        var userActivityCtx = document.getElementById('userActivityChart').getContext('2d');
+        var activeUsers, inactiveUsers;
+        if (inCourseContext && data.course_stats) {
+            activeUsers = data.course_stats.active_users || 0;
+            inactiveUsers = data.course_stats.inactive_users || 0;
+        } else {
+            activeUsers = data.user_summary.active || 0;
+            inactiveUsers = data.user_summary.inactive || 0;
         }
+        charts.userActivity = new Chart(userActivityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [STRINGS.activeusers, STRINGS.inactiveusers],
+                datasets: [{
+                    data: [activeUsers, inactiveUsers],
+                    backgroundColor: [COLORS.success.primary, COLORS.error.primary],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
 
         // Course Access Trends Line Chart.
-        var courseAccessCanvas = document.getElementById('courseAccessChart');
-        if (courseAccessCanvas) {
-            var courseAccessCtx = courseAccessCanvas.getContext('2d');
-            var accessGradient = createGradient(courseAccessCtx, 'rgba(245, 158, 11, 0.15)', 'rgba(245, 158, 11, 0.02)');
-
-            charts.courseAccess = new Chart(courseAccessCtx, {
-                type: 'line',
-                data: {
-                    labels: data.course_access_trends.labels,
-                    datasets: [{
-                        label: STRINGS.courseaccesses,
-                        data: data.course_access_trends.data,
-                        borderColor: COLORS.warning.primary,
-                        backgroundColor: accessGradient,
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 3,
-                        pointBackgroundColor: COLORS.warning.primary,
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 6,
-                        pointHoverBackgroundColor: COLORS.warning.primary,
-                        pointHoverBorderColor: '#ffffff',
-                        pointHoverBorderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 2.5,
-                    interaction: { intersect: false, mode: 'index' },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            align: 'end',
-                            labels: { boxWidth: 12, boxHeight: 12, padding: 15 }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: COLORS.gray[200], drawBorder: false },
-                            ticks: { padding: 10 }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { padding: 10, maxRotation: 45 }
-                        }
-                    }
-                }
-            });
-        }
+        var courseAccessCtx = document.getElementById('courseAccessChart').getContext('2d');
+        charts.courseAccess = new Chart(courseAccessCtx, {
+            type: 'line',
+            data: {
+                labels: data.course_access_trends.labels,
+                datasets: [{
+                    label: STRINGS.courseaccesses,
+                    data: data.course_access_trends.data,
+                    borderColor: COLORS.warning.primary,
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
 
         // Completion Trends Line Chart (only if canvas exists - has data).
         var completionTrendsCanvas = document.getElementById('completionTrendsChart');
         if (completionTrendsCanvas && data.completion_trends && data.completion_trends.labels) {
             var completionTrendsCtx = completionTrendsCanvas.getContext('2d');
-            var completionGradient = createGradient(completionTrendsCtx, 'rgba(6, 182, 212, 0.15)', 'rgba(6, 182, 212, 0.02)');
-
             charts.completionTrends = new Chart(completionTrendsCtx, {
                 type: 'line',
                 data: {
@@ -1090,51 +947,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         label: STRINGS.completions,
                         data: data.completion_trends.data,
                         borderColor: COLORS.info.primary,
-                        backgroundColor: completionGradient,
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
                         fill: true,
-                        tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 3,
-                        pointBackgroundColor: COLORS.info.primary,
-                        pointBorderColor: '#ffffff',
-                        pointBorderWidth: 2,
-                        pointHoverRadius: 6,
-                        pointHoverBackgroundColor: COLORS.info.primary,
-                        pointHoverBorderColor: '#ffffff',
-                        pointHoverBorderWidth: 2
+                        tension: 0.4
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 3,
+                    maintainAspectRatio: false,
                     interaction: { intersect: false, mode: 'index' },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            align: 'end',
-                            labels: { boxWidth: 12, boxHeight: 12, padding: 15 }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: COLORS.gray[200], drawBorder: false },
-                            ticks: { padding: 10 }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { padding: 10, maxRotation: 45 }
-                        }
-                    }
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { beginAtZero: true } }
                 }
             });
         }
 
         // Dedication Chart (horizontal bar).
-        var dedicationCanvas = document.getElementById('dedicationChart');
-        if (dedicationCanvas && data.top_dedication && data.top_dedication.length > 0) {
-            var dedicationCtx = dedicationCanvas.getContext('2d');
+        if (data.top_dedication && data.top_dedication.length > 0) {
+            var dedicationCtx = document.getElementById('dedicationChart').getContext('2d');
             charts.dedication = new Chart(dedicationCtx, {
                 type: 'bar',
                 data: {
@@ -1146,32 +976,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         data: data.top_dedication.map(function(c) { return c.dedication_percent; }),
                         backgroundColor: COLORS.brand.primary,
                         borderColor: COLORS.brand.primaryDark,
-                        borderWidth: 0,
-                        borderRadius: 4,
-                        borderSkipped: false
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     indexAxis: 'y',
                     responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 2.5,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
                     scales: {
                         x: {
                             beginAtZero: true,
                             max: 100,
-                            grid: { color: COLORS.gray[200], drawBorder: false },
-                            ticks: {
-                                callback: function(value) { return value + '%'; },
-                                padding: 10
-                            }
-                        },
-                        y: {
-                            grid: { display: false },
-                            ticks: { padding: 10 }
+                            ticks: { callback: function(value) { return value + '%'; } }
                         }
                     }
                 }
@@ -1463,6 +1280,63 @@ document.addEventListener('DOMContentLoaded', function() {
         var div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    // Initial data.
+    var currentData = {
+        login_summary: <?php echo json_encode($loginSummary); ?>,
+        user_summary: <?php echo json_encode($userSummary); ?>,
+        course_stats: <?php echo json_encode($courseStats); ?>,
+        daily_logins: <?php echo json_encode($dailyLogins); ?>,
+        course_access_trends: <?php echo json_encode($courseAccessTrends); ?>,
+        top_courses: <?php echo json_encode(array_values($topCourses)); ?>,
+        top_activities: <?php echo json_encode($topActivities); ?>,
+        completions_summary: <?php echo json_encode($completionsSummary); ?>,
+        completion_trends: <?php echo json_encode($completionTrends); ?>,
+        daily_users: <?php echo json_encode($dailyUsers); ?>,
+        top_dedication: <?php echo json_encode($topDedication); ?>
+    };
+
+    // Chart instances.
+    var charts = {};
+
+    // Initialize charts.
+    initCharts(currentData);
+
+    // Global context filter event (company + dates).
+    var globalFilterBtn = document.getElementById('apply-global-filter');
+    if (globalFilterBtn) {
+        globalFilterBtn.addEventListener('click', function() {
+            var companyFilter = document.getElementById('companyid');
+            var companyId = companyFilter ? companyFilter.value : 0;
+            var datefrom = document.getElementById('global-datefrom').value;
+            var dateto = document.getElementById('global-dateto').value;
+            loadGlobalReportData(companyId, datefrom, dateto);
+            updateGlobalExportLinks(companyId, datefrom, dateto);
+        });
+    }
+
+    // Company filter change event - triggers filter automatically.
+    var companyFilter = document.getElementById('companyid');
+    if (companyFilter) {
+        companyFilter.addEventListener('change', function() {
+            var companyId = this.value;
+            var datefrom = document.getElementById('global-datefrom').value;
+            var dateto = document.getElementById('global-dateto').value;
+            loadGlobalReportData(companyId, datefrom, dateto);
+            updateGlobalExportLinks(companyId, datefrom, dateto);
+        });
+    }
+
+    // Course context date filter event.
+    var courseFilterBtn = document.getElementById('apply-course-filter');
+    if (courseFilterBtn) {
+        courseFilterBtn.addEventListener('click', function() {
+            var datefrom = document.getElementById('course-datefrom').value;
+            var dateto = document.getElementById('course-dateto').value;
+            loadCourseReportData(datefrom, dateto);
+            updateCourseExportLinks(datefrom, dateto);
+        });
     }
 });
 </script>
