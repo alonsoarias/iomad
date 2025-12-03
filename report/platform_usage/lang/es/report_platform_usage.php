@@ -84,7 +84,6 @@ $string['coursename'] = 'Curso';
 $string['courseaccesses'] = 'Accesos';
 $string['courseusage'] = 'Uso de cursos';
 $string['topcourses'] = 'Cursos más accedidos';
-$string['courseaccesstrends'] = 'Tendencia de accesos';
 $string['courseaccessdetails'] = 'Detalle de accesos a cursos';
 $string['coursesummary'] = 'Resumen de cursos';
 $string['courseaccess'] = 'Acceso a cursos';

@@ -84,7 +84,6 @@ $string['coursename'] = 'Course';
 $string['courseaccesses'] = 'Accesses';
 $string['courseusage'] = 'Course usage';
 $string['topcourses'] = 'Most accessed courses';
-$string['courseaccesstrends'] = 'Access trends';
 $string['courseaccessdetails'] = 'Course access details';
 $string['coursesummary'] = 'Course summary';
 $string['courseaccess'] = 'Course access';
@@ -201,7 +200,6 @@ $string['coursemetrics'] = 'Course metrics';
 $string['metric'] = 'Metric';
 $string['value'] = 'Value';
 $string['completionrate'] = 'Completion rate';
-$string['coursereport'] = 'Course Usage Report';
 
 // Settings.
 $string['settings'] = 'Platform usage settings';
@@ -261,6 +259,7 @@ $string['tooltip_userdedicationlist'] = 'Time spent by each enrolled user in thi
 $string['task_collect_dedication'] = 'Collect dedication time data';
 
 // Context-aware strings (course vs platform).
+$string['courseaccesstrends'] = 'Course access trends';
 $string['courseaccesstrends_desc'] = 'Daily course accesses and unique users over the selected period.';
 $string['courseenrolledusers_desc'] = 'Distribution of enrolled users by activity status.';
 $string['coursededicationsummary'] = 'Course dedication summary';
