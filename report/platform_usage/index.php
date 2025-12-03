@@ -190,6 +190,21 @@ if (!$incoursecontext) {
         echo '</div>';
     }
 
+    // Date filters for global context.
+    echo '<div class="form-group mr-3 mb-2">';
+    echo '<label for="global-datefrom" class="mr-2">' . get_string('datefrom', 'report_platform_usage') . ':</label>';
+    echo '<input type="date" id="global-datefrom" class="form-control" value="' . date('Y-m-d', $datefrom) . '">';
+    echo '</div>';
+    echo '<div class="form-group mr-3 mb-2">';
+    echo '<label for="global-dateto" class="mr-2">' . get_string('dateto', 'report_platform_usage') . ':</label>';
+    echo '<input type="date" id="global-dateto" class="form-control" value="' . date('Y-m-d', $dateto) . '">';
+    echo '</div>';
+    echo '<div class="form-group mr-3 mb-2">';
+    echo '<button type="button" id="apply-global-filter" class="btn btn-primary">';
+    echo '<i class="fa fa-filter"></i> ' . get_string('filter', 'report_platform_usage');
+    echo '</button>';
+    echo '</div>';
+
     // Loading indicator.
     echo '<div id="loading-indicator" class="mb-2 mr-3" style="display: none;">';
     echo '<span class="spinner-border spinner-border-sm text-primary" role="status"></span>';
@@ -768,13 +783,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize charts.
     initCharts(currentData);
 
-    // Company filter change event - automatic AJAX loading (only in system context).
+    // Global context filter event (company + dates).
+    var globalFilterBtn = document.getElementById('apply-global-filter');
+    if (globalFilterBtn) {
+        globalFilterBtn.addEventListener('click', function() {
+            var companyFilter = document.getElementById('companyid');
+            var companyId = companyFilter ? companyFilter.value : 0;
+            var datefrom = document.getElementById('global-datefrom').value;
+            var dateto = document.getElementById('global-dateto').value;
+            loadGlobalReportData(companyId, datefrom, dateto);
+            updateGlobalExportLinks(companyId, datefrom, dateto);
+        });
+    }
+
+    // Company filter change event - triggers filter automatically.
     var companyFilter = document.getElementById('companyid');
     if (companyFilter) {
         companyFilter.addEventListener('change', function() {
             var companyId = this.value;
-            loadReportData(companyId);
-            updateExportLinks(companyId);
+            var datefrom = document.getElementById('global-datefrom').value;
+            var dateto = document.getElementById('global-dateto').value;
+            loadGlobalReportData(companyId, datefrom, dateto);
+            updateGlobalExportLinks(companyId, datefrom, dateto);
         });
     }
 
@@ -1087,13 +1117,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Load report data via AJAX.
+     * Load global report data via AJAX (with company and date filters).
      */
-    function loadReportData(companyId) {
+    function loadGlobalReportData(companyId, datefrom, dateto) {
         var loading = document.getElementById('loading-indicator');
         loading.style.display = 'inline-block';
 
-        var url = AJAX_URL + '?companyid=' + companyId;
+        var datefromTs = new Date(datefrom).getTime() / 1000;
+        var datetoTs = new Date(dateto).getTime() / 1000 + 86399; // End of day
+
+        var url = AJAX_URL + '?companyid=' + companyId + '&datefrom=' + Math.floor(datefromTs) + '&dateto=' + Math.floor(datetoTs);
 
         fetch(url)
             .then(function(response) {
@@ -1113,18 +1146,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Update export links with current company.
+     * Update global export links with current filters.
      */
-    function updateExportLinks(companyId) {
+    function updateGlobalExportLinks(companyId, datefrom, dateto) {
         var excelLink = document.getElementById('export-excel');
         var csvLink = document.getElementById('export-csv');
 
+        var datefromTs = new Date(datefrom).getTime() / 1000;
+        var datetoTs = new Date(dateto).getTime() / 1000 + 86399;
+
         if (excelLink) {
-            var url = excelLink.href.replace(/companyid=\d+/, 'companyid=' + companyId);
+            var url = excelLink.href
+                .replace(/companyid=\d+/, 'companyid=' + companyId)
+                .replace(/datefrom=\d+/, 'datefrom=' + Math.floor(datefromTs))
+                .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
             excelLink.href = url;
         }
         if (csvLink) {
-            var url = csvLink.href.replace(/companyid=\d+/, 'companyid=' + companyId);
+            var url = csvLink.href
+                .replace(/companyid=\d+/, 'companyid=' + companyId)
+                .replace(/datefrom=\d+/, 'datefrom=' + Math.floor(datefromTs))
+                .replace(/dateto=\d+/, 'dateto=' + Math.floor(datetoTs));
             csvLink.href = url;
         }
     }
