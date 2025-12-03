@@ -272,7 +272,9 @@ class report {
     }
 
     /**
-     * Compute login statistics summary.
+     * Compute login/access statistics summary.
+     * In platform context: tracks user logins.
+     * In course context: tracks course accesses.
      *
      * @return array Statistics
      */
@@ -309,27 +311,54 @@ class report {
 
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
-        // Single query for all time periods.
-        $sql = "SELECT
-                    SUM(CASE WHEN timecreated >= :today THEN 1 ELSE 0 END) as logins_today,
-                    COUNT(DISTINCT CASE WHEN timecreated >= :today2 THEN userid END) as unique_today,
-                    SUM(CASE WHEN timecreated >= :week THEN 1 ELSE 0 END) as logins_week,
-                    COUNT(DISTINCT CASE WHEN timecreated >= :week2 THEN userid END) as unique_week,
-                    SUM(CASE WHEN timecreated >= :month THEN 1 ELSE 0 END) as logins_month,
-                    COUNT(DISTINCT CASE WHEN timecreated >= :month2 THEN userid END) as unique_month
-                FROM {logstore_standard_log}
-                WHERE eventname = :event
-                  AND userid $usersql";
+        // Different event and filter based on context.
+        if ($this->courseid > 0) {
+            // Course context: track course_viewed events for this course.
+            $sql = "SELECT
+                        SUM(CASE WHEN timecreated >= :today THEN 1 ELSE 0 END) as logins_today,
+                        COUNT(DISTINCT CASE WHEN timecreated >= :today2 THEN userid END) as unique_today,
+                        SUM(CASE WHEN timecreated >= :week THEN 1 ELSE 0 END) as logins_week,
+                        COUNT(DISTINCT CASE WHEN timecreated >= :week2 THEN userid END) as unique_week,
+                        SUM(CASE WHEN timecreated >= :month THEN 1 ELSE 0 END) as logins_month,
+                        COUNT(DISTINCT CASE WHEN timecreated >= :month2 THEN userid END) as unique_month
+                    FROM {logstore_standard_log}
+                    WHERE eventname = :event
+                      AND courseid = :courseid
+                      AND userid $usersql";
 
-        $params = array_merge([
-            'event' => '\\core\\event\\user_loggedin',
-            'today' => $todaystart,
-            'today2' => $todaystart,
-            'week' => $weekstart,
-            'week2' => $weekstart,
-            'month' => $monthstart,
-            'month2' => $monthstart,
-        ], $userparams);
+            $params = array_merge([
+                'event' => '\\core\\event\\course_viewed',
+                'courseid' => $this->courseid,
+                'today' => $todaystart,
+                'today2' => $todaystart,
+                'week' => $weekstart,
+                'week2' => $weekstart,
+                'month' => $monthstart,
+                'month2' => $monthstart,
+            ], $userparams);
+        } else {
+            // Platform context: track login events.
+            $sql = "SELECT
+                        SUM(CASE WHEN timecreated >= :today THEN 1 ELSE 0 END) as logins_today,
+                        COUNT(DISTINCT CASE WHEN timecreated >= :today2 THEN userid END) as unique_today,
+                        SUM(CASE WHEN timecreated >= :week THEN 1 ELSE 0 END) as logins_week,
+                        COUNT(DISTINCT CASE WHEN timecreated >= :week2 THEN userid END) as unique_week,
+                        SUM(CASE WHEN timecreated >= :month THEN 1 ELSE 0 END) as logins_month,
+                        COUNT(DISTINCT CASE WHEN timecreated >= :month2 THEN userid END) as unique_month
+                    FROM {logstore_standard_log}
+                    WHERE eventname = :event
+                      AND userid $usersql";
+
+            $params = array_merge([
+                'event' => '\\core\\event\\user_loggedin',
+                'today' => $todaystart,
+                'today2' => $todaystart,
+                'week' => $weekstart,
+                'week2' => $weekstart,
+                'month' => $monthstart,
+                'month2' => $monthstart,
+            ], $userparams);
+        }
 
         $result = $DB->get_record_sql($sql, $params);
 
@@ -356,7 +385,9 @@ class report {
     }
 
     /**
-     * Compute daily login data.
+     * Compute daily login/access data.
+     * In platform context: tracks user logins.
+     * In course context: tracks course accesses.
      *
      * @param int $days Number of days
      * @return array
@@ -372,20 +403,42 @@ class report {
         $starttime = strtotime("-{$days} days midnight");
         list($usersql, $userparams) = $this->get_user_sql('userid');
 
-        $sql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as login_date,
-                       COUNT(*) as login_count,
-                       COUNT(DISTINCT userid) as unique_users
-                FROM {logstore_standard_log}
-                WHERE eventname = :event
-                  AND timecreated >= :starttime
-                  AND $usersql
-                GROUP BY DATE(FROM_UNIXTIME(timecreated))
-                ORDER BY login_date ASC";
+        // Different event based on context.
+        if ($this->courseid > 0) {
+            // Course context: track course_viewed events.
+            $sql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as login_date,
+                           COUNT(*) as login_count,
+                           COUNT(DISTINCT userid) as unique_users
+                    FROM {logstore_standard_log}
+                    WHERE eventname = :event
+                      AND courseid = :courseid
+                      AND timecreated >= :starttime
+                      AND $usersql
+                    GROUP BY DATE(FROM_UNIXTIME(timecreated))
+                    ORDER BY login_date ASC";
 
-        $params = array_merge([
-            'event' => '\\core\\event\\user_loggedin',
-            'starttime' => $starttime,
-        ], $userparams);
+            $params = array_merge([
+                'event' => '\\core\\event\\course_viewed',
+                'courseid' => $this->courseid,
+                'starttime' => $starttime,
+            ], $userparams);
+        } else {
+            // Platform context: track login events.
+            $sql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as login_date,
+                           COUNT(*) as login_count,
+                           COUNT(DISTINCT userid) as unique_users
+                    FROM {logstore_standard_log}
+                    WHERE eventname = :event
+                      AND timecreated >= :starttime
+                      AND $usersql
+                    GROUP BY DATE(FROM_UNIXTIME(timecreated))
+                    ORDER BY login_date ASC";
+
+            $params = array_merge([
+                'event' => '\\core\\event\\user_loggedin',
+                'starttime' => $starttime,
+            ], $userparams);
+        }
 
         $records = $DB->get_records_sql($sql, $params);
 
@@ -845,6 +898,14 @@ class report {
 
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
+        // Add course filter if in course context.
+        $coursefilter = '';
+        $courseparams = [];
+        if ($this->courseid > 0) {
+            $coursefilter = 'AND course = :courseid';
+            $courseparams['courseid'] = $this->courseid;
+        }
+
         $sql = "SELECT
                     SUM(CASE WHEN timecompleted >= :today THEN 1 ELSE 0 END) as completions_today,
                     SUM(CASE WHEN timecompleted >= :week THEN 1 ELSE 0 END) as completions_week,
@@ -852,13 +913,14 @@ class report {
                     COUNT(*) as total_completions
                 FROM {course_completions}
                 WHERE userid $usersql
-                  AND timecompleted IS NOT NULL";
+                  AND timecompleted IS NOT NULL
+                  $coursefilter";
 
         $params = array_merge([
             'today' => $todaystart,
             'week' => $weekstart,
             'month' => $monthstart,
-        ], $userparams);
+        ], $userparams, $courseparams);
 
         $result = $DB->get_record_sql($sql, $params);
 
@@ -959,16 +1021,25 @@ class report {
 
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
+        // Add course filter if in course context.
+        $coursefilter = '';
+        $courseparams = [];
+        if ($this->courseid > 0) {
+            $coursefilter = 'AND course = :courseid';
+            $courseparams['courseid'] = $this->courseid;
+        }
+
         $sql = "SELECT DATE(FROM_UNIXTIME(timecompleted)) as completion_date,
                        COUNT(*) as completion_count
                 FROM {course_completions}
                 WHERE userid $usersql
                   AND timecompleted >= :starttime
                   AND timecompleted IS NOT NULL
+                  $coursefilter
                 GROUP BY DATE(FROM_UNIXTIME(timecompleted))
                 ORDER BY completion_date ASC";
 
-        $params = array_merge(['starttime' => $starttime], $userparams);
+        $params = array_merge(['starttime' => $starttime], $userparams, $courseparams);
         $records = $DB->get_records_sql($sql, $params);
 
         $labels = [];
@@ -1354,6 +1425,8 @@ class report {
 
     /**
      * Compute daily users.
+     * In platform context: users who logged in.
+     * In course context: users who accessed the course.
      *
      * @param int $days
      * @return array
@@ -1369,19 +1442,40 @@ class report {
         $starttime = strtotime("-{$days} days midnight");
         list($usersql, $userparams) = $this->get_user_sql('userid');
 
-        $sql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as login_date,
-                       COUNT(DISTINCT userid) as unique_users
-                FROM {logstore_standard_log}
-                WHERE eventname = :event
-                  AND timecreated >= :starttime
-                  AND $usersql
-                GROUP BY DATE(FROM_UNIXTIME(timecreated))
-                ORDER BY login_date ASC";
+        // Different event based on context.
+        if ($this->courseid > 0) {
+            // Course context: track course_viewed events.
+            $sql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as login_date,
+                           COUNT(DISTINCT userid) as unique_users
+                    FROM {logstore_standard_log}
+                    WHERE eventname = :event
+                      AND courseid = :courseid
+                      AND timecreated >= :starttime
+                      AND $usersql
+                    GROUP BY DATE(FROM_UNIXTIME(timecreated))
+                    ORDER BY login_date ASC";
 
-        $params = array_merge([
-            'event' => '\\core\\event\\user_loggedin',
-            'starttime' => $starttime,
-        ], $userparams);
+            $params = array_merge([
+                'event' => '\\core\\event\\course_viewed',
+                'courseid' => $this->courseid,
+                'starttime' => $starttime,
+            ], $userparams);
+        } else {
+            // Platform context: track login events.
+            $sql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as login_date,
+                           COUNT(DISTINCT userid) as unique_users
+                    FROM {logstore_standard_log}
+                    WHERE eventname = :event
+                      AND timecreated >= :starttime
+                      AND $usersql
+                    GROUP BY DATE(FROM_UNIXTIME(timecreated))
+                    ORDER BY login_date ASC";
+
+            $params = array_merge([
+                'event' => '\\core\\event\\user_loggedin',
+                'starttime' => $starttime,
+            ], $userparams);
+        }
 
         $records = $DB->get_records_sql($sql, $params);
 
