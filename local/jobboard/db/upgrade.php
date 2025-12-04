@@ -469,5 +469,26 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024120508, 'local', 'jobboard');
     }
 
+    // Phase 5 upgrades: Advanced Security and REST API.
+    if ($oldversion < 2024120509) {
+
+        // Enable API by default.
+        set_config('api_enabled', 1, 'local_jobboard');
+
+        // Set default data retention period (5 years for Habeas Data compliance).
+        set_config('applicationretentiondays', 1825, 'local_jobboard');
+
+        // Ensure api_token table has all necessary fields.
+        $table = new xmldb_table('local_jobboard_api_token');
+
+        // Add ipwhitelist field if missing.
+        $field = new xmldb_field('ipwhitelist', XMLDB_TYPE_TEXT, null, null, null, null, null, 'permissions');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2024120509, 'local', 'jobboard');
+    }
+
     return true;
 }
