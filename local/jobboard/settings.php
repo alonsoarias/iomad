@@ -25,11 +25,44 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-    // Create new settings page.
-    $settings = new admin_settingpage('local_jobboard', get_string('pluginname', 'local_jobboard'));
+    // Create a category for Job Board.
+    $ADMIN->add('localplugins', new admin_category('local_jobboard_category',
+        get_string('pluginname', 'local_jobboard')));
 
-    // Add to admin menu.
-    $ADMIN->add('localplugins', $settings);
+    // Create new settings page.
+    $settings = new admin_settingpage('local_jobboard', get_string('generalsettings', 'local_jobboard'));
+
+    // Add settings page to the category.
+    $ADMIN->add('local_jobboard_category', $settings);
+
+    // Register external admin pages.
+    $ADMIN->add('local_jobboard_category', new admin_externalpage(
+        'local_jobboard_doctypes',
+        get_string('managedoctypes', 'local_jobboard'),
+        new moodle_url('/local/jobboard/admin/doctypes.php'),
+        'local/jobboard:configure'
+    ));
+
+    $ADMIN->add('local_jobboard_category', new admin_externalpage(
+        'local_jobboard_templates',
+        get_string('emailtemplates', 'local_jobboard'),
+        new moodle_url('/local/jobboard/admin/templates.php'),
+        'local/jobboard:configure'
+    ));
+
+    $ADMIN->add('local_jobboard_category', new admin_externalpage(
+        'local_jobboard_exemptions',
+        get_string('manageexemptions', 'local_jobboard'),
+        new moodle_url('/local/jobboard/admin/exemptions.php'),
+        'local/jobboard:configure'
+    ));
+
+    $ADMIN->add('local_jobboard_category', new admin_externalpage(
+        'local_jobboard_tokens',
+        get_string('apitokens', 'local_jobboard'),
+        new moodle_url('/local/jobboard/admin/tokens.php'),
+        'local/jobboard:manageapitokens'
+    ));
 
     // General settings header.
     $settings->add(new admin_setting_heading(

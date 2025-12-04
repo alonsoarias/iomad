@@ -1281,3 +1281,31 @@ $string['selected'] = 'Seleccionado';
 $string['selectionrate'] = 'Tasa de selección';
 $string['submitreview'] = 'Enviar revisión';
 $string['validateall'] = 'Validar todos';
+
+// ==========================================================================
+// Strings de páginas de administración.
+// ==========================================================================
+
+// Gestión de tipos de documentos.
+$string['doctypecode'] = 'Código del tipo de documento';
+$string['doctypename'] = 'Nombre del tipo de documento';
+$string['nodoctypes'] = 'No hay tipos de documentos configurados';
+$string['doctypecreated'] = 'Tipo de documento creado exitosamente';
+$string['doctypeupdated'] = 'Tipo de documento actualizado exitosamente';
+$string['doctypedeleted'] = 'Tipo de documento eliminado exitosamente';
+$string['enabledoctype'] = 'Habilitar tipo de documento';
+$string['disabledoctype'] = 'Deshabilitar tipo de documento';
+
+// Gestión de plantillas de correo.
+$string['subject'] = 'Asunto';
+$string['body'] = 'Cuerpo';
+$string['emailtemplateshelp'] = 'Las plantillas de correo utilizan marcadores como {USER_NAME}, {VACANCY_TITLE}, {APPLICATION_URL} que se reemplazan con valores reales cuando se envía el correo.';
+$string['notemplates'] = 'No hay plantillas de correo configuradas. Las plantillas se crean automáticamente cuando se instala el plugin.';
+
+// Recarga de documentos.
+$string['newdocument'] = 'Nuevo documento';
+$string['uploaddocument'] = 'Subir documento';
+$string['reuploadhelp'] = 'Suba una nueva versión del documento que fue rechazado. Asegúrese de que el nuevo documento atienda el motivo de rechazo.';
+$string['documentreuploaded'] = 'Documento subido exitosamente. Su postulación está nuevamente en revisión.';
+$string['uploadfailed'] = 'Error al subir el documento. Por favor intente de nuevo.';
+$string['cannotreupload'] = 'No puede volver a cargar documentos para esta postulación en su estado actual.';

@@ -1239,3 +1239,32 @@ $string['andmore'] = 'and {$a} more...';
 // Table headers additional.
 $string['row'] = 'Row';
 $string['result'] = 'Result';
+
+// ==========================================================================
+// Admin pages strings.
+// ==========================================================================
+
+// Document types management.
+$string['managedoctypes'] = 'Manage Document Types';
+$string['doctypecode'] = 'Document Type Code';
+$string['doctypename'] = 'Document Type Name';
+$string['nodoctypes'] = 'No document types configured';
+$string['doctypecreated'] = 'Document type created successfully';
+$string['doctypeupdated'] = 'Document type updated successfully';
+$string['doctypedeleted'] = 'Document type deleted successfully';
+$string['enabledoctype'] = 'Enable document type';
+$string['disabledoctype'] = 'Disable document type';
+
+// Email templates management.
+$string['subject'] = 'Subject';
+$string['body'] = 'Body';
+$string['emailtemplateshelp'] = 'Email templates use placeholders like {USER_NAME}, {VACANCY_TITLE}, {APPLICATION_URL} that are replaced with actual values when the email is sent.';
+$string['notemplates'] = 'No email templates configured. Templates are created automatically when the plugin is installed.';
+
+// Document re-upload.
+$string['newdocument'] = 'New document';
+$string['uploaddocument'] = 'Upload document';
+$string['reuploadhelp'] = 'Upload a new version of the document that was rejected. Make sure the new document addresses the rejection reason.';
+$string['documentreuploaded'] = 'Document uploaded successfully. Your application is now under review again.';
+$string['uploadfailed'] = 'Failed to upload document. Please try again.';
+$string['cannotreupload'] = 'Cannot re-upload documents for this application in its current status.';

@@ -118,11 +118,11 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
         );
     }
 
-    // Add settings for admins.
+    // Add settings for admins - link to admin category.
     if (has_capability('local/jobboard:configure', $context)) {
         $jobboardnode->add(
             get_string('settings', 'local_jobboard'),
-            new moodle_url('/local/jobboard/admin/settings.php'),
+            new moodle_url('/admin/category.php', ['category' => 'local_jobboard_category']),
             navigation_node::TYPE_CUSTOM
         );
     }
@@ -131,63 +131,16 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
 /**
  * Adds settings to the site admin menu.
  *
+ * Note: The admin pages are registered in settings.php using admin_externalpage,
+ * which automatically adds them to the Moodle admin tree. This function provides
+ * additional contextual navigation support.
+ *
  * @param settings_navigation $settingsnav The settings navigation object.
  * @param context $context The context.
  */
 function local_jobboard_extend_settings_navigation(settings_navigation $settingsnav, context $context) {
-    global $PAGE;
-
-    if ($context->contextlevel != CONTEXT_SYSTEM) {
-        return;
-    }
-
-    if (!has_capability('local/jobboard:configure', $context)) {
-        return;
-    }
-
-    $siteadmin = $settingsnav->find('root', navigation_node::TYPE_SITE_ADMIN);
-    if (!$siteadmin) {
-        return;
-    }
-
-    // Add Job Board settings category.
-    $jobboardsettings = $siteadmin->add(
-        get_string('pluginname', 'local_jobboard'),
-        null,
-        navigation_node::TYPE_CONTAINER,
-        null,
-        'local_jobboard_settings'
-    );
-
-    $jobboardsettings->add(
-        get_string('generalsettings', 'local_jobboard'),
-        new moodle_url('/local/jobboard/admin/settings.php'),
-        navigation_node::TYPE_SETTING
-    );
-
-    $jobboardsettings->add(
-        get_string('managedoctypes', 'local_jobboard'),
-        new moodle_url('/local/jobboard/admin/doctypes.php'),
-        navigation_node::TYPE_SETTING
-    );
-
-    $jobboardsettings->add(
-        get_string('emailtemplates', 'local_jobboard'),
-        new moodle_url('/local/jobboard/admin/templates.php'),
-        navigation_node::TYPE_SETTING
-    );
-
-    $jobboardsettings->add(
-        get_string('manageexemptions', 'local_jobboard'),
-        new moodle_url('/local/jobboard/admin/exemptions.php'),
-        navigation_node::TYPE_SETTING
-    );
-
-    $jobboardsettings->add(
-        get_string('apitokens', 'local_jobboard'),
-        new moodle_url('/local/jobboard/admin/tokens.php'),
-        navigation_node::TYPE_SETTING
-    );
+    // Admin pages are registered in settings.php and appear automatically in the admin tree.
+    // No additional navigation configuration needed here.
 }
 
 /**
