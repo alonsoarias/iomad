@@ -836,3 +836,406 @@ $string['error:invaliddocument'] = 'Invalid document';
 $string['error:reviewfailed'] = 'Failed to submit review';
 $string['applicant'] = 'Applicant';
 $string['name'] = 'Name';
+
+// ==========================================================================
+// Phase 2-4: Additional strings from Spanish localization.
+// ==========================================================================
+
+// Application system.
+$string['applytovacancy'] = 'Apply for vacancy';
+$string['application'] = 'Application';
+$string['currentstatus'] = 'Current status';
+$string['consentgiven'] = 'Consent given';
+$string['uploadeddocuments'] = 'Uploaded documents';
+$string['statushistory'] = 'Status history';
+$string['workflowactions'] = 'Workflow actions';
+$string['changestatus'] = 'Change status';
+$string['updatestatus'] = 'Update status';
+$string['notes'] = 'Notes';
+$string['backtoapplications'] = 'Back to applications';
+$string['cannotwithdraw'] = 'Cannot withdraw this application in its current status';
+$string['statuschanged'] = 'Status updated successfully';
+$string['invalidtransition'] = 'Invalid status transition';
+$string['viewvacancy'] = 'View vacancy';
+$string['noaccess'] = 'You do not have access to this resource';
+$string['vacancynotopen'] = 'Vacancy is not open for applications';
+$string['applicationcreatefailed'] = 'Failed to create application';
+$string['applicationerror'] = 'Application error';
+$string['deadlinewarning'] = 'Attention: Vacancy closes in {$a} day(s)';
+$string['applicationguidelines'] = 'Application guidelines';
+$string['guideline1'] = 'Complete all required fields marked with asterisk (*)';
+$string['guideline2'] = 'Upload legible and complete documents';
+$string['guideline3'] = 'Verify that the information provided is correct before submitting';
+$string['guideline4'] = 'Once submitted, you will receive a confirmation email';
+$string['documentsuploaded'] = 'documents uploaded';
+$string['exemptionactive'] = 'ISER exemption active';
+$string['exemption'] = 'Exemption';
+
+// Document validation.
+$string['documentinfo'] = 'Document information';
+$string['documenttype'] = 'Document type';
+$string['filename'] = 'File name';
+$string['uploaded'] = 'Uploaded';
+$string['viewdocument'] = 'View document';
+$string['validationchecklist'] = 'Validation checklist';
+$string['validationdecision'] = 'Validation decision';
+$string['selectreason'] = 'Select a reason';
+$string['additionalnotes'] = 'Additional notes';
+$string['rejectreason_illegible'] = 'Illegible document';
+$string['rejectreason_expired'] = 'Expired document';
+$string['rejectreason_incomplete'] = 'Incomplete document';
+$string['rejectreason_wrongtype'] = 'Wrong document type';
+$string['rejectreason_mismatch'] = 'Information mismatch';
+$string['validated'] = 'Validated';
+$string['pendingvalidation'] = 'Pending validation';
+$string['pending'] = 'Pending';
+
+// Validation checklist items.
+$string['checklist_legible'] = 'Document is legible';
+$string['checklist_complete'] = 'Document is complete';
+$string['checklist_namematch'] = 'Name matches applicant';
+$string['checklist_cedula_number'] = 'ID number is visible and legible';
+$string['checklist_cedula_photo'] = 'Photo is clear';
+$string['checklist_background_date'] = 'Issue date is recent (max. 3 months)';
+$string['checklist_background_status'] = 'No records found';
+$string['checklist_title_institution'] = 'Educational institution is recognized';
+$string['checklist_title_date'] = 'Graduation date is visible';
+$string['checklist_title_program'] = 'Academic program is clear';
+$string['checklist_acta_number'] = 'Certificate number is visible';
+$string['checklist_acta_date'] = 'Certificate date is visible';
+$string['checklist_tarjeta_number'] = 'License number is visible';
+$string['checklist_tarjeta_profession'] = 'Profession is specified';
+$string['checklist_rut_nit'] = 'Tax ID is visible';
+$string['checklist_rut_updated'] = 'Tax document is updated';
+$string['checklist_eps_active'] = 'Affiliation is active';
+$string['checklist_eps_entity'] = 'Health insurance entity is clear';
+$string['checklist_pension_fund'] = 'Pension fund is clear';
+$string['checklist_pension_active'] = 'Affiliation is active';
+$string['checklist_medical_date'] = 'Certificate date is recent';
+$string['checklist_medical_aptitude'] = 'Fitness assessment is favorable';
+$string['checklist_military_class'] = 'Military card class is visible';
+$string['checklist_military_number'] = 'Military card number is visible';
+
+// Additional document types.
+$string['doctype_titulo_especializacion'] = 'Specialization Degree';
+$string['doctype_titulo_maestria'] = 'Master\'s Degree';
+$string['doctype_titulo_doctorado'] = 'Doctoral Degree';
+$string['doctype_acta_grado'] = 'Graduation Certificate';
+$string['doctype_sijin'] = 'SIJIN Certificate';
+
+// Manage applications.
+$string['manageapplications'] = 'Manage applications';
+$string['backtomanage'] = 'Back to management';
+$string['searchapplicant'] = 'Search applicant...';
+
+// Reviewer management.
+$string['myreviews'] = 'My reviews';
+$string['assignreviewers'] = 'Assign reviewers';
+$string['assignreviewer'] = 'Assign reviewer';
+$string['reviewer'] = 'Reviewer';
+$string['reviewers'] = 'Reviewers';
+$string['selectreviewer'] = 'Select reviewer';
+$string['workload'] = 'Workload';
+$string['currentworkload'] = 'Current workload';
+$string['maxworkload'] = 'Maximum workload';
+$string['availablereviewers'] = 'Available reviewers';
+$string['noassignments'] = 'No pending assignments';
+$string['pendingassignments'] = 'Pending assignments';
+$string['assignedto'] = 'Assigned to';
+$string['assignedby'] = 'Assigned by';
+$string['assignmentdate'] = 'Assignment date';
+$string['unassigned'] = 'Unassigned';
+$string['reassign'] = 'Reassign';
+$string['autoassign'] = 'Auto-assign';
+$string['autoassigndesc'] = 'Automatically assign applications to available reviewers with load balancing';
+$string['assignmentscompleted'] = '{$a} assignments completed';
+$string['assignmenterror'] = 'Error assigning reviewer';
+$string['reviewerassigned'] = 'Reviewer assigned successfully';
+$string['reviewersassigned'] = '{$a} reviewers assigned successfully';
+$string['selectapplications'] = 'Select applications to assign';
+$string['noapplicationsselected'] = 'No applications selected';
+$string['allapplicationsassigned'] = 'All applications already have an assigned reviewer';
+$string['myassignments'] = 'My assignments';
+
+// Bulk validation.
+$string['bulkvalidation'] = 'Bulk validation';
+$string['bulkvalidate'] = 'Bulk validate';
+$string['selectdocuments'] = 'Select documents';
+$string['selectnone'] = 'Deselect all';
+$string['approveselected'] = 'Approve selected';
+$string['rejectselected'] = 'Reject selected';
+$string['documentssummary'] = 'Documents summary';
+$string['documentsvalidated'] = 'Documents validated';
+$string['documentsrejected'] = 'Documents rejected';
+$string['documentspending'] = 'Documents pending';
+$string['validationcomplete'] = 'Validation complete';
+$string['validationresults'] = 'Validation results';
+$string['validationsuccess'] = '{$a} documents processed successfully';
+$string['validationfailed'] = '{$a} documents failed';
+$string['bydocumenttype'] = 'By document type';
+$string['byapplication'] = 'By application';
+$string['autovalidate'] = 'Auto-validate';
+$string['autovalidatedesc'] = 'Automatically validate documents that meet predefined rules';
+$string['autovalidationrules'] = 'Auto-validation rules';
+$string['documentsautovalidated'] = '{$a} documents auto-validated';
+$string['noautovalidationdocs'] = 'No documents meet auto-validation rules';
+
+// Document re-upload.
+$string['reupload'] = 'Re-upload';
+$string['reuploaddocument'] = 'Re-upload document';
+$string['reuploaddesc'] = 'Your document was rejected. Please upload a corrected version.';
+$string['previousversion'] = 'Previous version';
+$string['newversion'] = 'New version';
+$string['superseded'] = 'Superseded';
+$string['documenthistory'] = 'Document history';
+$string['reuploadsuccess'] = 'Document re-uploaded successfully';
+$string['waitingforreupload'] = 'Waiting for new version';
+
+// Dashboard.
+$string['applicationpipeline'] = 'Application pipeline';
+$string['validationstats'] = 'Validation statistics';
+$string['recentapplications'] = 'Recent applications';
+$string['norecentapplications'] = 'No recent applications';
+$string['viewreports'] = 'View reports';
+$string['createvacancy'] = 'Create vacancy';
+
+// Reports.
+$string['generatereport'] = 'Generate report';
+$string['fromdate'] = 'From date';
+$string['todate'] = 'To date';
+$string['allreviewers'] = 'All reviewers';
+$string['totaldocuments'] = 'Total documents';
+$string['totalreviewed'] = 'Total reviewed';
+$string['rejectionrate'] = 'Rejection rate';
+$string['validationbytype'] = 'Validation by type';
+$string['commonrejections'] = 'Common rejections';
+$string['toprejectionreasons'] = 'Top rejection reasons';
+$string['timetovalidation'] = 'Time to validation';
+$string['timetoselection'] = 'Time to selection';
+
+// My reviews page.
+$string['sortby'] = 'Sort by';
+$string['datesubmitted'] = 'Date submitted';
+$string['closingdate'] = 'Closing date';
+$string['progress'] = 'Progress';
+$string['closingsoon'] = 'Closes in {$a} day(s)';
+
+// Rejection reasons.
+$string['rejectreason_ilegible'] = 'Illegible document';
+$string['rejectreason_vencido'] = 'Expired document';
+$string['rejectreason_incompleto'] = 'Incomplete document';
+$string['rejectreason_formato_incorrecto'] = 'Incorrect format';
+$string['rejectreason_datos_erroneos'] = 'Erroneous data';
+$string['rejectreason_no_coincide'] = 'Does not match applicant information';
+$string['rejectreason_sin_firma'] = 'Missing signature or seal';
+$string['rejectreason_otro'] = 'Other reason';
+
+// Export.
+$string['exportformat'] = 'Export format';
+$string['downloading'] = 'Downloading...';
+
+// Validation workflow.
+$string['validationworkflow'] = 'Validation workflow';
+$string['nextdocument'] = 'Next document';
+$string['previousdocument'] = 'Previous document';
+$string['validateandnext'] = 'Validate and next';
+$string['rejectandnext'] = 'Reject and next';
+$string['skipfornow'] = 'Skip for now';
+$string['allvalidated'] = 'All documents validated';
+$string['somerejected'] = 'Some documents rejected';
+$string['completereview'] = 'Complete review';
+$string['reviewcomplete'] = 'Review complete';
+
+// Filters.
+$string['filterbytype'] = 'Filter by type';
+$string['filterbyvacancy'] = 'Filter by vacancy';
+$string['filterbyreviewer'] = 'Filter by reviewer';
+$string['filterbydate'] = 'Filter by date';
+$string['applyfilters'] = 'Apply filters';
+
+// Statistics.
+$string['statistics'] = 'Statistics';
+$string['overallstats'] = 'Overall statistics';
+$string['mystats'] = 'My statistics';
+$string['todaystats'] = 'Today\'s statistics';
+$string['weekstats'] = 'This week\'s statistics';
+$string['monthstats'] = 'This month\'s statistics';
+$string['validationstoday'] = 'Validations today';
+$string['averagetime'] = 'Average time';
+$string['fastesttime'] = 'Fastest time';
+$string['slowesttime'] = 'Slowest time';
+
+// Alerts and warnings.
+$string['closingvacanciesalert'] = '{$a} vacancy(ies) closing in the next 3 days';
+$string['pendingvalidationsalert'] = 'You have {$a} documents pending validation';
+$string['overdueassignmentsalert'] = 'You have {$a} overdue assignments';
+$string['urgentattentionneeded'] = 'Urgent attention needed';
+$string['nourgentitems'] = 'No urgent items';
+
+// ISER Exemptions extended.
+$string['activeexemptions'] = 'Active exemptions';
+$string['expiredexemptions'] = 'Expired exemptions';
+$string['revokedexemptions'] = 'Revoked exemptions';
+$string['revoked'] = 'Revoked';
+$string['expired'] = 'Expired';
+$string['revoke'] = 'Revoke';
+$string['revokedby'] = 'Revoked by';
+$string['revokeexemption'] = 'Revoke exemption';
+$string['confirmrevokeexemption'] = 'Are you sure you want to revoke the exemption for {$a}?';
+$string['exemptionupdated'] = 'Exemption updated successfully';
+$string['exemptioncreated'] = 'Exemption created successfully';
+$string['exemptionrevoked'] = 'Exemption revoked successfully';
+$string['exemptionerror'] = 'Error processing exemption';
+$string['exemptionrevokeerror'] = 'Error revoking exemption';
+$string['noexemptions'] = 'No exemptions registered';
+$string['exemptionusagehistory'] = 'Exemption usage history';
+$string['noexemptionusage'] = 'This exemption has not been used in any application';
+$string['doctypes'] = 'document types';
+$string['searchuser'] = 'Search user...';
+
+// Interview scheduling.
+$string['scheduleinterview'] = 'Schedule interview';
+$string['schedulenewinterview'] = 'Schedule new interview';
+$string['interviewdetails'] = 'Interview details';
+$string['interviewdate'] = 'Interview date';
+$string['interviewtime'] = 'Interview time';
+$string['interviewlocation'] = 'Interview location';
+$string['interviewtype'] = 'Interview type';
+$string['interviewtype_presencial'] = 'In-person';
+$string['interviewtype_virtual'] = 'Virtual';
+$string['interviewtype_telefonica'] = 'Phone';
+$string['interviewlink'] = 'Meeting link';
+$string['interviewers'] = 'Interviewers';
+$string['selectinterviewers'] = 'Select interviewers';
+$string['interviewscheduled'] = 'Interview scheduled successfully';
+$string['interviewupdated'] = 'Interview updated successfully';
+$string['interviewcancelled'] = 'Interview cancelled';
+$string['confirmcancelinterview'] = 'Are you sure you want to cancel this interview?';
+$string['rescheduleinterview'] = 'Reschedule interview';
+$string['rescheduledby'] = 'Rescheduled by';
+$string['reschedulednote'] = 'Reschedule note';
+$string['cancelledby'] = 'Cancelled by';
+$string['cancelnote'] = 'Cancellation note';
+$string['scheduledinterviews'] = 'Scheduled interviews';
+$string['pastinterviews'] = 'Past interviews';
+$string['upcominginterviews'] = 'Upcoming interviews';
+$string['nointerviewsscheduled'] = 'No interviews scheduled';
+$string['recordresults'] = 'Record results';
+$string['interviewresults'] = 'Interview results';
+$string['attended'] = 'Attended';
+$string['noshow'] = 'No show';
+$string['interviewresult'] = 'Interview result';
+$string['result_favorable'] = 'Favorable';
+$string['result_no_favorable'] = 'Not favorable';
+$string['result_pendiente'] = 'Pending evaluation';
+$string['interviewscore'] = 'Interview score';
+$string['interviewobservations'] = 'Interview observations';
+$string['resultrecorded'] = 'Result recorded successfully';
+$string['completeinterview'] = 'Complete interview';
+$string['confirmnoshow'] = 'Are you sure you want to mark this applicant as no show?';
+
+// Selection committee.
+$string['selectioncommittee'] = 'Selection committee';
+$string['createcommittee'] = 'Create committee';
+$string['editcommittee'] = 'Edit committee';
+$string['committeedetails'] = 'Committee details';
+$string['committeename'] = 'Committee name';
+$string['committeemembers'] = 'Committee members';
+$string['addmember'] = 'Add member';
+$string['removemember'] = 'Remove member';
+$string['confirmremovemember'] = 'Are you sure you want to remove this member?';
+$string['role'] = 'Role';
+$string['role_chair'] = 'Chair';
+$string['role_secretary'] = 'Secretary';
+$string['role_evaluator'] = 'Evaluator';
+$string['role_observer'] = 'Observer';
+$string['rolechanged'] = 'Role changed successfully';
+$string['committeecreated'] = 'Committee created successfully';
+$string['committeeupdated'] = 'Committee updated successfully';
+$string['committeedeleted'] = 'Committee deleted';
+$string['nocommittees'] = 'No committees created';
+$string['committeechair'] = 'Committee chair';
+$string['quorum'] = 'Quorum';
+$string['quorummet'] = 'Quorum met';
+$string['quorumnotmet'] = 'Quorum not met';
+
+// Evaluation.
+$string['evaluateapplicant'] = 'Evaluate applicant';
+$string['evaluationcriteria'] = 'Evaluation criteria';
+$string['criterion'] = 'Criterion';
+$string['weight'] = 'Weight';
+$string['score'] = 'Score';
+$string['avgscore'] = 'Average score';
+$string['totalscore'] = 'Total score';
+$string['evaluationnotes'] = 'Evaluation notes';
+$string['submitevaluation'] = 'Submit evaluation';
+$string['evaluationsubmitted'] = 'Evaluation submitted successfully';
+$string['allevaluations'] = 'All evaluations';
+$string['pendingevaluations'] = 'Pending evaluations';
+$string['completedevaluations'] = 'Completed evaluations';
+$string['myevaluations'] = 'My evaluations';
+$string['viewevaluations'] = 'View evaluations';
+$string['applicantranking'] = 'Applicant ranking';
+$string['aggregateresults'] = 'Aggregate results';
+$string['totalevaluators'] = 'Total evaluators';
+$string['saveresults'] = 'Save results';
+
+// Voting.
+$string['submitvote'] = 'Submit vote';
+$string['vote_approve'] = 'Approve';
+$string['vote_reject'] = 'Reject';
+$string['vote_abstain'] = 'Abstain';
+$string['votes'] = 'Votes';
+$string['approvalvotes'] = 'Approval votes';
+$string['rejectionvotes'] = 'Rejection votes';
+$string['abstentions'] = 'Abstentions';
+$string['strong_approve'] = 'Strongly approve';
+
+// Decision.
+$string['makedecision'] = 'Make decision';
+$string['finaldecision'] = 'Final decision';
+$string['decisionreason'] = 'Decision justification';
+$string['confirmdecision'] = 'Are you sure about this decision? This action will notify the applicant.';
+$string['decisionrecorded'] = 'Decision recorded successfully';
+$string['applicantselected'] = 'Applicant selected';
+$string['applicantrejected'] = 'Applicant not selected';
+$string['committeeRecommendation'] = 'Committee recommendation';
+
+// Notifications.
+$string['notification_application_received_subject'] = 'Application confirmation - {VACANCY_TITLE}';
+$string['notification_application_received_body'] = '<p>Dear {USER_NAME},</p><p>We have received your application for the vacancy <strong>{VACANCY_TITLE}</strong> (Code: {VACANCY_CODE}).</p><p>You can check the status of your application at any time through the following link: <a href="{APPLICATION_URL}">{APPLICATION_URL}</a></p><p>Sincerely,<br>{SITE_NAME}</p>';
+$string['notification_under_review_subject'] = 'Your application is being reviewed - {VACANCY_TITLE}';
+$string['notification_under_review_body'] = '<p>Dear {USER_NAME},</p><p>Your application for the vacancy <strong>{VACANCY_TITLE}</strong> is now under review.</p><p>We will inform you when there are updates.</p><p>Sincerely,<br>{SITE_NAME}</p>';
+$string['notification_docs_validated_subject'] = 'Documents validated - {VACANCY_TITLE}';
+$string['notification_docs_validated_body'] = '<p>Dear {USER_NAME},</p><p>Your documents for the vacancy <strong>{VACANCY_TITLE}</strong> have been successfully validated.</p><p>Sincerely,<br>{SITE_NAME}</p>';
+$string['notification_docs_rejected_subject'] = 'Documents require correction - {VACANCY_TITLE}';
+$string['notification_docs_rejected_body'] = '<p>Dear {USER_NAME},</p><p>Some documents from your application for the vacancy <strong>{VACANCY_TITLE}</strong> require correction.</p><p>Please log in to see the details: <a href="{APPLICATION_URL}">{APPLICATION_URL}</a></p><p>Sincerely,<br>{SITE_NAME}</p>';
+$string['notification_interview_subject'] = 'Interview invitation - {VACANCY_TITLE}';
+$string['notification_interview_body'] = '<p>Dear {USER_NAME},</p><p>You have been invited to an interview for the vacancy <strong>{VACANCY_TITLE}</strong>.</p><p>{NOTES}</p><p>Sincerely,<br>{SITE_NAME}</p>';
+$string['notification_selected_subject'] = 'Congratulations! You have been selected - {VACANCY_TITLE}';
+$string['notification_selected_body'] = '<p>Dear {USER_NAME},</p><p>We are pleased to inform you that you have been selected for the vacancy <strong>{VACANCY_TITLE}</strong>.</p><p>You will soon receive information about the next steps in the hiring process.</p><p>Sincerely,<br>{SITE_NAME}</p>';
+$string['notification_rejected_subject'] = 'Selection process result - {VACANCY_TITLE}';
+$string['notification_rejected_body'] = '<p>Dear {USER_NAME},</p><p>Thank you for participating in the selection process for the vacancy <strong>{VACANCY_TITLE}</strong>.</p><p>On this occasion, we have selected another candidate whose profile better fits the specific requirements of the position.</p><p>We encourage you to continue participating in future calls.</p><p>Sincerely,<br>{SITE_NAME}</p>';
+$string['notification_closing_soon_subject'] = 'Vacancy closing soon - {VACANCY_TITLE}';
+$string['notification_closing_soon_body'] = '<p>Dear {USER_NAME},</p><p>The vacancy <strong>{VACANCY_TITLE}</strong> closes in {DAYS_LEFT} day(s).</p><p>If you are interested, you can apply before {CLOSE_DATE} at: <a href="{VACANCY_URL}">{VACANCY_URL}</a></p><p>Sincerely,<br>{SITE_NAME}</p>';
+
+// Tasks.
+$string['task:checkclosingvacancies'] = 'Check closing vacancies';
+
+// Import.
+$string['importfromcsv'] = 'Import from CSV';
+$string['csvfile'] = 'CSV file';
+$string['csvformat'] = 'CSV format';
+$string['requiredcolumns'] = 'Required columns';
+$string['samplecsv'] = 'Sample CSV';
+$string['importresults'] = 'Import results';
+$string['rowsprocessed'] = 'Rows processed';
+$string['rowsimported'] = 'Rows imported';
+$string['rowsfailed'] = 'Rows failed';
+$string['row'] = 'Row';
+$string['useridentifier'] = 'User identifier';
+$string['andmore'] = 'and {$a} more...';
+
+// Table headers additional.
+$string['row'] = 'Row';
+$string['result'] = 'Result';

@@ -1248,3 +1248,36 @@ $string['error:loginrequiredforinternal'] = 'Debe iniciar sesión para ver vacan
 $string['jobboard:viewpublicvacancies'] = 'Ver vacantes públicas';
 $string['jobboard:viewinternalvacancies'] = 'Ver vacantes internas';
 $string['jobboard:unlimitedapplications'] = 'Omitir límites de postulación';
+
+// ==========================================================================
+// Cadenas adicionales para revisión de documentos.
+// ==========================================================================
+
+$string['addnote'] = 'Agregar nota';
+$string['alldocumentsreviewed'] = 'Todos los documentos han sido revisados';
+$string['applicationof'] = 'Postulación {$a->current} de {$a->total}';
+$string['count'] = 'Cantidad';
+$string['datefrom'] = 'Desde';
+$string['dateto'] = 'Hasta';
+$string['documentlist'] = 'Lista de documentos';
+$string['documentpreview'] = 'Vista previa del documento';
+$string['documentref_help'] = 'Número de referencia o identificador del documento de respaldo';
+$string['documentstatus'] = 'Estado del documento';
+$string['error:invalidapplication'] = 'Postulación inválida';
+$string['error:invaliddocument'] = 'Documento inválido';
+$string['error:reviewfailed'] = 'Error al enviar la revisión';
+$string['name'] = 'Nombre';
+$string['nextapplication'] = 'Siguiente postulación';
+$string['nodocumentstoreview'] = 'No hay documentos para revisar';
+$string['pendingdocuments'] = 'Documentos pendientes';
+$string['previousapplication'] = 'Postulación anterior';
+$string['rejectall'] = 'Rechazar todos';
+$string['reviewedby'] = 'Revisado por';
+$string['reviewedon'] = 'Revisado el';
+$string['reviewhistory'] = 'Historial de revisión';
+$string['reviewnotes'] = 'Notas de revisión';
+$string['reviewsubmitted'] = 'Revisión enviada exitosamente';
+$string['selected'] = 'Seleccionado';
+$string['selectionrate'] = 'Tasa de selección';
+$string['submitreview'] = 'Enviar revisión';
+$string['validateall'] = 'Validar todos';
