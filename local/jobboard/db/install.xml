@@ -142,7 +142,8 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="documentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="isvalid" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1=valid, 0=rejected"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" COMMENT="Status: pending, approved, rejected"/>
+        <FIELD NAME="isvalid" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1=valid, 0=rejected (legacy)"/>
         <FIELD NAME="validatedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="User who validated"/>
         <FIELD NAME="rejectreason" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Reason code for rejection"/>
         <FIELD NAME="notes" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Validator notes"/>
@@ -157,6 +158,7 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="doc_unique" UNIQUE="true" FIELDS="documentid"/>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
         <INDEX NAME="isvalid_idx" UNIQUE="false" FIELDS="isvalid"/>
       </INDEXES>
     </TABLE>

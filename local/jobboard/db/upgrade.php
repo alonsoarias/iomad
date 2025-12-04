@@ -542,5 +542,37 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024120520, 'local', 'jobboard');
     }
 
+    // Phase 7.4 upgrades: Add status column to doc_validation table.
+    if ($oldversion < 2024120524) {
+
+        // Add status field to local_jobboard_doc_validation table.
+        $table = new xmldb_table('local_jobboard_doc_validation');
+
+        // status: 'pending', 'approved', or 'rejected'.
+        $field = new xmldb_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'pending', 'documentid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add index for status.
+        $index = new xmldb_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Migrate existing data: set status based on isvalid.
+        // isvalid = 1 -> status = 'approved'
+        // isvalid = 0 AND validatedby IS NOT NULL -> status = 'rejected'
+        // isvalid = 0 AND validatedby IS NULL -> status = 'pending'
+        $DB->execute("UPDATE {local_jobboard_doc_validation} SET status = 'approved' WHERE isvalid = 1");
+        $DB->execute("UPDATE {local_jobboard_doc_validation} SET status = 'rejected' WHERE isvalid = 0 AND validatedby IS NOT NULL");
+        $DB->execute("UPDATE {local_jobboard_doc_validation} SET status = 'pending' WHERE isvalid = 0 AND validatedby IS NULL");
+
+        // Purge caches.
+        purge_all_caches();
+
+        upgrade_plugin_savepoint(true, 2024120524, 'local', 'jobboard');
+    }
+
     return true;
 }

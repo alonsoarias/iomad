@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2024120523;  // Phase 7.3: Fixed lib.php include in all page scripts.
+$plugin->version = 2024120524;  // Phase 7.4: Added status column to doc_validation table.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.6.3-beta';
+$plugin->release = '1.6.4-beta';

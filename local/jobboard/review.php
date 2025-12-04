@@ -126,10 +126,15 @@ if (!$applicationid) {
     }
 
     // Get applications pending review.
+    // Document validation status is stored in local_jobboard_doc_validation.status column.
+    // A document is "pending" if its validation record has status = 'pending'.
     $sql = "SELECT a.*, v.title as vacancy_title, v.code as vacancy_code,
                    u.firstname, u.lastname, u.email,
-                   (SELECT COUNT(*) FROM {local_jobboard_document} d WHERE d.applicationid = a.id) as doccount,
-                   (SELECT COUNT(*) FROM {local_jobboard_document} d WHERE d.applicationid = a.id AND d.status = 'pending') as pendingcount
+                   (SELECT COUNT(*) FROM {local_jobboard_document} d WHERE d.applicationid = a.id AND d.issuperseded = 0) as doccount,
+                   (SELECT COUNT(*) FROM {local_jobboard_document} d
+                    JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
+                    WHERE d.applicationid = a.id AND d.issuperseded = 0 AND dv.status = 'pending'
+                   ) as pendingcount
             FROM {local_jobboard_application} a
             JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
             JOIN {user} u ON u.id = a.userid
