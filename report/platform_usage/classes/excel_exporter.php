@@ -342,9 +342,10 @@ class excel_exporter {
 
         $summary = $this->report->get_login_summary();
         $dataRows = [
-            [get_string('today', 'report_platform_usage'), $summary['logins_today'], $summary['unique_users_today']],
-            [get_string('lastweek', 'report_platform_usage'), $summary['logins_week'], $summary['unique_users_week']],
-            [get_string('lastmonth', 'report_platform_usage'), $summary['logins_month'], $summary['unique_users_month']],
+            [get_string('totallogins', 'report_platform_usage'), $summary['total_logins'], ''],
+            [get_string('uniqueusers', 'report_platform_usage'), $summary['unique_users'], ''],
+            [get_string('avgperday', 'report_platform_usage'), $summary['avg_logins_per_day'], ''],
+            [get_string('avgperuser', 'report_platform_usage'), $summary['avg_logins_per_user'], ''],
         ];
 
         $row++;
@@ -405,22 +406,17 @@ class excel_exporter {
 
         $completions = $this->report->get_course_completions_summary();
         $row++;
-        $sheet->setCellValue("A{$row}", get_string('completionstoday', 'report_platform_usage'));
-        $sheet->setCellValue("B{$row}", $completions['completions_today']);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
-        $row++;
-        $sheet->setCellValue("A{$row}", get_string('completionsweek', 'report_platform_usage'));
-        $sheet->setCellValue("B{$row}", $completions['completions_week']);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
-        $row++;
-        $sheet->setCellValue("A{$row}", get_string('completionsmonth', 'report_platform_usage'));
-        $sheet->setCellValue("B{$row}", $completions['completions_month']);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
-        $row++;
         $sheet->setCellValue("A{$row}", get_string('totalcompletions', 'report_platform_usage'));
         $sheet->setCellValue("B{$row}", $completions['total_completions']);
         $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['highlight']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('uniquecourses', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['unique_courses']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('avgperday', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['avg_per_day']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
 
         // Top 5 courses section.
         $row += 3;
@@ -853,20 +849,16 @@ class excel_exporter {
 
         $completions = $this->report->get_course_completions_summary();
         $row = 5;
-        $sheet->setCellValue("A{$row}", get_string('completionstoday', 'report_platform_usage'));
-        $sheet->setCellValue("B{$row}", $completions['completions_today']);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
-        $row++;
-        $sheet->setCellValue("A{$row}", get_string('completionsweek', 'report_platform_usage'));
-        $sheet->setCellValue("B{$row}", $completions['completions_week']);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
-        $row++;
-        $sheet->setCellValue("A{$row}", get_string('completionsmonth', 'report_platform_usage'));
-        $sheet->setCellValue("B{$row}", $completions['completions_month']);
-        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
-        $row++;
         $sheet->setCellValue("A{$row}", get_string('totalcompletions', 'report_platform_usage'));
         $sheet->setCellValue("B{$row}", $completions['total_completions']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('uniquecourses', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['unique_courses']);
+        $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
+        $row++;
+        $sheet->setCellValue("A{$row}", get_string('avgperday', 'report_platform_usage'));
+        $sheet->setCellValue("B{$row}", $completions['avg_per_day']);
         $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['data']);
         $sheet->getStyle("A{$row}:B{$row}")->applyFromArray($this->styles['highlight']);
 

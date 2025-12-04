@@ -275,37 +275,30 @@ class report {
      * Compute login/access statistics summary.
      * In platform context: tracks user logins.
      * In course context: tracks course accesses.
+     * Uses the configured date range ($datefrom to $dateto).
      *
      * @return array Statistics
      */
     protected function compute_login_summary(): array {
         global $DB;
 
-        $todaystart = strtotime('today midnight');
-        $weekstart = strtotime('-7 days midnight');
-        $monthstart = strtotime('-30 days midnight');
-
         $dbman = $DB->get_manager();
         if (!$dbman->table_exists('logstore_standard_log')) {
             return [
-                'logins_today' => 0,
-                'logins_week' => 0,
-                'logins_month' => 0,
-                'unique_users_today' => 0,
-                'unique_users_week' => 0,
-                'unique_users_month' => 0,
+                'total_logins' => 0,
+                'unique_users' => 0,
+                'avg_logins_per_day' => 0,
+                'avg_logins_per_user' => 0,
             ];
         }
 
         $userids = $this->get_company_userids();
         if (empty($userids)) {
             return [
-                'logins_today' => 0,
-                'logins_week' => 0,
-                'logins_month' => 0,
-                'unique_users_today' => 0,
-                'unique_users_week' => 0,
-                'unique_users_month' => 0,
+                'total_logins' => 0,
+                'unique_users' => 0,
+                'avg_logins_per_day' => 0,
+                'avg_logins_per_user' => 0,
             ];
         }
 
@@ -315,60 +308,54 @@ class report {
         if ($this->courseid > 0) {
             // Course context: track course_viewed events for this course.
             $sql = "SELECT
-                        SUM(CASE WHEN timecreated >= :today THEN 1 ELSE 0 END) as logins_today,
-                        COUNT(DISTINCT CASE WHEN timecreated >= :today2 THEN userid END) as unique_today,
-                        SUM(CASE WHEN timecreated >= :week THEN 1 ELSE 0 END) as logins_week,
-                        COUNT(DISTINCT CASE WHEN timecreated >= :week2 THEN userid END) as unique_week,
-                        SUM(CASE WHEN timecreated >= :month THEN 1 ELSE 0 END) as logins_month,
-                        COUNT(DISTINCT CASE WHEN timecreated >= :month2 THEN userid END) as unique_month
+                        COUNT(*) as total_logins,
+                        COUNT(DISTINCT userid) as unique_users
                     FROM {logstore_standard_log}
                     WHERE eventname = :event
                       AND courseid = :courseid
+                      AND timecreated >= :datefrom
+                      AND timecreated <= :dateto
                       AND userid $usersql";
 
             $params = array_merge([
                 'event' => '\\core\\event\\course_viewed',
                 'courseid' => $this->courseid,
-                'today' => $todaystart,
-                'today2' => $todaystart,
-                'week' => $weekstart,
-                'week2' => $weekstart,
-                'month' => $monthstart,
-                'month2' => $monthstart,
+                'datefrom' => $this->datefrom,
+                'dateto' => $this->dateto,
             ], $userparams);
         } else {
             // Platform context: track login events.
             $sql = "SELECT
-                        SUM(CASE WHEN timecreated >= :today THEN 1 ELSE 0 END) as logins_today,
-                        COUNT(DISTINCT CASE WHEN timecreated >= :today2 THEN userid END) as unique_today,
-                        SUM(CASE WHEN timecreated >= :week THEN 1 ELSE 0 END) as logins_week,
-                        COUNT(DISTINCT CASE WHEN timecreated >= :week2 THEN userid END) as unique_week,
-                        SUM(CASE WHEN timecreated >= :month THEN 1 ELSE 0 END) as logins_month,
-                        COUNT(DISTINCT CASE WHEN timecreated >= :month2 THEN userid END) as unique_month
+                        COUNT(*) as total_logins,
+                        COUNT(DISTINCT userid) as unique_users
                     FROM {logstore_standard_log}
                     WHERE eventname = :event
+                      AND timecreated >= :datefrom
+                      AND timecreated <= :dateto
                       AND userid $usersql";
 
             $params = array_merge([
                 'event' => '\\core\\event\\user_loggedin',
-                'today' => $todaystart,
-                'today2' => $todaystart,
-                'week' => $weekstart,
-                'week2' => $weekstart,
-                'month' => $monthstart,
-                'month2' => $monthstart,
+                'datefrom' => $this->datefrom,
+                'dateto' => $this->dateto,
             ], $userparams);
         }
 
         $result = $DB->get_record_sql($sql, $params);
 
+        $totalLogins = (int) ($result->total_logins ?? 0);
+        $uniqueUsers = (int) ($result->unique_users ?? 0);
+
+        // Calculate number of days in the range.
+        $days = max(1, ceil(($this->dateto - $this->datefrom) / DAYSECS));
+        $avgLoginsPerDay = round($totalLogins / $days, 1);
+        $avgLoginsPerUser = $uniqueUsers > 0 ? round($totalLogins / $uniqueUsers, 1) : 0;
+
         return [
-            'logins_today' => (int) ($result->logins_today ?? 0),
-            'logins_week' => (int) ($result->logins_week ?? 0),
-            'logins_month' => (int) ($result->logins_month ?? 0),
-            'unique_users_today' => (int) ($result->unique_today ?? 0),
-            'unique_users_week' => (int) ($result->unique_week ?? 0),
-            'unique_users_month' => (int) ($result->unique_month ?? 0),
+            'total_logins' => $totalLogins,
+            'unique_users' => $uniqueUsers,
+            'avg_logins_per_day' => $avgLoginsPerDay,
+            'avg_logins_per_user' => $avgLoginsPerUser,
         ];
     }
 
@@ -488,6 +475,7 @@ class report {
 
     /**
      * Compute user activity summary.
+     * Uses the configured date range - active users are those who accessed within the range.
      *
      * @return array
      */
@@ -501,13 +489,13 @@ class report {
             return ['total' => 0, 'active' => 0, 'inactive' => 0];
         }
 
-        $activeThreshold = strtotime('-30 days');
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
+        // Count users who accessed within the selected date range.
         $active = $DB->count_records_select(
             'user',
-            "id $usersql AND lastaccess >= :threshold",
-            array_merge($userparams, ['threshold' => $activeThreshold])
+            "id $usersql AND lastaccess >= :datefrom AND lastaccess <= :dateto",
+            array_merge($userparams, ['datefrom' => $this->datefrom, 'dateto' => $this->dateto])
         );
 
         return [
@@ -890,6 +878,7 @@ class report {
 
     /**
      * Compute course completions summary.
+     * Uses the configured date range ($datefrom to $dateto).
      *
      * @return array
      */
@@ -899,16 +888,11 @@ class report {
         $userids = $this->get_company_userids();
         if (empty($userids)) {
             return [
-                'completions_today' => 0,
-                'completions_week' => 0,
-                'completions_month' => 0,
                 'total_completions' => 0,
+                'unique_courses' => 0,
+                'avg_per_day' => 0,
             ];
         }
-
-        $todaystart = strtotime('today midnight');
-        $weekstart = strtotime('-7 days midnight');
-        $monthstart = strtotime('-30 days midnight');
 
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
@@ -921,28 +905,33 @@ class report {
         }
 
         $sql = "SELECT
-                    SUM(CASE WHEN timecompleted >= :today THEN 1 ELSE 0 END) as completions_today,
-                    SUM(CASE WHEN timecompleted >= :week THEN 1 ELSE 0 END) as completions_week,
-                    SUM(CASE WHEN timecompleted >= :month THEN 1 ELSE 0 END) as completions_month,
-                    COUNT(*) as total_completions
+                    COUNT(*) as total_completions,
+                    COUNT(DISTINCT course) as unique_courses
                 FROM {course_completions}
                 WHERE userid $usersql
                   AND timecompleted IS NOT NULL
+                  AND timecompleted >= :datefrom
+                  AND timecompleted <= :dateto
                   $coursefilter";
 
         $params = array_merge([
-            'today' => $todaystart,
-            'week' => $weekstart,
-            'month' => $monthstart,
+            'datefrom' => $this->datefrom,
+            'dateto' => $this->dateto,
         ], $userparams, $courseparams);
 
         $result = $DB->get_record_sql($sql, $params);
 
+        $totalCompletions = (int) ($result->total_completions ?? 0);
+        $uniqueCourses = (int) ($result->unique_courses ?? 0);
+
+        // Calculate average per day.
+        $days = max(1, ceil(($this->dateto - $this->datefrom) / DAYSECS));
+        $avgPerDay = round($totalCompletions / $days, 1);
+
         return [
-            'completions_today' => (int) ($result->completions_today ?? 0),
-            'completions_week' => (int) ($result->completions_week ?? 0),
-            'completions_month' => (int) ($result->completions_month ?? 0),
-            'total_completions' => (int) ($result->total_completions ?? 0),
+            'total_completions' => $totalCompletions,
+            'unique_courses' => $uniqueCourses,
+            'avg_per_day' => $avgPerDay,
         ];
     }
 
@@ -1039,6 +1028,7 @@ class report {
 
     /**
      * Compute logout statistics.
+     * Uses the configured date range ($datefrom to $dateto).
      *
      * @return array
      */
@@ -1047,41 +1037,44 @@ class report {
 
         $dbman = $DB->get_manager();
         if (!$dbman->table_exists('logstore_standard_log')) {
-            return ['logouts_today' => 0, 'logouts_week' => 0, 'logouts_month' => 0];
+            return ['total_logouts' => 0, 'unique_users' => 0, 'avg_per_day' => 0];
         }
-
-        $todaystart = strtotime('today midnight');
-        $weekstart = strtotime('-7 days midnight');
-        $monthstart = strtotime('-30 days midnight');
 
         $userids = $this->get_company_userids();
         if (empty($userids)) {
-            return ['logouts_today' => 0, 'logouts_week' => 0, 'logouts_month' => 0];
+            return ['total_logouts' => 0, 'unique_users' => 0, 'avg_per_day' => 0];
         }
 
         list($usersql, $userparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'user');
 
         $sql = "SELECT
-                    SUM(CASE WHEN timecreated >= :today THEN 1 ELSE 0 END) as logouts_today,
-                    SUM(CASE WHEN timecreated >= :week THEN 1 ELSE 0 END) as logouts_week,
-                    SUM(CASE WHEN timecreated >= :month THEN 1 ELSE 0 END) as logouts_month
+                    COUNT(*) as total_logouts,
+                    COUNT(DISTINCT userid) as unique_users
                 FROM {logstore_standard_log}
                 WHERE eventname = :event
+                  AND timecreated >= :datefrom
+                  AND timecreated <= :dateto
                   AND userid $usersql";
 
         $params = array_merge([
             'event' => '\\core\\event\\user_loggedout',
-            'today' => $todaystart,
-            'week' => $weekstart,
-            'month' => $monthstart,
+            'datefrom' => $this->datefrom,
+            'dateto' => $this->dateto,
         ], $userparams);
 
         $result = $DB->get_record_sql($sql, $params);
 
+        $totalLogouts = (int) ($result->total_logouts ?? 0);
+        $uniqueUsers = (int) ($result->unique_users ?? 0);
+
+        // Calculate average per day.
+        $days = max(1, ceil(($this->dateto - $this->datefrom) / DAYSECS));
+        $avgPerDay = round($totalLogouts / $days, 1);
+
         return [
-            'logouts_today' => (int) ($result->logouts_today ?? 0),
-            'logouts_week' => (int) ($result->logouts_week ?? 0),
-            'logouts_month' => (int) ($result->logouts_month ?? 0),
+            'total_logouts' => $totalLogouts,
+            'unique_users' => $uniqueUsers,
+            'avg_per_day' => $avgPerDay,
         ];
     }
 
@@ -1580,6 +1573,7 @@ class report {
 
     /**
      * Get course-specific statistics (for course context).
+     * Uses the configured date range ($datefrom to $dateto).
      *
      * @return array Course statistics
      */
@@ -1603,21 +1597,20 @@ class report {
         // Get enrolled users count.
         $enrolledcount = count_enrolled_users($context);
 
-        // Get active users (accessed in last 30 days).
-        $activeThreshold = strtotime('-30 days');
+        // Get active users (accessed within the selected date range).
         $enrolledusers = get_enrolled_users($context, '', 0, 'u.id, u.lastaccess', null, 0, 0, true);
         $activecount = 0;
         foreach ($enrolledusers as $user) {
-            if ($user->lastaccess >= $activeThreshold) {
+            if ($user->lastaccess >= $this->datefrom && $user->lastaccess <= $this->dateto) {
                 $activecount++;
             }
         }
 
-        // Get course completions.
+        // Get course completions within date range.
         $completions = $DB->count_records_select(
             'course_completions',
-            'course = :courseid AND timecompleted IS NOT NULL',
-            ['courseid' => $this->courseid]
+            'course = :courseid AND timecompleted IS NOT NULL AND timecompleted >= :datefrom AND timecompleted <= :dateto',
+            ['courseid' => $this->courseid, 'datefrom' => $this->datefrom, 'dateto' => $this->dateto]
         );
 
         // Get course accesses in period.
@@ -1720,6 +1713,7 @@ class report {
     /**
      * Get detailed user data for the course context.
      * Returns all enrolled users with their completion status, dedication time, and last access.
+     * Uses the configured date range ($datefrom to $dateto).
      *
      * @return array Array of user data with details
      */
@@ -1742,23 +1736,37 @@ class report {
             return [];
         }
 
-        // Get completions for this course.
-        $completions = $DB->get_records('course_completions', ['course' => $this->courseid], '', 'userid, timecompleted');
+        // Get completions for this course within date range.
+        $sql = "SELECT userid, timecompleted
+                FROM {course_completions}
+                WHERE course = :courseid
+                  AND timecompleted IS NOT NULL
+                  AND timecompleted >= :datefrom
+                  AND timecompleted <= :dateto";
+        $completions = $DB->get_records_sql($sql, [
+            'courseid' => $this->courseid,
+            'datefrom' => $this->datefrom,
+            'dateto' => $this->dateto
+        ]);
         $completionmap = [];
         foreach ($completions as $completion) {
             $completionmap[$completion->userid] = $completion->timecompleted;
         }
 
-        // Get last course access for each user.
+        // Get last course access for each user within date range.
         $sql = "SELECT userid, MAX(timecreated) as lastaccess
                 FROM {logstore_standard_log}
                 WHERE courseid = :courseid
                   AND eventname = :event
                   AND userid > 0
+                  AND timecreated >= :datefrom
+                  AND timecreated <= :dateto
                 GROUP BY userid";
         $lastaccesses = $DB->get_records_sql($sql, [
             'courseid' => $this->courseid,
-            'event' => '\\core\\event\\course_viewed'
+            'event' => '\\core\\event\\course_viewed',
+            'datefrom' => $this->datefrom,
+            'dateto' => $this->dateto
         ]);
         $accessmap = [];
         foreach ($lastaccesses as $access) {
@@ -1770,7 +1778,6 @@ class report {
         $sessionlimit = !empty($sessionlimit) ? (int)$sessionlimit : HOURSECS;
 
         $result = [];
-        $activeThreshold = strtotime('-30 days');
 
         foreach ($enrolledusers as $user) {
             // Calculate user dedication for this course.
@@ -1779,7 +1786,8 @@ class report {
             $lastCourseAccess = isset($accessmap[$user->id]) ? $accessmap[$user->id] : 0;
             $isCompleted = isset($completionmap[$user->id]) && $completionmap[$user->id];
             $completionDate = $isCompleted ? $completionmap[$user->id] : null;
-            $isActive = $user->lastaccess >= $activeThreshold;
+            // User is active if they accessed within the selected date range.
+            $isActive = $user->lastaccess >= $this->datefrom && $user->lastaccess <= $this->dateto;
 
             $result[] = [
                 'id' => $user->id,
@@ -1918,8 +1926,9 @@ class report {
 
     /**
      * Get course access history (daily accesses for the course).
+     * Uses the configured date range ($datefrom to $dateto).
      *
-     * @param int $days Number of days to retrieve
+     * @param int $days Ignored - kept for backwards compatibility
      * @return array Daily access data
      */
     public function get_course_access_history(int $days = 30): array {
@@ -1929,37 +1938,38 @@ class report {
             return ['labels' => [], 'accesses' => [], 'unique_users' => []];
         }
 
-        $startdate = strtotime("-{$days} days midnight");
-        $enddate = time();
-
         $sql = "SELECT DATE(FROM_UNIXTIME(timecreated)) as access_date,
                        COUNT(*) as access_count,
                        COUNT(DISTINCT userid) as unique_users
                 FROM {logstore_standard_log}
                 WHERE courseid = :courseid
                   AND eventname = :event
-                  AND timecreated >= :startdate
-                  AND timecreated <= :enddate
+                  AND timecreated >= :datefrom
+                  AND timecreated <= :dateto
                 GROUP BY DATE(FROM_UNIXTIME(timecreated))
                 ORDER BY access_date ASC";
 
         $records = $DB->get_records_sql($sql, [
             'courseid' => $this->courseid,
             'event' => '\\core\\event\\course_viewed',
-            'startdate' => $startdate,
-            'enddate' => $enddate
+            'datefrom' => $this->datefrom,
+            'dateto' => $this->dateto
         ]);
 
         $labels = [];
         $accesses = [];
         $uniqueUsers = [];
 
-        // Initialize all days.
-        for ($i = $days - 1; $i >= 0; $i--) {
-            $date = date('Y-m-d', strtotime("-{$i} days"));
-            $labels[] = date('d/m', strtotime($date));
+        // Initialize all days in the date range.
+        $currentDate = strtotime(date('Y-m-d', $this->datefrom));
+        $endDate = strtotime(date('Y-m-d', $this->dateto));
+
+        while ($currentDate <= $endDate) {
+            $date = date('Y-m-d', $currentDate);
+            $labels[] = date('d/m', $currentDate);
             $accesses[$date] = 0;
             $uniqueUsers[$date] = 0;
+            $currentDate = strtotime('+1 day', $currentDate);
         }
 
         // Fill in actual data.

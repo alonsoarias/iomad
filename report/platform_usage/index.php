@@ -387,7 +387,7 @@ if ($incoursecontext && !empty($courseStats)) {
 } else {
     // System Context: Show platform-wide metrics.
 
-    // Platform Access Summary card - combines logins.
+    // Platform Access Summary card - uses date range totals.
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-primary">';
     echo '<div class="card-header bg-primary text-white py-2">';
@@ -395,21 +395,21 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '</div>';
     echo '<div class="card-body">';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['loginstoday'] . '">' . get_string('today', 'report_platform_usage') . '</span>';
-    echo '<span class="badge badge-primary" id="logins-today">' . number_format($loginSummary['logins_today']) . '</span>';
+    echo '<span class="text-muted small">' . get_string('totallogins', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-primary" id="total-logins">' . number_format($loginSummary['total_logins']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['loginsweek'] . '">' . get_string('lastweek', 'report_platform_usage') . '</span>';
-    echo '<span class="badge badge-info" id="logins-week">' . number_format($loginSummary['logins_week']) . '</span>';
+    echo '<span class="text-muted small">' . get_string('uniqueusers', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-info" id="unique-users-login">' . number_format($loginSummary['unique_users']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center">';
-    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['loginsmonth'] . '">' . get_string('lastmonth', 'report_platform_usage') . '</span>';
-    echo '<span class="badge badge-secondary" id="logins-month">' . number_format($loginSummary['logins_month']) . '</span>';
+    echo '<span class="text-muted small">' . get_string('avgperday', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-secondary" id="avg-logins-day">' . number_format($loginSummary['avg_logins_per_day'], 1) . '</span>';
     echo '</div>';
     echo '<hr class="my-2">';
     echo '<div class="text-center">';
-    echo '<small class="text-muted" data-toggle="tooltip" title="' . $tooltips['uniqueusers'] . '">' . get_string('uniqueusersmonth', 'report_platform_usage') . ' <i class="fa fa-info-circle"></i></small>';
-    echo '<h4 class="text-primary mb-0" id="unique-month">' . number_format($loginSummary['unique_users_month']) . '</h4>';
+    echo '<small class="text-muted">' . get_string('avgperuser', 'report_platform_usage') . '</small>';
+    echo '<h4 class="text-primary mb-0" id="avg-logins-user">' . number_format($loginSummary['avg_logins_per_user'], 1) . '</h4>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
@@ -444,7 +444,7 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '</div>';
     echo '</div>';
 
-    // Course Completions Summary card.
+    // Course Completions Summary card - uses date range totals.
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-info">';
     echo '<div class="card-header bg-info text-white py-2">';
@@ -452,21 +452,23 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '</div>';
     echo '<div class="card-body">';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['completionstoday'] . '">' . get_string('today', 'report_platform_usage') . '</span>';
-    echo '<span class="badge badge-info" id="completions-today">' . number_format($completionsSummary['completions_today']) . '</span>';
+    echo '<span class="text-muted small">' . get_string('totalcompletions', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-info" id="total-completions">' . number_format($completionsSummary['total_completions']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['completionsweek'] . '">' . get_string('lastweek', 'report_platform_usage') . '</span>';
-    echo '<span class="badge badge-primary" id="completions-week">' . number_format($completionsSummary['completions_week']) . '</span>';
+    echo '<span class="text-muted small">' . get_string('uniquecourses', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-primary" id="unique-courses">' . number_format($completionsSummary['unique_courses']) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center">';
-    echo '<span class="text-muted small" data-toggle="tooltip" title="' . $tooltips['completionsmonth'] . '">' . get_string('lastmonth', 'report_platform_usage') . '</span>';
-    echo '<span class="badge badge-secondary" id="completions-month">' . number_format($completionsSummary['completions_month']) . '</span>';
+    echo '<span class="text-muted small">' . get_string('avgperday', 'report_platform_usage') . '</span>';
+    echo '<span class="badge badge-secondary" id="completions-avg">' . number_format($completionsSummary['avg_per_day'], 1) . '</span>';
     echo '</div>';
     echo '<hr class="my-2">';
+    // Calculate completion rate if user summary is available.
+    $completionRate = $userSummary['total'] > 0 ? round(($completionsSummary['total_completions'] / $userSummary['total']) * 100, 1) : 0;
     echo '<div class="text-center">';
-    echo '<small class="text-muted" data-toggle="tooltip" title="' . $tooltips['totalcompletions'] . '">' . get_string('totalcompletions', 'report_platform_usage') . ' <i class="fa fa-info-circle"></i></small>';
-    echo '<h4 class="text-info mb-0" id="total-completions">' . number_format($completionsSummary['total_completions']) . '</h4>';
+    echo '<small class="text-muted">' . get_string('completionrate', 'report_platform_usage') . '</small>';
+    echo '<h4 class="text-info mb-0" id="completion-rate">' . $completionRate . '%</h4>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
@@ -476,6 +478,7 @@ if ($incoursecontext && !empty($courseStats)) {
     $maxDailyUsers = !empty($dailyUsers['data']) ? max($dailyUsers['data']) : 0;
     $avgDailyUsers = !empty($dailyUsers['data']) ? round(array_sum($dailyUsers['data']) / count($dailyUsers['data'])) : 0;
     $todayUsers = !empty($dailyUsers['data']) ? end($dailyUsers['data']) : 0;
+    $totalDailyUsers = !empty($dailyUsers['data']) ? array_sum($dailyUsers['data']) : 0;
     echo '<div class="col-lg-3 col-md-6 mb-3">';
     echo '<div class="card h-100 border-warning">';
     echo '<div class="card-header bg-warning text-dark py-2">';
@@ -483,7 +486,7 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '</div>';
     echo '<div class="card-body">';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
-    echo '<span class="text-muted small">' . get_string('today', 'report_platform_usage') . '</span>';
+    echo '<span class="text-muted small">' . get_string('lastday', 'report_platform_usage') . '</span>';
     echo '<span class="badge badge-warning" id="daily-today">' . number_format($todayUsers) . '</span>';
     echo '</div>';
     echo '<div class="d-flex justify-content-between align-items-center mb-2">';
@@ -496,8 +499,8 @@ if ($incoursecontext && !empty($courseStats)) {
     echo '</div>';
     echo '<hr class="my-2">';
     echo '<div class="text-center">';
-    echo '<small class="text-muted">' . get_string('uniqueusersweek', 'report_platform_usage') . '</small>';
-    echo '<h4 class="text-warning mb-0" id="unique-week">' . number_format($loginSummary['unique_users_week']) . '</h4>';
+    echo '<small class="text-muted">' . get_string('totaldaysdata', 'report_platform_usage') . '</small>';
+    echo '<h4 class="text-warning mb-0" id="total-daily">' . count($dailyUsers['data']) . ' ' . get_string('days', 'report_platform_usage') . '</h4>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
@@ -1065,12 +1068,13 @@ function updateCharts(data) {
      * Update summary cards.
      */
     function updateSummaryCards(data) {
-        // Platform Access card.
-        updateElement('logins-today', numberFormat(data.login_summary.logins_today));
-        updateElement('logins-week', numberFormat(data.login_summary.logins_week));
-        updateElement('logins-month', numberFormat(data.login_summary.logins_month));
-        updateElement('unique-month', numberFormat(data.login_summary.unique_users_month));
-        updateElement('unique-week', numberFormat(data.login_summary.unique_users_week));
+        // Platform Access card - new structure.
+        if (data.login_summary) {
+            updateElement('total-logins', numberFormat(data.login_summary.total_logins || 0));
+            updateElement('unique-users-login', numberFormat(data.login_summary.unique_users || 0));
+            updateElement('avg-logins-day', (data.login_summary.avg_logins_per_day || 0).toFixed(1));
+            updateElement('avg-logins-user', (data.login_summary.avg_logins_per_user || 0).toFixed(1));
+        }
 
         // User Summary card.
         if (data.user_summary) {
@@ -1079,12 +1083,15 @@ function updateCharts(data) {
             updateElement('inactive-users', numberFormat(data.user_summary.inactive));
         }
 
-        // Completions card.
+        // Completions card - new structure.
         if (data.completions_summary) {
-            updateElement('completions-today', numberFormat(data.completions_summary.completions_today));
-            updateElement('completions-week', numberFormat(data.completions_summary.completions_week));
-            updateElement('completions-month', numberFormat(data.completions_summary.completions_month));
-            updateElement('total-completions', numberFormat(data.completions_summary.total_completions));
+            updateElement('total-completions', numberFormat(data.completions_summary.total_completions || 0));
+            updateElement('unique-courses', numberFormat(data.completions_summary.unique_courses || 0));
+            updateElement('completions-avg', (data.completions_summary.avg_per_day || 0).toFixed(1));
+            // Update completion rate.
+            var total = data.user_summary ? data.user_summary.total : 0;
+            var completionRate = total > 0 ? ((data.completions_summary.total_completions / total) * 100).toFixed(1) : '0';
+            updateElement('completion-rate', completionRate + '%');
         }
 
         // Daily Users card.

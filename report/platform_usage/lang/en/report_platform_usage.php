@@ -147,6 +147,13 @@ $string['average'] = 'Average';
 $string['maximum'] = 'Maximum';
 $string['period'] = 'Period';
 $string['accesscount'] = 'Accesses';
+$string['totallogins'] = 'Total logins';
+$string['avgperday'] = 'Avg. per day';
+$string['avgperuser'] = 'Avg. per user';
+$string['uniquecourses'] = 'Unique courses';
+$string['lastday'] = 'Last day';
+$string['totaldaysdata'] = 'Days in range';
+$string['days'] = 'days';
 
 // Course report.
 $string['coursereport'] = 'Course Usage Report';
