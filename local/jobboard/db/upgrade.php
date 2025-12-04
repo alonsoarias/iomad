@@ -259,5 +259,215 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024120403, 'local', 'jobboard');
     }
 
+    // Phase 4 upgrades: ISER Exemptions and Advanced Management.
+    if ($oldversion < 2024120501) {
+
+        // Create interview table.
+        $table = new xmldb_table('local_jobboard_interview');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('applicationid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('scheduledtime', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('duration', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '30');
+        $table->add_field('interviewtype', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'inperson');
+        $table->add_field('location', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'scheduled');
+        $table->add_field('notes', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('rating', XMLDB_TYPE_INTEGER, '1', null, null, null, null);
+        $table->add_field('feedback', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('recommendation', XMLDB_TYPE_CHAR, '20', null, null, null, null);
+        $table->add_field('completedby', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('timecompleted', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('createdby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('applicationid_fk', XMLDB_KEY_FOREIGN, ['applicationid'], 'local_jobboard_application', ['id']);
+
+        $table->add_index('scheduledtime_idx', XMLDB_INDEX_NOTUNIQUE, ['scheduledtime']);
+        $table->add_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2024120501, 'local', 'jobboard');
+    }
+
+    if ($oldversion < 2024120502) {
+
+        // Create interviewer (interview panel members) table.
+        $table = new xmldb_table('local_jobboard_interviewer');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('interviewid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('interviewid_fk', XMLDB_KEY_FOREIGN, ['interviewid'], 'local_jobboard_interview', ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+
+        $table->add_index('interview_user_idx', XMLDB_INDEX_UNIQUE, ['interviewid', 'userid']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2024120502, 'local', 'jobboard');
+    }
+
+    if ($oldversion < 2024120503) {
+
+        // Create selection committee table.
+        $table = new xmldb_table('local_jobboard_committee');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('vacancyid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'active');
+        $table->add_field('createdby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('vacancyid_fk', XMLDB_KEY_FOREIGN, ['vacancyid'], 'local_jobboard_vacancy', ['id']);
+
+        $table->add_index('vacancyid_idx', XMLDB_INDEX_UNIQUE, ['vacancyid']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2024120503, 'local', 'jobboard');
+    }
+
+    if ($oldversion < 2024120504) {
+
+        // Create committee member table.
+        $table = new xmldb_table('local_jobboard_committee_member');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('committeeid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('role', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'evaluator');
+        $table->add_field('addedby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('committeeid_fk', XMLDB_KEY_FOREIGN, ['committeeid'], 'local_jobboard_committee', ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+
+        $table->add_index('committee_user_idx', XMLDB_INDEX_UNIQUE, ['committeeid', 'userid']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2024120504, 'local', 'jobboard');
+    }
+
+    if ($oldversion < 2024120505) {
+
+        // Create evaluation table.
+        $table = new xmldb_table('local_jobboard_evaluation');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('committeeid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('applicationid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('score', XMLDB_TYPE_INTEGER, '3', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('vote', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('comments', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('criteriaratings', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('committeeid_fk', XMLDB_KEY_FOREIGN, ['committeeid'], 'local_jobboard_committee', ['id']);
+        $table->add_key('applicationid_fk', XMLDB_KEY_FOREIGN, ['applicationid'], 'local_jobboard_application', ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+
+        $table->add_index('evaluation_unique_idx', XMLDB_INDEX_UNIQUE, ['committeeid', 'applicationid', 'userid']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2024120505, 'local', 'jobboard');
+    }
+
+    if ($oldversion < 2024120506) {
+
+        // Create evaluation criteria table.
+        $table = new xmldb_table('local_jobboard_criteria');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('vacancyid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('weight', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '1');
+        $table->add_field('maxscore', XMLDB_TYPE_INTEGER, '3', null, XMLDB_NOTNULL, null, '10');
+        $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('vacancyid_fk', XMLDB_KEY_FOREIGN, ['vacancyid'], 'local_jobboard_vacancy', ['id']);
+
+        $table->add_index('vacancy_sort_idx', XMLDB_INDEX_NOTUNIQUE, ['vacancyid', 'sortorder']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2024120506, 'local', 'jobboard');
+    }
+
+    if ($oldversion < 2024120507) {
+
+        // Create decision table for final selection decisions.
+        $table = new xmldb_table('local_jobboard_decision');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('committeeid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('applicationid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('decision', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('reason', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('decidedby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('committeeid_fk', XMLDB_KEY_FOREIGN, ['committeeid'], 'local_jobboard_committee', ['id']);
+        $table->add_key('applicationid_fk', XMLDB_KEY_FOREIGN, ['applicationid'], 'local_jobboard_application', ['id']);
+
+        $table->add_index('applicationid_idx', XMLDB_INDEX_UNIQUE, ['applicationid']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2024120507, 'local', 'jobboard');
+    }
+
+    if ($oldversion < 2024120508) {
+
+        // Add modifiedby field to exemption table.
+        $table = new xmldb_table('local_jobboard_exemption');
+
+        $field = new xmldb_field('modifiedby', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'revokereason');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'modifiedby');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2024120508, 'local', 'jobboard');
+    }
+
     return true;
 }
