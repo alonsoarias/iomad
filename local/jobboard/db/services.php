@@ -17,7 +17,8 @@
 /**
  * Web service definitions for local_jobboard.
  *
- * This file defines all external web services according to Moodle standards.
+ * This file defines all external web services according to Moodle 4.1+ standards.
+ * All functions use the consolidated local_jobboard\external\api class.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -32,25 +33,32 @@ $functions = [
     // =========================================================================
 
     'local_jobboard_get_vacancies' => [
-        'classname' => 'local_jobboard_external',
+        'classname' => 'local_jobboard\external\api',
         'methodname' => 'get_vacancies',
-        'classpath' => 'local/jobboard/externallib.php',
         'description' => 'Get list of vacancies with optional filtering',
         'type' => 'read',
         'ajax' => true,
-        'loginrequired' => false, // Public vacancies accessible without login.
+        'loginrequired' => false,
         'capabilities' => 'local/jobboard:viewpublicvacancies',
     ],
 
     'local_jobboard_get_vacancy' => [
-        'classname' => 'local_jobboard_external',
+        'classname' => 'local_jobboard\external\api',
         'methodname' => 'get_vacancy',
-        'classpath' => 'local/jobboard/externallib.php',
         'description' => 'Get a single vacancy by ID with document requirements',
         'type' => 'read',
         'ajax' => true,
-        'loginrequired' => false, // Public vacancies accessible without login.
+        'loginrequired' => false,
         'capabilities' => 'local/jobboard:viewpublicvacancies',
+    ],
+
+    'local_jobboard_filter_vacancies' => [
+        'classname' => 'local_jobboard\external\api',
+        'methodname' => 'filter_vacancies',
+        'description' => 'Filter and search vacancies (AJAX)',
+        'type' => 'read',
+        'ajax' => true,
+        'loginrequired' => false,
     ],
 
     // =========================================================================
@@ -58,9 +66,8 @@ $functions = [
     // =========================================================================
 
     'local_jobboard_get_applications' => [
-        'classname' => 'local_jobboard_external',
+        'classname' => 'local_jobboard\external\api',
         'methodname' => 'get_applications',
-        'classpath' => 'local/jobboard/externallib.php',
         'description' => 'Get list of applications (own applications or all if manager)',
         'type' => 'read',
         'ajax' => true,
@@ -69,9 +76,8 @@ $functions = [
     ],
 
     'local_jobboard_get_application' => [
-        'classname' => 'local_jobboard_external',
+        'classname' => 'local_jobboard\external\api',
         'methodname' => 'get_application',
-        'classpath' => 'local/jobboard/externallib.php',
         'description' => 'Get a single application with documents and history',
         'type' => 'read',
         'ajax' => true,
@@ -80,23 +86,21 @@ $functions = [
     ],
 
     'local_jobboard_check_application_limit' => [
-        'classname' => 'local_jobboard_external',
+        'classname' => 'local_jobboard\external\api',
         'methodname' => 'check_application_limit',
-        'classpath' => 'local/jobboard/externallib.php',
         'description' => 'Check if user can apply (based on application limits)',
         'type' => 'read',
         'ajax' => true,
-        'loginrequired' => false, // Will return appropriate message if not logged in.
+        'loginrequired' => false,
     ],
 
     // =========================================================================
-    // AJAX TOKEN MANAGEMENT FUNCTIONS
+    // TOKEN MANAGEMENT FUNCTIONS
     // =========================================================================
 
     'local_jobboard_revoke_token' => [
-        'classname' => 'local_jobboard\external\api_functions',
+        'classname' => 'local_jobboard\external\api',
         'methodname' => 'revoke_token',
-        'classpath' => 'local/jobboard/classes/external/api_functions.php',
         'description' => 'Revoke an API token',
         'type' => 'write',
         'ajax' => true,
@@ -105,9 +109,8 @@ $functions = [
     ],
 
     'local_jobboard_enable_token' => [
-        'classname' => 'local_jobboard\external\api_functions',
+        'classname' => 'local_jobboard\external\api',
         'methodname' => 'enable_token',
-        'classpath' => 'local/jobboard/classes/external/api_functions.php',
         'description' => 'Enable an API token',
         'type' => 'write',
         'ajax' => true,
@@ -116,28 +119,13 @@ $functions = [
     ],
 
     'local_jobboard_delete_token' => [
-        'classname' => 'local_jobboard\external\api_functions',
+        'classname' => 'local_jobboard\external\api',
         'methodname' => 'delete_token',
-        'classpath' => 'local/jobboard/classes/external/api_functions.php',
         'description' => 'Delete an API token',
         'type' => 'write',
         'ajax' => true,
         'loginrequired' => true,
         'capabilities' => 'local/jobboard:manageapitokens',
-    ],
-
-    // =========================================================================
-    // AJAX FILTER FUNCTIONS
-    // =========================================================================
-
-    'local_jobboard_filter_vacancies' => [
-        'classname' => 'local_jobboard\external\api_functions',
-        'methodname' => 'filter_vacancies',
-        'classpath' => 'local/jobboard/classes/external/api_functions.php',
-        'description' => 'Filter and search vacancies (AJAX)',
-        'type' => 'read',
-        'ajax' => true,
-        'loginrequired' => false, // Public vacancies accessible without login.
     ],
 ];
 
@@ -145,9 +133,11 @@ $functions = [
 $services = [
     'Job Board Web Services' => [
         'functions' => [
-            // Main API functions.
+            // Vacancy functions.
             'local_jobboard_get_vacancies',
             'local_jobboard_get_vacancy',
+            'local_jobboard_filter_vacancies',
+            // Application functions.
             'local_jobboard_get_applications',
             'local_jobboard_get_application',
             'local_jobboard_check_application_limit',
@@ -155,8 +145,6 @@ $services = [
             'local_jobboard_revoke_token',
             'local_jobboard_enable_token',
             'local_jobboard_delete_token',
-            // AJAX functions.
-            'local_jobboard_filter_vacancies',
         ],
         'restrictedusers' => 0,
         'enabled' => 1,
