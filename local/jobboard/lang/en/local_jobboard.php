@@ -753,3 +753,25 @@ $string['declarationaccept'] = 'I accept and confirm this declaration';
 $string['declarationrequired'] = 'You must accept the declaration to proceed';
 $string['signaturetoooshort'] = 'Digital signature is too short. Please enter your full name.';
 $string['digitalsignature_help'] = 'Enter your full legal name as it appears on your official documents. This serves as your digital signature for this application.';
+
+// ==========================================================================
+// Additional strings for applications.php.
+// ==========================================================================
+
+// Application status strings (used with status_ prefix).
+$string['status_submitted'] = 'Submitted';
+$string['status_under_review'] = 'Under Review';
+$string['status_docs_validated'] = 'Documents Validated';
+$string['status_docs_rejected'] = 'Documents Rejected';
+$string['status_interview'] = 'Interview Scheduled';
+$string['status_selected'] = 'Selected';
+$string['status_rejected'] = 'Not Selected';
+$string['status_withdrawn'] = 'Withdrawn';
+
+// Applications page strings.
+$string['filterbystatus'] = 'Filter by status';
+$string['noapplicationsfound'] = 'No applications found';
+$string['browsevacancies'] = 'Browse Vacancies';
+$string['vacancy'] = 'Vacancy';
+$string['dateapplied'] = 'Date Applied';
+$string['unknownvacancy'] = 'Unknown Vacancy';
