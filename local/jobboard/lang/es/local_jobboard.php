@@ -985,3 +985,199 @@ $string['confirmdecision'] = '¿Está seguro de esta decisión? Esta acción not
 $string['decisionrecorded'] = 'Decisión registrada exitosamente';
 $string['applicantselected'] = 'Postulante seleccionado';
 $string['applicantrejected'] = 'Postulante no seleccionado';
+
+// Phase 5: Gestión de Tokens API.
+$string['managetokens'] = 'Gestionar Tokens API';
+$string['api:manageapitokens'] = 'Gestionar Tokens API';
+$string['api:token:create'] = 'Crear Token';
+$string['api:token:created'] = 'Token creado exitosamente. Asegúrese de copiar el token ahora ya que no se mostrará de nuevo.';
+$string['api:token:description'] = 'Descripción del token';
+$string['api:token:description_help'] = 'Un nombre descriptivo para identificar este token y su propósito';
+$string['api:token:validity'] = 'Período de Validez';
+$string['api:token:validfrom'] = 'Válido desde';
+$string['api:token:validfrom_help'] = 'La fecha desde la cual el token será válido. Dejar vacío para validez inmediata.';
+$string['api:token:validuntil'] = 'Válido hasta';
+$string['api:token:validuntil_help'] = 'La fecha hasta la cual el token permanece válido. Dejar vacío para sin expiración.';
+$string['api:token:ipwhitelist'] = 'Lista Blanca de IP';
+$string['api:token:ipwhitelist_help'] = 'Ingrese una dirección IP o rango CIDR por línea. Dejar vacío para permitir todas las IPs. Ejemplo: 192.168.1.0/24';
+$string['api:token:revoke'] = 'Revocar Token';
+$string['api:token:delete'] = 'Eliminar Token';
+$string['api:token:enable'] = 'Habilitar Token';
+$string['api:token:disable'] = 'Deshabilitar Token';
+$string['api:token:confirmrevoke'] = '¿Está seguro de que desea revocar este token API? Esta acción deshabilitará el token inmediatamente.';
+$string['api:token:confirmdelete'] = '¿Está seguro de que desea eliminar permanentemente este token API? Esta acción no se puede deshacer.';
+$string['api:token:revoked'] = 'El token ha sido revocado';
+$string['api:token:deleted'] = 'El token ha sido eliminado';
+$string['api:token:notfound'] = 'Token no encontrado';
+$string['api:token:lastused'] = 'Último uso';
+$string['api:token:never'] = 'Nunca';
+$string['api:token:copytoclipboard'] = 'Copiar al portapapeles';
+$string['api:token:copied'] = 'Token copiado al portapapeles';
+$string['api:token:yourtoken'] = 'Su nuevo token API';
+$string['api:token:warning'] = 'Advertencia: Esta es la única vez que se mostrará este token. Asegúrese de copiarlo ahora.';
+$string['api:token:notoken'] = 'Aún no se han creado tokens API.';
+
+// Estados de Token API.
+$string['api:token:status:active'] = 'Activo';
+$string['api:token:status:disabled'] = 'Deshabilitado';
+$string['api:token:status:expired'] = 'Expirado';
+$string['api:token:status:not_yet_valid'] = 'Aún no válido';
+
+// Permisos API.
+$string['permissions'] = 'Permisos';
+$string['api:permission:view_vacancies'] = 'Ver listado de vacantes';
+$string['api:permission:view_vacancy_details'] = 'Ver detalles de vacante';
+$string['api:permission:create_application'] = 'Crear postulaciones';
+$string['api:permission:view_applications'] = 'Ver postulaciones';
+$string['api:permission:view_application_details'] = 'Ver detalles de postulación';
+$string['api:permission:upload_documents'] = 'Subir documentos';
+$string['api:permission:view_documents'] = 'Ver documentos';
+
+// Errores API.
+$string['api:error:unauthorized'] = 'No autorizado: Token API inválido o faltante';
+$string['api:error:forbidden'] = 'Prohibido: No tiene permiso para acceder a este recurso';
+$string['api:error:notfound'] = 'No encontrado: El recurso solicitado no existe';
+$string['api:error:ratelimit'] = 'Límite de tasa excedido. Por favor intente más tarde.';
+$string['api:error:invalidrequest'] = 'Solicitud inválida';
+$string['api:error:ipnotallowed'] = 'Acceso denegado: Su dirección IP no está en la lista blanca';
+$string['api:error:tokendisabled'] = 'El token está deshabilitado';
+$string['api:error:tokenexpired'] = 'El token ha expirado';
+$string['api:error:tokennotyetvalid'] = 'El token aún no es válido';
+
+// Encabezados de respuesta API.
+$string['api:ratelimit:limit'] = 'Límite de tasa';
+$string['api:ratelimit:remaining'] = 'Solicitudes restantes';
+$string['api:ratelimit:reset'] = 'Tiempo de reinicio';
+
+// Encriptación.
+$string['encryption:enabled'] = 'La encriptación de archivos está habilitada';
+$string['encryption:disabled'] = 'La encriptación de archivos está deshabilitada';
+$string['encryption:keygenerated'] = 'Clave de encriptación generada exitosamente';
+$string['encryption:keyimported'] = 'Clave de encriptación importada exitosamente';
+$string['encryption:invalidkey'] = 'Formato de clave de encriptación inválido';
+$string['encryption:error'] = 'Ocurrió un error de encriptación/desencriptación';
+$string['encryption:nokey'] = 'Clave de encriptación no configurada';
+$string['encryption:settings'] = 'Configuración de Encriptación';
+$string['encryption:generatekey'] = 'Generar Nueva Clave';
+$string['encryption:importkey'] = 'Importar Clave';
+$string['encryption:exportkey'] = 'Exportar Clave';
+$string['encryption:warning'] = 'Advertencia: Cambiar la clave de encriptación hará ilegibles los archivos previamente encriptados.';
+
+// Seguridad.
+$string['security'] = 'Seguridad';
+$string['security:settings'] = 'Configuración de Seguridad';
+$string['security:apiconfig'] = 'Configuración de API';
+$string['security:ratelimiting'] = 'Límite de Tasa';
+
+// Exportación de Datos (GDPR/Habeas Data).
+$string['dataexport'] = 'Exportar Mis Datos';
+$string['dataexport:personal'] = 'Exportación de Datos Personales';
+$string['dataexport:title'] = 'Informe de Exportación de Datos Personales';
+$string['dataexport:userinfo'] = 'Información del Usuario';
+$string['dataexport:exportdate'] = 'Fecha de exportación';
+$string['dataexport:consent'] = 'Registros de Consentimiento';
+$string['dataexport:json'] = 'Exportar como JSON';
+$string['dataexport:pdf'] = 'Exportar como PDF';
+$string['dataexport:requested'] = 'Su exportación de datos ha sido solicitada';
+$string['dataexport:ready'] = 'Su exportación de datos está lista para descargar';
+$string['dataexport:description'] = 'Descargue una copia de sus datos personales almacenados en el sistema de Bolsa de Empleo';
+
+// Eliminación de Datos.
+$string['datadeletion'] = 'Eliminar Mis Datos';
+$string['datadeletion:request'] = 'Solicitar Eliminación de Datos';
+$string['datadeletion:confirm'] = '¿Está seguro de que desea solicitar la eliminación de sus datos personales? Esta acción no se puede deshacer.';
+$string['datadeletion:requested'] = 'Su solicitud de eliminación de datos ha sido enviada';
+$string['datadeletion:completed'] = 'Sus datos personales han sido eliminados';
+$string['datadeletion:pending'] = 'Eliminación de datos pendiente';
+
+// Proveedor de privacidad extendido.
+$string['privacy:metadata:local_jobboard_application'] = 'Información sobre postulaciones de empleo enviadas por el usuario';
+$string['privacy:metadata:local_jobboard_application:userid'] = 'El ID del usuario que envió la postulación';
+$string['privacy:metadata:local_jobboard_application:vacancyid'] = 'El ID de la vacante a la que se postuló';
+$string['privacy:metadata:local_jobboard_application:status'] = 'El estado actual de la postulación';
+$string['privacy:metadata:local_jobboard_application:coverletter'] = 'Texto de carta de presentación enviado con la postulación';
+$string['privacy:metadata:local_jobboard_application:digitalsignature'] = 'Firma digital proporcionada por el postulante';
+$string['privacy:metadata:local_jobboard_application:consentgiven'] = 'Si se otorgó consentimiento para el procesamiento de datos';
+$string['privacy:metadata:local_jobboard_application:consenttimestamp'] = 'Cuándo se otorgó el consentimiento';
+$string['privacy:metadata:local_jobboard_application:consentip'] = 'Dirección IP desde la cual se otorgó el consentimiento';
+$string['privacy:metadata:local_jobboard_application:timecreated'] = 'Cuándo se creó la postulación';
+
+$string['privacy:metadata:local_jobboard_document'] = 'Documentos subidos por usuarios como parte de sus postulaciones';
+$string['privacy:metadata:local_jobboard_document:userid'] = 'El ID del usuario que subió el documento';
+$string['privacy:metadata:local_jobboard_document:documenttype'] = 'El tipo de documento subido';
+$string['privacy:metadata:local_jobboard_document:filename'] = 'El nombre del archivo subido';
+$string['privacy:metadata:local_jobboard_document:timecreated'] = 'Cuándo se subió el documento';
+
+$string['privacy:metadata:local_jobboard_exemption'] = 'Registros de exención ISER para usuarios';
+$string['privacy:metadata:local_jobboard_exemption:userid'] = 'El ID del usuario con la exención';
+$string['privacy:metadata:local_jobboard_exemption:exemptiontype'] = 'El tipo de exención otorgada';
+$string['privacy:metadata:local_jobboard_exemption:validfrom'] = 'Cuándo la exención se vuelve válida';
+$string['privacy:metadata:local_jobboard_exemption:validuntil'] = 'Cuándo expira la exención';
+
+$string['privacy:metadata:local_jobboard_audit'] = 'Registro de auditoría de acciones del usuario';
+$string['privacy:metadata:local_jobboard_audit:userid'] = 'El ID del usuario que realizó la acción';
+$string['privacy:metadata:local_jobboard_audit:action'] = 'La acción realizada';
+$string['privacy:metadata:local_jobboard_audit:ipaddress'] = 'La dirección IP desde la cual se realizó la acción';
+$string['privacy:metadata:local_jobboard_audit:timecreated'] = 'Cuándo se realizó la acción';
+
+$string['privacy:metadata:local_jobboard_api_token'] = 'Tokens API creados por usuarios';
+$string['privacy:metadata:local_jobboard_api_token:userid'] = 'El ID del usuario propietario del token';
+$string['privacy:metadata:local_jobboard_api_token:description'] = 'Descripción del propósito del token';
+$string['privacy:metadata:local_jobboard_api_token:timecreated'] = 'Cuándo se creó el token';
+
+$string['privacy:metadata:local_jobboard_notification'] = 'Registros de notificaciones para usuarios';
+$string['privacy:metadata:local_jobboard_notification:userid'] = 'El ID del usuario que recibió la notificación';
+$string['privacy:metadata:local_jobboard_notification:templatecode'] = 'La plantilla de notificación utilizada';
+$string['privacy:metadata:local_jobboard_notification:timecreated'] = 'Cuándo se creó la notificación';
+
+// Errores de validación adicionales.
+$string['error:usernotfound'] = 'Usuario no encontrado';
+$string['error:nopermission'] = 'Debe seleccionar al menos un permiso';
+$string['error:invalidip'] = 'Dirección IP o notación CIDR inválida: {$a}';
+$string['error:invalidtoken'] = 'Token inválido o expirado';
+$string['error:tokenlimit'] = 'Número máximo de tokens alcanzado';
+
+// Tarea de limpieza.
+$string['task:cleanupolddata'] = 'Limpiar datos antiguos de bolsa de empleo';
+$string['cleanup:applicationsdeleted'] = '{$a} postulaciones antiguas eliminadas';
+$string['cleanup:tokensdeleted'] = '{$a} tokens expirados eliminados';
+$string['cleanup:auditlogsdeleted'] = '{$a} registros de auditoría antiguos eliminados';
+$string['cleanup:notificationsdeleted'] = '{$a} notificaciones antiguas eliminadas';
+
+// Retención de datos.
+$string['dataretention'] = 'Retención de Datos';
+$string['dataretention:days'] = 'Período de retención (días)';
+$string['dataretention:days_help'] = 'Número de días para retener postulaciones rechazadas o retiradas antes de la eliminación automática. Establecer en 0 para deshabilitar la eliminación automática.';
+$string['dataretention:policy'] = 'Política de retención de datos';
+$string['dataretention:auditdays'] = 'Retención de registro de auditoría (días)';
+$string['dataretention:notificationdays'] = 'Retención de notificaciones (días)';
+
+// Fechas de validez.
+$string['validfrom'] = 'Válido desde';
+$string['validuntil'] = 'Válido hasta';
+$string['validfrom_help'] = 'La fecha desde la cual este elemento es válido';
+$string['validuntil_help'] = 'La fecha hasta la cual este elemento permanece válido';
+
+// Documentos de usuario/postulación.
+$string['applications'] = 'Postulaciones';
+$string['documents'] = 'Documentos';
+$string['nodocumentsrequired'] = 'No se requieren documentos para esta vacante';
+$string['alldocumentssubmitted'] = 'Todos los documentos requeridos han sido enviados';
+$string['documentsmissing'] = 'Faltan algunos documentos requeridos';
+
+// Formulario de postulación.
+$string['applyfor'] = 'Postularse a: {$a}';
+$string['coverletter'] = 'Carta de Presentación';
+$string['coverletter_help'] = 'Carta de presentación opcional para acompañar su postulación';
+$string['submitapplication'] = 'Enviar Postulación';
+$string['applicationpreview'] = 'Vista Previa de Postulación';
+
+// Encabezados de tabla de tokens.
+$string['th:token'] = 'Token';
+$string['th:description'] = 'Descripción';
+$string['th:user'] = 'Usuario';
+$string['th:permissions'] = 'Permisos';
+$string['th:status'] = 'Estado';
+$string['th:lastused'] = 'Último Uso';
+$string['th:created'] = 'Creado';
+$string['th:actions'] = 'Acciones';
