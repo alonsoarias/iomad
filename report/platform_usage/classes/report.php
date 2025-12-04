@@ -374,25 +374,25 @@ class report {
 
     /**
      * Get daily login data for chart (cached).
+     * Uses the date range set in constructor ($datefrom to $dateto).
      *
-     * @param int $days Number of days to show
+     * @param int $days Ignored - kept for backwards compatibility
      * @return array [labels, logins, unique_users]
      */
     public function get_daily_logins(int $days = 30): array {
-        return $this->get_cached_data("daily_logins_{$days}", function() use ($days) {
-            return $this->compute_daily_logins($days);
+        return $this->get_cached_data("daily_logins", function() {
+            return $this->compute_daily_logins();
         });
     }
 
     /**
-     * Compute daily login/access data.
+     * Compute daily login/access data using the configured date range.
      * In platform context: tracks user logins.
      * In course context: tracks course accesses.
      *
-     * @param int $days Number of days
      * @return array
      */
-    protected function compute_daily_logins(int $days): array {
+    protected function compute_daily_logins(): array {
         global $DB;
 
         $dbman = $DB->get_manager();
@@ -400,7 +400,6 @@ class report {
             return ['labels' => [], 'logins' => [], 'unique_users' => []];
         }
 
-        $starttime = strtotime("-{$days} days midnight");
         list($usersql, $userparams) = $this->get_user_sql('userid');
 
         // Different event based on context.
@@ -412,7 +411,8 @@ class report {
                     FROM {logstore_standard_log}
                     WHERE eventname = :event
                       AND courseid = :courseid
-                      AND timecreated >= :starttime
+                      AND timecreated >= :datefrom
+                      AND timecreated <= :dateto
                       AND $usersql
                     GROUP BY DATE(FROM_UNIXTIME(timecreated))
                     ORDER BY login_date ASC";
@@ -420,7 +420,8 @@ class report {
             $params = array_merge([
                 'event' => '\\core\\event\\course_viewed',
                 'courseid' => $this->courseid,
-                'starttime' => $starttime,
+                'datefrom' => $this->datefrom,
+                'dateto' => $this->dateto,
             ], $userparams);
         } else {
             // Platform context: track login events.
@@ -429,28 +430,35 @@ class report {
                            COUNT(DISTINCT userid) as unique_users
                     FROM {logstore_standard_log}
                     WHERE eventname = :event
-                      AND timecreated >= :starttime
+                      AND timecreated >= :datefrom
+                      AND timecreated <= :dateto
                       AND $usersql
                     GROUP BY DATE(FROM_UNIXTIME(timecreated))
                     ORDER BY login_date ASC";
 
             $params = array_merge([
                 'event' => '\\core\\event\\user_loggedin',
-                'starttime' => $starttime,
+                'datefrom' => $this->datefrom,
+                'dateto' => $this->dateto,
             ], $userparams);
         }
 
         $records = $DB->get_records_sql($sql, $params);
 
+        // Generate labels for each day in the date range.
         $labels = [];
         $logins = [];
         $uniqueusers = [];
 
-        for ($i = $days; $i >= 0; $i--) {
-            $date = date('Y-m-d', strtotime("-{$i} days"));
-            $labels[] = date('d M', strtotime($date));
+        $currentDate = strtotime(date('Y-m-d', $this->datefrom));
+        $endDate = strtotime(date('Y-m-d', $this->dateto));
+
+        while ($currentDate <= $endDate) {
+            $date = date('Y-m-d', $currentDate);
+            $labels[] = date('d M', $currentDate);
             $logins[$date] = 0;
             $uniqueusers[$date] = 0;
+            $currentDate = strtotime('+1 day', $currentDate);
         }
 
         foreach ($records as $record) {
@@ -564,23 +572,23 @@ class report {
 
     /**
      * Get course access trends (cached).
+     * Uses the date range set in constructor ($datefrom to $dateto).
      *
-     * @param int $days Number of days
+     * @param int $days Ignored - kept for backwards compatibility
      * @return array [labels, data]
      */
     public function get_course_access_trends(int $days = 30): array {
-        return $this->get_cached_data("course_trends_{$days}", function() use ($days) {
-            return $this->compute_course_access_trends($days);
+        return $this->get_cached_data("course_trends", function() {
+            return $this->compute_course_access_trends();
         });
     }
 
     /**
-     * Compute course access trends.
+     * Compute course access trends using the configured date range.
      *
-     * @param int $days
      * @return array
      */
-    protected function compute_course_access_trends(int $days): array {
+    protected function compute_course_access_trends(): array {
         global $DB;
 
         $dbman = $DB->get_manager();
@@ -588,7 +596,6 @@ class report {
             return ['labels' => [], 'data' => []];
         }
 
-        $starttime = strtotime("-{$days} days midnight");
         list($usersql, $userparams) = $this->get_user_sql('userid');
         list($coursesql, $courseparams) = $this->get_course_sql('courseid');
 
@@ -596,7 +603,8 @@ class report {
                        COUNT(*) as access_count
                 FROM {logstore_standard_log}
                 WHERE eventname = :event
-                  AND timecreated >= :starttime
+                  AND timecreated >= :datefrom
+                  AND timecreated <= :dateto
                   AND courseid IS NOT NULL
                   AND courseid > 1
                   AND $usersql
@@ -606,18 +614,24 @@ class report {
 
         $params = array_merge([
             'event' => '\\core\\event\\course_viewed',
-            'starttime' => $starttime,
+            'datefrom' => $this->datefrom,
+            'dateto' => $this->dateto,
         ], $userparams, $courseparams);
 
         $records = $DB->get_records_sql($sql, $params);
 
+        // Generate labels for each day in the date range.
         $labels = [];
         $data = [];
 
-        for ($i = $days; $i >= 0; $i--) {
-            $date = date('Y-m-d', strtotime("-{$i} days"));
-            $labels[] = date('d M', strtotime($date));
+        $currentDate = strtotime(date('Y-m-d', $this->datefrom));
+        $endDate = strtotime(date('Y-m-d', $this->dateto));
+
+        while ($currentDate <= $endDate) {
+            $date = date('Y-m-d', $currentDate);
+            $labels[] = date('d M', $currentDate);
             $data[$date] = 0;
+            $currentDate = strtotime('+1 day', $currentDate);
         }
 
         foreach ($records as $record) {
@@ -934,26 +948,25 @@ class report {
 
     /**
      * Get completion trends over time (cached).
+     * Uses the date range set in constructor ($datefrom to $dateto).
      *
-     * @param int $days Number of days
+     * @param int $days Ignored - kept for backwards compatibility
      * @return array [labels, data]
      */
     public function get_completion_trends(int $days = 30): array {
-        return $this->get_cached_data("completion_trends_{$days}", function() use ($days) {
-            return $this->compute_completion_trends($days);
+        return $this->get_cached_data("completion_trends", function() {
+            return $this->compute_completion_trends();
         });
     }
 
     /**
-     * Compute completion trends.
+     * Compute completion trends using the configured date range.
      *
-     * @param int $days
      * @return array
      */
-    protected function compute_completion_trends(int $days): array {
+    protected function compute_completion_trends(): array {
         global $DB;
 
-        $starttime = strtotime("-{$days} days midnight");
         $userids = $this->get_company_userids();
 
         if (empty($userids)) {
@@ -974,22 +987,31 @@ class report {
                        COUNT(*) as completion_count
                 FROM {course_completions}
                 WHERE userid $usersql
-                  AND timecompleted >= :starttime
+                  AND timecompleted >= :datefrom
+                  AND timecompleted <= :dateto
                   AND timecompleted IS NOT NULL
                   $coursefilter
                 GROUP BY DATE(FROM_UNIXTIME(timecompleted))
                 ORDER BY completion_date ASC";
 
-        $params = array_merge(['starttime' => $starttime], $userparams, $courseparams);
+        $params = array_merge([
+            'datefrom' => $this->datefrom,
+            'dateto' => $this->dateto,
+        ], $userparams, $courseparams);
         $records = $DB->get_records_sql($sql, $params);
 
+        // Generate labels for each day in the date range.
         $labels = [];
         $data = [];
 
-        for ($i = $days; $i >= 0; $i--) {
-            $date = date('Y-m-d', strtotime("-{$i} days"));
-            $labels[] = date('d M', strtotime($date));
+        $currentDate = strtotime(date('Y-m-d', $this->datefrom));
+        $endDate = strtotime(date('Y-m-d', $this->dateto));
+
+        while ($currentDate <= $endDate) {
+            $date = date('Y-m-d', $currentDate);
+            $labels[] = date('d M', $currentDate);
             $data[$date] = 0;
+            $currentDate = strtotime('+1 day', $currentDate);
         }
 
         foreach ($records as $record) {
@@ -1064,33 +1086,34 @@ class report {
     }
 
     /**
-     * Get top courses by dedication time.
+     * Get top courses by dedication (cached).
+     * Uses the date range set in constructor ($datefrom to $dateto).
      *
      * @param int $limit Number of courses to return
-     * @param int $days Number of days to analyze
+     * @param int $days Ignored - kept for backwards compatibility
      * @return array Course dedication data
      */
     public function get_top_courses_dedication(int $limit = 10, int $days = 90): array {
-        return $this->get_cached_data("dedication_{$limit}_{$days}", function() use ($limit, $days) {
-            return $this->compute_top_courses_dedication($limit, $days);
+        return $this->get_cached_data("dedication_{$limit}", function() use ($limit) {
+            return $this->compute_top_courses_dedication($limit);
         });
     }
 
     /**
-     * Compute top courses by dedication.
+     * Compute top courses by dedication using the configured date range.
      *
-     * @param int $limit
-     * @param int $days
+     * @param int $limit Number of courses to return
      * @return array
      */
-    protected function compute_top_courses_dedication(int $limit, int $days): array {
+    protected function compute_top_courses_dedication(int $limit): array {
         global $DB;
 
         $sessionlimit = get_config('report_platform_usage', 'session_limit');
         $sessionlimit = !empty($sessionlimit) ? (int)$sessionlimit : HOURSECS;
 
-        $mintime = time() - ($days * DAYSECS);
-        $maxtime = time();
+        // Use the configured date range.
+        $mintime = $this->datefrom;
+        $maxtime = $this->dateto;
 
         // Get courses with enrollments (filter by course if in course context).
         $params = ['siteid' => SITEID];
@@ -1452,25 +1475,25 @@ class report {
 
     /**
      * Get daily users statistics.
+     * Uses the date range set in constructor ($datefrom to $dateto).
      *
-     * @param int $days Number of days
+     * @param int $days Ignored - kept for backwards compatibility
      * @return array Daily user data
      */
     public function get_daily_users(int $days = 10): array {
-        return $this->get_cached_data("daily_users_{$days}", function() use ($days) {
-            return $this->compute_daily_users($days);
+        return $this->get_cached_data("daily_users", function() {
+            return $this->compute_daily_users();
         });
     }
 
     /**
-     * Compute daily users.
+     * Compute daily users using the configured date range.
      * In platform context: users who logged in.
      * In course context: users who accessed the course.
      *
-     * @param int $days
      * @return array
      */
-    protected function compute_daily_users(int $days): array {
+    protected function compute_daily_users(): array {
         global $DB;
 
         $dbman = $DB->get_manager();
@@ -1478,7 +1501,6 @@ class report {
             return ['labels' => [], 'data' => [], 'records' => []];
         }
 
-        $starttime = strtotime("-{$days} days midnight");
         list($usersql, $userparams) = $this->get_user_sql('userid');
 
         // Different event based on context.
@@ -1489,7 +1511,8 @@ class report {
                     FROM {logstore_standard_log}
                     WHERE eventname = :event
                       AND courseid = :courseid
-                      AND timecreated >= :starttime
+                      AND timecreated >= :datefrom
+                      AND timecreated <= :dateto
                       AND $usersql
                     GROUP BY DATE(FROM_UNIXTIME(timecreated))
                     ORDER BY login_date ASC";
@@ -1497,7 +1520,8 @@ class report {
             $params = array_merge([
                 'event' => '\\core\\event\\course_viewed',
                 'courseid' => $this->courseid,
-                'starttime' => $starttime,
+                'datefrom' => $this->datefrom,
+                'dateto' => $this->dateto,
             ], $userparams);
         } else {
             // Platform context: track login events.
@@ -1505,27 +1529,34 @@ class report {
                            COUNT(DISTINCT userid) as unique_users
                     FROM {logstore_standard_log}
                     WHERE eventname = :event
-                      AND timecreated >= :starttime
+                      AND timecreated >= :datefrom
+                      AND timecreated <= :dateto
                       AND $usersql
                     GROUP BY DATE(FROM_UNIXTIME(timecreated))
                     ORDER BY login_date ASC";
 
             $params = array_merge([
                 'event' => '\\core\\event\\user_loggedin',
-                'starttime' => $starttime,
+                'datefrom' => $this->datefrom,
+                'dateto' => $this->dateto,
             ], $userparams);
         }
 
         $records = $DB->get_records_sql($sql, $params);
 
+        // Generate labels for each day in the date range.
         $labels = [];
         $data = [];
         $tablerecords = [];
 
-        for ($i = $days; $i >= 0; $i--) {
-            $date = date('Y-m-d', strtotime("-{$i} days"));
-            $labels[] = date('d M', strtotime($date));
+        $currentDate = strtotime(date('Y-m-d', $this->datefrom));
+        $endDate = strtotime(date('Y-m-d', $this->dateto));
+
+        while ($currentDate <= $endDate) {
+            $date = date('Y-m-d', $currentDate);
+            $labels[] = date('d M', $currentDate);
             $data[$date] = 0;
+            $currentDate = strtotime('+1 day', $currentDate);
         }
 
         foreach ($records as $record) {

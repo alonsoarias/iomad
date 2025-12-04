@@ -1358,28 +1358,56 @@ function updateCharts(data) {
         });
     }
 
-    // Initialize Bootstrap tooltips.
+    // Initialize Bootstrap tooltips with robust loading.
     function initTooltips() {
         if (typeof jQuery !== 'undefined' && typeof jQuery.fn.tooltip !== 'undefined') {
+            // Dispose existing tooltips first to prevent duplicates.
+            jQuery('[data-toggle="tooltip"]').each(function() {
+                var $el = jQuery(this);
+                if ($el.data('bs.tooltip')) {
+                    $el.tooltip('dispose');
+                }
+            });
+            // Initialize new tooltips.
             jQuery('[data-toggle="tooltip"]').tooltip({
                 container: 'body',
                 html: true,
                 trigger: 'hover focus',
-                delay: { show: 100, hide: 100 }
+                delay: { show: 100, hide: 100 },
+                boundary: 'window',
+                fallbackPlacement: ['top', 'bottom', 'right', 'left']
             });
+            return true;
+        }
+        return false;
+    }
+
+    // Initialize tooltips on page load with retry mechanism.
+    function initTooltipsWithRetry(retries) {
+        if (initTooltips()) {
+            return; // Success
+        }
+        if (retries > 0) {
+            setTimeout(function() {
+                initTooltipsWithRetry(retries - 1);
+            }, 200);
         }
     }
 
-    // Initialize tooltips on page load.
-    initTooltips();
+    // Start tooltip initialization with retries.
+    initTooltipsWithRetry(10);
 
     // Re-initialize tooltips after AJAX updates.
     document.addEventListener('tooltipsNeedRefresh', function() {
-        if (typeof jQuery !== 'undefined' && typeof jQuery.fn.tooltip !== 'undefined') {
-            jQuery('[data-toggle="tooltip"]').tooltip('dispose');
-        }
         initTooltips();
     });
+
+    // Also initialize on jQuery ready if not already done.
+    if (typeof jQuery !== 'undefined') {
+        jQuery(document).ready(function() {
+            initTooltips();
+        });
+    }
 });
 </script>
 <?php

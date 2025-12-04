@@ -973,31 +973,64 @@
     color: var(--rpu-brand-500);
 }
 
-/* Bootstrap tooltip overrides */
-.tooltip {
+/* Bootstrap tooltip overrides - High specificity and explicit z-index */
+.tooltip,
+.report-platform-usage ~ .tooltip,
+body > .tooltip {
     font-family: var(--rpu-font-sans);
+    z-index: 99999 !important;
+    opacity: 1 !important;
+    pointer-events: none;
 }
 
-.tooltip-inner {
-    background: var(--rpu-gray-900);
-    color: white;
-    padding: var(--rpu-space-2) var(--rpu-space-3);
-    font-size: var(--rpu-text-xs);
-    border-radius: var(--rpu-radius-md);
+.tooltip.show,
+.report-platform-usage ~ .tooltip.show,
+body > .tooltip.show {
+    opacity: 1 !important;
+}
+
+.tooltip-inner,
+.report-platform-usage ~ .tooltip .tooltip-inner,
+body > .tooltip .tooltip-inner {
+    background: #0f172a !important;
+    color: #ffffff !important;
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 6px;
     max-width: 300px;
     text-align: left;
-    box-shadow: var(--rpu-shadow-xl);
-    line-height: var(--rpu-leading-relaxed);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    line-height: 1.5;
+}
+
+.tooltip .arrow,
+.report-platform-usage ~ .tooltip .arrow,
+body > .tooltip .arrow {
+    display: block !important;
 }
 
 .tooltip.bs-tooltip-top .arrow::before,
-.tooltip.bs-tooltip-auto[x-placement^="top"] .arrow::before {
-    border-top-color: var(--rpu-gray-900);
+.tooltip.bs-tooltip-auto[x-placement^="top"] .arrow::before,
+.report-platform-usage ~ .tooltip.bs-tooltip-top .arrow::before,
+body > .tooltip.bs-tooltip-top .arrow::before {
+    border-top-color: #0f172a !important;
 }
 
 .tooltip.bs-tooltip-bottom .arrow::before,
-.tooltip.bs-tooltip-auto[x-placement^="bottom"] .arrow::before {
-    border-bottom-color: var(--rpu-gray-900);
+.tooltip.bs-tooltip-auto[x-placement^="bottom"] .arrow::before,
+.report-platform-usage ~ .tooltip.bs-tooltip-bottom .arrow::before,
+body > .tooltip.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: #0f172a !important;
+}
+
+.tooltip.bs-tooltip-left .arrow::before,
+.tooltip.bs-tooltip-auto[x-placement^="left"] .arrow::before {
+    border-left-color: #0f172a !important;
+}
+
+.tooltip.bs-tooltip-right .arrow::before,
+.tooltip.bs-tooltip-auto[x-placement^="right"] .arrow::before {
+    border-right-color: #0f172a !important;
 }
 
 /* ===========================================
