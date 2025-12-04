@@ -775,3 +775,64 @@ $string['browsevacancies'] = 'Browse Vacancies';
 $string['vacancy'] = 'Vacancy';
 $string['dateapplied'] = 'Date Applied';
 $string['unknownvacancy'] = 'Unknown Vacancy';
+
+// ==========================================================================
+// Reports page strings.
+// ==========================================================================
+
+$string['reportoverview'] = 'Overview';
+$string['reportapplications'] = 'Applications';
+$string['reportdocuments'] = 'Documents';
+$string['reportreviewers'] = 'Reviewers';
+$string['reporttimeline'] = 'Timeline';
+$string['allvacancies'] = 'All Vacancies';
+$string['datefrom'] = 'From';
+$string['dateto'] = 'To';
+$string['totalapplications'] = 'Total Applications';
+$string['selected'] = 'Selected';
+$string['rejected'] = 'Rejected';
+$string['selectionrate'] = 'Selection Rate';
+$string['applicationsbystatus'] = 'Applications by Status';
+$string['count'] = 'Count';
+$string['documentsbytype'] = 'Documents by Type';
+$string['validationrate'] = 'Validation Rate';
+$string['avgprocessingtime'] = 'Average Processing Time';
+$string['reviewerperformance'] = 'Reviewer Performance';
+$string['reviewerworkload'] = 'Reviewer Workload';
+$string['applicationtrends'] = 'Application Trends';
+$string['dailyapplications'] = 'Daily Applications';
+$string['noreportdata'] = 'No data available for this report';
+
+// ==========================================================================
+// Document review page strings.
+// ==========================================================================
+
+$string['reviewdocuments'] = 'Review Documents';
+$string['applicationdetails'] = 'Application Details';
+$string['applicantinfo'] = 'Applicant Information';
+$string['documentlist'] = 'Document List';
+$string['documentpreview'] = 'Document Preview';
+$string['validateall'] = 'Validate All';
+$string['rejectall'] = 'Reject All';
+$string['validatedocument'] = 'Validate Document';
+$string['rejectdocument'] = 'Reject Document';
+$string['addnote'] = 'Add Note';
+$string['reviewnotes'] = 'Review Notes';
+$string['markasreviewed'] = 'Mark as Reviewed';
+$string['nextapplication'] = 'Next Application';
+$string['previousapplication'] = 'Previous Application';
+$string['applicationof'] = 'Application {$a->current} of {$a->total}';
+$string['nodocumentstoreview'] = 'No documents to review';
+$string['alldocumentsreviewed'] = 'All documents have been reviewed';
+$string['pendingdocuments'] = 'Pending Documents';
+$string['reviewedby'] = 'Reviewed by';
+$string['reviewedon'] = 'Reviewed on';
+$string['documentstatus'] = 'Document Status';
+$string['reviewhistory'] = 'Review History';
+$string['submitreview'] = 'Submit Review';
+$string['reviewsubmitted'] = 'Review submitted successfully';
+$string['error:invalidapplication'] = 'Invalid application';
+$string['error:invaliddocument'] = 'Invalid document';
+$string['error:reviewfailed'] = 'Failed to submit review';
+$string['applicant'] = 'Applicant';
+$string['name'] = 'Name';
