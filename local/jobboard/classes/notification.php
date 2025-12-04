@@ -99,8 +99,8 @@ class notification {
             'application_id' => $application->id,
             'status' => get_string('status_' . $newstatus, 'local_jobboard'),
             'notes' => $notes ?? '',
-            'application_url' => (new \moodle_url('/local/jobboard/application.php',
-                ['id' => $application->id]))->out(false),
+            'application_url' => (new \moodle_url('/local/jobboard/index.php',
+                ['view' => 'application', 'id' => $application->id]))->out(false),
         ];
 
         // Map status to template.
@@ -133,8 +133,8 @@ class notification {
             'vacancy_code' => $vacancy->code ?? '',
             'vacancy_title' => $vacancy->title ?? '',
             'application_id' => $application->id,
-            'application_url' => (new \moodle_url('/local/jobboard/application.php',
-                ['id' => $application->id]))->out(false),
+            'application_url' => (new \moodle_url('/local/jobboard/index.php',
+                ['view' => 'application', 'id' => $application->id]))->out(false),
         ];
 
         self::queue($application->userid, self::TEMPLATE_APPLICATION_RECEIVED, $data);
@@ -153,8 +153,8 @@ class notification {
             'vacancy_title' => $vacancy->title,
             'days_left' => $daysleft,
             'close_date' => userdate($vacancy->closedate, get_string('strftimedatetime', 'langconfig')),
-            'vacancy_url' => (new \moodle_url('/local/jobboard/vacancy.php',
-                ['id' => $vacancy->id]))->out(false),
+            'vacancy_url' => (new \moodle_url('/local/jobboard/index.php',
+                ['view' => 'vacancy', 'id' => $vacancy->id]))->out(false),
         ];
 
         self::queue($userid, self::TEMPLATE_CLOSING_SOON, $data);

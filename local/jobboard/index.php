@@ -17,117 +17,120 @@
 /**
  * Main entry point for local_jobboard.
  *
+ * This file serves as the unified router for all jobboard views.
+ * All URLs should use this entry point with the 'view' parameter.
+ *
+ * URL Structure:
+ *   /local/jobboard/index.php                         - Dashboard (default)
+ *   /local/jobboard/index.php?view=vacancies          - Vacancies listing
+ *   /local/jobboard/index.php?view=vacancy&id=X       - Vacancy detail
+ *   /local/jobboard/index.php?view=apply&vacancyid=X  - Apply form
+ *   /local/jobboard/index.php?view=applications       - My applications
+ *   /local/jobboard/index.php?view=application&id=X   - Application detail
+ *   /local/jobboard/index.php?view=manage             - Manage vacancies
+ *   /local/jobboard/index.php?view=review             - Review applications
+ *   /local/jobboard/index.php?view=myreviews          - My reviews
+ *   /local/jobboard/index.php?view=reports            - Reports
+ *   /local/jobboard/index.php?view=public             - Public vacancies (no auth)
+ *   /local/jobboard/index.php?view=public&id=X        - Public vacancy detail
+ *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/lib.php');
 
-require_login();
+// Main routing parameters.
+$view = optional_param('view', 'dashboard', PARAM_ALPHA);
+$action = optional_param('action', '', PARAM_ALPHA);
+$id = optional_param('id', 0, PARAM_INT);
 
+// Context.
 $context = context_system::instance();
 
+// Define views that do NOT require authentication.
+$publicviews = ['public'];
+
+// Verify authentication based on view.
+if (!in_array($view, $publicviews)) {
+    require_login();
+}
+
+// Set up page context and URL.
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/jobboard/index.php'));
-$PAGE->set_pagelayout('standard');
-$PAGE->set_title(get_string('jobboard', 'local_jobboard'));
-$PAGE->set_heading(get_string('jobboard', 'local_jobboard'));
 
-echo $OUTPUT->header();
-
-// Dashboard content based on user capabilities.
-$canmanage = has_capability('local/jobboard:createvacancy', $context);
-$canreview = has_capability('local/jobboard:reviewdocuments', $context);
-$canapply = has_capability('local/jobboard:apply', $context);
-$canviewreports = has_capability('local/jobboard:viewreports', $context);
-
-echo html_writer::start_div('local-jobboard-dashboard');
-
-// Header.
-echo html_writer::tag('h2', get_string('dashboard', 'local_jobboard'));
-echo html_writer::tag('p', get_string('jobboard:desc', 'local_jobboard'));
-
-// Quick action cards.
-echo html_writer::start_div('card-deck mt-4');
-
-// View vacancies card.
-if ($canapply || $canmanage) {
-    echo html_writer::start_div('card');
-    echo html_writer::start_div('card-body');
-    echo html_writer::tag('h5', get_string('vacancies', 'local_jobboard'), ['class' => 'card-title']);
-    echo html_writer::tag('p', get_string('help:vacancy', 'local_jobboard'), ['class' => 'card-text']);
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/vacancies.php'),
-        get_string('view', 'local_jobboard') . ' ' . get_string('vacancies', 'local_jobboard'),
-        ['class' => 'btn btn-primary']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
+// Build URL parameters for current page.
+$urlparams = ['view' => $view];
+if ($action) {
+    $urlparams['action'] = $action;
+}
+if ($id) {
+    $urlparams['id'] = $id;
 }
 
-// My applications card.
-if ($canapply) {
-    echo html_writer::start_div('card');
-    echo html_writer::start_div('card-body');
-    echo html_writer::tag('h5', get_string('myapplications', 'local_jobboard'), ['class' => 'card-title']);
-    echo html_writer::tag('p', get_string('help:documents', 'local_jobboard'), ['class' => 'card-text']);
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/applications.php'),
-        get_string('view', 'local_jobboard') . ' ' . get_string('myapplications', 'local_jobboard'),
-        ['class' => 'btn btn-primary']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
+$PAGE->set_url(new moodle_url('/local/jobboard/index.php', $urlparams));
+
+// Route to the appropriate view.
+switch ($view) {
+    case 'dashboard':
+        // Default dashboard view - requires login.
+        require(__DIR__ . '/views/dashboard.php');
+        break;
+
+    case 'vacancies':
+        // List all available vacancies.
+        require(__DIR__ . '/views/vacancies.php');
+        break;
+
+    case 'vacancy':
+        // View single vacancy detail.
+        require(__DIR__ . '/views/vacancy.php');
+        break;
+
+    case 'apply':
+        // Apply for a vacancy - requires apply capability.
+        require(__DIR__ . '/views/apply.php');
+        break;
+
+    case 'applications':
+        // View user's own applications.
+        require(__DIR__ . '/views/applications.php');
+        break;
+
+    case 'application':
+        // View single application detail.
+        require(__DIR__ . '/views/application.php');
+        break;
+
+    case 'manage':
+        // Manage vacancies - requires createvacancy capability.
+        require(__DIR__ . '/views/manage.php');
+        break;
+
+    case 'review':
+        // Review applications/documents - requires reviewdocuments capability.
+        require(__DIR__ . '/views/review.php');
+        break;
+
+    case 'myreviews':
+        // Reviewer's personal queue - requires reviewdocuments capability.
+        require(__DIR__ . '/views/myreviews.php');
+        break;
+
+    case 'reports':
+        // View reports - requires viewreports capability.
+        require(__DIR__ . '/views/reports.php');
+        break;
+
+    case 'public':
+        // Public vacancies page - no authentication required.
+        require(__DIR__ . '/views/public.php');
+        break;
+
+    default:
+        // Unknown view - redirect to dashboard.
+        redirect(new moodle_url('/local/jobboard/index.php', ['view' => 'dashboard']));
+        break;
 }
-
-// Manage vacancies card.
-if ($canmanage) {
-    echo html_writer::start_div('card');
-    echo html_writer::start_div('card-body');
-    echo html_writer::tag('h5', get_string('managevacancies', 'local_jobboard'), ['class' => 'card-title']);
-    echo html_writer::tag('p', get_string('help:vacancy', 'local_jobboard'), ['class' => 'card-text']);
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/manage.php'),
-        get_string('managevacancies', 'local_jobboard'),
-        ['class' => 'btn btn-primary']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-}
-
-// Review applications card.
-if ($canreview) {
-    echo html_writer::start_div('card');
-    echo html_writer::start_div('card-body');
-    echo html_writer::tag('h5', get_string('reviewapplications', 'local_jobboard'), ['class' => 'card-title']);
-    echo html_writer::tag('p', get_string('help:review', 'local_jobboard'), ['class' => 'card-text']);
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/review.php'),
-        get_string('reviewapplications', 'local_jobboard'),
-        ['class' => 'btn btn-primary']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-}
-
-// Reports card.
-if ($canviewreports) {
-    echo html_writer::start_div('card');
-    echo html_writer::start_div('card-body');
-    echo html_writer::tag('h5', get_string('reports', 'local_jobboard'), ['class' => 'card-title']);
-    echo html_writer::tag('p', get_string('report:applications', 'local_jobboard'), ['class' => 'card-text']);
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/reports.php'),
-        get_string('reports', 'local_jobboard'),
-        ['class' => 'btn btn-primary']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-}
-
-echo html_writer::end_div(); // card-deck
-
-echo html_writer::end_div(); // local-jobboard-dashboard
-
-echo $OUTPUT->footer();

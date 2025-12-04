@@ -15,33 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Public vacancies listing page for local_jobboard.
+ * Vacancies listing view for local_jobboard.
+ *
+ * This file is included by index.php and should not be accessed directly.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/lib.php');
+defined('MOODLE_INTERNAL') || die();
 
-require_login();
+require_once(__DIR__ . '/../lib.php');
 
-$context = context_system::instance();
+// Parameters.
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 25, PARAM_INT);
 $search = optional_param('search', '', PARAM_TEXT);
 $status = optional_param('status', '', PARAM_ALPHA);
 $companyid = optional_param('companyid', 0, PARAM_INT);
 
-$PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/jobboard/vacancies.php', [
-    'page' => $page,
-    'perpage' => $perpage,
-    'search' => $search,
-    'status' => $status,
-    'companyid' => $companyid,
-]));
+// Page setup.
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('vacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('vacancies', 'local_jobboard'));
@@ -80,7 +74,9 @@ echo $OUTPUT->header();
 echo html_writer::tag('h2', get_string('vacancies', 'local_jobboard'));
 
 // Search and filter form.
-echo html_writer::start_tag('form', ['method' => 'get', 'action' => $PAGE->url->out_omit_querystring(), 'class' => 'mb-4']);
+$formurl = new moodle_url('/local/jobboard/index.php');
+echo html_writer::start_tag('form', ['method' => 'get', 'action' => $formurl, 'class' => 'mb-4']);
+echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'view', 'value' => 'vacancies']);
 
 echo html_writer::start_div('row');
 
@@ -122,7 +118,7 @@ echo html_writer::empty_tag('input', [
 ]);
 echo html_writer::end_div();
 
-echo html_writer::end_div(); // row
+echo html_writer::end_div(); // row.
 echo html_writer::end_tag('form');
 
 // Results count.
@@ -155,7 +151,7 @@ if (empty($vacancies)) {
 
         // Title.
         $row[] = html_writer::link(
-            new moodle_url('/local/jobboard/vacancy.php', ['id' => $vacancy->id]),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancy->id]),
             s($vacancy->title)
         );
 
@@ -197,7 +193,7 @@ if (empty($vacancies)) {
 
         // View button.
         $actions[] = html_writer::link(
-            new moodle_url('/local/jobboard/vacancy.php', ['id' => $vacancy->id]),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancy->id]),
             get_string('view', 'local_jobboard'),
             ['class' => 'btn btn-sm btn-outline-primary']
         );
@@ -205,7 +201,7 @@ if (empty($vacancies)) {
         // Apply button (if vacancy is open and user can apply).
         if ($vacancy->is_open() && has_capability('local/jobboard:apply', $context)) {
             $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/apply.php', ['vacancyid' => $vacancy->id]),
+                new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]),
                 get_string('apply', 'local_jobboard'),
                 ['class' => 'btn btn-sm btn-success']
             );
@@ -221,7 +217,8 @@ if (empty($vacancies)) {
 
 // Pagination.
 if ($total > $perpage) {
-    $baseurl = new moodle_url('/local/jobboard/vacancies.php', [
+    $baseurl = new moodle_url('/local/jobboard/index.php', [
+        'view' => 'vacancies',
         'search' => $search,
         'status' => $status,
         'companyid' => $companyid,

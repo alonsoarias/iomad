@@ -66,6 +66,6 @@ class vacancy_published extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/local/jobboard/vacancy.php', ['id' => $this->objectid]);
+        return new \moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $this->objectid]);
     }
 }

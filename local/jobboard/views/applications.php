@@ -15,37 +15,37 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * User's applications list page.
+ * User's applications list view.
+ *
+ * This file is included by index.php and should not be accessed directly.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->libdir . '/tablelib.php');
 
 use local_jobboard\application;
 use local_jobboard\exemption;
 
-require_login();
-
-$context = context_system::instance();
+// Require apply capability.
 require_capability('local/jobboard:apply', $context);
 
+// Parameters.
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 20, PARAM_INT);
 $status = optional_param('status', '', PARAM_ALPHA);
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/applications.php'));
-$PAGE->set_context($context);
 $PAGE->set_title(get_string('myapplications', 'local_jobboard'));
 $PAGE->set_heading(get_string('myapplications', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
 // Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
 $PAGE->navbar->add(get_string('myapplications', 'local_jobboard'));
 
 // Get user's applications.
@@ -82,7 +82,8 @@ foreach (application::STATUSES as $s) {
     $statusoptions[$s] = get_string('status_' . $s, 'local_jobboard');
 }
 
-echo '<form class="form-inline mb-3" method="get">';
+echo '<form class="form-inline mb-3" method="get" action="' . new moodle_url('/local/jobboard/index.php') . '">';
+echo '<input type="hidden" name="view" value="applications">';
 echo '<label class="mr-2">' . get_string('filterbystatus', 'local_jobboard') . '</label>';
 echo '<select name="status" class="form-control mr-2">';
 foreach ($statusoptions as $value => $label) {
@@ -97,7 +98,7 @@ if (empty($applications)) {
     echo $OUTPUT->notification(get_string('noapplicationsfound', 'local_jobboard'), 'info');
 
     // Link to browse vacancies.
-    echo '<p><a href="' . new moodle_url('/local/jobboard/vacancies.php') . '" class="btn btn-primary">';
+    echo '<p><a href="' . new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']) . '" class="btn btn-primary">';
     echo get_string('browsevacancies', 'local_jobboard');
     echo '</a></p>';
 } else {
@@ -116,7 +117,7 @@ if (empty($applications)) {
         $row = [];
 
         // Vacancy info.
-        $vacancyurl = new moodle_url('/local/jobboard/vacancy.php', ['id' => $app->vacancyid]);
+        $vacancyurl = new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $app->vacancyid]);
         $row[] = html_writer::link($vacancyurl, format_string($app->vacancy_title ?? get_string('unknownvacancy', 'local_jobboard')));
 
         // Date applied.
@@ -159,12 +160,12 @@ if (empty($applications)) {
 
         // Actions.
         $actions = [];
-        $viewurl = new moodle_url('/local/jobboard/application.php', ['id' => $app->id]);
+        $viewurl = new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]);
         $actions[] = html_writer::link($viewurl, get_string('view'), ['class' => 'btn btn-sm btn-outline-primary']);
 
         // Withdraw button if applicable.
         if (in_array($app->status, ['submitted', 'under_review'])) {
-            $withdrawurl = new moodle_url('/local/jobboard/application.php', ['id' => $app->id, 'action' => 'withdraw']);
+            $withdrawurl = new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id, 'action' => 'withdraw']);
             $actions[] = html_writer::link($withdrawurl, get_string('withdraw', 'local_jobboard'),
                 ['class' => 'btn btn-sm btn-outline-danger']);
         }
@@ -177,7 +178,7 @@ if (empty($applications)) {
     echo html_writer::table($table);
 
     // Pagination.
-    $baseurl = new moodle_url('/local/jobboard/applications.php', ['status' => $status]);
+    $baseurl = new moodle_url('/local/jobboard/index.php', ['view' => 'applications', 'status' => $status]);
     echo $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
 }
 

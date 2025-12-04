@@ -15,28 +15,29 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Reports page for Job Board.
+ * Reports view for local_jobboard.
+ *
+ * This file is included by index.php and should not be accessed directly.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+defined('MOODLE_INTERNAL') || die();
 
 use local_jobboard\bulk_validator;
 use local_jobboard\reviewer;
 
+// Require reports capability.
+require_capability('local/jobboard:viewreports', $context);
+
+// Parameters.
 $reporttype = optional_param('report', 'overview', PARAM_ALPHA);
 $vacancyid = optional_param('vacancyid', 0, PARAM_INT);
 $datefrom = optional_param('datefrom', 0, PARAM_INT);
 $dateto = optional_param('dateto', 0, PARAM_INT);
 $format = optional_param('format', '', PARAM_ALPHA);
-
-require_login();
-
-$context = context_system::instance();
-require_capability('local/jobboard:viewreports', $context);
 
 // Default date range: last 30 days.
 if (!$datefrom) {
@@ -47,24 +48,17 @@ if (!$dateto) {
 }
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/reports.php', [
-    'report' => $reporttype,
-    'vacancyid' => $vacancyid,
-    'datefrom' => $datefrom,
-    'dateto' => $dateto,
-]));
-$PAGE->set_context($context);
 $PAGE->set_title(get_string('reports', 'local_jobboard'));
 $PAGE->set_heading(get_string('reports', 'local_jobboard'));
 $PAGE->set_pagelayout('report');
 
 // Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
 $PAGE->navbar->add(get_string('reports', 'local_jobboard'));
 
 // Handle export.
 if ($format === 'csv' || $format === 'excel') {
-    export_report($reporttype, $vacancyid, $datefrom, $dateto, $format);
+    local_jobboard_export_report($reporttype, $vacancyid, $datefrom, $dateto, $format);
     exit;
 }
 
@@ -87,7 +81,8 @@ $reporttypes = [
 echo '<ul class="nav nav-tabs mb-4">';
 foreach ($reporttypes as $type => $name) {
     $active = ($reporttype === $type) ? 'active' : '';
-    $url = new moodle_url('/local/jobboard/reports.php', [
+    $url = new moodle_url('/local/jobboard/index.php', [
+        'view' => 'reports',
         'report' => $type,
         'vacancyid' => $vacancyid,
         'datefrom' => $datefrom,
@@ -100,7 +95,8 @@ foreach ($reporttypes as $type => $name) {
 echo '</ul>';
 
 // Filters.
-echo '<form class="form-inline mb-4" method="get">';
+echo '<form class="form-inline mb-4" method="get" action="' . new moodle_url('/local/jobboard/index.php') . '">';
+echo '<input type="hidden" name="view" value="reports">';
 echo '<input type="hidden" name="report" value="' . $reporttype . '">';
 
 echo '<div class="form-group mr-3">';
@@ -127,10 +123,17 @@ echo '</div>';
 echo '<button type="submit" class="btn btn-primary mr-2">' . get_string('filter') . '</button>';
 
 // Export buttons.
+$exportbaseurl = new moodle_url('/local/jobboard/index.php', [
+    'view' => 'reports',
+    'report' => $reporttype,
+    'vacancyid' => $vacancyid,
+    'datefrom' => $datefrom,
+    'dateto' => $dateto,
+]);
 echo '<div class="btn-group">';
-echo '<a href="' . $PAGE->url . '&format=csv" class="btn btn-outline-secondary">' .
+echo '<a href="' . $exportbaseurl . '&format=csv" class="btn btn-outline-secondary">' .
     get_string('exportcsv', 'local_jobboard') . '</a>';
-echo '<a href="' . $PAGE->url . '&format=excel" class="btn btn-outline-secondary">' .
+echo '<a href="' . $exportbaseurl . '&format=excel" class="btn btn-outline-secondary">' .
     get_string('exportexcel', 'local_jobboard') . '</a>';
 echo '</div>';
 
@@ -139,19 +142,19 @@ echo '</form>';
 // Render specific report.
 switch ($reporttype) {
     case 'overview':
-        render_overview_report($vacancyid, $datefrom, $dateto);
+        local_jobboard_render_overview_report($vacancyid, $datefrom, $dateto);
         break;
     case 'applications':
-        render_applications_report($vacancyid, $datefrom, $dateto);
+        local_jobboard_render_applications_report($vacancyid, $datefrom, $dateto);
         break;
     case 'documents':
-        render_documents_report($vacancyid, $datefrom, $dateto);
+        local_jobboard_render_documents_report($vacancyid, $datefrom, $dateto);
         break;
     case 'reviewers':
-        render_reviewers_report($vacancyid, $datefrom, $dateto);
+        local_jobboard_render_reviewers_report($vacancyid, $datefrom, $dateto);
         break;
     case 'timeline':
-        render_timeline_report($vacancyid, $datefrom, $dateto);
+        local_jobboard_render_timeline_report($vacancyid, $datefrom, $dateto);
         break;
 }
 
@@ -159,8 +162,12 @@ echo $OUTPUT->footer();
 
 /**
  * Render overview report.
+ *
+ * @param int $vacancyid Vacancy ID filter.
+ * @param int $datefrom Start date timestamp.
+ * @param int $dateto End date timestamp.
  */
-function render_overview_report(int $vacancyid, int $datefrom, int $dateto): void {
+function local_jobboard_render_overview_report(int $vacancyid, int $datefrom, int $dateto): void {
     global $DB;
 
     $params = ['from' => $datefrom, 'to' => $dateto];
@@ -252,8 +259,12 @@ function render_overview_report(int $vacancyid, int $datefrom, int $dateto): voi
 
 /**
  * Render applications report.
+ *
+ * @param int $vacancyid Vacancy ID filter.
+ * @param int $datefrom Start date timestamp.
+ * @param int $dateto End date timestamp.
  */
-function render_applications_report(int $vacancyid, int $datefrom, int $dateto): void {
+function local_jobboard_render_applications_report(int $vacancyid, int $datefrom, int $dateto): void {
     global $DB;
 
     $params = ['from' => $datefrom, 'to' => $dateto];
@@ -303,8 +314,12 @@ function render_applications_report(int $vacancyid, int $datefrom, int $dateto):
 
 /**
  * Render documents report.
+ *
+ * @param int $vacancyid Vacancy ID filter.
+ * @param int $datefrom Start date timestamp.
+ * @param int $dateto End date timestamp.
  */
-function render_documents_report(int $vacancyid, int $datefrom, int $dateto): void {
+function local_jobboard_render_documents_report(int $vacancyid, int $datefrom, int $dateto): void {
     $stats = bulk_validator::get_validation_stats($vacancyid ?: null, $datefrom);
     $rejectionreasons = bulk_validator::get_rejection_reasons_stats($vacancyid ?: null, $datefrom);
 
@@ -377,8 +392,12 @@ function render_documents_report(int $vacancyid, int $datefrom, int $dateto): vo
 
 /**
  * Render reviewers report.
+ *
+ * @param int $vacancyid Vacancy ID filter.
+ * @param int $datefrom Start date timestamp.
+ * @param int $dateto End date timestamp.
  */
-function render_reviewers_report(int $vacancyid, int $datefrom, int $dateto): void {
+function local_jobboard_render_reviewers_report(int $vacancyid, int $datefrom, int $dateto): void {
     $reviewers = reviewer::get_all_with_workload();
 
     echo '<div class="card mb-4">';
@@ -411,8 +430,12 @@ function render_reviewers_report(int $vacancyid, int $datefrom, int $dateto): vo
 
 /**
  * Render timeline report.
+ *
+ * @param int $vacancyid Vacancy ID filter.
+ * @param int $datefrom Start date timestamp.
+ * @param int $dateto End date timestamp.
  */
-function render_timeline_report(int $vacancyid, int $datefrom, int $dateto): void {
+function local_jobboard_render_timeline_report(int $vacancyid, int $datefrom, int $dateto): void {
     global $DB;
 
     $params = ['from' => $datefrom, 'to' => $dateto];
@@ -447,8 +470,14 @@ function render_timeline_report(int $vacancyid, int $datefrom, int $dateto): voi
 
 /**
  * Export report data.
+ *
+ * @param string $reporttype Report type.
+ * @param int $vacancyid Vacancy ID filter.
+ * @param int $datefrom Start date timestamp.
+ * @param int $dateto End date timestamp.
+ * @param string $format Export format.
  */
-function export_report(string $reporttype, int $vacancyid, int $datefrom, int $dateto, string $format): void {
+function local_jobboard_export_report(string $reporttype, int $vacancyid, int $datefrom, int $dateto, string $format): void {
     global $DB;
 
     $params = ['from' => $datefrom, 'to' => $dateto];

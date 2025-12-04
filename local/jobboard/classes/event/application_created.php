@@ -65,6 +65,6 @@ class application_created extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/local/jobboard/application.php', ['id' => $this->objectid]);
+        return new \moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $this->objectid]);
     }
 }

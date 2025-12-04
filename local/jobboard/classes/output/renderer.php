@@ -71,8 +71,8 @@ class renderer extends plugin_renderer_base {
             'urgent' => $daysremaining <= 7,
             'status' => $vacancy->status,
             'statusclass' => $this->get_status_class($vacancy->status),
-            'viewurl' => (new moodle_url('/local/jobboard/vacancy.php', ['id' => $vacancy->id]))->out(false),
-            'applyurl' => (new moodle_url('/local/jobboard/apply.php', ['id' => $vacancy->id]))->out(false),
+            'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancy->id]))->out(false),
+            'applyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'id' => $vacancy->id]))->out(false),
             'canapply' => $canapply && $vacancy->status === 'published' && $vacancy->closedate > time(),
         ];
     }
@@ -101,7 +101,7 @@ class renderer extends plugin_renderer_base {
             'hasvacancies' => !empty($vacancydata),
             'vacancies' => $vacancydata,
             'cancreatevacancy' => $cancreatevacancy,
-            'createurl' => (new moodle_url('/local/jobboard/edit.php'))->out(false),
+            'createurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'action' => 'create']))->out(false),
             'filterform' => $filterform,
             'pagination' => $pagination,
         ];
@@ -131,9 +131,9 @@ class renderer extends plugin_renderer_base {
             'alerts' => $alerts,
             'hasalerts' => !empty($alerts),
             'canmanage' => $canmanage,
-            'createvacancyurl' => (new moodle_url('/local/jobboard/edit.php'))->out(false),
-            'manageapplicationsurl' => (new moodle_url('/local/jobboard/manage_applications.php'))->out(false),
-            'reportsurl' => (new moodle_url('/local/jobboard/reports.php'))->out(false),
+            'createvacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'action' => 'create']))->out(false),
+            'manageapplicationsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
+            'reportsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'reports']))->out(false),
         ];
 
         return $this->render_from_template('local_jobboard/dashboard', $data);
@@ -172,10 +172,10 @@ class renderer extends plugin_renderer_base {
             'documentcount' => $documentcount,
             'documentsvalidated' => $documentsvalidated,
             'documentpercent' => $documentcount > 0 ? round(($documentsvalidated / $documentcount) * 100) : 0,
-            'viewurl' => (new moodle_url('/local/jobboard/application.php', ['id' => $application->id]))->out(false),
+            'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]))->out(false),
             'canreview' => $canreview,
-            'reviewurl' => (new moodle_url('/local/jobboard/validate_document.php', [
-                'applicationid' => $application->id,
+            'reviewurl' => (new moodle_url('/local/jobboard/index.php', [
+                'view' => 'review', 'applicationid' => $application->id,
             ]))->out(false),
         ];
 

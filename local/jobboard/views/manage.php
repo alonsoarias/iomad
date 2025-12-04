@@ -15,21 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Vacancy management page for local_jobboard.
+ * Vacancy management view for local_jobboard.
+ *
+ * This file is included by index.php and should not be accessed directly.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/lib.php');
+defined('MOODLE_INTERNAL') || die();
 
-require_login();
+require_once(__DIR__ . '/../lib.php');
 
-$context = context_system::instance();
+// Require manage capability.
 require_capability('local/jobboard:createvacancy', $context);
 
+// Parameters.
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 25, PARAM_INT);
 $search = optional_param('search', '', PARAM_TEXT);
@@ -38,8 +40,7 @@ $companyid = optional_param('companyid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
 $vacancyid = optional_param('id', 0, PARAM_INT);
 
-$PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/jobboard/manage.php'));
+// Page setup.
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title(get_string('managevacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('managevacancies', 'local_jobboard'));
@@ -57,26 +58,63 @@ if ($action && $vacancyid && confirm_sesskey()) {
             require_capability('local/jobboard:publishvacancy', $context);
             try {
                 $vacancy->publish();
-                redirect($PAGE->url, get_string('vacancypublished', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+                redirect(
+                    new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
+                    get_string('vacancypublished', 'local_jobboard'),
+                    null,
+                    \core\output\notification::NOTIFY_SUCCESS
+                );
             } catch (Exception $e) {
-                redirect($PAGE->url, $e->getMessage(), null, \core\output\notification::NOTIFY_ERROR);
+                redirect(
+                    new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
+                    $e->getMessage(),
+                    null,
+                    \core\output\notification::NOTIFY_ERROR
+                );
             }
             break;
 
         case 'close':
             require_capability('local/jobboard:editvacancy', $context);
             $vacancy->close();
-            redirect($PAGE->url, get_string('vacancyclosed', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+            redirect(
+                new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
+                get_string('vacancyclosed', 'local_jobboard'),
+                null,
+                \core\output\notification::NOTIFY_SUCCESS
+            );
             break;
 
         case 'delete':
             require_capability('local/jobboard:deletevacancy', $context);
             try {
                 $vacancy->delete();
-                redirect($PAGE->url, get_string('vacancydeleted', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+                redirect(
+                    new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
+                    get_string('vacancydeleted', 'local_jobboard'),
+                    null,
+                    \core\output\notification::NOTIFY_SUCCESS
+                );
             } catch (Exception $e) {
-                redirect($PAGE->url, $e->getMessage(), null, \core\output\notification::NOTIFY_ERROR);
+                redirect(
+                    new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
+                    $e->getMessage(),
+                    null,
+                    \core\output\notification::NOTIFY_ERROR
+                );
             }
+            break;
+
+        case 'edit':
+            // Redirect to edit form.
+            // For now, this can redirect to the legacy edit.php or be handled inline.
+            // In a complete refactor, we would add a views/edit.php view.
+            redirect(new moodle_url('/local/jobboard/edit.php', ['id' => $vacancyid]));
+            break;
+
+        case 'create':
+            // Redirect to create form.
+            redirect(new moodle_url('/local/jobboard/edit.php'));
             break;
     }
 }
@@ -125,7 +163,9 @@ echo html_writer::div(
 );
 
 // Search and filter form.
-echo html_writer::start_tag('form', ['method' => 'get', 'action' => $PAGE->url->out_omit_querystring(), 'class' => 'mb-4']);
+$formurl = new moodle_url('/local/jobboard/index.php');
+echo html_writer::start_tag('form', ['method' => 'get', 'action' => $formurl, 'class' => 'mb-4']);
+echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'view', 'value' => 'manage']);
 
 echo html_writer::start_div('row');
 
@@ -163,7 +203,7 @@ echo html_writer::empty_tag('input', [
 ]);
 echo html_writer::end_div();
 
-echo html_writer::end_div(); // row
+echo html_writer::end_div(); // row.
 echo html_writer::end_tag('form');
 
 // Results count.
@@ -197,7 +237,7 @@ if (empty($vacancies)) {
 
         // Title with company name.
         $title = html_writer::link(
-            new moodle_url('/local/jobboard/vacancy.php', ['id' => $vacancy->id]),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancy->id]),
             s($vacancy->title)
         );
         if ($vacancy->companyid) {
@@ -246,7 +286,8 @@ if (empty($vacancies)) {
         // Publish.
         if ($vacancy->can_publish() && has_capability('local/jobboard:publishvacancy', $context)) {
             $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/manage.php', [
+                new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'manage',
                     'action' => 'publish',
                     'id' => $vacancy->id,
                     'sesskey' => sesskey(),
@@ -263,7 +304,8 @@ if (empty($vacancies)) {
         // Close.
         if ($vacancy->status === 'published' && has_capability('local/jobboard:editvacancy', $context)) {
             $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/manage.php', [
+                new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'manage',
                     'action' => 'close',
                     'id' => $vacancy->id,
                     'sesskey' => sesskey(),
@@ -276,7 +318,7 @@ if (empty($vacancies)) {
         // View applications.
         if (has_capability('local/jobboard:viewallapplications', $context)) {
             $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/review.php', ['vacancyid' => $vacancy->id]),
+                new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancy->id]),
                 $OUTPUT->pix_icon('i/users', get_string('reviewapplications', 'local_jobboard')),
                 ['class' => 'btn btn-sm btn-outline-info', 'title' => get_string('reviewapplications', 'local_jobboard')]
             );
@@ -285,7 +327,8 @@ if (empty($vacancies)) {
         // Delete.
         if ($vacancy->can_delete() && has_capability('local/jobboard:deletevacancy', $context)) {
             $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/manage.php', [
+                new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'manage',
                     'action' => 'delete',
                     'id' => $vacancy->id,
                     'sesskey' => sesskey(),
@@ -309,7 +352,8 @@ if (empty($vacancies)) {
 
 // Pagination.
 if ($total > $perpage) {
-    $baseurl = new moodle_url('/local/jobboard/manage.php', [
+    $baseurl = new moodle_url('/local/jobboard/index.php', [
+        'view' => 'manage',
         'search' => $search,
         'status' => $status,
         'companyid' => $companyid,

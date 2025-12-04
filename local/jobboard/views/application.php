@@ -15,27 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * View application details page.
+ * View application details view.
+ *
+ * This file is included by index.php and should not be accessed directly.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+defined('MOODLE_INTERNAL') || die();
 
 use local_jobboard\application;
 use local_jobboard\document;
 use local_jobboard\vacancy;
 use local_jobboard\exemption;
 
+// Parameters.
 $id = required_param('id', PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
 $confirm = optional_param('confirm', 0, PARAM_INT);
-
-require_login();
-
-$context = context_system::instance();
 
 // Get application.
 $application = application::get($id);
@@ -56,18 +55,16 @@ if (!$isowner && !$canreview && !$canmanageworkflow) {
 $vacancy = vacancy::get($application->vacancyid);
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/application.php', ['id' => $id]));
-$PAGE->set_context($context);
 $PAGE->set_title(get_string('viewapplication', 'local_jobboard'));
 $PAGE->set_heading(get_string('viewapplication', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
 // Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
 if ($isowner) {
-    $PAGE->navbar->add(get_string('myapplications', 'local_jobboard'), new moodle_url('/local/jobboard/applications.php'));
+    $PAGE->navbar->add(get_string('myapplications', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'applications']));
 } else {
-    $PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/manage.php'));
+    $PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
 }
 $PAGE->navbar->add(get_string('viewapplication', 'local_jobboard'));
 
@@ -81,7 +78,7 @@ if ($action === 'withdraw' && $isowner) {
         require_sesskey();
         $application->withdraw();
         redirect(
-            new moodle_url('/local/jobboard/applications.php'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
             get_string('applicationwithdrawn', 'local_jobboard'),
             null,
             \core\output\notification::NOTIFY_SUCCESS
@@ -90,8 +87,8 @@ if ($action === 'withdraw' && $isowner) {
         echo $OUTPUT->header();
         echo $OUTPUT->confirm(
             get_string('confirmwithdraw', 'local_jobboard'),
-            new moodle_url('/local/jobboard/application.php', ['id' => $id, 'action' => 'withdraw', 'confirm' => 1]),
-            new moodle_url('/local/jobboard/application.php', ['id' => $id])
+            new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $id, 'action' => 'withdraw', 'confirm' => 1]),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $id])
         );
         echo $OUTPUT->footer();
         exit;
@@ -108,7 +105,7 @@ if ($action === 'changestatus' && $canmanageworkflow) {
     if ($application->can_transition_to($newstatus)) {
         $application->transition_to($newstatus, $notes);
         redirect(
-            new moodle_url('/local/jobboard/application.php', ['id' => $id]),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $id]),
             get_string('statuschanged', 'local_jobboard'),
             null,
             \core\output\notification::NOTIFY_SUCCESS
@@ -196,7 +193,7 @@ if ($vacancy) {
     if (!empty($vacancy->location)) {
         echo '<p><strong>' . get_string('location', 'local_jobboard') . ':</strong> ' . format_string($vacancy->location) . '</p>';
     }
-    $vacancyurl = new moodle_url('/local/jobboard/vacancy.php', ['id' => $vacancy->id]);
+    $vacancyurl = new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancy->id]);
     echo '<p><a href="' . $vacancyurl . '">' . get_string('viewvacancy', 'local_jobboard') . '</a></p>';
 } else {
     echo '<p>' . get_string('vacancynotfound', 'local_jobboard') . '</p>';
@@ -271,7 +268,7 @@ if (empty($documents)) {
 
         // Validation buttons for reviewers.
         if ($canreview && !$validation) {
-            echo '<a href="' . new moodle_url('/local/jobboard/validate_document.php', ['id' => $doc->id]) .
+            echo '<a href="' . new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'documentid' => $doc->id]) .
                 '" class="btn btn-sm btn-outline-success">' . get_string('validate', 'local_jobboard') . '</a>';
         }
         echo '</td>';
@@ -312,7 +309,7 @@ if ($canmanageworkflow) {
         echo '<div class="card mb-3">';
         echo '<div class="card-header"><h5>' . get_string('workflowactions', 'local_jobboard') . '</h5></div>';
         echo '<div class="card-body">';
-        echo '<form method="post" action="' . new moodle_url('/local/jobboard/application.php', ['id' => $id, 'action' => 'changestatus']) . '">';
+        echo '<form method="post" action="' . new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $id, 'action' => 'changestatus']) . '">';
         echo '<input type="hidden" name="sesskey" value="' . sesskey() . '">';
 
         echo '<div class="form-group">';
@@ -340,15 +337,15 @@ if ($canmanageworkflow) {
 echo '<div class="action-buttons mt-4">';
 
 if ($isowner) {
-    echo '<a href="' . new moodle_url('/local/jobboard/applications.php') . '" class="btn btn-secondary">' .
+    echo '<a href="' . new moodle_url('/local/jobboard/index.php', ['view' => 'applications']) . '" class="btn btn-secondary">' .
         get_string('backtoapplications', 'local_jobboard') . '</a> ';
 
     if (in_array($application->status, ['submitted', 'under_review'])) {
-        echo '<a href="' . new moodle_url('/local/jobboard/application.php', ['id' => $id, 'action' => 'withdraw']) .
+        echo '<a href="' . new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $id, 'action' => 'withdraw']) .
             '" class="btn btn-danger">' . get_string('withdrawapplication', 'local_jobboard') . '</a>';
     }
 } else {
-    echo '<a href="' . new moodle_url('/local/jobboard/manage_applications.php', ['vacancyid' => $application->vacancyid]) .
+    echo '<a href="' . new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $application->vacancyid]) .
         '" class="btn btn-secondary">' . get_string('backtoapplications', 'local_jobboard') . '</a>';
 }
 

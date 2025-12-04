@@ -495,7 +495,7 @@ class application {
             '{VACANCY_TITLE}' => $vacancy->title,
             '{APPLICATION_DATE}' => local_jobboard_format_date($this->timecreated),
             '{CURRENT_STATUS}' => $this->get_status_display(),
-            '{APPLICATION_URL}' => $CFG->wwwroot . '/local/jobboard/application.php?id=' . $this->id,
+            '{APPLICATION_URL}' => $CFG->wwwroot . '/local/jobboard/index.php?view=application&id=' . $this->id,
         ];
 
         return str_replace(array_keys($replacements), array_values($replacements), $text);

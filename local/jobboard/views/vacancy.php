@@ -15,21 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Vacancy detail view page for local_jobboard.
+ * Vacancy detail view for local_jobboard.
+ *
+ * This file is included by index.php and should not be accessed directly.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/lib.php');
+defined('MOODLE_INTERNAL') || die();
 
-require_login();
+require_once(__DIR__ . '/../lib.php');
 
+// Parameters.
 $id = required_param('id', PARAM_INT);
-
-$context = context_system::instance();
 
 $vacancy = \local_jobboard\vacancy::get($id);
 if (!$vacancy) {
@@ -41,13 +41,12 @@ if (!local_jobboard_can_view_vacancy($vacancy->to_record())) {
     throw new moodle_exception('error:noaccess', 'local_jobboard');
 }
 
-$PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/jobboard/vacancy.php', ['id' => $id]));
+// Page setup.
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title($vacancy->title);
 $PAGE->set_heading($vacancy->title);
 
-$PAGE->navbar->add(get_string('vacancies', 'local_jobboard'), new moodle_url('/local/jobboard/vacancies.php'));
+$PAGE->navbar->add(get_string('vacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']));
 $PAGE->navbar->add($vacancy->title);
 
 // Log view.
@@ -100,14 +99,14 @@ if ($vacancy->is_open() && $canapply) {
 
     if ($hasapplied) {
         echo html_writer::link(
-            new moodle_url('/local/jobboard/applications.php'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
             get_string('myapplications', 'local_jobboard'),
             ['class' => 'btn btn-outline-primary mr-2']
         );
         echo html_writer::span(get_string('error:alreadyapplied', 'local_jobboard'), 'badge badge-info');
     } else {
         echo html_writer::link(
-            new moodle_url('/local/jobboard/apply.php', ['vacancyid' => $vacancy->id]),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]),
             get_string('apply', 'local_jobboard'),
             ['class' => 'btn btn-success mr-2']
         );
@@ -116,14 +115,14 @@ if ($vacancy->is_open() && $canapply) {
 
 if ($canmanage && $vacancy->can_edit()) {
     echo html_writer::link(
-        new moodle_url('/local/jobboard/edit.php', ['id' => $vacancy->id]),
+        new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'action' => 'edit', 'id' => $vacancy->id]),
         get_string('edit', 'local_jobboard'),
         ['class' => 'btn btn-outline-primary mr-2']
     );
 }
 
 echo html_writer::link(
-    new moodle_url('/local/jobboard/vacancies.php'),
+    new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']),
     get_string('back', 'local_jobboard'),
     ['class' => 'btn btn-outline-secondary']
 );
@@ -156,9 +155,9 @@ if (!empty($vacancy->desirable)) {
     echo html_writer::div(format_text($vacancy->desirable, FORMAT_HTML), 'card-text');
 }
 
-echo html_writer::end_div(); // card-body
-echo html_writer::end_div(); // card
-echo html_writer::end_div(); // col-md-8
+echo html_writer::end_div(); // card-body.
+echo html_writer::end_div(); // card.
+echo html_writer::end_div(); // col-md-8.
 
 // Side info card.
 echo html_writer::start_div('col-md-4');
@@ -251,8 +250,8 @@ foreach ($details as $detail) {
 }
 echo html_writer::end_tag('dl');
 
-echo html_writer::end_div(); // card-body
-echo html_writer::end_div(); // card
+echo html_writer::end_div(); // card-body.
+echo html_writer::end_div(); // card.
 
 // Statistics card (for managers).
 if ($canmanage) {
@@ -281,18 +280,18 @@ if ($canmanage) {
 
     if ($appcount > 0) {
         echo html_writer::link(
-            new moodle_url('/local/jobboard/review.php', ['vacancyid' => $vacancy->id]),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancy->id]),
             get_string('reviewapplications', 'local_jobboard'),
             ['class' => 'btn btn-sm btn-outline-primary']
         );
     }
 
-    echo html_writer::end_div(); // card-body
-    echo html_writer::end_div(); // card
+    echo html_writer::end_div(); // card-body.
+    echo html_writer::end_div(); // card.
 }
 
-echo html_writer::end_div(); // col-md-4
-echo html_writer::end_div(); // row
+echo html_writer::end_div(); // col-md-4.
+echo html_writer::end_div(); // row.
 
 // Metadata (for managers).
 if ($canmanage) {
@@ -308,6 +307,6 @@ if ($canmanage) {
     echo html_writer::end_div();
 }
 
-echo html_writer::end_div(); // vacancy-detail
+echo html_writer::end_div(); // vacancy-detail.
 
 echo $OUTPUT->footer();

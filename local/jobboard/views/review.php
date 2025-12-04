@@ -15,20 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Document review page for job applications.
+ * Document review view for local_jobboard.
+ *
+ * This file is included by index.php and should not be accessed directly.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/lib.php');
+defined('MOODLE_INTERNAL') || die();
+
+require_once(__DIR__ . '/../lib.php');
 require_once($CFG->libdir . '/tablelib.php');
 
 use local_jobboard\application;
 use local_jobboard\document;
 use local_jobboard\vacancy;
+
+// Require review capability.
+require_capability('local/jobboard:reviewdocuments', $context);
 
 // Parameters.
 $applicationid = optional_param('applicationid', 0, PARAM_INT);
@@ -36,22 +42,13 @@ $documentid = optional_param('documentid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
 $vacancyid = optional_param('vacancyid', 0, PARAM_INT);
 
-// Context and access.
-$context = context_system::instance();
-require_login();
-require_capability('local/jobboard:reviewdocuments', $context);
-
-$PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/jobboard/review.php', [
-    'applicationid' => $applicationid,
-    'vacancyid' => $vacancyid,
-]));
+// Page setup.
 $PAGE->set_title(get_string('reviewdocuments', 'local_jobboard'));
 $PAGE->set_heading(get_string('reviewdocuments', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
 // Navigation.
-$PAGE->navbar->add(get_string('jobboard', 'local_jobboard'), new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('jobboard', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
 $PAGE->navbar->add(get_string('reviewdocuments', 'local_jobboard'));
 
 // Handle actions.
@@ -96,7 +93,8 @@ if ($action && confirm_sesskey()) {
     }
 
     // Redirect to avoid form resubmission.
-    redirect(new moodle_url('/local/jobboard/review.php', [
+    redirect(new moodle_url('/local/jobboard/index.php', [
+        'view' => 'review',
         'applicationid' => $applicationid,
         'vacancyid' => $vacancyid,
     ]));
@@ -126,8 +124,6 @@ if (!$applicationid) {
     }
 
     // Get applications pending review.
-    // Document validation status is stored in local_jobboard_doc_validation.status column.
-    // A document is "pending" if its validation record has status = 'pending'.
     $sql = "SELECT a.*, v.title as vacancy_title, v.code as vacancy_code,
                    u.firstname, u.lastname, u.email,
                    (SELECT COUNT(*) FROM {local_jobboard_document} d WHERE d.applicationid = a.id AND d.issuperseded = 0) as doccount,
@@ -146,7 +142,8 @@ if (!$applicationid) {
     // Vacancy filter dropdown.
     $vacancies = $DB->get_records('local_jobboard_vacancy', ['status' => 'published'], 'code ASC', 'id, code, title');
 
-    echo '<form class="form-inline mb-4" method="get">';
+    echo '<form class="form-inline mb-4" method="get" action="' . new moodle_url('/local/jobboard/index.php') . '">';
+    echo '<input type="hidden" name="view" value="review">';
     echo '<label class="mr-2">' . get_string('vacancy', 'local_jobboard') . '</label>';
     echo '<select name="vacancyid" class="form-control mr-2">';
     echo '<option value="0">' . get_string('allvacancies', 'local_jobboard') . '</option>';
@@ -193,7 +190,7 @@ if (!$applicationid) {
             $row[] = '<span class="badge badge-danger">' . $app->pendingcount . '</span>';
 
             // Actions.
-            $reviewurl = new moodle_url('/local/jobboard/review.php', ['applicationid' => $app->id]);
+            $reviewurl = new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'applicationid' => $app->id]);
             $row[] = '<a href="' . $reviewurl . '" class="btn btn-sm btn-primary">' .
                      get_string('reviewdocuments', 'local_jobboard') . '</a>';
 
@@ -215,7 +212,7 @@ if (!$applicationid) {
     $documents = document::get_by_application($applicationid);
 
     // Back button.
-    echo '<p><a href="' . new moodle_url('/local/jobboard/review.php', ['vacancyid' => $vacancyid]) .
+    echo '<p><a href="' . new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancyid]) .
          '" class="btn btn-secondary">&laquo; ' . get_string('back') . '</a></p>';
 
     // Application info card.
@@ -255,7 +252,8 @@ if (!$applicationid) {
     }
 
     if ($pendingcount > 0) {
-        $validateallurl = new moodle_url('/local/jobboard/review.php', [
+        $validateallurl = new moodle_url('/local/jobboard/index.php', [
+            'view' => 'review',
             'applicationid' => $applicationid,
             'action' => 'validateall',
             'sesskey' => sesskey(),
@@ -312,7 +310,8 @@ if (!$applicationid) {
 
             // Action buttons for pending documents.
             if ($doc->status === 'pending') {
-                $validateurl = new moodle_url('/local/jobboard/review.php', [
+                $validateurl = new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'review',
                     'applicationid' => $applicationid,
                     'documentid' => $doc->id,
                     'action' => 'validate',
@@ -329,7 +328,8 @@ if (!$applicationid) {
                 echo '<div class="modal fade" id="rejectModal' . $doc->id . '" tabindex="-1">';
                 echo '<div class="modal-dialog">';
                 echo '<div class="modal-content">';
-                echo '<form method="post" action="' . new moodle_url('/local/jobboard/review.php') . '">';
+                echo '<form method="post" action="' . new moodle_url('/local/jobboard/index.php') . '">';
+                echo '<input type="hidden" name="view" value="review">';
                 echo '<input type="hidden" name="applicationid" value="' . $applicationid . '">';
                 echo '<input type="hidden" name="documentid" value="' . $doc->id . '">';
                 echo '<input type="hidden" name="action" value="reject">';
@@ -373,7 +373,8 @@ if (!$applicationid) {
 
     if ($allreviewed && $application->status !== 'docs_validated' && $application->status !== 'docs_rejected') {
         echo '<div class="text-center">';
-        $markurl = new moodle_url('/local/jobboard/review.php', [
+        $markurl = new moodle_url('/local/jobboard/index.php', [
+            'view' => 'review',
             'applicationid' => $applicationid,
             'action' => 'markreviewed',
             'sesskey' => sesskey(),

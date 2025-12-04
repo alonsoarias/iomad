@@ -15,22 +15,22 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * My review assignments page.
+ * My reviews view for local_jobboard.
+ *
+ * This file is included by index.php and should not be accessed directly.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+defined('MOODLE_INTERNAL') || die();
 
 use local_jobboard\application;
 use local_jobboard\document;
 use local_jobboard\reviewer;
 
-require_login();
-
-$context = context_system::instance();
+// Require review capability.
 require_capability('local/jobboard:reviewdocuments', $context);
 
 // Filter parameters.
@@ -41,14 +41,12 @@ $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 20, PARAM_INT);
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/my_reviews.php'));
-$PAGE->set_context($context);
 $PAGE->set_title(get_string('myreviews', 'local_jobboard'));
 $PAGE->set_heading(get_string('myreviews', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
 // Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
 $PAGE->navbar->add(get_string('myreviews', 'local_jobboard'));
 
 // Get my stats.
@@ -166,7 +164,8 @@ echo '</div>';
 // Filters.
 echo '<div class="card mb-4">';
 echo '<div class="card-body">';
-echo '<form method="get" action="" class="form-inline">';
+echo '<form method="get" action="' . new moodle_url('/local/jobboard/index.php') . '" class="form-inline">';
+echo '<input type="hidden" name="view" value="myreviews">';
 
 // Status filter.
 echo '<div class="form-group mr-3 mb-2">';
@@ -279,7 +278,7 @@ if (empty($applications)) {
 
         // Actions.
         $actions = '';
-        $viewurl = new moodle_url('/local/jobboard/application.php', ['id' => $app->id]);
+        $viewurl = new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]);
         $actions .= '<a href="' . $viewurl . '" class="btn btn-sm btn-primary mr-1">' .
             get_string('reviewdocuments', 'local_jobboard') . '</a>';
 
@@ -308,7 +307,8 @@ if (empty($applications)) {
     echo html_writer::table($table);
 
     // Pagination.
-    $baseurl = new moodle_url('/local/jobboard/my_reviews.php', [
+    $baseurl = new moodle_url('/local/jobboard/index.php', [
+        'view' => 'myreviews',
         'status' => $status,
         'vacancy' => $vacancyid,
         'priority' => $priority,
@@ -318,7 +318,7 @@ if (empty($applications)) {
 
 // Quick links.
 echo '<div class="mt-4">';
-echo '<a href="' . new moodle_url('/local/jobboard/dashboard.php') . '" class="btn btn-outline-secondary mr-2">' .
+echo '<a href="' . new moodle_url('/local/jobboard/index.php') . '" class="btn btn-outline-secondary mr-2">' .
     '<i class="fa fa-tachometer-alt mr-1"></i>' . get_string('dashboard', 'local_jobboard') . '</a>';
 echo '<a href="' . new moodle_url('/local/jobboard/bulk_validate.php') . '" class="btn btn-outline-secondary">' .
     '<i class="fa fa-check-double mr-1"></i>' . get_string('bulkvalidation', 'local_jobboard') . '</a>';

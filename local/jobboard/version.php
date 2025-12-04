@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2024120525;  // Phase 7.5: Complete language string synchronization EN/ES.
+$plugin->version = 2024120600;  // Phase 8.0: URL structure refactoring - single entry point (index.php).
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.6.5-beta';
+$plugin->release = '1.7.0-beta';

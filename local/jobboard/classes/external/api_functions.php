@@ -253,8 +253,8 @@ class api_functions extends external_api {
                 'urgent' => $daysremaining <= 7,
                 'status' => $record->status,
                 'statusclass' => self::get_status_class($record->status),
-                'viewurl' => (new \moodle_url('/local/jobboard/vacancy.php', ['id' => $record->id]))->out(false),
-                'applyurl' => (new \moodle_url('/local/jobboard/apply.php', ['id' => $record->id]))->out(false),
+                'viewurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $record->id]))->out(false),
+                'applyurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'id' => $record->id]))->out(false),
                 'canapply' => has_capability('local/jobboard:apply', $context) &&
                               $record->status === 'published' && $record->closedate > time(),
             ];

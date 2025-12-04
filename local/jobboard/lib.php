@@ -44,7 +44,7 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
         if ($enablepublic && $showpublicnav) {
             $navigation->add(
                 get_string('publicvacancies', 'local_jobboard'),
-                new moodle_url('/local/jobboard/public/index.php'),
+                new moodle_url('/local/jobboard/index.php', ['view' => 'public']),
                 navigation_node::TYPE_CUSTOM,
                 null,
                 'local_jobboard_public',
@@ -68,7 +68,7 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
     if ($enablepublic) {
         $jobboardnode->add(
             get_string('publicvacancies', 'local_jobboard'),
-            new moodle_url('/local/jobboard/public/index.php'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'public']),
             navigation_node::TYPE_CUSTOM
         );
     }
@@ -77,7 +77,7 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
     if (has_capability('local/jobboard:apply', $context) || has_capability('local/jobboard:viewallvacancies', $context)) {
         $jobboardnode->add(
             get_string('vacancies', 'local_jobboard'),
-            new moodle_url('/local/jobboard/vacancies.php'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']),
             navigation_node::TYPE_CUSTOM
         );
     }
@@ -86,7 +86,7 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
     if (has_capability('local/jobboard:apply', $context)) {
         $jobboardnode->add(
             get_string('myapplications', 'local_jobboard'),
-            new moodle_url('/local/jobboard/applications.php'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
             navigation_node::TYPE_CUSTOM
         );
     }
@@ -95,7 +95,7 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
     if (has_capability('local/jobboard:createvacancy', $context)) {
         $jobboardnode->add(
             get_string('managevacancies', 'local_jobboard'),
-            new moodle_url('/local/jobboard/manage.php'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
             navigation_node::TYPE_CUSTOM
         );
     }
@@ -104,7 +104,7 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
     if (has_capability('local/jobboard:reviewdocuments', $context)) {
         $jobboardnode->add(
             get_string('reviewapplications', 'local_jobboard'),
-            new moodle_url('/local/jobboard/review.php'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'review']),
             navigation_node::TYPE_CUSTOM
         );
     }
@@ -113,7 +113,7 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
     if (has_capability('local/jobboard:viewreports', $context)) {
         $jobboardnode->add(
             get_string('reports', 'local_jobboard'),
-            new moodle_url('/local/jobboard/reports.php'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'reports']),
             navigation_node::TYPE_CUSTOM
         );
     }
@@ -122,7 +122,7 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
     if (has_capability('local/jobboard:configure', $context)) {
         $jobboardnode->add(
             get_string('settings', 'local_jobboard'),
-            new moodle_url('/local/jobboard/settings.php'),
+            new moodle_url('/local/jobboard/admin/settings.php'),
             navigation_node::TYPE_CUSTOM
         );
     }

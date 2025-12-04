@@ -15,14 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Apply for a vacancy page.
+ * Apply for a vacancy view.
+ *
+ * This file is included by index.php and should not be accessed directly.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->libdir . '/adminlib.php');
 
 use local_jobboard\vacancy;
@@ -31,11 +34,10 @@ use local_jobboard\document;
 use local_jobboard\exemption;
 use local_jobboard\forms\application_form;
 
+// Parameters.
 $vacancyid = required_param('vacancyid', PARAM_INT);
 
-require_login();
-
-$context = context_system::instance();
+// Require apply capability.
 require_capability('local/jobboard:apply', $context);
 
 // Get vacancy.
@@ -52,7 +54,7 @@ if (!$vacancy->is_open_for_applications()) {
 // Check user hasn't already applied.
 if (application::user_has_applied($USER->id, $vacancyid)) {
     redirect(
-        new moodle_url('/local/jobboard/applications.php'),
+        new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
         get_string('alreadyapplied', 'local_jobboard'),
         null,
         \core\output\notification::NOTIFY_WARNING
@@ -72,16 +74,14 @@ if ($exemption) {
 $requireddocs = exemption::get_required_doctypes($USER->id, true);
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/apply.php', ['vacancyid' => $vacancyid]));
-$PAGE->set_context($context);
 $PAGE->set_title(get_string('applytovacancy', 'local_jobboard'));
 $PAGE->set_heading(get_string('applytovacancy', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
 // Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
-$PAGE->navbar->add(get_string('vacancies', 'local_jobboard'), new moodle_url('/local/jobboard/vacancies.php'));
-$PAGE->navbar->add(format_string($vacancy->title), new moodle_url('/local/jobboard/vacancy.php', ['id' => $vacancyid]));
+$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
+$PAGE->navbar->add(get_string('vacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']));
+$PAGE->navbar->add(format_string($vacancy->title), new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]));
 $PAGE->navbar->add(get_string('apply', 'local_jobboard'));
 
 // Create form.
@@ -98,7 +98,7 @@ $customdata = [
 $mform = new application_form(null, $customdata);
 
 if ($mform->is_cancelled()) {
-    redirect(new moodle_url('/local/jobboard/vacancy.php', ['id' => $vacancyid]));
+    redirect(new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]));
 }
 
 if ($data = $mform->get_data()) {
@@ -140,7 +140,7 @@ if ($data = $mform->get_data()) {
 
         // Redirect to applications list with success message.
         redirect(
-            new moodle_url('/local/jobboard/applications.php'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
             get_string('applicationsubmitted', 'local_jobboard'),
             null,
             \core\output\notification::NOTIFY_SUCCESS

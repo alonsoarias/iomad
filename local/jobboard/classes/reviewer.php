@@ -344,8 +344,8 @@ class reviewer {
             'vacancy_title' => $vacancy->title ?? '',
             'applicant_name' => fullname($applicant),
             'application_id' => $application->id,
-            'application_url' => (new \moodle_url('/local/jobboard/application.php',
-                ['id' => $application->id]))->out(false),
+            'application_url' => (new \moodle_url('/local/jobboard/index.php',
+                ['view' => 'application', 'id' => $application->id]))->out(false),
         ];
 
         notification::queue($reviewerid, 'reviewer_assigned', $data);
