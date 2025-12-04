@@ -1181,3 +1181,69 @@ $string['th:status'] = 'Estado';
 $string['th:lastused'] = 'Último Uso';
 $string['th:created'] = 'Creado';
 $string['th:actions'] = 'Acciones';
+
+// ==========================================================================
+// Fase 7: Página Pública y Límites de Postulación.
+// ==========================================================================
+
+// Tipos de publicación.
+$string['publicationtype'] = 'Tipo de publicación';
+$string['publicationtype_help'] = 'Las vacantes públicas son visibles para todos, incluidos los usuarios no autenticados. Las vacantes internas solo son visibles para los usuarios autenticados de la organización.';
+$string['publicationtype:public'] = 'Pública';
+$string['publicationtype:internal'] = 'Interna';
+
+// Página pública.
+$string['publicvacancies'] = 'Oportunidades Laborales';
+$string['publicpagetitle'] = 'Oportunidades Laborales';
+$string['publicpagetitle_default'] = 'Oportunidades Laborales';
+$string['vacanciesfound'] = '{$a} vacantes encontradas';
+$string['novacanciesfound'] = 'No se encontraron vacantes que coincidan con sus criterios.';
+$string['searchplaceholder'] = 'Buscar por título, código o descripción...';
+$string['viewdetails'] = 'Ver Detalles';
+$string['loginandapply'] = 'Iniciar sesión para postularse';
+$string['closesin'] = 'Cierra en {$a} días';
+$string['closeson'] = 'Cierra el';
+$string['wanttoapply'] = '¿Desea postularse?';
+$string['createaccounttoapply'] = 'Cree una cuenta o inicie sesión para postularse a las vacantes.';
+$string['backtovacancies'] = 'Volver a Vacantes';
+$string['requireddocuments'] = 'Documentos Requeridos';
+$string['importantdates'] = 'Fechas Importantes';
+$string['sharethisvacancy'] = 'Compartir esta Vacante';
+$string['copylink'] = 'Copiar enlace';
+$string['applynow'] = 'Postularse Ahora';
+$string['alreadyapplied'] = 'Ya se ha postulado a esta vacante.';
+$string['applicationstatus'] = 'Estado de la postulación';
+$string['viewmyapplications'] = 'Ver Mis Postulaciones';
+$string['loginrequiredtoapply'] = 'Debe iniciar sesión para postularse a esta vacante.';
+$string['noapplypermission'] = 'No tiene permiso para postularse a vacantes.';
+$string['all'] = 'Todos';
+
+// Configuración de página pública.
+$string['publicpagesettings'] = 'Configuración de Página Pública';
+$string['publicpagesettings_desc'] = 'Configure la página de vacantes públicas accesible sin autenticación.';
+$string['enablepublicpage'] = 'Habilitar página pública';
+$string['enablepublicpage_desc'] = 'Permitir acceso público para ver vacantes públicas sin requerir autenticación.';
+$string['publicpagedescription'] = 'Descripción de la página';
+$string['publicpagedescription_desc'] = 'Texto introductorio mostrado en la parte superior de la página de vacantes públicas.';
+$string['publicpagetitle_desc'] = 'Título personalizado para la página de vacantes públicas. Dejar vacío para usar el predeterminado.';
+$string['showpublicnavlink'] = 'Mostrar en navegación';
+$string['showpublicnavlink_desc'] = 'Mostrar un enlace a la página de vacantes públicas en la navegación principal para usuarios no autenticados.';
+
+// Configuración de límites de postulación.
+$string['applicationlimits'] = 'Límites de Postulación';
+$string['applicationlimits_desc'] = 'Configure cuántas postulaciones pueden enviar los usuarios.';
+$string['allowmultipleapplications'] = 'Permitir múltiples postulaciones';
+$string['allowmultipleapplications_desc'] = 'Permitir a los usuarios postularse a múltiples vacantes simultáneamente.';
+$string['maxactiveapplications'] = 'Máximo de postulaciones activas';
+$string['maxactiveapplications_desc'] = 'Número máximo de postulaciones activas por usuario (0 = ilimitado). Solo aplica cuando se permiten múltiples postulaciones.';
+
+// Errores de límite de postulación.
+$string['error:multipleapplicationsnotallowed'] = 'Solo puede tener una postulación activa a la vez. Por favor retire su postulación actual antes de postularse a una nueva vacante.';
+$string['error:applicationlimitreached'] = 'Ha alcanzado el número máximo de postulaciones activas ({$a}). Por favor espere a que se procesen sus postulaciones actuales o retire una antes de postularse a una nueva vacante.';
+$string['error:publicpagedisabled'] = 'La página de vacantes públicas está deshabilitada.';
+$string['error:loginrequiredforinternal'] = 'Debe iniciar sesión para ver vacantes internas.';
+
+// Nuevas capabilities.
+$string['jobboard:viewpublicvacancies'] = 'Ver vacantes públicas';
+$string['jobboard:viewinternalvacancies'] = 'Ver vacantes internas';
+$string['jobboard:unlimitedapplications'] = 'Omitir límites de postulación';

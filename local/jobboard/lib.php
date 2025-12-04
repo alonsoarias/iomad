@@ -32,13 +32,29 @@ defined('MOODLE_INTERNAL') || die();
 function local_jobboard_extend_navigation(global_navigation $navigation) {
     global $USER, $PAGE;
 
-    if (!isloggedin() || isguestuser()) {
+    $context = context_system::instance();
+    $isloggedin = isloggedin() && !isguestuser();
+
+    // Check if public page is enabled and navigation link should be shown.
+    $enablepublic = get_config('local_jobboard', 'enable_public_page');
+    $showpublicnav = get_config('local_jobboard', 'show_public_nav_link');
+
+    // For non-logged in users, show public vacancies link if enabled.
+    if (!$isloggedin) {
+        if ($enablepublic && $showpublicnav) {
+            $navigation->add(
+                get_string('publicvacancies', 'local_jobboard'),
+                new moodle_url('/local/jobboard/public/index.php'),
+                navigation_node::TYPE_CUSTOM,
+                null,
+                'local_jobboard_public',
+                new pix_icon('i/briefcase', '')
+            );
+        }
         return;
     }
 
-    $context = context_system::instance();
-
-    // Add main Job Board node.
+    // Add main Job Board node for logged-in users.
     $jobboardnode = $navigation->add(
         get_string('jobboard', 'local_jobboard'),
         new moodle_url('/local/jobboard/index.php'),
@@ -47,6 +63,15 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
         'local_jobboard',
         new pix_icon('i/briefcase', '')
     );
+
+    // Add public vacancies link if enabled (also for logged-in users).
+    if ($enablepublic) {
+        $jobboardnode->add(
+            get_string('publicvacancies', 'local_jobboard'),
+            new moodle_url('/local/jobboard/public/index.php'),
+            navigation_node::TYPE_CUSTOM
+        );
+    }
 
     // Add vacancies link for users who can view or apply.
     if (has_capability('local/jobboard:apply', $context) || has_capability('local/jobboard:viewallvacancies', $context)) {

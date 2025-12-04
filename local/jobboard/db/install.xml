@@ -25,6 +25,7 @@
         <FIELD NAME="requirements" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Minimum requirements"/>
         <FIELD NAME="desirable" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Desirable requirements"/>
         <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" COMMENT="Status: draft, published, closed, assigned"/>
+        <FIELD NAME="publicationtype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="internal" SEQUENCE="false" COMMENT="Publication type: public (visible without auth) or internal (requires auth)"/>
         <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User who created the vacancy"/>
         <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="User who last modified"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -44,6 +45,8 @@
         <INDEX NAME="opendate_idx" UNIQUE="false" FIELDS="opendate"/>
         <INDEX NAME="closedate_idx" UNIQUE="false" FIELDS="closedate"/>
         <INDEX NAME="company_status_idx" UNIQUE="false" FIELDS="companyid, status"/>
+        <INDEX NAME="publicationtype_idx" UNIQUE="false" FIELDS="publicationtype"/>
+        <INDEX NAME="status_pubtype_idx" UNIQUE="false" FIELDS="status, publicationtype"/>
       </INDEXES>
     </TABLE>
 

@@ -56,6 +56,74 @@ if ($hassiteconfig) {
         PARAM_EMAIL
     ));
 
+    // ==========================================================================
+    // Public page settings.
+    // ==========================================================================
+    $settings->add(new admin_setting_heading(
+        'local_jobboard/publicpageheading',
+        get_string('publicpagesettings', 'local_jobboard'),
+        get_string('publicpagesettings_desc', 'local_jobboard')
+    ));
+
+    // Enable public page.
+    $settings->add(new admin_setting_configcheckbox(
+        'local_jobboard/enable_public_page',
+        get_string('enablepublicpage', 'local_jobboard'),
+        get_string('enablepublicpage_desc', 'local_jobboard'),
+        1
+    ));
+
+    // Public page title.
+    $settings->add(new admin_setting_configtext(
+        'local_jobboard/public_page_title',
+        get_string('publicpagetitle', 'local_jobboard'),
+        get_string('publicpagetitle_desc', 'local_jobboard'),
+        '',
+        PARAM_TEXT
+    ));
+
+    // Public page description.
+    $settings->add(new admin_setting_configtextarea(
+        'local_jobboard/public_page_description',
+        get_string('publicpagedescription', 'local_jobboard'),
+        get_string('publicpagedescription_desc', 'local_jobboard'),
+        ''
+    ));
+
+    // Show public link in navigation.
+    $settings->add(new admin_setting_configcheckbox(
+        'local_jobboard/show_public_nav_link',
+        get_string('showpublicnavlink', 'local_jobboard'),
+        get_string('showpublicnavlink_desc', 'local_jobboard'),
+        1
+    ));
+
+    // ==========================================================================
+    // Application limits settings.
+    // ==========================================================================
+    $settings->add(new admin_setting_heading(
+        'local_jobboard/applicationlimitsheading',
+        get_string('applicationlimits', 'local_jobboard'),
+        get_string('applicationlimits_desc', 'local_jobboard')
+    ));
+
+    // Allow multiple applications.
+    $settings->add(new admin_setting_configcheckbox(
+        'local_jobboard/allow_multiple_applications',
+        get_string('allowmultipleapplications', 'local_jobboard'),
+        get_string('allowmultipleapplications_desc', 'local_jobboard'),
+        1
+    ));
+
+    // Maximum active applications.
+    $settings->add(new admin_setting_configtext(
+        'local_jobboard/max_active_applications',
+        get_string('maxactiveapplications', 'local_jobboard'),
+        get_string('maxactiveapplications_desc', 'local_jobboard'),
+        0,
+        PARAM_INT
+    ));
+
     // Document settings header.
     $settings->add(new admin_setting_heading(
         'local_jobboard/documentsheading',

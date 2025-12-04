@@ -504,5 +504,43 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024120510, 'local', 'jobboard');
     }
 
+    // Phase 7 upgrades: Public Vacancies, API Standards, Application Limits.
+    if ($oldversion < 2024120520) {
+
+        // Add publicationtype field to local_jobboard_vacancy table.
+        $table = new xmldb_table('local_jobboard_vacancy');
+
+        // publicationtype: 'public' or 'internal'.
+        $field = new xmldb_field('publicationtype', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'internal', 'status');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add index for publicationtype.
+        $index = new xmldb_index('publicationtype_idx', XMLDB_INDEX_NOTUNIQUE, ['publicationtype']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Add compound index for status and publicationtype.
+        $index = new xmldb_index('status_pubtype_idx', XMLDB_INDEX_NOTUNIQUE, ['status', 'publicationtype']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Set default configuration for public vacancies and application limits.
+        set_config('enable_public_page', 1, 'local_jobboard');
+        set_config('public_page_title', get_string('publicpagetitle', 'local_jobboard'), 'local_jobboard');
+        set_config('allow_multiple_applications', 1, 'local_jobboard');
+        set_config('max_active_applications', 0, 'local_jobboard'); // 0 = unlimited.
+        set_config('show_menu_to_guests', 1, 'local_jobboard');
+        set_config('menu_item_text', get_string('vacancies', 'local_jobboard'), 'local_jobboard');
+
+        // Purge caches.
+        purge_all_caches();
+
+        upgrade_plugin_savepoint(true, 2024120520, 'local', 'jobboard');
+    }
+
     return true;
 }

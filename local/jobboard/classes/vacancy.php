@@ -85,6 +85,9 @@ class vacancy {
     /** @var string The vacancy status. */
     public $status = 'draft';
 
+    /** @var string The publication type (public or internal). */
+    public $publicationtype = 'internal';
+
     /** @var int The user who created the vacancy. */
     public $createdby = 0;
 
@@ -102,6 +105,9 @@ class vacancy {
 
     /** @var array Allowed status values. */
     public const STATUSES = ['draft', 'published', 'closed', 'assigned'];
+
+    /** @var array Allowed publication types. */
+    public const PUBLICATION_TYPES = ['public', 'internal'];
 
     /**
      * Constructor.
@@ -158,6 +164,7 @@ class vacancy {
         $this->requirements = $record->requirements ?? '';
         $this->desirable = $record->desirable ?? '';
         $this->status = $record->status;
+        $this->publicationtype = $record->publicationtype ?? 'internal';
         $this->createdby = (int) $record->createdby;
         $this->modifiedby = $record->modifiedby ? (int) $record->modifiedby : null;
         $this->timecreated = (int) $record->timecreated;
@@ -342,7 +349,7 @@ class vacancy {
             'code', 'title', 'description', 'contracttype', 'duration',
             'salary', 'location', 'department', 'courseid', 'categoryid',
             'companyid', 'opendate', 'closedate', 'positions', 'requirements',
-            'desirable', 'status',
+            'desirable', 'status', 'publicationtype',
         ];
 
         foreach ($fields as $field) {
@@ -413,12 +420,35 @@ class vacancy {
             $errors[] = get_string('error:invalidstatus', 'local_jobboard');
         }
 
+        // Validate publication type.
+        if (!in_array($this->publicationtype, self::PUBLICATION_TYPES)) {
+            $errors[] = get_string('error:invalidpublicationtype', 'local_jobboard');
+        }
+
         // For Iomad: require companyid if enabled.
         if (local_jobboard_is_iomad_installed()) {
             // Company ID is recommended but not strictly required.
         }
 
         return $errors;
+    }
+
+    /**
+     * Check if the vacancy is public.
+     *
+     * @return bool True if public.
+     */
+    public function is_public(): bool {
+        return $this->publicationtype === 'public';
+    }
+
+    /**
+     * Check if the vacancy is internal.
+     *
+     * @return bool True if internal.
+     */
+    public function is_internal(): bool {
+        return $this->publicationtype === 'internal';
     }
 
     /**
@@ -446,6 +476,7 @@ class vacancy {
             'requirements' => $this->requirements,
             'desirable' => $this->desirable,
             'status' => $this->status,
+            'publicationtype' => $this->publicationtype,
             'createdby' => $this->createdby,
             'modifiedby' => $this->modifiedby,
             'timecreated' => $this->timecreated,

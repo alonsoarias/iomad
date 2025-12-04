@@ -622,3 +622,69 @@ $string['th:status'] = 'Status';
 $string['th:lastused'] = 'Last Used';
 $string['th:created'] = 'Created';
 $string['th:actions'] = 'Actions';
+
+// ==========================================================================
+// Phase 7: Public Page and Application Limits.
+// ==========================================================================
+
+// Publication types.
+$string['publicationtype'] = 'Publication type';
+$string['publicationtype_help'] = 'Public vacancies are visible to everyone, including unauthenticated users. Internal vacancies are only visible to authenticated users of the organization.';
+$string['publicationtype:public'] = 'Public';
+$string['publicationtype:internal'] = 'Internal';
+
+// Public page.
+$string['publicvacancies'] = 'Job Opportunities';
+$string['publicpagetitle'] = 'Job Opportunities';
+$string['publicpagetitle_default'] = 'Job Opportunities';
+$string['vacanciesfound'] = '{$a} vacancies found';
+$string['novacanciesfound'] = 'No vacancies found matching your criteria.';
+$string['searchplaceholder'] = 'Search by title, code, or description...';
+$string['viewdetails'] = 'View Details';
+$string['loginandapply'] = 'Login to Apply';
+$string['closesin'] = 'Closes in {$a} days';
+$string['closeson'] = 'Closes on';
+$string['wanttoapply'] = 'Want to apply?';
+$string['createaccounttoapply'] = 'Create an account or log in to apply for vacancies.';
+$string['backtovacancies'] = 'Back to Vacancies';
+$string['requireddocuments'] = 'Required Documents';
+$string['importantdates'] = 'Important Dates';
+$string['sharethisvacancy'] = 'Share this Vacancy';
+$string['copylink'] = 'Copy link';
+$string['applynow'] = 'Apply Now';
+$string['alreadyapplied'] = 'You have already applied for this vacancy.';
+$string['applicationstatus'] = 'Application status';
+$string['viewmyapplications'] = 'View My Applications';
+$string['loginrequiredtoapply'] = 'You must be logged in to apply for this vacancy.';
+$string['noapplypermission'] = 'You do not have permission to apply for vacancies.';
+$string['all'] = 'All';
+
+// Public page settings.
+$string['publicpagesettings'] = 'Public Page Settings';
+$string['publicpagesettings_desc'] = 'Configure the public vacancies page accessible without authentication.';
+$string['enablepublicpage'] = 'Enable public page';
+$string['enablepublicpage_desc'] = 'Allow public access to view public vacancies without requiring authentication.';
+$string['publicpagedescription'] = 'Page description';
+$string['publicpagedescription_desc'] = 'Introduction text shown at the top of the public vacancies page.';
+$string['publicpagetitle_desc'] = 'Custom title for the public vacancies page. Leave empty to use the default.';
+$string['showpublicnavlink'] = 'Show in navigation';
+$string['showpublicnavlink_desc'] = 'Show a link to the public vacancies page in the main navigation for non-authenticated users.';
+
+// Application limits settings.
+$string['applicationlimits'] = 'Application Limits';
+$string['applicationlimits_desc'] = 'Configure how many applications users can submit.';
+$string['allowmultipleapplications'] = 'Allow multiple applications';
+$string['allowmultipleapplications_desc'] = 'Allow users to apply for multiple vacancies simultaneously.';
+$string['maxactiveapplications'] = 'Maximum active applications';
+$string['maxactiveapplications_desc'] = 'Maximum number of active applications per user (0 = unlimited). Only applies when multiple applications are allowed.';
+
+// Application limit errors.
+$string['error:multipleapplicationsnotallowed'] = 'You can only have one active application at a time. Please withdraw your current application before applying for a new vacancy.';
+$string['error:applicationlimitreached'] = 'You have reached the maximum number of active applications ({$a}). Please wait for your current applications to be processed or withdraw one before applying for a new vacancy.';
+$string['error:publicpagedisabled'] = 'The public vacancies page is disabled.';
+$string['error:loginrequiredforinternal'] = 'You must be logged in to view internal vacancies.';
+
+// New capabilities.
+$string['jobboard:viewpublicvacancies'] = 'View public vacancies';
+$string['jobboard:viewinternalvacancies'] = 'View internal vacancies';
+$string['jobboard:unlimitedapplications'] = 'Bypass application limits';

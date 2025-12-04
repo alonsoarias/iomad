@@ -191,4 +191,41 @@ $capabilities = [
         'archetypes' => [],
         'clonepermissionsfrom' => 'moodle/site:config',
     ],
+
+    // View public vacancies (available to guests).
+    'local/jobboard:viewpublicvacancies' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'guest' => CAP_ALLOW,
+            'user' => CAP_ALLOW,
+            'student' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    // View internal vacancies (authenticated users only).
+    'local/jobboard:viewinternalvacancies' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'user' => CAP_ALLOW,
+            'student' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    // Unlimited applications (bypass application limit).
+    'local/jobboard:unlimitedapplications' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+        'clonepermissionsfrom' => 'moodle/site:config',
+    ],
 ];
