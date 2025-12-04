@@ -1318,3 +1318,66 @@ $string['showinmainmenu_desc'] = 'Si está habilitado, Bolsa de Empleo aparecer�
 $string['mainmenutitle'] = 'Título del menú';
 $string['mainmenutitle_desc'] = 'Título personalizado para el elemento de menú de Bolsa de Empleo. Déjelo vacío para usar el nombre predeterminado del plugin.';
 $string['loginrequiredtoapply'] = 'Debe iniciar sesión para postularse a las vacantes.';
+
+// ==========================================================================
+// Cadenas adicionales para completar (Fase 8.3).
+// ==========================================================================
+
+// Detalles de entrevista adicionales (EN keys).
+$string['interviewdetails'] = 'Detalles de la entrevista';
+$string['interviewtime'] = 'Hora de la entrevista';
+$string['interviewlocation'] = 'Ubicación de la entrevista';
+$string['interviewtype_presencial'] = 'Presencial';
+$string['interviewtype_virtual'] = 'Virtual';
+$string['interviewtype_telefonica'] = 'Telefónica';
+$string['interviewlink'] = 'Enlace de la reunión';
+$string['interviewupdated'] = 'Entrevista actualizada exitosamente';
+$string['confirmcancelinterview'] = '¿Está seguro de que desea cancelar esta entrevista?';
+$string['rescheduleinterview'] = 'Reprogramar entrevista';
+$string['rescheduledby'] = 'Reprogramada por';
+$string['cancelnote'] = 'Nota de cancelación';
+$string['pastinterviews'] = 'Entrevistas pasadas';
+$string['upcominginterviews'] = 'Próximas entrevistas';
+$string['nointerviewsscheduled'] = 'No hay entrevistas programadas';
+$string['recordresults'] = 'Registrar resultados';
+$string['interviewresults'] = 'Resultados de la entrevista';
+$string['attended'] = 'Asistió';
+$string['interviewresult'] = 'Resultado de la entrevista';
+$string['result_favorable'] = 'Favorable';
+$string['result_no_favorable'] = 'No favorable';
+$string['result_pendiente'] = 'Pendiente de evaluación';
+$string['interviewscore'] = 'Puntaje de la entrevista';
+$string['interviewobservations'] = 'Observaciones de la entrevista';
+$string['resultrecorded'] = 'Resultado registrado exitosamente';
+
+// Comité de selección adicional (EN keys).
+$string['editcommittee'] = 'Editar comité';
+$string['committeedetails'] = 'Detalles del comité';
+$string['committeeupdated'] = 'Comité actualizado exitosamente';
+$string['committeedeleted'] = 'Comité eliminado';
+$string['nocommittees'] = 'No hay comités creados';
+$string['quorum'] = 'Quórum';
+$string['quorummet'] = 'Quórum alcanzado';
+$string['quorumnotmet'] = 'Quórum no alcanzado';
+
+// Evaluación adicional (EN keys).
+$string['evaluateapplicant'] = 'Evaluar postulante';
+$string['score'] = 'Puntaje';
+$string['totalscore'] = 'Puntaje total';
+$string['evaluationnotes'] = 'Notas de evaluación';
+$string['submitevaluation'] = 'Enviar evaluación';
+$string['allevaluations'] = 'Todas las evaluaciones';
+$string['pendingevaluations'] = 'Evaluaciones pendientes';
+$string['completedevaluations'] = 'Evaluaciones completadas';
+$string['myevaluations'] = 'Mis evaluaciones';
+$string['viewevaluations'] = 'Ver evaluaciones';
+
+// Importación adicional (EN keys).
+$string['importfromcsv'] = 'Importar desde CSV';
+$string['csvformat'] = 'Formato CSV';
+$string['rowsprocessed'] = 'Filas procesadas';
+$string['rowsimported'] = 'Filas importadas';
+$string['rowsfailed'] = 'Filas fallidas';
+
+// Gestión de tipos de documentos adicional (EN keys).
+$string['managedoctypes'] = 'Gestionar tipos de documentos';

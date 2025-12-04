@@ -1277,3 +1277,99 @@ $string['showinmainmenu_desc'] = 'If enabled, Job Board will appear in the main 
 $string['mainmenutitle'] = 'Menu title';
 $string['mainmenutitle_desc'] = 'Custom title for the Job Board menu item. Leave empty to use the default plugin name.';
 $string['loginrequiredtoapply'] = 'You must log in to apply for vacancies.';
+
+// ==========================================================================
+// Additional strings for completeness (Phase 8.3).
+// ==========================================================================
+
+// Application view.
+$string['viewapplication'] = 'View application';
+$string['withdrawapplication'] = 'Withdraw application';
+
+// Exemption additional.
+$string['viewexemption'] = 'View exemption';
+$string['noexpiry'] = 'No expiry';
+$string['exemptiontype_desc'] = 'historico_iser, documentos_recientes, traslado_interno, or recontratacion';
+$string['exempteddocs_desc'] = 'List of document codes separated by | (e.g. cedula|rut|eps)';
+$string['exempteddocs_help'] = 'Select the document types that will not be required';
+$string['revokereason'] = 'Revoke reason';
+$string['approvedocument'] = 'Approve document';
+$string['avgvalidationtime'] = 'Average validation time';
+
+// Import exemptions.
+$string['csvdelimiter'] = 'CSV delimiter';
+$string['encoding'] = 'Encoding';
+$string['defaultexemptiontype'] = 'Default exemption type';
+$string['defaultexemptiontype_help'] = 'This type will be used when the exemptiontype column is empty';
+$string['defaultvalidfrom'] = 'Default valid from';
+$string['defaultvaliduntil'] = 'Default valid until';
+$string['previewonly'] = 'Preview only (do not import)';
+$string['importinstructions'] = 'Import instructions';
+$string['importinstructionstext'] = 'Prepare a CSV file with the data of users who will receive ISER exemptions.';
+$string['optionalcolumns'] = 'Optional columns';
+$string['previewmodenotice'] = 'Preview mode: no changes were made. Review the results and run again without the "Preview only" option.';
+$string['previewtotal'] = '{$a} exemptions will be created';
+$string['previewconfirm'] = 'To import these exemptions, go back and uncheck the "Preview only" option.';
+$string['importcomplete'] = 'Import complete';
+$string['importedsuccess'] = '{$a} exemptions imported successfully';
+$string['importedskipped'] = '{$a} users skipped (already have an active exemption)';
+$string['importerrors'] = 'Errors found';
+$string['importednote'] = 'Imported via CSV on {$a}';
+$string['importerror_usernotfound'] = 'Row {$a}: User not found';
+$string['importerror_alreadyexempt'] = 'Row {$a->row}: {$a->user} already has an active exemption';
+$string['importerror_createfailed'] = 'Row {$a->row}: Error creating exemption for {$a->user}';
+$string['numdocs'] = 'Num. documents';
+$string['documentref_desc'] = 'Supporting document reference (optional)';
+$string['notes_desc'] = 'Additional notes (optional)';
+
+// Interview scheduling extended.
+$string['dateandtime'] = 'Date and time';
+$string['interviewtype_inperson'] = 'In-person';
+$string['interviewtype_video'] = 'Video call';
+$string['interviewtype_phone'] = 'Phone';
+$string['locationorurl'] = 'Location or URL';
+$string['locationorurl_help'] = 'For in-person interviews, enter the address. For video calls, enter the meeting link.';
+$string['interviewinstructions'] = 'Interview instructions';
+$string['interviewscheduleerror'] = 'Error scheduling interview';
+$string['interviewcompleted'] = 'Interview completed';
+$string['interviewstatus_scheduled'] = 'Scheduled';
+$string['interviewstatus_confirmed'] = 'Confirmed';
+$string['interviewstatus_completed'] = 'Completed';
+$string['interviewstatus_cancelled'] = 'Cancelled';
+$string['interviewstatus_noshow'] = 'No show';
+$string['interviewstatus_rescheduled'] = 'Rescheduled';
+$string['confirmcancel'] = 'Are you sure you want to cancel this interview?';
+$string['markedasnoshow'] = 'Interview marked as no show';
+$string['overallrating'] = 'Overall rating';
+$string['rating_poor'] = 'Poor';
+$string['rating_fair'] = 'Fair';
+$string['rating_good'] = 'Good';
+$string['rating_verygood'] = 'Very good';
+$string['rating_excellent'] = 'Excellent';
+$string['recommendation'] = 'Recommendation';
+$string['recommend_hire'] = 'Hire';
+$string['recommend_furtherreview'] = 'Needs further review';
+$string['recommend_reject'] = 'Do not hire';
+$string['interviewfeedback'] = 'Interview feedback';
+$string['error:pastdate'] = 'Date must be in the future';
+$string['error:schedulingconflict'] = 'One or more interviewers have a scheduling conflict';
+
+// Committee management extended.
+$string['managecommittee'] = 'Manage selection committee';
+$string['defaultcommitteename'] = 'Selection Committee - {$a}';
+$string['initialmembers'] = 'Initial members';
+$string['initialmembers_help'] = 'Select the members that will initially form the committee (besides the chair)';
+$string['memberadded'] = 'Member added successfully';
+$string['memberremoved'] = 'Member removed successfully';
+$string['nomembers'] = 'No members in the committee';
+$string['maxscore'] = 'Maximum score';
+$string['nocriteria'] = 'No evaluation criteria defined';
+$string['editcriteria'] = 'Edit criteria';
+$string['rank'] = 'Rank';
+$string['evaluate'] = 'Evaluate';
+$string['decide'] = 'Decide';
+$string['evaluateapplication'] = 'Evaluate application';
+$string['evaluationscore'] = 'Evaluation score';
+$string['evaluationvote'] = 'Vote';
+$string['evaluationcomments'] = 'Evaluation comments';
+$string['marginal'] = 'Marginal';
