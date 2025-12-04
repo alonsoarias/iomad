@@ -318,7 +318,6 @@ $string['quickactions'] = 'Quick actions';
 // Configuration.
 $string['generalsettings'] = 'General settings';
 $string['documentsettings'] = 'Document settings';
-$string['notificationsettings'] = 'Notification settings';
 $string['workflowsettings'] = 'Workflow settings';
 $string['securitysettings'] = 'Security settings';
 $string['multitenentsettings'] = 'Multi-tenant settings';
@@ -786,8 +785,6 @@ $string['reportdocuments'] = 'Documents';
 $string['reportreviewers'] = 'Reviewers';
 $string['reporttimeline'] = 'Timeline';
 $string['allvacancies'] = 'All Vacancies';
-$string['datefrom'] = 'From';
-$string['dateto'] = 'To';
 $string['totalapplications'] = 'Total Applications';
 $string['selected'] = 'Selected';
 $string['rejected'] = 'Rejected';
@@ -824,7 +821,6 @@ $string['previousapplication'] = 'Previous Application';
 $string['applicationof'] = 'Application {$a->current} of {$a->total}';
 $string['nodocumentstoreview'] = 'No documents to review';
 $string['alldocumentsreviewed'] = 'All documents have been reviewed';
-$string['pendingdocuments'] = 'Pending Documents';
 $string['reviewedby'] = 'Reviewed by';
 $string['reviewedon'] = 'Reviewed on';
 $string['documentstatus'] = 'Document Status';
@@ -1133,6 +1129,7 @@ $string['interviewobservations'] = 'Interview observations';
 $string['resultrecorded'] = 'Result recorded successfully';
 $string['completeinterview'] = 'Complete interview';
 $string['confirmnoshow'] = 'Are you sure you want to mark this applicant as no show?';
+$string['markednoshow'] = 'Marked as no show by {$a->user} on {$a->time}. Notes: {$a->notes}';
 
 // Selection committee.
 $string['selectioncommittee'] = 'Selection committee';
@@ -1190,6 +1187,8 @@ $string['approvalvotes'] = 'Approval votes';
 $string['rejectionvotes'] = 'Rejection votes';
 $string['abstentions'] = 'Abstentions';
 $string['strong_approve'] = 'Strongly approve';
+$string['recommendation_approve'] = 'Recommended';
+$string['recommendation_reject'] = 'Not recommended';
 
 // Decision.
 $string['makedecision'] = 'Make decision';
@@ -1237,7 +1236,6 @@ $string['useridentifier'] = 'User identifier';
 $string['andmore'] = 'and {$a} more...';
 
 // Table headers additional.
-$string['row'] = 'Row';
 $string['result'] = 'Result';
 
 // ==========================================================================
@@ -1276,7 +1274,6 @@ $string['showinmainmenu'] = 'Show in main navigation menu';
 $string['showinmainmenu_desc'] = 'If enabled, Job Board will appear in the main navigation menu (top bar) with dropdown submenus.';
 $string['mainmenutitle'] = 'Menu title';
 $string['mainmenutitle_desc'] = 'Custom title for the Job Board menu item. Leave empty to use the default plugin name.';
-$string['loginrequiredtoapply'] = 'You must log in to apply for vacancies.';
 
 // ==========================================================================
 // Additional strings for completeness (Phase 8.3).

@@ -475,7 +475,6 @@ $string['guideline4'] = 'Una vez enviada la postulación, recibirá un correo de
 // Application list strings.
 $string['dateapplied'] = 'Fecha de postulación';
 $string['filterbystatus'] = 'Filtrar por estado';
-$string['allstatuses'] = 'Todos los estados';
 $string['noapplicationsfound'] = 'No se encontraron postulaciones';
 $string['browsevacancies'] = 'Explorar vacantes disponibles';
 $string['documentsuploaded'] = 'documentos cargados';
@@ -592,8 +591,6 @@ $string['searchapplicant'] = 'Buscar postulante...';
 $string['applicant'] = 'Postulante';
 $string['applications'] = 'Postulaciones';
 $string['exemption'] = 'Excepción';
-$string['exportcsv'] = 'Exportar CSV';
-$string['exportexcel'] = 'Exportar Excel';
 
 // Notification strings.
 $string['notification_application_received_subject'] = 'Confirmación de postulación - {VACANCY_TITLE}';
@@ -770,7 +767,6 @@ $string['filterbytype'] = 'Filtrar por tipo';
 $string['filterbyvacancy'] = 'Filtrar por vacante';
 $string['filterbyreviewer'] = 'Filtrar por revisor';
 $string['filterbydate'] = 'Filtrar por fecha';
-$string['clearfilters'] = 'Limpiar filtros';
 $string['applyfilters'] = 'Aplicar filtros';
 
 // Statistics.
@@ -795,9 +791,6 @@ $string['nourgentitems'] = 'No hay items urgentes';
 // Phase 4: ISER Exemptions and Advanced Management strings.
 
 // Exemption management.
-$string['manageexemptions'] = 'Gestionar excepciones ISER';
-$string['addexemption'] = 'Agregar excepción';
-$string['editexemption'] = 'Editar excepción';
 $string['viewexemption'] = 'Ver excepción';
 $string['revokeexemption'] = 'Revocar excepción';
 $string['exemptiondetails'] = 'Detalles de la excepción';
@@ -973,10 +966,9 @@ $string['rejectionvotes'] = 'Votos en contra';
 $string['abstentions'] = 'Abstenciones';
 $string['committeeRecommendation'] = 'Recomendación del comité';
 $string['strong_approve'] = 'Fuertemente recomendado';
-$string['approve'] = 'Recomendado';
+$string['recommendation_approve'] = 'Recomendado';
 $string['marginal'] = 'Marginal';
-$string['reject'] = 'No recomendado';
-$string['pending'] = 'Pendiente';
+$string['recommendation_reject'] = 'No recomendado';
 
 // Decision.
 $string['makedecision'] = 'Tomar decisión';
@@ -1160,8 +1152,6 @@ $string['validfrom_help'] = 'La fecha desde la cual este elemento es válido';
 $string['validuntil_help'] = 'La fecha hasta la cual este elemento permanece válido';
 
 // Documentos de usuario/postulación.
-$string['applications'] = 'Postulaciones';
-$string['documents'] = 'Documentos';
 $string['nodocumentsrequired'] = 'No se requieren documentos para esta vacante';
 $string['alldocumentssubmitted'] = 'Todos los documentos requeridos han sido enviados';
 $string['documentsmissing'] = 'Faltan algunos documentos requeridos';
