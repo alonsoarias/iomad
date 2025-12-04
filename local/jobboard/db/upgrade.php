@@ -490,5 +490,19 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024120509, 'local', 'jobboard');
     }
 
+    // Phase 6 upgrades: UI/UX Improvements and Production Ready.
+    if ($oldversion < 2024120510) {
+
+        // Purge caches to ensure new templates and JS are loaded.
+        purge_all_caches();
+
+        // Set default UI preferences.
+        set_config('vacancies_per_page', 12, 'local_jobboard');
+        set_config('show_dashboard_widgets', 1, 'local_jobboard');
+        set_config('enable_ajax_filters', 1, 'local_jobboard');
+
+        upgrade_plugin_savepoint(true, 2024120510, 'local', 'jobboard');
+    }
+
     return true;
 }

@@ -1,0 +1,69 @@
+{{!
+    @template local_jobboard/application_row
+
+    Template for displaying a single application row in a table.
+
+    Context variables required for this template:
+    * id - Application ID
+    * vacancycode - Vacancy code
+    * vacancytitle - Vacancy title
+    * applicantname - Applicant name (for reviewers)
+    * status - Current status
+    * statusclass - CSS class for status
+    * statuslabel - Localized status label
+    * timecreated - Formatted creation date
+    * documentcount - Number of documents
+    * documentsvalidated - Number of validated documents
+    * viewurl - URL to view application
+    * canreview - Boolean if user can review
+
+    Example context (json):
+    {
+        "id": 1,
+        "vacancycode": "VAC2024-001",
+        "vacancytitle": "Developer",
+        "status": "submitted",
+        "statusclass": "info",
+        "statuslabel": "Submitted",
+        "timecreated": "15 Jan 2024",
+        "documentcount": 5,
+        "documentsvalidated": 3,
+        "viewurl": "/local/jobboard/application.php?id=1",
+        "canreview": false
+    }
+}}
+<tr data-application-id="{{id}}" class="application-row">
+    <td>
+        <a href="{{viewurl}}" class="font-weight-bold">{{vacancycode}}</a>
+        <br>
+        <small class="text-muted">{{vacancytitle}}</small>
+    </td>
+    {{#applicantname}}
+        <td>{{applicantname}}</td>
+    {{/applicantname}}
+    <td>
+        <span class="badge badge-{{statusclass}}">{{statuslabel}}</span>
+    </td>
+    <td>
+        <div class="progress" style="height: 20px; min-width: 100px;">
+            <div class="progress-bar bg-success" role="progressbar" 
+                 style="width: {{documentpercent}}%;" 
+                 aria-valuenow="{{documentsvalidated}}" 
+                 aria-valuemin="0" 
+                 aria-valuemax="{{documentcount}}">
+                {{documentsvalidated}}/{{documentcount}}
+            </div>
+        </div>
+    </td>
+    <td>{{timecreated}}</td>
+    <td class="text-right">
+        <a href="{{viewurl}}" class="btn btn-sm btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
+            {{#pix}}i/preview, core{{/pix}}
+        </a>
+        {{#canreview}}
+            <a href="{{reviewurl}}" class="btn btn-sm btn-outline-success" title="{{#str}}validate, local_jobboard{{/str}}">
+                {{#pix}}i/checked, core{{/pix}}
+            </a>
+        {{/canreview}}
+    </td>
+</tr>

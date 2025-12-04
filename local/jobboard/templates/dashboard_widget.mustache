@@ -1,0 +1,50 @@
+{{!
+    @template local_jobboard/dashboard_widget
+
+    Dashboard statistics widget template.
+
+    Context variables required for this template:
+    * title - Widget title
+    * value - Main value to display
+    * subtitle - Optional subtitle
+    * icon - Icon name
+    * color - Bootstrap color class (primary, success, warning, danger, info)
+    * url - Optional link URL
+
+    Example context (json):
+    {
+        "title": "Active Vacancies",
+        "value": 12,
+        "subtitle": "3 closing soon",
+        "icon": "briefcase",
+        "color": "primary",
+        "url": "/local/jobboard/vacancies.php"
+    }
+}}
+<div class="card jobboard-widget border-{{color}} h-100">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h6 class="card-subtitle mb-2 text-muted">{{title}}</h6>
+                <h2 class="card-title mb-0 text-{{color}}">
+                    {{#url}}<a href="{{url}}" class="text-{{color}}">{{/url}}
+                    {{value}}
+                    {{#url}}</a>{{/url}}
+                </h2>
+                {{#subtitle}}
+                    <small class="text-muted">{{subtitle}}</small>
+                {{/subtitle}}
+            </div>
+            <div class="widget-icon bg-{{color}} text-white rounded-circle p-3">
+                {{#pix}}i/{{icon}}, core{{/pix}}
+            </div>
+        </div>
+    </div>
+    {{#url}}
+        <div class="card-footer bg-transparent border-{{color}}">
+            <a href="{{url}}" class="small text-{{color}}">
+                {{#str}}view, local_jobboard{{/str}} {{#pix}}i/next, core{{/pix}}
+            </a>
+        </div>
+    {{/url}}
+</div>

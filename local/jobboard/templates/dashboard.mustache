@@ -1,0 +1,107 @@
+{{!
+    @template local_jobboard/dashboard
+
+    Main dashboard template.
+
+    Context variables required for this template:
+    * widgets - Array of dashboard widgets
+    * recentactivity - Array of recent activity items
+    * alerts - Array of alert items
+    * canmanage - Boolean if user can manage vacancies
+
+    Example context (json):
+    {
+        "widgets": [],
+        "recentactivity": [],
+        "alerts": [],
+        "canmanage": true
+    }
+}}
+<div class="jobboard-dashboard" data-region="dashboard">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>{{#str}}dashboard, local_jobboard{{/str}}</h2>
+        </div>
+    </div>
+
+    {{! Statistics Widgets }}
+    <div class="row mb-4">
+        {{#widgets}}
+            <div class="col-md-6 col-lg-3 mb-3">
+                {{> local_jobboard/dashboard_widget}}
+            </div>
+        {{/widgets}}
+    </div>
+
+    <div class="row">
+        {{! Recent Activity }}
+        <div class="col-lg-8 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">{{#str}}recentactivity, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="card-body">
+                    {{#hasrecentactivity}}
+                        <ul class="list-group list-group-flush">
+                            {{#recentactivity}}
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <span class="badge badge-{{typeclass}} mr-2">{{typelabel}}</span>
+                                        {{{message}}}
+                                    </div>
+                                    <small class="text-muted">{{timeago}}</small>
+                                </li>
+                            {{/recentactivity}}
+                        </ul>
+                    {{/hasrecentactivity}}
+                    {{^hasrecentactivity}}
+                        <p class="text-muted mb-0">{{#str}}noresults, local_jobboard{{/str}}</p>
+                    {{/hasrecentactivity}}
+                </div>
+            </div>
+        </div>
+
+        {{! Alerts and Quick Actions }}
+        <div class="col-lg-4 mb-4">
+            {{#hasalerts}}
+                <div class="card mb-3">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">{{#str}}alerts, local_jobboard{{/str}}</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {{#alerts}}
+                            <li class="list-group-item list-group-item-{{alertclass}}">
+                                {{#pix}}i/warning, core{{/pix}}
+                                {{{message}}}
+                            </li>
+                        {{/alerts}}
+                    </ul>
+                </div>
+            {{/hasalerts}}
+
+            {{#canmanage}}
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{#str}}quickactions, local_jobboard{{/str}}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{{createvacancyurl}}" class="btn btn-primary btn-block mb-2">
+                                {{#pix}}i/addblock, core{{/pix}}
+                                {{#str}}newvacancy, local_jobboard{{/str}}
+                            </a>
+                            <a href="{{manageapplicationsurl}}" class="btn btn-outline-primary btn-block mb-2">
+                                {{#pix}}i/grades, core{{/pix}}
+                                {{#str}}reviewapplications, local_jobboard{{/str}}
+                            </a>
+                            <a href="{{reportsurl}}" class="btn btn-outline-secondary btn-block">
+                                {{#pix}}i/report, core{{/pix}}
+                                {{#str}}reports, local_jobboard{{/str}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {{/canmanage}}
+        </div>
+    </div>
+</div>
