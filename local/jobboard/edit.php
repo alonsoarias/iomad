@@ -53,7 +53,7 @@ $PAGE->set_pagelayout('admin');
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 
-$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/manage.php'));
+$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
 $PAGE->navbar->add($pagetitle);
 
 // Create form.
@@ -61,7 +61,7 @@ $form = new \local_jobboard\forms\vacancy_form(null, ['vacancy' => $vacancy]);
 
 // Handle cancel.
 if ($form->is_cancelled()) {
-    redirect(new moodle_url('/local/jobboard/manage.php'));
+    redirect(new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
 }
 
 // Handle submission.
@@ -78,7 +78,7 @@ if ($data = $form->get_data()) {
         }
 
         redirect(
-            new moodle_url('/local/jobboard/vacancy.php', ['id' => $vacancy->id]),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancy->id]),
             $message,
             null,
             \core\output\notification::NOTIFY_SUCCESS

@@ -56,9 +56,9 @@ $PAGE->set_pagelayout('standard');
 
 // Navbar.
 $PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
-$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/manage.php'));
+$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
 $PAGE->navbar->add(get_string('viewapplication', 'local_jobboard'),
-    new moodle_url('/local/jobboard/application.php', ['id' => $application->id]));
+    new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]));
 $PAGE->navbar->add(get_string('validatedocument', 'local_jobboard'));
 
 // Handle form submission.
@@ -72,7 +72,7 @@ if ($action === 'validate' || $action === 'reject') {
     $document->validate($isvalid, $rejectreason, $notes);
 
     redirect(
-        new moodle_url('/local/jobboard/application.php', ['id' => $application->id]),
+        new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]),
         get_string($isvalid ? 'documentvalidated' : 'documentrejected', 'local_jobboard'),
         null,
         \core\output\notification::NOTIFY_SUCCESS
@@ -202,7 +202,7 @@ echo '</div>';
 echo '</div>';
 
 // Back button.
-echo '<a href="' . new moodle_url('/local/jobboard/application.php', ['id' => $application->id]) .
+echo '<a href="' . new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]) .
     '" class="btn btn-secondary">' . get_string('back') . '</a>';
 
 echo $OUTPUT->footer();

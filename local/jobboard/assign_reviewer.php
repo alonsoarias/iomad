@@ -44,7 +44,7 @@ $PAGE->set_pagelayout('admin');
 
 // Navbar.
 $PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
-$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/manage.php'));
+$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
 $PAGE->navbar->add(get_string('assignreviewer', 'local_jobboard'));
 
 // Handle actions.

@@ -64,7 +64,7 @@ $PAGE->set_pagelayout('admin');
 
 // Navbar.
 $PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
-$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/manage.php'));
+$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
 $PAGE->navbar->add(format_string($vacancy->code));
 $PAGE->navbar->add(get_string('applications', 'local_jobboard'));
 
@@ -89,7 +89,7 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('manageapplications', 'local_jobboard') . ': ' . format_string($vacancy->title));
 
 // Back link.
-echo '<p><a href="' . new moodle_url('/local/jobboard/manage.php') . '">' .
+echo '<p><a href="' . new moodle_url('/local/jobboard/index.php', ['view' => 'manage']) . '">' .
     get_string('backtomanage', 'local_jobboard') . '</a></p>';
 
 // Stats cards.
@@ -242,7 +242,7 @@ if (empty($applications)) {
 
         // Actions.
         $actions = [];
-        $viewurl = new moodle_url('/local/jobboard/application.php', ['id' => $app->id]);
+        $viewurl = new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]);
         $actions[] = html_writer::link($viewurl, get_string('view'), ['class' => 'btn btn-sm btn-primary']);
 
         $row[] = implode(' ', $actions);

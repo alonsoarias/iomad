@@ -67,9 +67,9 @@ $PAGE->set_pagelayout('standard');
 
 // Navbar.
 $PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
-$PAGE->navbar->add(get_string('myapplications', 'local_jobboard'), new moodle_url('/local/jobboard/applications.php'));
+$PAGE->navbar->add(get_string('myapplications', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'applications']));
 $PAGE->navbar->add(get_string('viewapplication', 'local_jobboard'),
-    new moodle_url('/local/jobboard/application.php', ['id' => $applicationid]));
+    new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $applicationid]));
 $PAGE->navbar->add(get_string('reuploaddocument', 'local_jobboard'));
 
 /**
@@ -176,7 +176,7 @@ $customdata = [
 $mform = new reupload_form(null, $customdata);
 
 if ($mform->is_cancelled()) {
-    redirect(new moodle_url('/local/jobboard/application.php', ['id' => $applicationid]));
+    redirect(new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $applicationid]));
 }
 
 if ($data = $mform->get_data()) {
@@ -200,7 +200,7 @@ if ($data = $mform->get_data()) {
         }
 
         redirect(
-            new moodle_url('/local/jobboard/application.php', ['id' => $applicationid]),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $applicationid]),
             get_string('documentreuploaded', 'local_jobboard'),
             null,
             \core\output\notification::NOTIFY_SUCCESS

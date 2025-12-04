@@ -261,7 +261,7 @@ class schedule_interview_form extends moodleform {
 $mform = new schedule_interview_form(null, ['applicationid' => $applicationid]);
 
 if ($mform->is_cancelled()) {
-    redirect(new moodle_url('/local/jobboard/application.php', ['id' => $applicationid]));
+    redirect(new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $applicationid]));
 } else if ($data = $mform->get_data()) {
     $interviewid = interview::schedule(
         $applicationid,
