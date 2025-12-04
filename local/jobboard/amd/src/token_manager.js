@@ -71,19 +71,21 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/modal_fact
      */
     TokenManager.prototype.confirmAndRevoke = function(tokenId, button) {
         var self = this;
+        var loadedStrings = null;
         Str.get_strings([
             {key: 'api:token:confirmrevoke', component: 'local_jobboard'},
             {key: 'api:token:revoke', component: 'local_jobboard'},
             {key: 'confirm', component: 'local_jobboard'},
             {key: 'cancel', component: 'local_jobboard'}
         ]).then(function(strings) {
+            loadedStrings = strings;
             return ModalFactory.create({
                 type: ModalFactory.types.SAVE_CANCEL,
                 title: strings[1],
                 body: strings[0]
             });
         }).then(function(modal) {
-            modal.setSaveButtonText(strings[2]);
+            modal.setSaveButtonText(loadedStrings[2]);
             modal.getRoot().on(ModalEvents.save, function() {
                 self.revokeToken(tokenId, button);
             });
@@ -159,19 +161,21 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/modal_fact
      */
     TokenManager.prototype.confirmAndDelete = function(tokenId, button) {
         var self = this;
+        var loadedStrings = null;
         Str.get_strings([
             {key: 'api:token:confirmdelete', component: 'local_jobboard'},
             {key: 'api:token:delete', component: 'local_jobboard'},
             {key: 'confirm', component: 'local_jobboard'},
             {key: 'cancel', component: 'local_jobboard'}
         ]).then(function(strings) {
+            loadedStrings = strings;
             return ModalFactory.create({
                 type: ModalFactory.types.SAVE_CANCEL,
                 title: strings[1],
                 body: strings[0]
             });
         }).then(function(modal) {
-            modal.setSaveButtonText(strings[2]);
+            modal.setSaveButtonText(loadedStrings[2]);
             modal.getRoot().on(ModalEvents.save, function() {
                 self.deleteToken(tokenId, button);
             });
