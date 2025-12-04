@@ -1309,3 +1309,12 @@ $string['reuploadhelp'] = 'Suba una nueva versión del documento que fue rechaza
 $string['documentreuploaded'] = 'Documento subido exitosamente. Su postulación está nuevamente en revisión.';
 $string['uploadfailed'] = 'Error al subir el documento. Por favor intente de nuevo.';
 $string['cannotreupload'] = 'No puede volver a cargar documentos para esta postulación en su estado actual.';
+
+// Configuración de navegación.
+$string['navigationsettings'] = 'Configuración de navegación';
+$string['navigationsettings_desc'] = 'Configure cómo aparece Bolsa de Empleo en la navegación del sitio.';
+$string['showinmainmenu'] = 'Mostrar en menú de navegación principal';
+$string['showinmainmenu_desc'] = 'Si está habilitado, Bolsa de Empleo aparecerá en el menú de navegación principal (barra superior) con submenús desplegables.';
+$string['mainmenutitle'] = 'Título del menú';
+$string['mainmenutitle_desc'] = 'Título personalizado para el elemento de menú de Bolsa de Empleo. Déjelo vacío para usar el nombre predeterminado del plugin.';
+$string['loginrequiredtoapply'] = 'Debe iniciar sesión para postularse a las vacantes.';

@@ -1268,3 +1268,12 @@ $string['reuploadhelp'] = 'Upload a new version of the document that was rejecte
 $string['documentreuploaded'] = 'Document uploaded successfully. Your application is now under review again.';
 $string['uploadfailed'] = 'Failed to upload document. Please try again.';
 $string['cannotreupload'] = 'Cannot re-upload documents for this application in its current status.';
+
+// Navigation settings.
+$string['navigationsettings'] = 'Navigation Settings';
+$string['navigationsettings_desc'] = 'Configure how Job Board appears in the site navigation.';
+$string['showinmainmenu'] = 'Show in main navigation menu';
+$string['showinmainmenu_desc'] = 'If enabled, Job Board will appear in the main navigation menu (top bar) with dropdown submenus.';
+$string['mainmenutitle'] = 'Menu title';
+$string['mainmenutitle_desc'] = 'Custom title for the Job Board menu item. Leave empty to use the default plugin name.';
+$string['loginrequiredtoapply'] = 'You must log in to apply for vacancies.';

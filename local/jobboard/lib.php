@@ -27,10 +27,14 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Adds navigation nodes to the main navigation.
  *
+ * This function adds Job Board to both:
+ * 1. The Moodle navigation drawer (side navigation)
+ * 2. The main navigation menu (custom menu items in top bar)
+ *
  * @param global_navigation $navigation The global navigation object.
  */
 function local_jobboard_extend_navigation(global_navigation $navigation) {
-    global $USER, $PAGE;
+    global $USER, $PAGE, $CFG;
 
     $context = context_system::instance();
     $isloggedin = isloggedin() && !isguestuser();
@@ -38,7 +42,65 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
     // Check if public page is enabled and navigation link should be shown.
     $enablepublic = get_config('local_jobboard', 'enable_public_page');
     $showpublicnav = get_config('local_jobboard', 'show_public_nav_link');
+    $showinmainmenu = get_config('local_jobboard', 'show_in_main_menu');
 
+    // Get custom menu title or use default.
+    $menutitle = get_config('local_jobboard', 'main_menu_title');
+    if (empty($menutitle)) {
+        $menutitle = get_string('jobboard', 'local_jobboard');
+    }
+
+    // Add to custom menu items (main navigation bar) if enabled.
+    if ($showinmainmenu) {
+        // Store original custom menu items if not already done.
+        if (!isset($CFG->dbunmodifiedcustommenuitems_jobboard)) {
+            $CFG->dbunmodifiedcustommenuitems_jobboard = $CFG->custommenuitems ?? '';
+        }
+
+        // Build the Job Board menu entry with submenus.
+        $menuentry = "\n$menutitle|/local/jobboard/index.php";
+
+        // Add submenu items based on user capabilities and settings.
+        if ($enablepublic) {
+            $publiclabel = get_string('publicvacancies', 'local_jobboard');
+            $menuentry .= "\n-$publiclabel|/local/jobboard/index.php?view=public";
+        }
+
+        if ($isloggedin) {
+            // Vacancies submenu.
+            if (has_capability('local/jobboard:apply', $context) || has_capability('local/jobboard:viewallvacancies', $context)) {
+                $vacancylabel = get_string('vacancies', 'local_jobboard');
+                $menuentry .= "\n-$vacancylabel|/local/jobboard/index.php?view=vacancies";
+            }
+
+            // My Applications submenu.
+            if (has_capability('local/jobboard:apply', $context)) {
+                $applabel = get_string('myapplications', 'local_jobboard');
+                $menuentry .= "\n-$applabel|/local/jobboard/index.php?view=applications";
+            }
+
+            // Management submenus for authorized users.
+            if (has_capability('local/jobboard:createvacancy', $context)) {
+                $managelabel = get_string('managevacancies', 'local_jobboard');
+                $menuentry .= "\n-$managelabel|/local/jobboard/index.php?view=manage";
+            }
+
+            if (has_capability('local/jobboard:reviewdocuments', $context)) {
+                $reviewlabel = get_string('reviewapplications', 'local_jobboard');
+                $menuentry .= "\n-$reviewlabel|/local/jobboard/index.php?view=review";
+            }
+
+            if (has_capability('local/jobboard:viewreports', $context)) {
+                $reportslabel = get_string('reports', 'local_jobboard');
+                $menuentry .= "\n-$reportslabel|/local/jobboard/index.php?view=reports";
+            }
+        }
+
+        // Append to custom menu items.
+        $CFG->custommenuitems .= $menuentry;
+    }
+
+    // Also add to the navigation drawer (side navigation).
     // For non-logged in users, show public vacancies link if enabled.
     if (!$isloggedin) {
         if ($enablepublic && $showpublicnav) {

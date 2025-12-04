@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120401;  // Phase 8.1: Admin pages and API refactoring.
+$plugin->version = 2025120402;  // Phase 8.2: Main menu navigation integration.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.7.1-beta';
+$plugin->release = '1.7.2-beta';

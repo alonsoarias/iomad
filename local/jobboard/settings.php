@@ -132,6 +132,32 @@ if ($hassiteconfig) {
     ));
 
     // ==========================================================================
+    // Navigation settings.
+    // ==========================================================================
+    $settings->add(new admin_setting_heading(
+        'local_jobboard/navigationheading',
+        get_string('navigationsettings', 'local_jobboard'),
+        get_string('navigationsettings_desc', 'local_jobboard')
+    ));
+
+    // Show in main navigation menu (custom menu items).
+    $settings->add(new admin_setting_configcheckbox(
+        'local_jobboard/show_in_main_menu',
+        get_string('showinmainmenu', 'local_jobboard'),
+        get_string('showinmainmenu_desc', 'local_jobboard'),
+        1
+    ));
+
+    // Main menu item title (can be customized).
+    $settings->add(new admin_setting_configtext(
+        'local_jobboard/main_menu_title',
+        get_string('mainmenutitle', 'local_jobboard'),
+        get_string('mainmenutitle_desc', 'local_jobboard'),
+        '',
+        PARAM_TEXT
+    ));
+
+    // ==========================================================================
     // Application limits settings.
     // ==========================================================================
     $settings->add(new admin_setting_heading(
