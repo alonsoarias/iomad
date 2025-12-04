@@ -76,12 +76,15 @@
         <FIELD NAME="vacancyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="status" TYPE="char" LENGTH="30" NOTNULL="true" DEFAULT="submitted" SEQUENCE="false" COMMENT="Status: submitted, under_review, docs_validated, docs_rejected, interview, selected, rejected, withdrawn"/>
+        <FIELD NAME="statusnotes" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Notes about current status"/>
         <FIELD NAME="isexemption" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="ISER historic exemption marker"/>
         <FIELD NAME="exemptionreason" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Reason for ISER exemption"/>
-        <FIELD NAME="consenttext" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Digital consent text signed"/>
+        <FIELD NAME="consentgiven" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Consent accepted"/>
+        <FIELD NAME="consenttimestamp" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Timestamp of consent"/>
         <FIELD NAME="consentip" TYPE="char" LENGTH="45" NOTNULL="false" SEQUENCE="false" COMMENT="IP address at consent time"/>
         <FIELD NAME="consentuseragent" TYPE="char" LENGTH="512" NOTNULL="false" SEQUENCE="false" COMMENT="User agent at consent time"/>
-        <FIELD NAME="consenttime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Timestamp of consent"/>
+        <FIELD NAME="digitalsignature" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Digital signature (full name)"/>
+        <FIELD NAME="coverletter" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Cover letter / motivation"/>
         <FIELD NAME="applicationdata" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Additional application data (JSON)"/>
         <FIELD NAME="reviewerid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Assigned reviewer"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -136,23 +139,22 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="documentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" COMMENT="Status: pending, approved, rejected"/>
-        <FIELD NAME="validatorid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="validationtime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="rejectreason" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="checklistitems" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Checklist items (JSON)"/>
-        <FIELD NAME="reviewernotes" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="isvalid" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1=valid, 0=rejected"/>
+        <FIELD NAME="validatedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="User who validated"/>
+        <FIELD NAME="rejectreason" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Reason code for rejection"/>
+        <FIELD NAME="notes" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Validator notes"/>
+        <FIELD NAME="checklistitems" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Checklist items completed (JSON)"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="documentid" TYPE="foreign" FIELDS="documentid" REFTABLE="local_jobboard_document" REFFIELDS="id"/>
-        <KEY NAME="validatorid" TYPE="foreign" FIELDS="validatorid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="validatedby" TYPE="foreign" FIELDS="validatedby" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
-        <INDEX NAME="doc_status_idx" UNIQUE="false" FIELDS="documentid, status"/>
+        <INDEX NAME="doc_unique" UNIQUE="true" FIELDS="documentid"/>
+        <INDEX NAME="isvalid_idx" UNIQUE="false" FIELDS="isvalid"/>
       </INDEXES>
     </TABLE>
 
@@ -236,11 +238,15 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="exemptiontype" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="historico_iser" SEQUENCE="false"/>
+        <FIELD NAME="documentref" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Reference document number"/>
         <FIELD NAME="exempteddocs" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Exempted document types (JSON array)"/>
         <FIELD NAME="validfrom" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="validuntil" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="notes" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timerevoked" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Time when revoked"/>
+        <FIELD NAME="revokedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="User who revoked"/>
+        <FIELD NAME="revokereason" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Reason for revocation"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
@@ -248,10 +254,12 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
         <KEY NAME="createdby" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="revokedby" TYPE="foreign" FIELDS="revokedby" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="user_type_idx" UNIQUE="false" FIELDS="userid, exemptiontype"/>
         <INDEX NAME="validity_idx" UNIQUE="false" FIELDS="validfrom, validuntil"/>
+        <INDEX NAME="active_idx" UNIQUE="false" FIELDS="timerevoked"/>
       </INDEXES>
     </TABLE>
 
@@ -260,12 +268,11 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Recipient user"/>
-        <FIELD NAME="notificationtype" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="body" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="entitytype" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="entityid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="issent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="templatecode" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Email template code"/>
+        <FIELD NAME="data" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Placeholder data (JSON)"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" COMMENT="Status: pending, sent, failed"/>
+        <FIELD NAME="attempts" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Send attempts"/>
+        <FIELD NAME="lasterror" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Last error message"/>
         <FIELD NAME="timesent" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
@@ -274,9 +281,9 @@
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="user_sent_idx" UNIQUE="false" FIELDS="userid, issent"/>
-        <INDEX NAME="type_idx" UNIQUE="false" FIELDS="notificationtype"/>
-        <INDEX NAME="sent_idx" UNIQUE="false" FIELDS="issent"/>
+        <INDEX NAME="user_status_idx" UNIQUE="false" FIELDS="userid, status"/>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="template_idx" UNIQUE="false" FIELDS="templatecode"/>
       </INDEXES>
     </TABLE>
 
@@ -335,6 +342,7 @@
         <FIELD NAME="requirements" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Validation requirements description"/>
         <FIELD NAME="checklistitems" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Default checklist items (JSON array)"/>
         <FIELD NAME="externalurl" TYPE="char" LENGTH="512" NOTNULL="false" SEQUENCE="false" COMMENT="External URL where to obtain the document"/>
+        <FIELD NAME="isrequired" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Document required for standard applications"/>
         <FIELD NAME="iserexempted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Exempted for ISER historic personnel"/>
         <FIELD NAME="defaultmaxagedays" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="sortorder" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -348,6 +356,7 @@
       <INDEXES>
         <INDEX NAME="code_unique" UNIQUE="true" FIELDS="code"/>
         <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
+        <INDEX NAME="isrequired_idx" UNIQUE="false" FIELDS="isrequired"/>
         <INDEX NAME="iserexempted_idx" UNIQUE="false" FIELDS="iserexempted"/>
       </INDEXES>
     </TABLE>

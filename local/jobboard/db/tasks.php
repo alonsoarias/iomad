@@ -15,10 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information for local_jobboard.
- *
- * Plugin for managing job vacancies and applications for adjunct professors.
- * Compatible with Moodle 4.1+ and Iomad multi-tenant.
+ * Scheduled tasks for local_jobboard.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -27,9 +24,35 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_jobboard';
-$plugin->version = 2024120401;  // Phase 2: Application System and Documents.
-$plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
-$plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '1.1.0-alpha';
+$tasks = [
+    [
+        'classname' => 'local_jobboard\task\send_notifications',
+        'blocking' => 0,
+        'minute' => '*/5',
+        'hour' => '*',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+        'disabled' => 0,
+    ],
+    [
+        'classname' => 'local_jobboard\task\check_closing_vacancies',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '8',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '*',
+        'disabled' => 0,
+    ],
+    [
+        'classname' => 'local_jobboard\task\cleanup_old_data',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '3',
+        'day' => '1',
+        'month' => '*',
+        'dayofweek' => '*',
+        'disabled' => 0,
+    ],
+];

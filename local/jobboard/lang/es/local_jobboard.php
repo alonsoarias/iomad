@@ -426,3 +426,193 @@ $string['active'] = 'Activo';
 $string['inactive'] = 'Inactivo';
 $string['enabled'] = 'Habilitado';
 $string['disabled'] = 'Deshabilitado';
+
+// Phase 2: Application System strings.
+$string['applytovacancy'] = 'Postularse a vacante';
+$string['vacancyinfo'] = 'Información de la vacante';
+$string['code'] = 'Código';
+$string['title'] = 'Título';
+$string['consentheader'] = 'Consentimiento Informado';
+$string['datatreatmentpolicytitle'] = 'Política de Tratamiento de Datos Personales';
+$string['defaultdatatreatmentpolicy'] = 'De acuerdo con la Ley 1581 de 2012 y el Decreto 1377 de 2013, autorizo el tratamiento de mis datos personales para fines del proceso de selección. Los datos serán utilizados exclusivamente para evaluar mi postulación y serán almacenados de forma segura.';
+$string['consentaccepttext'] = 'He leído y acepto la política de tratamiento de datos personales';
+$string['consentrequired'] = 'Debe aceptar la política de tratamiento de datos';
+$string['digitalsignature_help'] = 'Ingrese su nombre completo como firma digital para validar su consentimiento';
+$string['signaturetoooshort'] = 'La firma debe tener al menos 5 caracteres';
+$string['requireddocuments'] = 'Documentos Requeridos';
+$string['documentshelp'] = 'Suba los documentos requeridos en formato PDF, JPG o PNG. El tamaño máximo por archivo es de 10MB.';
+$string['documentrequired'] = 'El documento "{$a}" es obligatorio';
+$string['documentissuedate'] = 'Fecha de expedición';
+$string['documentexpired'] = 'El documento ha expirado (máximo {$a})';
+$string['additionalinfo'] = 'Información Adicional';
+$string['coverletter'] = 'Carta de presentación';
+$string['coverletter_help'] = 'Escriba una breve carta de presentación describiendo su motivación e interés en el cargo';
+$string['declaration'] = 'Declaración';
+$string['declarationtext'] = 'Declaro bajo la gravedad del juramento que la información proporcionada es veraz y los documentos anexos son auténticos. Entiendo que cualquier falsedad puede resultar en la exclusión del proceso y acciones legales.';
+$string['declarationaccept'] = 'Acepto la declaración anterior';
+$string['declarationrequired'] = 'Debe aceptar la declaración';
+$string['submitapplication'] = 'Enviar Postulación';
+$string['exemptionnotice'] = 'Aviso de Excepción';
+$string['exemptionapplied'] = 'Excepción ISER Aplicada';
+$string['exemptionreduceddocs'] = 'Sus requisitos de documentación han sido reducidos debido a su historial laboral en la institución.';
+$string['documentref'] = 'Referencia del documento';
+$string['exemptiontype_historico_iser'] = 'Personal Histórico ISER';
+$string['exemptiontype_documentos_recientes'] = 'Documentos Recientes Aprobados';
+$string['exemptiontype_traslado_interno'] = 'Traslado Interno';
+$string['exemptiontype_recontratacion'] = 'Recontratación';
+$string['vacancynotopen'] = 'La vacante no está abierta para postulaciones';
+$string['alreadyapplied'] = 'Ya tiene una postulación para esta vacante';
+$string['applicationcreatefailed'] = 'Error al crear la postulación';
+$string['applicationerror'] = 'Error en la postulación';
+$string['deadlinewarning'] = 'Atención: La vacante cierra en {$a} día(s)';
+$string['applicationguidelines'] = 'Instrucciones para postularse';
+$string['guideline1'] = 'Complete todos los campos obligatorios marcados con asterisco (*)';
+$string['guideline2'] = 'Suba documentos legibles y completos';
+$string['guideline3'] = 'Verifique que la información proporcionada sea correcta antes de enviar';
+$string['guideline4'] = 'Una vez enviada la postulación, recibirá un correo de confirmación';
+
+// Application list strings.
+$string['dateapplied'] = 'Fecha de postulación';
+$string['filterbystatus'] = 'Filtrar por estado';
+$string['allstatuses'] = 'Todos los estados';
+$string['noapplicationsfound'] = 'No se encontraron postulaciones';
+$string['browsevacancies'] = 'Explorar vacantes disponibles';
+$string['documentsuploaded'] = 'documentos cargados';
+$string['exemptionactive'] = 'Excepción ISER activa';
+
+// Application status strings.
+$string['status_submitted'] = 'Enviada';
+$string['status_under_review'] = 'En revisión';
+$string['status_docs_validated'] = 'Documentos validados';
+$string['status_docs_rejected'] = 'Documentos rechazados';
+$string['status_interview'] = 'Citado a entrevista';
+$string['status_selected'] = 'Seleccionado';
+$string['status_rejected'] = 'No seleccionado';
+$string['status_withdrawn'] = 'Retirada';
+
+// Application view strings.
+$string['viewapplication'] = 'Ver postulación';
+$string['application'] = 'Postulación';
+$string['currentstatus'] = 'Estado actual';
+$string['applicantinfo'] = 'Información del postulante';
+$string['applicationdetails'] = 'Detalles de la postulación';
+$string['consentgiven'] = 'Consentimiento otorgado';
+$string['uploadeddocuments'] = 'Documentos cargados';
+$string['statushistory'] = 'Historial de estados';
+$string['workflowactions'] = 'Acciones de flujo de trabajo';
+$string['changestatus'] = 'Cambiar estado';
+$string['updatestatus'] = 'Actualizar estado';
+$string['notes'] = 'Notas';
+$string['backtoapplications'] = 'Volver a postulaciones';
+$string['withdrawapplication'] = 'Retirar postulación';
+$string['confirmwithdraw'] = '¿Está seguro que desea retirar su postulación? Esta acción no se puede deshacer.';
+$string['cannotwithdraw'] = 'No puede retirar esta postulación en su estado actual';
+$string['statuschanged'] = 'Estado actualizado exitosamente';
+$string['invalidtransition'] = 'Transición de estado no válida';
+$string['viewvacancy'] = 'Ver vacante';
+$string['unknownvacancy'] = 'Vacante desconocida';
+$string['noaccess'] = 'No tiene acceso a este recurso';
+
+// Document validation strings.
+$string['validatedocument'] = 'Validar documento';
+$string['documentinfo'] = 'Información del documento';
+$string['documenttype'] = 'Tipo de documento';
+$string['filename'] = 'Nombre del archivo';
+$string['uploaded'] = 'Cargado';
+$string['viewdocument'] = 'Ver documento';
+$string['validationchecklist'] = 'Lista de verificación';
+$string['validationdecision'] = 'Decisión de validación';
+$string['approvedocument'] = 'Aprobar documento';
+$string['rejectdocument'] = 'Rechazar documento';
+$string['selectreason'] = 'Seleccione un motivo';
+$string['additionalnotes'] = 'Notas adicionales';
+$string['rejectreason_illegible'] = 'Documento ilegible';
+$string['rejectreason_expired'] = 'Documento vencido';
+$string['rejectreason_incomplete'] = 'Documento incompleto';
+$string['rejectreason_wrongtype'] = 'Tipo de documento incorrecto';
+$string['rejectreason_mismatch'] = 'Información no coincide';
+$string['validated'] = 'Validado';
+$string['rejected'] = 'Rechazado';
+$string['pendingvalidation'] = 'Pendiente de validación';
+$string['pending'] = 'Pendiente';
+
+// Validation checklist items.
+$string['checklist_legible'] = 'El documento es legible';
+$string['checklist_complete'] = 'El documento está completo';
+$string['checklist_namematch'] = 'El nombre coincide con el postulante';
+$string['checklist_cedula_number'] = 'El número de cédula es visible y legible';
+$string['checklist_cedula_photo'] = 'La fotografía es clara';
+$string['checklist_background_date'] = 'La fecha de expedición es reciente (máx. 3 meses)';
+$string['checklist_background_status'] = 'No registra antecedentes';
+$string['checklist_title_institution'] = 'La institución educativa es reconocida';
+$string['checklist_title_date'] = 'La fecha de grado es visible';
+$string['checklist_title_program'] = 'El programa académico es claro';
+$string['checklist_acta_number'] = 'El número de acta es visible';
+$string['checklist_acta_date'] = 'La fecha del acta es visible';
+$string['checklist_tarjeta_number'] = 'El número de matrícula es visible';
+$string['checklist_tarjeta_profession'] = 'La profesión está especificada';
+$string['checklist_rut_nit'] = 'El NIT está visible';
+$string['checklist_rut_updated'] = 'El RUT está actualizado';
+$string['checklist_eps_active'] = 'La afiliación está activa';
+$string['checklist_eps_entity'] = 'La entidad de EPS es clara';
+$string['checklist_pension_fund'] = 'El fondo de pensiones es claro';
+$string['checklist_pension_active'] = 'La afiliación está activa';
+$string['checklist_medical_date'] = 'La fecha del certificado es reciente';
+$string['checklist_medical_aptitude'] = 'El concepto de aptitud es favorable';
+$string['checklist_military_class'] = 'La clase de libreta es visible';
+$string['checklist_military_number'] = 'El número de libreta es visible';
+
+// Document types (doctype_ prefix).
+$string['doctype_sigep'] = 'Formato SIGEP II';
+$string['doctype_cedula'] = 'Cédula de Ciudadanía';
+$string['doctype_titulo_pregrado'] = 'Título de Pregrado';
+$string['doctype_titulo_postgrado'] = 'Título de Postgrado';
+$string['doctype_titulo_especializacion'] = 'Título de Especialización';
+$string['doctype_titulo_maestria'] = 'Título de Maestría';
+$string['doctype_titulo_doctorado'] = 'Título de Doctorado';
+$string['doctype_acta_grado'] = 'Acta de Grado';
+$string['doctype_tarjeta_profesional'] = 'Tarjeta Profesional';
+$string['doctype_libreta_militar'] = 'Libreta Militar';
+$string['doctype_rut'] = 'RUT';
+$string['doctype_eps'] = 'Certificado EPS';
+$string['doctype_pension'] = 'Certificado Pensión';
+$string['doctype_cuenta_bancaria'] = 'Certificación Bancaria';
+$string['doctype_antecedentes_procuraduria'] = 'Antecedentes Procuraduría';
+$string['doctype_antecedentes_contraloria'] = 'Antecedentes Contraloría';
+$string['doctype_antecedentes_policia'] = 'Antecedentes Policía';
+$string['doctype_rnmc'] = 'Registro Medidas Correctivas';
+$string['doctype_sijin'] = 'Certificado SIJIN';
+$string['doctype_certificado_medico'] = 'Certificado Médico';
+
+// Manage applications strings.
+$string['manageapplications'] = 'Gestionar postulaciones';
+$string['backtomanage'] = 'Volver a gestión';
+$string['searchapplicant'] = 'Buscar postulante...';
+$string['applicant'] = 'Postulante';
+$string['applications'] = 'Postulaciones';
+$string['exemption'] = 'Excepción';
+$string['exportcsv'] = 'Exportar CSV';
+$string['exportexcel'] = 'Exportar Excel';
+
+// Notification strings.
+$string['notification_application_received_subject'] = 'Confirmación de postulación - {VACANCY_TITLE}';
+$string['notification_application_received_body'] = '<p>Estimado/a {USER_NAME},</p><p>Hemos recibido su postulación para la vacante <strong>{VACANCY_TITLE}</strong> (Código: {VACANCY_CODE}).</p><p>Puede consultar el estado de su postulación en cualquier momento a través del siguiente enlace: <a href="{APPLICATION_URL}">{APPLICATION_URL}</a></p><p>Atentamente,<br>{SITE_NAME}</p>';
+$string['notification_under_review_subject'] = 'Su postulación está siendo revisada - {VACANCY_TITLE}';
+$string['notification_under_review_body'] = '<p>Estimado/a {USER_NAME},</p><p>Su postulación para la vacante <strong>{VACANCY_TITLE}</strong> ha pasado a estado de revisión.</p><p>Le informaremos cuando haya novedades.</p><p>Atentamente,<br>{SITE_NAME}</p>';
+$string['notification_docs_validated_subject'] = 'Documentos validados - {VACANCY_TITLE}';
+$string['notification_docs_validated_body'] = '<p>Estimado/a {USER_NAME},</p><p>Sus documentos para la vacante <strong>{VACANCY_TITLE}</strong> han sido validados exitosamente.</p><p>Atentamente,<br>{SITE_NAME}</p>';
+$string['notification_docs_rejected_subject'] = 'Documentos requieren corrección - {VACANCY_TITLE}';
+$string['notification_docs_rejected_body'] = '<p>Estimado/a {USER_NAME},</p><p>Algunos documentos de su postulación para la vacante <strong>{VACANCY_TITLE}</strong> requieren corrección.</p><p>Por favor ingrese al sistema para ver los detalles: <a href="{APPLICATION_URL}">{APPLICATION_URL}</a></p><p>Atentamente,<br>{SITE_NAME}</p>';
+$string['notification_interview_subject'] = 'Citación a entrevista - {VACANCY_TITLE}';
+$string['notification_interview_body'] = '<p>Estimado/a {USER_NAME},</p><p>Ha sido citado/a a entrevista para la vacante <strong>{VACANCY_TITLE}</strong>.</p><p>{NOTES}</p><p>Atentamente,<br>{SITE_NAME}</p>';
+$string['notification_selected_subject'] = '¡Felicitaciones! Ha sido seleccionado/a - {VACANCY_TITLE}';
+$string['notification_selected_body'] = '<p>Estimado/a {USER_NAME},</p><p>Nos complace informarle que ha sido seleccionado/a para la vacante <strong>{VACANCY_TITLE}</strong>.</p><p>Próximamente recibirá información sobre los siguientes pasos del proceso de contratación.</p><p>Atentamente,<br>{SITE_NAME}</p>';
+$string['notification_rejected_subject'] = 'Resultado del proceso de selección - {VACANCY_TITLE}';
+$string['notification_rejected_body'] = '<p>Estimado/a {USER_NAME},</p><p>Agradecemos su participación en el proceso de selección para la vacante <strong>{VACANCY_TITLE}</strong>.</p><p>En esta oportunidad, hemos seleccionado a otro candidato cuyo perfil se ajusta mejor a los requerimientos específicos del cargo.</p><p>Le animamos a seguir participando en futuras convocatorias.</p><p>Atentamente,<br>{SITE_NAME}</p>';
+$string['notification_closing_soon_subject'] = 'Vacante próxima a cerrar - {VACANCY_TITLE}';
+$string['notification_closing_soon_body'] = '<p>Estimado/a {USER_NAME},</p><p>La vacante <strong>{VACANCY_TITLE}</strong> cierra en {DAYS_LEFT} día(s).</p><p>Si está interesado/a, puede postularse antes del {CLOSE_DATE} en: <a href="{VACANCY_URL}">{VACANCY_URL}</a></p><p>Atentamente,<br>{SITE_NAME}</p>';
+
+// Task strings.
+$string['task:sendnotifications'] = 'Enviar notificaciones pendientes';
+$string['task:checkclosingvacancies'] = 'Verificar vacantes próximas a cerrar';
+$string['task:cleanupolddata'] = 'Limpiar datos antiguos';
