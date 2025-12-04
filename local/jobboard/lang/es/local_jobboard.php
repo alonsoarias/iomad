@@ -616,3 +616,177 @@ $string['notification_closing_soon_body'] = '<p>Estimado/a {USER_NAME},</p><p>La
 $string['task:sendnotifications'] = 'Enviar notificaciones pendientes';
 $string['task:checkclosingvacancies'] = 'Verificar vacantes próximas a cerrar';
 $string['task:cleanupolddata'] = 'Limpiar datos antiguos';
+
+// Phase 3: Workflow and Document Validation strings.
+
+// Reviewer management.
+$string['myreviews'] = 'Mis revisiones';
+$string['assignreviewers'] = 'Asignar revisores';
+$string['assignreviewer'] = 'Asignar revisor';
+$string['reviewer'] = 'Revisor';
+$string['reviewers'] = 'Revisores';
+$string['selectreviewer'] = 'Seleccionar revisor';
+$string['workload'] = 'Carga de trabajo';
+$string['currentworkload'] = 'Carga actual';
+$string['maxworkload'] = 'Carga máxima';
+$string['availablereviewers'] = 'Revisores disponibles';
+$string['noassignments'] = 'No tiene asignaciones pendientes';
+$string['pendingassignments'] = 'Asignaciones pendientes';
+$string['assignedto'] = 'Asignado a';
+$string['assignedby'] = 'Asignado por';
+$string['assignmentdate'] = 'Fecha de asignación';
+$string['unassigned'] = 'Sin asignar';
+$string['reassign'] = 'Reasignar';
+$string['autoassign'] = 'Asignación automática';
+$string['autoassigndesc'] = 'Asignar automáticamente postulaciones a revisores disponibles con balanceo de carga';
+$string['assignmentscompleted'] = '{$a} asignaciones completadas';
+$string['assignmenterror'] = 'Error al asignar revisor';
+$string['reviewerassigned'] = 'Revisor asignado exitosamente';
+$string['reviewersassigned'] = '{$a} revisores asignados exitosamente';
+$string['selectapplications'] = 'Seleccione las postulaciones a asignar';
+$string['noapplicationsselected'] = 'No se seleccionaron postulaciones';
+$string['allapplicationsassigned'] = 'Todas las postulaciones ya tienen revisor asignado';
+$string['myassignments'] = 'Mis asignaciones';
+
+// Bulk validation.
+$string['bulkvalidation'] = 'Validación masiva';
+$string['bulkvalidate'] = 'Validar en lote';
+$string['selectdocuments'] = 'Seleccionar documentos';
+$string['selectall'] = 'Seleccionar todo';
+$string['selectnone'] = 'Deseleccionar todo';
+$string['approveselected'] = 'Aprobar seleccionados';
+$string['rejectselected'] = 'Rechazar seleccionados';
+$string['documentssummary'] = 'Resumen de documentos';
+$string['documentsvalidated'] = 'Documentos validados';
+$string['documentsrejected'] = 'Documentos rechazados';
+$string['documentspending'] = 'Documentos pendientes';
+$string['validationcomplete'] = 'Validación completada';
+$string['validationresults'] = 'Resultados de validación';
+$string['validationsuccess'] = '{$a} documentos procesados exitosamente';
+$string['validationfailed'] = '{$a} documentos fallaron';
+$string['bydocumenttype'] = 'Por tipo de documento';
+$string['byapplication'] = 'Por postulación';
+$string['autovalidate'] = 'Auto-validar';
+$string['autovalidatedesc'] = 'Validar automáticamente documentos que cumplen las reglas predefinidas';
+$string['autovalidationrules'] = 'Reglas de auto-validación';
+$string['documentsautovalidated'] = '{$a} documentos auto-validados';
+$string['noautovalidationdocs'] = 'No hay documentos que cumplan las reglas de auto-validación';
+
+// Document re-upload.
+$string['reupload'] = 'Volver a cargar';
+$string['reuploaddocument'] = 'Volver a cargar documento';
+$string['reuploaddesc'] = 'Su documento fue rechazado. Por favor cargue una nueva versión corregida.';
+$string['previousversion'] = 'Versión anterior';
+$string['newversion'] = 'Nueva versión';
+$string['superseded'] = 'Reemplazado';
+$string['documenthistory'] = 'Historial del documento';
+$string['reuploadsuccess'] = 'Documento recargado exitosamente';
+$string['waitingforreupload'] = 'Esperando nueva versión';
+
+// Dashboard.
+$string['applicationpipeline'] = 'Pipeline de postulaciones';
+$string['totalapplications'] = 'Total postulaciones';
+$string['validationstats'] = 'Estadísticas de validación';
+$string['avgvalidationtime'] = 'Tiempo promedio de validación';
+$string['recentapplications'] = 'Postulaciones recientes';
+$string['norecentapplications'] = 'No hay postulaciones recientes';
+$string['viewreports'] = 'Ver reportes';
+$string['createvacancy'] = 'Crear vacante';
+
+// Reports.
+$string['reportoverview'] = 'Resumen general';
+$string['reportapplications'] = 'Reporte de postulaciones';
+$string['reportdocuments'] = 'Reporte de documentos';
+$string['reportreviewers'] = 'Desempeño de revisores';
+$string['reporttimeline'] = 'Línea de tiempo';
+$string['generatereport'] = 'Generar reporte';
+$string['daterange'] = 'Rango de fechas';
+$string['fromdate'] = 'Desde';
+$string['todate'] = 'Hasta';
+$string['vacancy'] = 'Vacante';
+$string['allvacancies'] = 'Todas las vacantes';
+$string['allreviewers'] = 'Todos los revisores';
+$string['totaldocuments'] = 'Total documentos';
+$string['totalreviewed'] = 'Total revisados';
+$string['validationrate'] = 'Tasa de validación';
+$string['rejectionrate'] = 'Tasa de rechazo';
+$string['applicationsbystatus'] = 'Postulaciones por estado';
+$string['applicationtrends'] = 'Tendencias de postulaciones';
+$string['dailyapplications'] = 'Postulaciones diarias';
+$string['documentsbytype'] = 'Documentos por tipo';
+$string['validationbytype'] = 'Validación por tipo';
+$string['commonrejections'] = 'Rechazos comunes';
+$string['toprejectionreasons'] = 'Principales motivos de rechazo';
+$string['reviewerperformance'] = 'Desempeño de revisores';
+$string['reviewerworkload'] = 'Carga de trabajo de revisores';
+$string['avgprocessingtime'] = 'Tiempo promedio de procesamiento';
+$string['timetovalidation'] = 'Tiempo hasta validación';
+$string['timetoselection'] = 'Tiempo hasta selección';
+$string['noreportdata'] = 'No hay datos para el reporte seleccionado';
+
+// My reviews page.
+$string['sortby'] = 'Ordenar por';
+$string['datesubmitted'] = 'Fecha de envío';
+$string['closingdate'] = 'Fecha de cierre';
+$string['progress'] = 'Progreso';
+$string['closingsoon'] = 'Cierra en {$a} día(s)';
+$string['reviewdocuments'] = 'Revisar documentos';
+$string['documents'] = 'Documentos';
+
+// Rejection reasons.
+$string['rejectreason_ilegible'] = 'Documento ilegible';
+$string['rejectreason_vencido'] = 'Documento vencido';
+$string['rejectreason_incompleto'] = 'Documento incompleto';
+$string['rejectreason_formato_incorrecto'] = 'Formato incorrecto';
+$string['rejectreason_datos_erroneos'] = 'Datos erróneos';
+$string['rejectreason_no_coincide'] = 'No coincide con información del postulante';
+$string['rejectreason_sin_firma'] = 'Sin firma o sello';
+$string['rejectreason_otro'] = 'Otro motivo';
+
+// Export.
+$string['export'] = 'Exportar';
+$string['exportformat'] = 'Formato de exportación';
+$string['exportcsv'] = 'CSV';
+$string['exportexcel'] = 'Excel';
+$string['exportpdf'] = 'PDF';
+$string['downloading'] = 'Descargando...';
+
+// Validation workflow.
+$string['validationworkflow'] = 'Flujo de validación';
+$string['nextdocument'] = 'Siguiente documento';
+$string['previousdocument'] = 'Documento anterior';
+$string['validateandnext'] = 'Validar y siguiente';
+$string['rejectandnext'] = 'Rechazar y siguiente';
+$string['skipfornow'] = 'Omitir por ahora';
+$string['allvalidated'] = 'Todos los documentos validados';
+$string['somerejected'] = 'Algunos documentos rechazados';
+$string['completereview'] = 'Completar revisión';
+$string['reviewcomplete'] = 'Revisión completada';
+$string['markasreviewed'] = 'Marcar como revisado';
+
+// Filters.
+$string['filterbytype'] = 'Filtrar por tipo';
+$string['filterbyvacancy'] = 'Filtrar por vacante';
+$string['filterbyreviewer'] = 'Filtrar por revisor';
+$string['filterbydate'] = 'Filtrar por fecha';
+$string['clearfilters'] = 'Limpiar filtros';
+$string['applyfilters'] = 'Aplicar filtros';
+
+// Statistics.
+$string['statistics'] = 'Estadísticas';
+$string['overallstats'] = 'Estadísticas generales';
+$string['mystats'] = 'Mis estadísticas';
+$string['todaystats'] = 'Estadísticas del día';
+$string['weekstats'] = 'Estadísticas de la semana';
+$string['monthstats'] = 'Estadísticas del mes';
+$string['validationstoday'] = 'Validaciones hoy';
+$string['averagetime'] = 'Tiempo promedio';
+$string['fastesttime'] = 'Tiempo más rápido';
+$string['slowesttime'] = 'Tiempo más lento';
+
+// Alerts and warnings.
+$string['closingvacanciesalert'] = 'Hay {$a} vacante(s) que cierran en los próximos 3 días';
+$string['pendingvalidationsalert'] = 'Tiene {$a} documentos pendientes de validación';
+$string['overdueassignmentsalert'] = 'Tiene {$a} asignaciones con retraso';
+$string['urgentattentionneeded'] = 'Atención urgente requerida';
+$string['nourgentitems'] = 'No hay items urgentes';

@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2024120401;  // Phase 2: Application System and Documents.
+$plugin->version = 2024120403;  // Phase 3: Workflow and Document Validation.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '1.1.0-alpha';
+$plugin->release = '1.2.0-alpha';
