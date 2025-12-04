@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/jobboard/db" VERSION="20241204" COMMENT="XMLDB file for Moodle local/jobboard - Job Board Plugin for Adjunct Professors"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <!-- Table 1: Vacancies -->
+    <TABLE NAME="local_jobboard_vacancy" COMMENT="Job vacancies for adjunct professors">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Unique internal vacancy code"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy title"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Full vacancy description"/>
+        <FIELD NAME="contracttype" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Type of contract"/>
+        <FIELD NAME="duration" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Contract duration"/>
+        <FIELD NAME="salary" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Salary information (optional)"/>
+        <FIELD NAME="location" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Work location"/>
+        <FIELD NAME="department" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Department or unit"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Associated Moodle course"/>
+        <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Associated Moodle category"/>
+        <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Iomad company/tenant ID"/>
+        <FIELD NAME="opendate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy opening date (timestamp)"/>
+        <FIELD NAME="closedate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy closing date (timestamp)"/>
+        <FIELD NAME="positions" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Number of available positions"/>
+        <FIELD NAME="requirements" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Minimum requirements"/>
+        <FIELD NAME="desirable" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Desirable requirements"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" COMMENT="Status: draft, published, closed, assigned"/>
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User who created the vacancy"/>
+        <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="User who last modified"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id"/>
+        <KEY NAME="categoryid" TYPE="foreign" FIELDS="categoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+        <KEY NAME="createdby" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="modifiedby" TYPE="foreign" FIELDS="modifiedby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="code_unique" UNIQUE="true" FIELDS="code"/>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>
+        <INDEX NAME="opendate_idx" UNIQUE="false" FIELDS="opendate"/>
+        <INDEX NAME="closedate_idx" UNIQUE="false" FIELDS="closedate"/>
+        <INDEX NAME="company_status_idx" UNIQUE="false" FIELDS="companyid, status"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 2: Custom fields for vacancies -->
+    <TABLE NAME="local_jobboard_vacancy_field" COMMENT="Custom fields for vacancies">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="vacancyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fieldname" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fieldtype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="text" SEQUENCE="false" COMMENT="Type: text, list, date, boolean"/>
+        <FIELD NAME="fieldvalue" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="required" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="vacancyid" TYPE="foreign" FIELDS="vacancyid" REFTABLE="local_jobboard_vacancy" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="vacancy_field_idx" UNIQUE="false" FIELDS="vacancyid, fieldname"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 3: Applications -->
+    <TABLE NAME="local_jobboard_application" COMMENT="Job applications from candidates">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="vacancyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="30" NOTNULL="true" DEFAULT="submitted" SEQUENCE="false" COMMENT="Status: submitted, under_review, docs_validated, docs_rejected, interview, selected, rejected, withdrawn"/>
+        <FIELD NAME="isexemption" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="ISER historic exemption marker"/>
+        <FIELD NAME="exemptionreason" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Reason for ISER exemption"/>
+        <FIELD NAME="consenttext" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Digital consent text signed"/>
+        <FIELD NAME="consentip" TYPE="char" LENGTH="45" NOTNULL="false" SEQUENCE="false" COMMENT="IP address at consent time"/>
+        <FIELD NAME="consentuseragent" TYPE="char" LENGTH="512" NOTNULL="false" SEQUENCE="false" COMMENT="User agent at consent time"/>
+        <FIELD NAME="consenttime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Timestamp of consent"/>
+        <FIELD NAME="applicationdata" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Additional application data (JSON)"/>
+        <FIELD NAME="reviewerid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Assigned reviewer"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="vacancyid" TYPE="foreign" FIELDS="vacancyid" REFTABLE="local_jobboard_vacancy" REFFIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="reviewerid" TYPE="foreign" FIELDS="reviewerid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="vacancy_user_unique" UNIQUE="true" FIELDS="vacancyid, userid"/>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="userid_idx" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="reviewerid_idx" UNIQUE="false" FIELDS="reviewerid"/>
+        <INDEX NAME="isexemption_idx" UNIQUE="false" FIELDS="isexemption"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 4: Documents -->
+    <TABLE NAME="local_jobboard_document" COMMENT="Documents uploaded for applications">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="applicationid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="documenttype" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Type of document"/>
+        <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Original filename"/>
+        <FIELD NAME="contenthash" TYPE="char" LENGTH="40" NOTNULL="false" SEQUENCE="false" COMMENT="Moodle file contenthash"/>
+        <FIELD NAME="filesize" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="File size in bytes"/>
+        <FIELD NAME="mimetype" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="issuedate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Document issue date (if applicable)"/>
+        <FIELD NAME="expirydate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Document expiry date (if applicable)"/>
+        <FIELD NAME="isencrypted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="issuperseded" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Replaced by newer version"/>
+        <FIELD NAME="uploadedby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="applicationid" TYPE="foreign" FIELDS="applicationid" REFTABLE="local_jobboard_application" REFFIELDS="id"/>
+        <KEY NAME="uploadedby" TYPE="foreign" FIELDS="uploadedby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="app_doctype_idx" UNIQUE="false" FIELDS="applicationid, documenttype"/>
+        <INDEX NAME="doctype_idx" UNIQUE="false" FIELDS="documenttype"/>
+        <INDEX NAME="superseded_idx" UNIQUE="false" FIELDS="issuperseded"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 5: Document validations -->
+    <TABLE NAME="local_jobboard_doc_validation" COMMENT="Document validation records">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="documentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="pending" SEQUENCE="false" COMMENT="Status: pending, approved, rejected"/>
+        <FIELD NAME="validatorid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="validationtime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="rejectreason" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="checklistitems" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Checklist items (JSON)"/>
+        <FIELD NAME="reviewernotes" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="documentid" TYPE="foreign" FIELDS="documentid" REFTABLE="local_jobboard_document" REFFIELDS="id"/>
+        <KEY NAME="validatorid" TYPE="foreign" FIELDS="validatorid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="doc_status_idx" UNIQUE="false" FIELDS="documentid, status"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 6: Document requirements per vacancy -->
+    <TABLE NAME="local_jobboard_doc_requirement" COMMENT="Document requirements configuration per vacancy">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="vacancyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="documenttype" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="required" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="acceptedformats" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="pdf,jpg,png" SEQUENCE="false" COMMENT="Comma-separated list of accepted formats"/>
+        <FIELD NAME="maxsize" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Max file size in bytes"/>
+        <FIELD NAME="requiresissuedate" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="maxagedays" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" COMMENT="Max days since issue date"/>
+        <FIELD NAME="validationrules" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Specific validation rules (JSON)"/>
+        <FIELD NAME="instructions" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Instructions for the applicant"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="vacancyid" TYPE="foreign" FIELDS="vacancyid" REFTABLE="local_jobboard_vacancy" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="vacancy_doctype_unique" UNIQUE="true" FIELDS="vacancyid, documenttype"/>
+        <INDEX NAME="doctype_idx" UNIQUE="false" FIELDS="documenttype"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 7: Workflow log -->
+    <TABLE NAME="local_jobboard_workflow_log" COMMENT="Workflow state change log">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="applicationid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="previousstatus" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="newstatus" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="changedby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="comments" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="notificationsent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="applicationid" TYPE="foreign" FIELDS="applicationid" REFTABLE="local_jobboard_application" REFFIELDS="id"/>
+        <KEY NAME="changedby" TYPE="foreign" FIELDS="changedby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="app_time_idx" UNIQUE="false" FIELDS="applicationid, timecreated"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 8: Audit log -->
+    <TABLE NAME="local_jobboard_audit" COMMENT="General audit log for all actions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="action" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Action performed"/>
+        <FIELD NAME="entitytype" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Entity type: vacancy, application, document"/>
+        <FIELD NAME="entityid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="ipaddress" TYPE="char" LENGTH="45" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="useragent" TYPE="char" LENGTH="512" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="extradata" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Additional data (JSON)"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="entity_idx" UNIQUE="false" FIELDS="entitytype, entityid"/>
+        <INDEX NAME="user_time_idx" UNIQUE="false" FIELDS="userid, timecreated"/>
+        <INDEX NAME="action_idx" UNIQUE="false" FIELDS="action"/>
+        <INDEX NAME="time_idx" UNIQUE="false" FIELDS="timecreated"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 9: ISER Exemptions -->
+    <TABLE NAME="local_jobboard_exemption" COMMENT="ISER historic personnel exemptions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="exemptiontype" TYPE="char" LENGTH="50" NOTNULL="true" DEFAULT="historico_iser" SEQUENCE="false"/>
+        <FIELD NAME="exempteddocs" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Exempted document types (JSON array)"/>
+        <FIELD NAME="validfrom" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="validuntil" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="notes" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="createdby" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_type_idx" UNIQUE="false" FIELDS="userid, exemptiontype"/>
+        <INDEX NAME="validity_idx" UNIQUE="false" FIELDS="validfrom, validuntil"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 10: Notifications -->
+    <TABLE NAME="local_jobboard_notification" COMMENT="Notification queue and history">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Recipient user"/>
+        <FIELD NAME="notificationtype" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="body" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="entitytype" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="entityid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="issent" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timesent" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_sent_idx" UNIQUE="false" FIELDS="userid, issent"/>
+        <INDEX NAME="type_idx" UNIQUE="false" FIELDS="notificationtype"/>
+        <INDEX NAME="sent_idx" UNIQUE="false" FIELDS="issent"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 11: System configuration -->
+    <TABLE NAME="local_jobboard_config" COMMENT="Plugin configuration settings">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="category" TYPE="char" LENGTH="50" NOTNULL="false" DEFAULT="general" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="name_unique" UNIQUE="true" FIELDS="name"/>
+        <INDEX NAME="category_idx" UNIQUE="false" FIELDS="category"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 12: API Tokens -->
+    <TABLE NAME="local_jobboard_api_token" COMMENT="API access tokens">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="token" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" COMMENT="Hashed token"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="permissions" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Allowed permissions (JSON array)"/>
+        <FIELD NAME="ipwhitelist" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="IP whitelist (JSON array)"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="validfrom" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="validuntil" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="lastused" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="token_unique" UNIQUE="true" FIELDS="token"/>
+        <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
+        <INDEX NAME="user_enabled_idx" UNIQUE="false" FIELDS="userid, enabled"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 13: Document type definitions (predefined types) -->
+    <TABLE NAME="local_jobboard_doctype" COMMENT="Predefined document types">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Unique code for the document type"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="requirements" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Validation requirements description"/>
+        <FIELD NAME="checklistitems" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Default checklist items (JSON array)"/>
+        <FIELD NAME="externalurl" TYPE="char" LENGTH="512" NOTNULL="false" SEQUENCE="false" COMMENT="External URL where to obtain the document"/>
+        <FIELD NAME="iserexempted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Exempted for ISER historic personnel"/>
+        <FIELD NAME="defaultmaxagedays" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="code_unique" UNIQUE="true" FIELDS="code"/>
+        <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
+        <INDEX NAME="iserexempted_idx" UNIQUE="false" FIELDS="iserexempted"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 14: Email templates -->
+    <TABLE NAME="local_jobboard_email_template" COMMENT="Email notification templates">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Template code"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="body" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="bodyformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="0=MOODLE, 1=HTML, 2=PLAIN"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="code_unique" UNIQUE="true" FIELDS="code"/>
+        <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
