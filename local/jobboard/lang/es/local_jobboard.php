@@ -1404,3 +1404,71 @@ $string['tour_applicant_step5_content'] = 'Puede dar seguimiento al estado de su
 
 // User Tours - Comun.
 $string['tour_endlabel'] = 'Entendido!';
+
+// Cadenas faltantes - Fase 8.8: Cobertura completa de cadenas de idiomas.
+// Relacionadas con asignacion y revisores.
+$string['activeassignments'] = 'Asignaciones activas';
+$string['assigned'] = 'Asignado';
+$string['assignselected'] = 'Asignar seleccionados';
+$string['assignto'] = 'Asignar a';
+$string['autoassignall'] = 'Auto-asignar todos';
+$string['autoassigncomplete'] = 'Auto-asignacion completada. {$a->assigned} postulaciones asignadas a {$a->reviewers} revisores.';
+$string['autoassignhelp'] = 'Distribuir automaticamente las postulaciones pendientes entre los revisores disponibles segun su carga de trabajo actual.';
+$string['manualassign'] = 'Asignacion manual';
+$string['maxperreviewer'] = 'Maximo por revisor';
+$string['nodocumentspending'] = 'No hay documentos pendientes de revision';
+$string['norejections'] = 'Sin rechazos';
+$string['noreviewers'] = 'No hay revisores disponibles';
+$string['nounassignedapplications'] = 'No hay postulaciones sin asignar';
+$string['reviewed'] = 'Revisado';
+$string['reviewerunassigned'] = 'Revisor desasignado exitosamente';
+
+// Validacion y documentos.
+$string['alreadyvalidated'] = 'Este documento ya ha sido validado';
+$string['autovalidated'] = 'Auto-validado';
+$string['bulkactions'] = 'Acciones masivas';
+$string['bulkvalidationcomplete'] = 'Validacion masiva completada. {$a->approved} aprobados, {$a->rejected} rechazados.';
+$string['documentnotfound'] = 'Documento no encontrado';
+$string['doctypeshelp'] = 'Configure los tipos de documentos que los postulantes pueden cargar. Cada tipo puede marcarse como requerido u opcional.';
+$string['optionalnotes'] = 'Notas opcionales';
+$string['rejectionreason'] = 'Razon de rechazo';
+$string['rejectionreasons'] = 'Razones de rechazo';
+$string['validationsummary'] = 'Resumen de validacion';
+
+// Relacionadas con API.
+$string['api:authheader'] = 'Encabezado de autorizacion';
+$string['api:baseurl'] = 'URL base';
+$string['api:info'] = 'Informacion de API';
+$string['api:ratelimit'] = 'Limite de solicitudes';
+$string['api:requestsperhour'] = 'solicitudes por hora';
+$string['api:token:copywarning'] = 'Este token solo se mostrara una vez. Copielo ahora y guardelo de forma segura.';
+$string['api:token:deleteconfirm'] = 'Esta seguro de que desea eliminar permanentemente este token de API? Esta accion no se puede deshacer.';
+$string['api:token:none'] = 'No se encontraron tokens de API';
+$string['api:token:revokeconfirm'] = 'Esta seguro de que desea revocar este token de API? Ya no funcionara para autenticacion.';
+$string['api:token:usage'] = 'Uso del token';
+
+// Reportes y estadisticas.
+$string['applicationsbyvacancy'] = 'Postulaciones por vacante';
+$string['avgtime'] = 'Tiempo promedio';
+
+// Importacion CSV.
+$string['csvimporterror'] = 'Error al importar archivo CSV';
+$string['csvinvalidtype'] = 'Tipo de excepcion invalido: {$a}';
+$string['csvlineerror'] = 'Error en linea {$a->line}: {$a->error}';
+$string['csvusernotfound'] = 'Usuario no encontrado: {$a}';
+
+// Encriptacion.
+$string['encryption:backupinstructions'] = 'Descargue y guarde de forma segura esta clave de encriptacion. La necesitara para descifrar documentos si restaura desde un respaldo.';
+$string['encryption:nokeytobackup'] = 'No hay clave de encriptacion para respaldar. Habilite la encriptacion primero.';
+
+// Mensajes de error.
+$string['error:invalidpublicationtype'] = 'Tipo de publicacion invalido';
+$string['error:invalidstatus'] = 'Estado invalido';
+$string['vacancynotfound'] = 'Vacante no encontrada';
+
+// Miscelaneos.
+$string['lastused'] = 'Ultimo uso';
+$string['selecttype'] = 'Seleccionar tipo';
+$string['share'] = 'Compartir';
+$string['loading'] = 'Cargando...';
+$string['selectioncommittee'] = 'Comite de seleccion';

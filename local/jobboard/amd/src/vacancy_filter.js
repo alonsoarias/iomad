@@ -34,6 +34,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/templates', 'core/str'
         this.filterForm = this.container.find('[data-region="filter-form"]');
         this.vacancyCards = this.container.find('[data-region="vacancy-cards"]');
         this.debounceTimer = null;
+        this.loadingString = 'Loading...'; // Default fallback.
 
         this.init();
     };
@@ -42,6 +43,13 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/templates', 'core/str'
      * Initialize the filter.
      */
     VacancyFilter.prototype.init = function() {
+        var self = this;
+        // Pre-load the loading string for use in spinner.
+        Str.get_string('loading', 'local_jobboard').then(function(str) {
+            self.loadingString = str;
+        }).catch(function() {
+            // Keep default fallback.
+        });
         this.registerEventListeners();
     };
 
@@ -145,7 +153,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/templates', 'core/str'
             this.vacancyCards.append(
                 '<div class="loading-overlay">' +
                 '<div class="spinner-border text-primary" role="status">' +
-                '<span class="sr-only">Loading...</span>' +
+                '<span class="sr-only">' + this.loadingString + '</span>' +
                 '</div></div>'
             );
         }

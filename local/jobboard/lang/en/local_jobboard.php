@@ -1403,3 +1403,70 @@ $string['tour_applicant_step5_content'] = 'You can track the status of your appl
 
 // User Tours - Common.
 $string['tour_endlabel'] = 'Got it!';
+
+// Missing strings - Phase 8.8: Complete language string coverage.
+// Assignment and reviewer related.
+$string['activeassignments'] = 'Active assignments';
+$string['assigned'] = 'Assigned';
+$string['assignselected'] = 'Assign selected';
+$string['assignto'] = 'Assign to';
+$string['autoassignall'] = 'Auto-assign all';
+$string['autoassigncomplete'] = 'Auto-assignment complete. {$a->assigned} applications assigned to {$a->reviewers} reviewers.';
+$string['autoassignhelp'] = 'Automatically distribute pending applications among available reviewers based on current workload.';
+$string['manualassign'] = 'Manual assignment';
+$string['maxperreviewer'] = 'Maximum per reviewer';
+$string['nodocumentspending'] = 'No documents pending review';
+$string['norejections'] = 'No rejections';
+$string['noreviewers'] = 'No reviewers available';
+$string['nounassignedapplications'] = 'No unassigned applications';
+$string['reviewed'] = 'Reviewed';
+$string['reviewerunassigned'] = 'Reviewer unassigned successfully';
+
+// Validation and documents.
+$string['alreadyvalidated'] = 'This document has already been validated';
+$string['autovalidated'] = 'Auto-validated';
+$string['bulkactions'] = 'Bulk actions';
+$string['bulkvalidationcomplete'] = 'Bulk validation complete. {$a->approved} approved, {$a->rejected} rejected.';
+$string['documentnotfound'] = 'Document not found';
+$string['doctypeshelp'] = 'Configure the document types that applicants can upload. Each type can be marked as required or optional.';
+$string['optionalnotes'] = 'Optional notes';
+$string['rejectionreason'] = 'Rejection reason';
+$string['rejectionreasons'] = 'Rejection reasons';
+$string['validationsummary'] = 'Validation summary';
+
+// API related.
+$string['api:authheader'] = 'Authorization header';
+$string['api:baseurl'] = 'Base URL';
+$string['api:info'] = 'API information';
+$string['api:ratelimit'] = 'Rate limit';
+$string['api:requestsperhour'] = 'requests per hour';
+$string['api:token:copywarning'] = 'This token will only be shown once. Copy it now and store it securely.';
+$string['api:token:deleteconfirm'] = 'Are you sure you want to permanently delete this API token? This action cannot be undone.';
+$string['api:token:none'] = 'No API tokens found';
+$string['api:token:revokeconfirm'] = 'Are you sure you want to revoke this API token? It will no longer work for authentication.';
+$string['api:token:usage'] = 'Token usage';
+
+// Reports and statistics.
+$string['applicationsbyvacancy'] = 'Applications by vacancy';
+$string['avgtime'] = 'Average time';
+
+// CSV import.
+$string['csvimporterror'] = 'Error importing CSV file';
+$string['csvinvalidtype'] = 'Invalid exemption type: {$a}';
+$string['csvlineerror'] = 'Error on line {$a->line}: {$a->error}';
+$string['csvusernotfound'] = 'User not found: {$a}';
+
+// Encryption.
+$string['encryption:backupinstructions'] = 'Download and securely store this encryption key. You will need it to decrypt documents if you restore from backup.';
+$string['encryption:nokeytobackup'] = 'No encryption key to backup. Enable encryption first.';
+
+// Error messages.
+$string['error:invalidpublicationtype'] = 'Invalid publication type';
+$string['error:invalidstatus'] = 'Invalid status';
+$string['vacancynotfound'] = 'Vacancy not found';
+
+// Miscellaneous.
+$string['lastused'] = 'Last used';
+$string['selecttype'] = 'Select type';
+$string['share'] = 'Share';
+$string['loading'] = 'Loading...';
