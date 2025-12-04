@@ -475,5 +475,48 @@ function xmldb_local_jobboard_install() {
         $DB->insert_record('local_jobboard_email_template', (object) $template);
     }
 
+    // Import User Tours.
+    local_jobboard_install_tours();
+
     return true;
+}
+
+/**
+ * Install User Tours for the Job Board plugin.
+ *
+ * @return void
+ */
+function local_jobboard_install_tours(): void {
+    global $CFG;
+
+    // Check if User Tours tool is available.
+    if (!class_exists('\tool_usertours\manager')) {
+        return;
+    }
+
+    $toursdir = $CFG->dirroot . '/local/jobboard/db/tours/';
+    $tourfiles = [
+        'jobboard_admin_tour.json',
+        'jobboard_applicant_tour.json',
+    ];
+
+    foreach ($tourfiles as $tourfile) {
+        $filepath = $toursdir . $tourfile;
+        if (file_exists($filepath)) {
+            $tourjson = file_get_contents($filepath);
+            if ($tourjson !== false) {
+                try {
+                    $tour = \tool_usertours\manager::import_tour_from_json($tourjson);
+
+                    // Mark as shipped tour for tracking.
+                    $tour->set_config('shipped_tour', true);
+                    $tour->set_config('shipped_filename', $tourfile);
+                    $tour->set_config('shipped_version', 1);
+                    $tour->persist();
+                } catch (\Exception $e) {
+                    debugging('Failed to import tour ' . $tourfile . ': ' . $e->getMessage(), DEBUG_DEVELOPER);
+                }
+            }
+        }
+    }
 }

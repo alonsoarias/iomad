@@ -1370,3 +1370,36 @@ $string['evaluationscore'] = 'Evaluation score';
 $string['evaluationvote'] = 'Vote';
 $string['evaluationcomments'] = 'Evaluation comments';
 $string['marginal'] = 'Marginal';
+
+// User Tours - Admin Tour.
+$string['tour_admin_name'] = 'Job Board Administrator Tour';
+$string['tour_admin_description'] = 'Learn how to manage vacancies and applications in Job Board';
+$string['tour_admin_step1_title'] = 'Welcome to Job Board';
+$string['tour_admin_step1_content'] = 'Welcome to the Job Board plugin! This guided tour will show you how to manage vacancies and applications effectively. The plugin allows you to create vacancies, receive applications, validate documents, and manage the complete selection process.';
+$string['tour_admin_step2_title'] = 'Dashboard Overview';
+$string['tour_admin_step2_content'] = 'This is your main dashboard. Here you can see an overview of all active vacancies, pending applications, and documents awaiting review. Use the dashboard to quickly access the most important information.';
+$string['tour_admin_step3_title'] = 'Quick Statistics';
+$string['tour_admin_step3_content'] = 'These statistics show you key metrics at a glance: total vacancies, active applications, pending documents for review, and more. Click on any statistic to see detailed information.';
+$string['tour_admin_step4_title'] = 'Create New Vacancy';
+$string['tour_admin_step4_content'] = 'Click here to create a new vacancy. You will need to provide details such as title, description, requirements, required documents, and application dates. Once published, candidates can start applying.';
+$string['tour_admin_step5_title'] = 'Vacancy List';
+$string['tour_admin_step5_content'] = 'This is the list of all vacancies. You can filter by status (draft, published, closed) and perform actions like edit, publish, close, or view applications for each vacancy.';
+$string['tour_admin_step6_title'] = 'Ready to Start!';
+$string['tour_admin_step6_content'] = 'You are now ready to start using Job Board! Remember: you can manage document types, configure email templates, create selection committees, and generate reports. Explore the administration menu for more options.';
+
+// User Tours - Applicant Tour.
+$string['tour_applicant_name'] = 'Job Board Applicant Tour';
+$string['tour_applicant_description'] = 'Learn how to find and apply for vacancies';
+$string['tour_applicant_step1_title'] = 'Welcome to Job Board';
+$string['tour_applicant_step1_content'] = 'Welcome! This guided tour will show you how to find available vacancies and submit your application. The process is simple: find a vacancy that interests you, prepare your documents, and apply.';
+$string['tour_applicant_step2_title'] = 'Available Vacancies';
+$string['tour_applicant_step2_content'] = 'Here you can see all available vacancies. Each vacancy shows the title, location, contract type, and closing date. Use the filters to find vacancies that match your profile.';
+$string['tour_applicant_step3_title'] = 'Vacancy Details';
+$string['tour_applicant_step3_content'] = 'Click on any vacancy to see the complete details: full description, requirements, benefits, and required documents. Make sure you meet the requirements before applying.';
+$string['tour_applicant_step4_title'] = 'Apply for a Vacancy';
+$string['tour_applicant_step4_content'] = 'When you find a vacancy that interests you, click "Apply" to start your application. You will need to upload the required documents. Make sure your documents are legible and up to date.';
+$string['tour_applicant_step5_title'] = 'Track Your Applications';
+$string['tour_applicant_step5_content'] = 'You can track the status of your applications at any time from "My Applications". You will receive notifications when there are updates to your application status. Good luck!';
+
+// User Tours - Common.
+$string['tour_endlabel'] = 'Got it!';

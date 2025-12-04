@@ -1371,3 +1371,36 @@ $string['rowsfailed'] = 'Filas fallidas';
 
 // Gestión de tipos de documentos adicional (EN keys).
 $string['managedoctypes'] = 'Gestionar tipos de documentos';
+
+// User Tours - Tour del Administrador.
+$string['tour_admin_name'] = 'Tour de Administrador - Bolsa de Empleo';
+$string['tour_admin_description'] = 'Aprenda a gestionar vacantes y postulaciones en la Bolsa de Empleo';
+$string['tour_admin_step1_title'] = 'Bienvenido a la Bolsa de Empleo';
+$string['tour_admin_step1_content'] = 'Bienvenido al plugin de Bolsa de Empleo! Este tour guiado le mostrara como gestionar vacantes y postulaciones de manera efectiva. El plugin le permite crear vacantes, recibir postulaciones, validar documentos y gestionar el proceso de seleccion completo.';
+$string['tour_admin_step2_title'] = 'Vista General del Panel';
+$string['tour_admin_step2_content'] = 'Este es su panel principal. Aqui puede ver un resumen de todas las vacantes activas, postulaciones pendientes y documentos por revisar. Use el panel para acceder rapidamente a la informacion mas importante.';
+$string['tour_admin_step3_title'] = 'Estadisticas Rapidas';
+$string['tour_admin_step3_content'] = 'Estas estadisticas le muestran metricas clave de un vistazo: total de vacantes, postulaciones activas, documentos pendientes de revision y mas. Haga clic en cualquier estadistica para ver informacion detallada.';
+$string['tour_admin_step4_title'] = 'Crear Nueva Vacante';
+$string['tour_admin_step4_content'] = 'Haga clic aqui para crear una nueva vacante. Debera proporcionar detalles como titulo, descripcion, requisitos, documentos requeridos y fechas de postulacion. Una vez publicada, los candidatos podran empezar a postularse.';
+$string['tour_admin_step5_title'] = 'Lista de Vacantes';
+$string['tour_admin_step5_content'] = 'Esta es la lista de todas las vacantes. Puede filtrar por estado (borrador, publicada, cerrada) y realizar acciones como editar, publicar, cerrar o ver postulaciones de cada vacante.';
+$string['tour_admin_step6_title'] = 'Listo para Comenzar!';
+$string['tour_admin_step6_content'] = 'Ya esta listo para empezar a usar la Bolsa de Empleo! Recuerde: puede gestionar tipos de documentos, configurar plantillas de correo, crear comites de seleccion y generar reportes. Explore el menu de administracion para mas opciones.';
+
+// User Tours - Tour del Postulante.
+$string['tour_applicant_name'] = 'Tour de Postulante - Bolsa de Empleo';
+$string['tour_applicant_description'] = 'Aprenda a buscar vacantes y postularse';
+$string['tour_applicant_step1_title'] = 'Bienvenido a la Bolsa de Empleo';
+$string['tour_applicant_step1_content'] = 'Bienvenido! Este tour guiado le mostrara como encontrar vacantes disponibles y enviar su postulacion. El proceso es sencillo: encuentre una vacante que le interese, prepare sus documentos y postulese.';
+$string['tour_applicant_step2_title'] = 'Vacantes Disponibles';
+$string['tour_applicant_step2_content'] = 'Aqui puede ver todas las vacantes disponibles. Cada vacante muestra el titulo, ubicacion, tipo de contrato y fecha de cierre. Use los filtros para encontrar vacantes que se ajusten a su perfil.';
+$string['tour_applicant_step3_title'] = 'Detalles de la Vacante';
+$string['tour_applicant_step3_content'] = 'Haga clic en cualquier vacante para ver los detalles completos: descripcion completa, requisitos, beneficios y documentos requeridos. Asegurese de cumplir con los requisitos antes de postularse.';
+$string['tour_applicant_step4_title'] = 'Postularse a una Vacante';
+$string['tour_applicant_step4_content'] = 'Cuando encuentre una vacante que le interese, haga clic en "Postularse" para iniciar su postulacion. Debera cargar los documentos requeridos. Asegurese de que sus documentos sean legibles y esten actualizados.';
+$string['tour_applicant_step5_title'] = 'Seguimiento de sus Postulaciones';
+$string['tour_applicant_step5_content'] = 'Puede dar seguimiento al estado de sus postulaciones en cualquier momento desde "Mis Postulaciones". Recibira notificaciones cuando haya actualizaciones en el estado de su postulacion. Mucha suerte!';
+
+// User Tours - Comun.
+$string['tour_endlabel'] = 'Entendido!';

@@ -574,5 +574,16 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2024120524, 'local', 'jobboard');
     }
 
+    // Phase 8.7: Add User Tours for plugin guidance.
+    if ($oldversion < 2025120407) {
+        // Import User Tours from the tours directory.
+        require_once(__DIR__ . '/install.php');
+        if (function_exists('local_jobboard_install_tours')) {
+            local_jobboard_install_tours();
+        }
+
+        upgrade_plugin_savepoint(true, 2025120407, 'local', 'jobboard');
+    }
+
     return true;
 }
