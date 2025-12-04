@@ -273,7 +273,7 @@ if (empty($vacancies)) {
 
         // Positions.
         echo html_writer::tag('p',
-            html_writer::tag('strong', get_string('positions', 'local_jobboard') . ': ') . $vacancy->positions,
+            html_writer::tag('strong', get_string('positions', 'local_jobboard') . ': ') . s($vacancy->positions),
             ['class' => 'card-text small']
         );
 

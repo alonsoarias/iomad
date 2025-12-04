@@ -313,14 +313,25 @@ class api_token {
 
         // CIDR notation.
         if (strpos($pattern, '/') !== false) {
-            list($subnet, $bits) = explode('/', $pattern);
+            [$subnet, $bits] = explode('/', $pattern);
             $bits = (int) $bits;
 
-            $ip = ip2long($ip);
-            $subnet = ip2long($subnet);
+            // Validate bits range.
+            if ($bits < 1 || $bits > 32) {
+                return false;
+            }
+
+            $iplong = ip2long($ip);
+            $subnetlong = ip2long($subnet);
+
+            // Validate IP conversions.
+            if ($iplong === false || $subnetlong === false) {
+                return false;
+            }
+
             $mask = -1 << (32 - $bits);
 
-            return ($ip & $mask) === ($subnet & $mask);
+            return ($iplong & $mask) === ($subnetlong & $mask);
         }
 
         return false;

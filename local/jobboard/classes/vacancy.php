@@ -279,7 +279,7 @@ class vacancy {
         global $DB, $USER;
 
         if (!$this->can_edit()) {
-            throw new \moodle_exception('error:cannotdelete', 'local_jobboard');
+            throw new \moodle_exception('error:cannotedit', 'local_jobboard');
         }
 
         $this->set_from_data($data);

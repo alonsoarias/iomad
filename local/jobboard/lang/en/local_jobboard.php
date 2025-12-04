@@ -215,6 +215,7 @@ $string['error:codeexists'] = 'A vacancy with this code already exists';
 $string['error:invaliddates'] = 'Closing date must be after opening date';
 $string['error:closedateexpired'] = 'Closing date has passed';
 $string['error:cannotdelete'] = 'Cannot delete vacancy because it has applications';
+$string['error:cannotedit'] = 'Cannot edit this vacancy';
 $string['error:cannotpublish'] = 'Cannot publish: complete all required fields';
 $string['error:alreadyapplied'] = 'You already have an active application for this vacancy';
 $string['error:vacancyclosed'] = 'The vacancy is closed and not accepting applications';

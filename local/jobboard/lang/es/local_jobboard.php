@@ -215,6 +215,7 @@ $string['error:codeexists'] = 'Ya existe una vacante con este código';
 $string['error:invaliddates'] = 'La fecha de cierre debe ser posterior a la fecha de apertura';
 $string['error:closedateexpired'] = 'La fecha de cierre ya pasó';
 $string['error:cannotdelete'] = 'No se puede eliminar la vacante porque tiene postulaciones';
+$string['error:cannotedit'] = 'No se puede editar esta vacante';
 $string['error:cannotpublish'] = 'No se puede publicar: complete todos los campos obligatorios';
 $string['error:alreadyapplied'] = 'Ya tiene una postulación activa para esta vacante';
 $string['error:vacancyclosed'] = 'La vacante está cerrada y no acepta postulaciones';

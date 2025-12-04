@@ -176,7 +176,7 @@ echo html_writer::start_div('d-flex align-items-center');
 echo html_writer::tag('i', '', ['class' => 'fa fa-users fa-lg text-primary me-2']);
 echo html_writer::start_div();
 echo html_writer::tag('small', get_string('positions', 'local_jobboard'), ['class' => 'text-muted d-block']);
-echo html_writer::tag('span', $vacancy->positions, ['class' => 'fw-bold']);
+echo html_writer::tag('span', s($vacancy->positions), ['class' => 'fw-bold']);
 echo html_writer::end_div();
 echo html_writer::end_div();
 echo html_writer::end_div();
@@ -269,7 +269,7 @@ if (!empty($docrequirements)) {
     echo html_writer::start_tag('ul', ['class' => 'list-group list-group-flush']);
 
     foreach ($docrequirements as $req) {
-        $doctypename = isset($doctypes[$req->doctypeid]) ? $doctypes[$req->doctypeid] : get_string('unknown');
+        $doctypename = isset($doctypes[$req->doctypeid]) ? s($doctypes[$req->doctypeid]) : get_string('unknown');
         $required = $req->isrequired ? html_writer::tag('span', get_string('required', 'local_jobboard'), ['class' => 'badge bg-danger ms-2'])
                                      : html_writer::tag('span', get_string('optional', 'local_jobboard'), ['class' => 'badge bg-secondary ms-2']);
 

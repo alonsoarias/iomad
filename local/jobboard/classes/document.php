@@ -377,7 +377,7 @@ class document {
             $file->get_contextid(),
             $file->get_component(),
             $file->get_filearea(),
-            $this->id, // Use document ID as itemid for access control.
+            $file->get_itemid(), // Use the actual itemid from the stored file.
             $file->get_filepath(),
             $file->get_filename(),
             $forcedownload

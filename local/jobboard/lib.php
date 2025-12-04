@@ -244,7 +244,8 @@ function local_jobboard_pluginfile($course, $cm, $context, $filearea, $args, $fo
     \local_jobboard\audit::log('document_download', 'document', $document->id);
 
     $fs = get_file_storage();
-    $file = $fs->get_file($context->id, 'local_jobboard', $filearea, $itemid, $filepath, $filename);
+    // Files are stored with applicationid as itemid, not document id.
+    $file = $fs->get_file($context->id, 'local_jobboard', $filearea, $document->applicationid, $filepath, $filename);
 
     if (!$file || $file->is_directory()) {
         return false;

@@ -28,12 +28,12 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/externallib.php');
 
-use external_api;
-use external_function_parameters;
-use external_value;
-use external_single_structure;
-use external_multiple_structure;
-use context_system;
+use core_external\external_api;
+use core_external\external_function_parameters;
+use core_external\external_value;
+use core_external\external_single_structure;
+use core_external\external_multiple_structure;
+use core_external\restricted_context_exception;
 
 /**
  * External API functions class.
@@ -54,7 +54,7 @@ class api_functions extends external_api {
      */
     public static function revoke_token(int $tokenid): array {
         $params = self::validate_parameters(self::revoke_token_parameters(), ['tokenid' => $tokenid]);
-        $context = context_system::instance();
+        $context = \context_system::instance();
         self::validate_context($context);
         require_capability('local/jobboard:manageapitokens', $context);
 
@@ -99,7 +99,7 @@ class api_functions extends external_api {
      */
     public static function enable_token(int $tokenid): array {
         $params = self::validate_parameters(self::enable_token_parameters(), ['tokenid' => $tokenid]);
-        $context = context_system::instance();
+        $context = \context_system::instance();
         self::validate_context($context);
         require_capability('local/jobboard:manageapitokens', $context);
 
@@ -144,7 +144,7 @@ class api_functions extends external_api {
      */
     public static function delete_token(int $tokenid): array {
         $params = self::validate_parameters(self::delete_token_parameters(), ['tokenid' => $tokenid]);
-        $context = context_system::instance();
+        $context = \context_system::instance();
         self::validate_context($context);
         require_capability('local/jobboard:manageapitokens', $context);
 
@@ -201,7 +201,7 @@ class api_functions extends external_api {
             'page' => $page, 'perpage' => $perpage,
         ]);
 
-        $context = context_system::instance();
+        $context = \context_system::instance();
         self::validate_context($context);
         $PAGE->set_context($context);
 
