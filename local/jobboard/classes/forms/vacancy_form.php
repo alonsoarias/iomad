@@ -70,7 +70,7 @@ class vacancy_form extends \moodleform {
         $mform->addElement('header', 'contractdetails', get_string('contracttype', 'local_jobboard'));
 
         // Contract type.
-        $contracttypes = ['' => get_string('selectcontracttype', 'local_jobboard')] + local_jobboard_get_contract_types();
+        $contracttypes = ['' => get_string('selectcontracttype', 'local_jobboard')] + \local_jobboard_get_contract_types();
         $mform->addElement('select', 'contracttype', get_string('contracttype', 'local_jobboard'), $contracttypes);
         $mform->setType('contracttype', PARAM_ALPHA);
         $mform->addHelpButton('contracttype', 'contracttype', 'local_jobboard');
@@ -153,15 +153,15 @@ class vacancy_form extends \moodleform {
         $mform->addHelpButton('categoryid', 'category', 'local_jobboard');
 
         // Company (Iomad multi-tenant).
-        if (local_jobboard_is_iomad_installed()) {
-            $companies = ['' => get_string('selectcompany', 'local_jobboard')] + local_jobboard_get_companies();
+        if (\local_jobboard_is_iomad_installed()) {
+            $companies = ['' => get_string('selectcompany', 'local_jobboard')] + \local_jobboard_get_companies();
             $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companies);
             $mform->setType('companyid', PARAM_INT);
             $mform->addHelpButton('companyid', 'company', 'local_jobboard');
 
             // Pre-select current user's company.
             if (!$isedit) {
-                $usercompanyid = local_jobboard_get_user_companyid();
+                $usercompanyid = \local_jobboard_get_user_companyid();
                 if ($usercompanyid) {
                     $mform->setDefault('companyid', $usercompanyid);
                 }

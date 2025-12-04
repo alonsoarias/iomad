@@ -426,7 +426,7 @@ class vacancy {
         }
 
         // For Iomad: require companyid if enabled.
-        if (local_jobboard_is_iomad_installed()) {
+        if (\local_jobboard_is_iomad_installed()) {
             // Company ID is recommended but not strictly required.
         }
 
@@ -723,7 +723,7 @@ class vacancy {
         if (!empty($filters['userid']) && !empty($filters['respect_tenant'])) {
             $context = \context_system::instance();
             if (!has_capability('local/jobboard:viewallvacancies', $context, $filters['userid'])) {
-                $usercompanyid = local_jobboard_get_user_companyid($filters['userid']);
+                $usercompanyid = \local_jobboard_get_user_companyid($filters['userid']);
                 if ($usercompanyid) {
                     $where[] = '(companyid IS NULL OR companyid = :usercompanyid)';
                     $params['usercompanyid'] = $usercompanyid;

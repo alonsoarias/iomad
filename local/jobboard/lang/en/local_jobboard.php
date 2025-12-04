@@ -689,3 +689,67 @@ $string['error:loginrequiredforinternal'] = 'You must be logged in to view inter
 $string['jobboard:viewpublicvacancies'] = 'View public vacancies';
 $string['jobboard:viewinternalvacancies'] = 'View internal vacancies';
 $string['jobboard:unlimitedapplications'] = 'Bypass application limits';
+
+// ==========================================================================
+// Additional form strings - Exemption Form.
+// ==========================================================================
+
+$string['exemptiondetails'] = 'Exemption Details';
+$string['exemptiontype'] = 'Exemption Type';
+$string['exemptiontype_help'] = 'Select the type of exemption applicable to this user';
+$string['exemptiontype_historico_iser'] = 'ISER Historic Personnel';
+$string['exemptiontype_documentos_recientes'] = 'Recent Documents on File';
+$string['exemptiontype_traslado_interno'] = 'Internal Transfer';
+$string['exemptiontype_recontratacion'] = 'Rehiring';
+$string['documentref'] = 'Document Reference';
+$string['documentref_help'] = 'Reference number or identifier of the supporting document';
+$string['validityperiod'] = 'Validity Period';
+$string['selectall'] = 'Select All';
+$string['selectidentitydocs'] = 'Select Identity Documents';
+$string['selectbackgrounddocs'] = 'Select Background Checks';
+$string['selectatleastone'] = 'Please select at least one option';
+$string['usernotfound'] = 'User not found';
+$string['additionalinfo'] = 'Additional Information';
+
+// Document types for exemption form.
+$string['doctype_cedula'] = 'National ID (Cédula)';
+$string['doctype_rut'] = 'Tax ID (RUT)';
+$string['doctype_eps'] = 'Health Insurance (EPS)';
+$string['doctype_pension'] = 'Pension Certificate';
+$string['doctype_cuenta_bancaria'] = 'Bank Account Certificate';
+$string['doctype_libreta_militar'] = 'Military Service Card';
+$string['doctype_titulo_pregrado'] = 'Undergraduate Degree';
+$string['doctype_titulo_postgrado'] = 'Graduate Degree';
+$string['doctype_tarjeta_profesional'] = 'Professional License';
+$string['doctype_sigep'] = 'SIGEP II Registration';
+$string['doctype_antecedentes_procuraduria'] = 'Disciplinary Background (Attorney General)';
+$string['doctype_antecedentes_contraloria'] = 'Fiscal Background (Comptroller)';
+$string['doctype_antecedentes_policia'] = 'Criminal Background (National Police)';
+$string['doctype_rnmc'] = 'National Registry of Corrective Measures';
+$string['doctype_certificado_medico'] = 'Medical Certificate';
+
+// ==========================================================================
+// Additional form strings - Application Form.
+// ==========================================================================
+
+$string['vacancyinfo'] = 'Vacancy Information';
+$string['code'] = 'Code';
+$string['title'] = 'Title';
+$string['exemptionnotice'] = 'Exemption Notice';
+$string['exemptionapplied'] = 'An exemption applies to your application';
+$string['exemptionreduceddocs'] = 'Some documents are not required due to your exemption status.';
+$string['consentheader'] = 'Consent and Authorization';
+$string['datatreatmentpolicytitle'] = 'Personal Data Treatment Policy';
+$string['defaultdatatreatmentpolicy'] = 'By submitting this application, you authorize the processing of your personal data in accordance with applicable data protection laws. Your data will be used exclusively for the selection process and will be handled with strict confidentiality.';
+$string['consentaccepttext'] = 'I have read and accept the personal data treatment policy';
+$string['consentrequired'] = 'You must accept the consent to proceed';
+$string['documentshelp'] = 'Please upload all required documents in PDF, JPG, or PNG format. Maximum file size varies by document type.';
+$string['documentrequired'] = 'The document "{$a}" is required';
+$string['documentissuedate'] = 'Document Issue Date';
+$string['documentexpired'] = 'Document has expired. Maximum age allowed: {$a}';
+$string['declaration'] = 'Declaration';
+$string['declarationtext'] = 'I solemnly declare that all information provided in this application is true, complete, and accurate to the best of my knowledge. I understand that any false statements or misrepresentations may result in disqualification from the selection process or termination of employment if discovered after hiring.';
+$string['declarationaccept'] = 'I accept and confirm this declaration';
+$string['declarationrequired'] = 'You must accept the declaration to proceed';
+$string['signaturetoooshort'] = 'Digital signature is too short. Please enter your full name.';
+$string['digitalsignature_help'] = 'Enter your full legal name as it appears on your official documents. This serves as your digital signature for this application.';
