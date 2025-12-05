@@ -46,7 +46,10 @@ $PAGE->set_title(get_string('managevacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('managevacancies', 'local_jobboard'));
 
 // Handle actions.
-if ($action && $vacancyid && confirm_sesskey()) {
+if ($action && $vacancyid) {
+    // Require sesskey for actions that modify data.
+    require_sesskey();
+
     $vacancy = \local_jobboard\vacancy::get($vacancyid);
 
     if (!$vacancy) {

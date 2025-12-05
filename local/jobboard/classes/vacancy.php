@@ -724,8 +724,9 @@ class vacancy {
         // Filter for user visibility (multi-tenant).
         if (!empty($filters['userid']) && !empty($filters['respect_tenant'])) {
             $context = \context_system::instance();
-            if (!has_capability('local/jobboard:viewallvacancies', $context, $filters['userid'])) {
-                $usercompanyid = \local_jobboard_get_user_companyid($filters['userid']);
+            $userid = (int) $filters['userid'];
+            if (!has_capability('local/jobboard:viewallvacancies', $context, $userid)) {
+                $usercompanyid = \local_jobboard_get_user_companyid($userid);
                 if ($usercompanyid) {
                     $where[] = '(companyid IS NULL OR companyid = :usercompanyid)';
                     $params['usercompanyid'] = $usercompanyid;

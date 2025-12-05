@@ -5,6 +5,16 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
+## [1.9.2-beta] - 2025-12-05
+
+### Corregido
+- **Error de sesskey en manage.php**
+  - Corregido: `confirm_sesskey()` se llamaba incluso al cargar la página sin acciones
+  - Ahora usa `require_sesskey()` solo cuando hay una acción que modificar datos
+- **TypeError en vacancy.php**
+  - Corregido: `local_jobboard_get_user_companyid()` recibía string en lugar de int
+  - Ahora convierte explícitamente `$filters['userid']` a int antes de pasarlo
+
 ## [1.9.1-beta] - 2025-12-05
 
 ### Añadido
