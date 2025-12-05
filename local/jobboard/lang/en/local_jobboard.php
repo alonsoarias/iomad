@@ -77,14 +77,14 @@ $string['salary'] = 'Salary';
 $string['salary_help'] = 'Compensation information (optional)';
 $string['location'] = 'Location';
 $string['location_help'] = 'Place where the position will be performed';
-$string['department'] = 'Modality';
-$string['department_help'] = 'Educational modality (Face-to-face, Distance, Virtual, Hybrid)';
+$string['department'] = 'Department/Unit';
+$string['department_help'] = 'Area or department of the institution';
 $string['course'] = 'Associated course';
 $string['course_help'] = 'Moodle course related to this vacancy';
 $string['category'] = 'Category';
 $string['category_help'] = 'Related course category';
-$string['company'] = 'Tutorial Center';
-$string['company_help'] = 'Tutorial center or regional site where the vacancy is located';
+$string['company'] = 'Company/Site';
+$string['company_help'] = 'Company or site (in multi-tenant environments)';
 $string['opendate'] = 'Opening date';
 $string['opendate_help'] = 'Date from which applications can be received';
 $string['closedate'] = 'Closing date';
@@ -150,8 +150,8 @@ $string['enterdescription'] = 'Describe the position and its functions';
 $string['selectcontracttype'] = 'Select contract type';
 $string['selectcourse'] = 'Select a course';
 $string['selectcategory'] = 'Select a category';
-$string['selectcompany'] = 'Select a tutorial center';
-$string['selectdepartment'] = 'Select a modality';
+$string['selectcompany'] = 'Select a company/site';
+$string['selectdepartment'] = 'Select a department';
 $string['selectstatus'] = 'Select status';
 $string['uploadfile'] = 'Upload file';
 $string['choosefiles'] = 'Choose files';
@@ -411,8 +411,8 @@ $string['noresults'] = 'No results found';
 $string['loading'] = 'Loading...';
 $string['processing'] = 'Processing...';
 $string['allstatuses'] = 'All statuses';
-$string['allcompanies'] = 'All tutorial centers';
-$string['alldepartments'] = 'All modalities';
+$string['allcompanies'] = 'All companies';
+$string['alldepartments'] = 'All departments';
 $string['alldates'] = 'All dates';
 $string['today'] = 'Today';
 $string['thisweek'] = 'This week';
@@ -636,9 +636,9 @@ $string['publicationtype:public'] = 'Public';
 $string['publicationtype:internal'] = 'Internal';
 
 // IOMAD multi-tenant strings.
-$string['iomadsettings'] = 'Tutorial Center & Modality';
-$string['iomad_department'] = 'Educational Modality';
-$string['iomad_department_help'] = 'Select the educational modality for this vacancy: Face-to-face, Distance, Virtual, or Hybrid.';
+$string['iomadsettings'] = 'Company & Department';
+$string['iomad_department'] = 'IOMAD Department';
+$string['iomad_department_help'] = 'Select the department within the company for this vacancy. Departments are managed in IOMAD.';
 
 // Public page.
 $string['publicvacancies'] = 'Job Opportunities';
@@ -1725,7 +1725,7 @@ $string['signup_success_instructions'] = 'Once you confirm your email, you will 
 // Signup form sections.
 $string['signup_personalinfo'] = 'Personal Information';
 $string['signup_contactinfo'] = 'Contact Information';
-$string['signup_companyinfo'] = 'Tutorial Center Selection';
+$string['signup_companyinfo'] = 'Company Selection';
 $string['signup_termsheader'] = 'Terms and Conditions';
 
 // Signup form fields.
@@ -1735,7 +1735,7 @@ $string['signup_password'] = 'Password';
 $string['signup_password_help'] = 'Create a strong password with at least 8 characters, including uppercase and lowercase letters, numbers, and symbols.';
 $string['signup_idnumber'] = 'Identification Number';
 $string['signup_idnumber_help'] = 'Enter your national identification number (e.g., ID card, passport number). This will be used to verify your identity.';
-$string['signup_company_help'] = 'Select the tutorial center where you wish to apply. This helps us assign you to the appropriate regional center.';
+$string['signup_company_help'] = 'Select the company or organization you wish to apply to. This helps us route your application to the appropriate department.';
 
 // Signup form actions.
 $string['signup_createaccount'] = 'Create Account';

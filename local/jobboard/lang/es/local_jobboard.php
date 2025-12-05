@@ -77,14 +77,14 @@ $string['salary'] = 'Salario';
 $string['salary_help'] = 'Información sobre remuneración (opcional)';
 $string['location'] = 'Ubicación';
 $string['location_help'] = 'Lugar donde se desempeñará el cargo';
-$string['department'] = 'Modalidad';
-$string['department_help'] = 'Modalidad educativa (Presencial, A Distancia, Virtual, Híbrida)';
+$string['department'] = 'Departamento/Unidad';
+$string['department_help'] = 'Área o dependencia de la institución';
 $string['course'] = 'Curso asociado';
 $string['course_help'] = 'Curso de Moodle relacionado con esta vacante';
 $string['category'] = 'Categoría';
 $string['category_help'] = 'Categoría de cursos relacionada';
-$string['company'] = 'Centro Tutorial';
-$string['company_help'] = 'Centro tutorial o sede regional donde se ubica la vacante';
+$string['company'] = 'Empresa/Sede';
+$string['company_help'] = 'Empresa o sede (en entornos multi-tenant)';
 $string['opendate'] = 'Fecha de apertura';
 $string['opendate_help'] = 'Fecha desde la cual se pueden recibir postulaciones';
 $string['closedate'] = 'Fecha de cierre';
@@ -150,8 +150,8 @@ $string['enterdescription'] = 'Describa el cargo y sus funciones';
 $string['selectcontracttype'] = 'Seleccione tipo de contrato';
 $string['selectcourse'] = 'Seleccione un curso';
 $string['selectcategory'] = 'Seleccione una categoría';
-$string['selectcompany'] = 'Seleccione un centro tutorial';
-$string['selectdepartment'] = 'Seleccione una modalidad';
+$string['selectcompany'] = 'Seleccione una empresa/sede';
+$string['selectdepartment'] = 'Seleccione un departamento';
 $string['selectstatus'] = 'Seleccione estado';
 $string['uploadfile'] = 'Subir archivo';
 $string['choosefiles'] = 'Seleccionar archivos';
@@ -412,8 +412,8 @@ $string['noresults'] = 'No se encontraron resultados';
 $string['loading'] = 'Cargando...';
 $string['processing'] = 'Procesando...';
 $string['allstatuses'] = 'Todos los estados';
-$string['allcompanies'] = 'Todos los centros tutoriales';
-$string['alldepartments'] = 'Todas las modalidades';
+$string['allcompanies'] = 'Todas las empresas';
+$string['alldepartments'] = 'Todos los departamentos';
 $string['alldates'] = 'Todas las fechas';
 $string['today'] = 'Hoy';
 $string['thisweek'] = 'Esta semana';
@@ -1186,9 +1186,9 @@ $string['publicationtype:public'] = 'Pública';
 $string['publicationtype:internal'] = 'Interna';
 
 // Strings multi-tenant IOMAD.
-$string['iomadsettings'] = 'Centro Tutorial y Modalidad';
-$string['iomad_department'] = 'Modalidad Educativa';
-$string['iomad_department_help'] = 'Seleccione la modalidad educativa para esta vacante: Presencial, A Distancia, Virtual o Híbrida.';
+$string['iomadsettings'] = 'Empresa y Departamento';
+$string['iomad_department'] = 'Departamento IOMAD';
+$string['iomad_department_help'] = 'Seleccione el departamento dentro de la empresa para esta vacante. Los departamentos se gestionan en IOMAD.';
 
 // Página pública.
 $string['publicvacancies'] = 'Oportunidades Laborales';
@@ -1727,7 +1727,7 @@ $string['signup_success_instructions'] = 'Una vez confirmes tu correo electróni
 // Secciones del formulario de registro.
 $string['signup_personalinfo'] = 'Información Personal';
 $string['signup_contactinfo'] = 'Información de Contacto';
-$string['signup_companyinfo'] = 'Selección de Centro Tutorial';
+$string['signup_companyinfo'] = 'Selección de Compañía';
 $string['signup_termsheader'] = 'Términos y Condiciones';
 
 // Campos del formulario de registro.
@@ -1737,7 +1737,7 @@ $string['signup_password'] = 'Contraseña';
 $string['signup_password_help'] = 'Crea una contraseña segura con al menos 8 caracteres, incluyendo letras mayúsculas y minúsculas, números y símbolos.';
 $string['signup_idnumber'] = 'Número de Identificación';
 $string['signup_idnumber_help'] = 'Ingresa tu número de identificación nacional (ej. cédula de ciudadanía, pasaporte). Se usará para verificar tu identidad.';
-$string['signup_company_help'] = 'Selecciona el centro tutorial donde deseas postularte. Esto nos ayuda a asignarte al centro regional apropiado.';
+$string['signup_company_help'] = 'Selecciona la compañía u organización a la que deseas postularte. Esto ayuda a dirigir tu aplicación al departamento apropiado.';
 
 // Acciones del formulario de registro.
 $string['signup_createaccount'] = 'Crear Cuenta';
