@@ -45,9 +45,17 @@ $PAGE->set_pagelayout('admin');
 $PAGE->set_title(get_string('managevacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('managevacancies', 'local_jobboard'));
 
-// Handle actions.
-if ($action && $vacancyid) {
-    // Require sesskey for actions that modify data.
+// Handle actions that don't need sesskey (just redirects).
+if ($action === 'create') {
+    redirect(new moodle_url('/local/jobboard/edit.php'));
+}
+
+if ($action === 'edit' && $vacancyid) {
+    redirect(new moodle_url('/local/jobboard/edit.php', ['id' => $vacancyid]));
+}
+
+// Handle actions that modify data (require sesskey).
+if ($action && $vacancyid && in_array($action, ['publish', 'close', 'delete'])) {
     require_sesskey();
 
     $vacancy = \local_jobboard\vacancy::get($vacancyid);
@@ -106,18 +114,6 @@ if ($action && $vacancyid) {
                     \core\output\notification::NOTIFY_ERROR
                 );
             }
-            break;
-
-        case 'edit':
-            // Redirect to edit form.
-            // For now, this can redirect to the legacy edit.php or be handled inline.
-            // In a complete refactor, we would add a views/edit.php view.
-            redirect(new moodle_url('/local/jobboard/edit.php', ['id' => $vacancyid]));
-            break;
-
-        case 'create':
-            // Redirect to create form.
-            redirect(new moodle_url('/local/jobboard/edit.php'));
             break;
     }
 }

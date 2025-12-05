@@ -10,7 +10,8 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 ### Corregido
 - **Error de sesskey en manage.php**
   - Corregido: `confirm_sesskey()` se llamaba incluso al cargar la página sin acciones
-  - Ahora usa `require_sesskey()` solo cuando hay una acción que modificar datos
+  - Las acciones `edit` y `create` ahora redirigen directamente sin requerir sesskey
+  - Solo las acciones que modifican datos (`publish`, `close`, `delete`) requieren sesskey
 - **TypeError en vacancy.php**
   - Corregido: `local_jobboard_get_user_companyid()` recibía string en lugar de int
   - Ahora convierte explícitamente `$filters['userid']` a int antes de pasarlo
