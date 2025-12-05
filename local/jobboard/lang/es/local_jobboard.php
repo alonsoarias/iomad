@@ -299,6 +299,8 @@ $string['convocatoriaarchived'] = 'Convocatoria archivada exitosamente';
 $string['error:convocatoriahasnovacancies'] = 'No se puede abrir una convocatoria sin vacantes';
 $string['error:convocatoriadatesinvalid'] = 'La fecha de cierre debe ser posterior a la fecha de inicio';
 $string['error:convocatoriacodeexists'] = 'Ya existe una convocatoria con este código';
+$string['vacanciesforconvocatoria'] = 'Vacantes de la convocatoria';
+$string['backtoconvocatorias'] = 'Volver a convocatorias';
 
 // External links.
 $string['externallinkinfo'] = 'Debe descargar este certificado desde el sitio oficial y subirlo aquí';

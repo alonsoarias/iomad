@@ -37,6 +37,7 @@ $perpage = optional_param('perpage', 25, PARAM_INT);
 $search = optional_param('search', '', PARAM_TEXT);
 $status = optional_param('status', '', PARAM_ALPHA);
 $companyid = optional_param('companyid', 0, PARAM_INT);
+$convocatoriaid = optional_param('convocatoriaid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
 $vacancyid = optional_param('id', 0, PARAM_INT);
 
@@ -133,6 +134,10 @@ if ($companyid) {
     $filters['companyid'] = $companyid;
 }
 
+if ($convocatoriaid) {
+    $filters['convocatoriaid'] = $convocatoriaid;
+}
+
 // For non-admin users, filter by their company.
 if (!has_capability('local/jobboard:viewallvacancies', $context)) {
     $usercompanyid = local_jobboard_get_user_companyid();
@@ -151,10 +156,41 @@ echo $OUTPUT->header();
 // Page title.
 echo html_writer::tag('h2', get_string('managevacancies', 'local_jobboard'));
 
+// If filtering by convocatoria, show context info.
+$convocatoriainfo = null;
+if ($convocatoriaid) {
+    $convocatoriainfo = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
+    if ($convocatoriainfo) {
+        $statusclass = [
+            'draft' => 'secondary',
+            'open' => 'success',
+            'closed' => 'warning',
+            'archived' => 'dark',
+        ];
+        echo html_writer::start_div('alert alert-info d-flex justify-content-between align-items-center');
+        echo html_writer::tag('span',
+            get_string('vacanciesforconvocatoria', 'local_jobboard') . ': ' .
+            html_writer::tag('strong', s($convocatoriainfo->name)) . ' ' .
+            html_writer::tag('span', get_string('convocatoria_status_' . $convocatoriainfo->status, 'local_jobboard'),
+                ['class' => 'badge badge-' . ($statusclass[$convocatoriainfo->status] ?? 'secondary')])
+        );
+        echo html_writer::link(
+            new moodle_url('/local/jobboard/admin/convocatorias.php'),
+            get_string('backtoconvocatorias', 'local_jobboard'),
+            ['class' => 'btn btn-sm btn-outline-primary']
+        );
+        echo html_writer::end_div();
+    }
+}
+
 // Add new vacancy button.
+$newvacancyurl = new moodle_url('/local/jobboard/edit.php');
+if ($convocatoriaid) {
+    $newvacancyurl->param('convocatoriaid', $convocatoriaid);
+}
 echo html_writer::div(
     html_writer::link(
-        new moodle_url('/local/jobboard/edit.php'),
+        $newvacancyurl,
         get_string('newvacancy', 'local_jobboard'),
         ['class' => 'btn btn-primary']
     ),
@@ -165,6 +201,9 @@ echo html_writer::div(
 $formurl = new moodle_url('/local/jobboard/index.php');
 echo html_writer::start_tag('form', ['method' => 'get', 'action' => $formurl, 'class' => 'mb-4']);
 echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'view', 'value' => 'manage']);
+if ($convocatoriaid) {
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'convocatoriaid', 'value' => $convocatoriaid]);
+}
 
 echo html_writer::start_div('row');
 
@@ -356,6 +395,7 @@ if ($total > $perpage) {
         'search' => $search,
         'status' => $status,
         'companyid' => $companyid,
+        'convocatoriaid' => $convocatoriaid,
         'perpage' => $perpage,
     ]);
     echo $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);

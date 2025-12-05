@@ -385,3 +385,314 @@
         transition: none;
     }
 }
+
+/* ==========================================================================
+   Signup Form Styles (matching inteb/remui theme)
+   ========================================================================== */
+
+.jobboard-signup-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.signup-header-section {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 1.5rem;
+}
+
+.signup-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.signup-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #343a40;
+}
+
+.vacancy-info-card {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.vacancy-info-card .card-header {
+    border-bottom: none;
+}
+
+.login-notice {
+    border-radius: 0.5rem;
+    border-left: 4px solid #17a2b8;
+}
+
+/* Signup Form Styling */
+.signup-form-wrapper .mform {
+    background: #fff;
+    border-radius: 0.5rem;
+}
+
+.signup-form-wrapper .mform .form-group,
+.signup-form-wrapper .mform .fitem {
+    margin-bottom: 1rem;
+}
+
+.signup-form-wrapper .mform fieldset {
+    border: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.signup-form-wrapper .mform fieldset legend,
+.signup-form-wrapper .mform .ftoggler {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #343a40;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+    border-bottom: 2px solid #007bff;
+    border-radius: 0.25rem 0.25rem 0 0;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.signup-form-wrapper .mform .form-control,
+.signup-form-wrapper .mform select.custom-select,
+.signup-form-wrapper .mform input[type="text"],
+.signup-form-wrapper .mform input[type="email"],
+.signup-form-wrapper .mform input[type="password"],
+.signup-form-wrapper .mform textarea {
+    border-radius: 0.375rem;
+    border: 1px solid #ced4da;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.95rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.signup-form-wrapper .mform .form-control:focus,
+.signup-form-wrapper .mform select.custom-select:focus,
+.signup-form-wrapper .mform input[type="text"]:focus,
+.signup-form-wrapper .mform input[type="email"]:focus,
+.signup-form-wrapper .mform input[type="password"]:focus,
+.signup-form-wrapper .mform textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+    outline: none;
+}
+
+.signup-form-wrapper .mform label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.375rem;
+}
+
+.signup-form-wrapper .mform .form-control-feedback,
+.signup-form-wrapper .mform .form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+/* Section headers within the form */
+.signup-form-wrapper .mform .collapsible-actions,
+.signup-form-wrapper .mform .fheader {
+    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+    border-bottom: 2px solid #007bff;
+    padding: 0.75rem 1rem;
+    margin: 1.5rem 0 1rem 0;
+    border-radius: 0.25rem 0.25rem 0 0;
+    font-weight: 600;
+}
+
+/* Checkboxes and radio buttons */
+.signup-form-wrapper .mform .form-check,
+.signup-form-wrapper .mform .fcheckbox {
+    padding: 0.5rem 0;
+}
+
+.signup-form-wrapper .mform .form-check-input {
+    width: 1.1em;
+    height: 1.1em;
+    margin-top: 0.15em;
+}
+
+.signup-form-wrapper .mform .form-check-label {
+    padding-left: 0.25rem;
+    line-height: 1.5;
+}
+
+/* Required field asterisk */
+.signup-form-wrapper .mform .fdescription.required::after,
+.signup-form-wrapper .mform .req {
+    color: #dc3545;
+}
+
+/* Help buttons */
+.signup-form-wrapper .mform .helptooltip {
+    color: #6c757d;
+    margin-left: 0.25rem;
+}
+
+/* Alerts within form */
+.signup-form-wrapper .mform .alert {
+    border-radius: 0.375rem;
+    padding: 0.875rem 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Privacy and terms section */
+.signup-form-wrapper .privacy-notice,
+.signup-form-wrapper .data-treatment-policy {
+    background-color: #f8f9fa;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e9ecef;
+}
+
+.signup-form-wrapper .data-treatment-policy {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Submit buttons */
+.signup-form-wrapper .mform .form-group.fitem_actionbuttons,
+.signup-form-wrapper .mform #fgroup_id_buttonar {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.signup-form-wrapper .mform .btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+}
+
+.signup-form-wrapper .mform .btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.signup-form-wrapper .mform .btn-secondary {
+    background: #fff;
+    border: 1px solid #ced4da;
+    color: #495057;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    border-radius: 0.375rem;
+}
+
+.signup-form-wrapper .mform .btn-secondary:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+/* Error states */
+.signup-form-wrapper .mform .is-invalid,
+.signup-form-wrapper .mform .error {
+    border-color: #dc3545 !important;
+}
+
+.signup-form-wrapper .mform .invalid-feedback,
+.signup-form-wrapper .mform .form-control-feedback.text-danger {
+    color: #dc3545;
+    font-size: 0.8rem;
+}
+
+/* Success message page */
+.signup-success {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+}
+
+.signup-success .text-success {
+    color: #28a745 !important;
+}
+
+/* Date selector styling */
+.signup-form-wrapper .mform .fdate_selector .form-group {
+    display: inline-block;
+    margin-right: 0.5rem;
+    margin-bottom: 0;
+}
+
+.signup-form-wrapper .mform .fdate_selector select {
+    min-width: 80px;
+}
+
+/* Responsive adjustments for signup form */
+@media (max-width: 767.98px) {
+    .jobboard-signup-container {
+        padding: 1rem;
+    }
+
+    .signup-header-section {
+        padding-bottom: 0.75rem;
+    }
+
+    .signup-icon-wrapper {
+        width: 60px;
+        height: 60px;
+    }
+
+    .signup-icon-wrapper i {
+        font-size: 1.75rem !important;
+    }
+
+    .signup-title {
+        font-size: 1.5rem;
+    }
+
+    .signup-form-wrapper .mform fieldset legend,
+    .signup-form-wrapper .mform .ftoggler {
+        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .signup-form-wrapper .mform .btn-primary,
+    .signup-form-wrapper .mform .btn-secondary {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-notice {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .login-notice .btn {
+        margin-top: 0.5rem;
+        margin-left: 0 !important;
+    }
+}
+
+/* Styling for expanded/collapsed fieldsets */
+.signup-form-wrapper .mform .collapsed .fcontainer {
+    display: none;
+}
+
+.signup-form-wrapper .mform .collapsible-actions .collapseexpand {
+    color: #007bff;
+    text-decoration: none;
+}
+
+/* Form inline help */
+.signup-form-wrapper .mform .form-inline-help {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    font-style: italic;
+}

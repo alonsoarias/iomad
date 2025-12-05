@@ -1,0 +1,64 @@
+{{!
+    Signup page template for local_jobboard.
+    Follows the inteb/remui theme design patterns.
+
+    @package   local_jobboard
+    @copyright 2024 ISER
+    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+<div class="jobboard-signup-container">
+    {{! Header Section }}
+    <div class="signup-header-section text-center mb-4">
+        <div class="signup-icon-wrapper mb-3">
+            <i class="fa fa-user-plus fa-3x text-primary"></i>
+        </div>
+        <h1 class="h-bold-3 m-0 signup-title">{{title}}</h1>
+        <p class="para-regular-3 text-muted mt-2">{{intro}}</p>
+    </div>
+
+    {{! Vacancy Info Card (if applying to specific vacancy) }}
+    {{#vacancy}}
+    <div class="card vacancy-info-card mb-4 border-primary shadow-sm">
+        <div class="card-header bg-primary text-white py-2">
+            <h5 class="mb-0 d-flex align-items-center">
+                <i class="fa fa-briefcase me-2"></i>
+                {{applyingfortext}}
+            </h5>
+        </div>
+        <div class="card-body py-3">
+            <h5 class="card-title mb-2 font-weight-bold">{{vacancy.title}}</h5>
+            <p class="card-text mb-1">
+                <span class="text-muted">{{codetext}}:</span>
+                <strong>{{vacancy.code}}</strong>
+            </p>
+            {{#vacancy.location}}
+            <p class="card-text mb-0 text-muted small">
+                <i class="fa fa-map-marker me-1"></i>
+                {{vacancy.location}}
+            </p>
+            {{/vacancy.location}}
+        </div>
+    </div>
+    {{/vacancy}}
+
+    {{! Already have account notice }}
+    <div class="alert alert-info d-flex align-items-center mb-4 login-notice">
+        <i class="fa fa-info-circle fa-lg me-3 flex-shrink-0"></i>
+        <div class="flex-grow-1">
+            <strong>{{alreadyaccounttext}}</strong>
+            <a href="{{loginurl}}" class="btn btn-sm btn-primary ms-2">
+                <i class="fa fa-sign-in me-1"></i>{{logintext}}
+            </a>
+        </div>
+    </div>
+
+    {{! Required fields notice }}
+    <p class="text-muted small mb-4">
+        <span class="text-danger">*</span> {{requiredfieldstext}}
+    </p>
+
+    {{! The form content }}
+    <div class="signup-form-wrapper">
+        {{{formhtml}}}
+    </div>
+</div>

@@ -299,6 +299,8 @@ $string['convocatoriaarchived'] = 'Call archived successfully';
 $string['error:convocatoriahasnovacancies'] = 'Cannot open a call without vacancies';
 $string['error:convocatoriadatesinvalid'] = 'End date must be after start date';
 $string['error:convocatoriacodeexists'] = 'A call with this code already exists';
+$string['vacanciesforconvocatoria'] = 'Vacancies for call';
+$string['backtoconvocatorias'] = 'Back to calls';
 
 // External links.
 $string['externallinkinfo'] = 'You must download this certificate from the official website and upload it here';

@@ -44,6 +44,7 @@ class vacancy_form extends \moodleform {
         $mform = $this->_form;
         $vacancy = $this->_customdata['vacancy'] ?? null;
         $isedit = !empty($vacancy) && $vacancy->id > 0;
+        $defaultconvocatoriaid = $this->_customdata['convocatoriaid'] ?? 0;
 
         // Header: Basic Information.
         $mform->addElement('header', 'basicinfo', get_string('vacancytitle', 'local_jobboard'));
@@ -145,6 +146,9 @@ class vacancy_form extends \moodleform {
         ]);
         $mform->setType('convocatoriaid', PARAM_INT);
         $mform->addHelpButton('convocatoriaid', 'convocatoria', 'local_jobboard');
+        if ($defaultconvocatoriaid && !$isedit) {
+            $mform->setDefault('convocatoriaid', $defaultconvocatoriaid);
+        }
 
         // Header: Associations.
         $mform->addElement('header', 'associations', get_string('course', 'local_jobboard'));

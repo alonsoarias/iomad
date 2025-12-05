@@ -767,6 +767,12 @@ class vacancy {
             $params['companyid'] = $filters['companyid'];
         }
 
+        // Filter by convocatoria.
+        if (!empty($filters['convocatoriaid'])) {
+            $where[] = 'convocatoriaid = :convocatoriaid';
+            $params['convocatoriaid'] = (int) $filters['convocatoriaid'];
+        }
+
         // Filter by date range.
         if (!empty($filters['datefrom'])) {
             $where[] = 'opendate >= :datefrom';

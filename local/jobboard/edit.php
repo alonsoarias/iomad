@@ -28,6 +28,7 @@ require_once(__DIR__ . '/lib.php');
 require_login();
 
 $id = optional_param('id', 0, PARAM_INT);
+$convocatoriaid = optional_param('convocatoriaid', 0, PARAM_INT);
 
 $context = context_system::instance();
 
@@ -57,7 +58,11 @@ $PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_u
 $PAGE->navbar->add($pagetitle);
 
 // Create form.
-$form = new \local_jobboard\forms\vacancy_form(null, ['vacancy' => $vacancy]);
+$formdata = ['vacancy' => $vacancy];
+if ($convocatoriaid && !$vacancy) {
+    $formdata['convocatoriaid'] = $convocatoriaid;
+}
+$form = new \local_jobboard\forms\vacancy_form(null, $formdata);
 
 // Handle cancel.
 if ($form->is_cancelled()) {

@@ -196,45 +196,7 @@ if ($data = $mform->get_data()) {
 // Display the form.
 echo $OUTPUT->header();
 
-// Page header with icon.
-echo html_writer::start_div('signup-header mb-4 text-center');
-echo html_writer::tag('div', html_writer::tag('i', '', ['class' => 'fa fa-user-plus fa-3x']),
-    ['class' => 'text-primary mb-3']);
-echo html_writer::tag('h1', get_string('signup_title', 'local_jobboard'), ['class' => 'h2']);
-echo html_writer::tag('p', get_string('signup_intro', 'local_jobboard'), ['class' => 'lead text-muted']);
-echo html_writer::end_div();
-
-// Show vacancy info if available.
-if ($vacancy) {
-    echo html_writer::start_div('card mb-4 border-primary');
-    echo html_writer::start_div('card-header bg-primary text-white');
-    echo html_writer::tag('h5', html_writer::tag('i', '', ['class' => 'fa fa-briefcase me-2']) .
-        get_string('signup_applying_for', 'local_jobboard'), ['class' => 'mb-0']);
-    echo html_writer::end_div();
-    echo html_writer::start_div('card-body');
-    echo html_writer::tag('h5', s($vacancy->title), ['class' => 'card-title mb-2']);
-    echo html_writer::tag('p',
-        html_writer::tag('span', get_string('code', 'local_jobboard') . ': ', ['class' => 'text-muted']) .
-        html_writer::tag('strong', s($vacancy->code)),
-        ['class' => 'card-text mb-1']
-    );
-    if (!empty($vacancy->location)) {
-        echo html_writer::tag('p',
-            html_writer::tag('i', '', ['class' => 'fa fa-map-marker text-muted me-1']) .
-            html_writer::tag('span', s($vacancy->location), ['class' => 'text-muted']),
-            ['class' => 'card-text mb-0']
-        );
-    }
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-}
-
-// Login alternative with better styling.
-echo html_writer::start_div('alert alert-info d-flex align-items-center mb-4');
-echo html_writer::tag('i', '', ['class' => 'fa fa-info-circle fa-lg me-3']);
-echo html_writer::start_div();
-echo html_writer::tag('strong', get_string('signup_already_account', 'local_jobboard'));
-echo ' ';
+// Build login URL with redirect.
 $loginurl = new moodle_url('/login/index.php');
 if ($vacancyid) {
     $loginurl->param('wantsurl', (new moodle_url('/local/jobboard/index.php', [
@@ -242,19 +204,31 @@ if ($vacancyid) {
         'vacancyid' => $vacancyid,
     ]))->out(false));
 }
-echo html_writer::link($loginurl, get_string('login'), ['class' => 'btn btn-sm btn-primary ms-2']);
-echo html_writer::end_div();
-echo html_writer::end_div();
 
-// Required fields notice.
-echo html_writer::tag('p',
-    html_writer::tag('span', '*', ['class' => 'text-danger']) . ' ' .
-    get_string('signup_required_fields', 'local_jobboard'),
-    ['class' => 'text-muted small mb-4']
-);
+// Build template context.
+$templatecontext = [
+    'title' => get_string('signup_title', 'local_jobboard'),
+    'intro' => get_string('signup_intro', 'local_jobboard'),
+    'alreadyaccounttext' => get_string('signup_already_account', 'local_jobboard'),
+    'loginurl' => $loginurl->out(false),
+    'logintext' => get_string('login'),
+    'requiredfieldstext' => get_string('signup_required_fields', 'local_jobboard'),
+    'formhtml' => $mform->render(),
+];
 
-// Display the form.
-$mform->display();
+// Add vacancy info if available.
+if ($vacancy) {
+    $templatecontext['vacancy'] = [
+        'title' => s($vacancy->title),
+        'code' => s($vacancy->code),
+        'location' => !empty($vacancy->location) ? s($vacancy->location) : '',
+    ];
+    $templatecontext['applyingfortext'] = get_string('signup_applying_for', 'local_jobboard');
+    $templatecontext['codetext'] = get_string('code', 'local_jobboard');
+}
+
+// Render using template.
+echo $OUTPUT->render_from_template('local_jobboard/signup_page', $templatecontext);
 
 // JavaScript for dynamic department loading.
 if ($isiomad) {
