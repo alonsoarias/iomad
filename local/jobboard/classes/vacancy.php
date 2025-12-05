@@ -487,6 +487,16 @@ class vacancy {
     }
 
     /**
+     * Get the vacancy as a database record object.
+     * Alias for to_record() method.
+     *
+     * @return \stdClass The database record.
+     */
+    public function get_record(): \stdClass {
+        return $this->to_record();
+    }
+
+    /**
      * Check if the vacancy can be edited.
      *
      * @return bool True if editable.
