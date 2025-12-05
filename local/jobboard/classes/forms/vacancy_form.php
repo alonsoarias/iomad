@@ -154,20 +154,64 @@ class vacancy_form extends \moodleform {
         $mform->setType('categoryid', PARAM_INT);
         $mform->addHelpButton('categoryid', 'category', 'local_jobboard');
 
-        // Company (Iomad multi-tenant).
+        // Company and Department (Iomad multi-tenant).
         if (\local_jobboard_is_iomad_installed()) {
-            $companies = ['' => get_string('selectcompany', 'local_jobboard')] + \local_jobboard_get_companies();
-            $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companies);
+            // Header for IOMAD section.
+            $mform->addElement('header', 'iomadsection', get_string('iomadsettings', 'local_jobboard'));
+
+            // Company selector.
+            $companies = [0 => get_string('selectcompany', 'local_jobboard')] + \local_jobboard_get_companies();
+            $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companies, [
+                'id' => 'id_companyid',
+            ]);
             $mform->setType('companyid', PARAM_INT);
             $mform->addHelpButton('companyid', 'company', 'local_jobboard');
 
             // Pre-select current user's company.
+            $defaultcompanyid = 0;
             if (!$isedit) {
                 $usercompanyid = \local_jobboard_get_user_companyid();
                 if ($usercompanyid) {
                     $mform->setDefault('companyid', $usercompanyid);
+                    $defaultcompanyid = $usercompanyid;
                 }
+            } else if ($vacancy && $vacancy->companyid) {
+                $defaultcompanyid = (int) $vacancy->companyid;
             }
+
+            // Department selector (IOMAD).
+            $iomadinfo = \local_jobboard_get_iomad_info();
+            if ($iomadinfo['has_departments']) {
+                // Get departments for the selected/default company.
+                $departments = [0 => get_string('selectdepartment', 'local_jobboard')];
+                if ($defaultcompanyid > 0) {
+                    $departments += \local_jobboard_get_departments($defaultcompanyid);
+                }
+
+                $mform->addElement('select', 'departmentid', get_string('iomad_department', 'local_jobboard'), $departments, [
+                    'id' => 'id_departmentid',
+                ]);
+                $mform->setType('departmentid', PARAM_INT);
+                $mform->addHelpButton('departmentid', 'iomad_department', 'local_jobboard');
+
+                // Add JavaScript to update departments when company changes.
+                global $PAGE;
+                $PAGE->requires->js_call_amd('local_jobboard/vacancy_form', 'init', []);
+            }
+
+            // Publication type for IOMAD (public or internal).
+            $pubtypes = [
+                'public' => get_string('publicationtype:public', 'local_jobboard'),
+                'internal' => get_string('publicationtype:internal', 'local_jobboard'),
+            ];
+            $mform->addElement('select', 'publicationtype', get_string('publicationtype', 'local_jobboard'), $pubtypes);
+            $mform->setType('publicationtype', PARAM_ALPHA);
+            $mform->setDefault('publicationtype', 'public');
+            $mform->addHelpButton('publicationtype', 'publicationtype', 'local_jobboard');
+        } else {
+            // For non-IOMAD installations, default to public.
+            $mform->addElement('hidden', 'publicationtype', 'public');
+            $mform->setType('publicationtype', PARAM_ALPHA);
         }
 
         // Hidden vacancy ID for editing.
@@ -259,6 +303,8 @@ class vacancy_form extends \moodleform {
         $data->courseid = $vacancy->courseid;
         $data->categoryid = $vacancy->categoryid;
         $data->companyid = $vacancy->companyid;
+        $data->departmentid = $vacancy->departmentid ?? 0;
+        $data->publicationtype = $vacancy->publicationtype ?? 'public';
         $data->opendate = $vacancy->opendate;
         $data->closedate = $vacancy->closedate;
         $data->positions = $vacancy->positions;

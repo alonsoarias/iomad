@@ -1020,6 +1020,73 @@ class api extends \external_api {
     }
 
     // =========================================================================
+    // IOMAD FUNCTIONS
+    // =========================================================================
+
+    /**
+     * Returns description of get_departments parameters.
+     *
+     * @return \external_function_parameters
+     */
+    public static function get_departments_parameters(): \external_function_parameters {
+        return new \external_function_parameters([
+            'companyid' => new \external_value(PARAM_INT, 'Company ID'),
+        ]);
+    }
+
+    /**
+     * Get list of departments for a company.
+     *
+     * @param int $companyid Company ID.
+     * @return array List of departments.
+     */
+    public static function get_departments(int $companyid): array {
+        // Validate parameters.
+        $params = self::validate_parameters(self::get_departments_parameters(), [
+            'companyid' => $companyid,
+        ]);
+
+        // Get and validate context.
+        $context = \context_system::instance();
+        self::validate_context($context);
+
+        // Check if user has capability.
+        require_capability('local/jobboard:createvacancy', $context);
+
+        // Check if IOMAD is installed.
+        if (!\local_jobboard_is_iomad_installed()) {
+            return [];
+        }
+
+        // Get departments.
+        $departments = \local_jobboard_get_departments($params['companyid']);
+
+        $result = [];
+        foreach ($departments as $id => $name) {
+            $result[] = [
+                'id' => (int) $id,
+                'name' => $name,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Returns description of get_departments return value.
+     *
+     * @return \external_multiple_structure
+     */
+    public static function get_departments_returns(): \external_multiple_structure {
+        return new \external_multiple_structure(
+            new \external_single_structure([
+                'id' => new \external_value(PARAM_INT, 'Department ID'),
+                'name' => new \external_value(PARAM_TEXT, 'Department name'),
+            ])
+        );
+    }
+
+    // =========================================================================
     // HELPER METHODS
     // =========================================================================
 

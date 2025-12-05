@@ -479,6 +479,96 @@ function local_jobboard_is_iomad_installed(): bool {
 }
 
 /**
+ * Get list of departments for a company (IOMAD).
+ *
+ * @param int $companyid The company ID.
+ * @return array Department ID => name.
+ */
+function local_jobboard_get_departments(int $companyid): array {
+    global $DB;
+
+    if (!$companyid) {
+        return [];
+    }
+
+    // Check if department table exists (IOMAD).
+    $dbman = $DB->get_manager();
+    if (!$dbman->table_exists('department')) {
+        return [];
+    }
+
+    $departments = $DB->get_records('department', ['company' => $companyid], 'name ASC', 'id, name');
+
+    $result = [];
+    foreach ($departments as $dept) {
+        $result[$dept->id] = $dept->name;
+    }
+
+    return $result;
+}
+
+/**
+ * Get department name by ID.
+ *
+ * @param int $departmentid The department ID.
+ * @return string Department name or empty string.
+ */
+function local_jobboard_get_department_name(int $departmentid): string {
+    global $DB;
+
+    if (!$departmentid) {
+        return '';
+    }
+
+    $dbman = $DB->get_manager();
+    if (!$dbman->table_exists('department')) {
+        return '';
+    }
+
+    $dept = $DB->get_record('department', ['id' => $departmentid], 'name');
+    return $dept ? $dept->name : '';
+}
+
+/**
+ * Get IOMAD installation type and details.
+ *
+ * @return array Installation info with keys: is_iomad, version, has_departments.
+ */
+function local_jobboard_get_iomad_info(): array {
+    global $DB, $CFG;
+
+    $info = [
+        'is_iomad' => false,
+        'version' => null,
+        'has_departments' => false,
+        'has_companies' => false,
+    ];
+
+    $dbman = $DB->get_manager();
+
+    // Check for IOMAD tables.
+    if (!$dbman->table_exists('company')) {
+        return $info;
+    }
+
+    $info['is_iomad'] = true;
+    $info['has_companies'] = true;
+
+    // Check for departments.
+    if ($dbman->table_exists('department')) {
+        $info['has_departments'] = true;
+    }
+
+    // Get IOMAD version if available.
+    $iomadversion = get_config('local_iomad', 'version');
+    if ($iomadversion) {
+        $info['version'] = $iomadversion;
+    }
+
+    return $info;
+}
+
+/**
  * Get the default document types to be exempted for ISER historic personnel.
  *
  * @return array Array of document type codes.

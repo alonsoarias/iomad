@@ -1,0 +1,98 @@
+{
+  "name": "tour_vacancy_name,local_jobboard",
+  "description": "tour_vacancy_description,local_jobboard",
+  "pathmatch": "/local/jobboard/index.php%view=vacancy%",
+  "enabled": 1,
+  "sortorder": 0,
+  "endtourlabel": "tour_endlabel,local_jobboard",
+  "displaystepnumbers": true,
+  "configdata": {
+    "placement": "bottom",
+    "orphan": true,
+    "backdrop": true,
+    "reflex": false,
+    "filtervalues": {
+      "accessdate": {
+        "filter_accessdate_enabled": 0
+      },
+      "role": [],
+      "category": [],
+      "course": [],
+      "courseformat": [],
+      "theme": [],
+      "cssselector": []
+    }
+  },
+  "steps": [
+    {
+      "title": "tour_vacancy_step1_title,local_jobboard",
+      "content": "tour_vacancy_step1_content,local_jobboard",
+      "targettype": 2,
+      "targetvalue": "",
+      "sortorder": 0,
+      "configdata": {
+        "placement": "bottom"
+      }
+    },
+    {
+      "title": "tour_vacancy_step2_title,local_jobboard",
+      "content": "tour_vacancy_step2_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".card-header",
+      "sortorder": 1,
+      "configdata": {
+        "placement": "bottom"
+      }
+    },
+    {
+      "title": "tour_vacancy_step3_title,local_jobboard",
+      "content": "tour_vacancy_step3_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".card-body h2",
+      "sortorder": 2,
+      "configdata": {
+        "placement": "bottom"
+      }
+    },
+    {
+      "title": "tour_vacancy_step4_title,local_jobboard",
+      "content": "tour_vacancy_step4_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".alert-warning, .text-muted",
+      "sortorder": 3,
+      "configdata": {
+        "placement": "top"
+      }
+    },
+    {
+      "title": "tour_vacancy_step5_title,local_jobboard",
+      "content": "tour_vacancy_step5_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".btn-success, .btn-primary",
+      "sortorder": 4,
+      "configdata": {
+        "placement": "right"
+      }
+    },
+    {
+      "title": "tour_vacancy_step6_title,local_jobboard",
+      "content": "tour_vacancy_step6_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": "dl.row",
+      "sortorder": 5,
+      "configdata": {
+        "placement": "top"
+      }
+    },
+    {
+      "title": "tour_vacancy_step7_title,local_jobboard",
+      "content": "tour_vacancy_step7_content,local_jobboard",
+      "targettype": 2,
+      "targetvalue": "",
+      "sortorder": 6,
+      "configdata": {
+        "placement": "bottom"
+      }
+    }
+  ]
+}

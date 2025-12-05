@@ -545,5 +545,28 @@
         <INDEX NAME="applicationid_idx" UNIQUE="true" FIELDS="applicationid"/>
       </INDEXES>
     </TABLE>
+
+    <!-- Table 22: User consent records -->
+    <TABLE NAME="local_jobboard_consent" COMMENT="User consent records for data treatment and terms">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User who gave consent"/>
+        <FIELD NAME="consenttype" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Type of consent: datatreatment, terms, privacy"/>
+        <FIELD NAME="consentgiven" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1=consent given, 0=declined"/>
+        <FIELD NAME="consentversion" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Version of policy consented to"/>
+        <FIELD NAME="ipaddress" TYPE="char" LENGTH="45" NOTNULL="false" SEQUENCE="false" COMMENT="IP address at consent time"/>
+        <FIELD NAME="useragent" TYPE="char" LENGTH="512" NOTNULL="false" SEQUENCE="false" COMMENT="User agent at consent time"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_type_idx" UNIQUE="false" FIELDS="userid, consenttype"/>
+        <INDEX NAME="consenttype_idx" UNIQUE="false" FIELDS="consenttype"/>
+        <INDEX NAME="time_idx" UNIQUE="false" FIELDS="timecreated"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>

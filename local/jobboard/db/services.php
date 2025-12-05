@@ -127,6 +127,20 @@ $functions = [
         'loginrequired' => true,
         'capabilities' => 'local/jobboard:manageapitokens',
     ],
+
+    // =========================================================================
+    // IOMAD FUNCTIONS
+    // =========================================================================
+
+    'local_jobboard_get_departments' => [
+        'classname' => 'local_jobboard\external\api',
+        'methodname' => 'get_departments',
+        'description' => 'Get list of departments for a company (IOMAD)',
+        'type' => 'read',
+        'ajax' => true,
+        'loginrequired' => true,
+        'capabilities' => 'local/jobboard:createvacancy',
+    ],
 ];
 
 // Define the web service.
@@ -145,6 +159,8 @@ $services = [
             'local_jobboard_revoke_token',
             'local_jobboard_enable_token',
             'local_jobboard_delete_token',
+            // IOMAD functions.
+            'local_jobboard_get_departments',
         ],
         'restrictedusers' => 0,
         'enabled' => 1,

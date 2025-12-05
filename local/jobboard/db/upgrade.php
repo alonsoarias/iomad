@@ -585,5 +585,34 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120407, 'local', 'jobboard');
     }
 
+    // Phase 9.3: Add consent table for alternative signup form.
+    if ($oldversion < 2025120516) {
+
+        // Create consent table for tracking user consents.
+        $table = new xmldb_table('local_jobboard_consent');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('consenttype', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('consentgiven', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('consentversion', XMLDB_TYPE_CHAR, '20', null, null, null, null);
+        $table->add_field('ipaddress', XMLDB_TYPE_CHAR, '45', null, null, null, null);
+        $table->add_field('useragent', XMLDB_TYPE_CHAR, '512', null, null, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+
+        $table->add_index('user_type_idx', XMLDB_INDEX_NOTUNIQUE, ['userid', 'consenttype']);
+        $table->add_index('consenttype_idx', XMLDB_INDEX_NOTUNIQUE, ['consenttype']);
+        $table->add_index('time_idx', XMLDB_INDEX_NOTUNIQUE, ['timecreated']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2025120516, 'local', 'jobboard');
+    }
+
     return true;
 }

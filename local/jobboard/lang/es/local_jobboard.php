@@ -151,6 +151,7 @@ $string['selectcontracttype'] = 'Seleccione tipo de contrato';
 $string['selectcourse'] = 'Seleccione un curso';
 $string['selectcategory'] = 'Seleccione una categoría';
 $string['selectcompany'] = 'Seleccione una empresa/sede';
+$string['selectdepartment'] = 'Seleccione un departamento';
 $string['selectstatus'] = 'Seleccione estado';
 $string['uploadfile'] = 'Subir archivo';
 $string['choosefiles'] = 'Seleccionar archivos';
@@ -412,6 +413,7 @@ $string['loading'] = 'Cargando...';
 $string['processing'] = 'Procesando...';
 $string['allstatuses'] = 'Todos los estados';
 $string['allcompanies'] = 'Todas las empresas';
+$string['alldepartments'] = 'Todos los departamentos';
 $string['alldates'] = 'Todas las fechas';
 $string['today'] = 'Hoy';
 $string['thisweek'] = 'Esta semana';
@@ -1183,6 +1185,11 @@ $string['publicationtype_help'] = 'Las vacantes públicas son visibles para todo
 $string['publicationtype:public'] = 'Pública';
 $string['publicationtype:internal'] = 'Interna';
 
+// Strings multi-tenant IOMAD.
+$string['iomadsettings'] = 'Empresa y Departamento';
+$string['iomad_department'] = 'Departamento IOMAD';
+$string['iomad_department_help'] = 'Seleccione el departamento dentro de la empresa para esta vacante. Los departamentos se gestionan en IOMAD.';
+
 // Página pública.
 $string['publicvacancies'] = 'Oportunidades Laborales';
 $string['publicpagetitle'] = 'Oportunidades Laborales';
@@ -1196,6 +1203,8 @@ $string['closesin'] = 'Cierra en {$a} días';
 $string['closeson'] = 'Cierra el';
 $string['wanttoapply'] = '¿Desea postularse?';
 $string['createaccounttoapply'] = 'Cree una cuenta o inicie sesión para postularse a las vacantes.';
+$string['loginprompt_public'] = 'Inicie sesión o cree una cuenta para postularse a las vacantes.';
+$string['loginrequired_apply'] = 'Debe iniciar sesión para postularse a esta vacante.';
 $string['backtovacancies'] = 'Volver a Vacantes';
 $string['requireddocuments'] = 'Documentos Requeridos';
 $string['importantdates'] = 'Fechas Importantes';
@@ -1539,6 +1548,76 @@ $string['tour_validate_step7_content'] = 'Si el documento tiene problemas, selec
 $string['tour_validate_step8_title'] = 'Validacion Completada!';
 $string['tour_validate_step8_content'] = 'Despues de tomar su decision, regresara a la vista de la postulacion. Continue revisando otros documentos hasta que todos esten validados.';
 
+// Tour: Lista de Vacantes.
+$string['tour_vacancies_name'] = 'Tour Lista de Vacantes';
+$string['tour_vacancies_description'] = 'Aprenda a navegar y filtrar las vacantes disponibles';
+$string['tour_vacancies_step1_title'] = 'Vista General de Vacantes';
+$string['tour_vacancies_step1_content'] = 'Bienvenido a la lista de vacantes! Esta pagina muestra todas las vacantes a las que tiene acceso. Use los filtros y la busqueda para encontrar oportunidades especificas.';
+$string['tour_vacancies_step2_title'] = 'Panel de Busqueda y Filtros';
+$string['tour_vacancies_step2_content'] = 'Use este panel para buscar y filtrar vacantes. Puede combinar multiples filtros para reducir los resultados.';
+$string['tour_vacancies_step3_title'] = 'Cuadro de Busqueda';
+$string['tour_vacancies_step3_content'] = 'Escriba palabras clave para buscar en titulos, codigos y descripciones de vacantes. Presione Enter o haga clic en Buscar para aplicar.';
+$string['tour_vacancies_step4_title'] = 'Filtro de Estado';
+$string['tour_vacancies_step4_content'] = 'Filtre vacantes por su estado: Borrador (no publicada), Publicada (aceptando postulaciones), Cerrada (ya no acepta), o Asignada (posiciones cubiertas).';
+$string['tour_vacancies_step5_title'] = 'Tabla de Vacantes';
+$string['tour_vacancies_step5_content'] = 'La tabla muestra todas las vacantes que coinciden con informacion clave: codigo, titulo, estado, fechas y posiciones disponibles.';
+$string['tour_vacancies_step6_title'] = 'Insignias de Estado';
+$string['tour_vacancies_step6_content'] = 'Las insignias de estado ayudan a identificar rapidamente los estados: verde para publicada, amarillo para borrador, gris para cerrada.';
+$string['tour_vacancies_step7_title'] = 'Postularse a Vacantes';
+$string['tour_vacancies_step7_content'] = 'Haga clic en el boton Postularse para enviar su postulacion a cualquier vacante abierta que le interese. Buena suerte!';
+
+// Tour: Detalle de Vacante Individual.
+$string['tour_vacancy_name'] = 'Tour Detalle de Vacante';
+$string['tour_vacancy_description'] = 'Conozca toda la informacion disponible en la pagina de detalle de vacante';
+$string['tour_vacancy_step1_title'] = 'Detalles de la Vacante';
+$string['tour_vacancy_step1_content'] = 'Esta pagina muestra informacion completa sobre una vacante especifica. Revise todos los detalles antes de postularse.';
+$string['tour_vacancy_step2_title'] = 'Encabezado de Vacante';
+$string['tour_vacancy_step2_content'] = 'El encabezado muestra el codigo de vacante y la insignia de tipo de publicacion. Las vacantes publicas estan abiertas a todos; las internas solo para miembros de la organizacion.';
+$string['tour_vacancy_step3_title'] = 'Titulo de Vacante';
+$string['tour_vacancy_step3_content'] = 'El titulo de la vacante y los detalles principales se muestran aqui, incluyendo nombre de empresa (si aplica), ubicacion y tipo de contrato.';
+$string['tour_vacancy_step4_title'] = 'Alerta de Fecha de Cierre';
+$string['tour_vacancy_step4_content'] = 'Preste atencion a la fecha de cierre! Si aparece como advertencia, la fecha limite se acerca. Asegurese de enviar su postulacion a tiempo.';
+$string['tour_vacancy_step5_title'] = 'Boton Postularse';
+$string['tour_vacancy_step5_content'] = 'Haga clic en este boton para iniciar su postulacion. Es posible que necesite iniciar sesion primero si aun no lo ha hecho.';
+$string['tour_vacancy_step6_title'] = 'Detalles Adicionales';
+$string['tour_vacancy_step6_content'] = 'Revise detalles adicionales como duracion, informacion salarial, departamento y fechas importantes antes de postularse.';
+$string['tour_vacancy_step7_title'] = 'Listo para Postularse!';
+$string['tour_vacancy_step7_content'] = 'Ahora tiene toda la informacion que necesita. Si esta vacante coincide con su perfil, adelante y postulese!';
+
+// Tour: Detalle de Postulacion.
+$string['tour_application_name'] = 'Tour Detalle de Postulacion';
+$string['tour_application_description'] = 'Aprenda a seguir el estado de su postulacion y gestionar documentos';
+$string['tour_application_step1_title'] = 'Su Postulacion';
+$string['tour_application_step1_content'] = 'Esta pagina muestra los detalles completos de su postulacion. Siga su progreso y gestione sus documentos aqui.';
+$string['tour_application_step2_title'] = 'Estado de Postulacion';
+$string['tour_application_step2_content'] = 'La insignia de estado muestra donde esta su postulacion en el proceso: Enviada, En Revision, Documentos Validados, Entrevista, Seleccionado o Rechazado.';
+$string['tour_application_step3_title'] = 'Indicador de Progreso';
+$string['tour_application_step3_content'] = 'Esta barra de progreso muestra que tan avanzado esta en el proceso de postulacion. Observe como avanza a medida que sus documentos son revisados.';
+$string['tour_application_step4_title'] = 'Lista de Documentos';
+$string['tour_application_step4_content'] = 'Todos sus documentos cargados se listan aqui con su estado de validacion. Verde significa aprobado, rojo significa rechazado, y amarillo significa pendiente de revision.';
+$string['tour_application_step5_title'] = 'Acciones de Documentos';
+$string['tour_application_step5_content'] = 'Para cada documento, puede verlo o descargarlo. Si un documento fue rechazado, vera una opcion para cargar una version corregida.';
+$string['tour_application_step6_title'] = 'Historial de Postulacion';
+$string['tour_application_step6_content'] = 'La seccion de historial muestra todos los cambios de estado y acciones tomadas en su postulacion. Esto le ayuda a seguir el proceso de revision.';
+$string['tour_application_step7_title'] = 'Mantengase Informado!';
+$string['tour_application_step7_content'] = 'Revise regularmente para actualizaciones, o active las notificaciones por correo para ser informado de cambios de estado. Buena suerte con su postulacion!';
+
+// Tour: Mis Revisiones.
+$string['tour_myreviews_name'] = 'Tour Mis Revisiones';
+$string['tour_myreviews_description'] = 'Aprenda a gestionar sus revisiones de documentos asignadas';
+$string['tour_myreviews_step1_title'] = 'Su Cola de Revisiones';
+$string['tour_myreviews_step1_content'] = 'Bienvenido a su cola de revisiones! Esta pagina muestra todas las postulaciones y documentos asignados para su revision.';
+$string['tour_myreviews_step2_title'] = 'Vista General de Cola';
+$string['tour_myreviews_step2_content'] = 'Las tarjetas de vista general muestran sus revisiones pendientes, revisiones completadas y cualquier elemento urgente que requiera atencion inmediata.';
+$string['tour_myreviews_step3_title'] = 'Elementos Pendientes';
+$string['tour_myreviews_step3_content'] = 'Los elementos marcados con una insignia de advertencia requieren su atencion. Priorice estos para mantener el proceso de revision en movimiento.';
+$string['tour_myreviews_step4_title'] = 'Tabla de Revisiones';
+$string['tour_myreviews_step4_content'] = 'La tabla lista todas sus revisiones asignadas con informacion del postulante, detalles de vacante y estado actual.';
+$string['tour_myreviews_step5_title'] = 'Acciones de Revision';
+$string['tour_myreviews_step5_content'] = 'Haga clic en el boton Revisar para comenzar a revisar documentos de cualquier postulacion. Sera llevado a la pagina de revision detallada.';
+$string['tour_myreviews_step6_title'] = 'Comience a Revisar!';
+$string['tour_myreviews_step6_content'] = 'Sus revisiones ayudan a los postulantes a avanzar en el proceso. Trate de completar las revisiones prontamente para mantener un flujo de trabajo eficiente.';
+
 // Cadenas faltantes - Fase 8.8: Cobertura completa de cadenas de idiomas.
 // Relacionadas con asignacion y revisores.
 $string['activeassignments'] = 'Asignaciones activas';
@@ -1633,3 +1712,51 @@ $string['noconvertersavailable'] = 'No hay convertidores de documentos configura
 $string['supportedformats'] = 'Formatos soportados para conversión';
 $string['documentconverted'] = 'Documento convertido exitosamente';
 $string['refreshpreview'] = 'Actualizar vista previa';
+
+// ==========================================================================
+// Cadenas del Formulario de Registro Alternativo.
+// ==========================================================================
+
+// Títulos e introducción de la página de registro.
+$string['signup_title'] = 'Crear Tu Cuenta';
+$string['signup_intro'] = 'Regístrate para postularte a vacantes y dar seguimiento a tus aplicaciones. Completa el formulario con tu información.';
+$string['signup_success_title'] = '¡Registro Exitoso!';
+$string['signup_success_message'] = 'Se ha enviado un correo de confirmación a {$a}. Por favor revisa tu bandeja de entrada y haz clic en el enlace de confirmación para activar tu cuenta.';
+$string['signup_success_instructions'] = 'Una vez confirmes tu correo electrónico, podrás iniciar sesión y postularte a vacantes.';
+
+// Secciones del formulario de registro.
+$string['signup_personalinfo'] = 'Información Personal';
+$string['signup_contactinfo'] = 'Información de Contacto';
+$string['signup_companyinfo'] = 'Selección de Compañía';
+$string['signup_termsheader'] = 'Términos y Condiciones';
+
+// Campos del formulario de registro.
+$string['signup_username'] = 'Nombre de usuario';
+$string['signup_username_help'] = 'Elige un nombre de usuario único que usarás para iniciar sesión. Debe contener solo letras minúsculas, números, guiones bajos y guiones.';
+$string['signup_password'] = 'Contraseña';
+$string['signup_password_help'] = 'Crea una contraseña segura con al menos 8 caracteres, incluyendo letras mayúsculas y minúsculas, números y símbolos.';
+$string['signup_idnumber'] = 'Número de Identificación';
+$string['signup_idnumber_help'] = 'Ingresa tu número de identificación nacional (ej. cédula de ciudadanía, pasaporte). Se usará para verificar tu identidad.';
+$string['signup_company_help'] = 'Selecciona la compañía u organización a la que deseas postularte. Esto ayuda a dirigir tu aplicación al departamento apropiado.';
+
+// Acciones del formulario de registro.
+$string['signup_createaccount'] = 'Crear Cuenta';
+$string['signup_already_account'] = '¿Ya tienes una cuenta?';
+$string['signup_applying_for'] = 'Te estás registrando para postularte a:';
+
+// Validaciones y errores del formulario de registro.
+$string['signup_terms_accept'] = 'He leído y acepto los términos de servicio y la política de privacidad';
+$string['signup_terms_required'] = 'Debes aceptar los términos y condiciones para crear una cuenta';
+$string['signup_datatreatment_accept'] = 'Consiento el tratamiento de mis datos personales como se describe arriba';
+$string['signup_datatreatment_required'] = 'Debes aceptar la política de tratamiento de datos para crear una cuenta';
+$string['signup_privacy_text'] = 'Al crear una cuenta, aceptas nuestra <a href="{$a}" target="_blank">Política de Privacidad</a>. Tus datos personales serán procesados de acuerdo con las regulaciones de protección de datos aplicables.';
+$string['signup_email_error'] = 'Error al enviar el correo de confirmación. Por favor intenta de nuevo o contacta a soporte.';
+$string['emailnotmatch'] = 'Las direcciones de correo electrónico no coinciden';
+
+// Indicadores de fortaleza de contraseña.
+$string['password_strength_weak'] = 'Contraseña débil';
+$string['password_strength_medium'] = 'Fortaleza media';
+$string['password_strength_strong'] = 'Contraseña fuerte';
+
+// Registro deshabilitado.
+$string['registrationdisabled'] = 'El auto-registro está actualmente deshabilitado. Por favor contacta al administrador para asistencia.';

@@ -151,6 +151,7 @@ $string['selectcontracttype'] = 'Select contract type';
 $string['selectcourse'] = 'Select a course';
 $string['selectcategory'] = 'Select a category';
 $string['selectcompany'] = 'Select a company/site';
+$string['selectdepartment'] = 'Select a department';
 $string['selectstatus'] = 'Select status';
 $string['uploadfile'] = 'Upload file';
 $string['choosefiles'] = 'Choose files';
@@ -411,6 +412,7 @@ $string['loading'] = 'Loading...';
 $string['processing'] = 'Processing...';
 $string['allstatuses'] = 'All statuses';
 $string['allcompanies'] = 'All companies';
+$string['alldepartments'] = 'All departments';
 $string['alldates'] = 'All dates';
 $string['today'] = 'Today';
 $string['thisweek'] = 'This week';
@@ -633,6 +635,11 @@ $string['publicationtype_help'] = 'Public vacancies are visible to everyone, inc
 $string['publicationtype:public'] = 'Public';
 $string['publicationtype:internal'] = 'Internal';
 
+// IOMAD multi-tenant strings.
+$string['iomadsettings'] = 'Company & Department';
+$string['iomad_department'] = 'IOMAD Department';
+$string['iomad_department_help'] = 'Select the department within the company for this vacancy. Departments are managed in IOMAD.';
+
 // Public page.
 $string['publicvacancies'] = 'Job Opportunities';
 $string['publicpagetitle'] = 'Job Opportunities';
@@ -646,6 +653,8 @@ $string['closesin'] = 'Closes in {$a} days';
 $string['closeson'] = 'Closes on';
 $string['wanttoapply'] = 'Want to apply?';
 $string['createaccounttoapply'] = 'Create an account or log in to apply for vacancies.';
+$string['loginprompt_public'] = 'Sign in or create an account to apply for vacancies.';
+$string['loginrequired_apply'] = 'You need to be logged in to apply for this position.';
 $string['backtovacancies'] = 'Back to Vacancies';
 $string['requireddocuments'] = 'Required Documents';
 $string['importantdates'] = 'Important Dates';
@@ -1538,6 +1547,76 @@ $string['tour_validate_step7_content'] = 'If the document has issues, select a r
 $string['tour_validate_step8_title'] = 'Validation Complete!';
 $string['tour_validate_step8_content'] = 'After making your decision, you\'ll return to the application view. Continue reviewing other documents until all are validated.';
 
+// Tour: Vacancies List.
+$string['tour_vacancies_name'] = 'Vacancies List Tour';
+$string['tour_vacancies_description'] = 'Learn how to browse and filter available vacancies';
+$string['tour_vacancies_step1_title'] = 'Vacancies Overview';
+$string['tour_vacancies_step1_content'] = 'Welcome to the vacancies list! This page shows all vacancies you have access to view. Use filters and search to find specific opportunities.';
+$string['tour_vacancies_step2_title'] = 'Search and Filter Panel';
+$string['tour_vacancies_step2_content'] = 'Use this panel to search and filter vacancies. You can combine multiple filters to narrow down results.';
+$string['tour_vacancies_step3_title'] = 'Search Box';
+$string['tour_vacancies_step3_content'] = 'Type keywords to search in vacancy titles, codes, and descriptions. Press Enter or click Search to apply.';
+$string['tour_vacancies_step4_title'] = 'Status Filter';
+$string['tour_vacancies_step4_content'] = 'Filter vacancies by their status: Draft (not published), Published (accepting applications), Closed (no longer accepting), or Assigned (positions filled).';
+$string['tour_vacancies_step5_title'] = 'Vacancies Table';
+$string['tour_vacancies_step5_content'] = 'The table shows all matching vacancies with key information: code, title, status, dates, and available positions.';
+$string['tour_vacancies_step6_title'] = 'Status Badges';
+$string['tour_vacancies_step6_content'] = 'Status badges help you quickly identify vacancy states: green for published, yellow for draft, gray for closed.';
+$string['tour_vacancies_step7_title'] = 'Apply for Vacancies';
+$string['tour_vacancies_step7_content'] = 'Click the Apply button to submit your application for any open vacancy that interests you. Good luck!';
+
+// Tour: Single Vacancy Detail.
+$string['tour_vacancy_name'] = 'Vacancy Detail Tour';
+$string['tour_vacancy_description'] = 'Learn about all the information available in a vacancy detail page';
+$string['tour_vacancy_step1_title'] = 'Vacancy Details';
+$string['tour_vacancy_step1_content'] = 'This page shows complete information about a specific vacancy. Review all details before applying.';
+$string['tour_vacancy_step2_title'] = 'Vacancy Header';
+$string['tour_vacancy_step2_content'] = 'The header shows the vacancy code and publication type badge. Public vacancies are open to everyone; internal ones are for organization members only.';
+$string['tour_vacancy_step3_title'] = 'Vacancy Title';
+$string['tour_vacancy_step3_content'] = 'The vacancy title and main details are shown here, including company name (if applicable), location, and contract type.';
+$string['tour_vacancy_step4_title'] = 'Closing Date Alert';
+$string['tour_vacancy_step4_content'] = 'Pay attention to the closing date! If it shows as a warning, the deadline is approaching soon. Make sure to submit your application on time.';
+$string['tour_vacancy_step5_title'] = 'Apply Button';
+$string['tour_vacancy_step5_content'] = 'Click this button to start your application. You may need to log in first if you haven\'t already.';
+$string['tour_vacancy_step6_title'] = 'Additional Details';
+$string['tour_vacancy_step6_content'] = 'Review additional details like duration, salary information, department, and important dates before applying.';
+$string['tour_vacancy_step7_title'] = 'Ready to Apply!';
+$string['tour_vacancy_step7_content'] = 'You now have all the information you need. If this vacancy matches your profile, go ahead and apply!';
+
+// Tour: Application Detail.
+$string['tour_application_name'] = 'Application Detail Tour';
+$string['tour_application_description'] = 'Learn how to track your application status and manage documents';
+$string['tour_application_step1_title'] = 'Your Application';
+$string['tour_application_step1_content'] = 'This page shows the complete details of your application. Track your progress and manage your documents here.';
+$string['tour_application_step2_title'] = 'Application Status';
+$string['tour_application_step2_content'] = 'The status badge shows where your application is in the process: Submitted, Under Review, Documents Validated, Interview, Selected, or Rejected.';
+$string['tour_application_step3_title'] = 'Progress Indicator';
+$string['tour_application_step3_content'] = 'This progress bar shows how far along you are in the application process. Watch it advance as your documents are reviewed.';
+$string['tour_application_step4_title'] = 'Document List';
+$string['tour_application_step4_content'] = 'All your uploaded documents are listed here with their validation status. Green means approved, red means rejected, and yellow means pending review.';
+$string['tour_application_step5_title'] = 'Document Actions';
+$string['tour_application_step5_content'] = 'For each document, you can view or download it. If a document was rejected, you\'ll see an option to upload a corrected version.';
+$string['tour_application_step6_title'] = 'Application History';
+$string['tour_application_step6_content'] = 'The history section shows all status changes and actions taken on your application. This helps you track the review process.';
+$string['tour_application_step7_title'] = 'Stay Informed!';
+$string['tour_application_step7_content'] = 'Check back regularly for updates, or enable email notifications to be informed of status changes. Good luck with your application!';
+
+// Tour: My Reviews.
+$string['tour_myreviews_name'] = 'My Reviews Tour';
+$string['tour_myreviews_description'] = 'Learn how to manage your assigned document reviews';
+$string['tour_myreviews_step1_title'] = 'Your Review Queue';
+$string['tour_myreviews_step1_content'] = 'Welcome to your review queue! This page shows all applications and documents assigned to you for review.';
+$string['tour_myreviews_step2_title'] = 'Queue Overview';
+$string['tour_myreviews_step2_content'] = 'The overview cards show your pending reviews, completed reviews, and any urgent items requiring immediate attention.';
+$string['tour_myreviews_step3_title'] = 'Pending Items';
+$string['tour_myreviews_step3_content'] = 'Items marked with a warning badge require your attention. Prioritize these to keep the review process moving.';
+$string['tour_myreviews_step4_title'] = 'Review Table';
+$string['tour_myreviews_step4_content'] = 'The table lists all your assigned reviews with applicant information, vacancy details, and current status.';
+$string['tour_myreviews_step5_title'] = 'Review Actions';
+$string['tour_myreviews_step5_content'] = 'Click the Review button to start reviewing documents for any application. You\'ll be taken to the detailed review page.';
+$string['tour_myreviews_step6_title'] = 'Start Reviewing!';
+$string['tour_myreviews_step6_content'] = 'Your reviews help applicants move forward in the process. Try to complete reviews promptly to maintain an efficient workflow.';
+
 // Missing strings - Phase 8.8: Complete language string coverage.
 // Assignment and reviewer related.
 $string['activeassignments'] = 'Active assignments';
@@ -1631,3 +1710,51 @@ $string['noconvertersavailable'] = 'No document converters configured';
 $string['supportedformats'] = 'Supported formats for conversion';
 $string['documentconverted'] = 'Document converted successfully';
 $string['refreshpreview'] = 'Refresh preview';
+
+// ==========================================================================
+// Alternative Signup Form strings.
+// ==========================================================================
+
+// Signup page titles and intro.
+$string['signup_title'] = 'Create Your Account';
+$string['signup_intro'] = 'Register to apply for vacancies and track your applications. Complete the form below with your information.';
+$string['signup_success_title'] = 'Registration Successful!';
+$string['signup_success_message'] = 'A confirmation email has been sent to {$a}. Please check your inbox and click the confirmation link to activate your account.';
+$string['signup_success_instructions'] = 'Once you confirm your email, you will be able to log in and apply for vacancies.';
+
+// Signup form sections.
+$string['signup_personalinfo'] = 'Personal Information';
+$string['signup_contactinfo'] = 'Contact Information';
+$string['signup_companyinfo'] = 'Company Selection';
+$string['signup_termsheader'] = 'Terms and Conditions';
+
+// Signup form fields.
+$string['signup_username'] = 'Username';
+$string['signup_username_help'] = 'Choose a unique username that you will use to log in. It should contain only lowercase letters, numbers, underscores, and hyphens.';
+$string['signup_password'] = 'Password';
+$string['signup_password_help'] = 'Create a strong password with at least 8 characters, including uppercase and lowercase letters, numbers, and symbols.';
+$string['signup_idnumber'] = 'Identification Number';
+$string['signup_idnumber_help'] = 'Enter your national identification number (e.g., ID card, passport number). This will be used to verify your identity.';
+$string['signup_company_help'] = 'Select the company or organization you wish to apply to. This helps us route your application to the appropriate department.';
+
+// Signup form actions.
+$string['signup_createaccount'] = 'Create Account';
+$string['signup_already_account'] = 'Already have an account?';
+$string['signup_applying_for'] = 'You are registering to apply for:';
+
+// Signup form validations and errors.
+$string['signup_terms_accept'] = 'I have read and accept the terms of service and privacy policy';
+$string['signup_terms_required'] = 'You must accept the terms and conditions to create an account';
+$string['signup_datatreatment_accept'] = 'I consent to the processing of my personal data as described above';
+$string['signup_datatreatment_required'] = 'You must consent to the data treatment policy to create an account';
+$string['signup_privacy_text'] = 'By creating an account, you agree to our <a href="{$a}" target="_blank">Privacy Policy</a>. Your personal data will be processed in accordance with applicable data protection regulations.';
+$string['signup_email_error'] = 'Failed to send confirmation email. Please try again or contact support.';
+$string['emailnotmatch'] = 'The email addresses do not match';
+
+// Password strength indicators.
+$string['password_strength_weak'] = 'Weak password';
+$string['password_strength_medium'] = 'Medium strength';
+$string['password_strength_strong'] = 'Strong password';
+
+// Registration disabled.
+$string['registrationdisabled'] = 'Self-registration is currently disabled. Please contact the administrator for assistance.';
