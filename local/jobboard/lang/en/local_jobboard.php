@@ -81,10 +81,7 @@ $string['location'] = 'Location';
 $string['location_help'] = 'Place where the position will be performed';
 $string['department'] = 'Department/Unit';
 $string['department_help'] = 'Area or department of the institution';
-$string['course'] = 'Associated course';
-$string['course_help'] = 'Moodle course related to this vacancy';
 $string['category'] = 'Category';
-$string['category_help'] = 'Related course category';
 $string['company'] = 'Company/Site';
 $string['company_help'] = 'Company or site (in multi-tenant environments)';
 $string['opendate'] = 'Opening date';
@@ -1960,3 +1957,62 @@ $string['tour_convocatorias_step7_content'] = 'You now understand how to manage 
 // Convocatoria help strings.
 $string['convocatoria_help'] = 'A call groups related job vacancies under a single campaign with defined start and end dates. When you create a vacancy, you can associate it with a call to organize your recruitment process. The call dates determine when applications can be submitted.';
 $string['convocatoria_profile_help'] = 'Vacancies within a call should be created according to the professional profiles defined in the PERFILES PROFESORES documents. Each profile specifies the required qualifications, experience, and documents needed for that position.';
+
+// ============================================================================
+// Dashboard redesign - Hierarchical navigation (Calls → Vacancies)
+// ============================================================================
+
+// Welcome messages.
+$string['dashboard_admin_welcome'] = 'Welcome to the Job Board administration panel. From here you can manage calls, vacancies, applications and review documents.';
+$string['dashboard_applicant_welcome'] = 'Welcome to the Job Board. Explore available vacancies and manage your applications from this panel.';
+
+// Section titles.
+$string['administracion'] = 'Administration';
+$string['reviewertasks'] = 'Review Tasks';
+
+// Statistics cards.
+$string['activeconvocatorias'] = 'Active calls';
+$string['publishedvacancies'] = 'Published vacancies';
+$string['pendingreviews'] = 'Pending reviews';
+
+// Calls management card.
+$string['convocatorias_dashboard_desc'] = 'Manage the institution\'s job calls. Vacancies are organized within calls to facilitate the selection process.';
+$string['workflow_flow'] = 'Workflow';
+$string['selection'] = 'Selection';
+$string['gotoconvocatorias'] = 'Go to Calls';
+
+// Review card.
+$string['review_dashboard_desc'] = 'Review and validate applicant documents. Verify that documentation meets the established requirements.';
+$string['pending_reviews_alert'] = 'You have {$a} pending document reviews that require your attention.';
+$string['gotoreview'] = 'Go to Reviews';
+
+// Reports card.
+$string['reports_dashboard_desc'] = 'View statistics and reports on calls, vacancies, applications and processing times.';
+
+// Configuration card.
+$string['configuration'] = 'Configuration';
+$string['config_dashboard_desc'] = 'Configure document types, email templates, workflows and other system options.';
+$string['configure'] = 'Configure';
+
+// Exemptions card.
+$string['exemptions_dashboard_desc'] = 'Manage document exemptions for historical ISER personnel and other special categories.';
+
+// Applicant section statistics.
+$string['myapplicationcount'] = 'My applications';
+$string['availablevacancies'] = 'Available vacancies';
+$string['pendingdocs'] = 'Pending documents';
+
+// Browse vacancies card.
+$string['browservacancies'] = 'Browse Vacancies';
+$string['browse_vacancies_desc'] = 'View vacancies published by the institution. Review requirements and apply to those that match your professional profile.';
+$string['available_vacancies_alert'] = 'There are {$a} available vacancies that match your profile. Don\'t miss the opportunity to apply!';
+$string['explorevacancias'] = 'View available vacancies';
+
+// My applications card.
+$string['myapplications_desc'] = 'Check the status of your applications, upload pending documents and track your selection processes.';
+$string['pending_docs_alert'] = 'You have {$a} pending documents to upload or correct in your applications.';
+$string['viewmyapplications'] = 'View my applications';
+
+// Reviewer section.
+$string['myreviews_desc'] = 'View applications assigned for review and validate applicant documentation.';
+$string['viewmyreviews'] = 'View my reviews';

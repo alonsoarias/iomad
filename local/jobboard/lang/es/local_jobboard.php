@@ -844,6 +844,7 @@ $string['doctype_sijin'] = 'Certificado SIJIN';
 $string['doctype_certificado_medico'] = 'Certificado Médico';
 
 // Categorías de documentos.
+$string['category'] = 'Categoría';
 $string['doccategory_identification'] = 'Documentos de Identificación';
 $string['doccategory_academic'] = 'Documentos Académicos';
 $string['doccategory_employment'] = 'Documentos Laborales';
