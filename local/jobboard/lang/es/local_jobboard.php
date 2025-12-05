@@ -1251,6 +1251,8 @@ $string['datefrom'] = 'Desde';
 $string['dateto'] = 'Hasta';
 $string['documentlist'] = 'Lista de documentos';
 $string['documentpreview'] = 'Vista previa del documento';
+$string['previewdocument'] = 'Vista previa';
+$string['togglepreview'] = 'Mostrar/Ocultar';
 $string['documentref_help'] = 'Número de referencia o identificador del documento de respaldo';
 $string['documentstatus'] = 'Estado del documento';
 $string['error:invalidapplication'] = 'Postulación inválida';
@@ -1372,38 +1374,170 @@ $string['rowsfailed'] = 'Filas fallidas';
 // Gestión de tipos de documentos adicional (EN keys).
 $string['managedoctypes'] = 'Gestionar tipos de documentos';
 
-// User Tours - Tour del Administrador.
-$string['tour_admin_name'] = 'Tour de Administrador - Bolsa de Empleo';
-$string['tour_admin_description'] = 'Aprenda a gestionar vacantes y postulaciones en la Bolsa de Empleo';
-$string['tour_admin_step1_title'] = 'Bienvenido a la Bolsa de Empleo';
-$string['tour_admin_step1_content'] = 'Bienvenido al plugin de Bolsa de Empleo! Este tour guiado le mostrara como gestionar vacantes y postulaciones de manera efectiva. El plugin le permite crear vacantes, recibir postulaciones, validar documentos y gestionar el proceso de seleccion completo.';
-$string['tour_admin_step2_title'] = 'Vista General del Panel';
-$string['tour_admin_step2_content'] = 'Este es su panel principal. Aqui puede ver un resumen de todas las vacantes activas, postulaciones pendientes y documentos por revisar. Use el panel para acceder rapidamente a la informacion mas importante.';
-$string['tour_admin_step3_title'] = 'Estadisticas Rapidas';
-$string['tour_admin_step3_content'] = 'Estas estadisticas le muestran metricas clave de un vistazo: total de vacantes, postulaciones activas, documentos pendientes de revision y mas. Haga clic en cualquier estadistica para ver informacion detallada.';
-$string['tour_admin_step4_title'] = 'Crear Nueva Vacante';
-$string['tour_admin_step4_content'] = 'Haga clic aqui para crear una nueva vacante. Debera proporcionar detalles como titulo, descripcion, requisitos, documentos requeridos y fechas de postulacion. Una vez publicada, los candidatos podran empezar a postularse.';
-$string['tour_admin_step5_title'] = 'Lista de Vacantes';
-$string['tour_admin_step5_content'] = 'Esta es la lista de todas las vacantes. Puede filtrar por estado (borrador, publicada, cerrada) y realizar acciones como editar, publicar, cerrar o ver postulaciones de cada vacante.';
-$string['tour_admin_step6_title'] = 'Listo para Comenzar!';
-$string['tour_admin_step6_content'] = 'Ya esta listo para empezar a usar la Bolsa de Empleo! Recuerde: puede gestionar tipos de documentos, configurar plantillas de correo, crear comites de seleccion y generar reportes. Explore el menu de administracion para mas opciones.';
+// =============================================================================
+// USER TOURS - Tours Guiados Completos para todas las vistas del plugin
+// =============================================================================
 
-// User Tours - Tour del Postulante.
-$string['tour_applicant_name'] = 'Tour de Postulante - Bolsa de Empleo';
-$string['tour_applicant_description'] = 'Aprenda a buscar vacantes y postularse';
-$string['tour_applicant_step1_title'] = 'Bienvenido a la Bolsa de Empleo';
-$string['tour_applicant_step1_content'] = 'Bienvenido! Este tour guiado le mostrara como encontrar vacantes disponibles y enviar su postulacion. El proceso es sencillo: encuentre una vacante que le interese, prepare sus documentos y postulese.';
-$string['tour_applicant_step2_title'] = 'Vacantes Disponibles';
-$string['tour_applicant_step2_content'] = 'Aqui puede ver todas las vacantes disponibles. Cada vacante muestra el titulo, ubicacion, tipo de contrato y fecha de cierre. Use los filtros para encontrar vacantes que se ajusten a su perfil.';
-$string['tour_applicant_step3_title'] = 'Detalles de la Vacante';
-$string['tour_applicant_step3_content'] = 'Haga clic en cualquier vacante para ver los detalles completos: descripcion completa, requisitos, beneficios y documentos requeridos. Asegurese de cumplir con los requisitos antes de postularse.';
-$string['tour_applicant_step4_title'] = 'Postularse a una Vacante';
-$string['tour_applicant_step4_content'] = 'Cuando encuentre una vacante que le interese, haga clic en "Postularse" para iniciar su postulacion. Debera cargar los documentos requeridos. Asegurese de que sus documentos sean legibles y esten actualizados.';
-$string['tour_applicant_step5_title'] = 'Seguimiento de sus Postulaciones';
-$string['tour_applicant_step5_content'] = 'Puede dar seguimiento al estado de sus postulaciones en cualquier momento desde "Mis Postulaciones". Recibira notificaciones cuando haya actualizaciones en el estado de su postulacion. Mucha suerte!';
-
-// User Tours - Comun.
+// Cadenas comunes de tours.
 $string['tour_endlabel'] = 'Entendido!';
+
+// Tour: Panel Principal (Dashboard).
+$string['tour_dashboard_name'] = 'Tour del Panel Principal';
+$string['tour_dashboard_description'] = 'Aprenda a navegar por el panel principal de la Bolsa de Empleo';
+$string['tour_dashboard_step1_title'] = 'Bienvenido a la Bolsa de Empleo';
+$string['tour_dashboard_step1_content'] = 'Bienvenido al plugin de Bolsa de Empleo! Este tour guiado le mostrara como navegar y usar las funciones principales. La Bolsa de Empleo le permite gestionar vacantes, postulaciones y todo el proceso de seleccion.';
+$string['tour_dashboard_step2_title'] = 'Vista General del Panel';
+$string['tour_dashboard_step2_content'] = 'Este es su panel principal. Desde aqui puede acceder a todas las funciones clave segun su rol: explorar vacantes, gestionar postulaciones, revisar documentos y generar reportes.';
+$string['tour_dashboard_step3_title'] = 'Acciones Rapidas';
+$string['tour_dashboard_step3_content'] = 'Cada tarjeta proporciona acceso rapido a una area especifica del sistema. Haga clic en cualquier tarjeta para navegar a esa seccion.';
+$string['tour_dashboard_step4_title'] = 'Funciones Disponibles';
+$string['tour_dashboard_step4_content'] = 'Dependiendo de sus permisos, puede: ver vacantes, dar seguimiento a sus postulaciones, gestionar vacantes como administrador, revisar documentos de postulantes y acceder a reportes y estadisticas.';
+$string['tour_dashboard_step5_title'] = 'Listo para Comenzar!';
+$string['tour_dashboard_step5_content'] = 'Ya esta listo para usar la Bolsa de Empleo! Explore las opciones disponibles y no dude en usar los recursos de ayuda si necesita asistencia.';
+
+// Tour: Vacantes Publicas.
+$string['tour_public_name'] = 'Tour de Vacantes Publicas';
+$string['tour_public_description'] = 'Aprenda a buscar y filtrar vacantes disponibles';
+$string['tour_public_step1_title'] = 'Vacantes Publicas';
+$string['tour_public_step1_content'] = 'Bienvenido a la pagina de vacantes publicas! Aqui puede encontrar todas las oportunidades laborales disponibles. Este tour le mostrara como buscar y filtrar vacantes efectivamente.';
+$string['tour_public_step2_title'] = 'Encabezado de Pagina';
+$string['tour_public_step2_content'] = 'Esta seccion muestra el titulo de la pagina y cualquier mensaje de bienvenida configurado por el administrador. Lealo para conocer mas sobre el proceso de seleccion de la organizacion.';
+$string['tour_public_step3_title'] = 'Busqueda y Filtros';
+$string['tour_public_step3_content'] = 'Use estos controles para filtrar vacantes. Puede buscar por palabra clave, filtrar por tipo de contrato, ubicacion y mas para encontrar oportunidades que coincidan con su perfil.';
+$string['tour_public_step4_title'] = 'Caja de Busqueda';
+$string['tour_public_step4_content'] = 'Escriba palabras clave aqui para buscar en titulos, codigos y descripciones de vacantes. La busqueda no distingue mayusculas y encuentra coincidencias parciales.';
+$string['tour_public_step5_title'] = 'Menus Desplegables';
+$string['tour_public_step5_content'] = 'Use estos menus desplegables para filtrar por tipo de contrato (tiempo completo, medio tiempo, etc.) y ubicacion. Combine multiples filtros para afinar su busqueda.';
+$string['tour_public_step6_title'] = 'Tarjetas de Vacantes';
+$string['tour_public_step6_content'] = 'Cada vacante se muestra como una tarjeta con informacion clave: titulo, ubicacion, tipo de contrato y fecha de cierre. La tarjeta tambien muestra cuantos dias quedan hasta la fecha limite.';
+$string['tour_public_step7_title'] = 'Insignias de Tipo';
+$string['tour_public_step7_content'] = 'Las vacantes se marcan como "Publica" (abierta a todos) o "Interna" (solo para usuarios autenticados de la organizacion). Asegurese de cumplir con los criterios de elegibilidad antes de postularse.';
+$string['tour_public_step8_title'] = 'Ver Detalles y Postularse';
+$string['tour_public_step8_content'] = 'Haga clic en "Ver Detalles" para ver la informacion completa de la vacante, o haga clic en "Postularse" para iniciar su postulacion. Puede que necesite iniciar sesion primero.';
+$string['tour_public_step9_title'] = 'Comience a Explorar!';
+$string['tour_public_step9_content'] = 'Ya esta listo para explorar las vacantes disponibles! Use la busqueda y los filtros para encontrar oportunidades que coincidan con sus habilidades e intereses. Mucha suerte!';
+
+// Tour: Formulario de Postulacion.
+$string['tour_apply_name'] = 'Tour del Formulario de Postulacion';
+$string['tour_apply_description'] = 'Aprenda a completar y enviar su postulacion laboral';
+$string['tour_apply_step1_title'] = 'Postularse a una Vacante';
+$string['tour_apply_step1_content'] = 'Bienvenido al formulario de postulacion! Este tour le ayudara a entender cada seccion y enviar exitosamente su postulacion.';
+$string['tour_apply_step2_title'] = 'Guias de Postulacion';
+$string['tour_apply_step2_content'] = 'Lea estas guias cuidadosamente antes de iniciar su postulacion. Contienen informacion importante sobre documentos requeridos, formatos aceptados y el proceso de postulacion.';
+$string['tour_apply_step3_title'] = 'Consentimiento y Terminos';
+$string['tour_apply_step3_content'] = 'Debe aceptar los terminos y condiciones y dar su consentimiento para el procesamiento de sus datos personales segun las leyes de proteccion de datos. Esto es requerido para enviar su postulacion.';
+$string['tour_apply_step4_title'] = 'Firma Digital';
+$string['tour_apply_step4_content'] = 'Ingrese su nombre completo exactamente como aparece en su documento de identidad. Esto sirve como su firma digital y confirma que la informacion proporcionada es precisa.';
+$string['tour_apply_step5_title'] = 'Documentos Requeridos';
+$string['tour_apply_step5_content'] = 'Cargue todos los documentos requeridos aqui. Asegurese de que cada documento sea legible, este completo y en un formato aceptado (usualmente PDF, JPG o PNG). Verifique los limites de tamaño.';
+$string['tour_apply_step6_title'] = 'Carta de Presentacion';
+$string['tour_apply_step6_content'] = 'Opcionalmente, puede agregar una carta de presentacion para explicar por que le interesa esta posicion y destacar sus calificaciones y experiencia relevantes.';
+$string['tour_apply_step7_title'] = 'Enviar Postulacion';
+$string['tour_apply_step7_content'] = 'Una vez que haya completado todos los campos requeridos y cargado sus documentos, haga clic en este boton para enviar su postulacion. Asegurese de que todo este correcto antes de enviar!';
+$string['tour_apply_step8_title'] = 'Mucha Suerte!';
+$string['tour_apply_step8_content'] = 'Despues de enviar, puede dar seguimiento al estado de su postulacion en "Mis Postulaciones". Recibira notificaciones por correo cuando haya actualizaciones. Le deseamos mucho exito!';
+
+// Tour: Mis Postulaciones.
+$string['tour_myapplications_name'] = 'Tour de Mis Postulaciones';
+$string['tour_myapplications_description'] = 'Aprenda a dar seguimiento y gestionar sus postulaciones';
+$string['tour_myapplications_step1_title'] = 'Mis Postulaciones';
+$string['tour_myapplications_step1_content'] = 'Bienvenido a su panel de postulaciones! Aqui puede dar seguimiento al estado de todas sus postulaciones y ver actualizaciones o acciones requeridas.';
+$string['tour_myapplications_step2_title'] = 'Estado de Exencion';
+$string['tour_myapplications_step2_content'] = 'Si tiene una exencion activa (por ejemplo, como empleado actual o anterior), se mostrara aqui. Esto afecta que documentos necesita presentar con sus postulaciones.';
+$string['tour_myapplications_step3_title'] = 'Filtro de Estado';
+$string['tour_myapplications_step3_content'] = 'Use este filtro para mostrar solo postulaciones con un estado especifico. Esto le ayuda a enfocarse en postulaciones que necesitan atencion o revision.';
+$string['tour_myapplications_step4_title'] = 'Tabla de Postulaciones';
+$string['tour_myapplications_step4_content'] = 'Esta tabla muestra todas sus postulaciones con informacion clave: nombre de vacante, fecha de postulacion, estado actual y cantidad de documentos. Haga clic en cualquier fila para mas detalles.';
+$string['tour_myapplications_step5_title'] = 'Estado de Postulacion';
+$string['tour_myapplications_step5_content'] = 'La insignia de estado muestra donde esta su postulacion en el proceso: Enviada, En Revision, Documentos Validados, Entrevista, Seleccionado o Rechazado. Este atento a los cambios!';
+$string['tour_myapplications_step6_title'] = 'Acciones Disponibles';
+$string['tour_myapplications_step6_content'] = 'Haga clic en "Ver" para ver los detalles completos de su postulacion y documentos cargados. Si su postulacion aun esta en revision, tambien puede tener la opcion de retirarla.';
+$string['tour_myapplications_step7_title'] = 'Mantengase Informado!';
+$string['tour_myapplications_step7_content'] = 'Revise esta pagina regularmente para actualizaciones de sus postulaciones. Tambien recibira notificaciones por correo para cambios importantes de estado. Mucha suerte!';
+
+// Tour: Revision de Documentos.
+$string['tour_review_name'] = 'Tour de Revision de Documentos';
+$string['tour_review_description'] = 'Aprenda a revisar y validar documentos de postulantes';
+$string['tour_review_step1_title'] = 'Centro de Revision de Documentos';
+$string['tour_review_step1_content'] = 'Bienvenido al centro de revision de documentos! Como revisor, es responsable de validar los documentos de los postulantes para asegurar que cumplan con los requisitos.';
+$string['tour_review_step2_title'] = 'Filtro de Vacante';
+$string['tour_review_step2_content'] = 'Use este filtro para enfocarse en postulaciones de una vacante especifica. Esto le ayuda a gestionar su carga de trabajo al revisar multiples posiciones.';
+$string['tour_review_step3_title'] = 'Cola de Postulaciones';
+$string['tour_review_step3_content'] = 'Esta tabla muestra todas las postulaciones pendientes de revision. Cada fila muestra la vacante, informacion del postulante, estado, cantidad de documentos y documentos pendientes.';
+$string['tour_review_step4_title'] = 'Indicadores Pendientes';
+$string['tour_review_step4_content'] = 'La insignia roja muestra cuantos documentos aun estan pendientes de validacion. Priorice postulaciones con documentos pendientes para avanzar en el proceso.';
+$string['tour_review_step5_title'] = 'Detalles de Postulacion';
+$string['tour_review_step5_content'] = 'Al revisar una postulacion, vera la informacion del postulante y detalles de la vacante. Revise este contexto antes de validar documentos.';
+$string['tour_review_step6_title'] = 'Lista de Documentos';
+$string['tour_review_step6_content'] = 'Todos los documentos cargados se listan aqui con su estado actual. Cada documento muestra el tipo, nombre de archivo, fecha de carga y estado de validacion.';
+$string['tour_review_step7_title'] = 'Acciones de Validacion';
+$string['tour_review_step7_content'] = 'Para cada documento, puede Aprobar (si cumple requisitos) o Rechazar (si hay problemas). Al rechazar, debe proporcionar una razon para que el postulante sepa que corregir.';
+$string['tour_review_step8_title'] = 'Acciones Masivas';
+$string['tour_review_step8_content'] = 'Para acelerar el proceso de revision, puede validar todos los documentos pendientes a la vez si todos cumplen los requisitos.';
+$string['tour_review_step9_title'] = 'Feliz Revision!';
+$string['tour_review_step9_content'] = 'Recuerde: la validacion cuidadosa de documentos es crucial para la integridad del proceso de seleccion. Tomese su tiempo para verificar cada documento a fondo.';
+
+// Tour: Gestion de Vacantes.
+$string['tour_manage_name'] = 'Tour de Gestion de Vacantes';
+$string['tour_manage_description'] = 'Aprenda a crear y gestionar vacantes laborales';
+$string['tour_manage_step1_title'] = 'Gestion de Vacantes';
+$string['tour_manage_step1_content'] = 'Bienvenido al centro de gestion de vacantes! Aqui puede crear, editar, publicar y gestionar todas las vacantes del sistema.';
+$string['tour_manage_step2_title'] = 'Crear Nueva Vacante';
+$string['tour_manage_step2_content'] = 'Haga clic en este boton para crear una nueva vacante. Debera proporcionar detalles como titulo, descripcion, requisitos, documentos requeridos y fechas de postulacion.';
+$string['tour_manage_step3_title'] = 'Buscar Vacantes';
+$string['tour_manage_step3_content'] = 'Use la caja de busqueda para encontrar vacantes por codigo, titulo o descripcion. Esto es util cuando gestiona muchas vacantes.';
+$string['tour_manage_step4_title'] = 'Opciones de Filtro';
+$string['tour_manage_step4_content'] = 'Filtre vacantes por estado (Borrador, Publicada, Cerrada) y empresa (en configuraciones multi-tenant). Combine filtros para encontrar exactamente lo que busca.';
+$string['tour_manage_step5_title'] = 'Tabla de Vacantes';
+$string['tour_manage_step5_content'] = 'Esta tabla muestra todas las vacantes con su codigo, titulo, estado, fechas y numero de posiciones. Haga clic en el titulo de una vacante para ver sus detalles completos.';
+$string['tour_manage_step6_title'] = 'Insignias de Estado';
+$string['tour_manage_step6_content'] = 'La insignia de estado muestra el estado actual: Borrador (no visible), Publicada (aceptando postulaciones), Cerrada (ya no acepta) o Asignada (posiciones cubiertas).';
+$string['tour_manage_step7_title'] = 'Botones de Accion';
+$string['tour_manage_step7_content'] = 'Use estos botones para: Editar la vacante, Publicar un borrador, Cerrar una vacante activa, o Eliminar (solo si no hay postulaciones).';
+$string['tour_manage_step8_title'] = 'Ver Postulaciones';
+$string['tour_manage_step8_content'] = 'Haga clic en este boton para ver todas las postulaciones de una vacante especifica e iniciar el proceso de revision.';
+$string['tour_manage_step9_title'] = 'Todo Listo!';
+$string['tour_manage_step9_content'] = 'Ya sabe como gestionar vacantes! Recuerde publicar las vacantes para hacerlas visibles a los postulantes, y monitorear las postulaciones regularmente.';
+
+// Tour: Reportes.
+$string['tour_reports_name'] = 'Tour de Reportes y Estadisticas';
+$string['tour_reports_description'] = 'Aprenda a generar reportes y analizar datos de reclutamiento';
+$string['tour_reports_step1_title'] = 'Panel de Reportes';
+$string['tour_reports_step1_content'] = 'Bienvenido a la seccion de reportes! Aqui puede analizar datos de reclutamiento, dar seguimiento a metricas de rendimiento y exportar reportes para analisis adicional.';
+$string['tour_reports_step2_title'] = 'Tipos de Reportes';
+$string['tour_reports_step2_content'] = 'Use estas pestanas para cambiar entre diferentes tipos de reportes: Resumen (estadisticas generales), Postulaciones, Documentos, Revisores (rendimiento) y Linea de Tiempo (tendencias).';
+$string['tour_reports_step3_title'] = 'Filtro de Vacante';
+$string['tour_reports_step3_content'] = 'Filtre reportes por una vacante especifica o vea datos de todas las vacantes combinadas. Esto le ayuda a analizar el rendimiento de posiciones individuales.';
+$string['tour_reports_step4_title'] = 'Rango de Fechas';
+$string['tour_reports_step4_content'] = 'Establezca el rango de fechas para su reporte. Por defecto, los reportes muestran los ultimos 30 dias, pero puede ajustar esto para analizar cualquier periodo.';
+$string['tour_reports_step5_title'] = 'Opciones de Exportacion';
+$string['tour_reports_step5_content'] = 'Exporte los datos de su reporte en formato CSV o Excel para analisis adicional, compartir con interesados o archivar. La exportacion a PDF tambien esta disponible.';
+$string['tour_reports_step6_title'] = 'Contenido del Reporte';
+$string['tour_reports_step6_content'] = 'El area principal del reporte muestra estadisticas, tablas y graficos segun el tipo de reporte seleccionado. Los datos se actualizan automaticamente al cambiar filtros.';
+$string['tour_reports_step7_title'] = 'Indicadores Visuales';
+$string['tour_reports_step7_content'] = 'Las barras de progreso y graficos le ayudan a entender rapidamente los datos. El verde indica metricas positivas, el rojo indica areas que pueden necesitar atencion.';
+$string['tour_reports_step8_title'] = 'Tome Decisiones Basadas en Datos!';
+$string['tour_reports_step8_content'] = 'Use estos reportes para identificar tendencias, optimizar su proceso de reclutamiento y tomar decisiones informadas. El analisis regular lleva a la mejora continua!';
+
+// Tour: Pagina de Validacion de Documentos.
+$string['tour_validate_name'] = 'Tour de Validacion de Documentos';
+$string['tour_validate_description'] = 'Aprenda a validar correctamente los documentos de postulantes';
+$string['tour_validate_step1_title'] = 'Validacion de Documentos';
+$string['tour_validate_step1_content'] = 'Bienvenido a la pagina de validacion de documentos! Aqui revisara un documento especifico y decidira si aprobarlo o rechazarlo.';
+$string['tour_validate_step2_title'] = 'Informacion del Documento';
+$string['tour_validate_step2_content'] = 'Esta seccion muestra detalles sobre el documento: tipo, nombre de archivo, fecha de carga y fecha de expedicion (si aplica). Revise esta informacion cuidadosamente.';
+$string['tour_validate_step3_title'] = 'Ver Documento';
+$string['tour_validate_step3_content'] = 'Haga clic en este boton para abrir el documento en una nueva pestana o use la vista previa integrada. Examine el documento cuidadosamente antes de tomar una decision.';
+$string['tour_validate_step4_title'] = 'Lista de Verificacion';
+$string['tour_validate_step4_content'] = 'Use esta lista de verificacion para comprobar que el documento cumple todos los requisitos. Cada tipo de documento tiene criterios especificos que debe verificar.';
+$string['tour_validate_step5_title'] = 'Verifique Cada Punto';
+$string['tour_validate_step5_content'] = 'Revise cada punto: Es legible el documento? Esta completo? El nombre coincide con el postulante? Las fechas estan vigentes (para documentos con vigencia)?';
+$string['tour_validate_step6_title'] = 'Aprobar Documento';
+$string['tour_validate_step6_content'] = 'Si el documento cumple todos los requisitos, haga clic en "Aprobar". Opcionalmente puede agregar notas para sus registros.';
+$string['tour_validate_step7_title'] = 'Rechazar Documento';
+$string['tour_validate_step7_content'] = 'Si el documento tiene problemas, seleccione una razon de rechazo del menu desplegable y haga clic en "Rechazar". El postulante sera notificado y podra cargar un documento corregido.';
+$string['tour_validate_step8_title'] = 'Validacion Completada!';
+$string['tour_validate_step8_content'] = 'Despues de tomar su decision, regresara a la vista de la postulacion. Continue revisando otros documentos hasta que todos esten validados.';
 
 // Cadenas faltantes - Fase 8.8: Cobertura completa de cadenas de idiomas.
 // Relacionadas con asignacion y revisores.
@@ -1472,3 +1606,16 @@ $string['selecttype'] = 'Seleccionar tipo';
 $string['share'] = 'Compartir';
 $string['loading'] = 'Cargando...';
 $string['selectioncommittee'] = 'Comite de seleccion';
+
+// Funcionalidad de exportacion.
+$string['exportdocumentszip'] = 'Exportar Documentos (ZIP)';
+$string['exportalldocuments'] = 'Exportar Todos los Documentos';
+$string['exportapplicationdocs'] = 'Exportar Documentos de Postulacion';
+$string['zipexportfailed'] = 'Error al crear el archivo ZIP';
+$string['nodocuments'] = 'No hay documentos para exportar';
+$string['invalidparameters'] = 'Parametros invalidos';
+$string['exportpdf'] = 'Exportar PDF';
+$string['exportingpdf'] = 'Exportando PDF...';
+$string['pdfreportgenerated'] = 'Reporte PDF generado exitosamente';
+$string['pdfexportfailed'] = 'Error al generar el reporte PDF';
+$string['generatedon'] = 'Generado el';

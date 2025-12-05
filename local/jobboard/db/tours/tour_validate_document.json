@@ -1,0 +1,108 @@
+{
+  "name": "tour_validate_name,local_jobboard",
+  "description": "tour_validate_description,local_jobboard",
+  "pathmatch": "/local/jobboard/validate_document.php%",
+  "enabled": 1,
+  "sortorder": 7,
+  "endtourlabel": "tour_endlabel,local_jobboard",
+  "displaystepnumbers": true,
+  "configdata": {
+    "placement": "bottom",
+    "orphan": true,
+    "backdrop": true,
+    "reflex": false,
+    "filtervalues": {
+      "accessdate": {
+        "filter_accessdate_enabled": 0
+      },
+      "role": [],
+      "category": [],
+      "course": [],
+      "courseformat": [],
+      "theme": [],
+      "cssselector": []
+    }
+  },
+  "steps": [
+    {
+      "title": "tour_validate_step1_title,local_jobboard",
+      "content": "tour_validate_step1_content,local_jobboard",
+      "targettype": 2,
+      "targetvalue": "",
+      "sortorder": 0,
+      "configdata": {
+        "placement": "bottom"
+      }
+    },
+    {
+      "title": "tour_validate_step2_title,local_jobboard",
+      "content": "tour_validate_step2_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".card:first-of-type, .card-body:first-of-type",
+      "sortorder": 1,
+      "configdata": {
+        "placement": "bottom"
+      }
+    },
+    {
+      "title": "tour_validate_step3_title,local_jobboard",
+      "content": "tour_validate_step3_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": "a.btn-primary[target='_blank'], [data-action='preview']",
+      "sortorder": 2,
+      "configdata": {
+        "placement": "right"
+      }
+    },
+    {
+      "title": "tour_validate_step4_title,local_jobboard",
+      "content": "tour_validate_step4_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".list-group, .list-group-item, .form-check",
+      "sortorder": 3,
+      "configdata": {
+        "placement": "right"
+      }
+    },
+    {
+      "title": "tour_validate_step5_title,local_jobboard",
+      "content": "tour_validate_step5_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".checklist-item, input[type='checkbox']",
+      "sortorder": 4,
+      "configdata": {
+        "placement": "right"
+      }
+    },
+    {
+      "title": "tour_validate_step6_title,local_jobboard",
+      "content": "tour_validate_step6_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".btn-success.btn-lg, form[action*='validate']",
+      "sortorder": 5,
+      "configdata": {
+        "placement": "top"
+      }
+    },
+    {
+      "title": "tour_validate_step7_title,local_jobboard",
+      "content": "tour_validate_step7_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".btn-danger.btn-lg, select[name='rejectreason']",
+      "sortorder": 6,
+      "configdata": {
+        "placement": "top"
+      }
+    },
+    {
+      "title": "tour_validate_step8_title,local_jobboard",
+      "content": "tour_validate_step8_content,local_jobboard",
+      "targettype": 2,
+      "targetvalue": "",
+      "sortorder": 7,
+      "configdata": {
+        "placement": "bottom"
+      }
+    }
+  ]
+}

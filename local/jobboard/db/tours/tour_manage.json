@@ -1,0 +1,118 @@
+{
+  "name": "tour_manage_name,local_jobboard",
+  "description": "tour_manage_description,local_jobboard",
+  "pathmatch": "/local/jobboard/index.php?view=manage%",
+  "enabled": 1,
+  "sortorder": 5,
+  "endtourlabel": "tour_endlabel,local_jobboard",
+  "displaystepnumbers": true,
+  "configdata": {
+    "placement": "bottom",
+    "orphan": true,
+    "backdrop": true,
+    "reflex": false,
+    "filtervalues": {
+      "accessdate": {
+        "filter_accessdate_enabled": 0
+      },
+      "role": [],
+      "category": [],
+      "course": [],
+      "courseformat": [],
+      "theme": [],
+      "cssselector": []
+    }
+  },
+  "steps": [
+    {
+      "title": "tour_manage_step1_title,local_jobboard",
+      "content": "tour_manage_step1_content,local_jobboard",
+      "targettype": 2,
+      "targetvalue": "",
+      "sortorder": 0,
+      "configdata": {
+        "placement": "bottom"
+      }
+    },
+    {
+      "title": "tour_manage_step2_title,local_jobboard",
+      "content": "tour_manage_step2_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": "a.btn-primary[href*='edit.php'], .btn-primary",
+      "sortorder": 1,
+      "configdata": {
+        "placement": "right"
+      }
+    },
+    {
+      "title": "tour_manage_step3_title,local_jobboard",
+      "content": "tour_manage_step3_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": "form .row, input[name='search']",
+      "sortorder": 2,
+      "configdata": {
+        "placement": "bottom"
+      }
+    },
+    {
+      "title": "tour_manage_step4_title,local_jobboard",
+      "content": "tour_manage_step4_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": "select[name='status'], select[name='companyid']",
+      "sortorder": 3,
+      "configdata": {
+        "placement": "bottom"
+      }
+    },
+    {
+      "title": "tour_manage_step5_title,local_jobboard",
+      "content": "tour_manage_step5_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".table, .table-striped",
+      "sortorder": 4,
+      "configdata": {
+        "placement": "top"
+      }
+    },
+    {
+      "title": "tour_manage_step6_title,local_jobboard",
+      "content": "tour_manage_step6_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".badge-success, .badge-warning, .badge-secondary",
+      "sortorder": 5,
+      "configdata": {
+        "placement": "left"
+      }
+    },
+    {
+      "title": "tour_manage_step7_title,local_jobboard",
+      "content": "tour_manage_step7_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".btn-outline-primary, .btn-outline-success, .btn-outline-warning",
+      "sortorder": 6,
+      "configdata": {
+        "placement": "left"
+      }
+    },
+    {
+      "title": "tour_manage_step8_title,local_jobboard",
+      "content": "tour_manage_step8_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".btn-outline-info",
+      "sortorder": 7,
+      "configdata": {
+        "placement": "left"
+      }
+    },
+    {
+      "title": "tour_manage_step9_title,local_jobboard",
+      "content": "tour_manage_step9_content,local_jobboard",
+      "targettype": 2,
+      "targetvalue": "",
+      "sortorder": 8,
+      "configdata": {
+        "placement": "bottom"
+      }
+    }
+  ]
+}

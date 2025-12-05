@@ -809,6 +809,8 @@ $string['applicationdetails'] = 'Application Details';
 $string['applicantinfo'] = 'Applicant Information';
 $string['documentlist'] = 'Document List';
 $string['documentpreview'] = 'Document Preview';
+$string['previewdocument'] = 'Preview Document';
+$string['togglepreview'] = 'Toggle Preview';
 $string['validateall'] = 'Validate All';
 $string['rejectall'] = 'Reject All';
 $string['validatedocument'] = 'Validate Document';
@@ -1371,38 +1373,170 @@ $string['evaluationvote'] = 'Vote';
 $string['evaluationcomments'] = 'Evaluation comments';
 $string['marginal'] = 'Marginal';
 
-// User Tours - Admin Tour.
-$string['tour_admin_name'] = 'Job Board Administrator Tour';
-$string['tour_admin_description'] = 'Learn how to manage vacancies and applications in Job Board';
-$string['tour_admin_step1_title'] = 'Welcome to Job Board';
-$string['tour_admin_step1_content'] = 'Welcome to the Job Board plugin! This guided tour will show you how to manage vacancies and applications effectively. The plugin allows you to create vacancies, receive applications, validate documents, and manage the complete selection process.';
-$string['tour_admin_step2_title'] = 'Dashboard Overview';
-$string['tour_admin_step2_content'] = 'This is your main dashboard. Here you can see an overview of all active vacancies, pending applications, and documents awaiting review. Use the dashboard to quickly access the most important information.';
-$string['tour_admin_step3_title'] = 'Quick Statistics';
-$string['tour_admin_step3_content'] = 'These statistics show you key metrics at a glance: total vacancies, active applications, pending documents for review, and more. Click on any statistic to see detailed information.';
-$string['tour_admin_step4_title'] = 'Create New Vacancy';
-$string['tour_admin_step4_content'] = 'Click here to create a new vacancy. You will need to provide details such as title, description, requirements, required documents, and application dates. Once published, candidates can start applying.';
-$string['tour_admin_step5_title'] = 'Vacancy List';
-$string['tour_admin_step5_content'] = 'This is the list of all vacancies. You can filter by status (draft, published, closed) and perform actions like edit, publish, close, or view applications for each vacancy.';
-$string['tour_admin_step6_title'] = 'Ready to Start!';
-$string['tour_admin_step6_content'] = 'You are now ready to start using Job Board! Remember: you can manage document types, configure email templates, create selection committees, and generate reports. Explore the administration menu for more options.';
+// =============================================================================
+// USER TOURS - Complete Guided Tours for all plugin views
+// =============================================================================
 
-// User Tours - Applicant Tour.
-$string['tour_applicant_name'] = 'Job Board Applicant Tour';
-$string['tour_applicant_description'] = 'Learn how to find and apply for vacancies';
-$string['tour_applicant_step1_title'] = 'Welcome to Job Board';
-$string['tour_applicant_step1_content'] = 'Welcome! This guided tour will show you how to find available vacancies and submit your application. The process is simple: find a vacancy that interests you, prepare your documents, and apply.';
-$string['tour_applicant_step2_title'] = 'Available Vacancies';
-$string['tour_applicant_step2_content'] = 'Here you can see all available vacancies. Each vacancy shows the title, location, contract type, and closing date. Use the filters to find vacancies that match your profile.';
-$string['tour_applicant_step3_title'] = 'Vacancy Details';
-$string['tour_applicant_step3_content'] = 'Click on any vacancy to see the complete details: full description, requirements, benefits, and required documents. Make sure you meet the requirements before applying.';
-$string['tour_applicant_step4_title'] = 'Apply for a Vacancy';
-$string['tour_applicant_step4_content'] = 'When you find a vacancy that interests you, click "Apply" to start your application. You will need to upload the required documents. Make sure your documents are legible and up to date.';
-$string['tour_applicant_step5_title'] = 'Track Your Applications';
-$string['tour_applicant_step5_content'] = 'You can track the status of your applications at any time from "My Applications". You will receive notifications when there are updates to your application status. Good luck!';
-
-// User Tours - Common.
+// Common tour strings.
 $string['tour_endlabel'] = 'Got it!';
+
+// Tour: Dashboard.
+$string['tour_dashboard_name'] = 'Job Board Dashboard Tour';
+$string['tour_dashboard_description'] = 'Learn how to navigate the Job Board dashboard';
+$string['tour_dashboard_step1_title'] = 'Welcome to Job Board';
+$string['tour_dashboard_step1_content'] = 'Welcome to the Job Board plugin! This guided tour will show you how to navigate and use the main features. The Job Board allows you to manage job vacancies, applications, and the complete hiring process.';
+$string['tour_dashboard_step2_title'] = 'Dashboard Overview';
+$string['tour_dashboard_step2_content'] = 'This is your main dashboard. From here you can access all the key features based on your role: browse vacancies, manage applications, review documents, and generate reports.';
+$string['tour_dashboard_step3_title'] = 'Quick Actions';
+$string['tour_dashboard_step3_content'] = 'Each card provides quick access to a specific area of the system. Click on any card to navigate to that section.';
+$string['tour_dashboard_step4_title'] = 'Available Features';
+$string['tour_dashboard_step4_content'] = 'Depending on your permissions, you can: view vacancies, track your applications, manage vacancies as an administrator, review applicant documents, and access reports and analytics.';
+$string['tour_dashboard_step5_title'] = 'Ready to Start!';
+$string['tour_dashboard_step5_content'] = 'You are now ready to use the Job Board! Explore the available options and don\'t hesitate to use the help resources if you need assistance.';
+
+// Tour: Public Vacancies.
+$string['tour_public_name'] = 'Public Vacancies Tour';
+$string['tour_public_description'] = 'Learn how to browse and search for available vacancies';
+$string['tour_public_step1_title'] = 'Public Vacancies';
+$string['tour_public_step1_content'] = 'Welcome to the public vacancies page! Here you can find all available job opportunities. This guided tour will show you how to search and filter vacancies effectively.';
+$string['tour_public_step2_title'] = 'Page Header';
+$string['tour_public_step2_content'] = 'This section displays the page title and any welcome message configured by the administrator. Read it to understand more about the organization\'s hiring process.';
+$string['tour_public_step3_title'] = 'Search and Filters';
+$string['tour_public_step3_content'] = 'Use these controls to filter vacancies. You can search by keyword, filter by contract type, location, and more to find opportunities that match your profile.';
+$string['tour_public_step4_title'] = 'Search Box';
+$string['tour_public_step4_content'] = 'Type keywords here to search in vacancy titles, codes, and descriptions. The search is case-insensitive and looks for partial matches.';
+$string['tour_public_step5_title'] = 'Filter Dropdowns';
+$string['tour_public_step5_content'] = 'Use these dropdown menus to filter by contract type (full-time, part-time, etc.) and location. Combine multiple filters to narrow down your search.';
+$string['tour_public_step6_title'] = 'Vacancy Cards';
+$string['tour_public_step6_content'] = 'Each vacancy is displayed as a card with key information: title, location, contract type, and closing date. The card also shows how many days remain until the application deadline.';
+$string['tour_public_step7_title'] = 'Vacancy Type Badges';
+$string['tour_public_step7_content'] = 'Vacancies are marked as "Public" (open to everyone) or "Internal" (only for authenticated users from the organization). Make sure you meet the eligibility criteria before applying.';
+$string['tour_public_step8_title'] = 'View Details and Apply';
+$string['tour_public_step8_content'] = 'Click "View Details" to see the complete vacancy information, or click "Apply" to start your application. You may need to log in first to apply.';
+$string['tour_public_step9_title'] = 'Start Exploring!';
+$string['tour_public_step9_content'] = 'You are now ready to browse available vacancies! Use the search and filters to find opportunities that match your skills and interests. Good luck with your applications!';
+
+// Tour: Application Form.
+$string['tour_apply_name'] = 'Application Form Tour';
+$string['tour_apply_description'] = 'Learn how to complete and submit your job application';
+$string['tour_apply_step1_title'] = 'Apply for a Vacancy';
+$string['tour_apply_step1_content'] = 'Welcome to the application form! This guided tour will help you understand each section and successfully submit your application.';
+$string['tour_apply_step2_title'] = 'Application Guidelines';
+$string['tour_apply_step2_content'] = 'Read these guidelines carefully before starting your application. They contain important information about required documents, accepted formats, and the application process.';
+$string['tour_apply_step3_title'] = 'Consent and Terms';
+$string['tour_apply_step3_content'] = 'You must accept the terms and conditions and give consent for processing your personal data according to data protection laws. This is required to submit your application.';
+$string['tour_apply_step4_title'] = 'Digital Signature';
+$string['tour_apply_step4_content'] = 'Enter your full name exactly as it appears on your ID document. This serves as your digital signature and confirms that the information you provide is accurate.';
+$string['tour_apply_step5_title'] = 'Required Documents';
+$string['tour_apply_step5_content'] = 'Upload all required documents here. Make sure each document is legible, complete, and in an accepted format (usually PDF, JPG, or PNG). Check the size limits for each document.';
+$string['tour_apply_step6_title'] = 'Cover Letter';
+$string['tour_apply_step6_content'] = 'Optionally, you can add a cover letter to explain why you are interested in this position and highlight your relevant qualifications and experience.';
+$string['tour_apply_step7_title'] = 'Submit Application';
+$string['tour_apply_step7_content'] = 'Once you have filled in all required fields and uploaded your documents, click this button to submit your application. Make sure everything is correct before submitting!';
+$string['tour_apply_step8_title'] = 'Good Luck!';
+$string['tour_apply_step8_content'] = 'After submitting, you can track your application status in "My Applications". You will receive email notifications when there are updates. We wish you the best of luck!';
+
+// Tour: My Applications.
+$string['tour_myapplications_name'] = 'My Applications Tour';
+$string['tour_myapplications_description'] = 'Learn how to track and manage your job applications';
+$string['tour_myapplications_step1_title'] = 'My Applications';
+$string['tour_myapplications_step1_content'] = 'Welcome to your applications dashboard! Here you can track the status of all your job applications and see any updates or required actions.';
+$string['tour_myapplications_step2_title'] = 'Exemption Status';
+$string['tour_myapplications_step2_content'] = 'If you have an active exemption (for example, as a current or former employee), it will be displayed here. This affects which documents you need to submit with your applications.';
+$string['tour_myapplications_step3_title'] = 'Status Filter';
+$string['tour_myapplications_step3_content'] = 'Use this filter to show only applications with a specific status. This helps you focus on applications that need attention or review.';
+$string['tour_myapplications_step4_title'] = 'Applications Table';
+$string['tour_myapplications_step4_content'] = 'This table shows all your applications with key information: vacancy name, date applied, current status, and document count. Click on any row for more details.';
+$string['tour_myapplications_step5_title'] = 'Application Status';
+$string['tour_myapplications_step5_content'] = 'The status badge shows where your application is in the review process: Submitted, Under Review, Documents Validated, Interview, Selected, or Rejected. Watch for status changes!';
+$string['tour_myapplications_step6_title'] = 'Available Actions';
+$string['tour_myapplications_step6_content'] = 'Click "View" to see your full application details and uploaded documents. If your application is still under review, you may also have the option to withdraw it.';
+$string['tour_myapplications_step7_title'] = 'Stay Updated!';
+$string['tour_myapplications_step7_content'] = 'Check this page regularly for updates on your applications. You will also receive email notifications for important status changes. Good luck with your applications!';
+
+// Tour: Document Review.
+$string['tour_review_name'] = 'Document Review Tour';
+$string['tour_review_description'] = 'Learn how to review and validate applicant documents';
+$string['tour_review_step1_title'] = 'Document Review Center';
+$string['tour_review_step1_content'] = 'Welcome to the document review center! As a reviewer, you are responsible for validating applicant documents to ensure they meet the requirements.';
+$string['tour_review_step2_title'] = 'Vacancy Filter';
+$string['tour_review_step2_content'] = 'Use this filter to focus on applications for a specific vacancy. This helps you manage your workload when reviewing multiple positions.';
+$string['tour_review_step3_title'] = 'Applications Queue';
+$string['tour_review_step3_content'] = 'This table shows all applications pending review. Each row displays the vacancy, applicant info, status, document count, and pending documents count.';
+$string['tour_review_step4_title'] = 'Pending Indicators';
+$string['tour_review_step4_content'] = 'The red badge shows how many documents are still pending validation. Prioritize applications with pending documents to move them forward in the process.';
+$string['tour_review_step5_title'] = 'Application Details';
+$string['tour_review_step5_content'] = 'When reviewing an application, you\'ll see the applicant\'s information and vacancy details. Review this context before validating documents.';
+$string['tour_review_step6_title'] = 'Document List';
+$string['tour_review_step6_content'] = 'All uploaded documents are listed here with their current status. Each document shows the type, filename, upload date, and validation status.';
+$string['tour_review_step7_title'] = 'Validation Actions';
+$string['tour_review_step7_content'] = 'For each document, you can Approve (if it meets requirements) or Reject (if there are issues). When rejecting, you must provide a reason so the applicant knows what to fix.';
+$string['tour_review_step8_title'] = 'Bulk Actions';
+$string['tour_review_step8_content'] = 'To speed up the review process, you can validate all pending documents at once if they all meet the requirements.';
+$string['tour_review_step9_title'] = 'Happy Reviewing!';
+$string['tour_review_step9_content'] = 'Remember: careful document validation is crucial for the integrity of the selection process. Take your time to verify each document thoroughly.';
+
+// Tour: Vacancy Management.
+$string['tour_manage_name'] = 'Vacancy Management Tour';
+$string['tour_manage_description'] = 'Learn how to create and manage job vacancies';
+$string['tour_manage_step1_title'] = 'Vacancy Management';
+$string['tour_manage_step1_content'] = 'Welcome to the vacancy management center! Here you can create, edit, publish, and manage all job vacancies in the system.';
+$string['tour_manage_step2_title'] = 'Create New Vacancy';
+$string['tour_manage_step2_content'] = 'Click this button to create a new vacancy. You\'ll need to provide details like title, description, requirements, document requirements, and application dates.';
+$string['tour_manage_step3_title'] = 'Search Vacancies';
+$string['tour_manage_step3_content'] = 'Use the search box to find vacancies by code, title, or description. This is helpful when managing many vacancies.';
+$string['tour_manage_step4_title'] = 'Filter Options';
+$string['tour_manage_step4_content'] = 'Filter vacancies by status (Draft, Published, Closed) and company (in multi-tenant setups). Combine filters to find exactly what you\'re looking for.';
+$string['tour_manage_step5_title'] = 'Vacancies Table';
+$string['tour_manage_step5_content'] = 'This table displays all vacancies with their code, title, status, dates, and number of positions. Click on a vacancy title to view its full details.';
+$string['tour_manage_step6_title'] = 'Status Badges';
+$string['tour_manage_step6_content'] = 'The status badge shows the current state: Draft (not visible), Published (accepting applications), Closed (no longer accepting), or Assigned (positions filled).';
+$string['tour_manage_step7_title'] = 'Action Buttons';
+$string['tour_manage_step7_content'] = 'Use these buttons to: Edit the vacancy, Publish a draft, Close an active vacancy, or Delete (only if no applications exist).';
+$string['tour_manage_step8_title'] = 'View Applications';
+$string['tour_manage_step8_content'] = 'Click this button to see all applications for a specific vacancy and start the review process.';
+$string['tour_manage_step9_title'] = 'You\'re All Set!';
+$string['tour_manage_step9_content'] = 'You now know how to manage vacancies! Remember to publish vacancies to make them visible to applicants, and monitor applications regularly.';
+
+// Tour: Reports.
+$string['tour_reports_name'] = 'Reports and Analytics Tour';
+$string['tour_reports_description'] = 'Learn how to generate reports and analyze recruitment data';
+$string['tour_reports_step1_title'] = 'Reports Dashboard';
+$string['tour_reports_step1_content'] = 'Welcome to the reports section! Here you can analyze recruitment data, track performance metrics, and export reports for further analysis.';
+$string['tour_reports_step2_title'] = 'Report Types';
+$string['tour_reports_step2_content'] = 'Use these tabs to switch between different report types: Overview (summary statistics), Applications, Documents, Reviewers (performance), and Timeline (trends).';
+$string['tour_reports_step3_title'] = 'Vacancy Filter';
+$string['tour_reports_step3_content'] = 'Filter reports by a specific vacancy or view data for all vacancies combined. This helps you analyze performance for individual positions.';
+$string['tour_reports_step4_title'] = 'Date Range';
+$string['tour_reports_step4_content'] = 'Set the date range for your report. By default, reports show the last 30 days, but you can adjust this to analyze any time period.';
+$string['tour_reports_step5_title'] = 'Export Options';
+$string['tour_reports_step5_content'] = 'Export your report data in CSV or Excel format for further analysis, sharing with stakeholders, or archiving. PDF export is also available.';
+$string['tour_reports_step6_title'] = 'Report Content';
+$string['tour_reports_step6_content'] = 'The main report area displays statistics, tables, and charts based on the selected report type. Data updates automatically when you change filters.';
+$string['tour_reports_step7_title'] = 'Visual Indicators';
+$string['tour_reports_step7_content'] = 'Progress bars and charts help you quickly understand the data. Green indicates positive metrics, red indicates areas that may need attention.';
+$string['tour_reports_step8_title'] = 'Make Data-Driven Decisions!';
+$string['tour_reports_step8_content'] = 'Use these reports to identify trends, optimize your recruitment process, and make informed decisions. Regular analysis leads to continuous improvement!';
+
+// Tour: Document Validation Page.
+$string['tour_validate_name'] = 'Document Validation Tour';
+$string['tour_validate_description'] = 'Learn how to properly validate applicant documents';
+$string['tour_validate_step1_title'] = 'Document Validation';
+$string['tour_validate_step1_content'] = 'Welcome to the document validation page! Here you will review a specific document and decide whether to approve or reject it.';
+$string['tour_validate_step2_title'] = 'Document Information';
+$string['tour_validate_step2_content'] = 'This section shows details about the document: type, filename, upload date, and issue date (if applicable). Review this information carefully.';
+$string['tour_validate_step3_title'] = 'View Document';
+$string['tour_validate_step3_content'] = 'Click this button to open the document in a new tab or use the inline preview. Examine the document carefully before making a decision.';
+$string['tour_validate_step4_title'] = 'Validation Checklist';
+$string['tour_validate_step4_content'] = 'Use this checklist to verify the document meets all requirements. Each document type has specific criteria you should verify.';
+$string['tour_validate_step5_title'] = 'Check Each Item';
+$string['tour_validate_step5_content'] = 'Go through each checklist item: Is the document legible? Is it complete? Does the name match the applicant? Are dates current (for time-sensitive documents)?';
+$string['tour_validate_step6_title'] = 'Approve Document';
+$string['tour_validate_step6_content'] = 'If the document meets all requirements, click "Approve". You can optionally add notes for your records.';
+$string['tour_validate_step7_title'] = 'Reject Document';
+$string['tour_validate_step7_content'] = 'If the document has issues, select a rejection reason from the dropdown and click "Reject". The applicant will be notified and can upload a corrected document.';
+$string['tour_validate_step8_title'] = 'Validation Complete!';
+$string['tour_validate_step8_content'] = 'After making your decision, you\'ll return to the application view. Continue reviewing other documents until all are validated.';
 
 // Missing strings - Phase 8.8: Complete language string coverage.
 // Assignment and reviewer related.
@@ -1470,3 +1604,16 @@ $string['lastused'] = 'Last used';
 $string['selecttype'] = 'Select type';
 $string['share'] = 'Share';
 $string['loading'] = 'Loading...';
+
+// Export functionality.
+$string['exportdocumentszip'] = 'Export Documents (ZIP)';
+$string['exportalldocuments'] = 'Export All Documents';
+$string['exportapplicationdocs'] = 'Export Application Documents';
+$string['zipexportfailed'] = 'Failed to create ZIP archive';
+$string['nodocuments'] = 'No documents to export';
+$string['invalidparameters'] = 'Invalid parameters';
+$string['exportpdf'] = 'Export PDF';
+$string['exportingpdf'] = 'Exporting PDF...';
+$string['pdfreportgenerated'] = 'PDF report generated successfully';
+$string['pdfexportfailed'] = 'Failed to generate PDF report';
+$string['generatedon'] = 'Generated on';

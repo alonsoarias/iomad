@@ -57,7 +57,7 @@ $PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/
 $PAGE->navbar->add(get_string('reports', 'local_jobboard'));
 
 // Handle export.
-if ($format === 'csv' || $format === 'excel') {
+if ($format === 'csv' || $format === 'excel' || $format === 'pdf') {
     local_jobboard_export_report($reporttype, $vacancyid, $datefrom, $dateto, $format);
     exit;
 }
@@ -135,6 +135,8 @@ echo '<a href="' . $exportbaseurl . '&format=csv" class="btn btn-outline-seconda
     get_string('exportcsv', 'local_jobboard') . '</a>';
 echo '<a href="' . $exportbaseurl . '&format=excel" class="btn btn-outline-secondary">' .
     get_string('exportexcel', 'local_jobboard') . '</a>';
+echo '<a href="' . $exportbaseurl . '&format=pdf" class="btn btn-outline-secondary">' .
+    get_string('exportpdf', 'local_jobboard') . '</a>';
 echo '</div>';
 
 echo '</form>';
@@ -532,5 +534,100 @@ function local_jobboard_export_report(string $reporttype, int $vacancyid, int $d
             fputcsv($output, $row);
         }
         fclose($output);
+    } else if ($format === 'excel') {
+        global $CFG;
+        require_once($CFG->libdir . '/excellib.class.php');
+
+        $filename = 'report_' . $reporttype . '_' . date('Y-m-d') . '.xlsx';
+        $workbook = new MoodleExcelWorkbook($filename);
+        $worksheet = $workbook->add_worksheet($reporttype);
+
+        // Write headers.
+        $col = 0;
+        foreach ($headers as $header) {
+            $worksheet->write(0, $col++, $header);
+        }
+
+        // Write data.
+        $row = 1;
+        foreach ($data as $rowdata) {
+            $col = 0;
+            foreach ($rowdata as $cell) {
+                $worksheet->write($row, $col++, $cell);
+            }
+            $row++;
+        }
+
+        $workbook->close();
+    } else if ($format === 'pdf') {
+        global $CFG;
+        require_once($CFG->libdir . '/pdflib.php');
+
+        $filename = 'report_' . $reporttype . '_' . date('Y-m-d') . '.pdf';
+
+        // Create PDF document.
+        $pdf = new pdf('L', 'mm', 'A4', true, 'UTF-8');
+
+        // Set document information.
+        $pdf->SetCreator('Job Board');
+        $pdf->SetAuthor('Job Board');
+        $pdf->SetTitle(get_string('reports', 'local_jobboard') . ' - ' . $reporttype);
+        $pdf->SetSubject(get_string('reports', 'local_jobboard'));
+
+        // Set margins.
+        $pdf->SetMargins(15, 15, 15);
+        $pdf->SetHeaderMargin(5);
+        $pdf->SetFooterMargin(10);
+
+        // Set auto page breaks.
+        $pdf->SetAutoPageBreak(true, 25);
+
+        // Add a page.
+        $pdf->AddPage();
+
+        // Report title.
+        $pdf->SetFont('helvetica', 'B', 16);
+        $pdf->Cell(0, 10, get_string('reports', 'local_jobboard') . ': ' . ucfirst($reporttype), 0, 1, 'C');
+        $pdf->Ln(5);
+
+        // Date range.
+        $pdf->SetFont('helvetica', '', 10);
+        $pdf->Cell(0, 6, get_string('datefrom', 'local_jobboard') . ': ' . date('Y-m-d', $datefrom) .
+            ' - ' . get_string('dateto', 'local_jobboard') . ': ' . date('Y-m-d', $dateto), 0, 1, 'C');
+        $pdf->Ln(10);
+
+        // Build HTML table.
+        $html = '<table border="1" cellpadding="5">';
+        $html .= '<thead><tr style="background-color: #4472C4; color: white; font-weight: bold;">';
+        foreach ($headers as $header) {
+            $html .= '<th>' . htmlspecialchars($header) . '</th>';
+        }
+        $html .= '</tr></thead>';
+        $html .= '<tbody>';
+
+        $rownum = 0;
+        foreach ($data as $rowdata) {
+            $bgcolor = ($rownum % 2 == 0) ? '#ffffff' : '#f2f2f2';
+            $html .= '<tr style="background-color: ' . $bgcolor . ';">';
+            foreach ($rowdata as $cell) {
+                $html .= '<td>' . htmlspecialchars($cell) . '</td>';
+            }
+            $html .= '</tr>';
+            $rownum++;
+        }
+
+        $html .= '</tbody></table>';
+
+        // Write HTML table.
+        $pdf->SetFont('helvetica', '', 9);
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Footer with generation date.
+        $pdf->Ln(10);
+        $pdf->SetFont('helvetica', 'I', 8);
+        $pdf->Cell(0, 6, get_string('generatedon', 'local_jobboard') . ': ' . date('Y-m-d H:i:s'), 0, 1, 'R');
+
+        // Output PDF.
+        $pdf->Output($filename, 'D');
     }
 }

@@ -101,14 +101,53 @@ if (!empty($document->issuedate)) {
         userdate($document->issuedate, get_string('strftimedate', 'langconfig')) . '</p>';
 }
 
-// Download link.
+// Document preview and download.
 $downloadurl = $document->get_download_url();
 if ($downloadurl) {
-    echo '<p><a href="' . $downloadurl . '" class="btn btn-primary" target="_blank">' .
-        get_string('viewdocument', 'local_jobboard') . '</a></p>';
+    // Inline preview button.
+    echo '<div class="mb-3">';
+    echo '<button type="button" class="btn btn-primary mr-2" ' .
+        'data-preview-url="' . $downloadurl . '" ' .
+        'data-preview-filename="' . s($document->filename) . '" ' .
+        'data-preview-mimetype="' . s($document->mimetype) . '">' .
+        '<i class="fa fa-eye mr-1"></i>' . get_string('previewdocument', 'local_jobboard') . '</button>';
+    echo '<a href="' . $downloadurl . '" class="btn btn-outline-secondary" target="_blank">' .
+        '<i class="fa fa-download mr-1"></i>' . get_string('download') . '</a>';
+    echo '</div>';
+
+    // Inline preview container for supported formats.
+    $supportedpreview = in_array($document->mimetype, ['application/pdf', 'image/jpeg', 'image/png', 'image/gif']);
+    if ($supportedpreview) {
+        echo '<div class="document-inline-preview mb-3">';
+        echo '<div class="card">';
+        echo '<div class="card-header d-flex justify-content-between align-items-center">';
+        echo '<span>' . get_string('documentpreview', 'local_jobboard') . '</span>';
+        echo '<button type="button" class="btn btn-sm btn-outline-secondary" id="toggle-preview">' .
+            get_string('togglepreview', 'local_jobboard') . '</button>';
+        echo '</div>';
+        echo '<div class="card-body preview-content" style="max-height: 500px; overflow: auto;">';
+
+        if ($document->mimetype === 'application/pdf') {
+            // Use iframe for PDF preview.
+            echo '<iframe src="' . $downloadurl . '#toolbar=0&navpanes=0" ' .
+                'style="width: 100%; height: 450px; border: none;" ' .
+                'title="' . get_string('documentpreview', 'local_jobboard') . '"></iframe>';
+        } else {
+            // Direct image display.
+            echo '<img src="' . $downloadurl . '" class="img-fluid" ' .
+                'alt="' . s($document->filename) . '" style="max-width: 100%;">';
+        }
+
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    }
 }
 echo '</div>';
 echo '</div>';
+
+// Initialize document preview module.
+$PAGE->requires->js_call_amd('local_jobboard/document_preview', 'init');
 
 // Applicant information.
 echo '<div class="card mb-3">';
