@@ -604,6 +604,16 @@ class vacancy {
     }
 
     /**
+     * Check if the vacancy is open for applications.
+     * Alias for is_open() method.
+     *
+     * @return bool True if accepting applications.
+     */
+    public function is_open_for_applications(): bool {
+        return $this->is_open();
+    }
+
+    /**
      * Get the count of applications for this vacancy.
      *
      * @param string|null $status Filter by status.

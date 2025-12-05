@@ -15,6 +15,9 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 - **TypeError en vacancy.php**
   - Corregido: `local_jobboard_get_user_companyid()` recibía string en lugar de int
   - Ahora convierte explícitamente `$filters['userid']` a int antes de pasarlo
+- **Método faltante is_open_for_applications()**
+  - Añadido: método `is_open_for_applications()` como alias de `is_open()` en vacancy.php
+  - Corrige error en apply.php al verificar si la vacante acepta postulaciones
 
 ## [1.9.1-beta] - 2025-12-05
 
