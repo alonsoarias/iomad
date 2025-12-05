@@ -1837,3 +1837,27 @@ $string['signup_email_instruction_1'] = 'Revise su bandeja de entrada de correo 
 $string['signup_email_instruction_2'] = 'Haga clic en el enlace de confirmación del correo para activar su cuenta';
 $string['signup_email_instruction_3'] = 'Una vez confirmada, podrá iniciar sesión y postularse a vacantes';
 $string['signup_check_spam'] = 'Si no ve el correo, por favor revise su carpeta de spam o correo no deseado';
+
+// Cadenas Username = Número de Identificación.
+$string['signup_username_is_idnumber'] = 'Su número de identificación será su nombre de usuario para acceder a la plataforma.';
+$string['signup_idnumber_username'] = 'Número de Identificación (Usuario)';
+$string['signup_idnumber_username_help'] = 'Ingrese su número de identificación nacional. Este será su nombre de usuario para ingresar a la plataforma. Por ejemplo: 1234567890';
+$string['signup_idnumber_tooshort'] = 'El número de identificación debe tener al menos 4 caracteres';
+$string['signup_idnumber_exists_as_user'] = 'Ya existe un usuario con este número de identificación. Por favor inicie sesión.';
+
+// Cadenas del modal de aplicación.
+$string['apply_modal_title'] = 'Postularse a esta Vacante';
+$string['apply_modal_question'] = '¿Ya tiene una cuenta en nuestra plataforma?';
+$string['apply_modal_registered'] = 'Sí, tengo cuenta';
+$string['apply_modal_not_registered'] = 'No, necesito registrarme';
+$string['apply_modal_registered_desc'] = 'Inicie sesión con sus credenciales y actualice su perfil para aplicar.';
+$string['apply_modal_not_registered_desc'] = 'Cree una cuenta nueva usando su número de cédula como usuario.';
+
+// Cadenas de actualización de perfil.
+$string['updateprofile_title'] = 'Actualizar su Perfil';
+$string['updateprofile_intro'] = 'Por favor complete o actualice la información de su perfil antes de postularse a vacantes.';
+$string['updateprofile_required'] = 'Debe completar su perfil antes de postularse a vacantes.';
+$string['updateprofile_success'] = 'Su perfil ha sido actualizado exitosamente.';
+$string['updateprofile_company_required'] = 'Por favor seleccione una empresa/departamento para continuar con su postulación.';
+$string['updateprofile_continue_apply'] = 'Continuar a la Postulación';
+$string['updateprofile_submit'] = 'Actualizar Perfil y Continuar';

@@ -274,12 +274,16 @@ function create_user_from_form($data, $isiomad) {
     $user->auth = $CFG->registerauth;
     $user->confirmed = 0; // Requires email confirmation.
     $user->mnethostid = $CFG->mnet_localhost_id;
-    $user->username = trim(core_text::strtolower($data->username));
+
+    // Username is the ID number (cleaned for use as username).
+    $idnumber = trim($data->idnumber ?? '');
+    $user->username = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($idnumber));
+    $user->idnumber = $idnumber;
+
     $user->password = hash_internal_user_password($data->password);
     $user->email = trim($data->email);
     $user->firstname = trim($data->firstname);
     $user->lastname = trim($data->lastname);
-    $user->idnumber = trim($data->idnumber ?? '');
     $user->phone1 = trim($data->phone1 ?? '');
     $user->phone2 = trim($data->phone2 ?? '');
     $user->address = trim($data->address ?? '');

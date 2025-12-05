@@ -356,15 +356,14 @@ if (empty($vacancies)) {
                 ['class' => 'btn btn-sm btn-primary']
             );
         } else {
-            echo html_writer::link(
-                new moodle_url('/login/index.php', [
-                    'wantsurl' => (new moodle_url('/local/jobboard/index.php', [
-                        'view' => 'apply',
-                        'vacancyid' => $vacancy->id,
-                    ]))->out(false),
-                ]),
+            // Use modal for non-logged users.
+            echo html_writer::tag('button',
                 get_string('loginandapply', 'local_jobboard'),
-                ['class' => 'btn btn-sm btn-success']
+                [
+                    'class' => 'btn btn-sm btn-success jobboard-apply-btn',
+                    'data-vacancyid' => $vacancy->id,
+                    'data-vacancytitle' => s($vacancy->title),
+                ]
             );
         }
 
@@ -406,6 +405,18 @@ if (!$isloggedin) {
     );
     echo html_writer::end_div();
     echo html_writer::end_div();
+
+    // Initialize the apply modal JS for listing page.
+    $loginurl = (new moodle_url('/login/index.php', [
+        'wantsurl' => (new moodle_url('/local/jobboard/updateprofile.php'))->out(false),
+    ]))->out(false);
+    $signupurl = (new moodle_url('/local/jobboard/signup.php'))->out(false);
+    $PAGE->requires->js_call_amd('local_jobboard/apply_modal', 'init', [
+        0,
+        '',
+        $loginurl,
+        $signupurl,
+    ]);
 }
 
 echo $OUTPUT->footer();
@@ -546,16 +557,27 @@ function render_public_vacancy_detail($vacancyid, $context, $isloggedin, $isioma
             ['class' => 'btn btn-success btn-lg']
         );
     } else {
-        echo html_writer::link(
-            new moodle_url('/login/index.php', [
-                'wantsurl' => (new moodle_url('/local/jobboard/index.php', [
-                    'view' => 'apply',
-                    'vacancyid' => $vacancy->id,
-                ]))->out(false),
-            ]),
+        // Use modal for non-logged users.
+        echo html_writer::tag('button',
             get_string('loginandapply', 'local_jobboard'),
-            ['class' => 'btn btn-primary btn-lg']
+            [
+                'class' => 'btn btn-primary btn-lg jobboard-apply-btn',
+                'data-vacancyid' => $vacancy->id,
+                'data-vacancytitle' => s($vacancy->title),
+            ]
         );
+
+        // Initialize the apply modal JS for detail page.
+        $loginurl = (new moodle_url('/login/index.php', [
+            'wantsurl' => (new moodle_url('/local/jobboard/updateprofile.php'))->out(false),
+        ]))->out(false);
+        $signupurl = (new moodle_url('/local/jobboard/signup.php'))->out(false);
+        $PAGE->requires->js_call_amd('local_jobboard/apply_modal', 'init', [
+            $vacancy->id,
+            s($vacancy->title),
+            $loginurl,
+            $signupurl,
+        ]);
     }
     echo html_writer::end_div();
 

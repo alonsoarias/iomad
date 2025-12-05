@@ -15,11 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Alternative signup form with company selection for Job Board.
+ * Profile update form for Job Board applicants.
  *
- * This form allows new users to register and select a company/department
- * when applying for vacancies in IOMAD environments. It captures complete
- * profile information for job applicants.
+ * This form allows existing users to update their profile and select
+ * a company/department when applying for vacancies in IOMAD environments.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -31,58 +30,44 @@ namespace local_jobboard\forms;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
-require_once($CFG->dirroot . '/user/editlib.php');
 
 use moodleform;
-use context_system;
 
 /**
- * Alternative signup form for job applicants.
+ * Profile update form for job applicants.
  */
-class signup_form extends moodleform {
+class updateprofile_form extends moodleform {
 
     /**
      * Form definition.
      */
     protected function definition() {
-        global $CFG;
+        global $CFG, $DB;
 
         $mform = $this->_form;
         $vacancyid = $this->_customdata['vacancyid'] ?? 0;
         $companies = $this->_customdata['companies'] ?? [];
         $isiomad = $this->_customdata['isiomad'] ?? false;
+        $userid = $this->_customdata['userid'] ?? 0;
+        $usercompanyid = $this->_customdata['usercompanyid'] ?? 0;
+
+        // Get user record for checking existing values.
+        $user = $DB->get_record('user', ['id' => $userid]);
 
         // Hidden field for vacancy redirect.
         $mform->addElement('hidden', 'vacancyid', $vacancyid);
         $mform->setType('vacancyid', PARAM_INT);
 
         // ==========================================
-        // SECTION 1: Account Credentials
+        // SECTION 1: Account Information (Read-only)
         // ==========================================
         $mform->addElement('header', 'accountheader', get_string('signup_account_header', 'local_jobboard'));
         $mform->setExpanded('accountheader', true);
 
-        // Notice about username being the ID number.
-        $mform->addElement('html', '<div class="alert alert-info mb-3">' .
-            '<i class="fa fa-info-circle me-2"></i>' .
-            get_string('signup_username_is_idnumber', 'local_jobboard') . '</div>');
-
-        // Password with strength requirements.
-        $mform->addElement('passwordunmask', 'password', get_string('password'), 'maxlength="32" size="25"');
-        $mform->setType('password', PARAM_RAW);
-        $mform->addRule('password', get_string('required'), 'required', null, 'client');
-        $mform->addHelpButton('password', 'signup_password', 'local_jobboard');
-
-        // Email.
-        $mform->addElement('text', 'email', get_string('email'), 'maxlength="100" size="40"');
-        $mform->setType('email', PARAM_RAW_TRIMMED);
-        $mform->addRule('email', get_string('required'), 'required', null, 'client');
-        $mform->addRule('email', get_string('invalidemail'), 'email', null, 'client');
-
-        // Email confirmation.
-        $mform->addElement('text', 'email2', get_string('emailagain'), 'maxlength="100" size="40"');
-        $mform->setType('email2', PARAM_RAW_TRIMMED);
-        $mform->addRule('email2', get_string('required'), 'required', null, 'client');
+        // Email (read-only).
+        $mform->addElement('static', 'email_display', get_string('email'), $user->email ?? '');
+        $mform->addElement('hidden', 'email', $user->email ?? '');
+        $mform->setType('email', PARAM_EMAIL);
 
         // ==========================================
         // SECTION 2: Personal Information
@@ -114,12 +99,19 @@ class signup_form extends moodleform {
         $mform->addElement('select', 'doctype', get_string('signup_doctype', 'local_jobboard'), $doctypes);
         $mform->addRule('doctype', get_string('required'), 'required', null, 'client');
 
-        // Identification number (this will be the username).
-        $mform->addElement('text', 'idnumber', get_string('signup_idnumber', 'local_jobboard'),
-            'maxlength="50" size="25" id="id_idnumber"');
-        $mform->setType('idnumber', PARAM_TEXT);
-        $mform->addRule('idnumber', get_string('required'), 'required', null, 'client');
-        $mform->addHelpButton('idnumber', 'signup_idnumber_username', 'local_jobboard');
+        // Identification number.
+        if (!empty($user->idnumber)) {
+            // If already set, show as read-only.
+            $mform->addElement('static', 'idnumber_display', get_string('signup_idnumber', 'local_jobboard'), $user->idnumber);
+            $mform->addElement('hidden', 'idnumber', $user->idnumber);
+            $mform->setType('idnumber', PARAM_TEXT);
+        } else {
+            // Allow editing if not set.
+            $mform->addElement('text', 'idnumber', get_string('signup_idnumber', 'local_jobboard'),
+                'maxlength="50" size="25"');
+            $mform->setType('idnumber', PARAM_TEXT);
+            $mform->addRule('idnumber', get_string('required'), 'required', null, 'client');
+        }
 
         // Date of birth.
         $mform->addElement('date_selector', 'birthdate', get_string('signup_birthdate', 'local_jobboard'), [
@@ -248,68 +240,22 @@ class signup_form extends moodleform {
             $mform->addRule('companyid', get_string('required'), 'required', null, 'client');
 
             // Department selector (will be populated via AJAX).
+            $departmentoptions = [0 => get_string('selectdepartment', 'local_jobboard')];
+            // If user already has a company, load its departments.
+            if (!empty($usercompanyid)) {
+                $departments = local_jobboard_get_departments($usercompanyid);
+                if (!empty($departments)) {
+                    $departmentoptions = $departmentoptions + $departments;
+                }
+            }
             $mform->addElement('select', 'departmentid', get_string('department', 'local_jobboard'),
-                [0 => get_string('selectdepartment', 'local_jobboard')], [
+                $departmentoptions, [
                 'id' => 'id_departmentid_signup',
             ]);
         }
 
-        // ==========================================
-        // SECTION 6: Terms and Privacy
-        // ==========================================
-        $mform->addElement('header', 'termsheader', get_string('signup_termsheader', 'local_jobboard'));
-        $mform->setExpanded('termsheader', true);
-
-        // Privacy policy notice.
-        $privacyurl = get_config('local_jobboard', 'privacy_policy_url');
-        if (empty($privacyurl)) {
-            $privacyurl = new \moodle_url('/admin/tool/policy/viewall.php');
-        }
-
-        $privacytext = get_string('signup_privacy_text', 'local_jobboard', $privacyurl);
-        $mform->addElement('html', '<div class="privacy-notice mb-3">' . $privacytext . '</div>');
-
-        // Terms acceptance.
-        $mform->addElement('advcheckbox', 'policyagreed', '',
-            get_string('signup_terms_accept', 'local_jobboard'), ['group' => 1], [0, 1]);
-        $mform->addRule('policyagreed', get_string('signup_terms_required', 'local_jobboard'),
-            'required', null, 'client');
-        $mform->addRule('policyagreed', get_string('signup_terms_required', 'local_jobboard'),
-            'nonzero', null, 'client');
-
-        // Data treatment consent.
-        $datatreatmenttext = get_config('local_jobboard', 'datatreatmentpolicy');
-        if (!empty($datatreatmenttext)) {
-            $mform->addElement('html', '<div class="data-treatment-policy my-3 p-3 border rounded"><strong>' .
-                get_string('datatreatmentpolicytitle', 'local_jobboard') . '</strong><br>' .
-                '<div class="small mt-2" style="max-height: 150px; overflow-y: auto;">' .
-                format_text($datatreatmenttext, FORMAT_HTML) . '</div></div>');
-        }
-
-        $mform->addElement('advcheckbox', 'datatreatmentagreed', '',
-            get_string('signup_datatreatment_accept', 'local_jobboard'), ['group' => 1], [0, 1]);
-        $mform->addRule('datatreatmentagreed', get_string('signup_datatreatment_required', 'local_jobboard'),
-            'required', null, 'client');
-        $mform->addRule('datatreatmentagreed', get_string('signup_datatreatment_required', 'local_jobboard'),
-            'nonzero', null, 'client');
-
-        // Data accuracy declaration.
-        $mform->addElement('advcheckbox', 'dataaccuracy', '',
-            get_string('signup_dataaccuracy_accept', 'local_jobboard'), ['group' => 1], [0, 1]);
-        $mform->addRule('dataaccuracy', get_string('signup_dataaccuracy_required', 'local_jobboard'),
-            'required', null, 'client');
-        $mform->addRule('dataaccuracy', get_string('signup_dataaccuracy_required', 'local_jobboard'),
-            'nonzero', null, 'client');
-
-        // reCAPTCHA if enabled.
-        if (!empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey)) {
-            $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'));
-            $mform->addHelpButton('recaptcha_element', 'recaptcha', 'auth');
-            $mform->closeHeaderBefore('recaptcha_element');
-        }
-
         // Submit button.
-        $this->add_action_buttons(true, get_string('signup_createaccount', 'local_jobboard'));
+        $this->add_action_buttons(true, get_string('updateprofile_submit', 'local_jobboard'));
     }
 
     /**
@@ -320,59 +266,10 @@ class signup_form extends moodleform {
      * @return array Validation errors.
      */
     public function validation($data, $files) {
-        global $DB, $CFG;
+        global $DB;
 
         $errors = parent::validation($data, $files);
-
-        // ID Number validation (this will be the username).
-        $idnumber = trim($data['idnumber'] ?? '');
-        if (empty($idnumber)) {
-            $errors['idnumber'] = get_string('required');
-        } else {
-            // Clean the ID number for use as username.
-            $username = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($idnumber));
-
-            // Check minimum length.
-            if (strlen($username) < 4) {
-                $errors['idnumber'] = get_string('signup_idnumber_tooshort', 'local_jobboard');
-            }
-
-            // Check if username (idnumber) already exists.
-            if ($DB->record_exists('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id])) {
-                $errors['idnumber'] = get_string('signup_idnumber_exists_as_user', 'local_jobboard');
-            }
-
-            // Check if idnumber already exists.
-            if ($DB->record_exists('user', ['idnumber' => $idnumber])) {
-                $errors['idnumber'] = get_string('signup_idnumber_exists', 'local_jobboard');
-            }
-        }
-
-        // Password validation.
-        $password = $data['password'] ?? '';
-        if (empty($password)) {
-            $errors['password'] = get_string('required');
-        } else {
-            $errmsg = '';
-            if (!check_password_policy($password, $errmsg)) {
-                $errors['password'] = $errmsg;
-            }
-        }
-
-        // Email validation.
-        $email = trim($data['email']);
-        if (empty($email)) {
-            $errors['email'] = get_string('required');
-        } else if (!validate_email($email)) {
-            $errors['email'] = get_string('invalidemail');
-        } else if ($DB->record_exists('user', ['email' => $email])) {
-            $errors['email'] = get_string('emailexists');
-        }
-
-        // Email confirmation.
-        if ($email !== trim($data['email2'])) {
-            $errors['email2'] = get_string('emailnotmatch', 'local_jobboard');
-        }
+        $userid = $this->_customdata['userid'] ?? 0;
 
         // First name validation.
         if (empty(trim($data['firstname']))) {
@@ -387,6 +284,18 @@ class signup_form extends moodleform {
         // Document type validation.
         if (empty($data['doctype'])) {
             $errors['doctype'] = get_string('required');
+        }
+
+        // ID number validation (only if editable).
+        $user = $DB->get_record('user', ['id' => $userid]);
+        if (empty($user->idnumber) && empty(trim($data['idnumber'] ?? ''))) {
+            $errors['idnumber'] = get_string('required');
+        } else if (empty($user->idnumber) && !empty($data['idnumber'])) {
+            // Check if idnumber already exists for another user.
+            $existing = $DB->get_record('user', ['idnumber' => trim($data['idnumber'])]);
+            if ($existing && $existing->id != $userid) {
+                $errors['idnumber'] = get_string('signup_idnumber_exists', 'local_jobboard');
+            }
         }
 
         // Birthdate validation (must be at least 18 years old).
@@ -423,31 +332,6 @@ class signup_form extends moodleform {
         if ($isiomad && !empty($this->_customdata['companies'])) {
             if (empty($data['companyid'])) {
                 $errors['companyid'] = get_string('required');
-            }
-        }
-
-        // Terms validation.
-        if (empty($data['policyagreed'])) {
-            $errors['policyagreed'] = get_string('signup_terms_required', 'local_jobboard');
-        }
-
-        // Data treatment validation.
-        if (empty($data['datatreatmentagreed'])) {
-            $errors['datatreatmentagreed'] = get_string('signup_datatreatment_required', 'local_jobboard');
-        }
-
-        // Data accuracy validation.
-        if (empty($data['dataaccuracy'])) {
-            $errors['dataaccuracy'] = get_string('signup_dataaccuracy_required', 'local_jobboard');
-        }
-
-        // reCAPTCHA validation.
-        if (!empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey)) {
-            $recaptchaelement = $this->_form->getElement('recaptcha_element');
-            if (!empty($recaptchaelement)) {
-                if (!$recaptchaelement->verify($data['g-recaptcha-response'] ?? '')) {
-                    $errors['recaptcha_element'] = get_string('incorrectpleasetryagain', 'auth');
-                }
             }
         }
 

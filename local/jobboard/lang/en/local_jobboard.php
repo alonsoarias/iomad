@@ -1835,3 +1835,27 @@ $string['signup_email_instruction_1'] = 'Check your email inbox for the confirma
 $string['signup_email_instruction_2'] = 'Click the confirmation link in the email to activate your account';
 $string['signup_email_instruction_3'] = 'Once confirmed, you can log in and apply for vacancies';
 $string['signup_check_spam'] = 'If you don\'t see the email, please check your spam or junk folder';
+
+// Username = ID Number strings.
+$string['signup_username_is_idnumber'] = 'Your identification number will be your username to access the platform.';
+$string['signup_idnumber_username'] = 'Identification Number (Username)';
+$string['signup_idnumber_username_help'] = 'Enter your national identification number. This will be used as your username to log into the platform. For example: 1234567890';
+$string['signup_idnumber_tooshort'] = 'The identification number must have at least 4 characters';
+$string['signup_idnumber_exists_as_user'] = 'A user with this identification number already exists. Please log in instead.';
+
+// Apply modal strings.
+$string['apply_modal_title'] = 'Apply for this Vacancy';
+$string['apply_modal_question'] = 'Do you already have an account on our platform?';
+$string['apply_modal_registered'] = 'Yes, I have an account';
+$string['apply_modal_not_registered'] = 'No, I need to register';
+$string['apply_modal_registered_desc'] = 'Log in with your credentials and update your profile to apply.';
+$string['apply_modal_not_registered_desc'] = 'Create a new account using your ID number as username.';
+
+// Profile update strings.
+$string['updateprofile_title'] = 'Update Your Profile';
+$string['updateprofile_intro'] = 'Please complete or update your profile information before applying for vacancies.';
+$string['updateprofile_required'] = 'You must complete your profile before applying for vacancies.';
+$string['updateprofile_success'] = 'Your profile has been updated successfully.';
+$string['updateprofile_company_required'] = 'Please select a company/department to continue with your application.';
+$string['updateprofile_continue_apply'] = 'Continue to Application';
+$string['updateprofile_submit'] = 'Update Profile and Continue';
