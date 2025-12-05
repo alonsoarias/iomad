@@ -19,6 +19,7 @@
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Associated Moodle course"/>
         <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Associated Moodle category"/>
         <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Iomad company/tenant ID"/>
+        <FIELD NAME="departmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD department ID"/>
         <FIELD NAME="convocatoriaid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Parent convocatoria ID"/>
         <FIELD NAME="opendate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy opening date (timestamp)"/>
         <FIELD NAME="closedate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy closing date (timestamp)"/>
@@ -44,6 +45,7 @@
         <INDEX NAME="code_unique" UNIQUE="true" FIELDS="code"/>
         <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
         <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>
+        <INDEX NAME="departmentid_idx" UNIQUE="false" FIELDS="departmentid"/>
         <INDEX NAME="convocatoriaid_idx" UNIQUE="false" FIELDS="convocatoriaid"/>
         <INDEX NAME="opendate_idx" UNIQUE="false" FIELDS="opendate"/>
         <INDEX NAME="closedate_idx" UNIQUE="false" FIELDS="closedate"/>

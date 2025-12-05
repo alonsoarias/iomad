@@ -702,6 +702,26 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120518, 'local', 'jobboard');
     }
 
+    // Version 2025120519: Add departmentid field to vacancy table for IOMAD integration.
+    if ($oldversion < 2025120519) {
+
+        // Add departmentid field to local_jobboard_vacancy table.
+        $table = new xmldb_table('local_jobboard_vacancy');
+
+        $field = new xmldb_field('departmentid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'companyid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add index for departmentid.
+        $index = new xmldb_index('departmentid_idx', XMLDB_INDEX_NOTUNIQUE, ['departmentid']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        upgrade_plugin_savepoint(true, 2025120519, 'local', 'jobboard');
+    }
+
     // Version 2025120520: Add convocatoria table and link vacancies to convocatorias.
     if ($oldversion < 2025120520) {
 
