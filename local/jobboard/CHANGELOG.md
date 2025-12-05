@@ -18,6 +18,9 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 - **Método faltante is_open_for_applications()**
   - Añadido: método `is_open_for_applications()` como alias de `is_open()` en vacancy.php
   - Corrige error en apply.php al verificar si la vacante acepta postulaciones
+- **Warning undefined property en doctypes.php**
+  - Corregido: usaba `$dt->required` pero el campo en BD es `isrequired`
+  - Añadido null coalescing para evitar warnings si el campo no existe
 
 ## [1.9.1-beta] - 2025-12-05
 

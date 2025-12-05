@@ -69,7 +69,8 @@ if (empty($doctypes)) {
             ? '<span class="badge badge-success">' . get_string('enabled', 'local_jobboard') . '</span>'
             : '<span class="badge badge-secondary">' . get_string('disabled', 'local_jobboard') . '</span>';
 
-        $requiredbadge = $dt->required
+        $isrequired = $dt->isrequired ?? 0;
+        $requiredbadge = $isrequired
             ? '<span class="badge badge-primary">' . get_string('yes') . '</span>'
             : '<span class="badge badge-secondary">' . get_string('no') . '</span>';
 
