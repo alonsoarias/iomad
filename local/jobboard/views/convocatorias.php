@@ -1,0 +1,317 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Convocatorias (Calls) listing and management view for local_jobboard.
+ *
+ * This file is included by index.php and should not be accessed directly.
+ *
+ * @package   local_jobboard
+ * @copyright 2024 ISER
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once(__DIR__ . '/../lib.php');
+
+// Require capability to manage convocatorias.
+require_capability('local/jobboard:createvacancy', $context);
+
+// Parameters.
+$page = optional_param('page', 0, PARAM_INT);
+$perpage = optional_param('perpage', 25, PARAM_INT);
+$status = optional_param('status', '', PARAM_ALPHA);
+$action = optional_param('action', '', PARAM_ALPHA);
+$convocatoriaid = optional_param('id', 0, PARAM_INT);
+
+// Page setup.
+$PAGE->set_pagelayout('admin');
+$PAGE->set_title(get_string('manageconvocatorias', 'local_jobboard'));
+$PAGE->set_heading(get_string('manageconvocatorias', 'local_jobboard'));
+
+// Base URL for this page.
+$baseurl = new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']);
+
+// Handle actions that modify data (require sesskey).
+if ($action && $convocatoriaid && confirm_sesskey()) {
+    $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid], '*', MUST_EXIST);
+
+    switch ($action) {
+        case 'delete':
+            // Only allow delete for draft or archived convocatorias.
+            if (in_array($convocatoria->status, ['draft', 'archived'])) {
+                // Unlink vacancies from this convocatoria (don't delete them).
+                $DB->set_field('local_jobboard_vacancy', 'convocatoriaid', null, ['convocatoriaid' => $convocatoriaid]);
+                // Delete the convocatoria.
+                $DB->delete_records('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
+                redirect($baseurl, get_string('convocatoriadeleted', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+            } else {
+                redirect($baseurl, get_string('error:cannotdeleteconvocatoria', 'local_jobboard'), null, \core\output\notification::NOTIFY_ERROR);
+            }
+            break;
+
+        case 'open':
+            // Check if it has vacancies.
+            $vacancycount = $DB->count_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid]);
+            if ($vacancycount == 0) {
+                redirect($baseurl, get_string('error:convocatoriahasnovacancies', 'local_jobboard'), null, \core\output\notification::NOTIFY_ERROR);
+            }
+
+            // Update status and publish all vacancies.
+            $convocatoria->status = 'open';
+            $convocatoria->timemodified = time();
+            $convocatoria->modifiedby = $USER->id;
+            $DB->update_record('local_jobboard_convocatoria', $convocatoria);
+
+            // Publish all draft vacancies in this convocatoria.
+            $DB->execute("UPDATE {local_jobboard_vacancy}
+                          SET status = 'published', opendate = ?, closedate = ?, timemodified = ?
+                          WHERE convocatoriaid = ? AND status = 'draft'",
+                [$convocatoria->startdate, $convocatoria->enddate, time(), $convocatoriaid]);
+
+            redirect($baseurl, get_string('convocatoriaopened', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+            break;
+
+        case 'close':
+            $convocatoria->status = 'closed';
+            $convocatoria->timemodified = time();
+            $convocatoria->modifiedby = $USER->id;
+            $DB->update_record('local_jobboard_convocatoria', $convocatoria);
+
+            // Close all vacancies in this convocatoria.
+            $DB->set_field('local_jobboard_vacancy', 'status', 'closed', ['convocatoriaid' => $convocatoriaid]);
+
+            redirect($baseurl, get_string('convocatoriaclosedmsg', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+            break;
+
+        case 'archive':
+            $convocatoria->status = 'archived';
+            $convocatoria->timemodified = time();
+            $convocatoria->modifiedby = $USER->id;
+            $DB->update_record('local_jobboard_convocatoria', $convocatoria);
+
+            redirect($baseurl, get_string('convocatoriaarchived', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+            break;
+    }
+}
+
+// Check IOMAD installation.
+$isiomad = local_jobboard_is_iomad_installed();
+
+// Build filters.
+$where = ['1=1'];
+$params = [];
+
+if ($status) {
+    $where[] = 'status = :status';
+    $params['status'] = $status;
+}
+
+// For non-admin users, filter by their company.
+if ($isiomad && !has_capability('local/jobboard:viewallvacancies', $context)) {
+    $usercompanyid = local_jobboard_get_user_companyid();
+    if ($usercompanyid) {
+        $where[] = '(companyid IS NULL OR companyid = :companyid)';
+        $params['companyid'] = $usercompanyid;
+    }
+}
+
+// Get total count.
+$wheresql = implode(' AND ', $where);
+$total = $DB->count_records_select('local_jobboard_convocatoria', $wheresql, $params);
+
+// Get convocatorias.
+$convocatorias = $DB->get_records_select(
+    'local_jobboard_convocatoria',
+    $wheresql,
+    $params,
+    'status ASC, startdate DESC',
+    '*',
+    $page * $perpage,
+    $perpage
+);
+
+echo $OUTPUT->header();
+
+// Page title.
+echo html_writer::tag('h2', get_string('manageconvocatorias', 'local_jobboard'));
+
+// Help text.
+echo html_writer::div(get_string('convocatoriahelp', 'local_jobboard'), 'alert alert-info');
+
+// Add new convocatoria button.
+$addurl = new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'action' => 'add']);
+echo html_writer::div(
+    html_writer::link($addurl, get_string('addconvocatoria', 'local_jobboard'), ['class' => 'btn btn-primary']),
+    'mb-4'
+);
+
+// Filter form.
+$formurl = new moodle_url('/local/jobboard/index.php');
+echo html_writer::start_tag('form', ['method' => 'get', 'action' => $formurl, 'class' => 'mb-4']);
+echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'view', 'value' => 'convocatorias']);
+
+echo html_writer::start_div('row');
+
+// Status filter.
+echo html_writer::start_div('col-md-4');
+$statusoptions = [
+    '' => get_string('allstatuses', 'local_jobboard'),
+    'draft' => get_string('convocatoria_status_draft', 'local_jobboard'),
+    'open' => get_string('convocatoria_status_open', 'local_jobboard'),
+    'closed' => get_string('convocatoria_status_closed', 'local_jobboard'),
+    'archived' => get_string('convocatoria_status_archived', 'local_jobboard'),
+];
+echo html_writer::select($statusoptions, 'status', $status, null, ['class' => 'form-control']);
+echo html_writer::end_div();
+
+// Submit button.
+echo html_writer::start_div('col-md-2');
+echo html_writer::empty_tag('input', [
+    'type' => 'submit',
+    'value' => get_string('filter', 'local_jobboard'),
+    'class' => 'btn btn-secondary',
+]);
+echo html_writer::end_div();
+
+echo html_writer::end_div(); // row.
+echo html_writer::end_tag('form');
+
+// Results count.
+$showing = new stdClass();
+$showing->from = $total > 0 ? ($page * $perpage) + 1 : 0;
+$showing->to = min(($page + 1) * $perpage, $total);
+$showing->total = $total;
+echo html_writer::tag('p', get_string('showing', 'local_jobboard', $showing), ['class' => 'text-muted']);
+
+// Convocatorias table.
+if (empty($convocatorias)) {
+    echo $OUTPUT->notification(get_string('noconvocatorias', 'local_jobboard'), 'info');
+} else {
+    $table = new html_table();
+    $table->head = [
+        get_string('convocatoriacode', 'local_jobboard'),
+        get_string('convocatorianame', 'local_jobboard'),
+        get_string('convocatoriastartdate', 'local_jobboard'),
+        get_string('convocatoriaenddate', 'local_jobboard'),
+        get_string('vacancies', 'local_jobboard'),
+        get_string('convocatoriastatus', 'local_jobboard'),
+        get_string('actions'),
+    ];
+    $table->attributes['class'] = 'table table-striped table-hover generaltable';
+
+    foreach ($convocatorias as $c) {
+        $row = [];
+
+        // Code.
+        $row[] = html_writer::tag('strong', s($c->code));
+
+        // Name.
+        $editurl = new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'id' => $c->id]);
+        $row[] = html_writer::link($editurl, s($c->name));
+
+        // Dates.
+        $row[] = userdate($c->startdate, get_string('strftimedate', 'langconfig'));
+        $row[] = userdate($c->enddate, get_string('strftimedate', 'langconfig'));
+
+        // Vacancy count.
+        $vacancycount = $DB->count_records('local_jobboard_vacancy', ['convocatoriaid' => $c->id]);
+        if ($vacancycount > 0) {
+            $vacanciesurl = new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $c->id]);
+            $row[] = html_writer::link($vacanciesurl, $vacancycount, ['class' => 'badge badge-info']);
+        } else {
+            $row[] = html_writer::tag('span', '0', ['class' => 'badge badge-secondary']);
+        }
+
+        // Status badge.
+        $statusclass = [
+            'draft' => 'secondary',
+            'open' => 'success',
+            'closed' => 'warning',
+            'archived' => 'dark',
+        ];
+        $row[] = html_writer::tag('span',
+            get_string('convocatoria_status_' . $c->status, 'local_jobboard'),
+            ['class' => 'badge badge-' . ($statusclass[$c->status] ?? 'secondary')]
+        );
+
+        // Actions.
+        $actions = [];
+
+        // Edit (always available).
+        $editurl = new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'id' => $c->id]);
+        $actions[] = html_writer::link($editurl,
+            $OUTPUT->pix_icon('t/edit', get_string('edit')),
+            ['class' => 'btn btn-sm btn-outline-primary', 'title' => get_string('edit')]
+        );
+
+        // Add vacancy (for draft convocatorias).
+        if ($c->status === 'draft') {
+            $addvacancyurl = new moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $c->id]);
+            $actions[] = html_writer::link($addvacancyurl,
+                $OUTPUT->pix_icon('t/add', get_string('addvacancy', 'local_jobboard')),
+                ['class' => 'btn btn-sm btn-outline-success', 'title' => get_string('addvacancy', 'local_jobboard')]
+            );
+        }
+
+        // Status change actions based on current status.
+        if ($c->status === 'draft') {
+            $openurl = new moodle_url($baseurl, ['action' => 'open', 'id' => $c->id, 'sesskey' => sesskey()]);
+            $actions[] = html_writer::link($openurl, get_string('openconvocatoria', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-success']);
+        } elseif ($c->status === 'open') {
+            $closeurl = new moodle_url($baseurl, ['action' => 'close', 'id' => $c->id, 'sesskey' => sesskey()]);
+            $actions[] = html_writer::link($closeurl, get_string('closeconvocatoria', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-warning']);
+        } elseif ($c->status === 'closed') {
+            $archiveurl = new moodle_url($baseurl, ['action' => 'archive', 'id' => $c->id, 'sesskey' => sesskey()]);
+            $actions[] = html_writer::link($archiveurl, get_string('archiveconvocatoria', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-dark']);
+        }
+
+        // Delete (only for draft or archived).
+        if (in_array($c->status, ['draft', 'archived'])) {
+            $deleteurl = new moodle_url($baseurl, ['action' => 'delete', 'id' => $c->id, 'sesskey' => sesskey()]);
+            $actions[] = html_writer::link($deleteurl,
+                $OUTPUT->pix_icon('t/delete', get_string('delete')),
+                [
+                    'class' => 'btn btn-sm btn-outline-danger',
+                    'title' => get_string('delete'),
+                    'onclick' => "return confirm('" . get_string('confirmdeletevconvocatoria', 'local_jobboard') . "')",
+                ]
+            );
+        }
+
+        $row[] = implode(' ', $actions);
+
+        $table->data[] = $row;
+    }
+
+    echo html_writer::table($table);
+}
+
+// Pagination.
+if ($total > $perpage) {
+    $paginationurl = new moodle_url('/local/jobboard/index.php', [
+        'view' => 'convocatorias',
+        'status' => $status,
+        'perpage' => $perpage,
+    ]);
+    echo $OUTPUT->paging_bar($total, $page, $perpage, $paginationurl);
+}
+
+echo $OUTPUT->footer();

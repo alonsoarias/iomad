@@ -21,18 +21,21 @@
  * All URLs should use this entry point with the 'view' parameter.
  *
  * URL Structure:
- *   /local/jobboard/index.php                         - Dashboard (default)
- *   /local/jobboard/index.php?view=vacancies          - Vacancies listing
- *   /local/jobboard/index.php?view=vacancy&id=X       - Vacancy detail
- *   /local/jobboard/index.php?view=apply&vacancyid=X  - Apply form
- *   /local/jobboard/index.php?view=applications       - My applications
- *   /local/jobboard/index.php?view=application&id=X   - Application detail
- *   /local/jobboard/index.php?view=manage             - Manage vacancies
- *   /local/jobboard/index.php?view=review             - Review applications
- *   /local/jobboard/index.php?view=myreviews          - My reviews
- *   /local/jobboard/index.php?view=reports            - Reports
- *   /local/jobboard/index.php?view=public             - Public vacancies (no auth)
- *   /local/jobboard/index.php?view=public&id=X        - Public vacancy detail
+ *   /local/jobboard/index.php                              - Dashboard (default)
+ *   /local/jobboard/index.php?view=convocatorias           - Manage convocatorias (calls)
+ *   /local/jobboard/index.php?view=convocatoria&id=X       - Edit convocatoria
+ *   /local/jobboard/index.php?view=convocatoria&action=add - Create new convocatoria
+ *   /local/jobboard/index.php?view=vacancies               - Vacancies listing
+ *   /local/jobboard/index.php?view=vacancy&id=X            - Vacancy detail
+ *   /local/jobboard/index.php?view=manage                  - Manage vacancies
+ *   /local/jobboard/index.php?view=apply&vacancyid=X       - Apply form
+ *   /local/jobboard/index.php?view=applications            - My applications
+ *   /local/jobboard/index.php?view=application&id=X        - Application detail
+ *   /local/jobboard/index.php?view=review                  - Review applications
+ *   /local/jobboard/index.php?view=myreviews               - My reviews
+ *   /local/jobboard/index.php?view=reports                 - Reports
+ *   /local/jobboard/index.php?view=public                  - Public vacancies (no auth)
+ *   /local/jobboard/index.php?view=public&id=X             - Public vacancy detail
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -77,6 +80,16 @@ switch ($view) {
     case 'dashboard':
         // Default dashboard view - requires login.
         require(__DIR__ . '/views/dashboard.php');
+        break;
+
+    case 'convocatorias':
+        // List and manage convocatorias (calls).
+        require(__DIR__ . '/views/convocatorias.php');
+        break;
+
+    case 'convocatoria':
+        // View/edit single convocatoria.
+        require(__DIR__ . '/views/convocatoria.php');
         break;
 
     case 'vacancies':

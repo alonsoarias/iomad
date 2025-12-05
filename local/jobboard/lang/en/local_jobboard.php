@@ -34,6 +34,8 @@ $string['vacancies'] = 'Vacancies';
 $string['myvacancies'] = 'My Vacancies';
 $string['myapplications'] = 'My Applications';
 $string['newvacancy'] = 'New Vacancy';
+$string['addvacancy'] = 'Add Vacancy';
+$string['viewvacancies'] = 'View Vacancies';
 $string['managevacancies'] = 'Manage Vacancies';
 $string['reviewapplications'] = 'Review Applications';
 $string['reports'] = 'Reports';
@@ -299,6 +301,8 @@ $string['convocatoriaarchived'] = 'Call archived successfully';
 $string['error:convocatoriahasnovacancies'] = 'Cannot open a call without vacancies';
 $string['error:convocatoriadatesinvalid'] = 'End date must be after start date';
 $string['error:convocatoriacodeexists'] = 'A call with this code already exists';
+$string['error:cannotdeleteconvocatoria'] = 'Cannot delete this call. Only draft or archived calls can be deleted';
+$string['dates'] = 'Dates';
 $string['vacanciesforconvocatoria'] = 'Vacancies for call';
 $string['backtoconvocatorias'] = 'Back to calls';
 

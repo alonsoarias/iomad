@@ -78,6 +78,21 @@ if ($canapply) {
     echo html_writer::end_div();
 }
 
+// Manage convocatorias card.
+if ($canmanage) {
+    echo html_writer::start_div('card');
+    echo html_writer::start_div('card-body');
+    echo html_writer::tag('h5', get_string('manageconvocatorias', 'local_jobboard'), ['class' => 'card-title']);
+    echo html_writer::tag('p', get_string('convocatoriahelp', 'local_jobboard'), ['class' => 'card-text']);
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
+        get_string('manageconvocatorias', 'local_jobboard'),
+        ['class' => 'btn btn-primary']
+    );
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+}
+
 // Manage vacancies card.
 if ($canmanage) {
     echo html_writer::start_div('card');
