@@ -135,6 +135,17 @@ class vacancy_form extends \moodleform {
         $mform->setType('desirable', PARAM_RAW);
         $mform->addHelpButton('desirable', 'desirable', 'local_jobboard');
 
+        // Header: Convocatoria.
+        $mform->addElement('header', 'convocatoriaheader', get_string('convocatoria', 'local_jobboard'));
+
+        // Convocatoria selector (groups vacancies).
+        $convocatorias = [0 => get_string('selectconvocatoria', 'local_jobboard')] + \local_jobboard_get_convocatorias(0, '', true);
+        $mform->addElement('select', 'convocatoriaid', get_string('convocatoria', 'local_jobboard'), $convocatorias, [
+            'id' => 'id_convocatoriaid',
+        ]);
+        $mform->setType('convocatoriaid', PARAM_INT);
+        $mform->addHelpButton('convocatoriaid', 'convocatoria', 'local_jobboard');
+
         // Header: Associations.
         $mform->addElement('header', 'associations', get_string('course', 'local_jobboard'));
 
@@ -304,6 +315,7 @@ class vacancy_form extends \moodleform {
         $data->categoryid = $vacancy->categoryid;
         $data->companyid = $vacancy->companyid;
         $data->departmentid = $vacancy->departmentid ?? 0;
+        $data->convocatoriaid = $vacancy->convocatoriaid ?? 0;
         $data->publicationtype = $vacancy->publicationtype ?? 'public';
         $data->opendate = $vacancy->opendate;
         $data->closedate = $vacancy->closedate;

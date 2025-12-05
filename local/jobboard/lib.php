@@ -530,6 +530,67 @@ function local_jobboard_get_department_name(int $departmentid): string {
 }
 
 /**
+ * Get list of convocatorias for select dropdown.
+ *
+ * @param int $companyid Optional company ID to filter by.
+ * @param string $status Optional status filter ('draft', 'open', 'closed', 'archived').
+ * @param bool $includeall Whether to include all convocatorias regardless of status.
+ * @return array Array of convocatoria ID => name.
+ */
+function local_jobboard_get_convocatorias(int $companyid = 0, string $status = '', bool $includeall = false): array {
+    global $DB;
+
+    $conditions = [];
+    $params = [];
+
+    if ($companyid > 0) {
+        $conditions[] = 'companyid = :companyid';
+        $params['companyid'] = $companyid;
+    }
+
+    if (!$includeall && empty($status)) {
+        // By default, only show open convocatorias.
+        $conditions[] = "status = 'open'";
+    } elseif (!empty($status)) {
+        $conditions[] = 'status = :status';
+        $params['status'] = $status;
+    }
+
+    $where = empty($conditions) ? '' : 'WHERE ' . implode(' AND ', $conditions);
+
+    $sql = "SELECT id, code, name, startdate, enddate, status
+            FROM {local_jobboard_convocatoria}
+            {$where}
+            ORDER BY startdate DESC, name ASC";
+
+    $records = $DB->get_records_sql($sql, $params);
+
+    $result = [];
+    foreach ($records as $conv) {
+        $dates = userdate($conv->startdate, '%d/%m/%Y') . ' - ' . userdate($conv->enddate, '%d/%m/%Y');
+        $result[$conv->id] = $conv->name . ' (' . $conv->code . ') - ' . $dates;
+    }
+
+    return $result;
+}
+
+/**
+ * Get convocatoria by ID.
+ *
+ * @param int $convocatoriaid The convocatoria ID.
+ * @return stdClass|false The convocatoria record or false.
+ */
+function local_jobboard_get_convocatoria(int $convocatoriaid) {
+    global $DB;
+
+    if (!$convocatoriaid) {
+        return false;
+    }
+
+    return $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
+}
+
+/**
  * Get IOMAD installation type and details.
  *
  * @return array Installation info with keys: is_iomad, version, has_departments.

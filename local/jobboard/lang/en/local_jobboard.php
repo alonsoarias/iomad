@@ -1921,3 +1921,25 @@ $string['updateprofile_success'] = 'Your profile has been updated successfully.'
 $string['updateprofile_company_required'] = 'Please select a company/department to continue with your application.';
 $string['updateprofile_continue_apply'] = 'Continue to Application';
 $string['updateprofile_submit'] = 'Update Profile and Continue';
+
+// Tour: Convocatorias.
+$string['tour_convocatorias_name'] = 'Calls/Campaigns Management Tour';
+$string['tour_convocatorias_description'] = 'Learn how to create and manage job calls that group related vacancies';
+$string['tour_convocatorias_step1_title'] = 'Welcome to Calls Management';
+$string['tour_convocatorias_step1_content'] = 'This is the calls (convocatorias) management center. A call groups related vacancies and defines the period during which applications are accepted. You can create calls with specific start and end dates, and then add multiple vacancies to each call.';
+$string['tour_convocatorias_step2_title'] = 'Create New Call';
+$string['tour_convocatorias_step2_content'] = 'Click this button to create a new call. You will need to provide a unique code, name, description, start date, end date, and terms and conditions. The call can be set as public (visible to everyone) or internal (only for authenticated users).';
+$string['tour_convocatorias_step3_title'] = 'Calls Table';
+$string['tour_convocatorias_step3_content'] = 'This table shows all existing calls with their code, name, dates, status, and number of associated vacancies. Each call has a lifecycle: Draft (being prepared), Open (accepting applications), Closed (applications finished), and Archived (historical record).';
+$string['tour_convocatorias_step4_title'] = 'Call Status';
+$string['tour_convocatorias_step4_content'] = 'The status badge indicates the current state of the call. Draft calls are not visible to applicants. When you are ready, open the call to start receiving applications. The call can be manually closed or will auto-close on the end date.';
+$string['tour_convocatorias_step5_title'] = 'Edit Call';
+$string['tour_convocatorias_step5_content'] = 'Click here to modify the call details, adjust dates, or update the terms and conditions. You can also view and manage the vacancies associated with this call.';
+$string['tour_convocatorias_step6_title'] = 'Add Vacancies';
+$string['tour_convocatorias_step6_content'] = 'Use this button to create a new vacancy within this call. Vacancies inherit the date constraints from the call and can be assigned to specific professional profiles according to the PERFILES PROFESORES documents.';
+$string['tour_convocatorias_step7_title'] = 'Ready to Go!';
+$string['tour_convocatorias_step7_content'] = 'You now understand how to manage calls in the Job Board. Remember: first create the call with its dates, then add the vacancies according to the required professional profiles. Once everything is set up, open the call to start receiving applications.';
+
+// Convocatoria help strings.
+$string['convocatoria_help'] = 'A call groups related job vacancies under a single campaign with defined start and end dates. When you create a vacancy, you can associate it with a call to organize your recruitment process. The call dates determine when applications can be submitted.';
+$string['convocatoria_profile_help'] = 'Vacancies within a call should be created according to the professional profiles defined in the PERFILES PROFESORES documents. Each profile specifies the required qualifications, experience, and documents needed for that position.';

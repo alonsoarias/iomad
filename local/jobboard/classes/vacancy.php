@@ -69,6 +69,12 @@ class vacancy {
     /** @var int|null The Iomad company ID. */
     public $companyid = null;
 
+    /** @var int|null The IOMAD department ID. */
+    public $departmentid = null;
+
+    /** @var int|null The parent convocatoria ID. */
+    public $convocatoriaid = null;
+
     /** @var int The opening date timestamp. */
     public $opendate = 0;
 
@@ -160,6 +166,8 @@ class vacancy {
         $this->courseid = $record->courseid ? (int) $record->courseid : null;
         $this->categoryid = $record->categoryid ? (int) $record->categoryid : null;
         $this->companyid = $record->companyid ? (int) $record->companyid : null;
+        $this->departmentid = isset($record->departmentid) && $record->departmentid ? (int) $record->departmentid : null;
+        $this->convocatoriaid = isset($record->convocatoriaid) && $record->convocatoriaid ? (int) $record->convocatoriaid : null;
         $this->opendate = (int) $record->opendate;
         $this->closedate = (int) $record->closedate;
         $this->positions = (int) $record->positions;
@@ -350,8 +358,8 @@ class vacancy {
         $fields = [
             'code', 'title', 'description', 'contracttype', 'duration',
             'salary', 'location', 'department', 'courseid', 'categoryid',
-            'companyid', 'opendate', 'closedate', 'positions', 'requirements',
-            'desirable', 'status', 'publicationtype',
+            'companyid', 'departmentid', 'convocatoriaid', 'opendate', 'closedate',
+            'positions', 'requirements', 'desirable', 'status', 'publicationtype',
         ];
 
         foreach ($fields as $field) {
@@ -472,6 +480,8 @@ class vacancy {
             'courseid' => $this->courseid,
             'categoryid' => $this->categoryid,
             'companyid' => $this->companyid,
+            'departmentid' => $this->departmentid,
+            'convocatoriaid' => $this->convocatoriaid,
             'opendate' => $this->opendate,
             'closedate' => $this->closedate,
             'positions' => $this->positions,
@@ -661,6 +671,44 @@ class vacancy {
         }
 
         return local_jobboard_get_company_name($this->companyid);
+    }
+
+    /**
+     * Get the department name.
+     *
+     * @return string The department name.
+     */
+    public function get_department_name(): string {
+        if (!$this->departmentid) {
+            return '';
+        }
+
+        return local_jobboard_get_department_name($this->departmentid);
+    }
+
+    /**
+     * Get the convocatoria record.
+     *
+     * @return \stdClass|null The convocatoria record or null.
+     */
+    public function get_convocatoria(): ?\stdClass {
+        global $DB;
+
+        if (!$this->convocatoriaid) {
+            return null;
+        }
+
+        return $DB->get_record('local_jobboard_convocatoria', ['id' => $this->convocatoriaid]);
+    }
+
+    /**
+     * Get the convocatoria name.
+     *
+     * @return string The convocatoria name or empty string.
+     */
+    public function get_convocatoria_name(): string {
+        $convocatoria = $this->get_convocatoria();
+        return $convocatoria ? $convocatoria->name : '';
     }
 
     /**

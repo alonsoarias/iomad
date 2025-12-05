@@ -1923,3 +1923,25 @@ $string['updateprofile_success'] = 'Su perfil ha sido actualizado exitosamente.'
 $string['updateprofile_company_required'] = 'Por favor seleccione una empresa/departamento para continuar con su postulación.';
 $string['updateprofile_continue_apply'] = 'Continuar a la Postulación';
 $string['updateprofile_submit'] = 'Actualizar Perfil y Continuar';
+
+// Tour: Convocatorias.
+$string['tour_convocatorias_name'] = 'Tour de Gestion de Convocatorias';
+$string['tour_convocatorias_description'] = 'Aprenda a crear y gestionar convocatorias que agrupan vacantes relacionadas';
+$string['tour_convocatorias_step1_title'] = 'Bienvenido a Gestion de Convocatorias';
+$string['tour_convocatorias_step1_content'] = 'Este es el centro de gestion de convocatorias. Una convocatoria agrupa vacantes relacionadas y define el periodo durante el cual se aceptan postulaciones. Puede crear convocatorias con fechas de inicio y fin especificas, y luego agregar multiples vacantes a cada una.';
+$string['tour_convocatorias_step2_title'] = 'Crear Nueva Convocatoria';
+$string['tour_convocatorias_step2_content'] = 'Haga clic en este boton para crear una nueva convocatoria. Debera proporcionar un codigo unico, nombre, descripcion, fecha de inicio, fecha de cierre y terminos y condiciones. La convocatoria puede ser publica (visible para todos) o interna (solo para usuarios autenticados).';
+$string['tour_convocatorias_step3_title'] = 'Tabla de Convocatorias';
+$string['tour_convocatorias_step3_content'] = 'Esta tabla muestra todas las convocatorias existentes con su codigo, nombre, fechas, estado y numero de vacantes asociadas. Cada convocatoria tiene un ciclo de vida: Borrador (en preparacion), Abierta (aceptando postulaciones), Cerrada (postulaciones finalizadas), y Archivada (registro historico).';
+$string['tour_convocatorias_step4_title'] = 'Estado de la Convocatoria';
+$string['tour_convocatorias_step4_content'] = 'La insignia de estado indica el estado actual de la convocatoria. Las convocatorias en borrador no son visibles para los postulantes. Cuando este listo, abra la convocatoria para comenzar a recibir postulaciones. La convocatoria puede cerrarse manualmente o se cerrara automaticamente en la fecha de cierre.';
+$string['tour_convocatorias_step5_title'] = 'Editar Convocatoria';
+$string['tour_convocatorias_step5_content'] = 'Haga clic aqui para modificar los detalles de la convocatoria, ajustar fechas o actualizar los terminos y condiciones. Tambien puede ver y gestionar las vacantes asociadas a esta convocatoria.';
+$string['tour_convocatorias_step6_title'] = 'Agregar Vacantes';
+$string['tour_convocatorias_step6_content'] = 'Use este boton para crear una nueva vacante dentro de esta convocatoria. Las vacantes heredan las restricciones de fecha de la convocatoria y pueden asignarse a perfiles profesionales especificos segun los documentos de PERFILES PROFESORES.';
+$string['tour_convocatorias_step7_title'] = 'Listo para Comenzar!';
+$string['tour_convocatorias_step7_content'] = 'Ahora entiende como gestionar convocatorias en la Bolsa de Empleo. Recuerde: primero cree la convocatoria con sus fechas, luego agregue las vacantes segun los perfiles profesionales requeridos. Una vez todo configurado, abra la convocatoria para comenzar a recibir postulaciones.';
+
+// Cadenas de ayuda para convocatorias.
+$string['convocatoria_help'] = 'Una convocatoria agrupa vacantes laborales relacionadas bajo una campana unica con fechas de inicio y fin definidas. Al crear una vacante, puede asociarla con una convocatoria para organizar su proceso de reclutamiento. Las fechas de la convocatoria determinan cuando se pueden enviar postulaciones.';
+$string['convocatoria_profile_help'] = 'Las vacantes dentro de una convocatoria deben crearse de acuerdo con los perfiles profesionales definidos en los documentos de PERFILES PROFESORES. Cada perfil especifica las calificaciones requeridas, experiencia y documentos necesarios para ese puesto.';
