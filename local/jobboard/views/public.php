@@ -352,7 +352,7 @@ if (!$isloggedin) {
     echo html_writer::tag('h5', get_string('wanttoapply', 'local_jobboard'), ['class' => 'card-title']);
     echo html_writer::tag('p', get_string('createaccounttoapply', 'local_jobboard'), ['class' => 'card-text']);
     echo html_writer::link(
-        new moodle_url('/login/signup.php'),
+        new moodle_url('/local/jobboard/signup.php'),
         get_string('createaccount'),
         ['class' => 'btn btn-primary me-2']
     );

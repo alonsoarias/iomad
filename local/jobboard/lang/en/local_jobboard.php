@@ -256,6 +256,50 @@ $string['deleteexemption'] = 'Delete exemption';
 $string['importexemptions'] = 'Import exemptions from CSV';
 $string['exemptionimported'] = 'Exemptions imported successfully';
 
+// Convocatorias (Calls/Campaigns).
+$string['convocatoria'] = 'Call';
+$string['convocatorias'] = 'Calls';
+$string['manageconvocatorias'] = 'Manage Calls';
+$string['addconvocatoria'] = 'Add call';
+$string['editconvocatoria'] = 'Edit call';
+$string['deleteconvocatoria'] = 'Delete call';
+$string['convocatoriacode'] = 'Call code';
+$string['convocatorianame'] = 'Call name';
+$string['convocatoriadescription'] = 'Description';
+$string['convocatoriastartdate'] = 'Start date';
+$string['convocatoriaenddate'] = 'End date';
+$string['convocatoriastatus'] = 'Status';
+$string['convocatoriaterms'] = 'Terms and conditions';
+$string['convocatoriavacancies'] = 'Vacancies in this call';
+$string['convocatoria_status_draft'] = 'Draft';
+$string['convocatoria_status_open'] = 'Open';
+$string['convocatoria_status_closed'] = 'Closed';
+$string['convocatoria_status_archived'] = 'Archived';
+$string['convocatoriacreated'] = 'Call created successfully';
+$string['convocatoriaupdated'] = 'Call updated successfully';
+$string['convocatoriadeleted'] = 'Call deleted successfully';
+$string['noconvocatorias'] = 'No calls found';
+$string['convocatorianotfound'] = 'Call not found';
+$string['convocatoriaactive'] = 'Active calls';
+$string['convocatoriaclosed'] = 'Closed calls';
+$string['viewconvocatoria'] = 'View call';
+$string['convocatoriadetails'] = 'Call details';
+$string['selectconvocatoria'] = 'Select a call';
+$string['convocatoriahelp'] = 'A call groups related vacancies and sets the period during which applications are accepted.';
+$string['convocatoriavacancycount'] = '{$a} vacancies';
+$string['createvacancyinconvocatoria'] = 'Add vacancy to this call';
+$string['confirmdeletevconvocatoria'] = 'Are you sure you want to delete this call? This will not delete the associated vacancies.';
+$string['convocatoriawithvacancies'] = 'This call has {$a} vacancies. They will be unlinked but not deleted.';
+$string['openconvocatoria'] = 'Open call';
+$string['closeconvocatoria'] = 'Close call';
+$string['archiveconvocatoria'] = 'Archive call';
+$string['convocatoriaopened'] = 'Call opened successfully';
+$string['convocatoriaclosedmsg'] = 'Call closed successfully';
+$string['convocatoriaarchived'] = 'Call archived successfully';
+$string['error:convocatoriahasnovacancies'] = 'Cannot open a call without vacancies';
+$string['error:convocatoriadatesinvalid'] = 'End date must be after start date';
+$string['error:convocatoriacodeexists'] = 'A call with this code already exists';
+
 // External links.
 $string['externallinkinfo'] = 'You must download this certificate from the official website and upload it here';
 $string['linkantecedentesjudiciales'] = 'Criminal Background (National Police)';
@@ -318,6 +362,8 @@ $string['quickactions'] = 'Quick actions';
 
 // Configuration.
 $string['generalsettings'] = 'General settings';
+$string['enableselfregistration'] = 'Enable plugin self-registration';
+$string['enableselfregistration_desc'] = 'Allow users to register through the Job Board even when Moodle\'s global self-registration is disabled. Users will register using email confirmation.';
 $string['documentsettings'] = 'Document settings';
 $string['workflowsettings'] = 'Workflow settings';
 $string['securitysettings'] = 'Security settings';

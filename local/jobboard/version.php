@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120519;  // Conditional document types: gender, profession, ISER exemption.
+$plugin->version = 2025120520;  // Convocatorias system, plugin self-registration, unified index.php routing.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.6-beta';
+$plugin->release = '1.9.7-beta';

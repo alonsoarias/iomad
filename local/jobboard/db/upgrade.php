@@ -702,5 +702,64 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120518, 'local', 'jobboard');
     }
 
+    // Version 2025120520: Add convocatoria table and link vacancies to convocatorias.
+    if ($oldversion < 2025120520) {
+
+        // Define table local_jobboard_convocatoria.
+        $table = new xmldb_table('local_jobboard_convocatoria');
+
+        // Adding fields to table local_jobboard_convocatoria.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('code', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('startdate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('enddate', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'draft');
+        $table->add_field('companyid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('departmentid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('publicationtype', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'internal');
+        $table->add_field('terms', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('createdby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('modifiedby', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        // Adding keys to table local_jobboard_convocatoria.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('createdby_fk', XMLDB_KEY_FOREIGN, ['createdby'], 'user', ['id']);
+        $table->add_key('modifiedby_fk', XMLDB_KEY_FOREIGN, ['modifiedby'], 'user', ['id']);
+
+        // Adding indexes to table local_jobboard_convocatoria.
+        $table->add_index('code_unique', XMLDB_INDEX_UNIQUE, ['code']);
+        $table->add_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
+        $table->add_index('companyid_idx', XMLDB_INDEX_NOTUNIQUE, ['companyid']);
+        $table->add_index('dates_idx', XMLDB_INDEX_NOTUNIQUE, ['startdate', 'enddate']);
+        $table->add_index('publicationtype_idx', XMLDB_INDEX_NOTUNIQUE, ['publicationtype']);
+
+        // Create table if it doesn't exist.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Add convocatoriaid field to vacancy table.
+        $vacancytable = new xmldb_table('local_jobboard_vacancy');
+        $field = new xmldb_field('convocatoriaid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'companyid');
+        if (!$dbman->field_exists($vacancytable, $field)) {
+            $dbman->add_field($vacancytable, $field);
+        }
+
+        // Add index on convocatoriaid.
+        $index = new xmldb_index('convocatoriaid_idx', XMLDB_INDEX_NOTUNIQUE, ['convocatoriaid']);
+        if (!$dbman->index_exists($vacancytable, $index)) {
+            $dbman->add_index($vacancytable, $index);
+        }
+
+        // Add foreign key (as index since Moodle doesn't enforce foreign keys).
+        // Note: Foreign keys are not strictly enforced in Moodle DB, but we document the relationship.
+
+        upgrade_plugin_savepoint(true, 2025120520, 'local', 'jobboard');
+    }
+
     return true;
 }

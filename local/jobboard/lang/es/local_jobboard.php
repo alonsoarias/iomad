@@ -256,6 +256,50 @@ $string['deleteexemption'] = 'Eliminar excepción';
 $string['importexemptions'] = 'Importar excepciones desde CSV';
 $string['exemptionimported'] = 'Excepciones importadas exitosamente';
 
+// Convocatorias.
+$string['convocatoria'] = 'Convocatoria';
+$string['convocatorias'] = 'Convocatorias';
+$string['manageconvocatorias'] = 'Gestionar Convocatorias';
+$string['addconvocatoria'] = 'Agregar convocatoria';
+$string['editconvocatoria'] = 'Editar convocatoria';
+$string['deleteconvocatoria'] = 'Eliminar convocatoria';
+$string['convocatoriacode'] = 'Código de convocatoria';
+$string['convocatorianame'] = 'Nombre de convocatoria';
+$string['convocatoriadescription'] = 'Descripción';
+$string['convocatoriastartdate'] = 'Fecha de inicio';
+$string['convocatoriaenddate'] = 'Fecha de cierre';
+$string['convocatoriastatus'] = 'Estado';
+$string['convocatoriaterms'] = 'Términos y condiciones';
+$string['convocatoriavacancies'] = 'Vacantes de esta convocatoria';
+$string['convocatoria_status_draft'] = 'Borrador';
+$string['convocatoria_status_open'] = 'Abierta';
+$string['convocatoria_status_closed'] = 'Cerrada';
+$string['convocatoria_status_archived'] = 'Archivada';
+$string['convocatoriacreated'] = 'Convocatoria creada exitosamente';
+$string['convocatoriaupdated'] = 'Convocatoria actualizada exitosamente';
+$string['convocatoriadeleted'] = 'Convocatoria eliminada exitosamente';
+$string['noconvocatorias'] = 'No se encontraron convocatorias';
+$string['convocatorianotfound'] = 'Convocatoria no encontrada';
+$string['convocatoriaactive'] = 'Convocatorias activas';
+$string['convocatoriaclosed'] = 'Convocatorias cerradas';
+$string['viewconvocatoria'] = 'Ver convocatoria';
+$string['convocatoriadetails'] = 'Detalles de la convocatoria';
+$string['selectconvocatoria'] = 'Seleccione una convocatoria';
+$string['convocatoriahelp'] = 'Una convocatoria agrupa vacantes relacionadas y define el período durante el cual se aceptan postulaciones.';
+$string['convocatoriavacancycount'] = '{$a} vacantes';
+$string['createvacancyinconvocatoria'] = 'Agregar vacante a esta convocatoria';
+$string['confirmdeletevconvocatoria'] = '¿Está seguro de eliminar esta convocatoria? Las vacantes asociadas no serán eliminadas.';
+$string['convocatoriawithvacancies'] = 'Esta convocatoria tiene {$a} vacantes. Serán desvinculadas pero no eliminadas.';
+$string['openconvocatoria'] = 'Abrir convocatoria';
+$string['closeconvocatoria'] = 'Cerrar convocatoria';
+$string['archiveconvocatoria'] = 'Archivar convocatoria';
+$string['convocatoriaopened'] = 'Convocatoria abierta exitosamente';
+$string['convocatoriaclosedmsg'] = 'Convocatoria cerrada exitosamente';
+$string['convocatoriaarchived'] = 'Convocatoria archivada exitosamente';
+$string['error:convocatoriahasnovacancies'] = 'No se puede abrir una convocatoria sin vacantes';
+$string['error:convocatoriadatesinvalid'] = 'La fecha de cierre debe ser posterior a la fecha de inicio';
+$string['error:convocatoriacodeexists'] = 'Ya existe una convocatoria con este código';
+
 // External links.
 $string['externallinkinfo'] = 'Debe descargar este certificado desde el sitio oficial y subirlo aquí';
 $string['linkantecedentesjudiciales'] = 'Antecedentes Judiciales (Policía Nacional)';
@@ -318,6 +362,8 @@ $string['quickactions'] = 'Acciones rápidas';
 
 // Configuration.
 $string['generalsettings'] = 'Configuración general';
+$string['enableselfregistration'] = 'Habilitar auto-registro del plugin';
+$string['enableselfregistration_desc'] = 'Permitir a los usuarios registrarse a través del Job Board incluso cuando el auto-registro global de Moodle está deshabilitado. Los usuarios se registrarán usando confirmación por correo electrónico.';
 $string['documentsettings'] = 'Configuración de documentos';
 $string['notificationsettings'] = 'Configuración de notificaciones';
 $string['workflowsettings'] = 'Configuración de flujo de trabajo';

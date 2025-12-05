@@ -48,9 +48,14 @@ if (isloggedin() && !isguestuser()) {
     }
 }
 
-// Check if self-registration is allowed.
-if (empty($CFG->registerauth) || $CFG->registerauth === 'none') {
-    throw new moodle_exception('registrationdisabled', 'local_jobboard');
+// Check if plugin-specific self-registration is enabled.
+// This allows registration through the jobboard even when global registration is disabled.
+$pluginselfreg = get_config('local_jobboard', 'enable_self_registration');
+if (empty($pluginselfreg)) {
+    // Fallback to Moodle's global setting.
+    if (empty($CFG->registerauth) || $CFG->registerauth === 'none') {
+        throw new moodle_exception('registrationdisabled', 'local_jobboard');
+    }
 }
 
 // Parameters.
@@ -271,7 +276,8 @@ function create_user_from_form($data, $isiomad) {
 
     // Build user object with all Moodle standard fields.
     $user = new stdClass();
-    $user->auth = $CFG->registerauth;
+    // Use Moodle's registerauth if set, otherwise default to 'email' for plugin-specific registration.
+    $user->auth = (!empty($CFG->registerauth) && $CFG->registerauth !== 'none') ? $CFG->registerauth : 'email';
     $user->confirmed = 0; // Requires email confirmation.
     $user->mnethostid = $CFG->mnet_localhost_id;
 

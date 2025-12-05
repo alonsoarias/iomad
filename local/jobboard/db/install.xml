@@ -19,6 +19,7 @@
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Associated Moodle course"/>
         <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Associated Moodle category"/>
         <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Iomad company/tenant ID"/>
+        <FIELD NAME="convocatoriaid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Parent convocatoria ID"/>
         <FIELD NAME="opendate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy opening date (timestamp)"/>
         <FIELD NAME="closedate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy closing date (timestamp)"/>
         <FIELD NAME="positions" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Number of available positions"/>
@@ -37,11 +38,13 @@
         <KEY NAME="categoryid" TYPE="foreign" FIELDS="categoryid" REFTABLE="course_categories" REFFIELDS="id"/>
         <KEY NAME="createdby" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id"/>
         <KEY NAME="modifiedby" TYPE="foreign" FIELDS="modifiedby" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="convocatoriaid_fk" TYPE="foreign" FIELDS="convocatoriaid" REFTABLE="local_jobboard_convocatoria" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="code_unique" UNIQUE="true" FIELDS="code"/>
         <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
         <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>
+        <INDEX NAME="convocatoriaid_idx" UNIQUE="false" FIELDS="convocatoriaid"/>
         <INDEX NAME="opendate_idx" UNIQUE="false" FIELDS="opendate"/>
         <INDEX NAME="closedate_idx" UNIQUE="false" FIELDS="closedate"/>
         <INDEX NAME="company_status_idx" UNIQUE="false" FIELDS="companyid, status"/>
@@ -598,6 +601,39 @@
         <INDEX NAME="education_idx" UNIQUE="false" FIELDS="education_level"/>
         <INDEX NAME="experience_idx" UNIQUE="false" FIELDS="experience_years"/>
         <INDEX NAME="profile_complete_idx" UNIQUE="false" FIELDS="profile_complete"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 24: Convocatorias (Calls/Campaigns) -->
+    <TABLE NAME="local_jobboard_convocatoria" COMMENT="Job calls/campaigns that group related vacancies">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Unique convocatoria code"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Convocatoria title/name"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Full description"/>
+        <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Start date for applications"/>
+        <FIELD NAME="enddate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="End date for applications"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" COMMENT="Status: draft, open, closed, archived"/>
+        <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD company ID"/>
+        <FIELD NAME="departmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD department ID"/>
+        <FIELD NAME="publicationtype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="internal" SEQUENCE="false" COMMENT="Publication type: public or internal"/>
+        <FIELD NAME="terms" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Terms and conditions for this convocatoria"/>
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="createdby_fk" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="modifiedby_fk" TYPE="foreign" FIELDS="modifiedby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="code_unique" UNIQUE="true" FIELDS="code"/>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
+        <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>
+        <INDEX NAME="dates_idx" UNIQUE="false" FIELDS="startdate, enddate"/>
+        <INDEX NAME="publicationtype_idx" UNIQUE="false" FIELDS="publicationtype"/>
       </INDEXES>
     </TABLE>
   </TABLES>

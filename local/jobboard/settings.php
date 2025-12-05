@@ -64,11 +64,26 @@ if ($hassiteconfig) {
         'local/jobboard:manageapitokens'
     ));
 
+    $ADMIN->add('local_jobboard_category', new admin_externalpage(
+        'local_jobboard_convocatorias',
+        get_string('manageconvocatorias', 'local_jobboard'),
+        new moodle_url('/local/jobboard/admin/convocatorias.php'),
+        'local/jobboard:createvacancy'
+    ));
+
     // General settings header.
     $settings->add(new admin_setting_heading(
         'local_jobboard/generalheading',
         get_string('generalsettings', 'local_jobboard'),
         ''
+    ));
+
+    // Enable plugin-specific self-registration.
+    $settings->add(new admin_setting_configcheckbox(
+        'local_jobboard/enable_self_registration',
+        get_string('enableselfregistration', 'local_jobboard'),
+        get_string('enableselfregistration_desc', 'local_jobboard'),
+        1
     ));
 
     // Institution name.
