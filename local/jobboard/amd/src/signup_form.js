@@ -63,13 +63,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                 }));
             });
 
-            // Fetch departments via AJAX.
-            Ajax.call([{
-                methodname: 'local_jobboard_get_departments',
-                args: {
+            // Fetch departments via AJAX endpoint.
+            $.ajax({
+                url: M.cfg.wwwroot + '/local/jobboard/ajax/get_departments.php',
+                method: 'GET',
+                data: {
                     companyid: parseInt(companyId, 10)
-                }
-            }])[0].done(function(departments) {
+                },
+                dataType: 'json'
+            }).done(function(response) {
                 departmentSelect.empty();
                 departmentSelect.prop('disabled', false);
 
@@ -81,8 +83,23 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                     }));
 
                     // Add department options.
-                    if (departments && departments.length > 0) {
-                        $.each(departments, function(index, dept) {
+                    if (response.success && response.departments && response.departments.length > 0) {
+                        $.each(response.departments, function(index, dept) {
+                            departmentSelect.append($('<option>', {
+                                value: dept.id,
+                                text: dept.name
+                            }));
+                        });
+                    }
+                }).fail(function() {
+                    // Fallback if string not found.
+                    departmentSelect.append($('<option>', {
+                        value: 0,
+                        text: 'Select department...'
+                    }));
+
+                    if (response.success && response.departments && response.departments.length > 0) {
+                        $.each(response.departments, function(index, dept) {
                             departmentSelect.append($('<option>', {
                                 value: dept.id,
                                 text: dept.name
@@ -91,7 +108,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                     }
                 });
 
-            }).fail(function(ex) {
+            }).fail(function(jqXHR, textStatus, errorThrown) {
                 departmentSelect.empty();
                 departmentSelect.prop('disabled', false);
                 Str.get_string('selectdepartment', 'local_jobboard').done(function(str) {
@@ -99,8 +116,14 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         value: 0,
                         text: str
                     }));
+                }).fail(function() {
+                    departmentSelect.append($('<option>', {
+                        value: 0,
+                        text: 'Select department...'
+                    }));
                 });
-                Notification.exception(ex);
+                // eslint-disable-next-line no-console
+                console.error('Error loading departments:', textStatus, errorThrown);
             });
         };
 
