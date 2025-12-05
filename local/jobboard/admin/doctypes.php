@@ -59,6 +59,7 @@ if (empty($doctypes)) {
         get_string('name'),
         get_string('category', 'local_jobboard'),
         get_string('required', 'local_jobboard'),
+        get_string('conditions', 'local_jobboard'),
         get_string('status'),
         get_string('actions'),
     ];
@@ -73,6 +74,43 @@ if (empty($doctypes)) {
         $requiredbadge = $isrequired
             ? '<span class="badge badge-primary">' . get_string('yes') . '</span>'
             : '<span class="badge badge-secondary">' . get_string('no') . '</span>';
+
+        // Build conditions display.
+        $conditions = [];
+
+        // Gender condition.
+        if (!empty($dt->gender_condition)) {
+            if ($dt->gender_condition === 'M') {
+                $conditions[] = '<span class="badge badge-info">' . get_string('doc_condition_men_only', 'local_jobboard') . '</span>';
+            } else if ($dt->gender_condition === 'F') {
+                $conditions[] = '<span class="badge badge-info">' . get_string('doc_condition_women_only', 'local_jobboard') . '</span>';
+            }
+        }
+
+        // Profession exemption.
+        if (!empty($dt->profession_exempt)) {
+            $exemptlist = json_decode($dt->profession_exempt, true);
+            if (is_array($exemptlist) && !empty($exemptlist)) {
+                $exemptnames = [];
+                foreach ($exemptlist as $edu) {
+                    $stringkey = 'signup_edu_' . $edu;
+                    if (get_string_manager()->string_exists($stringkey, 'local_jobboard')) {
+                        $exemptnames[] = get_string($stringkey, 'local_jobboard');
+                    } else {
+                        $exemptnames[] = ucfirst($edu);
+                    }
+                }
+                $conditions[] = '<span class="badge badge-warning">' .
+                    get_string('doc_condition_profession_exempt', 'local_jobboard', implode(', ', $exemptnames)) . '</span>';
+            }
+        }
+
+        // ISER exemption.
+        if (!empty($dt->iserexempted)) {
+            $conditions[] = '<span class="badge badge-secondary">' . get_string('doc_condition_iser_exempt', 'local_jobboard') . '</span>';
+        }
+
+        $conditionshtml = !empty($conditions) ? implode('<br>', $conditions) : '-';
 
         $toggleurl = new moodle_url($pageurl, ['action' => 'toggle', 'id' => $dt->id, 'sesskey' => sesskey()]);
         $togglelabel = $dt->enabled ? get_string('disable') : get_string('enable');
@@ -91,6 +129,7 @@ if (empty($doctypes)) {
             $name,
             $category,
             $requiredbadge,
+            $conditionshtml,
             $statusbadge,
             $actions,
         ];

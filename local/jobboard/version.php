@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120518;  // Apply modal popup and profile update flow.
+$plugin->version = 2025120519;  // Conditional document types: gender, profession, ISER exemption.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.5-beta';
+$plugin->release = '1.9.6-beta';

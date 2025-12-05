@@ -351,6 +351,9 @@
         <FIELD NAME="externalurl" TYPE="char" LENGTH="512" NOTNULL="false" SEQUENCE="false" COMMENT="External URL where to obtain the document"/>
         <FIELD NAME="isrequired" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Document required for standard applications"/>
         <FIELD NAME="iserexempted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Exempted for ISER historic personnel"/>
+        <FIELD NAME="gender_condition" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Gender condition: M=men only, F=women only, null=all"/>
+        <FIELD NAME="profession_exempt" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON array of education types exempt from this requirement"/>
+        <FIELD NAME="category" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Document category for grouping"/>
         <FIELD NAME="defaultmaxagedays" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="sortorder" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
@@ -365,6 +368,8 @@
         <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
         <INDEX NAME="isrequired_idx" UNIQUE="false" FIELDS="isrequired"/>
         <INDEX NAME="iserexempted_idx" UNIQUE="false" FIELDS="iserexempted"/>
+        <INDEX NAME="gender_idx" UNIQUE="false" FIELDS="gender_condition"/>
+        <INDEX NAME="category_idx" UNIQUE="false" FIELDS="category"/>
       </INDEXES>
     </TABLE>
 

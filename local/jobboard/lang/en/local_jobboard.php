@@ -736,6 +736,22 @@ $string['doctype_antecedentes_policia'] = 'Criminal Background (National Police)
 $string['doctype_rnmc'] = 'National Registry of Corrective Measures';
 $string['doctype_certificado_medico'] = 'Medical Certificate';
 
+// Document categories.
+$string['doccategory_identification'] = 'Identification Documents';
+$string['doccategory_academic'] = 'Academic Documents';
+$string['doccategory_employment'] = 'Employment Documents';
+$string['doccategory_financial'] = 'Financial Documents';
+$string['doccategory_health'] = 'Health and Social Security';
+$string['doccategory_legal'] = 'Legal Background Checks';
+$string['doccategory_other'] = 'Other Documents';
+
+// Document conditional messages.
+$string['conditions'] = 'Conditions';
+$string['doc_condition_men_only'] = 'Required only for men';
+$string['doc_condition_women_only'] = 'Required only for women';
+$string['doc_condition_profession_exempt'] = 'Not required for: {$a}';
+$string['doc_condition_iser_exempt'] = 'Not required for previous ISER employees';
+
 // ==========================================================================
 // Additional form strings - Application Form.
 // ==========================================================================

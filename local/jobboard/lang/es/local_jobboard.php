@@ -586,6 +586,22 @@ $string['doctype_rnmc'] = 'Registro Medidas Correctivas';
 $string['doctype_sijin'] = 'Certificado SIJIN';
 $string['doctype_certificado_medico'] = 'Certificado Médico';
 
+// Categorías de documentos.
+$string['doccategory_identification'] = 'Documentos de Identificación';
+$string['doccategory_academic'] = 'Documentos Académicos';
+$string['doccategory_employment'] = 'Documentos Laborales';
+$string['doccategory_financial'] = 'Documentos Financieros';
+$string['doccategory_health'] = 'Salud y Seguridad Social';
+$string['doccategory_legal'] = 'Antecedentes Legales';
+$string['doccategory_other'] = 'Otros Documentos';
+
+// Mensajes condicionales de documentos.
+$string['conditions'] = 'Condiciones';
+$string['doc_condition_men_only'] = 'Requerido solo para hombres';
+$string['doc_condition_women_only'] = 'Requerido solo para mujeres';
+$string['doc_condition_profession_exempt'] = 'No requerido para: {$a}';
+$string['doc_condition_iser_exempt'] = 'No requerido para empleados previos del ISER';
+
 // Manage applications strings.
 $string['manageapplications'] = 'Gestionar postulaciones';
 $string['backtomanage'] = 'Volver a gestión';

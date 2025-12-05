@@ -704,3 +704,148 @@ function local_jobboard_validate_file_type(stored_file $file, ?array $allowedfor
 
     return true;
 }
+
+/**
+ * Get all enabled document types.
+ *
+ * @return array Array of document type objects.
+ */
+function local_jobboard_get_all_doctypes(): array {
+    global $DB;
+
+    return $DB->get_records('local_jobboard_doctype', ['enabled' => 1], 'sortorder ASC');
+}
+
+/**
+ * Get required document types for an applicant based on their profile.
+ *
+ * This function filters document types based on:
+ * - Gender condition (e.g., libreta_militar only for men)
+ * - Profession exemptions (e.g., tarjeta_profesional not for licenciados)
+ * - ISER exemption status (documents already in file for previous ISER employees)
+ *
+ * @param string|null $gender The applicant's gender (M, F, O, N).
+ * @param string|null $educationlevel The applicant's education level code.
+ * @param bool $isiserexempted Whether the applicant is ISER exempted.
+ * @return array Array of document type objects that are required for this applicant.
+ */
+function local_jobboard_get_required_doctypes_for_applicant(
+    ?string $gender = null,
+    ?string $educationlevel = null,
+    bool $isiserexempted = false
+): array {
+    global $DB;
+
+    $doctypes = local_jobboard_get_all_doctypes();
+    $required = [];
+
+    foreach ($doctypes as $doctype) {
+        // Check if document is required at all.
+        if (empty($doctype->isrequired)) {
+            continue;
+        }
+
+        // Check gender condition.
+        if (!empty($doctype->gender_condition)) {
+            // If gender condition is set, check if it matches.
+            if ($gender !== $doctype->gender_condition) {
+                // Document not required for this gender.
+                continue;
+            }
+        }
+
+        // Check profession exemption.
+        if (!empty($doctype->profession_exempt) && !empty($educationlevel)) {
+            $exemptprofessions = json_decode($doctype->profession_exempt, true);
+            if (is_array($exemptprofessions) && in_array($educationlevel, $exemptprofessions)) {
+                // Document not required for this profession.
+                continue;
+            }
+        }
+
+        // Check ISER exemption.
+        if ($isiserexempted && !empty($doctype->iserexempted)) {
+            // Document is exempted for ISER previous employees.
+            continue;
+        }
+
+        $required[$doctype->code] = $doctype;
+    }
+
+    return $required;
+}
+
+/**
+ * Get document types grouped by category.
+ *
+ * @param string|null $gender The applicant's gender for filtering.
+ * @param string|null $educationlevel The applicant's education level for filtering.
+ * @param bool $isiserexempted Whether the applicant is ISER exempted.
+ * @return array Associative array of category => doctypes.
+ */
+function local_jobboard_get_doctypes_by_category(
+    ?string $gender = null,
+    ?string $educationlevel = null,
+    bool $isiserexempted = false
+): array {
+    $doctypes = local_jobboard_get_required_doctypes_for_applicant($gender, $educationlevel, $isiserexempted);
+    $grouped = [];
+
+    foreach ($doctypes as $doctype) {
+        $category = $doctype->category ?? 'other';
+        if (!isset($grouped[$category])) {
+            $grouped[$category] = [];
+        }
+        $grouped[$category][] = $doctype;
+    }
+
+    // Sort categories in a logical order.
+    $categoryorder = ['identification', 'academic', 'employment', 'financial', 'health', 'legal', 'other'];
+    $sorted = [];
+    foreach ($categoryorder as $cat) {
+        if (isset($grouped[$cat])) {
+            $sorted[$cat] = $grouped[$cat];
+        }
+    }
+    // Add any remaining categories not in the predefined order.
+    foreach ($grouped as $cat => $docs) {
+        if (!isset($sorted[$cat])) {
+            $sorted[$cat] = $docs;
+        }
+    }
+
+    return $sorted;
+}
+
+/**
+ * Get the localized category name for a document category.
+ *
+ * @param string $category The category code.
+ * @return string The localized category name.
+ */
+function local_jobboard_get_category_name(string $category): string {
+    $stringkey = 'doccategory_' . $category;
+    if (get_string_manager()->string_exists($stringkey, 'local_jobboard')) {
+        return get_string($stringkey, 'local_jobboard');
+    }
+    return ucfirst($category);
+}
+
+/**
+ * Check if a specific document is required for an applicant.
+ *
+ * @param string $doccode The document type code.
+ * @param string|null $gender The applicant's gender.
+ * @param string|null $educationlevel The applicant's education level.
+ * @param bool $isiserexempted Whether the applicant is ISER exempted.
+ * @return bool True if the document is required.
+ */
+function local_jobboard_is_document_required(
+    string $doccode,
+    ?string $gender = null,
+    ?string $educationlevel = null,
+    bool $isiserexempted = false
+): bool {
+    $required = local_jobboard_get_required_doctypes_for_applicant($gender, $educationlevel, $isiserexempted);
+    return isset($required[$doccode]);
+}

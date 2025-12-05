@@ -647,5 +647,60 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120517, 'local', 'jobboard');
     }
 
+    // Phase 9.5: Add conditional fields to doctype table for gender/profession conditions.
+    if ($oldversion < 2025120518) {
+
+        // Add new fields to local_jobboard_doctype table.
+        $table = new xmldb_table('local_jobboard_doctype');
+
+        // Field for gender condition: 'M' = men only, 'F' = women only, null = all.
+        $field = new xmldb_field('gender_condition', XMLDB_TYPE_CHAR, '1', null, null, null, null, 'iserexempted');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Field for profession exemptions (JSON array of education types exempt).
+        $field = new xmldb_field('profession_exempt', XMLDB_TYPE_TEXT, null, null, null, null, null, 'gender_condition');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Field for category grouping.
+        $field = new xmldb_field('category', XMLDB_TYPE_CHAR, '50', null, null, null, null, 'profession_exempt');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Update existing document types with correct conditions.
+        // libreta_militar: only for men.
+        $DB->set_field('local_jobboard_doctype', 'gender_condition', 'M', ['code' => 'libreta_militar']);
+
+        // tarjeta_profesional: not required for licenciados.
+        $DB->set_field('local_jobboard_doctype', 'profession_exempt', json_encode(['licenciatura']), ['code' => 'tarjeta_profesional']);
+
+        // Set iserexempted flag for documents that ISER previous employees don't need.
+        $iserexempteddocs = ['cedula', 'titulo_academico', 'tarjeta_profesional', 'libreta_militar', 'certificacion_laboral'];
+        foreach ($iserexempteddocs as $code) {
+            $DB->set_field('local_jobboard_doctype', 'iserexempted', 1, ['code' => $code]);
+        }
+
+        // Set categories for better organization.
+        $categories = [
+            'identification' => ['cedula', 'libreta_militar'],
+            'academic' => ['titulo_academico', 'tarjeta_profesional', 'formacion_complementaria'],
+            'employment' => ['sigep', 'bienes_rentas', 'certificacion_laboral'],
+            'financial' => ['rut', 'cuenta_bancaria'],
+            'health' => ['eps', 'pension'],
+            'legal' => ['antecedentes_disciplinarios', 'antecedentes_fiscales', 'antecedentes_judiciales', 'medidas_correctivas', 'inhabilidades', 'redam'],
+        ];
+        foreach ($categories as $category => $codes) {
+            foreach ($codes as $code) {
+                $DB->set_field('local_jobboard_doctype', 'category', $category, ['code' => $code]);
+            }
+        }
+
+        upgrade_plugin_savepoint(true, 2025120518, 'local', 'jobboard');
+    }
+
     return true;
 }
