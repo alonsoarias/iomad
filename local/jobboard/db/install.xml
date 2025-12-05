@@ -21,6 +21,8 @@
         <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Iomad company/tenant ID"/>
         <FIELD NAME="departmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD department ID"/>
         <FIELD NAME="convocatoriaid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Parent convocatoria ID"/>
+        <FIELD NAME="isextemporaneous" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 if vacancy has dates different from convocatoria"/>
+        <FIELD NAME="extemporaneousreason" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Reason for extemporaneous dates"/>
         <FIELD NAME="opendate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy opening date (timestamp)"/>
         <FIELD NAME="closedate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy closing date (timestamp)"/>
         <FIELD NAME="positions" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Number of available positions"/>

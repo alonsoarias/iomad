@@ -88,14 +88,47 @@ if ($form->is_cancelled()) {
 // Handle submission.
 if ($data = $form->get_data()) {
     try {
+        // Handle extemporaneous logic: use convocatoria dates if not extemporaneous.
+        if (!empty($data->convocatoriaid)) {
+            $convocatoria = local_jobboard_get_convocatoria($data->convocatoriaid);
+            if ($convocatoria) {
+                if (empty($data->isextemporaneous)) {
+                    // Use convocatoria dates.
+                    $data->opendate = $convocatoria->startdate;
+                    $data->closedate = $convocatoria->enddate;
+                    $data->isextemporaneous = 0;
+                    $data->extemporaneousreason = '';
+                } else {
+                    $data->isextemporaneous = 1;
+                }
+            }
+        } else {
+            // No convocatoria - clear extemporaneous fields.
+            $data->isextemporaneous = 0;
+            $data->extemporaneousreason = '';
+        }
+
         if ($id) {
             // Update existing vacancy.
             $vacancy->update($data);
             $message = get_string('vacancyupdated', 'local_jobboard');
+
+            // Audit log for update.
+            \local_jobboard\audit::log('vacancy_updated', 'vacancy', $vacancy->id, [
+                'isextemporaneous' => $data->isextemporaneous,
+                'extemporaneousreason' => $data->extemporaneousreason ?? '',
+            ]);
         } else {
             // Create new vacancy.
             $vacancy = \local_jobboard\vacancy::create($data);
             $message = get_string('vacancycreated', 'local_jobboard');
+
+            // Audit log for creation.
+            \local_jobboard\audit::log('vacancy_created', 'vacancy', $vacancy->id, [
+                'convocatoriaid' => $data->convocatoriaid ?? 0,
+                'isextemporaneous' => $data->isextemporaneous,
+                'extemporaneousreason' => $data->extemporaneousreason ?? '',
+            ]);
         }
 
         redirect(

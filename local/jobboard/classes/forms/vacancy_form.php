@@ -101,6 +101,48 @@ class vacancy_form extends \moodleform {
         // Header: Dates and Positions.
         $mform->addElement('header', 'datepositions', get_string('opendate', 'local_jobboard'));
 
+        // Get convocatoria info if set.
+        $convocatoriarecord = null;
+        $hasconvocatoria = false;
+        if ($defaultconvocatoriaid > 0) {
+            $convocatoriarecord = \local_jobboard_get_convocatoria($defaultconvocatoriaid);
+            $hasconvocatoria = !empty($convocatoriarecord);
+        } else if ($isedit && !empty($vacancy->convocatoriaid)) {
+            $convocatoriarecord = \local_jobboard_get_convocatoria($vacancy->convocatoriaid);
+            $hasconvocatoria = !empty($convocatoriarecord);
+        }
+
+        // If vacancy belongs to a convocatoria, show info and extemporaneous toggle.
+        if ($hasconvocatoria && $convocatoriarecord) {
+            // Show convocatoria dates info.
+            $convdates = userdate($convocatoriarecord->startdate, '%d/%m/%Y %H:%M') . ' - ' .
+                         userdate($convocatoriarecord->enddate, '%d/%m/%Y %H:%M');
+            $mform->addElement('static', 'convocatoria_dates_info',
+                get_string('convocatoriadates', 'local_jobboard'),
+                \html_writer::tag('strong', s($convocatoriarecord->name)) . '<br>' .
+                \html_writer::tag('span', $convdates, ['class' => 'badge badge-info'])
+            );
+
+            // Extemporaneous toggle.
+            $mform->addElement('advcheckbox', 'isextemporaneous',
+                get_string('isextemporaneous', 'local_jobboard'),
+                get_string('isextemporaneous_desc', 'local_jobboard'),
+                ['id' => 'id_isextemporaneous'],
+                [0, 1]
+            );
+            $mform->addHelpButton('isextemporaneous', 'isextemporaneous', 'local_jobboard');
+            $mform->setDefault('isextemporaneous', 0);
+
+            // Extemporaneous reason (required when extemporaneous is checked).
+            $mform->addElement('textarea', 'extemporaneousreason',
+                get_string('extemporaneousreason', 'local_jobboard'),
+                ['rows' => 3, 'cols' => 50]
+            );
+            $mform->setType('extemporaneousreason', PARAM_TEXT);
+            $mform->addHelpButton('extemporaneousreason', 'extemporaneousreason', 'local_jobboard');
+            $mform->hideIf('extemporaneousreason', 'isextemporaneous', 'eq', 0);
+        }
+
         // Opening date.
         $mform->addElement('date_time_selector', 'opendate', get_string('opendate', 'local_jobboard'));
         $mform->addRule('opendate', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
@@ -110,6 +152,18 @@ class vacancy_form extends \moodleform {
         $mform->addElement('date_time_selector', 'closedate', get_string('closedate', 'local_jobboard'));
         $mform->addRule('closedate', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
         $mform->addHelpButton('closedate', 'closedate', 'local_jobboard');
+
+        // Set default dates from convocatoria if not editing and has convocatoria.
+        if ($hasconvocatoria && $convocatoriarecord && !$isedit) {
+            $mform->setDefault('opendate', $convocatoriarecord->startdate);
+            $mform->setDefault('closedate', $convocatoriarecord->enddate);
+        }
+
+        // Hide date fields when using convocatoria dates (non-extemporaneous).
+        if ($hasconvocatoria) {
+            $mform->hideIf('opendate', 'isextemporaneous', 'eq', 0);
+            $mform->hideIf('closedate', 'isextemporaneous', 'eq', 0);
+        }
 
         // Number of positions.
         $mform->addElement('text', 'positions', get_string('positions', 'local_jobboard'), ['size' => 5]);
@@ -253,10 +307,34 @@ class vacancy_form extends \moodleform {
             $errors['code'] = get_string('error:codeexists', 'local_jobboard');
         }
 
-        // Validate dates.
-        if (!empty($data['opendate']) && !empty($data['closedate'])) {
-            if ($data['closedate'] <= $data['opendate']) {
-                $errors['closedate'] = get_string('error:invaliddates', 'local_jobboard');
+        // Get convocatoria if set.
+        $convocatoriaid = !empty($data['convocatoriaid']) ? (int)$data['convocatoriaid'] : 0;
+        $convocatoriarecord = $convocatoriaid ? \local_jobboard_get_convocatoria($convocatoriaid) : null;
+
+        // Handle extemporaneous validation.
+        $isextemporaneous = !empty($data['isextemporaneous']);
+
+        if ($convocatoriarecord && $isextemporaneous) {
+            // Extemporaneous reason is required when enabled.
+            if (empty(trim($data['extemporaneousreason'] ?? ''))) {
+                $errors['extemporaneousreason'] = get_string('error:extemporaneousreasonrequired', 'local_jobboard');
+            }
+        }
+
+        // Validate dates - use convocatoria dates if not extemporaneous.
+        $opendate = $data['opendate'] ?? 0;
+        $closedate = $data['closedate'] ?? 0;
+
+        if ($convocatoriarecord && !$isextemporaneous) {
+            // Use convocatoria dates - no validation needed here as they come from convocatoria.
+            $opendate = $convocatoriarecord->startdate;
+            $closedate = $convocatoriarecord->enddate;
+        } else {
+            // Validate custom dates.
+            if (!empty($opendate) && !empty($closedate)) {
+                if ($closedate <= $opendate) {
+                    $errors['closedate'] = get_string('error:invaliddates', 'local_jobboard');
+                }
             }
         }
 
@@ -320,6 +398,8 @@ class vacancy_form extends \moodleform {
         $data->companyid = $vacancy->companyid;
         $data->departmentid = $vacancy->departmentid ?? 0;
         $data->convocatoriaid = $vacancy->convocatoriaid ?? 0;
+        $data->isextemporaneous = $vacancy->isextemporaneous ?? 0;
+        $data->extemporaneousreason = $vacancy->extemporaneousreason ?? '';
         $data->publicationtype = $vacancy->publicationtype ?? 'public';
         $data->opendate = $vacancy->opendate;
         $data->closedate = $vacancy->closedate;

@@ -781,5 +781,32 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120520, 'local', 'jobboard');
     }
 
+    // Version 2025120527: Add extemporaneous vacancy support.
+    if ($oldversion < 2025120527) {
+
+        // Add isextemporaneous and extemporaneousreason fields to vacancy table.
+        $table = new xmldb_table('local_jobboard_vacancy');
+
+        // isextemporaneous: 0 = uses convocatoria dates, 1 = uses custom dates.
+        $field = new xmldb_field('isextemporaneous', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'convocatoriaid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Reason for using extemporaneous dates.
+        $field = new xmldb_field('extemporaneousreason', XMLDB_TYPE_TEXT, null, null, null, null, null, 'isextemporaneous');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add index for extemporaneous filter.
+        $index = new xmldb_index('isextemporaneous_idx', XMLDB_INDEX_NOTUNIQUE, ['isextemporaneous']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        upgrade_plugin_savepoint(true, 2025120527, 'local', 'jobboard');
+    }
+
     return true;
 }

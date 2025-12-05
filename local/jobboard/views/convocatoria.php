@@ -98,6 +98,9 @@ if ($data = $form->get_data()) {
         }
 
         if ($convocatoria) {
+            // Store previous values for audit.
+            $previousdata = clone $convocatoria;
+
             // Update existing convocatoria.
             $convocatoria->code = $data->code;
             $convocatoria->name = $data->name;
@@ -115,6 +118,18 @@ if ($data = $form->get_data()) {
             }
 
             $DB->update_record('local_jobboard_convocatoria', $convocatoria);
+
+            // Audit log for update.
+            \local_jobboard\audit::log('convocatoria_updated', 'convocatoria', $convocatoria->id, [
+                'code' => $convocatoria->code,
+                'name' => $convocatoria->name,
+                'previous_startdate' => $previousdata->startdate,
+                'new_startdate' => $convocatoria->startdate,
+                'previous_enddate' => $previousdata->enddate,
+                'new_enddate' => $convocatoria->enddate,
+                'status' => $convocatoria->status,
+            ]);
+
             $message = get_string('convocatoriaupdated', 'local_jobboard');
 
             // Redirect back to edit page to continue editing.
@@ -144,6 +159,17 @@ if ($data = $form->get_data()) {
             }
 
             $newid = $DB->insert_record('local_jobboard_convocatoria', $newconvocatoria);
+
+            // Audit log for creation.
+            \local_jobboard\audit::log('convocatoria_created', 'convocatoria', $newid, [
+                'code' => $newconvocatoria->code,
+                'name' => $newconvocatoria->name,
+                'startdate' => $newconvocatoria->startdate,
+                'enddate' => $newconvocatoria->enddate,
+                'publicationtype' => $newconvocatoria->publicationtype,
+                'companyid' => $newconvocatoria->companyid ?? null,
+            ]);
+
             $message = get_string('convocatoriacreated', 'local_jobboard');
 
             // Redirect to the new convocatoria to add vacancies.

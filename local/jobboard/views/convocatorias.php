@@ -54,10 +54,23 @@ if ($action && $convocatoriaid && confirm_sesskey()) {
         case 'delete':
             // Only allow delete for draft or archived convocatorias.
             if (in_array($convocatoria->status, ['draft', 'archived'])) {
+                // Count vacancies to log.
+                $vacancycount = $DB->count_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid]);
+
                 // Unlink vacancies from this convocatoria (don't delete them).
                 $DB->set_field('local_jobboard_vacancy', 'convocatoriaid', null, ['convocatoriaid' => $convocatoriaid]);
+
                 // Delete the convocatoria.
                 $DB->delete_records('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
+
+                // Audit log.
+                \local_jobboard\audit::log('convocatoria_deleted', 'convocatoria', $convocatoriaid, [
+                    'code' => $convocatoria->code,
+                    'name' => $convocatoria->name,
+                    'previous_status' => $convocatoria->status,
+                    'vacancies_unlinked' => $vacancycount,
+                ]);
+
                 redirect($baseurl, get_string('convocatoriadeleted', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
             } else {
                 redirect($baseurl, get_string('error:cannotdeleteconvocatoria', 'local_jobboard'), null, \core\output\notification::NOTIFY_ERROR);
@@ -71,38 +84,76 @@ if ($action && $convocatoriaid && confirm_sesskey()) {
                 redirect($baseurl, get_string('error:convocatoriahasnovacancies', 'local_jobboard'), null, \core\output\notification::NOTIFY_ERROR);
             }
 
+            $previousstatus = $convocatoria->status;
+
             // Update status and publish all vacancies.
             $convocatoria->status = 'open';
             $convocatoria->timemodified = time();
             $convocatoria->modifiedby = $USER->id;
             $DB->update_record('local_jobboard_convocatoria', $convocatoria);
 
-            // Publish all draft vacancies in this convocatoria.
+            // Publish all draft vacancies in this convocatoria and sync dates.
             $DB->execute("UPDATE {local_jobboard_vacancy}
                           SET status = 'published', opendate = ?, closedate = ?, timemodified = ?
-                          WHERE convocatoriaid = ? AND status = 'draft'",
+                          WHERE convocatoriaid = ? AND status = 'draft' AND isextemporaneous = 0",
                 [$convocatoria->startdate, $convocatoria->enddate, time(), $convocatoriaid]);
+
+            // For extemporaneous vacancies, only change status (keep their custom dates).
+            $DB->execute("UPDATE {local_jobboard_vacancy}
+                          SET status = 'published', timemodified = ?
+                          WHERE convocatoriaid = ? AND status = 'draft' AND isextemporaneous = 1",
+                [time(), $convocatoriaid]);
+
+            // Audit log.
+            \local_jobboard\audit::log('convocatoria_opened', 'convocatoria', $convocatoriaid, [
+                'code' => $convocatoria->code,
+                'name' => $convocatoria->name,
+                'previous_status' => $previousstatus,
+                'vacancies_published' => $vacancycount,
+                'startdate' => $convocatoria->startdate,
+                'enddate' => $convocatoria->enddate,
+            ]);
 
             redirect($baseurl, get_string('convocatoriaopened', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
             break;
 
         case 'close':
+            $previousstatus = $convocatoria->status;
+
             $convocatoria->status = 'closed';
             $convocatoria->timemodified = time();
             $convocatoria->modifiedby = $USER->id;
             $DB->update_record('local_jobboard_convocatoria', $convocatoria);
 
             // Close all vacancies in this convocatoria.
+            $vacancycount = $DB->count_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid]);
             $DB->set_field('local_jobboard_vacancy', 'status', 'closed', ['convocatoriaid' => $convocatoriaid]);
+
+            // Audit log.
+            \local_jobboard\audit::log('convocatoria_closed', 'convocatoria', $convocatoriaid, [
+                'code' => $convocatoria->code,
+                'name' => $convocatoria->name,
+                'previous_status' => $previousstatus,
+                'vacancies_closed' => $vacancycount,
+            ]);
 
             redirect($baseurl, get_string('convocatoriaclosedmsg', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
             break;
 
         case 'archive':
+            $previousstatus = $convocatoria->status;
+
             $convocatoria->status = 'archived';
             $convocatoria->timemodified = time();
             $convocatoria->modifiedby = $USER->id;
             $DB->update_record('local_jobboard_convocatoria', $convocatoria);
+
+            // Audit log.
+            \local_jobboard\audit::log('convocatoria_archived', 'convocatoria', $convocatoriaid, [
+                'code' => $convocatoria->code,
+                'name' => $convocatoria->name,
+                'previous_status' => $previousstatus,
+            ]);
 
             redirect($baseurl, get_string('convocatoriaarchived', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
             break;

@@ -306,6 +306,17 @@ $string['dates'] = 'Dates';
 $string['vacanciesforconvocatoria'] = 'Vacancies for call';
 $string['backtoconvocatorias'] = 'Back to calls';
 
+// Extemporaneous vacancies.
+$string['isextemporaneous'] = 'Extemporaneous vacancy';
+$string['isextemporaneous_desc'] = 'Enable custom dates different from the call dates';
+$string['isextemporaneous_help'] = 'When enabled, you can set custom opening and closing dates for this vacancy that differ from the parent call dates. A reason must be provided for audit purposes.';
+$string['extemporaneousreason'] = 'Reason for extemporaneous dates';
+$string['extemporaneousreason_help'] = 'Explain why this vacancy needs dates different from the call. This is required for audit and compliance purposes.';
+$string['convocatoriadates'] = 'Call dates';
+$string['error:extemporaneousreasonrequired'] = 'A reason is required when using extemporaneous dates';
+$string['extemporaneousvacancy'] = 'Extemporaneous';
+$string['usingconvocatoriadates'] = 'Using call dates';
+
 // External links.
 $string['externallinkinfo'] = 'You must download this certificate from the official website and upload it here';
 $string['linkantecedentesjudiciales'] = 'Criminal Background (National Police)';

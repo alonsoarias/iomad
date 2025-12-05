@@ -306,6 +306,17 @@ $string['dates'] = 'Fechas';
 $string['vacanciesforconvocatoria'] = 'Vacantes de la convocatoria';
 $string['backtoconvocatorias'] = 'Volver a convocatorias';
 
+// Vacantes extemporáneas.
+$string['isextemporaneous'] = 'Vacante extemporánea';
+$string['isextemporaneous_desc'] = 'Habilitar fechas personalizadas diferentes a las de la convocatoria';
+$string['isextemporaneous_help'] = 'Cuando está habilitado, puede establecer fechas de apertura y cierre personalizadas para esta vacante que difieren de las fechas de la convocatoria. Se requiere una justificación para fines de auditoría.';
+$string['extemporaneousreason'] = 'Justificación de fechas extemporáneas';
+$string['extemporaneousreason_help'] = 'Explique por qué esta vacante necesita fechas diferentes a la convocatoria. Esto es requerido para fines de auditoría y cumplimiento.';
+$string['convocatoriadates'] = 'Fechas de la convocatoria';
+$string['error:extemporaneousreasonrequired'] = 'Se requiere una justificación cuando se usan fechas extemporáneas';
+$string['extemporaneousvacancy'] = 'Extemporánea';
+$string['usingconvocatoriadates'] = 'Usando fechas de la convocatoria';
+
 // External links.
 $string['externallinkinfo'] = 'Debe descargar este certificado desde el sitio oficial y subirlo aquí';
 $string['linkantecedentesjudiciales'] = 'Antecedentes Judiciales (Policía Nacional)';
