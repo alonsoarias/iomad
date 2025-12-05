@@ -60,10 +60,16 @@ class vacancy {
     /** @var string The department. */
     public $department = '';
 
-    /** @var int|null The associated course ID. */
+    /**
+     * @var int|null The associated course ID.
+     * @deprecated Since version 1.9.15. No longer used - vacancies are not linked to courses.
+     */
     public $courseid = null;
 
-    /** @var int|null The associated category ID. */
+    /**
+     * @var int|null The associated category ID.
+     * @deprecated Since version 1.9.15. No longer used.
+     */
     public $categoryid = null;
 
     /** @var int|null The Iomad company ID. */

@@ -66,37 +66,231 @@ $string['jobboard:manageemailtemplates'] = 'Gestionar plantillas de correo';
 
 // Vacancy fields.
 $string['vacancycode'] = 'Código de vacante';
-$string['vacancycode_help'] = 'Código único interno para identificar la vacante';
+$string['vacancycode_help'] = 'Código único interno para identificar la vacante dentro del sistema.
+
+**Formato recomendado:** Use un código alfanumérico corto y descriptivo, por ejemplo:
+- DOC-2025-001 (para docentes)
+- ADM-2025-003 (para administrativos)
+- TEMP-2025-010 (para temporales)
+
+**Importante:**
+- El código debe ser único y no puede repetirse
+- Una vez creada la vacante, el código no puede modificarse
+- Use guiones (-) para separar secciones del código
+- Evite caracteres especiales y espacios';
 $string['vacancytitle'] = 'Título de la vacante';
-$string['vacancytitle_help'] = 'Nombre del cargo o posición';
+$string['vacancytitle_help'] = 'Nombre oficial del cargo o posición que se oferta.
+
+**Recomendaciones:**
+- Sea claro y específico (ej: "Docente de Matemáticas - Jornada Completa")
+- Incluya información relevante como jornada o nivel si aplica
+- Evite abreviaturas que no sean ampliamente conocidas
+- El título será visible públicamente para los postulantes
+
+**Ejemplos correctos:**
+- Docente Catedrático - Programa de Ingeniería de Sistemas
+- Profesional de Apoyo Académico - Facultad de Ciencias
+- Docente Tiempo Completo - Área de Humanidades';
 $string['vacancydescription'] = 'Descripción';
-$string['vacancydescription_help'] = 'Descripción detallada del cargo y sus funciones';
+$string['vacancydescription_help'] = 'Descripción detallada del cargo, funciones y responsabilidades.
+
+**Incluya información sobre:**
+- Funciones principales del cargo
+- Responsabilidades específicas
+- A quién reporta (si aplica)
+- Equipo de trabajo
+- Proyectos o actividades especiales
+
+**Consejos de redacción:**
+- Use viñetas para listar funciones
+- Sea específico sobre las expectativas
+- Mencione si hay viajes o actividades fuera de horario
+- Indique si es trabajo presencial, remoto o híbrido
+
+**Longitud recomendada:** 200-500 palabras';
 $string['contracttype'] = 'Tipo de contrato';
-$string['contracttype_help'] = 'Modalidad de contratación';
+$string['contracttype_help'] = 'Modalidad de vinculación laboral ofrecida para esta posición.
+
+**Tipos disponibles:**
+
+**Planta:** Vinculación permanente con estabilidad laboral y todos los beneficios institucionales.
+
+**Término Fijo:** Contrato por período determinado (usualmente 6-12 meses) con posibilidad de renovación según evaluación de desempeño.
+
+**Ocasional:** Vinculación temporal para actividades específicas o proyectos puntuales, generalmente inferior a 6 meses.
+
+**Cátedra:** Vinculación por horas para impartir asignaturas específicas. La remuneración se calcula por hora de clase.
+
+**Prestación de Servicios:** Contrato civil para servicios profesionales específicos, sin relación laboral directa.
+
+**Nota:** Cada tipo de contrato tiene implicaciones diferentes en términos de beneficios, seguridad social y estabilidad laboral.';
 $string['duration'] = 'Duración';
-$string['duration_help'] = 'Duración estimada del contrato';
+$string['duration_help'] = 'Duración estimada del contrato o período de vinculación.
+
+**Ejemplos de formato:**
+- "6 meses con posibilidad de renovación"
+- "Semestre académico 2025-1"
+- "1 año - Término fijo"
+- "Mientras dure el proyecto X"
+- "Indefinido"
+
+**Consideraciones:**
+- Para contratos a término fijo, especifique claramente el período
+- Mencione si existe posibilidad de renovación o prórroga
+- Para docentes, puede indicar el período académico
+- Si depende de un proyecto, indique la duración esperada del mismo';
 $string['salary'] = 'Salario';
-$string['salary_help'] = 'Información sobre remuneración (opcional)';
+$string['salary_help'] = 'Información sobre remuneración y beneficios económicos.
+
+**Puede incluir:**
+- Rango salarial (ej: "$3.000.000 - $4.500.000 según experiencia")
+- Salario exacto si está definido
+- Referencia a escalafón docente (si aplica)
+- Información sobre bonificaciones o beneficios adicionales
+- Periodicidad del pago (mensual, quincenal)
+
+**Ejemplo para docentes:**
+"Según escalafón docente. Categoría Instructor: $3.200.000 - Categoría Asistente: $4.100.000. Incluye prima de servicios y vacaciones legales."
+
+**Nota:** Este campo es opcional. Si prefiere no publicar esta información, puede dejarlo en blanco o indicar "A convenir según perfil del candidato".';
 $string['location'] = 'Ubicación';
-$string['location_help'] = 'Lugar donde se desempeñará el cargo';
+$string['location_help'] = 'Lugar físico donde se desempeñarán las funciones del cargo.
+
+**Información a incluir:**
+- Ciudad o municipio
+- Sede específica (si hay varias)
+- Dirección o campus
+- Si es trabajo remoto, híbrido o presencial
+
+**Ejemplos:**
+- "Sede Principal - Bogotá, Carrera 7 No. 45-20"
+- "Campus Norte - Medellín (trabajo presencial)"
+- "Trabajo remoto con reuniones presenciales mensuales en Cali"
+- "Híbrido: 3 días presencial en Sede Centro, 2 días remoto"
+
+**Importante para postulantes:** Esta información les permite evaluar si pueden asumir el desplazamiento necesario.';
 $string['department'] = 'Departamento/Unidad';
-$string['department_help'] = 'Área o dependencia de la institución';
-$string['course'] = 'Curso asociado';
-$string['course_help'] = 'Curso de Moodle relacionado con esta vacante';
-$string['category'] = 'Categoría';
-$string['category_help'] = 'Categoría de cursos relacionada';
+$string['department_help'] = 'Área, facultad, departamento o unidad organizacional donde se desempeñará el cargo.
+
+**Ejemplos:**
+- Facultad de Ingeniería
+- Departamento de Matemáticas y Estadística
+- Vicerrectoría Académica
+- Oficina de Bienestar Universitario
+- Escuela de Ciencias Básicas
+
+**Utilidad:**
+- Ayuda a los postulantes a identificar el área de trabajo
+- Facilita la organización interna de vacantes
+- Permite filtrar vacantes por departamento
+- Define el contexto organizacional del cargo';
 $string['company'] = 'Empresa/Sede';
-$string['company_help'] = 'Empresa o sede (en entornos multi-tenant)';
+$string['company_help'] = 'Seleccione la empresa o sede donde se publicará esta vacante.
+
+**En entornos multi-tenant (IOMAD):**
+- Cada empresa tiene su propia gestión de vacantes
+- Los postulantes solo verán las vacantes de la empresa correspondiente
+- Las métricas y reportes se segmentan por empresa
+
+**Nota para administradores:**
+- Si gestiona múltiples sedes, asegúrese de seleccionar la correcta
+- Las vacantes internas solo serán visibles para usuarios de la empresa seleccionada
+- Las vacantes públicas pueden ser visibles para todos según la configuración';
 $string['opendate'] = 'Fecha de apertura';
-$string['opendate_help'] = 'Fecha desde la cual se pueden recibir postulaciones';
+$string['opendate_help'] = 'Fecha y hora desde la cual se aceptarán postulaciones para esta vacante.
+
+**Consideraciones importantes:**
+- Los postulantes NO podrán enviar solicitudes antes de esta fecha
+- La vacante será visible pero mostrará "Próximamente" si está publicada antes de la fecha de apertura
+- La hora se considera en la zona horaria del servidor
+
+**Recomendaciones:**
+- Publique la vacante unos días antes de la apertura para dar visibilidad
+- Coordine la fecha con el área de comunicaciones si es una convocatoria importante
+- Considere días hábiles para iniciar (evite fines de semana)
+
+**Si pertenece a una convocatoria:** La fecha se heredará de la convocatoria, a menos que marque esta vacante como "extemporánea".';
 $string['closedate'] = 'Fecha de cierre';
-$string['closedate_help'] = 'Fecha límite para recibir postulaciones';
+$string['closedate_help'] = 'Fecha y hora límite para recibir postulaciones.
+
+**Importante:**
+- Después de esta fecha, el sistema NO permitirá nuevas postulaciones
+- Los postulantes recibirán avisos cuando la fecha de cierre esté próxima
+- Incluye la hora exacta (ej: 23:59 del día seleccionado)
+
+**Recomendaciones:**
+- Deje suficiente tiempo para que los postulantes preparen sus documentos (mínimo 7-15 días)
+- Para convocatorias grandes, considere 30 días o más
+- Evite cerrar en días festivos o fines de semana
+
+**Nota:** Si necesita extender el plazo, puede editar la fecha mientras la vacante esté abierta. Los postulantes serán notificados del cambio.';
 $string['positions'] = 'Número de vacantes';
-$string['positions_help'] = 'Cantidad de posiciones disponibles';
+$string['positions_help'] = 'Cantidad de personas que se contratarán para este cargo.
+
+**Uso:**
+- Si necesita contratar varias personas para el mismo cargo, indique el número
+- Para una sola posición, deje el valor en 1
+- Esto ayuda a los postulantes a conocer la magnitud de la convocatoria
+
+**Ejemplo:**
+Si necesita 3 docentes de matemáticas para diferentes jornadas, puede:
+1. Crear una vacante con positions=3
+2. O crear 3 vacantes separadas con información específica de cada jornada
+
+**Recomendación:** Si las condiciones son diferentes (horarios, sedes, etc.), es mejor crear vacantes separadas para mayor claridad.';
 $string['requirements'] = 'Requisitos mínimos';
-$string['requirements_help'] = 'Requisitos indispensables para el cargo';
+$string['requirements_help'] = 'Liste los requisitos INDISPENSABLES que debe cumplir el candidato para ser considerado.
+
+**Estructura recomendada:**
+
+**Formación académica:**
+- Título profesional requerido
+- Especialización o maestría si es necesaria
+- Tarjeta profesional vigente (si aplica)
+
+**Experiencia:**
+- Años de experiencia mínima
+- Tipo de experiencia (docente, profesional, investigativa)
+- Sectores o áreas específicas
+
+**Conocimientos técnicos:**
+- Software o herramientas específicas
+- Idiomas (indique nivel requerido)
+- Certificaciones obligatorias
+
+**Otros:**
+- Disponibilidad horaria
+- Documentación legal vigente
+- Requisitos especiales del cargo
+
+**Importante:** Los postulantes que no cumplan estos requisitos NO pasarán la fase de verificación documental.';
 $string['desirable'] = 'Requisitos deseables';
-$string['desirable_help'] = 'Requisitos que suman puntos pero no son obligatorios';
+$string['desirable_help'] = 'Liste los requisitos DESEABLES que suman puntos pero NO son eliminatorios.
+
+**Diferencia con requisitos mínimos:**
+- Los mínimos son OBLIGATORIOS - sin ellos, el postulante queda excluido
+- Los deseables SON OPCIONALES - dan ventaja pero no excluyen
+
+**Ejemplos de requisitos deseables:**
+
+**Formación adicional:**
+- Doctorado o estudios doctorales en curso
+- Cursos o diplomados en áreas relacionadas
+- Certificaciones adicionales
+
+**Experiencia valorada:**
+- Experiencia en investigación
+- Publicaciones académicas
+- Participación en proyectos especiales
+- Experiencia en el sector público/privado
+
+**Habilidades:**
+- Dominio de segundo idioma
+- Conocimiento de metodologías específicas
+- Experiencia con poblaciones especiales
+
+**Consejo:** Estos criterios pueden usarse para diferenciar candidatos que cumplan todos los requisitos mínimos.';
+
 $string['status'] = 'Estado';
 $string['createdby'] = 'Creado por';
 $string['modifiedby'] = 'Modificado por';
@@ -1470,18 +1664,90 @@ $string['managedoctypes'] = 'Gestionar tipos de documentos';
 $string['tour_endlabel'] = 'Entendido!';
 
 // Tour: Panel Principal (Dashboard).
-$string['tour_dashboard_name'] = 'Tour del Panel Principal';
-$string['tour_dashboard_description'] = 'Aprenda a navegar por el panel principal de la Bolsa de Empleo';
+$string['tour_dashboard_name'] = 'Tour del Panel Principal - Guia Completa';
+$string['tour_dashboard_description'] = 'Aprenda a navegar por el panel principal de la Bolsa de Empleo. Este tour le mostrara todas las funciones disponibles segun su rol.';
 $string['tour_dashboard_step1_title'] = 'Bienvenido a la Bolsa de Empleo';
-$string['tour_dashboard_step1_content'] = 'Bienvenido al plugin de Bolsa de Empleo! Este tour guiado le mostrara como navegar y usar las funciones principales. La Bolsa de Empleo le permite gestionar vacantes, postulaciones y todo el proceso de seleccion.';
+$string['tour_dashboard_step1_content'] = 'Bienvenido al sistema de Bolsa de Empleo del ISER!
+
+**Que es la Bolsa de Empleo?**
+Es un sistema completo para gestionar procesos de seleccion de personal, incluyendo:
+
+- Publicacion y gestion de vacantes
+- Recepcion y seguimiento de postulaciones
+- Validacion de documentos de los candidatos
+- Evaluacion y seleccion de personal
+- Generacion de reportes estadisticos
+
+Este tour le guiara paso a paso por las funciones principales.';
 $string['tour_dashboard_step2_title'] = 'Vista General del Panel';
-$string['tour_dashboard_step2_content'] = 'Este es su panel principal. Desde aqui puede acceder a todas las funciones clave segun su rol: explorar vacantes, gestionar postulaciones, revisar documentos y generar reportes.';
-$string['tour_dashboard_step3_title'] = 'Acciones Rapidas';
-$string['tour_dashboard_step3_content'] = 'Cada tarjeta proporciona acceso rapido a una area especifica del sistema. Haga clic en cualquier tarjeta para navegar a esa seccion.';
-$string['tour_dashboard_step4_title'] = 'Funciones Disponibles';
-$string['tour_dashboard_step4_content'] = 'Dependiendo de sus permisos, puede: ver vacantes, dar seguimiento a sus postulaciones, gestionar vacantes como administrador, revisar documentos de postulantes y acceder a reportes y estadisticas.';
+$string['tour_dashboard_step2_content'] = 'Este es su panel principal de navegacion.
+
+**Que encontrara aqui:**
+- Accesos directos a todas las funciones del sistema
+- Resumen de estadisticas relevantes
+- Alertas y notificaciones pendientes
+- Acciones rapidas segun su rol
+
+**Su rol determina que opciones ve:**
+- Postulantes: Vacantes disponibles y sus postulaciones
+- Revisores: Documentos pendientes de validacion
+- Administradores: Todas las funciones de gestion
+
+Explore cada seccion para familiarizarse con el sistema.';
+$string['tour_dashboard_step3_title'] = 'Tarjetas de Acciones Rapidas';
+$string['tour_dashboard_step3_content'] = 'Las tarjetas proporcionan acceso directo a las funciones principales.
+
+**Como usar las tarjetas:**
+1. Cada tarjeta tiene un icono descriptivo y un titulo
+2. Haga clic en la tarjeta para ir a esa seccion
+3. Algunas tarjetas muestran contadores (ej: "5 pendientes")
+
+**Tarjetas comunes:**
+- **Vacantes**: Ver oportunidades laborales disponibles
+- **Mis Postulaciones**: Seguimiento de sus aplicaciones
+- **Gestionar Vacantes**: Para administradores
+- **Revisar Documentos**: Para revisores asignados
+- **Reportes**: Estadisticas y analisis
+
+Las tarjetas disponibles dependen de sus permisos en el sistema.';
+$string['tour_dashboard_step4_title'] = 'Funciones segun su Rol';
+$string['tour_dashboard_step4_content'] = '**Si es POSTULANTE:**
+- Explore las vacantes publicadas
+- Envie postulaciones con sus documentos
+- De seguimiento al estado de sus aplicaciones
+- Reciba notificaciones de avances
+
+**Si es REVISOR:**
+- Vea las postulaciones asignadas
+- Valide los documentos de los candidatos
+- Marque documentos como aprobados o rechazados
+- Agregue notas y comentarios
+
+**Si es ADMINISTRADOR:**
+- Cree y gestione convocatorias
+- Publique y cierre vacantes
+- Asigne revisores a postulaciones
+- Genere reportes de seguimiento
+- Configure el sistema
+
+Cada rol tiene permisos especificos para mantener la seguridad del proceso.';
 $string['tour_dashboard_step5_title'] = 'Listo para Comenzar!';
-$string['tour_dashboard_step5_content'] = 'Ya esta listo para usar la Bolsa de Empleo! Explore las opciones disponibles y no dude en usar los recursos de ayuda si necesita asistencia.';
+$string['tour_dashboard_step5_content'] = 'Ya conoce el panel principal!
+
+**Proximos pasos recomendados:**
+
+1. **Si busca empleo**: Vaya a "Vacantes" para ver las oportunidades disponibles
+
+2. **Si es revisor**: Consulte "Mis Revisiones" para ver sus asignaciones pendientes
+
+3. **Si es administrador**: Explore "Gestionar Vacantes" y "Convocatorias"
+
+**Recursos de ayuda:**
+- Cada pagina tiene su propio tour guiado
+- Los campos con icono (?) tienen tooltips explicativos
+- Puede reiniciar este tour desde el menu de ayuda
+
+Mucho exito usando la Bolsa de Empleo!';
 
 // Tour: Vacantes Publicas.
 $string['tour_public_name'] = 'Tour de Vacantes Publicas';
@@ -1506,24 +1772,164 @@ $string['tour_public_step9_title'] = 'Comience a Explorar!';
 $string['tour_public_step9_content'] = 'Ya esta listo para explorar las vacantes disponibles! Use la busqueda y los filtros para encontrar oportunidades que coincidan con sus habilidades e intereses. Mucha suerte!';
 
 // Tour: Formulario de Postulacion.
-$string['tour_apply_name'] = 'Tour del Formulario de Postulacion';
-$string['tour_apply_description'] = 'Aprenda a completar y enviar su postulacion laboral';
+$string['tour_apply_name'] = 'Tour del Formulario de Postulacion - Guia Paso a Paso';
+$string['tour_apply_description'] = 'Aprenda a completar correctamente su postulacion y cargar todos los documentos requeridos. Este tour le guiara por cada seccion del formulario.';
 $string['tour_apply_step1_title'] = 'Postularse a una Vacante';
-$string['tour_apply_step1_content'] = 'Bienvenido al formulario de postulacion! Este tour le ayudara a entender cada seccion y enviar exitosamente su postulacion.';
-$string['tour_apply_step2_title'] = 'Guias de Postulacion';
-$string['tour_apply_step2_content'] = 'Lea estas guias cuidadosamente antes de iniciar su postulacion. Contienen informacion importante sobre documentos requeridos, formatos aceptados y el proceso de postulacion.';
-$string['tour_apply_step3_title'] = 'Consentimiento y Terminos';
-$string['tour_apply_step3_content'] = 'Debe aceptar los terminos y condiciones y dar su consentimiento para el procesamiento de sus datos personales segun las leyes de proteccion de datos. Esto es requerido para enviar su postulacion.';
+$string['tour_apply_step1_content'] = 'Bienvenido al formulario de postulacion!
+
+**Antes de comenzar, asegurese de tener:**
+- Todos sus documentos digitalizados (PDF preferiblemente)
+- Documentos legibles y completos
+- Archivos de maximo 10MB cada uno
+- Formato SIGEP si es requerido
+
+**Tiempo estimado:** 15-20 minutos si tiene todos los documentos listos.
+
+**IMPORTANTE:** La postulacion NO se guarda automaticamente. Complete todo en una sola sesion.
+
+Este tour le explicara cada seccion del formulario.';
+$string['tour_apply_step2_title'] = 'Instrucciones de la Vacante';
+$string['tour_apply_step2_content'] = 'LEA ESTA SECCION CUIDADOSAMENTE antes de continuar.
+
+**Aqui encontrara:**
+- Documentos especificos requeridos para esta vacante
+- Formatos aceptados para cada documento
+- Condiciones especiales (si aplican)
+- Fechas limites importantes
+
+**Tipos de documentos comunes:**
+- Formato SIGEP II actualizado
+- Cedula de ciudadania (ambas caras)
+- Titulos academicos
+- Tarjeta profesional (si aplica)
+- Certificados de antecedentes (vigentes)
+- Certificaciones laborales
+
+Revise los requisitos especificos de ESTA vacante.';
+$string['tour_apply_step3_title'] = 'Consentimiento para Tratamiento de Datos';
+$string['tour_apply_step3_content'] = 'Es OBLIGATORIO aceptar el consentimiento informado.
+
+**Que esta aceptando:**
+- El tratamiento de sus datos personales segun Ley 1581 de 2012
+- El uso de su informacion exclusivamente para el proceso de seleccion
+- El almacenamiento seguro de sus documentos
+- La comunicacion sobre el estado de su postulacion
+
+**Sus derechos:**
+- Conocer, actualizar y rectificar sus datos
+- Solicitar prueba del consentimiento
+- Revocar el consentimiento en cualquier momento
+- Presentar quejas ante la SIC
+
+Marque la casilla solo si esta de acuerdo con estos terminos.';
 $string['tour_apply_step4_title'] = 'Firma Digital';
-$string['tour_apply_step4_content'] = 'Ingrese su nombre completo exactamente como aparece en su documento de identidad. Esto sirve como su firma digital y confirma que la informacion proporcionada es precisa.';
-$string['tour_apply_step5_title'] = 'Documentos Requeridos';
-$string['tour_apply_step5_content'] = 'Cargue todos los documentos requeridos aqui. Asegurese de que cada documento sea legible, este completo y en un formato aceptado (usualmente PDF, JPG o PNG). Verifique los limites de tamaño.';
-$string['tour_apply_step6_title'] = 'Carta de Presentacion';
-$string['tour_apply_step6_content'] = 'Opcionalmente, puede agregar una carta de presentacion para explicar por que le interesa esta posicion y destacar sus calificaciones y experiencia relevantes.';
+$string['tour_apply_step4_content'] = 'Su firma digital valida legalmente la postulacion.
+
+**Como firmar:**
+1. Escriba su NOMBRE COMPLETO
+2. Exactamente como aparece en su cedula
+3. Incluya todos sus nombres y apellidos
+4. Use mayusculas y minusculas correctamente
+
+**Ejemplo:** Juan Carlos Perez Rodriguez
+
+**Esta firma certifica que:**
+- La informacion proporcionada es veridica
+- Los documentos son autenticos
+- Acepta los terminos del proceso
+
+IMPORTANTE: Una firma incompleta o incorrecta puede retrasar su postulacion.';
+$string['tour_apply_step5_title'] = 'Carga de Documentos - Seccion Critica';
+$string['tour_apply_step5_content'] = 'Esta es la seccion mas importante del formulario.
+
+**Para cada documento:**
+1. Haga clic en el boton de carga
+2. Seleccione el archivo desde su computador
+3. Espere a que se cargue completamente
+4. Verifique que el archivo correcto aparezca
+
+**Requisitos tecnicos:**
+- Formatos: PDF (preferido), JPG, PNG
+- Tamano maximo: 10MB por archivo
+- Resolucion minima: 150 DPI
+- Documentos de multiples paginas: use PDF
+
+**Consejos:**
+- Escanee documentos, no tome fotos borrosas
+- Verifique que el texto sea legible
+- Incluya TODAS las paginas requeridas
+- Los documentos con fecha deben estar vigentes
+
+Un documento rechazado retrasa todo el proceso.';
+$string['tour_apply_step6_title'] = 'Carta de Presentacion (Opcional pero Recomendada)';
+$string['tour_apply_step6_content'] = 'La carta de presentacion puede diferenciarle de otros candidatos.
+
+**Que incluir:**
+- Por que le interesa esta vacante especificamente
+- Como su experiencia se alinea con los requisitos
+- Que puede aportar a la institucion
+- Su disponibilidad horaria
+
+**Estructura sugerida:**
+1. Saludo formal
+2. Mencion de la vacante a la que aplica
+3. Resumen de su perfil relevante
+4. Motivacion e interes
+5. Despedida cordial
+
+**Longitud recomendada:** 150-300 palabras
+
+Aunque es opcional, una buena carta demuestra interes y profesionalismo.';
 $string['tour_apply_step7_title'] = 'Enviar Postulacion';
-$string['tour_apply_step7_content'] = 'Una vez que haya completado todos los campos requeridos y cargado sus documentos, haga clic en este boton para enviar su postulacion. Asegurese de que todo este correcto antes de enviar!';
-$string['tour_apply_step8_title'] = 'Mucha Suerte!';
-$string['tour_apply_step8_content'] = 'Despues de enviar, puede dar seguimiento al estado de su postulacion en "Mis Postulaciones". Recibira notificaciones por correo cuando haya actualizaciones. Le deseamos mucho exito!';
+$string['tour_apply_step7_content'] = 'Ultimo paso! Antes de enviar:
+
+**Lista de verificacion final:**
+✓ Lei y acepte el consentimiento de datos
+✓ Firme digitalmente con mi nombre completo
+✓ Cargue TODOS los documentos requeridos
+✓ Verifique que los archivos se cargaron correctamente
+✓ Revise que los documentos sean legibles
+✓ Complete la carta de presentacion (si desea)
+
+**Al hacer clic en Enviar:**
+- Su postulacion se registra en el sistema
+- Recibira un correo de confirmacion
+- El proceso de revision comienza
+
+**ADVERTENCIA:** Despues de enviar NO podra:
+- Agregar mas documentos (salvo rechazo)
+- Modificar la informacion
+- Cambiar de vacante
+
+Asegurese de que TODO este correcto antes de enviar.';
+$string['tour_apply_step8_title'] = 'Postulacion Enviada - Que Sigue?';
+$string['tour_apply_step8_content'] = 'Felicitaciones por completar su postulacion!
+
+**Pasos siguientes del proceso:**
+
+1. **Confirmacion** (inmediato)
+   - Recibira un correo de confirmacion
+   - Guarde este correo como comprobante
+
+2. **Revision de documentos** (3-10 dias habiles)
+   - Un revisor verificara sus documentos
+   - Le notificaran si hay observaciones
+
+3. **Evaluacion** (segun convocatoria)
+   - Si sus documentos son aprobados
+   - Pasara a la siguiente fase
+
+**Como dar seguimiento:**
+- Entre a "Mis Postulaciones" regularmente
+- Configure notificaciones por correo
+- Responda rapidamente si hay observaciones
+
+**Si un documento es rechazado:**
+- Recibira notificacion con el motivo
+- Podra cargar una version corregida
+- Haga la correccion lo antes posible
+
+Le deseamos mucho exito en su proceso!';
 
 // Tour: Mis Postulaciones.
 $string['tour_myapplications_name'] = 'Tour de Mis Postulaciones';

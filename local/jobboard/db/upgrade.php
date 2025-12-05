@@ -808,5 +808,46 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120527, 'local', 'jobboard');
     }
 
+    // Version 2025120528: Remove courseid/categoryid fields, improve tooltips and User Tours.
+    if ($oldversion < 2025120528) {
+
+        $table = new xmldb_table('local_jobboard_vacancy');
+
+        // Remove foreign key for courseid first.
+        $key = new xmldb_key('courseid', XMLDB_KEY_FOREIGN, ['courseid'], 'course', ['id']);
+        if ($dbman->key_exists($table, $key)) {
+            $dbman->drop_key($table, $key);
+        }
+
+        // Remove foreign key for categoryid.
+        $key = new xmldb_key('categoryid', XMLDB_KEY_FOREIGN, ['categoryid'], 'course_categories', ['id']);
+        if ($dbman->key_exists($table, $key)) {
+            $dbman->drop_key($table, $key);
+        }
+
+        // Drop the courseid field (no longer used).
+        $field = new xmldb_field('courseid');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Drop the categoryid field (no longer used).
+        $field = new xmldb_field('categoryid');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Reinstall improved User Tours.
+        require_once(__DIR__ . '/install.php');
+        if (function_exists('local_jobboard_install_tours')) {
+            local_jobboard_install_tours();
+        }
+
+        // Purge caches to load new strings.
+        purge_all_caches();
+
+        upgrade_plugin_savepoint(true, 2025120528, 'local', 'jobboard');
+    }
+
     return true;
 }

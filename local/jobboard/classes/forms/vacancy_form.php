@@ -204,25 +204,6 @@ class vacancy_form extends \moodleform {
             $mform->setDefault('convocatoriaid', $defaultconvocatoriaid);
         }
 
-        // Header: Associations.
-        $mform->addElement('header', 'associations', get_string('course', 'local_jobboard'));
-
-        // Associated course (optional).
-        $courses = $this->get_courses_options();
-        $mform->addElement('autocomplete', 'courseid', get_string('course', 'local_jobboard'), $courses, [
-            'noselectionstring' => get_string('selectcourse', 'local_jobboard'),
-        ]);
-        $mform->setType('courseid', PARAM_INT);
-        $mform->addHelpButton('courseid', 'course', 'local_jobboard');
-
-        // Associated category (optional).
-        $categories = $this->get_categories_options();
-        $mform->addElement('autocomplete', 'categoryid', get_string('category', 'local_jobboard'), $categories, [
-            'noselectionstring' => get_string('selectcategory', 'local_jobboard'),
-        ]);
-        $mform->setType('categoryid', PARAM_INT);
-        $mform->addHelpButton('categoryid', 'category', 'local_jobboard');
-
         // Company and Department (Iomad multi-tenant).
         if (\local_jobboard_is_iomad_installed()) {
             // Header for IOMAD section.
@@ -347,37 +328,6 @@ class vacancy_form extends \moodleform {
     }
 
     /**
-     * Get courses for dropdown.
-     *
-     * @return array Course ID => name.
-     */
-    protected function get_courses_options(): array {
-        global $DB;
-
-        $courses = $DB->get_records('course', ['visible' => 1], 'fullname ASC', 'id, fullname, shortname');
-
-        $options = [];
-        foreach ($courses as $course) {
-            if ($course->id == SITEID) {
-                continue;
-            }
-            $options[$course->id] = $course->fullname . ' (' . $course->shortname . ')';
-        }
-
-        return $options;
-    }
-
-    /**
-     * Get course categories for dropdown.
-     *
-     * @return array Category ID => name.
-     */
-    protected function get_categories_options(): array {
-        $categories = \core_course_category::make_categories_list();
-        return $categories;
-    }
-
-    /**
      * Set data from vacancy object.
      *
      * @param \local_jobboard\vacancy $vacancy The vacancy.
@@ -393,8 +343,6 @@ class vacancy_form extends \moodleform {
         $data->salary = $vacancy->salary;
         $data->location = $vacancy->location;
         $data->department = $vacancy->department;
-        $data->courseid = $vacancy->courseid;
-        $data->categoryid = $vacancy->categoryid;
         $data->companyid = $vacancy->companyid;
         $data->departmentid = $vacancy->departmentid ?? 0;
         $data->convocatoriaid = $vacancy->convocatoriaid ?? 0;
