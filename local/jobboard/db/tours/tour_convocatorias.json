@@ -1,7 +1,7 @@
 {
   "name": "tour_convocatorias_name,local_jobboard",
   "description": "tour_convocatorias_description,local_jobboard",
-  "pathmatch": "/local/jobboard/admin/convocatorias.php",
+  "pathmatch": "/local/jobboard/index.php%view=convocatorias%",
   "enabled": 1,
   "sortorder": 0,
   "endtourlabel": "tour_endlabel,local_jobboard",

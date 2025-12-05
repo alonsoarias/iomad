@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120525;  // Convocatorias management through main router.
+$plugin->version = 2025120526;  // Complete workflow fixes - convocatoria routing.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.12-beta';
+$plugin->release = '1.9.13-beta';

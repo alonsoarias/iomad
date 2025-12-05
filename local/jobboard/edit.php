@@ -54,7 +54,19 @@ $PAGE->set_pagelayout('admin');
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 
-$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
+// Build navigation based on context.
+if ($convocatoriaid) {
+    $convocatoriarecord = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
+    if ($convocatoriarecord) {
+        $PAGE->navbar->add(get_string('manageconvocatorias', 'local_jobboard'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']));
+        $PAGE->navbar->add(s($convocatoriarecord->name),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'id' => $convocatoriaid]));
+    }
+} else {
+    $PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'),
+        new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
+}
 $PAGE->navbar->add($pagetitle);
 
 // Create form.
@@ -66,7 +78,11 @@ $form = new \local_jobboard\forms\vacancy_form(null, $formdata);
 
 // Handle cancel.
 if ($form->is_cancelled()) {
-    redirect(new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
+    if ($convocatoriaid) {
+        redirect(new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'id' => $convocatoriaid]));
+    } else {
+        redirect(new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
+    }
 }
 
 // Handle submission.

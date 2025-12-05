@@ -175,7 +175,7 @@ if ($convocatoriaid) {
                 ['class' => 'badge badge-' . ($statusclass[$convocatoriainfo->status] ?? 'secondary')])
         );
         echo html_writer::link(
-            new moodle_url('/local/jobboard/admin/convocatorias.php'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
             get_string('backtoconvocatorias', 'local_jobboard'),
             ['class' => 'btn btn-sm btn-outline-primary']
         );
