@@ -1617,3 +1617,17 @@ $string['exportingpdf'] = 'Exporting PDF...';
 $string['pdfreportgenerated'] = 'PDF report generated successfully';
 $string['pdfexportfailed'] = 'Failed to generate PDF report';
 $string['generatedon'] = 'Generated on';
+
+// Document conversion.
+$string['conversionready'] = 'Preview ready';
+$string['conversioninprogress'] = 'Converting document...';
+$string['conversionpending'] = 'Conversion pending';
+$string['conversionfailed'] = 'Conversion failed';
+$string['conversionwait'] = 'The document is being converted for preview. This may take a few moments.';
+$string['previewunavailable'] = 'Preview not available for this file type';
+$string['downloadtoview'] = 'Download to view';
+$string['convertersavailable'] = 'Document converters available';
+$string['noconvertersavailable'] = 'No document converters configured';
+$string['supportedformats'] = 'Supported formats for conversion';
+$string['documentconverted'] = 'Document converted successfully';
+$string['refreshpreview'] = 'Refresh preview';

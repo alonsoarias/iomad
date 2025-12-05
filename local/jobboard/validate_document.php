@@ -26,6 +26,7 @@ require_once(__DIR__ . '/../../config.php');
 
 use local_jobboard\document;
 use local_jobboard\application;
+use local_jobboard\document_services;
 
 $id = required_param('id', PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
@@ -103,21 +104,40 @@ if (!empty($document->issuedate)) {
 
 // Document preview and download.
 $downloadurl = $document->get_download_url();
+$previewinfo = document_services::get_preview_info($document);
+
 if ($downloadurl) {
     // Inline preview button.
     echo '<div class="mb-3">';
+
+    // Use converted URL if available, otherwise original.
+    $previewurl = $previewinfo['url'] ?: $downloadurl;
+    $previewmime = $previewinfo['mimetype'];
+
     echo '<button type="button" class="btn btn-primary mr-2" ' .
-        'data-preview-url="' . $downloadurl . '" ' .
+        'data-preview-url="' . $previewurl . '" ' .
         'data-preview-filename="' . s($document->filename) . '" ' .
-        'data-preview-mimetype="' . s($document->mimetype) . '">' .
+        'data-preview-mimetype="' . s($previewmime) . '">' .
         '<i class="fa fa-eye mr-1"></i>' . get_string('previewdocument', 'local_jobboard') . '</button>';
     echo '<a href="' . $downloadurl . '" class="btn btn-outline-secondary" target="_blank">' .
         '<i class="fa fa-download mr-1"></i>' . get_string('download') . '</a>';
+
+    // Show conversion status if applicable.
+    if ($previewinfo['can_convert']) {
+        echo '<span class="ml-3 badge badge-' .
+            ($previewinfo['status'] === 'ready' ? 'success' :
+            ($previewinfo['status'] === 'converting' ? 'info' :
+            ($previewinfo['status'] === 'failed' ? 'danger' : 'secondary'))) . '" ' .
+            'id="conversion-status" data-documentid="' . $document->id . '">' .
+            document_services::get_status_message($previewinfo['status']) . '</span>';
+    }
     echo '</div>';
 
-    // Inline preview container for supported formats.
-    $supportedpreview = in_array($document->mimetype, ['application/pdf', 'image/jpeg', 'image/png', 'image/gif']);
-    if ($supportedpreview) {
+    // Inline preview container.
+    $canpreview = ($previewinfo['status'] === 'ready' && $previewinfo['url']);
+    $directpreview = in_array($document->mimetype, document_services::DIRECT_PREVIEW_MIMETYPES);
+
+    if ($canpreview || $directpreview) {
         echo '<div class="document-inline-preview mb-3">';
         echo '<div class="card">';
         echo '<div class="card-header d-flex justify-content-between align-items-center">';
@@ -125,19 +145,52 @@ if ($downloadurl) {
         echo '<button type="button" class="btn btn-sm btn-outline-secondary" id="toggle-preview">' .
             get_string('togglepreview', 'local_jobboard') . '</button>';
         echo '</div>';
-        echo '<div class="card-body preview-content" style="max-height: 500px; overflow: auto;">';
+        echo '<div class="card-body preview-content" id="preview-container" style="max-height: 500px; overflow: auto;">';
 
-        if ($document->mimetype === 'application/pdf') {
-            // Use iframe for PDF preview.
-            echo '<iframe src="' . $downloadurl . '#toolbar=0&navpanes=0" ' .
+        if ($previewmime === 'application/pdf' && $previewinfo['url']) {
+            // Use iframe for PDF preview (original or converted).
+            echo '<iframe src="' . $previewinfo['url'] . '#toolbar=0&navpanes=0" ' .
                 'style="width: 100%; height: 450px; border: none;" ' .
                 'title="' . get_string('documentpreview', 'local_jobboard') . '"></iframe>';
-        } else {
+        } else if (strpos($document->mimetype, 'image/') === 0) {
             // Direct image display.
             echo '<img src="' . $downloadurl . '" class="img-fluid" ' .
                 'alt="' . s($document->filename) . '" style="max-width: 100%;">';
         }
 
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    } else if ($previewinfo['status'] === 'converting') {
+        // Show converting message with polling.
+        echo '<div class="document-inline-preview mb-3">';
+        echo '<div class="card">';
+        echo '<div class="card-header">' . get_string('documentpreview', 'local_jobboard') . '</div>';
+        echo '<div class="card-body text-center" id="preview-container">';
+        echo '<div class="conversion-progress">';
+        echo '<i class="fa fa-spinner fa-spin fa-3x mb-3"></i>';
+        echo '<p>' . get_string('conversioninprogress', 'local_jobboard') . '</p>';
+        echo '<p class="text-muted">' . get_string('conversionwait', 'local_jobboard') . '</p>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    } else if ($previewinfo['can_convert'] && $previewinfo['status'] !== 'ready') {
+        // Show message that conversion is possible but not yet started or failed.
+        echo '<div class="document-inline-preview mb-3">';
+        echo '<div class="card">';
+        echo '<div class="card-header">' . get_string('documentpreview', 'local_jobboard') . '</div>';
+        echo '<div class="card-body text-center" id="preview-container">';
+        if ($previewinfo['status'] === 'failed') {
+            echo '<div class="alert alert-warning">';
+            echo '<i class="fa fa-exclamation-triangle mr-2"></i>';
+            echo get_string('conversionfailed', 'local_jobboard');
+            echo '</div>';
+        } else {
+            echo '<p class="text-muted">' . get_string('previewunavailable', 'local_jobboard') . '</p>';
+        }
+        echo '<p><a href="' . $downloadurl . '" class="btn btn-outline-primary" target="_blank">' .
+            '<i class="fa fa-download mr-1"></i>' . get_string('downloadtoview', 'local_jobboard') . '</a></p>';
         echo '</div>';
         echo '</div>';
         echo '</div>';

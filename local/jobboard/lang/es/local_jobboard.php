@@ -1619,3 +1619,17 @@ $string['exportingpdf'] = 'Exportando PDF...';
 $string['pdfreportgenerated'] = 'Reporte PDF generado exitosamente';
 $string['pdfexportfailed'] = 'Error al generar el reporte PDF';
 $string['generatedon'] = 'Generado el';
+
+// Conversión de documentos.
+$string['conversionready'] = 'Vista previa lista';
+$string['conversioninprogress'] = 'Convirtiendo documento...';
+$string['conversionpending'] = 'Conversión pendiente';
+$string['conversionfailed'] = 'Conversión fallida';
+$string['conversionwait'] = 'El documento se está convirtiendo para vista previa. Esto puede tomar unos momentos.';
+$string['previewunavailable'] = 'Vista previa no disponible para este tipo de archivo';
+$string['downloadtoview'] = 'Descargar para ver';
+$string['convertersavailable'] = 'Convertidores de documentos disponibles';
+$string['noconvertersavailable'] = 'No hay convertidores de documentos configurados';
+$string['supportedformats'] = 'Formatos soportados para conversión';
+$string['documentconverted'] = 'Documento convertido exitosamente';
+$string['refreshpreview'] = 'Actualizar vista previa';

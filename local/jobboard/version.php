@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120509;  // Phase 9: User Tours, PDF preview, ZIP export, PDF reports.
+$plugin->version = 2025120510;  // Phase 9.1: Document conversion for preview using Moodle file converters.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.0-beta';
+$plugin->release = '1.9.1-beta';
