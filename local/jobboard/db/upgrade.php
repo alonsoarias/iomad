@@ -813,17 +813,8 @@ function xmldb_local_jobboard_upgrade($oldversion) {
 
         $table = new xmldb_table('local_jobboard_vacancy');
 
-        // Remove foreign key for courseid first.
-        $key = new xmldb_key('courseid', XMLDB_KEY_FOREIGN, ['courseid'], 'course', ['id']);
-        if ($dbman->key_exists($table, $key)) {
-            $dbman->drop_key($table, $key);
-        }
-
-        // Remove foreign key for categoryid.
-        $key = new xmldb_key('categoryid', XMLDB_KEY_FOREIGN, ['categoryid'], 'course_categories', ['id']);
-        if ($dbman->key_exists($table, $key)) {
-            $dbman->drop_key($table, $key);
-        }
+        // Note: Foreign keys in Moodle XMLDB are documentation only and don't create actual
+        // database constraints in most engines. We skip dropping keys and just drop the fields.
 
         // Drop the courseid field (no longer used).
         $field = new xmldb_field('courseid');
