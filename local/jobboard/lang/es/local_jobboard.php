@@ -1760,3 +1760,80 @@ $string['password_strength_strong'] = 'Contraseña fuerte';
 
 // Registro deshabilitado.
 $string['registrationdisabled'] = 'El auto-registro está actualmente deshabilitado. Por favor contacta al administrador para asistencia.';
+
+// ==========================================================================
+// Cadenas del Formulario de Registro Mejorado (campos de perfil extendido).
+// ==========================================================================
+
+// Secciones del formulario.
+$string['signup_account_header'] = 'Credenciales de la Cuenta';
+$string['signup_academic_header'] = 'Perfil Académico y Profesional';
+$string['signup_required_fields'] = 'Los campos marcados con asterisco son obligatorios';
+
+// Tipos de documento.
+$string['signup_doctype'] = 'Tipo de Documento';
+$string['signup_doctype_cc'] = 'Cédula de Ciudadanía';
+$string['signup_doctype_ce'] = 'Cédula de Extranjería';
+$string['signup_doctype_passport'] = 'Pasaporte';
+$string['signup_doctype_ti'] = 'Tarjeta de Identidad';
+$string['signup_doctype_pep'] = 'Permiso Especial de Permanencia (PEP)';
+$string['signup_doctype_ppt'] = 'Permiso de Protección Temporal (PPT)';
+
+// Campos personales.
+$string['signup_birthdate'] = 'Fecha de Nacimiento';
+$string['signup_gender'] = 'Género';
+$string['signup_gender_male'] = 'Masculino';
+$string['signup_gender_female'] = 'Femenino';
+$string['signup_gender_other'] = 'Otro';
+$string['signup_gender_prefer_not'] = 'Prefiero no decir';
+
+// Campos de contacto.
+$string['signup_phone_mobile'] = 'Teléfono Celular';
+$string['signup_phone_home'] = 'Teléfono Fijo/Alternativo';
+$string['signup_department_region'] = 'Departamento/Estado/Provincia';
+
+// Campos académicos.
+$string['signup_education_level'] = 'Nivel Educativo Más Alto';
+$string['signup_edu_highschool'] = 'Bachillerato';
+$string['signup_edu_technical'] = 'Técnico';
+$string['signup_edu_technological'] = 'Tecnológico';
+$string['signup_edu_undergraduate'] = 'Pregrado (Profesional)';
+$string['signup_edu_specialization'] = 'Especialización';
+$string['signup_edu_masters'] = 'Maestría';
+$string['signup_edu_doctorate'] = 'Doctorado';
+$string['signup_edu_postdoctorate'] = 'Postdoctorado';
+
+$string['signup_degree_title'] = 'Título Obtenido';
+$string['signup_degree_title_help'] = 'Ingrese el nombre exacto de su título de mayor nivel. Por ejemplo: "Ingeniero de Sistemas" o "Licenciado en Matemáticas"';
+$string['signup_institution'] = 'Institución';
+$string['signup_institution_help'] = 'Ingrese el nombre de la institución educativa donde obtuvo su título de mayor nivel';
+$string['signup_expertise_area'] = 'Área de Especialización/Expertise';
+$string['signup_expertise_area_help'] = 'Ingrese su principal área de expertise profesional o especialización académica';
+
+// Experiencia.
+$string['signup_experience_years'] = 'Años de Experiencia Profesional';
+$string['signup_exp_none'] = 'Sin experiencia';
+$string['signup_exp_less_1'] = 'Menos de 1 año';
+$string['signup_exp_1_3'] = '1 a 3 años';
+$string['signup_exp_3_5'] = '3 a 5 años';
+$string['signup_exp_5_10'] = '5 a 10 años';
+$string['signup_exp_more_10'] = 'Más de 10 años';
+
+// Perfil profesional.
+$string['signup_professional_profile'] = 'Perfil Profesional';
+$string['signup_professional_profile_help'] = 'Escriba una breve descripción de su perfil profesional, incluyendo sus habilidades clave, experiencia y objetivos profesionales (máximo 1000 caracteres)';
+
+// Mensajes de validación.
+$string['signup_username_tooshort'] = 'El nombre de usuario debe tener al menos 4 caracteres';
+$string['signup_idnumber_exists'] = 'Este número de identificación ya está registrado en el sistema';
+$string['signup_birthdate_minage'] = 'Debe tener al menos 18 años para registrarse';
+$string['signup_dataaccuracy_accept'] = 'Declaro que toda la información proporcionada es verídica y exacta';
+$string['signup_dataaccuracy_required'] = 'Debe confirmar que la información proporcionada es exacta';
+$string['signup_error_creating'] = 'Ocurrió un error al crear su cuenta';
+
+// Instrucciones de confirmación por email.
+$string['signup_email_instructions_title'] = 'Próximos Pasos';
+$string['signup_email_instruction_1'] = 'Revise su bandeja de entrada de correo electrónico para el mensaje de confirmación';
+$string['signup_email_instruction_2'] = 'Haga clic en el enlace de confirmación del correo para activar su cuenta';
+$string['signup_email_instruction_3'] = 'Una vez confirmada, podrá iniciar sesión y postularse a vacantes';
+$string['signup_check_spam'] = 'Si no ve el correo, por favor revise su carpeta de spam o correo no deseado';

@@ -568,5 +568,32 @@
         <INDEX NAME="time_idx" UNIQUE="false" FIELDS="timecreated"/>
       </INDEXES>
     </TABLE>
+
+    <!-- Table 23: Applicant profile (extended user data for job applicants) -->
+    <TABLE NAME="local_jobboard_applicant_profile" COMMENT="Extended profile data for job applicants registered through jobboard">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User ID from mdl_user"/>
+        <FIELD NAME="doctype" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Document type: cc, ce, passport, ti, pep, ppt"/>
+        <FIELD NAME="birthdate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Date of birth (Unix timestamp)"/>
+        <FIELD NAME="gender" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Gender: M, F, O, N"/>
+        <FIELD NAME="education_level" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="Highest education level code"/>
+        <FIELD NAME="degree_title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Degree or title obtained"/>
+        <FIELD NAME="expertise_area" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Area of expertise or specialization"/>
+        <FIELD NAME="experience_years" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Years of experience code"/>
+        <FIELD NAME="profile_complete" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 if profile is complete"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid_fk" TYPE="foreign-unique" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="education_idx" UNIQUE="false" FIELDS="education_level"/>
+        <INDEX NAME="experience_idx" UNIQUE="false" FIELDS="experience_years"/>
+        <INDEX NAME="profile_complete_idx" UNIQUE="false" FIELDS="profile_complete"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>

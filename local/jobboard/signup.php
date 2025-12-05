@@ -17,9 +17,10 @@
 /**
  * Alternative signup page for Job Board with company selection.
  *
- * This page allows new users to register and optionally select a company
- * when they want to apply for vacancies. It works alongside IOMAD's
- * multi-tenant architecture.
+ * This page allows new users to register with complete profile information
+ * and optionally select a company when applying for vacancies. It works
+ * alongside IOMAD's multi-tenant architecture and replicates Moodle's
+ * email confirmation workflow.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -35,6 +36,7 @@ require_once(__DIR__ . '/lib.php');
 require_once($CFG->dirroot . '/user/editlib.php');
 require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->libdir . '/authlib.php');
+require_once($CFG->dirroot . '/login/lib.php');
 
 // Check if user is already logged in.
 if (isloggedin() && !isguestuser()) {
@@ -48,7 +50,6 @@ if (isloggedin() && !isguestuser()) {
 
 // Check if self-registration is allowed.
 if (empty($CFG->registerauth) || $CFG->registerauth === 'none') {
-    // Self-registration is disabled - show error.
     throw new moodle_exception('registrationdisabled', 'local_jobboard');
 }
 
@@ -71,6 +72,9 @@ $PAGE->set_url(new moodle_url('/local/jobboard/signup.php', ['vacancyid' => $vac
 $PAGE->set_pagelayout('login');
 $PAGE->set_title(get_string('signup_title', 'local_jobboard'));
 $PAGE->set_heading(get_string('signup_title', 'local_jobboard'));
+
+// Add custom CSS for the signup form.
+$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Add navigation.
 $PAGE->navbar->add(get_string('publicvacancies', 'local_jobboard'), new moodle_url('/local/jobboard/public.php'));
@@ -115,74 +119,115 @@ if ($mform->is_cancelled()) {
 
 // Handle form submission.
 if ($data = $mform->get_data()) {
-    // Create the user account.
-    $user = create_user_from_form($data, $isiomad);
+    try {
+        // Create the user account.
+        $user = create_user_from_form($data, $isiomad);
 
-    if ($user) {
-        // Send confirmation email.
-        if (!send_confirmation_email($user)) {
-            throw new moodle_exception('signup_email_error', 'local_jobboard');
+        if ($user) {
+            // Send confirmation email using Moodle's standard function.
+            $confirmationemail = send_confirmation_email_to_user($user);
+
+            if (!$confirmationemail) {
+                // Email failed but user was created - log this.
+                debugging('Failed to send confirmation email to user ' . $user->id, DEBUG_NORMAL);
+            }
+
+            // Show success message.
+            $PAGE->set_title(get_string('signup_success_title', 'local_jobboard'));
+            $PAGE->set_heading(get_string('signup_success_title', 'local_jobboard'));
+
+            echo $OUTPUT->header();
+
+            echo html_writer::start_div('signup-success text-center my-5');
+            echo html_writer::tag('div', html_writer::tag('i', '', ['class' => 'fa fa-check-circle fa-5x']),
+                ['class' => 'text-success mb-4']);
+            echo html_writer::tag('h2', get_string('signup_success_title', 'local_jobboard'), ['class' => 'mb-3']);
+            echo html_writer::tag('p', get_string('signup_success_message', 'local_jobboard', $user->email),
+                ['class' => 'lead text-muted']);
+
+            // Detailed instructions.
+            echo html_writer::start_div('alert alert-info text-start mt-4 mx-auto', ['style' => 'max-width: 600px;']);
+            echo html_writer::tag('h5', html_writer::tag('i', '', ['class' => 'fa fa-envelope me-2']) .
+                get_string('signup_email_instructions_title', 'local_jobboard'));
+            echo html_writer::start_tag('ol', ['class' => 'mb-0']);
+            echo html_writer::tag('li', get_string('signup_email_instruction_1', 'local_jobboard'));
+            echo html_writer::tag('li', get_string('signup_email_instruction_2', 'local_jobboard'));
+            echo html_writer::tag('li', get_string('signup_email_instruction_3', 'local_jobboard'));
+            echo html_writer::end_tag('ol');
+            echo html_writer::end_div();
+
+            // Spam notice.
+            echo html_writer::tag('p', html_writer::tag('small',
+                html_writer::tag('i', '', ['class' => 'fa fa-exclamation-triangle me-1']) .
+                get_string('signup_check_spam', 'local_jobboard')),
+                ['class' => 'text-muted mt-3']);
+
+            // Buttons.
+            echo html_writer::start_div('mt-4');
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/public.php'),
+                html_writer::tag('i', '', ['class' => 'fa fa-arrow-left me-2']) .
+                get_string('backtovacancies', 'local_jobboard'),
+                ['class' => 'btn btn-primary me-2']
+            );
+            echo html_writer::link(
+                new moodle_url('/login/index.php'),
+                html_writer::tag('i', '', ['class' => 'fa fa-sign-in me-2']) .
+                get_string('login'),
+                ['class' => 'btn btn-outline-secondary']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+
+            echo $OUTPUT->footer();
+            exit;
         }
-
-        // Show success message.
-        $PAGE->set_title(get_string('signup_success_title', 'local_jobboard'));
-        $PAGE->set_heading(get_string('signup_success_title', 'local_jobboard'));
-
-        echo $OUTPUT->header();
-
-        echo html_writer::start_div('signup-success text-center my-5');
-        echo html_writer::tag('i', '', ['class' => 'fa fa-check-circle text-success fa-5x mb-3']);
-        echo html_writer::tag('h2', get_string('signup_success_title', 'local_jobboard'));
-        echo html_writer::tag('p', get_string('signup_success_message', 'local_jobboard', $user->email), ['class' => 'lead']);
-        echo html_writer::tag('p', get_string('signup_success_instructions', 'local_jobboard'));
-
-        echo html_writer::start_div('mt-4');
-        echo html_writer::link(
-            new moodle_url('/local/jobboard/public.php'),
-            get_string('backtovacancies', 'local_jobboard'),
-            ['class' => 'btn btn-primary']
-        );
-        echo html_writer::end_div();
-        echo html_writer::end_div();
-
-        echo $OUTPUT->footer();
-        exit;
+    } catch (Exception $e) {
+        // Show error message.
+        \core\notification::error(get_string('signup_error_creating', 'local_jobboard') . ': ' . $e->getMessage());
     }
 }
 
 // Display the form.
 echo $OUTPUT->header();
 
-// Page header.
-echo html_writer::start_div('signup-header mb-4');
+// Page header with icon.
+echo html_writer::start_div('signup-header mb-4 text-center');
+echo html_writer::tag('div', html_writer::tag('i', '', ['class' => 'fa fa-user-plus fa-3x']),
+    ['class' => 'text-primary mb-3']);
 echo html_writer::tag('h1', get_string('signup_title', 'local_jobboard'), ['class' => 'h2']);
-echo html_writer::tag('p', get_string('signup_intro', 'local_jobboard'), ['class' => 'lead']);
+echo html_writer::tag('p', get_string('signup_intro', 'local_jobboard'), ['class' => 'lead text-muted']);
 echo html_writer::end_div();
 
 // Show vacancy info if available.
 if ($vacancy) {
-    echo html_writer::start_div('card mb-4');
-    echo html_writer::start_div('card-header');
-    echo html_writer::tag('h5', get_string('signup_applying_for', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::start_div('card mb-4 border-primary');
+    echo html_writer::start_div('card-header bg-primary text-white');
+    echo html_writer::tag('h5', html_writer::tag('i', '', ['class' => 'fa fa-briefcase me-2']) .
+        get_string('signup_applying_for', 'local_jobboard'), ['class' => 'mb-0']);
     echo html_writer::end_div();
     echo html_writer::start_div('card-body');
-    echo html_writer::tag('h5', s($vacancy->title), ['class' => 'card-title']);
+    echo html_writer::tag('h5', s($vacancy->title), ['class' => 'card-title mb-2']);
     echo html_writer::tag('p',
-        html_writer::tag('strong', get_string('code', 'local_jobboard') . ': ') . s($vacancy->code),
+        html_writer::tag('span', get_string('code', 'local_jobboard') . ': ', ['class' => 'text-muted']) .
+        html_writer::tag('strong', s($vacancy->code)),
         ['class' => 'card-text mb-1']
     );
     if (!empty($vacancy->location)) {
         echo html_writer::tag('p',
-            html_writer::tag('i', '', ['class' => 'fa fa-map-marker me-1']) . s($vacancy->location),
-            ['class' => 'card-text text-muted']
+            html_writer::tag('i', '', ['class' => 'fa fa-map-marker text-muted me-1']) .
+            html_writer::tag('span', s($vacancy->location), ['class' => 'text-muted']),
+            ['class' => 'card-text mb-0']
         );
     }
     echo html_writer::end_div();
     echo html_writer::end_div();
 }
 
-// Login alternative.
-echo html_writer::start_div('alert alert-info mb-4');
+// Login alternative with better styling.
+echo html_writer::start_div('alert alert-info d-flex align-items-center mb-4');
+echo html_writer::tag('i', '', ['class' => 'fa fa-info-circle fa-lg me-3']);
+echo html_writer::start_div();
 echo html_writer::tag('strong', get_string('signup_already_account', 'local_jobboard'));
 echo ' ';
 $loginurl = new moodle_url('/login/index.php');
@@ -192,8 +237,16 @@ if ($vacancyid) {
         'vacancyid' => $vacancyid,
     ]))->out(false));
 }
-echo html_writer::link($loginurl, get_string('login'), ['class' => 'btn btn-sm btn-primary']);
+echo html_writer::link($loginurl, get_string('login'), ['class' => 'btn btn-sm btn-primary ms-2']);
 echo html_writer::end_div();
+echo html_writer::end_div();
+
+// Required fields notice.
+echo html_writer::tag('p',
+    html_writer::tag('span', '*', ['class' => 'text-danger']) . ' ' .
+    get_string('signup_required_fields', 'local_jobboard'),
+    ['class' => 'text-muted small mb-4']
+);
 
 // Display the form.
 $mform->display();
@@ -211,55 +264,187 @@ echo $OUTPUT->footer();
  * @param stdClass $data Form data.
  * @param bool $isiomad Whether IOMAD is installed.
  * @return stdClass|false The created user or false on failure.
+ * @throws Exception If user creation fails.
  */
 function create_user_from_form($data, $isiomad) {
     global $CFG, $DB;
 
-    // Build user object.
+    // Build user object with all Moodle standard fields.
     $user = new stdClass();
     $user->auth = $CFG->registerauth;
-    $user->confirmed = 0;
+    $user->confirmed = 0; // Requires email confirmation.
     $user->mnethostid = $CFG->mnet_localhost_id;
-    $user->username = trim(strtolower($data->username));
+    $user->username = trim(core_text::strtolower($data->username));
     $user->password = hash_internal_user_password($data->password);
     $user->email = trim($data->email);
     $user->firstname = trim($data->firstname);
     $user->lastname = trim($data->lastname);
+    $user->idnumber = trim($data->idnumber ?? '');
     $user->phone1 = trim($data->phone1 ?? '');
+    $user->phone2 = trim($data->phone2 ?? '');
+    $user->address = trim($data->address ?? '');
     $user->city = trim($data->city ?? '');
     $user->country = $data->country ?? '';
-    $user->idnumber = trim($data->idnumber ?? '');
+    $user->institution = trim($data->institution ?? '');
+    $user->department = trim($data->department_region ?? '');
+    $user->description = trim($data->description ?? '');
+    $user->descriptionformat = FORMAT_HTML;
     $user->lang = current_language();
     $user->calendartype = $CFG->calendartype;
+    $user->timezone = $CFG->timezone ?? '99';
     $user->timecreated = time();
     $user->timemodified = $user->timecreated;
     $user->policyagreed = 1;
     $user->secret = random_string(15);
 
+    // Start transaction for data integrity.
+    $transaction = $DB->start_delegated_transaction();
+
     try {
-        // Create the user.
+        // Create the user in the database.
         $user->id = $DB->insert_record('user', $user);
+
+        if (!$user->id) {
+            throw new Exception('Failed to insert user record');
+        }
+
+        // Update user context.
+        $usercontext = context_user::instance($user->id);
 
         // Trigger user created event.
         $event = \core\event\user_created::create([
             'objectid' => $user->id,
             'context' => context_system::instance(),
             'relateduserid' => $user->id,
+            'other' => [
+                'auth' => $user->auth,
+            ],
         ]);
         $event->trigger();
+
+        // Store extended profile data in jobboard profile table.
+        store_extended_profile($user->id, $data);
+
+        // Store consent records.
+        store_user_consents($user->id, $data);
 
         // Assign to company in IOMAD if selected.
         if ($isiomad && !empty($data->companyid)) {
             assign_user_to_company($user->id, $data->companyid, $data->departmentid ?? 0);
         }
 
-        // Store job board specific data.
-        store_jobboard_user_data($user->id, $data);
+        // Store the vacancy they were applying for as user preference.
+        if (!empty($data->vacancyid)) {
+            set_user_preference('local_jobboard_pending_vacancy', $data->vacancyid, $user->id);
+        }
+
+        // Commit transaction.
+        $transaction->allow_commit();
+
+        // Log the signup in the audit table.
+        log_signup_audit($user->id, $data);
 
         return $user;
+
     } catch (Exception $e) {
-        debugging('Error creating user: ' . $e->getMessage(), DEBUG_DEVELOPER);
-        return false;
+        $transaction->rollback($e);
+        throw $e;
+    }
+}
+
+/**
+ * Store extended profile data for the applicant.
+ *
+ * @param int $userid The user ID.
+ * @param stdClass $data The form data.
+ */
+function store_extended_profile($userid, $data) {
+    global $DB;
+
+    // Create applicant profile record.
+    $profile = new stdClass();
+    $profile->userid = $userid;
+    $profile->doctype = $data->doctype ?? '';
+    $profile->birthdate = $data->birthdate ?? 0;
+    $profile->gender = $data->gender ?? '';
+    $profile->education_level = $data->education_level ?? '';
+    $profile->degree_title = trim($data->degree_title ?? '');
+    $profile->expertise_area = trim($data->expertise_area ?? '');
+    $profile->experience_years = $data->experience_years ?? '';
+    $profile->timecreated = time();
+    $profile->timemodified = time();
+
+    // Check if our profile table exists.
+    $dbman = $DB->get_manager();
+    if ($dbman->table_exists('local_jobboard_applicant_profile')) {
+        $DB->insert_record('local_jobboard_applicant_profile', $profile);
+    } else {
+        // Fallback: Store in user preferences.
+        set_user_preference('local_jobboard_doctype', $profile->doctype, $userid);
+        set_user_preference('local_jobboard_birthdate', $profile->birthdate, $userid);
+        set_user_preference('local_jobboard_gender', $profile->gender, $userid);
+        set_user_preference('local_jobboard_education_level', $profile->education_level, $userid);
+        set_user_preference('local_jobboard_degree_title', $profile->degree_title, $userid);
+        set_user_preference('local_jobboard_expertise_area', $profile->expertise_area, $userid);
+        set_user_preference('local_jobboard_experience_years', $profile->experience_years, $userid);
+    }
+}
+
+/**
+ * Store user consent records.
+ *
+ * @param int $userid The user ID.
+ * @param stdClass $data The form data.
+ */
+function store_user_consents($userid, $data) {
+    global $DB;
+
+    $dbman = $DB->get_manager();
+    if (!$dbman->table_exists('local_jobboard_consent')) {
+        return;
+    }
+
+    $now = time();
+    $ipaddress = getremoteaddr();
+    $useragent = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 512);
+
+    // Terms consent.
+    if (!empty($data->policyagreed)) {
+        $consent = new stdClass();
+        $consent->userid = $userid;
+        $consent->consenttype = 'terms';
+        $consent->consentgiven = 1;
+        $consent->consentversion = get_config('local_jobboard', 'terms_version') ?: '1.0';
+        $consent->ipaddress = $ipaddress;
+        $consent->useragent = $useragent;
+        $consent->timecreated = $now;
+        $DB->insert_record('local_jobboard_consent', $consent);
+    }
+
+    // Data treatment consent.
+    if (!empty($data->datatreatmentagreed)) {
+        $consent = new stdClass();
+        $consent->userid = $userid;
+        $consent->consenttype = 'datatreatment';
+        $consent->consentgiven = 1;
+        $consent->consentversion = get_config('local_jobboard', 'datatreatment_version') ?: '1.0';
+        $consent->ipaddress = $ipaddress;
+        $consent->useragent = $useragent;
+        $consent->timecreated = $now;
+        $DB->insert_record('local_jobboard_consent', $consent);
+    }
+
+    // Data accuracy consent.
+    if (!empty($data->dataaccuracy)) {
+        $consent = new stdClass();
+        $consent->userid = $userid;
+        $consent->consenttype = 'dataaccuracy';
+        $consent->consentgiven = 1;
+        $consent->consentversion = '1.0';
+        $consent->ipaddress = $ipaddress;
+        $consent->useragent = $useragent;
+        $consent->timecreated = $now;
+        $DB->insert_record('local_jobboard_consent', $consent);
     }
 }
 
@@ -308,32 +493,47 @@ function assign_user_to_company($userid, $companyid, $departmentid = 0) {
 }
 
 /**
- * Store job board specific user data.
+ * Send confirmation email to the new user.
+ *
+ * This function uses Moodle's standard confirmation email mechanism.
+ *
+ * @param stdClass $user The user object.
+ * @return bool True if email was sent successfully.
+ */
+function send_confirmation_email_to_user($user) {
+    global $CFG;
+
+    // Use Moodle's standard confirmation email function.
+    return send_confirmation_email($user);
+}
+
+/**
+ * Log the signup in the audit table.
  *
  * @param int $userid The user ID.
  * @param stdClass $data The form data.
  */
-function store_jobboard_user_data($userid, $data) {
+function log_signup_audit($userid, $data) {
     global $DB;
 
-    // Store the data treatment consent.
-    $consent = new stdClass();
-    $consent->userid = $userid;
-    $consent->consenttype = 'datatreatment';
-    $consent->consentgiven = !empty($data->datatreatmentagreed) ? 1 : 0;
-    $consent->timecreated = time();
-    $consent->ipaddress = getremoteaddr();
-    $consent->useragent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-
-    // Check if jobboard consent table exists.
     $dbman = $DB->get_manager();
-    if ($dbman->table_exists('local_jobboard_consent')) {
-        $DB->insert_record('local_jobboard_consent', $consent);
+    if (!$dbman->table_exists('local_jobboard_audit')) {
+        return;
     }
 
-    // Store the vacancy they were applying for.
-    if (!empty($data->vacancyid)) {
-        // Store as user preference for later redirect.
-        set_user_preference('local_jobboard_pending_vacancy', $data->vacancyid, $userid);
-    }
+    $audit = new stdClass();
+    $audit->userid = $userid;
+    $audit->action = 'user_signup';
+    $audit->entitytype = 'user';
+    $audit->entityid = $userid;
+    $audit->ipaddress = getremoteaddr();
+    $audit->useragent = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 512);
+    $audit->extradata = json_encode([
+        'vacancyid' => $data->vacancyid ?? 0,
+        'companyid' => $data->companyid ?? 0,
+        'source' => 'jobboard_signup',
+    ]);
+    $audit->timecreated = time();
+
+    $DB->insert_record('local_jobboard_audit', $audit);
 }

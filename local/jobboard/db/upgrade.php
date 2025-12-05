@@ -614,5 +614,38 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120516, 'local', 'jobboard');
     }
 
+    // Phase 9.4: Add applicant profile table for extended user data.
+    if ($oldversion < 2025120517) {
+
+        // Create applicant profile table for storing extended user data.
+        $table = new xmldb_table('local_jobboard_applicant_profile');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('doctype', XMLDB_TYPE_CHAR, '20', null, null, null, null);
+        $table->add_field('birthdate', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('gender', XMLDB_TYPE_CHAR, '1', null, null, null, null);
+        $table->add_field('education_level', XMLDB_TYPE_CHAR, '30', null, null, null, null);
+        $table->add_field('degree_title', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('expertise_area', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('experience_years', XMLDB_TYPE_CHAR, '10', null, null, null, null);
+        $table->add_field('profile_complete', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN_UNIQUE, ['userid'], 'user', ['id']);
+
+        $table->add_index('education_idx', XMLDB_INDEX_NOTUNIQUE, ['education_level']);
+        $table->add_index('experience_idx', XMLDB_INDEX_NOTUNIQUE, ['experience_years']);
+        $table->add_index('profile_complete_idx', XMLDB_INDEX_NOTUNIQUE, ['profile_complete']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2025120517, 'local', 'jobboard');
+    }
+
     return true;
 }

@@ -1758,3 +1758,80 @@ $string['password_strength_strong'] = 'Strong password';
 
 // Registration disabled.
 $string['registrationdisabled'] = 'Self-registration is currently disabled. Please contact the administrator for assistance.';
+
+// ==========================================================================
+// Enhanced Signup Form strings (extended profile fields).
+// ==========================================================================
+
+// Form sections.
+$string['signup_account_header'] = 'Account Credentials';
+$string['signup_academic_header'] = 'Academic and Professional Profile';
+$string['signup_required_fields'] = 'Fields marked with an asterisk are required';
+
+// Document types.
+$string['signup_doctype'] = 'Document Type';
+$string['signup_doctype_cc'] = 'Citizenship ID (Cédula de Ciudadanía)';
+$string['signup_doctype_ce'] = 'Foreign ID (Cédula de Extranjería)';
+$string['signup_doctype_passport'] = 'Passport';
+$string['signup_doctype_ti'] = 'Identity Card (Tarjeta de Identidad)';
+$string['signup_doctype_pep'] = 'Special Stay Permit (PEP)';
+$string['signup_doctype_ppt'] = 'Temporary Protection Permit (PPT)';
+
+// Personal fields.
+$string['signup_birthdate'] = 'Date of Birth';
+$string['signup_gender'] = 'Gender';
+$string['signup_gender_male'] = 'Male';
+$string['signup_gender_female'] = 'Female';
+$string['signup_gender_other'] = 'Other';
+$string['signup_gender_prefer_not'] = 'Prefer not to say';
+
+// Contact fields.
+$string['signup_phone_mobile'] = 'Mobile Phone';
+$string['signup_phone_home'] = 'Home/Alternative Phone';
+$string['signup_department_region'] = 'State/Province/Department';
+
+// Academic fields.
+$string['signup_education_level'] = 'Highest Education Level';
+$string['signup_edu_highschool'] = 'High School';
+$string['signup_edu_technical'] = 'Technical Degree';
+$string['signup_edu_technological'] = 'Technological Degree';
+$string['signup_edu_undergraduate'] = 'Undergraduate Degree (Bachelor\'s)';
+$string['signup_edu_specialization'] = 'Specialization';
+$string['signup_edu_masters'] = 'Master\'s Degree';
+$string['signup_edu_doctorate'] = 'Doctorate (PhD)';
+$string['signup_edu_postdoctorate'] = 'Post-Doctorate';
+
+$string['signup_degree_title'] = 'Degree/Title Obtained';
+$string['signup_degree_title_help'] = 'Enter the exact name of your highest degree or professional title. For example: "Bachelor of Science in Computer Engineering"';
+$string['signup_institution'] = 'Institution';
+$string['signup_institution_help'] = 'Enter the name of the educational institution where you obtained your highest degree';
+$string['signup_expertise_area'] = 'Area of Expertise/Specialization';
+$string['signup_expertise_area_help'] = 'Enter your main area of professional expertise or academic specialization';
+
+// Experience.
+$string['signup_experience_years'] = 'Years of Professional Experience';
+$string['signup_exp_none'] = 'No experience';
+$string['signup_exp_less_1'] = 'Less than 1 year';
+$string['signup_exp_1_3'] = '1 to 3 years';
+$string['signup_exp_3_5'] = '3 to 5 years';
+$string['signup_exp_5_10'] = '5 to 10 years';
+$string['signup_exp_more_10'] = 'More than 10 years';
+
+// Professional profile.
+$string['signup_professional_profile'] = 'Professional Profile';
+$string['signup_professional_profile_help'] = 'Write a brief description of your professional profile, including your key skills, experience, and career objectives (maximum 1000 characters)';
+
+// Validation messages.
+$string['signup_username_tooshort'] = 'Username must be at least 4 characters long';
+$string['signup_idnumber_exists'] = 'This identification number is already registered in the system';
+$string['signup_birthdate_minage'] = 'You must be at least 18 years old to register';
+$string['signup_dataaccuracy_accept'] = 'I declare that all information provided is accurate and truthful';
+$string['signup_dataaccuracy_required'] = 'You must confirm that the information provided is accurate';
+$string['signup_error_creating'] = 'An error occurred while creating your account';
+
+// Email confirmation instructions.
+$string['signup_email_instructions_title'] = 'Next Steps';
+$string['signup_email_instruction_1'] = 'Check your email inbox for the confirmation message';
+$string['signup_email_instruction_2'] = 'Click the confirmation link in the email to activate your account';
+$string['signup_email_instruction_3'] = 'Once confirmed, you can log in and apply for vacancies';
+$string['signup_check_spam'] = 'If you don\'t see the email, please check your spam or junk folder';
