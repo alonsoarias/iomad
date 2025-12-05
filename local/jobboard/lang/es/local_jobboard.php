@@ -2368,3 +2368,62 @@ $string['tour_convocatorias_step7_content'] = 'Ahora entiende como gestionar con
 // Cadenas de ayuda para convocatorias.
 $string['convocatoria_help'] = 'Una convocatoria agrupa vacantes laborales relacionadas bajo una campana unica con fechas de inicio y fin definidas. Al crear una vacante, puede asociarla con una convocatoria para organizar su proceso de reclutamiento. Las fechas de la convocatoria determinan cuando se pueden enviar postulaciones.';
 $string['convocatoria_profile_help'] = 'Las vacantes dentro de una convocatoria deben crearse de acuerdo con los perfiles profesionales definidos en los documentos de PERFILES PROFESORES. Cada perfil especifica las calificaciones requeridas, experiencia y documentos necesarios para ese puesto.';
+
+// ============================================================================
+// Dashboard redesign - Navegación jerárquica (Convocatorias → Vacantes)
+// ============================================================================
+
+// Welcome messages.
+$string['dashboard_admin_welcome'] = 'Bienvenido al panel de administración de la Bolsa de Empleo. Desde aquí puede gestionar convocatorias, vacantes, postulaciones y revisar documentos.';
+$string['dashboard_applicant_welcome'] = 'Bienvenido a la Bolsa de Empleo. Explore las vacantes disponibles y gestione sus postulaciones desde este panel.';
+
+// Section titles.
+$string['administracion'] = 'Administración';
+$string['reviewertasks'] = 'Tareas de Revisión';
+
+// Statistics cards.
+$string['activeconvocatorias'] = 'Convocatorias activas';
+$string['publishedvacancies'] = 'Vacantes publicadas';
+$string['pendingreviews'] = 'Revisiones pendientes';
+
+// Convocatorias management card.
+$string['convocatorias_dashboard_desc'] = 'Gestione las convocatorias de la institución. Las vacantes se organizan dentro de convocatorias para facilitar el proceso de selección.';
+$string['workflow_flow'] = 'Flujo de trabajo';
+$string['selection'] = 'Selección';
+$string['gotoconvocatorias'] = 'Ir a Convocatorias';
+
+// Review card.
+$string['review_dashboard_desc'] = 'Revise y valide los documentos de los postulantes. Verifique que la documentación cumpla con los requisitos establecidos.';
+$string['pending_reviews_alert'] = 'Tiene {$a} documentos pendientes de revisión que requieren su atención.';
+$string['gotoreview'] = 'Ir a Revisiones';
+
+// Reports card.
+$string['reports_dashboard_desc'] = 'Consulte estadísticas y reportes sobre convocatorias, vacantes, postulaciones y tiempos de procesamiento.';
+
+// Configuration card.
+$string['configuration'] = 'Configuración';
+$string['config_dashboard_desc'] = 'Configure tipos de documentos, plantillas de correo, flujos de trabajo y otras opciones del sistema.';
+$string['configure'] = 'Configurar';
+
+// Exemptions card.
+$string['exemptions_dashboard_desc'] = 'Gestione las excepciones documentales para personal histórico ISER y otras categorías especiales.';
+
+// Applicant section statistics.
+$string['myapplicationcount'] = 'Mis postulaciones';
+$string['availablevacancies'] = 'Vacantes disponibles';
+$string['pendingdocs'] = 'Documentos pendientes';
+
+// Browse vacancies card.
+$string['browservacancies'] = 'Explorar Vacantes';
+$string['browse_vacancies_desc'] = 'Consulte las vacantes publicadas por la institución. Revise los requisitos y postúlese a las que cumplan con su perfil profesional.';
+$string['available_vacancies_alert'] = 'Hay {$a} vacantes disponibles que coinciden con su perfil. ¡No pierda la oportunidad de postularse!';
+$string['explorevacancias'] = 'Ver vacantes disponibles';
+
+// My applications card.
+$string['myapplications_desc'] = 'Consulte el estado de sus postulaciones, suba documentos pendientes y haga seguimiento a sus procesos de selección.';
+$string['pending_docs_alert'] = 'Tiene {$a} documentos pendientes de cargar o corregir en sus postulaciones.';
+$string['viewmyapplications'] = 'Ver mis postulaciones';
+
+// Reviewer section.
+$string['myreviews_desc'] = 'Consulte las postulaciones asignadas para revisión y valide la documentación de los postulantes.';
+$string['viewmyreviews'] = 'Ver mis revisiones';

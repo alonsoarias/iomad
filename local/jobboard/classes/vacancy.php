@@ -60,18 +60,6 @@ class vacancy {
     /** @var string The department. */
     public $department = '';
 
-    /**
-     * @var int|null The associated course ID.
-     * @deprecated Since version 1.9.15. No longer used - vacancies are not linked to courses.
-     */
-    public $courseid = null;
-
-    /**
-     * @var int|null The associated category ID.
-     * @deprecated Since version 1.9.15. No longer used.
-     */
-    public $categoryid = null;
-
     /** @var int|null The Iomad company ID. */
     public $companyid = null;
 
@@ -169,8 +157,6 @@ class vacancy {
         $this->salary = $record->salary ?? '';
         $this->location = $record->location ?? '';
         $this->department = $record->department ?? '';
-        $this->courseid = $record->courseid ? (int) $record->courseid : null;
-        $this->categoryid = $record->categoryid ? (int) $record->categoryid : null;
         $this->companyid = $record->companyid ? (int) $record->companyid : null;
         $this->departmentid = isset($record->departmentid) && $record->departmentid ? (int) $record->departmentid : null;
         $this->convocatoriaid = isset($record->convocatoriaid) && $record->convocatoriaid ? (int) $record->convocatoriaid : null;
@@ -363,9 +349,9 @@ class vacancy {
     protected function set_from_data(\stdClass $data): void {
         $fields = [
             'code', 'title', 'description', 'contracttype', 'duration',
-            'salary', 'location', 'department', 'courseid', 'categoryid',
-            'companyid', 'departmentid', 'convocatoriaid', 'opendate', 'closedate',
-            'positions', 'requirements', 'desirable', 'status', 'publicationtype',
+            'salary', 'location', 'department', 'companyid', 'departmentid',
+            'convocatoriaid', 'opendate', 'closedate', 'positions',
+            'requirements', 'desirable', 'status', 'publicationtype',
         ];
 
         foreach ($fields as $field) {
@@ -483,8 +469,6 @@ class vacancy {
             'salary' => $this->salary,
             'location' => $this->location,
             'department' => $this->department,
-            'courseid' => $this->courseid,
-            'categoryid' => $this->categoryid,
             'companyid' => $this->companyid,
             'departmentid' => $this->departmentid,
             'convocatoriaid' => $this->convocatoriaid,

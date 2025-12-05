@@ -910,3 +910,73 @@ function local_jobboard_is_document_required(
     $required = local_jobboard_get_required_doctypes_for_applicant($gender, $educationlevel, $isiserexempted);
     return isset($required[$doccode]);
 }
+
+/**
+ * Get dashboard statistics for the current user.
+ *
+ * @param int $userid The user ID.
+ * @param bool $isadmin Whether the user is an admin.
+ * @param bool $isreviewer Whether the user is a reviewer.
+ * @return array Statistics array.
+ */
+function local_jobboard_get_dashboard_stats(int $userid, bool $isadmin = false, bool $isreviewer = false): array {
+    global $DB;
+
+    $stats = [];
+    $now = time();
+
+    // Admin/manager statistics.
+    if ($isadmin) {
+        // Active convocatorias (status = 'open').
+        $stats['active_convocatorias'] = $DB->count_records('local_jobboard_convocatoria', ['status' => 'open']);
+
+        // Published vacancies.
+        $stats['published_vacancies'] = $DB->count_records('local_jobboard_vacancy', ['status' => 'published']);
+
+        // Total applications.
+        $stats['total_applications'] = $DB->count_records('local_jobboard_application');
+
+        // Pending reviews (documents pending validation).
+        $sql = "SELECT COUNT(DISTINCT d.id)
+                FROM {local_jobboard_document} d
+                LEFT JOIN {local_jobboard_doc_validation} v ON v.documentid = d.id
+                WHERE v.id IS NULL OR v.status = 'pending'";
+        $stats['pending_reviews'] = (int) $DB->count_records_sql($sql);
+
+        // Recent activity (last 10 audit entries).
+        $stats['recent_activity'] = $DB->get_records('local_jobboard_audit', [], 'timecreated DESC', '*', 0, 10);
+    }
+
+    // Reviewer statistics.
+    if ($isreviewer) {
+        // My pending reviews.
+        $sql = "SELECT COUNT(DISTINCT a.id)
+                FROM {local_jobboard_application} a
+                WHERE a.reviewerid = :userid
+                AND a.status IN ('submitted', 'under_review')";
+        $stats['my_pending_reviews'] = (int) $DB->count_records_sql($sql, ['userid' => $userid]);
+    }
+
+    // Applicant statistics (for all authenticated users).
+    // My applications count.
+    $stats['my_applications'] = $DB->count_records('local_jobboard_application', ['userid' => $userid]);
+
+    // Available vacancies (published and open).
+    $sql = "SELECT COUNT(*)
+            FROM {local_jobboard_vacancy}
+            WHERE status = 'published'
+            AND opendate <= :now1
+            AND closedate >= :now2";
+    $stats['available_vacancies'] = (int) $DB->count_records_sql($sql, ['now1' => $now, 'now2' => $now]);
+
+    // Pending documents for my applications.
+    $sql = "SELECT COUNT(d.id)
+            FROM {local_jobboard_document} d
+            JOIN {local_jobboard_application} a ON a.id = d.applicationid
+            LEFT JOIN {local_jobboard_doc_validation} v ON v.documentid = d.id
+            WHERE a.userid = :userid
+            AND (v.id IS NULL OR v.status = 'pending')";
+    $stats['pending_docs'] = (int) $DB->count_records_sql($sql, ['userid' => $userid]);
+
+    return $stats;
+}
