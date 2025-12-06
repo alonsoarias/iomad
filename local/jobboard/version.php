@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120604;  // Improve navigation menu with Convocatorias and My Reviews links.
+$plugin->version = 2025120605;  // Complete CRUD and state management for vacancies and convocatorias.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.25-beta';
+$plugin->release = '1.9.26-beta';

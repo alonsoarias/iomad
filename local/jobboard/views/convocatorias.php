@@ -157,6 +157,37 @@ if ($action && $convocatoriaid && confirm_sesskey()) {
 
             redirect($baseurl, get_string('convocatoriaarchived', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
             break;
+
+        case 'reopen':
+            // Can only reopen closed convocatorias.
+            if ($convocatoria->status !== 'closed') {
+                redirect($baseurl, get_string('error:cannotreopenconvocatoria', 'local_jobboard'), null, \core\output\notification::NOTIFY_ERROR);
+            }
+
+            $previousstatus = $convocatoria->status;
+
+            $convocatoria->status = 'open';
+            $convocatoria->timemodified = time();
+            $convocatoria->modifiedby = $USER->id;
+            $DB->update_record('local_jobboard_convocatoria', $convocatoria);
+
+            // Reopen all closed vacancies in this convocatoria.
+            $vacancycount = $DB->count_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid, 'status' => 'closed']);
+            $DB->execute("UPDATE {local_jobboard_vacancy}
+                          SET status = 'published', timemodified = ?
+                          WHERE convocatoriaid = ? AND status = 'closed'",
+                [time(), $convocatoriaid]);
+
+            // Audit log.
+            \local_jobboard\audit::log('convocatoria_reopened', 'convocatoria', $convocatoriaid, [
+                'code' => $convocatoria->code,
+                'name' => $convocatoria->name,
+                'previous_status' => $previousstatus,
+                'vacancies_reopened' => $vacancycount,
+            ]);
+
+            redirect($baseurl, get_string('convocatoriareopened', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+            break;
     }
 }
 
@@ -329,6 +360,11 @@ if (empty($convocatorias)) {
             $actions[] = html_writer::link($closeurl, get_string('closeconvocatoria', 'local_jobboard'),
                 ['class' => 'btn btn-sm btn-outline-warning']);
         } elseif ($c->status === 'closed') {
+            // Reopen button.
+            $reopenurl = new moodle_url($baseurl, ['action' => 'reopen', 'id' => $c->id, 'sesskey' => sesskey()]);
+            $actions[] = html_writer::link($reopenurl, get_string('reopenconvocatoria', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-success']);
+            // Archive button.
             $archiveurl = new moodle_url($baseurl, ['action' => 'archive', 'id' => $c->id, 'sesskey' => sesskey()]);
             $actions[] = html_writer::link($archiveurl, get_string('archiveconvocatoria', 'local_jobboard'),
                 ['class' => 'btn btn-sm btn-outline-dark']);

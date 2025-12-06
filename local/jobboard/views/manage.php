@@ -56,7 +56,7 @@ if ($action === 'edit' && $vacancyid) {
 }
 
 // Handle actions that modify data (require sesskey).
-if ($action && $vacancyid && in_array($action, ['publish', 'close', 'delete'])) {
+if ($action && $vacancyid && in_array($action, ['publish', 'unpublish', 'close', 'reopen', 'delete'])) {
     require_sesskey();
 
     $vacancy = \local_jobboard\vacancy::get($vacancyid);
@@ -65,55 +65,65 @@ if ($action && $vacancyid && in_array($action, ['publish', 'close', 'delete'])) 
         throw new moodle_exception('error:vacancynotfound', 'local_jobboard');
     }
 
+    $redirecturl = new moodle_url('/local/jobboard/index.php', ['view' => 'manage']);
+
     switch ($action) {
         case 'publish':
             require_capability('local/jobboard:publishvacancy', $context);
             try {
                 $vacancy->publish();
-                redirect(
-                    new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
-                    get_string('vacancypublished', 'local_jobboard'),
-                    null,
-                    \core\output\notification::NOTIFY_SUCCESS
-                );
+                redirect($redirecturl, get_string('vacancypublished', 'local_jobboard'), null,
+                    \core\output\notification::NOTIFY_SUCCESS);
             } catch (Exception $e) {
-                redirect(
-                    new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
-                    $e->getMessage(),
-                    null,
-                    \core\output\notification::NOTIFY_ERROR
-                );
+                redirect($redirecturl, $e->getMessage(), null, \core\output\notification::NOTIFY_ERROR);
+            }
+            break;
+
+        case 'unpublish':
+            require_capability('local/jobboard:editvacancy', $context);
+            try {
+                $vacancy->unpublish();
+                redirect($redirecturl, get_string('vacancyunpublished', 'local_jobboard'), null,
+                    \core\output\notification::NOTIFY_SUCCESS);
+            } catch (Exception $e) {
+                redirect($redirecturl, $e->getMessage(), null, \core\output\notification::NOTIFY_ERROR);
             }
             break;
 
         case 'close':
             require_capability('local/jobboard:editvacancy', $context);
-            $vacancy->close();
-            redirect(
-                new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
-                get_string('vacancyclosed', 'local_jobboard'),
-                null,
-                \core\output\notification::NOTIFY_SUCCESS
-            );
+            try {
+                $vacancy->close();
+                redirect($redirecturl, get_string('vacancyclosed', 'local_jobboard'), null,
+                    \core\output\notification::NOTIFY_SUCCESS);
+            } catch (Exception $e) {
+                redirect($redirecturl, $e->getMessage(), null, \core\output\notification::NOTIFY_ERROR);
+            }
+            break;
+
+        case 'reopen':
+            require_capability('local/jobboard:publishvacancy', $context);
+            try {
+                $vacancy->reopen();
+                redirect($redirecturl, get_string('vacancyreopened', 'local_jobboard'), null,
+                    \core\output\notification::NOTIFY_SUCCESS);
+            } catch (Exception $e) {
+                redirect($redirecturl, $e->getMessage(), null, \core\output\notification::NOTIFY_ERROR);
+            }
             break;
 
         case 'delete':
             require_capability('local/jobboard:deletevacancy', $context);
             try {
+                if (!$vacancy->can_delete()) {
+                    $reason = $vacancy->get_delete_restriction_reason();
+                    throw new moodle_exception('error:cannotdelete', 'local_jobboard', '', $reason);
+                }
                 $vacancy->delete();
-                redirect(
-                    new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
-                    get_string('vacancydeleted', 'local_jobboard'),
-                    null,
-                    \core\output\notification::NOTIFY_SUCCESS
-                );
+                redirect($redirecturl, get_string('vacancydeleted', 'local_jobboard'), null,
+                    \core\output\notification::NOTIFY_SUCCESS);
             } catch (Exception $e) {
-                redirect(
-                    new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
-                    $e->getMessage(),
-                    null,
-                    \core\output\notification::NOTIFY_ERROR
-                );
+                redirect($redirecturl, $e->getMessage(), null, \core\output\notification::NOTIFY_ERROR);
             }
             break;
     }
@@ -339,8 +349,26 @@ if (empty($vacancies)) {
             );
         }
 
+        // Unpublish (revert to draft - only if no applications).
+        if ($vacancy->can_unpublish() && has_capability('local/jobboard:editvacancy', $context)) {
+            $actions[] = html_writer::link(
+                new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'manage',
+                    'action' => 'unpublish',
+                    'id' => $vacancy->id,
+                    'sesskey' => sesskey(),
+                ]),
+                $OUTPUT->pix_icon('t/hide', get_string('unpublish', 'local_jobboard')),
+                [
+                    'class' => 'btn btn-sm btn-outline-secondary',
+                    'title' => get_string('unpublish', 'local_jobboard'),
+                    'onclick' => "return confirm('" . get_string('confirmunpublish', 'local_jobboard') . "');",
+                ]
+            );
+        }
+
         // Close.
-        if ($vacancy->status === 'published' && has_capability('local/jobboard:editvacancy', $context)) {
+        if ($vacancy->can_close() && has_capability('local/jobboard:editvacancy', $context)) {
             $actions[] = html_writer::link(
                 new moodle_url('/local/jobboard/index.php', [
                     'view' => 'manage',
@@ -349,7 +377,29 @@ if (empty($vacancies)) {
                     'sesskey' => sesskey(),
                 ]),
                 $OUTPUT->pix_icon('t/block', get_string('close', 'local_jobboard')),
-                ['class' => 'btn btn-sm btn-outline-warning', 'title' => get_string('close', 'local_jobboard')]
+                [
+                    'class' => 'btn btn-sm btn-outline-warning',
+                    'title' => get_string('close', 'local_jobboard'),
+                    'onclick' => "return confirm('" . get_string('confirmclose', 'local_jobboard') . "');",
+                ]
+            );
+        }
+
+        // Reopen (for closed vacancies).
+        if ($vacancy->can_reopen() && has_capability('local/jobboard:publishvacancy', $context)) {
+            $actions[] = html_writer::link(
+                new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'manage',
+                    'action' => 'reopen',
+                    'id' => $vacancy->id,
+                    'sesskey' => sesskey(),
+                ]),
+                $OUTPUT->pix_icon('t/restore', get_string('reopen', 'local_jobboard')),
+                [
+                    'class' => 'btn btn-sm btn-outline-success',
+                    'title' => get_string('reopen', 'local_jobboard'),
+                    'onclick' => "return confirm('" . get_string('confirmreopen', 'local_jobboard') . "');",
+                ]
             );
         }
 
@@ -362,7 +412,7 @@ if (empty($vacancies)) {
             );
         }
 
-        // Delete.
+        // Delete (any status, but only if no applications).
         if ($vacancy->can_delete() && has_capability('local/jobboard:deletevacancy', $context)) {
             $actions[] = html_writer::link(
                 new moodle_url('/local/jobboard/index.php', [

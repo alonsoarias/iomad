@@ -502,24 +502,46 @@ class vacancy {
      * @return bool True if editable.
      */
     public function can_edit(): bool {
-        // Can edit in draft or published states.
-        return in_array($this->status, ['draft', 'published']);
+        // Can edit in draft, published, or closed states.
+        return in_array($this->status, ['draft', 'published', 'closed']);
     }
 
     /**
      * Check if the vacancy can be deleted.
      *
+     * @param bool $force Whether to allow force delete (ignores application check).
      * @return bool True if deletable.
      */
-    public function can_delete(): bool {
+    public function can_delete(bool $force = false): bool {
         global $DB;
 
-        // Can only delete drafts with no applications.
-        if ($this->status !== 'draft') {
+        // Force delete bypasses all checks (admin only).
+        if ($force) {
+            return true;
+        }
+
+        // Cannot delete if there are applications.
+        if ($DB->record_exists('local_jobboard_application', ['vacancyid' => $this->id])) {
             return false;
         }
 
-        return !$DB->record_exists('local_jobboard_application', ['vacancyid' => $this->id]);
+        return true;
+    }
+
+    /**
+     * Get the reason why the vacancy cannot be deleted.
+     *
+     * @return string|null The reason or null if can be deleted.
+     */
+    public function get_delete_restriction_reason(): ?string {
+        global $DB;
+
+        $appcount = $DB->count_records('local_jobboard_application', ['vacancyid' => $this->id]);
+        if ($appcount > 0) {
+            return get_string('error:cannotdelete_hasapplications', 'local_jobboard', $appcount);
+        }
+
+        return null;
     }
 
     /**
@@ -547,6 +569,42 @@ class vacancy {
     }
 
     /**
+     * Check if the vacancy can be unpublished (reverted to draft).
+     *
+     * @return bool True if can be unpublished.
+     */
+    public function can_unpublish(): bool {
+        global $DB;
+
+        // Must be in published status.
+        if ($this->status !== 'published') {
+            return false;
+        }
+
+        // Cannot unpublish if there are applications.
+        return !$DB->record_exists('local_jobboard_application', ['vacancyid' => $this->id]);
+    }
+
+    /**
+     * Check if the vacancy can be reopened.
+     *
+     * @return bool True if can be reopened.
+     */
+    public function can_reopen(): bool {
+        // Must be in closed status.
+        return $this->status === 'closed';
+    }
+
+    /**
+     * Check if the vacancy can be closed.
+     *
+     * @return bool True if can be closed.
+     */
+    public function can_close(): bool {
+        return $this->status === 'published';
+    }
+
+    /**
      * Publish the vacancy.
      *
      * @throws \moodle_exception If publish not allowed.
@@ -568,14 +626,120 @@ class vacancy {
     }
 
     /**
+     * Unpublish the vacancy (revert to draft).
+     *
+     * @throws \moodle_exception If unpublish not allowed.
+     */
+    public function unpublish(): void {
+        if (!$this->can_unpublish()) {
+            throw new \moodle_exception('error:cannotunpublish', 'local_jobboard');
+        }
+
+        $this->change_status('draft');
+
+        // Log audit.
+        audit::log('vacancy_unpublished', 'vacancy', $this->id);
+    }
+
+    /**
      * Close the vacancy.
+     *
+     * @throws \moodle_exception If close not allowed.
      */
     public function close(): void {
-        if ($this->status !== 'published') {
-            return;
+        if (!$this->can_close()) {
+            throw new \moodle_exception('error:cannotclose', 'local_jobboard');
         }
 
         $this->change_status('closed');
+
+        // Trigger event.
+        $event = \local_jobboard\event\vacancy_closed::create([
+            'objectid' => $this->id,
+            'context' => \context_system::instance(),
+            'other' => ['code' => $this->code, 'title' => $this->title],
+        ]);
+        $event->trigger();
+    }
+
+    /**
+     * Reopen a closed vacancy.
+     *
+     * @param int|null $newclosedate Optional new close date timestamp.
+     * @throws \moodle_exception If reopen not allowed.
+     */
+    public function reopen(?int $newclosedate = null): void {
+        if (!$this->can_reopen()) {
+            throw new \moodle_exception('error:cannotreopen', 'local_jobboard');
+        }
+
+        global $DB;
+
+        // Update close date if provided.
+        if ($newclosedate !== null && $newclosedate > time()) {
+            $this->closedate = $newclosedate;
+            $DB->set_field('local_jobboard_vacancy', 'closedate', $this->closedate, ['id' => $this->id]);
+        }
+
+        $this->change_status('published');
+
+        // Log audit.
+        audit::log('vacancy_reopened', 'vacancy', $this->id);
+
+        // Trigger event.
+        $event = \local_jobboard\event\vacancy_published::create([
+            'objectid' => $this->id,
+            'context' => \context_system::instance(),
+            'other' => ['code' => $this->code, 'title' => $this->title, 'action' => 'reopened'],
+        ]);
+        $event->trigger();
+    }
+
+    /**
+     * Mark the vacancy as assigned (positions filled).
+     */
+    public function assign(): void {
+        if ($this->status !== 'closed') {
+            // Can only assign from closed status.
+            return;
+        }
+
+        $this->change_status('assigned');
+
+        // Log audit.
+        audit::log('vacancy_assigned', 'vacancy', $this->id);
+    }
+
+    /**
+     * Get available status transitions from current status.
+     *
+     * @return array Array of available target statuses.
+     */
+    public function get_available_transitions(): array {
+        $transitions = [];
+
+        switch ($this->status) {
+            case 'draft':
+                if ($this->can_publish()) {
+                    $transitions[] = 'published';
+                }
+                break;
+            case 'published':
+                $transitions[] = 'closed';
+                if ($this->can_unpublish()) {
+                    $transitions[] = 'draft';
+                }
+                break;
+            case 'closed':
+                $transitions[] = 'published'; // Reopen.
+                $transitions[] = 'assigned';
+                break;
+            case 'assigned':
+                // Final state, no transitions.
+                break;
+        }
+
+        return $transitions;
     }
 
     /**
@@ -583,9 +747,10 @@ class vacancy {
      *
      * @param string $newstatus The new status.
      */
-    protected function change_status(string $newstatus): void {
+    public function change_status(string $newstatus): void {
         global $DB, $USER;
 
+        $oldstatus = $this->status;
         $this->status = $newstatus;
         $this->modifiedby = $USER->id;
         $this->timemodified = time();
@@ -598,7 +763,10 @@ class vacancy {
         ]);
 
         // Log audit.
-        audit::log('vacancy_status_changed', 'vacancy', $this->id, ['new_status' => $newstatus]);
+        audit::log('vacancy_status_changed', 'vacancy', $this->id, [
+            'old_status' => $oldstatus,
+            'new_status' => $newstatus,
+        ]);
     }
 
     /**
