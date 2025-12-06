@@ -725,16 +725,26 @@ $string['datatreatmentpolicytitle'] = 'Política de Tratamiento de Datos Persona
 $string['defaultdatatreatmentpolicy'] = 'De acuerdo con la Ley 1581 de 2012 y el Decreto 1377 de 2013, autorizo el tratamiento de mis datos personales para fines del proceso de selección. Los datos serán utilizados exclusivamente para evaluar mi postulación y serán almacenados de forma segura.';
 $string['consentaccepttext'] = 'He leído y acepto la política de tratamiento de datos personales';
 $string['consentrequired'] = 'Debe aceptar la política de tratamiento de datos';
-$string['digitalsignature_help'] = 'Ingrese su nombre completo como firma digital para validar su consentimiento';
+$string['digitalsignature_help'] = 'Escriba su nombre legal completo tal como aparece en sus documentos de identidad. Esto sirve como su firma digital y confirma legalmente que: toda la información proporcionada es veraz, autoriza la verificación de sus documentos, acepta los términos y condiciones del proceso de selección. El uso de un nombre falso puede resultar en descalificación.';
 $string['signaturetoooshort'] = 'La firma debe tener al menos 5 caracteres';
 $string['requireddocuments'] = 'Documentos Requeridos';
 $string['documentshelp'] = 'Suba los documentos requeridos en formato PDF, JPG o PNG. El tamaño máximo por archivo es de 10MB.';
+
+// Help strings para carga de documentos.
+$string['documenttype_help'] = 'Seleccione el tipo de documento que está cargando. Cada vacante requiere documentos específicos. Los tipos comunes incluyen: títulos y diplomas académicos, certificaciones profesionales, documentos de identidad, cartas de referencia. Asegúrese de seleccionar el tipo correcto para evitar demoras en el proceso de revisión.';
+$string['documentfile_help'] = 'Cargue su documento en formato PDF. Requisitos: tamaño máximo 10MB, formatos soportados solo PDF, el documento debe ser legible y estar completo. Para documentos de varias páginas, combine todas las páginas en un solo PDF. Los documentos escaneados deben tener una resolución mínima de 150 DPI para legibilidad.';
+$string['documentissuedate_help'] = 'Ingrese la fecha en que se expidió o certificó este documento. Para títulos académicos, use la fecha de grado. Para certificaciones, use la fecha de certificación. Algunos documentos tienen períodos de validez y pueden ser rechazados si están vencidos.';
+
+// Help strings para revisión de documentos.
+$string['validationstatus_help'] = 'Estado actual de la validación del documento: Pendiente (aún no revisado), Aprobado (el documento cumple todos los requisitos), Rechazado (el documento tiene problemas - ver razón de rechazo), Requiere Aclaración (se necesita información adicional del postulante).';
+$string['rejectionreason_help'] = 'Si rechaza el documento, seleccione la razón de la lista o proporcione una explicación personalizada. Razones comunes incluyen: el documento es ilegible, el documento está incompleto, el documento está vencido, se cargó un tipo de documento incorrecto, el nombre no coincide con la postulación. El postulante será notificado y podrá cargar una versión corregida.';
+$string['reviewcomments_help'] = 'Agregue cualquier comentario interno sobre esta revisión de documento. Estos comentarios son visibles solo para revisores y administradores, no para el postulante. Use este campo para anotar preocupaciones, verificaciones realizadas o recomendaciones.';
 $string['documentrequired'] = 'El documento "{$a}" es obligatorio';
 $string['documentissuedate'] = 'Fecha de expedición';
 $string['documentexpired'] = 'El documento ha expirado (máximo {$a})';
 $string['additionalinfo'] = 'Información Adicional';
 $string['coverletter'] = 'Carta de presentación';
-$string['coverletter_help'] = 'Escriba una breve carta de presentación describiendo su motivación e interés en el cargo';
+$string['coverletter_help'] = 'Escriba una carta de presentación personalizada explicando: por qué está interesado en este cargo, cómo su experiencia coincide con los requisitos, qué puede aportar a la organización. Manténgala concisa (300-500 palabras) y profesional. Es opcional pero altamente recomendada ya que ayuda a los revisores a entender su motivación.';
 $string['declaration'] = 'Declaración';
 $string['declarationtext'] = 'Declaro bajo la gravedad del juramento que la información proporcionada es veraz y los documentos anexos son auténticos. Entiendo que cualquier falsedad puede resultar en la exclusión del proceso y acciones legales.';
 $string['declarationaccept'] = 'Acepto la declaración anterior';

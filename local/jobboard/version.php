@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120614;  // Phase 4 - Public view target blank for login/signup links.
+$plugin->version = 2025120615;  // Phase 5 - Enhanced help strings for tooltips.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.35-beta';
+$plugin->release = '1.9.36-beta';

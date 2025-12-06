@@ -66,34 +66,34 @@ $string['jobboard:manageemailtemplates'] = 'Manage email templates';
 
 // Vacancy fields.
 $string['vacancycode'] = 'Vacancy code';
-$string['vacancycode_help'] = 'Unique internal code to identify the vacancy';
+$string['vacancycode_help'] = 'A unique internal code to identify this vacancy. This code will be used in reports, communications, and as a reference throughout the selection process. Use a consistent format such as VAC-2025-001 or PROF-MAT-001.';
 $string['vacancytitle'] = 'Vacancy title';
-$string['vacancytitle_help'] = 'Name of the position';
+$string['vacancytitle_help'] = 'Enter a clear and descriptive title for the position. This will be displayed in vacancy listings and search results. Example: "Full-time Mathematics Professor" or "Part-time English Instructor". Keep it concise but informative.';
 $string['vacancydescription'] = 'Description';
-$string['vacancydescription_help'] = 'Detailed description of the position and its functions';
+$string['vacancydescription_help'] = 'Provide a comprehensive description of the position including: main responsibilities and duties, working hours and schedule, location or campus, department or faculty. This description will be visible to all applicants and helps them understand the role.';
 $string['contracttype'] = 'Contract type';
-$string['contracttype_help'] = 'Contract modality';
+$string['contracttype_help'] = 'Select the employment contract type for this position. Options typically include: Full-time (dedicated), Part-time (hourly), Temporary, Fixed-term. The contract type affects benefits, schedule expectations, and compensation.';
 $string['duration'] = 'Duration';
-$string['duration_help'] = 'Estimated contract duration';
+$string['duration_help'] = 'Specify the expected duration of the contract. For permanent positions, you can indicate "Indefinite". For temporary or fixed-term contracts, specify the period (e.g., "6 months", "1 academic year", "Until December 2025").';
 $string['salary'] = 'Salary';
-$string['salary_help'] = 'Compensation information (optional)';
+$string['salary_help'] = 'Enter the salary or compensation range for this position. You can specify a fixed amount, a range (e.g., "$2,000 - $2,500"), or reference a salary scale. This field is optional but recommended for transparency.';
 $string['location'] = 'Location';
-$string['location_help'] = 'Place where the position will be performed';
+$string['location_help'] = 'Specify where the position will be performed. Include campus name, city, or indicate if remote work is possible. Example: "Main Campus - Bogota", "Virtual/Remote", or "Hybrid - 3 days on-site".';
 $string['department'] = 'Department/Unit';
-$string['department_help'] = 'Area or department of the institution';
+$string['department_help'] = 'Select or enter the department, faculty, or organizational unit where this position belongs. This helps applicants understand the organizational context and who they would report to.';
 $string['category'] = 'Category';
 $string['company'] = 'Company/Site';
-$string['company_help'] = 'Company or site (in multi-tenant environments)';
+$string['company_help'] = 'In multi-tenant environments (IOMAD), select the company or site this vacancy belongs to. The vacancy will only be visible to users associated with this company unless published as public.';
 $string['opendate'] = 'Opening date';
-$string['opendate_help'] = 'Date from which applications can be received';
+$string['opendate_help'] = 'The date when this vacancy will become visible and applications will be accepted. The vacancy will not appear in listings before this date. Set this to a future date if you want to prepare the vacancy in advance.';
 $string['closedate'] = 'Closing date';
-$string['closedate_help'] = 'Deadline for receiving applications';
+$string['closedate_help'] = 'The deadline for receiving applications. After this date: the vacancy will show as "Closed", no new applications will be accepted, existing applications will proceed to review. Plan sufficient time for the review process.';
 $string['positions'] = 'Number of positions';
-$string['positions_help'] = 'Number of available positions';
+$string['positions_help'] = 'The total number of positions available for this vacancy. This affects: how many candidates can be selected, reporting and statistics, and helps applicants understand competition level.';
 $string['requirements'] = 'Minimum requirements';
-$string['requirements_help'] = 'Indispensable requirements for the position';
+$string['requirements_help'] = 'List all mandatory requirements for this position: academic qualifications (degrees, certifications), years of experience required, specific skills or competencies, language requirements. Be specific to help candidates assess their eligibility. Candidates not meeting these requirements may be automatically disqualified.';
 $string['desirable'] = 'Desirable requirements';
-$string['desirable_help'] = 'Requirements that add points but are not mandatory';
+$string['desirable_help'] = 'List qualifications that are valued but not mandatory: additional certifications, extra experience, special skills, publications, awards. Meeting these requirements can give candidates an advantage during the selection process but will not disqualify those who do not have them.';
 $string['status'] = 'Status';
 $string['createdby'] = 'Created by';
 $string['modifiedby'] = 'Modified by';
@@ -719,7 +719,7 @@ $string['documentsmissing'] = 'Some required documents are missing';
 // Application form.
 $string['applyfor'] = 'Apply for: {$a}';
 $string['coverletter'] = 'Cover Letter';
-$string['coverletter_help'] = 'Optional cover letter to accompany your application';
+$string['coverletter_help'] = 'Write a personalized cover letter explaining: why you are interested in this position, how your experience matches the requirements, what you can contribute to the organization. Keep it concise (300-500 words) and professional. This is optional but highly recommended as it helps reviewers understand your motivation.';
 $string['submitapplication'] = 'Submit Application';
 $string['applicationpreview'] = 'Application Preview';
 
@@ -739,7 +739,7 @@ $string['th:actions'] = 'Actions';
 
 // Publication types.
 $string['publicationtype'] = 'Publication type';
-$string['publicationtype_help'] = 'Public vacancies are visible to everyone, including unauthenticated users. Internal vacancies are only visible to authenticated users of the organization.';
+$string['publicationtype_help'] = 'Choose how this vacancy will be published. Public: visible to everyone including non-registered users, ideal for open positions. Internal: only visible to authenticated users within the organization, used for promotions, internal mobility, or positions reserved for current staff.';
 $string['publicationtype:public'] = 'Public';
 $string['publicationtype:internal'] = 'Internal';
 
@@ -885,7 +885,17 @@ $string['declarationtext'] = 'I solemnly declare that all information provided i
 $string['declarationaccept'] = 'I accept and confirm this declaration';
 $string['declarationrequired'] = 'You must accept the declaration to proceed';
 $string['signaturetoooshort'] = 'Digital signature is too short. Please enter your full name.';
-$string['digitalsignature_help'] = 'Enter your full legal name as it appears on your official documents. This serves as your digital signature for this application.';
+$string['digitalsignature_help'] = 'Type your full legal name exactly as it appears on your identification documents. This serves as your digital signature and legally confirms that: all information provided is accurate and truthful, you authorize the verification of your documents, you accept the terms and conditions of the application process. Using a false name may result in disqualification.';
+
+// Document upload help strings.
+$string['documenttype_help'] = 'Select the type of document you are uploading. Each vacancy requires specific documents. Common types include: academic degrees and diplomas, professional certifications, identification documents, reference letters. Make sure to select the correct type to avoid delays in the review process.';
+$string['documentfile_help'] = 'Upload your document in PDF format. Requirements: maximum file size 10MB, supported formats PDF only, the document must be legible and complete. For multi-page documents, combine all pages into a single PDF. Scanned documents should have a minimum resolution of 150 DPI for readability.';
+$string['documentissuedate_help'] = 'Enter the date when this document was issued or certified. For academic degrees, use the graduation date. For certifications, use the certification date. Some documents have validity periods and may be rejected if expired.';
+
+// Document review help strings.
+$string['validationstatus_help'] = 'Current status of document validation: Pending (not yet reviewed), Approved (document meets all requirements), Rejected (document has issues - see rejection reason), Needs Clarification (additional information required from applicant).';
+$string['rejectionreason_help'] = 'If rejecting the document, select the reason from the list or provide a custom explanation. Common reasons include: document is illegible, document is incomplete, document is expired, wrong document type uploaded, name does not match application. The applicant will be notified and can upload a corrected version.';
+$string['reviewcomments_help'] = 'Add any internal comments about this document review. These comments are visible only to reviewers and administrators, not to the applicant. Use this field to note any concerns, verifications performed, or recommendations.';
 
 // ==========================================================================
 // Additional strings for applications.php.
