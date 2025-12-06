@@ -2168,6 +2168,7 @@ $string['vacancynotfound'] = 'Vacante no encontrada';
 // Miscelaneos.
 $string['lastused'] = 'Ultimo uso';
 $string['selecttype'] = 'Seleccionar tipo';
+$string['type'] = 'Tipo';
 $string['share'] = 'Compartir';
 $string['loading'] = 'Cargando...';
 $string['selectioncommittee'] = 'Comite de seleccion';
@@ -2369,6 +2370,13 @@ $string['tour_convocatorias_step7_content'] = 'Ahora entiende como gestionar con
 // Cadenas de ayuda para convocatorias.
 $string['convocatoria_help'] = 'Una convocatoria agrupa vacantes laborales relacionadas bajo una campana unica con fechas de inicio y fin definidas. Al crear una vacante, puede asociarla con una convocatoria para organizar su proceso de reclutamiento. Las fechas de la convocatoria determinan cuando se pueden enviar postulaciones.';
 $string['convocatoria_profile_help'] = 'Las vacantes dentro de una convocatoria deben crearse de acuerdo con los perfiles profesionales definidos en los documentos de PERFILES PROFESORES. Cada perfil especifica las calificaciones requeridas, experiencia y documentos necesarios para ese puesto.';
+$string['convocatoriaid_help'] = 'Seleccione la convocatoria a la que pertenecerá esta vacante. La vacante heredará las fechas y condiciones de la convocatoria seleccionada.';
+$string['convocatoriacode_help'] = 'Código único para identificar esta convocatoria. Use un formato consistente como CONV-2024-001.';
+$string['convocatoriaterms_help'] = 'Ingrese los términos y condiciones que los postulantes deben aceptar al aplicar a vacantes de esta convocatoria.';
+$string['departmentid_help'] = 'Seleccione el departamento de IOMAD al que pertenecerá esta vacante para filtrar por estructura organizacional.';
+$string['companyid_help'] = 'Seleccione la empresa o sede donde se publicará esta vacante. En entornos multi-tenant, esto determina la visibilidad.';
+$string['terms_help'] = 'Debe aceptar los términos y condiciones para continuar con el proceso.';
+$string['recaptcha_help'] = 'Complete la verificación de seguridad para demostrar que no es un robot.';
 
 // ============================================================================
 // Dashboard redesign - Navegación jerárquica (Convocatorias → Vacantes)

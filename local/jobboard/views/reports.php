@@ -244,7 +244,7 @@ function local_jobboard_render_overview_report(int $vacancyid, int $datefrom, in
     echo '<div class="card-header">' . get_string('applicationsbystatus', 'local_jobboard') . '</div>';
     echo '<div class="card-body">';
     echo '<table class="table">';
-    echo '<thead><tr><th>' . get_string('status', 'local_jobboard') . '</th><th>' . get_string('count') . '</th><th></th></tr></thead>';
+    echo '<thead><tr><th>' . get_string('status', 'local_jobboard') . '</th><th>' . get_string('count', 'local_jobboard') . '</th><th></th></tr></thead>';
     echo '<tbody>';
     foreach ($statusdata as $row) {
         $pct = $totalapps > 0 ? round(($row->count / $totalapps) * 100) : 0;

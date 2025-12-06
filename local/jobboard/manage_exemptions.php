@@ -171,9 +171,9 @@ if ($action === 'revoke' && $id) {
     echo '<textarea name="reason" id="reason" class="form-control" rows="3" required></textarea>';
     echo '</div>';
 
-    echo '<button type="submit" class="btn btn-danger">' . get_string('confirm') . '</button>';
+    echo '<button type="submit" class="btn btn-danger">' . get_string('confirm', 'local_jobboard') . '</button>';
     echo ' <a href="' . new moodle_url('/local/jobboard/manage_exemptions.php') .
-        '" class="btn btn-secondary">' . get_string('cancel') . '</a>';
+        '" class="btn btn-secondary">' . get_string('cancel', 'local_jobboard') . '</a>';
     echo '</form>';
 
     echo $OUTPUT->footer();
@@ -228,18 +228,18 @@ if ($action === 'view' && $id) {
 
     // Status.
     $isvalid = exemption::is_valid($exemption);
-    echo '<dt class="col-sm-3">' . get_string('status') . '</dt>';
+    echo '<dt class="col-sm-3">' . get_string('status', 'local_jobboard') . '</dt>';
     echo '<dd class="col-sm-9">';
     if ($exemption->timerevoked) {
         echo '<span class="badge badge-danger">' . get_string('revoked', 'local_jobboard') . '</span>';
     } else if ($isvalid) {
-        echo '<span class="badge badge-success">' . get_string('active') . '</span>';
+        echo '<span class="badge badge-success">' . get_string('active', 'local_jobboard') . '</span>';
     } else {
         echo '<span class="badge badge-warning">' . get_string('expired', 'local_jobboard') . '</span>';
     }
     echo '</dd>';
 
-    echo '<dt class="col-sm-3">' . get_string('notes') . '</dt>';
+    echo '<dt class="col-sm-3">' . get_string('notes', 'local_jobboard') . '</dt>';
     echo '<dd class="col-sm-9">' . ($exemption->notes ?: '-') . '</dd>';
 
     echo '<dt class="col-sm-3">' . get_string('createdby', 'local_jobboard') . '</dt>';
@@ -263,14 +263,14 @@ if ($action === 'view' && $id) {
     if (!$exemption->timerevoked && $isvalid) {
         echo '<a href="' . new moodle_url('/local/jobboard/manage_exemptions.php',
             ['action' => 'edit', 'id' => $id]) . '" class="btn btn-primary mr-2">' .
-            get_string('edit') . '</a>';
+            get_string('edit', 'local_jobboard') . '</a>';
         echo '<a href="' . new moodle_url('/local/jobboard/manage_exemptions.php',
             ['action' => 'revoke', 'id' => $id]) . '" class="btn btn-danger mr-2">' .
             get_string('revoke', 'local_jobboard') . '</a>';
     }
 
     echo '<a href="' . new moodle_url('/local/jobboard/manage_exemptions.php') .
-        '" class="btn btn-secondary">' . get_string('back') . '</a>';
+        '" class="btn btn-secondary">' . get_string('back', 'local_jobboard') . '</a>';
 
     echo '</div>';
     echo '</div>';
@@ -335,15 +335,15 @@ echo '<div class="card-body">';
 echo '<form method="get" action="" class="form-inline">';
 
 echo '<div class="form-group mr-3 mb-2">';
-echo '<label for="search" class="sr-only">' . get_string('search') . '</label>';
+echo '<label for="search" class="sr-only">' . get_string('search', 'local_jobboard') . '</label>';
 echo '<input type="text" name="search" id="search" class="form-control" placeholder="' .
     get_string('searchuser', 'local_jobboard') . '" value="' . s($search) . '">';
 echo '</div>';
 
 echo '<div class="form-group mr-3 mb-2">';
-echo '<label for="type" class="mr-2">' . get_string('type') . ':</label>';
+echo '<label for="type" class="mr-2">' . get_string('type', 'local_jobboard') . ':</label>';
 echo '<select name="type" id="type" class="form-control">';
-echo '<option value="">' . get_string('all') . '</option>';
+echo '<option value="">' . get_string('all', 'local_jobboard') . '</option>';
 $types = ['historico_iser', 'documentos_recientes', 'traslado_interno', 'recontratacion'];
 foreach ($types as $t) {
     $selected = ($type === $t) ? 'selected' : '';
@@ -354,11 +354,11 @@ echo '</select>';
 echo '</div>';
 
 echo '<div class="form-group mr-3 mb-2">';
-echo '<label for="status" class="mr-2">' . get_string('status') . ':</label>';
+echo '<label for="status" class="mr-2">' . get_string('status', 'local_jobboard') . ':</label>';
 echo '<select name="status" id="status" class="form-control">';
-echo '<option value="">' . get_string('all') . '</option>';
+echo '<option value="">' . get_string('all', 'local_jobboard') . '</option>';
 echo '<option value="active"' . ($status === 'active' ? ' selected' : '') . '>' .
-    get_string('active') . '</option>';
+    get_string('active', 'local_jobboard') . '</option>';
 echo '<option value="expired"' . ($status === 'expired' ? ' selected' : '') . '>' .
     get_string('expired', 'local_jobboard') . '</option>';
 echo '<option value="revoked"' . ($status === 'revoked' ? ' selected' : '') . '>' .
@@ -366,7 +366,7 @@ echo '<option value="revoked"' . ($status === 'revoked' ? ' selected' : '') . '>
 echo '</select>';
 echo '</div>';
 
-echo '<button type="submit" class="btn btn-primary mb-2 mr-2">' . get_string('filter') . '</button>';
+echo '<button type="submit" class="btn btn-primary mb-2 mr-2">' . get_string('filter', 'local_jobboard') . '</button>';
 echo '<a href="' . new moodle_url('/local/jobboard/manage_exemptions.php') .
     '" class="btn btn-outline-secondary mb-2">' . get_string('clearfilters', 'local_jobboard') . '</a>';
 echo '</form>';
@@ -478,7 +478,7 @@ if (empty($exemptions)) {
         get_string('exempteddocs', 'local_jobboard'),
         get_string('validfrom', 'local_jobboard'),
         get_string('validuntil', 'local_jobboard'),
-        get_string('status'),
+        get_string('status', 'local_jobboard'),
         get_string('actions'),
     ];
     $table->attributes['class'] = 'table table-striped table-hover';
@@ -492,7 +492,7 @@ if (empty($exemptions)) {
         if ($ex->timerevoked) {
             $statusbadge = '<span class="badge badge-danger">' . get_string('revoked', 'local_jobboard') . '</span>';
         } else if ($isvalid) {
-            $statusbadge = '<span class="badge badge-success">' . get_string('active') . '</span>';
+            $statusbadge = '<span class="badge badge-success">' . get_string('active', 'local_jobboard') . '</span>';
         } else {
             $statusbadge = '<span class="badge badge-warning">' . get_string('expired', 'local_jobboard') . '</span>';
         }
@@ -506,12 +506,12 @@ if (empty($exemptions)) {
         $actions = '<div class="btn-group btn-group-sm">';
         $actions .= '<a href="' . new moodle_url('/local/jobboard/manage_exemptions.php',
             ['action' => 'view', 'id' => $ex->id]) . '" class="btn btn-outline-primary" title="' .
-            get_string('view') . '"><i class="fa fa-eye"></i></a>';
+            get_string('view', 'local_jobboard') . '"><i class="fa fa-eye"></i></a>';
 
         if ($isvalid) {
             $actions .= '<a href="' . new moodle_url('/local/jobboard/manage_exemptions.php',
                 ['action' => 'edit', 'id' => $ex->id]) . '" class="btn btn-outline-secondary" title="' .
-                get_string('edit') . '"><i class="fa fa-edit"></i></a>';
+                get_string('edit', 'local_jobboard') . '"><i class="fa fa-edit"></i></a>';
             $actions .= '<a href="' . new moodle_url('/local/jobboard/manage_exemptions.php',
                 ['action' => 'revoke', 'id' => $ex->id]) . '" class="btn btn-outline-danger" title="' .
                 get_string('revoke', 'local_jobboard') . '"><i class="fa fa-ban"></i></a>';

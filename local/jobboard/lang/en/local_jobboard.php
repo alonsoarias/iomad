@@ -1757,6 +1757,7 @@ $string['vacancynotfound'] = 'Vacancy not found';
 // Miscellaneous.
 $string['lastused'] = 'Last used';
 $string['selecttype'] = 'Select type';
+$string['type'] = 'Type';
 $string['share'] = 'Share';
 $string['loading'] = 'Loading...';
 
@@ -1957,6 +1958,13 @@ $string['tour_convocatorias_step7_content'] = 'You now understand how to manage 
 // Convocatoria help strings.
 $string['convocatoria_help'] = 'A call groups related job vacancies under a single campaign with defined start and end dates. When you create a vacancy, you can associate it with a call to organize your recruitment process. The call dates determine when applications can be submitted.';
 $string['convocatoria_profile_help'] = 'Vacancies within a call should be created according to the professional profiles defined in the PERFILES PROFESORES documents. Each profile specifies the required qualifications, experience, and documents needed for that position.';
+$string['convocatoriaid_help'] = 'Select the call to which this vacancy will belong. The vacancy will inherit the dates and conditions of the selected call.';
+$string['convocatoriacode_help'] = 'Unique code to identify this call. Use a consistent format like CALL-2024-001.';
+$string['convocatoriaterms_help'] = 'Enter the terms and conditions that applicants must accept when applying to vacancies in this call.';
+$string['departmentid_help'] = 'Select the IOMAD department this vacancy will belong to for organizational filtering.';
+$string['companyid_help'] = 'Select the company or site where this vacancy will be published. In multi-tenant environments, this determines visibility.';
+$string['terms_help'] = 'You must accept the terms and conditions to continue with the process.';
+$string['recaptcha_help'] = 'Complete the security verification to prove you are not a robot.';
 
 // ============================================================================
 // Dashboard redesign - Hierarchical navigation (Calls → Vacancies)

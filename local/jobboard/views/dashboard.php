@@ -390,7 +390,9 @@ if ($canmanage && !empty($stats['recent_activity'])) {
     echo html_writer::start_div('list-group');
     foreach ($stats['recent_activity'] as $activity) {
         echo html_writer::start_div('list-group-item list-group-item-action d-flex justify-content-between align-items-center');
-        echo html_writer::tag('span', $activity->description);
+        // Use action field from audit table, with entitytype for context.
+        $activitytext = $activity->action . ' (' . $activity->entitytype . ')';
+        echo html_writer::tag('span', $activitytext);
         echo html_writer::tag('small', userdate($activity->timecreated, get_string('strftimedatetime', 'langconfig')), ['class' => 'text-muted']);
         echo html_writer::end_div();
     }
