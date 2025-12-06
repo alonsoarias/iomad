@@ -1,0 +1,53 @@
+{{!
+    @template local_jobboard/components/progress_bar
+
+    Progress bar component.
+
+    Context variables:
+    * percent - Percentage complete (0-100)
+    * color - Bootstrap color (primary, success, warning, danger, info)
+    * label - Optional label text inside bar
+    * showpercent - Boolean to show percentage
+    * height - Optional height in pixels
+    * striped - Boolean for striped style
+    * animated - Boolean for animation
+    * segments - Optional array for multi-segment bars [{percent, color, label}]
+
+    Example context (json):
+    {
+        "percent": 75,
+        "color": "success",
+        "showpercent": true,
+        "height": 20,
+        "striped": true
+    }
+}}
+{{^segments}}
+<div class="progress{{#height}} {{/height}}" {{#height}}style="height: {{height}}px;"{{/height}}>
+    <div class="progress-bar bg-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}{{#striped}} progress-bar-striped{{/striped}}{{#animated}} progress-bar-animated{{/animated}}"
+         role="progressbar"
+         style="width: {{percent}}%;"
+         aria-valuenow="{{percent}}"
+         aria-valuemin="0"
+         aria-valuemax="100">
+        {{#showpercent}}{{percent}}%{{/showpercent}}
+        {{#label}}{{label}}{{/label}}
+    </div>
+</div>
+{{/segments}}
+
+{{#segments.0}}
+<div class="progress{{#height}} {{/height}}" {{#height}}style="height: {{height}}px;"{{/height}}>
+    {{#segments}}
+    <div class="progress-bar bg-{{color}}"
+         role="progressbar"
+         style="width: {{percent}}%;"
+         aria-valuenow="{{percent}}"
+         aria-valuemin="0"
+         aria-valuemax="100"
+         title="{{label}}">
+        {{#showvalue}}{{label}}{{/showvalue}}
+    </div>
+    {{/segments}}
+</div>
+{{/segments.0}}

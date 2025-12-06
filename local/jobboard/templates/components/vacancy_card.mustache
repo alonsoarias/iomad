@@ -1,0 +1,131 @@
+{{!
+    @template local_jobboard/components/vacancy_card
+
+    Reusable vacancy card component.
+
+    Context variables:
+    * id - Vacancy ID
+    * code - Vacancy code
+    * title - Vacancy title
+    * description - Short description
+    * location - Location
+    * contracttypelabel - Contract type label
+    * positions - Number of positions
+    * statuslabel - Status label
+    * statuscolor - Bootstrap color for status
+    * isurgent - Boolean if closing soon
+    * daysremaining - Days until close
+    * publicationtypelabel - Publication type label
+    * publicationtypecolor - Publication type color
+    * convocatoriacode - Convocatoria code if exists
+    * viewurl - View details URL
+    * applyurl - Apply URL
+    * editurl - Edit URL (for managers)
+    * canapply - Boolean if can apply
+    * canedit - Boolean if can edit
+    * showstatus - Boolean to show status badge
+    * showactions - Boolean to show action buttons
+
+    Example context (json):
+    {
+        "id": 1,
+        "code": "VAC-001",
+        "title": "Software Developer",
+        "canapply": true
+    }
+}}
+<div class="card h-100 shadow-sm jb-vacancy-card{{#isurgent}} border-warning{{/isurgent}}" data-vacancy-id="{{id}}">
+    {{! Card Header }}
+    <div class="card-header d-flex justify-content-between align-items-center bg-white">
+        <span class="badge badge-secondary">{{code}}</span>
+        <div>
+            {{#showstatus}}
+            <span class="badge badge-{{statuscolor}} mr-1">{{statuslabel}}</span>
+            {{/showstatus}}
+            {{#publicationtypelabel}}
+            <span class="badge badge-{{publicationtypecolor}}">{{publicationtypelabel}}</span>
+            {{/publicationtypelabel}}
+        </div>
+    </div>
+
+    {{! Card Body }}
+    <div class="card-body">
+        <h5 class="card-title">{{title}}</h5>
+
+        {{! Convocatoria Badge }}
+        {{#convocatoriacode}}
+        <div class="mb-2">
+            <i class="fa fa-folder-open text-muted mr-1"></i>
+            <span class="badge badge-light">{{convocatoriacode}}</span>
+        </div>
+        {{/convocatoriacode}}
+
+        {{! Location }}
+        {{#location}}
+        <p class="card-text text-muted small mb-1">
+            <i class="fa fa-map-marker-alt text-muted mr-2"></i>{{location}}
+        </p>
+        {{/location}}
+
+        {{! Contract Type }}
+        {{#contracttypelabel}}
+        <p class="card-text text-muted small mb-2">
+            <i class="fa fa-briefcase text-muted mr-2"></i>{{contracttypelabel}}
+        </p>
+        {{/contracttypelabel}}
+
+        {{! Description }}
+        {{#description}}
+        <p class="card-text small text-muted">{{description}}</p>
+        {{/description}}
+
+        {{! Positions }}
+        <p class="card-text small mb-0">
+            <i class="fa fa-users text-muted mr-2"></i>
+            {{#str}}positions, local_jobboard{{/str}}: <strong>{{positions}}</strong>
+        </p>
+    </div>
+
+    {{! Card Footer }}
+    {{#showactions}}
+    <div class="card-footer bg-white">
+        {{! Closing Date }}
+        <small class="{{#isurgent}}text-warning font-weight-bold{{/isurgent}}{{^isurgent}}text-muted{{/isurgent}} d-block mb-2">
+            <i class="fa fa-{{#isurgent}}exclamation-triangle{{/isurgent}}{{^isurgent}}calendar-alt{{/isurgent}} mr-1"></i>
+            {{#str}}closesin, local_jobboard, {{daysremaining}}{{/str}}
+        </small>
+
+        {{! Action Buttons }}
+        <div class="d-flex justify-content-between">
+            <a href="{{viewurl}}" class="btn btn-sm btn-outline-primary">
+                <i class="fa fa-eye mr-1"></i>
+                {{#str}}view, local_jobboard{{/str}}
+            </a>
+
+            {{#canapply}}
+            <a href="{{applyurl}}" class="btn btn-sm btn-primary">
+                <i class="fa fa-paper-plane mr-1"></i>
+                {{#str}}apply, local_jobboard{{/str}}
+            </a>
+            {{/canapply}}
+
+            {{#canedit}}
+            <a href="{{editurl}}" class="btn btn-sm btn-outline-secondary">
+                <i class="fa fa-edit mr-1"></i>
+                {{#str}}edit{{/str}}
+            </a>
+            {{/canedit}}
+        </div>
+    </div>
+    {{/showactions}}
+</div>
+
+<style>
+.jb-vacancy-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.jb-vacancy-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
+}
+</style>

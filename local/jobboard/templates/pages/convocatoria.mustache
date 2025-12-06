@@ -1,0 +1,161 @@
+{{!
+    @template local_jobboard/pages/convocatoria
+
+    Single convocatoria view/edit page template.
+
+    Context variables:
+    * pageheader - Page header data
+    * isediting - Boolean if editing existing
+    * convocatoria - Convocatoria data if editing
+    * stats - Statistics cards (vacancies, applications, status)
+    * vacancies - Array of vacancies in this convocatoria
+    * hasvacancies - Boolean if has vacancies
+    * vacancycount - Total vacancy count
+    * canaddvacancy - Boolean if can add vacancy
+    * addvacancyurl - URL to add vacancy
+    * viewallurl - URL to view all vacancies
+    * form - Moodle form HTML
+
+    Example context (json):
+    {
+        "isediting": true,
+        "convocatoria": {"id": 1, "name": "Call 2025"},
+        "hasvacancies": true
+    }
+}}
+<div class="local-jobboard-convocatoria" data-region="jobboard-convocatoria">
+    {{! Page Header }}
+    {{> local_jobboard/components/page_header }}
+
+    {{#isediting}}
+    {{! Statistics Row }}
+    {{#stats.0}}
+    <div class="row mb-4">
+        {{#stats}}
+        <div class="col-lg-4 col-md-6 mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        {{/stats}}
+    </div>
+    {{/stats.0}}
+
+    {{! Convocatoria Info Card }}
+    <div class="card shadow-sm mb-4 border-{{convocatoria.statuscolor}}">
+        <div class="card-header d-flex justify-content-between align-items-center bg-{{convocatoria.statuscolor}} text-white">
+            <h5 class="mb-0">{{convocatoria.name}}</h5>
+            <span class="badge badge-light">{{convocatoria.statuslabel}}</span>
+        </div>
+        <div class="card-body">
+            {{! Dates }}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <small class="d-block text-muted">{{#str}}convocatoriastartdate, local_jobboard{{/str}}</small>
+                    <strong>
+                        <i class="fa fa-calendar-alt text-success mr-2"></i>
+                        {{convocatoria.startdateformatted}}
+                    </strong>
+                </div>
+                <div class="col-md-6">
+                    <small class="d-block text-muted">{{#str}}convocatoriaenddate, local_jobboard{{/str}}</small>
+                    <strong>
+                        <i class="fa fa-calendar-times text-danger mr-2"></i>
+                        {{convocatoria.enddateformatted}}
+                    </strong>
+                </div>
+            </div>
+
+            {{! Action Buttons }}
+            <div class="d-flex flex-wrap">
+                {{#canaddvacancy}}
+                <a href="{{addvacancyurl}}" class="btn btn-success mr-2 mb-2">
+                    <i class="fa fa-plus mr-2"></i>
+                    {{#str}}addvacancy, local_jobboard{{/str}}
+                </a>
+                {{/canaddvacancy}}
+
+                {{#hasvacancies}}
+                <a href="{{viewallurl}}" class="btn btn-info mr-2 mb-2">
+                    <i class="fa fa-list mr-2"></i>
+                    {{#str}}viewvacancies, local_jobboard{{/str}} ({{vacancycount}})
+                </a>
+                {{/hasvacancies}}
+
+                {{#applicationcount}}
+                <a href="{{applicationsurl}}" class="btn btn-outline-info mr-2 mb-2">
+                    <i class="fa fa-file-alt mr-2"></i>
+                    {{#str}}applications, local_jobboard{{/str}} ({{applicationcount}})
+                </a>
+                {{/applicationcount}}
+            </div>
+        </div>
+    </div>
+
+    {{! Vacancies List Card }}
+    {{#hasvacancies}}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white font-weight-bold">
+            <i class="fa fa-briefcase mr-2"></i>
+            {{#str}}vacancies, local_jobboard{{/str}}
+            <span class="badge badge-primary ml-2">{{vacancycount}}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+                {{#vacancies}}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge badge-secondary mr-2">{{code}}</span>
+                        <strong>{{title}}</strong>
+                        <span class="badge badge-{{statuscolor}} ml-2">{{statuslabel}}</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span class="badge badge-info mr-2" title="{{#str}}applications, local_jobboard{{/str}}">
+                            <i class="fa fa-file-alt mr-1"></i>{{applicationcount}}
+                        </span>
+                        <a href="{{editurl}}" class="btn btn-sm btn-outline-primary">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </div>
+                </div>
+                {{/vacancies}}
+
+                {{#showviewall}}
+                <div class="list-group-item text-center">
+                    <a href="{{viewallurl}}" class="btn btn-sm btn-outline-secondary">
+                        {{#str}}viewall, local_jobboard{{/str}} ({{vacancycount}})
+                    </a>
+                </div>
+                {{/showviewall}}
+            </div>
+        </div>
+    </div>
+    {{/hasvacancies}}
+    {{/isediting}}
+
+    {{! Form Card }}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white font-weight-bold">
+            <i class="fa fa-edit mr-2"></i>
+            {{#isediting}}
+            {{#str}}editconvocatoria, local_jobboard{{/str}}
+            {{/isediting}}
+            {{^isediting}}
+            {{#str}}addconvocatoria, local_jobboard{{/str}}
+            {{/isediting}}
+        </div>
+        <div class="card-body">
+            {{{form}}}
+        </div>
+    </div>
+</div>
+
+<style>
+.local-jobboard-convocatoria .mform {
+    max-width: 100%;
+}
+.local-jobboard-convocatoria .fitem {
+    margin-bottom: 1rem;
+}
+.local-jobboard-convocatoria .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+</style>

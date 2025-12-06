@@ -1,0 +1,221 @@
+{{!
+    @template local_jobboard/pages/public
+
+    Public vacancies page template for anonymous and authenticated users.
+
+    Context variables:
+    * pageheader - Page header configuration
+    * pagetitle - Page title string
+    * pagedescription - Page description HTML
+    * stats - Array of statistic cards
+    * filterform - Filter form configuration
+    * showfilters - Boolean if filters should be shown
+    * hasfilters - Boolean if any filter is active
+    * clearfiltersurl - URL to clear all filters
+    * resultscount - Number of results found
+    * hasvacancies - Boolean if there are vacancies
+    * vacancies - Array of vacancy data
+    * pagination - Pagination HTML
+    * isloggedin - Boolean if user is logged in
+    * canapply - Boolean if user can apply
+    * loginurl - Login URL
+    * signupurl - Signup URL
+
+    Example context (json):
+    {
+        "pagetitle": "Job Opportunities",
+        "hasvacancies": true,
+        "vacancies": [{"id": 1, "title": "Developer"}]
+    }
+}}
+<div class="local-jobboard-public" data-region="jobboard-public">
+    {{! Hero Section }}
+    <div class="jb-public-hero text-center py-5 mb-4 rounded">
+        <div class="container">
+            <h1 class="display-4 mb-3 text-white">{{pagetitle}}</h1>
+            {{#pagedescription}}
+            <p class="lead mb-0 text-white-50">{{{pagedescription}}}</p>
+            {{/pagedescription}}
+        </div>
+    </div>
+
+    {{! Statistics Row }}
+    {{#stats.0}}
+    <div class="row mb-4">
+        {{#stats}}
+        <div class="col-lg-3 col-md-6 mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        {{/stats}}
+    </div>
+    {{/stats.0}}
+
+    {{! Filter Form }}
+    {{#showfilters}}
+    {{#filterform}}
+    {{> local_jobboard/components/filter_form }}
+    {{/filterform}}
+    {{/showfilters}}
+
+    {{! Clear Filters Link }}
+    {{#hasfilters}}
+    <div class="mb-3">
+        <a href="{{clearfiltersurl}}" class="btn btn-sm btn-outline-secondary">
+            <i class="fa fa-times mr-1"></i>
+            {{#str}}clearfilters, local_jobboard{{/str}}
+        </a>
+    </div>
+    {{/hasfilters}}
+
+    {{! Results Count }}
+    <p class="text-muted mb-3">
+        {{#str}}vacanciesfound, local_jobboard, {{resultscount}}{{/str}}
+    </p>
+
+    {{! Vacancy Cards Grid }}
+    {{#hasvacancies}}
+    <div class="row">
+        {{#vacancies}}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm jb-vacancy-card{{#isurgent}} border-warning{{/isurgent}}" data-vacancy-id="{{id}}">
+                {{! Card Header }}
+                <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                    <span class="badge badge-secondary">{{code}}</span>
+                    {{#publicationtype}}
+                    <span class="badge badge-{{publicationtypecolor}}">
+                        {{publicationtypelabel}}
+                    </span>
+                    {{/publicationtype}}
+                </div>
+
+                {{! Card Body }}
+                <div class="card-body">
+                    <h5 class="card-title">{{title}}</h5>
+
+                    {{! Convocatoria Badge }}
+                    {{#convocatorianame}}
+                    <div class="mb-2">
+                        <i class="fa fa-folder-open text-muted mr-1"></i>
+                        <span class="badge badge-light">{{convocatoriacode}}</span>
+                    </div>
+                    {{/convocatorianame}}
+
+                    {{! Location }}
+                    {{#location}}
+                    <p class="card-text text-muted small mb-1">
+                        <i class="fa fa-map-marker-alt text-muted mr-2"></i>{{location}}
+                    </p>
+                    {{/location}}
+
+                    {{! Contract Type }}
+                    {{#contracttypelabel}}
+                    <p class="card-text text-muted small mb-2">
+                        <i class="fa fa-briefcase text-muted mr-2"></i>{{contracttypelabel}}
+                    </p>
+                    {{/contracttypelabel}}
+
+                    {{! Description Excerpt }}
+                    {{#descriptionexcerpt}}
+                    <p class="card-text small">{{descriptionexcerpt}}</p>
+                    {{/descriptionexcerpt}}
+
+                    {{! Positions }}
+                    <p class="card-text small mb-0">
+                        <i class="fa fa-users text-muted mr-2"></i>
+                        {{#str}}positions, local_jobboard{{/str}}: <strong>{{positions}}</strong>
+                    </p>
+                </div>
+
+                {{! Card Footer }}
+                <div class="card-footer bg-white">
+                    {{! Closing Date }}
+                    <small class="{{#isurgent}}text-warning font-weight-bold{{/isurgent}}{{^isurgent}}text-muted{{/isurgent}} d-block mb-2">
+                        <i class="fa fa-{{#isurgent}}exclamation-triangle{{/isurgent}}{{^isurgent}}calendar-alt{{/isurgent}} mr-1"></i>
+                        {{#str}}closesin, local_jobboard, {{daysremaining}}{{/str}}
+                    </small>
+
+                    {{! Action Buttons }}
+                    <div class="d-flex justify-content-between">
+                        <a href="{{viewurl}}" class="btn btn-sm btn-outline-primary">
+                            <i class="fa fa-eye mr-1"></i>
+                            {{#str}}viewdetails, local_jobboard{{/str}}
+                        </a>
+
+                        {{#canapply}}
+                        <a href="{{applyurl}}" class="btn btn-sm btn-primary">
+                            <i class="fa fa-paper-plane mr-1"></i>
+                            {{#str}}apply, local_jobboard{{/str}}
+                        </a>
+                        {{/canapply}}
+
+                        {{^isloggedin}}
+                        <a href="{{loginapplyurl}}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fa fa-sign-in-alt mr-1"></i>
+                            {{#str}}loginandapply, local_jobboard{{/str}}
+                        </a>
+                        {{/isloggedin}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/vacancies}}
+    </div>
+    {{/hasvacancies}}
+
+    {{! Empty State }}
+    {{^hasvacancies}}
+    <div class="text-center py-5">
+        <i class="fa fa-briefcase fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">{{#str}}novacanciesfound, local_jobboard{{/str}}</h4>
+        {{^isloggedin}}
+        <p class="text-muted mb-4">{{#str}}logintoviewmore, local_jobboard{{/str}}</p>
+        <a href="{{loginurl}}" class="btn btn-primary">
+            <i class="fa fa-sign-in-alt mr-2"></i>
+            {{#str}}login{{/str}}
+        </a>
+        {{/isloggedin}}
+    </div>
+    {{/hasvacancies}}
+
+    {{! Pagination }}
+    {{#pagination}}
+    <div class="mt-4">
+        {{{pagination}}}
+    </div>
+    {{/pagination}}
+
+    {{! CTA for Non-Logged In Users }}
+    {{^isloggedin}}
+    <div class="card bg-light mt-4 border-0 jb-cta-card">
+        <div class="card-body text-center py-5">
+            <i class="fa fa-user-plus fa-3x text-primary mb-3"></i>
+            <h4 class="card-title">{{#str}}wanttoapply, local_jobboard{{/str}}</h4>
+            <p class="card-text text-muted mb-4">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
+            <a href="{{signupurl}}" class="btn btn-primary btn-lg mr-3">
+                <i class="fa fa-user-plus mr-2"></i>
+                {{#str}}createaccount{{/str}}
+            </a>
+            <a href="{{loginurl}}" class="btn btn-outline-primary btn-lg">
+                <i class="fa fa-sign-in-alt mr-2"></i>
+                {{#str}}login{{/str}}
+            </a>
+        </div>
+    </div>
+    {{/isloggedin}}
+</div>
+
+<style>
+.jb-public-hero {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+.jb-vacancy-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.jb-vacancy-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15) !important;
+}
+.jb-cta-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+}
+</style>

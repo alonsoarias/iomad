@@ -1,0 +1,68 @@
+{{!
+    @template local_jobboard/components/page_header
+
+    Page header component with breadcrumbs and action buttons.
+
+    Context variables:
+    * title - Page title
+    * subtitle - Optional subtitle
+    * breadcrumbs - Array of breadcrumb items [{label, url}]
+    * actions - Array of action buttons [{url, label, icon, class, primary}]
+    * showback - Boolean to show back button
+    * backurl - URL for back button
+
+    Example context (json):
+    {
+        "title": "Manage Vacancies",
+        "subtitle": "View and edit all vacancies",
+        "breadcrumbs": [{"label": "Dashboard", "url": "/dashboard"}, {"label": "Vacancies"}],
+        "actions": [{"url": "/create", "label": "Create", "icon": "plus", "primary": true}],
+        "showback": true,
+        "backurl": "/dashboard"
+    }
+}}
+<div class="jb-page-header mb-4">
+    {{#breadcrumbs.0}}
+    <nav aria-label="breadcrumb" class="mb-2">
+        <ol class="breadcrumb bg-transparent p-0 mb-2">
+            {{#breadcrumbs}}
+            {{#url}}
+            <li class="breadcrumb-item">
+                <a href="{{url}}" class="text-primary">{{label}}</a>
+            </li>
+            {{/url}}
+            {{^url}}
+            <li class="breadcrumb-item active" aria-current="page">{{label}}</li>
+            {{/url}}
+            {{/breadcrumbs}}
+        </ol>
+    </nav>
+    {{/breadcrumbs.0}}
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+        <div class="mb-2 mb-md-0">
+            {{#showback}}
+            <a href="{{backurl}}" class="btn btn-link p-0 mr-2 text-muted">
+                {{#pix}}i/return, core, {{#str}}back{{/str}}{{/pix}}
+            </a>
+            {{/showback}}
+            <h2 class="d-inline mb-0">{{title}}</h2>
+            {{#subtitle}}
+            <p class="text-muted mb-0 mt-1">{{subtitle}}</p>
+            {{/subtitle}}
+        </div>
+
+        {{#actions.0}}
+        <div class="btn-group flex-wrap">
+            {{#actions}}
+            <a href="{{url}}" class="btn {{#primary}}btn-primary{{/primary}}{{^primary}}btn-outline-secondary{{/primary}} {{class}}">
+                {{#icon}}
+                <i class="fa fa-{{icon}} mr-1"></i>
+                {{/icon}}
+                {{label}}
+            </a>
+            {{/actions}}
+        </div>
+        {{/actions.0}}
+    </div>
+</div>

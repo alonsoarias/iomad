@@ -1,0 +1,230 @@
+{{!
+    @template local_jobboard/pages/public_detail
+
+    Public vacancy detail page template.
+
+    Context variables:
+    * vacancy - Vacancy data object
+    * backurl - URL to go back to listings
+    * convocatoria - Convocatoria info if exists
+    * isloggedin - Boolean if user is logged in
+    * canapply - Boolean if user can apply
+    * hasapplied - Boolean if already applied
+    * applyurl - Apply URL
+    * applicationsurl - My applications URL
+    * loginapplyurl - Login and apply URL
+    * sharelinks - Social sharing links
+
+    Example context (json):
+    {
+        "vacancy": {"id": 1, "title": "Developer", "code": "DEV-001"},
+        "isloggedin": true,
+        "canapply": true
+    }
+}}
+<div class="local-jobboard-public-detail" data-region="jobboard-public-detail">
+    {{! Back Button }}
+    <div class="mb-4">
+        <a href="{{backurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left mr-2"></i>
+            {{#str}}backtovacancies, local_jobboard{{/str}}
+        </a>
+    </div>
+
+    {{! Two Column Layout }}
+    <div class="row">
+        {{! Left Column - Main Content }}
+        <div class="col-lg-8">
+            {{! Vacancy Header Card }}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                    <span class="badge badge-light">{{vacancy.code}}</span>
+                    <span class="badge badge-{{vacancy.publicationtypecolor}}">
+                        {{vacancy.publicationtypelabel}}
+                    </span>
+                </div>
+
+                <div class="card-body">
+                    <h2 class="card-title mb-3">{{vacancy.title}}</h2>
+
+                    {{! Convocatoria Info }}
+                    {{#convocatoria}}
+                    <div class="mb-3">
+                        <i class="fa fa-folder-open text-muted mr-2"></i>
+                        {{#str}}convocatoria, local_jobboard{{/str}}:
+                        <strong>{{name}}</strong>
+                    </div>
+                    {{/convocatoria}}
+
+                    {{! Quick Details }}
+                    <div class="mb-3">
+                        {{#vacancy.location}}
+                        <span class="badge badge-light mr-2 mb-1">
+                            <i class="fa fa-map-marker-alt mr-1"></i>{{vacancy.location}}
+                        </span>
+                        {{/vacancy.location}}
+
+                        {{#vacancy.contracttypelabel}}
+                        <span class="badge badge-light mr-2 mb-1">
+                            <i class="fa fa-briefcase mr-1"></i>{{vacancy.contracttypelabel}}
+                        </span>
+                        {{/vacancy.contracttypelabel}}
+
+                        <span class="badge badge-light mb-1">
+                            <i class="fa fa-users mr-1"></i>
+                            {{#str}}positions, local_jobboard{{/str}}: {{vacancy.positions}}
+                        </span>
+                    </div>
+
+                    {{! Urgent Warning }}
+                    {{#vacancy.isurgent}}
+                    <div class="alert alert-warning">
+                        <i class="fa fa-exclamation-triangle mr-2"></i>
+                        {{#str}}closesin, local_jobboard, {{vacancy.daysremaining}}{{/str}}
+                    </div>
+                    {{/vacancy.isurgent}}
+                </div>
+            </div>
+
+            {{! Description Card }}
+            {{#vacancy.description}}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white font-weight-bold">
+                    <i class="fa fa-file-alt mr-2"></i>
+                    {{#str}}vacancydescription, local_jobboard{{/str}}
+                </div>
+                <div class="card-body">
+                    {{{vacancy.description}}}
+                </div>
+            </div>
+            {{/vacancy.description}}
+
+            {{! Requirements Card }}
+            {{#vacancy.requirements}}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white font-weight-bold">
+                    <i class="fa fa-check-circle mr-2"></i>
+                    {{#str}}requirements, local_jobboard{{/str}}
+                </div>
+                <div class="card-body">
+                    {{{vacancy.requirements}}}
+                </div>
+            </div>
+            {{/vacancy.requirements}}
+
+            {{! Desirable Card }}
+            {{#vacancy.desirable}}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white font-weight-bold">
+                    <i class="fa fa-star mr-2"></i>
+                    {{#str}}desirable, local_jobboard{{/str}}
+                </div>
+                <div class="card-body">
+                    {{{vacancy.desirable}}}
+                </div>
+            </div>
+            {{/vacancy.desirable}}
+        </div>
+
+        {{! Right Column - Sidebar }}
+        <div class="col-lg-4">
+            {{! Apply CTA Card }}
+            <div class="card shadow-sm mb-4 border-primary">
+                <div class="card-header bg-primary text-white font-weight-bold">
+                    <i class="fa fa-paper-plane mr-2"></i>
+                    {{#str}}readytoapply, local_jobboard{{/str}}
+                </div>
+                <div class="card-body text-center">
+                    {{#isloggedin}}
+                        {{#hasapplied}}
+                        <p class="text-success">
+                            <i class="fa fa-check-circle fa-2x mb-2"></i><br>
+                            {{#str}}alreadyapplied, local_jobboard{{/str}}
+                        </p>
+                        <a href="{{applicationsurl}}" class="btn btn-outline-primary btn-block">
+                            {{#str}}viewmyapplications, local_jobboard{{/str}}
+                        </a>
+                        {{/hasapplied}}
+
+                        {{^hasapplied}}
+                            {{#canapply}}
+                            <p class="text-muted mb-3">{{#str}}applynowdesc, local_jobboard{{/str}}</p>
+                            <a href="{{applyurl}}" class="btn btn-primary btn-lg btn-block">
+                                <i class="fa fa-paper-plane mr-2"></i>
+                                {{#str}}apply, local_jobboard{{/str}}
+                            </a>
+                            {{/canapply}}
+
+                            {{^canapply}}
+                            <p class="text-muted">{{#str}}cannotapply, local_jobboard{{/str}}</p>
+                            {{/canapply}}
+                        {{/hasapplied}}
+                    {{/isloggedin}}
+
+                    {{^isloggedin}}
+                    <p class="text-muted mb-3">{{#str}}logintoapply, local_jobboard{{/str}}</p>
+                    <a href="{{loginapplyurl}}" class="btn btn-primary btn-lg btn-block">
+                        <i class="fa fa-sign-in-alt mr-2"></i>
+                        {{#str}}loginandapply, local_jobboard{{/str}}
+                    </a>
+                    {{/isloggedin}}
+                </div>
+            </div>
+
+            {{! Details Card }}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white font-weight-bold">
+                    <i class="fa fa-info-circle mr-2"></i>
+                    {{#str}}details, local_jobboard{{/str}}
+                </div>
+                <div class="card-body">
+                    <dl class="mb-0">
+                        {{#vacancy.duration}}
+                        <dt class="text-muted small">{{#str}}duration, local_jobboard{{/str}}</dt>
+                        <dd class="mb-2">{{vacancy.duration}}</dd>
+                        {{/vacancy.duration}}
+
+                        {{#vacancy.salary}}
+                        <dt class="text-muted small">{{#str}}salary, local_jobboard{{/str}}</dt>
+                        <dd class="mb-2">{{vacancy.salary}}</dd>
+                        {{/vacancy.salary}}
+
+                        {{#vacancy.department}}
+                        <dt class="text-muted small">{{#str}}department, local_jobboard{{/str}}</dt>
+                        <dd class="mb-2">{{vacancy.department}}</dd>
+                        {{/vacancy.department}}
+
+                        <dt class="text-muted small">{{#str}}opendate, local_jobboard{{/str}}</dt>
+                        <dd class="mb-2">{{vacancy.opendateformatted}}</dd>
+
+                        <dt class="text-muted small">{{#str}}closedate, local_jobboard{{/str}}</dt>
+                        <dd class="mb-0 {{#vacancy.isurgent}}text-warning font-weight-bold{{/vacancy.isurgent}}">
+                            {{vacancy.closedateformatted}}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            {{! Share Card }}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white font-weight-bold">
+                    <i class="fa fa-share-alt mr-2"></i>
+                    {{#str}}share, local_jobboard{{/str}}
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <a href="{{sharelinks.linkedin}}" class="btn btn-outline-primary btn-lg mx-1" target="_blank" title="LinkedIn">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="{{sharelinks.facebook}}" class="btn btn-outline-primary btn-lg mx-1" target="_blank" title="Facebook">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="{{sharelinks.twitter}}" class="btn btn-outline-primary btn-lg mx-1" target="_blank" title="Twitter">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

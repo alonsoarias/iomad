@@ -1,0 +1,66 @@
+{{!
+    @template local_jobboard/components/action_card
+
+    Action card component for CTA sections.
+
+    Context variables:
+    * title - Card title
+    * description - Description text
+    * icon - FontAwesome icon
+    * color - Bootstrap color
+    * primaryaction - Primary action {url, label, icon}
+    * secondaryaction - Secondary action {url, label, icon}
+    * alert - Optional alert message
+    * alerttype - Alert type (warning, info, danger, success)
+
+    Example context (json):
+    {
+        "title": "Ready to Apply?",
+        "description": "Submit your application before the deadline.",
+        "icon": "paper-plane",
+        "color": "primary",
+        "primaryaction": {"url": "/apply", "label": "Apply Now", "icon": "arrow-right"},
+        "alert": "Only 3 days left!",
+        "alerttype": "warning"
+    }
+}}
+<div class="card shadow-sm mb-4 jb-action-card border-{{color}}">
+    <div class="card-header bg-{{color}} text-white">
+        <h5 class="mb-0">
+            {{#icon}}
+            <i class="fa fa-{{icon}} mr-2"></i>
+            {{/icon}}
+            {{title}}
+        </h5>
+    </div>
+    <div class="card-body text-center">
+        {{#alert}}
+        <div class="alert alert-{{#alerttype}}{{alerttype}}{{/alerttype}}{{^alerttype}}info{{/alerttype}} mb-3">
+            <i class="fa fa-exclamation-triangle mr-1"></i>
+            {{alert}}
+        </div>
+        {{/alert}}
+
+        {{#description}}
+        <p class="text-muted mb-4">{{description}}</p>
+        {{/description}}
+
+        {{#primaryaction}}
+        <a href="{{url}}" class="btn btn-{{color}} btn-lg btn-block mb-2">
+            {{#icon}}
+            <i class="fa fa-{{icon}} mr-2"></i>
+            {{/icon}}
+            {{label}}
+        </a>
+        {{/primaryaction}}
+
+        {{#secondaryaction}}
+        <a href="{{url}}" class="btn btn-outline-{{color}} btn-block">
+            {{#icon}}
+            <i class="fa fa-{{icon}} mr-2"></i>
+            {{/icon}}
+            {{label}}
+        </a>
+        {{/secondaryaction}}
+    </div>
+</div>

@@ -1,0 +1,173 @@
+{{!
+    @template local_jobboard/pages/applications
+
+    My applications list page template.
+
+    Context variables:
+    * pageheader - Page header data
+    * stats - Array of stat cards
+    * filterform - Filter form data
+    * hasapplications - Boolean
+    * applications - Array of application data
+    * pagination - Pagination HTML
+    * progresssteps - Steps for progress indicator
+
+    Example context (json):
+    {
+        "hasapplications": true,
+        "applications": [{"id": 1, "vacancytitle": "Developer"}]
+    }
+}}
+<div class="local-jobboard-applications" data-region="jobboard-applications">
+    {{! Page Header }}
+    {{> local_jobboard/components/page_header }}
+
+    {{! Statistics Row }}
+    {{#stats.0}}
+    <div class="row mb-4">
+        {{#stats}}
+        <div class="col-lg-3 col-md-6 mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        {{/stats}}
+    </div>
+    {{/stats.0}}
+
+    {{! Filter Form }}
+    {{#filterform}}
+    {{> local_jobboard/components/filter_form }}
+    {{/filterform}}
+
+    {{! Applications List }}
+    {{#hasapplications}}
+    <div class="row">
+        {{#applications}}
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 shadow-sm jb-application-card" data-application-id="{{id}}">
+                {{! Card Header with Status }}
+                <div class="card-header bg-{{statuscolor}} text-white d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge badge-light mr-2">{{vacancycode}}</span>
+                        <span class="font-weight-bold">{{statuslabel}}</span>
+                    </div>
+                    {{#urgent}}
+                    <span class="badge badge-warning">
+                        <i class="fa fa-exclamation-triangle mr-1"></i>
+                        {{#str}}urgent, local_jobboard{{/str}}
+                    </span>
+                    {{/urgent}}
+                </div>
+
+                {{! Card Body }}
+                <div class="card-body">
+                    <h5 class="card-title mb-2">{{vacancytitle}}</h5>
+
+                    {{#convocatoria}}
+                    <p class="small text-muted mb-2">
+                        <i class="fa fa-folder-open mr-1"></i>
+                        {{convocatoria}}
+                    </p>
+                    {{/convocatoria}}
+
+                    {{! Progress Indicator }}
+                    <div class="jb-progress-steps mb-3">
+                        <div class="d-flex justify-content-between small">
+                            {{#progresssteps}}
+                            <div class="text-center flex-fill">
+                                <div class="jb-step-icon rounded-circle mx-auto mb-1
+                                     {{#completed}}bg-success text-white{{/completed}}
+                                     {{#current}}bg-primary text-white{{/current}}
+                                     {{^completed}}{{^current}}bg-light text-muted{{/current}}{{/completed}}">
+                                    {{#completed}}<i class="fa fa-check"></i>{{/completed}}
+                                    {{#current}}<i class="fa fa-circle"></i>{{/current}}
+                                    {{^completed}}{{^current}}<i class="fa fa-circle"></i>{{/current}}{{/completed}}
+                                </div>
+                                <span class="d-none d-md-block {{#current}}font-weight-bold{{/current}}">{{label}}</span>
+                            </div>
+                            {{/progresssteps}}
+                        </div>
+                        <div class="progress mt-2" style="height: 4px;">
+                            <div class="progress-bar bg-success" style="width: {{progresspercent}}%;"></div>
+                        </div>
+                    </div>
+
+                    {{! Document Status }}
+                    <div class="row small text-center">
+                        <div class="col-4">
+                            <span class="badge badge-success badge-pill">{{docsapproved}}</span>
+                            <div class="text-muted">{{#str}}approved, local_jobboard{{/str}}</div>
+                        </div>
+                        <div class="col-4">
+                            <span class="badge badge-warning badge-pill">{{docspending}}</span>
+                            <div class="text-muted">{{#str}}pending, local_jobboard{{/str}}</div>
+                        </div>
+                        <div class="col-4">
+                            <span class="badge badge-danger badge-pill">{{docsrejected}}</span>
+                            <div class="text-muted">{{#str}}rejected, local_jobboard{{/str}}</div>
+                        </div>
+                    </div>
+
+                    {{! Pending Docs Alert }}
+                    {{#haspendingdocs}}
+                    <div class="alert alert-warning mt-3 mb-0 py-2">
+                        <i class="fa fa-exclamation-circle mr-1"></i>
+                        {{#str}}pendingdocsalert, local_jobboard{{/str}}
+                    </div>
+                    {{/haspendingdocs}}
+                </div>
+
+                {{! Card Footer }}
+                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        <i class="fa fa-calendar mr-1"></i>
+                        {{dateapplied}}
+                    </small>
+                    <a href="{{viewurl}}" class="btn btn-primary btn-sm">
+                        {{#str}}viewdetails, local_jobboard{{/str}}
+                        <i class="fa fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{/applications}}
+    </div>
+    {{/hasapplications}}
+
+    {{! Empty State }}
+    {{^hasapplications}}
+    <div class="text-center py-5">
+        <i class="fa fa-file-alt fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">{{#str}}noapplications, local_jobboard{{/str}}</h4>
+        <p class="text-muted mb-4">{{#str}}noapplicationsdesc, local_jobboard{{/str}}</p>
+        <a href="{{browseurl}}" class="btn btn-primary">
+            <i class="fa fa-search mr-2"></i>
+            {{#str}}browservacancies, local_jobboard{{/str}}
+        </a>
+    </div>
+    {{/hasapplications}}
+
+    {{! Pagination }}
+    {{#pagination}}
+    <div class="mt-4">
+        {{{pagination}}}
+    </div>
+    {{/pagination}}
+</div>
+
+<style>
+.jb-application-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.jb-application-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
+}
+.jb-step-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>

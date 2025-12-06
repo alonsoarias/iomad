@@ -1,0 +1,112 @@
+{{!
+    @template local_jobboard/components/list_group
+
+    List group component for displaying lists of items.
+
+    Context variables:
+    * title - Optional card header title
+    * icon - Optional header icon
+    * headercolor - Header background color
+    * items - Array of list items with:
+        - title: Item title
+        - subtitle: Optional subtitle
+        - badge: Optional badge {label, color}
+        - icon: Optional icon
+        - iconcolor: Icon color
+        - url: Optional link URL
+        - actions: Array of action buttons [{url, icon, label, class, title}]
+        - meta: Optional meta text (right side)
+        - active: Boolean for active state
+        - disabled: Boolean for disabled state
+    * flush - Boolean for flush style (no outer borders)
+    * empty - Empty state message
+
+    Example context (json):
+    {
+        "title": "Documents",
+        "icon": "folder",
+        "headercolor": "primary",
+        "items": [
+            {
+                "title": "Resume.pdf",
+                "subtitle": "Uploaded 2 days ago",
+                "badge": {"label": "Approved", "color": "success"},
+                "icon": "file-pdf",
+                "iconcolor": "danger",
+                "actions": [{"url": "/download", "icon": "download", "title": "Download"}]
+            }
+        ]
+    }
+}}
+<div class="card shadow-sm mb-4 jb-list-group">
+    {{#title}}
+    <div class="card-header {{#headercolor}}bg-{{headercolor}} text-white{{/headercolor}} d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            {{#icon}}
+            <i class="fa fa-{{icon}} mr-2"></i>
+            {{/icon}}
+            {{title}}
+        </h5>
+        {{#count}}
+        <span class="badge badge-light">{{count}}</span>
+        {{/count}}
+    </div>
+    {{/title}}
+
+    {{#items.0}}
+    <ul class="list-group list-group-flush">
+        {{#items}}
+        <li class="list-group-item{{#active}} active{{/active}}{{#disabled}} disabled{{/disabled}} d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center flex-grow-1">
+                {{#icon}}
+                <div class="mr-3">
+                    <i class="fa fa-{{icon}} fa-lg text-{{#iconcolor}}{{iconcolor}}{{/iconcolor}}{{^iconcolor}}muted{{/iconcolor}}"></i>
+                </div>
+                {{/icon}}
+                <div class="flex-grow-1">
+                    {{#url}}
+                    <a href="{{url}}" class="text-dark font-weight-bold text-decoration-none">{{title}}</a>
+                    {{/url}}
+                    {{^url}}
+                    <span class="font-weight-bold">{{title}}</span>
+                    {{/url}}
+                    {{#subtitle}}
+                    <div class="text-muted small">{{subtitle}}</div>
+                    {{/subtitle}}
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center">
+                {{#badge}}
+                <span class="badge badge-{{color}} mr-2">{{label}}</span>
+                {{/badge}}
+
+                {{#meta}}
+                <small class="text-muted mr-2">{{meta}}</small>
+                {{/meta}}
+
+                {{#actions.0}}
+                <div class="btn-group btn-group-sm">
+                    {{#actions}}
+                    <a href="{{url}}" class="btn {{#class}}{{class}}{{/class}}{{^class}}btn-outline-secondary{{/class}}" title="{{title}}">
+                        {{#icon}}
+                        <i class="fa fa-{{icon}}"></i>
+                        {{/icon}}
+                        {{#label}}{{label}}{{/label}}
+                    </a>
+                    {{/actions}}
+                </div>
+                {{/actions.0}}
+            </div>
+        </li>
+        {{/items}}
+    </ul>
+    {{/items.0}}
+
+    {{^items.0}}
+    <div class="card-body text-center text-muted py-4">
+        <i class="fa fa-inbox fa-2x mb-2"></i>
+        <p class="mb-0">{{#empty}}{{empty}}{{/empty}}{{^empty}}{{#str}}noresults{{/str}}{{/empty}}</p>
+    </div>
+    {{/items.0}}
+</div>

@@ -1,0 +1,28 @@
+{{!
+    @template local_jobboard/components/status_badge
+
+    Status badge component.
+
+    Context variables:
+    * status - Status code
+    * label - Display label
+    * color - Bootstrap color (primary, success, warning, danger, info, secondary)
+    * icon - Optional FontAwesome icon
+    * size - Optional size (sm, lg)
+    * pill - Boolean for pill style
+
+    Example context (json):
+    {
+        "status": "published",
+        "label": "Published",
+        "color": "success",
+        "icon": "check-circle",
+        "pill": true
+    }
+}}
+<span class="badge badge-{{color}}{{#pill}} badge-pill{{/pill}}{{#size}} badge-{{size}}{{/size}}">
+    {{#icon}}
+    <i class="fa fa-{{icon}} mr-1"></i>
+    {{/icon}}
+    {{label}}
+</span>

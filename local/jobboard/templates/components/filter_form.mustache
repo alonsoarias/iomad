@@ -1,0 +1,91 @@
+{{!
+    @template local_jobboard/components/filter_form
+
+    Filter form component for list views.
+
+    Context variables:
+    * action - Form action URL
+    * method - Form method (get/post), defaults to get
+    * hiddenfields - Array of hidden fields [{name, value}]
+    * fields - Array of filter fields with:
+        - type: text, select, date
+        - name: field name
+        - label: optional label
+        - placeholder: optional placeholder
+        - value: current value
+        - options: for select [{value, label, selected}]
+        - col: Bootstrap column class (col-md-3)
+    * showreset - Boolean to show reset button
+    * reseturl - URL for reset
+
+    Example context (json):
+    {
+        "action": "/search",
+        "hiddenfields": [{"name": "view", "value": "vacancies"}],
+        "fields": [
+            {"type": "text", "name": "search", "placeholder": "Search...", "col": "col-md-4"},
+            {"type": "select", "name": "status", "options": [{"value": "", "label": "All"}], "col": "col-md-3"}
+        ],
+        "showreset": true,
+        "reseturl": "/vacancies"
+    }
+}}
+<div class="card shadow-sm mb-4 jb-filter-form">
+    <div class="card-body py-3">
+        <form action="{{action}}" method="{{#method}}{{method}}{{/method}}{{^method}}get{{/method}}" class="mb-0">
+            {{#hiddenfields}}
+            <input type="hidden" name="{{name}}" value="{{value}}">
+            {{/hiddenfields}}
+
+            <div class="row align-items-end">
+                {{#fields}}
+                <div class="{{#col}}{{col}}{{/col}}{{^col}}col-md-3{{/col}} mb-2 mb-md-0">
+                    {{#label}}
+                    <label for="filter_{{name}}" class="small text-muted mb-1">{{label}}</label>
+                    {{/label}}
+
+                    {{#isText}}
+                    <input type="text"
+                           id="filter_{{name}}"
+                           name="{{name}}"
+                           class="form-control form-control-sm"
+                           placeholder="{{placeholder}}"
+                           value="{{value}}">
+                    {{/isText}}
+
+                    {{#isSelect}}
+                    <select id="filter_{{name}}"
+                            name="{{name}}"
+                            class="form-control form-control-sm custom-select custom-select-sm">
+                        {{#options}}
+                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                        {{/options}}
+                    </select>
+                    {{/isSelect}}
+
+                    {{#isDate}}
+                    <input type="date"
+                           id="filter_{{name}}"
+                           name="{{name}}"
+                           class="form-control form-control-sm"
+                           value="{{value}}">
+                    {{/isDate}}
+                </div>
+                {{/fields}}
+
+                <div class="col-md-auto mb-2 mb-md-0">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-search mr-1"></i>
+                        {{#str}}search{{/str}}
+                    </button>
+                    {{#showreset}}
+                    <a href="{{reseturl}}" class="btn btn-outline-secondary btn-sm ml-1">
+                        <i class="fa fa-times mr-1"></i>
+                        {{#str}}reset{{/str}}
+                    </a>
+                    {{/showreset}}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

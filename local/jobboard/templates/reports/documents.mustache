@@ -1,0 +1,120 @@
+{{!
+    @template local_jobboard/reports/documents
+
+    Documents validation report section template.
+
+    Context variables:
+    * stats - Validation statistics
+    * rejectionreasons - Top rejection reasons
+    * bytype - Documents by type
+
+    Example context (json):
+    {
+        "stats": {"total": 1000, "validated": 800, "rejected": 100}
+    }
+}}
+<div class="jb-report-documents">
+    <div class="row mb-4">
+        {{! Validation Summary }}
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fa fa-chart-bar mr-2"></i>
+                        {{#str}}validationsummary, local_jobboard{{/str}}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table mb-0">
+                        <tr>
+                            <td>{{#str}}totaldocuments, local_jobboard{{/str}}</td>
+                            <td class="text-right"><strong>{{stats.total}}</strong></td>
+                        </tr>
+                        <tr class="text-success">
+                            <td>{{#str}}validated, local_jobboard{{/str}}</td>
+                            <td class="text-right">{{stats.validated}} ({{stats.validationrate}}%)</td>
+                        </tr>
+                        <tr class="text-danger">
+                            <td>{{#str}}rejected, local_jobboard{{/str}}</td>
+                            <td class="text-right">{{stats.rejected}} ({{stats.rejectionrate}}%)</td>
+                        </tr>
+                        <tr class="text-warning">
+                            <td>{{#str}}pending, local_jobboard{{/str}}</td>
+                            <td class="text-right">{{stats.pending}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{#str}}avgvalidationtime, local_jobboard{{/str}}</td>
+                            <td class="text-right">{{stats.avgtime}} {{#str}}hours{{/str}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {{! Rejection Reasons }}
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fa fa-times-circle mr-2"></i>
+                        {{#str}}rejectionreasons, local_jobboard{{/str}}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {{#hasrejections}}
+                    <table class="table mb-0">
+                        {{#rejectionreasons}}
+                        <tr>
+                            <td>{{reason}}</td>
+                            <td class="text-right text-danger">{{count}}</td>
+                        </tr>
+                        {{/rejectionreasons}}
+                    </table>
+                    {{/hasrejections}}
+                    {{^hasrejections}}
+                    <p class="text-muted text-center mb-0">
+                        <i class="fa fa-check-circle text-success mr-2"></i>
+                        {{#str}}norejections, local_jobboard{{/str}}
+                    </p>
+                    {{/hasrejections}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{! By Document Type }}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="fa fa-file-alt mr-2"></i>
+                {{#str}}bydocumenttype, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>{{#str}}documenttype, local_jobboard{{/str}}</th>
+                            <th class="text-center">{{#str}}total{{/str}}</th>
+                            <th class="text-center text-success">{{#str}}validated, local_jobboard{{/str}}</th>
+                            <th class="text-center text-danger">{{#str}}rejected, local_jobboard{{/str}}</th>
+                            <th class="text-center text-warning">{{#str}}pending, local_jobboard{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#bytype}}
+                        <tr>
+                            <td>{{typename}}</td>
+                            <td class="text-center">{{total}}</td>
+                            <td class="text-center text-success">{{validated}}</td>
+                            <td class="text-center text-danger">{{rejected}}</td>
+                            <td class="text-center text-warning">{{pending}}</td>
+                        </tr>
+                        {{/bytype}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

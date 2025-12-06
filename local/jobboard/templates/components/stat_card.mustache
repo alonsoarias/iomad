@@ -1,0 +1,53 @@
+{{!
+    @template local_jobboard/components/stat_card
+
+    Statistics card component.
+
+    Context variables:
+    * value - The main value to display
+    * label - Description label
+    * icon - FontAwesome icon name (without fa- prefix)
+    * color - Bootstrap color (primary, success, warning, danger, info, secondary)
+    * url - Optional link URL
+    * trend - Optional trend indicator (up, down, stable)
+    * trendvalue - Optional trend value text
+
+    Example context (json):
+    {
+        "value": "42",
+        "label": "Active Vacancies",
+        "icon": "briefcase",
+        "color": "primary",
+        "url": "/vacancies",
+        "trend": "up",
+        "trendvalue": "+5 this week"
+    }
+}}
+<div class="card shadow-sm h-100 jb-stat-card border-left-{{color}}">
+    {{#url}}
+    <a href="{{url}}" class="text-decoration-none">
+    {{/url}}
+        <div class="card-body py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="mb-0 font-weight-bold text-{{color}}">{{value}}</h3>
+                    <p class="text-muted mb-0 small">{{label}}</p>
+                    {{#trendvalue}}
+                    <small class="text-{{#trend}}{{trend}}{{/trend}}{{^trend}}muted{{/trend}}">
+                        {{#trend}}
+                        {{#isUp}}<i class="fa fa-arrow-up"></i>{{/isUp}}
+                        {{#isDown}}<i class="fa fa-arrow-down"></i>{{/isDown}}
+                        {{/trend}}
+                        {{trendvalue}}
+                    </small>
+                    {{/trendvalue}}
+                </div>
+                <div class="text-{{color}} opacity-50">
+                    <i class="fa fa-{{icon}} fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    {{#url}}
+    </a>
+    {{/url}}
+</div>

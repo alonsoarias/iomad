@@ -1,0 +1,119 @@
+{{!
+    @template local_jobboard/components/timeline
+
+    Timeline component for status history.
+
+    Context variables:
+    * title - Optional card header title
+    * icon - Optional header icon
+    * events - Array of timeline events with:
+        - title: Event title
+        - description: Optional description
+        - date: Formatted date string
+        - time: Optional time string
+        - icon: FontAwesome icon
+        - color: Bootstrap color
+        - user: Optional user name
+        - current: Boolean for current/active state
+
+    Example context (json):
+    {
+        "title": "Application History",
+        "icon": "history",
+        "events": [
+            {
+                "title": "Application Submitted",
+                "description": "Initial submission",
+                "date": "Dec 5, 2025",
+                "time": "10:30 AM",
+                "icon": "paper-plane",
+                "color": "primary",
+                "user": "John Doe"
+            }
+        ]
+    }
+}}
+<div class="card shadow-sm mb-4 jb-timeline">
+    {{#title}}
+    <div class="card-header bg-light">
+        <h5 class="mb-0">
+            {{#icon}}
+            <i class="fa fa-{{icon}} mr-2"></i>
+            {{/icon}}
+            {{title}}
+        </h5>
+    </div>
+    {{/title}}
+
+    <div class="card-body">
+        {{#events.0}}
+        <div class="timeline">
+            {{#events}}
+            <div class="timeline-item{{#current}} timeline-item-current{{/current}}">
+                <div class="timeline-marker bg-{{#color}}{{color}}{{/color}}{{^color}}secondary{{/color}}">
+                    <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}circle{{/icon}} text-white"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <h6 class="mb-0 font-weight-bold">{{title}}</h6>
+                        <small class="text-muted">
+                            {{date}}
+                            {{#time}}<br>{{time}}{{/time}}
+                        </small>
+                    </div>
+                    {{#description}}
+                    <p class="text-muted mb-1 small">{{description}}</p>
+                    {{/description}}
+                    {{#user}}
+                    <small class="text-muted">
+                        <i class="fa fa-user mr-1"></i>{{user}}
+                    </small>
+                    {{/user}}
+                </div>
+            </div>
+            {{/events}}
+        </div>
+        {{/events.0}}
+
+        {{^events.0}}
+        <p class="text-muted text-center mb-0">{{#str}}nohistory, local_jobboard{{/str}}</p>
+        {{/events.0}}
+    </div>
+</div>
+
+<style>
+.jb-timeline .timeline {
+    position: relative;
+    padding-left: 30px;
+}
+.jb-timeline .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+.jb-timeline .timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+.jb-timeline .timeline-item:last-child {
+    padding-bottom: 0;
+}
+.jb-timeline .timeline-marker {
+    position: absolute;
+    left: -30px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+.jb-timeline .timeline-item-current .timeline-marker {
+    box-shadow: 0 0 0 4px rgba(0,123,255,0.25);
+}
+</style>

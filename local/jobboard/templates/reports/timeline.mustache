@@ -1,0 +1,88 @@
+{{!
+    @template local_jobboard/reports/timeline
+
+    Timeline report section template showing daily applications.
+
+    Context variables:
+    * daily - Array of daily application counts
+    * hasdaily - Boolean if has daily data
+
+    Example context (json):
+    {
+        "daily": [{"day": "2025-12-01", "count": 15}]
+    }
+}}
+<div class="jb-report-timeline">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="fa fa-calendar-alt mr-2"></i>
+                {{#str}}dailyapplications, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="card-body">
+            {{#hasdaily}}
+            {{! Simple chart visualization using bars }}
+            <div class="jb-timeline-chart mb-4">
+                {{#daily}}
+                <div class="d-flex align-items-center mb-2">
+                    <div class="text-muted small" style="width: 100px;">{{day}}</div>
+                    <div class="flex-grow-1 mx-2">
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-primary" style="width: {{percentage}}%; min-width: 30px;">
+                                {{count}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/daily}}
+            </div>
+
+            {{! Data Table }}
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>{{#str}}date{{/str}}</th>
+                            <th class="text-center">{{#str}}applications, local_jobboard{{/str}}</th>
+                            <th>{{#str}}trend, local_jobboard{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#daily}}
+                        <tr>
+                            <td>{{day}}</td>
+                            <td class="text-center font-weight-bold">{{count}}</td>
+                            <td>
+                                {{#isup}}
+                                <span class="text-success">
+                                    <i class="fa fa-arrow-up"></i> +{{change}}
+                                </span>
+                                {{/isup}}
+                                {{#isdown}}
+                                <span class="text-danger">
+                                    <i class="fa fa-arrow-down"></i> {{change}}
+                                </span>
+                                {{/isdown}}
+                                {{#issame}}
+                                <span class="text-muted">
+                                    <i class="fa fa-minus"></i> 0
+                                </span>
+                                {{/issame}}
+                            </td>
+                        </tr>
+                        {{/daily}}
+                    </tbody>
+                </table>
+            </div>
+            {{/hasdaily}}
+
+            {{^hasdaily}}
+            <p class="text-muted text-center mb-0">
+                <i class="fa fa-calendar-times fa-2x mb-2 d-block"></i>
+                {{#str}}nodata, local_jobboard{{/str}}
+            </p>
+            {{/hasdaily}}
+        </div>
+    </div>
+</div>

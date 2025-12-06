@@ -1,0 +1,178 @@
+{{!
+    @template local_jobboard/pages/myreviews
+
+    My reviews page template for reviewers.
+
+    Context variables:
+    * pageheader - Page header data
+    * stats - Reviewer statistics
+    * filterform - Filter form data
+    * hasassignments - Boolean
+    * assignments - Array of assigned applications
+    * pagination - Pagination HTML
+
+    Example context (json):
+    {
+        "hasassignments": true,
+        "assignments": [{"id": 1, "applicantname": "John Doe"}]
+    }
+}}
+<div class="local-jobboard-myreviews" data-region="jobboard-myreviews">
+    {{! Page Header }}
+    {{> local_jobboard/components/page_header }}
+
+    {{! Statistics Row }}
+    {{#stats.0}}
+    <div class="row mb-4">
+        {{#stats}}
+        <div class="col-lg-3 col-md-6 mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        {{/stats}}
+    </div>
+    {{/stats.0}}
+
+    {{! Filter Form }}
+    {{#filterform}}
+    {{> local_jobboard/components/filter_form }}
+    {{/filterform}}
+
+    {{! Results Info }}
+    {{#totalcount}}
+    <p class="text-muted small mb-3">
+        {{#str}}showing, local_jobboard, {"from": {{from}}, "to": {{to}}, "total": {{total}}}{{/str}}
+    </p>
+    {{/totalcount}}
+
+    {{! Assignments List }}
+    {{#hasassignments}}
+    <div class="row">
+        {{#assignments}}
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 shadow-sm{{#isurgent}} border-danger{{/isurgent}}">
+                {{! Card Header }}
+                <div class="card-header bg-{{statuscolor}} text-white d-flex justify-content-between align-items-center">
+                    <span class="font-weight-bold">{{statuslabel}}</span>
+                    {{#isurgent}}
+                    <span class="badge badge-danger">
+                        <i class="fa fa-exclamation-triangle mr-1"></i>
+                        {{#str}}closingsoon, local_jobboard, {{daysuntilclose}}{{/str}}
+                    </span>
+                    {{/isurgent}}
+                    {{#isclosed}}
+                    <span class="badge badge-dark">{{#str}}closed{{/str}}</span>
+                    {{/isclosed}}
+                </div>
+
+                {{! Card Body }}
+                <div class="card-body">
+                    {{! Applicant Info }}
+                    <h5 class="card-title mb-1">
+                        <i class="fa fa-user text-muted mr-2"></i>
+                        {{applicantname}}
+                    </h5>
+                    <p class="small mb-2">
+                        <i class="fa fa-envelope text-muted mr-2"></i>
+                        <a href="mailto:{{email}}" class="text-muted">{{email}}</a>
+                    </p>
+
+                    {{! Vacancy Info }}
+                    <div class="mb-3">
+                        <span class="badge badge-secondary mr-2">{{vacancycode}}</span>
+                        <span class="text-muted small">{{vacancytitle}}</span>
+                    </div>
+
+                    {{! Document Progress }}
+                    <div class="mb-3">
+                        <small class="text-muted d-block mb-1">{{#str}}documents, local_jobboard{{/str}}:</small>
+                        {{#totaldocs}}
+                        <div class="progress mb-2" style="height: 20px;">
+                            <div class="progress-bar bg-success" style="width: {{approvedpercent}}%;" title="{{#str}}docstatus:approved, local_jobboard{{/str}}">
+                                {{approvedcount}}
+                            </div>
+                            <div class="progress-bar bg-danger" style="width: {{rejectedpercent}}%;" title="{{#str}}docstatus:rejected, local_jobboard{{/str}}">
+                                {{rejectedcount}}
+                            </div>
+                        </div>
+                        {{/totaldocs}}
+                        <div class="d-flex flex-wrap">
+                            <span class="badge badge-success mr-2 mb-1">
+                                <i class="fa fa-check mr-1"></i>{{approvedcount}}
+                            </span>
+                            <span class="badge badge-danger mr-2 mb-1">
+                                <i class="fa fa-times mr-1"></i>{{rejectedcount}}
+                            </span>
+                            <span class="badge badge-warning mb-1">
+                                <i class="fa fa-clock mr-1"></i>{{pendingcount}}
+                            </span>
+                        </div>
+                    </div>
+
+                    {{! Closing Date }}
+                    <div class="small">
+                        <i class="fa fa-{{#isurgent}}exclamation-triangle text-danger{{/isurgent}}{{^isurgent}}calendar-alt text-muted{{/isurgent}} mr-2"></i>
+                        <span class="{{#isurgent}}text-danger font-weight-bold{{/isurgent}}{{^isurgent}}text-muted{{/isurgent}}">
+                            {{#str}}closedate, local_jobboard{{/str}}: {{closedate}}
+                        </span>
+                    </div>
+                </div>
+
+                {{! Card Footer }}
+                <div class="card-footer bg-white d-flex justify-content-between">
+                    <a href="{{reviewurl}}" class="btn {{#pendingcount}}btn-primary{{/pendingcount}}{{^pendingcount}}btn-outline-primary{{/pendingcount}} btn-sm">
+                        <i class="fa fa-search mr-1"></i>
+                        {{#str}}reviewdocuments, local_jobboard{{/str}}
+                    </a>
+                    <a href="{{viewurl}}" class="btn btn-outline-secondary btn-sm" title="{{#str}}viewapplication, local_jobboard{{/str}}">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{/assignments}}
+    </div>
+    {{/hasassignments}}
+
+    {{! Empty State }}
+    {{^hasassignments}}
+    <div class="text-center py-5">
+        <i class="fa fa-clipboard-list fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">{{#str}}noassignments, local_jobboard{{/str}}</h4>
+    </div>
+    {{/hasassignments}}
+
+    {{! Pagination }}
+    {{#pagination}}
+    <div class="mt-4">
+        {{{pagination}}}
+    </div>
+    {{/pagination}}
+
+    {{! Quick Links }}
+    <div class="card mt-4 bg-light border-0">
+        <div class="card-body d-flex flex-wrap align-items-center justify-content-center">
+            <a href="{{dashboardurl}}" class="btn btn-outline-secondary m-1">
+                <i class="fa fa-tachometer-alt mr-2"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+            <a href="{{reviewqueueurl}}" class="btn btn-outline-primary m-1">
+                <i class="fa fa-clipboard-check mr-2"></i>
+                {{#str}}reviewdocuments, local_jobboard{{/str}}
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.local-jobboard-myreviews .card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.local-jobboard-myreviews .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
+}
+.local-jobboard-myreviews .progress-bar {
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+</style>

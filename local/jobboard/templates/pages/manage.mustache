@@ -1,0 +1,167 @@
+{{!
+    @template local_jobboard/pages/manage
+
+    Vacancy management page template with table view.
+
+    Context variables:
+    * pageheader - Page header data
+    * convocatoriainfo - Optional convocatoria context
+    * stats - Array of statistic cards
+    * filterform - Filter form configuration
+    * showinginfo - Showing X to Y of Z text
+    * hasvacancies - Boolean if there are vacancies
+    * vacancies - Array of vacancy data with actions
+    * pagination - Pagination HTML
+    * newvacancyurl - URL to create new vacancy
+
+    Example context (json):
+    {
+        "hasvacancies": true,
+        "vacancies": [{"id": 1, "code": "VAC-001", "title": "Developer"}]
+    }
+}}
+<div class="local-jobboard-manage" data-region="jobboard-manage">
+    {{! Page Header }}
+    {{> local_jobboard/components/page_header }}
+
+    {{! Convocatoria Context Banner }}
+    {{#convocatoriainfo}}
+    <div class="alert alert-info border-left-info d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+            <i class="fa fa-calendar-alt mr-3 fa-lg"></i>
+            <div>
+                <strong class="d-block">{{name}}</strong>
+                <small class="text-muted">{{startdate}} - {{enddate}}</small>
+            </div>
+        </div>
+        <span class="badge badge-{{statuscolor}}">{{statuslabel}}</span>
+    </div>
+    {{/convocatoriainfo}}
+
+    {{! Statistics Row }}
+    {{#stats.0}}
+    <div class="row mb-4">
+        {{#stats}}
+        <div class="col-lg-3 col-md-6 mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        {{/stats}}
+    </div>
+    {{/stats.0}}
+
+    {{! Filter Form }}
+    {{#filterform}}
+    {{> local_jobboard/components/filter_form }}
+    {{/filterform}}
+
+    {{! Results Info }}
+    {{#showinginfo}}
+    <p class="text-muted small mb-3">{{{showinginfo}}}</p>
+    {{/showinginfo}}
+
+    {{! Vacancies Table }}
+    {{#hasvacancies}}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>{{#str}}thcode, local_jobboard{{/str}}</th>
+                            <th>{{#str}}thtitle, local_jobboard{{/str}}</th>
+                            <th>{{#str}}thstatus, local_jobboard{{/str}}</th>
+                            <th>{{#str}}opendate, local_jobboard{{/str}}</th>
+                            <th>{{#str}}closedate, local_jobboard{{/str}}</th>
+                            <th class="text-center">{{#str}}applications, local_jobboard{{/str}}</th>
+                            <th class="text-right">{{#str}}thactions, local_jobboard{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#vacancies}}
+                        <tr data-vacancy-id="{{id}}">
+                            <td>
+                                <code class="font-weight-bold">{{code}}</code>
+                            </td>
+                            <td>
+                                <a href="{{viewurl}}" class="font-weight-medium">{{title}}</a>
+                                {{#companyname}}
+                                <small class="text-muted d-block">({{companyname}})</small>
+                                {{/companyname}}
+                            </td>
+                            <td>
+                                <span class="badge badge-{{statuscolor}}">
+                                    {{#statusicon}}<i class="fa fa-{{statusicon}} mr-1"></i>{{/statusicon}}
+                                    {{statuslabel}}
+                                </span>
+                            </td>
+                            <td>
+                                <small>{{opendateformatted}}</small>
+                            </td>
+                            <td>
+                                <small class="{{#isclosing}}text-warning font-weight-bold{{/isclosing}}">
+                                    {{closedateformatted}}
+                                </small>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge {{#hasapplications}}badge-info{{/hasapplications}}{{^hasapplications}}badge-secondary{{/hasapplications}}">
+                                    {{applicationcount}}
+                                </span>
+                            </td>
+                            <td class="text-right">
+                                <div class="btn-group btn-group-sm">
+                                    {{#actions}}
+                                    {{#isconfirm}}
+                                    <a href="{{url}}" class="btn {{class}}" title="{{title}}"
+                                       onclick="return confirm('{{confirm}}');">
+                                        {{#pix}}{{icon}}, core, {{title}}{{/pix}}
+                                    </a>
+                                    {{/isconfirm}}
+                                    {{^isconfirm}}
+                                    <a href="{{url}}" class="btn {{class}}" title="{{title}}">
+                                        {{#pix}}{{icon}}, core, {{title}}{{/pix}}
+                                    </a>
+                                    {{/isconfirm}}
+                                    {{/actions}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{/vacancies}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{/hasvacancies}}
+
+    {{! Empty State }}
+    {{^hasvacancies}}
+    <div class="text-center py-5">
+        <i class="fa fa-briefcase fa-4x text-muted mb-3"></i>
+        <h4 class="text-muted">{{#str}}noresults, local_jobboard{{/str}}</h4>
+        <p class="text-muted mb-4">{{#str}}novacanciesyet, local_jobboard{{/str}}</p>
+        <a href="{{newvacancyurl}}" class="btn btn-primary">
+            <i class="fa fa-plus mr-2"></i>
+            {{#str}}newvacancy, local_jobboard{{/str}}
+        </a>
+    </div>
+    {{/hasvacancies}}
+
+    {{! Pagination }}
+    {{#pagination}}
+    <div class="mt-4">
+        {{{pagination}}}
+    </div>
+    {{/pagination}}
+</div>
+
+<style>
+.local-jobboard-manage .table td {
+    vertical-align: middle;
+}
+.local-jobboard-manage .btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+}
+.local-jobboard-manage .border-left-info {
+    border-left: 4px solid #17a2b8 !important;
+}
+</style>

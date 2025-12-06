@@ -1,0 +1,73 @@
+{{!
+    @template local_jobboard/reports/reviewers
+
+    Reviewers performance report section template.
+
+    Context variables:
+    * reviewers - Array of reviewer data with stats
+
+    Example context (json):
+    {
+        "reviewers": [{"name": "John Doe", "workload": 15, "reviewed": 100}]
+    }
+}}
+<div class="jb-report-reviewers">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="fa fa-users mr-2"></i>
+                {{#str}}reviewerperformance, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>{{#str}}reviewer, local_jobboard{{/str}}</th>
+                            <th class="text-center">{{#str}}currentworkload, local_jobboard{{/str}}</th>
+                            <th class="text-center">{{#str}}reviewed, local_jobboard{{/str}}</th>
+                            <th class="text-center text-success">{{#str}}validated, local_jobboard{{/str}}</th>
+                            <th class="text-center text-danger">{{#str}}rejected, local_jobboard{{/str}}</th>
+                            <th class="text-center">{{#str}}avgtime, local_jobboard{{/str}}</th>
+                            <th class="w-25">{{#str}}performance, local_jobboard{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#reviewers}}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {{#userpicture}}{{{userpicture}}}{{/userpicture}}
+                                    <div class="ml-2">
+                                        <strong>{{fullname}}</strong>
+                                        {{#email}}
+                                        <small class="text-muted d-block">{{email}}</small>
+                                        {{/email}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge {{#highworkload}}badge-danger{{/highworkload}}{{^highworkload}}badge-info{{/highworkload}}">
+                                    {{workload}}
+                                </span>
+                            </td>
+                            <td class="text-center font-weight-bold">{{reviewed}}</td>
+                            <td class="text-center text-success">{{validated}}</td>
+                            <td class="text-center text-danger">{{rejected}}</td>
+                            <td class="text-center">{{avgtime}}h</td>
+                            <td>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" style="width: {{validatedpct}}%" title="{{#str}}validated, local_jobboard{{/str}}"></div>
+                                    <div class="progress-bar bg-danger" style="width: {{rejectedpct}}%" title="{{#str}}rejected, local_jobboard{{/str}}"></div>
+                                </div>
+                                <small class="text-muted">{{validatedpct}}% {{#str}}approvalrate, local_jobboard{{/str}}</small>
+                            </td>
+                        </tr>
+                        {{/reviewers}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

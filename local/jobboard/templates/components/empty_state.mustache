@@ -1,0 +1,36 @@
+{{!
+    @template local_jobboard/components/empty_state
+
+    Empty state component for when no results found.
+
+    Context variables:
+    * message - Main message to display
+    * icon - FontAwesome icon name (without fa- prefix)
+    * description - Optional additional description
+    * action - Optional action button {url, label, icon, class}
+
+    Example context (json):
+    {
+        "message": "No vacancies found",
+        "icon": "briefcase",
+        "description": "Try adjusting your filters",
+        "action": {"url": "/create", "label": "Create Vacancy", "icon": "plus", "class": "btn-primary"}
+    }
+}}
+<div class="jb-empty-state text-center py-5">
+    <div class="empty-state-icon mb-4">
+        <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}inbox{{/icon}} fa-4x text-muted"></i>
+    </div>
+    <h4 class="text-muted mb-2">{{message}}</h4>
+    {{#description}}
+    <p class="text-muted mb-4">{{description}}</p>
+    {{/description}}
+    {{#action}}
+    <a href="{{url}}" class="btn {{#class}}{{class}}{{/class}}{{^class}}btn-primary{{/class}}">
+        {{#icon}}
+        <i class="fa fa-{{icon}} mr-1"></i>
+        {{/icon}}
+        {{label}}
+    </a>
+    {{/action}}
+</div>
