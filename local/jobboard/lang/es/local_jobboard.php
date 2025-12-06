@@ -2426,6 +2426,40 @@ $string['tour_convocatorias_step6_content'] = 'Use este boton para crear una nue
 $string['tour_convocatorias_step7_title'] = 'Listo para Comenzar!';
 $string['tour_convocatorias_step7_content'] = 'Ahora entiende como gestionar convocatorias en la Bolsa de Empleo. Recuerde: primero cree la convocatoria con sus fechas, luego agregue las vacantes segun los perfiles profesionales requeridos. Una vez todo configurado, abra la convocatoria para comenzar a recibir postulaciones.';
 
+// Tour: Gestion de Tipos de Documentos.
+$string['tour_documents_name'] = 'Tour de Configuracion de Tipos de Documentos';
+$string['tour_documents_description'] = 'Aprenda a configurar y gestionar los tipos de documentos que los postulantes deben cargar';
+$string['tour_documents_step1_title'] = 'Gestion de Tipos de Documentos';
+$string['tour_documents_step1_content'] = 'Bienvenido a la pagina de configuracion de tipos de documentos! Aqui define que documentos deben cargar los postulantes al aplicar a vacantes. Cada tipo de documento especifica requisitos, reglas de validacion y si es obligatorio.';
+$string['tour_documents_step2_title'] = 'Tabla de Tipos de Documentos';
+$string['tour_documents_step2_content'] = 'Esta tabla muestra todos los tipos de documentos configurados. Cada tipo tiene un codigo unico, nombre, categoria y estado. Puede ver cuales documentos son requeridos versus opcionales, y cualquier condicion especial que aplique.';
+$string['tour_documents_step3_title'] = 'Categorias de Documentos';
+$string['tour_documents_step3_content'] = 'Los documentos se organizan en categorias: identificacion (cedulas, libreta militar), academicos (titulos, certificaciones), empleo (certificados laborales, hoja de vida), salud (EPS, pension), financieros (cuenta bancaria, RUT), y legales (antecedentes).';
+$string['tour_documents_step4_title'] = 'Condiciones Especiales';
+$string['tour_documents_step4_content'] = 'Algunos documentos tienen condiciones especiales: requisitos por genero (ej. libreta militar solo para hombres), exenciones por profesion (ej. sin tarjeta profesional para licenciados), o limites de antiguedad maxima del documento.';
+$string['tour_documents_step5_title'] = 'Lista de Verificacion';
+$string['tour_documents_step5_content'] = 'Cada tipo de documento tiene una lista de verificacion que los revisores usan para validar documentos. Esto asegura criterios de revision consistentes en todas las postulaciones y ayuda a mantener estandares de calidad.';
+$string['tour_documents_step6_title'] = 'Habilitar/Deshabilitar Documentos';
+$string['tour_documents_step6_content'] = 'Puede habilitar o deshabilitar tipos de documentos segun sea necesario. Los tipos de documentos deshabilitados no seran requeridos a los postulantes. Use esto para adaptar requisitos a diferentes campanas de reclutamiento.';
+
+// Tour: Gestion de Convocatoria Individual.
+$string['tour_convocatoria_manage_name'] = 'Tour de Detalle de Gestion de Convocatoria';
+$string['tour_convocatoria_manage_description'] = 'Aprenda a crear y editar una convocatoria con todos sus detalles y vacantes';
+$string['tour_convocatoria_manage_step1_title'] = 'Pagina de Detalle de Convocatoria';
+$string['tour_convocatoria_manage_step1_content'] = 'Esta es la pagina de gestion de convocatoria. Desde aqui puede configurar todos los aspectos de una convocatoria: informacion basica, fechas, terminos, y las vacantes que pertenecen a esta convocatoria.';
+$string['tour_convocatoria_manage_step2_title'] = 'Informacion Basica';
+$string['tour_convocatoria_manage_step2_content'] = 'Ingrese el codigo de convocatoria (identificador unico), nombre y descripcion. El codigo debe seguir la convencion de nombres de su organizacion (ej. CONV-2024-001). La descripcion ayuda a los postulantes a entender el proposito de esta campana de reclutamiento.';
+$string['tour_convocatoria_manage_step3_title'] = 'Fechas de la Convocatoria';
+$string['tour_convocatoria_manage_step3_content'] = 'Establezca las fechas de inicio y fin de la convocatoria. Las postulaciones solo se aceptaran durante este periodo. Asegurese de dejar suficiente tiempo para que los postulantes recopilen los documentos requeridos y envien sus aplicaciones.';
+$string['tour_convocatoria_manage_step4_title'] = 'Tipo de Publicacion';
+$string['tour_convocatoria_manage_step4_content'] = 'Elija si la convocatoria es publica (visible para todos sin iniciar sesion) o interna (solo visible para usuarios autenticados). Las convocatorias internas son utiles para oportunidades de reclutamiento exclusivas para empleados.';
+$string['tour_convocatoria_manage_step5_title'] = 'Terminos y Condiciones';
+$string['tour_convocatoria_manage_step5_content'] = 'Defina los terminos y condiciones que los postulantes deben aceptar. Tipicamente incluye consentimiento de privacidad de datos, declaracion de veracidad de informacion, y aceptacion de las reglas del proceso de seleccion.';
+$string['tour_convocatoria_manage_step6_title'] = 'Vacantes Asociadas';
+$string['tour_convocatoria_manage_step6_content'] = 'Despues de crear la convocatoria, puede agregarle vacantes. Las vacantes heredan las restricciones de fecha de la convocatoria. Cada vacante representa un cargo especifico con sus propios requisitos, basados en la documentacion de PERFILES PROFESORES.';
+$string['tour_convocatoria_manage_step7_title'] = 'Guardar y Publicar';
+$string['tour_convocatoria_manage_step7_content'] = 'Guarde sus cambios y cuando este listo, cambie el estado de la convocatoria de Borrador a Abierta para comenzar a recibir postulaciones. Recuerde: puede agregar o modificar vacantes incluso despues de que la convocatoria este abierta.';
+
 // Cadenas de ayuda para convocatorias.
 $string['convocatoria_help'] = 'Una convocatoria agrupa vacantes laborales relacionadas bajo una campana unica con fechas de inicio y fin definidas. Al crear una vacante, puede asociarla con una convocatoria para organizar su proceso de reclutamiento. Las fechas de la convocatoria determinan cuando se pueden enviar postulaciones.';
 $string['convocatoria_profile_help'] = 'Las vacantes dentro de una convocatoria deben crearse de acuerdo con los perfiles profesionales definidos en los documentos de PERFILES PROFESORES. Cada perfil especifica las calificaciones requeridas, experiencia y documentos necesarios para ese puesto.';

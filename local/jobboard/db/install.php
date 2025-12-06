@@ -549,9 +549,30 @@ function local_jobboard_install_tours(): void {
     }
 
     $toursdir = $CFG->dirroot . '/local/jobboard/db/tours/';
+
+    // All available tour files - ordered by user journey.
     $tourfiles = [
-        'jobboard_admin_tour.json',
-        'jobboard_applicant_tour.json',
+        // Main entry points.
+        'tour_dashboard.json',
+        'tour_public.json',
+        // Convocatorias/Calls management.
+        'tour_convocatorias.json',
+        'tour_convocatoria_manage.json',
+        // Vacancies.
+        'tour_vacancies.json',
+        'tour_vacancy.json',
+        'tour_manage.json',
+        // Application process.
+        'tour_apply.json',
+        'tour_application.json',
+        'tour_myapplications.json',
+        // Document management.
+        'tour_documents.json',
+        'tour_review.json',
+        'tour_myreviews.json',
+        'tour_validate_document.json',
+        // Reports.
+        'tour_reports.json',
     ];
 
     foreach ($tourfiles as $tourfile) {

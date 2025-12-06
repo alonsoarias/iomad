@@ -2014,6 +2014,40 @@ $string['tour_convocatorias_step6_content'] = 'Use this button to create a new v
 $string['tour_convocatorias_step7_title'] = 'Ready to Go!';
 $string['tour_convocatorias_step7_content'] = 'You now understand how to manage calls in the Job Board. Remember: first create the call with its dates, then add the vacancies according to the required professional profiles. Once everything is set up, open the call to start receiving applications.';
 
+// Tour: Document Types Management.
+$string['tour_documents_name'] = 'Document Types Configuration Tour';
+$string['tour_documents_description'] = 'Learn how to configure and manage document types that applicants must upload';
+$string['tour_documents_step1_title'] = 'Document Types Management';
+$string['tour_documents_step1_content'] = 'Welcome to the document types configuration page! Here you define what documents applicants must upload when applying for positions. Each document type specifies requirements, validation rules, and whether it is mandatory.';
+$string['tour_documents_step2_title'] = 'Document Types Table';
+$string['tour_documents_step2_content'] = 'This table shows all configured document types. Each type has a unique code, name, category, and status. You can see which documents are required versus optional, and any special conditions that apply.';
+$string['tour_documents_step3_title'] = 'Document Categories';
+$string['tour_documents_step3_content'] = 'Documents are organized into categories: identification (ID cards, military service), academic (degrees, certifications), employment (work certificates, CV), health (EPS, pension), financial (bank account, RUT), and legal (background checks).';
+$string['tour_documents_step4_title'] = 'Special Conditions';
+$string['tour_documents_step4_content'] = 'Some documents have special conditions: gender-specific requirements (e.g., military service for males only), profession exemptions (e.g., no professional card for education graduates), or maximum document age limits.';
+$string['tour_documents_step5_title'] = 'Validation Checklist';
+$string['tour_documents_step5_content'] = 'Each document type has a validation checklist that reviewers use to verify documents. This ensures consistent review criteria across all applications and helps maintain quality standards.';
+$string['tour_documents_step6_title'] = 'Enable/Disable Documents';
+$string['tour_documents_step6_content'] = 'You can enable or disable document types as needed. Disabled document types will not be required from applicants. Use this to adapt requirements for different recruitment campaigns.';
+
+// Tour: Single Convocatoria Management.
+$string['tour_convocatoria_manage_name'] = 'Call Management Detail Tour';
+$string['tour_convocatoria_manage_description'] = 'Learn how to create and edit a job call with all its details and vacancies';
+$string['tour_convocatoria_manage_step1_title'] = 'Call Detail Page';
+$string['tour_convocatoria_manage_step1_content'] = 'This is the call (convocatoria) management page. From here you can configure all aspects of a job call: basic information, dates, terms, and the vacancies that belong to this call.';
+$string['tour_convocatoria_manage_step2_title'] = 'Basic Information';
+$string['tour_convocatoria_manage_step2_content'] = 'Enter the call code (unique identifier), name, and description. The code should follow your organization\'s naming convention (e.g., CONV-2024-001). The description helps applicants understand the purpose of this recruitment campaign.';
+$string['tour_convocatoria_manage_step3_title'] = 'Call Dates';
+$string['tour_convocatoria_manage_step3_content'] = 'Set the start and end dates for the call. Applications will only be accepted during this period. Make sure to leave enough time for applicants to gather required documents and submit their applications.';
+$string['tour_convocatoria_manage_step4_title'] = 'Publication Type';
+$string['tour_convocatoria_manage_step4_content'] = 'Choose whether the call is public (visible to everyone without login) or internal (only visible to authenticated users). Internal calls are useful for employee-only recruitment opportunities.';
+$string['tour_convocatoria_manage_step5_title'] = 'Terms and Conditions';
+$string['tour_convocatoria_manage_step5_content'] = 'Define the terms and conditions applicants must accept. This typically includes data privacy consent, accuracy of information declaration, and acceptance of the selection process rules.';
+$string['tour_convocatoria_manage_step6_title'] = 'Associated Vacancies';
+$string['tour_convocatoria_manage_step6_content'] = 'After creating the call, you can add vacancies to it. Vacancies inherit the call\'s date constraints. Each vacancy represents a specific position with its own requirements, based on the PERFILES PROFESORES documentation.';
+$string['tour_convocatoria_manage_step7_title'] = 'Save and Publish';
+$string['tour_convocatoria_manage_step7_content'] = 'Save your changes and when ready, change the call status from Draft to Open to start accepting applications. Remember: you can add or modify vacancies even after the call is open.';
+
 // Convocatoria help strings.
 $string['convocatoria_help'] = 'A call groups related job vacancies under a single campaign with defined start and end dates. When you create a vacancy, you can associate it with a call to organize your recruitment process. The call dates determine when applications can be submitted.';
 $string['convocatoria_profile_help'] = 'Vacancies within a call should be created according to the professional profiles defined in the PERFILES PROFESORES documents. Each profile specifies the required qualifications, experience, and documents needed for that position.';
