@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120627;  // Fix responsive grid: add Bootstrap grid styles for proper desktop layout.
+$plugin->version = 2025120628;  // Add complete Bootstrap element styles to override theme.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.9';
+$plugin->release = '2.0.10';

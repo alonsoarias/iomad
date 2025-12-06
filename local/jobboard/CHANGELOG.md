@@ -7,6 +7,33 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.10] - 2025-12-06
+
+### Añadido
+- **Estilos de elementos Bootstrap completos (scoped)**
+  - Sobrescriben los estilos del tema para apariencia consistente
+  - Headings: `h1-h6`, `.h1-.h6`, `.display-4`
+  - Text: `p`, `.lead`, `.small`, `.text-muted`, `.text-*`
+  - Links: `a`, `.text-decoration-none`
+  - Badges: `.badge`, `.badge-primary/secondary/success/danger/warning/info/light/dark`
+  - Cards: `.card`, `.card-header`, `.card-body`, `.card-footer`, `.shadow-sm`
+  - Buttons: `.btn`, `.btn-primary/secondary/success/danger/warning/info`, `.btn-outline-*`, `.btn-sm/lg/block`
+  - Alerts: `.alert`, `.alert-primary/success/danger/warning/info`
+  - Tables: `.table`, `.table-striped`, `.table-hover`, `.table-responsive`
+  - Lists: `ul`, `ol`, `.list-unstyled`, `.list-group`, `.list-group-item`
+  - Forms: `.form-control`, `.form-group`, `label`
+  - Backgrounds: `.bg-primary/secondary/success/danger/warning/info/light/dark/white`
+  - Borders: `.border`, `.border-*`, `.rounded`
+  - Typography: `.font-weight-bold/normal/light`
+  - Icons: `.fa`, `.fas`, `.far`, `.fab`, `.fa-2x/3x/5x`
+  - Spacing: `.mr-*`, `.ml-*`, `.mt-*`, `.mb-*`, `.my-*`, `.mx-auto`, `.p-*`, `.px-*`, `.py-*`
+
+### Modificado
+- **styles.css**: Añadidas ~560 líneas de estilos de elementos Bootstrap
+- **version.php**: Incrementado a 2.0.10 (2025120628)
+
+---
+
 ## [2.0.9] - 2025-12-06
 
 ### Corregido
