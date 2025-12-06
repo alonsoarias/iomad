@@ -81,6 +81,12 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
         }
 
         if ($isloggedin) {
+            // Browse Convocatorias - PRIMARY ENTRY POINT for all users.
+            if (has_capability('local/jobboard:apply', $context) || has_capability('local/jobboard:viewallvacancies', $context)) {
+                $convocatorialabel = get_string('convocatorias', 'local_jobboard');
+                $menuentry .= "\n-$convocatorialabel|/local/jobboard/index.php?view=browse_convocatorias";
+            }
+
             // Available vacancies submenu.
             if (has_capability('local/jobboard:apply', $context) || has_capability('local/jobboard:viewallvacancies', $context)) {
                 $vacancylabel = get_string('vacancies', 'local_jobboard');
@@ -96,8 +102,8 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
             // Management submenus for authorized users.
             if (has_capability('local/jobboard:createvacancy', $context)) {
                 // Convocatorias management.
-                $convocatorialabel = get_string('manageconvocatorias', 'local_jobboard');
-                $menuentry .= "\n-$convocatorialabel|/local/jobboard/index.php?view=convocatorias";
+                $convocatoriamanagelabel = get_string('manageconvocatorias', 'local_jobboard');
+                $menuentry .= "\n-$convocatoriamanagelabel|/local/jobboard/index.php?view=convocatorias";
 
                 // Vacancies management.
                 $managelabel = get_string('managevacancies', 'local_jobboard');
@@ -155,6 +161,15 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
         $jobboardnode->add(
             get_string('publicvacancies', 'local_jobboard'),
             new moodle_url('/local/jobboard/index.php', ['view' => 'public']),
+            navigation_node::TYPE_CUSTOM
+        );
+    }
+
+    // Add Convocatorias link - PRIMARY ENTRY POINT for browsing.
+    if (has_capability('local/jobboard:apply', $context) || has_capability('local/jobboard:viewallvacancies', $context)) {
+        $jobboardnode->add(
+            get_string('convocatorias', 'local_jobboard'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']),
             navigation_node::TYPE_CUSTOM
         );
     }

@@ -37,6 +37,13 @@ $search = optional_param('search', '', PARAM_TEXT);
 $status = optional_param('status', '', PARAM_ALPHA);
 $companyid = optional_param('companyid', 0, PARAM_INT);
 $contracttype = optional_param('contracttype', '', PARAM_ALPHA);
+$convocatoriaid = optional_param('convocatoriaid', 0, PARAM_INT);
+
+// Load convocatoria if filtering by it.
+$convocatoria = null;
+if ($convocatoriaid) {
+    $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
+}
 
 // Page setup.
 $PAGE->set_pagelayout('standard');
@@ -70,6 +77,10 @@ if ($contracttype) {
     $filters['contracttype'] = $contracttype;
 }
 
+if ($convocatoriaid) {
+    $filters['convocatoriaid'] = $convocatoriaid;
+}
+
 // Get vacancies.
 $result = \local_jobboard\vacancy::get_list($filters, 'closedate', 'ASC', $page, $perpage);
 $vacancies = $result['vacancies'];
@@ -94,11 +105,22 @@ echo html_writer::start_div('local-jobboard-vacancies');
 // ============================================================================
 $breadcrumbs = [
     get_string('dashboard', 'local_jobboard') => new moodle_url('/local/jobboard/index.php'),
-    get_string('vacancies', 'local_jobboard') => null,
 ];
 
+// Add convocatoria to breadcrumbs if filtering by it.
+if ($convocatoria) {
+    $breadcrumbs[get_string('convocatorias', 'local_jobboard')] = new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']);
+    $breadcrumbs[s($convocatoria->name)] = new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]);
+}
+
+$breadcrumbs[get_string('vacancies', 'local_jobboard')] = null;
+
+$pageTitle = $convocatoria
+    ? get_string('vacancies', 'local_jobboard') . ': ' . s($convocatoria->name)
+    : get_string('vacancies', 'local_jobboard');
+
 echo ui_helper::page_header(
-    get_string('vacancies', 'local_jobboard'),
+    $pageTitle,
     $breadcrumbs
 );
 
@@ -321,14 +343,18 @@ if (empty($vacancies)) {
 // PAGINATION
 // ============================================================================
 if ($total > $perpage) {
-    $baseurl = new moodle_url('/local/jobboard/index.php', [
+    $paginationParams = [
         'view' => 'vacancies',
         'search' => $search,
         'status' => $status,
         'companyid' => $companyid,
         'contracttype' => $contracttype,
         'perpage' => $perpage,
-    ]);
+    ];
+    if ($convocatoriaid) {
+        $paginationParams['convocatoriaid'] = $convocatoriaid;
+    }
+    $baseurl = new moodle_url('/local/jobboard/index.php', $paginationParams);
     echo $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
 }
 

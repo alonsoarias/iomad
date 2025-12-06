@@ -49,7 +49,22 @@ $PAGE->set_title($vacancy->title);
 $PAGE->set_heading($vacancy->title);
 $PAGE->requires->css('/local/jobboard/styles.css');
 
-$PAGE->navbar->add(get_string('vacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']));
+// Load convocatoria if vacancy belongs to one (for breadcrumbs).
+$convocatoria = null;
+if ($vacancy->convocatoriaid) {
+    $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $vacancy->convocatoriaid]);
+}
+
+// Set up Moodle navbar with proper hierarchy.
+if ($convocatoria) {
+    $PAGE->navbar->add(get_string('convocatorias', 'local_jobboard'),
+        new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']));
+    $PAGE->navbar->add($convocatoria->name,
+        new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]));
+} else {
+    $PAGE->navbar->add(get_string('vacancies', 'local_jobboard'),
+        new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']));
+}
 $PAGE->navbar->add($vacancy->title);
 
 // Log view.
@@ -80,9 +95,17 @@ echo html_writer::start_div('local-jobboard-vacancy-detail');
 // ============================================================================
 $breadcrumbs = [
     get_string('dashboard', 'local_jobboard') => new moodle_url('/local/jobboard/index.php'),
-    get_string('vacancies', 'local_jobboard') => new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']),
-    s($vacancy->title) => null,
 ];
+
+// Add convocatoria to breadcrumbs if vacancy belongs to one.
+if ($convocatoria) {
+    $breadcrumbs[get_string('convocatorias', 'local_jobboard')] = new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']);
+    $breadcrumbs[s($convocatoria->name)] = new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]);
+} else {
+    $breadcrumbs[get_string('vacancies', 'local_jobboard')] = new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']);
+}
+
+$breadcrumbs[s($vacancy->title)] = null;
 
 $headerActions = [];
 if ($vacancy->is_open() && $canapply && !$hasApplied) {

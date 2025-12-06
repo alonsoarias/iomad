@@ -236,8 +236,17 @@ if ($canmanage) {
 // APPLICANT DASHBOARD
 // ============================================================================
 if ($canapply && !$canmanage) {
+    // Get active convocatorias count.
+    $activeConvocatorias = $DB->count_records('local_jobboard_convocatoria', ['status' => 'open']);
+
     // Statistics Row.
     echo html_writer::start_div('row mb-4');
+    echo ui_helper::stat_card(
+        (string) $activeConvocatorias,
+        get_string('activeconvocatorias', 'local_jobboard'),
+        'primary', 'calendar-alt',
+        new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias'])
+    );
     echo ui_helper::stat_card(
         $stats['my_applications'] ?? 0,
         get_string('myapplicationcount', 'local_jobboard'),
@@ -260,12 +269,39 @@ if ($canapply && !$canmanage) {
     // Action Cards.
     echo html_writer::start_div('row');
 
+    // Browse Convocatorias - PRIMARY ENTRY POINT.
+    echo html_writer::start_div('col-lg-4 mb-4');
+    echo html_writer::start_div('card h-100 shadow-sm border-0 border-left-primary jb-action-card');
+    echo html_writer::start_div('card-body');
+    echo html_writer::start_div('d-flex align-items-center mb-3');
+    echo html_writer::tag('i', '', ['class' => 'fa fa-calendar-alt fa-2x text-primary mr-3']);
+    echo html_writer::tag('h4', get_string('browseconvocatorias', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::tag('p', get_string('convocatoriahelp', 'local_jobboard'), ['class' => 'text-muted']);
+
+    if ($activeConvocatorias > 0) {
+        echo html_writer::div(
+            '<i class="fa fa-info-circle mr-1"></i>' .
+            get_string('activeconvocatorias_alert', 'local_jobboard', $activeConvocatorias),
+            'alert alert-primary py-2 mb-3'
+        );
+    }
+
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']),
+        '<i class="fa fa-arrow-right mr-2"></i>' . get_string('viewconvocatorias', 'local_jobboard'),
+        ['class' => 'btn btn-primary']
+    );
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+
     // Browse Vacancies.
-    echo html_writer::start_div('col-lg-6 mb-4');
+    echo html_writer::start_div('col-lg-4 mb-4');
     echo html_writer::start_div('card h-100 shadow-sm border-0 border-left-success jb-action-card');
     echo html_writer::start_div('card-body');
     echo html_writer::start_div('d-flex align-items-center mb-3');
-    echo html_writer::tag('i', '', ['class' => 'fa fa-search fa-2x text-success mr-3']);
+    echo html_writer::tag('i', '', ['class' => 'fa fa-briefcase fa-2x text-success mr-3']);
     echo html_writer::tag('h4', get_string('browservacancies', 'local_jobboard'), ['class' => 'mb-0']);
     echo html_writer::end_div();
     echo html_writer::tag('p', get_string('browse_vacancies_desc', 'local_jobboard'), ['class' => 'text-muted']);
@@ -288,7 +324,7 @@ if ($canapply && !$canmanage) {
     echo html_writer::end_div();
 
     // My Applications.
-    echo html_writer::start_div('col-lg-6 mb-4');
+    echo html_writer::start_div('col-lg-4 mb-4');
     echo html_writer::start_div('card h-100 shadow-sm border-0 border-left-info jb-action-card');
     echo html_writer::start_div('card-body');
     echo html_writer::start_div('d-flex align-items-center mb-3');

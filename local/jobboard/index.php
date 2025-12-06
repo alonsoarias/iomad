@@ -22,10 +22,13 @@
  *
  * URL Structure:
  *   /local/jobboard/index.php                              - Dashboard (default)
- *   /local/jobboard/index.php?view=convocatorias           - Manage convocatorias (calls)
+ *   /local/jobboard/index.php?view=browse_convocatorias    - Browse convocatorias (main entry for users)
+ *   /local/jobboard/index.php?view=view_convocatoria&id=X  - View convocatoria with vacancies
+ *   /local/jobboard/index.php?view=convocatorias           - Manage convocatorias (admin)
  *   /local/jobboard/index.php?view=convocatoria&id=X       - Edit convocatoria
  *   /local/jobboard/index.php?view=convocatoria&action=add - Create new convocatoria
  *   /local/jobboard/index.php?view=vacancies               - Vacancies listing
+ *   /local/jobboard/index.php?view=vacancies&convocatoriaid=X - Vacancies filtered by convocatoria
  *   /local/jobboard/index.php?view=vacancy&id=X            - Vacancy detail
  *   /local/jobboard/index.php?view=manage                  - Manage vacancies
  *   /local/jobboard/index.php?view=apply&vacancyid=X       - Apply form
@@ -82,14 +85,24 @@ switch ($view) {
         require(__DIR__ . '/views/dashboard.php');
         break;
 
+    case 'browse_convocatorias':
+        // Browse convocatorias - public entry point for applicants.
+        require(__DIR__ . '/views/browse_convocatorias.php');
+        break;
+
     case 'convocatorias':
-        // List and manage convocatorias (calls).
+        // List and manage convocatorias (calls) - admin view.
         require(__DIR__ . '/views/convocatorias.php');
         break;
 
     case 'convocatoria':
         // View/edit single convocatoria.
         require(__DIR__ . '/views/convocatoria.php');
+        break;
+
+    case 'view_convocatoria':
+        // View convocatoria details with vacancies - public view.
+        require(__DIR__ . '/views/view_convocatoria.php');
         break;
 
     case 'vacancies':

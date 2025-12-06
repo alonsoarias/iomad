@@ -318,6 +318,13 @@ $string['backtoconvocatorias'] = 'Back to calls';
 $string['period'] = 'Period';
 $string['totalvacancies'] = 'Total Vacancies';
 $string['totalconvocatorias'] = 'Total Calls';
+$string['browseconvocatorias'] = 'Browse Calls';
+$string['viewconvocatorias'] = 'View calls';
+$string['activeconvocatorias'] = 'Active Calls';
+$string['activeconvocatorias_alert'] = 'There are {$a} active calls available';
+$string['novacancies'] = 'No vacancies available';
+$string['daysleft'] = '{$a} days left';
+$string['convocatorias_dashboard_desc'] = 'Create and manage job calls that group related vacancies.';
 
 // Extemporaneous vacancies.
 $string['isextemporaneous'] = 'Extemporaneous vacancy';

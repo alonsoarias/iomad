@@ -515,6 +515,13 @@ $string['backtoconvocatorias'] = 'Volver a convocatorias';
 $string['period'] = 'Período';
 $string['totalvacancies'] = 'Total de Vacantes';
 $string['totalconvocatorias'] = 'Total de Convocatorias';
+$string['browseconvocatorias'] = 'Explorar Convocatorias';
+$string['viewconvocatorias'] = 'Ver convocatorias';
+$string['activeconvocatorias'] = 'Convocatorias Activas';
+$string['activeconvocatorias_alert'] = 'Hay {$a} convocatorias activas disponibles';
+$string['novacancies'] = 'No hay vacantes disponibles';
+$string['daysleft'] = '{$a} días restantes';
+$string['convocatorias_dashboard_desc'] = 'Cree y administre convocatorias que agrupan vacantes relacionadas.';
 
 // Vacantes extemporáneas.
 $string['isextemporaneous'] = 'Vacante extemporánea';
