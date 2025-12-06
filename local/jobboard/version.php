@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120531;  // Fix upgrade.php key_exists() error.
+$plugin->version = 2025120532;  // Fix upgrade: drop indexes before fields.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.18-beta';
+$plugin->release = '1.9.19-beta';

@@ -813,8 +813,17 @@ function xmldb_local_jobboard_upgrade($oldversion) {
 
         $table = new xmldb_table('local_jobboard_vacancy');
 
-        // Note: Foreign keys in Moodle XMLDB are documentation only and don't create actual
-        // database constraints in most engines. We skip dropping keys and just drop the fields.
+        // Drop index on courseid first (must be done before dropping the field).
+        $index = new xmldb_index('courseid', XMLDB_INDEX_NOTUNIQUE, ['courseid']);
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        // Drop index on categoryid.
+        $index = new xmldb_index('categoryid', XMLDB_INDEX_NOTUNIQUE, ['categoryid']);
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
 
         // Drop the courseid field (no longer used).
         $field = new xmldb_field('courseid');
