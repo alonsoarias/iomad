@@ -575,3 +575,511 @@
     text-decoration: none;
     background-color: #f8f9fa;
 }
+
+/* ==========================================================================
+   Additional Theme Override Styles
+   Complete isolation from remui/inteb themes
+   ========================================================================== */
+
+/* Background colors */
+.path-local-jobboard .bg-primary { background-color: #007bff !important; }
+.path-local-jobboard .bg-secondary { background-color: #6c757d !important; }
+.path-local-jobboard .bg-success { background-color: #28a745 !important; }
+.path-local-jobboard .bg-danger { background-color: #dc3545 !important; }
+.path-local-jobboard .bg-warning { background-color: #ffc107 !important; }
+.path-local-jobboard .bg-info { background-color: #17a2b8 !important; }
+.path-local-jobboard .bg-light { background-color: #f8f9fa !important; }
+.path-local-jobboard .bg-dark { background-color: #343a40 !important; }
+.path-local-jobboard .bg-white { background-color: #fff !important; }
+
+/* Text white for dark backgrounds */
+.path-local-jobboard .text-white { color: #fff !important; }
+.path-local-jobboard .text-dark { color: #343a40 !important; }
+
+/* Additional button variants */
+.path-local-jobboard .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
+}
+
+.path-local-jobboard .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+.path-local-jobboard .btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529;
+}
+
+.path-local-jobboard .btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+
+.path-local-jobboard .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: #fff;
+}
+
+.path-local-jobboard .btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+.path-local-jobboard .btn-light {
+    background-color: #f8f9fa;
+    border-color: #f8f9fa;
+    color: #212529;
+}
+
+.path-local-jobboard .btn-light:hover {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+}
+
+.path-local-jobboard .btn-dark {
+    background-color: #343a40;
+    border-color: #343a40;
+    color: #fff;
+}
+
+.path-local-jobboard .btn-dark:hover {
+    background-color: #23272b;
+    border-color: #1d2124;
+}
+
+.path-local-jobboard .btn-link {
+    font-weight: 400;
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.path-local-jobboard .btn-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Outline button variants */
+.path-local-jobboard .btn-outline-success {
+    color: #28a745;
+    border-color: #28a745;
+    background-color: transparent;
+}
+
+.path-local-jobboard .btn-outline-success:hover {
+    color: #fff;
+    background-color: #28a745;
+}
+
+.path-local-jobboard .btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+    background-color: transparent;
+}
+
+.path-local-jobboard .btn-outline-danger:hover {
+    color: #fff;
+    background-color: #dc3545;
+}
+
+.path-local-jobboard .btn-outline-warning {
+    color: #ffc107;
+    border-color: #ffc107;
+    background-color: transparent;
+}
+
+.path-local-jobboard .btn-outline-warning:hover {
+    color: #212529;
+    background-color: #ffc107;
+}
+
+.path-local-jobboard .btn-outline-info {
+    color: #17a2b8;
+    border-color: #17a2b8;
+    background-color: transparent;
+}
+
+.path-local-jobboard .btn-outline-info:hover {
+    color: #fff;
+    background-color: #17a2b8;
+}
+
+/* List groups */
+.path-local-jobboard .list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.path-local-jobboard .list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.path-local-jobboard .list-group-item:first-child {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+
+.path-local-jobboard .list-group-item:last-child {
+    margin-bottom: 0;
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.path-local-jobboard .list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Nav tabs and pills */
+.path-local-jobboard .nav {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.path-local-jobboard .nav-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #007bff;
+}
+
+.path-local-jobboard .nav-link:hover,
+.path-local-jobboard .nav-link:focus {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.path-local-jobboard .nav-link.active {
+    color: #495057;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.path-local-jobboard .nav-tabs {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.path-local-jobboard .nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+
+.path-local-jobboard .nav-tabs .nav-link:hover,
+.path-local-jobboard .nav-tabs .nav-link:focus {
+    border-color: #e9ecef #e9ecef #dee2e6;
+}
+
+.path-local-jobboard .nav-tabs .nav-link.active {
+    color: #495057;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+/* Progress bars */
+.path-local-jobboard .progress {
+    display: flex;
+    height: 1rem;
+    overflow: hidden;
+    font-size: 0.75rem;
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+}
+
+.path-local-jobboard .progress-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #007bff;
+    transition: width 0.6s ease;
+}
+
+.path-local-jobboard .progress-bar.bg-success {
+    background-color: #28a745 !important;
+}
+
+.path-local-jobboard .progress-bar.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+.path-local-jobboard .progress-bar.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+/* Borders */
+.path-local-jobboard .border { border: 1px solid #dee2e6 !important; }
+.path-local-jobboard .border-top { border-top: 1px solid #dee2e6 !important; }
+.path-local-jobboard .border-right { border-right: 1px solid #dee2e6 !important; }
+.path-local-jobboard .border-bottom { border-bottom: 1px solid #dee2e6 !important; }
+.path-local-jobboard .border-left { border-left: 1px solid #dee2e6 !important; }
+.path-local-jobboard .border-0 { border: 0 !important; }
+
+.path-local-jobboard .border-primary { border-color: #007bff !important; }
+.path-local-jobboard .border-secondary { border-color: #6c757d !important; }
+.path-local-jobboard .border-success { border-color: #28a745 !important; }
+.path-local-jobboard .border-danger { border-color: #dc3545 !important; }
+.path-local-jobboard .border-warning { border-color: #ffc107 !important; }
+.path-local-jobboard .border-info { border-color: #17a2b8 !important; }
+
+/* Shadows */
+.path-local-jobboard .shadow-sm { box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important; }
+.path-local-jobboard .shadow { box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important; }
+.path-local-jobboard .shadow-lg { box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important; }
+.path-local-jobboard .shadow-none { box-shadow: none !important; }
+
+/* Typography */
+.path-local-jobboard h1, .path-local-jobboard .h1 { font-size: 2.5rem; font-weight: 500; }
+.path-local-jobboard h2, .path-local-jobboard .h2 { font-size: 2rem; font-weight: 500; }
+.path-local-jobboard h3, .path-local-jobboard .h3 { font-size: 1.75rem; font-weight: 500; }
+.path-local-jobboard h4, .path-local-jobboard .h4 { font-size: 1.5rem; font-weight: 500; }
+.path-local-jobboard h5, .path-local-jobboard .h5 { font-size: 1.25rem; font-weight: 500; }
+.path-local-jobboard h6, .path-local-jobboard .h6 { font-size: 1rem; font-weight: 500; }
+
+.path-local-jobboard .lead { font-size: 1.25rem; font-weight: 300; }
+.path-local-jobboard .small, .path-local-jobboard small { font-size: 80%; font-weight: 400; }
+
+.path-local-jobboard .font-weight-bold { font-weight: 700 !important; }
+.path-local-jobboard .font-weight-normal { font-weight: 400 !important; }
+.path-local-jobboard .font-weight-light { font-weight: 300 !important; }
+
+/* Input groups */
+.path-local-jobboard .input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.path-local-jobboard .input-group > .form-control {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    margin-bottom: 0;
+}
+
+.path-local-jobboard .input-group-prepend,
+.path-local-jobboard .input-group-append {
+    display: flex;
+}
+
+.path-local-jobboard .input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+/* Custom form elements */
+.path-local-jobboard .custom-control {
+    position: relative;
+    display: block;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.path-local-jobboard .custom-control-input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+.path-local-jobboard .custom-control-label {
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+}
+
+.path-local-jobboard .custom-control-label::before {
+    position: absolute;
+    top: 0.25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: #fff;
+    border: #adb5bd solid 1px;
+}
+
+.path-local-jobboard .custom-checkbox .custom-control-label::before {
+    border-radius: 0.25rem;
+}
+
+.path-local-jobboard .custom-control-input:checked ~ .custom-control-label::before {
+    color: #fff;
+    border-color: #007bff;
+    background-color: #007bff;
+}
+
+/* Tooltip and popover base */
+.path-local-jobboard .tooltip {
+    position: absolute;
+    z-index: 1070;
+    display: block;
+    margin: 0;
+    font-size: 0.875rem;
+    word-wrap: break-word;
+    opacity: 0;
+}
+
+.path-local-jobboard .tooltip.show { opacity: 0.9; }
+
+.path-local-jobboard .tooltip-inner {
+    max-width: 200px;
+    padding: 0.25rem 0.5rem;
+    color: #fff;
+    text-align: center;
+    background-color: #000;
+    border-radius: 0.25rem;
+}
+
+/* Spacing utilities (ensure theme doesn't override) */
+.path-local-jobboard .m-0 { margin: 0 !important; }
+.path-local-jobboard .m-1 { margin: 0.25rem !important; }
+.path-local-jobboard .m-2 { margin: 0.5rem !important; }
+.path-local-jobboard .m-3 { margin: 1rem !important; }
+.path-local-jobboard .m-4 { margin: 1.5rem !important; }
+.path-local-jobboard .m-5 { margin: 3rem !important; }
+
+.path-local-jobboard .p-0 { padding: 0 !important; }
+.path-local-jobboard .p-1 { padding: 0.25rem !important; }
+.path-local-jobboard .p-2 { padding: 0.5rem !important; }
+.path-local-jobboard .p-3 { padding: 1rem !important; }
+.path-local-jobboard .p-4 { padding: 1.5rem !important; }
+.path-local-jobboard .p-5 { padding: 3rem !important; }
+
+.path-local-jobboard .mb-0 { margin-bottom: 0 !important; }
+.path-local-jobboard .mb-1 { margin-bottom: 0.25rem !important; }
+.path-local-jobboard .mb-2 { margin-bottom: 0.5rem !important; }
+.path-local-jobboard .mb-3 { margin-bottom: 1rem !important; }
+.path-local-jobboard .mb-4 { margin-bottom: 1.5rem !important; }
+.path-local-jobboard .mb-5 { margin-bottom: 3rem !important; }
+
+.path-local-jobboard .mt-0 { margin-top: 0 !important; }
+.path-local-jobboard .mt-1 { margin-top: 0.25rem !important; }
+.path-local-jobboard .mt-2 { margin-top: 0.5rem !important; }
+.path-local-jobboard .mt-3 { margin-top: 1rem !important; }
+.path-local-jobboard .mt-4 { margin-top: 1.5rem !important; }
+.path-local-jobboard .mt-5 { margin-top: 3rem !important; }
+
+.path-local-jobboard .mr-1 { margin-right: 0.25rem !important; }
+.path-local-jobboard .mr-2 { margin-right: 0.5rem !important; }
+.path-local-jobboard .mr-3 { margin-right: 1rem !important; }
+
+.path-local-jobboard .ml-1 { margin-left: 0.25rem !important; }
+.path-local-jobboard .ml-2 { margin-left: 0.5rem !important; }
+.path-local-jobboard .ml-3 { margin-left: 1rem !important; }
+.path-local-jobboard .ml-auto { margin-left: auto !important; }
+
+.path-local-jobboard .py-2 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
+.path-local-jobboard .py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+.path-local-jobboard .px-2 { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+.path-local-jobboard .px-3 { padding-left: 1rem !important; padding-right: 1rem !important; }
+
+/* Display utilities */
+.path-local-jobboard .d-none { display: none !important; }
+.path-local-jobboard .d-inline { display: inline !important; }
+.path-local-jobboard .d-inline-block { display: inline-block !important; }
+.path-local-jobboard .d-block { display: block !important; }
+.path-local-jobboard .d-flex { display: flex !important; }
+.path-local-jobboard .d-inline-flex { display: inline-flex !important; }
+
+/* Flex utilities */
+.path-local-jobboard .flex-row { flex-direction: row !important; }
+.path-local-jobboard .flex-column { flex-direction: column !important; }
+.path-local-jobboard .flex-wrap { flex-wrap: wrap !important; }
+.path-local-jobboard .flex-nowrap { flex-wrap: nowrap !important; }
+.path-local-jobboard .flex-grow-1 { flex-grow: 1 !important; }
+.path-local-jobboard .flex-shrink-0 { flex-shrink: 0 !important; }
+
+.path-local-jobboard .justify-content-start { justify-content: flex-start !important; }
+.path-local-jobboard .justify-content-end { justify-content: flex-end !important; }
+.path-local-jobboard .justify-content-center { justify-content: center !important; }
+.path-local-jobboard .justify-content-between { justify-content: space-between !important; }
+.path-local-jobboard .justify-content-around { justify-content: space-around !important; }
+
+.path-local-jobboard .align-items-start { align-items: flex-start !important; }
+.path-local-jobboard .align-items-end { align-items: flex-end !important; }
+.path-local-jobboard .align-items-center { align-items: center !important; }
+.path-local-jobboard .align-items-baseline { align-items: baseline !important; }
+.path-local-jobboard .align-items-stretch { align-items: stretch !important; }
+
+/* Text alignment */
+.path-local-jobboard .text-left { text-align: left !important; }
+.path-local-jobboard .text-right { text-align: right !important; }
+.path-local-jobboard .text-center { text-align: center !important; }
+
+/* Visibility */
+.path-local-jobboard .visible { visibility: visible !important; }
+.path-local-jobboard .invisible { visibility: hidden !important; }
+
+/* Width/Height utilities */
+.path-local-jobboard .w-25 { width: 25% !important; }
+.path-local-jobboard .w-50 { width: 50% !important; }
+.path-local-jobboard .w-75 { width: 75% !important; }
+.path-local-jobboard .w-100 { width: 100% !important; }
+.path-local-jobboard .w-auto { width: auto !important; }
+
+.path-local-jobboard .h-25 { height: 25% !important; }
+.path-local-jobboard .h-50 { height: 50% !important; }
+.path-local-jobboard .h-75 { height: 75% !important; }
+.path-local-jobboard .h-100 { height: 100% !important; }
+.path-local-jobboard .h-auto { height: auto !important; }
+
+/* Rounded corners */
+.path-local-jobboard .rounded { border-radius: 0.25rem !important; }
+.path-local-jobboard .rounded-top { border-top-left-radius: 0.25rem !important; border-top-right-radius: 0.25rem !important; }
+.path-local-jobboard .rounded-bottom { border-bottom-right-radius: 0.25rem !important; border-bottom-left-radius: 0.25rem !important; }
+.path-local-jobboard .rounded-circle { border-radius: 50% !important; }
+.path-local-jobboard .rounded-0 { border-radius: 0 !important; }
+
+/* Position */
+.path-local-jobboard .position-relative { position: relative !important; }
+.path-local-jobboard .position-absolute { position: absolute !important; }
+.path-local-jobboard .position-fixed { position: fixed !important; }
+.path-local-jobboard .position-sticky { position: sticky !important; }
+
+/* Overflow */
+.path-local-jobboard .overflow-auto { overflow: auto !important; }
+.path-local-jobboard .overflow-hidden { overflow: hidden !important; }
+
+/* Float */
+.path-local-jobboard .float-left { float: left !important; }
+.path-local-jobboard .float-right { float: right !important; }
+.path-local-jobboard .float-none { float: none !important; }
+.path-local-jobboard .clearfix::after {
+    display: block;
+    clear: both;
+    content: "";
+}
