@@ -7,6 +7,27 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.6] - 2025-12-06
+
+### Añadido
+- **Control de visibilidad del menú de navegación**
+  - Nueva función `local_jobboard_should_show_menu()` para determinar visibilidad
+  - Nueva función `local_jobboard_user_has_custom_role()` para verificar roles
+  - Nueva función `local_jobboard_has_open_convocatorias()` para verificar convocatorias abiertas
+
+### Modificado
+- **Menú de navegación condicional**
+  - El menú solo es visible si:
+    - Hay convocatorias abiertas (status = 'open'), O
+    - El usuario tiene uno de los 3 roles personalizados (jobboard_reviewer, jobboard_coordinator, jobboard_committee), O
+    - El usuario es administrador del sitio
+  - Optimiza la experiencia de usuario mostrando el menú solo cuando es relevante
+  - Reduce el desorden visual cuando no hay convocatorias activas
+
+- **version.php**: Incrementado a 2.0.6 (2025120624)
+
+---
+
 ## [2.0.5] - 2025-12-06
 
 ### Eliminado

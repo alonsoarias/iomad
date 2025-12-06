@@ -25,11 +25,91 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * Check if user has any of the jobboard custom roles.
+ *
+ * @param int|null $userid User ID or null for current user.
+ * @return bool True if user has any jobboard role.
+ */
+function local_jobboard_user_has_custom_role(?int $userid = null): bool {
+    global $DB, $USER;
+
+    $userid = $userid ?? $USER->id;
+
+    // Get the custom role IDs.
+    $customroles = ['jobboard_reviewer', 'jobboard_coordinator', 'jobboard_committee'];
+    $roleids = $DB->get_fieldset_select('role', 'id', 'shortname IN (' .
+        implode(',', array_fill(0, count($customroles), '?')) . ')', $customroles);
+
+    if (empty($roleids)) {
+        return false;
+    }
+
+    // Check if user has any of these roles assigned at system level.
+    list($insql, $params) = $DB->get_in_or_equal($roleids, SQL_PARAMS_NAMED);
+    $params['userid'] = $userid;
+    $params['contextid'] = context_system::instance()->id;
+
+    return $DB->record_exists_select('role_assignments',
+        "roleid $insql AND userid = :userid AND contextid = :contextid", $params);
+}
+
+/**
+ * Check if there are any open convocatorias.
+ *
+ * @return bool True if there are open convocatorias.
+ */
+function local_jobboard_has_open_convocatorias(): bool {
+    global $DB;
+
+    // Check if the table exists.
+    $dbman = $DB->get_manager();
+    if (!$dbman->table_exists('local_jobboard_convocatoria')) {
+        return false;
+    }
+
+    return $DB->record_exists('local_jobboard_convocatoria', ['status' => 'open']);
+}
+
+/**
+ * Check if the jobboard menu should be visible for the current user.
+ *
+ * The menu is visible if:
+ * - There are open convocatorias, OR
+ * - The user has one of the custom jobboard roles, OR
+ * - The user is a site admin
+ *
+ * @return bool True if menu should be visible.
+ */
+function local_jobboard_should_show_menu(): bool {
+    // Site admins always see the menu.
+    if (is_siteadmin()) {
+        return true;
+    }
+
+    // Check if user has custom jobboard roles.
+    if (local_jobboard_user_has_custom_role()) {
+        return true;
+    }
+
+    // Check if there are open convocatorias.
+    if (local_jobboard_has_open_convocatorias()) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Adds navigation nodes to the main navigation.
  *
  * This function adds Job Board to both:
  * 1. The Moodle navigation drawer (side navigation)
  * 2. The main navigation menu (custom menu items in top bar)
+ *
+ * VISIBILITY: Menu is only shown if:
+ * - There are open convocatorias, OR
+ * - User has a custom jobboard role (reviewer, coordinator, committee), OR
+ * - User is a site admin
  *
  * Navigation Structure:
  * - Dashboard (main page)
@@ -49,6 +129,11 @@ defined('MOODLE_INTERNAL') || die();
  */
 function local_jobboard_extend_navigation(global_navigation $navigation) {
     global $USER, $PAGE, $CFG;
+
+    // Check if menu should be visible at all.
+    if (!local_jobboard_should_show_menu()) {
+        return;
+    }
 
     $context = context_system::instance();
     $isloggedin = isloggedin() && !isguestuser();
