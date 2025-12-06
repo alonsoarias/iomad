@@ -344,7 +344,6 @@ $string['entercode'] = 'Ingrese el código de vacante';
 $string['entertitle'] = 'Ingrese el título de la vacante';
 $string['enterdescription'] = 'Describa el cargo y sus funciones';
 $string['selectcontracttype'] = 'Seleccione tipo de contrato';
-$string['selectcourse'] = 'Seleccione un curso';
 $string['selectcategory'] = 'Seleccione una categoría';
 $string['selectcompany'] = 'Seleccione una empresa/sede';
 $string['selectdepartment'] = 'Seleccione un departamento';

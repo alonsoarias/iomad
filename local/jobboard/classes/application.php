@@ -28,10 +28,14 @@ namespace local_jobboard;
 
 defined('MOODLE_INTERNAL') || die();
 
+use local_jobboard\trait\request_helper;
+
 /**
  * Class representing a job application.
  */
 class application {
+
+    use request_helper;
 
     /** @var int The application ID. */
     public $id = 0;
@@ -753,38 +757,5 @@ class application {
             'applications' => $applications,
             'total' => $total,
         ];
-    }
-
-    /**
-     * Get user IP address.
-     *
-     * @return string The IP address.
-     */
-    protected static function get_user_ip(): string {
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-        }
-
-        if (strpos($ip, ',') !== false) {
-            $ips = explode(',', $ip);
-            $ip = trim($ips[0]);
-        }
-
-        $ip = filter_var($ip, FILTER_VALIDATE_IP);
-        return $ip !== false ? $ip : '0.0.0.0';
-    }
-
-    /**
-     * Get user agent.
-     *
-     * @return string The user agent.
-     */
-    protected static function get_user_agent(): string {
-        $useragent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-        return substr($useragent, 0, 512);
     }
 }

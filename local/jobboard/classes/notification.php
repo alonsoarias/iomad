@@ -261,13 +261,57 @@ class notification {
     /**
      * Retry failed notifications.
      *
+     * Resets all failed notifications to pending status for retry.
+     *
      * @return int Number of notifications reset for retry.
      */
     public static function retry_failed(): int {
         global $DB;
 
-        return $DB->execute("UPDATE {local_jobboard_notification}
-                             SET status = 'pending', attempts = 0, lasterror = NULL
-                             WHERE status = 'failed'");
+        // Get count of failed notifications first.
+        $count = $DB->count_records('local_jobboard_notification', ['status' => 'failed']);
+
+        if ($count > 0) {
+            // Get all failed notification IDs.
+            $failedids = $DB->get_fieldset_select(
+                'local_jobboard_notification',
+                'id',
+                "status = :status",
+                ['status' => 'failed']
+            );
+
+            if (!empty($failedids)) {
+                list($insql, $inparams) = $DB->get_in_or_equal($failedids, SQL_PARAMS_NAMED);
+
+                // Update status to pending.
+                $DB->set_field_select(
+                    'local_jobboard_notification',
+                    'status',
+                    'pending',
+                    "id $insql",
+                    $inparams
+                );
+
+                // Reset attempts to 0.
+                $DB->set_field_select(
+                    'local_jobboard_notification',
+                    'attempts',
+                    0,
+                    "id $insql",
+                    $inparams
+                );
+
+                // Clear last error.
+                $DB->set_field_select(
+                    'local_jobboard_notification',
+                    'lasterror',
+                    null,
+                    "id $insql",
+                    $inparams
+                );
+            }
+        }
+
+        return $count;
     }
 }

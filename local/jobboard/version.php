@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120609;  // Mustache templates migration - component-based architecture.
+$plugin->version = 2025120610;  // Phase 2 cleanup - legacy code removal, trait consolidation.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.30-beta';
+$plugin->release = '1.9.31-beta';

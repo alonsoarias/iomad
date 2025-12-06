@@ -28,10 +28,14 @@ namespace local_jobboard;
 
 defined('MOODLE_INTERNAL') || die();
 
+use local_jobboard\trait\request_helper;
+
 /**
  * Class for handling audit logging.
  */
 class audit {
+
+    use request_helper;
 
     /**
      * Log an action to the audit table.
@@ -67,41 +71,6 @@ class audit {
             // Silently fail - don't break main operation if audit fails.
             debugging('Failed to log audit record: ' . $e->getMessage(), DEBUG_DEVELOPER);
         }
-    }
-
-    /**
-     * Get user IP address.
-     *
-     * @return string The IP address.
-     */
-    protected static function get_user_ip(): string {
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-        }
-
-        // Handle multiple IPs in X-Forwarded-For.
-        if (strpos($ip, ',') !== false) {
-            $ips = explode(',', $ip);
-            $ip = trim($ips[0]);
-        }
-
-        // Validate and sanitize.
-        $ip = filter_var($ip, FILTER_VALIDATE_IP);
-        return $ip !== false ? $ip : '0.0.0.0';
-    }
-
-    /**
-     * Get user agent string.
-     *
-     * @return string The user agent (truncated to 512 chars).
-     */
-    protected static function get_user_agent(): string {
-        $useragent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-        return substr($useragent, 0, 512);
     }
 
     /**

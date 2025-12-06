@@ -147,8 +147,6 @@ class vacancies extends base {
             $data['salary'] = $vacancy->salary;
             $data['requirements'] = $vacancy->requirements;
             $data['desirable'] = $vacancy->desirable;
-            $data['course_id'] = $vacancy->courseid;
-            $data['category_id'] = $vacancy->categoryid;
             $data['created_at'] = date('Y-m-d\TH:i:sP', $vacancy->timecreated);
             $data['updated_at'] = $vacancy->timemodified ? date('Y-m-d\TH:i:sP', $vacancy->timemodified) : null;
 

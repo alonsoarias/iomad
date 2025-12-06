@@ -390,7 +390,8 @@ function store_user_consents($userid, $data) {
 
     $now = time();
     $ipaddress = getremoteaddr();
-    $useragent = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 512);
+    // Sanitize user agent to prevent XSS in logs.
+    $useragent = substr(clean_param($_SERVER['HTTP_USER_AGENT'] ?? '', PARAM_TEXT), 0, 512);
 
     // Terms consent.
     if (!empty($data->policyagreed)) {
@@ -511,7 +512,8 @@ function log_signup_audit($userid, $data) {
     $audit->entitytype = 'user';
     $audit->entityid = $userid;
     $audit->ipaddress = getremoteaddr();
-    $audit->useragent = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 512);
+    // Sanitize user agent to prevent XSS in logs.
+    $audit->useragent = substr(clean_param($_SERVER['HTTP_USER_AGENT'] ?? '', PARAM_TEXT), 0, 512);
     $audit->extradata = json_encode([
         'vacancyid' => $data->vacancyid ?? 0,
         'companyid' => $data->companyid ?? 0,

@@ -63,8 +63,6 @@ class local_jobboard_generator extends testing_module_generator {
             'descriptionformat' => FORMAT_HTML,
             'contracttype' => 'catedra',
             'companyid' => 0,
-            'courseid' => null,
-            'categoryid' => null,
             'location' => 'Test Location',
             'department' => 'Test Department',
             'salary' => 'Competitive',

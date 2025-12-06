@@ -147,7 +147,6 @@ $string['entercode'] = 'Enter vacancy code';
 $string['entertitle'] = 'Enter vacancy title';
 $string['enterdescription'] = 'Describe the position and its functions';
 $string['selectcontracttype'] = 'Select contract type';
-$string['selectcourse'] = 'Select a course';
 $string['selectcategory'] = 'Select a category';
 $string['selectcompany'] = 'Select a company/site';
 $string['selectdepartment'] = 'Select a department';
