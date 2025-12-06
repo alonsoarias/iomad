@@ -564,9 +564,27 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         // isvalid = 1 -> status = 'approved'
         // isvalid = 0 AND validatedby IS NOT NULL -> status = 'rejected'
         // isvalid = 0 AND validatedby IS NULL -> status = 'pending'
-        $DB->execute("UPDATE {local_jobboard_doc_validation} SET status = 'approved' WHERE isvalid = 1");
-        $DB->execute("UPDATE {local_jobboard_doc_validation} SET status = 'rejected' WHERE isvalid = 0 AND validatedby IS NOT NULL");
-        $DB->execute("UPDATE {local_jobboard_doc_validation} SET status = 'pending' WHERE isvalid = 0 AND validatedby IS NULL");
+        $DB->set_field_select(
+            'local_jobboard_doc_validation',
+            'status',
+            'approved',
+            'isvalid = :isvalid',
+            ['isvalid' => 1]
+        );
+        $DB->set_field_select(
+            'local_jobboard_doc_validation',
+            'status',
+            'rejected',
+            'isvalid = :isvalid AND validatedby IS NOT NULL',
+            ['isvalid' => 0]
+        );
+        $DB->set_field_select(
+            'local_jobboard_doc_validation',
+            'status',
+            'pending',
+            'isvalid = :isvalid AND validatedby IS NULL',
+            ['isvalid' => 0]
+        );
 
         // Purge caches.
         purge_all_caches();

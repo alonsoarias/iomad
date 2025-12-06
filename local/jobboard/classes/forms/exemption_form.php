@@ -113,47 +113,27 @@ class exemption_form extends \moodleform {
         $mform->addRule('exempteddoctypes', get_string('required'), 'required', null, 'client');
         $mform->addHelpButton('exempteddoctypes', 'exempteddocs', 'local_jobboard');
 
-        // Quick select buttons (via JavaScript).
+        // Quick select buttons (via AMD module for CSP compliance).
+        global $PAGE;
+        $PAGE->requires->js_call_amd('local_jobboard/exemption_form', 'init', ['id_exempteddoctypes']);
+
         $mform->addElement('html', '
-            <div class="form-group row mb-3">
+            <div class="form-group row mb-3 exemption-quick-select">
                 <div class="col-md-9 offset-md-3">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-2"
-                        onclick="selectAllDocs()">
+                        data-action="selectall">
                         ' . get_string('selectall', 'local_jobboard') . '
                     </button>
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-2"
-                        onclick="selectIdentityDocs()">
+                        data-action="selectidentity">
                         ' . get_string('selectidentitydocs', 'local_jobboard') . '
                     </button>
                     <button type="button" class="btn btn-sm btn-outline-secondary"
-                        onclick="selectBackgroundDocs()">
+                        data-action="selectbackground">
                         ' . get_string('selectbackgrounddocs', 'local_jobboard') . '
                     </button>
                 </div>
             </div>
-            <script>
-            function selectAllDocs() {
-                var select = document.getElementById("id_exempteddoctypes");
-                for (var i = 0; i < select.options.length; i++) {
-                    select.options[i].selected = true;
-                }
-            }
-            function selectIdentityDocs() {
-                var select = document.getElementById("id_exempteddoctypes");
-                var identity = ["cedula", "rut", "libreta_militar"];
-                for (var i = 0; i < select.options.length; i++) {
-                    select.options[i].selected = identity.includes(select.options[i].value);
-                }
-            }
-            function selectBackgroundDocs() {
-                var select = document.getElementById("id_exempteddoctypes");
-                var background = ["antecedentes_procuraduria", "antecedentes_contraloria",
-                                  "antecedentes_policia", "rnmc"];
-                for (var i = 0; i < select.options.length; i++) {
-                    select.options[i].selected = background.includes(select.options[i].value);
-                }
-            }
-            </script>
         ');
 
         // Validity period.

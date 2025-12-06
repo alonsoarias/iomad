@@ -654,6 +654,26 @@ $string['privacy:metadata:local_jobboard_notification:userid'] = 'The ID of the 
 $string['privacy:metadata:local_jobboard_notification:templatecode'] = 'The notification template used';
 $string['privacy:metadata:local_jobboard_notification:timecreated'] = 'When the notification was created';
 
+$string['privacy:metadata:interviewer'] = 'Information about users assigned as interview panel members';
+$string['privacy:metadata:interviewer:userid'] = 'The ID of the user assigned as interviewer';
+$string['privacy:metadata:interviewer:interviewid'] = 'The interview to which they are assigned';
+$string['privacy:metadata:interviewer:timecreated'] = 'When the assignment was made';
+
+$string['privacy:metadata:committeemember'] = 'Information about users assigned to selection committees';
+$string['privacy:metadata:committeemember:userid'] = 'The ID of the user assigned to the committee';
+$string['privacy:metadata:committeemember:committeeid'] = 'The committee to which they are assigned';
+$string['privacy:metadata:committeemember:role'] = 'The role of the user in the committee';
+$string['privacy:metadata:committeemember:addedby'] = 'The user who made the assignment';
+$string['privacy:metadata:committeemember:timecreated'] = 'When the assignment was made';
+
+$string['privacy:metadata:evaluation'] = 'Evaluation scores and votes submitted by committee members';
+$string['privacy:metadata:evaluation:userid'] = 'The ID of the user who submitted the evaluation';
+$string['privacy:metadata:evaluation:applicationid'] = 'The application being evaluated';
+$string['privacy:metadata:evaluation:score'] = 'The numeric score given';
+$string['privacy:metadata:evaluation:vote'] = 'The vote decision (approve/reject)';
+$string['privacy:metadata:evaluation:comments'] = 'Comments provided with the evaluation';
+$string['privacy:metadata:evaluation:timecreated'] = 'When the evaluation was submitted';
+
 // Additional validation errors.
 $string['error:usernotfound'] = 'User not found';
 $string['error:nopermission'] = 'At least one permission must be selected';

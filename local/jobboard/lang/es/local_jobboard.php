@@ -1420,6 +1420,26 @@ $string['privacy:metadata:local_jobboard_notification:userid'] = 'El ID del usua
 $string['privacy:metadata:local_jobboard_notification:templatecode'] = 'La plantilla de notificación utilizada';
 $string['privacy:metadata:local_jobboard_notification:timecreated'] = 'Cuándo se creó la notificación';
 
+$string['privacy:metadata:interviewer'] = 'Información sobre usuarios asignados como miembros del panel de entrevistas';
+$string['privacy:metadata:interviewer:userid'] = 'El ID del usuario asignado como entrevistador';
+$string['privacy:metadata:interviewer:interviewid'] = 'La entrevista a la que está asignado';
+$string['privacy:metadata:interviewer:timecreated'] = 'Cuándo se realizó la asignación';
+
+$string['privacy:metadata:committeemember'] = 'Información sobre usuarios asignados a comités de selección';
+$string['privacy:metadata:committeemember:userid'] = 'El ID del usuario asignado al comité';
+$string['privacy:metadata:committeemember:committeeid'] = 'El comité al que está asignado';
+$string['privacy:metadata:committeemember:role'] = 'El rol del usuario en el comité';
+$string['privacy:metadata:committeemember:addedby'] = 'El usuario que realizó la asignación';
+$string['privacy:metadata:committeemember:timecreated'] = 'Cuándo se realizó la asignación';
+
+$string['privacy:metadata:evaluation'] = 'Puntuaciones y votos de evaluación enviados por miembros del comité';
+$string['privacy:metadata:evaluation:userid'] = 'El ID del usuario que envió la evaluación';
+$string['privacy:metadata:evaluation:applicationid'] = 'La postulación siendo evaluada';
+$string['privacy:metadata:evaluation:score'] = 'La puntuación numérica otorgada';
+$string['privacy:metadata:evaluation:vote'] = 'La decisión del voto (aprobar/rechazar)';
+$string['privacy:metadata:evaluation:comments'] = 'Comentarios proporcionados con la evaluación';
+$string['privacy:metadata:evaluation:timecreated'] = 'Cuándo se envió la evaluación';
+
 // Errores de validación adicionales.
 $string['error:usernotfound'] = 'Usuario no encontrado';
 $string['error:nopermission'] = 'Debe seleccionar al menos un permiso';
