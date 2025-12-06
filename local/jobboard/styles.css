@@ -1168,3 +1168,306 @@
         border: 1px solid #dee2e6 !important;
     }
 }
+
+/* ==========================================================================
+   Content Area Styling (v2.0.12)
+   ========================================================================== */
+
+/* Rich content areas - ensure proper text styling */
+.path-local-jobboard .jb-content-area {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #333;
+}
+
+.path-local-jobboard .jb-content-area p {
+    margin-bottom: 1rem;
+}
+
+.path-local-jobboard .jb-content-area ul,
+.path-local-jobboard .jb-content-area ol {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.path-local-jobboard .jb-content-area li {
+    margin-bottom: 0.5rem;
+}
+
+/* Definition lists */
+.path-local-jobboard .jb-definition-list dt {
+    font-weight: 600;
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.path-local-jobboard .jb-definition-list dd {
+    font-size: 1rem;
+    color: #212529;
+    margin-bottom: 1rem;
+}
+
+/* ==========================================================================
+   Card and Article Styling Enhancements
+   ========================================================================== */
+
+/* Article cards with better visual hierarchy */
+.path-local-jobboard article.card {
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.path-local-jobboard article.card:focus-within {
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25), 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Card title sizing */
+.path-local-jobboard .card-title.h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+/* Stat card interaction */
+.path-local-jobboard .jb-stat-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.path-local-jobboard .jb-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   Timeline Component Improvements
+   ========================================================================== */
+
+.path-local-jobboard .timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.path-local-jobboard .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.path-local-jobboard .timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.path-local-jobboard .timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.path-local-jobboard .timeline-marker {
+    position: absolute;
+    left: -2rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+
+.path-local-jobboard .timeline-content {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+.path-local-jobboard .timeline-item-current .timeline-content {
+    background: #e7f1ff;
+    border-left: 3px solid #007bff;
+}
+
+/* ==========================================================================
+   Share Buttons
+   ========================================================================== */
+
+.path-local-jobboard .jb-share-buttons .btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.path-local-jobboard .jb-share-buttons .btn:hover {
+    transform: scale(1.1);
+}
+
+/* ==========================================================================
+   Application Progress Steps
+   ========================================================================== */
+
+.path-local-jobboard .jb-progress-steps .jb-step-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+}
+
+/* ==========================================================================
+   Improved Badge Visibility
+   ========================================================================== */
+
+.path-local-jobboard .badge {
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.path-local-jobboard .badge-light {
+    background-color: #f1f3f5;
+    color: #495057;
+    border: 1px solid #dee2e6;
+}
+
+/* Badge sizing for improved readability */
+.path-local-jobboard .badge-pill {
+    padding: 0.4em 0.8em;
+}
+
+/* ==========================================================================
+   CTA Card Enhancement
+   ========================================================================== */
+
+.path-local-jobboard .jb-cta-card {
+    border-radius: 0.5rem;
+}
+
+.path-local-jobboard .jb-cta-card .card-body {
+    padding: 2rem;
+}
+
+/* ==========================================================================
+   Section Card Improvements
+   ========================================================================== */
+
+.path-local-jobboard .jb-section-card {
+    transition: box-shadow 0.2s ease;
+}
+
+.path-local-jobboard .jb-section-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ==========================================================================
+   Application Card Styling
+   ========================================================================== */
+
+.path-local-jobboard .jb-application-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.path-local-jobboard .jb-application-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   Convocatoria Card Styling
+   ========================================================================== */
+
+.path-local-jobboard .jb-convocatoria-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.path-local-jobboard .jb-convocatoria-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   Alert Styling Improvements
+   ========================================================================== */
+
+.path-local-jobboard .alert {
+    border-radius: 0.375rem;
+    border-left-width: 4px;
+}
+
+.path-local-jobboard .alert-warning {
+    background-color: #fff8e1;
+    border-color: #ffc107;
+    color: #856404;
+}
+
+.path-local-jobboard .alert-success {
+    background-color: #e8f5e9;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.path-local-jobboard .alert-danger {
+    background-color: #ffebee;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+.path-local-jobboard .alert-info {
+    background-color: #e3f2fd;
+    border-color: #17a2b8;
+    color: #0c5460;
+}
+
+/* ==========================================================================
+   Gap Utility for Flex Layouts
+   ========================================================================== */
+
+.path-local-jobboard .gap-1 { gap: 0.25rem; }
+.path-local-jobboard .gap-2 { gap: 0.5rem; }
+.path-local-jobboard .gap-3 { gap: 1rem; }
+.path-local-jobboard .gap-4 { gap: 1.5rem; }
+
+/* ==========================================================================
+   Icon-only Button Improvements
+   ========================================================================== */
+
+.path-local-jobboard .btn-group-sm > .btn:not(:only-child),
+.path-local-jobboard .btn-sm {
+    min-width: 2rem;
+}
+
+.path-local-jobboard .btn-group-sm > .btn i:only-child,
+.path-local-jobboard .btn-sm i:only-child {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Dropdown Menu Styling
+   ========================================================================== */
+
+.path-local-jobboard .dropdown-menu {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.375rem;
+}
+
+.path-local-jobboard .dropdown-item {
+    padding: 0.5rem 1rem;
+    transition: background-color 0.15s ease;
+}
+
+.path-local-jobboard .dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.path-local-jobboard .dropdown-item:focus {
+    background-color: #e9ecef;
+    outline: none;
+}

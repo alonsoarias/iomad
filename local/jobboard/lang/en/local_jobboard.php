@@ -2274,3 +2274,36 @@ $string['date'] = 'Date';
 $string['applyto'] = 'Apply to';
 $string['editvacancy'] = 'Edit vacancy';
 $string['logintoviewmore'] = 'Log in to view all available vacancies';
+
+// Navigation and page structure.
+$string['navigation'] = 'Navigation';
+$string['statistics'] = 'Statistics';
+$string['vacancydetails'] = 'Vacancy details';
+$string['pagination'] = 'Pagination';
+
+// Social sharing.
+$string['shareonlinkedin'] = 'Share on LinkedIn';
+$string['shareonfacebook'] = 'Share on Facebook';
+$string['shareontwitter'] = 'Share on Twitter';
+
+// Accessibility and ARIA labels (v2.0.13).
+$string['notifications'] = 'Notifications';
+$string['closealert'] = 'Close alert';
+$string['adminstatistics'] = 'Administration statistics';
+$string['applicantstatistics'] = 'Applicant statistics';
+$string['features'] = 'Features';
+$string['applicationstatistics'] = 'Application statistics';
+$string['applicationlist'] = 'Application list';
+$string['applicationprogress'] = 'Application progress';
+$string['documentstatus'] = 'Document status';
+$string['documentactions'] = 'Document actions';
+$string['reviewstatistics'] = 'Review statistics';
+$string['applicationsqueue'] = 'Applications queue';
+$string['documentstoreview'] = 'Documents to review';
+$string['close'] = 'Close';
+$string['at'] = 'at';
+$string['performedby'] = 'Performed by';
+$string['currentstatus'] = 'Current status';
+$string['noteshelptext'] = 'Add any notes about the status change (visible to applicant)';
+$string['warning'] = 'Warning';
+$string['sharethisvacancy'] = 'Share this vacancy';

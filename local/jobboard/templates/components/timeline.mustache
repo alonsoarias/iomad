@@ -36,47 +36,52 @@
 <div class="card shadow-sm mb-4 jb-timeline">
     {{#title}}
     <div class="card-header bg-light">
-        <h5 class="mb-0">
+        <h2 class="h5 mb-0">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-2"></i>
+            <i class="fa fa-{{icon}} mr-2" aria-hidden="true"></i>
             {{/icon}}
             {{title}}
-        </h5>
+        </h2>
     </div>
     {{/title}}
 
     <div class="card-body">
         {{#events.0}}
-        <div class="timeline">
+        <ol class="timeline list-unstyled" role="list" aria-label="{{#str}}statushistory, local_jobboard{{/str}}">
             {{#events}}
-            <div class="timeline-item{{#current}} timeline-item-current{{/current}}">
-                <div class="timeline-marker bg-{{#color}}{{color}}{{/color}}{{^color}}secondary{{/color}}">
+            <li class="timeline-item{{#current}} timeline-item-current{{/current}}" role="listitem">
+                <div class="timeline-marker bg-{{#color}}{{color}}{{/color}}{{^color}}secondary{{/color}}" aria-hidden="true">
                     <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}circle{{/icon}} text-white"></i>
                 </div>
-                <div class="timeline-content">
+                <article class="timeline-content">
                     <div class="d-flex justify-content-between align-items-start mb-1">
-                        <h6 class="mb-0 font-weight-bold">{{title}}</h6>
-                        <small class="text-muted">
+                        <h3 class="h6 mb-0 font-weight-bold">{{title}}</h3>
+                        <time class="text-muted small" datetime="{{datetime}}">
                             {{date}}
-                            {{#time}}<br>{{time}}{{/time}}
-                        </small>
+                            {{#time}}<br><span class="sr-only">{{#str}}at, local_jobboard{{/str}}</span>{{time}}{{/time}}
+                        </time>
                     </div>
                     {{#description}}
                     <p class="text-muted mb-1 small">{{description}}</p>
                     {{/description}}
                     {{#user}}
                     <small class="text-muted">
-                        <i class="fa fa-user mr-1"></i>{{user}}
+                        <i class="fa fa-user mr-1" aria-hidden="true"></i>
+                        <span class="sr-only">{{#str}}performedby, local_jobboard{{/str}}:</span>
+                        {{user}}
                     </small>
                     {{/user}}
-                </div>
-            </div>
+                    {{#current}}
+                    <span class="sr-only">{{#str}}currentstatus, local_jobboard{{/str}}</span>
+                    {{/current}}
+                </article>
+            </li>
             {{/events}}
-        </div>
+        </ol>
         {{/events.0}}
 
         {{^events.0}}
-        <p class="text-muted text-center mb-0">{{#str}}nohistory, local_jobboard{{/str}}</p>
+        <p class="text-muted text-center mb-0" role="status">{{#str}}nohistory, local_jobboard{{/str}}</p>
         {{/events.0}}
     </div>
 </div>

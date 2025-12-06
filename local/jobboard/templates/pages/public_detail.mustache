@@ -24,123 +24,136 @@
 }}
 <div class="local-jobboard-public-detail" data-region="jobboard-public-detail">
     {{! Back Button }}
-    <div class="mb-4">
+    <nav class="mb-4" aria-label="{{#str}}navigation, local_jobboard{{/str}}">
         <a href="{{backurl}}" class="btn btn-outline-secondary">
-            <i class="fa fa-arrow-left mr-2"></i>
+            <i class="fa fa-arrow-left mr-2" aria-hidden="true"></i>
             {{#str}}backtovacancies, local_jobboard{{/str}}
         </a>
-    </div>
+    </nav>
 
     {{! Two Column Layout }}
     <div class="row">
         {{! Left Column - Main Content }}
-        <div class="col-lg-8">
+        <main class="col-lg-8">
             {{! Vacancy Header Card }}
-            <div class="card shadow-sm mb-4">
+            <article class="card shadow-sm mb-4" aria-labelledby="vacancy-detail-title">
                 <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-                    <span class="badge badge-light">{{vacancy.code}}</span>
+                    <span class="badge badge-light" aria-label="{{#str}}vacancycode, local_jobboard{{/str}}: {{vacancy.code}}">{{vacancy.code}}</span>
                     <span class="badge badge-{{vacancy.publicationtypecolor}}">
                         {{vacancy.publicationtypelabel}}
                     </span>
                 </div>
 
                 <div class="card-body">
-                    <h2 class="card-title mb-3">{{vacancy.title}}</h2>
+                    <h1 class="card-title h2 mb-3" id="vacancy-detail-title">{{vacancy.title}}</h1>
 
                     {{! Convocatoria Info }}
                     {{#convocatoria}}
                     <div class="mb-3">
-                        <i class="fa fa-folder-open text-muted mr-2"></i>
+                        <i class="fa fa-folder-open text-muted mr-2" aria-hidden="true"></i>
                         {{#str}}convocatoria, local_jobboard{{/str}}:
                         <strong>{{name}}</strong>
                     </div>
                     {{/convocatoria}}
 
                     {{! Quick Details }}
-                    <div class="mb-3">
+                    <div class="mb-3 jb-vacancy-badges" role="list" aria-label="{{#str}}vacancydetails, local_jobboard{{/str}}">
                         {{#vacancy.location}}
-                        <span class="badge badge-light mr-2 mb-1">
-                            <i class="fa fa-map-marker-alt mr-1"></i>{{vacancy.location}}
+                        <span class="badge badge-light mr-2 mb-1" role="listitem">
+                            <i class="fa fa-map-marker-alt mr-1" aria-hidden="true"></i>
+                            <span class="sr-only">{{#str}}location, local_jobboard{{/str}}:</span>
+                            {{vacancy.location}}
                         </span>
                         {{/vacancy.location}}
 
                         {{#vacancy.contracttypelabel}}
-                        <span class="badge badge-light mr-2 mb-1">
-                            <i class="fa fa-briefcase mr-1"></i>{{vacancy.contracttypelabel}}
+                        <span class="badge badge-light mr-2 mb-1" role="listitem">
+                            <i class="fa fa-briefcase mr-1" aria-hidden="true"></i>
+                            <span class="sr-only">{{#str}}contracttype, local_jobboard{{/str}}:</span>
+                            {{vacancy.contracttypelabel}}
                         </span>
                         {{/vacancy.contracttypelabel}}
 
-                        <span class="badge badge-light mb-1">
-                            <i class="fa fa-users mr-1"></i>
+                        <span class="badge badge-light mb-1" role="listitem">
+                            <i class="fa fa-users mr-1" aria-hidden="true"></i>
                             {{#str}}positions, local_jobboard{{/str}}: {{vacancy.positions}}
                         </span>
                     </div>
 
                     {{! Urgent Warning }}
                     {{#vacancy.isurgent}}
-                    <div class="alert alert-warning">
-                        <i class="fa fa-exclamation-triangle mr-2"></i>
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>
+                        <strong>{{#str}}urgent, local_jobboard{{/str}}:</strong>
                         {{#str}}closesin, local_jobboard, {{vacancy.daysremaining}}{{/str}}
                     </div>
                     {{/vacancy.isurgent}}
                 </div>
-            </div>
+            </article>
 
             {{! Description Card }}
             {{#vacancy.description}}
-            <div class="card shadow-sm mb-4">
+            <section class="card shadow-sm mb-4" aria-labelledby="description-heading">
                 <div class="card-header bg-white font-weight-bold">
-                    <i class="fa fa-file-alt mr-2"></i>
-                    {{#str}}vacancydescription, local_jobboard{{/str}}
+                    <h2 class="h5 mb-0" id="description-heading">
+                        <i class="fa fa-file-alt mr-2" aria-hidden="true"></i>
+                        {{#str}}vacancydescription, local_jobboard{{/str}}
+                    </h2>
                 </div>
-                <div class="card-body">
+                <div class="card-body jb-content-area">
                     {{{vacancy.description}}}
                 </div>
-            </div>
+            </section>
             {{/vacancy.description}}
 
             {{! Requirements Card }}
             {{#vacancy.requirements}}
-            <div class="card shadow-sm mb-4">
+            <section class="card shadow-sm mb-4" aria-labelledby="requirements-heading">
                 <div class="card-header bg-white font-weight-bold">
-                    <i class="fa fa-check-circle mr-2"></i>
-                    {{#str}}requirements, local_jobboard{{/str}}
+                    <h2 class="h5 mb-0" id="requirements-heading">
+                        <i class="fa fa-check-circle mr-2" aria-hidden="true"></i>
+                        {{#str}}requirements, local_jobboard{{/str}}
+                    </h2>
                 </div>
-                <div class="card-body">
+                <div class="card-body jb-content-area">
                     {{{vacancy.requirements}}}
                 </div>
-            </div>
+            </section>
             {{/vacancy.requirements}}
 
             {{! Desirable Card }}
             {{#vacancy.desirable}}
-            <div class="card shadow-sm mb-4">
+            <section class="card shadow-sm mb-4" aria-labelledby="desirable-heading">
                 <div class="card-header bg-white font-weight-bold">
-                    <i class="fa fa-star mr-2"></i>
-                    {{#str}}desirable, local_jobboard{{/str}}
+                    <h2 class="h5 mb-0" id="desirable-heading">
+                        <i class="fa fa-star mr-2" aria-hidden="true"></i>
+                        {{#str}}desirable, local_jobboard{{/str}}
+                    </h2>
                 </div>
-                <div class="card-body">
+                <div class="card-body jb-content-area">
                     {{{vacancy.desirable}}}
                 </div>
-            </div>
+            </section>
             {{/vacancy.desirable}}
-        </div>
+        </main>
 
         {{! Right Column - Sidebar }}
-        <div class="col-lg-4">
+        <aside class="col-lg-4">
             {{! Apply CTA Card }}
-            <div class="card shadow-sm mb-4 border-primary">
+            <section class="card shadow-sm mb-4 border-primary" aria-labelledby="apply-cta-heading">
                 <div class="card-header bg-primary text-white font-weight-bold">
-                    <i class="fa fa-paper-plane mr-2"></i>
-                    {{#str}}readytoapply, local_jobboard{{/str}}
+                    <h2 class="h5 mb-0" id="apply-cta-heading">
+                        <i class="fa fa-paper-plane mr-2" aria-hidden="true"></i>
+                        {{#str}}readytoapply, local_jobboard{{/str}}
+                    </h2>
                 </div>
                 <div class="card-body text-center">
                     {{#isloggedin}}
                         {{#hasapplied}}
-                        <p class="text-success">
-                            <i class="fa fa-check-circle fa-2x mb-2"></i><br>
-                            {{#str}}alreadyapplied, local_jobboard{{/str}}
-                        </p>
+                        <div class="text-success" role="status">
+                            <i class="fa fa-check-circle fa-2x mb-2" aria-hidden="true"></i>
+                            <p class="mb-3">{{#str}}alreadyapplied, local_jobboard{{/str}}</p>
+                        </div>
                         <a href="{{applicationsurl}}" class="btn btn-outline-primary btn-block">
                             {{#str}}viewmyapplications, local_jobboard{{/str}}
                         </a>
@@ -149,8 +162,8 @@
                         {{^hasapplied}}
                             {{#canapply}}
                             <p class="text-muted mb-3">{{#str}}applynowdesc, local_jobboard{{/str}}</p>
-                            <a href="{{applyurl}}" class="btn btn-primary btn-lg btn-block">
-                                <i class="fa fa-paper-plane mr-2"></i>
+                            <a href="{{applyurl}}" class="btn btn-primary btn-lg btn-block" aria-label="{{#str}}applyto, local_jobboard{{/str}}: {{vacancy.title}}">
+                                <i class="fa fa-paper-plane mr-2" aria-hidden="true"></i>
                                 {{#str}}apply, local_jobboard{{/str}}
                             </a>
                             {{/canapply}}
@@ -164,22 +177,24 @@
                     {{^isloggedin}}
                     <p class="text-muted mb-3">{{#str}}logintoapply, local_jobboard{{/str}}</p>
                     <a href="{{loginapplyurl}}" class="btn btn-primary btn-lg btn-block" target="_blank" rel="noopener noreferrer">
-                        <i class="fa fa-sign-in-alt mr-2"></i>
+                        <i class="fa fa-sign-in-alt mr-2" aria-hidden="true"></i>
                         {{#str}}loginandapply, local_jobboard{{/str}}
                         <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
                     </a>
                     {{/isloggedin}}
                 </div>
-            </div>
+            </section>
 
             {{! Details Card }}
-            <div class="card shadow-sm mb-4">
+            <section class="card shadow-sm mb-4" aria-labelledby="details-heading">
                 <div class="card-header bg-white font-weight-bold">
-                    <i class="fa fa-info-circle mr-2"></i>
-                    {{#str}}details, local_jobboard{{/str}}
+                    <h2 class="h5 mb-0" id="details-heading">
+                        <i class="fa fa-info-circle mr-2" aria-hidden="true"></i>
+                        {{#str}}details, local_jobboard{{/str}}
+                    </h2>
                 </div>
                 <div class="card-body">
-                    <dl class="mb-0">
+                    <dl class="mb-0 jb-definition-list">
                         {{#vacancy.duration}}
                         <dt class="text-muted small">{{#str}}duration, local_jobboard{{/str}}</dt>
                         <dd class="mb-2">{{vacancy.duration}}</dd>
@@ -204,28 +219,33 @@
                         </dd>
                     </dl>
                 </div>
-            </div>
+            </section>
 
             {{! Share Card }}
-            <div class="card shadow-sm mb-4">
+            <section class="card shadow-sm mb-4" aria-labelledby="share-heading">
                 <div class="card-header bg-white font-weight-bold">
-                    <i class="fa fa-share-alt mr-2"></i>
-                    {{#str}}share, local_jobboard{{/str}}
+                    <h2 class="h5 mb-0" id="share-heading">
+                        <i class="fa fa-share-alt mr-2" aria-hidden="true"></i>
+                        {{#str}}share, local_jobboard{{/str}}
+                    </h2>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-center">
-                        <a href="{{sharelinks.linkedin}}" class="btn btn-outline-primary btn-lg mx-1" target="_blank" title="LinkedIn">
-                            <i class="fa fa-linkedin"></i>
+                    <div class="d-flex justify-content-center jb-share-buttons" role="group" aria-label="{{#str}}sharethisvacancy, local_jobboard{{/str}}">
+                        <a href="{{sharelinks.linkedin}}" class="btn btn-outline-primary btn-lg mx-1" target="_blank" rel="noopener noreferrer" aria-label="{{#str}}shareonlinkedin, local_jobboard{{/str}}">
+                            <i class="fa fa-linkedin" aria-hidden="true"></i>
+                            <span class="sr-only">LinkedIn</span>
                         </a>
-                        <a href="{{sharelinks.facebook}}" class="btn btn-outline-primary btn-lg mx-1" target="_blank" title="Facebook">
-                            <i class="fa fa-facebook"></i>
+                        <a href="{{sharelinks.facebook}}" class="btn btn-outline-primary btn-lg mx-1" target="_blank" rel="noopener noreferrer" aria-label="{{#str}}shareonfacebook, local_jobboard{{/str}}">
+                            <i class="fa fa-facebook" aria-hidden="true"></i>
+                            <span class="sr-only">Facebook</span>
                         </a>
-                        <a href="{{sharelinks.twitter}}" class="btn btn-outline-primary btn-lg mx-1" target="_blank" title="Twitter">
-                            <i class="fa fa-twitter"></i>
+                        <a href="{{sharelinks.twitter}}" class="btn btn-outline-primary btn-lg mx-1" target="_blank" rel="noopener noreferrer" aria-label="{{#str}}shareontwitter, local_jobboard{{/str}}">
+                            <i class="fa fa-twitter" aria-hidden="true"></i>
+                            <span class="sr-only">Twitter</span>
                         </a>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </aside>
     </div>
 </div>

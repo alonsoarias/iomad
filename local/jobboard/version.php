@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120629;  // Add accessibility and UX improvements to templates.
+$plugin->version = 2025120631;  // Full UX/accessibility redesign: semantic HTML, ARIA labels, improved legibility.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.11';
+$plugin->release = '2.0.13';

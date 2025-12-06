@@ -26,33 +26,33 @@
     {{> local_jobboard/components/page_header }}
 
     {{! Status Banner }}
-    <div class="alert alert-{{application.statuscolor}} d-flex align-items-center mb-4" role="alert">
-        <i class="fa fa-{{application.statusicon}} fa-2x mr-3"></i>
+    <div class="alert alert-{{application.statuscolor}} d-flex align-items-center mb-4" role="status" aria-live="polite">
+        <i class="fa fa-{{application.statusicon}} fa-2x mr-3" aria-hidden="true"></i>
         <div>
-            <h5 class="alert-heading mb-1">{{application.statuslabel}}</h5>
+            <h2 class="h5 alert-heading mb-1">{{application.statuslabel}}</h2>
             <p class="mb-0 small">{{application.statusdescription}}</p>
         </div>
     </div>
 
     <div class="row">
         {{! Main Content Column }}
-        <div class="col-lg-8">
+        <main class="col-lg-8">
             {{! Applicant Info Card (for reviewers) }}
             {{#applicant}}
-            <div class="card shadow-sm mb-4">
+            <section class="card shadow-sm mb-4" aria-labelledby="applicant-info-heading">
                 <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">
-                        <i class="fa fa-user mr-2"></i>
+                    <h2 class="h5 mb-0" id="applicant-info-heading">
+                        <i class="fa fa-user mr-2" aria-hidden="true"></i>
                         {{#str}}applicantinfo, local_jobboard{{/str}}
-                    </h5>
+                    </h2>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <dl class="mb-0">
-                                <dt class="text-muted small">{{#str}}fullname{{/str}}</dt>
+                            <dl class="jb-definition-list mb-0">
+                                <dt>{{#str}}fullname{{/str}}</dt>
                                 <dd class="mb-2">{{fullname}}</dd>
-                                <dt class="text-muted small">{{#str}}email{{/str}}</dt>
+                                <dt>{{#str}}email{{/str}}</dt>
                                 <dd class="mb-0">
                                     <a href="mailto:{{email}}">{{email}}</a>
                                 </dd>
@@ -60,70 +60,72 @@
                         </div>
                         <div class="col-md-6">
                             {{#idnumber}}
-                            <dl class="mb-0">
-                                <dt class="text-muted small">{{#str}}idnumber{{/str}}</dt>
+                            <dl class="jb-definition-list mb-0">
+                                <dt>{{#str}}idnumber{{/str}}</dt>
                                 <dd class="mb-2">{{idnumber}}</dd>
                             </dl>
                             {{/idnumber}}
                             {{#phone}}
-                            <dl class="mb-0">
-                                <dt class="text-muted small">{{#str}}phone{{/str}}</dt>
+                            <dl class="jb-definition-list mb-0">
+                                <dt>{{#str}}phone{{/str}}</dt>
                                 <dd class="mb-0">{{phone}}</dd>
                             </dl>
                             {{/phone}}
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
             {{/applicant}}
 
             {{! Documents Card }}
-            <div class="card shadow-sm mb-4">
+            <section class="card shadow-sm mb-4" aria-labelledby="documents-heading">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        <i class="fa fa-folder-open mr-2"></i>
+                    <h2 class="h5 mb-0" id="documents-heading">
+                        <i class="fa fa-folder-open mr-2" aria-hidden="true"></i>
                         {{#str}}documents, local_jobboard{{/str}}
-                    </h5>
-                    <span class="badge badge-light">{{documentcount}}</span>
+                    </h2>
+                    <span class="badge badge-light" aria-label="{{documentcount}} {{#str}}documents, local_jobboard{{/str}}">{{documentcount}}</span>
                 </div>
 
                 {{#hasdocuments}}
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0">
+                    <table class="table table-hover mb-0" aria-label="{{#str}}documentlist, local_jobboard{{/str}}">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{#str}}documenttype, local_jobboard{{/str}}</th>
-                                <th>{{#str}}filename, local_jobboard{{/str}}</th>
-                                <th class="text-center">{{#str}}status, local_jobboard{{/str}}</th>
-                                <th class="text-right">{{#str}}actions, local_jobboard{{/str}}</th>
+                                <th scope="col">{{#str}}documenttype, local_jobboard{{/str}}</th>
+                                <th scope="col">{{#str}}filename, local_jobboard{{/str}}</th>
+                                <th scope="col" class="text-center">{{#str}}status, local_jobboard{{/str}}</th>
+                                <th scope="col" class="text-right">{{#str}}actions, local_jobboard{{/str}}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#documents}}
                             <tr>
                                 <td>
-                                    <i class="fa fa-{{fileicon}} text-{{filecolor}} mr-2"></i>
+                                    <i class="fa fa-{{fileicon}} text-{{filecolor}} mr-2" aria-hidden="true"></i>
                                     {{typename}}
                                 </td>
                                 <td class="text-muted small">{{filename}}</td>
                                 <td class="text-center">
-                                    <span class="badge badge-{{statuscolor}}">
+                                    <span class="badge badge-{{statuscolor}}" aria-label="{{#str}}status, local_jobboard{{/str}}: {{statuslabel}}">
                                         {{#statusicon}}
-                                        <i class="fa fa-{{statusicon}} mr-1"></i>
+                                        <i class="fa fa-{{statusicon}} mr-1" aria-hidden="true"></i>
                                         {{/statusicon}}
                                         {{statuslabel}}
                                     </span>
                                 </td>
                                 <td class="text-right">
-                                    <div class="btn-group btn-group-sm">
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="{{#str}}documentactions, local_jobboard{{/str}}">
                                         {{#downloadurl}}
-                                        <a href="{{downloadurl}}" class="btn btn-outline-primary" title="{{#str}}download{{/str}}">
-                                            <i class="fa fa-download"></i>
+                                        <a href="{{downloadurl}}" class="btn btn-outline-primary" aria-label="{{#str}}download{{/str}} {{typename}}">
+                                            <i class="fa fa-download" aria-hidden="true"></i>
+                                            <span class="sr-only">{{#str}}download{{/str}}</span>
                                         </a>
                                         {{/downloadurl}}
                                         {{#canreupload}}
-                                        <a href="{{reuploadurl}}" class="btn btn-outline-warning" title="{{#str}}reupload, local_jobboard{{/str}}">
-                                            <i class="fa fa-upload"></i>
+                                        <a href="{{reuploadurl}}" class="btn btn-outline-warning" aria-label="{{#str}}reupload, local_jobboard{{/str}} {{typename}}">
+                                            <i class="fa fa-upload" aria-hidden="true"></i>
+                                            <span class="sr-only">{{#str}}reupload, local_jobboard{{/str}}</span>
                                         </a>
                                         {{/canreupload}}
                                     </div>
@@ -131,8 +133,8 @@
                             </tr>
                             {{#rejectreason}}
                             <tr class="table-danger">
-                                <td colspan="4" class="small">
-                                    <i class="fa fa-exclamation-circle mr-1"></i>
+                                <td colspan="4" class="small" role="alert">
+                                    <i class="fa fa-exclamation-circle mr-1" aria-hidden="true"></i>
                                     <strong>{{#str}}rejectreason, local_jobboard{{/str}}:</strong> {{rejectreason}}
                                 </td>
                             </tr>
@@ -144,89 +146,90 @@
                 {{/hasdocuments}}
 
                 {{^hasdocuments}}
-                <div class="card-body text-center text-muted py-4">
-                    <i class="fa fa-file-upload fa-2x mb-2"></i>
+                <div class="card-body text-center text-muted py-4" role="status">
+                    <i class="fa fa-file-upload fa-2x mb-2" aria-hidden="true"></i>
                     <p class="mb-0">{{#str}}nodocuments, local_jobboard{{/str}}</p>
                 </div>
                 {{/hasdocuments}}
-            </div>
+            </section>
 
             {{! Status History Timeline }}
             {{#history.0}}
-            <div class="card shadow-sm mb-4">
+            <section class="card shadow-sm mb-4" aria-labelledby="history-heading">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0">
-                        <i class="fa fa-history mr-2"></i>
+                    <h2 class="h5 mb-0" id="history-heading">
+                        <i class="fa fa-history mr-2" aria-hidden="true"></i>
                         {{#str}}statushistory, local_jobboard{{/str}}
-                    </h5>
+                    </h2>
                 </div>
                 <div class="card-body">
                     {{> local_jobboard/components/timeline }}
                 </div>
-            </div>
+            </section>
             {{/history.0}}
-        </div>
+        </main>
 
         {{! Sidebar Column }}
-        <div class="col-lg-4">
+        <aside class="col-lg-4">
             {{! Vacancy Info Card }}
-            <div class="card shadow-sm mb-4">
+            <section class="card shadow-sm mb-4" aria-labelledby="vacancy-info-heading">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">
-                        <i class="fa fa-briefcase mr-2"></i>
+                    <h2 class="h5 mb-0" id="vacancy-info-heading">
+                        <i class="fa fa-briefcase mr-2" aria-hidden="true"></i>
                         {{#str}}vacancy, local_jobboard{{/str}}
-                    </h5>
+                    </h2>
                 </div>
                 <div class="card-body">
-                    <span class="badge badge-secondary mb-2">{{vacancy.code}}</span>
-                    <h5>{{vacancy.title}}</h5>
+                    <span class="badge badge-secondary mb-2" aria-label="{{#str}}vacancycode, local_jobboard{{/str}}: {{vacancy.code}}">{{vacancy.code}}</span>
+                    <h3 class="h5">{{vacancy.title}}</h3>
                     {{#vacancy.location}}
                     <p class="small text-muted mb-1">
-                        <i class="fa fa-map-marker-alt mr-1"></i>
+                        <i class="fa fa-map-marker-alt mr-1" aria-hidden="true"></i>
+                        <span class="sr-only">{{#str}}location, local_jobboard{{/str}}:</span>
                         {{vacancy.location}}
                     </p>
                     {{/vacancy.location}}
-                    <a href="{{vacancy.viewurl}}" class="btn btn-outline-info btn-sm btn-block mt-3">
+                    <a href="{{vacancy.viewurl}}" class="btn btn-outline-info btn-sm btn-block mt-3" aria-label="{{#str}}viewvacancy, local_jobboard{{/str}}: {{vacancy.title}}">
                         {{#str}}viewvacancy, local_jobboard{{/str}}
                     </a>
                 </div>
-            </div>
+            </section>
 
             {{! Application Info Card }}
-            <div class="card shadow-sm mb-4">
+            <section class="card shadow-sm mb-4" aria-labelledby="app-info-heading">
                 <div class="card-header bg-white">
-                    <h5 class="mb-0">
-                        <i class="fa fa-info-circle text-primary mr-2"></i>
+                    <h2 class="h5 mb-0" id="app-info-heading">
+                        <i class="fa fa-info-circle text-primary mr-2" aria-hidden="true"></i>
                         {{#str}}applicationinfo, local_jobboard{{/str}}
-                    </h5>
+                    </h2>
                 </div>
                 <div class="card-body">
-                    <dl class="mb-0">
-                        <dt class="text-muted small">{{#str}}dateapplied, local_jobboard{{/str}}</dt>
+                    <dl class="jb-definition-list mb-0">
+                        <dt>{{#str}}dateapplied, local_jobboard{{/str}}</dt>
                         <dd class="mb-2">{{application.dateapplied}}</dd>
-                        <dt class="text-muted small">{{#str}}lastupdated, local_jobboard{{/str}}</dt>
+                        <dt>{{#str}}lastupdated, local_jobboard{{/str}}</dt>
                         <dd class="mb-0">{{application.lastupdated}}</dd>
                     </dl>
                 </div>
-            </div>
+            </section>
 
             {{! Workflow Actions (for managers) }}
             {{#canmanage}}
-            <div class="card shadow-sm mb-4 border-warning">
+            <section class="card shadow-sm mb-4 border-warning" aria-labelledby="workflow-heading">
                 <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0">
-                        <i class="fa fa-cog mr-2"></i>
+                    <h2 class="h5 mb-0" id="workflow-heading">
+                        <i class="fa fa-cog mr-2" aria-hidden="true"></i>
                         {{#str}}workflowactions, local_jobboard{{/str}}
-                    </h5>
+                    </h2>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{{workflowurl}}">
+                    <form method="post" action="{{workflowurl}}" aria-label="{{#str}}workflowactions, local_jobboard{{/str}}">
                         <input type="hidden" name="sesskey" value="{{sesskey}}">
                         <input type="hidden" name="applicationid" value="{{application.id}}">
 
                         <div class="form-group">
-                            <label for="newstatus">{{#str}}changestatus, local_jobboard{{/str}}</label>
-                            <select name="status" id="newstatus" class="form-control">
+                            <label for="newstatus" class="font-weight-bold">{{#str}}changestatus, local_jobboard{{/str}}</label>
+                            <select name="status" id="newstatus" class="form-control" required aria-required="true">
                                 {{#workflowactions}}
                                 <option value="{{value}}">{{label}}</option>
                                 {{/workflowactions}}
@@ -235,17 +238,18 @@
 
                         <div class="form-group">
                             <label for="notes">{{#str}}optionalnotes, local_jobboard{{/str}}</label>
-                            <textarea name="notes" id="notes" class="form-control" rows="2"></textarea>
+                            <textarea name="notes" id="notes" class="form-control" rows="2" aria-describedby="notes-help"></textarea>
+                            <small id="notes-help" class="form-text text-muted">{{#str}}noteshelptext, local_jobboard{{/str}}</small>
                         </div>
 
                         <button type="submit" class="btn btn-warning btn-block">
-                            <i class="fa fa-save mr-1"></i>
+                            <i class="fa fa-save mr-1" aria-hidden="true"></i>
                             {{#str}}updatestatus, local_jobboard{{/str}}
                         </button>
                     </form>
                 </div>
-            </div>
+            </section>
             {{/canmanage}}
-        </div>
+        </aside>
     </div>
 </div>

@@ -30,24 +30,26 @@
 }}
 <div class="local-jobboard-public" data-region="jobboard-public">
     {{! Hero Section }}
-    <div class="jb-public-hero text-center py-5 mb-4 rounded">
+    <header class="jb-public-hero text-center py-5 mb-4 rounded" role="banner">
         <div class="container">
             <h1 class="display-4 mb-3 text-white">{{pagetitle}}</h1>
             {{#pagedescription}}
             <p class="lead mb-0 text-white-50">{{{pagedescription}}}</p>
             {{/pagedescription}}
         </div>
-    </div>
+    </header>
 
     {{! Statistics Row }}
     {{#stats.0}}
-    <div class="row mb-4">
-        {{#stats}}
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
+    <section class="jb-stats-section mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        <div class="row">
+            {{#stats}}
+            <div class="col-lg-3 col-md-6 mb-3">
+                {{> local_jobboard/components/stat_card }}
+            </div>
+            {{/stats}}
         </div>
-        {{/stats}}
-    </div>
+    </section>
     {{/stats.0}}
 
     {{! Filter Form }}
@@ -61,117 +63,126 @@
     {{#hasfilters}}
     <div class="mb-3">
         <a href="{{clearfiltersurl}}" class="btn btn-sm btn-outline-secondary">
-            <i class="fa fa-times mr-1"></i>
+            <i class="fa fa-times mr-1" aria-hidden="true"></i>
             {{#str}}clearfilters, local_jobboard{{/str}}
         </a>
     </div>
     {{/hasfilters}}
 
     {{! Results Count }}
-    <p class="text-muted mb-3">
+    <p class="text-muted mb-3" role="status" aria-live="polite">
         {{#str}}vacanciesfound, local_jobboard, {{resultscount}}{{/str}}
     </p>
 
     {{! Vacancy Cards Grid }}
     {{#hasvacancies}}
-    <div class="row">
-        {{#vacancies}}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm jb-vacancy-card{{#isurgent}} border-warning{{/isurgent}}" data-vacancy-id="{{id}}">
-                {{! Card Header }}
-                <div class="card-header d-flex justify-content-between align-items-center bg-white">
-                    <span class="badge badge-secondary">{{code}}</span>
-                    {{#publicationtype}}
-                    <span class="badge badge-{{publicationtypecolor}}">
-                        {{publicationtypelabel}}
-                    </span>
-                    {{/publicationtype}}
-                </div>
-
-                {{! Card Body }}
-                <div class="card-body">
-                    <h5 class="card-title">{{title}}</h5>
-
-                    {{! Convocatoria Badge }}
-                    {{#convocatorianame}}
-                    <div class="mb-2">
-                        <i class="fa fa-folder-open text-muted mr-1"></i>
-                        <span class="badge badge-light">{{convocatoriacode}}</span>
+    <section class="jb-vacancies-grid" aria-label="{{#str}}vacancies, local_jobboard{{/str}}">
+        <div class="row">
+            {{#vacancies}}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <article class="card h-100 shadow-sm jb-vacancy-card{{#isurgent}} border-warning{{/isurgent}}" data-vacancy-id="{{id}}" aria-labelledby="public-vacancy-{{id}}">
+                    {{! Card Header }}
+                    <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                        <span class="badge badge-secondary" aria-label="{{#str}}vacancycode, local_jobboard{{/str}}: {{code}}">{{code}}</span>
+                        {{#publicationtype}}
+                        <span class="badge badge-{{publicationtypecolor}}">
+                            {{publicationtypelabel}}
+                        </span>
+                        {{/publicationtype}}
                     </div>
-                    {{/convocatorianame}}
 
-                    {{! Location }}
-                    {{#location}}
-                    <p class="card-text text-muted small mb-1">
-                        <i class="fa fa-map-marker-alt text-muted mr-2"></i>{{location}}
-                    </p>
-                    {{/location}}
+                    {{! Card Body }}
+                    <div class="card-body">
+                        <h2 class="card-title h5" id="public-vacancy-{{id}}">{{title}}</h2>
 
-                    {{! Contract Type }}
-                    {{#contracttypelabel}}
-                    <p class="card-text text-muted small mb-2">
-                        <i class="fa fa-briefcase text-muted mr-2"></i>{{contracttypelabel}}
-                    </p>
-                    {{/contracttypelabel}}
+                        {{! Convocatoria Badge }}
+                        {{#convocatorianame}}
+                        <div class="mb-2">
+                            <i class="fa fa-folder-open text-muted mr-1" aria-hidden="true"></i>
+                            <span class="badge badge-light">{{convocatoriacode}}</span>
+                        </div>
+                        {{/convocatorianame}}
 
-                    {{! Description Excerpt }}
-                    {{#descriptionexcerpt}}
-                    <p class="card-text small">{{descriptionexcerpt}}</p>
-                    {{/descriptionexcerpt}}
+                        {{! Location }}
+                        {{#location}}
+                        <p class="card-text text-muted small mb-1">
+                            <i class="fa fa-map-marker-alt text-muted mr-2" aria-hidden="true"></i>
+                            <span class="sr-only">{{#str}}location, local_jobboard{{/str}}:</span>
+                            {{location}}
+                        </p>
+                        {{/location}}
 
-                    {{! Positions }}
-                    <p class="card-text small mb-0">
-                        <i class="fa fa-users text-muted mr-2"></i>
-                        {{#str}}positions, local_jobboard{{/str}}: <strong>{{positions}}</strong>
-                    </p>
-                </div>
+                        {{! Contract Type }}
+                        {{#contracttypelabel}}
+                        <p class="card-text text-muted small mb-2">
+                            <i class="fa fa-briefcase text-muted mr-2" aria-hidden="true"></i>
+                            <span class="sr-only">{{#str}}contracttype, local_jobboard{{/str}}:</span>
+                            {{contracttypelabel}}
+                        </p>
+                        {{/contracttypelabel}}
 
-                {{! Card Footer }}
-                <div class="card-footer bg-white">
-                    {{! Closing Date }}
-                    <small class="{{#isurgent}}text-warning font-weight-bold{{/isurgent}}{{^isurgent}}text-muted{{/isurgent}} d-block mb-2">
-                        <i class="fa fa-{{#isurgent}}exclamation-triangle{{/isurgent}}{{^isurgent}}calendar-alt{{/isurgent}} mr-1"></i>
-                        {{#str}}closesin, local_jobboard, {{daysremaining}}{{/str}}
-                    </small>
+                        {{! Description Excerpt }}
+                        {{#descriptionexcerpt}}
+                        <p class="card-text small">{{descriptionexcerpt}}</p>
+                        {{/descriptionexcerpt}}
 
-                    {{! Action Buttons }}
-                    <div class="d-flex justify-content-between">
-                        <a href="{{viewurl}}" class="btn btn-sm btn-outline-primary">
-                            <i class="fa fa-eye mr-1"></i>
-                            {{#str}}viewdetails, local_jobboard{{/str}}
-                        </a>
-
-                        {{#canapply}}
-                        <a href="{{applyurl}}" class="btn btn-sm btn-primary">
-                            <i class="fa fa-paper-plane mr-1"></i>
-                            {{#str}}apply, local_jobboard{{/str}}
-                        </a>
-                        {{/canapply}}
-
-                        {{^isloggedin}}
-                        <a href="{{loginapplyurl}}" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener noreferrer">
-                            <i class="fa fa-sign-in-alt mr-1"></i>
-                            {{#str}}loginandapply, local_jobboard{{/str}}
-                            <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
-                        </a>
-                        {{/isloggedin}}
+                        {{! Positions }}
+                        <p class="card-text small mb-0">
+                            <i class="fa fa-users text-muted mr-2" aria-hidden="true"></i>
+                            {{#str}}positions, local_jobboard{{/str}}: <strong>{{positions}}</strong>
+                        </p>
                     </div>
-                </div>
+
+                    {{! Card Footer }}
+                    <footer class="card-footer bg-white">
+                        {{! Closing Date }}
+                        <small class="{{#isurgent}}text-warning font-weight-bold{{/isurgent}}{{^isurgent}}text-muted{{/isurgent}} d-block mb-2">
+                            <i class="fa fa-{{#isurgent}}exclamation-triangle{{/isurgent}}{{^isurgent}}calendar-alt{{/isurgent}} mr-1" aria-hidden="true"></i>
+                            {{#isurgent}}<span class="sr-only">{{#str}}urgent, local_jobboard{{/str}}:</span>{{/isurgent}}
+                            {{#str}}closesin, local_jobboard, {{daysremaining}}{{/str}}
+                        </small>
+
+                        {{! Action Buttons }}
+                        <div class="d-flex justify-content-between jb-card-actions">
+                            <a href="{{viewurl}}" class="btn btn-sm btn-outline-primary" aria-label="{{#str}}viewdetails, local_jobboard{{/str}}: {{title}}">
+                                <i class="fa fa-eye mr-1" aria-hidden="true"></i>
+                                {{#str}}viewdetails, local_jobboard{{/str}}
+                            </a>
+
+                            {{#canapply}}
+                            <a href="{{applyurl}}" class="btn btn-sm btn-primary" aria-label="{{#str}}applyto, local_jobboard{{/str}}: {{title}}">
+                                <i class="fa fa-paper-plane mr-1" aria-hidden="true"></i>
+                                {{#str}}apply, local_jobboard{{/str}}
+                            </a>
+                            {{/canapply}}
+
+                            {{^isloggedin}}
+                            <a href="{{loginapplyurl}}" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener noreferrer">
+                                <i class="fa fa-sign-in-alt mr-1" aria-hidden="true"></i>
+                                {{#str}}loginandapply, local_jobboard{{/str}}
+                                <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
+                            </a>
+                            {{/isloggedin}}
+                        </div>
+                    </footer>
+                </article>
             </div>
+            {{/vacancies}}
         </div>
-        {{/vacancies}}
-    </div>
+    </section>
     {{/hasvacancies}}
 
     {{! Empty State }}
     {{^hasvacancies}}
-    <div class="text-center py-5">
-        <i class="fa fa-briefcase fa-4x text-muted mb-3"></i>
-        <h4 class="text-muted">{{#str}}novacanciesfound, local_jobboard{{/str}}</h4>
+    <div class="jb-empty-state text-center py-5" role="status" aria-live="polite">
+        <div class="empty-state-icon mb-4" aria-hidden="true">
+            <i class="fa fa-briefcase fa-4x text-muted"></i>
+        </div>
+        <h2 class="h4 text-muted">{{#str}}novacanciesfound, local_jobboard{{/str}}</h2>
         {{^isloggedin}}
         <p class="text-muted mb-4">{{#str}}logintoviewmore, local_jobboard{{/str}}</p>
         <a href="{{loginurl}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-            <i class="fa fa-sign-in-alt mr-2"></i>
+            <i class="fa fa-sign-in-alt mr-2" aria-hidden="true"></i>
             {{#str}}login{{/str}}
             <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
         </a>
@@ -181,30 +192,34 @@
 
     {{! Pagination }}
     {{#pagination}}
-    <div class="mt-4">
+    <nav class="mt-4" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
         {{{pagination}}}
-    </div>
+    </nav>
     {{/pagination}}
 
     {{! CTA for Non-Logged In Users }}
     {{^isloggedin}}
-    <div class="card bg-light mt-4 border-0 jb-cta-card">
+    <aside class="card bg-light mt-4 border-0 jb-cta-card" aria-label="{{#str}}wanttoapply, local_jobboard{{/str}}">
         <div class="card-body text-center py-5">
-            <i class="fa fa-user-plus fa-3x text-primary mb-3"></i>
-            <h4 class="card-title">{{#str}}wanttoapply, local_jobboard{{/str}}</h4>
+            <div aria-hidden="true">
+                <i class="fa fa-user-plus fa-3x text-primary mb-3"></i>
+            </div>
+            <h2 class="card-title h4">{{#str}}wanttoapply, local_jobboard{{/str}}</h2>
             <p class="card-text text-muted mb-4">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
-            <a href="{{signupurl}}" class="btn btn-primary btn-lg mr-3" target="_blank" rel="noopener noreferrer">
-                <i class="fa fa-user-plus mr-2"></i>
-                {{#str}}createaccount{{/str}}
-                <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
-            </a>
-            <a href="{{loginurl}}" class="btn btn-outline-primary btn-lg" target="_blank" rel="noopener noreferrer">
-                <i class="fa fa-sign-in-alt mr-2"></i>
-                {{#str}}login{{/str}}
-                <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
-            </a>
+            <div class="d-flex flex-wrap justify-content-center">
+                <a href="{{signupurl}}" class="btn btn-primary btn-lg m-1" target="_blank" rel="noopener noreferrer">
+                    <i class="fa fa-user-plus mr-2" aria-hidden="true"></i>
+                    {{#str}}createaccount{{/str}}
+                    <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
+                </a>
+                <a href="{{loginurl}}" class="btn btn-outline-primary btn-lg m-1" target="_blank" rel="noopener noreferrer">
+                    <i class="fa fa-sign-in-alt mr-2" aria-hidden="true"></i>
+                    {{#str}}login{{/str}}
+                    <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
+                </a>
+            </div>
         </div>
-    </div>
+    </aside>
     {{/isloggedin}}
 </div>
 {{! Styles moved to styles.css - Public Page Styles section }}
