@@ -7,6 +7,33 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.3] - 2025-12-06
+
+### Añadido
+- **Creación de roles en actualizaciones**
+  - Los roles personalizados ahora se crean también al actualizar el plugin
+  - Instalaciones existentes obtendrán los 3 roles automáticamente
+  - Añadido paso de upgrade 2025120621 en `db/upgrade.php`
+
+- **Estilos base para todos los elementos HTML**
+  - Tipografía completa: h1-h6, p, span, strong, em, small
+  - Enlaces (a) con estados hover y focus
+  - Listas (ul, ol, li, dl, dt, dd)
+  - Elementos de formulario: label, input, select, textarea, button
+  - Elementos de código: code, pre
+  - Otros: blockquote, hr, img, figure, figcaption, address
+  - Utilidades de texto: colores, pesos, alineación, transformación
+  - Todos con prefijo `.path-local-jobboard` para aislamiento de temas
+
+### Modificado
+- **styles.css**: Ampliado con ~250 líneas de estilos base de elementos
+- **version.php**: Incrementado a 2.0.3 (2025120621)
+
+### Corregido
+- Roles no se creaban en instalaciones existentes que actualizaban desde versiones anteriores
+
+---
+
 ## [2.0.2] - 2025-12-06
 
 ### Añadido

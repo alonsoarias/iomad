@@ -2,7 +2,7 @@
 
 **Fecha:** 2025-12-06
 **Plugin:** local_jobboard
-**Versión verificada:** 2.0.2 (actualizado desde 2.0.0)
+**Versión verificada:** 2.0.3
 
 ---
 
@@ -13,7 +13,7 @@ La verificación de integridad se completó exitosamente. El plugin está en est
 | Categoría | Estado | Notas |
 |-----------|--------|-------|
 | Archivos críticos | ✅ PASS | Todos los archivos existen |
-| Versión del plugin | ✅ PASS | 2.0.2 MATURITY_STABLE |
+| Versión del plugin | ✅ PASS | 2.0.3 MATURITY_STABLE |
 | Capabilities | ✅ PASS | 34 capabilities definidas |
 | Roles personalizados | ✅ PASS | 3 roles implementados |
 | Privacy API | ✅ PASS | 10 tablas cubiertas |
@@ -95,8 +95,8 @@ La verificación de integridad se completó exitosamente. El plugin está en est
 **Archivo:** `version.php`
 
 ```php
-$plugin->version = 2025120620;  // Complete theme isolation and documentation rewrite
-$plugin->release = '2.0.2';
+$plugin->version = 2025120621;  // Role creation on upgrade, comprehensive CSS element styling
+$plugin->release = '2.0.3';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5
@@ -273,10 +273,10 @@ function local_jobboard_create_roles(): void {
 
 ## Conclusión
 
-El plugin **local_jobboard v2.0.2** pasa la verificación de integridad con todos los criterios cumplidos:
+El plugin **local_jobboard v2.0.3** pasa la verificación de integridad con todos los criterios cumplidos:
 
 - ✅ Todos los archivos críticos documentados existen
-- ✅ Versión correcta en version.php (2.0.2 stable)
+- ✅ Versión correcta en version.php (2.0.3 stable)
 - ✅ 34/34 capabilities implementadas
 - ✅ 3/3 roles personalizados implementados (IOMAD-compatible)
 - ✅ Privacy API con cobertura completa de 10 tablas
@@ -291,5 +291,5 @@ El plugin **local_jobboard v2.0.2** pasa la verificación de integridad con todo
 ---
 
 *Verificación completada: 2025-12-06*
-*Versión verificada: 2.0.2*
+*Versión verificada: 2.0.3*
 *Estado: FASE A COMPLETADA - No se requiere Fase B (sin gaps pendientes)*

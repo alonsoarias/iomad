@@ -250,6 +250,253 @@
    Ensures plugin styles take precedence over theme styles
    ========================================================================== */
 
+/* ==========================================================================
+   Base Element Resets - Ensure consistent styling for ALL elements
+   ========================================================================== */
+
+/* Typography - Headers */
+.path-local-jobboard h1,
+.path-local-jobboard h2,
+.path-local-jobboard h3,
+.path-local-jobboard h4,
+.path-local-jobboard h5,
+.path-local-jobboard h6 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #212529;
+}
+
+.path-local-jobboard h1 { font-size: 2.5rem; }
+.path-local-jobboard h2 { font-size: 2rem; }
+.path-local-jobboard h3 { font-size: 1.75rem; }
+.path-local-jobboard h4 { font-size: 1.5rem; }
+.path-local-jobboard h5 { font-size: 1.25rem; }
+.path-local-jobboard h6 { font-size: 1rem; }
+
+/* Typography - Body text */
+.path-local-jobboard p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #212529;
+    line-height: 1.5;
+}
+
+.path-local-jobboard span {
+    color: inherit;
+    font-family: inherit;
+}
+
+.path-local-jobboard strong,
+.path-local-jobboard b {
+    font-weight: 700;
+}
+
+.path-local-jobboard em,
+.path-local-jobboard i:not(.fa):not([class*="icon"]) {
+    font-style: italic;
+}
+
+.path-local-jobboard small {
+    font-size: 80%;
+    font-weight: 400;
+}
+
+/* Links */
+.path-local-jobboard a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.path-local-jobboard a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.path-local-jobboard a:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Lists */
+.path-local-jobboard ul,
+.path-local-jobboard ol {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+}
+
+.path-local-jobboard ul ul,
+.path-local-jobboard ol ol,
+.path-local-jobboard ul ol,
+.path-local-jobboard ol ul {
+    margin-bottom: 0;
+}
+
+.path-local-jobboard li {
+    margin-bottom: 0.25rem;
+    line-height: 1.5;
+}
+
+.path-local-jobboard dl {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.path-local-jobboard dt {
+    font-weight: 700;
+}
+
+.path-local-jobboard dd {
+    margin-bottom: 0.5rem;
+    margin-left: 0;
+}
+
+/* Labels and form text */
+.path-local-jobboard label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #212529;
+}
+
+/* Blockquotes */
+.path-local-jobboard blockquote {
+    margin: 0 0 1rem;
+    padding: 0.5rem 1rem;
+    border-left: 4px solid #007bff;
+    background-color: #f8f9fa;
+}
+
+/* Code and pre */
+.path-local-jobboard code {
+    font-size: 87.5%;
+    color: #e83e8c;
+    word-wrap: break-word;
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+}
+
+.path-local-jobboard pre {
+    display: block;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    overflow: auto;
+    font-size: 87.5%;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+/* Horizontal rules */
+.path-local-jobboard hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Images */
+.path-local-jobboard img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    border-style: none;
+}
+
+/* Tables - base */
+.path-local-jobboard table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* Form elements - base */
+.path-local-jobboard input,
+.path-local-jobboard select,
+.path-local-jobboard textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.path-local-jobboard input:focus,
+.path-local-jobboard select:focus,
+.path-local-jobboard textarea:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 1px;
+}
+
+/* Buttons - base reset */
+.path-local-jobboard button {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    cursor: pointer;
+}
+
+/* Figure */
+.path-local-jobboard figure {
+    margin: 0 0 1rem;
+}
+
+.path-local-jobboard figcaption {
+    font-size: 90%;
+    color: #6c757d;
+}
+
+/* Address */
+.path-local-jobboard address {
+    margin-bottom: 1rem;
+    font-style: normal;
+    line-height: inherit;
+}
+
+/* Text utilities - ensure they work */
+.path-local-jobboard .text-primary { color: #007bff !important; }
+.path-local-jobboard .text-secondary { color: #6c757d !important; }
+.path-local-jobboard .text-success { color: #28a745 !important; }
+.path-local-jobboard .text-danger { color: #dc3545 !important; }
+.path-local-jobboard .text-warning { color: #ffc107 !important; }
+.path-local-jobboard .text-info { color: #17a2b8 !important; }
+.path-local-jobboard .text-light { color: #f8f9fa !important; }
+.path-local-jobboard .text-dark { color: #343a40 !important; }
+.path-local-jobboard .text-muted { color: #6c757d !important; }
+.path-local-jobboard .text-white { color: #fff !important; }
+
+/* Font weight utilities */
+.path-local-jobboard .font-weight-light { font-weight: 300 !important; }
+.path-local-jobboard .font-weight-normal { font-weight: 400 !important; }
+.path-local-jobboard .font-weight-bold { font-weight: 700 !important; }
+
+/* Font style utilities */
+.path-local-jobboard .font-italic { font-style: italic !important; }
+
+/* Text alignment */
+.path-local-jobboard .text-left { text-align: left !important; }
+.path-local-jobboard .text-center { text-align: center !important; }
+.path-local-jobboard .text-right { text-align: right !important; }
+
+/* Text transform */
+.path-local-jobboard .text-lowercase { text-transform: lowercase !important; }
+.path-local-jobboard .text-uppercase { text-transform: uppercase !important; }
+.path-local-jobboard .text-capitalize { text-transform: capitalize !important; }
+
+/* Text wrapping */
+.path-local-jobboard .text-nowrap { white-space: nowrap !important; }
+.path-local-jobboard .text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   Component Overrides
+   ========================================================================== */
+
 /* Force plugin card styling */
 .path-local-jobboard .card {
     border-radius: 0.5rem;

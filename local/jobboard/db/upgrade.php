@@ -867,5 +867,23 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120528, 'local', 'jobboard');
     }
 
+    // Version 2025120621: Create custom roles for existing installations.
+    // Roles are created on fresh install, but existing installations need this upgrade step.
+    if ($oldversion < 2025120621) {
+
+        // Include install.php for role creation function.
+        require_once(__DIR__ . '/install.php');
+
+        // Create custom roles if they don't exist.
+        if (function_exists('local_jobboard_create_roles')) {
+            local_jobboard_create_roles();
+        }
+
+        // Purge caches to ensure roles are visible.
+        purge_all_caches();
+
+        upgrade_plugin_savepoint(true, 2025120621, 'local', 'jobboard');
+    }
+
     return true;
 }
