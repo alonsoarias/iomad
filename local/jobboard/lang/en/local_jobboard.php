@@ -2072,3 +2072,65 @@ $string['convocatoria_departmentid_help'] = 'Select the IOMAD department associa
 // Application form help strings.
 $string['consentaccepted_help'] = 'By checking this box, you agree that your personal data will be processed in accordance with the institution\'s data protection policy for the purposes of the selection process.';
 $string['declarationaccepted_help'] = 'By checking this box, you declare under oath that all information provided is true and that the attached documents are authentic.';
+
+// ============================================================================
+// Modern UI Redesign strings
+// ============================================================================
+
+// Error messages.
+$string['error:convocatoriarequired'] = 'You must select a call (convocatoria). Vacancies must belong to a call.';
+
+// Vacancy search and filters.
+$string['searchvacancies'] = 'Search vacancies';
+$string['allcontracttypes'] = 'All contract types';
+
+// Vacancy detail page.
+$string['closingsoondays'] = 'Closing in {$a} days! Apply now.';
+$string['vacancyopen'] = 'This vacancy is open for applications';
+$string['deadlineprogress'] = 'Application deadline progress';
+$string['readytoapply'] = 'Ready to apply?';
+$string['applynowdesc'] = 'Review the requirements and submit your application before the deadline.';
+$string['applicationstats'] = 'Application Statistics';
+$string['applied'] = 'Applied';
+$string['total'] = 'Total';
+
+// Navigation and flow.
+$string['selectconvocatoriafirst'] = 'Please select a call first';
+$string['createvacancyinconvocatoriadesc'] = 'Vacancies must belong to a call. Select or create a call first, then add vacancies.';
+$string['noconvocatoriasavailable'] = 'No calls available. Create a call first to add vacancies.';
+$string['gotocreateconvocatoria'] = 'Create a call';
+
+// Dashboard cards.
+$string['quickstats'] = 'Quick Statistics';
+$string['recentactivity'] = 'Recent Activity';
+$string['pendingactions'] = 'Pending Actions';
+
+// Application management.
+$string['applicationprogress'] = 'Application Progress';
+$string['documentsvalidated'] = 'Documents Validated';
+$string['documentspending'] = 'Documents Pending';
+$string['documentsrejected'] = 'Documents Rejected';
+
+// Review interface.
+$string['reviewqueue'] = 'Review Queue';
+$string['assignedtome'] = 'Assigned to me';
+$string['pendingmyreview'] = 'Pending my review';
+$string['completedreviews'] = 'Completed reviews';
+
+// Status flow.
+$string['workflowstatus'] = 'Workflow Status';
+$string['nextsteps'] = 'Next Steps';
+$string['statusupdated'] = 'Status updated successfully';
+
+// Accessibility.
+$string['expandsection'] = 'Expand section';
+$string['collapsesection'] = 'Collapse section';
+$string['loadingcontent'] = 'Loading content...';
+$string['actionrequired'] = 'Action required';
+
+// Tooltips for redesigned interface.
+$string['tooltip_viewdetails'] = 'Click to view full details';
+$string['tooltip_quickapply'] = 'Start your application';
+$string['tooltip_trackstatus'] = 'Track your application status';
+$string['tooltip_downloadall'] = 'Download all documents';
+$string['tooltip_filterresults'] = 'Filter results by criteria';

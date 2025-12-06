@@ -193,12 +193,13 @@ class vacancy_form extends \moodleform {
         // Header: Convocatoria.
         $mform->addElement('header', 'convocatoriaheader', get_string('convocatoria', 'local_jobboard'));
 
-        // Convocatoria selector (groups vacancies).
-        $convocatorias = [0 => get_string('selectconvocatoria', 'local_jobboard')] + \local_jobboard_get_convocatorias(0, '', true);
+        // Convocatoria selector (REQUIRED - vacancies must belong to a convocatoria).
+        $convocatorias = ['' => get_string('selectconvocatoria', 'local_jobboard')] + \local_jobboard_get_convocatorias(0, '', true);
         $mform->addElement('select', 'convocatoriaid', get_string('convocatoria', 'local_jobboard'), $convocatorias, [
             'id' => 'id_convocatoriaid',
         ]);
         $mform->setType('convocatoriaid', PARAM_INT);
+        $mform->addRule('convocatoriaid', get_string('error:convocatoriarequired', 'local_jobboard'), 'required', null, 'client');
         $mform->addHelpButton('convocatoriaid', 'convocatoria', 'local_jobboard');
         if ($defaultconvocatoriaid && !$isedit) {
             $mform->setDefault('convocatoriaid', $defaultconvocatoriaid);
@@ -288,8 +289,13 @@ class vacancy_form extends \moodleform {
             $errors['code'] = get_string('error:codeexists', 'local_jobboard');
         }
 
-        // Get convocatoria if set.
+        // Validate convocatoria is required.
         $convocatoriaid = !empty($data['convocatoriaid']) ? (int)$data['convocatoriaid'] : 0;
+        if ($convocatoriaid <= 0) {
+            $errors['convocatoriaid'] = get_string('error:convocatoriarequired', 'local_jobboard');
+        }
+
+        // Get convocatoria if set.
         $convocatoriarecord = $convocatoriaid ? \local_jobboard_get_convocatoria($convocatoriaid) : null;
 
         // Handle extemporaneous validation.

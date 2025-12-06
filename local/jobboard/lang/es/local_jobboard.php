@@ -2484,3 +2484,65 @@ $string['convocatoria_departmentid_help'] = 'Seleccione el departamento de IOMAD
 // Application form help strings.
 $string['consentaccepted_help'] = 'Al marcar esta casilla, acepta que sus datos personales serán tratados de acuerdo con la política de protección de datos de la institución para fines del proceso de selección.';
 $string['declarationaccepted_help'] = 'Al marcar esta casilla, declara bajo juramento que toda la información proporcionada es veraz y que los documentos adjuntos son auténticos.';
+
+// ============================================================================
+// Cadenas para el rediseño moderno de UI
+// ============================================================================
+
+// Mensajes de error.
+$string['error:convocatoriarequired'] = 'Debe seleccionar una convocatoria. Las vacantes deben pertenecer a una convocatoria.';
+
+// Búsqueda y filtros de vacantes.
+$string['searchvacancies'] = 'Buscar vacantes';
+$string['allcontracttypes'] = 'Todos los tipos de contrato';
+
+// Página de detalle de vacante.
+$string['closingsoondays'] = '¡Cierra en {$a} días! Postúlate ahora.';
+$string['vacancyopen'] = 'Esta vacante está abierta para postulaciones';
+$string['deadlineprogress'] = 'Progreso hacia la fecha límite';
+$string['readytoapply'] = '¿Listo para postularte?';
+$string['applynowdesc'] = 'Revisa los requisitos y envía tu postulación antes de la fecha límite.';
+$string['applicationstats'] = 'Estadísticas de Postulaciones';
+$string['applied'] = 'Postulado';
+$string['total'] = 'Total';
+
+// Navegación y flujo.
+$string['selectconvocatoriafirst'] = 'Por favor seleccione una convocatoria primero';
+$string['createvacancyinconvocatoriadesc'] = 'Las vacantes deben pertenecer a una convocatoria. Seleccione o cree una convocatoria primero, luego agregue vacantes.';
+$string['noconvocatoriasavailable'] = 'No hay convocatorias disponibles. Cree una convocatoria primero para agregar vacantes.';
+$string['gotocreateconvocatoria'] = 'Crear una convocatoria';
+
+// Tarjetas del dashboard.
+$string['quickstats'] = 'Estadísticas Rápidas';
+$string['recentactivity'] = 'Actividad Reciente';
+$string['pendingactions'] = 'Acciones Pendientes';
+
+// Gestión de postulaciones.
+$string['applicationprogress'] = 'Progreso de la Postulación';
+$string['documentsvalidated'] = 'Documentos Validados';
+$string['documentspending'] = 'Documentos Pendientes';
+$string['documentsrejected'] = 'Documentos Rechazados';
+
+// Interfaz de revisión.
+$string['reviewqueue'] = 'Cola de Revisión';
+$string['assignedtome'] = 'Asignados a mí';
+$string['pendingmyreview'] = 'Pendientes de mi revisión';
+$string['completedreviews'] = 'Revisiones completadas';
+
+// Flujo de estados.
+$string['workflowstatus'] = 'Estado del Flujo';
+$string['nextsteps'] = 'Próximos Pasos';
+$string['statusupdated'] = 'Estado actualizado exitosamente';
+
+// Accesibilidad.
+$string['expandsection'] = 'Expandir sección';
+$string['collapsesection'] = 'Contraer sección';
+$string['loadingcontent'] = 'Cargando contenido...';
+$string['actionrequired'] = 'Acción requerida';
+
+// Tooltips para la interfaz rediseñada.
+$string['tooltip_viewdetails'] = 'Clic para ver detalles completos';
+$string['tooltip_quickapply'] = 'Iniciar tu postulación';
+$string['tooltip_trackstatus'] = 'Seguir el estado de tu postulación';
+$string['tooltip_downloadall'] = 'Descargar todos los documentos';
+$string['tooltip_filterresults'] = 'Filtrar resultados por criterios';
