@@ -1,5 +1,9 @@
 /**
- * Job Board Plugin Styles
+ * Job Board Plugin Styles (Minimal)
+ *
+ * This file contains only essential styles that cannot be achieved
+ * with Moodle's Bootstrap classes. All other styling should use
+ * Bootstrap utility classes directly in templates.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -7,97 +11,8 @@
  */
 
 /* ==========================================================================
-   Vacancy Cards
-   ========================================================================== */
-
-.jobboard-vacancy-card {
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.jobboard-vacancy-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-}
-
-.jobboard-vacancy-card .card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.jobboard-vacancy-card .card-title a {
-    text-decoration: none;
-}
-
-.jobboard-vacancy-card .card-title a:hover {
-    color: #0056b3 !important;
-}
-
-.jobboard-vacancy-card .card-footer {
-    background-color: #fff;
-}
-
-/* ==========================================================================
-   Dashboard Widgets
-   ========================================================================== */
-
-.jobboard-widget {
-    transition: transform 0.2s ease;
-}
-
-.jobboard-widget:hover {
-    transform: translateY(-2px);
-}
-
-.jobboard-widget .widget-icon {
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.jobboard-widget .widget-icon .icon {
-    width: 24px;
-    height: 24px;
-}
-
-.jobboard-widget .card-title {
-    font-size: 2rem;
-    font-weight: 600;
-}
-
-/* ==========================================================================
-   Document Upload
-   ========================================================================== */
-
-.document-upload-card {
-    transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.document-upload-card.drag-over {
-    border-color: #007bff;
-    background-color: rgba(0, 123, 255, 0.05);
-}
-
-.document-upload-card .current-file {
-    border: 1px solid #e9ecef;
-}
-
-.document-upload-card .custom-file-label::after {
-    content: "Browse";
-}
-
-/* RTL support */
-[dir="rtl"] .document-upload-card .custom-file-label::after {
-    right: auto;
-    left: 0;
-    border-left: none;
-    border-right: inherit;
-    border-radius: 0.25rem 0 0 0.25rem;
-}
-
-/* ==========================================================================
    Application Status Badges
+   Custom colors for workflow states not covered by Bootstrap
    ========================================================================== */
 
 .badge-submitted {
@@ -140,10 +55,6 @@
     color: #fff;
 }
 
-/* ==========================================================================
-   Vacancy Status Badges
-   ========================================================================== */
-
 .badge-draft {
     background-color: #6c757d;
     color: #fff;
@@ -159,175 +70,54 @@
     color: #fff;
 }
 
-.badge-assigned {
-    background-color: #007bff;
-    color: #fff;
+/* ==========================================================================
+   Document Progress Bar
+   ========================================================================== */
+
+.jb-document-progress {
+    height: 20px;
+    min-width: 100px;
 }
 
 /* ==========================================================================
-   Loading States
+   Workflow Timeline
+   Unique component for showing application status history
    ========================================================================== */
 
-.loading {
+.jb-workflow-log {
     position: relative;
-    min-height: 200px;
+    padding-left: 30px;
 }
 
-.loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-}
-
-/* ==========================================================================
-   Application Table
-   ========================================================================== */
-
-.application-row:hover {
-    background-color: rgba(0, 123, 255, 0.05);
-}
-
-.application-row .progress {
-    border-radius: 10px;
-}
-
-.application-row .progress-bar {
-    font-size: 0.75rem;
-    line-height: 20px;
-}
-
-/* ==========================================================================
-   Token Management
-   ========================================================================== */
-
-.token-row:hover {
-    background-color: rgba(0, 123, 255, 0.05);
-}
-
-.token-row code {
-    font-size: 0.85rem;
-    padding: 0.2rem 0.4rem;
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
-}
-
-.token-created-alert {
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-}
-
-.token-created-alert code {
-    display: block;
-    padding: 1rem;
-    background-color: #343a40;
-    color: #00ff41;
-    font-size: 1rem;
-    word-break: break-all;
-    border-radius: 0.25rem;
-    margin: 0.5rem 0;
-}
-
-/* ==========================================================================
-   Workflow Log
-   ========================================================================== */
-
-.workflow-log {
-    position: relative;
-}
-
-.workflow-log::before {
+.jb-workflow-log::before {
     content: '';
     position: absolute;
-    left: 20px;
+    left: 10px;
     top: 0;
     bottom: 0;
     width: 2px;
-    background-color: #e9ecef;
+    background-color: #dee2e6;
 }
 
-.workflow-log-item {
+.jb-workflow-item {
     position: relative;
-    padding-left: 50px;
-    padding-bottom: 1.5rem;
+    padding-bottom: 1rem;
 }
 
-.workflow-log-item::before {
-    content: '';
-    position: absolute;
-    left: 14px;
-    top: 5px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background-color: #007bff;
-    border: 2px solid #fff;
-    box-shadow: 0 0 0 2px #007bff;
-}
-
-.workflow-log-item:last-child {
+.jb-workflow-item:last-child {
     padding-bottom: 0;
 }
 
-/* ==========================================================================
-   Document Validation Checklist
-   ========================================================================== */
-
-.validation-checklist .form-check {
-    padding: 0.5rem;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.validation-checklist .form-check:last-child {
-    border-bottom: none;
-}
-
-.validation-checklist .form-check-input:checked + .form-check-label {
-    color: #28a745;
-}
-
-/* ==========================================================================
-   Report Charts
-   ========================================================================== */
-
-.chart-container {
-    position: relative;
-    height: 300px;
-}
-
-/* ==========================================================================
-   Responsive Adjustments
-   ========================================================================== */
-
-@media (max-width: 767.98px) {
-    .jobboard-widget .card-title {
-        font-size: 1.5rem;
-    }
-
-    .jobboard-widget .widget-icon {
-        width: 40px;
-        height: 40px;
-    }
-
-    .workflow-log::before {
-        left: 15px;
-    }
-
-    .workflow-log-item {
-        padding-left: 40px;
-    }
-
-    .workflow-log-item::before {
-        left: 9px;
-        width: 12px;
-        height: 12px;
-    }
+.jb-workflow-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #007bff;
+    border: 2px solid #fff;
 }
 
 /* ==========================================================================
@@ -335,19 +125,20 @@
    ========================================================================== */
 
 @media print {
-    .jobboard-vacancy-card {
-        break-inside: avoid;
-        box-shadow: none !important;
-    }
-
     .btn,
-    .token-action,
-    .pagination {
+    .pagination,
+    .jb-filter-form {
         display: none !important;
     }
 
     .badge {
-        border: 1px solid #000;
+        border: 1px solid currentColor;
+    }
+
+    .card {
+        break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
     }
 }
 
@@ -355,956 +146,31 @@
    Accessibility
    ========================================================================== */
 
-.jobboard-vacancy-card:focus-within {
+/* Focus indicators */
+.card:focus-within {
     outline: 2px solid #007bff;
     outline-offset: 2px;
 }
 
-.token-action:focus,
-.btn-upload:focus {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
 }
 
-/* High contrast mode adjustments */
+/* High contrast mode */
 @media (prefers-contrast: high) {
     .badge {
         border: 1px solid currentColor;
     }
 
-    .jobboard-vacancy-card {
+    .card {
         border-width: 2px;
     }
-}
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-    .jobboard-vacancy-card,
-    .jobboard-widget,
-    .document-upload-card {
-        transition: none;
-    }
-}
-
-/* ==========================================================================
-   Signup Form Styles (matching inteb/remui theme)
-   ========================================================================== */
-
-.jobboard-signup-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1.5rem;
-}
-
-.signup-header-section {
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e9ecef;
-    margin-bottom: 1.5rem;
-}
-
-.signup-icon-wrapper {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-}
-
-.signup-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #343a40;
-}
-
-.vacancy-info-card {
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-.vacancy-info-card .card-header {
-    border-bottom: none;
-}
-
-.login-notice {
-    border-radius: 0.5rem;
-    border-left: 4px solid #17a2b8;
-}
-
-/* Signup Form Styling */
-.signup-form-wrapper .mform {
-    background: #fff;
-    border-radius: 0.5rem;
-}
-
-.signup-form-wrapper .mform .form-group,
-.signup-form-wrapper .mform .fitem {
-    margin-bottom: 1rem;
-}
-
-.signup-form-wrapper .mform fieldset {
-    border: none;
-    padding: 0;
-    margin-bottom: 1.5rem;
-}
-
-.signup-form-wrapper .mform fieldset legend,
-.signup-form-wrapper .mform .ftoggler {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #343a40;
-    padding: 0.75rem 1rem;
-    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
-    border-bottom: 2px solid #007bff;
-    border-radius: 0.25rem 0.25rem 0 0;
-    margin-bottom: 1rem;
-    width: 100%;
-}
-
-.signup-form-wrapper .mform .form-control,
-.signup-form-wrapper .mform select.custom-select,
-.signup-form-wrapper .mform input[type="text"],
-.signup-form-wrapper .mform input[type="email"],
-.signup-form-wrapper .mform input[type="password"],
-.signup-form-wrapper .mform textarea {
-    border-radius: 0.375rem;
-    border: 1px solid #ced4da;
-    padding: 0.625rem 0.875rem;
-    font-size: 0.95rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.signup-form-wrapper .mform .form-control:focus,
-.signup-form-wrapper .mform select.custom-select:focus,
-.signup-form-wrapper .mform input[type="text"]:focus,
-.signup-form-wrapper .mform input[type="email"]:focus,
-.signup-form-wrapper .mform input[type="password"]:focus,
-.signup-form-wrapper .mform textarea:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
-    outline: none;
-}
-
-.signup-form-wrapper .mform label {
-    font-weight: 500;
-    color: #495057;
-    margin-bottom: 0.375rem;
-}
-
-.signup-form-wrapper .mform .form-control-feedback,
-.signup-form-wrapper .mform .form-text {
-    font-size: 0.8rem;
-    color: #6c757d;
-    margin-top: 0.25rem;
-}
-
-/* Section headers within the form */
-.signup-form-wrapper .mform .collapsible-actions,
-.signup-form-wrapper .mform .fheader {
-    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
-    border-bottom: 2px solid #007bff;
-    padding: 0.75rem 1rem;
-    margin: 1.5rem 0 1rem 0;
-    border-radius: 0.25rem 0.25rem 0 0;
-    font-weight: 600;
-}
-
-/* Checkboxes and radio buttons */
-.signup-form-wrapper .mform .form-check,
-.signup-form-wrapper .mform .fcheckbox {
-    padding: 0.5rem 0;
-}
-
-.signup-form-wrapper .mform .form-check-input {
-    width: 1.1em;
-    height: 1.1em;
-    margin-top: 0.15em;
-}
-
-.signup-form-wrapper .mform .form-check-label {
-    padding-left: 0.25rem;
-    line-height: 1.5;
-}
-
-/* Required field asterisk */
-.signup-form-wrapper .mform .fdescription.required::after,
-.signup-form-wrapper .mform .req {
-    color: #dc3545;
-}
-
-/* Help buttons */
-.signup-form-wrapper .mform .helptooltip {
-    color: #6c757d;
-    margin-left: 0.25rem;
-}
-
-/* Alerts within form */
-.signup-form-wrapper .mform .alert {
-    border-radius: 0.375rem;
-    padding: 0.875rem 1rem;
-    margin-bottom: 1rem;
-}
-
-/* Privacy and terms section */
-.signup-form-wrapper .privacy-notice,
-.signup-form-wrapper .data-treatment-policy {
-    background-color: #f8f9fa;
-    border-radius: 0.375rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border: 1px solid #e9ecef;
-}
-
-.signup-form-wrapper .data-treatment-policy {
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-/* Submit buttons */
-.signup-form-wrapper .mform .form-group.fitem_actionbuttons,
-.signup-form-wrapper .mform #fgroup_id_buttonar {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #e9ecef;
-}
-
-.signup-form-wrapper .mform .btn-primary {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    border: none;
-    padding: 0.75rem 2rem;
-    font-size: 1rem;
-    font-weight: 500;
-    border-radius: 0.375rem;
-    transition: all 0.2s ease;
-}
-
-.signup-form-wrapper .mform .btn-primary:hover {
-    background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-}
-
-.signup-form-wrapper .mform .btn-secondary {
-    background: #fff;
-    border: 1px solid #ced4da;
-    color: #495057;
-    padding: 0.75rem 2rem;
-    font-size: 1rem;
-    border-radius: 0.375rem;
-}
-
-.signup-form-wrapper .mform .btn-secondary:hover {
-    background: #f8f9fa;
-    border-color: #adb5bd;
-}
-
-/* Error states */
-.signup-form-wrapper .mform .is-invalid,
-.signup-form-wrapper .mform .error {
-    border-color: #dc3545 !important;
-}
-
-.signup-form-wrapper .mform .invalid-feedback,
-.signup-form-wrapper .mform .form-control-feedback.text-danger {
-    color: #dc3545;
-    font-size: 0.8rem;
-}
-
-/* Success message page */
-.signup-success {
-    max-width: 600px;
-    margin: 3rem auto;
-    padding: 2rem;
-}
-
-.signup-success .text-success {
-    color: #28a745 !important;
-}
-
-/* Date selector styling */
-.signup-form-wrapper .mform .fdate_selector .form-group {
-    display: inline-block;
-    margin-right: 0.5rem;
-    margin-bottom: 0;
-}
-
-.signup-form-wrapper .mform .fdate_selector select {
-    min-width: 80px;
-}
-
-/* Responsive adjustments for signup form */
-@media (max-width: 767.98px) {
-    .jobboard-signup-container {
-        padding: 1rem;
-    }
-
-    .signup-header-section {
-        padding-bottom: 0.75rem;
-    }
-
-    .signup-icon-wrapper {
-        width: 60px;
-        height: 60px;
-    }
-
-    .signup-icon-wrapper i {
-        font-size: 1.75rem !important;
-    }
-
-    .signup-title {
-        font-size: 1.5rem;
-    }
-
-    .signup-form-wrapper .mform fieldset legend,
-    .signup-form-wrapper .mform .ftoggler {
-        font-size: 1rem;
-        padding: 0.5rem 0.75rem;
-    }
-
-    .signup-form-wrapper .mform .btn-primary,
-    .signup-form-wrapper .mform .btn-secondary {
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
-
-    .login-notice {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .login-notice .btn {
-        margin-top: 0.5rem;
-        margin-left: 0 !important;
-    }
-}
-
-/* Styling for expanded/collapsed fieldsets */
-.signup-form-wrapper .mform .collapsed .fcontainer {
-    display: none;
-}
-
-.signup-form-wrapper .mform .collapsible-actions .collapseexpand {
-    color: #007bff;
-    text-decoration: none;
-}
-
-/* Form inline help */
-.signup-form-wrapper .mform .form-inline-help {
-    font-size: 0.8rem;
-    color: #6c757d;
-    margin-top: 0.25rem;
-    font-style: italic;
-}
-
-/* ==========================================================================
-   MUSTACHE TEMPLATE STYLES - Jobboard UI Components
-   ========================================================================== */
-
-/* --------------------------------------------------------------------------
-   Page Header Component
-   -------------------------------------------------------------------------- */
-.jb-page-header {
-    margin-bottom: 1.5rem;
-}
-
-.jb-page-header .page-title {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: #343a40;
-    margin-bottom: 0;
-}
-
-.jb-page-header .breadcrumb {
-    padding: 0;
-    margin-bottom: 0.5rem;
-    background: transparent;
-    font-size: 0.875rem;
-}
-
-/* --------------------------------------------------------------------------
-   Stat Card Component
-   -------------------------------------------------------------------------- */
-.jb-stat-card {
-    border-radius: 0.5rem;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.jb-stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
-}
-
-.jb-stat-card .card-body {
-    position: relative;
-}
-
-.jb-stat-card .stat-icon {
-    opacity: 0.5;
-}
-
-/* Border left colors for stat cards */
-.jb-stat-card.border-left-primary {
-    border-left: 4px solid #007bff !important;
-}
-
-.jb-stat-card.border-left-success {
-    border-left: 4px solid #28a745 !important;
-}
-
-.jb-stat-card.border-left-warning {
-    border-left: 4px solid #ffc107 !important;
-}
-
-.jb-stat-card.border-left-danger {
-    border-left: 4px solid #dc3545 !important;
-}
-
-.jb-stat-card.border-left-info {
-    border-left: 4px solid #17a2b8 !important;
-}
-
-.jb-stat-card.border-left-secondary {
-    border-left: 4px solid #6c757d !important;
-}
-
-/* --------------------------------------------------------------------------
-   Filter Form Component
-   -------------------------------------------------------------------------- */
-.jb-filter-form {
-    background: #fff;
-    border-radius: 0.5rem;
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid #e9ecef;
-}
-
-.jb-filter-form .form-control,
-.jb-filter-form .custom-select {
-    border-radius: 0.375rem;
-}
-
-.jb-filter-form .btn {
-    border-radius: 0.375rem;
-}
-
-/* --------------------------------------------------------------------------
-   Vacancy Card Component
-   -------------------------------------------------------------------------- */
-.jb-vacancy-card {
-    border-radius: 0.5rem;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.jb-vacancy-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
-}
-
-.jb-vacancy-card .card-header {
-    background-color: #fff;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-.jb-vacancy-card .card-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.jb-vacancy-card .card-footer {
-    background-color: #fff;
-    border-top: 1px solid rgba(0,0,0,0.05);
-}
-
-/* --------------------------------------------------------------------------
-   Timeline Component
-   -------------------------------------------------------------------------- */
-.jb-timeline .timeline {
-    position: relative;
-    padding-left: 30px;
-}
-
-.jb-timeline .timeline::before {
-    content: '';
-    position: absolute;
-    left: 12px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: #dee2e6;
-}
-
-.jb-timeline .timeline-item {
-    position: relative;
-    padding-bottom: 1.5rem;
-}
-
-.jb-timeline .timeline-item:last-child {
-    padding-bottom: 0;
-}
-
-.jb-timeline .timeline-marker {
-    position: absolute;
-    left: -30px;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-}
-
-.jb-timeline .timeline-item-current .timeline-marker {
-    box-shadow: 0 0 0 4px rgba(0,123,255,0.25);
-}
-
-.jb-timeline .timeline-content {
-    background: #f8f9fa;
-    border-radius: 0.375rem;
-    padding: 0.75rem 1rem;
-}
-
-/* --------------------------------------------------------------------------
-   Progress Bar Component
-   -------------------------------------------------------------------------- */
-.jb-progress {
-    height: 0.75rem;
-    border-radius: 1rem;
-    overflow: hidden;
-    background-color: #e9ecef;
-}
-
-.jb-progress .progress-bar {
-    border-radius: 1rem;
-    transition: width 0.3s ease;
-}
-
-/* Multi-segment progress bar */
-.jb-progress-multi .progress-bar {
-    border-radius: 0;
-}
-
-.jb-progress-multi .progress-bar:first-child {
-    border-radius: 1rem 0 0 1rem;
-}
-
-.jb-progress-multi .progress-bar:last-child {
-    border-radius: 0 1rem 1rem 0;
-}
-
-/* --------------------------------------------------------------------------
-   Info Card Component
-   -------------------------------------------------------------------------- */
-.jb-info-card {
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-.jb-info-card .card-header {
-    font-weight: 600;
-}
-
-.jb-info-card .info-item {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-.jb-info-card .info-item:last-child {
-    border-bottom: none;
-}
-
-.jb-info-card .info-label {
-    font-size: 0.75rem;
-    color: #6c757d;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* --------------------------------------------------------------------------
-   Action Card Component (CTA)
-   -------------------------------------------------------------------------- */
-.jb-action-card {
-    border-radius: 0.5rem;
-    overflow: hidden;
-    text-align: center;
-}
-
-.jb-action-card .card-body {
-    padding: 2rem;
-}
-
-.jb-action-card .action-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    opacity: 0.8;
-}
-
-.jb-action-card .action-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-/* --------------------------------------------------------------------------
-   Empty State Component
-   -------------------------------------------------------------------------- */
-.jb-empty-state {
-    text-align: center;
-    padding: 3rem 1rem;
-}
-
-.jb-empty-state .empty-icon {
-    font-size: 4rem;
-    color: #dee2e6;
-    margin-bottom: 1rem;
-}
-
-.jb-empty-state .empty-title {
-    font-size: 1.25rem;
-    color: #6c757d;
-    margin-bottom: 0.5rem;
-}
-
-.jb-empty-state .empty-description {
-    color: #adb5bd;
-    margin-bottom: 1.5rem;
-}
-
-/* --------------------------------------------------------------------------
-   List Group Component
-   -------------------------------------------------------------------------- */
-.jb-list-group .list-group-item {
-    transition: background-color 0.15s ease;
-}
-
-.jb-list-group .list-group-item:hover {
-    background-color: #f8f9fa;
-}
-
-.jb-list-group .list-group-item-action {
-    cursor: pointer;
-}
-
-/* --------------------------------------------------------------------------
-   Data Table Component
-   -------------------------------------------------------------------------- */
-.jb-data-table {
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-.jb-data-table .table {
-    margin-bottom: 0;
-}
-
-.jb-data-table .table th {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
-    color: #6c757d;
-    border-top: none;
-}
-
-.jb-data-table .table td {
-    vertical-align: middle;
-}
-
-.jb-data-table .table tbody tr:hover {
-    background-color: rgba(0,123,255,0.03);
-}
-
-/* --------------------------------------------------------------------------
-   Public Page Styles
-   -------------------------------------------------------------------------- */
-.local-jobboard-public .jb-public-hero {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    border-radius: 0.5rem;
-}
-
-.local-jobboard-public .jb-cta-card {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-    border-radius: 0.5rem;
-}
-
-/* --------------------------------------------------------------------------
-   Dashboard Page Styles
-   -------------------------------------------------------------------------- */
-.local-jobboard-dashboard .quick-actions .btn {
-    margin-bottom: 0.5rem;
-}
-
-.local-jobboard-dashboard .activity-item {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.local-jobboard-dashboard .activity-item:last-child {
-    border-bottom: none;
-}
-
-/* --------------------------------------------------------------------------
-   Convocatoria Card Component
-   -------------------------------------------------------------------------- */
-.jb-convocatoria-card {
-    border-radius: 0.5rem;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.jb-convocatoria-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
-}
-
-/* --------------------------------------------------------------------------
-   Reports Page Styles
-   -------------------------------------------------------------------------- */
-.local-jobboard-reports .nav-tabs .nav-link {
-    border-radius: 0;
-    font-weight: 500;
-}
-
-.local-jobboard-reports .nav-tabs .nav-link.active {
-    border-bottom: 3px solid #007bff;
-    font-weight: 600;
-}
-
-.local-jobboard-reports .report-chart {
-    min-height: 300px;
-}
-
-/* --------------------------------------------------------------------------
-   Review Page Styles
-   -------------------------------------------------------------------------- */
-.local-jobboard-review .document-preview {
-    max-width: 100%;
-    border-radius: 0.375rem;
-    border: 1px solid #e9ecef;
-}
-
-.local-jobboard-review .review-actions {
-    position: sticky;
-    top: 1rem;
-}
-
-/* --------------------------------------------------------------------------
-   Apply Page Styles
-   -------------------------------------------------------------------------- */
-.local-jobboard-apply .mform {
-    max-width: 100%;
-}
-
-.local-jobboard-apply .fitem {
-    margin-bottom: 1.25rem;
-}
-
-.local-jobboard-apply .filepicker-container {
-    border: 2px dashed #dee2e6;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    background: #f8f9fa;
-    transition: border-color 0.2s ease;
-}
-
-.local-jobboard-apply .filepicker-container:hover {
-    border-color: #007bff;
-}
-
-/* --------------------------------------------------------------------------
-   Manage Page Styles
-   -------------------------------------------------------------------------- */
-.local-jobboard-manage .border-left-info {
-    border-left: 4px solid #17a2b8 !important;
-}
-
-.local-jobboard-manage .table td {
-    vertical-align: middle;
-}
-
-.local-jobboard-manage .btn-group-sm .btn {
-    padding: 0.25rem 0.5rem;
-}
-
-/* --------------------------------------------------------------------------
-   Convocatoria Form Styles
-   -------------------------------------------------------------------------- */
-.local-jobboard-convocatoria .mform {
-    max-width: 100%;
-}
-
-.local-jobboard-convocatoria .fitem {
-    margin-bottom: 1rem;
-}
-
-.local-jobboard-convocatoria .list-group-item:hover {
-    background-color: #f8f9fa;
-}
-
-/* --------------------------------------------------------------------------
-   Application Detail Styles
-   -------------------------------------------------------------------------- */
-.local-jobboard-application .document-row {
-    transition: background-color 0.15s ease;
-}
-
-.local-jobboard-application .document-row:hover {
-    background-color: rgba(0,123,255,0.03);
-}
-
-.local-jobboard-application .status-history {
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-/* --------------------------------------------------------------------------
-   My Reviews Page Styles
-   -------------------------------------------------------------------------- */
-.local-jobboard-myreviews .review-card {
-    transition: transform 0.2s ease;
-}
-
-.local-jobboard-myreviews .review-card:hover {
-    transform: translateY(-2px);
-}
-
-.local-jobboard-myreviews .priority-high {
-    border-left: 4px solid #dc3545;
-}
-
-/* --------------------------------------------------------------------------
-   Utility Classes
-   -------------------------------------------------------------------------- */
-.jb-text-truncate-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.jb-text-truncate-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.jb-opacity-50 {
-    opacity: 0.5;
-}
-
-.jb-shadow-hover {
-    transition: box-shadow 0.2s ease;
-}
-
-.jb-shadow-hover:hover {
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
-}
-
-/* --------------------------------------------------------------------------
-   Responsive Adjustments for Mustache Templates
-   -------------------------------------------------------------------------- */
-@media (max-width: 991.98px) {
-    .jb-page-header .page-title {
-        font-size: 1.5rem;
-    }
-
-    .jb-stat-card .card-body h3 {
-        font-size: 1.5rem;
-    }
-}
-
-@media (max-width: 767.98px) {
-    .jb-page-header .d-flex {
-        flex-direction: column;
-        align-items: flex-start !important;
-    }
-
-    .jb-page-header .btn-group {
-        margin-top: 0.5rem;
-    }
-
-    .jb-filter-form .row > [class*="col-"] {
-        margin-bottom: 0.75rem;
-    }
-
-    .jb-vacancy-card .card-footer .d-flex {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .jb-vacancy-card .card-footer .btn {
-        width: 100%;
-    }
-
-    .jb-timeline .timeline {
-        padding-left: 25px;
-    }
-
-    .jb-timeline .timeline::before {
-        left: 10px;
-    }
-
-    .jb-timeline .timeline-marker {
-        left: -25px;
-        width: 22px;
-        height: 22px;
-    }
-}
-
-/* --------------------------------------------------------------------------
-   Print Styles for Mustache Templates
-   -------------------------------------------------------------------------- */
-@media print {
-    .jb-page-header .btn,
-    .jb-filter-form,
-    .jb-vacancy-card .card-footer .btn,
-    .jb-action-card .btn {
-        display: none !important;
-    }
-
-    .jb-stat-card,
-    .jb-vacancy-card,
-    .jb-info-card {
-        box-shadow: none !important;
-        border: 1px solid #dee2e6 !important;
-    }
-
-    .jb-vacancy-card,
-    .jb-convocatoria-card {
-        break-inside: avoid;
-    }
-}
-
-/* --------------------------------------------------------------------------
-   Accessibility for Mustache Templates
-   -------------------------------------------------------------------------- */
-.jb-vacancy-card:focus-within,
-.jb-stat-card:focus-within,
-.jb-convocatoria-card:focus-within {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .jb-vacancy-card,
-    .jb-stat-card,
-    .jb-convocatoria-card,
-    .jb-timeline .timeline-marker {
-        transition: none !important;
-    }
-}
-
-@media (prefers-contrast: high) {
-    .jb-stat-card.border-left-primary,
-    .jb-stat-card.border-left-success,
-    .jb-stat-card.border-left-warning,
-    .jb-stat-card.border-left-danger,
-    .jb-stat-card.border-left-info {
-        border-left-width: 6px !important;
+    .jb-workflow-item::before {
+        border-width: 3px;
     }
 }

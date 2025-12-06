@@ -3,7 +3,7 @@
 [![Moodle 4.1+](https://img.shields.io/badge/Moodle-4.1%2B-orange.svg)](https://moodle.org)
 [![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://php.net)
 [![License GPL-3.0](https://img.shields.io/badge/License-GPL%20v3-green.svg)](http://www.gnu.org/copyleft/gpl.html)
-[![Version 1.9.1](https://img.shields.io/badge/Version-1.9.1--beta-brightgreen.svg)]()
+[![Version 2.0.0](https://img.shields.io/badge/Version-2.0.0-brightgreen.svg)]()
 
 Plugin para Moodle 4.1+ que implementa un sistema completo de gestión de vacantes y recepción de hojas de vida para profesores cátedra de instituciones educativas. Compatible con IOMAD multi-tenant.
 
@@ -46,23 +46,32 @@ El plugin **local_jobboard** proporciona un sistema integral para:
 - **Reportes con exportación PDF/Excel/CSV**
 - Auditoría completa de acciones
 
-## Novedades v1.9.1
+## Novedades v2.0.0
 
-### Conversión de Documentos para Previsualización
-- Integración con convertidores de Moodle (unoconv/LibreOffice)
-- Conversión automática de documentos Office a PDF
-- Formatos soportados: DOC, DOCX, XLS, XLSX, PPT, PPTX, ODT, ODS, ODP, RTF, TXT, HTML
-- Indicador de estado de conversión en tiempo real
+### Convocatorias (Nuevo sistema)
+- Gestión jerárquica: Convocatorias contienen múltiples vacantes
+- Vista pública de convocatorias abiertas
+- Navegación mejorada entre convocatorias y vacantes
 
-### User Tours Interactivos
-- 8 tours guiados para cada vista del plugin
+### Sistema de Roles Personalizados
+- **Document Reviewer**: Revisor de documentos con permisos específicos
+- **Selection Coordinator**: Coordinador con gestión completa de vacantes
+- **Selection Committee**: Miembro de comité de selección para evaluaciones
+
+### User Tours Completos
+- 15 tours guiados para todas las vistas del plugin
 - Selectores CSS específicos para elementos de UI
 - Disponibles en español e inglés
 
-### Exportación de Documentos
-- Exportación ZIP de documentos por aplicación
-- Exportación masiva de todos los documentos de una vacante
-- Exportación de reportes en PDF
+### Privacy API Completa
+- Cobertura de 10 tablas con datos de usuario
+- Cumplimiento GDPR y Ley Habeas Data (Colombia)
+- Exportación y eliminación de datos personales
+
+### Mejoras de Accesibilidad
+- Tooltips con help buttons en todos los campos
+- Strings descriptivos para lectores de pantalla
+- Navegación por teclado mejorada
 
 ## Compatibilidad
 
@@ -182,7 +191,7 @@ local/jobboard/
 ├── db/
 │   ├── install.xml          # Esquema 21 tablas
 │   ├── access.php           # Capabilities
-│   ├── tours/               # 8 User Tours JSON
+│   ├── tours/               # 15 User Tours JSON
 │   └── services.php         # Web services
 ├── amd/
 │   └── src/
@@ -190,8 +199,8 @@ local/jobboard/
 │       ├── document_upload.js   # Upload con drag&drop
 │       └── vacancy_filter.js    # Filtros dinámicos
 ├── lang/
-│   ├── en/                  # 1332 strings
-│   └── es/                  # 1357 strings
+│   ├── en/                  # 2251 líneas
+│   └── es/                  # 2658 líneas
 ├── templates/               # Plantillas Mustache
 ├── tests/                   # PHPUnit tests
 ├── export_documents.php     # Exportación ZIP
@@ -272,5 +281,5 @@ Sistema de gestión de vacantes para profesores cátedra.
 
 ---
 
-**Versión actual**: 1.9.1-beta
+**Versión actual**: 2.0.0
 **Última actualización**: Diciembre 2025

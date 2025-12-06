@@ -5,6 +5,48 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
+## [2.0.0] - 2025-12-06
+
+### Añadido
+- **Sistema de Convocatorias**
+  - Gestión jerárquica: Convocatorias contienen múltiples vacantes
+  - Vista pública de convocatorias abiertas
+  - Navegación browse_convocatorias.php y view_convocatoria.php
+
+- **Roles Personalizados (3 nuevos roles)**
+  - `jobboard_reviewer`: Revisor de documentos
+  - `jobboard_coordinator`: Coordinador de selección
+  - `jobboard_committee`: Miembro de comité de selección
+  - Creación automática en instalación
+
+- **15 User Tours Completos**
+  - Tours para todas las vistas del plugin
+  - Disponibles en español e inglés
+  - Instalación automática desde db/tours/
+
+- **34 Capabilities**
+  - Permisos granulares para todas las funcionalidades
+  - Nuevos permisos para convocatorias y API
+
+- **Privacy API Completa**
+  - Cobertura de 10 tablas con datos de usuario
+  - Cumplimiento GDPR y Ley Habeas Data (Colombia)
+  - Exportación y eliminación de datos personales
+
+### Modificado
+- **Versión estable**: Maturity cambiada de BETA a STABLE
+- **styles.css**: Reducido de 1,310 a 176 líneas (87% de reducción)
+- **Templates core**: Removidos estilos inline, uso de Bootstrap nativo
+- **README.md**: Actualizado a versión 2.0.0 con nuevas características
+
+### Mejorado
+- **Accesibilidad**
+  - Focus indicators para navegación por teclado
+  - Soporte para `prefers-reduced-motion`
+  - Soporte para `prefers-contrast: high`
+
+---
+
 ## [1.9.2-beta] - 2025-12-05
 
 ### Corregido
@@ -227,7 +269,8 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ## Versiones futuras planificadas
 
-### [2.0.0] - Planificado
+### [2.1.0] - Planificado
+- [ ] Migración completa de iconos Font Awesome a pix_icon
 - [ ] Integración con sistemas de nómina
 - [ ] Firmas digitales de documentos
 - [ ] Verificación automática de antecedentes

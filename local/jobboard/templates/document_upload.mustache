@@ -128,11 +128,10 @@
         {{/currentfile}}
 
         {{#showreupload}}
-            <form class="document-upload-form mt-3" 
-                  action="{{uploadurl}}" 
-                  method="post" 
-                  enctype="multipart/form-data"
-                  style="display: none;">
+            <form class="document-upload-form mt-3 d-none jb-reupload-form"
+                  action="{{uploadurl}}"
+                  method="post"
+                  enctype="multipart/form-data">
                 {{! Same form as above for re-upload }}
                 <input type="hidden" name="applicationid" value="{{applicationid}}">
                 <input type="hidden" name="documenttype" value="{{documenttype}}">
