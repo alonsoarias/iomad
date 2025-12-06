@@ -44,25 +44,48 @@ $string['dashboard'] = 'Panel de Control';
 $string['exemptions'] = 'Excepciones ISER';
 
 // Capabilities.
+$string['jobboard:view'] = 'Ver bolsa de empleo';
+$string['jobboard:viewinternal'] = 'Ver vacantes internas';
+$string['jobboard:manage'] = 'Gestionar bolsa de empleo';
 $string['jobboard:createvacancy'] = 'Crear vacantes';
 $string['jobboard:editvacancy'] = 'Editar vacantes';
 $string['jobboard:deletevacancy'] = 'Eliminar vacantes';
 $string['jobboard:publishvacancy'] = 'Publicar vacantes';
 $string['jobboard:viewallvacancies'] = 'Ver todas las vacantes';
+$string['jobboard:manageconvocatorias'] = 'Gestionar convocatorias';
 $string['jobboard:apply'] = 'Postularse a vacantes';
 $string['jobboard:viewownapplications'] = 'Ver postulaciones propias';
 $string['jobboard:viewallapplications'] = 'Ver todas las postulaciones';
+$string['jobboard:changeapplicationstatus'] = 'Cambiar estado de postulacion';
+$string['jobboard:review'] = 'Revisar postulaciones';
+$string['jobboard:validatedocuments'] = 'Validar documentos';
 $string['jobboard:reviewdocuments'] = 'Revisar documentos';
+$string['jobboard:assignreviewers'] = 'Asignar revisores';
 $string['jobboard:downloadanydocument'] = 'Descargar cualquier documento';
+$string['jobboard:evaluate'] = 'Evaluar candidatos';
+$string['jobboard:viewevaluations'] = 'Ver evaluaciones';
 $string['jobboard:manageworkflow'] = 'Gestionar flujo de trabajo';
 $string['jobboard:viewreports'] = 'Ver reportes';
+$string['jobboard:exportreports'] = 'Exportar reportes';
 $string['jobboard:exportdata'] = 'Exportar datos';
 $string['jobboard:manageexemptions'] = 'Gestionar excepciones ISER';
+$string['jobboard:useapi'] = 'Usar API REST';
 $string['jobboard:accessapi'] = 'Acceder a la API REST';
 $string['jobboard:manageapitokens'] = 'Gestionar tokens API';
-$string['jobboard:configure'] = 'Configurar el sistema';
+$string['jobboard:configure'] = 'Configurar bolsa de empleo';
 $string['jobboard:managedoctypes'] = 'Gestionar tipos de documentos';
 $string['jobboard:manageemailtemplates'] = 'Gestionar plantillas de correo';
+$string['jobboard:viewpublicvacancies'] = 'Ver vacantes publicas';
+$string['jobboard:viewinternalvacancies'] = 'Ver vacantes internas';
+$string['jobboard:unlimitedapplications'] = 'Postulaciones ilimitadas';
+
+// Roles personalizados.
+$string['role_reviewer'] = 'Revisor de Documentos de Bolsa de Empleo';
+$string['role_reviewer_desc'] = 'Puede revisar y validar documentos enviados por los postulantes en el sistema de bolsa de empleo.';
+$string['role_coordinator'] = 'Coordinador de Bolsa de Empleo';
+$string['role_coordinator_desc'] = 'Puede gestionar vacantes, convocatorias y coordinar el proceso de seleccion.';
+$string['role_committee'] = 'Comite de Seleccion de Bolsa de Empleo';
+$string['role_committee_desc'] = 'Puede evaluar candidatos y participar en las decisiones finales de seleccion.';
 
 // Vacancy fields.
 $string['vacancycode'] = 'Código de vacante';
@@ -1575,11 +1598,6 @@ $string['error:multipleapplicationsnotallowed'] = 'Solo puede tener una postulac
 $string['error:applicationlimitreached'] = 'Ha alcanzado el número máximo de postulaciones activas ({$a}). Por favor espere a que se procesen sus postulaciones actuales o retire una antes de postularse a una nueva vacante.';
 $string['error:publicpagedisabled'] = 'La página de vacantes públicas está deshabilitada.';
 $string['error:loginrequiredforinternal'] = 'Debe iniciar sesión para ver vacantes internas.';
-
-// Nuevas capabilities.
-$string['jobboard:viewpublicvacancies'] = 'Ver vacantes públicas';
-$string['jobboard:viewinternalvacancies'] = 'Ver vacantes internas';
-$string['jobboard:unlimitedapplications'] = 'Omitir límites de postulación';
 
 // ==========================================================================
 // Cadenas adicionales para revisión de documentos.

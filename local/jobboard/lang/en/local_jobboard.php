@@ -44,25 +44,48 @@ $string['dashboard'] = 'Dashboard';
 $string['exemptions'] = 'ISER Exemptions';
 
 // Capabilities.
+$string['jobboard:view'] = 'View job board';
+$string['jobboard:viewinternal'] = 'View internal vacancies';
+$string['jobboard:manage'] = 'Manage job board';
 $string['jobboard:createvacancy'] = 'Create vacancies';
 $string['jobboard:editvacancy'] = 'Edit vacancies';
 $string['jobboard:deletevacancy'] = 'Delete vacancies';
 $string['jobboard:publishvacancy'] = 'Publish vacancies';
 $string['jobboard:viewallvacancies'] = 'View all vacancies';
+$string['jobboard:manageconvocatorias'] = 'Manage calls for applications';
 $string['jobboard:apply'] = 'Apply for vacancies';
 $string['jobboard:viewownapplications'] = 'View own applications';
 $string['jobboard:viewallapplications'] = 'View all applications';
+$string['jobboard:changeapplicationstatus'] = 'Change application status';
+$string['jobboard:review'] = 'Review applications';
+$string['jobboard:validatedocuments'] = 'Validate documents';
 $string['jobboard:reviewdocuments'] = 'Review documents';
+$string['jobboard:assignreviewers'] = 'Assign reviewers';
 $string['jobboard:downloadanydocument'] = 'Download any document';
+$string['jobboard:evaluate'] = 'Evaluate candidates';
+$string['jobboard:viewevaluations'] = 'View evaluations';
 $string['jobboard:manageworkflow'] = 'Manage workflow';
 $string['jobboard:viewreports'] = 'View reports';
+$string['jobboard:exportreports'] = 'Export reports';
 $string['jobboard:exportdata'] = 'Export data';
 $string['jobboard:manageexemptions'] = 'Manage ISER exemptions';
+$string['jobboard:useapi'] = 'Use REST API';
 $string['jobboard:accessapi'] = 'Access REST API';
 $string['jobboard:manageapitokens'] = 'Manage API tokens';
-$string['jobboard:configure'] = 'Configure system';
+$string['jobboard:configure'] = 'Configure job board';
 $string['jobboard:managedoctypes'] = 'Manage document types';
 $string['jobboard:manageemailtemplates'] = 'Manage email templates';
+$string['jobboard:viewpublicvacancies'] = 'View public vacancies';
+$string['jobboard:viewinternalvacancies'] = 'View internal vacancies';
+$string['jobboard:unlimitedapplications'] = 'Unlimited applications';
+
+// Custom roles.
+$string['role_reviewer'] = 'Job Board Document Reviewer';
+$string['role_reviewer_desc'] = 'Can review and validate documents submitted by applicants in the job board system.';
+$string['role_coordinator'] = 'Job Board Coordinator';
+$string['role_coordinator_desc'] = 'Can manage vacancies, calls for applications, and coordinate the selection process.';
+$string['role_committee'] = 'Job Board Selection Committee';
+$string['role_committee_desc'] = 'Can evaluate candidates and participate in the final selection decisions.';
 
 // Vacancy fields.
 $string['vacancycode'] = 'Vacancy code';

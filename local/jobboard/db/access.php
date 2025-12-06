@@ -26,23 +26,67 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
 
+    // =========================================================================
+    // General view capabilities.
+    // =========================================================================
+
+    // General view capability for the job board.
+    'local/jobboard:view' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'guest' => CAP_ALLOW,
+            'user' => CAP_ALLOW,
+            'student' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    // View internal (non-public) vacancies.
+    'local/jobboard:viewinternal' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'user' => CAP_ALLOW,
+            'student' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    // =========================================================================
     // Vacancy management capabilities.
+    // =========================================================================
+
+    // General management capability for the job board.
+    'local/jobboard:manage' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
     'local/jobboard:createvacancy' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/site:config',
     ],
 
     'local/jobboard:editvacancy' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/site:config',
     ],
 
     'local/jobboard:deletevacancy' => [
@@ -51,32 +95,49 @@ $capabilities = [
         'archetypes' => [
             'manager' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/site:config',
+        'riskbitmask' => RISK_DATALOSS,
     ],
 
     'local/jobboard:publishvacancy' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/site:config',
     ],
 
     'local/jobboard:viewallvacancies' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
         ],
     ],
 
+    // =========================================================================
+    // Convocatoria (Call) management capabilities.
+    // =========================================================================
+
+    'local/jobboard:manageconvocatorias' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    // =========================================================================
     // Application capabilities.
+    // =========================================================================
+
     'local/jobboard:apply' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'user' => CAP_ALLOW,
+            'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
         ],
@@ -87,6 +148,7 @@ $capabilities = [
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'user' => CAP_ALLOW,
+            'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
         ],
@@ -96,15 +158,59 @@ $capabilities = [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
         ],
     ],
 
+    'local/jobboard:changeapplicationstatus' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    // =========================================================================
     // Document review capabilities.
+    // =========================================================================
+
+    'local/jobboard:review' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    'local/jobboard:validatedocuments' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
     'local/jobboard:reviewdocuments' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    'local/jobboard:assignreviewers' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
         ],
     ],
@@ -113,11 +219,39 @@ $capabilities = [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW,
         ],
     ],
 
+    // =========================================================================
+    // Selection committee capabilities.
+    // =========================================================================
+
+    'local/jobboard:evaluate' => [
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    'local/jobboard:viewevaluations' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    // =========================================================================
     // Workflow management.
+    // =========================================================================
+
     'local/jobboard:manageworkflow' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
@@ -126,8 +260,20 @@ $capabilities = [
         ],
     ],
 
+    // =========================================================================
     // Reporting capabilities.
+    // =========================================================================
+
     'local/jobboard:viewreports' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
+    'local/jobboard:exportreports' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
@@ -143,53 +289,73 @@ $capabilities = [
         ],
     ],
 
+    // =========================================================================
     // ISER exemption management.
+    // =========================================================================
+
     'local/jobboard:manageexemptions' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes' => [
             'manager' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/site:config',
     ],
 
+    // =========================================================================
     // API access.
+    // =========================================================================
+
+    'local/jobboard:useapi' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+
     'local/jobboard:accessapi' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [],
-        'clonepermissionsfrom' => 'moodle/site:config',
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
     ],
 
     'local/jobboard:manageapitokens' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [],
-        'clonepermissionsfrom' => 'moodle/site:config',
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
     ],
 
-    // Configuration.
+    // =========================================================================
+    // Configuration and administration.
+    // =========================================================================
+
     'local/jobboard:configure' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [],
-        'clonepermissionsfrom' => 'moodle/site:config',
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+        'riskbitmask' => RISK_CONFIG,
     ],
 
-    // Document type management.
     'local/jobboard:managedoctypes' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [],
-        'clonepermissionsfrom' => 'moodle/site:config',
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
     ],
 
-    // Email template management.
     'local/jobboard:manageemailtemplates' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [],
-        'clonepermissionsfrom' => 'moodle/site:config',
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
     ],
 
     // View public vacancies (available to guests).
