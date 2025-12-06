@@ -7,6 +7,27 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.7] - 2025-12-06
+
+### Corregido
+- **Error de base de datos en consultas de documentos**
+  - Corregido error "Unknown column 'd.status'" en `views/review.php`
+  - Corregido error similar en `views/myreviews.php`
+  - El campo `status` está en la tabla `local_jobboard_doc_validation`, no en `local_jobboard_document`
+  - Consultas ahora usan LEFT JOIN con `local_jobboard_doc_validation` para obtener el estado de validación
+
+### Verificado
+- **Aislamiento de estilos del navbar**
+  - Plugin NO tiene estilos que afecten `.navbar`, `.nav-item`, `.nav-link` del tema
+  - Todos los estilos de componentes usan prefijo `.path-local-jobboard` para aislamiento
+  - Clases de badges son únicas (`.badge-submitted`, `.badge-docs_validated`, etc.)
+  - No hay conflicto con clases Bootstrap estándar del tema
+
+### Modificado
+- **version.php**: Incrementado a 2.0.7 (2025120625)
+
+---
+
 ## [2.0.6] - 2025-12-06
 
 ### Añadido

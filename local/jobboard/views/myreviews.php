@@ -68,12 +68,15 @@ if ($vacancyid) {
 $whereclause = implode(' AND ', $whereclauses);
 
 // Priority ordering.
+// Note: Document status is in local_jobboard_doc_validation table, not document table.
 $orderby = 'a.timecreated ASC';
 if ($priority === 'closing') {
     $orderby = 'v.closedate ASC, a.timecreated ASC';
 } else if ($priority === 'pending') {
     $orderby = "(SELECT COUNT(*) FROM {local_jobboard_document} d
-                  WHERE d.applicationid = a.id AND d.issuperseded = 0 AND d.status = 'pending') DESC,
+                  LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
+                  WHERE d.applicationid = a.id AND d.issuperseded = 0
+                  AND (dv.id IS NULL OR dv.status = 'pending')) DESC,
                  a.timecreated ASC";
 }
 
@@ -85,16 +88,21 @@ $countsql = "SELECT COUNT(*)
 $totalcount = $DB->count_records_sql($countsql, $params);
 
 // Get assigned applications.
+// Document validation status is in local_jobboard_doc_validation table.
 $sql = "SELECT a.*, v.code as vacancy_code, v.title as vacancy_title, v.closedate,
                u.firstname, u.lastname, u.email,
                (SELECT COUNT(*) FROM {local_jobboard_document} d
                  WHERE d.applicationid = a.id AND d.issuperseded = 0) as total_docs,
                (SELECT COUNT(*) FROM {local_jobboard_document} d
-                 WHERE d.applicationid = a.id AND d.issuperseded = 0 AND d.status = 'approved') as validated_docs,
+                 JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
+                 WHERE d.applicationid = a.id AND d.issuperseded = 0 AND dv.status = 'approved') as validated_docs,
                (SELECT COUNT(*) FROM {local_jobboard_document} d
-                 WHERE d.applicationid = a.id AND d.issuperseded = 0 AND d.status = 'rejected') as rejected_docs,
+                 JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
+                 WHERE d.applicationid = a.id AND d.issuperseded = 0 AND dv.status = 'rejected') as rejected_docs,
                (SELECT COUNT(*) FROM {local_jobboard_document} d
-                 WHERE d.applicationid = a.id AND d.issuperseded = 0 AND d.status = 'pending') as pending_docs
+                 LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
+                 WHERE d.applicationid = a.id AND d.issuperseded = 0
+                 AND (dv.id IS NULL OR dv.status = 'pending')) as pending_docs
           FROM {local_jobboard_application} a
           JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
           JOIN {user} u ON u.id = a.userid

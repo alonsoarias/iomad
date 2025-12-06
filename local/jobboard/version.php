@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120624;  // Menu visibility: only show with open convocatorias or custom roles.
+$plugin->version = 2025120625;  // Fix document status queries, verify navbar style isolation.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.6';
+$plugin->release = '2.0.7';
