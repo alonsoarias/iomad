@@ -74,7 +74,7 @@ if ($vacancyid) {
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/jobboard/signup.php', ['vacancyid' => $vacancyid]));
-$PAGE->set_pagelayout('login');
+$PAGE->set_pagelayout('base'); // Use 'base' instead of 'login' to enable help button tooltips.
 $PAGE->set_title(get_string('signup_title', 'local_jobboard'));
 $PAGE->set_heading(get_string('signup_title', 'local_jobboard'));
 

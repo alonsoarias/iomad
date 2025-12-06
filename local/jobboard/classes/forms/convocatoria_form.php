@@ -66,6 +66,7 @@ class convocatoria_form extends \moodleform {
         $mform->addElement('text', 'name', get_string('convocatorianame', 'local_jobboard'), ['size' => 60, 'maxlength' => 255]);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
+        $mform->addHelpButton('name', 'convocatorianame', 'local_jobboard');
 
         // Description.
         $mform->addElement('editor', 'description', get_string('convocatoriadescription', 'local_jobboard'), null, [
@@ -73,6 +74,7 @@ class convocatoria_form extends \moodleform {
             'noclean' => false,
         ]);
         $mform->setType('description', PARAM_RAW);
+        $mform->addHelpButton('description', 'convocatoriadescription', 'local_jobboard');
 
         // Header: Dates.
         $mform->addElement('header', 'datesheader', get_string('dates', 'local_jobboard'));
@@ -80,10 +82,12 @@ class convocatoria_form extends \moodleform {
         // Start date.
         $mform->addElement('date_selector', 'startdate', get_string('convocatoriastartdate', 'local_jobboard'));
         $mform->addRule('startdate', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
+        $mform->addHelpButton('startdate', 'convocatoriastartdate', 'local_jobboard');
 
         // End date.
         $mform->addElement('date_selector', 'enddate', get_string('convocatoriaenddate', 'local_jobboard'));
         $mform->addRule('enddate', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
+        $mform->addHelpButton('enddate', 'convocatoriaenddate', 'local_jobboard');
 
         // Header: Publication.
         $mform->addElement('header', 'publicationheader', get_string('publicationtype', 'local_jobboard'));
@@ -104,11 +108,13 @@ class convocatoria_form extends \moodleform {
             $companyoptions = [0 => get_string('allcompanies', 'local_jobboard')] + $companies;
             $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companyoptions);
             $mform->setType('companyid', PARAM_INT);
+            $mform->addHelpButton('companyid', 'convocatoria_companyid', 'local_jobboard');
 
             // Department selector (populated via AJAX or simple select).
             $mform->addElement('select', 'departmentid', get_string('department', 'local_jobboard'),
                 [0 => get_string('selectdepartment', 'local_jobboard')]);
             $mform->setType('departmentid', PARAM_INT);
+            $mform->addHelpButton('departmentid', 'convocatoria_departmentid', 'local_jobboard');
         }
 
         // Header: Terms and Conditions.

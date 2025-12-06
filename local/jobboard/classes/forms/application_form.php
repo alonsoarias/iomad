@@ -113,6 +113,7 @@ class application_form extends moodleform {
             get_string('consentaccepttext', 'local_jobboard'), ['group' => 1], [0, 1]);
         $mform->addRule('consentaccepted', get_string('consentrequired', 'local_jobboard'), 'required', null, 'client');
         $mform->addRule('consentaccepted', get_string('consentrequired', 'local_jobboard'), 'nonzero', null, 'client');
+        $mform->addHelpButton('consentaccepted', 'consentaccepted', 'local_jobboard');
 
         // Digital signature - Full name.
         $mform->addElement('text', 'digitalsignature', get_string('digitalsignature', 'local_jobboard'),
@@ -206,6 +207,7 @@ class application_form extends moodleform {
             'required', null, 'client');
         $mform->addRule('declarationaccepted', get_string('declarationrequired', 'local_jobboard'),
             'nonzero', null, 'client');
+        $mform->addHelpButton('declarationaccepted', 'declarationaccepted', 'local_jobboard');
 
         // Submit buttons.
         $this->add_action_buttons(true, get_string('submitapplication', 'local_jobboard'));

@@ -98,6 +98,7 @@ class updateprofile_form extends moodleform {
         ];
         $mform->addElement('select', 'doctype', get_string('signup_doctype', 'local_jobboard'), $doctypes);
         $mform->addRule('doctype', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('doctype', 'signup_doctype', 'local_jobboard');
 
         // Identification number.
         if (!empty($user->idnumber)) {
@@ -120,6 +121,7 @@ class updateprofile_form extends moodleform {
             'optional' => false,
         ]);
         $mform->addRule('birthdate', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('birthdate', 'signup_birthdate', 'local_jobboard');
 
         // Gender.
         $genders = [
@@ -141,6 +143,7 @@ class updateprofile_form extends moodleform {
         $mform->addElement('text', 'phone1', get_string('signup_phone_mobile', 'local_jobboard'), 'maxlength="20" size="20"');
         $mform->setType('phone1', PARAM_TEXT);
         $mform->addRule('phone1', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('phone1', 'signup_phone', 'local_jobboard');
 
         // Phone (secondary/home).
         $mform->addElement('text', 'phone2', get_string('signup_phone_home', 'local_jobboard'), 'maxlength="20" size="20"');
@@ -188,6 +191,7 @@ class updateprofile_form extends moodleform {
         ];
         $mform->addElement('select', 'education_level', get_string('signup_education_level', 'local_jobboard'), $educationlevels);
         $mform->addRule('education_level', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('education_level', 'signup_education_level', 'local_jobboard');
 
         // Degree/Title obtained.
         $mform->addElement('text', 'degree_title', get_string('signup_degree_title', 'local_jobboard'), 'maxlength="255" size="50"');

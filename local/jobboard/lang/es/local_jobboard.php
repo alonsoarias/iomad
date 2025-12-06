@@ -2436,3 +2436,26 @@ $string['viewmyapplications'] = 'Ver mis postulaciones';
 // Reviewer section.
 $string['myreviews_desc'] = 'Consulte las postulaciones asignadas para revisión y valide la documentación de los postulantes.';
 $string['viewmyreviews'] = 'Ver mis revisiones';
+
+// ============================================================================
+// Cadenas de ayuda adicionales para tooltips (Help strings)
+// ============================================================================
+
+// Signup form help strings.
+$string['signup_email_help'] = 'Ingrese una dirección de correo electrónico válida. Se utilizará para enviar la confirmación de su cuenta y notificaciones importantes sobre el proceso de selección.';
+$string['signup_doctype_help'] = 'Seleccione el tipo de documento de identidad que utilizará para el registro. Este documento debe coincidir con el número de identificación que ingrese.';
+$string['signup_birthdate_help'] = 'Seleccione su fecha de nacimiento. Debe ser mayor de 18 años para postularse a las vacantes.';
+$string['signup_phone_help'] = 'Ingrese su número de teléfono móvil principal donde podamos contactarlo para notificaciones y entrevistas.';
+$string['signup_education_level_help'] = 'Seleccione el nivel educativo más alto que ha completado. Esto ayuda a filtrar las vacantes que coinciden con su perfil académico.';
+
+// Convocatoria form help strings.
+$string['convocatorianame_help'] = 'Ingrese un nombre descriptivo para la convocatoria. Este nombre será visible para los postulantes y debe reflejar el propósito de la convocatoria.';
+$string['convocatoriadescription_help'] = 'Proporcione una descripción detallada de la convocatoria, incluyendo información general sobre las vacantes, requisitos comunes y el proceso de selección.';
+$string['convocatoriastartdate_help'] = 'Seleccione la fecha de inicio de la convocatoria. A partir de esta fecha, las vacantes asociadas estarán disponibles para recibir postulaciones.';
+$string['convocatoriaenddate_help'] = 'Seleccione la fecha de cierre de la convocatoria. Después de esta fecha, no se recibirán más postulaciones para las vacantes asociadas.';
+$string['convocatoria_companyid_help'] = 'Seleccione la empresa o sede a la que pertenece esta convocatoria. Seleccione "Todas las empresas" si la convocatoria es institucional.';
+$string['convocatoria_departmentid_help'] = 'Seleccione el departamento de IOMAD asociado a esta convocatoria. Esto ayuda a organizar las vacantes por estructura organizacional.';
+
+// Application form help strings.
+$string['consentaccepted_help'] = 'Al marcar esta casilla, acepta que sus datos personales serán tratados de acuerdo con la política de protección de datos de la institución para fines del proceso de selección.';
+$string['declarationaccepted_help'] = 'Al marcar esta casilla, declara bajo juramento que toda la información proporcionada es veraz y que los documentos adjuntos son auténticos.';

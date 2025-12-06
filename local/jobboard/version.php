@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120533;  // Fix language strings and tooltips.
+$plugin->version = 2025120600;  // Add tooltips to all forms and fix signup page layout.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.20-beta';
+$plugin->release = '1.9.21-beta';

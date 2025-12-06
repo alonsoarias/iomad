@@ -2024,3 +2024,26 @@ $string['viewmyapplications'] = 'View my applications';
 // Reviewer section.
 $string['myreviews_desc'] = 'View applications assigned for review and validate applicant documentation.';
 $string['viewmyreviews'] = 'View my reviews';
+
+// ============================================================================
+// Additional help strings for tooltips
+// ============================================================================
+
+// Signup form help strings.
+$string['signup_email_help'] = 'Enter a valid email address. It will be used to send your account confirmation and important notifications about the selection process.';
+$string['signup_doctype_help'] = 'Select the type of identification document you will use for registration. This document must match the identification number you enter.';
+$string['signup_birthdate_help'] = 'Select your date of birth. You must be at least 18 years old to apply for vacancies.';
+$string['signup_phone_help'] = 'Enter your primary mobile phone number where we can contact you for notifications and interviews.';
+$string['signup_education_level_help'] = 'Select the highest education level you have completed. This helps filter vacancies that match your academic profile.';
+
+// Convocatoria form help strings.
+$string['convocatorianame_help'] = 'Enter a descriptive name for the call. This name will be visible to applicants and should reflect the purpose of the call.';
+$string['convocatoriadescription_help'] = 'Provide a detailed description of the call, including general information about vacancies, common requirements and the selection process.';
+$string['convocatoriastartdate_help'] = 'Select the start date of the call. From this date, associated vacancies will be available to receive applications.';
+$string['convocatoriaenddate_help'] = 'Select the closing date of the call. After this date, no more applications will be received for associated vacancies.';
+$string['convocatoria_companyid_help'] = 'Select the company or headquarters to which this call belongs. Select "All companies" if the call is institutional.';
+$string['convocatoria_departmentid_help'] = 'Select the IOMAD department associated with this call. This helps organize vacancies by organizational structure.';
+
+// Application form help strings.
+$string['consentaccepted_help'] = 'By checking this box, you agree that your personal data will be processed in accordance with the institution\'s data protection policy for the purposes of the selection process.';
+$string['declarationaccepted_help'] = 'By checking this box, you declare under oath that all information provided is true and that the attached documents are authentic.';

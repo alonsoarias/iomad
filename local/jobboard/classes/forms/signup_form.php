@@ -78,6 +78,7 @@ class signup_form extends moodleform {
         $mform->setType('email', PARAM_RAW_TRIMMED);
         $mform->addRule('email', get_string('required'), 'required', null, 'client');
         $mform->addRule('email', get_string('invalidemail'), 'email', null, 'client');
+        $mform->addHelpButton('email', 'signup_email', 'local_jobboard');
 
         // Email confirmation.
         $mform->addElement('text', 'email2', get_string('emailagain'), 'maxlength="100" size="40"');
@@ -113,6 +114,7 @@ class signup_form extends moodleform {
         ];
         $mform->addElement('select', 'doctype', get_string('signup_doctype', 'local_jobboard'), $doctypes);
         $mform->addRule('doctype', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('doctype', 'signup_doctype', 'local_jobboard');
 
         // Identification number (this will be the username).
         $mform->addElement('text', 'idnumber', get_string('signup_idnumber', 'local_jobboard'),
@@ -128,6 +130,7 @@ class signup_form extends moodleform {
             'optional' => false,
         ]);
         $mform->addRule('birthdate', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('birthdate', 'signup_birthdate', 'local_jobboard');
 
         // Gender.
         $genders = [
@@ -149,6 +152,7 @@ class signup_form extends moodleform {
         $mform->addElement('text', 'phone1', get_string('signup_phone_mobile', 'local_jobboard'), 'maxlength="20" size="20"');
         $mform->setType('phone1', PARAM_TEXT);
         $mform->addRule('phone1', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('phone1', 'signup_phone', 'local_jobboard');
 
         // Phone (secondary/home).
         $mform->addElement('text', 'phone2', get_string('signup_phone_home', 'local_jobboard'), 'maxlength="20" size="20"');
@@ -196,6 +200,7 @@ class signup_form extends moodleform {
         ];
         $mform->addElement('select', 'education_level', get_string('signup_education_level', 'local_jobboard'), $educationlevels);
         $mform->addRule('education_level', get_string('required'), 'required', null, 'client');
+        $mform->addHelpButton('education_level', 'signup_education_level', 'local_jobboard');
 
         // Degree/Title obtained.
         $mform->addElement('text', 'degree_title', get_string('signup_degree_title', 'local_jobboard'), 'maxlength="255" size="50"');
@@ -246,12 +251,14 @@ class signup_form extends moodleform {
                 'id' => 'id_companyid_signup',
             ]);
             $mform->addRule('companyid', get_string('required'), 'required', null, 'client');
+            $mform->addHelpButton('companyid', 'companyid', 'local_jobboard');
 
             // Department selector (will be populated via AJAX).
             $mform->addElement('select', 'departmentid', get_string('department', 'local_jobboard'),
                 [0 => get_string('selectdepartment', 'local_jobboard')], [
                 'id' => 'id_departmentid_signup',
             ]);
+            $mform->addHelpButton('departmentid', 'departmentid', 'local_jobboard');
         }
 
         // ==========================================
