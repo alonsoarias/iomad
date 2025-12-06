@@ -1,9 +1,8 @@
 /**
- * Job Board Plugin Styles (Minimal)
+ * Job Board Plugin Styles (Minimal & Isolated)
  *
- * This file contains only essential styles that cannot be achieved
- * with Moodle's Bootstrap classes. All other styling should use
- * Bootstrap utility classes directly in templates.
+ * IMPORTANT: All styles MUST be scoped to .path-local-jobboard to prevent
+ * affecting other parts of the Moodle platform.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -11,85 +10,86 @@
  */
 
 /* ==========================================================================
-   Application Status Badges
+   Application Status Badges (Scoped)
    Custom colors for workflow states not covered by Bootstrap
    ========================================================================== */
 
-.badge-submitted {
+.path-local-jobboard .badge-submitted {
     background-color: #17a2b8;
     color: #fff;
 }
 
-.badge-under_review {
+.path-local-jobboard .badge-under_review {
     background-color: #ffc107;
     color: #212529;
 }
 
-.badge-docs_validated {
+.path-local-jobboard .badge-docs_validated {
     background-color: #28a745;
     color: #fff;
 }
 
-.badge-docs_rejected {
+.path-local-jobboard .badge-docs_rejected {
     background-color: #dc3545;
     color: #fff;
 }
 
-.badge-interview {
+.path-local-jobboard .badge-interview {
     background-color: #6f42c1;
     color: #fff;
 }
 
-.badge-selected {
+.path-local-jobboard .badge-selected {
     background-color: #20c997;
     color: #fff;
 }
 
-.badge-rejected {
+.path-local-jobboard .badge-rejected {
     background-color: #6c757d;
     color: #fff;
 }
 
-.badge-withdrawn {
+.path-local-jobboard .badge-withdrawn {
     background-color: #868e96;
     color: #fff;
 }
 
-.badge-draft {
+.path-local-jobboard .badge-draft {
     background-color: #6c757d;
     color: #fff;
 }
 
-.badge-published {
+.path-local-jobboard .badge-published {
     background-color: #28a745;
     color: #fff;
 }
 
-.badge-closed {
+.path-local-jobboard .badge-closed {
     background-color: #dc3545;
     color: #fff;
 }
 
+.path-local-jobboard .badge-purple {
+    background-color: #6f42c1;
+    color: #fff;
+}
+
 /* ==========================================================================
-   Document Progress Bar
+   Plugin-Specific Components (Scoped)
    ========================================================================== */
 
-.jb-document-progress {
+.path-local-jobboard .jb-document-progress {
     height: 20px;
     min-width: 100px;
 }
 
-/* ==========================================================================
-   Workflow Timeline
-   Unique component for showing application status history
-   ========================================================================== */
-
-.jb-workflow-log {
+/* Workflow Timeline */
+.path-local-jobboard .jb-workflow-log {
     position: relative;
     padding-left: 30px;
 }
 
-.jb-workflow-log::before {
+.path-local-jobboard .jb-workflow-log::before {
     content: '';
     position: absolute;
     left: 10px;
@@ -99,16 +99,16 @@
     background-color: #dee2e6;
 }
 
-.jb-workflow-item {
+.path-local-jobboard .jb-workflow-item {
     position: relative;
     padding-bottom: 1rem;
 }
 
-.jb-workflow-item:last-child {
+.path-local-jobboard .jb-workflow-item:last-child {
     padding-bottom: 0;
 }
 
-.jb-workflow-item::before {
+.path-local-jobboard .jb-workflow-item::before {
     content: '';
     position: absolute;
     left: -26px;
@@ -120,1165 +120,90 @@
     border: 2px solid #fff;
 }
 
-/* ==========================================================================
-   Print Styles
-   ========================================================================== */
-
-@media print {
-    .btn,
-    .pagination,
-    .jb-filter-form {
-        display: none !important;
-    }
-
-    .badge {
-        border: 1px solid currentColor;
-    }
-
-    .card {
-        break-inside: avoid;
-        box-shadow: none !important;
-        border: 1px solid #dee2e6 !important;
-    }
-}
-
-/* ==========================================================================
-   Accessibility
-   ========================================================================== */
-
-/* Focus indicators */
-.card:focus-within {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
-}
-
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        transition: none !important;
-        animation: none !important;
-    }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-    .badge {
-        border: 1px solid currentColor;
-    }
-
-    .card {
-        border-width: 2px;
-    }
-
-    .jb-workflow-item::before {
-        border-width: 3px;
-    }
-}
-
-/* ==========================================================================
-   UI Helper Components (Migrated from inline styles)
-   ========================================================================== */
-
-.jb-page-header {
+/* UI Helper Components */
+.path-local-jobboard .jb-page-header {
     padding-bottom: 1rem;
     border-bottom: 2px solid #e9ecef;
 }
 
-.jb-page-title {
+.path-local-jobboard .jb-page-title {
     font-weight: 600;
     color: #343a40;
 }
 
-.jb-stat-card {
+.path-local-jobboard .jb-stat-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border-width: 0 0 0 4px !important;
 }
 
-.jb-stat-card:hover {
+.path-local-jobboard .jb-stat-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.jb-stat-value {
+.path-local-jobboard .jb-stat-value {
     font-size: 1.75rem;
     font-weight: 700;
     line-height: 1.2;
 }
 
-.jb-stat-label {
+.path-local-jobboard .jb-stat-label {
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.jb-empty-state {
+.path-local-jobboard .jb-empty-state {
     background: #f8f9fa;
     border-radius: 0.5rem;
 }
 
-.jb-filter-form {
+.path-local-jobboard .jb-filter-form {
     background: #f8f9fa;
     padding: 1rem;
     border-radius: 0.5rem;
 }
 
-.jb-actions .btn {
+.path-local-jobboard .jb-actions .btn {
     border-radius: 0;
 }
 
-.jb-actions .btn:first-child {
+.path-local-jobboard .jb-actions .btn:first-child {
     border-radius: 0.25rem 0 0 0.25rem;
 }
 
-.jb-actions .btn:last-child {
+.path-local-jobboard .jb-actions .btn:last-child {
     border-radius: 0 0.25rem 0.25rem 0;
 }
 
-/* Border left utilities */
-.border-left-primary { border-left: 4px solid #007bff !important; }
-.border-left-success { border-left: 4px solid #28a745 !important; }
-.border-left-warning { border-left: 4px solid #ffc107 !important; }
-.border-left-danger { border-left: 4px solid #dc3545 !important; }
-.border-left-info { border-left: 4px solid #17a2b8 !important; }
+/* Border left utilities (Scoped) */
+.path-local-jobboard .border-left-primary { border-left: 4px solid #007bff !important; }
+.path-local-jobboard .border-left-success { border-left: 4px solid #28a745 !important; }
+.path-local-jobboard .border-left-warning { border-left: 4px solid #ffc107 !important; }
+.path-local-jobboard .border-left-danger { border-left: 4px solid #dc3545 !important; }
+.path-local-jobboard .border-left-info { border-left: 4px solid #17a2b8 !important; }
 
-/* Utility classes */
-.cursor-pointer { cursor: pointer; }
-.badge-purple { background-color: #6f42c1; color: #fff; }
-
-/* ==========================================================================
-   Theme Override Styles (remui/inteb compatibility)
-   Ensures plugin styles take precedence over theme styles
-   ========================================================================== */
+/* Utility classes (Scoped) */
+.path-local-jobboard .cursor-pointer { cursor: pointer; }
 
 /* ==========================================================================
-   Base Element Resets - Ensure consistent styling for ALL elements
+   Print Styles (Scoped to plugin pages only)
    ========================================================================== */
 
-/* Typography - Headers */
-.path-local-jobboard h1,
-.path-local-jobboard h2,
-.path-local-jobboard h3,
-.path-local-jobboard h4,
-.path-local-jobboard h5,
-.path-local-jobboard h6 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    font-family: inherit;
-    font-weight: 500;
-    line-height: 1.2;
-    color: #212529;
-}
-
-.path-local-jobboard h1 { font-size: 2.5rem; }
-.path-local-jobboard h2 { font-size: 2rem; }
-.path-local-jobboard h3 { font-size: 1.75rem; }
-.path-local-jobboard h4 { font-size: 1.5rem; }
-.path-local-jobboard h5 { font-size: 1.25rem; }
-.path-local-jobboard h6 { font-size: 1rem; }
-
-/* Typography - Body text */
-.path-local-jobboard p {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: #212529;
-    line-height: 1.5;
-}
-
-.path-local-jobboard span {
-    color: inherit;
-    font-family: inherit;
-}
-
-.path-local-jobboard strong,
-.path-local-jobboard b {
-    font-weight: 700;
-}
-
-.path-local-jobboard em,
-.path-local-jobboard i:not(.fa):not([class*="icon"]) {
-    font-style: italic;
-}
-
-.path-local-jobboard small {
-    font-size: 80%;
-    font-weight: 400;
-}
-
-/* Links */
-.path-local-jobboard a {
-    color: #007bff;
-    text-decoration: none;
-    background-color: transparent;
-}
-
-.path-local-jobboard a:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-.path-local-jobboard a:focus {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
-}
-
-/* Lists */
-.path-local-jobboard ul,
-.path-local-jobboard ol {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    padding-left: 2rem;
-}
-
-.path-local-jobboard ul ul,
-.path-local-jobboard ol ol,
-.path-local-jobboard ul ol,
-.path-local-jobboard ol ul {
-    margin-bottom: 0;
-}
-
-.path-local-jobboard li {
-    margin-bottom: 0.25rem;
-    line-height: 1.5;
-}
-
-.path-local-jobboard dl {
-    margin-top: 0;
-    margin-bottom: 1rem;
-}
-
-.path-local-jobboard dt {
-    font-weight: 700;
-}
-
-.path-local-jobboard dd {
-    margin-bottom: 0.5rem;
-    margin-left: 0;
-}
-
-/* Labels and form text */
-.path-local-jobboard label {
-    display: inline-block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #212529;
-}
-
-/* Blockquotes */
-.path-local-jobboard blockquote {
-    margin: 0 0 1rem;
-    padding: 0.5rem 1rem;
-    border-left: 4px solid #007bff;
-    background-color: #f8f9fa;
-}
-
-/* Code and pre */
-.path-local-jobboard code {
-    font-size: 87.5%;
-    color: #e83e8c;
-    word-wrap: break-word;
-    background-color: #f8f9fa;
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.25rem;
-}
-
-.path-local-jobboard pre {
-    display: block;
-    margin-top: 0;
-    margin-bottom: 1rem;
-    overflow: auto;
-    font-size: 87.5%;
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.25rem;
-}
-
-/* Horizontal rules */
-.path-local-jobboard hr {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    border: 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-/* Images */
-.path-local-jobboard img {
-    max-width: 100%;
-    height: auto;
-    vertical-align: middle;
-    border-style: none;
-}
-
-/* Tables - base */
-.path-local-jobboard table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-/* Form elements - base */
-.path-local-jobboard input,
-.path-local-jobboard select,
-.path-local-jobboard textarea {
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-}
-
-.path-local-jobboard input:focus,
-.path-local-jobboard select:focus,
-.path-local-jobboard textarea:focus {
-    outline: 2px solid #007bff;
-    outline-offset: 1px;
-}
-
-/* Buttons - base reset */
-.path-local-jobboard button {
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-    cursor: pointer;
-}
-
-/* Figure */
-.path-local-jobboard figure {
-    margin: 0 0 1rem;
-}
-
-.path-local-jobboard figcaption {
-    font-size: 90%;
-    color: #6c757d;
-}
-
-/* Address */
-.path-local-jobboard address {
-    margin-bottom: 1rem;
-    font-style: normal;
-    line-height: inherit;
-}
-
-/* Text utilities - ensure they work */
-.path-local-jobboard .text-primary { color: #007bff !important; }
-.path-local-jobboard .text-secondary { color: #6c757d !important; }
-.path-local-jobboard .text-success { color: #28a745 !important; }
-.path-local-jobboard .text-danger { color: #dc3545 !important; }
-.path-local-jobboard .text-warning { color: #ffc107 !important; }
-.path-local-jobboard .text-info { color: #17a2b8 !important; }
-.path-local-jobboard .text-light { color: #f8f9fa !important; }
-.path-local-jobboard .text-dark { color: #343a40 !important; }
-.path-local-jobboard .text-muted { color: #6c757d !important; }
-.path-local-jobboard .text-white { color: #fff !important; }
-
-/* Font weight utilities */
-.path-local-jobboard .font-weight-light { font-weight: 300 !important; }
-.path-local-jobboard .font-weight-normal { font-weight: 400 !important; }
-.path-local-jobboard .font-weight-bold { font-weight: 700 !important; }
-
-/* Font style utilities */
-.path-local-jobboard .font-italic { font-style: italic !important; }
-
-/* Text alignment */
-.path-local-jobboard .text-left { text-align: left !important; }
-.path-local-jobboard .text-center { text-align: center !important; }
-.path-local-jobboard .text-right { text-align: right !important; }
-
-/* Text transform */
-.path-local-jobboard .text-lowercase { text-transform: lowercase !important; }
-.path-local-jobboard .text-uppercase { text-transform: uppercase !important; }
-.path-local-jobboard .text-capitalize { text-transform: capitalize !important; }
-
-/* Text wrapping */
-.path-local-jobboard .text-nowrap { white-space: nowrap !important; }
-.path-local-jobboard .text-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* ==========================================================================
-   Component Overrides
-   ========================================================================== */
-
-/* Force plugin card styling */
-.path-local-jobboard .card {
-    border-radius: 0.5rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-}
-
-.path-local-jobboard .card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-/* Override theme table styles */
-.path-local-jobboard .table {
-    margin-bottom: 1rem;
-    background-color: transparent;
-}
-
-.path-local-jobboard .table th,
-.path-local-jobboard .table td {
-    padding: 0.75rem;
-    vertical-align: middle;
-    border-top: 1px solid #dee2e6;
-}
-
-.path-local-jobboard .table thead th {
-    vertical-align: bottom;
-    border-bottom: 2px solid #dee2e6;
-    background-color: #f8f9fa;
-    font-weight: 600;
-}
-
-.path-local-jobboard .table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(0, 0, 0, 0.03);
-}
-
-/* Override theme button styles */
-.path-local-jobboard .btn {
-    font-weight: 400;
-    border-radius: 0.25rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-}
-
-.path-local-jobboard .btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-}
-
-.path-local-jobboard .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #fff;
-}
-
-.path-local-jobboard .btn-primary:hover {
-    background-color: #0069d9;
-    border-color: #0062cc;
-}
-
-.path-local-jobboard .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-    color: #fff;
-}
-
-.path-local-jobboard .btn-success:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
-}
-
-.path-local-jobboard .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    color: #fff;
-}
-
-.path-local-jobboard .btn-danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
-}
-
-.path-local-jobboard .btn-outline-primary {
-    color: #007bff;
-    border-color: #007bff;
-    background-color: transparent;
-}
-
-.path-local-jobboard .btn-outline-primary:hover {
-    color: #fff;
-    background-color: #007bff;
-}
-
-.path-local-jobboard .btn-outline-secondary {
-    color: #6c757d;
-    border-color: #6c757d;
-    background-color: transparent;
-}
-
-.path-local-jobboard .btn-outline-secondary:hover {
-    color: #fff;
-    background-color: #6c757d;
-}
-
-/* Override theme badge styles */
-.path-local-jobboard .badge {
-    display: inline-block;
-    padding: 0.35em 0.65em;
-    font-size: 0.75em;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 0.25rem;
-}
-
-/* Override theme form styles */
-.path-local-jobboard .form-control {
-    display: block;
-    width: 100%;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: #495057;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.path-local-jobboard .form-control:focus {
-    color: #495057;
-    background-color: #fff;
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-.path-local-jobboard select.form-control {
-    height: calc(1.5em + 0.75rem + 2px);
-}
-
-/* Override theme alert styles */
-.path-local-jobboard .alert {
-    position: relative;
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 1rem;
-    border: 1px solid transparent;
-    border-radius: 0.25rem;
-}
-
-.path-local-jobboard .alert-info {
-    color: #0c5460;
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-}
-
-.path-local-jobboard .alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-}
-
-.path-local-jobboard .alert-warning {
-    color: #856404;
-    background-color: #fff3cd;
-    border-color: #ffeeba;
-}
-
-.path-local-jobboard .alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-
-/* Override theme pagination */
-.path-local-jobboard .pagination {
-    display: flex;
-    padding-left: 0;
-    list-style: none;
-    border-radius: 0.25rem;
-}
-
-.path-local-jobboard .page-link {
-    position: relative;
-    display: block;
-    padding: 0.5rem 0.75rem;
-    margin-left: -1px;
-    line-height: 1.25;
-    color: #007bff;
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-}
-
-.path-local-jobboard .page-link:hover {
-    z-index: 2;
-    color: #0056b3;
-    text-decoration: none;
-    background-color: #e9ecef;
-    border-color: #dee2e6;
-}
-
-.path-local-jobboard .page-item.active .page-link {
-    z-index: 3;
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-/* Fix navigation/link visibility */
-.path-local-jobboard a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.path-local-jobboard a:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-/* Override theme modal styles */
-.path-local-jobboard .modal-content {
-    background-color: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 0.3rem;
-}
-
-.path-local-jobboard .modal-header {
-    padding: 1rem;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.path-local-jobboard .modal-body {
-    padding: 1rem;
-}
-
-.path-local-jobboard .modal-footer {
-    padding: 1rem;
-    border-top: 1px solid #dee2e6;
-}
-
-/* Ensure proper spacing in plugin views */
-.path-local-jobboard .container-fluid {
-    padding-right: 15px;
-    padding-left: 15px;
-}
-
-.path-local-jobboard .row {
-    margin-right: -15px;
-    margin-left: -15px;
-}
-
-.path-local-jobboard [class*="col-"] {
-    padding-right: 15px;
-    padding-left: 15px;
-}
-
-/* Override text colors for readability */
-.path-local-jobboard .text-muted {
-    color: #6c757d !important;
-}
-
-.path-local-jobboard .text-primary {
-    color: #007bff !important;
-}
-
-.path-local-jobboard .text-success {
-    color: #28a745 !important;
-}
-
-.path-local-jobboard .text-danger {
-    color: #dc3545 !important;
-}
-
-.path-local-jobboard .text-warning {
-    color: #ffc107 !important;
-}
-
-.path-local-jobboard .text-info {
-    color: #17a2b8 !important;
-}
-
-/* Ensure dropdown menus display correctly */
-.path-local-jobboard .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    display: none;
-    min-width: 10rem;
-    padding: 0.5rem 0;
-    margin: 0.125rem 0 0;
-    font-size: 1rem;
-    color: #212529;
-    text-align: left;
-    list-style: none;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 0.25rem;
-}
-
-.path-local-jobboard .dropdown-menu.show {
-    display: block;
-}
-
-.path-local-jobboard .dropdown-item {
-    display: block;
-    width: 100%;
-    padding: 0.25rem 1.5rem;
-    clear: both;
-    font-weight: 400;
-    color: #212529;
-    text-align: inherit;
-    white-space: nowrap;
-    background-color: transparent;
-    border: 0;
-}
-
-.path-local-jobboard .dropdown-item:hover,
-.path-local-jobboard .dropdown-item:focus {
-    color: #16181b;
-    text-decoration: none;
-    background-color: #f8f9fa;
-}
-
-/* ==========================================================================
-   Additional Theme Override Styles
-   Complete isolation from remui/inteb themes
-   ========================================================================== */
-
-/* Background colors */
-.path-local-jobboard .bg-primary { background-color: #007bff !important; }
-.path-local-jobboard .bg-secondary { background-color: #6c757d !important; }
-.path-local-jobboard .bg-success { background-color: #28a745 !important; }
-.path-local-jobboard .bg-danger { background-color: #dc3545 !important; }
-.path-local-jobboard .bg-warning { background-color: #ffc107 !important; }
-.path-local-jobboard .bg-info { background-color: #17a2b8 !important; }
-.path-local-jobboard .bg-light { background-color: #f8f9fa !important; }
-.path-local-jobboard .bg-dark { background-color: #343a40 !important; }
-.path-local-jobboard .bg-white { background-color: #fff !important; }
-
-/* Text white for dark backgrounds */
-.path-local-jobboard .text-white { color: #fff !important; }
-.path-local-jobboard .text-dark { color: #343a40 !important; }
-
-/* Additional button variants */
-.path-local-jobboard .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    color: #fff;
-}
-
-.path-local-jobboard .btn-secondary:hover {
-    background-color: #5a6268;
-    border-color: #545b62;
-}
-
-.path-local-jobboard .btn-warning {
-    background-color: #ffc107;
-    border-color: #ffc107;
-    color: #212529;
-}
-
-.path-local-jobboard .btn-warning:hover {
-    background-color: #e0a800;
-    border-color: #d39e00;
-}
-
-.path-local-jobboard .btn-info {
-    background-color: #17a2b8;
-    border-color: #17a2b8;
-    color: #fff;
-}
-
-.path-local-jobboard .btn-info:hover {
-    background-color: #138496;
-    border-color: #117a8b;
-}
-
-.path-local-jobboard .btn-light {
-    background-color: #f8f9fa;
-    border-color: #f8f9fa;
-    color: #212529;
-}
-
-.path-local-jobboard .btn-light:hover {
-    background-color: #e2e6ea;
-    border-color: #dae0e5;
-}
-
-.path-local-jobboard .btn-dark {
-    background-color: #343a40;
-    border-color: #343a40;
-    color: #fff;
-}
-
-.path-local-jobboard .btn-dark:hover {
-    background-color: #23272b;
-    border-color: #1d2124;
-}
-
-.path-local-jobboard .btn-link {
-    font-weight: 400;
-    color: #007bff;
-    text-decoration: none;
-    background-color: transparent;
-    border-color: transparent;
-}
-
-.path-local-jobboard .btn-link:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-/* Outline button variants */
-.path-local-jobboard .btn-outline-success {
-    color: #28a745;
-    border-color: #28a745;
-    background-color: transparent;
-}
-
-.path-local-jobboard .btn-outline-success:hover {
-    color: #fff;
-    background-color: #28a745;
-}
-
-.path-local-jobboard .btn-outline-danger {
-    color: #dc3545;
-    border-color: #dc3545;
-    background-color: transparent;
-}
-
-.path-local-jobboard .btn-outline-danger:hover {
-    color: #fff;
-    background-color: #dc3545;
-}
-
-.path-local-jobboard .btn-outline-warning {
-    color: #ffc107;
-    border-color: #ffc107;
-    background-color: transparent;
-}
-
-.path-local-jobboard .btn-outline-warning:hover {
-    color: #212529;
-    background-color: #ffc107;
-}
-
-.path-local-jobboard .btn-outline-info {
-    color: #17a2b8;
-    border-color: #17a2b8;
-    background-color: transparent;
-}
-
-.path-local-jobboard .btn-outline-info:hover {
-    color: #fff;
-    background-color: #17a2b8;
-}
-
-/* List groups */
-.path-local-jobboard .list-group {
-    display: flex;
-    flex-direction: column;
-    padding-left: 0;
-    margin-bottom: 0;
-}
-
-.path-local-jobboard .list-group-item {
-    position: relative;
-    display: block;
-    padding: 0.75rem 1.25rem;
-    margin-bottom: -1px;
-    background-color: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-.path-local-jobboard .list-group-item:first-child {
-    border-top-left-radius: 0.25rem;
-    border-top-right-radius: 0.25rem;
-}
-
-.path-local-jobboard .list-group-item:last-child {
-    margin-bottom: 0;
-    border-bottom-right-radius: 0.25rem;
-    border-bottom-left-radius: 0.25rem;
-}
-
-.path-local-jobboard .list-group-item.active {
-    z-index: 2;
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-/* Progress bars */
-.path-local-jobboard .progress {
-    display: flex;
-    height: 1rem;
-    overflow: hidden;
-    font-size: 0.75rem;
-    background-color: #e9ecef;
-    border-radius: 0.25rem;
-}
-
-.path-local-jobboard .progress-bar {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: #fff;
-    text-align: center;
-    white-space: nowrap;
-    background-color: #007bff;
-    transition: width 0.6s ease;
-}
-
-.path-local-jobboard .progress-bar.bg-success {
-    background-color: #28a745 !important;
-}
-
-.path-local-jobboard .progress-bar.bg-warning {
-    background-color: #ffc107 !important;
-}
-
-.path-local-jobboard .progress-bar.bg-danger {
-    background-color: #dc3545 !important;
-}
-
-/* Borders */
-.path-local-jobboard .border { border: 1px solid #dee2e6 !important; }
-.path-local-jobboard .border-top { border-top: 1px solid #dee2e6 !important; }
-.path-local-jobboard .border-right { border-right: 1px solid #dee2e6 !important; }
-.path-local-jobboard .border-bottom { border-bottom: 1px solid #dee2e6 !important; }
-.path-local-jobboard .border-left { border-left: 1px solid #dee2e6 !important; }
-.path-local-jobboard .border-0 { border: 0 !important; }
-
-.path-local-jobboard .border-primary { border-color: #007bff !important; }
-.path-local-jobboard .border-secondary { border-color: #6c757d !important; }
-.path-local-jobboard .border-success { border-color: #28a745 !important; }
-.path-local-jobboard .border-danger { border-color: #dc3545 !important; }
-.path-local-jobboard .border-warning { border-color: #ffc107 !important; }
-.path-local-jobboard .border-info { border-color: #17a2b8 !important; }
-
-/* Shadows */
-.path-local-jobboard .shadow-sm { box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important; }
-.path-local-jobboard .shadow { box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important; }
-.path-local-jobboard .shadow-lg { box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important; }
-.path-local-jobboard .shadow-none { box-shadow: none !important; }
-
-/* Typography */
-.path-local-jobboard h1, .path-local-jobboard .h1 { font-size: 2.5rem; font-weight: 500; }
-.path-local-jobboard h2, .path-local-jobboard .h2 { font-size: 2rem; font-weight: 500; }
-.path-local-jobboard h3, .path-local-jobboard .h3 { font-size: 1.75rem; font-weight: 500; }
-.path-local-jobboard h4, .path-local-jobboard .h4 { font-size: 1.5rem; font-weight: 500; }
-.path-local-jobboard h5, .path-local-jobboard .h5 { font-size: 1.25rem; font-weight: 500; }
-.path-local-jobboard h6, .path-local-jobboard .h6 { font-size: 1rem; font-weight: 500; }
-
-.path-local-jobboard .lead { font-size: 1.25rem; font-weight: 300; }
-.path-local-jobboard .small, .path-local-jobboard small { font-size: 80%; font-weight: 400; }
-
-.path-local-jobboard .font-weight-bold { font-weight: 700 !important; }
-.path-local-jobboard .font-weight-normal { font-weight: 400 !important; }
-.path-local-jobboard .font-weight-light { font-weight: 300 !important; }
-
-/* Input groups */
-.path-local-jobboard .input-group {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-    width: 100%;
-}
-
-.path-local-jobboard .input-group > .form-control {
-    position: relative;
-    flex: 1 1 auto;
-    width: 1%;
-    margin-bottom: 0;
-}
-
-.path-local-jobboard .input-group-prepend,
-.path-local-jobboard .input-group-append {
-    display: flex;
-}
-
-.path-local-jobboard .input-group-text {
-    display: flex;
-    align-items: center;
-    padding: 0.375rem 0.75rem;
-    margin-bottom: 0;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #495057;
-    text-align: center;
-    white-space: nowrap;
-    background-color: #e9ecef;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-}
-
-/* Custom form elements */
-.path-local-jobboard .custom-control {
-    position: relative;
-    display: block;
-    min-height: 1.5rem;
-    padding-left: 1.5rem;
-}
-
-.path-local-jobboard .custom-control-input {
-    position: absolute;
-    z-index: -1;
-    opacity: 0;
-}
-
-.path-local-jobboard .custom-control-label {
-    position: relative;
-    margin-bottom: 0;
-    vertical-align: top;
-}
-
-.path-local-jobboard .custom-control-label::before {
-    position: absolute;
-    top: 0.25rem;
-    left: -1.5rem;
-    display: block;
-    width: 1rem;
-    height: 1rem;
-    pointer-events: none;
-    content: "";
-    background-color: #fff;
-    border: #adb5bd solid 1px;
-}
-
-.path-local-jobboard .custom-checkbox .custom-control-label::before {
-    border-radius: 0.25rem;
-}
-
-.path-local-jobboard .custom-control-input:checked ~ .custom-control-label::before {
-    color: #fff;
-    border-color: #007bff;
-    background-color: #007bff;
-}
-
-/* Tooltip and popover base */
-.path-local-jobboard .tooltip {
-    position: absolute;
-    z-index: 1070;
-    display: block;
-    margin: 0;
-    font-size: 0.875rem;
-    word-wrap: break-word;
-    opacity: 0;
-}
-
-.path-local-jobboard .tooltip.show { opacity: 0.9; }
-
-.path-local-jobboard .tooltip-inner {
-    max-width: 200px;
-    padding: 0.25rem 0.5rem;
-    color: #fff;
-    text-align: center;
-    background-color: #000;
-    border-radius: 0.25rem;
-}
-
-/* Spacing utilities (ensure theme doesn't override) */
-.path-local-jobboard .m-0 { margin: 0 !important; }
-.path-local-jobboard .m-1 { margin: 0.25rem !important; }
-.path-local-jobboard .m-2 { margin: 0.5rem !important; }
-.path-local-jobboard .m-3 { margin: 1rem !important; }
-.path-local-jobboard .m-4 { margin: 1.5rem !important; }
-.path-local-jobboard .m-5 { margin: 3rem !important; }
-
-.path-local-jobboard .p-0 { padding: 0 !important; }
-.path-local-jobboard .p-1 { padding: 0.25rem !important; }
-.path-local-jobboard .p-2 { padding: 0.5rem !important; }
-.path-local-jobboard .p-3 { padding: 1rem !important; }
-.path-local-jobboard .p-4 { padding: 1.5rem !important; }
-.path-local-jobboard .p-5 { padding: 3rem !important; }
-
-.path-local-jobboard .mb-0 { margin-bottom: 0 !important; }
-.path-local-jobboard .mb-1 { margin-bottom: 0.25rem !important; }
-.path-local-jobboard .mb-2 { margin-bottom: 0.5rem !important; }
-.path-local-jobboard .mb-3 { margin-bottom: 1rem !important; }
-.path-local-jobboard .mb-4 { margin-bottom: 1.5rem !important; }
-.path-local-jobboard .mb-5 { margin-bottom: 3rem !important; }
-
-.path-local-jobboard .mt-0 { margin-top: 0 !important; }
-.path-local-jobboard .mt-1 { margin-top: 0.25rem !important; }
-.path-local-jobboard .mt-2 { margin-top: 0.5rem !important; }
-.path-local-jobboard .mt-3 { margin-top: 1rem !important; }
-.path-local-jobboard .mt-4 { margin-top: 1.5rem !important; }
-.path-local-jobboard .mt-5 { margin-top: 3rem !important; }
-
-.path-local-jobboard .mr-1 { margin-right: 0.25rem !important; }
-.path-local-jobboard .mr-2 { margin-right: 0.5rem !important; }
-.path-local-jobboard .mr-3 { margin-right: 1rem !important; }
-
-.path-local-jobboard .ml-1 { margin-left: 0.25rem !important; }
-.path-local-jobboard .ml-2 { margin-left: 0.5rem !important; }
-.path-local-jobboard .ml-3 { margin-left: 1rem !important; }
-.path-local-jobboard .ml-auto { margin-left: auto !important; }
-
-.path-local-jobboard .py-2 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
-.path-local-jobboard .py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
-.path-local-jobboard .px-2 { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
-.path-local-jobboard .px-3 { padding-left: 1rem !important; padding-right: 1rem !important; }
-
-/* Display utilities */
-.path-local-jobboard .d-none { display: none !important; }
-.path-local-jobboard .d-inline { display: inline !important; }
-.path-local-jobboard .d-inline-block { display: inline-block !important; }
-.path-local-jobboard .d-block { display: block !important; }
-.path-local-jobboard .d-flex { display: flex !important; }
-.path-local-jobboard .d-inline-flex { display: inline-flex !important; }
-
-/* Flex utilities */
-.path-local-jobboard .flex-row { flex-direction: row !important; }
-.path-local-jobboard .flex-column { flex-direction: column !important; }
-.path-local-jobboard .flex-wrap { flex-wrap: wrap !important; }
-.path-local-jobboard .flex-nowrap { flex-wrap: nowrap !important; }
-.path-local-jobboard .flex-grow-1 { flex-grow: 1 !important; }
-.path-local-jobboard .flex-shrink-0 { flex-shrink: 0 !important; }
-
-.path-local-jobboard .justify-content-start { justify-content: flex-start !important; }
-.path-local-jobboard .justify-content-end { justify-content: flex-end !important; }
-.path-local-jobboard .justify-content-center { justify-content: center !important; }
-.path-local-jobboard .justify-content-between { justify-content: space-between !important; }
-.path-local-jobboard .justify-content-around { justify-content: space-around !important; }
-
-.path-local-jobboard .align-items-start { align-items: flex-start !important; }
-.path-local-jobboard .align-items-end { align-items: flex-end !important; }
-.path-local-jobboard .align-items-center { align-items: center !important; }
-.path-local-jobboard .align-items-baseline { align-items: baseline !important; }
-.path-local-jobboard .align-items-stretch { align-items: stretch !important; }
-
-/* Text alignment */
-.path-local-jobboard .text-left { text-align: left !important; }
-.path-local-jobboard .text-right { text-align: right !important; }
-.path-local-jobboard .text-center { text-align: center !important; }
-
-/* Visibility */
-.path-local-jobboard .visible { visibility: visible !important; }
-.path-local-jobboard .invisible { visibility: hidden !important; }
-
-/* Width/Height utilities */
-.path-local-jobboard .w-25 { width: 25% !important; }
-.path-local-jobboard .w-50 { width: 50% !important; }
-.path-local-jobboard .w-75 { width: 75% !important; }
-.path-local-jobboard .w-100 { width: 100% !important; }
-.path-local-jobboard .w-auto { width: auto !important; }
-
-.path-local-jobboard .h-25 { height: 25% !important; }
-.path-local-jobboard .h-50 { height: 50% !important; }
-.path-local-jobboard .h-75 { height: 75% !important; }
-.path-local-jobboard .h-100 { height: 100% !important; }
-.path-local-jobboard .h-auto { height: auto !important; }
-
-/* Rounded corners */
-.path-local-jobboard .rounded { border-radius: 0.25rem !important; }
-.path-local-jobboard .rounded-top { border-top-left-radius: 0.25rem !important; border-top-right-radius: 0.25rem !important; }
-.path-local-jobboard .rounded-bottom { border-bottom-right-radius: 0.25rem !important; border-bottom-left-radius: 0.25rem !important; }
-.path-local-jobboard .rounded-circle { border-radius: 50% !important; }
-.path-local-jobboard .rounded-0 { border-radius: 0 !important; }
-
-/* Position */
-.path-local-jobboard .position-relative { position: relative !important; }
-.path-local-jobboard .position-absolute { position: absolute !important; }
-.path-local-jobboard .position-fixed { position: fixed !important; }
-.path-local-jobboard .position-sticky { position: sticky !important; }
-
-/* Overflow */
-.path-local-jobboard .overflow-auto { overflow: auto !important; }
-.path-local-jobboard .overflow-hidden { overflow: hidden !important; }
-
-/* Float */
-.path-local-jobboard .float-left { float: left !important; }
-.path-local-jobboard .float-right { float: right !important; }
-.path-local-jobboard .float-none { float: none !important; }
-.path-local-jobboard .clearfix::after {
-    display: block;
-    clear: both;
-    content: "";
+@media print {
+    .path-local-jobboard .btn,
+    .path-local-jobboard .pagination,
+    .path-local-jobboard .jb-filter-form {
+        display: none !important;
+    }
+
+    .path-local-jobboard .badge {
+        border: 1px solid currentColor;
+    }
+
+    .path-local-jobboard .card {
+        break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
+    }
 }

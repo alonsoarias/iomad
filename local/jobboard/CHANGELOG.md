@@ -7,6 +7,34 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.8] - 2025-12-06
+
+### Corregido
+- **CSS completamente reescrito para aislamiento total**
+  - **CRÍTICO**: Removidos todos los estilos globales que afectaban la plataforma
+  - Eliminado `@media (prefers-reduced-motion) { * {...} }` que afectaba TODOS los elementos
+  - Eliminado `.card:focus-within` global que afectaba todas las tarjetas
+  - Eliminados estilos de print con selectores globales (`.btn`, `.badge`, `.card`)
+  - Eliminados overrides de Bootstrap utilities sin scope
+
+### Eliminado
+- Más de 1000 líneas de CSS con estilos globales o excesivos
+- Todas las reglas que no tenían prefijo `.path-local-jobboard`
+- Overrides de componentes Bootstrap (buttons, cards, alerts, etc.)
+- Reglas de accesibilidad globales que conflictuaban con el tema
+
+### Modificado
+- **styles.css**: Reducido a ~210 líneas (antes >1300 líneas)
+  - Todos los estilos ahora usan `.path-local-jobboard` como prefijo
+  - Solo se mantienen estilos específicos del plugin:
+    - Badges de estado de aplicaciones
+    - Componentes `.jb-*` (workflow, stats, filters)
+    - Utilidades específicas (border-left-*)
+  - Print styles ahora también tienen scope correcto
+- **version.php**: Incrementado a 2.0.8 (2025120626)
+
+---
+
 ## [2.0.7] - 2025-12-06
 
 ### Corregido
