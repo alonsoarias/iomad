@@ -64,14 +64,24 @@ $PAGE->navbar->add($convocatoria ? s($convocatoria->name) : get_string('addconvo
 // Base URLs.
 $returnurl = new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']);
 
-// Create form.
+// Form URL must include all necessary parameters.
+$formurlparams = ['view' => 'convocatoria'];
+if ($convocatoriaid) {
+    $formurlparams['id'] = $convocatoriaid;
+}
+if ($action) {
+    $formurlparams['action'] = $action;
+}
+$formurl = new moodle_url('/local/jobboard/index.php', $formurlparams);
+
+// Create form with explicit URL.
 $formdata = [
     'convocatoria' => $convocatoria,
     'isiomad' => $isiomad,
     'companies' => $companies,
 ];
 
-$form = new \local_jobboard\forms\convocatoria_form(null, $formdata);
+$form = new \local_jobboard\forms\convocatoria_form($formurl, $formdata);
 
 // Set form data if editing.
 if ($convocatoria) {
@@ -91,15 +101,20 @@ if ($isiomad) {
 // Handle submission.
 if ($data = $form->get_data()) {
     try {
-        // Process description and terms.
+        // Process description field (editor returns array with 'text' and 'format').
         $description = '';
-        if (!empty($data->description['text'])) {
+        if (is_array($data->description) && !empty($data->description['text'])) {
             $description = $data->description['text'];
+        } else if (is_string($data->description)) {
+            $description = $data->description;
         }
 
+        // Process terms field (editor returns array with 'text' and 'format').
         $terms = '';
-        if (!empty($data->terms['text'])) {
+        if (is_array($data->terms) && !empty($data->terms['text'])) {
             $terms = $data->terms['text'];
+        } else if (is_string($data->terms)) {
+            $terms = $data->terms;
         }
 
         if ($convocatoria) {
