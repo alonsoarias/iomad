@@ -31,6 +31,20 @@ defined('MOODLE_INTERNAL') || die();
  * 1. The Moodle navigation drawer (side navigation)
  * 2. The main navigation menu (custom menu items in top bar)
  *
+ * Navigation Structure:
+ * - Dashboard (main page)
+ * - Public Vacancies (if enabled)
+ * - Available Vacancies
+ * - My Applications
+ * - Management Section (for managers):
+ *   - Manage Convocatorias
+ *   - Manage Vacancies
+ * - Review Section (for reviewers):
+ *   - Review Applications
+ *   - My Reviews
+ * - Reports
+ * - Settings
+ *
  * @param global_navigation $navigation The global navigation object.
  */
 function local_jobboard_extend_navigation(global_navigation $navigation) {
@@ -67,7 +81,7 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
         }
 
         if ($isloggedin) {
-            // Vacancies submenu.
+            // Available vacancies submenu.
             if (has_capability('local/jobboard:apply', $context) || has_capability('local/jobboard:viewallvacancies', $context)) {
                 $vacancylabel = get_string('vacancies', 'local_jobboard');
                 $menuentry .= "\n-$vacancylabel|/local/jobboard/index.php?view=vacancies";
@@ -81,15 +95,25 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
 
             // Management submenus for authorized users.
             if (has_capability('local/jobboard:createvacancy', $context)) {
+                // Convocatorias management.
+                $convocatorialabel = get_string('manageconvocatorias', 'local_jobboard');
+                $menuentry .= "\n-$convocatorialabel|/local/jobboard/index.php?view=convocatorias";
+
+                // Vacancies management.
                 $managelabel = get_string('managevacancies', 'local_jobboard');
                 $menuentry .= "\n-$managelabel|/local/jobboard/index.php?view=manage";
             }
 
+            // Review submenus for reviewers.
             if (has_capability('local/jobboard:reviewdocuments', $context)) {
                 $reviewlabel = get_string('reviewapplications', 'local_jobboard');
                 $menuentry .= "\n-$reviewlabel|/local/jobboard/index.php?view=review";
+
+                $myreviewslabel = get_string('myreviews', 'local_jobboard');
+                $menuentry .= "\n-$myreviewslabel|/local/jobboard/index.php?view=myreviews";
             }
 
+            // Reports.
             if (has_capability('local/jobboard:viewreports', $context)) {
                 $reportslabel = get_string('reports', 'local_jobboard');
                 $menuentry .= "\n-$reportslabel|/local/jobboard/index.php?view=reports";
@@ -153,8 +177,16 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
         );
     }
 
-    // Add management links for managers.
+    // Management section for managers.
     if (has_capability('local/jobboard:createvacancy', $context)) {
+        // Add convocatorias management.
+        $jobboardnode->add(
+            get_string('manageconvocatorias', 'local_jobboard'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
+            navigation_node::TYPE_CUSTOM
+        );
+
+        // Add vacancies management.
         $jobboardnode->add(
             get_string('managevacancies', 'local_jobboard'),
             new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
@@ -162,11 +194,19 @@ function local_jobboard_extend_navigation(global_navigation $navigation) {
         );
     }
 
-    // Add review applications for reviewers.
+    // Review section for reviewers.
     if (has_capability('local/jobboard:reviewdocuments', $context)) {
+        // All applications to review.
         $jobboardnode->add(
             get_string('reviewapplications', 'local_jobboard'),
             new moodle_url('/local/jobboard/index.php', ['view' => 'review']),
+            navigation_node::TYPE_CUSTOM
+        );
+
+        // My assigned reviews.
+        $jobboardnode->add(
+            get_string('myreviews', 'local_jobboard'),
+            new moodle_url('/local/jobboard/index.php', ['view' => 'myreviews']),
             navigation_node::TYPE_CUSTOM
         );
     }
