@@ -83,6 +83,11 @@ if ($form->is_cancelled()) {
     redirect($returnurl);
 }
 
+// Load AMD module for IOMAD company/department selection.
+if ($isiomad) {
+    $PAGE->requires->js_call_amd('local_jobboard/vacancy_form', 'init', []);
+}
+
 // Handle submission.
 if ($data = $form->get_data()) {
     try {
