@@ -73,7 +73,7 @@ define(['jquery', 'core/modal_factory', 'core/modal_events', 'core/str', 'core/n
             var notRegisteredBtn = strings[3];
             var registeredDesc = strings[4];
             var notRegisteredDesc = strings[5];
-            var cancelBtn = strings[6];
+            // strings[6] is 'cancel' - not used in current UI but kept for future use.
 
             // Build modal body HTML.
             var bodyHtml = '<div class="apply-modal-content text-center">';

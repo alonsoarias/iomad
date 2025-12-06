@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120601;  // Fix convocatoria form AMD module loading for departments.
+$plugin->version = 2025120602;  // Recompile AMD modules and fix ESLint errors.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.22-beta';
+$plugin->release = '1.9.23-beta';

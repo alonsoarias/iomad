@@ -37,9 +37,6 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             return;
         }
 
-        // Store the current department ID if editing.
-        var currentDepartmentId = departmentSelect.val();
-
         // Handle company change.
         companySelect.on('change', function() {
             var companyId = $(this).val();
