@@ -38,7 +38,7 @@
       "title": "tour_vacancies_step2_title,local_jobboard",
       "content": "tour_vacancies_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "form.mb-4",
+      "targetvalue": ".jb-stat-card, .row.mb-4 .col-lg-3:first-child",
       "sortorder": 1,
       "configdata": {
         "placement": "bottom"
@@ -48,7 +48,7 @@
       "title": "tour_vacancies_step3_title,local_jobboard",
       "content": "tour_vacancies_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "input[name='search']",
+      "targetvalue": ".jb-filter-form, form.card.mb-4",
       "sortorder": 2,
       "configdata": {
         "placement": "bottom"
@@ -58,7 +58,7 @@
       "title": "tour_vacancies_step4_title,local_jobboard",
       "content": "tour_vacancies_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "select[name='status']",
+      "targetvalue": "input[name='search'], .form-control[name='search']",
       "sortorder": 3,
       "configdata": {
         "placement": "bottom"
@@ -68,7 +68,7 @@
       "title": "tour_vacancies_step5_title,local_jobboard",
       "content": "tour_vacancies_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".table",
+      "targetvalue": ".jb-vacancy-card, .row .col-lg-4:first-child .card",
       "sortorder": 4,
       "configdata": {
         "placement": "top"
@@ -78,7 +78,7 @@
       "title": "tour_vacancies_step6_title,local_jobboard",
       "content": "tour_vacancies_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".badge-success",
+      "targetvalue": ".card-header .badge-success, .badge-warning",
       "sortorder": 5,
       "configdata": {
         "placement": "right"
@@ -88,7 +88,7 @@
       "title": "tour_vacancies_step7_title,local_jobboard",
       "content": "tour_vacancies_step7_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-primary",
+      "targetvalue": ".card-footer .btn-primary",
       "sortorder": 6,
       "configdata": {
         "placement": "left"

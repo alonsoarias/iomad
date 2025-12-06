@@ -38,7 +38,7 @@
       "title": "tour_review_step2_title,local_jobboard",
       "content": "tour_review_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "form.form-inline, select[name='vacancyid']",
+      "targetvalue": ".jb-stat-card, .col-lg-3",
       "sortorder": 1,
       "configdata": {
         "placement": "bottom"
@@ -48,27 +48,27 @@
       "title": "tour_review_step3_title,local_jobboard",
       "content": "tour_review_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".review-table, .generaltable",
+      "targetvalue": ".jb-filter-form, form.card",
       "sortorder": 2,
       "configdata": {
-        "placement": "top"
+        "placement": "bottom"
       }
     },
     {
       "title": "tour_review_step4_title,local_jobboard",
       "content": "tour_review_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".badge-warning, .badge-danger",
+      "targetvalue": ".row .card.shadow-sm",
       "sortorder": 3,
       "configdata": {
-        "placement": "left"
+        "placement": "top"
       }
     },
     {
       "title": "tour_review_step5_title,local_jobboard",
       "content": "tour_review_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card-header, .applicationdetails",
+      "targetvalue": ".card-header.bg-warning, .card-header.bg-success",
       "sortorder": 4,
       "configdata": {
         "placement": "bottom"
@@ -88,7 +88,7 @@
       "title": "tour_review_step7_title,local_jobboard",
       "content": "tour_review_step7_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-success, .btn-danger",
+      "targetvalue": ".btn-success.btn-sm, .btn-danger.btn-sm",
       "sortorder": 6,
       "configdata": {
         "placement": "top"
@@ -98,7 +98,7 @@
       "title": "tour_review_step8_title,local_jobboard",
       "content": "tour_review_step8_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-validateall, [data-action='validateall']",
+      "targetvalue": ".card.border-primary .btn-success.btn-lg",
       "sortorder": 7,
       "configdata": {
         "placement": "left"

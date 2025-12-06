@@ -2546,3 +2546,24 @@ $string['tooltip_quickapply'] = 'Iniciar tu postulación';
 $string['tooltip_trackstatus'] = 'Seguir el estado de tu postulación';
 $string['tooltip_downloadall'] = 'Descargar todos los documentos';
 $string['tooltip_filterresults'] = 'Filtrar resultados por criterios';
+
+// ============================================================================
+// Cadenas de rediseño de la interfaz de revisión
+// ============================================================================
+$string['pendingreview'] = 'Pendiente de Revisión';
+$string['reviewapplication'] = 'Revisar Postulación';
+$string['reviewprogress'] = 'Progreso de Revisión';
+$string['alldocsreviewed'] = 'Todos los documentos han sido revisados';
+$string['rejectreason_placeholder'] = 'Describa el motivo del rechazo...';
+
+// Cadenas de rediseño de la página pública.
+$string['alllocations'] = 'Todas las ubicaciones';
+$string['allconvocatorias'] = 'Todas las convocatorias';
+$string['openvacancies'] = 'Vacantes Abiertas';
+$string['logintoapply'] = 'Inicia sesión para postularte a esta posición';
+
+// General.
+$string['viewall'] = 'Ver todos';
+$string['urgent'] = 'Urgente';
+$string['pending'] = 'Pendiente';
+$string['allstatuses'] = 'Todos los estados';

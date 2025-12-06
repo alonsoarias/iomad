@@ -17,7 +17,7 @@
 /**
  * My reviews view for local_jobboard.
  *
- * This file is included by index.php and should not be accessed directly.
+ * Modern redesign with card-based layout and reviewer statistics.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 use local_jobboard\application;
 use local_jobboard\document;
 use local_jobboard\reviewer;
+use local_jobboard\output\ui_helper;
 
 // Require review capability.
 require_capability('local/jobboard:reviewdocuments', $context);
@@ -44,6 +45,7 @@ $perpage = optional_param('perpage', 20, PARAM_INT);
 $PAGE->set_title(get_string('myreviews', 'local_jobboard'));
 $PAGE->set_heading(get_string('myreviews', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
+$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Navbar.
 $PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
@@ -75,8 +77,7 @@ if ($priority === 'closing') {
     $orderby = 'v.closedate ASC, a.timecreated ASC';
 } else if ($priority === 'pending') {
     $orderby = "(SELECT COUNT(*) FROM {local_jobboard_document} d
-                  WHERE d.applicationid = a.id AND d.issuperseded = 0
-                  AND NOT EXISTS (SELECT 1 FROM {local_jobboard_doc_validation} dv WHERE dv.documentid = d.id)) DESC,
+                  WHERE d.applicationid = a.id AND d.issuperseded = 0 AND d.status = 'pending') DESC,
                  a.timecreated ASC";
 }
 
@@ -93,13 +94,11 @@ $sql = "SELECT a.*, v.code as vacancy_code, v.title as vacancy_title, v.closedat
                (SELECT COUNT(*) FROM {local_jobboard_document} d
                  WHERE d.applicationid = a.id AND d.issuperseded = 0) as total_docs,
                (SELECT COUNT(*) FROM {local_jobboard_document} d
-                 WHERE d.applicationid = a.id AND d.issuperseded = 0
-                 AND EXISTS (SELECT 1 FROM {local_jobboard_doc_validation} dv
-                             WHERE dv.documentid = d.id AND dv.isvalid = 1)) as validated_docs,
+                 WHERE d.applicationid = a.id AND d.issuperseded = 0 AND d.status = 'approved') as validated_docs,
                (SELECT COUNT(*) FROM {local_jobboard_document} d
-                 WHERE d.applicationid = a.id AND d.issuperseded = 0
-                 AND EXISTS (SELECT 1 FROM {local_jobboard_doc_validation} dv
-                             WHERE dv.documentid = d.id AND dv.isvalid = 0)) as rejected_docs
+                 WHERE d.applicationid = a.id AND d.issuperseded = 0 AND d.status = 'rejected') as rejected_docs,
+               (SELECT COUNT(*) FROM {local_jobboard_document} d
+                 WHERE d.applicationid = a.id AND d.issuperseded = 0 AND d.status = 'pending') as pending_docs
           FROM {local_jobboard_application} a
           JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
           JOIN {user} u ON u.id = a.userid
@@ -117,196 +116,283 @@ $vacancysql = "SELECT DISTINCT v.id, v.code, v.title
 $vacancies = $DB->get_records_sql($vacancysql, ['reviewerid' => $USER->id]);
 
 echo $OUTPUT->header();
+echo ui_helper::get_inline_styles();
 
-echo $OUTPUT->heading(get_string('myreviews', 'local_jobboard'));
+echo html_writer::start_div('local-jobboard-myreviews');
 
-// Stats cards.
-echo '<div class="row mb-4">';
+// ============================================================================
+// PAGE HEADER
+// ============================================================================
+$breadcrumbs = [
+    get_string('dashboard', 'local_jobboard') => new moodle_url('/local/jobboard/index.php'),
+    get_string('myreviews', 'local_jobboard') => null,
+];
 
-echo '<div class="col-md-3 col-sm-6 mb-3">';
-echo '<div class="card bg-primary text-white h-100">';
-echo '<div class="card-body text-center">';
-echo '<h2>' . $myworkload . '</h2>';
-echo '<p class="mb-0">' . get_string('pendingassignments', 'local_jobboard') . '</p>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
+echo ui_helper::page_header(
+    get_string('myreviews', 'local_jobboard'),
+    $breadcrumbs,
+    [[
+        'url' => new moodle_url('/local/jobboard/index.php', ['view' => 'review']),
+        'label' => get_string('reviewdocuments', 'local_jobboard'),
+        'icon' => 'clipboard-check',
+        'class' => 'btn btn-primary',
+    ]]
+);
 
-echo '<div class="col-md-3 col-sm-6 mb-3">';
-echo '<div class="card bg-success text-white h-100">';
-echo '<div class="card-body text-center">';
-echo '<h2>' . $mystats['validated'] . '</h2>';
-echo '<p class="mb-0">' . get_string('documentsvalidated', 'local_jobboard') . '</p>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
+// ============================================================================
+// STATISTICS ROW
+// ============================================================================
+echo html_writer::start_div('row mb-4');
+echo ui_helper::stat_card(
+    (string)$myworkload,
+    get_string('pendingassignments', 'local_jobboard'),
+    'primary', 'tasks'
+);
+echo ui_helper::stat_card(
+    (string)$mystats['validated'],
+    get_string('documentsvalidated', 'local_jobboard'),
+    'success', 'check-circle'
+);
+echo ui_helper::stat_card(
+    (string)$mystats['rejected'],
+    get_string('documentsrejected', 'local_jobboard'),
+    'danger', 'times-circle'
+);
+echo ui_helper::stat_card(
+    round($mystats['avg_time_hours'], 1) . 'h',
+    get_string('avgvalidationtime', 'local_jobboard'),
+    'info', 'clock'
+);
+echo html_writer::end_div();
 
-echo '<div class="col-md-3 col-sm-6 mb-3">';
-echo '<div class="card bg-danger text-white h-100">';
-echo '<div class="card-body text-center">';
-echo '<h2>' . $mystats['rejected'] . '</h2>';
-echo '<p class="mb-0">' . get_string('documentsrejected', 'local_jobboard') . '</p>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
-
-echo '<div class="col-md-3 col-sm-6 mb-3">';
-echo '<div class="card bg-info text-white h-100">';
-echo '<div class="card-body text-center">';
-echo '<h2>' . round($mystats['avg_time_hours'], 1) . 'h</h2>';
-echo '<p class="mb-0">' . get_string('avgvalidationtime', 'local_jobboard') . '</p>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
-
-echo '</div>';
-
-// Filters.
-echo '<div class="card mb-4">';
-echo '<div class="card-body">';
-echo '<form method="get" action="' . new moodle_url('/local/jobboard/index.php') . '" class="form-inline">';
-echo '<input type="hidden" name="view" value="myreviews">';
-
-// Status filter.
-echo '<div class="form-group mr-3 mb-2">';
-echo '<label for="status" class="mr-2">' . get_string('status') . ':</label>';
-echo '<select name="status" id="status" class="form-control">';
-echo '<option value="">' . get_string('all') . '</option>';
-$statuses = ['submitted', 'under_review', 'docs_validated', 'docs_rejected'];
-foreach ($statuses as $s) {
-    $selected = ($status === $s) ? 'selected' : '';
-    echo '<option value="' . $s . '" ' . $selected . '>' .
-        get_string('status_' . $s, 'local_jobboard') . '</option>';
+// ============================================================================
+// FILTER FORM
+// ============================================================================
+$statusOptions = ['' => get_string('allstatuses', 'local_jobboard')];
+foreach (['submitted', 'under_review', 'docs_validated', 'docs_rejected'] as $s) {
+    $statusOptions[$s] = get_string('status_' . $s, 'local_jobboard');
 }
-echo '</select>';
-echo '</div>';
 
-// Vacancy filter.
-echo '<div class="form-group mr-3 mb-2">';
-echo '<label for="vacancy" class="mr-2">' . get_string('vacancy', 'local_jobboard') . ':</label>';
-echo '<select name="vacancy" id="vacancy" class="form-control">';
-echo '<option value="0">' . get_string('all') . '</option>';
+$vacancyOptions = [0 => get_string('allvacancies', 'local_jobboard')];
 foreach ($vacancies as $v) {
-    $selected = ($vacancyid == $v->id) ? 'selected' : '';
-    echo '<option value="' . $v->id . '" ' . $selected . '>' .
-        format_string($v->code . ' - ' . $v->title) . '</option>';
+    $vacancyOptions[$v->id] = format_string($v->code . ' - ' . $v->title);
 }
-echo '</select>';
-echo '</div>';
 
-// Priority ordering.
-echo '<div class="form-group mr-3 mb-2">';
-echo '<label for="priority" class="mr-2">' . get_string('sortby', 'local_jobboard') . ':</label>';
-echo '<select name="priority" id="priority" class="form-control">';
-echo '<option value="">' . get_string('datesubmitted', 'local_jobboard') . '</option>';
-echo '<option value="closing"' . ($priority === 'closing' ? ' selected' : '') . '>' .
-    get_string('closingdate', 'local_jobboard') . '</option>';
-echo '<option value="pending"' . ($priority === 'pending' ? ' selected' : '') . '>' .
-    get_string('pendingdocuments', 'local_jobboard') . '</option>';
-echo '</select>';
-echo '</div>';
+$priorityOptions = [
+    '' => get_string('datesubmitted', 'local_jobboard'),
+    'closing' => get_string('closingdate', 'local_jobboard'),
+    'pending' => get_string('pendingdocuments', 'local_jobboard'),
+];
 
-echo '<button type="submit" class="btn btn-primary mb-2">' . get_string('filter') . '</button>';
-echo '</form>';
-echo '</div>';
-echo '</div>';
+$filterDefinitions = [
+    [
+        'type' => 'select',
+        'name' => 'status',
+        'options' => $statusOptions,
+        'col' => 'col-md-3',
+    ],
+    [
+        'type' => 'select',
+        'name' => 'vacancy',
+        'options' => $vacancyOptions,
+        'col' => 'col-md-4',
+    ],
+    [
+        'type' => 'select',
+        'name' => 'priority',
+        'label' => get_string('sortby', 'local_jobboard'),
+        'options' => $priorityOptions,
+        'col' => 'col-md-3',
+    ],
+];
 
-// Applications table.
+echo ui_helper::filter_form(
+    (new moodle_url('/local/jobboard/index.php'))->out(false),
+    $filterDefinitions,
+    ['status' => $status, 'vacancy' => $vacancyid, 'priority' => $priority],
+    ['view' => 'myreviews']
+);
+
+// ============================================================================
+// RESULTS INFO
+// ============================================================================
+$showing = new stdClass();
+$showing->from = $totalcount > 0 ? ($page * $perpage) + 1 : 0;
+$showing->to = min(($page + 1) * $perpage, $totalcount);
+$showing->total = $totalcount;
+echo html_writer::tag('p', get_string('showing', 'local_jobboard', $showing),
+    ['class' => 'text-muted small mb-3']);
+
+// ============================================================================
+// APPLICATIONS LIST
+// ============================================================================
 if (empty($applications)) {
-    echo $OUTPUT->notification(get_string('noassignments', 'local_jobboard'), 'info');
+    echo ui_helper::empty_state(
+        get_string('noassignments', 'local_jobboard'),
+        'clipboard-list'
+    );
 } else {
-    $table = new html_table();
-    $table->head = [
-        get_string('applicant', 'local_jobboard'),
-        get_string('vacancy', 'local_jobboard'),
-        get_string('status'),
-        get_string('documents', 'local_jobboard'),
-        get_string('progress', 'local_jobboard'),
-        get_string('closingdate', 'local_jobboard'),
-        get_string('actions'),
-    ];
-    $table->attributes['class'] = 'table table-striped table-hover';
+    echo html_writer::start_div('row');
 
     foreach ($applications as $app) {
-        // Calculate progress.
-        $totaldocs = $app->total_docs ?: 0;
-        $validatedocs = $app->validated_docs ?: 0;
-        $rejecteddocs = $app->rejected_docs ?: 0;
-        $pendingdocs = $totaldocs - $validatedocs - $rejecteddocs;
+        // Calculate stats.
+        $totaldocs = (int)$app->total_docs;
+        $validatedocs = (int)$app->validated_docs;
+        $rejecteddocs = (int)$app->rejected_docs;
+        $pendingdocs = (int)$app->pending_docs;
 
-        $progresspct = $totaldocs > 0 ? round(($validatedocs / $totaldocs) * 100) : 0;
+        // Urgency check.
+        $daysUntilClose = ceil(($app->closedate - time()) / 86400);
+        $isUrgent = $daysUntilClose <= 3 && $daysUntilClose > 0;
+        $isClosed = $daysUntilClose <= 0;
+
+        // Status color.
+        $statusClass = 'badge-secondary';
+        $headerClass = 'bg-secondary';
+        if (in_array($app->status, ['docs_validated', 'selected'])) {
+            $statusClass = 'badge-success';
+            $headerClass = 'bg-success';
+        } else if (in_array($app->status, ['docs_rejected', 'rejected'])) {
+            $statusClass = 'badge-danger';
+            $headerClass = 'bg-danger';
+        } else if ($app->status === 'under_review') {
+            $statusClass = 'badge-warning';
+            $headerClass = 'bg-warning';
+        } else if ($app->status === 'submitted') {
+            $statusClass = 'badge-info';
+            $headerClass = 'bg-info';
+        }
+
+        echo html_writer::start_div('col-lg-6 mb-4');
+        echo html_writer::start_div('card h-100 shadow-sm' . ($isUrgent ? ' border-danger' : ''));
+
+        // Card header.
+        echo html_writer::start_div('card-header d-flex justify-content-between align-items-center ' . $headerClass . ' text-white');
+        echo html_writer::tag('span',
+            get_string('status_' . $app->status, 'local_jobboard'),
+            ['class' => 'font-weight-bold']
+        );
+        if ($isUrgent) {
+            echo html_writer::tag('span',
+                '<i class="fa fa-exclamation-triangle mr-1"></i>' . get_string('closingsoon', 'local_jobboard', $daysUntilClose),
+                ['class' => 'badge badge-danger']
+            );
+        } else if ($isClosed) {
+            echo html_writer::tag('span',
+                get_string('closed'),
+                ['class' => 'badge badge-dark']
+            );
+        }
+        echo html_writer::end_div();
+
+        // Card body.
+        echo html_writer::start_div('card-body');
+
+        // Applicant info.
+        echo html_writer::tag('h5',
+            '<i class="fa fa-user text-muted mr-2"></i>' . format_string($app->firstname . ' ' . $app->lastname),
+            ['class' => 'card-title mb-1']
+        );
+        echo html_writer::tag('p',
+            '<i class="fa fa-envelope text-muted mr-2"></i>' .
+            html_writer::tag('a', $app->email, ['href' => 'mailto:' . $app->email, 'class' => 'text-muted']),
+            ['class' => 'small mb-2']
+        );
+
+        // Vacancy info.
+        echo html_writer::start_div('mb-3');
+        echo html_writer::tag('span', format_string($app->vacancy_code), ['class' => 'badge badge-secondary mr-2']);
+        echo html_writer::tag('span', format_string($app->vacancy_title), ['class' => 'text-muted small']);
+        echo html_writer::end_div();
+
+        // Document progress.
+        echo html_writer::start_div('mb-3');
+        echo html_writer::tag('small', get_string('documents', 'local_jobboard') . ':', ['class' => 'd-block mb-1 text-muted']);
 
         // Progress bar.
-        $progressbar = '<div class="progress" style="height: 20px; min-width: 100px;">';
         if ($totaldocs > 0) {
             $vpct = round(($validatedocs / $totaldocs) * 100);
             $rpct = round(($rejecteddocs / $totaldocs) * 100);
-            $progressbar .= '<div class="progress-bar bg-success" style="width: ' . $vpct . '%">' . $validatedocs . '</div>';
-            $progressbar .= '<div class="progress-bar bg-danger" style="width: ' . $rpct . '%">' . $rejecteddocs . '</div>';
-        }
-        $progressbar .= '</div>';
-        $progressbar .= '<small>' . $validatedocs . '/' . $totaldocs . ' ' . get_string('validated', 'local_jobboard') . '</small>';
 
-        // Status badge.
-        $statusclass = 'secondary';
-        if (in_array($app->status, ['docs_validated', 'selected'])) {
-            $statusclass = 'success';
-        } else if (in_array($app->status, ['docs_rejected', 'rejected'])) {
-            $statusclass = 'danger';
-        } else if ($app->status === 'under_review') {
-            $statusclass = 'primary';
-        } else if ($app->status === 'submitted') {
-            $statusclass = 'info';
+            echo html_writer::start_div('progress mb-2', ['style' => 'height: 20px;']);
+            echo html_writer::div($validatedocs, 'progress-bar bg-success', [
+                'role' => 'progressbar',
+                'style' => 'width: ' . $vpct . '%',
+                'title' => get_string('docstatus:approved', 'local_jobboard'),
+            ]);
+            echo html_writer::div($rejecteddocs, 'progress-bar bg-danger', [
+                'role' => 'progressbar',
+                'style' => 'width: ' . $rpct . '%',
+                'title' => get_string('docstatus:rejected', 'local_jobboard'),
+            ]);
+            echo html_writer::end_div();
         }
 
-        // Document summary.
-        $docsummary = '<span class="badge badge-success">' . $validatedocs . ' ✓</span> ';
-        $docsummary .= '<span class="badge badge-danger">' . $rejecteddocs . ' ✗</span> ';
-        $docsummary .= '<span class="badge badge-warning">' . $pendingdocs . ' ⏳</span>';
+        // Document summary badges.
+        echo html_writer::start_div('d-flex flex-wrap');
+        echo html_writer::tag('span',
+            '<i class="fa fa-check mr-1"></i>' . $validatedocs,
+            ['class' => 'badge badge-success mr-2 mb-1', 'title' => get_string('docstatus:approved', 'local_jobboard')]
+        );
+        echo html_writer::tag('span',
+            '<i class="fa fa-times mr-1"></i>' . $rejecteddocs,
+            ['class' => 'badge badge-danger mr-2 mb-1', 'title' => get_string('docstatus:rejected', 'local_jobboard')]
+        );
+        echo html_writer::tag('span',
+            '<i class="fa fa-clock mr-1"></i>' . $pendingdocs,
+            ['class' => 'badge badge-warning mb-1', 'title' => get_string('docstatus:pending', 'local_jobboard')]
+        );
+        echo html_writer::end_div();
+        echo html_writer::end_div();
 
-        // Closing date warning.
-        $closingdate = userdate($app->closedate, get_string('strftimedate', 'langconfig'));
-        $daysuntilclose = ceil(($app->closedate - time()) / 86400);
-        if ($daysuntilclose <= 3 && $daysuntilclose > 0) {
-            $closingdate = '<span class="text-danger font-weight-bold">' . $closingdate . '</span>';
-            $closingdate .= '<br><small class="text-danger">' .
-                get_string('closingsoon', 'local_jobboard', $daysuntilclose) . '</small>';
-        } else if ($daysuntilclose <= 0) {
-            $closingdate = '<span class="text-muted">' . $closingdate . '</span>';
-            $closingdate .= '<br><small class="text-muted">' . get_string('closed') . '</small>';
-        }
+        // Closing date.
+        echo html_writer::start_div('small');
+        $closingClass = $isUrgent ? 'text-danger font-weight-bold' : 'text-muted';
+        $closingIcon = $isUrgent ? 'fa-exclamation-triangle' : 'fa-calendar-alt';
+        echo html_writer::tag('i', '', ['class' => 'fa ' . $closingIcon . ' mr-2 ' . $closingClass]);
+        echo html_writer::tag('span',
+            get_string('closedate', 'local_jobboard') . ': ' .
+            userdate($app->closedate, get_string('strftimedate', 'langconfig')),
+            ['class' => $closingClass]
+        );
+        echo html_writer::end_div();
 
-        // Actions.
-        $actions = '';
-        $viewurl = new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]);
-        $actions .= '<a href="' . $viewurl . '" class="btn btn-sm btn-primary mr-1">' .
-            get_string('reviewdocuments', 'local_jobboard') . '</a>';
+        echo html_writer::end_div(); // card-body
 
-        if ($pendingdocs > 0) {
-            $bulkurl = new moodle_url('/local/jobboard/bulk_validate.php', ['application' => $app->id]);
-            $actions .= '<a href="' . $bulkurl . '" class="btn btn-sm btn-outline-secondary">' .
-                get_string('bulkvalidate', 'local_jobboard') . '</a>';
-        }
+        // Card footer.
+        echo html_writer::start_div('card-footer bg-white d-flex justify-content-between');
 
-        $row = [
-            '<strong>' . format_string($app->firstname . ' ' . $app->lastname) . '</strong>' .
-                '<br><small class="text-muted">' . $app->email . '</small>',
-            '<span class="badge badge-secondary">' . format_string($app->vacancy_code) . '</span>' .
-                '<br><small>' . format_string($app->vacancy_title) . '</small>',
-            '<span class="badge badge-' . $statusclass . '">' .
-                get_string('status_' . $app->status, 'local_jobboard') . '</span>',
-            $docsummary,
-            $progressbar,
-            $closingdate,
-            $actions,
-        ];
+        // Review button.
+        $reviewUrl = new moodle_url('/local/jobboard/index.php', [
+            'view' => 'review',
+            'applicationid' => $app->id,
+        ]);
+        $reviewClass = $pendingdocs > 0 ? 'btn btn-primary btn-sm' : 'btn btn-outline-primary btn-sm';
+        echo html_writer::link($reviewUrl,
+            '<i class="fa fa-search mr-1"></i>' . get_string('reviewdocuments', 'local_jobboard'),
+            ['class' => $reviewClass]
+        );
 
-        $table->data[] = $row;
+        // View application button.
+        $viewUrl = new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]);
+        echo html_writer::link($viewUrl,
+            '<i class="fa fa-eye"></i>',
+            ['class' => 'btn btn-outline-secondary btn-sm', 'title' => get_string('viewapplication', 'local_jobboard')]
+        );
+
+        echo html_writer::end_div(); // card-footer
+
+        echo html_writer::end_div(); // card
+        echo html_writer::end_div(); // col
     }
 
-    echo html_writer::table($table);
+    echo html_writer::end_div(); // row
+}
 
-    // Pagination.
+// ============================================================================
+// PAGINATION
+// ============================================================================
+if ($totalcount > $perpage) {
     $baseurl = new moodle_url('/local/jobboard/index.php', [
         'view' => 'myreviews',
         'status' => $status,
@@ -316,12 +402,50 @@ if (empty($applications)) {
     echo $OUTPUT->paging_bar($totalcount, $page, $perpage, $baseurl);
 }
 
-// Quick links.
-echo '<div class="mt-4">';
-echo '<a href="' . new moodle_url('/local/jobboard/index.php') . '" class="btn btn-outline-secondary mr-2">' .
-    '<i class="fa fa-tachometer-alt mr-1"></i>' . get_string('dashboard', 'local_jobboard') . '</a>';
-echo '<a href="' . new moodle_url('/local/jobboard/bulk_validate.php') . '" class="btn btn-outline-secondary">' .
-    '<i class="fa fa-check-double mr-1"></i>' . get_string('bulkvalidation', 'local_jobboard') . '</a>';
-echo '</div>';
+// ============================================================================
+// QUICK LINKS
+// ============================================================================
+echo html_writer::start_div('card mt-4 bg-light');
+echo html_writer::start_div('card-body d-flex flex-wrap align-items-center justify-content-center');
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php'),
+    '<i class="fa fa-tachometer-alt mr-2"></i>' . get_string('dashboard', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary m-1']
+);
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php', ['view' => 'review']),
+    '<i class="fa fa-clipboard-check mr-2"></i>' . get_string('reviewdocuments', 'local_jobboard'),
+    ['class' => 'btn btn-outline-primary m-1']
+);
+
+if (has_capability('local/jobboard:createvacancy', $context)) {
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
+        '<i class="fa fa-cog mr-2"></i>' . get_string('managevacancies', 'local_jobboard'),
+        ['class' => 'btn btn-outline-info m-1']
+    );
+}
+
+echo html_writer::end_div();
+echo html_writer::end_div();
+
+echo html_writer::end_div(); // local-jobboard-myreviews
+
+// Additional styles.
+echo html_writer::tag('style', '
+.local-jobboard-myreviews .card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.local-jobboard-myreviews .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
+}
+.local-jobboard-myreviews .progress-bar {
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+');
 
 echo $OUTPUT->footer();

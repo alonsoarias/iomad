@@ -2134,3 +2134,24 @@ $string['tooltip_quickapply'] = 'Start your application';
 $string['tooltip_trackstatus'] = 'Track your application status';
 $string['tooltip_downloadall'] = 'Download all documents';
 $string['tooltip_filterresults'] = 'Filter results by criteria';
+
+// ============================================================================
+// Review interface redesign strings
+// ============================================================================
+$string['pendingreview'] = 'Pending Review';
+$string['reviewapplication'] = 'Review Application';
+$string['reviewprogress'] = 'Review Progress';
+$string['alldocsreviewed'] = 'All documents have been reviewed';
+$string['rejectreason_placeholder'] = 'Describe the reason for rejection...';
+
+// Public page redesign strings.
+$string['alllocations'] = 'All locations';
+$string['allconvocatorias'] = 'All calls';
+$string['openvacancies'] = 'Open Vacancies';
+$string['logintoapply'] = 'Log in to apply for this position';
+
+// General.
+$string['viewall'] = 'View all';
+$string['urgent'] = 'Urgent';
+$string['pending'] = 'Pending';
+$string['allstatuses'] = 'All statuses';

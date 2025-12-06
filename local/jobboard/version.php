@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120607;  // Complete UI redesign - vacancies must belong to convocatoria.
+$plugin->version = 2025120608;  // Complete UI redesign phase 3 - all views modernized with ui_helper.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.9.28-beta';
+$plugin->release = '1.9.29-beta';

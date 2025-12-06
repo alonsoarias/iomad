@@ -17,7 +17,7 @@
 /**
  * Convocatoria create/edit view for local_jobboard.
  *
- * This file is included by index.php and should not be accessed directly.
+ * Modern redesign with card-based layout and vacancy management.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -27,6 +27,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
+
+use local_jobboard\output\ui_helper;
 
 // Require capability to manage convocatorias.
 require_capability('local/jobboard:createvacancy', $context);
@@ -55,6 +57,7 @@ if ($convocatoriaid) {
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
+$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Add navigation.
 $PAGE->navbar->add(get_string('manageconvocatorias', 'local_jobboard'),
@@ -206,77 +209,239 @@ if ($data = $form->get_data()) {
 }
 
 echo $OUTPUT->header();
+echo ui_helper::get_inline_styles();
 
-// Show convocatoria info box if editing.
+echo html_writer::start_div('local-jobboard-convocatoria');
+
+// ============================================================================
+// PAGE HEADER
+// ============================================================================
+$breadcrumbs = [
+    get_string('dashboard', 'local_jobboard') => new moodle_url('/local/jobboard/index.php'),
+    get_string('manageconvocatorias', 'local_jobboard') => new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
+    ($convocatoria ? format_string($convocatoria->name) : get_string('addconvocatoria', 'local_jobboard')) => null,
+];
+
+$headerActions = [[
+    'url' => $returnurl,
+    'label' => get_string('backtoconvocatorias', 'local_jobboard'),
+    'icon' => 'arrow-left',
+    'class' => 'btn btn-outline-secondary',
+]];
+
+echo ui_helper::page_header(
+    $convocatoria ? get_string('editconvocatoria', 'local_jobboard') : get_string('addconvocatoria', 'local_jobboard'),
+    $breadcrumbs,
+    $headerActions
+);
+
+// ============================================================================
+// CONVOCATORIA INFO CARD (when editing)
+// ============================================================================
 if ($convocatoria) {
-    $statusclass = [
+    // Get statistics.
+    $vacancyCount = $DB->count_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoria->id]);
+    $applicationCount = $DB->get_field_sql(
+        "SELECT COUNT(a.id)
+           FROM {local_jobboard_application} a
+           JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+          WHERE v.convocatoriaid = :convid",
+        ['convid' => $convocatoria->id]
+    );
+
+    // Status config.
+    $statusColors = [
         'draft' => 'secondary',
         'open' => 'success',
         'closed' => 'warning',
         'archived' => 'dark',
     ];
+    $statusColor = $statusColors[$convocatoria->status] ?? 'secondary';
 
-    echo html_writer::start_div('card mb-4');
-    echo html_writer::start_div('card-header d-flex justify-content-between align-items-center');
-    echo html_writer::tag('h5', s($convocatoria->name), ['class' => 'mb-0']);
-    echo html_writer::tag('span',
+    // Statistics row.
+    echo html_writer::start_div('row mb-4');
+    echo ui_helper::stat_card(
+        (string)$vacancyCount,
+        get_string('vacancies', 'local_jobboard'),
+        'primary', 'briefcase'
+    );
+    echo ui_helper::stat_card(
+        (string)$applicationCount,
+        get_string('applications', 'local_jobboard'),
+        'info', 'file-alt'
+    );
+    echo ui_helper::stat_card(
         get_string('convocatoria_status_' . $convocatoria->status, 'local_jobboard'),
-        ['class' => 'badge badge-' . ($statusclass[$convocatoria->status] ?? 'secondary')]
+        get_string('status', 'local_jobboard'),
+        $statusColor, 'flag'
     );
     echo html_writer::end_div();
+
+    // Info card with dates and actions.
+    echo html_writer::start_div('card shadow-sm mb-4 border-' . $statusColor);
+    echo html_writer::start_div('card-header d-flex justify-content-between align-items-center bg-' . $statusColor . ' text-white');
+    echo html_writer::tag('h5', format_string($convocatoria->name), ['class' => 'mb-0']);
+    echo html_writer::tag('span',
+        get_string('convocatoria_status_' . $convocatoria->status, 'local_jobboard'),
+        ['class' => 'badge badge-light']
+    );
+    echo html_writer::end_div();
+
     echo html_writer::start_div('card-body');
 
-    // Show dates.
-    echo html_writer::tag('p',
-        html_writer::tag('strong', get_string('convocatoriastartdate', 'local_jobboard') . ': ') .
-        userdate($convocatoria->startdate, get_string('strftimedate', 'langconfig')) . ' - ' .
-        html_writer::tag('strong', get_string('convocatoriaenddate', 'local_jobboard') . ': ') .
+    // Dates.
+    echo html_writer::start_div('row mb-3');
+    echo html_writer::start_div('col-md-6');
+    echo html_writer::tag('small', get_string('convocatoriastartdate', 'local_jobboard'), ['class' => 'd-block text-muted']);
+    echo html_writer::tag('strong',
+        '<i class="fa fa-calendar-alt text-success mr-2"></i>' .
+        userdate($convocatoria->startdate, get_string('strftimedate', 'langconfig'))
+    );
+    echo html_writer::end_div();
+    echo html_writer::start_div('col-md-6');
+    echo html_writer::tag('small', get_string('convocatoriaenddate', 'local_jobboard'), ['class' => 'd-block text-muted']);
+    echo html_writer::tag('strong',
+        '<i class="fa fa-calendar-times text-danger mr-2"></i>' .
         userdate($convocatoria->enddate, get_string('strftimedate', 'langconfig'))
     );
-
-    // Show vacancy count and link.
-    $vacancycount = $DB->count_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoria->id]);
-    echo html_writer::tag('p',
-        html_writer::tag('strong', get_string('vacancies', 'local_jobboard') . ': ') .
-        html_writer::tag('span', $vacancycount, ['class' => 'badge badge-info'])
-    );
+    echo html_writer::end_div();
+    echo html_writer::end_div();
 
     // Action buttons.
-    echo html_writer::start_div('mt-3');
+    echo html_writer::start_div('d-flex flex-wrap');
 
-    // Add vacancy button (for draft convocatorias).
-    if ($convocatoria->status === 'draft') {
-        $addvacancyurl = new moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $convocatoria->id]);
-        echo html_writer::link($addvacancyurl,
-            html_writer::tag('i', '', ['class' => 'fa fa-plus me-1']) .
-            get_string('addvacancy', 'local_jobboard'),
-            ['class' => 'btn btn-success me-2']
+    // Add vacancy button (for draft/open convocatorias).
+    if (in_array($convocatoria->status, ['draft', 'open'])) {
+        $addVacancyUrl = new moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $convocatoria->id]);
+        echo html_writer::link($addVacancyUrl,
+            '<i class="fa fa-plus mr-2"></i>' . get_string('addvacancy', 'local_jobboard'),
+            ['class' => 'btn btn-success mr-2 mb-2']
         );
     }
 
     // View vacancies button.
-    if ($vacancycount > 0) {
-        $vacanciesurl = new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $convocatoria->id]);
-        echo html_writer::link($vacanciesurl,
-            html_writer::tag('i', '', ['class' => 'fa fa-list me-1']) .
-            get_string('viewvacancies', 'local_jobboard'),
-            ['class' => 'btn btn-info me-2']
+    if ($vacancyCount > 0) {
+        $vacanciesUrl = new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $convocatoria->id]);
+        echo html_writer::link($vacanciesUrl,
+            '<i class="fa fa-list mr-2"></i>' . get_string('viewvacancies', 'local_jobboard') . ' (' . $vacancyCount . ')',
+            ['class' => 'btn btn-info mr-2 mb-2']
         );
     }
 
-    // Back to list button.
-    echo html_writer::link($returnurl,
-        html_writer::tag('i', '', ['class' => 'fa fa-arrow-left me-1']) .
-        get_string('backtoconvocatorias', 'local_jobboard'),
-        ['class' => 'btn btn-outline-secondary']
-    );
+    // View applications button.
+    if ($applicationCount > 0) {
+        $appsUrl = new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $convocatoria->id]);
+        echo html_writer::link($appsUrl,
+            '<i class="fa fa-file-alt mr-2"></i>' . get_string('applications', 'local_jobboard') . ' (' . $applicationCount . ')',
+            ['class' => 'btn btn-outline-info mr-2 mb-2']
+        );
+    }
 
     echo html_writer::end_div();
-    echo html_writer::end_div();
-    echo html_writer::end_div();
+
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
+
+    // ============================================================================
+    // VACANCIES LIST (if any)
+    // ============================================================================
+    if ($vacancyCount > 0) {
+        $vacancies = $DB->get_records_sql(
+            "SELECT v.*,
+                    (SELECT COUNT(*) FROM {local_jobboard_application} a WHERE a.vacancyid = v.id) as app_count
+               FROM {local_jobboard_vacancy} v
+              WHERE v.convocatoriaid = :convid
+              ORDER BY v.code",
+            ['convid' => $convocatoria->id],
+            0, 5
+        );
+
+        echo html_writer::start_div('card shadow-sm mb-4');
+        echo html_writer::tag('div',
+            '<i class="fa fa-briefcase mr-2"></i>' . get_string('vacancies', 'local_jobboard') .
+            html_writer::tag('span', $vacancyCount, ['class' => 'badge badge-primary ml-2']),
+            ['class' => 'card-header bg-white font-weight-bold']
+        );
+        echo html_writer::start_div('card-body p-0');
+        echo html_writer::start_div('list-group list-group-flush');
+
+        foreach ($vacancies as $v) {
+            $statusClass = 'badge-secondary';
+            if ($v->status === 'published') {
+                $statusClass = 'badge-success';
+            } else if ($v->status === 'closed') {
+                $statusClass = 'badge-warning';
+            }
+
+            echo html_writer::start_div('list-group-item d-flex justify-content-between align-items-center');
+            echo html_writer::start_div();
+            echo html_writer::tag('span', $v->code, ['class' => 'badge badge-secondary mr-2']);
+            echo html_writer::tag('strong', format_string($v->title));
+            echo html_writer::tag('span',
+                get_string('status:' . $v->status, 'local_jobboard'),
+                ['class' => 'badge ' . $statusClass . ' ml-2']
+            );
+            echo html_writer::end_div();
+            echo html_writer::start_div();
+            echo html_writer::tag('span',
+                '<i class="fa fa-file-alt mr-1"></i>' . $v->app_count,
+                ['class' => 'badge badge-info mr-2', 'title' => get_string('applications', 'local_jobboard')]
+            );
+            $editUrl = new moodle_url('/local/jobboard/edit.php', ['id' => $v->id]);
+            echo html_writer::link($editUrl,
+                '<i class="fa fa-edit"></i>',
+                ['class' => 'btn btn-sm btn-outline-primary']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+        if ($vacancyCount > 5) {
+            echo html_writer::start_div('list-group-item text-center');
+            $allUrl = new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $convocatoria->id]);
+            echo html_writer::link($allUrl,
+                get_string('viewall', 'local_jobboard') . ' (' . $vacancyCount . ')',
+                ['class' => 'btn btn-sm btn-outline-secondary']
+            );
+            echo html_writer::end_div();
+        }
+
+        echo html_writer::end_div(); // list-group
+        echo html_writer::end_div(); // card-body
+        echo html_writer::end_div(); // card
+    }
 }
+
+// ============================================================================
+// FORM CARD
+// ============================================================================
+echo html_writer::start_div('card shadow-sm mb-4');
+echo html_writer::tag('div',
+    '<i class="fa fa-edit mr-2"></i>' .
+    ($convocatoria ? get_string('editconvocatoria', 'local_jobboard') : get_string('addconvocatoria', 'local_jobboard')),
+    ['class' => 'card-header bg-primary text-white font-weight-bold']
+);
+echo html_writer::start_div('card-body');
 
 // Display the form.
 $form->display();
+
+echo html_writer::end_div(); // card-body
+echo html_writer::end_div(); // card
+
+echo html_writer::end_div(); // local-jobboard-convocatoria
+
+// Additional styles.
+echo html_writer::tag('style', '
+.local-jobboard-convocatoria .mform {
+    max-width: 100%;
+}
+.local-jobboard-convocatoria .fitem {
+    margin-bottom: 1rem;
+}
+.local-jobboard-convocatoria .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+');
 
 echo $OUTPUT->footer();
