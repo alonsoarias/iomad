@@ -357,37 +357,6 @@ if ($canreview && !$canmanage) {
 
 echo html_writer::end_div(); // local-jobboard-dashboard
 
-// Additional inline styles.
-echo html_writer::tag('style', '
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-}
-.jb-welcome-section {
-    position: relative;
-    overflow: hidden;
-}
-.jb-icon-circle {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.bg-primary-light { background-color: rgba(0, 123, 255, 0.1); }
-.bg-success-light { background-color: rgba(40, 167, 69, 0.1); }
-.bg-warning-light { background-color: rgba(255, 193, 7, 0.1); }
-.bg-info-light { background-color: rgba(23, 162, 184, 0.1); }
-.jb-action-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.jb-action-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
-}
-.border-left-success { border-left: 4px solid #28a745 !important; }
-.border-left-info { border-left: 4px solid #17a2b8 !important; }
-.border-left-warning { border-left: 4px solid #ffc107 !important; }
-');
+// Styles consolidated in styles.css - Dashboard Page Styles section.
 
 echo $OUTPUT->footer();

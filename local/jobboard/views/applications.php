@@ -359,21 +359,6 @@ if ($total > $perpage) {
 
 echo html_writer::end_div(); // local-jobboard-applications
 
-// Additional styles.
-echo html_writer::tag('style', '
-.jb-application-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.jb-application-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
-}
-.border-left-success {
-    border-left: 4px solid #28a745 !important;
-}
-.border-left-warning {
-    border-left: 4px solid #ffc107 !important;
-}
-');
+// Styles consolidated in styles.css - Application Card section.
 
 echo $OUTPUT->footer();

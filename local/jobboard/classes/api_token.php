@@ -86,7 +86,7 @@ class api_token {
     /**
      * Constructor.
      *
-     * @param int|stdClass|null $idorrecord Token ID, record, or null.
+     * @param int|\stdClass|null $idorrecord Token ID, record, or null.
      */
     public function __construct($idorrecord = null) {
         if ($idorrecord === null) {

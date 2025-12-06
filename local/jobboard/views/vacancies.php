@@ -334,38 +334,6 @@ if ($total > $perpage) {
 
 echo html_writer::end_div(); // local-jobboard-vacancies
 
-// Additional styles.
-echo html_writer::tag('style', '
-.bg-gradient-success {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-}
-.jb-vacancy-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-left: 4px solid transparent;
-}
-.jb-vacancy-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
-}
-.jb-vacancy-card.border-warning {
-    border-left-color: #ffc107;
-}
-.jb-vacancy-card.border-secondary {
-    border-left-color: #6c757d;
-}
-.stretched-link::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 1;
-    content: "";
-}
-.jb-vacancy-card .btn {
-    position: relative;
-    z-index: 2;
-}
-');
+// Styles consolidated in styles.css - Vacancy Card Component section.
 
 echo $OUTPUT->footer();

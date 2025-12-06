@@ -114,7 +114,7 @@ class vacancy {
     /**
      * Constructor.
      *
-     * @param int|stdClass|null $idorrecord Vacancy ID, database record, or null.
+     * @param int|\stdClass|null $idorrecord Vacancy ID, database record, or null.
      */
     public function __construct($idorrecord = null) {
         if ($idorrecord === null) {

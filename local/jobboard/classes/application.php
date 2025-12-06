@@ -109,7 +109,7 @@ class application {
     /**
      * Constructor.
      *
-     * @param int|stdClass|null $idorrecord Application ID, database record, or null.
+     * @param int|\stdClass|null $idorrecord Application ID, database record, or null.
      */
     public function __construct($idorrecord = null) {
         if ($idorrecord === null) {

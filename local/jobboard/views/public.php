@@ -469,19 +469,7 @@ if (!$isloggedin) {
 
 echo html_writer::end_div(); // local-jobboard-public
 
-// Additional styles.
-echo html_writer::tag('style', '
-.jb-public-hero {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-}
-.jb-vacancy-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.jb-vacancy-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.15) !important;
-}
-');
+// Styles consolidated in styles.css - Public Page Styles section.
 
 echo $OUTPUT->footer();
 
