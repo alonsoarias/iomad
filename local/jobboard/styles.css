@@ -992,54 +992,6 @@
     border-color: #007bff;
 }
 
-/* Nav tabs and pills */
-.path-local-jobboard .nav {
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 0;
-    margin-bottom: 0;
-    list-style: none;
-}
-
-.path-local-jobboard .nav-link {
-    display: block;
-    padding: 0.5rem 1rem;
-    color: #007bff;
-}
-
-.path-local-jobboard .nav-link:hover,
-.path-local-jobboard .nav-link:focus {
-    color: #0056b3;
-    text-decoration: none;
-}
-
-.path-local-jobboard .nav-link.active {
-    color: #495057;
-    background-color: #fff;
-    border-color: #dee2e6 #dee2e6 #fff;
-}
-
-.path-local-jobboard .nav-tabs {
-    border-bottom: 1px solid #dee2e6;
-}
-
-.path-local-jobboard .nav-tabs .nav-link {
-    border: 1px solid transparent;
-    border-top-left-radius: 0.25rem;
-    border-top-right-radius: 0.25rem;
-}
-
-.path-local-jobboard .nav-tabs .nav-link:hover,
-.path-local-jobboard .nav-tabs .nav-link:focus {
-    border-color: #e9ecef #e9ecef #dee2e6;
-}
-
-.path-local-jobboard .nav-tabs .nav-link.active {
-    color: #495057;
-    background-color: #fff;
-    border-color: #dee2e6 #dee2e6 #fff;
-}
-
 /* Progress bars */
 .path-local-jobboard .progress {
     display: flex;

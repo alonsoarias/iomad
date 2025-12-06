@@ -7,6 +7,28 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.5] - 2025-12-06
+
+### Eliminado
+- **Estilos de navegación personalizados**
+  - Removidas las reglas CSS para `.nav`, `.nav-link`, `.nav-tabs`
+  - La navegación ahora usa exclusivamente los estilos nativos del tema Moodle
+  - El plugin ya utiliza `local_jobboard_extend_navigation()` para integración nativa
+
+### Verificado
+- **Navegación nativa de Moodle**
+  - El plugin usa `local_jobboard_extend_navigation()` en lib.php
+  - Añade items al navigation drawer (barra lateral)
+  - Añade items al custom menu (menú superior)
+  - Soporta submenús basados en capabilities del usuario
+  - Integración completa con Moodle sin estilos personalizados
+
+### Modificado
+- **styles.css**: Removidos ~50 líneas de estilos de navegación
+- **version.php**: Incrementado a 2.0.5 (2025120623)
+
+---
+
 ## [2.0.4] - 2025-12-06
 
 ### Corregido
