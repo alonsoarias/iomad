@@ -17,7 +17,7 @@
 /**
  * Vacancy management view for local_jobboard.
  *
- * This file is included by index.php and should not be accessed directly.
+ * Modern redesign using ui_helper for consistent styling.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -27,6 +27,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
+
+use local_jobboard\output\ui_helper;
 
 // Require manage capability.
 require_capability('local/jobboard:createvacancy', $context);
@@ -42,9 +44,10 @@ $action = optional_param('action', '', PARAM_ALPHA);
 $vacancyid = optional_param('id', 0, PARAM_INT);
 
 // Page setup.
-$PAGE->set_pagelayout('admin');
+$PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('managevacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('managevacancies', 'local_jobboard'));
+$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle actions that don't need sesskey (just redirects).
 if ($action === 'create') {
@@ -161,284 +164,317 @@ $result = \local_jobboard\vacancy::get_list($filters, 'timecreated', 'DESC', $pa
 $vacancies = $result['vacancies'];
 $total = $result['total'];
 
-echo $OUTPUT->header();
-
-// Page title.
-echo html_writer::tag('h2', get_string('managevacancies', 'local_jobboard'));
-
-// If filtering by convocatoria, show context info.
+// Get convocatoria info if filtering.
 $convocatoriainfo = null;
 if ($convocatoriaid) {
     $convocatoriainfo = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
-    if ($convocatoriainfo) {
-        $statusclass = [
-            'draft' => 'secondary',
-            'open' => 'success',
-            'closed' => 'warning',
-            'archived' => 'dark',
-        ];
-        echo html_writer::start_div('alert alert-info d-flex justify-content-between align-items-center');
-        echo html_writer::tag('span',
-            get_string('vacanciesforconvocatoria', 'local_jobboard') . ': ' .
-            html_writer::tag('strong', s($convocatoriainfo->name)) . ' ' .
-            html_writer::tag('span', get_string('convocatoria_status_' . $convocatoriainfo->status, 'local_jobboard'),
-                ['class' => 'badge badge-' . ($statusclass[$convocatoriainfo->status] ?? 'secondary')])
-        );
-        echo html_writer::link(
-            new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
-            get_string('backtoconvocatorias', 'local_jobboard'),
-            ['class' => 'btn btn-sm btn-outline-primary']
-        );
-        echo html_writer::end_div();
-    }
 }
 
-// Add new vacancy button.
+echo $OUTPUT->header();
+echo ui_helper::get_inline_styles();
+
+echo html_writer::start_div('local-jobboard-manage');
+
+// ============================================================================
+// PAGE HEADER
+// ============================================================================
+$breadcrumbs = [
+    get_string('dashboard', 'local_jobboard') => new moodle_url('/local/jobboard/index.php'),
+];
+
+if ($convocatoriainfo) {
+    $breadcrumbs[get_string('manageconvocatorias', 'local_jobboard')] =
+        new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']);
+    $breadcrumbs[s($convocatoriainfo->name)] = null;
+} else {
+    $breadcrumbs[get_string('managevacancies', 'local_jobboard')] = null;
+}
+
 $newvacancyurl = new moodle_url('/local/jobboard/edit.php');
 if ($convocatoriaid) {
     $newvacancyurl->param('convocatoriaid', $convocatoriaid);
 }
-echo html_writer::div(
-    html_writer::link(
-        $newvacancyurl,
-        get_string('newvacancy', 'local_jobboard'),
-        ['class' => 'btn btn-primary']
-    ),
-    'mb-4'
+
+echo ui_helper::page_header(
+    $convocatoriainfo
+        ? get_string('vacanciesforconvocatoria', 'local_jobboard') . ': ' . s($convocatoriainfo->name)
+        : get_string('managevacancies', 'local_jobboard'),
+    $breadcrumbs,
+    [[
+        'url' => $newvacancyurl,
+        'label' => get_string('newvacancy', 'local_jobboard'),
+        'icon' => 'plus',
+        'class' => 'btn btn-primary',
+    ]]
 );
 
-// Search and filter form.
-$formurl = new moodle_url('/local/jobboard/index.php');
-echo html_writer::start_tag('form', ['method' => 'get', 'action' => $formurl, 'class' => 'mb-4']);
-echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'view', 'value' => 'manage']);
-if ($convocatoriaid) {
-    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'convocatoriaid', 'value' => $convocatoriaid]);
-}
+// ============================================================================
+// CONVOCATORIA INFO BANNER
+// ============================================================================
+if ($convocatoriainfo) {
+    $statusColors = ['draft' => 'secondary', 'open' => 'success', 'closed' => 'warning', 'archived' => 'dark'];
+    $convColor = $statusColors[$convocatoriainfo->status] ?? 'secondary';
 
-echo html_writer::start_div('row');
-
-// Search box.
-echo html_writer::start_div('col-md-4');
-echo html_writer::empty_tag('input', [
-    'type' => 'text',
-    'name' => 'search',
-    'value' => $search,
-    'class' => 'form-control',
-    'placeholder' => get_string('search', 'local_jobboard') . '...',
-]);
-echo html_writer::end_div();
-
-// Status filter.
-echo html_writer::start_div('col-md-3');
-$statusoptions = ['' => get_string('allstatuses', 'local_jobboard')] + local_jobboard_get_vacancy_statuses();
-echo html_writer::select($statusoptions, 'status', $status, null, ['class' => 'form-control']);
-echo html_writer::end_div();
-
-// Company filter (Iomad).
-if (local_jobboard_is_iomad_installed() && has_capability('local/jobboard:viewallvacancies', $context)) {
-    echo html_writer::start_div('col-md-3');
-    $companyoptions = [0 => get_string('allcompanies', 'local_jobboard')] + local_jobboard_get_companies();
-    echo html_writer::select($companyoptions, 'companyid', $companyid, null, ['class' => 'form-control']);
+    echo html_writer::start_div('alert alert-info border-left-info d-flex justify-content-between align-items-center mb-4');
+    echo html_writer::start_div('d-flex align-items-center');
+    echo html_writer::tag('i', '', ['class' => 'fa fa-calendar-alt mr-3 fa-lg']);
+    echo html_writer::start_div();
+    echo html_writer::tag('strong', s($convocatoriainfo->name), ['class' => 'd-block']);
+    echo html_writer::tag('small',
+        userdate($convocatoriainfo->startdate, get_string('strftimedate', 'langconfig')) . ' - ' .
+        userdate($convocatoriainfo->enddate, get_string('strftimedate', 'langconfig')),
+        ['class' => 'text-muted']
+    );
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+    echo html_writer::tag('span',
+        get_string('convocatoria_status_' . $convocatoriainfo->status, 'local_jobboard'),
+        ['class' => 'badge badge-' . $convColor]
+    );
     echo html_writer::end_div();
 }
 
-// Submit button.
-echo html_writer::start_div('col-md-2');
-echo html_writer::empty_tag('input', [
-    'type' => 'submit',
-    'value' => get_string('filter', 'local_jobboard'),
-    'class' => 'btn btn-secondary',
-]);
+// ============================================================================
+// STATISTICS ROW
+// ============================================================================
+$stats = [
+    'draft' => 0,
+    'published' => 0,
+    'closed' => 0,
+    'assigned' => 0,
+];
+foreach ($vacancies as $v) {
+    if (isset($stats[$v->status])) {
+        $stats[$v->status]++;
+    }
+}
+
+echo html_writer::start_div('row mb-4');
+echo ui_helper::stat_card(
+    (string) $total,
+    get_string('totalvacancies', 'local_jobboard'),
+    'primary', 'briefcase'
+);
+echo ui_helper::stat_card(
+    (string) $stats['draft'],
+    get_string('status:draft', 'local_jobboard'),
+    'secondary', 'edit'
+);
+echo ui_helper::stat_card(
+    (string) $stats['published'],
+    get_string('status:published', 'local_jobboard'),
+    'success', 'check-circle'
+);
+echo ui_helper::stat_card(
+    (string) $stats['closed'],
+    get_string('status:closed', 'local_jobboard'),
+    'warning', 'lock'
+);
 echo html_writer::end_div();
 
-echo html_writer::end_div(); // row.
-echo html_writer::end_tag('form');
+// ============================================================================
+// FILTER FORM
+// ============================================================================
+$filterDefinitions = [
+    [
+        'type' => 'text',
+        'name' => 'search',
+        'placeholder' => get_string('search', 'local_jobboard') . '...',
+        'col' => 'col-md-4',
+    ],
+    [
+        'type' => 'select',
+        'name' => 'status',
+        'options' => ['' => get_string('allstatuses', 'local_jobboard')] + local_jobboard_get_vacancy_statuses(),
+        'col' => 'col-md-3',
+    ],
+];
 
-// Results count.
+// Company filter for Iomad.
+if (local_jobboard_is_iomad_installed() && has_capability('local/jobboard:viewallvacancies', $context)) {
+    $filterDefinitions[] = [
+        'type' => 'select',
+        'name' => 'companyid',
+        'options' => [0 => get_string('allcompanies', 'local_jobboard')] + local_jobboard_get_companies(),
+        'col' => 'col-md-3',
+    ];
+}
+
+$hiddenFields = ['view' => 'manage'];
+if ($convocatoriaid) {
+    $hiddenFields['convocatoriaid'] = $convocatoriaid;
+}
+
+echo ui_helper::filter_form(
+    (new moodle_url('/local/jobboard/index.php'))->out(false),
+    $filterDefinitions,
+    ['search' => $search, 'status' => $status, 'companyid' => $companyid],
+    $hiddenFields
+);
+
+// ============================================================================
+// RESULTS INFO
+// ============================================================================
 $showing = new stdClass();
 $showing->from = $total > 0 ? ($page * $perpage) + 1 : 0;
 $showing->to = min(($page + 1) * $perpage, $total);
 $showing->total = $total;
-echo html_writer::tag('p', get_string('showing', 'local_jobboard', $showing), ['class' => 'text-muted']);
+echo html_writer::tag('p', get_string('showing', 'local_jobboard', $showing),
+    ['class' => 'text-muted small mb-3']);
 
-// Vacancies table.
+// ============================================================================
+// VACANCIES TABLE
+// ============================================================================
 if (empty($vacancies)) {
-    echo $OUTPUT->notification(get_string('noresults', 'local_jobboard'), 'info');
+    echo ui_helper::empty_state(
+        get_string('noresults', 'local_jobboard'),
+        'briefcase',
+        [
+            'url' => $newvacancyurl,
+            'label' => get_string('newvacancy', 'local_jobboard'),
+            'class' => 'btn btn-primary',
+        ]
+    );
 } else {
-    $table = new html_table();
-    $table->head = [
+    $headers = [
         get_string('thcode', 'local_jobboard'),
         get_string('thtitle', 'local_jobboard'),
         get_string('thstatus', 'local_jobboard'),
         get_string('opendate', 'local_jobboard'),
         get_string('closedate', 'local_jobboard'),
-        get_string('positions', 'local_jobboard'),
+        get_string('applications', 'local_jobboard'),
         get_string('thactions', 'local_jobboard'),
     ];
-    $table->attributes['class'] = 'table table-striped table-hover';
 
+    $rows = [];
     foreach ($vacancies as $vacancy) {
         $row = [];
 
         // Code.
-        $row[] = html_writer::tag('strong', s($vacancy->code));
+        $row[] = html_writer::tag('code', s($vacancy->code), ['class' => 'font-weight-bold']);
 
         // Title with company name.
         $title = html_writer::link(
             new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancy->id]),
-            s($vacancy->title)
+            s($vacancy->title),
+            ['class' => 'font-weight-medium']
         );
         if ($vacancy->companyid) {
-            $title .= html_writer::tag('small', ' (' . $vacancy->get_company_name() . ')', ['class' => 'text-muted']);
+            $title .= html_writer::tag('small', ' (' . $vacancy->get_company_name() . ')', ['class' => 'text-muted d-block']);
         }
         $row[] = $title;
 
         // Status badge.
-        $statusclass = 'secondary';
-        switch ($vacancy->status) {
-            case 'published':
-                $statusclass = 'success';
-                break;
-            case 'draft':
-                $statusclass = 'warning';
-                break;
-            case 'closed':
-                $statusclass = 'secondary';
-                break;
-            case 'assigned':
-                $statusclass = 'info';
-                break;
-        }
-        $row[] = html_writer::span($vacancy->get_status_display(), 'badge badge-' . $statusclass);
+        $row[] = ui_helper::status_badge($vacancy->status, 'vacancy');
 
         // Dates.
-        $row[] = local_jobboard_format_date($vacancy->opendate);
-        $row[] = local_jobboard_format_date($vacancy->closedate);
+        $row[] = html_writer::tag('small', local_jobboard_format_date($vacancy->opendate));
+        $row[] = html_writer::tag('small', local_jobboard_format_date($vacancy->closedate));
 
         // Applications count.
         $appcount = $vacancy->get_application_count();
-        $row[] = html_writer::tag('span', $appcount, ['class' => 'badge badge-secondary']);
+        $appBadgeClass = $appcount > 0 ? 'badge-info' : 'badge-secondary';
+        $row[] = html_writer::tag('span', $appcount, ['class' => 'badge ' . $appBadgeClass]);
 
         // Actions.
         $actions = [];
 
         // Edit.
         if ($vacancy->can_edit() && has_capability('local/jobboard:editvacancy', $context)) {
-            $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/edit.php', ['id' => $vacancy->id]),
-                $OUTPUT->pix_icon('t/edit', get_string('edit', 'local_jobboard')),
-                ['class' => 'btn btn-sm btn-outline-primary', 'title' => get_string('edit', 'local_jobboard')]
-            );
+            $actions[] = [
+                'url' => new moodle_url('/local/jobboard/edit.php', ['id' => $vacancy->id]),
+                'icon' => 't/edit',
+                'title' => get_string('edit', 'local_jobboard'),
+                'class' => 'btn-outline-primary',
+            ];
         }
 
         // Publish.
         if ($vacancy->can_publish() && has_capability('local/jobboard:publishvacancy', $context)) {
-            $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/index.php', [
-                    'view' => 'manage',
-                    'action' => 'publish',
-                    'id' => $vacancy->id,
-                    'sesskey' => sesskey(),
+            $actions[] = [
+                'url' => new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'manage', 'action' => 'publish', 'id' => $vacancy->id, 'sesskey' => sesskey(),
                 ]),
-                $OUTPUT->pix_icon('t/show', get_string('publish', 'local_jobboard')),
-                [
-                    'class' => 'btn btn-sm btn-outline-success',
-                    'title' => get_string('publish', 'local_jobboard'),
-                    'onclick' => "return confirm('" . get_string('confirmpublish', 'local_jobboard') . "');",
-                ]
-            );
+                'icon' => 't/show',
+                'title' => get_string('publish', 'local_jobboard'),
+                'class' => 'btn-outline-success',
+                'confirm' => get_string('confirmpublish', 'local_jobboard'),
+            ];
         }
 
-        // Unpublish (revert to draft - only if no applications).
+        // Unpublish.
         if ($vacancy->can_unpublish() && has_capability('local/jobboard:editvacancy', $context)) {
-            $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/index.php', [
-                    'view' => 'manage',
-                    'action' => 'unpublish',
-                    'id' => $vacancy->id,
-                    'sesskey' => sesskey(),
+            $actions[] = [
+                'url' => new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'manage', 'action' => 'unpublish', 'id' => $vacancy->id, 'sesskey' => sesskey(),
                 ]),
-                $OUTPUT->pix_icon('t/hide', get_string('unpublish', 'local_jobboard')),
-                [
-                    'class' => 'btn btn-sm btn-outline-secondary',
-                    'title' => get_string('unpublish', 'local_jobboard'),
-                    'onclick' => "return confirm('" . get_string('confirmunpublish', 'local_jobboard') . "');",
-                ]
-            );
+                'icon' => 't/hide',
+                'title' => get_string('unpublish', 'local_jobboard'),
+                'class' => 'btn-outline-secondary',
+                'confirm' => get_string('confirmunpublish', 'local_jobboard'),
+            ];
         }
 
         // Close.
         if ($vacancy->can_close() && has_capability('local/jobboard:editvacancy', $context)) {
-            $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/index.php', [
-                    'view' => 'manage',
-                    'action' => 'close',
-                    'id' => $vacancy->id,
-                    'sesskey' => sesskey(),
+            $actions[] = [
+                'url' => new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'manage', 'action' => 'close', 'id' => $vacancy->id, 'sesskey' => sesskey(),
                 ]),
-                $OUTPUT->pix_icon('t/block', get_string('close', 'local_jobboard')),
-                [
-                    'class' => 'btn btn-sm btn-outline-warning',
-                    'title' => get_string('close', 'local_jobboard'),
-                    'onclick' => "return confirm('" . get_string('confirmclose', 'local_jobboard') . "');",
-                ]
-            );
+                'icon' => 't/block',
+                'title' => get_string('close', 'local_jobboard'),
+                'class' => 'btn-outline-warning',
+                'confirm' => get_string('confirmclose', 'local_jobboard'),
+            ];
         }
 
-        // Reopen (for closed vacancies).
+        // Reopen.
         if ($vacancy->can_reopen() && has_capability('local/jobboard:publishvacancy', $context)) {
-            $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/index.php', [
-                    'view' => 'manage',
-                    'action' => 'reopen',
-                    'id' => $vacancy->id,
-                    'sesskey' => sesskey(),
+            $actions[] = [
+                'url' => new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'manage', 'action' => 'reopen', 'id' => $vacancy->id, 'sesskey' => sesskey(),
                 ]),
-                $OUTPUT->pix_icon('t/restore', get_string('reopen', 'local_jobboard')),
-                [
-                    'class' => 'btn btn-sm btn-outline-success',
-                    'title' => get_string('reopen', 'local_jobboard'),
-                    'onclick' => "return confirm('" . get_string('confirmreopen', 'local_jobboard') . "');",
-                ]
-            );
+                'icon' => 't/restore',
+                'title' => get_string('reopen', 'local_jobboard'),
+                'class' => 'btn-outline-success',
+                'confirm' => get_string('confirmreopen', 'local_jobboard'),
+            ];
         }
 
         // View applications.
         if (has_capability('local/jobboard:viewallapplications', $context)) {
-            $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancy->id]),
-                $OUTPUT->pix_icon('i/users', get_string('reviewapplications', 'local_jobboard')),
-                ['class' => 'btn btn-sm btn-outline-info', 'title' => get_string('reviewapplications', 'local_jobboard')]
-            );
+            $actions[] = [
+                'url' => new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancy->id]),
+                'icon' => 'i/users',
+                'title' => get_string('reviewapplications', 'local_jobboard'),
+                'class' => 'btn-outline-info',
+            ];
         }
 
-        // Delete (any status, but only if no applications).
+        // Delete.
         if ($vacancy->can_delete() && has_capability('local/jobboard:deletevacancy', $context)) {
-            $actions[] = html_writer::link(
-                new moodle_url('/local/jobboard/index.php', [
-                    'view' => 'manage',
-                    'action' => 'delete',
-                    'id' => $vacancy->id,
-                    'sesskey' => sesskey(),
+            $actions[] = [
+                'url' => new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'manage', 'action' => 'delete', 'id' => $vacancy->id, 'sesskey' => sesskey(),
                 ]),
-                $OUTPUT->pix_icon('t/delete', get_string('delete', 'local_jobboard')),
-                [
-                    'class' => 'btn btn-sm btn-outline-danger',
-                    'title' => get_string('delete', 'local_jobboard'),
-                    'onclick' => "return confirm('" . get_string('confirmdeletevacancy', 'local_jobboard') . "');",
-                ]
-            );
+                'icon' => 't/delete',
+                'title' => get_string('delete', 'local_jobboard'),
+                'class' => 'btn-outline-danger',
+                'confirm' => get_string('confirmdeletevacancy', 'local_jobboard'),
+            ];
         }
 
-        $row[] = implode(' ', $actions);
+        $row[] = ui_helper::action_buttons($actions);
 
-        $table->data[] = $row;
+        $rows[] = $row;
     }
 
-    echo html_writer::table($table);
+    echo ui_helper::data_table($headers, $rows);
 }
 
-// Pagination.
+// ============================================================================
+// PAGINATION
+// ============================================================================
 if ($total > $perpage) {
     $baseurl = new moodle_url('/local/jobboard/index.php', [
         'view' => 'manage',
@@ -450,5 +486,7 @@ if ($total > $perpage) {
     ]);
     echo $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
 }
+
+echo html_writer::end_div(); // local-jobboard-manage
 
 echo $OUTPUT->footer();

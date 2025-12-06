@@ -497,6 +497,10 @@ $string['openconvocatoria'] = 'Abrir convocatoria';
 $string['closeconvocatoria'] = 'Cerrar convocatoria';
 $string['archiveconvocatoria'] = 'Archivar convocatoria';
 $string['reopenconvocatoria'] = 'Reabrir convocatoria';
+$string['confirmopenconvocatoria'] = '¿Está seguro de abrir esta convocatoria? Todas las vacantes en borrador serán publicadas.';
+$string['confirmcloseconvocatoria'] = '¿Está seguro de cerrar esta convocatoria? Todas las vacantes serán cerradas.';
+$string['confirmreopenconvocatoria'] = '¿Está seguro de reabrir esta convocatoria? Las vacantes cerradas volverán a estar publicadas.';
+$string['confirmarchiveconvocatoria'] = '¿Está seguro de archivar esta convocatoria? Esta acción es para convocatorias finalizadas.';
 $string['convocatoriaopened'] = 'Convocatoria abierta exitosamente';
 $string['convocatoriaclosedmsg'] = 'Convocatoria cerrada exitosamente';
 $string['convocatoriaarchived'] = 'Convocatoria archivada exitosamente';
@@ -509,6 +513,9 @@ $string['error:cannotdeleteconvocatoria'] = 'No se puede eliminar esta convocato
 $string['dates'] = 'Fechas';
 $string['vacanciesforconvocatoria'] = 'Vacantes de la convocatoria';
 $string['backtoconvocatorias'] = 'Volver a convocatorias';
+$string['period'] = 'Período';
+$string['totalvacancies'] = 'Total de Vacantes';
+$string['totalconvocatorias'] = 'Total de Convocatorias';
 
 // Vacantes extemporáneas.
 $string['isextemporaneous'] = 'Vacante extemporánea';
@@ -2412,6 +2419,7 @@ $string['pendingreviews'] = 'Revisiones pendientes';
 
 // Convocatorias management card.
 $string['convocatorias_dashboard_desc'] = 'Gestione las convocatorias de la institución. Las vacantes se organizan dentro de convocatorias para facilitar el proceso de selección.';
+$string['vacancies_dashboard_desc'] = 'Cree, edite y gestione las vacantes. Controle el estado de publicación y asignación de los cargos.';
 $string['workflow_flow'] = 'Flujo de trabajo';
 $string['selection'] = 'Selección';
 $string['gotoconvocatorias'] = 'Ir a Convocatorias';

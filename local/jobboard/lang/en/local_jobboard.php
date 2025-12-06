@@ -300,6 +300,10 @@ $string['openconvocatoria'] = 'Open call';
 $string['closeconvocatoria'] = 'Close call';
 $string['archiveconvocatoria'] = 'Archive call';
 $string['reopenconvocatoria'] = 'Reopen call';
+$string['confirmopenconvocatoria'] = 'Are you sure you want to open this call? All draft vacancies will be published.';
+$string['confirmcloseconvocatoria'] = 'Are you sure you want to close this call? All vacancies will be closed.';
+$string['confirmreopenconvocatoria'] = 'Are you sure you want to reopen this call? Closed vacancies will be published again.';
+$string['confirmarchiveconvocatoria'] = 'Are you sure you want to archive this call? This action is for completed calls.';
 $string['convocatoriaopened'] = 'Call opened successfully';
 $string['convocatoriaclosedmsg'] = 'Call closed successfully';
 $string['convocatoriaarchived'] = 'Call archived successfully';
@@ -312,6 +316,9 @@ $string['error:cannotdeleteconvocatoria'] = 'Cannot delete this call. Only draft
 $string['dates'] = 'Dates';
 $string['vacanciesforconvocatoria'] = 'Vacancies for call';
 $string['backtoconvocatorias'] = 'Back to calls';
+$string['period'] = 'Period';
+$string['totalvacancies'] = 'Total Vacancies';
+$string['totalconvocatorias'] = 'Total Calls';
 
 // Extemporaneous vacancies.
 $string['isextemporaneous'] = 'Extemporaneous vacancy';
@@ -2000,6 +2007,7 @@ $string['pendingreviews'] = 'Pending reviews';
 
 // Calls management card.
 $string['convocatorias_dashboard_desc'] = 'Manage the institution\'s job calls. Vacancies are organized within calls to facilitate the selection process.';
+$string['vacancies_dashboard_desc'] = 'Create, edit and manage vacancies. Control publication and assignment status of positions.';
 $string['workflow_flow'] = 'Workflow';
 $string['selection'] = 'Selection';
 $string['gotoconvocatorias'] = 'Go to Calls';
