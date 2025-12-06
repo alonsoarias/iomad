@@ -38,7 +38,7 @@
       "title": "tour_vacancies_step2_title,local_jobboard",
       "content": "tour_vacancies_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-stat-card, .row.mb-4 .col-lg-3:first-child",
+      "targetvalue": ".jb-stat-card, .col-lg-3 .card",
       "sortorder": 1,
       "configdata": {
         "placement": "bottom"
@@ -68,7 +68,7 @@
       "title": "tour_vacancies_step5_title,local_jobboard",
       "content": "tour_vacancies_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-vacancy-card, .row .col-lg-4:first-child .card",
+      "targetvalue": ".jb-vacancy-card, .col-lg-4 .card.h-100.shadow-sm",
       "sortorder": 4,
       "configdata": {
         "placement": "top"

@@ -38,7 +38,7 @@
       "title": "tour_documents_step2_title,local_jobboard",
       "content": "tour_documents_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".generaltable",
+      "targetvalue": ".generaltable, .table.table-striped",
       "sortorder": 1,
       "configdata": {
         "placement": "top"
@@ -48,7 +48,7 @@
       "title": "tour_documents_step3_title,local_jobboard",
       "content": "tour_documents_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "th:nth-child(3)",
+      "targetvalue": "th:nth-child(3), thead th",
       "sortorder": 2,
       "configdata": {
         "placement": "bottom"
@@ -58,7 +58,7 @@
       "title": "tour_documents_step4_title,local_jobboard",
       "content": "tour_documents_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "th:nth-child(5)",
+      "targetvalue": "th:nth-child(5), thead th:last-child",
       "sortorder": 3,
       "configdata": {
         "placement": "bottom"
@@ -68,7 +68,7 @@
       "title": "tour_documents_step5_title,local_jobboard",
       "content": "tour_documents_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".alert-info",
+      "targetvalue": ".alert.alert-info, .alert[role='alert']",
       "sortorder": 4,
       "configdata": {
         "placement": "bottom"
@@ -78,7 +78,7 @@
       "title": "tour_documents_step6_title,local_jobboard",
       "content": "tour_documents_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".badge-success, .badge-secondary",
+      "targetvalue": "td .badge, .badge-success, .badge-secondary",
       "sortorder": 5,
       "configdata": {
         "placement": "left"

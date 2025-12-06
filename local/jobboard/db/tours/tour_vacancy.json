@@ -38,7 +38,7 @@
       "title": "tour_vacancy_step2_title,local_jobboard",
       "content": "tour_vacancy_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card-header",
+      "targetvalue": ".card-header.bg-primary.text-white, .col-lg-8 .card.shadow-sm:first-child",
       "sortorder": 1,
       "configdata": {
         "placement": "bottom"
@@ -48,7 +48,7 @@
       "title": "tour_vacancy_step3_title,local_jobboard",
       "content": "tour_vacancy_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card-body h2",
+      "targetvalue": ".card-title, .card-body h2",
       "sortorder": 2,
       "configdata": {
         "placement": "bottom"
@@ -58,7 +58,7 @@
       "title": "tour_vacancy_step4_title,local_jobboard",
       "content": "tour_vacancy_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".alert-warning, .text-muted",
+      "targetvalue": ".alert.alert-warning, .d-flex.flex-wrap .badge",
       "sortorder": 3,
       "configdata": {
         "placement": "top"
@@ -68,7 +68,7 @@
       "title": "tour_vacancy_step5_title,local_jobboard",
       "content": "tour_vacancy_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-success, .btn-primary",
+      "targetvalue": ".card.border-primary .btn-primary.btn-lg, .col-lg-4 .btn-primary",
       "sortorder": 4,
       "configdata": {
         "placement": "right"
@@ -78,7 +78,7 @@
       "title": "tour_vacancy_step6_title,local_jobboard",
       "content": "tour_vacancy_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "dl.row",
+      "targetvalue": ".col-lg-4 .card.shadow-sm dl, .card-body dl",
       "sortorder": 5,
       "configdata": {
         "placement": "top"

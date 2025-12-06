@@ -38,7 +38,7 @@
       "title": "tour_convocatoria_manage_step2_title,local_jobboard",
       "content": "tour_convocatoria_manage_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#id_code, #id_name",
+      "targetvalue": "#id_code, #id_name, .form-group:first-of-type input",
       "sortorder": 1,
       "configdata": {
         "placement": "right"
@@ -48,7 +48,7 @@
       "title": "tour_convocatoria_manage_step3_title,local_jobboard",
       "content": "tour_convocatoria_manage_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#id_startdate, #id_enddate",
+      "targetvalue": "#id_startdate, #id_enddate, [data-fieldtype='date']",
       "sortorder": 2,
       "configdata": {
         "placement": "right"
@@ -58,7 +58,7 @@
       "title": "tour_convocatoria_manage_step4_title,local_jobboard",
       "content": "tour_convocatoria_manage_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#id_publicationtype",
+      "targetvalue": "#id_publicationtype, select.form-control",
       "sortorder": 3,
       "configdata": {
         "placement": "right"
@@ -68,7 +68,7 @@
       "title": "tour_convocatoria_manage_step5_title,local_jobboard",
       "content": "tour_convocatoria_manage_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#id_terms",
+      "targetvalue": "#id_terms, [data-fieldtype='editor']",
       "sortorder": 4,
       "configdata": {
         "placement": "top"
@@ -78,7 +78,7 @@
       "title": "tour_convocatoria_manage_step6_title,local_jobboard",
       "content": "tour_convocatoria_manage_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".vacancies-list, .card-body",
+      "targetvalue": ".jb-vacancies-list, .card.shadow-sm .card-body",
       "sortorder": 5,
       "configdata": {
         "placement": "top"
@@ -88,7 +88,7 @@
       "title": "tour_convocatoria_manage_step7_title,local_jobboard",
       "content": "tour_convocatoria_manage_step7_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#id_submitbutton, .btn-primary",
+      "targetvalue": "#id_submitbutton, input[type='submit'].btn-primary",
       "sortorder": 6,
       "configdata": {
         "placement": "top"

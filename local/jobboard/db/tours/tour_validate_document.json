@@ -38,7 +38,7 @@
       "title": "tour_validate_step2_title,local_jobboard",
       "content": "tour_validate_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card:first-of-type, .card-body:first-of-type",
+      "targetvalue": ".card.shadow-sm:first-of-type, section[aria-labelledby]",
       "sortorder": 1,
       "configdata": {
         "placement": "bottom"
@@ -48,7 +48,7 @@
       "title": "tour_validate_step3_title,local_jobboard",
       "content": "tour_validate_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "a.btn-primary[target='_blank'], [data-action='preview']",
+      "targetvalue": "a.btn-primary[target='_blank'], a.btn-outline-primary[aria-label*='download']",
       "sortorder": 2,
       "configdata": {
         "placement": "right"
@@ -58,7 +58,7 @@
       "title": "tour_validate_step4_title,local_jobboard",
       "content": "tour_validate_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".list-group, .list-group-item, .form-check",
+      "targetvalue": ".list-group[role='list'], .list-group-item[role='listitem']",
       "sortorder": 3,
       "configdata": {
         "placement": "right"
@@ -68,7 +68,7 @@
       "title": "tour_validate_step5_title,local_jobboard",
       "content": "tour_validate_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".checklist-item, input[type='checkbox']",
+      "targetvalue": ".form-check, input[type='checkbox']",
       "sortorder": 4,
       "configdata": {
         "placement": "right"
@@ -78,7 +78,7 @@
       "title": "tour_validate_step6_title,local_jobboard",
       "content": "tour_validate_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-success.btn-lg, form[action*='validate']",
+      "targetvalue": ".btn-success[aria-label*='approve'], .btn-success.btn-lg",
       "sortorder": 5,
       "configdata": {
         "placement": "top"
@@ -88,7 +88,7 @@
       "title": "tour_validate_step7_title,local_jobboard",
       "content": "tour_validate_step7_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-danger.btn-lg, select[name='rejectreason']",
+      "targetvalue": ".btn-danger[aria-label*='reject'], .modal .btn-danger",
       "sortorder": 6,
       "configdata": {
         "placement": "top"

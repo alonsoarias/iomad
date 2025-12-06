@@ -38,7 +38,7 @@
       "title": "tour_application_step2_title,local_jobboard",
       "content": "tour_application_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card-header .badge",
+      "targetvalue": ".alert[role='status'], .alert.d-flex.align-items-center",
       "sortorder": 1,
       "configdata": {
         "placement": "bottom"
@@ -48,7 +48,7 @@
       "title": "tour_application_step3_title,local_jobboard",
       "content": "tour_application_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".progress",
+      "targetvalue": "section[aria-labelledby='documents-heading'], .table.table-hover",
       "sortorder": 2,
       "configdata": {
         "placement": "bottom"
@@ -58,7 +58,7 @@
       "title": "tour_application_step4_title,local_jobboard",
       "content": "tour_application_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".list-group",
+      "targetvalue": ".badge[aria-label*='status'], td .badge",
       "sortorder": 3,
       "configdata": {
         "placement": "top"
@@ -68,7 +68,7 @@
       "title": "tour_application_step5_title,local_jobboard",
       "content": "tour_application_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-outline-primary",
+      "targetvalue": ".btn-group.btn-group-sm .btn-outline-primary, .btn-outline-warning[aria-label*='reupload']",
       "sortorder": 4,
       "configdata": {
         "placement": "left"
@@ -78,7 +78,7 @@
       "title": "tour_application_step6_title,local_jobboard",
       "content": "tour_application_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".timeline, .list-group-flush",
+      "targetvalue": "section[aria-labelledby='history-heading'], .local-jobboard-timeline",
       "sortorder": 5,
       "configdata": {
         "placement": "top"

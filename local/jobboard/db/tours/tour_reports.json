@@ -38,7 +38,7 @@
       "title": "tour_reports_step2_title,local_jobboard",
       "content": "tour_reports_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".nav-tabs, ul.nav",
+      "targetvalue": ".nav.nav-tabs, ul.nav.nav-tabs",
       "sortorder": 1,
       "configdata": {
         "placement": "bottom"
@@ -48,7 +48,7 @@
       "title": "tour_reports_step3_title,local_jobboard",
       "content": "tour_reports_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "form.form-inline, select[name='vacancyid']",
+      "targetvalue": ".card.shadow-sm form.form-inline, select[name='vacancyid']",
       "sortorder": 2,
       "configdata": {
         "placement": "bottom"
@@ -58,7 +58,7 @@
       "title": "tour_reports_step4_title,local_jobboard",
       "content": "tour_reports_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "input[name='datefrom'], input[name='dateto']",
+      "targetvalue": "input[type='date'][name='datefrom'], input[type='date'][name='dateto']",
       "sortorder": 3,
       "configdata": {
         "placement": "bottom"
@@ -68,7 +68,7 @@
       "title": "tour_reports_step5_title,local_jobboard",
       "content": "tour_reports_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-group, a[href*='format=csv'], a[href*='format=excel']",
+      "targetvalue": ".btn-group a.btn-sm.btn-outline-secondary, a[href*='format=']",
       "sortorder": 4,
       "configdata": {
         "placement": "left"
@@ -78,7 +78,7 @@
       "title": "tour_reports_step6_title,local_jobboard",
       "content": "tour_reports_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card, .card-body",
+      "targetvalue": ".local-jobboard-reports > div:not(.card.shadow-sm):not(.nav):not(.text-center)",
       "sortorder": 5,
       "configdata": {
         "placement": "top"

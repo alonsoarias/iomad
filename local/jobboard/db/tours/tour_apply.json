@@ -38,7 +38,7 @@
       "title": "tour_apply_step2_title,local_jobboard",
       "content": "tour_apply_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".application-guidelines",
+      "targetvalue": "section[aria-labelledby='guidelines-heading'], .card.shadow-sm:first-of-type",
       "sortorder": 1,
       "configdata": {
         "placement": "bottom"
@@ -48,17 +48,17 @@
       "title": "tour_apply_step3_title,local_jobboard",
       "content": "tour_apply_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#id_consent, .form-check, [name='consent']",
+      "targetvalue": "section[aria-labelledby='docs-heading'], .list-group[role='list']",
       "sortorder": 2,
       "configdata": {
-        "placement": "right"
+        "placement": "bottom"
       }
     },
     {
       "title": "tour_apply_step4_title,local_jobboard",
       "content": "tour_apply_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#id_digitalsignature, [name='digitalsignature']",
+      "targetvalue": "#id_consent, .form-check, [name='consent']",
       "sortorder": 3,
       "configdata": {
         "placement": "right"
@@ -68,17 +68,17 @@
       "title": "tour_apply_step5_title,local_jobboard",
       "content": "tour_apply_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".filepicker-container, .fp-btn-add, .document-upload-card, [data-fieldtype='filemanager']",
+      "targetvalue": "#id_digitalsignature, [name='digitalsignature']",
       "sortorder": 4,
       "configdata": {
-        "placement": "top"
+        "placement": "right"
       }
     },
     {
       "title": "tour_apply_step6_title,local_jobboard",
       "content": "tour_apply_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#id_coverletter, [name='coverletter'], textarea[name='coverletter']",
+      "targetvalue": ".filepicker-container, .fp-btn-add, [data-fieldtype='filemanager']",
       "sortorder": 5,
       "configdata": {
         "placement": "top"
@@ -88,18 +88,28 @@
       "title": "tour_apply_step7_title,local_jobboard",
       "content": "tour_apply_step7_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#id_submitbutton, input[type='submit'], .btn-primary[type='submit']",
+      "targetvalue": "aside.col-lg-4, .jb-sidebar-card",
       "sortorder": 6,
       "configdata": {
-        "placement": "top"
+        "placement": "left"
       }
     },
     {
       "title": "tour_apply_step8_title,local_jobboard",
       "content": "tour_apply_step8_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": "#id_submitbutton, input[type='submit'], .btn-primary[type='submit']",
+      "sortorder": 7,
+      "configdata": {
+        "placement": "top"
+      }
+    },
+    {
+      "title": "tour_apply_step9_title,local_jobboard",
+      "content": "tour_apply_step9_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 7,
+      "sortorder": 8,
       "configdata": {
         "placement": "bottom"
       }
