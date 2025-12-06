@@ -2656,3 +2656,99 @@ $string['viewall'] = 'Ver todos';
 $string['urgent'] = 'Urgente';
 $string['pending'] = 'Pendiente';
 $string['allstatuses'] = 'Todos los estados';
+
+// ============================================================================
+// Cadenas sincronizadas desde EN - 2025-12-06
+// ============================================================================
+$string['actions'] = 'Acciones';
+$string['adminstatistics'] = 'Estadísticas de administración';
+$string['applicantstatistics'] = 'Estadísticas de postulantes';
+$string['applicationform'] = 'Formulario de Postulación';
+$string['applicationhelptext'] = 'Si necesita ayuda con su postulación, por favor contáctenos.';
+$string['applicationinfo'] = 'Información de la Postulación';
+$string['applicationlist'] = 'Lista de postulaciones';
+$string['applicationsqueue'] = 'Cola de postulaciones';
+$string['applicationstatistics'] = 'Estadísticas de postulaciones';
+$string['applyto'] = 'Postularse a';
+$string['approvalrate'] = 'Tasa de Aprobación';
+$string['approved'] = 'Aprobado';
+$string['at'] = 'a las';
+$string['cannotapply'] = 'No puede postularse a esta vacante.';
+$string['changessaved'] = 'Cambios guardados exitosamente';
+$string['clickfordetails'] = 'Clic para ver detalles';
+$string['closealert'] = 'Cerrar alerta';
+$string['complete'] = 'completo';
+$string['contactus'] = 'Contáctenos';
+$string['datatable'] = 'Tabla de datos';
+$string['date'] = 'Fecha';
+$string['daysremaining'] = 'Días restantes';
+$string['documentactions'] = 'Acciones del documento';
+$string['documentstoreview'] = 'Documentos por revisar';
+$string['editvacancy'] = 'Editar vacante';
+$string['features'] = 'Características';
+$string['filterform'] = 'Formulario de filtros';
+$string['inprogress'] = 'En Progreso';
+$string['issuedate'] = 'Fecha de Emisión';
+$string['issuedatehelp'] = 'Fecha en que se emitió el documento';
+$string['lastupdated'] = 'Última Actualización';
+$string['logintoviewmore'] = 'Inicie sesión para ver todas las vacantes disponibles';
+$string['navigation'] = 'Navegación';
+$string['needhelp'] = '¿Necesita Ayuda?';
+$string['noapplications'] = 'Sin postulaciones';
+$string['noapplicationsdesc'] = 'Aún no ha enviado ninguna postulación. Explore las vacantes disponibles para comenzar.';
+$string['noconvocatoriasdesc'] = 'No hay convocatorias abiertas en este momento. Vuelva más tarde para ver nuevas oportunidades.';
+$string['nodata'] = 'No hay datos disponibles';
+$string['nohistory'] = 'No hay historial disponible';
+$string['noteshelptext'] = 'Agregue notas sobre el cambio de estado (visible para el postulante)';
+$string['novacanciesyet'] = 'Aún no hay vacantes disponibles';
+$string['pagination'] = 'Paginación';
+$string['pendingdocsalert'] = 'Tiene documentos pendientes que requieren atención.';
+$string['percentage'] = 'Porcentaje';
+$string['performance'] = 'Rendimiento';
+$string['performedby'] = 'Realizado por';
+$string['progressindicator'] = 'Indicador de progreso';
+$string['requireddocument'] = 'Documento requerido';
+$string['resetfilters'] = 'Restablecer filtros';
+$string['reviewstatistics'] = 'Estadísticas de revisión';
+$string['select'] = 'Seleccionar';
+$string['shareonfacebook'] = 'Compartir en Facebook';
+$string['shareonlinkedin'] = 'Compartir en LinkedIn';
+$string['shareontwitter'] = 'Compartir en Twitter';
+$string['showingresults'] = 'Mostrando resultados';
+$string['trend'] = 'Tendencia';
+$string['trending_down'] = 'Tendencia a la baja';
+$string['trending_up'] = 'Tendencia al alza';
+$string['trydifferentfilters'] = 'Intente ajustar sus filtros para ver más resultados.';
+$string['uploadform'] = 'Formulario de carga';
+$string['uploading'] = 'Subiendo...';
+$string['vacancydetails'] = 'Detalles de la vacante';
+$string['vacancysummary'] = 'Resumen de la Vacante';
+$string['warning'] = 'Advertencia';
+
+// ============================================================================
+// Cadenas de tours adicionales - 2025-12-06
+// ============================================================================
+
+// Tour: Dashboard (pasos 6-8)
+$string['tour_dashboard_step6_title'] = 'Sección de Revisor';
+$string['tour_dashboard_step6_content'] = 'Si eres un revisor de documentos, esta sección muestra tus revisiones asignadas y documentos pendientes. Mantén un seguimiento de tus tareas de revisión aquí.';
+$string['tour_dashboard_step7_title'] = 'Mis Postulaciones';
+$string['tour_dashboard_step7_content'] = 'Como postulante, esta sección muestra el estado de tus postulaciones y acceso rápido para ver todas tus postulaciones. Sigue tu progreso aquí.';
+$string['tour_dashboard_step8_title'] = '¡Listo para Empezar!';
+$string['tour_dashboard_step8_content'] = '¡Ya estás listo para usar la Bolsa de Empleo! Explora las opciones disponibles y no dudes en usar los recursos de ayuda si necesitas asistencia.';
+
+// Tour: Public (paso 10)
+$string['tour_public_step9_title'] = 'Llamada a la Acción';
+$string['tour_public_step9_content'] = 'Si no has iniciado sesión, verás un mensaje para crear una cuenta o iniciar sesión. Esto te permite postularte a vacantes y seguir tus postulaciones.';
+$string['tour_public_step10_title'] = '¡Comienza a Explorar!';
+$string['tour_public_step10_content'] = '¡Ya estás listo para explorar las vacantes disponibles! Usa la búsqueda y los filtros para encontrar oportunidades que coincidan con tus habilidades e intereses. ¡Buena suerte con tus postulaciones!';
+
+// Tour: Apply (paso 9)
+$string['tour_apply_step9_title'] = '¿Necesitas Ayuda?';
+$string['tour_apply_step9_content'] = 'Si encuentras algún problema o tienes preguntas sobre el proceso de postulación, por favor contacta a nuestro equipo de soporte. ¡Estamos aquí para ayudarte a tener éxito!';
+
+// Tour: My Applications (paso 8)
+$string['tour_myapplications_step7_title'] = 'Ver Detalles de Postulación';
+$string['tour_myapplications_step7_content'] = 'Haz clic en "Ver" para ver los detalles completos de tu postulación y los documentos subidos. También puedes retirar tu postulación si aún está en revisión.';
+$string['tour_myapplications_step8_title'] = '¡Mantente Actualizado!';
+$string['tour_myapplications_step8_content'] = 'Revisa esta página regularmente para ver actualizaciones de tus postulaciones. También recibirás notificaciones por correo electrónico para cambios importantes de estado. ¡Buena suerte con tus postulaciones!';

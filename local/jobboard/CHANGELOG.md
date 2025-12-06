@@ -7,6 +7,21 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.15] - 2025-12-06
+
+### Añadido
+- **Sincronización de cadenas de idioma EN/ES**
+  - 64 cadenas añadidas a lang/es/local_jobboard.php
+  - Paridad completa entre archivos de idioma inglés y español
+
+### Modificado
+- **User Tours recreados completamente**
+  - Todos los tours actualizados con selectores CSS compatibles con la interfaz actual
+  - Estructura de pasos optimizada para mejor experiencia de usuario
+- **version.php**: Incrementado a 2.0.15 (2025120633)
+
+---
+
 ## [2.0.10] - 2025-12-06
 
 ### Añadido

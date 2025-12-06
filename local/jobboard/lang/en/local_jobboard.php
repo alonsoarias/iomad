@@ -1558,8 +1558,14 @@ $string['tour_dashboard_step3_title'] = 'Quick Actions';
 $string['tour_dashboard_step3_content'] = 'Each card provides quick access to a specific area of the system. Click on any card to navigate to that section.';
 $string['tour_dashboard_step4_title'] = 'Available Features';
 $string['tour_dashboard_step4_content'] = 'Depending on your permissions, you can: view vacancies, track your applications, manage vacancies as an administrator, review applicant documents, and access reports and analytics.';
-$string['tour_dashboard_step5_title'] = 'Ready to Start!';
-$string['tour_dashboard_step5_content'] = 'You are now ready to use the Job Board! Explore the available options and don\'t hesitate to use the help resources if you need assistance.';
+$string['tour_dashboard_step5_title'] = 'Action Cards';
+$string['tour_dashboard_step5_content'] = 'These cards provide quick access to different sections: manage vacancies, view applications, and access reports. Click on any card to navigate to that section.';
+$string['tour_dashboard_step6_title'] = 'Reviewer Section';
+$string['tour_dashboard_step6_content'] = 'If you are a document reviewer, this section shows your assigned reviews and pending documents. Keep track of your review tasks here.';
+$string['tour_dashboard_step7_title'] = 'My Applications';
+$string['tour_dashboard_step7_content'] = 'As an applicant, this section shows your application status and quick access to view all your applications. Track your progress here.';
+$string['tour_dashboard_step8_title'] = 'Ready to Start!';
+$string['tour_dashboard_step8_content'] = 'You are now ready to use the Job Board! Explore the available options and don\'t hesitate to use the help resources if you need assistance.';
 
 // Tour: Public Vacancies.
 $string['tour_public_name'] = 'Public Vacancies Tour';
@@ -1580,8 +1586,10 @@ $string['tour_public_step7_title'] = 'Vacancy Type Badges';
 $string['tour_public_step7_content'] = 'Vacancies are marked as "Public" (open to everyone) or "Internal" (only for authenticated users from the organization). Make sure you meet the eligibility criteria before applying.';
 $string['tour_public_step8_title'] = 'View Details and Apply';
 $string['tour_public_step8_content'] = 'Click "View Details" to see the complete vacancy information, or click "Apply" to start your application. You may need to log in first to apply.';
-$string['tour_public_step9_title'] = 'Start Exploring!';
-$string['tour_public_step9_content'] = 'You are now ready to browse available vacancies! Use the search and filters to find opportunities that match your skills and interests. Good luck with your applications!';
+$string['tour_public_step9_title'] = 'Call to Action';
+$string['tour_public_step9_content'] = 'If you are not logged in, you will see a prompt to create an account or log in. This allows you to apply for vacancies and track your applications.';
+$string['tour_public_step10_title'] = 'Start Exploring!';
+$string['tour_public_step10_content'] = 'You are now ready to browse available vacancies! Use the search and filters to find opportunities that match your skills and interests. Good luck with your applications!';
 
 // Tour: Application Form.
 $string['tour_apply_name'] = 'Application Form Tour';
@@ -1602,6 +1610,8 @@ $string['tour_apply_step7_title'] = 'Submit Application';
 $string['tour_apply_step7_content'] = 'Once you have filled in all required fields and uploaded your documents, click this button to submit your application. Make sure everything is correct before submitting!';
 $string['tour_apply_step8_title'] = 'Good Luck!';
 $string['tour_apply_step8_content'] = 'After submitting, you can track your application status in "My Applications". You will receive email notifications when there are updates. We wish you the best of luck!';
+$string['tour_apply_step9_title'] = 'Need Help?';
+$string['tour_apply_step9_content'] = 'If you encounter any issues or have questions about the application process, please contact our support team. We are here to help you succeed!';
 
 // Tour: My Applications.
 $string['tour_myapplications_name'] = 'My Applications Tour';
@@ -1618,8 +1628,10 @@ $string['tour_myapplications_step5_title'] = 'Application Status';
 $string['tour_myapplications_step5_content'] = 'The status badge shows where your application is in the review process: Submitted, Under Review, Documents Validated, Interview, Selected, or Rejected. Watch for status changes!';
 $string['tour_myapplications_step6_title'] = 'Available Actions';
 $string['tour_myapplications_step6_content'] = 'Click "View" to see your full application details and uploaded documents. If your application is still under review, you may also have the option to withdraw it.';
-$string['tour_myapplications_step7_title'] = 'Stay Updated!';
-$string['tour_myapplications_step7_content'] = 'Check this page regularly for updates on your applications. You will also receive email notifications for important status changes. Good luck with your applications!';
+$string['tour_myapplications_step7_title'] = 'View Application Details';
+$string['tour_myapplications_step7_content'] = 'Click "View" to see your full application details and uploaded documents. You can also withdraw your application if it is still under review.';
+$string['tour_myapplications_step8_title'] = 'Stay Updated!';
+$string['tour_myapplications_step8_content'] = 'Check this page regularly for updates on your applications. You will also receive email notifications for important status changes. Good luck with your applications!';
 
 // Tour: Document Review.
 $string['tour_review_name'] = 'Document Review Tour';
