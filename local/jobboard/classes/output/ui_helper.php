@@ -34,58 +34,37 @@ defined('MOODLE_INTERNAL') || die();
 class ui_helper {
 
     /**
-     * Render page header with breadcrumb and title.
+     * Render page header with optional action buttons.
      *
-     * @param string $title Page title.
-     * @param array $breadcrumbs Array of [label => url] pairs.
+     * NOTE: Page title is handled by Moodle's $PAGE->set_heading().
+     * NOTE: Breadcrumbs are handled by Moodle's native $PAGE->navbar.
+     * This method ONLY renders action buttons to avoid duplication.
+     *
+     * @param string $title DEPRECATED - Ignored. Use $PAGE->set_heading() instead.
+     * @param array $breadcrumbs DEPRECATED - Ignored. Use $PAGE->navbar instead.
      * @param array $actions Optional action buttons.
      * @return string HTML output.
      */
     public static function page_header(string $title, array $breadcrumbs = [], array $actions = []): string {
-        $html = \html_writer::start_div('jb-page-header d-flex justify-content-between align-items-start mb-4');
-
-        // Left side: breadcrumb and title.
-        $html .= \html_writer::start_div('jb-header-left');
-
-        // Breadcrumb.
-        if (!empty($breadcrumbs)) {
-            $html .= \html_writer::start_tag('nav', ['aria-label' => 'breadcrumb']);
-            $html .= \html_writer::start_tag('ol', ['class' => 'breadcrumb bg-transparent p-0 mb-2']);
-
-            foreach ($breadcrumbs as $label => $url) {
-                if ($url === null) {
-                    // Current page (no link).
-                    $html .= \html_writer::tag('li', s($label),
-                        ['class' => 'breadcrumb-item active', 'aria-current' => 'page']);
-                } else {
-                    $html .= \html_writer::tag('li',
-                        \html_writer::link($url, s($label)),
-                        ['class' => 'breadcrumb-item']);
-                }
-            }
-
-            $html .= \html_writer::end_tag('ol');
-            $html .= \html_writer::end_tag('nav');
+        // If no actions, return empty string (title/breadcrumbs handled by Moodle).
+        if (empty($actions)) {
+            return '';
         }
 
-        // Title.
-        $html .= \html_writer::tag('h2', s($title), ['class' => 'jb-page-title mb-0']);
+        $html = \html_writer::start_div('jb-page-header d-flex justify-content-end mb-4');
+
+        // Action buttons only (title and breadcrumbs handled by Moodle's theme).
+        $html .= \html_writer::start_div('jb-header-actions');
+        foreach ($actions as $action) {
+            $class = $action['class'] ?? 'btn btn-primary';
+            $icon = isset($action['icon']) ? '<i class="fa fa-' . $action['icon'] . ' mr-2"></i>' : '';
+            $html .= \html_writer::link(
+                $action['url'],
+                $icon . s($action['label']),
+                ['class' => $class . ' ml-2']
+            );
+        }
         $html .= \html_writer::end_div();
-
-        // Right side: action buttons.
-        if (!empty($actions)) {
-            $html .= \html_writer::start_div('jb-header-actions');
-            foreach ($actions as $action) {
-                $class = $action['class'] ?? 'btn btn-primary';
-                $icon = isset($action['icon']) ? '<i class="fa fa-' . $action['icon'] . ' mr-2"></i>' : '';
-                $html .= \html_writer::link(
-                    $action['url'],
-                    $icon . s($action['label']),
-                    ['class' => $class . ' ml-2']
-                );
-            }
-            $html .= \html_writer::end_div();
-        }
 
         $html .= \html_writer::end_div();
 

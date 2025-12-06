@@ -7,6 +7,28 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.4] - 2025-12-06
+
+### Corregido
+- **Breadcrumbs duplicados eliminados**
+  - `ui_helper::page_header()` ya no renderiza título ni breadcrumbs
+  - Template `page_header.mustache` solo muestra botones de acción
+  - El título se maneja con `$PAGE->set_heading()` de Moodle
+  - Los breadcrumbs se manejan con `$PAGE->navbar` de Moodle
+  - Evita duplicación de título y navegación en todas las vistas
+
+- **Formulario de registro (signup_form.php)**
+  - Nombres y apellidos se convierten automáticamente a MAYÚSCULAS
+  - Email se convierte automáticamente a minúsculas
+  - Validación de email case-insensitive para evitar duplicados
+
+### Modificado
+- **ui_helper::page_header()**: Parámetros `$title` y `$breadcrumbs` ahora son ignorados (deprecated)
+- **page_header.mustache**: Simplificado para mostrar solo botones de acción
+- **version.php**: Incrementado a 2.0.4 (2025120622)
+
+---
+
 ## [2.0.3] - 2025-12-06
 
 ### Añadido

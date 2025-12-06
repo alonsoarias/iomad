@@ -322,6 +322,38 @@ class signup_form extends moodleform {
     }
 
     /**
+     * Get data from the form, transforming values as needed.
+     *
+     * - First name and last name are converted to UPPERCASE
+     * - Email is converted to lowercase
+     *
+     * @return object|null Form data or null if cancelled/not submitted.
+     */
+    public function get_data() {
+        $data = parent::get_data();
+
+        if ($data) {
+            // Convert names to uppercase.
+            if (!empty($data->firstname)) {
+                $data->firstname = mb_strtoupper(trim($data->firstname), 'UTF-8');
+            }
+            if (!empty($data->lastname)) {
+                $data->lastname = mb_strtoupper(trim($data->lastname), 'UTF-8');
+            }
+
+            // Convert email to lowercase.
+            if (!empty($data->email)) {
+                $data->email = mb_strtolower(trim($data->email), 'UTF-8');
+            }
+            if (!empty($data->email2)) {
+                $data->email2 = mb_strtolower(trim($data->email2), 'UTF-8');
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Validate the form data.
      *
      * @param array $data Form data.
@@ -368,18 +400,19 @@ class signup_form extends moodleform {
             }
         }
 
-        // Email validation.
-        $email = trim($data['email']);
+        // Email validation - normalize to lowercase.
+        $email = mb_strtolower(trim($data['email']), 'UTF-8');
         if (empty($email)) {
             $errors['email'] = get_string('required');
         } else if (!validate_email($email)) {
             $errors['email'] = get_string('invalidemail');
-        } else if ($DB->record_exists('user', ['email' => $email])) {
+        } else if ($DB->record_exists_select('user', 'LOWER(email) = ?', [$email])) {
             $errors['email'] = get_string('emailexists');
         }
 
-        // Email confirmation.
-        if ($email !== trim($data['email2'])) {
+        // Email confirmation - compare in lowercase.
+        $email2 = mb_strtolower(trim($data['email2']), 'UTF-8');
+        if ($email !== $email2) {
             $errors['email2'] = get_string('emailnotmatch', 'local_jobboard');
         }
 
