@@ -7,6 +7,28 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.9] - 2025-12-06
+
+### Corregido
+- **Vista móvil en escritorio corregida**
+  - Añadidos estilos de grid Bootstrap con scope `.path-local-jobboard`
+  - El tema inteb/remui sobrescribía los estilos de Bootstrap grid
+  - Ahora las páginas public.php y signup.php muestran layout correcto en desktop
+
+### Añadido
+- **Estilos de grid responsivo (scoped)**
+  - `.row` con display flex y wrap
+  - Columnas responsivas: `col-sm-*`, `col-md-*`, `col-lg-*`
+  - Utilidades flexbox: `d-flex`, `justify-content-*`, `align-items-*`
+  - Utilidades de spacing: `mb-3`, `mb-4`, `py-3`, `py-5`
+  - Container fluid con padding correcto
+
+### Modificado
+- **styles.css**: Añadidas ~80 líneas de estilos de grid scoped
+- **version.php**: Incrementado a 2.0.9 (2025120627)
+
+---
+
 ## [2.0.8] - 2025-12-06
 
 ### Corregido

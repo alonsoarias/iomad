@@ -187,6 +187,82 @@
 .path-local-jobboard .cursor-pointer { cursor: pointer; }
 
 /* ==========================================================================
+   Bootstrap Grid Fix (Scoped)
+   Ensures proper responsive behavior on plugin pages
+   ========================================================================== */
+
+/* Ensure flexbox display for rows */
+.path-local-jobboard .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+/* Column padding */
+.path-local-jobboard [class*="col-"] {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+/* Responsive column widths - ensure desktop layout works */
+@media (min-width: 576px) {
+    .path-local-jobboard .col-sm-6 { flex: 0 0 50%; max-width: 50%; }
+    .path-local-jobboard .col-sm-12 { flex: 0 0 100%; max-width: 100%; }
+}
+
+@media (min-width: 768px) {
+    .path-local-jobboard .col-md-2 { flex: 0 0 16.666667%; max-width: 16.666667%; }
+    .path-local-jobboard .col-md-3 { flex: 0 0 25%; max-width: 25%; }
+    .path-local-jobboard .col-md-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
+    .path-local-jobboard .col-md-6 { flex: 0 0 50%; max-width: 50%; }
+    .path-local-jobboard .col-md-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
+    .path-local-jobboard .col-md-12 { flex: 0 0 100%; max-width: 100%; }
+}
+
+@media (min-width: 992px) {
+    .path-local-jobboard .col-lg-3 { flex: 0 0 25%; max-width: 25%; }
+    .path-local-jobboard .col-lg-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
+    .path-local-jobboard .col-lg-6 { flex: 0 0 50%; max-width: 50%; }
+    .path-local-jobboard .col-lg-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
+    .path-local-jobboard .col-lg-12 { flex: 0 0 100%; max-width: 100%; }
+}
+
+/* Flexbox utilities */
+.path-local-jobboard .d-flex { display: flex !important; }
+.path-local-jobboard .d-none { display: none !important; }
+.path-local-jobboard .d-block { display: block !important; }
+.path-local-jobboard .flex-wrap { flex-wrap: wrap !important; }
+.path-local-jobboard .justify-content-between { justify-content: space-between !important; }
+.path-local-jobboard .justify-content-center { justify-content: center !important; }
+.path-local-jobboard .justify-content-end { justify-content: flex-end !important; }
+.path-local-jobboard .align-items-center { align-items: center !important; }
+
+/* Card height for equal columns */
+.path-local-jobboard .h-100 { height: 100% !important; }
+
+/* Container */
+.path-local-jobboard .container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/* Text alignment */
+.path-local-jobboard .text-center { text-align: center !important; }
+.path-local-jobboard .text-left { text-align: left !important; }
+
+/* Spacing utilities */
+.path-local-jobboard .mb-3 { margin-bottom: 1rem !important; }
+.path-local-jobboard .mb-4 { margin-bottom: 1.5rem !important; }
+.path-local-jobboard .py-3 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+.path-local-jobboard .py-5 { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+
+/* ==========================================================================
    Print Styles (Scoped to plugin pages only)
    ========================================================================== */
 
