@@ -819,6 +819,335 @@
 .path-local-jobboard .py-5 { padding-top: 3rem !important; padding-bottom: 3rem !important; }
 
 /* ==========================================================================
+   Accessibility Utilities (Scoped)
+   ========================================================================== */
+
+/* Screen reader only - visually hidden but accessible */
+.path-local-jobboard .sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Screen reader only - focusable variant */
+.path-local-jobboard .sr-only-focusable:focus,
+.path-local-jobboard .sr-only-focusable:active {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+}
+
+/* Skip to content link */
+.path-local-jobboard .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    padding: 8px 16px;
+    background: #007bff;
+    color: #fff;
+    z-index: 100;
+    transition: top 0.3s;
+}
+
+.path-local-jobboard .skip-link:focus {
+    top: 0;
+}
+
+/* Focus visible - keyboard navigation indicator */
+.path-local-jobboard *:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+.path-local-jobboard *:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.path-local-jobboard *:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Enhanced focus for buttons */
+.path-local-jobboard .btn:focus,
+.path-local-jobboard .btn:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Enhanced focus for form controls */
+.path-local-jobboard .form-control:focus,
+.path-local-jobboard .custom-select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* ==========================================================================
+   Loading States (Scoped)
+   ========================================================================== */
+
+/* Button loading state */
+.path-local-jobboard .jb-btn-loading.is-loading .btn-text {
+    display: none;
+}
+
+.path-local-jobboard .jb-btn-loading.is-loading .btn-loading-indicator {
+    display: inline-block !important;
+}
+
+.path-local-jobboard .jb-btn-loading:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Spinner animation */
+.path-local-jobboard .fa-spin {
+    animation: jb-spin 1s infinite linear;
+}
+
+@keyframes jb-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Loading overlay for cards/sections */
+.path-local-jobboard .jb-loading-overlay {
+    position: relative;
+}
+
+.path-local-jobboard .jb-loading-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.path-local-jobboard .jb-loading-overlay.is-loading::after {
+    display: block;
+}
+
+/* ==========================================================================
+   Form Validation States (Scoped)
+   ========================================================================== */
+
+.path-local-jobboard .form-control.is-valid {
+    border-color: #28a745;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center right calc(0.375em + 0.1875rem);
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.path-local-jobboard .form-control.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23dc3545' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23dc3545' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center right calc(0.375em + 0.1875rem);
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.path-local-jobboard .valid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #28a745;
+}
+
+.path-local-jobboard .invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+
+.path-local-jobboard .form-control.is-valid ~ .valid-feedback,
+.path-local-jobboard .form-control.is-invalid ~ .invalid-feedback {
+    display: block;
+}
+
+/* ==========================================================================
+   Progress Bar Enhancements (Scoped)
+   ========================================================================== */
+
+.path-local-jobboard .progress {
+    display: flex;
+    height: 1rem;
+    overflow: hidden;
+    font-size: 0.75rem;
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+}
+
+.path-local-jobboard .progress-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #007bff;
+    transition: width 0.6s ease;
+}
+
+.path-local-jobboard .progress-bar-striped {
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+    background-size: 1rem 1rem;
+}
+
+.path-local-jobboard .progress-bar-animated {
+    animation: jb-progress-bar-stripes 1s linear infinite;
+}
+
+@keyframes jb-progress-bar-stripes {
+    from { background-position: 1rem 0; }
+    to { background-position: 0 0; }
+}
+
+/* ==========================================================================
+   Vacancy Card Enhancements (Scoped)
+   ========================================================================== */
+
+.path-local-jobboard .jb-vacancy-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.path-local-jobboard .jb-vacancy-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.path-local-jobboard .jb-vacancy-card:focus-within {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.path-local-jobboard .jb-card-actions .btn {
+    flex: 0 0 auto;
+}
+
+/* ==========================================================================
+   Public Page Hero (Scoped)
+   ========================================================================== */
+
+.path-local-jobboard .jb-public-hero {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border-radius: 0.5rem;
+}
+
+.path-local-jobboard .text-white-50 {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ==========================================================================
+   Reduced Motion Preference (Scoped)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .path-local-jobboard *,
+    .path-local-jobboard *::before,
+    .path-local-jobboard *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .path-local-jobboard .jb-vacancy-card:hover {
+        transform: none;
+    }
+
+    .path-local-jobboard .jb-stat-card:hover {
+        transform: none;
+    }
+}
+
+/* ==========================================================================
+   High Contrast Mode Support (Scoped)
+   ========================================================================== */
+
+@media (prefers-contrast: high) {
+    .path-local-jobboard .btn {
+        border-width: 2px;
+    }
+
+    .path-local-jobboard .card {
+        border-width: 2px;
+    }
+
+    .path-local-jobboard .badge {
+        border: 1px solid currentColor;
+    }
+
+    .path-local-jobboard *:focus,
+    .path-local-jobboard *:focus-visible {
+        outline-width: 3px;
+    }
+}
+
+/* ==========================================================================
+   Custom Select Enhancement (Scoped)
+   ========================================================================== */
+
+.path-local-jobboard .custom-select {
+    display: inline-block;
+    width: 100%;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    vertical-align: middle;
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    appearance: none;
+}
+
+.path-local-jobboard .custom-select-sm {
+    height: calc(1.5em + 0.5rem + 2px);
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    padding-left: 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   Opacity Utility (Scoped)
+   ========================================================================== */
+
+.path-local-jobboard .opacity-50 {
+    opacity: 0.5 !important;
+}
+
+.path-local-jobboard .opacity-75 {
+    opacity: 0.75 !important;
+}
+
+/* ==========================================================================
    Print Styles (Scoped to plugin pages only)
    ========================================================================== */
 

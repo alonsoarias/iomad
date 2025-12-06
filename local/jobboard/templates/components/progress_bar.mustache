@@ -23,21 +23,22 @@
     }
 }}
 {{^segments}}
-<div class="progress{{#height}} {{/height}}" {{#height}}style="height: {{height}}px;"{{/height}}>
+<div class="progress jb-progress{{#height}} {{/height}}" {{#height}}style="height: {{height}}px;"{{/height}} role="group" aria-label="{{#arialabel}}{{arialabel}}{{/arialabel}}{{^arialabel}}{{#str}}progressindicator, local_jobboard{{/str}}{{/arialabel}}">
     <div class="progress-bar bg-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}{{#striped}} progress-bar-striped{{/striped}}{{#animated}} progress-bar-animated{{/animated}}"
          role="progressbar"
          style="width: {{percent}}%;"
          aria-valuenow="{{percent}}"
          aria-valuemin="0"
-         aria-valuemax="100">
-        {{#showpercent}}{{percent}}%{{/showpercent}}
-        {{#label}}{{label}}{{/label}}
+         aria-valuemax="100"
+         aria-label="{{percent}}% {{#str}}complete, local_jobboard{{/str}}">
+        <span class="progress-text">{{#showpercent}}{{percent}}%{{/showpercent}}{{#label}}{{label}}{{/label}}</span>
     </div>
 </div>
+<span class="sr-only">{{#arialabel}}{{arialabel}}{{/arialabel}}: {{percent}}% {{#str}}complete, local_jobboard{{/str}}</span>
 {{/segments}}
 
 {{#segments.0}}
-<div class="progress{{#height}} {{/height}}" {{#height}}style="height: {{height}}px;"{{/height}}>
+<div class="progress jb-progress jb-progress-segmented{{#height}} {{/height}}" {{#height}}style="height: {{height}}px;"{{/height}} role="group" aria-label="{{#arialabel}}{{arialabel}}{{/arialabel}}{{^arialabel}}{{#str}}progressindicator, local_jobboard{{/str}}{{/arialabel}}">
     {{#segments}}
     <div class="progress-bar bg-{{color}}"
          role="progressbar"
@@ -45,8 +46,9 @@
          aria-valuenow="{{percent}}"
          aria-valuemin="0"
          aria-valuemax="100"
-         title="{{label}}">
-        {{#showvalue}}{{label}}{{/showvalue}}
+         aria-label="{{label}}: {{percent}}%"
+         title="{{label}}: {{percent}}%">
+        {{#showvalue}}<span class="progress-text">{{label}}</span>{{/showvalue}}
     </div>
     {{/segments}}
 </div>

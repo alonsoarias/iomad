@@ -2249,3 +2249,28 @@ $string['viewall'] = 'View all';
 $string['urgent'] = 'Urgent';
 $string['pending'] = 'Pending';
 $string['allstatuses'] = 'All statuses';
+
+// ============================================================================
+// Accessibility and UX enhancement strings (v2.0.11)
+// ============================================================================
+
+// Screen reader and ARIA labels.
+$string['clickfordetails'] = 'Click for details';
+$string['trending_up'] = 'Trending up';
+$string['trending_down'] = 'Trending down';
+$string['progressindicator'] = 'Progress indicator';
+$string['complete'] = 'complete';
+$string['datatable'] = 'Data table';
+$string['filterform'] = 'Filter form';
+$string['resetfilters'] = 'Reset filters';
+$string['uploadform'] = 'Upload form';
+$string['requireddocument'] = 'Required document';
+$string['issuedatehelp'] = 'Date the document was issued';
+$string['uploading'] = 'Uploading...';
+$string['select'] = 'Select';
+$string['date'] = 'Date';
+
+// Additional card and component labels.
+$string['applyto'] = 'Apply to';
+$string['editvacancy'] = 'Edit vacancy';
+$string['logintoviewmore'] = 'Log in to view all available vacancies';

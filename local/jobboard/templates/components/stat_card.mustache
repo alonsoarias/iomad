@@ -23,26 +23,26 @@
         "trendvalue": "+5 this week"
     }
 }}
-<div class="card shadow-sm h-100 jb-stat-card border-left-{{color}}">
+<div class="card shadow-sm h-100 jb-stat-card border-left-{{color}}" role="region" aria-label="{{label}}: {{value}}">
     {{#url}}
-    <a href="{{url}}" class="text-decoration-none">
+    <a href="{{url}}" class="text-decoration-none" aria-label="{{label}}: {{value}}. {{#str}}clickfordetails, local_jobboard{{/str}}">
     {{/url}}
         <div class="card-body py-3">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h3 class="mb-0 font-weight-bold text-{{color}}">{{value}}</h3>
+                    <h3 class="mb-0 font-weight-bold text-{{color}}" aria-hidden="true">{{value}}</h3>
                     <p class="text-muted mb-0 small">{{label}}</p>
                     {{#trendvalue}}
-                    <small class="text-{{#trend}}{{trend}}{{/trend}}{{^trend}}muted{{/trend}}">
+                    <small class="jb-trend-indicator text-{{#trend}}{{trend}}{{/trend}}{{^trend}}muted{{/trend}}">
                         {{#trend}}
-                        {{#isUp}}<i class="fa fa-arrow-up"></i>{{/isUp}}
-                        {{#isDown}}<i class="fa fa-arrow-down"></i>{{/isDown}}
+                        {{#isUp}}<i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sr-only">{{#str}}trending_up, local_jobboard{{/str}}</span>{{/isUp}}
+                        {{#isDown}}<i class="fa fa-arrow-down" aria-hidden="true"></i><span class="sr-only">{{#str}}trending_down, local_jobboard{{/str}}</span>{{/isDown}}
                         {{/trend}}
-                        {{trendvalue}}
+                        <span class="trend-text">{{trendvalue}}</span>
                     </small>
                     {{/trendvalue}}
                 </div>
-                <div class="text-{{color}} opacity-50">
+                <div class="text-{{color}} opacity-50" aria-hidden="true">
                     <i class="fa fa-{{icon}} fa-2x"></i>
                 </div>
             </div>

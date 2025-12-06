@@ -1,10 +1,10 @@
 {{!
     @template local_jobboard/components/status_badge
 
-    Status badge component.
+    Status badge component with accessibility support.
 
     Context variables:
-    * status - Status code
+    * status - Status code (used for aria-label context)
     * label - Display label
     * color - Bootstrap color (primary, success, warning, danger, info, secondary)
     * icon - Optional FontAwesome icon
@@ -20,9 +20,11 @@
         "pill": true
     }
 }}
-<span class="badge badge-{{color}}{{#pill}} badge-pill{{/pill}}{{#size}} badge-{{size}}{{/size}}">
+<span class="badge badge-{{color}}{{#pill}} badge-pill{{/pill}}{{#size}} badge-{{size}}{{/size}}"
+      role="status"
+      aria-label="{{#str}}status{{/str}}: {{label}}">
     {{#icon}}
-    <i class="fa fa-{{icon}} mr-1"></i>
+    <i class="fa fa-{{icon}} mr-1" aria-hidden="true"></i>
     {{/icon}}
-    {{label}}
+    <span class="badge-text">{{label}}</span>
 </span>

@@ -20,13 +20,16 @@
     }
 }}
 {{#responsive}}
-<div class="table-responsive">
+<div class="table-responsive" tabindex="0" role="region" aria-label="{{#tablecaption}}{{tablecaption}}{{/tablecaption}}{{^tablecaption}}{{#str}}datatable, local_jobboard{{/str}}{{/tablecaption}}">
 {{/responsive}}
-<table class="table{{#striped}} table-striped{{/striped}}{{#hover}} table-hover{{/hover}} mb-0">
+<table class="table jb-data-table{{#striped}} table-striped{{/striped}}{{#hover}} table-hover{{/hover}} mb-0">
+    {{#tablecaption}}
+    <caption class="sr-only">{{tablecaption}}</caption>
+    {{/tablecaption}}
     <thead class="thead-light">
         <tr>
             {{#headers}}
-            <th{{#class}} class="{{class}}"{{/class}}>{{label}}</th>
+            <th scope="col"{{#class}} class="{{class}}"{{/class}}>{{label}}</th>
             {{/headers}}
         </tr>
     </thead>
@@ -35,14 +38,14 @@
         {{#rows}}
         <tr>
             {{#cells}}
-            <td{{#class}} class="{{class}}"{{/class}}>{{{content}}}</td>
+            <td{{#class}} class="{{class}}"{{/class}}{{#isheader}} scope="row"{{/isheader}}>{{{content}}}</td>
             {{/cells}}
         </tr>
         {{/rows}}
         {{/hasdata}}
         {{^hasdata}}
         <tr>
-            <td colspan="{{headercount}}" class="text-center text-muted py-4">
+            <td colspan="{{headercount}}" class="text-center text-muted py-4" role="status">
                 {{#emptytext}}{{emptytext}}{{/emptytext}}
                 {{^emptytext}}{{#str}}nodata, local_jobboard{{/str}}{{/emptytext}}
             </td>

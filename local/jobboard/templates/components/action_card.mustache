@@ -24,19 +24,19 @@
         "alerttype": "warning"
     }
 }}
-<div class="card shadow-sm mb-4 jb-action-card border-{{color}}">
+<section class="card shadow-sm mb-4 jb-action-card border-{{color}}" aria-labelledby="action-card-title-{{uniqid}}">
     <div class="card-header bg-{{color}} text-white">
-        <h5 class="mb-0">
+        <h5 class="mb-0" id="action-card-title-{{uniqid}}">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-2"></i>
+            <i class="fa fa-{{icon}} mr-2" aria-hidden="true"></i>
             {{/icon}}
             {{title}}
         </h5>
     </div>
     <div class="card-body text-center">
         {{#alert}}
-        <div class="alert alert-{{#alerttype}}{{alerttype}}{{/alerttype}}{{^alerttype}}info{{/alerttype}} mb-3">
-            <i class="fa fa-exclamation-triangle mr-1"></i>
+        <div class="alert alert-{{#alerttype}}{{alerttype}}{{/alerttype}}{{^alerttype}}info{{/alerttype}} mb-3" role="alert">
+            <i class="fa fa-exclamation-triangle mr-1" aria-hidden="true"></i>
             {{alert}}
         </div>
         {{/alert}}
@@ -46,21 +46,21 @@
         {{/description}}
 
         {{#primaryaction}}
-        <a href="{{url}}" class="btn btn-{{color}} btn-lg btn-block mb-2">
+        <a href="{{url}}" class="btn btn-{{color}} btn-lg btn-block mb-2" role="button">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-2"></i>
+            <i class="fa fa-{{icon}} mr-2" aria-hidden="true"></i>
             {{/icon}}
             {{label}}
         </a>
         {{/primaryaction}}
 
         {{#secondaryaction}}
-        <a href="{{url}}" class="btn btn-outline-{{color}} btn-block">
+        <a href="{{url}}" class="btn btn-outline-{{color}} btn-block" role="button">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-2"></i>
+            <i class="fa fa-{{icon}} mr-2" aria-hidden="true"></i>
             {{/icon}}
             {{label}}
         </a>
         {{/secondaryaction}}
     </div>
-</div>
+</section>
