@@ -7,6 +7,32 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.1] - 2025-12-06
+
+### Añadido
+- **Estilos de override para temas**: Compatibilidad con temas remui e inteb
+  - Prefijo `.path-local-jobboard` para especificidad CSS
+  - Override de cards, tablas, botones, badges, formularios
+  - Override de alerts, pagination, modals, dropdowns
+  - Colores de texto y espaciado garantizados
+
+### Modificado
+- **Breadcrumbs removidos**: Eliminados del plugin para usar navegación nativa de Moodle
+  - assign_reviewer.php
+  - import_exemptions.php
+  - edit.php
+  - Todos los archivos en views/
+
+- **Estilos inline migrados**: `ui_helper::get_inline_styles()` ahora retorna vacío
+  - Estilos de jb-page-header, jb-stat-card, jb-filter-form migrados a styles.css
+  - Utilidades border-left-* y badge-purple migradas a styles.css
+
+### Corregido
+- Conflictos de navegación y visualización con temas remui/inteb
+- Estilos de plugin ahora tienen precedencia sobre estilos del tema
+
+---
+
 ## [2.0.0] - 2025-12-06
 
 ### Añadido

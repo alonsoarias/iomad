@@ -61,17 +61,6 @@ $PAGE->set_heading(get_string('viewapplication', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 $PAGE->requires->css('/local/jobboard/styles.css');
 
-// Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
-if ($isowner) {
-    $PAGE->navbar->add(get_string('myapplications', 'local_jobboard'),
-        new moodle_url('/local/jobboard/index.php', ['view' => 'applications']));
-} else {
-    $PAGE->navbar->add(get_string('reviewapplications', 'local_jobboard'),
-        new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $application->vacancyid]));
-}
-$PAGE->navbar->add(get_string('viewapplication', 'local_jobboard'));
-
 // Handle actions.
 if ($action === 'withdraw' && $isowner) {
     if (!in_array($application->status, ['submitted', 'under_review'])) {

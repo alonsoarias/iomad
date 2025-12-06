@@ -47,10 +47,6 @@ $PAGE->set_heading(get_string('myreviews', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 $PAGE->requires->css('/local/jobboard/styles.css');
 
-// Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
-$PAGE->navbar->add(get_string('myreviews', 'local_jobboard'));
-
 // Get my stats.
 $mystats = reviewer::get_reviewer_stats($USER->id);
 $myworkload = reviewer::get_reviewer_workload($USER->id);

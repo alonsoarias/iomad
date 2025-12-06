@@ -63,21 +63,11 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 $PAGE->requires->css('/local/jobboard/styles.css');
 
-// Build navigation.
-$PAGE->navbar->add(get_string('jobboard', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
-$PAGE->navbar->add(get_string('manageconvocatorias', 'local_jobboard'),
-    new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']));
-
 // Get convocatoria info.
 $convocatoriarecord = null;
 if ($convocatoriaid) {
     $convocatoriarecord = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
-    if ($convocatoriarecord) {
-        $PAGE->navbar->add(s($convocatoriarecord->name),
-            new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $convocatoriaid]));
-    }
 }
-$PAGE->navbar->add($pagetitle);
 
 // If creating new vacancy and no convocatoria selected, show selection page.
 if (!$id && !$convocatoriaid) {

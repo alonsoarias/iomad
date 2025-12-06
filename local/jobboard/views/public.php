@@ -499,9 +499,6 @@ function local_jobboard_render_public_vacancy_detail($vacancy, $context, $islogg
     $PAGE->set_heading($vacancy->title);
     $PAGE->requires->css('/local/jobboard/styles.css');
 
-    $PAGE->navbar->add(get_string('publicvacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'public']));
-    $PAGE->navbar->add($vacancy->title);
-
     echo $OUTPUT->header();
     echo \local_jobboard\output\ui_helper::get_inline_styles();
 

@@ -51,10 +51,6 @@ $PAGE->set_heading(get_string('reviewdocuments', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 $PAGE->requires->css('/local/jobboard/styles.css');
 
-// Navigation.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
-$PAGE->navbar->add(get_string('reviewdocuments', 'local_jobboard'));
-
 // Handle actions.
 if ($action && confirm_sesskey()) {
     switch ($action) {

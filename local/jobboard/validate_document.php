@@ -55,13 +55,6 @@ $PAGE->set_title(get_string('validatedocument', 'local_jobboard'));
 $PAGE->set_heading(get_string('validatedocument', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
-// Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
-$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
-$PAGE->navbar->add(get_string('viewapplication', 'local_jobboard'),
-    new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]));
-$PAGE->navbar->add(get_string('validatedocument', 'local_jobboard'));
-
 // Handle form submission.
 if ($action === 'validate' || $action === 'reject') {
     require_sesskey();

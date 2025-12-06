@@ -78,12 +78,6 @@ $PAGE->set_title(get_string('applytovacancy', 'local_jobboard'));
 $PAGE->set_heading(get_string('applytovacancy', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
-// Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
-$PAGE->navbar->add(get_string('vacancies', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']));
-$PAGE->navbar->add(format_string($vacancy->title), new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]));
-$PAGE->navbar->add(get_string('apply', 'local_jobboard'));
-
 // Create form.
 $customdata = [
     'vacancy' => $vacancy->get_record(),

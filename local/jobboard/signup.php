@@ -81,10 +81,6 @@ $PAGE->set_heading(get_string('signup_title', 'local_jobboard'));
 // Add custom CSS for the signup form.
 $PAGE->requires->css('/local/jobboard/styles.css');
 
-// Add navigation.
-$PAGE->navbar->add(get_string('publicvacancies', 'local_jobboard'), new moodle_url('/local/jobboard/public.php'));
-$PAGE->navbar->add(get_string('signup_title', 'local_jobboard'));
-
 // Check IOMAD installation and get companies.
 $isiomad = local_jobboard_is_iomad_installed();
 $companies = [];

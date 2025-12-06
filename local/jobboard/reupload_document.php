@@ -65,13 +65,6 @@ $PAGE->set_title(get_string('reuploaddocument', 'local_jobboard'));
 $PAGE->set_heading(get_string('reuploaddocument', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
-// Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
-$PAGE->navbar->add(get_string('myapplications', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'applications']));
-$PAGE->navbar->add(get_string('viewapplication', 'local_jobboard'),
-    new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $applicationid]));
-$PAGE->navbar->add(get_string('reuploaddocument', 'local_jobboard'));
-
 /**
  * Reupload form.
  */

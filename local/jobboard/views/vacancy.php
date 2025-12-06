@@ -55,18 +55,6 @@ if ($vacancy->convocatoriaid) {
     $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $vacancy->convocatoriaid]);
 }
 
-// Set up Moodle navbar with proper hierarchy.
-if ($convocatoria) {
-    $PAGE->navbar->add(get_string('convocatorias', 'local_jobboard'),
-        new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']));
-    $PAGE->navbar->add($convocatoria->name,
-        new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]));
-} else {
-    $PAGE->navbar->add(get_string('vacancies', 'local_jobboard'),
-        new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']));
-}
-$PAGE->navbar->add($vacancy->title);
-
 // Log view.
 \local_jobboard\audit::log('vacancy_viewed', 'vacancy', $vacancy->id);
 

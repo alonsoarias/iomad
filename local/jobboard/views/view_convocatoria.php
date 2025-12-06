@@ -45,11 +45,6 @@ $PAGE->set_title($convocatoria->name);
 $PAGE->set_heading($convocatoria->name);
 $PAGE->requires->css('/local/jobboard/styles.css');
 
-// Set up breadcrumbs.
-$PAGE->navbar->add(get_string('convocatorias', 'local_jobboard'),
-    new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']));
-$PAGE->navbar->add($convocatoria->name);
-
 // Log view.
 \local_jobboard\audit::log('convocatoria_viewed', 'convocatoria', $convocatoria->id);
 

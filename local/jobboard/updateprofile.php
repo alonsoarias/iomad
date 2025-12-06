@@ -48,10 +48,6 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('updateprofile_title', 'local_jobboard'));
 $PAGE->set_heading(get_string('updateprofile_title', 'local_jobboard'));
 
-// Add navigation.
-$PAGE->navbar->add(get_string('publicvacancies', 'local_jobboard'), new moodle_url('/local/jobboard/public.php'));
-$PAGE->navbar->add(get_string('updateprofile_title', 'local_jobboard'));
-
 // Check IOMAD installation.
 $isiomad = local_jobboard_is_iomad_installed();
 $companies = [];

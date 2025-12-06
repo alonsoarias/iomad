@@ -46,12 +46,6 @@ $PAGE->set_title(get_string('managecommittee', 'local_jobboard'));
 $PAGE->set_heading(get_string('managecommittee', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
 
-// Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/'));
-$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'),
-    new moodle_url('/local/jobboard/manage_vacancies.php'));
-$PAGE->navbar->add(get_string('managecommittee', 'local_jobboard'));
-
 // Get existing committee.
 $committee = committee::get_for_vacancy($vacancyid);
 

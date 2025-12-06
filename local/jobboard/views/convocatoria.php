@@ -59,11 +59,6 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 $PAGE->requires->css('/local/jobboard/styles.css');
 
-// Add navigation.
-$PAGE->navbar->add(get_string('manageconvocatorias', 'local_jobboard'),
-    new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']));
-$PAGE->navbar->add($convocatoria ? s($convocatoria->name) : get_string('addconvocatoria', 'local_jobboard'));
-
 // Base URLs.
 $returnurl = new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']);
 

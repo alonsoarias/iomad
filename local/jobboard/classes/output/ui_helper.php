@@ -422,64 +422,11 @@ class ui_helper {
     /**
      * Get page CSS.
      *
-     * @return string CSS styles.
+     * @deprecated since version 2.0.1 - Styles now in styles.css
+     * @return string Empty string (styles migrated to styles.css).
      */
     public static function get_inline_styles(): string {
-        return '
-        <style>
-        /* UI Helper Styles */
-        .jb-page-header {
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #e9ecef;
-        }
-        .jb-page-title {
-            font-weight: 600;
-            color: #343a40;
-        }
-        .jb-stat-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border-width: 0 0 0 4px !important;
-        }
-        .jb-stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .jb-stat-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-        .jb-stat-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .jb-empty-state {
-            background: #f8f9fa;
-            border-radius: 0.5rem;
-        }
-        .jb-filter-form {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 0.5rem;
-        }
-        .jb-actions .btn {
-            border-radius: 0;
-        }
-        .jb-actions .btn:first-child {
-            border-radius: 0.25rem 0 0 0.25rem;
-        }
-        .jb-actions .btn:last-child {
-            border-radius: 0 0.25rem 0.25rem 0;
-        }
-        .border-left-primary { border-left: 4px solid #007bff !important; }
-        .border-left-success { border-left: 4px solid #28a745 !important; }
-        .border-left-warning { border-left: 4px solid #ffc107 !important; }
-        .border-left-danger { border-left: 4px solid #dc3545 !important; }
-        .border-left-info { border-left: 4px solid #17a2b8 !important; }
-        .cursor-pointer { cursor: pointer; }
-        .badge-purple { background-color: #6f42c1; color: #fff; }
-        </style>
-        ';
+        // Styles have been migrated to styles.css for better caching and organization.
+        return '';
     }
 }

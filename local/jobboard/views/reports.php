@@ -52,10 +52,6 @@ $PAGE->set_title(get_string('reports', 'local_jobboard'));
 $PAGE->set_heading(get_string('reports', 'local_jobboard'));
 $PAGE->set_pagelayout('report');
 
-// Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
-$PAGE->navbar->add(get_string('reports', 'local_jobboard'));
-
 // Handle export.
 if ($format === 'csv' || $format === 'excel' || $format === 'pdf') {
     local_jobboard_export_report($reporttype, $vacancyid, $datefrom, $dateto, $format);

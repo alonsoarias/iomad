@@ -46,10 +46,6 @@ $PAGE->set_heading(get_string('myapplications', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 $PAGE->requires->css('/local/jobboard/styles.css');
 
-// Navbar.
-$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
-$PAGE->navbar->add(get_string('myapplications', 'local_jobboard'));
-
 // Get user's applications.
 $filters = ['userid' => $USER->id];
 if (!empty($status)) {
