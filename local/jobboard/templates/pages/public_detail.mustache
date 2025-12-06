@@ -163,9 +163,10 @@
 
                     {{^isloggedin}}
                     <p class="text-muted mb-3">{{#str}}logintoapply, local_jobboard{{/str}}</p>
-                    <a href="{{loginapplyurl}}" class="btn btn-primary btn-lg btn-block">
+                    <a href="{{loginapplyurl}}" class="btn btn-primary btn-lg btn-block" target="_blank" rel="noopener noreferrer">
                         <i class="fa fa-sign-in-alt mr-2"></i>
                         {{#str}}loginandapply, local_jobboard{{/str}}
+                        <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
                     </a>
                     {{/isloggedin}}
                 </div>

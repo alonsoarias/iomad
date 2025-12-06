@@ -757,6 +757,7 @@ $string['novacanciesfound'] = 'No vacancies found matching your criteria.';
 $string['searchplaceholder'] = 'Search by title, code, or description...';
 $string['viewdetails'] = 'View Details';
 $string['loginandapply'] = 'Login to Apply';
+$string['opensnewwindow'] = '(opens in new window)';
 $string['closesin'] = 'Closes in {$a} days';
 $string['closeson'] = 'Closes on';
 $string['wanttoapply'] = 'Want to apply?';

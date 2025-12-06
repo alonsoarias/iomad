@@ -1521,6 +1521,7 @@ $string['novacanciesfound'] = 'No se encontraron vacantes que coincidan con sus 
 $string['searchplaceholder'] = 'Buscar por título, código o descripción...';
 $string['viewdetails'] = 'Ver Detalles';
 $string['loginandapply'] = 'Iniciar sesión para postularse';
+$string['opensnewwindow'] = '(abre en nueva ventana)';
 $string['closesin'] = 'Cierra en {$a} días';
 $string['closeson'] = 'Cierra el';
 $string['wanttoapply'] = '¿Desea postularse?';

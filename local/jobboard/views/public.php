@@ -418,8 +418,9 @@ if (empty($vacancies)) {
                         'vacancyid' => $vacancy->id,
                     ]))->out(false),
                 ]),
-                '<i class="fa fa-sign-in-alt mr-1"></i>' . get_string('loginandapply', 'local_jobboard'),
-                ['class' => 'btn btn-sm btn-outline-secondary']
+                '<i class="fa fa-sign-in-alt mr-1"></i>' . get_string('loginandapply', 'local_jobboard') .
+                '<span class="sr-only"> ' . get_string('opensnewwindow', 'local_jobboard') . '</span>',
+                ['class' => 'btn btn-sm btn-outline-secondary', 'target' => '_blank', 'rel' => 'noopener noreferrer']
             );
         }
 
@@ -453,15 +454,18 @@ if (!$isloggedin) {
     echo html_writer::tag('i', '', ['class' => 'fa fa-user-plus fa-3x text-primary mb-3']);
     echo html_writer::tag('h4', get_string('wanttoapply', 'local_jobboard'), ['class' => 'card-title']);
     echo html_writer::tag('p', get_string('createaccounttoapply', 'local_jobboard'), ['class' => 'card-text text-muted mb-4']);
+    $currentpageurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false);
     echo html_writer::link(
-        new moodle_url('/local/jobboard/signup.php'),
-        '<i class="fa fa-user-plus mr-2"></i>' . get_string('createaccount'),
-        ['class' => 'btn btn-primary btn-lg mr-3']
+        new moodle_url('/local/jobboard/signup.php', ['wantsurl' => $currentpageurl]),
+        '<i class="fa fa-user-plus mr-2"></i>' . get_string('createaccount') .
+        '<span class="sr-only"> ' . get_string('opensnewwindow', 'local_jobboard') . '</span>',
+        ['class' => 'btn btn-primary btn-lg mr-3', 'target' => '_blank', 'rel' => 'noopener noreferrer']
     );
     echo html_writer::link(
-        new moodle_url('/login/index.php'),
-        '<i class="fa fa-sign-in-alt mr-2"></i>' . get_string('login'),
-        ['class' => 'btn btn-outline-primary btn-lg']
+        new moodle_url('/login/index.php', ['wantsurl' => $currentpageurl]),
+        '<i class="fa fa-sign-in-alt mr-2"></i>' . get_string('login') .
+        '<span class="sr-only"> ' . get_string('opensnewwindow', 'local_jobboard') . '</span>',
+        ['class' => 'btn btn-outline-primary btn-lg', 'target' => '_blank', 'rel' => 'noopener noreferrer']
     );
     echo html_writer::end_div();
     echo html_writer::end_div();
@@ -658,8 +662,9 @@ function local_jobboard_render_public_vacancy_detail($vacancy, $context, $islogg
                     'vacancyid' => $vacancy->id,
                 ]))->out(false),
             ]),
-            '<i class="fa fa-sign-in-alt mr-2"></i>' . get_string('loginandapply', 'local_jobboard'),
-            ['class' => 'btn btn-primary btn-lg btn-block']
+            '<i class="fa fa-sign-in-alt mr-2"></i>' . get_string('loginandapply', 'local_jobboard') .
+            '<span class="sr-only"> ' . get_string('opensnewwindow', 'local_jobboard') . '</span>',
+            ['class' => 'btn btn-primary btn-lg btn-block', 'target' => '_blank', 'rel' => 'noopener noreferrer']
         );
     }
 

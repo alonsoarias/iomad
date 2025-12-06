@@ -149,9 +149,10 @@
                         {{/canapply}}
 
                         {{^isloggedin}}
-                        <a href="{{loginapplyurl}}" class="btn btn-sm btn-outline-secondary">
+                        <a href="{{loginapplyurl}}" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener noreferrer">
                             <i class="fa fa-sign-in-alt mr-1"></i>
                             {{#str}}loginandapply, local_jobboard{{/str}}
+                            <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
                         </a>
                         {{/isloggedin}}
                     </div>
@@ -169,9 +170,10 @@
         <h4 class="text-muted">{{#str}}novacanciesfound, local_jobboard{{/str}}</h4>
         {{^isloggedin}}
         <p class="text-muted mb-4">{{#str}}logintoviewmore, local_jobboard{{/str}}</p>
-        <a href="{{loginurl}}" class="btn btn-primary">
+        <a href="{{loginurl}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
             <i class="fa fa-sign-in-alt mr-2"></i>
             {{#str}}login{{/str}}
+            <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
         </a>
         {{/isloggedin}}
     </div>
@@ -191,13 +193,15 @@
             <i class="fa fa-user-plus fa-3x text-primary mb-3"></i>
             <h4 class="card-title">{{#str}}wanttoapply, local_jobboard{{/str}}</h4>
             <p class="card-text text-muted mb-4">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
-            <a href="{{signupurl}}" class="btn btn-primary btn-lg mr-3">
+            <a href="{{signupurl}}" class="btn btn-primary btn-lg mr-3" target="_blank" rel="noopener noreferrer">
                 <i class="fa fa-user-plus mr-2"></i>
                 {{#str}}createaccount{{/str}}
+                <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
             </a>
-            <a href="{{loginurl}}" class="btn btn-outline-primary btn-lg">
+            <a href="{{loginurl}}" class="btn btn-outline-primary btn-lg" target="_blank" rel="noopener noreferrer">
                 <i class="fa fa-sign-in-alt mr-2"></i>
                 {{#str}}login{{/str}}
+                <span class="sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
             </a>
         </div>
     </div>
