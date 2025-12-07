@@ -52,7 +52,7 @@
       "title": "tour_application_step6_title,local_jobboard",
       "content": "tour_application_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-timeline",
+      "targetvalue": "#history-heading",
       "sortorder": 5,
       "configdata": "{\"placement\": \"top\"}"
     },

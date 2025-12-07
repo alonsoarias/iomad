@@ -28,7 +28,7 @@
       "title": "tour_dashboard_step3_title,local_jobboard",
       "content": "tour_dashboard_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-welcome-section",
+      "targetvalue": ".jb-page-header",
       "sortorder": 2,
       "configdata": "{\"placement\": \"bottom\"}"
     },
@@ -44,7 +44,7 @@
       "title": "tour_dashboard_step5_title,local_jobboard",
       "content": "tour_dashboard_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-action-card",
+      "targetvalue": ".jb-section-card",
       "sortorder": 4,
       "configdata": "{\"placement\": \"right\"}"
     },

@@ -44,7 +44,7 @@
       "title": "tour_vacancy_step5_title,local_jobboard",
       "content": "tour_vacancy_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-success",
+      "targetvalue": ".btn-primary",
       "sortorder": 4,
       "configdata": "{\"placement\": \"left\"}"
     },

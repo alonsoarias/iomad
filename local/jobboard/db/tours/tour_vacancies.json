@@ -44,7 +44,7 @@
       "title": "tour_vacancies_step5_title,local_jobboard",
       "content": "tour_vacancies_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "input[name='search']",
+      "targetvalue": ".jb-filter-form .form-control",
       "sortorder": 4,
       "configdata": "{\"placement\": \"bottom\"}"
     },
@@ -60,7 +60,7 @@
       "title": "tour_vacancies_step7_title,local_jobboard",
       "content": "tour_vacancies_step7_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-vacancy-card .btn-success",
+      "targetvalue": ".jb-vacancy-card .btn",
       "sortorder": 6,
       "configdata": "{\"placement\": \"top\"}"
     }

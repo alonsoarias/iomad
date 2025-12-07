@@ -44,7 +44,7 @@
       "title": "tour_public_step5_title,local_jobboard",
       "content": "tour_public_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#filter_search",
+      "targetvalue": ".jb-filter-form .form-control",
       "sortorder": 4,
       "configdata": "{\"placement\": \"bottom\"}"
     },

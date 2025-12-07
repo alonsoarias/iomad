@@ -993,5 +993,27 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120741, 'local', 'jobboard');
     }
 
+    // Version 2025120742: Fix tours - correct CSS selectors matching mustache templates.
+    if ($oldversion < 2025120742) {
+        global $CFG, $DB;
+
+        // Delete all existing tours from this plugin before reinstalling.
+        $likepath = $DB->sql_like('pathmatch', ':pathmatch');
+        $tours = $DB->get_records_select('tool_usertours_tours', $likepath, ['pathmatch' => '%/local/jobboard/%']);
+        foreach ($tours as $tour) {
+            $DB->delete_records('tool_usertours_steps', ['tourid' => $tour->id]);
+            $DB->delete_records('tool_usertours_tours', ['id' => $tour->id]);
+        }
+
+        // Reinstall tours with corrected CSS selectors.
+        require_once(__DIR__ . '/install.php');
+        if (function_exists('local_jobboard_install_tours')) {
+            local_jobboard_install_tours();
+        }
+
+        purge_all_caches();
+        upgrade_plugin_savepoint(true, 2025120742, 'local', 'jobboard');
+    }
+
     return true;
 }
