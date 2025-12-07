@@ -885,5 +885,36 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120621, 'local', 'jobboard');
     }
 
+    // Version 2025120735: Complete tour recreation - delete old tours and reinstall.
+    // This fixes the issue where tours show string keys instead of translated text.
+    if ($oldversion < 2025120735) {
+        global $CFG;
+
+        // Delete all existing tours from this plugin before reinstalling.
+        // Tours are identified by their pathmatch containing '/local/jobboard/'.
+        if (class_exists('\tool_usertours\manager')) {
+            $tours = \tool_usertours\manager::get_tours();
+            foreach ($tours as $tour) {
+                $pathmatch = $tour->get_pathmatch();
+                if (strpos($pathmatch, '/local/jobboard/') !== false) {
+                    $tour->remove();
+                }
+            }
+        }
+
+        // Include install.php for tour installation function.
+        require_once(__DIR__ . '/install.php');
+
+        // Reinstall all tours fresh.
+        if (function_exists('local_jobboard_install_tours')) {
+            local_jobboard_install_tours();
+        }
+
+        // Purge all caches to ensure language strings are reloaded.
+        purge_all_caches();
+
+        upgrade_plugin_savepoint(true, 2025120735, 'local', 'jobboard');
+    }
+
     return true;
 }

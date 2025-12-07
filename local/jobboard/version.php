@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120734;  // Complete User Tours recreation with simplified selectors.
+$plugin->version = 2025120735;  // Fix tour strings: delete and reinstall tours during upgrade.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.16';
+$plugin->release = '2.0.17';

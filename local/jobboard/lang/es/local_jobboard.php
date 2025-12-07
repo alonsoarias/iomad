@@ -373,7 +373,6 @@ $string['selectdepartment'] = 'Seleccione un departamento';
 $string['selectstatus'] = 'Seleccione estado';
 $string['uploadfile'] = 'Subir archivo';
 $string['choosefiles'] = 'Seleccionar archivos';
-$string['nodocuments'] = 'No hay documentos cargados';
 
 // Contract types.
 $string['contract:catedra'] = 'Profesor Cátedra';
@@ -404,7 +403,6 @@ $string['previous'] = 'Anterior';
 $string['search'] = 'Buscar';
 $string['filter'] = 'Filtrar';
 $string['clearfilters'] = 'Limpiar filtros';
-$string['export'] = 'Exportar';
 $string['import'] = 'Importar';
 $string['download'] = 'Descargar';
 $string['upload'] = 'Cargar';
@@ -471,14 +469,12 @@ $string['iserexemption'] = 'Excepción ISER';
 $string['iserhistoric'] = 'Personal histórico ISER';
 $string['isernewpersonnel'] = 'Personal nuevo';
 $string['iserexemptionmessage'] = 'Usted es personal histórico ISER. Los siguientes documentos no se solicitan porque ya reposan en su Historia Laboral:';
-$string['exempteddocs'] = 'Documentos exceptuados';
 $string['exemptionvalid'] = 'Excepción vigente';
 $string['exemptionexpired'] = 'Excepción vencida';
 $string['manageexemptions'] = 'Gestionar excepciones ISER';
 $string['addexemption'] = 'Agregar excepción';
 $string['editexemption'] = 'Editar excepción';
 $string['deleteexemption'] = 'Eliminar excepción';
-$string['importexemptions'] = 'Importar excepciones desde CSV';
 $string['exemptionimported'] = 'Excepciones importadas exitosamente';
 
 // Convocatorias.
@@ -540,11 +536,9 @@ $string['totalvacancies'] = 'Total de Vacantes';
 $string['totalconvocatorias'] = 'Total de Convocatorias';
 $string['browseconvocatorias'] = 'Explorar Convocatorias';
 $string['viewconvocatorias'] = 'Ver convocatorias';
-$string['activeconvocatorias'] = 'Convocatorias Activas';
 $string['activeconvocatorias_alert'] = 'Hay {$a} convocatorias activas disponibles';
 $string['novacancies'] = 'No hay vacantes disponibles';
 $string['daysleft'] = '{$a} días restantes';
-$string['convocatorias_dashboard_desc'] = 'Cree y administre convocatorias que agrupan vacantes relacionadas.';
 
 // Vacantes extemporáneas.
 $string['isextemporaneous'] = 'Vacante extemporánea';
@@ -589,7 +583,6 @@ $string['notification'] = 'Notificación';
 $string['notifications'] = 'Notificaciones';
 $string['emailsent'] = 'Correo enviado';
 $string['emailfailed'] = 'Error al enviar correo';
-$string['notificationsettings'] = 'Configuración de notificaciones';
 $string['emailtemplates'] = 'Plantillas de correo';
 $string['edittemplate'] = 'Editar plantilla';
 
@@ -599,21 +592,13 @@ $string['report:documents'] = 'Reporte de documentos';
 $string['report:metrics'] = 'Métricas de tiempo';
 $string['report:vacancies'] = 'Reporte de vacantes';
 $string['report:audit'] = 'Auditoría';
-$string['exportcsv'] = 'Exportar CSV';
-$string['exportexcel'] = 'Exportar Excel';
-$string['exportpdf'] = 'Exportar PDF';
-$string['daterange'] = 'Rango de fechas';
-$string['datefrom'] = 'Desde';
-$string['dateto'] = 'Hasta';
 
 // Dashboard.
 $string['activevacancies'] = 'Vacantes activas';
 $string['applicationstoday'] = 'Postulaciones hoy';
-$string['pendingdocuments'] = 'Documentos pendientes';
 $string['totalapplicants'] = 'Postulantes totales';
 $string['selectedthismonth'] = 'Seleccionados este mes';
 $string['averagereviewtime'] = 'Tiempo promedio de revisión';
-$string['recentactivity'] = 'Actividad reciente';
 $string['alerts'] = 'Alertas';
 $string['quickactions'] = 'Acciones rápidas';
 
@@ -679,7 +664,6 @@ $string['last'] = 'Última';
 
 // Confirmations.
 $string['confirmdeletevacancy'] = '¿Está seguro que desea eliminar esta vacante?';
-$string['confirmwithdraw'] = '¿Está seguro que desea retirar su postulación?';
 $string['confirmstatuschange'] = '¿Confirma el cambio de estado?';
 $string['confirmpublish'] = '¿Está seguro que desea publicar esta vacante?';
 $string['confirmunpublish'] = '¿Está seguro que desea despublicar esta vacante? Volverá al estado de borrador.';
@@ -706,7 +690,6 @@ $string['event:documentvalidated'] = 'Documento validado';
 $string['event:statuschanged'] = 'Estado cambiado';
 
 // Task names.
-$string['task:sendnotifications'] = 'Enviar notificaciones pendientes';
 $string['task:cleanupdata'] = 'Limpieza de datos antiguos';
 $string['task:updatemetrics'] = 'Actualizar métricas del dashboard';
 
@@ -717,9 +700,7 @@ $string['privacy:metadata:audit'] = 'Registro de acciones del usuario';
 
 // Miscellaneous.
 $string['noresults'] = 'No se encontraron resultados';
-$string['loading'] = 'Cargando...';
 $string['processing'] = 'Procesando...';
-$string['allstatuses'] = 'Todos los estados';
 $string['allcompanies'] = 'Todas las empresas';
 $string['alldepartments'] = 'Todos los departamentos';
 $string['alldates'] = 'Todas las fechas';
@@ -750,7 +731,6 @@ $string['consentaccepttext'] = 'He leído y acepto la política de tratamiento d
 $string['consentrequired'] = 'Debe aceptar la política de tratamiento de datos';
 $string['digitalsignature_help'] = 'Escriba su nombre legal completo tal como aparece en sus documentos de identidad. Esto sirve como su firma digital y confirma legalmente que: toda la información proporcionada es veraz, autoriza la verificación de sus documentos, acepta los términos y condiciones del proceso de selección. El uso de un nombre falso puede resultar en descalificación.';
 $string['signaturetoooshort'] = 'La firma debe tener al menos 5 caracteres';
-$string['requireddocuments'] = 'Documentos Requeridos';
 $string['documentshelp'] = 'Suba los documentos requeridos en formato PDF, JPG o PNG. El tamaño máximo por archivo es de 10MB.';
 
 // Help strings para carga de documentos.
@@ -766,13 +746,10 @@ $string['documentrequired'] = 'El documento "{$a}" es obligatorio';
 $string['documentissuedate'] = 'Fecha de expedición';
 $string['documentexpired'] = 'El documento ha expirado (máximo {$a})';
 $string['additionalinfo'] = 'Información Adicional';
-$string['coverletter'] = 'Carta de presentación';
-$string['coverletter_help'] = 'Escriba una carta de presentación personalizada explicando: por qué está interesado en este cargo, cómo su experiencia coincide con los requisitos, qué puede aportar a la organización. Manténgala concisa (300-500 palabras) y profesional. Es opcional pero altamente recomendada ya que ayuda a los revisores a entender su motivación.';
 $string['declaration'] = 'Declaración';
 $string['declarationtext'] = 'Declaro bajo la gravedad del juramento que la información proporcionada es veraz y los documentos anexos son auténticos. Entiendo que cualquier falsedad puede resultar en la exclusión del proceso y acciones legales.';
 $string['declarationaccept'] = 'Acepto la declaración anterior';
 $string['declarationrequired'] = 'Debe aceptar la declaración';
-$string['submitapplication'] = 'Enviar Postulación';
 $string['exemptionnotice'] = 'Aviso de Excepción';
 $string['exemptionapplied'] = 'Excepción ISER Aplicada';
 $string['exemptionreduceddocs'] = 'Sus requisitos de documentación han sido reducidos debido a su historial laboral en la institución.';
@@ -782,7 +759,6 @@ $string['exemptiontype_documentos_recientes'] = 'Documentos Recientes Aprobados'
 $string['exemptiontype_traslado_interno'] = 'Traslado Interno';
 $string['exemptiontype_recontratacion'] = 'Recontratación';
 $string['vacancynotopen'] = 'La vacante no está abierta para postulaciones';
-$string['alreadyapplied'] = 'Ya tiene una postulación para esta vacante';
 $string['applicationcreatefailed'] = 'Error al crear la postulación';
 $string['applicationerror'] = 'Error en la postulación';
 $string['deadlinewarning'] = 'Atención: La vacante cierra en {$a} día(s)';
@@ -854,7 +830,6 @@ $string['rejectreason_mismatch'] = 'Información no coincide';
 $string['validated'] = 'Validado';
 $string['rejected'] = 'Rechazado';
 $string['pendingvalidation'] = 'Pendiente de validación';
-$string['pending'] = 'Pendiente';
 
 // Validation checklist items.
 $string['checklist_legible'] = 'El documento es legible';
@@ -950,7 +925,6 @@ $string['notification_closing_soon_body'] = '<p>Estimado/a {USER_NAME},</p><p>La
 // Task strings.
 $string['task:sendnotifications'] = 'Enviar notificaciones pendientes';
 $string['task:checkclosingvacancies'] = 'Verificar vacantes próximas a cerrar';
-$string['task:cleanupolddata'] = 'Limpiar datos antiguos';
 
 // Phase 3: Workflow and Document Validation strings.
 
@@ -987,14 +961,10 @@ $string['myassignments'] = 'Mis asignaciones';
 $string['bulkvalidation'] = 'Validación masiva';
 $string['bulkvalidate'] = 'Validar en lote';
 $string['selectdocuments'] = 'Seleccionar documentos';
-$string['selectall'] = 'Seleccionar todo';
 $string['selectnone'] = 'Deseleccionar todo';
 $string['approveselected'] = 'Aprobar seleccionados';
 $string['rejectselected'] = 'Rechazar seleccionados';
 $string['documentssummary'] = 'Resumen de documentos';
-$string['documentsvalidated'] = 'Documentos validados';
-$string['documentsrejected'] = 'Documentos rechazados';
-$string['documentspending'] = 'Documentos pendientes';
 $string['validationcomplete'] = 'Validación completada';
 $string['validationresults'] = 'Resultados de validación';
 $string['validationsuccess'] = '{$a} documentos procesados exitosamente';
@@ -1083,7 +1053,6 @@ $string['export'] = 'Exportar';
 $string['exportformat'] = 'Formato de exportación';
 $string['exportcsv'] = 'CSV';
 $string['exportexcel'] = 'Excel';
-$string['exportpdf'] = 'PDF';
 $string['downloading'] = 'Descargando...';
 
 // Validation workflow.
@@ -1137,9 +1106,6 @@ $string['exemptiontype_desc'] = 'historico_iser, documentos_recientes, traslado_
 $string['exempteddocs'] = 'Documentos exceptuados';
 $string['exempteddocs_help'] = 'Seleccione los tipos de documentos que no serán requeridos';
 $string['exempteddocs_desc'] = 'Lista de códigos separados por | (ej: cedula|rut|eps)';
-$string['validfrom'] = 'Válido desde';
-$string['validuntil'] = 'Válido hasta';
-$string['validuntil_help'] = 'Deje en blanco para excepción sin fecha de vencimiento';
 $string['noexpiry'] = 'Sin vencimiento';
 $string['validityperiod'] = 'Período de validez';
 $string['activeexemptions'] = 'Excepciones activas';
@@ -1244,7 +1210,6 @@ $string['recommend_reject'] = 'No contratar';
 $string['interviewfeedback'] = 'Retroalimentación de la entrevista';
 $string['saveresults'] = 'Guardar resultados';
 $string['result'] = 'Resultado';
-$string['rescheduledby'] = 'Reprogramada por {$a->user} el {$a->time}. Motivo: {$a->reason}';
 $string['reschedulednote'] = 'Reprogramación de entrevista #{$a}';
 $string['cancelledby'] = 'Cancelada por {$a->user} el {$a->time}. Motivo: {$a->reason}';
 $string['markednoshow'] = 'Marcada como No se presentó por {$a->user} el {$a->time}. Notas: {$a->notes}';
@@ -1569,8 +1534,6 @@ $string['copylink'] = 'Copiar enlace';
 $string['applynow'] = 'Postularse Ahora';
 $string['alreadyapplied'] = 'Ya se ha postulado a esta vacante.';
 $string['applicationstatus'] = 'Estado de la postulación';
-$string['viewmyapplications'] = 'Ver Mis Postulaciones';
-$string['loginrequiredtoapply'] = 'Debe iniciar sesión para postularse a esta vacante.';
 $string['noapplypermission'] = 'No tiene permiso para postularse a vacantes.';
 $string['all'] = 'Todos';
 
@@ -1846,8 +1809,6 @@ $string['tour_public_step7_title'] = 'Insignias de Tipo';
 $string['tour_public_step7_content'] = 'Las vacantes se marcan como "Publica" (abierta a todos) o "Interna" (solo para usuarios autenticados de la organizacion). Asegurese de cumplir con los criterios de elegibilidad antes de postularse.';
 $string['tour_public_step8_title'] = 'Ver Detalles y Postularse';
 $string['tour_public_step8_content'] = 'Haga clic en "Ver Detalles" para ver la informacion completa de la vacante, o haga clic en "Postularse" para iniciar su postulacion. Puede que necesite iniciar sesion primero.';
-$string['tour_public_step9_title'] = 'Comience a Explorar!';
-$string['tour_public_step9_content'] = 'Ya esta listo para explorar las vacantes disponibles! Use la busqueda y los filtros para encontrar oportunidades que coincidan con sus habilidades e intereses. Mucha suerte!';
 
 // Tour: Formulario de Postulacion.
 $string['tour_apply_name'] = 'Tour del Formulario de Postulacion - Guia Paso a Paso';
@@ -2024,8 +1985,6 @@ $string['tour_myapplications_step5_title'] = 'Estado de Postulacion';
 $string['tour_myapplications_step5_content'] = 'La insignia de estado muestra donde esta su postulacion en el proceso: Enviada, En Revision, Documentos Validados, Entrevista, Seleccionado o Rechazado. Este atento a los cambios!';
 $string['tour_myapplications_step6_title'] = 'Acciones Disponibles';
 $string['tour_myapplications_step6_content'] = 'Haga clic en "Ver" para ver los detalles completos de su postulacion y documentos cargados. Si su postulacion aun esta en revision, tambien puede tener la opcion de retirarla.';
-$string['tour_myapplications_step7_title'] = 'Mantengase Informado!';
-$string['tour_myapplications_step7_content'] = 'Revise esta pagina regularmente para actualizaciones de sus postulaciones. Tambien recibira notificaciones por correo para cambios importantes de estado. Mucha suerte!';
 
 // Tour: Revision de Documentos.
 $string['tour_review_name'] = 'Tour de Revision de Documentos';
