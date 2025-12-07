@@ -1,9 +1,9 @@
 {
   "name": "tour_myreviews_name,local_jobboard",
   "description": "tour_myreviews_description,local_jobboard",
-  "pathmatch": "/local/jobboard/index.php%view=myreviews%",
+  "pathmatch": "/local/jobboard/index.php?view=myreviews%",
   "enabled": 1,
-  "sortorder": 0,
+  "sortorder": 5,
   "endtourlabel": "tour_endlabel,local_jobboard",
   "displaystepnumbers": true,
   "configdata": {
@@ -12,9 +12,7 @@
     "backdrop": true,
     "reflex": false,
     "filtervalues": {
-      "accessdate": {
-        "filter_accessdate_enabled": 0
-      },
+      "accessdate": {"filter_accessdate_enabled": 0},
       "role": [],
       "category": [],
       "course": [],
@@ -30,49 +28,39 @@
       "targettype": 2,
       "targetvalue": "",
       "sortorder": 0,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_myreviews_step2_title,local_jobboard",
       "content": "tour_myreviews_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-stat-card, .col-lg-3 .card",
+      "targetvalue": ".jb-stat-card",
       "sortorder": 1,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_myreviews_step3_title,local_jobboard",
       "content": "tour_myreviews_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".badge-warning, .border-danger",
+      "targetvalue": ".jb-filter-form",
       "sortorder": 2,
-      "configdata": {
-        "placement": "right"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_myreviews_step4_title,local_jobboard",
       "content": "tour_myreviews_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".col-lg-6 .card.h-100.shadow-sm, .local-jobboard-myreviews .card.shadow-sm",
+      "targetvalue": ".card.shadow-sm",
       "sortorder": 3,
-      "configdata": {
-        "placement": "top"
-      }
+      "configdata": {"placement": "right"}
     },
     {
       "title": "tour_myreviews_step5_title,local_jobboard",
       "content": "tour_myreviews_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card-footer .btn-primary, .btn-outline-primary.btn-sm",
+      "targetvalue": ".btn-primary",
       "sortorder": 4,
-      "configdata": {
-        "placement": "left"
-      }
+      "configdata": {"placement": "top"}
     },
     {
       "title": "tour_myreviews_step6_title,local_jobboard",
@@ -80,9 +68,7 @@
       "targettype": 2,
       "targetvalue": "",
       "sortorder": 5,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     }
   ]
 }

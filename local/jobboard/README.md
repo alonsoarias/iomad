@@ -3,7 +3,7 @@
 [![Moodle 4.1+](https://img.shields.io/badge/Moodle-4.1%2B-orange.svg)](https://moodle.org)
 [![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://php.net)
 [![License GPL-3.0](https://img.shields.io/badge/License-GPL%20v3-green.svg)](http://www.gnu.org/copyleft/gpl.html)
-[![Version 2.0.15](https://img.shields.io/badge/Version-2.0.15-brightgreen.svg)]()
+[![Version 2.0.16](https://img.shields.io/badge/Version-2.0.16-brightgreen.svg)]()
 [![IOMAD Compatible](https://img.shields.io/badge/IOMAD-Compatible-blue.svg)]()
 
 Plugin para Moodle que implementa un sistema completo de gestión de convocatorias, vacantes y postulaciones para profesores cátedra. Diseñado específicamente para instituciones educativas en Colombia, compatible con IOMAD multi-tenant.

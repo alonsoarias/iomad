@@ -12,9 +12,7 @@
     "backdrop": true,
     "reflex": false,
     "filtervalues": {
-      "accessdate": {
-        "filter_accessdate_enabled": 0
-      },
+      "accessdate": {"filter_accessdate_enabled": 0},
       "role": [],
       "category": [],
       "course": [],
@@ -30,89 +28,55 @@
       "targettype": 2,
       "targetvalue": "",
       "sortorder": 0,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_review_step2_title,local_jobboard",
       "content": "tour_review_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "section[role='region'][aria-label], .col-lg-3 .jb-stat-card",
+      "targetvalue": ".jb-stat-card",
       "sortorder": 1,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_review_step3_title,local_jobboard",
       "content": "tour_review_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-filter-form, form[role='search']",
+      "targetvalue": ".jb-filter-form",
       "sortorder": 2,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_review_step4_title,local_jobboard",
       "content": "tour_review_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "article[aria-labelledby^='queue-app'], .col-lg-6 .card.shadow-sm",
+      "targetvalue": ".card.shadow-sm",
       "sortorder": 3,
-      "configdata": {
-        "placement": "top"
-      }
+      "configdata": {"placement": "right"}
     },
     {
       "title": "tour_review_step5_title,local_jobboard",
       "content": "tour_review_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card-header.bg-warning, .card-header.bg-success",
+      "targetvalue": ".badge-danger",
       "sortorder": 4,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_review_step6_title,local_jobboard",
       "content": "tour_review_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".list-group.list-group-flush[role='list'], section[aria-labelledby='documents-review-heading']",
+      "targetvalue": ".btn-success",
       "sortorder": 5,
-      "configdata": {
-        "placement": "right"
-      }
+      "configdata": {"placement": "top"}
     },
     {
       "title": "tour_review_step7_title,local_jobboard",
       "content": "tour_review_step7_content,local_jobboard",
-      "targettype": 0,
-      "targetvalue": ".btn-group-vertical .btn-success, .btn-group-vertical .btn-danger",
-      "sortorder": 6,
-      "configdata": {
-        "placement": "top"
-      }
-    },
-    {
-      "title": "tour_review_step8_title,local_jobboard",
-      "content": "tour_review_step8_content,local_jobboard",
-      "targettype": 0,
-      "targetvalue": "section.card.border-primary[aria-labelledby='progress-heading'], .card.border-primary .btn-success.btn-lg",
-      "sortorder": 7,
-      "configdata": {
-        "placement": "left"
-      }
-    },
-    {
-      "title": "tour_review_step9_title,local_jobboard",
-      "content": "tour_review_step9_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 8,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "sortorder": 6,
+      "configdata": {"placement": "bottom"}
     }
   ]
 }

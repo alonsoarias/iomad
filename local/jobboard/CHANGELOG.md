@@ -7,6 +7,34 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.16] - 2025-12-07
+
+### Modificado
+- **User Tours recreados completamente con selectores simplificados**
+  - 15 tours actualizados con selectores CSS robustos y mantenibles
+  - Selectores simplificados usando clases principales: `.jb-stat-card`, `.jb-filter-form`, `.jb-vacancy-card`, `.jb-application-card`, `.jb-convocatoria-card`
+  - Eliminados selectores frágiles y complejos (ej. `article[aria-labelledby^='queue-app']`)
+  - Tours optimizados con menos pasos pero más relevantes
+  - pathmatch corregidos para usar formato `?view=` consistente
+- **version.php**: Incrementado a 2.0.16 (2025120734)
+- **README.md**: Badge de versión actualizado
+
+### Tours actualizados:
+| Tour | Pasos | Selectores principales |
+|------|-------|----------------------|
+| dashboard | 5 | `.jb-welcome-section`, `.jb-stat-card`, `.jb-action-card` |
+| public | 8 | `.jb-public-hero`, `.jb-stat-card`, `.jb-filter-form`, `.jb-vacancy-card` |
+| myapplications | 7 | `.jb-stat-card`, `.jb-filter-form`, `.jb-application-card`, `.progress-tracker` |
+| apply | 8 | `.application-guidelines`, `#id_consent`, `#id_digitalsignature`, `.filepicker-container` |
+| review | 7 | `.jb-stat-card`, `.jb-filter-form`, `.card.shadow-sm`, `.btn-success` |
+| myreviews | 6 | `.jb-stat-card`, `.jb-filter-form`, `.card.shadow-sm` |
+| manage | 8 | `.jb-stat-card`, `.jb-filter-form`, `.table`, `.badge`, `.btn-group` |
+| reports | 6 | `.nav-tabs`, `.jb-filter-form`, `.btn-group`, `.card.shadow-sm` |
+| vacancies | 6 | `.jb-stat-card`, `.jb-filter-form`, `.jb-vacancy-card` |
+| convocatorias | 6 | `.jb-stat-card`, `.jb-convocatoria-card`, `.badge` |
+
+---
+
 ## [2.0.15] - 2025-12-06
 
 ### Añadido
