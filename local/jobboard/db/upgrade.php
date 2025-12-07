@@ -888,18 +888,17 @@ function xmldb_local_jobboard_upgrade($oldversion) {
     // Version 2025120735: Complete tour recreation - delete old tours and reinstall.
     // This fixes the issue where tours show string keys instead of translated text.
     if ($oldversion < 2025120735) {
-        global $CFG;
+        global $CFG, $DB;
 
         // Delete all existing tours from this plugin before reinstalling.
         // Tours are identified by their pathmatch containing '/local/jobboard/'.
-        if (class_exists('\tool_usertours\manager')) {
-            $tours = \tool_usertours\manager::get_tours();
-            foreach ($tours as $tour) {
-                $pathmatch = $tour->get_pathmatch();
-                if (strpos($pathmatch, '/local/jobboard/') !== false) {
-                    $tour->remove();
-                }
-            }
+        $likepath = $DB->sql_like('pathmatch', ':pathmatch');
+        $tours = $DB->get_records_select('tool_usertours_tours', $likepath, ['pathmatch' => '%/local/jobboard/%']);
+        foreach ($tours as $tour) {
+            // Delete tour steps first.
+            $DB->delete_records('tool_usertours_steps', ['tourid' => $tour->id]);
+            // Delete the tour.
+            $DB->delete_records('tool_usertours_tours', ['id' => $tour->id]);
         }
 
         // Include install.php for tour installation function.
@@ -914,6 +913,34 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         purge_all_caches();
 
         upgrade_plugin_savepoint(true, 2025120735, 'local', 'jobboard');
+    }
+
+    // Version 2025120739: Recreate tours with improved CSS selectors for all 15 views.
+    if ($oldversion < 2025120739) {
+        global $CFG, $DB;
+
+        // Delete all existing tours from this plugin before reinstalling.
+        $likepath = $DB->sql_like('pathmatch', ':pathmatch');
+        $tours = $DB->get_records_select('tool_usertours_tours', $likepath, ['pathmatch' => '%/local/jobboard/%']);
+        foreach ($tours as $tour) {
+            // Delete tour steps first.
+            $DB->delete_records('tool_usertours_steps', ['tourid' => $tour->id]);
+            // Delete the tour.
+            $DB->delete_records('tool_usertours_tours', ['id' => $tour->id]);
+        }
+
+        // Include install.php for tour installation function.
+        require_once(__DIR__ . '/install.php');
+
+        // Reinstall all tours fresh with improved selectors.
+        if (function_exists('local_jobboard_install_tours')) {
+            local_jobboard_install_tours();
+        }
+
+        // Purge all caches.
+        purge_all_caches();
+
+        upgrade_plugin_savepoint(true, 2025120739, 'local', 'jobboard');
     }
 
     return true;
