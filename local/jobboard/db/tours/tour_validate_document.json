@@ -28,7 +28,7 @@
       "title": "tour_validate_step3_title,local_jobboard",
       "content": "tour_validate_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-outline-primary",
+      "targetvalue": ".btn-primary",
       "sortorder": 2,
       "configdata": "{\"placement\": \"right\"}"
     },
@@ -52,7 +52,7 @@
       "title": "tour_validate_step6_title,local_jobboard",
       "content": "tour_validate_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "textarea",
+      "targetvalue": ".btn-success",
       "sortorder": 5,
       "configdata": "{\"placement\": \"top\"}"
     },
@@ -60,24 +60,16 @@
       "title": "tour_validate_step7_title,local_jobboard",
       "content": "tour_validate_step7_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-success",
+      "targetvalue": ".btn-danger",
       "sortorder": 6,
       "configdata": "{\"placement\": \"top\"}"
     },
     {
       "title": "tour_validate_step8_title,local_jobboard",
       "content": "tour_validate_step8_content,local_jobboard",
-      "targettype": 0,
-      "targetvalue": ".btn-danger",
-      "sortorder": 7,
-      "configdata": "{\"placement\": \"top\"}"
-    },
-    {
-      "title": "tour_validate_step9_title,local_jobboard",
-      "content": "tour_validate_step9_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 8,
+      "sortorder": 7,
       "configdata": "{\"placement\": \"bottom\"}"
     }
   ]

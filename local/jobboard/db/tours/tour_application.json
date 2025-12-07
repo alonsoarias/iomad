@@ -28,7 +28,7 @@
       "title": "tour_application_step3_title,local_jobboard",
       "content": "tour_application_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".alert[role='status']",
+      "targetvalue": ".alert",
       "sortorder": 2,
       "configdata": "{\"placement\": \"bottom\"}"
     },
@@ -36,48 +36,32 @@
       "title": "tour_application_step4_title,local_jobboard",
       "content": "tour_application_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "#documents-heading",
+      "targetvalue": ".table.table-hover",
       "sortorder": 3,
-      "configdata": "{\"placement\": \"bottom\"}"
+      "configdata": "{\"placement\": \"top\"}"
     },
     {
       "title": "tour_application_step5_title,local_jobboard",
       "content": "tour_application_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".table.table-hover",
+      "targetvalue": ".btn-group",
       "sortorder": 4,
-      "configdata": "{\"placement\": \"top\"}"
+      "configdata": "{\"placement\": \"left\"}"
     },
     {
       "title": "tour_application_step6_title,local_jobboard",
       "content": "tour_application_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-group.btn-group-sm",
+      "targetvalue": ".jb-timeline",
       "sortorder": 5,
-      "configdata": "{\"placement\": \"left\"}"
+      "configdata": "{\"placement\": \"top\"}"
     },
     {
       "title": "tour_application_step7_title,local_jobboard",
       "content": "tour_application_step7_content,local_jobboard",
-      "targettype": 0,
-      "targetvalue": "#vacancy-info-heading",
-      "sortorder": 6,
-      "configdata": "{\"placement\": \"left\"}"
-    },
-    {
-      "title": "tour_application_step8_title,local_jobboard",
-      "content": "tour_application_step8_content,local_jobboard",
-      "targettype": 0,
-      "targetvalue": "#history-heading",
-      "sortorder": 7,
-      "configdata": "{\"placement\": \"top\"}"
-    },
-    {
-      "title": "tour_application_step9_title,local_jobboard",
-      "content": "tour_application_step9_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 8,
+      "sortorder": 6,
       "configdata": "{\"placement\": \"bottom\"}"
     }
   ]

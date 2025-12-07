@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120740;  // Fix: configdata as JSON string for Moodle compatibility.
+$plugin->version = 2025120741;  // Fix tours: align step count with available language strings.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.22';
+$plugin->release = '2.0.23';

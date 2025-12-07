@@ -36,7 +36,7 @@
       "title": "tour_convocatoria_manage_step4_title,local_jobboard",
       "content": "tour_convocatoria_manage_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card.shadow-sm.mb-4",
+      "targetvalue": ".card.shadow-sm",
       "sortorder": 3,
       "configdata": "{\"placement\": \"bottom\"}"
     },
@@ -44,40 +44,24 @@
       "title": "tour_convocatoria_manage_step5_title,local_jobboard",
       "content": "tour_convocatoria_manage_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-success",
+      "targetvalue": ".list-group",
       "sortorder": 4,
-      "configdata": "{\"placement\": \"bottom\"}"
+      "configdata": "{\"placement\": \"top\"}"
     },
     {
       "title": "tour_convocatoria_manage_step6_title,local_jobboard",
       "content": "tour_convocatoria_manage_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".list-group.list-group-flush",
+      "targetvalue": ".btn-success",
       "sortorder": 5,
       "configdata": "{\"placement\": \"top\"}"
     },
     {
       "title": "tour_convocatoria_manage_step7_title,local_jobboard",
       "content": "tour_convocatoria_manage_step7_content,local_jobboard",
-      "targettype": 0,
-      "targetvalue": ".list-group-item",
-      "sortorder": 6,
-      "configdata": "{\"placement\": \"right\"}"
-    },
-    {
-      "title": "tour_convocatoria_manage_step8_title,local_jobboard",
-      "content": "tour_convocatoria_manage_step8_content,local_jobboard",
-      "targettype": 0,
-      "targetvalue": ".card-header.bg-primary",
-      "sortorder": 7,
-      "configdata": "{\"placement\": \"bottom\"}"
-    },
-    {
-      "title": "tour_convocatoria_manage_step9_title,local_jobboard",
-      "content": "tour_convocatoria_manage_step9_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 8,
+      "sortorder": 6,
       "configdata": "{\"placement\": \"bottom\"}"
     }
   ]

@@ -44,7 +44,7 @@
       "title": "tour_convocatorias_step5_title,local_jobboard",
       "content": "tour_convocatorias_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-convocatoria-card .card-header",
+      "targetvalue": ".badge",
       "sortorder": 4,
       "configdata": "{\"placement\": \"bottom\"}"
     },
@@ -52,24 +52,16 @@
       "title": "tour_convocatorias_step6_title,local_jobboard",
       "content": "tour_convocatorias_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-convocatoria-card .card-body",
+      "targetvalue": ".btn-primary",
       "sortorder": 5,
       "configdata": "{\"placement\": \"top\"}"
     },
     {
       "title": "tour_convocatorias_step7_title,local_jobboard",
       "content": "tour_convocatorias_step7_content,local_jobboard",
-      "targettype": 0,
-      "targetvalue": ".jb-convocatoria-card .btn-group",
-      "sortorder": 6,
-      "configdata": "{\"placement\": \"top\"}"
-    },
-    {
-      "title": "tour_convocatorias_step8_title,local_jobboard",
-      "content": "tour_convocatorias_step8_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 7,
+      "sortorder": 6,
       "configdata": "{\"placement\": \"bottom\"}"
     }
   ]
