@@ -7,6 +7,40 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.21] - 2025-12-07
+
+### Mejorado
+- **User Tours recreados completamente para todas las 15 vistas**
+  - Análisis detallado de cada plantilla Mustache para identificar selectores CSS precisos
+  - Tours más detallados con pasos adicionales para explicar cada elemento de interfaz
+  - Selectores CSS robustos basados en clases específicas del plugin (`.jb-*`, `.local-jobboard-*`)
+  - Uso de IDs de accesibilidad (`#documents-heading`, `#vacancy-info-heading`, `#history-heading`)
+  - pathmatch corregidos usando formato `%view=NAME%` para mejor coincidencia
+
+### Tours actualizados (15 tours):
+| Tour | Pasos | Selectores principales |
+|------|-------|----------------------|
+| dashboard | 8 | `.local-jobboard-dashboard`, `.jb-welcome-section`, `.jb-stat-card`, `.jb-action-card` |
+| public | 10 | `.jb-public-hero`, `.jb-stats-section`, `.jb-filter-form`, `.jb-vacancies-grid`, `.jb-vacancy-card` |
+| vacancies | 7 | `.local-jobboard-vacancies`, `.jb-stat-card`, `.jb-filter-form`, `.jb-vacancy-card` |
+| vacancy | 7 | `.local-jobboard-vacancy-detail`, `.card-title`, `.alert`, `.btn-success`, `.col-lg-4 .card` |
+| apply | 9 | `.jb-content-area`, `#id_consentheader`, `#id_digitalsignature`, `#id_documentsheader`, `#id_submitbutton` |
+| application | 9 | `.local-jobboard-application-detail`, `.alert[role='status']`, `#documents-heading`, `#vacancy-info-heading` |
+| myapplications | 9 | `.local-jobboard-applications`, `.jb-application-card`, `.jb-progress-steps`, `.badge.badge-success.badge-pill` |
+| convocatorias | 8 | `.local-jobboard-convocatorias`, `.jb-convocatoria-card`, `.jb-convocatoria-card .card-header` |
+| convocatoria_manage | 9 | `.local-jobboard-convocatoria`, `.jb-stat-card`, `.list-group.list-group-flush`, `.list-group-item` |
+| manage | 9 | `.local-jobboard-manage`, `.jb-filter-form`, `.table.table-hover`, `.thead-light`, `.btn-group.btn-group-sm` |
+| review | 9 | `.local-jobboard-review`, `#documents-review-heading`, `.list-group.list-group-flush`, `#progress-heading` |
+| myreviews | 8 | `.local-jobboard-myreviews`, `.card.h-100.shadow-sm`, `.progress`, `.card-footer .btn-primary` |
+| documents | 8 | `.table`, `thead`, `tbody tr`, `.badge`, `.btn-group`, `.btn-success` |
+| validate_document | 9 | `.card.shadow-sm`, `.btn-outline-primary`, `.list-group`, `.form-check`, `textarea` |
+| reports | 8 | `.local-jobboard-reports`, `.nav-tabs`, `select[name='vacancyid']`, `input[type='date']` |
+
+### Técnico
+- **version.php**: Incrementado a 2.0.21 (2025120739)
+
+---
+
 ## [2.0.20] - 2025-12-07
 
 ### Verificado

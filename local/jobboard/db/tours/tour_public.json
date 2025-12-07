@@ -1,7 +1,7 @@
 {
   "name": "tour_public_name,local_jobboard",
   "description": "tour_public_description,local_jobboard",
-  "pathmatch": "/local/jobboard/index.php?view=public%",
+  "pathmatch": "/local/jobboard/public.php%",
   "enabled": 1,
   "sortorder": 1,
   "endtourlabel": "tour_endlabel,local_jobboard",
@@ -34,7 +34,7 @@
       "title": "tour_public_step2_title,local_jobboard",
       "content": "tour_public_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".local-jobboard-public",
+      "targetvalue": ".jb-public-hero",
       "sortorder": 1,
       "configdata": {"placement": "bottom"}
     },
@@ -58,7 +58,7 @@
       "title": "tour_public_step5_title,local_jobboard",
       "content": "tour_public_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-vacancies-grid",
+      "targetvalue": "#filter_search",
       "sortorder": 4,
       "configdata": {"placement": "bottom"}
     },
@@ -66,24 +66,40 @@
       "title": "tour_public_step6_title,local_jobboard",
       "content": "tour_public_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-vacancy-card",
+      "targetvalue": ".jb-vacancies-grid",
       "sortorder": 5,
-      "configdata": {"placement": "right"}
+      "configdata": {"placement": "top"}
     },
     {
       "title": "tour_public_step7_title,local_jobboard",
       "content": "tour_public_step7_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-cta-card",
+      "targetvalue": ".jb-vacancy-card",
       "sortorder": 6,
-      "configdata": {"placement": "top"}
+      "configdata": {"placement": "right"}
     },
     {
       "title": "tour_public_step8_title,local_jobboard",
       "content": "tour_public_step8_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".jb-vacancy-card .btn-outline-primary",
+      "sortorder": 7,
+      "configdata": {"placement": "top"}
+    },
+    {
+      "title": "tour_public_step9_title,local_jobboard",
+      "content": "tour_public_step9_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".jb-cta-card",
+      "sortorder": 8,
+      "configdata": {"placement": "top"}
+    },
+    {
+      "title": "tour_public_step10_title,local_jobboard",
+      "content": "tour_public_step10_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 7,
+      "sortorder": 9,
       "configdata": {"placement": "bottom"}
     }
   ]

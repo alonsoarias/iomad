@@ -1,7 +1,7 @@
 {
   "name": "tour_dashboard_name,local_jobboard",
   "description": "tour_dashboard_description,local_jobboard",
-  "pathmatch": "/local/jobboard/index.php",
+  "pathmatch": "/local/jobboard/index.php%view=dashboard%",
   "enabled": 1,
   "sortorder": 0,
   "endtourlabel": "tour_endlabel,local_jobboard",
@@ -42,7 +42,7 @@
       "title": "tour_dashboard_step3_title,local_jobboard",
       "content": "tour_dashboard_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-stat-card",
+      "targetvalue": ".jb-welcome-section",
       "sortorder": 2,
       "configdata": {"placement": "bottom"}
     },
@@ -50,16 +50,40 @@
       "title": "tour_dashboard_step4_title,local_jobboard",
       "content": "tour_dashboard_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-section-card",
+      "targetvalue": ".jb-stat-card",
       "sortorder": 3,
-      "configdata": {"placement": "right"}
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_dashboard_step5_title,local_jobboard",
       "content": "tour_dashboard_step5_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".jb-action-card",
+      "sortorder": 4,
+      "configdata": {"placement": "right"}
+    },
+    {
+      "title": "tour_dashboard_step6_title,local_jobboard",
+      "content": "tour_dashboard_step6_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".jb-reviewer-section",
+      "sortorder": 5,
+      "configdata": {"placement": "top"}
+    },
+    {
+      "title": "tour_dashboard_step7_title,local_jobboard",
+      "content": "tour_dashboard_step7_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".jb-applicant-section",
+      "sortorder": 6,
+      "configdata": {"placement": "top"}
+    },
+    {
+      "title": "tour_dashboard_step8_title,local_jobboard",
+      "content": "tour_dashboard_step8_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 4,
+      "sortorder": 7,
       "configdata": {"placement": "bottom"}
     }
   ]

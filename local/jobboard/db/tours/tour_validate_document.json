@@ -3,7 +3,7 @@
   "description": "tour_validate_description,local_jobboard",
   "pathmatch": "/local/jobboard/validate_document.php%",
   "enabled": 1,
-  "sortorder": 12,
+  "sortorder": 13,
   "endtourlabel": "tour_endlabel,local_jobboard",
   "displaystepnumbers": true,
   "configdata": {
@@ -42,7 +42,7 @@
       "title": "tour_validate_step3_title,local_jobboard",
       "content": "tour_validate_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-primary",
+      "targetvalue": ".btn-outline-primary",
       "sortorder": 2,
       "configdata": {"placement": "right"}
     },
@@ -66,7 +66,7 @@
       "title": "tour_validate_step6_title,local_jobboard",
       "content": "tour_validate_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-success",
+      "targetvalue": "textarea",
       "sortorder": 5,
       "configdata": {"placement": "top"}
     },
@@ -74,16 +74,24 @@
       "title": "tour_validate_step7_title,local_jobboard",
       "content": "tour_validate_step7_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-danger",
+      "targetvalue": ".btn-success",
       "sortorder": 6,
       "configdata": {"placement": "top"}
     },
     {
       "title": "tour_validate_step8_title,local_jobboard",
       "content": "tour_validate_step8_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".btn-danger",
+      "sortorder": 7,
+      "configdata": {"placement": "top"}
+    },
+    {
+      "title": "tour_validate_step9_title,local_jobboard",
+      "content": "tour_validate_step9_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 7,
+      "sortorder": 8,
       "configdata": {"placement": "bottom"}
     }
   ]

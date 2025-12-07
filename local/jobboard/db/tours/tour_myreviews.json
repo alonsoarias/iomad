@@ -1,9 +1,9 @@
 {
   "name": "tour_myreviews_name,local_jobboard",
   "description": "tour_myreviews_description,local_jobboard",
-  "pathmatch": "/local/jobboard/index.php?view=myreviews%",
+  "pathmatch": "/local/jobboard/index.php%view=myreviews%",
   "enabled": 1,
-  "sortorder": 5,
+  "sortorder": 11,
   "endtourlabel": "tour_endlabel,local_jobboard",
   "displaystepnumbers": true,
   "configdata": {
@@ -34,7 +34,7 @@
       "title": "tour_myreviews_step2_title,local_jobboard",
       "content": "tour_myreviews_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-stat-card",
+      "targetvalue": ".local-jobboard-myreviews",
       "sortorder": 1,
       "configdata": {"placement": "bottom"}
     },
@@ -42,7 +42,7 @@
       "title": "tour_myreviews_step3_title,local_jobboard",
       "content": "tour_myreviews_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-filter-form",
+      "targetvalue": ".jb-stat-card",
       "sortorder": 2,
       "configdata": {"placement": "bottom"}
     },
@@ -50,24 +50,40 @@
       "title": "tour_myreviews_step4_title,local_jobboard",
       "content": "tour_myreviews_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card.shadow-sm",
+      "targetvalue": ".jb-filter-form",
       "sortorder": 3,
-      "configdata": {"placement": "right"}
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_myreviews_step5_title,local_jobboard",
       "content": "tour_myreviews_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-primary",
+      "targetvalue": ".card.h-100.shadow-sm",
       "sortorder": 4,
-      "configdata": {"placement": "top"}
+      "configdata": {"placement": "right"}
     },
     {
       "title": "tour_myreviews_step6_title,local_jobboard",
       "content": "tour_myreviews_step6_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".progress",
+      "sortorder": 5,
+      "configdata": {"placement": "bottom"}
+    },
+    {
+      "title": "tour_myreviews_step7_title,local_jobboard",
+      "content": "tour_myreviews_step7_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".card-footer .btn-primary",
+      "sortorder": 6,
+      "configdata": {"placement": "top"}
+    },
+    {
+      "title": "tour_myreviews_step8_title,local_jobboard",
+      "content": "tour_myreviews_step8_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 5,
+      "sortorder": 7,
       "configdata": {"placement": "bottom"}
     }
   ]

@@ -1,9 +1,9 @@
 {
   "name": "tour_vacancy_name,local_jobboard",
   "description": "tour_vacancy_description,local_jobboard",
-  "pathmatch": "/local/jobboard/index.php?view=vacancy%",
+  "pathmatch": "/local/jobboard/index.php%view=vacancy%",
   "enabled": 1,
-  "sortorder": 5,
+  "sortorder": 3,
   "endtourlabel": "tour_endlabel,local_jobboard",
   "displaystepnumbers": true,
   "configdata": {
@@ -42,7 +42,7 @@
       "title": "tour_vacancy_step3_title,local_jobboard",
       "content": "tour_vacancy_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card.shadow-sm",
+      "targetvalue": ".card-title",
       "sortorder": 2,
       "configdata": {"placement": "bottom"}
     },
@@ -50,7 +50,7 @@
       "title": "tour_vacancy_step4_title,local_jobboard",
       "content": "tour_vacancy_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".alert-warning",
+      "targetvalue": ".alert",
       "sortorder": 3,
       "configdata": {"placement": "top"}
     },
@@ -58,17 +58,17 @@
       "title": "tour_vacancy_step5_title,local_jobboard",
       "content": "tour_vacancy_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-primary",
+      "targetvalue": ".btn-success",
       "sortorder": 4,
-      "configdata": {"placement": "right"}
+      "configdata": {"placement": "left"}
     },
     {
       "title": "tour_vacancy_step6_title,local_jobboard",
       "content": "tour_vacancy_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-definition-list",
+      "targetvalue": ".col-lg-4 .card",
       "sortorder": 5,
-      "configdata": {"placement": "top"}
+      "configdata": {"placement": "left"}
     },
     {
       "title": "tour_vacancy_step7_title,local_jobboard",

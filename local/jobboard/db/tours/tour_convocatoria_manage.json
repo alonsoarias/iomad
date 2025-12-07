@@ -1,9 +1,9 @@
 {
   "name": "tour_convocatoria_manage_name,local_jobboard",
   "description": "tour_convocatoria_manage_description,local_jobboard",
-  "pathmatch": "/local/jobboard/index.php?view=convocatoria%",
+  "pathmatch": "/local/jobboard/index.php%view=convocatoria%",
   "enabled": 1,
-  "sortorder": 10,
+  "sortorder": 8,
   "endtourlabel": "tour_endlabel,local_jobboard",
   "displaystepnumbers": true,
   "configdata": {
@@ -50,7 +50,7 @@
       "title": "tour_convocatoria_manage_step4_title,local_jobboard",
       "content": "tour_convocatoria_manage_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card.shadow-sm",
+      "targetvalue": ".card.shadow-sm.mb-4",
       "sortorder": 3,
       "configdata": {"placement": "bottom"}
     },
@@ -58,24 +58,40 @@
       "title": "tour_convocatoria_manage_step5_title,local_jobboard",
       "content": "tour_convocatoria_manage_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".list-group",
+      "targetvalue": ".btn-success",
       "sortorder": 4,
-      "configdata": {"placement": "top"}
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_convocatoria_manage_step6_title,local_jobboard",
       "content": "tour_convocatoria_manage_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-success",
+      "targetvalue": ".list-group.list-group-flush",
       "sortorder": 5,
       "configdata": {"placement": "top"}
     },
     {
       "title": "tour_convocatoria_manage_step7_title,local_jobboard",
       "content": "tour_convocatoria_manage_step7_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".list-group-item",
+      "sortorder": 6,
+      "configdata": {"placement": "right"}
+    },
+    {
+      "title": "tour_convocatoria_manage_step8_title,local_jobboard",
+      "content": "tour_convocatoria_manage_step8_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".card-header.bg-primary",
+      "sortorder": 7,
+      "configdata": {"placement": "bottom"}
+    },
+    {
+      "title": "tour_convocatoria_manage_step9_title,local_jobboard",
+      "content": "tour_convocatoria_manage_step9_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 6,
+      "sortorder": 8,
       "configdata": {"placement": "bottom"}
     }
   ]

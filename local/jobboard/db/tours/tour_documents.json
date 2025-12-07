@@ -1,9 +1,9 @@
 {
   "name": "tour_documents_name,local_jobboard",
   "description": "tour_documents_description,local_jobboard",
-  "pathmatch": "/local/jobboard/admin/doctypes.php",
+  "pathmatch": "/local/jobboard/admin/doctypes.php%",
   "enabled": 1,
-  "sortorder": 11,
+  "sortorder": 12,
   "endtourlabel": "tour_endlabel,local_jobboard",
   "displaystepnumbers": true,
   "configdata": {
@@ -50,24 +50,40 @@
       "title": "tour_documents_step4_title,local_jobboard",
       "content": "tour_documents_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".badge",
+      "targetvalue": "tbody tr",
       "sortorder": 3,
-      "configdata": {"placement": "bottom"}
+      "configdata": {"placement": "right"}
     },
     {
       "title": "tour_documents_step5_title,local_jobboard",
       "content": "tour_documents_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".alert",
+      "targetvalue": ".badge",
       "sortorder": 4,
       "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_documents_step6_title,local_jobboard",
       "content": "tour_documents_step6_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".btn-group",
+      "sortorder": 5,
+      "configdata": {"placement": "left"}
+    },
+    {
+      "title": "tour_documents_step7_title,local_jobboard",
+      "content": "tour_documents_step7_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".btn-success",
+      "sortorder": 6,
+      "configdata": {"placement": "bottom"}
+    },
+    {
+      "title": "tour_documents_step8_title,local_jobboard",
+      "content": "tour_documents_step8_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 5,
+      "sortorder": 7,
       "configdata": {"placement": "bottom"}
     }
   ]
