@@ -1,9 +1,9 @@
 {
   "name": "tour_application_name,local_jobboard",
   "description": "tour_application_description,local_jobboard",
-  "pathmatch": "/local/jobboard/index.php%view=application%",
+  "pathmatch": "/local/jobboard/index.php?view=application%",
   "enabled": 1,
-  "sortorder": 0,
+  "sortorder": 7,
   "endtourlabel": "tour_endlabel,local_jobboard",
   "displaystepnumbers": true,
   "configdata": {
@@ -12,9 +12,7 @@
     "backdrop": true,
     "reflex": false,
     "filtervalues": {
-      "accessdate": {
-        "filter_accessdate_enabled": 0
-      },
+      "accessdate": {"filter_accessdate_enabled": 0},
       "role": [],
       "category": [],
       "course": [],
@@ -30,59 +28,47 @@
       "targettype": 2,
       "targetvalue": "",
       "sortorder": 0,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_application_step2_title,local_jobboard",
       "content": "tour_application_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".alert[role='status'], .alert.d-flex.align-items-center",
+      "targetvalue": ".local-jobboard-application-detail",
       "sortorder": 1,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_application_step3_title,local_jobboard",
       "content": "tour_application_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "section[aria-labelledby='documents-heading'], .table.table-hover",
+      "targetvalue": ".jb-progress-steps",
       "sortorder": 2,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_application_step4_title,local_jobboard",
       "content": "tour_application_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".badge[aria-label*='status'], td .badge",
+      "targetvalue": ".table.table-hover",
       "sortorder": 3,
-      "configdata": {
-        "placement": "top"
-      }
+      "configdata": {"placement": "top"}
     },
     {
       "title": "tour_application_step5_title,local_jobboard",
       "content": "tour_application_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".btn-group.btn-group-sm .btn-outline-primary, .btn-outline-warning[aria-label*='reupload']",
+      "targetvalue": ".btn-group",
       "sortorder": 4,
-      "configdata": {
-        "placement": "left"
-      }
+      "configdata": {"placement": "left"}
     },
     {
       "title": "tour_application_step6_title,local_jobboard",
       "content": "tour_application_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": "section[aria-labelledby='history-heading'], .local-jobboard-timeline",
+      "targetvalue": ".jb-timeline",
       "sortorder": 5,
-      "configdata": {
-        "placement": "top"
-      }
+      "configdata": {"placement": "top"}
     },
     {
       "title": "tour_application_step7_title,local_jobboard",
@@ -90,9 +76,7 @@
       "targettype": 2,
       "targetvalue": "",
       "sortorder": 6,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     }
   ]
 }

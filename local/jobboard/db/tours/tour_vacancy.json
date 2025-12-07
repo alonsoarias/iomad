@@ -1,9 +1,9 @@
 {
   "name": "tour_vacancy_name,local_jobboard",
   "description": "tour_vacancy_description,local_jobboard",
-  "pathmatch": "/local/jobboard/index.php%view=vacancy%",
+  "pathmatch": "/local/jobboard/index.php?view=vacancy%",
   "enabled": 1,
-  "sortorder": 0,
+  "sortorder": 5,
   "endtourlabel": "tour_endlabel,local_jobboard",
   "displaystepnumbers": true,
   "configdata": {
@@ -12,9 +12,7 @@
     "backdrop": true,
     "reflex": false,
     "filtervalues": {
-      "accessdate": {
-        "filter_accessdate_enabled": 0
-      },
+      "accessdate": {"filter_accessdate_enabled": 0},
       "role": [],
       "category": [],
       "course": [],
@@ -30,59 +28,47 @@
       "targettype": 2,
       "targetvalue": "",
       "sortorder": 0,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_vacancy_step2_title,local_jobboard",
       "content": "tour_vacancy_step2_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card-header.bg-primary.text-white, .col-lg-8 .card.shadow-sm:first-child",
+      "targetvalue": ".local-jobboard-vacancy-detail",
       "sortorder": 1,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_vacancy_step3_title,local_jobboard",
       "content": "tour_vacancy_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card-title, .card-body h2",
+      "targetvalue": ".card.shadow-sm",
       "sortorder": 2,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     },
     {
       "title": "tour_vacancy_step4_title,local_jobboard",
       "content": "tour_vacancy_step4_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".alert.alert-warning, .d-flex.flex-wrap .badge",
+      "targetvalue": ".alert-warning",
       "sortorder": 3,
-      "configdata": {
-        "placement": "top"
-      }
+      "configdata": {"placement": "top"}
     },
     {
       "title": "tour_vacancy_step5_title,local_jobboard",
       "content": "tour_vacancy_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".card.border-primary .btn-primary.btn-lg, .col-lg-4 .btn-primary",
+      "targetvalue": ".btn-primary",
       "sortorder": 4,
-      "configdata": {
-        "placement": "right"
-      }
+      "configdata": {"placement": "right"}
     },
     {
       "title": "tour_vacancy_step6_title,local_jobboard",
       "content": "tour_vacancy_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".col-lg-4 .card.shadow-sm dl, .card-body dl",
+      "targetvalue": ".jb-definition-list",
       "sortorder": 5,
-      "configdata": {
-        "placement": "top"
-      }
+      "configdata": {"placement": "top"}
     },
     {
       "title": "tour_vacancy_step7_title,local_jobboard",
@@ -90,9 +76,7 @@
       "targettype": 2,
       "targetvalue": "",
       "sortorder": 6,
-      "configdata": {
-        "placement": "bottom"
-      }
+      "configdata": {"placement": "bottom"}
     }
   ]
 }

@@ -7,6 +7,77 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.20] - 2025-12-07
+
+### Verificado
+- **Verificación global de integridad completada**
+  - Archivos de idioma: 1860 strings en EN y ES con paridad perfecta
+  - Esquema de base de datos: 24 tablas con claves foráneas e índices
+  - Capabilities: 34 permisos granulares verificados
+  - Roles personalizados: 3 roles (reviewer, coordinator, committee)
+  - User Tours: 15 tours con selectores CSS robustos
+  - PHP: 104 archivos sin errores de sintaxis
+  - Mustache: 39 plantillas
+  - JSON: 30 archivos (15 tours) validados
+- **version.php**: Incrementado a 2.0.20 (2025120738)
+
+---
+
+## [2.0.19] - 2025-12-07
+
+### Modificado
+- **User Tours actualizados con selectores CSS robustos**
+  - 9 tours actualizados para eliminar selectores frágiles
+  - Eliminados selectores problemáticos: `:first-child`, `:first-of-type`, `:nth-child(N)`, `[aria-labelledby^='']`, `[aria-label*='']`
+  - Ahora se usan clases CSS estables y mantenibles
+- **version.php**: Incrementado a 2.0.19 (2025120737)
+
+### Tours actualizados:
+| Tour | Cambios |
+|------|---------|
+| tour_dashboard.json | `.local-jobboard-dashboard`, `.jb-stat-card`, `.jb-section-card` |
+| tour_public.json | `.local-jobboard-public`, `.jb-stats-section`, `.jb-vacancies-grid` |
+| tour_vacancy.json | Eliminado `:first-child`, ahora usa `.local-jobboard-vacancy-detail` |
+| tour_application.json | Eliminado `[aria-labelledby^='']`, ahora usa `.jb-progress-steps`, `.jb-timeline` |
+| tour_convocatoria_manage.json | Eliminado `:first-of-type`, ahora usa `.local-jobboard-convocatoria` |
+| tour_documents.json | Eliminado `th:nth-child(N)`, ahora usa `.table`, `thead` |
+| tour_validate_document.json | Eliminado `:first-of-type` y `[aria-label*='']` |
+| tour_convocatorias.json | `.jb-convocatoria-card`, `.jb-stat-card` |
+| tour_reports.json | `.jb-filter-form`, `.card.shadow-sm` |
+
+---
+
+## [2.0.18] - 2025-12-07
+
+### Modificado
+- **Paridad completa de archivos de idioma EN/ES**
+  - 1860 strings en ambos archivos (EN y ES)
+  - Eliminados 22 strings duplicados del archivo EN
+  - Añadidos strings faltantes para paridad perfecta
+  - Nueva clave `nodocumentstoexport` separada de `nodocuments` para claridad semántica
+- **version.php**: Incrementado a 2.0.18 (2025120736)
+
+### Corregido
+- Duplicados eliminados en lang/en/local_jobboard.php:
+  - `activeconvocatorias`, `allstatuses`, `applicationprogress`
+  - `close`, `currentstatus`, `documentspending`
+  - `documentsrejected`, `documentstatus`, `documentsvalidated`
+  - `exportpdf`, `loading`, `nodocuments` (se mantuvo versión para uploads)
+  - `notifications`, `pending`, `recentactivity`
+  - `sharethisvacancy`, `statistics`, `viewmyapplications`
+  - `jobboard:viewpublicvacancies`, `jobboard:viewinternalvacancies`, `jobboard:unlimitedapplications`
+
+---
+
+## [2.0.17] - 2025-12-07
+
+### Corregido
+- **Tours reinstalados durante upgrade**
+  - Se eliminan e reinstalan tours durante db/upgrade.php para garantizar strings correctas
+- **version.php**: Incrementado a 2.0.17 (2025120735)
+
+---
+
 ## [2.0.16] - 2025-12-07
 
 ### Modificado

@@ -825,11 +825,6 @@ $string['error:applicationlimitreached'] = 'You have reached the maximum number 
 $string['error:publicpagedisabled'] = 'The public vacancies page is disabled.';
 $string['error:loginrequiredforinternal'] = 'You must be logged in to view internal vacancies.';
 
-// New capabilities.
-$string['jobboard:viewpublicvacancies'] = 'View public vacancies';
-$string['jobboard:viewinternalvacancies'] = 'View internal vacancies';
-$string['jobboard:unlimitedapplications'] = 'Bypass application limits';
-
 // ==========================================================================
 // Additional form strings - Exemption Form.
 // ==========================================================================
@@ -1853,16 +1848,14 @@ $string['lastused'] = 'Last used';
 $string['selecttype'] = 'Select type';
 $string['type'] = 'Type';
 $string['share'] = 'Share';
-$string['loading'] = 'Loading...';
 
 // Export functionality.
 $string['exportdocumentszip'] = 'Export Documents (ZIP)';
 $string['exportalldocuments'] = 'Export All Documents';
 $string['exportapplicationdocs'] = 'Export Application Documents';
 $string['zipexportfailed'] = 'Failed to create ZIP archive';
-$string['nodocuments'] = 'No documents to export';
+$string['nodocumentstoexport'] = 'No documents to export';
 $string['invalidparameters'] = 'Invalid parameters';
-$string['exportpdf'] = 'Export PDF';
 $string['exportingpdf'] = 'Exporting PDF...';
 $string['pdfreportgenerated'] = 'PDF report generated successfully';
 $string['pdfexportfailed'] = 'Failed to generate PDF report';
@@ -2107,12 +2100,8 @@ $string['administracion'] = 'Administration';
 $string['reviewertasks'] = 'Review Tasks';
 
 // Statistics cards.
-$string['activeconvocatorias'] = 'Active calls';
 $string['publishedvacancies'] = 'Published vacancies';
 $string['pendingreviews'] = 'Pending reviews';
-
-// Calls management card.
-$string['convocatorias_dashboard_desc'] = 'Manage the institution\'s job calls. Vacancies are organized within calls to facilitate the selection process.';
 $string['vacancies_dashboard_desc'] = 'Create, edit and manage vacancies. Control publication and assignment status of positions.';
 $string['workflow_flow'] = 'Workflow';
 $string['selection'] = 'Selection';
@@ -2148,7 +2137,6 @@ $string['explorevacancias'] = 'View available vacancies';
 // My applications card.
 $string['myapplications_desc'] = 'Check the status of your applications, upload pending documents and track your selection processes.';
 $string['pending_docs_alert'] = 'You have {$a} pending documents to upload or correct in your applications.';
-$string['viewmyapplications'] = 'View my applications';
 
 // Reviewer section.
 $string['myreviews_desc'] = 'View applications assigned for review and validate applicant documentation.';
@@ -2208,20 +2196,14 @@ $string['gotocreateconvocatoria'] = 'Create a call';
 
 // Dashboard cards.
 $string['quickstats'] = 'Quick Statistics';
-$string['recentactivity'] = 'Recent Activity';
 $string['pendingactions'] = 'Pending Actions';
-
-// Application management.
-$string['applicationprogress'] = 'Application Progress';
-$string['documentsvalidated'] = 'Documents Validated';
-$string['documentspending'] = 'Documents Pending';
-$string['documentsrejected'] = 'Documents Rejected';
 
 // Review interface.
 $string['reviewqueue'] = 'Review Queue';
 $string['assignedtome'] = 'Assigned to me';
 $string['pendingmyreview'] = 'Pending my review';
 $string['completedreviews'] = 'Completed reviews';
+$string['applicationprogress'] = 'Application Progress';
 
 // Status flow.
 $string['workflowstatus'] = 'Workflow Status';
@@ -2259,8 +2241,6 @@ $string['logintoapply'] = 'Log in to apply for this position';
 // General.
 $string['viewall'] = 'View all';
 $string['urgent'] = 'Urgent';
-$string['pending'] = 'Pending';
-$string['allstatuses'] = 'All statuses';
 
 // ============================================================================
 // Accessibility and UX enhancement strings (v2.0.11)
@@ -2289,7 +2269,6 @@ $string['logintoviewmore'] = 'Log in to view all available vacancies';
 
 // Navigation and page structure.
 $string['navigation'] = 'Navigation';
-$string['statistics'] = 'Statistics';
 $string['vacancydetails'] = 'Vacancy details';
 $string['pagination'] = 'Pagination';
 
@@ -2299,26 +2278,20 @@ $string['shareonfacebook'] = 'Share on Facebook';
 $string['shareontwitter'] = 'Share on Twitter';
 
 // Accessibility and ARIA labels (v2.0.13).
-$string['notifications'] = 'Notifications';
 $string['closealert'] = 'Close alert';
 $string['adminstatistics'] = 'Administration statistics';
 $string['applicantstatistics'] = 'Applicant statistics';
 $string['features'] = 'Features';
 $string['applicationstatistics'] = 'Application statistics';
 $string['applicationlist'] = 'Application list';
-$string['applicationprogress'] = 'Application progress';
-$string['documentstatus'] = 'Document status';
 $string['documentactions'] = 'Document actions';
 $string['reviewstatistics'] = 'Review statistics';
 $string['applicationsqueue'] = 'Applications queue';
 $string['documentstoreview'] = 'Documents to review';
-$string['close'] = 'Close';
 $string['at'] = 'at';
 $string['performedby'] = 'Performed by';
-$string['currentstatus'] = 'Current status';
 $string['noteshelptext'] = 'Add any notes about the status change (visible to applicant)';
 $string['warning'] = 'Warning';
-$string['sharethisvacancy'] = 'Share this vacancy';
 
 // Missing strings identified in v2.0.13 audit.
 $string['actions'] = 'Actions';

@@ -373,6 +373,7 @@ $string['selectdepartment'] = 'Seleccione un departamento';
 $string['selectstatus'] = 'Seleccione estado';
 $string['uploadfile'] = 'Subir archivo';
 $string['choosefiles'] = 'Seleccionar archivos';
+$string['nodocuments'] = 'No hay documentos subidos';
 
 // Contract types.
 $string['contract:catedra'] = 'Profesor Cátedra';
@@ -1053,6 +1054,7 @@ $string['export'] = 'Exportar';
 $string['exportformat'] = 'Formato de exportación';
 $string['exportcsv'] = 'CSV';
 $string['exportexcel'] = 'Excel';
+$string['exportpdf'] = 'Exportar PDF';
 $string['downloading'] = 'Descargando...';
 
 // Validation workflow.
@@ -2214,9 +2216,8 @@ $string['exportdocumentszip'] = 'Exportar Documentos (ZIP)';
 $string['exportalldocuments'] = 'Exportar Todos los Documentos';
 $string['exportapplicationdocs'] = 'Exportar Documentos de Postulacion';
 $string['zipexportfailed'] = 'Error al crear el archivo ZIP';
-$string['nodocuments'] = 'No hay documentos para exportar';
+$string['nodocumentstoexport'] = 'No hay documentos para exportar';
 $string['invalidparameters'] = 'Parametros invalidos';
-$string['exportpdf'] = 'Exportar PDF';
 $string['exportingpdf'] = 'Exportando PDF...';
 $string['pdfreportgenerated'] = 'Reporte PDF generado exitosamente';
 $string['pdfexportfailed'] = 'Error al generar el reporte PDF';
