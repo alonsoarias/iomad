@@ -44,17 +44,17 @@
       "title": "tour_manage_step5_title,local_jobboard",
       "content": "tour_manage_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".table.table-hover",
+      "targetvalue": ".jb-bulk-item",
       "sortorder": 4,
-      "configdata": "{\"placement\": \"top\"}"
+      "configdata": "{\"placement\": \"right\"}"
     },
     {
       "title": "tour_manage_step6_title,local_jobboard",
       "content": "tour_manage_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".thead-light",
+      "targetvalue": ".table.table-hover",
       "sortorder": 5,
-      "configdata": "{\"placement\": \"bottom\"}"
+      "configdata": "{\"placement\": \"top\"}"
     },
     {
       "title": "tour_manage_step7_title,local_jobboard",
@@ -75,9 +75,17 @@
     {
       "title": "tour_manage_step9_title,local_jobboard",
       "content": "tour_manage_step9_content,local_jobboard",
+      "targettype": 0,
+      "targetvalue": ".jb-pagination-container",
+      "sortorder": 8,
+      "configdata": "{\"placement\": \"top\"}"
+    },
+    {
+      "title": "tour_manage_step10_title,local_jobboard",
+      "content": "tour_manage_step10_content,local_jobboard",
       "targettype": 2,
       "targetvalue": "",
-      "sortorder": 8,
+      "sortorder": 9,
       "configdata": "{\"placement\": \"bottom\"}"
     }
   ]

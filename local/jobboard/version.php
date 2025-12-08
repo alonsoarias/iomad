@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120844;  // v2.0.26: CLI v2.0 - Auto-create IOMAD structure (sedes/modalidades).
+$plugin->version = 2025120845;  // v2.0.27: CLI v2.1 - Detailed convocatorias and vacancies with complete info.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.26';
+$plugin->release = '2.0.27';

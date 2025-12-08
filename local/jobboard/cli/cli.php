@@ -519,9 +519,10 @@ $convocatoriaid = !empty($options['convocatoria']) ? (int) $options['convocatori
 if ($shouldpublish && empty($convocatoriaid)) {
     cli_heading('Phase 4: Creating Convocatoria');
 
-    $convcode = $options['convocatoria-code'] ?: 'CONV-' . date('Y') . '-' . date('md');
-    $convname = $options['convocatoria-name'] ?: 'Convocatoria Docentes ISER ' . date('Y') . '-' . ceil(date('n') / 6);
-    $convdesc = $options['convocatoria-desc'] ?: '';
+    $year = date('Y');
+    $semester = ceil(date('n') / 6);
+    $convcode = $options['convocatoria-code'] ?: "CONV-ISER-{$year}-{$semester}";
+    $convname = $options['convocatoria-name'] ?: "Convocatoria Docentes Ocasionales y Cátedra ISER {$year}-{$semester}";
 
     // Check if exists.
     $existingconv = $DB->get_record('local_jobboard_convocatoria', ['code' => $convcode]);
@@ -532,22 +533,213 @@ if ($shouldpublish && empty($convocatoriaid)) {
     } else if (!$dryrun) {
         $adminuser = get_admin();
 
-        // Build description.
-        $deschtml = '<h3>Convocatoria para Docentes ISER</h3>';
-        $deschtml .= '<p><strong>Período:</strong> ' . date('d/m/Y', $opendate) . ' al ' . date('d/m/Y', $closedate) . '</p>';
-        $deschtml .= '<p><strong>Total de perfiles:</strong> ' . count($allprofiles) . '</p>';
-        $deschtml .= '<ul>';
-        $deschtml .= '<li>Facultad FCAS: ' . $parsestats['fcas'] . ' perfiles</li>';
-        $deschtml .= '<li>Facultad FII: ' . $parsestats['fii'] . ' perfiles</li>';
-        $deschtml .= '</ul>';
-        $deschtml .= '<h4>Distribución por Sede:</h4><ul>';
+        // Count by contract type and program.
+        $ocasionalCount = 0;
+        $catedraCount = 0;
+        $programStats = [];
+        foreach ($allprofiles as $p) {
+            if (stripos($p['contracttype'], 'OCASIONAL') !== false) {
+                $ocasionalCount++;
+            } else {
+                $catedraCount++;
+            }
+            $prog = $p['program'] ?: 'Sin programa específico';
+            $programStats[$prog] = ($programStats[$prog] ?? 0) + 1;
+        }
+        arsort($programStats);
+
+        // Build distribution by location HTML.
+        $locationHtml = '';
         foreach ($locationstats as $loc => $cnt) {
-            $deschtml .= "<li>$loc: $cnt vacantes</li>";
+            $locname = $ISER_SEDES[$loc]['name'] ?? $loc;
+            $locationHtml .= "<li><strong>{$locname}:</strong> {$cnt} vacantes</li>\n";
         }
-        $deschtml .= '</ul>';
-        if ($convdesc) {
-            $deschtml .= '<p>' . $convdesc . '</p>';
+
+        // Build program distribution HTML (top 10).
+        $programHtml = '';
+        $topPrograms = array_slice($programStats, 0, 10, true);
+        foreach ($topPrograms as $prog => $cnt) {
+            $programHtml .= "<li>{$prog}: {$cnt} perfiles</li>\n";
         }
+
+        $totalVacancies = count($allprofiles);
+        $openDateStr = date('d/m/Y', $opendate);
+        $closeDateStr = date('d/m/Y', $closedate);
+
+        // Build comprehensive description.
+        $deschtml = <<<HTML
+<div class="convocatoria-description">
+    <h3>Convocatoria para Vinculación de Docentes ISER {$year}</h3>
+
+    <div class="alert alert-info">
+        <strong>Instituto Superior de Educación Rural - ISER</strong><br>
+        Proceso de selección para docentes ocasionales y de cátedra - Vigencia {$year}
+    </div>
+
+    <h4>Información General</h4>
+    <table class="table table-bordered">
+        <tr><th>Código de Convocatoria</th><td><strong>{$convcode}</strong></td></tr>
+        <tr><th>Período de Inscripción</th><td>{$openDateStr} al {$closeDateStr}</td></tr>
+        <tr><th>Total de Vacantes</th><td><strong>{$totalVacancies}</strong></td></tr>
+        <tr><th>Modalidades</th><td>Presencial y A Distancia</td></tr>
+    </table>
+
+    <h4>Distribución de Vacantes</h4>
+
+    <h5>Por Tipo de Vinculación</h5>
+    <ul>
+        <li><strong>Docente Ocasional Tiempo Completo:</strong> {$ocasionalCount} vacantes
+            <br><small class="text-muted">Contrato laboral a término fijo por período académico</small></li>
+        <li><strong>Docente de Cátedra:</strong> {$catedraCount} vacantes
+            <br><small class="text-muted">Contrato de prestación de servicios por horas</small></li>
+    </ul>
+
+    <h5>Por Facultad</h5>
+    <ul>
+        <li><strong>FCAS</strong> - Facultad de Ciencias Administrativas y Sociales: {$parsestats['fcas']} perfiles</li>
+        <li><strong>FII</strong> - Facultad de Ingenierías e Informática: {$parsestats['fii']} perfiles</li>
+    </ul>
+
+    <h5>Por Sede / Centro Tutorial</h5>
+    <ul>
+        {$locationHtml}
+    </ul>
+
+    <h5>Programas Académicos con Mayor Demanda</h5>
+    <ul>
+        {$programHtml}
+    </ul>
+
+    <h4>Requisitos Generales</h4>
+    <ol>
+        <li>Título profesional universitario acorde al perfil requerido para la vacante</li>
+        <li>Título de posgrado (especialización, maestría o doctorado) - según perfil</li>
+        <li>Experiencia docente en educación superior (deseable mínimo 1 año)</li>
+        <li>Disponibilidad horaria para la sede y modalidad seleccionada</li>
+        <li>No tener inhabilidades ni incompatibilidades para contratar con el Estado</li>
+    </ol>
+
+    <h4>Documentos Requeridos</h4>
+    <p>Los aspirantes deberán cargar en el sistema los siguientes documentos en formato PDF:</p>
+
+    <h5>Documentos de Identificación</h5>
+    <ul>
+        <li>Hoja de vida actualizada (formato libre o SIGEP)</li>
+        <li>Cédula de ciudadanía (ambas caras, legible)</li>
+        <li>Libreta militar (hombres menores de 50 años)</li>
+        <li>Foto reciente tipo documento (fondo blanco)</li>
+    </ul>
+
+    <h5>Documentos Académicos</h5>
+    <ul>
+        <li>Diploma y acta de grado de pregrado</li>
+        <li>Diploma y acta de grado de posgrado (si aplica)</li>
+        <li>Tarjeta profesional (para profesiones reguladas)</li>
+        <li>Certificado de vigencia de tarjeta profesional (expedición no mayor a 3 meses)</li>
+    </ul>
+
+    <h5>Documentos Laborales</h5>
+    <ul>
+        <li>Certificaciones laborales de experiencia docente</li>
+        <li>Certificaciones laborales de experiencia profesional relacionada</li>
+    </ul>
+
+    <h5>Certificados de Antecedentes (vigencia no mayor a 30 días)</h5>
+    <ul>
+        <li>Certificado de antecedentes disciplinarios - Procuraduría General de la Nación</li>
+        <li>Certificado de antecedentes fiscales - Contraloría General de la República</li>
+        <li>Certificado de antecedentes judiciales - Policía Nacional</li>
+        <li>Certificado de medidas correctivas - Policía Nacional</li>
+        <li>Certificado del Sistema de Registro de Inhabilidades por Delitos Sexuales</li>
+    </ul>
+
+    <h5>Documentos Financieros y de Seguridad Social</h5>
+    <ul>
+        <li>RUT actualizado (expedición no mayor a 3 meses)</li>
+        <li>Certificación bancaria (cuenta de ahorros o corriente a nombre del aspirante)</li>
+        <li>Certificado de afiliación a EPS</li>
+        <li>Certificado de afiliación a Fondo de Pensiones</li>
+    </ul>
+
+    <h4>Proceso de Selección</h4>
+    <ol>
+        <li><strong>Inscripción:</strong> Registro en el sistema y carga de documentos</li>
+        <li><strong>Verificación documental:</strong> Revisión de requisitos mínimos</li>
+        <li><strong>Evaluación de méritos:</strong> Valoración de formación y experiencia</li>
+        <li><strong>Entrevista:</strong> Evaluación de competencias (si aplica)</li>
+        <li><strong>Publicación de resultados:</strong> Lista de elegibles</li>
+        <li><strong>Vinculación:</strong> Sujeta a disponibilidad presupuestal</li>
+    </ol>
+
+    <h4>Contacto</h4>
+    <p>Para mayor información sobre esta convocatoria:</p>
+    <ul>
+        <li><strong>Oficina de Talento Humano - ISER</strong></li>
+        <li>Correo: talento.humano@iser.edu.co</li>
+        <li>Teléfono: (607) 568XXXX</li>
+        <li>Dirección: Pamplona, Norte de Santander</li>
+    </ul>
+</div>
+HTML;
+
+        // Build terms and conditions.
+        $termshtml = <<<HTML
+<div class="convocatoria-terms">
+    <h4>Términos y Condiciones de la Convocatoria</h4>
+
+    <p>Al registrarse y postularse a esta convocatoria, el aspirante declara bajo la gravedad de juramento y acepta expresamente lo siguiente:</p>
+
+    <h5>1. Veracidad de la Información</h5>
+    <p>Que toda la información consignada en el formulario de inscripción y los documentos adjuntos son verídicos, auténticos y pueden ser verificados por la institución. La presentación de documentos falsos o adulterados causará el rechazo inmediato de la postulación y las acciones legales correspondientes según la legislación colombiana.</p>
+
+    <h5>2. Autorización de Tratamiento de Datos Personales</h5>
+    <p>De conformidad con la Ley 1581 de 2012 (Ley de Protección de Datos Personales), el Decreto 1377 de 2013 y demás normas concordantes, autorizo expresamente al Instituto Superior de Educación Rural - ISER para:</p>
+    <ul>
+        <li>Recolectar, almacenar, usar, circular y procesar mis datos personales</li>
+        <li>Verificar la autenticidad de los documentos presentados ante las entidades correspondientes</li>
+        <li>Contactarme por cualquier medio (correo electrónico, teléfono, WhatsApp) para asuntos relacionados con esta convocatoria</li>
+        <li>Compartir mi información con entidades de control cuando sea requerido</li>
+    </ul>
+
+    <h5>3. Proceso de Selección</h5>
+    <p>Acepto que:</p>
+    <ul>
+        <li>El proceso de selección se realizará de acuerdo con los criterios establecidos por la institución</li>
+        <li>La decisión final de vinculación es discrecional del ISER y no admite recurso alguno</li>
+        <li>La inscripción y postulación NO genera ningún derecho ni expectativa de vinculación laboral</li>
+        <li>El ISER se reserva el derecho de declarar desierta la convocatoria en cualquier momento</li>
+    </ul>
+
+    <h5>4. Tipo de Vinculación</h5>
+    <ul>
+        <li><strong>Docente Ocasional Tiempo Completo:</strong> Vinculación mediante contrato laboral a término fijo por el período académico correspondiente, con todas las prestaciones de ley.</li>
+        <li><strong>Docente de Cátedra:</strong> Vinculación mediante contrato de prestación de servicios profesionales, remunerado por hora efectivamente dictada. No genera relación laboral.</li>
+    </ul>
+
+    <h5>5. Requisitos de Vinculación</h5>
+    <p>En caso de ser seleccionado, la vinculación estará condicionada a:</p>
+    <ul>
+        <li>Disponibilidad presupuestal de la institución</li>
+        <li>Cumplimiento de todos los requisitos legales y documentales</li>
+        <li>Aprobación de exámenes médicos ocupacionales</li>
+        <li>No estar incurso en inhabilidades o incompatibilidades legales</li>
+    </ul>
+
+    <h5>6. Compromiso del Aspirante</h5>
+    <p>Me comprometo a:</p>
+    <ul>
+        <li>Mantener actualizados mis datos de contacto en el sistema</li>
+        <li>Responder oportunamente a las comunicaciones de la institución</li>
+        <li>Presentar los documentos originales cuando sean requeridos</li>
+        <li>Informar cualquier cambio en mi situación que afecte mi participación</li>
+    </ul>
+
+    <h5>7. Declaración de Inhabilidades</h5>
+    <p>Declaro que no me encuentro incurso en ninguna de las causales de inhabilidad o incompatibilidad previstas en la Constitución Política, la Ley 80 de 1993, la Ley 1474 de 2011 y demás normas concordantes para celebrar contratos con entidades públicas.</p>
+
+    <p class="mt-4"><strong>NOTA IMPORTANTE:</strong> La aceptación de estos términos y condiciones es requisito indispensable para participar en esta convocatoria. Al hacer clic en "Acepto" y enviar mi postulación, confirmo haber leído, entendido y aceptado todas las condiciones aquí establecidas.</p>
+</div>
+HTML;
 
         $convrecord = new stdClass();
         $convrecord->code = $convcode;
@@ -555,13 +747,11 @@ if ($shouldpublish && empty($convocatoriaid)) {
         $convrecord->description = $deschtml;
         $convrecord->startdate = $opendate;
         $convrecord->enddate = $closedate;
-        $convrecord->opendate = $opendate;
-        $convrecord->closedate = $closedate;
         $convrecord->status = 'open';
         $convrecord->companyid = null; // Convocatoria is global, not tied to a company.
         $convrecord->departmentid = null;
         $convrecord->publicationtype = $options['public'] ? 'public' : 'internal';
-        $convrecord->terms = '<p>Al postularse a esta convocatoria, el candidato acepta los términos y condiciones del proceso de selección docente del ISER.</p>';
+        $convrecord->terms = $termshtml;
         $convrecord->createdby = $adminuser->id;
         $convrecord->timecreated = $now;
 
@@ -572,6 +762,7 @@ if ($shouldpublish && empty($convocatoriaid)) {
         echo "  ID: $convocatoriaid\n";
         echo "  Status: open\n";
         echo "  Period: " . date('Y-m-d', $opendate) . " to " . date('Y-m-d', $closedate) . "\n";
+        echo "  Vacancies: Ocasional={$ocasionalCount}, Cátedra={$catedraCount}\n";
     } else {
         echo "DRY RUN: Would create convocatoria '$convname'\n";
         $convocatoriaid = 0;
@@ -618,44 +809,136 @@ foreach ($allprofiles as $code => $profile) {
     $record = new stdClass();
     $record->code = $code;
 
-    // Title.
+    // Extract profile data.
     $program = $profile['program'] ?: '';
     $proftext = $profile['profile'] ?: '';
-    $record->title = $program ?: "Vacante $code";
-    if ($proftext && strlen($proftext) < 100) {
+    $courses = $profile['courses'] ?? [];
+    $faculty = $profile['faculty'] ?? '';
+    $location = $profile['location'] ?? 'PAMPLONA';
+    $modality = $profile['modality'] ?? 'PRESENCIAL';
+    $modalitykey = stripos($modality, 'DISTANCIA') !== false ? 'DISTANCIA' : 'PRESENCIAL';
+    $contracttype = $profile['contracttype'] ?: 'CATEDRA';
+    $isOcasional = stripos($contracttype, 'OCASIONAL') !== false;
+
+    // Title: Program + Brief Profile.
+    $record->title = $program ?: "Docente {$faculty}";
+    if ($proftext && strlen($proftext) < 80) {
         $record->title .= " - " . $proftext;
     }
     if (strlen($record->title) > 250) {
         $record->title = substr($record->title, 0, 247) . '...';
     }
 
-    // Description.
-    $courses = $profile['courses'] ?? [];
-    if (!empty($courses)) {
-        $record->description = "<h4>Cursos a orientar:</h4>\n<ul>\n<li>" .
-            implode("</li>\n<li>", $courses) . "</li>\n</ul>";
-    } else {
-        $record->description = '';
+    // Get location name.
+    $locationName = $ISER_SEDES[$location]['name'] ?? $location;
+    $modalityName = $modalitykey === 'DISTANCIA' ? 'A Distancia' : 'Presencial';
+    $facultyName = $faculty === 'FCAS' ? 'Ciencias Administrativas y Sociales' :
+                   ($faculty === 'FII' ? 'Ingenierías e Informática' : $faculty);
+
+    // Build comprehensive description.
+    $deschtml = "<div class=\"vacancy-description\">\n";
+
+    // Vacancy header info.
+    $deschtml .= "<div class=\"alert alert-secondary\">\n";
+    $deschtml .= "<strong>Código:</strong> {$code} | ";
+    $deschtml .= "<strong>Facultad:</strong> {$facultyName} | ";
+    $deschtml .= "<strong>Modalidad:</strong> {$modalityName}\n";
+    $deschtml .= "</div>\n";
+
+    // Program info.
+    if ($program) {
+        $deschtml .= "<h4>Programa Académico</h4>\n";
+        $deschtml .= "<p><strong>{$program}</strong></p>\n";
     }
+
+    // Courses to teach.
+    if (!empty($courses)) {
+        $deschtml .= "<h4>Cursos/Asignaturas a Orientar</h4>\n";
+        $deschtml .= "<ul class=\"list-group list-group-flush mb-3\">\n";
+        foreach ($courses as $course) {
+            $deschtml .= "<li class=\"list-group-item\"><i class=\"fa fa-book mr-2\"></i>{$course}</li>\n";
+        }
+        $deschtml .= "</ul>\n";
+    }
+
+    // Contract type info.
+    $deschtml .= "<h4>Información de la Vinculación</h4>\n";
+    $deschtml .= "<table class=\"table table-sm\">\n";
+    $deschtml .= "<tr><th>Tipo de Vinculación</th><td>";
+    if ($isOcasional) {
+        $deschtml .= "<span class=\"badge badge-primary\">Ocasional Tiempo Completo</span>";
+    } else {
+        $deschtml .= "<span class=\"badge badge-info\">Cátedra</span>";
+    }
+    $deschtml .= "</td></tr>\n";
+    $deschtml .= "<tr><th>Sede</th><td>{$locationName}</td></tr>\n";
+    $deschtml .= "<tr><th>Modalidad</th><td>{$modalityName}</td></tr>\n";
+    $deschtml .= "<tr><th>Facultad</th><td>{$facultyName}</td></tr>\n";
+    $deschtml .= "</table>\n";
+
+    $deschtml .= "</div>\n";
+    $record->description = $deschtml;
 
     // Contract type and duration.
-    $record->contracttype = $profile['contracttype'] ?: 'CATEDRA';
-    $record->duration = stripos($record->contracttype, 'OCASIONAL') !== false ? 'Semestral' : 'Por horas';
-
-    // Location.
-    $location = $profile['location'] ?? 'PAMPLONA';
-    $record->location = $location;
-
-    // Department (text field).
-    $record->department = $program;
-
-    // Requirements.
-    if ($proftext) {
-        $record->requirements = "<p><strong>Perfil profesional requerido:</strong></p>\n<p>$proftext</p>";
+    $record->contracttype = $contracttype;
+    if ($isOcasional) {
+        $record->duration = 'Período académico (semestral)';
+        $record->salary = 'Según escala salarial institucional';
     } else {
-        $record->requirements = '';
+        $record->duration = 'Por horas según programación académica';
+        $record->salary = 'Valor hora cátedra según escalafón';
     }
-    $record->desirable = '';
+
+    // Location (text field).
+    $record->location = $locationName;
+
+    // Department (text field = program name).
+    $record->department = $program ?: $facultyName;
+
+    // Build requirements.
+    $reqhtml = "<div class=\"vacancy-requirements\">\n";
+    $reqhtml .= "<h5>Perfil Profesional Requerido</h5>\n";
+    if ($proftext) {
+        $reqhtml .= "<p class=\"lead\">{$proftext}</p>\n";
+    }
+
+    $reqhtml .= "<h5>Requisitos Mínimos</h5>\n";
+    $reqhtml .= "<ul>\n";
+    $reqhtml .= "<li>Título profesional universitario acorde al perfil solicitado</li>\n";
+    if (preg_match('/POSGRADO|ESPECIALIZA|MAESTR|DOCTOR|MAGISTER/i', $proftext)) {
+        $reqhtml .= "<li>Título de posgrado en el área o afines</li>\n";
+    }
+    $reqhtml .= "<li>No tener inhabilidades ni incompatibilidades para contratar con el Estado</li>\n";
+    $reqhtml .= "<li>Disponibilidad para la sede {$locationName} en modalidad {$modalityName}</li>\n";
+    $reqhtml .= "</ul>\n";
+
+    $reqhtml .= "<h5>Documentos a Presentar</h5>\n";
+    $reqhtml .= "<ul>\n";
+    $reqhtml .= "<li>Hoja de vida actualizada</li>\n";
+    $reqhtml .= "<li>Cédula de ciudadanía</li>\n";
+    $reqhtml .= "<li>Títulos académicos (pregrado y posgrado)</li>\n";
+    $reqhtml .= "<li>Tarjeta profesional (si aplica)</li>\n";
+    $reqhtml .= "<li>Certificaciones de experiencia laboral</li>\n";
+    $reqhtml .= "<li>Certificados de antecedentes vigentes</li>\n";
+    $reqhtml .= "</ul>\n";
+    $reqhtml .= "</div>\n";
+    $record->requirements = $reqhtml;
+
+    // Desirable requirements.
+    $deshtml = "<div class=\"vacancy-desirable\">\n";
+    $deshtml .= "<h5>Requisitos Deseables</h5>\n";
+    $deshtml .= "<ul>\n";
+    $deshtml .= "<li>Experiencia docente en educación superior mínimo 1 año</li>\n";
+    $deshtml .= "<li>Publicaciones académicas o investigaciones en el área</li>\n";
+    $deshtml .= "<li>Manejo de herramientas tecnológicas para educación virtual</li>\n";
+    if ($modalitykey === 'DISTANCIA') {
+        $deshtml .= "<li>Experiencia en educación a distancia o virtual</li>\n";
+        $deshtml .= "<li>Certificación en diseño instruccional o tutoría virtual</li>\n";
+    }
+    $deshtml .= "<li>Dominio de un segundo idioma (preferiblemente inglés)</li>\n";
+    $deshtml .= "</ul>\n";
+    $deshtml .= "</div>\n";
+    $record->desirable = $deshtml;
 
     // IOMAD Company ID.
     if ($options['create-structure'] && isset($companymap[$location])) {
@@ -665,13 +948,10 @@ foreach ($allprofiles as $code => $profile) {
     }
 
     // IOMAD Department ID (based on modality).
-    $modality = $profile['modality'] ?? 'PRESENCIAL';
-    $modalitykey = stripos($modality, 'DISTANCIA') !== false ? 'DISTANCIA' : 'PRESENCIAL';
     $deptkey = $location . '_' . $modalitykey;
-
     if ($options['create-structure'] && isset($departmentmap[$deptkey])) {
         $record->departmentid = $departmentmap[$deptkey];
-    } else if ($record->companyid && !empty($profile['modality'])) {
+    } else if ($record->companyid && !empty($modality)) {
         $deptname = $modalitykey === 'DISTANCIA' ? 'A Distancia' : 'Presencial';
         $dept = $DB->get_record('department', ['company' => $record->companyid, 'name' => $deptname]);
         $record->departmentid = $dept ? $dept->id : null;
@@ -685,7 +965,7 @@ foreach ($allprofiles as $code => $profile) {
     $record->closedate = $closedate;
     $record->positions = 1;
 
-    // Status.
+    // Status and publication type.
     $record->status = $options['status'];
     $record->publicationtype = $options['public'] ? 'public' : 'internal';
 
@@ -695,7 +975,7 @@ foreach ($allprofiles as $code => $profile) {
 
     // Dry run?
     if ($dryrun) {
-        echo "$prefix DRY: $code -> $location ($modalitykey)\n";
+        echo "$prefix DRY: $code -> {$locationName} ({$modalityName})\n";
         $importstats[$existing ? 'updated' : 'created']++;
         continue;
     }
@@ -711,7 +991,7 @@ foreach ($allprofiles as $code => $profile) {
             $importstats['updated']++;
         } else {
             $id = $DB->insert_record('local_jobboard_vacancy', $record);
-            if ($verbose) echo "$prefix CREATED: $code (ID: $id) -> $location\n";
+            if ($verbose) echo "$prefix CREATED: $code (ID: $id) -> {$locationName}\n";
             $importstats['created']++;
         }
     } catch (Exception $e) {
