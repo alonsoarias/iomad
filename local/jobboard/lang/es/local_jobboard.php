@@ -2108,8 +2108,10 @@ $string['tour_vacancy_step5_title'] = 'Boton Postularse';
 $string['tour_vacancy_step5_content'] = 'Haga clic en este boton para iniciar su postulacion. Es posible que necesite iniciar sesion primero si aun no lo ha hecho.';
 $string['tour_vacancy_step6_title'] = 'Detalles Adicionales';
 $string['tour_vacancy_step6_content'] = 'Revise detalles adicionales como duracion, informacion salarial, departamento y fechas importantes antes de postularse.';
-$string['tour_vacancy_step7_title'] = 'Listo para Postularse!';
-$string['tour_vacancy_step7_content'] = 'Ahora tiene toda la informacion que necesita. Si esta vacante coincide con su perfil, adelante y postulese!';
+$string['tour_vacancy_step7_title'] = 'Navegación';
+$string['tour_vacancy_step7_content'] = 'Use este botón para volver a la página anterior - ya sea la lista de convocatorias o la lista de vacantes, dependiendo de cómo llegó aquí.';
+$string['tour_vacancy_step8_title'] = '¡Listo para Postularse!';
+$string['tour_vacancy_step8_content'] = 'Ahora tiene toda la información que necesita. Si esta vacante coincide con su perfil, ¡adelante y postúlese!';
 
 // Tour: Detalle de Postulacion.
 $string['tour_application_name'] = 'Tour Detalle de Postulacion';

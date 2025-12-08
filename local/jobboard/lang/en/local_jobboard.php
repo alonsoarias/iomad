@@ -1748,8 +1748,10 @@ $string['tour_vacancy_step5_title'] = 'Apply Button';
 $string['tour_vacancy_step5_content'] = 'Click this button to start your application. You may need to log in first if you haven\'t already.';
 $string['tour_vacancy_step6_title'] = 'Additional Details';
 $string['tour_vacancy_step6_content'] = 'Review additional details like duration, salary information, department, and important dates before applying.';
-$string['tour_vacancy_step7_title'] = 'Ready to Apply!';
-$string['tour_vacancy_step7_content'] = 'You now have all the information you need. If this vacancy matches your profile, go ahead and apply!';
+$string['tour_vacancy_step7_title'] = 'Navigation';
+$string['tour_vacancy_step7_content'] = 'Use this back button to return to the previous page - either the convocatoria list or the vacancies list, depending on how you navigated here.';
+$string['tour_vacancy_step8_title'] = 'Ready to Apply!';
+$string['tour_vacancy_step8_content'] = 'You now have all the information you need. If this vacancy matches your profile, go ahead and apply!';
 
 // Tour: Application Detail.
 $string['tour_application_name'] = 'Application Detail Tour';
