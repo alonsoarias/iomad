@@ -7,6 +7,30 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.33] - 2025-12-08
+
+### Corregido
+- **Datos de perfiles profesionales completados**
+  - Corregidos 167 perfiles sin tipo de contrato (asignado "CATEDRA" por defecto)
+  - Actualizado `perfiles_2026.json` con metadatos de corrección
+
+### Añadido
+- **Informe de análisis exhaustivo del plugin**
+  - Nuevo archivo `INFORME_ANALISIS.md` con inventario completo de componentes
+  - Documentación de 24 tablas de base de datos
+  - Mapeo de 15 User Tours y sus selectores CSS
+  - Análisis de 1,921 cadenas de idioma
+
+### Actualizado
+- **Documentación sincronizada**
+  - Badge de versión en README.md actualizado a 2.0.33
+  - version.php incrementado a 2025120851
+
+### Técnico
+- **version.php**: Incrementado a 2.0.33 (2025120851)
+
+---
+
 ## [2.0.21] - 2025-12-07
 
 ### Mejorado

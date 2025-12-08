@@ -1,2472 +1,2473 @@
 {
-    "generated": "2025-12-08 15:40:28",
-    "source": "PERFILES PROFESORES ISER 2026",
-    "stats": {
-        "total_profiles": 197,
-        "fcas_profiles": 156,
-        "fii_profiles": 41
+  "generated": "2025-12-08 19:45:00",
+  "source": "PERFILES PROFESORES ISER 2026",
+  "stats": {
+    "total_profiles": 197,
+    "fcas_profiles": 156,
+    "fii_profiles": 41,
+    "notes": "Contract types fixed: 167 empty entries set to CATEDRA"
+  },
+  "vacancies": [
+    {
+      "code": "FCAS-01",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
     },
-    "vacancies": [
-        {
-            "code": "FCAS-01",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-02",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-03",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "CATEDRA",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-04",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "CATEDRA",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-05",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "CATEDRA",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-06",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "CATEDRA",
-            "program": "",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-07",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "CATEDRA",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-08",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "CATEDRA",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-09",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "CATEDRA",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-10",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "CATEDRA",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-101",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-102",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-103",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-11",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "CATEDRA",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-118",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS"
-            ]
-        },
-        {
-            "code": "FCAS-119",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA"
-            ]
-        },
-        {
-            "code": "FCAS-12",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " EMPRENDIMIENTO  ADMINISTRACIÓN GENERAL  PLANEACIÓN Y DIRECCIONAMIENTO ESTRATÉGICO.  COORDINACIÓN DE PROGRAMA."
-            ]
-        },
-        {
-            "code": "FCAS-120",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-121",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "LIDERAZGO Y GESTIÓN",
-                "MERCADEO ESTRATÉGICO",
-                "EMPRENDIMIENTO"
-            ]
-        },
-        {
-            "code": "FCAS-122",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I"
-            ]
-        },
-        {
-            "code": "FCAS-128",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-13",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " TÉCNICA, TECNOLOGÍA Y CIENCIA  FORMULACION DE PROYECTOS  EVALUACIÓN DEL DESEMPEÑO. "
-            ]
-        },
-        {
-            "code": "FCAS-132",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-14",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " OPTATIVA I (BIENESTAR SOCIAL LABORAL)  OPTATIVA II (GESTION DEL CONOCIMIENTO)",
-                " ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-140",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS"
-            ]
-        },
-        {
-            "code": "FCAS-141",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-142",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-143",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "INVESTIGACIÓN DE MERCADOS",
-                "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
-                "LOGÍSTICA Y DISTRIBUCIÓN",
-                "MERCADEO ESTRATÉGICO",
-                "LIDERAZGO Y GESTIÓN",
-                "EMPRENDIMIENTO"
-            ]
-        },
-        {
-            "code": "FCAS-144",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "III"
-            ]
-        },
-        {
-            "code": "FCAS-149",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-15",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " CAPACITACIÓN Y ENTRENAMIENTO DE PERSONAL  METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-155",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-156",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL CENTRO TUTORIAL TIBU CÓDIG O TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-16",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " MATEMATICA APLICADA  ESTADISTICA."
-            ]
-        },
-        {
-            "code": "FCAS-164",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS"
-            ]
-        },
-        {
-            "code": "FCAS-165",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-166",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-167",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "INVESTIGACIÓN DE MERCADOS",
-                "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
-                "LOGÍSTICA Y DISTRIBUCIÓN",
-                "MERCADEO ESTRATÉGICO",
-                "LIDERAZGO Y GESTIÓN",
-                "EMPRENDIMIENTO",
-                "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
-            ]
-        },
-        {
-            "code": "FCAS-168",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "III"
-            ]
-        },
-        {
-            "code": "FCAS-17",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " ADMINISTRACION DE LA PRODUCCION  SEGURIDAD Y SALUD EN EL TRABAJO"
-            ]
-        },
-        {
-            "code": "FCAS-173",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-174",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-175",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-18",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " GESTION AMBIENTAL"
-            ]
-        },
-        {
-            "code": "FCAS-181",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-19",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " INGLES I  INGLES II  INGLES III."
-            ]
-        },
-        {
-            "code": "FCAS-190",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS"
-            ]
-        },
-        {
-            "code": "FCAS-191",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-192",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-193",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "INVESTIGACIÓN DE MERCADOS",
-                "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
-                "LOGÍSTICA Y DISTRIBUCIÓN",
-                "MERCADEO ESTRATÉGICO",
-                "LIDERAZGO Y GESTIÓN",
-                "EMPRENDIMIENTO",
-                "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
-            ]
-        },
-        {
-            "code": "FCAS-194",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "III"
-            ]
-        },
-        {
-            "code": "FCAS-199",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-20",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " OFIMATICA  SISTEMAS DE INFORMACION."
-            ]
-        },
-        {
-            "code": "FCAS-200",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-201",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-207",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-208",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL SALAZAR CÓDIG O TIPO DE VINCULACIÓ N PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-21",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " HABILIDADES COMUNICATIVAS  PRODUCCION Y COMPRENSION DE TEXTOS."
-            ]
-        },
-        {
-            "code": "FCAS-216",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS",
-                "ESTADISTICA"
-            ]
-        },
-        {
-            "code": "FCAS-217",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-218",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-219",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "INVESTIGACIÓN DE MERCADOS",
-                "COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE",
-                "COMUNICACIÓN Y PUBLICIDAD",
-                "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
-                "LOGÍSTICA Y DISTRIBUCIÓN",
-                "MERCADEO ESTRATÉGICO",
-                "LIDERAZGO Y GESTIÓN",
-                "EMPRENDIMIENTO",
-                "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
-            ]
-        },
-        {
-            "code": "FCAS-22",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " SOCIEDAD Y RURALIDAD  CIUDADANIA Y CONVIVENCIA."
-            ]
-        },
-        {
-            "code": "FCAS-220",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "III"
-            ]
-        },
-        {
-            "code": "FCAS-23",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL PSICÓLOGO O",
-            "profile": "",
-            "courses": [
-                " HABILIDADES INTRA E INTERPERSONALES"
-            ]
-        },
-        {
-            "code": "FCAS-235",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-24",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
-            "profile": "",
-            "courses": [
-                " TRABAJO DE GRADO. CÓDIGO TIPO DE VINCULACIÓN PROGRAMA ACADÉMICO PERFIL PROFESIONAL ESPECÍFICO POSIBLES CURSOS PARA ORIENTAR"
-            ]
-        },
-        {
-            "code": "FCAS-243",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS"
-            ]
-        },
-        {
-            "code": "FCAS-244",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-245",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-246",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "INVESTIGACIÓN DE MERCADOS",
-                "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
-                "LOGÍSTICA Y DISTRIBUCIÓN",
-                "MERCADEO ESTRATÉGICO",
-                "LIDERAZGO Y GESTIÓN",
-                "EMPRENDIMIENTO",
-                "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
-            ]
-        },
-        {
-            "code": "FCAS-247",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "III"
-            ]
-        },
-        {
-            "code": "FCAS-25",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO TECNICO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-252",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-253",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-254",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-260",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-261",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL CENTRO TUTORIAL SANTA ROSA DEL SUR DE BOLÍVAR CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-270",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS"
-            ]
-        },
-        {
-            "code": "FCAS-271",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-272",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-273",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "INVESTIGACIÓN DE MERCADOS",
-                "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
-                "LOGÍSTICA Y DISTRIBUCIÓN",
-                "MERCADEO ESTRATÉGICO",
-                "LIDERAZGO Y GESTIÓN",
-                "EMPRENDIMIENTO",
-                "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
-            ]
-        },
-        {
-            "code": "FCAS-274",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "III"
-            ]
-        },
-        {
-            "code": "FCAS-279",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-280",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-281",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-285",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-293",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS"
-            ]
-        },
-        {
-            "code": "FCAS-294",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-295",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "INVESTIGACIÓN DE MERCADOS",
-                "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
-                "LOGÍSTICA Y DISTRIBUCIÓN",
-                "MERCADEO ESTRATÉGICO",
-                "LIDERAZGO Y GESTIÓN",
-                "EMPRENDIMIENTO",
-                "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
-            ]
-        },
-        {
-            "code": "FCAS-296",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "III"
-            ]
-        },
-        {
-            "code": "FCAS-301",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-302",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-303",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-309",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-310",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL CIMITARRA CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-316",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL FORMULACIÓN DE PROYECTOS SARAVENA CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-326",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL SISTEMAS DE INFORMACION Y GESTION DOCUMENTAL CENTRO TUTORIAL FUNDACION CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-327",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS",
-                "ESTADISTICA AFINES MERCADEO"
-            ]
-        },
-        {
-            "code": "FCAS-328",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-329",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-330",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE.",
-                "COMUNICACIÓN Y PUBLICIDAD",
-                "INVESTIGACIÓN DE MERCADOS",
-                "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
-                "LOGÍSTICA Y DISTRIBUCIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-331",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "III"
-            ]
-        },
-        {
-            "code": "FCAS-338",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CENTRO TUTORIAL PUEBLO BELLO CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-339",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS",
-                "ESTADISTICA"
-            ]
-        },
-        {
-            "code": "FCAS-340",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-341",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-342",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE.",
-                "COMUNICACIÓN Y PUBLICIDAD"
-            ]
-        },
-        {
-            "code": "FCAS-343",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "INGLES II"
-            ]
-        },
-        {
-            "code": "FCAS-347",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO HABILIDADES INTRA E INTERPERSONALES CENTRO TUTORIAL TAME CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-348",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS",
-                "ESTADISTICA"
-            ]
-        },
-        {
-            "code": "FCAS-349",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TECNICA TECNOLOGIA Y CIENCIA"
-            ]
-        },
-        {
-            "code": "FCAS-350",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-351",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO"
-            ]
-        },
-        {
-            "code": "FCAS-352",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I"
-            ]
-        },
-        {
-            "code": "FCAS-40",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-41",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-42",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-43",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS MATEMÀTICOS, ESTADÌSTICA"
-            ]
-        },
-        {
-            "code": "FCAS-44",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "PRODUCCION, COMPRENSION DE TEXTOS",
-                "COMPETENCIAS COMUNICATIVAS",
-                "MEDIOS DE COMUNICACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-45",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "INGLES II",
-                "INGLES III."
-            ]
-        },
-        {
-            "code": "FCAS-46",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "GESTION AMBIENTAL",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA"
-            ]
-        },
-        {
-            "code": "FCAS-47",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE PSICOLOGÍA",
-                "INCLUSIÓN SOCIAL"
-            ]
-        },
-        {
-            "code": "FCAS-48",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACION",
-                "DIRECCIONAMIENTO ESTRATÉGICO"
-            ]
-        },
-        {
-            "code": "FCAS-49",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-50",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "DESARROLLO HUMANO Y TERRITORIO",
-                "METODOLOGÌA Y MODELOS DE INTERVENCIÒN CON COMUNIDADES",
-                "SISTEMATIZACIÓN DE EXPERIENCIAS"
-            ]
-        },
-        {
-            "code": "FCAS-51",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "METODOLOGÍA DE LA INVESTIGACIÓN",
-                "METODOLOGÍA DE LA INVESTIGACIÓN",
-                "INVESTIGACIÒN EN CIENCIAS SOCIALES"
-            ]
-        },
-        {
-            "code": "FCAS-52",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "PRÁCTICA II",
-                "PRÁCTICA COMUNITARIA",
-                "DERECHOS HUMANOS Y POLÍTICAS PÚBLICAS"
-            ]
-        },
-        {
-            "code": "FCAS-53",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "GESTIÓN COMUNITARIA",
-                "ETICA Y ACCIÓN COMUNITARIA",
-                "COMUNIDAD"
-            ]
-        },
-        {
-            "code": "FCAS-54",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "ELECTIVA ÁREA DE DEPORTES"
-            ]
-        },
-        {
-            "code": "FCAS-55",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
-            "profile": "",
-            "courses": [
-                "ELECTIVA ÁREA DE CULTURA Y SOCIO HUMANÍSTICA PROGRAMA MODALIDAD A DISTANCIA PAMPLONA CÓDIGO TIPO DE VINCULACIÓN PERFIL PROFESIONAL ESPECÍFICO PROGRAMA ACADÉMICO POSIBLES CURSOS PARA ORIENTAR"
-            ]
-        },
-        {
-            "code": "FCAS-56",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-63",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-69",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-70",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-71",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-72",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS",
-                "ESTADISTICA"
-            ]
-        },
-        {
-            "code": "FCAS-73",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-74",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-75",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE.",
-                "COMUNICACIÓN Y PUBLICIDAD",
-                "MERCADEO ESTRATÉGICO",
-                "EMPRENDIMIENTO",
-                "LIDERAZGO Y GESTIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-76",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I"
-            ]
-        },
-        {
-            "code": "FCAS-77",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "COMPETENCIAS COMUNICATIVAS",
-                "PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS",
-                "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
-            ]
-        },
-        {
-            "code": "FCAS-78",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-79",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-80",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-81",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-82",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-83",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-84",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-90",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-91",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
-            "profile": "",
-            "courses": []
-        },
-        {
-            "code": "FCAS-92",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MATEMATICAS"
-            ]
-        },
-        {
-            "code": "FCAS-93",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "METODOLOGÍA DE LA INVESTIGACIÓN"
-            ]
-        },
-        {
-            "code": "FCAS-94",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ECONOMIA"
-            ]
-        },
-        {
-            "code": "FCAS-95",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "MERCADEO",
-                "INVESTIGACIÓN DE MERCADOS",
-                "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
-                "LOGÍSTICA Y DISTRIBUCIÓN",
-                "MERCADEO ESTRATÉGICO"
-            ]
-        },
-        {
-            "code": "FCAS-96",
-            "faculty": "FCAS",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "III"
-            ]
-        },
-        {
-            "code": "FII-01",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
-            "profile": "INGENIERO DE ALIMENTOS\/ INGENIERO AGROINDUSTRIAL\/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
-            "courses": [
-                "INTRODUCCION A LA AGROINDUSTRIA",
-                "PROCESOS AGROALIMENTARIOS I",
-                "PROCESOS AGROALIMENTARIOS II"
-            ]
-        },
-        {
-            "code": "FII-02",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
-            "profile": "INGENIERO DE ALIMENTOS\/ INGENIERO AGROINDUSTRIAL\/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
-            "courses": [
-                "GESTION AGROINDUSTRIAL",
-                "PROYECTOS PRODUCTIVOS",
-                "MATERIAS PRIMAS Y POSCOSECHA."
-            ]
-        },
-        {
-            "code": "FII-03",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
-            "profile": "",
-            "courses": [
-                "LÓGICA COMPUTACIONAL",
-                "PROGRAMACIÓN ESTRUCTURADA",
-                "METODOLOGÍAS PARA EL DESARROLLO DE SOFWARE"
-            ]
-        },
-        {
-            "code": "FII-04",
-            "faculty": "FII",
-            "modality": "A DISTANCIA",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
-            "profile": "LICENCIADO EN FÍSICA \/ FISICO O AREAS AFINES",
-            "courses": [
-                "FISICA"
-            ]
-        },
-        {
-            "code": "FII-05",
-            "faculty": "FII",
-            "modality": "A DISTANCIA",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "QUIMICA",
-                "FISICOQUIMICA AGROINDUSTRIAL",
-                "PROCESOS DE TRANSFORMACION FISICOQUIMICA"
-            ]
-        },
-        {
-            "code": "FII-06",
-            "faculty": "FII",
-            "modality": "A DISTANCIA",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES MICROBIOLOGO",
-            "profile": "",
-            "courses": [
-                "MICROBIOLOGIA",
-                "INOCUIDAD EN LOS PROCESOS AGROINDUSTRIALES"
-            ]
-        },
-        {
-            "code": "FII-07",
-            "faculty": "FII",
-            "modality": "A DISTANCIA",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "INGLES II",
-                "INGLES III"
-            ]
-        },
-        {
-            "code": "FII-08",
-            "faculty": "FII",
-            "modality": "A DISTANCIA",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
-            "profile": "INGENIERO DE ALIMENTOS\/ INGENIERO AGROINDUSTRIAL\/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
-            "courses": [
-                "OPTATIVA I DE PROFUNDIZACIÓN AGROINDUSTRIA ALIMENTARIA (PRODUCTOS DE ORIGEN PECUARIO) Y OPTATIVA II AGROINDUSTRIA ALIMENTARIA (PRODUCTOS DE ORIGEN AGRÍCOLA)."
-            ]
-        },
-        {
-            "code": "FII-09",
-            "faculty": "FII",
-            "modality": "A DISTANCIA",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
-            "profile": "INGENIERO INDUSTRIAL",
-            "courses": [
-                "AGROINDUSTRIA NO ALIMENTARIA I (SUBPRODUCTOS DE ORIGEN PECUARIO), AGROINDUSTRIA NO ALIMENTARIA II (SUBPRODUCTOS DE ORIGEN AGRÍCOLA)"
-            ]
-        },
-        {
-            "code": "FII-10",
-            "faculty": "FII",
-            "modality": "A DISTANCIA",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
-            "profile": "INGENIERO DE PRODUCCIÓN AGROINDUSTRIAL",
-            "courses": [
-                "PROCESAMIENTO DE PRODUCTOS FORESTALES Y PROCESAMIENTO DE PRODUCTOS PARA ALIMENTACIÓN ANIMAL."
-            ]
-        },
-        {
-            "code": "FII-11",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "RIEGOS Y DRENAJES",
-                "MAQUINARIA Y TOPOGRÁFIA",
-                "EXTENSIÓN RURAL Y POLITICA AGROPECUARIA"
-            ]
-        },
-        {
-            "code": "FII-12",
-            "faculty": "FII",
-            "modality": "A DISTANCIA",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
-            "profile": "INGENIERO DE ALIMENTOS- INGENIERO QUÍMICO O PROFESIONES AFINES",
-            "courses": [
-                "FISICOQUÍMICA AGROINDUSTRIAL Y PROCESOS DE TRANSFORMACIÓN FISICOQUÍMICA."
-            ]
-        },
-        {
-            "code": "FII-13",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNICA PROFESIONAL EN PROCESOS DE LA SEGURIDAD Y SALUD EN EL TRABAJO",
-            "profile": "PROFESIONAL EN SEGURIDAD Y SALUD EN EL TRABAJO O PROFESIONAL EN TODAS LAS ÁREAS CON POSGRADO EN SEGURIDAD Y SALUD EN EL TRABAJO",
-            "courses": [
-                "CIENCIAS BÁSICAS ENFOCADAS A LA SST",
-                "GENERALIDADES DEL SISTEMA DE GESTIÓN EN SST, MEDICINA DEL TRABAJO",
-                "PRÁCTICA EN SST"
-            ]
-        },
-        {
-            "code": "FII-14",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN GESTION INDUSTRIAL",
-            "profile": "INGENIERO INDUSTRIAL",
-            "courses": [
-                "ERGONOMÍA",
-                "GESTIÓN DE LA SEGURIDAD Y SALUD EN EL TRABAJO",
-                "GESTIÓN DEL TALENTO HUMANO",
-                "TRABAJOS DE GRADO"
-            ]
-        },
-        {
-            "code": "FII-15",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN GESTION INDUSTRIAL",
-            "profile": "INGENIERO INDUSTRIAL",
-            "courses": [
-                "PROCESOS INDUSTRIALES",
-                "DISTRIBUCIÓN DE PLANTAS",
-                "OPTATIVA I",
-                "OPTATIVA II",
-                "FORMULACIÓN DE PROYECTOS",
-                "COSTOS Y PRESUPUESTOS",
-                "TRABAJOS DE GRADO"
-            ]
-        },
-        {
-            "code": "FII-16",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
-            "profile": "INGENIERO CIVIL",
-            "courses": [
-                "COSTOS, PRESUPUESTO Y PROGRAMACIÓN DE OBRA",
-                "OPTATIVA DE PROFUNDIZACION MATERIALES Y EQUIPO",
-                "MATERIALES DE CONSTRUCCIÓN",
-                "TRABAJOS DE GRADO"
-            ]
-        },
-        {
-            "code": "FII-17",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
-            "profile": "INGENIERO CIVIL",
-            "courses": [
-                "TRAZADO DE VIAS",
-                "OPTATIVA I (CIMENTACIONES Y OBRAS DE CONTENCIÓN",
-                "OPTATIVA II (CONTRATACION ESTATAL",
-                "TRABAJOS DE GRADO."
-            ]
-        },
-        {
-            "code": "FII-18",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "OCASIONAL TIEMPO COMPLETO",
-            "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES ARQUITECTO",
-            "profile": "",
-            "courses": [
-                "DIBUJO TECNICO DIGITAL",
-                "METODOLOGIA DE LA INVESTIGACION",
-                "TÉCNICA, TECNOLOGÍA Y CIENCIA",
-                "TRABAJOS DE GRADO."
-            ]
-        },
-        {
-            "code": "FII-19",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "ALGEBRA Y TRIGONOMETRIA",
-                "MATEMATICAS",
-                "MATEMATICA APLICADA",
-                "CALCULOS"
-            ]
-        },
-        {
-            "code": "FII-20",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "ESTADISTICA",
-                "BIOESTADISTICA",
-                "ESTADISTICA Y PROBABILIDADES."
-            ]
-        },
-        {
-            "code": "FII-21",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "FISICA",
-                "FISICA MECANICA",
-                "LABORATORIO DE FISICA MECANICA"
-            ]
-        },
-        {
-            "code": "FII-22",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN PROTECCIÓN Y RECUPERACIÓN DE ECOSISTEMA FORESTALES",
-            "profile": "",
-            "courses": [
-                "BIOLOGIA GENERAL",
-                "BIOLOGIA APLICADA."
-            ]
-        },
-        {
-            "code": "FII-23",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "QUIMICA",
-                "QUIMICA GENERAL",
-                "QUIMICA APLICADA",
-                "BIOQUIMICA APLICADA",
-                "FISICOQUIMICA AGROINDUSTRIAL",
-                "PROCESOS DE TRANSFORMACION FISICOQUIMICA."
-            ]
-        },
-        {
-            "code": "FII-24",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "TECNOLOGIA EN PRODUCCION AGROPECUARIA MICROBIOLOGO",
-            "profile": "",
-            "courses": [
-                "MICROBIOLOGIA",
-                "INOCUIDAD EN LOS PROCESOS AGROINDUSTRIALES"
-            ]
-        },
-        {
-            "code": "FII-25",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "HABILIDADES COMUNICATIVAS",
-                "PRODUCCION Y COMPRENSION DE TEXTOS",
-                "COMPETENCIAS COMUNICATIVAS"
-            ]
-        },
-        {
-            "code": "FII-26",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "CONTABILIDAD",
-                "COSTOS Y PRESUPUESTO",
-                "CONTABILIDAD FINANCIERA",
-                "FUNDAMENTOS DE ADMINISTRACIÓN",
-                "ECOSISTEMA ECONÓMICO AGROINDUSTRIAL",
-                "ADMINISTRACIÓN GENERAL"
-            ]
-        },
-        {
-            "code": "FII-27",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "INGLES I",
-                "INGLES II",
-                "INGLES III",
-                "INGLES TECNICO I, II y III."
-            ]
-        },
-        {
-            "code": "FII-28",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "SOCIEDAD Y RURALIDAD",
-                "CIUDADANIA Y CONVIVENCIA",
-                "ELECTIVAS DE SOCIOHUMANISTICA"
-            ]
-        },
-        {
-            "code": "FII-29",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "AMBIENTAL",
-                "GESTION AMBIENTAL",
-                "SANEAMIENTO Y LEGISLACION AMBIENTAL"
-            ]
-        },
-        {
-            "code": "FII-30",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "HABILIDADES INTRA E INTERPERSONALES"
-            ]
-        },
-        {
-            "code": "FII-31",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "FUNDAMENTOS DE ADMINISTRACION",
-                "TECNICAS Y ESTRATEGIAS DE INVESTIGACION",
-                "METODOLOGIA DE LA INVESTIGACION",
-                "TECNICA TECNOLOGIA Y CIENCIA"
-            ]
-        },
-        {
-            "code": "FII-32",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "LEGISLACION LABORAL."
-            ]
-        },
-        {
-            "code": "FII-33",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "ELECTRICIDAD Y ELECTRÓNICA APLICADA, COMPUTACIÓN FISICA, HERRAMIENTAS TECNOLOGICAS Y PROGRAMACION APLICADA",
-                "TECNICA TECNOLOGIA Y CIENCIA"
-            ]
-        },
-        {
-            "code": "FII-34",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "INFORMATICA, SERVIDORES, PROGRAMACION ORIENTADA A OBJETOS, DISEÑOS PARA LA WEB",
-                "SISTEMAS OPERATIVOS",
-                "SISTEMAS DE INFORMACIÓN DE SST"
-            ]
-        },
-        {
-            "code": "FII-35",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "SANIDAD VEGETAL",
-                "ANATOMIA Y FISIOLOGIA VEGETAL",
-                "EXTENSIÓN RURAL Y POLITICA AGROPECUARIA"
-            ]
-        },
-        {
-            "code": "FII-36",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "SANIDAD ANIMAL",
-                "FISIOLOGIA DE LA REPRODUCCIÓN",
-                "INSEMINACIÓN ARTIFICIAL",
-                "TRANSFERENCIA DE EMBRIONES"
-            ]
-        },
-        {
-            "code": "FII-37",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "CONSERVACION DE FORRAJES",
-                "NUTRICION",
-                "PASTOS Y FORRAJES",
-                "PRODUCIÓN",
-                "PROCESAMIENTO DE PRODUCTOS PARA ALIMENTACION ANIMAL"
-            ]
-        },
-        {
-            "code": "FII-38",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "ACUEDUCTOS Y ALCANTARILLADOS",
-                "INSTALACIONES HIDROSANITARIAS PARA EDIFICACIONES",
-                "LABORATORIO DE PAVIMENTOS, TOPOGRAFIA",
-                "ALTIMETRIA, TOPOGRAFIA",
-                "PLANIMETRIA, MECANICA DE FLUIDOS E HIDRAULICA",
-                "GEOLOGIA APLICADA",
-                "DISEÑO DE MEZCLAS",
-                "MECANICA DE MATERIALES",
-                "MECÁNICA DE SUELOS",
-                "RESIDENCIA Y SUPERVISIÓN TECNICA DE OBRAS",
-                "CONSTRUCIONES SISMORRESISTENTES",
-                "TRABAJOS DE GRADO ."
-            ]
-        },
-        {
-            "code": "FII-39",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "SEGURIDAD Y SALUD EN EL TRABAJO",
-                "SALUD PÚBLICA",
-                "SEGURIDAD INDUSTRIAL",
-                "HIGIENE INDUSTRIAL",
-                "OPTATIVA. SEGURIDAD VIAL",
-                "OPTATIVA. BIOSEGURIDAD",
-                "TRABAJO SEGURO EN ALTURAS",
-                "FUNDAMENTOS EN EMERGENCIAS Y DESASTRES",
-                "GESTION DE LA SEGURIDAD Y SALUD EN EL TRABAJO"
-            ]
-        },
-        {
-            "code": "FII-40",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "OPTATIVA I DE PROFUNDIZACIÓN AGROINDUSTRIA ALIMENTARIA (PRODUCTOS DE ORIGEN PECUARIO)",
-                "OPTATIVA II AGROINDUSTRIA ALIMENTARIA (PRODUCTOS DE ORIGEN AGRÍCOLA).",
-                "CALIDAD E INOCUIDAD EN LA INDUSTRIA AGROALIMENTARIA"
-            ]
-        },
-        {
-            "code": "FII-41",
-            "faculty": "FII",
-            "modality": "PRESENCIAL",
-            "location": "PAMPLONA",
-            "contracttype": "",
-            "program": "",
-            "profile": "",
-            "courses": [
-                "PLANEACIÓN Y CONTROL DE LA PRODUCCIÓN",
-                "RESPONSABILIDAD SOCIAL",
-                "PRODUCTIVIDAD Y COMPETITIVIDAD",
-                "LOGÍSTICA Y DISTRIBUCIÓN. GESTION INDUSTRIAL",
-                "PROCESOS INDUSTRIALES",
-                "SIMULACIÓN DE PROCESOS",
-                "AGROINDUSTRIA NO ALIMENTARIA I Y II"
-            ]
-        }
-    ]
+    {
+      "code": "FCAS-02",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-03",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-04",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-05",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-06",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-07",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-08",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-09",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-10",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-101",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-102",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-103",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-11",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-118",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS"
+      ]
+    },
+    {
+      "code": "FCAS-119",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA"
+      ]
+    },
+    {
+      "code": "FCAS-12",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " EMPRENDIMIENTO  ADMINISTRACIÓN GENERAL  PLANEACIÓN Y DIRECCIONAMIENTO ESTRATÉGICO.  COORDINACIÓN DE PROGRAMA."
+      ]
+    },
+    {
+      "code": "FCAS-120",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-121",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "LIDERAZGO Y GESTIÓN",
+        "MERCADEO ESTRATÉGICO",
+        "EMPRENDIMIENTO"
+      ]
+    },
+    {
+      "code": "FCAS-122",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I"
+      ]
+    },
+    {
+      "code": "FCAS-128",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-13",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " TÉCNICA, TECNOLOGÍA Y CIENCIA  FORMULACION DE PROYECTOS  EVALUACIÓN DEL DESEMPEÑO. "
+      ]
+    },
+    {
+      "code": "FCAS-132",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-14",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " OPTATIVA I (BIENESTAR SOCIAL LABORAL)  OPTATIVA II (GESTION DEL CONOCIMIENTO)",
+        " ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-140",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS"
+      ]
+    },
+    {
+      "code": "FCAS-141",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-142",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-143",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "INVESTIGACIÓN DE MERCADOS",
+        "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
+        "LOGÍSTICA Y DISTRIBUCIÓN",
+        "MERCADEO ESTRATÉGICO",
+        "LIDERAZGO Y GESTIÓN",
+        "EMPRENDIMIENTO"
+      ]
+    },
+    {
+      "code": "FCAS-144",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "III"
+      ]
+    },
+    {
+      "code": "FCAS-149",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-15",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " CAPACITACIÓN Y ENTRENAMIENTO DE PERSONAL  METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-155",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-156",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL CENTRO TUTORIAL TIBU CÓDIG O TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-16",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " MATEMATICA APLICADA  ESTADISTICA."
+      ]
+    },
+    {
+      "code": "FCAS-164",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS"
+      ]
+    },
+    {
+      "code": "FCAS-165",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-166",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-167",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "INVESTIGACIÓN DE MERCADOS",
+        "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
+        "LOGÍSTICA Y DISTRIBUCIÓN",
+        "MERCADEO ESTRATÉGICO",
+        "LIDERAZGO Y GESTIÓN",
+        "EMPRENDIMIENTO",
+        "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
+      ]
+    },
+    {
+      "code": "FCAS-168",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "III"
+      ]
+    },
+    {
+      "code": "FCAS-17",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " ADMINISTRACION DE LA PRODUCCION  SEGURIDAD Y SALUD EN EL TRABAJO"
+      ]
+    },
+    {
+      "code": "FCAS-173",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-174",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-175",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-18",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " GESTION AMBIENTAL"
+      ]
+    },
+    {
+      "code": "FCAS-181",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-19",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " INGLES I  INGLES II  INGLES III."
+      ]
+    },
+    {
+      "code": "FCAS-190",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS"
+      ]
+    },
+    {
+      "code": "FCAS-191",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-192",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-193",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "INVESTIGACIÓN DE MERCADOS",
+        "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
+        "LOGÍSTICA Y DISTRIBUCIÓN",
+        "MERCADEO ESTRATÉGICO",
+        "LIDERAZGO Y GESTIÓN",
+        "EMPRENDIMIENTO",
+        "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
+      ]
+    },
+    {
+      "code": "FCAS-194",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "III"
+      ]
+    },
+    {
+      "code": "FCAS-199",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-20",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " OFIMATICA  SISTEMAS DE INFORMACION."
+      ]
+    },
+    {
+      "code": "FCAS-200",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-201",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-207",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-208",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL SALAZAR CÓDIG O TIPO DE VINCULACIÓ N PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-21",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " HABILIDADES COMUNICATIVAS  PRODUCCION Y COMPRENSION DE TEXTOS."
+      ]
+    },
+    {
+      "code": "FCAS-216",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS",
+        "ESTADISTICA"
+      ]
+    },
+    {
+      "code": "FCAS-217",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-218",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-219",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "INVESTIGACIÓN DE MERCADOS",
+        "COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE",
+        "COMUNICACIÓN Y PUBLICIDAD",
+        "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
+        "LOGÍSTICA Y DISTRIBUCIÓN",
+        "MERCADEO ESTRATÉGICO",
+        "LIDERAZGO Y GESTIÓN",
+        "EMPRENDIMIENTO",
+        "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
+      ]
+    },
+    {
+      "code": "FCAS-22",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " SOCIEDAD Y RURALIDAD  CIUDADANIA Y CONVIVENCIA."
+      ]
+    },
+    {
+      "code": "FCAS-220",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "III"
+      ]
+    },
+    {
+      "code": "FCAS-23",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL PSICÓLOGO O",
+      "profile": "",
+      "courses": [
+        " HABILIDADES INTRA E INTERPERSONALES"
+      ]
+    },
+    {
+      "code": "FCAS-235",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-24",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL",
+      "profile": "",
+      "courses": [
+        " TRABAJO DE GRADO. CÓDIGO TIPO DE VINCULACIÓN PROGRAMA ACADÉMICO PERFIL PROFESIONAL ESPECÍFICO POSIBLES CURSOS PARA ORIENTAR"
+      ]
+    },
+    {
+      "code": "FCAS-243",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS"
+      ]
+    },
+    {
+      "code": "FCAS-244",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-245",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-246",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "INVESTIGACIÓN DE MERCADOS",
+        "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
+        "LOGÍSTICA Y DISTRIBUCIÓN",
+        "MERCADEO ESTRATÉGICO",
+        "LIDERAZGO Y GESTIÓN",
+        "EMPRENDIMIENTO",
+        "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
+      ]
+    },
+    {
+      "code": "FCAS-247",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "III"
+      ]
+    },
+    {
+      "code": "FCAS-25",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO TECNICO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-252",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-253",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-254",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-260",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-261",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL CENTRO TUTORIAL SANTA ROSA DEL SUR DE BOLÍVAR CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-270",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS"
+      ]
+    },
+    {
+      "code": "FCAS-271",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-272",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-273",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "INVESTIGACIÓN DE MERCADOS",
+        "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
+        "LOGÍSTICA Y DISTRIBUCIÓN",
+        "MERCADEO ESTRATÉGICO",
+        "LIDERAZGO Y GESTIÓN",
+        "EMPRENDIMIENTO",
+        "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
+      ]
+    },
+    {
+      "code": "FCAS-274",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "III"
+      ]
+    },
+    {
+      "code": "FCAS-279",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-280",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-281",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-285",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-293",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS"
+      ]
+    },
+    {
+      "code": "FCAS-294",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-295",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "INVESTIGACIÓN DE MERCADOS",
+        "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
+        "LOGÍSTICA Y DISTRIBUCIÓN",
+        "MERCADEO ESTRATÉGICO",
+        "LIDERAZGO Y GESTIÓN",
+        "EMPRENDIMIENTO",
+        "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
+      ]
+    },
+    {
+      "code": "FCAS-296",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "III"
+      ]
+    },
+    {
+      "code": "FCAS-301",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-302",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-303",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-309",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-310",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL CIMITARRA CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-316",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL FORMULACIÓN DE PROYECTOS SARAVENA CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-326",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN EMPRESARIAL SISTEMAS DE INFORMACION Y GESTION DOCUMENTAL CENTRO TUTORIAL FUNDACION CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-327",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS",
+        "ESTADISTICA AFINES MERCADEO"
+      ]
+    },
+    {
+      "code": "FCAS-328",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-329",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-330",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE.",
+        "COMUNICACIÓN Y PUBLICIDAD",
+        "INVESTIGACIÓN DE MERCADOS",
+        "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
+        "LOGÍSTICA Y DISTRIBUCIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-331",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "III"
+      ]
+    },
+    {
+      "code": "FCAS-338",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO GESTION AMBIENTAL CENTRO TUTORIAL PUEBLO BELLO CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-339",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS",
+        "ESTADISTICA"
+      ]
+    },
+    {
+      "code": "FCAS-340",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-341",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-342",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE.",
+        "COMUNICACIÓN Y PUBLICIDAD"
+      ]
+    },
+    {
+      "code": "FCAS-343",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "INGLES II"
+      ]
+    },
+    {
+      "code": "FCAS-347",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO HABILIDADES INTRA E INTERPERSONALES CENTRO TUTORIAL TAME CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-348",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS",
+        "ESTADISTICA"
+      ]
+    },
+    {
+      "code": "FCAS-349",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TECNICA TECNOLOGIA Y CIENCIA"
+      ]
+    },
+    {
+      "code": "FCAS-350",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-351",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO"
+      ]
+    },
+    {
+      "code": "FCAS-352",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I"
+      ]
+    },
+    {
+      "code": "FCAS-40",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-41",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-42",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-43",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS MATEMÀTICOS, ESTADÌSTICA"
+      ]
+    },
+    {
+      "code": "FCAS-44",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "PRODUCCION, COMPRENSION DE TEXTOS",
+        "COMPETENCIAS COMUNICATIVAS",
+        "MEDIOS DE COMUNICACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-45",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "INGLES II",
+        "INGLES III."
+      ]
+    },
+    {
+      "code": "FCAS-46",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "GESTION AMBIENTAL",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA"
+      ]
+    },
+    {
+      "code": "FCAS-47",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE PSICOLOGÍA",
+        "INCLUSIÓN SOCIAL"
+      ]
+    },
+    {
+      "code": "FCAS-48",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACION",
+        "DIRECCIONAMIENTO ESTRATÉGICO"
+      ]
+    },
+    {
+      "code": "FCAS-49",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-50",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "DESARROLLO HUMANO Y TERRITORIO",
+        "METODOLOGÌA Y MODELOS DE INTERVENCIÒN CON COMUNIDADES",
+        "SISTEMATIZACIÓN DE EXPERIENCIAS"
+      ]
+    },
+    {
+      "code": "FCAS-51",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "METODOLOGÍA DE LA INVESTIGACIÓN",
+        "METODOLOGÍA DE LA INVESTIGACIÓN",
+        "INVESTIGACIÒN EN CIENCIAS SOCIALES"
+      ]
+    },
+    {
+      "code": "FCAS-52",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "PRÁCTICA II",
+        "PRÁCTICA COMUNITARIA",
+        "DERECHOS HUMANOS Y POLÍTICAS PÚBLICAS"
+      ]
+    },
+    {
+      "code": "FCAS-53",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "GESTIÓN COMUNITARIA",
+        "ETICA Y ACCIÓN COMUNITARIA",
+        "COMUNIDAD"
+      ]
+    },
+    {
+      "code": "FCAS-54",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "ELECTIVA ÁREA DE DEPORTES"
+      ]
+    },
+    {
+      "code": "FCAS-55",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA",
+      "profile": "",
+      "courses": [
+        "ELECTIVA ÁREA DE CULTURA Y SOCIO HUMANÍSTICA PROGRAMA MODALIDAD A DISTANCIA PAMPLONA CÓDIGO TIPO DE VINCULACIÓN PERFIL PROFESIONAL ESPECÍFICO PROGRAMA ACADÉMICO POSIBLES CURSOS PARA ORIENTAR"
+      ]
+    },
+    {
+      "code": "FCAS-56",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-63",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-69",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-70",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-71",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-72",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS",
+        "ESTADISTICA"
+      ]
+    },
+    {
+      "code": "FCAS-73",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-74",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-75",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "COMPORTAMIENTO DEL CONSUMIDOR Y SERVICIO AL CLIENTE.",
+        "COMUNICACIÓN Y PUBLICIDAD",
+        "MERCADEO ESTRATÉGICO",
+        "EMPRENDIMIENTO",
+        "LIDERAZGO Y GESTIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-76",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I"
+      ]
+    },
+    {
+      "code": "FCAS-77",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "COMPETENCIAS COMUNICATIVAS",
+        "PRODUCCIÓN Y COMPRENSIÓN DE TEXTOS",
+        "OPTATIVA I (PROMOCIÓN DIGITAL DE PRODUCTOS, BIENES Y SERVICIOS.)"
+      ]
+    },
+    {
+      "code": "FCAS-78",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-79",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-80",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-81",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-82",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-83",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-84",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-90",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SOCIEDAD Y RURALIDAD FUNDAMENTOS DE",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-91",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN COMUNITARIA SUJETO Y FAMILIA GRUPOS SOCIALES DESARROLLO HUMANO Y TERRITORIO METODOLOGÍA DE LA INVESTIGACIÓN COMUNIDAD INCLUSIÓN SOCIAL CÓDIGO TIPO DE VINCULACIÓN PERFIL",
+      "profile": "",
+      "courses": []
+    },
+    {
+      "code": "FCAS-92",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MATEMATICAS"
+      ]
+    },
+    {
+      "code": "FCAS-93",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "METODOLOGÍA DE LA INVESTIGACIÓN"
+      ]
+    },
+    {
+      "code": "FCAS-94",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ECONOMIA"
+      ]
+    },
+    {
+      "code": "FCAS-95",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "MERCADEO",
+        "INVESTIGACIÓN DE MERCADOS",
+        "COMERCIALIZACIÓN DE BIENES Y SERVICIOS",
+        "LOGÍSTICA Y DISTRIBUCIÓN",
+        "MERCADEO ESTRATÉGICO"
+      ]
+    },
+    {
+      "code": "FCAS-96",
+      "faculty": "FCAS",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN GESTIÓN DE MERCADEO",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "III"
+      ]
+    },
+    {
+      "code": "FII-01",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO DE ALIMENTOS/ INGENIERO AGROINDUSTRIAL/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+      "courses": [
+        "INTRODUCCION A LA AGROINDUSTRIA",
+        "PROCESOS AGROALIMENTARIOS I",
+        "PROCESOS AGROALIMENTARIOS II"
+      ]
+    },
+    {
+      "code": "FII-02",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO DE ALIMENTOS/ INGENIERO AGROINDUSTRIAL/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+      "courses": [
+        "GESTION AGROINDUSTRIAL",
+        "PROYECTOS PRODUCTIVOS",
+        "MATERIAS PRIMAS Y POSCOSECHA."
+      ]
+    },
+    {
+      "code": "FII-03",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN GESTIÓN DE REDES Y SISTEMAS TELEINFORMÁTICOS",
+      "profile": "",
+      "courses": [
+        "LÓGICA COMPUTACIONAL",
+        "PROGRAMACIÓN ESTRUCTURADA",
+        "METODOLOGÍAS PARA EL DESARROLLO DE SOFWARE"
+      ]
+    },
+    {
+      "code": "FII-04",
+      "faculty": "FII",
+      "modality": "A DISTANCIA",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "LICENCIADO EN FÍSICA / FISICO O AREAS AFINES",
+      "courses": [
+        "FISICA"
+      ]
+    },
+    {
+      "code": "FII-05",
+      "faculty": "FII",
+      "modality": "A DISTANCIA",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "QUIMICA",
+        "FISICOQUIMICA AGROINDUSTRIAL",
+        "PROCESOS DE TRANSFORMACION FISICOQUIMICA"
+      ]
+    },
+    {
+      "code": "FII-06",
+      "faculty": "FII",
+      "modality": "A DISTANCIA",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES MICROBIOLOGO",
+      "profile": "",
+      "courses": [
+        "MICROBIOLOGIA",
+        "INOCUIDAD EN LOS PROCESOS AGROINDUSTRIALES"
+      ]
+    },
+    {
+      "code": "FII-07",
+      "faculty": "FII",
+      "modality": "A DISTANCIA",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "INGLES II",
+        "INGLES III"
+      ]
+    },
+    {
+      "code": "FII-08",
+      "faculty": "FII",
+      "modality": "A DISTANCIA",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO DE ALIMENTOS/ INGENIERO AGROINDUSTRIAL/ INGENIERO DE PRODUCCION AGROINDUSTRIAL O AREAS AFINES",
+      "courses": [
+        "OPTATIVA I DE PROFUNDIZACIÓN AGROINDUSTRIA ALIMENTARIA (PRODUCTOS DE ORIGEN PECUARIO) Y OPTATIVA II AGROINDUSTRIA ALIMENTARIA (PRODUCTOS DE ORIGEN AGRÍCOLA)."
+      ]
+    },
+    {
+      "code": "FII-09",
+      "faculty": "FII",
+      "modality": "A DISTANCIA",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO INDUSTRIAL",
+      "courses": [
+        "AGROINDUSTRIA NO ALIMENTARIA I (SUBPRODUCTOS DE ORIGEN PECUARIO), AGROINDUSTRIA NO ALIMENTARIA II (SUBPRODUCTOS DE ORIGEN AGRÍCOLA)"
+      ]
+    },
+    {
+      "code": "FII-10",
+      "faculty": "FII",
+      "modality": "A DISTANCIA",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO DE PRODUCCIÓN AGROINDUSTRIAL",
+      "courses": [
+        "PROCESAMIENTO DE PRODUCTOS FORESTALES Y PROCESAMIENTO DE PRODUCTOS PARA ALIMENTACIÓN ANIMAL."
+      ]
+    },
+    {
+      "code": "FII-11",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "RIEGOS Y DRENAJES",
+        "MAQUINARIA Y TOPOGRÁFIA",
+        "EXTENSIÓN RURAL Y POLITICA AGROPECUARIA"
+      ]
+    },
+    {
+      "code": "FII-12",
+      "faculty": "FII",
+      "modality": "A DISTANCIA",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN PROCESOS AGROINDUSTRIALES",
+      "profile": "INGENIERO DE ALIMENTOS- INGENIERO QUÍMICO O PROFESIONES AFINES",
+      "courses": [
+        "FISICOQUÍMICA AGROINDUSTRIAL Y PROCESOS DE TRANSFORMACIÓN FISICOQUÍMICA."
+      ]
+    },
+    {
+      "code": "FII-13",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNICA PROFESIONAL EN PROCESOS DE LA SEGURIDAD Y SALUD EN EL TRABAJO",
+      "profile": "PROFESIONAL EN SEGURIDAD Y SALUD EN EL TRABAJO O PROFESIONAL EN TODAS LAS ÁREAS CON POSGRADO EN SEGURIDAD Y SALUD EN EL TRABAJO",
+      "courses": [
+        "CIENCIAS BÁSICAS ENFOCADAS A LA SST",
+        "GENERALIDADES DEL SISTEMA DE GESTIÓN EN SST, MEDICINA DEL TRABAJO",
+        "PRÁCTICA EN SST"
+      ]
+    },
+    {
+      "code": "FII-14",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN GESTION INDUSTRIAL",
+      "profile": "INGENIERO INDUSTRIAL",
+      "courses": [
+        "ERGONOMÍA",
+        "GESTIÓN DE LA SEGURIDAD Y SALUD EN EL TRABAJO",
+        "GESTIÓN DEL TALENTO HUMANO",
+        "TRABAJOS DE GRADO"
+      ]
+    },
+    {
+      "code": "FII-15",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN GESTION INDUSTRIAL",
+      "profile": "INGENIERO INDUSTRIAL",
+      "courses": [
+        "PROCESOS INDUSTRIALES",
+        "DISTRIBUCIÓN DE PLANTAS",
+        "OPTATIVA I",
+        "OPTATIVA II",
+        "FORMULACIÓN DE PROYECTOS",
+        "COSTOS Y PRESUPUESTOS",
+        "TRABAJOS DE GRADO"
+      ]
+    },
+    {
+      "code": "FII-16",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
+      "profile": "INGENIERO CIVIL",
+      "courses": [
+        "COSTOS, PRESUPUESTO Y PROGRAMACIÓN DE OBRA",
+        "OPTATIVA DE PROFUNDIZACION MATERIALES Y EQUIPO",
+        "MATERIALES DE CONSTRUCCIÓN",
+        "TRABAJOS DE GRADO"
+      ]
+    },
+    {
+      "code": "FII-17",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES",
+      "profile": "INGENIERO CIVIL",
+      "courses": [
+        "TRAZADO DE VIAS",
+        "OPTATIVA I (CIMENTACIONES Y OBRAS DE CONTENCIÓN",
+        "OPTATIVA II (CONTRATACION ESTATAL",
+        "TRABAJOS DE GRADO."
+      ]
+    },
+    {
+      "code": "FII-18",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "OCASIONAL TIEMPO COMPLETO",
+      "program": "TECNOLOGIA EN CONSTRUCCIÓN DE OBRAS CIVILES ARQUITECTO",
+      "profile": "",
+      "courses": [
+        "DIBUJO TECNICO DIGITAL",
+        "METODOLOGIA DE LA INVESTIGACION",
+        "TÉCNICA, TECNOLOGÍA Y CIENCIA",
+        "TRABAJOS DE GRADO."
+      ]
+    },
+    {
+      "code": "FII-19",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "ALGEBRA Y TRIGONOMETRIA",
+        "MATEMATICAS",
+        "MATEMATICA APLICADA",
+        "CALCULOS"
+      ]
+    },
+    {
+      "code": "FII-20",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "ESTADISTICA",
+        "BIOESTADISTICA",
+        "ESTADISTICA Y PROBABILIDADES."
+      ]
+    },
+    {
+      "code": "FII-21",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "FISICA",
+        "FISICA MECANICA",
+        "LABORATORIO DE FISICA MECANICA"
+      ]
+    },
+    {
+      "code": "FII-22",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN PROTECCIÓN Y RECUPERACIÓN DE ECOSISTEMA FORESTALES",
+      "profile": "",
+      "courses": [
+        "BIOLOGIA GENERAL",
+        "BIOLOGIA APLICADA."
+      ]
+    },
+    {
+      "code": "FII-23",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "QUIMICA",
+        "QUIMICA GENERAL",
+        "QUIMICA APLICADA",
+        "BIOQUIMICA APLICADA",
+        "FISICOQUIMICA AGROINDUSTRIAL",
+        "PROCESOS DE TRANSFORMACION FISICOQUIMICA."
+      ]
+    },
+    {
+      "code": "FII-24",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "TECNOLOGIA EN PRODUCCION AGROPECUARIA MICROBIOLOGO",
+      "profile": "",
+      "courses": [
+        "MICROBIOLOGIA",
+        "INOCUIDAD EN LOS PROCESOS AGROINDUSTRIALES"
+      ]
+    },
+    {
+      "code": "FII-25",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "HABILIDADES COMUNICATIVAS",
+        "PRODUCCION Y COMPRENSION DE TEXTOS",
+        "COMPETENCIAS COMUNICATIVAS"
+      ]
+    },
+    {
+      "code": "FII-26",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "CONTABILIDAD",
+        "COSTOS Y PRESUPUESTO",
+        "CONTABILIDAD FINANCIERA",
+        "FUNDAMENTOS DE ADMINISTRACIÓN",
+        "ECOSISTEMA ECONÓMICO AGROINDUSTRIAL",
+        "ADMINISTRACIÓN GENERAL"
+      ]
+    },
+    {
+      "code": "FII-27",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "INGLES I",
+        "INGLES II",
+        "INGLES III",
+        "INGLES TECNICO I, II y III."
+      ]
+    },
+    {
+      "code": "FII-28",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "SOCIEDAD Y RURALIDAD",
+        "CIUDADANIA Y CONVIVENCIA",
+        "ELECTIVAS DE SOCIOHUMANISTICA"
+      ]
+    },
+    {
+      "code": "FII-29",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "AMBIENTAL",
+        "GESTION AMBIENTAL",
+        "SANEAMIENTO Y LEGISLACION AMBIENTAL"
+      ]
+    },
+    {
+      "code": "FII-30",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "HABILIDADES INTRA E INTERPERSONALES"
+      ]
+    },
+    {
+      "code": "FII-31",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "FUNDAMENTOS DE ADMINISTRACION",
+        "TECNICAS Y ESTRATEGIAS DE INVESTIGACION",
+        "METODOLOGIA DE LA INVESTIGACION",
+        "TECNICA TECNOLOGIA Y CIENCIA"
+      ]
+    },
+    {
+      "code": "FII-32",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "LEGISLACION LABORAL."
+      ]
+    },
+    {
+      "code": "FII-33",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "ELECTRICIDAD Y ELECTRÓNICA APLICADA, COMPUTACIÓN FISICA, HERRAMIENTAS TECNOLOGICAS Y PROGRAMACION APLICADA",
+        "TECNICA TECNOLOGIA Y CIENCIA"
+      ]
+    },
+    {
+      "code": "FII-34",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "INFORMATICA, SERVIDORES, PROGRAMACION ORIENTADA A OBJETOS, DISEÑOS PARA LA WEB",
+        "SISTEMAS OPERATIVOS",
+        "SISTEMAS DE INFORMACIÓN DE SST"
+      ]
+    },
+    {
+      "code": "FII-35",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "SANIDAD VEGETAL",
+        "ANATOMIA Y FISIOLOGIA VEGETAL",
+        "EXTENSIÓN RURAL Y POLITICA AGROPECUARIA"
+      ]
+    },
+    {
+      "code": "FII-36",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "SANIDAD ANIMAL",
+        "FISIOLOGIA DE LA REPRODUCCIÓN",
+        "INSEMINACIÓN ARTIFICIAL",
+        "TRANSFERENCIA DE EMBRIONES"
+      ]
+    },
+    {
+      "code": "FII-37",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "CONSERVACION DE FORRAJES",
+        "NUTRICION",
+        "PASTOS Y FORRAJES",
+        "PRODUCIÓN",
+        "PROCESAMIENTO DE PRODUCTOS PARA ALIMENTACION ANIMAL"
+      ]
+    },
+    {
+      "code": "FII-38",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "ACUEDUCTOS Y ALCANTARILLADOS",
+        "INSTALACIONES HIDROSANITARIAS PARA EDIFICACIONES",
+        "LABORATORIO DE PAVIMENTOS, TOPOGRAFIA",
+        "ALTIMETRIA, TOPOGRAFIA",
+        "PLANIMETRIA, MECANICA DE FLUIDOS E HIDRAULICA",
+        "GEOLOGIA APLICADA",
+        "DISEÑO DE MEZCLAS",
+        "MECANICA DE MATERIALES",
+        "MECÁNICA DE SUELOS",
+        "RESIDENCIA Y SUPERVISIÓN TECNICA DE OBRAS",
+        "CONSTRUCIONES SISMORRESISTENTES",
+        "TRABAJOS DE GRADO ."
+      ]
+    },
+    {
+      "code": "FII-39",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "SEGURIDAD Y SALUD EN EL TRABAJO",
+        "SALUD PÚBLICA",
+        "SEGURIDAD INDUSTRIAL",
+        "HIGIENE INDUSTRIAL",
+        "OPTATIVA. SEGURIDAD VIAL",
+        "OPTATIVA. BIOSEGURIDAD",
+        "TRABAJO SEGURO EN ALTURAS",
+        "FUNDAMENTOS EN EMERGENCIAS Y DESASTRES",
+        "GESTION DE LA SEGURIDAD Y SALUD EN EL TRABAJO"
+      ]
+    },
+    {
+      "code": "FII-40",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "OPTATIVA I DE PROFUNDIZACIÓN AGROINDUSTRIA ALIMENTARIA (PRODUCTOS DE ORIGEN PECUARIO)",
+        "OPTATIVA II AGROINDUSTRIA ALIMENTARIA (PRODUCTOS DE ORIGEN AGRÍCOLA).",
+        "CALIDAD E INOCUIDAD EN LA INDUSTRIA AGROALIMENTARIA"
+      ]
+    },
+    {
+      "code": "FII-41",
+      "faculty": "FII",
+      "modality": "PRESENCIAL",
+      "location": "PAMPLONA",
+      "contracttype": "CATEDRA",
+      "program": "",
+      "profile": "",
+      "courses": [
+        "PLANEACIÓN Y CONTROL DE LA PRODUCCIÓN",
+        "RESPONSABILIDAD SOCIAL",
+        "PRODUCTIVIDAD Y COMPETITIVIDAD",
+        "LOGÍSTICA Y DISTRIBUCIÓN. GESTION INDUSTRIAL",
+        "PROCESOS INDUSTRIALES",
+        "SIMULACIÓN DE PROCESOS",
+        "AGROINDUSTRIA NO ALIMENTARIA I Y II"
+      ]
+    }
+  ]
 }
