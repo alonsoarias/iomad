@@ -338,6 +338,7 @@ $string['error:cannotdeleteconvocatoria'] = 'Cannot delete this call. Only draft
 $string['dates'] = 'Dates';
 $string['vacanciesforconvocatoria'] = 'Vacancies for call';
 $string['backtoconvocatorias'] = 'Back to calls';
+$string['backtoconvocatoria'] = 'Back to call';
 $string['period'] = 'Period';
 $string['totalvacancies'] = 'Total Vacancies';
 $string['totalconvocatorias'] = 'Total Calls';

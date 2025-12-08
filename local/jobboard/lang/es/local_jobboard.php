@@ -532,6 +532,7 @@ $string['error:cannotdeleteconvocatoria'] = 'No se puede eliminar esta convocato
 $string['dates'] = 'Fechas';
 $string['vacanciesforconvocatoria'] = 'Vacantes de la convocatoria';
 $string['backtoconvocatorias'] = 'Volver a convocatorias';
+$string['backtoconvocatoria'] = 'Volver a la convocatoria';
 $string['period'] = 'Período';
 $string['totalvacancies'] = 'Total de Vacantes';
 $string['totalconvocatorias'] = 'Total de Convocatorias';

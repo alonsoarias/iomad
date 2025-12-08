@@ -445,6 +445,25 @@ if ($canmanage) {
     echo html_writer::end_div();
 }
 
+// ============================================================================
+// BACK BUTTON
+// ============================================================================
+echo html_writer::start_div('mt-4');
+if ($convocatoria) {
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]),
+        '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtoconvocatoria', 'local_jobboard'),
+        ['class' => 'btn btn-outline-secondary']
+    );
+} else {
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']),
+        '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtovacancies', 'local_jobboard'),
+        ['class' => 'btn btn-outline-secondary']
+    );
+}
+echo html_writer::end_div();
+
 echo html_writer::end_div(); // local-jobboard-vacancy-detail
 
 echo $OUTPUT->footer();
