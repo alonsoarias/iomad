@@ -192,6 +192,8 @@ $string['location_help'] = 'Lugar físico donde se desempeñarán las funciones 
 - "Híbrido: 3 días presencial en Sede Centro, 2 días remoto"
 
 **Importante para postulantes:** Esta información les permite evaluar si pueden asumir el desplazamiento necesario.';
+$string['modality'] = 'Modalidad';
+$string['modality_help'] = 'Modalidad educativa para esta posición: Presencial (en sitio), A Distancia (educación a distancia), Virtual (en línea), o Híbrida (combinación).';
 $string['department'] = 'Departamento/Unidad';
 $string['department_help'] = 'Área, facultad, departamento o unidad organizacional donde se desempeñará el cargo.
 
