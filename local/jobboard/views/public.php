@@ -308,14 +308,12 @@ echo html_writer::tag('label', get_string('location', 'local_jobboard'), ['for' 
 echo html_writer::start_tag('select', [
     'name' => 'location',
     'id' => 'filter-location',
-    'class' => 'jb-filter-select form-control',
-    'style' => 'color: #212529; background-color: #fff;'
+    'class' => 'jb-filter-select'
 ]);
 foreach ($locationOptions as $val => $label) {
     echo html_writer::tag('option', $label, [
         'value' => $val,
-        'selected' => $location === $val ? 'selected' : null,
-        'style' => 'color: #212529; background-color: #fff;'
+        'selected' => $location === $val ? 'selected' : null
     ]);
 }
 echo html_writer::end_tag('select');
@@ -328,14 +326,12 @@ echo html_writer::tag('label', get_string('modality', 'local_jobboard'), ['for' 
 echo html_writer::start_tag('select', [
     'name' => 'modality',
     'id' => 'filter-modality',
-    'class' => 'jb-filter-select form-control',
-    'style' => 'color: #212529; background-color: #fff;'
+    'class' => 'jb-filter-select'
 ]);
 foreach ($modalityOptions as $val => $label) {
     echo html_writer::tag('option', $label, [
         'value' => $val,
-        'selected' => $modality === $val ? 'selected' : null,
-        'style' => 'color: #212529; background-color: #fff;'
+        'selected' => $modality === $val ? 'selected' : null
     ]);
 }
 echo html_writer::end_tag('select');
@@ -348,14 +344,12 @@ echo html_writer::tag('label', get_string('contracttype', 'local_jobboard'), ['f
 echo html_writer::start_tag('select', [
     'name' => 'contracttype',
     'id' => 'filter-contract',
-    'class' => 'jb-filter-select form-control',
-    'style' => 'color: #212529; background-color: #fff;'
+    'class' => 'jb-filter-select'
 ]);
 foreach ($contractOptions as $val => $label) {
     echo html_writer::tag('option', $label, [
         'value' => $val,
-        'selected' => $contracttype === $val ? 'selected' : null,
-        'style' => 'color: #212529; background-color: #fff;'
+        'selected' => $contracttype === $val ? 'selected' : null
     ]);
 }
 echo html_writer::end_tag('select');
@@ -371,14 +365,12 @@ echo html_writer::tag('label', get_string('convocatoria', 'local_jobboard'), ['f
 echo html_writer::start_tag('select', [
     'name' => 'convocatoria',
     'id' => 'filter-convocatoria',
-    'class' => 'jb-filter-select form-control',
-    'style' => 'color: #212529; background-color: #fff;'
+    'class' => 'jb-filter-select'
 ]);
 foreach ($convocatoriaOptions as $val => $label) {
     echo html_writer::tag('option', $label, [
         'value' => $val,
-        'selected' => $convocatoriaid == $val ? 'selected' : null,
-        'style' => 'color: #212529; background-color: #fff;'
+        'selected' => $convocatoriaid == $val ? 'selected' : null
     ]);
 }
 echo html_writer::end_tag('select');
@@ -617,6 +609,27 @@ if (!$isloggedin) {
 }
 
 echo html_writer::end_div(); // local-jobboard-public
+
+// JavaScript to force select option visibility.
+$js = <<<'JS'
+document.addEventListener('DOMContentLoaded', function() {
+    // Force select and option visibility
+    var selects = document.querySelectorAll('.jb-filter-select');
+    selects.forEach(function(select) {
+        select.style.color = '#212529';
+        select.style.backgroundColor = '#fff';
+        select.style.webkitTextFillColor = '#212529';
+
+        var options = select.querySelectorAll('option');
+        options.forEach(function(option) {
+            option.style.color = '#212529';
+            option.style.backgroundColor = '#fff';
+            option.style.webkitTextFillColor = '#212529';
+        });
+    });
+});
+JS;
+echo html_writer::tag('script', $js);
 
 echo $OUTPUT->footer();
 

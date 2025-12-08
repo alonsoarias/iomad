@@ -1724,6 +1724,43 @@
     outline: none;
 }
 
+/* Override Firefox focusring that sets color: transparent */
+.local-jobboard-public .jb-filter-select:-moz-focusring {
+    color: #212529 !important;
+    text-shadow: none !important;
+}
+
+/* Override IE/Edge select value styling */
+.local-jobboard-public .jb-filter-select::-ms-value {
+    color: #212529 !important;
+    background-color: #fff !important;
+}
+
+/* Override any webkit text fill issues */
+.local-jobboard-public .jb-filter-select,
+.local-jobboard-public .jb-filter-select option {
+    -webkit-text-fill-color: #212529 !important;
+    color: #212529 !important;
+}
+
+/* Ensure the select element itself has proper colors */
+.jb-filter-select {
+    color: #212529 !important;
+    background-color: #fff !important;
+    -webkit-text-fill-color: #212529 !important;
+}
+
+.jb-filter-select option {
+    color: #212529 !important;
+    background-color: #fff !important;
+    -webkit-text-fill-color: #212529 !important;
+}
+
+.jb-filter-select:-moz-focusring {
+    color: #212529 !important;
+    text-shadow: none !important;
+}
+
 .local-jobboard-public .jb-filter-actions {
     display: flex;
     gap: 0.75rem;
