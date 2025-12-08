@@ -1695,9 +1695,26 @@
 }
 
 .local-jobboard-public .jb-filter-select option {
-    color: #212529;
-    background-color: #fff;
+    color: #212529 !important;
+    background-color: #fff !important;
     padding: 0.5rem;
+    font-size: 0.95rem !important;
+    -webkit-text-fill-color: #212529 !important;
+}
+
+/* Force visibility on all select dropdowns - override theme */
+.local-jobboard-public select,
+.local-jobboard-public select option {
+    color: #212529 !important;
+    background-color: #fff !important;
+    -webkit-text-fill-color: #212529 !important;
+    opacity: 1 !important;
+}
+
+.local-jobboard-public select option:checked {
+    background: linear-gradient(#e9ecef, #e9ecef) !important;
+    background-color: #e9ecef !important;
+    color: #212529 !important;
 }
 
 .local-jobboard-public .jb-filter-input:focus,
