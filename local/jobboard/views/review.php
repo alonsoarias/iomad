@@ -149,6 +149,15 @@ if (!$applicationid) {
     // Get applications pending review.
     // Note: Document status is in local_jobboard_doc_validation table, not in document table.
     // A document is "pending" if it has no validation record or validation status = 'pending'.
+
+    // Count total records for pagination.
+    $countsql = "SELECT COUNT(*)
+                   FROM {local_jobboard_application} a
+                   JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                   JOIN {user} u ON u.id = a.userid
+                  WHERE {$where}";
+    $total = $DB->count_records_sql($countsql, $params);
+
     $sql = "SELECT a.*, v.title as vacancy_title, v.code as vacancy_code, v.closedate,
                    u.firstname, u.lastname, u.email,
                    (SELECT COUNT(*) FROM {local_jobboard_document} d WHERE d.applicationid = a.id AND d.issuperseded = 0) as doccount,
@@ -163,16 +172,18 @@ if (!$applicationid) {
             WHERE {$where}
             ORDER BY a.timecreated ASC";
 
-    $applications = $DB->get_records_sql($sql, $params);
-    $total = count($applications);
+    $applications = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
 
-    // Calculate stats.
+    // Get all applications for stats (without pagination).
+    $allapplications = $DB->get_records_sql($sql, $params);
+
+    // Calculate stats from all applications (not just paginated).
     $stats = [
         'total' => 0,
         'pending' => 0,
         'urgent' => 0,
     ];
-    foreach ($applications as $app) {
+    foreach ($allapplications as $app) {
         $stats['total']++;
         $stats['pending'] += (int)$app->pendingcount;
         if ($app->closedate && ($app->closedate - time()) <= 7 * 86400) {
@@ -347,6 +358,15 @@ if (!$applicationid) {
         }
 
         echo html_writer::end_div(); // row
+
+        // Pagination.
+        if ($total > $perpage) {
+            $baseurl = new moodle_url('/local/jobboard/index.php', [
+                'view' => 'review',
+                'vacancyid' => $vacancyid,
+            ]);
+            echo $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
+        }
     }
 } else {
     // ============================================================================
