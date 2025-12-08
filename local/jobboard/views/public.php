@@ -305,10 +305,18 @@ echo html_writer::end_div();
 $locationOptions = ['' => get_string('alllocations', 'local_jobboard')] + ($locations ?: []);
 echo html_writer::start_div('jb-filter-item');
 echo html_writer::tag('label', get_string('location', 'local_jobboard'), ['for' => 'filter-location', 'class' => 'jb-filter-label']);
-echo html_writer::start_tag('select', ['name' => 'location', 'id' => 'filter-location', 'class' => 'jb-filter-select']);
+echo html_writer::start_tag('select', [
+    'name' => 'location',
+    'id' => 'filter-location',
+    'class' => 'jb-filter-select form-control',
+    'style' => 'color: #212529; background-color: #fff;'
+]);
 foreach ($locationOptions as $val => $label) {
-    $selected = ($location === $val) ? ' selected' : '';
-    echo html_writer::tag('option', $label, ['value' => $val, 'selected' => $location === $val ? 'selected' : null]);
+    echo html_writer::tag('option', $label, [
+        'value' => $val,
+        'selected' => $location === $val ? 'selected' : null,
+        'style' => 'color: #212529; background-color: #fff;'
+    ]);
 }
 echo html_writer::end_tag('select');
 echo html_writer::end_div();
@@ -317,9 +325,18 @@ echo html_writer::end_div();
 $modalityOptions = ['' => get_string('allmodalities', 'local_jobboard')] + ($modalities ?: []);
 echo html_writer::start_div('jb-filter-item');
 echo html_writer::tag('label', get_string('modality', 'local_jobboard'), ['for' => 'filter-modality', 'class' => 'jb-filter-label']);
-echo html_writer::start_tag('select', ['name' => 'modality', 'id' => 'filter-modality', 'class' => 'jb-filter-select']);
+echo html_writer::start_tag('select', [
+    'name' => 'modality',
+    'id' => 'filter-modality',
+    'class' => 'jb-filter-select form-control',
+    'style' => 'color: #212529; background-color: #fff;'
+]);
 foreach ($modalityOptions as $val => $label) {
-    echo html_writer::tag('option', $label, ['value' => $val, 'selected' => $modality === $val ? 'selected' : null]);
+    echo html_writer::tag('option', $label, [
+        'value' => $val,
+        'selected' => $modality === $val ? 'selected' : null,
+        'style' => 'color: #212529; background-color: #fff;'
+    ]);
 }
 echo html_writer::end_tag('select');
 echo html_writer::end_div();
@@ -328,9 +345,18 @@ echo html_writer::end_div();
 $contractOptions = ['' => get_string('allcontracttypes', 'local_jobboard')] + $contracttypes;
 echo html_writer::start_div('jb-filter-item');
 echo html_writer::tag('label', get_string('contracttype', 'local_jobboard'), ['for' => 'filter-contract', 'class' => 'jb-filter-label']);
-echo html_writer::start_tag('select', ['name' => 'contracttype', 'id' => 'filter-contract', 'class' => 'jb-filter-select']);
+echo html_writer::start_tag('select', [
+    'name' => 'contracttype',
+    'id' => 'filter-contract',
+    'class' => 'jb-filter-select form-control',
+    'style' => 'color: #212529; background-color: #fff;'
+]);
 foreach ($contractOptions as $val => $label) {
-    echo html_writer::tag('option', $label, ['value' => $val, 'selected' => $contracttype === $val ? 'selected' : null]);
+    echo html_writer::tag('option', $label, [
+        'value' => $val,
+        'selected' => $contracttype === $val ? 'selected' : null,
+        'style' => 'color: #212529; background-color: #fff;'
+    ]);
 }
 echo html_writer::end_tag('select');
 echo html_writer::end_div();
@@ -342,9 +368,18 @@ foreach ($convocatorias as $conv) {
 }
 echo html_writer::start_div('jb-filter-item');
 echo html_writer::tag('label', get_string('convocatoria', 'local_jobboard'), ['for' => 'filter-convocatoria', 'class' => 'jb-filter-label']);
-echo html_writer::start_tag('select', ['name' => 'convocatoria', 'id' => 'filter-convocatoria', 'class' => 'jb-filter-select']);
+echo html_writer::start_tag('select', [
+    'name' => 'convocatoria',
+    'id' => 'filter-convocatoria',
+    'class' => 'jb-filter-select form-control',
+    'style' => 'color: #212529; background-color: #fff;'
+]);
 foreach ($convocatoriaOptions as $val => $label) {
-    echo html_writer::tag('option', $label, ['value' => $val, 'selected' => $convocatoriaid == $val ? 'selected' : null]);
+    echo html_writer::tag('option', $label, [
+        'value' => $val,
+        'selected' => $convocatoriaid == $val ? 'selected' : null,
+        'style' => 'color: #212529; background-color: #fff;'
+    ]);
 }
 echo html_writer::end_tag('select');
 echo html_writer::end_div();
