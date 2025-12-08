@@ -7,6 +7,39 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.35] - 2025-12-08
+
+### Añadido
+- **Nueva opción --json en CLI (RECOMENDADA)**
+  - Importación directa desde archivo JSON pre-extraído
+  - Más confiable que el parseo de archivos de texto
+  - Ejemplo: `php cli.php --json=perfiles_2026.json --create-structure --publish`
+
+### Actualizado
+- **perfiles_2026.json reconstruido desde archivos DOCX originales**
+  - 395 perfiles extraídos (antes 197)
+  - FCAS: 354 perfiles | FII: 41 perfiles
+  - Campos `profile` y `courses` ahora completamente poblados
+  - Distribución correcta por 12 ubicaciones (PAMPLONA, CUCUTA, TIBU, etc.)
+
+### Corregido
+- **Bug en cli_get_params standalone mode**
+  - Corregido `isset()` que retornaba false para opciones con valor null
+  - Ahora usa `array_key_exists()` para detección correcta de opciones
+
+### Añadido
+- **Archivos de texto generados (PERFILESPROFESORES_TEXT/)**
+  - FCAS_2026.txt, FII_PRESENCIAL_2026.txt, FII_DISTANCIA_2026.txt
+  - Compatibilidad con CLI anterior basado en texto
+
+### Técnico
+- **CLI actualizado a v2.2**
+  - Soporte para JSON, CSV y archivos de texto
+  - Help actualizado con documentación de JSON import
+- **version.php**: Incrementado a 2.0.35 (2025120853)
+
+---
+
 ## [2.0.34] - 2025-12-08
 
 ### Corregido

@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120852;  // v2.0.34: Fix IOMAD function call, recreate tours with correct selectors.
+$plugin->version = 2025120853;  // v2.0.35: Add JSON import to CLI, rebuild perfiles_2026.json from DOCX.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.34';
+$plugin->release = '2.0.35';

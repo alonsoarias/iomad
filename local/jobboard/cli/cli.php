@@ -61,7 +61,8 @@ if (!$moodleavailable) {
         foreach ($args as $key => $value) {
             // Map short key to long key using $shortoptions directly.
             $longkey = $shortoptions[$key] ?? $key;
-            if (isset($options[$longkey])) {
+            // Use array_key_exists because isset returns false for null values.
+            if (array_key_exists($longkey, $options)) {
                 $options[$longkey] = is_bool($longoptions[$longkey]) ? true : $value;
             }
         }
@@ -79,6 +80,7 @@ list($options, $unrecognized) = cli_get_params([
     'help' => false,
     'input' => null,
     'csv' => null,
+    'json' => null,
     'export-csv-template' => false,
     'convocatoria' => null,
     'convocatoria-name' => null,
@@ -114,6 +116,7 @@ list($options, $unrecognized) = cli_get_params([
     'v' => 'verbose',
     'j' => 'export-json',
     'x' => 'csv',
+    'J' => 'json',
     'T' => 'export-csv-template',
 ]);
 
@@ -126,12 +129,12 @@ $moodlemode = $moodleavailable ? 'MOODLE MODE (full import)' : 'STANDALONE MODE 
 
 $help = <<<EOT
 ============================================================
-ISER Job Board - Profile Import CLI v2.1
+ISER Job Board - Profile Import CLI v2.2
 ============================================================
 Mode: $moodlemode
 
 Automated import of professional profiles into the local_jobboard vacancy system.
-Supports importing from extracted PDF text files OR from CSV files.
+Supports importing from JSON, CSV, or extracted text files.
 
 This CLI can automatically create the complete IOMAD structure:
 - Companies (Sedes): PAMPLONA, CÚCUTA, TIBÚ, SAN VICENTE, EL TARRA, OCAÑA, etc.
@@ -144,10 +147,18 @@ BASIC OPTIONS:
   -h, --help              Show this help message
   -i, --input=DIR         Input directory with .txt files
                           (default: PERFILESPROFESORES_TEXT)
-  -x, --csv=FILE          Import vacancies from CSV file (instead of text files)
+  -J, --json=FILE         Import vacancies from JSON file (RECOMMENDED)
+  -x, --csv=FILE          Import vacancies from CSV file
   -T, --export-csv-template  Generate a CSV template file for import
   -j, --export-json=FILE  Export parsed data to JSON file
   -v, --verbose           Show detailed output
+
+JSON IMPORT (RECOMMENDED):
+  The --json option imports from a pre-extracted JSON file like perfiles_2026.json.
+  This is the most reliable method as it uses properly extracted DOCX data.
+
+  Example:
+    php cli.php --json=perfiles_2026.json --create-structure --publish --public
 
 CSV IMPORT:
   The --csv option allows importing vacancies from a CSV file.
@@ -347,9 +358,18 @@ $ISER_MODALIDADES = [
 $plugindir = __DIR__ . '/..';
 $inputdir = $options['input'] ?? $plugindir . '/PERFILESPROFESORES_TEXT';
 $csvfile = $options['csv'] ?? null;
+$jsonfile = $options['json'] ?? null;
 
 // Validate input source.
-if ($csvfile) {
+if ($jsonfile) {
+    // Check relative to plugin dir if not absolute.
+    if (!file_exists($jsonfile) && file_exists($plugindir . '/' . $jsonfile)) {
+        $jsonfile = $plugindir . '/' . $jsonfile;
+    }
+    if (!file_exists($jsonfile)) {
+        cli_error("JSON file not found: $jsonfile");
+    }
+} else if ($csvfile) {
     if (!file_exists($csvfile)) {
         cli_error("CSV file not found: $csvfile");
     }
@@ -389,8 +409,10 @@ if ($shouldpublish) {
 // HEADER
 // ============================================================
 
-cli_heading('ISER Job Board - Profile Import v2.1');
-if ($csvfile) {
+cli_heading('ISER Job Board - Profile Import v2.2');
+if ($jsonfile) {
+    echo "Input JSON: $jsonfile\n";
+} else if ($csvfile) {
     echo "Input CSV: $csvfile\n";
 } else {
     echo "Input directory: $inputdir\n";
@@ -408,14 +430,51 @@ if ($options['reset']) {
 echo "\n";
 
 // ============================================================
-// PHASE 1: PARSE INPUT (Text Files or CSV)
+// PHASE 1: PARSE INPUT (JSON, CSV, or Text Files)
 // ============================================================
 
 $allprofiles = [];
 $parsestats = ['files' => 0, 'profiles' => 0, 'fcas' => 0, 'fii' => 0];
 $locationstats = [];
 
-if ($csvfile) {
+if ($jsonfile) {
+    // Import from JSON file.
+    cli_heading('Phase 1: Importing from JSON File');
+
+    $jsoncontent = file_get_contents($jsonfile);
+    $jsondata = json_decode($jsoncontent, true);
+
+    if (!$jsondata || !isset($jsondata['vacancies'])) {
+        cli_error("Invalid JSON format: missing 'vacancies' array");
+    }
+
+    echo "JSON source: " . ($jsondata['source'] ?? 'Unknown') . "\n";
+    echo "Generated: " . ($jsondata['generated'] ?? 'Unknown') . "\n\n";
+
+    foreach ($jsondata['vacancies'] as $profile) {
+        $code = $profile['code'] ?? '';
+        if (empty($code)) continue;
+
+        $allprofiles[$code] = $profile;
+        $parsestats['profiles']++;
+        if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
+        else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
+
+        $loc = $profile['location'] ?? 'PAMPLONA';
+        $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
+    }
+    $parsestats['files'] = 1;
+
+    echo "JSON import complete:\n";
+    echo "  Profiles imported: {$parsestats['profiles']}\n";
+    echo "    - FCAS: {$parsestats['fcas']}\n";
+    echo "    - FII: {$parsestats['fii']}\n";
+    echo "\n  By location:\n";
+    foreach ($locationstats as $loc => $cnt) {
+        echo "    - $loc: $cnt\n";
+    }
+
+} else if ($csvfile) {
     // Import from CSV.
     cli_heading('Phase 1: Importing from CSV File');
 
@@ -495,8 +554,8 @@ if ($csvfile) {
 
 // Export JSON if requested.
 if (!empty($options['export-json'])) {
-    $jsonfile = $options['export-json'];
-    $jsondata = [
+    $exportjsonfile = $options['export-json'];
+    $exportjsondata = [
         'generated' => date('Y-m-d H:i:s'),
         'source' => 'PERFILES PROFESORES ISER',
         'stats' => [
@@ -507,8 +566,8 @@ if (!empty($options['export-json'])) {
         ],
         'vacancies' => array_values($allprofiles),
     ];
-    file_put_contents($jsonfile, json_encode($jsondata, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-    echo "\nJSON exported to: $jsonfile\n";
+    file_put_contents($exportjsonfile, json_encode($exportjsondata, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    echo "\nJSON exported to: $exportjsonfile\n";
 }
 
 // ============================================================
