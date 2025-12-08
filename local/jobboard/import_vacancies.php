@@ -640,6 +640,29 @@ foreach ($csvcolumns as $col) {
 echo html_writer::end_tag('tbody');
 echo html_writer::end_tag('table');
 
+// Inline CSV example.
+echo html_writer::tag('h6', html_writer::tag('i', '', ['class' => 'fa fa-code mr-2']) . get_string('csvexample', 'local_jobboard'), ['class' => 'mt-4 mb-2']);
+echo html_writer::tag('p', get_string('csvexample_desc', 'local_jobboard'), ['class' => 'text-muted small']);
+
+$csvexample = <<<'CSV'
+code,contracttype,program,profile,courses,location,modality,faculty
+FCAS-001,OCASIONAL TIEMPO COMPLETO,TECNOLOGÍA EN GESTIÓN COMUNITARIA,PROFESIONAL EN TRABAJO SOCIAL,SISTEMATIZACIÓN DE EXPERIENCIAS|SUJETO Y FAMILIA|DIRECCIÓN DE TRABAJO DE GRADO,PAMPLONA,PRESENCIAL,FCAS
+FCAS-002,CATEDRA,TECNOLOGÍA EN GESTIÓN EMPRESARIAL,ADMINISTRADOR DE EMPRESAS CON POSGRADO EN ÁREAS AFINES,EMPRENDIMIENTO|ADMINISTRACIÓN GENERAL,CUCUTA,A DISTANCIA,FCAS
+FCAS-003,CATEDRA,TECNOLOGÍA EN GESTIÓN DE MERCADEO,LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS,INGLES I|INGLES III|INGLES IV,TIBU,A DISTANCIA,FCAS
+FII-001,OCASIONAL TIEMPO COMPLETO,TECNOLOGÍA EN GESTIÓN INDUSTRIAL,INGENIERO INDUSTRIAL,ERGONOMÍA|GESTIÓN DE LA SEGURIDAD Y SALUD EN EL TRABAJO|GESTIÓN DEL TALENTO HUMANO,PAMPLONA,PRESENCIAL,FII
+FII-002,CATEDRA,TODOS LOS PROGRAMAS,LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO,ALGEBRA Y TRIGONOMETRÍA|MATEMÁTICAS|ESTADÍSTICA,PAMPLONA,PRESENCIAL,FII
+CSV;
+
+echo html_writer::start_tag('pre', ['class' => 'bg-light p-3 rounded border', 'style' => 'font-size: 0.75rem; overflow-x: auto;']);
+echo html_writer::tag('code', htmlspecialchars($csvexample));
+echo html_writer::end_tag('pre');
+
+echo html_writer::tag('div',
+    html_writer::tag('i', '', ['class' => 'fa fa-lightbulb mr-2']) .
+    get_string('csvexample_tip', 'local_jobboard'),
+    ['class' => 'alert alert-light small mb-0']
+);
+
 echo html_writer::end_div();
 echo html_writer::end_div();
 

@@ -45,15 +45,22 @@ if ($moodleavailable) {
 // Helper functions for standalone mode.
 if (!$moodleavailable) {
     function cli_get_params($longoptions, $shortoptions) {
-        $shortmap = array_flip($shortoptions);
+        // $shortoptions is already in format [short => long], no need to flip.
         $options = [];
         foreach ($longoptions as $key => $default) {
             $options[$key] = $default;
         }
-        $args = getopt(implode('', array_map(fn($k) => $k . ':', array_keys($shortoptions))),
-            array_map(fn($k) => is_bool($longoptions[$k]) ? $k : $k . ':', array_keys($longoptions)));
+        // Build short options spec: boolean options get no colon, others get colon.
+        $shortspec = '';
+        foreach ($shortoptions as $short => $long) {
+            $shortspec .= is_bool($longoptions[$long]) ? $short : $short . ':';
+        }
+        // Build long options spec: boolean options get no colon, others get colon.
+        $longspec = array_map(fn($k) => is_bool($longoptions[$k]) ? $k : $k . ':', array_keys($longoptions));
+        $args = getopt($shortspec, $longspec);
         foreach ($args as $key => $value) {
-            $longkey = $shortmap[$key] ?? $key;
+            // Map short key to long key using $shortoptions directly.
+            $longkey = $shortoptions[$key] ?? $key;
             if (isset($options[$longkey])) {
                 $options[$longkey] = is_bool($longoptions[$longkey]) ? true : $value;
             }
