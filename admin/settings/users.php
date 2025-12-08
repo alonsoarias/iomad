@@ -89,13 +89,17 @@ if ($hassiteconfig
         $temp->add(new admin_setting_configselect('defaultpreference_trackforums', new lang_string('trackforums'),
             '', 0, $choices));
 
-        $choices = [];
-        $choices[\core_contentbank\content::VISIBILITY_PUBLIC] = new lang_string('visibilitychoicepublic', 'core_contentbank');
-        $choices[\core_contentbank\content::VISIBILITY_UNLISTED] = new lang_string('visibilitychoiceunlisted', 'core_contentbank');
-        $temp->add(new admin_setting_configselect('defaultpreference_core_contentbank_visibility',
-            new lang_string('visibilitypref', 'core_contentbank'),
-            new lang_string('visibilitypref_help', 'core_contentbank'),
-            \core_contentbank\content::VISIBILITY_PUBLIC, $choices));
+        // Content bank visibility settings - only add if contentbank class is available.
+        // During fresh installation, this class may not be autoloaded yet.
+        if (class_exists('\core_contentbank\content')) {
+            $choices = [];
+            $choices[\core_contentbank\content::VISIBILITY_PUBLIC] = new lang_string('visibilitychoicepublic', 'core_contentbank');
+            $choices[\core_contentbank\content::VISIBILITY_UNLISTED] = new lang_string('visibilitychoiceunlisted', 'core_contentbank');
+            $temp->add(new admin_setting_configselect('defaultpreference_core_contentbank_visibility',
+                new lang_string('visibilitypref', 'core_contentbank'),
+                new lang_string('visibilitypref_help', 'core_contentbank'),
+                \core_contentbank\content::VISIBILITY_PUBLIC, $choices));
+        }
     }
     $ADMIN->add('accounts', $temp);
 

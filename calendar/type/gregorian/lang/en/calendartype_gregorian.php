@@ -22,6 +22,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['calendartype'] = 'Gregorian';
 $string['name'] = 'Gregorian';
 $string['pluginname'] = 'Gregorian calendar type';
 $string['privacy:metadata'] = 'The Gregorian calendar format plugin does not store any personal data.';
