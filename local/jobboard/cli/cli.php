@@ -71,6 +71,8 @@ if (!$moodleavailable) {
 list($options, $unrecognized) = cli_get_params([
     'help' => false,
     'input' => null,
+    'csv' => null,
+    'export-csv-template' => false,
     'convocatoria' => null,
     'convocatoria-name' => null,
     'convocatoria-code' => null,
@@ -104,6 +106,8 @@ list($options, $unrecognized) = cli_get_params([
     'r' => 'reset',
     'v' => 'verbose',
     'j' => 'export-json',
+    'x' => 'csv',
+    'T' => 'export-csv-template',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -115,15 +119,15 @@ $moodlemode = $moodleavailable ? 'MOODLE MODE (full import)' : 'STANDALONE MODE 
 
 $help = <<<EOT
 ============================================================
-ISER Job Board - Profile Import CLI v2.0
+ISER Job Board - Profile Import CLI v2.1
 ============================================================
 Mode: $moodlemode
 
-Automated import of professional profiles from extracted PDF text files
-into the local_jobboard vacancy system.
+Automated import of professional profiles into the local_jobboard vacancy system.
+Supports importing from extracted PDF text files OR from CSV files.
 
 This CLI can automatically create the complete IOMAD structure:
-- Companies (Sedes): PAMPLONA, CÚCUTA, TIBÚ, SAN VICENTE
+- Companies (Sedes): PAMPLONA, CÚCUTA, TIBÚ, SAN VICENTE, EL TARRA, OCAÑA, etc.
 - Departments (Modalidades): PRESENCIAL, A DISTANCIA
 
 USAGE:
@@ -133,8 +137,21 @@ BASIC OPTIONS:
   -h, --help              Show this help message
   -i, --input=DIR         Input directory with .txt files
                           (default: PERFILESPROFESORES_TEXT)
+  -x, --csv=FILE          Import vacancies from CSV file (instead of text files)
+  -T, --export-csv-template  Generate a CSV template file for import
   -j, --export-json=FILE  Export parsed data to JSON file
   -v, --verbose           Show detailed output
+
+CSV IMPORT:
+  The --csv option allows importing vacancies from a CSV file.
+  Use --export-csv-template to generate a template with the correct format.
+
+  CSV columns: code,contracttype,program,profile,courses,location,modality,faculty
+
+  Example:
+    php cli.php --export-csv-template > template.csv
+    # Edit template.csv with your data
+    php cli.php --csv=template.csv --create-structure --publish --public
 
 MOODLE-ONLY OPTIONS:
   -C, --create-structure  AUTO-CREATE IOMAD companies (sedes) and departments
@@ -156,8 +173,11 @@ MOODLE-ONLY OPTIONS:
   -s, --status=STATUS     Initial status: draft|published (default: draft)
 
 EXAMPLES:
-  # RECOMMENDED: Full import with structure creation
+  # RECOMMENDED: Full import from text files with structure creation
   php cli.php --create-structure --publish --public
+
+  # Import from CSV file
+  php cli.php --csv=vacancies.csv --create-structure --publish --public
 
   # With custom convocatoria
   php cli.php --create-structure --publish --public \\
@@ -173,9 +193,13 @@ EXAMPLES:
 STRUCTURE CREATED:
   Companies (Sedes):
     - ISER Sede Pamplona (shortname: PAMPLONA)
-    - ISER Sede Cúcuta (shortname: CUCUTA)
-    - ISER Sede Tibú (shortname: TIBU)
-    - ISER Sede San Vicente (shortname: SANVICENTE)
+    - ISER Centro Tutorial Cúcuta (shortname: CUCUTA)
+    - ISER Centro Tutorial Tibú (shortname: TIBU)
+    - ISER Centro Tutorial San Vicente (shortname: SANVICENTE)
+    - ISER Centro Tutorial El Tarra (shortname: ELTARRA)
+    - ISER Centro Tutorial Ocaña (shortname: OCANA)
+    - ISER Centro Tutorial Pueblo Bello (shortname: PUEBLOBELLO)
+    - And more...
 
   Departments per Company (Modalidades):
     - Presencial
@@ -189,10 +213,38 @@ if ($options['help']) {
 }
 
 // ============================================================
+// CSV TEMPLATE EXPORT
+// ============================================================
+if ($options['export-csv-template']) {
+    $template = <<<CSV
+code,contracttype,program,profile,courses,location,modality,faculty
+FCAS-01,OCASIONAL TIEMPO COMPLETO,TECNOLOGÍA EN GESTIÓN COMUNITARIA,PROFESIONAL EN TRABAJO SOCIAL,"SISTEMATIZACIÓN DE EXPERIENCIAS|SUJETO Y FAMILIA|DIRECCIÓN DE TRABAJO DE GRADO",PAMPLONA,PRESENCIAL,FCAS
+FCAS-02,CATEDRA,TECNOLOGÍA EN GESTIÓN EMPRESARIAL,ADMINISTRADOR DE EMPRESAS CON POSGRADO EN ÁREAS AFINES,"EMPRENDIMIENTO|ADMINISTRACIÓN GENERAL",PAMPLONA,A DISTANCIA,FCAS
+FII-01,OCASIONAL TIEMPO COMPLETO,TECNOLOGÍA EN GESTIÓN INDUSTRIAL,INGENIERO INDUSTRIAL,"ERGONOMÍA|GESTIÓN DE LA SEGURIDAD Y SALUD EN EL TRABAJO|GESTIÓN DEL TALENTO HUMANO",CUCUTA,PRESENCIAL,FII
+CSV;
+    echo $template . "\n";
+    echo "\n# CSV IMPORT INSTRUCTIONS:\n";
+    echo "# ========================\n";
+    echo "# 1. Remove these comment lines and the example rows\n";
+    echo "# 2. Add your vacancy data following the same format\n";
+    echo "# 3. Columns:\n";
+    echo "#    - code: Unique code (e.g., FCAS-01, FII-15)\n";
+    echo "#    - contracttype: OCASIONAL TIEMPO COMPLETO or CATEDRA\n";
+    echo "#    - program: Academic program name\n";
+    echo "#    - profile: Professional profile required\n";
+    echo "#    - courses: Courses separated by | (pipe character)\n";
+    echo "#    - location: PAMPLONA, CUCUTA, TIBU, SANVICENTE, ELTARRA, OCANA, etc.\n";
+    echo "#    - modality: PRESENCIAL or A DISTANCIA\n";
+    echo "#    - faculty: FCAS or FII\n";
+    echo "# 4. Save and run: php cli.php --csv=yourfile.csv --create-structure --publish\n";
+    exit(0);
+}
+
+// ============================================================
 // CONFIGURATION
 // ============================================================
 
-// Define ISER structure.
+// Define ISER structure - All locations from profile files.
 $ISER_SEDES = [
     'PAMPLONA' => [
         'name' => 'ISER Sede Pamplona',
@@ -201,22 +253,82 @@ $ISER_SEDES = [
         'code' => 'ISER-PAM',
     ],
     'CUCUTA' => [
-        'name' => 'ISER Sede Cúcuta',
+        'name' => 'ISER Centro Tutorial San José de Cúcuta',
         'shortname' => 'CUCUTA',
         'city' => 'Cúcuta',
         'code' => 'ISER-CUC',
     ],
     'TIBU' => [
-        'name' => 'ISER Sede Tibú',
+        'name' => 'ISER Centro Tutorial Tibú',
         'shortname' => 'TIBU',
         'city' => 'Tibú',
         'code' => 'ISER-TIB',
     ],
     'SANVICENTE' => [
-        'name' => 'ISER Sede San Vicente de Chucurí',
+        'name' => 'ISER Centro Tutorial San Vicente del Chucurí',
         'shortname' => 'SANVICENTE',
-        'city' => 'San Vicente de Chucurí',
+        'city' => 'San Vicente del Chucurí',
         'code' => 'ISER-SVC',
+    ],
+    'ELTARRA' => [
+        'name' => 'ISER Centro Tutorial El Tarra',
+        'shortname' => 'ELTARRA',
+        'city' => 'El Tarra',
+        'code' => 'ISER-TAR',
+    ],
+    'OCANA' => [
+        'name' => 'ISER Centro Tutorial Ocaña',
+        'shortname' => 'OCANA',
+        'city' => 'Ocaña',
+        'code' => 'ISER-OCA',
+    ],
+    'PUEBLOBELLO' => [
+        'name' => 'ISER Centro Tutorial Pueblo Bello',
+        'shortname' => 'PUEBLOBELLO',
+        'city' => 'Pueblo Bello',
+        'code' => 'ISER-PBL',
+    ],
+    'SANPABLO' => [
+        'name' => 'ISER Centro Tutorial San Pablo, Sur de Bolívar',
+        'shortname' => 'SANPABLO',
+        'city' => 'San Pablo',
+        'code' => 'ISER-SPB',
+    ],
+    'SANTAROSA' => [
+        'name' => 'ISER Centro Tutorial Santa Rosa del Sur de Bolívar',
+        'shortname' => 'SANTAROSA',
+        'city' => 'Santa Rosa del Sur',
+        'code' => 'ISER-SRS',
+    ],
+    'TAME' => [
+        'name' => 'ISER Centro Tutorial Tame',
+        'shortname' => 'TAME',
+        'city' => 'Tame',
+        'code' => 'ISER-TAM',
+    ],
+    'FUNDACION' => [
+        'name' => 'ISER Centro Tutorial Fundación',
+        'shortname' => 'FUNDACION',
+        'city' => 'Fundación',
+        'code' => 'ISER-FUN',
+    ],
+    'CIMITARRA' => [
+        'name' => 'ISER Centro Tutorial Cimitarra',
+        'shortname' => 'CIMITARRA',
+        'city' => 'Cimitarra',
+        'code' => 'ISER-CIM',
+    ],
+    'SALAZAR' => [
+        'name' => 'ISER Centro Tutorial Salazar',
+        'shortname' => 'SALAZAR',
+        'city' => 'Salazar',
+        'code' => 'ISER-SAL',
+    ],
+    'TOLEDO' => [
+        'name' => 'ISER Centro Tutorial Toledo',
+        'shortname' => 'TOLEDO',
+        'city' => 'Toledo',
+        'code' => 'ISER-TOL',
     ],
 ];
 
@@ -227,7 +339,14 @@ $ISER_MODALIDADES = [
 
 $plugindir = __DIR__ . '/..';
 $inputdir = $options['input'] ?? $plugindir . '/PERFILESPROFESORES_TEXT';
-if (!is_dir($inputdir)) {
+$csvfile = $options['csv'] ?? null;
+
+// Validate input source.
+if ($csvfile) {
+    if (!file_exists($csvfile)) {
+        cli_error("CSV file not found: $csvfile");
+    }
+} else if (!is_dir($inputdir)) {
     cli_error("Input directory not found: $inputdir");
 }
 
@@ -263,8 +382,12 @@ if ($shouldpublish) {
 // HEADER
 // ============================================================
 
-cli_heading('ISER Job Board - Profile Import v2.0');
-echo "Input directory: $inputdir\n";
+cli_heading('ISER Job Board - Profile Import v2.1');
+if ($csvfile) {
+    echo "Input CSV: $csvfile\n";
+} else {
+    echo "Input directory: $inputdir\n";
+}
 echo "Open date: " . date('Y-m-d', $opendate) . "\n";
 echo "Close date: " . date('Y-m-d', $closedate) . "\n";
 echo "Create structure: " . ($options['create-structure'] ? 'YES (companies + departments)' : 'NO') . "\n";
@@ -278,60 +401,89 @@ if ($options['reset']) {
 echo "\n";
 
 // ============================================================
-// PHASE 1: PARSE TEXT FILES
+// PHASE 1: PARSE INPUT (Text Files or CSV)
 // ============================================================
-
-cli_heading('Phase 1: Parsing Profile Text Files');
-
-$files = glob($inputdir . '/*.txt');
-$files = array_filter($files, fn($f) => strpos(basename($f), '_CONSOLIDADO') === false);
-sort($files);
-
-echo "Found " . count($files) . " text files\n\n";
 
 $allprofiles = [];
 $parsestats = ['files' => 0, 'profiles' => 0, 'fcas' => 0, 'fii' => 0];
 $locationstats = [];
 
-foreach ($files as $file) {
-    $filename = basename($file);
-    $content = file_get_contents($file);
+if ($csvfile) {
+    // Import from CSV.
+    cli_heading('Phase 1: Importing from CSV File');
 
-    // Determine location from content.
-    $location = extract_location_from_content($content, $filename);
-
-    $profiles = parse_profiles_from_text($content, $filename, $location);
-    $count = count($profiles);
-
-    if ($verbose) {
-        echo "  $filename: $count profiles (Location: $location)\n";
-    }
+    $profiles = parse_csv_file($csvfile, $verbose);
+    $allprofiles = $profiles;
 
     foreach ($profiles as $code => $profile) {
-        if (!isset($allprofiles[$code])) {
-            $allprofiles[$code] = $profile;
-            $parsestats['profiles']++;
-            if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
-            else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
+        $parsestats['profiles']++;
+        if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
+        else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
 
-            // Track location stats.
-            $loc = $profile['location'] ?? 'PAMPLONA';
-            $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
-        }
+        $loc = $profile['location'] ?? 'PAMPLONA';
+        $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
     }
-    $parsestats['files']++;
-}
+    $parsestats['files'] = 1;
 
-ksort($allprofiles);
+    echo "\nCSV import complete:\n";
+    echo "  Profiles imported: {$parsestats['profiles']}\n";
+    echo "    - FCAS: {$parsestats['fcas']}\n";
+    echo "    - FII: {$parsestats['fii']}\n";
+    echo "\n  By location:\n";
+    foreach ($locationstats as $loc => $cnt) {
+        echo "    - $loc: $cnt\n";
+    }
 
-echo "\nParsing complete:\n";
-echo "  Files processed: {$parsestats['files']}\n";
-echo "  Profiles found: {$parsestats['profiles']}\n";
-echo "    - FCAS: {$parsestats['fcas']}\n";
-echo "    - FII: {$parsestats['fii']}\n";
-echo "\n  By location:\n";
-foreach ($locationstats as $loc => $cnt) {
-    echo "    - $loc: $cnt\n";
+} else {
+    // Parse text files.
+    cli_heading('Phase 1: Parsing Profile Text Files');
+
+    $files = glob($inputdir . '/*.txt');
+    $files = array_filter($files, fn($f) => strpos(basename($f), '_CONSOLIDADO') === false);
+    sort($files);
+
+    echo "Found " . count($files) . " text files\n\n";
+
+    foreach ($files as $file) {
+        $filename = basename($file);
+        $content = file_get_contents($file);
+
+        // Determine location from content.
+        $location = extract_location_from_content($content, $filename);
+
+        $profiles = parse_profiles_from_text($content, $filename, $location);
+        $count = count($profiles);
+
+        if ($verbose) {
+            echo "  $filename: $count profiles (Location: $location)\n";
+        }
+
+        foreach ($profiles as $code => $profile) {
+            if (!isset($allprofiles[$code])) {
+                $allprofiles[$code] = $profile;
+                $parsestats['profiles']++;
+                if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
+                else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
+
+                // Track location stats.
+                $loc = $profile['location'] ?? 'PAMPLONA';
+                $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
+            }
+        }
+        $parsestats['files']++;
+    }
+
+    ksort($allprofiles);
+
+    echo "\nParsing complete:\n";
+    echo "  Files processed: {$parsestats['files']}\n";
+    echo "  Profiles found: {$parsestats['profiles']}\n";
+    echo "    - FCAS: {$parsestats['fcas']}\n";
+    echo "    - FII: {$parsestats['fii']}\n";
+    echo "\n  By location:\n";
+    foreach ($locationstats as $loc => $cnt) {
+        echo "    - $loc: $cnt\n";
+    }
 }
 
 // Export JSON if requested.
@@ -1033,46 +1185,198 @@ exit($importstats['errors'] > 0 ? 1 : 0);
 
 
 // ============================================================
-// PARSING FUNCTIONS
+// PARSING FUNCTIONS (Rewritten v2.1 for accurate extraction)
 // ============================================================
 
 /**
- * Extract location from file content.
+ * Location patterns mapping to normalized keys.
  */
-function extract_location_from_content($content, $filename) {
-    // Check filename first.
-    $content_upper = strtoupper($content . ' ' . $filename);
-
-    // Check for specific locations in content.
-    if (preg_match('/SAN\s*VICENTE/i', $content_upper)) {
-        return 'SANVICENTE';
-    }
-    if (preg_match('/TIB[UÚ]/i', $content_upper)) {
-        return 'TIBU';
-    }
-    if (preg_match('/C[UÚ]CUTA/i', $content_upper)) {
-        return 'CUCUTA';
-    }
-
-    // Default to PAMPLONA.
-    return 'PAMPLONA';
+function get_location_patterns() {
+    return [
+        // Centros Tutoriales (order matters - more specific first).
+        'CENTRO TUTORIAL EL TARRA' => 'ELTARRA',
+        'CENTRO TUTORIAL OCA[ÑN]A' => 'OCANA',
+        'CENTRO TUTORIAL PUEBLO BELLO' => 'PUEBLOBELLO',
+        'CENTRO TUTORIAL SAN JOS[EÉ] DE C[UÚ]CUTA' => 'CUCUTA',
+        'CENTRO TUTORIAL SAN PABLO' => 'SANPABLO',
+        'CENTRO TUTORIAL SAN VICENTE' => 'SANVICENTE',
+        'CENTRO TUTORIAL SANTA ROSA' => 'SANTAROSA',
+        'CENTRO TUTORIAL TAME' => 'TAME',
+        'CENTRO TUTORIAL TIB[UÚ]' => 'TIBU',
+        'CENTRO TUTORIAL FUNDACION' => 'FUNDACION',
+        'CENTRO TUTORIAL TOLEDO' => 'TOLEDO',
+        // Individual location names.
+        'EL TARRA' => 'ELTARRA',
+        'OCA[ÑN]A' => 'OCANA',
+        'PUEBLO BELLO' => 'PUEBLOBELLO',
+        'SAN VICENTE' => 'SANVICENTE',
+        'SANTA ROSA' => 'SANTAROSA',
+        'SAN PABLO' => 'SANPABLO',
+        'CIMITARRA' => 'CIMITARRA',
+        'SALAZAR' => 'SALAZAR',
+        'TOLEDO' => 'TOLEDO',
+        'TAME' => 'TAME',
+        'TIB[UÚ]' => 'TIBU',
+        'C[UÚ]CUTA' => 'CUCUTA',
+        'FUNDACI[OÓ]N' => 'FUNDACION',
+        'PAMPLONA' => 'PAMPLONA',
+    ];
 }
 
 /**
- * Parse profiles from text content.
+ * Extract location from a text segment.
+ * @param string $text Text to search in.
+ * @return string|null Normalized location key or null.
+ */
+function detect_location($text) {
+    $patterns = get_location_patterns();
+    $text_upper = strtoupper($text);
+
+    foreach ($patterns as $pattern => $location) {
+        if (preg_match('/' . $pattern . '/iu', $text_upper)) {
+            return $location;
+        }
+    }
+    return null;
+}
+
+/**
+ * Detect modality from text segment.
+ * @param string $text Text to search in.
+ * @return string 'PRESENCIAL' or 'A DISTANCIA'.
+ */
+function detect_modality($text) {
+    if (preg_match('/MODALIDAD\s+A?\s*DISTANCIA|A\s+DISTANCIA/iu', $text)) {
+        return 'A DISTANCIA';
+    }
+    return 'PRESENCIAL';
+}
+
+/**
+ * Build a regex pattern to match location section headers.
+ * @return string Regex pattern.
+ */
+function get_section_header_pattern() {
+    return '/(?:^|\n)\s*(?:'
+        . 'CENTRO\s+TUTORIAL\s+[^\n]+|'
+        . 'PROGRAMA\s+MODALIDAD\s+(?:A\s+)?DISTANCIA[^\n]*|'
+        . 'MODALIDAD\s+(?:A\s+)?DISTANCIA[^\n]*|'
+        . 'MODALIDAD\s+PRESENCIAL[^\n]*|'
+        . '(?:PAMPLONA|C[UÚ]CUTA|TIB[UÚ]|SALAZAR|CIMITARRA|OCA[ÑN]A|TOLEDO|TAME)\s*(?:\n|$)'
+        . ')/iu';
+}
+
+/**
+ * Split content into sections by location/modality headers.
+ * @param string $content File content.
+ * @param string $filename File name for context.
+ * @return array Array of sections with metadata.
+ */
+function split_into_sections($content, $filename) {
+    $content = preg_replace('/\r\n|\r/', "\n", $content);
+
+    // Determine faculty from filename.
+    $faculty = '';
+    if (stripos($filename, 'FCAS') !== false) {
+        $faculty = 'FCAS';
+    } else if (stripos($filename, 'FII') !== false) {
+        $faculty = 'FII';
+    }
+
+    // Default modality from filename.
+    $default_modality = 'PRESENCIAL';
+    if (stripos($filename, 'DISTANCIA') !== false) {
+        $default_modality = 'A DISTANCIA';
+    }
+
+    // Find all section headers with their positions.
+    $pattern = get_section_header_pattern();
+    $sections = [];
+
+    if (preg_match_all($pattern, $content, $matches, PREG_OFFSET_CAPTURE)) {
+        $headers = $matches[0];
+        $numheaders = count($headers);
+
+        for ($i = 0; $i < $numheaders; $i++) {
+            $header_text = $headers[$i][0];
+            $start = $headers[$i][1];
+            $end = isset($headers[$i + 1]) ? $headers[$i + 1][1] : strlen($content);
+
+            $section_content = substr($content, $start, $end - $start);
+
+            // Detect location and modality for this section.
+            $location = detect_location($header_text) ?: 'PAMPLONA';
+            $modality = detect_modality($header_text);
+
+            // If modality not in header, check if it's in the section start.
+            if ($modality === 'PRESENCIAL') {
+                $modality = detect_modality(substr($section_content, 0, 200));
+            }
+
+            $sections[] = [
+                'content' => $section_content,
+                'location' => $location,
+                'modality' => $modality !== 'PRESENCIAL' ? $modality : $default_modality,
+                'faculty' => $faculty,
+            ];
+        }
+    }
+
+    // If no sections found, treat entire content as one section.
+    if (empty($sections)) {
+        $location = detect_location($content) ?: 'PAMPLONA';
+        $modality = detect_modality($content);
+        if ($modality === 'PRESENCIAL') {
+            $modality = $default_modality;
+        }
+
+        $sections[] = [
+            'content' => $content,
+            'location' => $location,
+            'modality' => $modality,
+            'faculty' => $faculty,
+        ];
+    }
+
+    return $sections;
+}
+
+/**
+ * Parse profiles from text content - REWRITTEN for accuracy.
+ * @param string $content Full file content.
+ * @param string $filename File name.
+ * @param string $defaultlocation Default location (unused, kept for compatibility).
+ * @return array Array of profiles keyed by code.
  */
 function parse_profiles_from_text($content, $filename, $defaultlocation = 'PAMPLONA') {
     $profiles = [];
 
-    // Determine source info.
-    $source = [
-        'faculty' => strpos($filename, 'FCAS') !== false ? 'FCAS' :
-                    (strpos($filename, 'FII') !== false ? 'FII' : ''),
-        'modality' => stripos($filename, 'DISTANCIA') !== false ? 'A DISTANCIA' : 'PRESENCIAL',
-        'location' => $defaultlocation,
-    ];
+    // Split into sections.
+    $sections = split_into_sections($content, $filename);
 
-    $content = preg_replace('/\r\n|\r/', "\n", $content);
+    foreach ($sections as $section) {
+        $section_profiles = parse_section_profiles($section);
+        foreach ($section_profiles as $code => $profile) {
+            // Only add if not already present (avoid duplicates).
+            if (!isset($profiles[$code])) {
+                $profiles[$code] = $profile;
+            }
+        }
+    }
+
+    return $profiles;
+}
+
+/**
+ * Parse profiles from a single section.
+ * @param array $section Section data with content, location, modality, faculty.
+ * @return array Array of profiles.
+ */
+function parse_section_profiles($section) {
+    $profiles = [];
+    $content = $section['content'];
+
+    // Find all profile codes.
     $pattern = '/\b(FCAS-?\s*\d+|FII-?\s*\d+)\b/i';
 
     if (!preg_match_all($pattern, $content, $matches, PREG_OFFSET_CAPTURE)) {
@@ -1087,13 +1391,26 @@ function parse_profiles_from_text($content, $filename, $defaultlocation = 'PAMPL
         $start = $codes[$i][1];
         $end = isset($codes[$i + 1]) ? $codes[$i + 1][1] : strlen($content);
 
-        $code = preg_replace('/\s+/', '', strtoupper($coderaw));
+        // Normalize code (remove spaces).
+        $code = preg_replace('/[\s-]+/', '-', strtoupper(trim($coderaw)));
+        $code = preg_replace('/-+/', '-', $code);
 
+        // Skip table headers.
         $blockstart = substr($content, $start, 100);
-        if (preg_match('/CÓDIGO\s*TIPO/i', $blockstart)) continue;
+        if (preg_match('/C[ÓO]DIGO\s*TIPO/iu', $blockstart)) {
+            continue;
+        }
 
+        // Extract block for this profile.
         $block = substr($content, $start + strlen($coderaw), $end - $start - strlen($coderaw));
         $block = trim($block);
+
+        // Parse the profile block.
+        $source = [
+            'faculty' => $section['faculty'] ?: (strpos($code, 'FCAS') === 0 ? 'FCAS' : 'FII'),
+            'modality' => $section['modality'],
+            'location' => $section['location'],
+        ];
 
         $profile = parse_profile_block($code, $block, $source);
         if ($profile) {
@@ -1105,11 +1422,18 @@ function parse_profiles_from_text($content, $filename, $defaultlocation = 'PAMPL
 }
 
 /**
- * Parse a single profile block.
+ * Parse a single profile block - REWRITTEN for better extraction.
+ * @param string $code Profile code (e.g., FCAS-01).
+ * @param string $block Raw text block for this profile.
+ * @param array $source Source info (faculty, modality, location).
+ * @return array|null Profile data or null if invalid.
  */
 function parse_profile_block($code, $block, $source) {
-    $normalized = preg_replace('/\s+/', ' ', $block);
+    // Normalize whitespace but preserve some structure.
+    $normalized = preg_replace('/[ \t]+/', ' ', $block);
+    $normalized = preg_replace('/\n\s*\n+/', "\n", $normalized);
     $normalized = trim($normalized);
+    $oneline = preg_replace('/\s+/', ' ', $normalized);
 
     $profile = [
         'code' => $code,
@@ -1122,59 +1446,399 @@ function parse_profile_block($code, $block, $source) {
         'courses' => [],
     ];
 
-    // Contract type.
-    if (preg_match('/^\s*(OCASIONAL\s+TIEMPO\s+COMPLETO|C[ÁA]TEDRA)/i', $normalized, $m)) {
-        $ct = strtoupper(trim($m[1]));
-        $profile['contracttype'] = str_replace('ÁTEDRA', 'ATEDRA', $ct);
+    // =====================
+    // 1. CONTRACT TYPE
+    // =====================
+    if (preg_match('/OCASIONAL\s+TIEMPO\s+COMPLETO/iu', $oneline)) {
+        $profile['contracttype'] = 'OCASIONAL TIEMPO COMPLETO';
+    } else if (preg_match('/C[ÁA]TEDRA/iu', $oneline)) {
+        $profile['contracttype'] = 'CATEDRA';
     }
 
-    // Program.
-    if (preg_match('/TECNOLOG[IÍ]A\s+EN\s+([A-ZÁÉÍÓÚÑ\s]+?)(?=\s+(?:PROFESIONAL|INGENIER|LICENCIAD|ADMINISTRAD|MÉDICO|ABOGAD|CONTADOR|ECONOMISTA|PSICOLOG|TRABAJADOR|TECNÓLOG|ORIENTAR|$))/iu', $normalized, $m)) {
-        $profile['program'] = 'TECNOLOGIA EN ' . trim(preg_replace('/\s+/', ' ', $m[1]));
-    } else if (preg_match('/T[EÉ]CNICA\s+PROFESIONAL\s+EN\s+([A-ZÁÉÍÓÚÑ\s]+?)(?=\s+(?:PROFESIONAL|INGENIER|LICENCIAD|$))/iu', $normalized, $m)) {
-        $profile['program'] = 'TECNICA PROFESIONAL EN ' . trim(preg_replace('/\s+/', ' ', $m[1]));
+    // =====================
+    // 2. PROGRAM
+    // =====================
+    // Look for TECNOLOGÍA EN...
+    if (preg_match('/TECNOLOG[IÍ]A\s+EN\s+([A-ZÁÉÍÓÚÑ\s]+?)(?=\s+(?:PROFESIONAL|INGENIER|LICENCIAD|ADMINISTRAD|MÉDICO|ABOGAD|CONTADOR|ECONOMISTA|PSIC[OÓ]LOG|TRABAJADOR|TECN[ÓO]LOG|ORIENTAR|DOCENTE|QU[IÍ]MICO|ARQUITECTO|MICROBIO|COMUNICADOR|$))/iu', $oneline, $m)) {
+        $prog = 'TECNOLOGÍA EN ' . trim(preg_replace('/\s+/', ' ', $m[1]));
+        // Clean up common issues.
+        $prog = preg_replace('/\s+(PROFESIONAL|INGENIER|LICENCIAD).*$/iu', '', $prog);
+        $profile['program'] = trim($prog);
+    }
+    // TÉCNICA PROFESIONAL EN...
+    else if (preg_match('/T[EÉ]CNICA\s+PROFESIONAL\s+EN\s+([A-ZÁÉÍÓÚÑ\s]+?)(?=\s+(?:PROFESIONAL|INGENIER|LICENCIAD|$))/iu', $oneline, $m)) {
+        $profile['program'] = 'TÉCNICA PROFESIONAL EN ' . trim(preg_replace('/\s+/', ' ', $m[1]));
+    }
+    // Special: TODOS LOS PROGRAMAS.
+    else if (preg_match('/TODOS\s+LOS\s+PROGRAMAS/iu', $oneline)) {
+        $profile['program'] = 'TODOS LOS PROGRAMAS';
     }
 
-    // Professional profile.
-    $progend = 0;
-    if (!empty($profile['program'])) {
-        $pos = stripos($normalized, $profile['program']);
-        if ($pos !== false) $progend = $pos + strlen($profile['program']);
-    }
+    // =====================
+    // 3. PROFESSIONAL PROFILE
+    // =====================
+    // Extract professional profile - look for professional titles.
+    $prof_patterns = [
+        '/(?:PROFESIONAL\s+(?:EN\s+)?|INGENIER[OA]?\s*(?:\s+EN|\s+DE|\(A\))?|LICENCIAD[OA]?\s*(?:\s+EN|\(A\))?|ADMINISTRADOR[A]?\s*(?:\s+DE)?|CONTADOR[A]?\s*(?:\s+P[UÚ]BLICO)?|ECONOMISTA|PSIC[OÓ]LOG[OA]?|TRABAJADOR[A]?\s+SOCIAL|TECN[OÓ]LOG[OA]?\s*(?:\s+EN|\(A\))?|QU[IÍ]MICO|ARQUITECTO|MICROBIO|COMUNICADOR|ABOGAD[OA]?)([^O][A-ZÁÉÍÓÚÑ\s,\/\.\-\(\)]+)/iu',
+    ];
 
-    $orientarpos = stripos($normalized, 'ORIENTAR');
-    if ($orientarpos === false) $orientarpos = strlen($normalized);
-
-    if ($progend > 0 && $orientarpos > $progend) {
-        $proftext = substr($normalized, $progend, $orientarpos - $progend);
-        $proftext = trim($proftext);
-        $proftext = preg_replace('/^\s*(?:Y\s+|,\s*)+/', '', $proftext);
-        $proftext = preg_replace('/\s*(?:ORIENTAR.*|CURSOS?.*)$/i', '', $proftext);
-        if (strlen($proftext) > 5) {
-            $profile['profile'] = trim($proftext);
+    foreach ($prof_patterns as $pattern) {
+        if (preg_match_all($pattern, $oneline, $pm, PREG_SET_ORDER)) {
+            $parts = [];
+            foreach ($pm as $match) {
+                $full = trim($match[0]);
+                // Clean up.
+                $full = preg_replace('/\s*(?:ORIENTAR|POSIBLES|CURSOS|CÓDIGO|TIPO|VINCULACIÓN).*$/iu', '', $full);
+                $full = preg_replace('/\s+/', ' ', $full);
+                if (strlen($full) > 10 && !preg_match('/^(?:TECNOLOGÍA|TÉCNICA|PROGRAMA)/iu', $full)) {
+                    $parts[] = $full;
+                }
+            }
+            if (!empty($parts)) {
+                $profile['profile'] = implode(' / ', array_unique($parts));
+                break;
+            }
         }
     }
 
-    // Courses.
-    if (preg_match('/ORIENTAR\s+(?:LOS\s+)?CURSOS?\s*(?:DE)?\s*:?\s*(.+?)$/isu', $normalized, $m)) {
-        $coursestext = trim($m[1]);
-        $courses = preg_split('/\s*(?:[-–•]|\n|\s{2,})\s*/u', $coursestext);
-        $courses = array_map('trim', $courses);
-        $courses = array_filter($courses, function($c) {
-            $c = trim($c);
-            if (strlen($c) < 3) return false;
-            if (preg_match('/^(?:DE|EN|LOS|LAS|EL|LA|Y|O|PARA|DEL|AL|CON|CURSOS?|ORIENTAR|CÓDIGO|TIPO|VINCULACIÓN|PROGRAMA|ACADÉMICO|PERFIL|PROFESIONAL|ESPECÍFICO|POSIBLES)$/i', $c)) {
-                return false;
+    // Fallback: Look between program and ORIENTAR.
+    if (empty($profile['profile']) && !empty($profile['program'])) {
+        $progpos = stripos($oneline, $profile['program']);
+        if ($progpos !== false) {
+            $afterprog = substr($oneline, $progpos + strlen($profile['program']));
+            $orientarpos = stripos($afterprog, 'ORIENTAR');
+            if ($orientarpos === false) {
+                $orientarpos = strlen($afterprog);
             }
-            return true;
-        });
-        $profile['courses'] = array_values($courses);
+            $proftext = trim(substr($afterprog, 0, $orientarpos));
+            $proftext = preg_replace('/^[\s,\.]+/', '', $proftext);
+            if (strlen($proftext) > 15) {
+                $profile['profile'] = $proftext;
+            }
+        }
     }
 
-    if (!empty($profile['contracttype']) || !empty($profile['program']) ||
-        !empty($profile['profile']) || !empty($profile['courses'])) {
-        return $profile;
+    // =====================
+    // 4. COURSES
+    // =====================
+    $courses = [];
+
+    // Method 1: Look for "ORIENTAR LOS CURSOS DE:" pattern.
+    if (preg_match('/ORIENTAR\s+(?:LOS\s+)?CURSOS?\s*(?:DE)?\s*:?\s*(.+?)$/isu', $oneline, $cm)) {
+        $coursestext = trim($cm[1]);
+        // Split by common delimiters.
+        $course_items = preg_split('/\s*(?:[-–•]|\s{2,})\s*/u', $coursestext);
+        foreach ($course_items as $c) {
+            $c = trim($c);
+            if (is_valid_course($c)) {
+                $courses[] = clean_course_name($c);
+            }
+        }
     }
 
-    return null;
+    // Method 2: Look for course patterns at the end of blocks.
+    if (empty($courses)) {
+        // Get text after profile description.
+        $lines = preg_split('/\n/', $normalized);
+        $in_courses = false;
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (empty($line)) continue;
+
+            // Detect start of courses.
+            if (preg_match('/ORIENTAR|CURSOS?\s*(?:PARA|DE)|POSIBLES\s+CURSOS/iu', $line)) {
+                $in_courses = true;
+                $line = preg_replace('/.*(?:ORIENTAR|CURSOS?\s*(?:PARA|DE)|POSIBLES\s+CURSOS)\s*:?\s*/iu', '', $line);
+            }
+
+            if ($in_courses && !empty($line)) {
+                // Check if this looks like a course name.
+                if (preg_match('/^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s,\.\-\(\)IVX0-9]+$/iu', $line)) {
+                    $course_items = preg_split('/\s*[-–•]\s*/', $line);
+                    foreach ($course_items as $c) {
+                        $c = trim($c);
+                        if (is_valid_course($c)) {
+                            $courses[] = clean_course_name($c);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    $profile['courses'] = array_values(array_unique($courses));
+
+    // Validate profile has meaningful data.
+    if (empty($profile['contracttype']) && empty($profile['program']) &&
+        empty($profile['profile']) && empty($profile['courses'])) {
+        return null;
+    }
+
+    return $profile;
+}
+
+/**
+ * Check if a string looks like a valid course name.
+ * @param string $c Course name candidate.
+ * @return bool True if valid.
+ */
+function is_valid_course($c) {
+    $c = trim($c);
+    if (strlen($c) < 4) return false;
+    if (strlen($c) > 100) return false;
+
+    // Reject common non-course words.
+    $reject = '/^(?:DE|EN|LOS|LAS|EL|LA|Y|O|PARA|DEL|AL|CON|A|'
+        . 'CURSOS?|ORIENTAR|C[ÓO]DIGO|TIPO|VINCULACI[ÓO]N|PROGRAMA|ACAD[ÉE]MICO|'
+        . 'PERFIL|PROFESIONAL|ESPEC[IÍ]FICO|POSIBLES|DOCENTE|C[ÁA]TEDRA|'
+        . 'OCASIONAL|TIEMPO|COMPLETO|TECNOLOG[IÍ]A|T[ÉE]CNICA|GESTI[ÓO]N|'
+        . 'POSGRADO|ESPECIALI|MAESTR[IÍ]A|DOCTOR)$/iu';
+
+    if (preg_match($reject, $c)) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Clean up a course name.
+ * @param string $c Course name.
+ * @return string Cleaned course name.
+ */
+function clean_course_name($c) {
+    $c = trim($c);
+    // Remove leading numbers/bullets.
+    $c = preg_replace('/^[\d\.\)\-\•]+\s*/', '', $c);
+    // Clean extra spaces.
+    $c = preg_replace('/\s+/', ' ', $c);
+    // Remove trailing punctuation.
+    $c = preg_replace('/[\.\,;:]+$/', '', $c);
+    return trim($c);
+}
+
+/**
+ * Legacy function - kept for compatibility.
+ */
+function extract_location_from_content($content, $filename) {
+    return detect_location($content . ' ' . $filename) ?: 'PAMPLONA';
+}
+
+// ============================================================
+// CSV PARSING FUNCTIONS
+// ============================================================
+
+/**
+ * Parse profiles from a CSV file.
+ *
+ * Expected CSV format:
+ * code,contracttype,program,profile,courses,location,modality,faculty
+ *
+ * Courses should be separated by | (pipe) character.
+ *
+ * @param string $filepath Path to the CSV file.
+ * @param bool $verbose Show detailed output.
+ * @return array Array of profiles keyed by code.
+ */
+function parse_csv_file($filepath, $verbose = false) {
+    $profiles = [];
+
+    $handle = fopen($filepath, 'r');
+    if ($handle === false) {
+        if (function_exists('cli_error')) {
+            cli_error("Cannot open CSV file: $filepath");
+        }
+        return [];
+    }
+
+    // Read header row.
+    $header = fgetcsv($handle);
+    if ($header === false) {
+        fclose($handle);
+        if (function_exists('cli_error')) {
+            cli_error("CSV file is empty or invalid: $filepath");
+        }
+        return [];
+    }
+
+    // Normalize header names.
+    $header = array_map(function($h) {
+        return strtolower(trim($h));
+    }, $header);
+
+    // Map expected column names.
+    $colmap = [
+        'code' => array_search('code', $header),
+        'contracttype' => array_search('contracttype', $header),
+        'program' => array_search('program', $header),
+        'profile' => array_search('profile', $header),
+        'courses' => array_search('courses', $header),
+        'location' => array_search('location', $header),
+        'modality' => array_search('modality', $header),
+        'faculty' => array_search('faculty', $header),
+    ];
+
+    // Check required columns.
+    if ($colmap['code'] === false) {
+        fclose($handle);
+        if (function_exists('cli_error')) {
+            cli_error("CSV missing required column: code");
+        }
+        return [];
+    }
+
+    $rownum = 1;
+    $errors = 0;
+
+    while (($row = fgetcsv($handle)) !== false) {
+        $rownum++;
+
+        // Skip empty rows.
+        if (empty($row) || (count($row) === 1 && empty($row[0]))) {
+            continue;
+        }
+
+        // Skip comment rows (starting with #).
+        if (isset($row[0]) && strpos(trim($row[0]), '#') === 0) {
+            continue;
+        }
+
+        // Extract values.
+        $code = $colmap['code'] !== false ? trim($row[$colmap['code']] ?? '') : '';
+
+        if (empty($code)) {
+            if ($verbose) {
+                echo "  Row $rownum: skipping (empty code)\n";
+            }
+            continue;
+        }
+
+        // Normalize code.
+        $code = preg_replace('/[\s-]+/', '-', strtoupper($code));
+        $code = preg_replace('/-+/', '-', $code);
+
+        // Extract other fields.
+        $contracttype = $colmap['contracttype'] !== false ? trim($row[$colmap['contracttype']] ?? '') : '';
+        $program = $colmap['program'] !== false ? trim($row[$colmap['program']] ?? '') : '';
+        $profile_text = $colmap['profile'] !== false ? trim($row[$colmap['profile']] ?? '') : '';
+        $courses_str = $colmap['courses'] !== false ? trim($row[$colmap['courses']] ?? '') : '';
+        $location = $colmap['location'] !== false ? strtoupper(trim($row[$colmap['location']] ?? '')) : 'PAMPLONA';
+        $modality = $colmap['modality'] !== false ? trim($row[$colmap['modality']] ?? '') : 'PRESENCIAL';
+        $faculty = $colmap['faculty'] !== false ? strtoupper(trim($row[$colmap['faculty']] ?? '')) : '';
+
+        // Auto-detect faculty from code if not specified.
+        if (empty($faculty)) {
+            $faculty = strpos($code, 'FCAS') === 0 ? 'FCAS' : (strpos($code, 'FII') === 0 ? 'FII' : '');
+        }
+
+        // Normalize location.
+        $location = normalize_location_key($location);
+
+        // Normalize modality.
+        if (stripos($modality, 'DISTANCIA') !== false) {
+            $modality = 'A DISTANCIA';
+        } else {
+            $modality = 'PRESENCIAL';
+        }
+
+        // Parse courses (separated by |).
+        $courses = [];
+        if (!empty($courses_str)) {
+            $course_items = explode('|', $courses_str);
+            foreach ($course_items as $c) {
+                $c = trim($c);
+                if (!empty($c)) {
+                    $courses[] = $c;
+                }
+            }
+        }
+
+        // Build profile.
+        $profiles[$code] = [
+            'code' => $code,
+            'faculty' => $faculty,
+            'modality' => $modality,
+            'location' => $location,
+            'contracttype' => strtoupper($contracttype),
+            'program' => $program,
+            'profile' => $profile_text,
+            'courses' => $courses,
+        ];
+
+        if ($verbose) {
+            echo "  Row $rownum: imported $code ({$location}, {$modality})\n";
+        }
+    }
+
+    fclose($handle);
+
+    if ($verbose) {
+        echo "\n  Total rows processed: $rownum\n";
+        echo "  Profiles imported: " . count($profiles) . "\n";
+        if ($errors > 0) {
+            echo "  Errors: $errors\n";
+        }
+    }
+
+    return $profiles;
+}
+
+/**
+ * Normalize location key from various input formats.
+ *
+ * @param string $location Location name from CSV.
+ * @return string Normalized location key.
+ */
+function normalize_location_key($location) {
+    $location = strtoupper(trim($location));
+
+    // Remove common prefixes.
+    $location = preg_replace('/^(?:ISER\s+)?(?:SEDE\s+|CENTRO\s+TUTORIAL\s+)?/i', '', $location);
+    $location = trim($location);
+
+    // Map common variations.
+    $map = [
+        'PAMPLONA' => 'PAMPLONA',
+        'CÚCUTA' => 'CUCUTA',
+        'CUCUTA' => 'CUCUTA',
+        'SAN JOSÉ DE CÚCUTA' => 'CUCUTA',
+        'SAN JOSE DE CUCUTA' => 'CUCUTA',
+        'TIBÚ' => 'TIBU',
+        'TIBU' => 'TIBU',
+        'SAN VICENTE' => 'SANVICENTE',
+        'SAN VICENTE DEL CHUCURÍ' => 'SANVICENTE',
+        'SAN VICENTE DE CHUCURÍ' => 'SANVICENTE',
+        'SANVICENTE' => 'SANVICENTE',
+        'EL TARRA' => 'ELTARRA',
+        'ELTARRA' => 'ELTARRA',
+        'TARRA' => 'ELTARRA',
+        'OCAÑA' => 'OCANA',
+        'OCANA' => 'OCANA',
+        'PUEBLO BELLO' => 'PUEBLOBELLO',
+        'PUEBLOBELLO' => 'PUEBLOBELLO',
+        'SAN PABLO' => 'SANPABLO',
+        'SANPABLO' => 'SANPABLO',
+        'SANTA ROSA' => 'SANTAROSA',
+        'SANTAROSA' => 'SANTAROSA',
+        'SANTA ROSA DEL SUR' => 'SANTAROSA',
+        'TAME' => 'TAME',
+        'FUNDACIÓN' => 'FUNDACION',
+        'FUNDACION' => 'FUNDACION',
+        'CIMITARRA' => 'CIMITARRA',
+        'SALAZAR' => 'SALAZAR',
+        'TOLEDO' => 'TOLEDO',
+    ];
+
+    if (isset($map[$location])) {
+        return $map[$location];
+    }
+
+    // Try to detect from detect_location function.
+    $detected = detect_location($location);
+    if ($detected) {
+        return $detected;
+    }
+
+    // Default to PAMPLONA if unrecognized.
+    return 'PAMPLONA';
 }
