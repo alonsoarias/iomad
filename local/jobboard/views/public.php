@@ -303,62 +303,41 @@ echo html_writer::end_div();
 
 // Location.
 $locationOptions = ['' => get_string('alllocations', 'local_jobboard')] + ($locations ?: []);
-$locationLabel = isset($locationOptions[$location]) ? $locationOptions[$location] : get_string('alllocations', 'local_jobboard');
 echo html_writer::start_div('jb-filter-item');
 echo html_writer::tag('label', get_string('location', 'local_jobboard'), ['class' => 'jb-filter-label']);
-echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'location', 'id' => 'filter-location-value', 'value' => $location]);
-echo html_writer::start_div('jb-custom-select', ['id' => 'filter-location']);
-echo html_writer::tag('div', htmlspecialchars($locationLabel) . ' <i class="fa fa-chevron-down"></i>', ['class' => 'jb-select-trigger']);
-echo html_writer::start_div('jb-select-options');
+echo '<select name="location" id="filter-location" class="jb-filter-select">';
 foreach ($locationOptions as $val => $label) {
-    $selectedClass = ($location === $val) ? ' selected' : '';
-    echo html_writer::tag('div', htmlspecialchars($label), [
-        'class' => 'jb-select-option' . $selectedClass,
-        'data-value' => $val
-    ]);
+    $selected = ($location === $val) ? ' selected="selected"' : '';
+    $optionText = s($label);
+    echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
-echo html_writer::end_div();
-echo html_writer::end_div();
+echo '</select>';
 echo html_writer::end_div();
 
 // Modality.
 $modalityOptions = ['' => get_string('allmodalities', 'local_jobboard')] + ($modalities ?: []);
-$modalityLabel = isset($modalityOptions[$modality]) ? $modalityOptions[$modality] : get_string('allmodalities', 'local_jobboard');
 echo html_writer::start_div('jb-filter-item');
 echo html_writer::tag('label', get_string('modality', 'local_jobboard'), ['class' => 'jb-filter-label']);
-echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'modality', 'id' => 'filter-modality-value', 'value' => $modality]);
-echo html_writer::start_div('jb-custom-select', ['id' => 'filter-modality']);
-echo html_writer::tag('div', htmlspecialchars($modalityLabel) . ' <i class="fa fa-chevron-down"></i>', ['class' => 'jb-select-trigger']);
-echo html_writer::start_div('jb-select-options');
+echo '<select name="modality" id="filter-modality" class="jb-filter-select">';
 foreach ($modalityOptions as $val => $label) {
-    $selectedClass = ($modality === $val) ? ' selected' : '';
-    echo html_writer::tag('div', htmlspecialchars($label), [
-        'class' => 'jb-select-option' . $selectedClass,
-        'data-value' => $val
-    ]);
+    $selected = ($modality === $val) ? ' selected="selected"' : '';
+    $optionText = s($label);
+    echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
-echo html_writer::end_div();
-echo html_writer::end_div();
+echo '</select>';
 echo html_writer::end_div();
 
 // Contract type.
 $contractOptions = ['' => get_string('allcontracttypes', 'local_jobboard')] + $contracttypes;
-$contractLabel = isset($contractOptions[$contracttype]) ? $contractOptions[$contracttype] : get_string('allcontracttypes', 'local_jobboard');
 echo html_writer::start_div('jb-filter-item');
 echo html_writer::tag('label', get_string('contracttype', 'local_jobboard'), ['class' => 'jb-filter-label']);
-echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'contracttype', 'id' => 'filter-contract-value', 'value' => $contracttype]);
-echo html_writer::start_div('jb-custom-select', ['id' => 'filter-contract']);
-echo html_writer::tag('div', htmlspecialchars($contractLabel) . ' <i class="fa fa-chevron-down"></i>', ['class' => 'jb-select-trigger']);
-echo html_writer::start_div('jb-select-options');
+echo '<select name="contracttype" id="filter-contract" class="jb-filter-select">';
 foreach ($contractOptions as $val => $label) {
-    $selectedClass = ($contracttype === $val) ? ' selected' : '';
-    echo html_writer::tag('div', htmlspecialchars($label), [
-        'class' => 'jb-select-option' . $selectedClass,
-        'data-value' => $val
-    ]);
+    $selected = ($contracttype === $val) ? ' selected="selected"' : '';
+    $optionText = s($label);
+    echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
-echo html_writer::end_div();
-echo html_writer::end_div();
+echo '</select>';
 echo html_writer::end_div();
 
 // Convocatoria.
@@ -366,22 +345,15 @@ $convocatoriaOptions = [0 => get_string('allconvocatorias', 'local_jobboard')];
 foreach ($convocatorias as $conv) {
     $convocatoriaOptions[$conv->id] = format_string($conv->code . ' - ' . $conv->name);
 }
-$convocatoriaLabel = isset($convocatoriaOptions[$convocatoriaid]) ? $convocatoriaOptions[$convocatoriaid] : get_string('allconvocatorias', 'local_jobboard');
 echo html_writer::start_div('jb-filter-item');
 echo html_writer::tag('label', get_string('convocatoria', 'local_jobboard'), ['class' => 'jb-filter-label']);
-echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'convocatoria', 'id' => 'filter-convocatoria-value', 'value' => $convocatoriaid]);
-echo html_writer::start_div('jb-custom-select', ['id' => 'filter-convocatoria']);
-echo html_writer::tag('div', htmlspecialchars($convocatoriaLabel) . ' <i class="fa fa-chevron-down"></i>', ['class' => 'jb-select-trigger']);
-echo html_writer::start_div('jb-select-options');
+echo '<select name="convocatoria" id="filter-convocatoria" class="jb-filter-select">';
 foreach ($convocatoriaOptions as $val => $label) {
-    $selectedClass = ($convocatoriaid == $val) ? ' selected' : '';
-    echo html_writer::tag('div', htmlspecialchars($label), [
-        'class' => 'jb-select-option' . $selectedClass,
-        'data-value' => $val
-    ]);
+    $selected = ($convocatoriaid == $val) ? ' selected="selected"' : '';
+    $optionText = s($label);
+    echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
-echo html_writer::end_div();
-echo html_writer::end_div();
+echo '</select>';
 echo html_writer::end_div();
 
 echo html_writer::end_div(); // jb-filter-grid
@@ -618,69 +590,20 @@ if (!$isloggedin) {
 
 echo html_writer::end_div(); // local-jobboard-public
 
-// JavaScript for custom dropdown functionality.
+// JavaScript to ensure select options are visible.
 $js = <<<'JS'
 document.addEventListener('DOMContentLoaded', function() {
-    // Custom select dropdown functionality
-    var customSelects = document.querySelectorAll('.jb-custom-select');
+    // Force visibility on all select elements
+    var selects = document.querySelectorAll('.jb-filter-select');
+    selects.forEach(function(select) {
+        select.style.setProperty('color', '#212529', 'important');
+        select.style.setProperty('background-color', '#fff', 'important');
 
-    customSelects.forEach(function(select) {
-        var trigger = select.querySelector('.jb-select-trigger');
-        var options = select.querySelector('.jb-select-options');
-        var hiddenInput = select.previousElementSibling;
-
-        // Toggle dropdown on click
-        trigger.addEventListener('click', function(e) {
-            e.stopPropagation();
-            // Close all other dropdowns
-            customSelects.forEach(function(s) {
-                if (s !== select) {
-                    s.classList.remove('open');
-                }
-            });
-            select.classList.toggle('open');
+        var options = select.querySelectorAll('option');
+        options.forEach(function(option) {
+            option.style.setProperty('color', '#212529', 'important');
+            option.style.setProperty('background-color', '#fff', 'important');
         });
-
-        // Handle option selection
-        var optionItems = options.querySelectorAll('.jb-select-option');
-        optionItems.forEach(function(option) {
-            option.addEventListener('click', function(e) {
-                e.stopPropagation();
-                var value = this.getAttribute('data-value');
-                var text = this.textContent;
-
-                // Update hidden input
-                hiddenInput.value = value;
-
-                // Update trigger text
-                trigger.innerHTML = text + ' <i class="fa fa-chevron-down"></i>';
-
-                // Update selected state
-                optionItems.forEach(function(opt) {
-                    opt.classList.remove('selected');
-                });
-                this.classList.add('selected');
-
-                // Close dropdown
-                select.classList.remove('open');
-            });
-        });
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function() {
-        customSelects.forEach(function(select) {
-            select.classList.remove('open');
-        });
-    });
-
-    // Close dropdown on escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            customSelects.forEach(function(select) {
-                select.classList.remove('open');
-            });
-        }
     });
 });
 JS;
