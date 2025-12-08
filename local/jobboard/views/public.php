@@ -308,7 +308,7 @@ echo html_writer::tag('label', get_string('location', 'local_jobboard'), ['class
 echo '<select name="location" id="filter-location" class="jb-filter-select">';
 foreach ($locationOptions as $val => $label) {
     $selected = ($location === $val) ? ' selected="selected"' : '';
-    $optionText = s($label);
+    $optionText = !empty($label) ? s($label) : s($val);
     echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
 echo '</select>';
@@ -321,7 +321,7 @@ echo html_writer::tag('label', get_string('modality', 'local_jobboard'), ['class
 echo '<select name="modality" id="filter-modality" class="jb-filter-select">';
 foreach ($modalityOptions as $val => $label) {
     $selected = ($modality === $val) ? ' selected="selected"' : '';
-    $optionText = s($label);
+    $optionText = !empty($label) ? s($label) : s($val);
     echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
 echo '</select>';
@@ -334,7 +334,7 @@ echo html_writer::tag('label', get_string('contracttype', 'local_jobboard'), ['c
 echo '<select name="contracttype" id="filter-contract" class="jb-filter-select">';
 foreach ($contractOptions as $val => $label) {
     $selected = ($contracttype === $val) ? ' selected="selected"' : '';
-    $optionText = s($label);
+    $optionText = !empty($label) ? s($label) : s($val);
     echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
 echo '</select>';
@@ -350,7 +350,7 @@ echo html_writer::tag('label', get_string('convocatoria', 'local_jobboard'), ['c
 echo '<select name="convocatoria" id="filter-convocatoria" class="jb-filter-select">';
 foreach ($convocatoriaOptions as $val => $label) {
     $selected = ($convocatoriaid == $val) ? ' selected="selected"' : '';
-    $optionText = s($label);
+    $optionText = !empty($label) ? s($label) : s($val);
     echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
 echo '</select>';

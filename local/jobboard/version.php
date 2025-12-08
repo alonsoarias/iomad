@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120863;  // v2.0.45: Revert to native selects with direct HTML output for options.
+$plugin->version = 2025120864;  // v2.0.46: Fix option text fallback to use value if label is empty.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.45';
+$plugin->release = '2.0.46';
