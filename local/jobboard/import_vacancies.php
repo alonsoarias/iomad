@@ -102,7 +102,7 @@ $PAGE->requires->css('/local/jobboard/styles.css');
 $convocatorias = $DB->get_records_menu('local_jobboard_convocatoria', null, 'name ASC', 'id, name');
 
 // Check if IOMAD is available for company selection.
-$isiomad = local_jobboard_is_iomad_available();
+$isiomad = local_jobboard_is_iomad_installed();
 
 /**
  * CSV import form for vacancies.

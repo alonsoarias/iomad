@@ -6,7 +6,7 @@
   "sortorder": 9,
   "endtourlabel": "tour_endlabel,local_jobboard",
   "displaystepnumbers": true,
-  "configdata": "{\"placement\": \"bottom\", \"orphan\": true, \"backdrop\": true, \"reflex\": false, \"filtervalues\": {\"accessdate\": {\"filter_accessdate_enabled\": 0}, \"role\": [], \"category\": [], \"course\": [], \"courseformat\": [], \"theme\": [], \"cssselector\": []}}",
+  "configdata": "{\"placement\": \"bottom\", \"orphan\": true, \"backdrop\": true, \"reflex\": false}",
   "steps": [
     {
       "title": "tour_manage_step1_title,local_jobboard",
@@ -44,17 +44,17 @@
       "title": "tour_manage_step5_title,local_jobboard",
       "content": "tour_manage_step5_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-bulk-item",
+      "targetvalue": ".table.table-hover",
       "sortorder": 4,
-      "configdata": "{\"placement\": \"right\"}"
+      "configdata": "{\"placement\": \"top\"}"
     },
     {
       "title": "tour_manage_step6_title,local_jobboard",
       "content": "tour_manage_step6_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".table.table-hover",
+      "targetvalue": ".thead-light",
       "sortorder": 5,
-      "configdata": "{\"placement\": \"top\"}"
+      "configdata": "{\"placement\": \"bottom\"}"
     },
     {
       "title": "tour_manage_step7_title,local_jobboard",
@@ -76,7 +76,7 @@
       "title": "tour_manage_step9_title,local_jobboard",
       "content": "tour_manage_step9_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-pagination-container",
+      "targetvalue": ".card.shadow-sm",
       "sortorder": 8,
       "configdata": "{\"placement\": \"top\"}"
     },

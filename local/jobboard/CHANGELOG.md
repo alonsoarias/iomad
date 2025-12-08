@@ -7,6 +7,26 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.34] - 2025-12-08
+
+### Corregido
+- **Error en import_vacancies.php**
+  - Corregida llamada a función inexistente `local_jobboard_is_iomad_available()`
+  - Ahora usa correctamente `local_jobboard_is_iomad_installed()`
+
+### Actualizado
+- **User Tours recreados con selectores CSS correctos (15 tours)**
+  - tour_dashboard: Corregidos selectores `.jb-admin-section`, `.jb-section-card`
+  - tour_manage: Eliminados selectores inexistentes `.jb-bulk-item`, `.jb-pagination-container`
+  - tour_myapplications: Corregido `.progress-tracker` a `.jb-progress-steps`
+  - Limpieza de configdata con filtervalues innecesarios en todos los tours
+  - Todos los JSON validados sintácticamente
+
+### Técnico
+- **version.php**: Incrementado a 2.0.34 (2025120852)
+
+---
+
 ## [2.0.33] - 2025-12-08
 
 ### Corregido

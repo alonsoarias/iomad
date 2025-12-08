@@ -6,7 +6,7 @@
   "sortorder": 0,
   "endtourlabel": "tour_endlabel,local_jobboard",
   "displaystepnumbers": true,
-  "configdata": "{\"placement\": \"bottom\", \"orphan\": true, \"backdrop\": true, \"reflex\": false, \"filtervalues\": {\"accessdate\": {\"filter_accessdate_enabled\": 0}, \"role\": [], \"category\": [], \"course\": [], \"courseformat\": [], \"theme\": [], \"cssselector\": []}}",
+  "configdata": "{\"placement\": \"bottom\", \"orphan\": true, \"backdrop\": true, \"reflex\": false}",
   "steps": [
     {
       "title": "tour_dashboard_step1_title,local_jobboard",
@@ -28,7 +28,7 @@
       "title": "tour_dashboard_step3_title,local_jobboard",
       "content": "tour_dashboard_step3_content,local_jobboard",
       "targettype": 0,
-      "targetvalue": ".jb-page-header",
+      "targetvalue": ".jb-admin-section",
       "sortorder": 2,
       "configdata": "{\"placement\": \"bottom\"}"
     },
