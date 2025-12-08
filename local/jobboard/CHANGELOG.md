@@ -7,6 +7,25 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.36] - 2025-12-08
+
+### Corregido
+- **Formato de cursos en perfiles_2026.json**
+  - Corregidos 21 vacantes con cursos mal formateados
+  - Cursos concatenados con espacios múltiples ahora correctamente separados
+  - Ejemplo: "CURSO A                    CURSO B" → ["CURSO A", "CURSO B"]
+
+### Validado
+- **Todas las 395 vacantes verificadas con campos completos**
+  - code, faculty, contracttype, program, profile, courses, location, modality
+  - Total: 798 cursos (promedio 2 por vacante)
+  - Ocasional TC: 29 | Cátedra: 366
+
+### Técnico
+- **version.php**: Incrementado a 2.0.36 (2025120854)
+
+---
+
 ## [2.0.35] - 2025-12-08
 
 ### Añadido
