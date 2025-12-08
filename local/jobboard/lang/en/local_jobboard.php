@@ -2244,6 +2244,10 @@ $string['alllocations'] = 'All locations';
 $string['allconvocatorias'] = 'All calls';
 $string['openvacancies'] = 'Open Vacancies';
 $string['logintoapply'] = 'Log in to apply for this position';
+$string['allmodalities'] = 'All modalities';
+$string['filtervacancies'] = 'Filter vacancies';
+$string['publicpagedesc'] = 'Explore our available positions and find your next career opportunity.';
+$string['closingsoon'] = 'closing soon';
 
 // General.
 $string['viewall'] = 'View all';

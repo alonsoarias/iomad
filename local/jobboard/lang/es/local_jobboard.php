@@ -2617,6 +2617,10 @@ $string['alllocations'] = 'Todas las ubicaciones';
 $string['allconvocatorias'] = 'Todas las convocatorias';
 $string['openvacancies'] = 'Vacantes Abiertas';
 $string['logintoapply'] = 'Inicia sesión para postularte a esta posición';
+$string['allmodalities'] = 'Todas las modalidades';
+$string['filtervacancies'] = 'Filtrar vacantes';
+$string['publicpagedesc'] = 'Explora nuestras posiciones disponibles y encuentra tu próxima oportunidad laboral.';
+$string['closingsoon'] = 'cierra pronto';
 
 // General.
 $string['viewall'] = 'Ver todos';

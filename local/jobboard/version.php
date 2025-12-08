@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120858;  // v2.0.40: Update vacancy tour with back button step.
+$plugin->version = 2025120859;  // v2.0.41: Complete redesign of public vacancies view.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.40';
+$plugin->release = '2.0.41';
