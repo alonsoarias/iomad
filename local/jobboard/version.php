@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120855;  // v2.0.37: Fix public view filters, add missing lang strings, back button.
+$plugin->version = 2025120856;  // v2.0.38: Complete IOMAD structure (16 companies, 4 departments per company).
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.37';
+$plugin->release = '2.0.38';

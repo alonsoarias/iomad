@@ -137,8 +137,10 @@ Automated import of professional profiles into the local_jobboard vacancy system
 Supports importing from JSON, CSV, or extracted text files.
 
 This CLI can automatically create the complete IOMAD structure:
-- Companies (Sedes): PAMPLONA, CÚCUTA, TIBÚ, SAN VICENTE, EL TARRA, OCAÑA, etc.
-- Departments (Modalidades): PRESENCIAL, A DISTANCIA
+- Companies (16 Centros Tutoriales): PAMPLONA, CUCUTA, TIBU, OCANA, TOLEDO, ELTARRA,
+  SARDINATA, SANVICENTE, PUEBLOBELLO, SANPABLO, SANTAROSA, FUNDACION, CIMITARRA,
+  SALAZAR, TAME, SARAVENA
+- Departments (4 Modalidades per Company): PRESENCIAL, A DISTANCIA, VIRTUAL, HÍBRIDA
 
 USAGE:
   php cli.php [options]
@@ -208,20 +210,30 @@ EXAMPLES:
   # Parse only (standalone mode)
   php cli.php --export-json=perfiles.json --verbose
 
-STRUCTURE CREATED:
-  Companies (Sedes):
-    - ISER Sede Pamplona (shortname: PAMPLONA)
-    - ISER Centro Tutorial Cúcuta (shortname: CUCUTA)
-    - ISER Centro Tutorial Tibú (shortname: TIBU)
-    - ISER Centro Tutorial San Vicente (shortname: SANVICENTE)
-    - ISER Centro Tutorial El Tarra (shortname: ELTARRA)
-    - ISER Centro Tutorial Ocaña (shortname: OCANA)
-    - ISER Centro Tutorial Pueblo Bello (shortname: PUEBLOBELLO)
-    - And more...
+STRUCTURE CREATED (IOMAD Hierarchy):
+  LEVEL 1 - Companies (16 Centros Tutoriales):
+    - ISER Sede Pamplona (PAMPLONA) - Sede Principal
+    - ISER Centro Tutorial Cúcuta (CUCUTA)
+    - ISER Centro Tutorial Tibú (TIBU)
+    - ISER Centro Tutorial Ocaña (OCANA)
+    - ISER Centro Tutorial Toledo (TOLEDO)
+    - ISER Centro Tutorial El Tarra (ELTARRA)
+    - ISER Centro Tutorial Sardinata (SARDINATA)
+    - ISER Centro Tutorial San Vicente (SANVICENTE)
+    - ISER Centro Tutorial Pueblo Bello (PUEBLOBELLO)
+    - ISER Centro Tutorial San Pablo (SANPABLO)
+    - ISER Centro Tutorial Santa Rosa (SANTAROSA)
+    - ISER Centro Tutorial Fundación (FUNDACION)
+    - ISER Centro Tutorial Cimitarra (CIMITARRA)
+    - ISER Centro Tutorial Salazar (SALAZAR)
+    - ISER Centro Tutorial Tame (TAME)
+    - ISER Centro Tutorial Saravena (SARAVENA)
 
-  Departments per Company (Modalidades):
-    - Presencial
-    - A Distancia
+  LEVEL 2 - Departments per Company (4 Modalidades Educativas):
+    - Presencial (PRESENCIAL)
+    - A Distancia (DISTANCIA)
+    - Virtual (VIRTUAL)
+    - Híbrida (HIBRIDA)
 
 EOT;
 
@@ -251,8 +263,10 @@ CSV;
     echo "#    - program: Academic program name\n";
     echo "#    - profile: Professional profile required\n";
     echo "#    - courses: Courses separated by | (pipe character)\n";
-    echo "#    - location: PAMPLONA, CUCUTA, TIBU, SANVICENTE, ELTARRA, OCANA, etc.\n";
-    echo "#    - modality: PRESENCIAL or A DISTANCIA\n";
+    echo "#    - location: PAMPLONA, CUCUTA, TIBU, OCANA, TOLEDO, ELTARRA, SARDINATA,\n";
+    echo "#                SANVICENTE, PUEBLOBELLO, SANPABLO, SANTAROSA, FUNDACION,\n";
+    echo "#                CIMITARRA, SALAZAR, TAME, SARAVENA\n";
+    echo "#    - modality: PRESENCIAL, A DISTANCIA, VIRTUAL, HIBRIDA\n";
     echo "#    - faculty: FCAS or FII\n";
     echo "# 4. Save and run: php cli.php --csv=yourfile.csv --create-structure --publish\n";
     exit(0);
@@ -348,11 +362,26 @@ $ISER_SEDES = [
         'city' => 'Toledo',
         'code' => 'ISER-TOL',
     ],
+    'SARDINATA' => [
+        'name' => 'ISER Centro Tutorial Sardinata',
+        'shortname' => 'SARDINATA',
+        'city' => 'Sardinata',
+        'code' => 'ISER-SAR',
+    ],
+    'SARAVENA' => [
+        'name' => 'ISER Centro Tutorial Saravena',
+        'shortname' => 'SARAVENA',
+        'city' => 'Saravena',
+        'code' => 'ISER-SRV',
+    ],
 ];
 
+// Modalidades educativas según arquitectura IOMAD ISER.
 $ISER_MODALIDADES = [
     'PRESENCIAL' => ['name' => 'Presencial', 'shortname' => 'PRESENCIAL'],
     'DISTANCIA' => ['name' => 'A Distancia', 'shortname' => 'DISTANCIA'],
+    'VIRTUAL' => ['name' => 'Virtual', 'shortname' => 'VIRTUAL'],
+    'HIBRIDA' => ['name' => 'Híbrida', 'shortname' => 'HIBRIDA'],
 ];
 
 $plugindir = __DIR__ . '/..';
@@ -1034,7 +1063,16 @@ foreach ($allprofiles as $code => $profile) {
     $faculty = $profile['faculty'] ?? '';
     $location = $profile['location'] ?? 'PAMPLONA';
     $modality = $profile['modality'] ?? 'PRESENCIAL';
-    $modalitykey = stripos($modality, 'DISTANCIA') !== false ? 'DISTANCIA' : 'PRESENCIAL';
+    // Map modality to key: A DISTANCIA -> DISTANCIA, PRESENCIAL -> PRESENCIAL, VIRTUAL -> VIRTUAL, HIBRIDA -> HIBRIDA
+    if (stripos($modality, 'DISTANCIA') !== false) {
+        $modalitykey = 'DISTANCIA';
+    } else if (stripos($modality, 'VIRTUAL') !== false) {
+        $modalitykey = 'VIRTUAL';
+    } else if (stripos($modality, 'HIBRIDA') !== false || stripos($modality, 'HÍBRIDA') !== false) {
+        $modalitykey = 'HIBRIDA';
+    } else {
+        $modalitykey = 'PRESENCIAL';
+    }
     $contracttype = $profile['contracttype'] ?: 'CATEDRA';
     $isOcasional = stripos($contracttype, 'OCASIONAL') !== false;
 
@@ -1049,7 +1087,8 @@ foreach ($allprofiles as $code => $profile) {
 
     // Get location name.
     $locationName = $ISER_SEDES[$location]['name'] ?? $location;
-    $modalityName = $modalitykey === 'DISTANCIA' ? 'A Distancia' : 'Presencial';
+    $modalityNames = ['PRESENCIAL' => 'Presencial', 'DISTANCIA' => 'A Distancia', 'VIRTUAL' => 'Virtual', 'HIBRIDA' => 'Híbrida'];
+    $modalityName = $modalityNames[$modalitykey] ?? $modalitykey;
     $facultyName = $faculty === 'FCAS' ? 'Ciencias Administrativas y Sociales' :
                    ($faculty === 'FII' ? 'Ingenierías e Informática' : $faculty);
 
@@ -1149,9 +1188,14 @@ foreach ($allprofiles as $code => $profile) {
     $deshtml .= "<li>Experiencia docente en educación superior mínimo 1 año</li>\n";
     $deshtml .= "<li>Publicaciones académicas o investigaciones en el área</li>\n";
     $deshtml .= "<li>Manejo de herramientas tecnológicas para educación virtual</li>\n";
-    if ($modalitykey === 'DISTANCIA') {
+    // Requisitos específicos por modalidad.
+    if (in_array($modalitykey, ['DISTANCIA', 'VIRTUAL', 'HIBRIDA'])) {
         $deshtml .= "<li>Experiencia en educación a distancia o virtual</li>\n";
         $deshtml .= "<li>Certificación en diseño instruccional o tutoría virtual</li>\n";
+        if ($modalitykey === 'VIRTUAL' || $modalitykey === 'HIBRIDA') {
+            $deshtml .= "<li>Manejo de plataformas LMS (Moodle, Canvas, Blackboard)</li>\n";
+            $deshtml .= "<li>Experiencia en creación de contenidos multimedia educativos</li>\n";
+        }
     }
     $deshtml .= "<li>Dominio de un segundo idioma (preferiblemente inglés)</li>\n";
     $deshtml .= "</ul>\n";
@@ -1170,7 +1214,8 @@ foreach ($allprofiles as $code => $profile) {
     if ($options['create-structure'] && isset($departmentmap[$deptkey])) {
         $record->departmentid = $departmentmap[$deptkey];
     } else if ($record->companyid && !empty($modality)) {
-        $deptname = $modalitykey === 'DISTANCIA' ? 'A Distancia' : 'Presencial';
+        // Try to find the department by name using the modalityNames mapping.
+        $deptname = $modalityNames[$modalitykey] ?? 'Presencial';
         $dept = $DB->get_record('department', ['company' => $record->companyid, 'name' => $deptname]);
         $record->departmentid = $dept ? $dept->id : null;
     } else {
@@ -1285,6 +1330,8 @@ function get_location_patterns() {
         'TIB[UÚ]' => 'TIBU',
         'C[UÚ]CUTA' => 'CUCUTA',
         'FUNDACI[OÓ]N' => 'FUNDACION',
+        'SARDINATA' => 'SARDINATA',
+        'SARAVENA' => 'SARAVENA',
         'PAMPLONA' => 'PAMPLONA',
     ];
 }
@@ -1309,9 +1356,18 @@ function detect_location($text) {
 /**
  * Detect modality from text segment.
  * @param string $text Text to search in.
- * @return string 'PRESENCIAL' or 'A DISTANCIA'.
+ * @return string 'PRESENCIAL', 'A DISTANCIA', 'VIRTUAL', or 'HIBRIDA'.
  */
 function detect_modality($text) {
+    // Check for Virtual first (most specific).
+    if (preg_match('/MODALIDAD\s+VIRTUAL|VIRTUAL/iu', $text)) {
+        return 'VIRTUAL';
+    }
+    // Check for Híbrida.
+    if (preg_match('/MODALIDAD\s+H[IÍ]BRIDA|H[IÍ]BRIDA/iu', $text)) {
+        return 'HIBRIDA';
+    }
+    // Check for A Distancia.
     if (preg_match('/MODALIDAD\s+A?\s*DISTANCIA|A\s+DISTANCIA/iu', $text)) {
         return 'A DISTANCIA';
     }
@@ -1800,8 +1856,12 @@ function parse_csv_file($filepath, $verbose = false) {
         // Normalize location.
         $location = normalize_location_key($location);
 
-        // Normalize modality.
-        if (stripos($modality, 'DISTANCIA') !== false) {
+        // Normalize modality to one of 4 valid values.
+        if (stripos($modality, 'VIRTUAL') !== false) {
+            $modality = 'VIRTUAL';
+        } else if (stripos($modality, 'HIBRIDA') !== false || stripos($modality, 'HÍBRIDA') !== false) {
+            $modality = 'HIBRIDA';
+        } else if (stripos($modality, 'DISTANCIA') !== false) {
             $modality = 'A DISTANCIA';
         } else {
             $modality = 'PRESENCIAL';
@@ -1893,6 +1953,8 @@ function normalize_location_key($location) {
         'CIMITARRA' => 'CIMITARRA',
         'SALAZAR' => 'SALAZAR',
         'TOLEDO' => 'TOLEDO',
+        'SARDINATA' => 'SARDINATA',
+        'SARAVENA' => 'SARAVENA',
     ];
 
     if (isset($map[$location])) {
