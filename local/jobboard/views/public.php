@@ -134,8 +134,8 @@ if (!empty($location)) {
     $params['location'] = '%' . $DB->sql_like_escape($location) . '%';
 }
 
-// Modality filter.
-if (!empty($modality)) {
+// Modality filter (only if column exists).
+if (!empty($modality) && !empty($modalities)) {
     $conditions[] = $DB->sql_like('v.modality', ':modality', false);
     $params['modality'] = '%' . $DB->sql_like_escape($modality) . '%';
 }
@@ -162,12 +162,22 @@ $locations = $DB->get_records_sql_menu(
      ORDER BY location"
 );
 
-// Get modalities for filter.
-$modalities = $DB->get_records_sql_menu(
-    "SELECT DISTINCT modality, modality FROM {local_jobboard_vacancy}
-     WHERE status = 'published' AND modality IS NOT NULL AND modality != ''
-     ORDER BY modality"
-);
+// Get modalities for filter (safely handle if column doesn't exist yet).
+$modalities = [];
+try {
+    $dbman = $DB->get_manager();
+    $table = new xmldb_table('local_jobboard_vacancy');
+    $field = new xmldb_field('modality');
+    if ($dbman->field_exists($table, $field)) {
+        $modalities = $DB->get_records_sql_menu(
+            "SELECT DISTINCT modality, modality FROM {local_jobboard_vacancy}
+             WHERE status = 'published' AND modality IS NOT NULL AND modality != ''
+             ORDER BY modality"
+        );
+    }
+} catch (Exception $e) {
+    $modalities = [];
+}
 
 // Get open convocatorias for filter.
 $convocatorias = $DB->get_records_sql(

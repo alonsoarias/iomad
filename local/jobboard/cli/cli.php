@@ -1149,6 +1149,9 @@ foreach ($allprofiles as $code => $profile) {
     // Location (text field).
     $record->location = $locationName;
 
+    // Modality (educational modality).
+    $record->modality = $modalityName;
+
     // Department (text field = program name).
     $record->department = $program ?: $facultyName;
 

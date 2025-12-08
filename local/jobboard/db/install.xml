@@ -15,6 +15,7 @@
         <FIELD NAME="duration" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Contract duration"/>
         <FIELD NAME="salary" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Salary information (optional)"/>
         <FIELD NAME="location" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Work location"/>
+        <FIELD NAME="modality" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Educational modality: Presencial, A Distancia, Virtual, Híbrida"/>
         <FIELD NAME="department" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Department or unit"/>
         <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Iomad company/tenant ID"/>
         <FIELD NAME="departmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD department ID"/>

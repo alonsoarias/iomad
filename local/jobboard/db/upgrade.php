@@ -1015,5 +1015,21 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120742, 'local', 'jobboard');
     }
 
+    // Version 2025120860: Add modality field to vacancy table.
+    if ($oldversion < 2025120860) {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        $table = new xmldb_table('local_jobboard_vacancy');
+
+        // Add modality field after location.
+        $field = new xmldb_field('modality', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'location');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2025120860, 'local', 'jobboard');
+    }
+
     return true;
 }
