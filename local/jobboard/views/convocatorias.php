@@ -255,16 +255,25 @@ $breadcrumbs = [
 ];
 
 $addurl = new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'action' => 'add']);
+$importurl = new moodle_url('/local/jobboard/import_vacancies.php');
 
 echo ui_helper::page_header(
     get_string('manageconvocatorias', 'local_jobboard'),
     $breadcrumbs,
-    [[
-        'url' => $addurl,
-        'label' => get_string('addconvocatoria', 'local_jobboard'),
-        'icon' => 'plus',
-        'class' => 'btn btn-primary',
-    ]]
+    [
+        [
+            'url' => $importurl,
+            'label' => get_string('importvacancies', 'local_jobboard'),
+            'icon' => 'file-csv',
+            'class' => 'btn btn-outline-secondary mr-2',
+        ],
+        [
+            'url' => $addurl,
+            'label' => get_string('addconvocatoria', 'local_jobboard'),
+            'icon' => 'plus',
+            'class' => 'btn btn-primary',
+        ],
+    ]
 );
 
 // ============================================================================
