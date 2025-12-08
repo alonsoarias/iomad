@@ -2712,3 +2712,26 @@ $string['tour_myapplications_step7_title'] = 'Ver Detalles de Postulación';
 $string['tour_myapplications_step7_content'] = 'Haz clic en "Ver" para ver los detalles completos de tu postulación y los documentos subidos. También puedes retirar tu postulación si aún está en revisión.';
 $string['tour_myapplications_step8_title'] = '¡Mantente Actualizado!';
 $string['tour_myapplications_step8_content'] = 'Revisa esta página regularmente para ver actualizaciones de tus postulaciones. También recibirás notificaciones por correo electrónico para cambios importantes de estado. ¡Buena suerte con tus postulaciones!';
+
+// Paginación y acciones masivas (v2.0.25).
+$string['recordsperpage'] = 'Registros por página';
+$string['entries'] = 'registros';
+$string['showingxofy'] = 'Mostrando {$a->start} a {$a->end} de {$a->total} registros';
+$string['selectall'] = 'Seleccionar todo';
+$string['selected'] = 'seleccionados';
+$string['bulkactions'] = 'Acciones masivas';
+$string['bulkdelete'] = 'Eliminar seleccionados';
+$string['bulkpublish'] = 'Publicar seleccionados';
+$string['bulkunpublish'] = 'Despublicar seleccionados';
+$string['bulkclose'] = 'Cerrar seleccionados';
+$string['confirmdelete'] = '¿Está seguro de que desea eliminar los elementos seleccionados? Esta acción no se puede deshacer.';
+$string['confirmpublish'] = '¿Está seguro de que desea publicar los elementos seleccionados?';
+$string['confirmunpublish'] = '¿Está seguro de que desea despublicar los elementos seleccionados?';
+$string['confirmclose'] = '¿Está seguro de que desea cerrar los elementos seleccionados?';
+$string['itemsdeleted'] = '{$a} elemento(s) eliminado(s) exitosamente';
+$string['itemspublished'] = '{$a} elemento(s) publicado(s) exitosamente';
+$string['itemsunpublished'] = '{$a} elemento(s) despublicado(s) exitosamente';
+$string['itemsclosed'] = '{$a} elemento(s) cerrado(s) exitosamente';
+$string['noitemsselected'] = 'No hay elementos seleccionados';
+$string['confirmaction'] = 'Confirmar acción';
+$string['bulkactionerrors'] = '{$a} elemento(s) no pudieron ser procesados debido a errores';

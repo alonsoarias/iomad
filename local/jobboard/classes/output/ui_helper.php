@@ -408,4 +408,301 @@ class ui_helper {
         // Styles have been migrated to styles.css for better caching and organization.
         return '';
     }
+
+    /**
+     * Render a per-page selector.
+     *
+     * @param \moodle_url $baseurl Base URL for the page.
+     * @param int $currentperpage Current per-page value.
+     * @param int $total Total number of records.
+     * @param array $options Available per-page options.
+     * @return string HTML output.
+     */
+    public static function perpage_selector(\moodle_url $baseurl, int $currentperpage, int $total,
+                                            array $options = [10, 25, 50, 100]): string {
+        if ($total <= min($options)) {
+            return '';
+        }
+
+        $html = \html_writer::start_div('jb-perpage-selector d-inline-flex align-items-center');
+        $html .= \html_writer::tag('span', get_string('show') . ':', ['class' => 'mr-2 small text-muted']);
+
+        $select = \html_writer::start_tag('select', [
+            'class' => 'form-control form-control-sm d-inline-block w-auto',
+            'onchange' => 'window.location.href=this.value',
+            'aria-label' => get_string('recordsperpage', 'local_jobboard'),
+        ]);
+
+        foreach ($options as $option) {
+            $url = clone $baseurl;
+            $url->param('perpage', $option);
+            $url->param('page', 0);
+            $selected = ($option == $currentperpage) ? ' selected' : '';
+            $select .= \html_writer::tag('option', $option, [
+                'value' => $url->out(false),
+                'selected' => $option == $currentperpage ? 'selected' : null,
+            ]);
+        }
+
+        $select .= \html_writer::end_tag('select');
+        $html .= $select;
+
+        $html .= \html_writer::tag('span', get_string('entries', 'local_jobboard'), ['class' => 'ml-2 small text-muted']);
+        $html .= \html_writer::end_div();
+
+        return $html;
+    }
+
+    /**
+     * Render pagination controls with perpage selector.
+     *
+     * @param int $total Total records.
+     * @param int $page Current page.
+     * @param int $perpage Records per page.
+     * @param \moodle_url $baseurl Base URL.
+     * @return string HTML output.
+     */
+    public static function pagination_bar(int $total, int $page, int $perpage, \moodle_url $baseurl): string {
+        global $OUTPUT;
+
+        if ($total == 0) {
+            return '';
+        }
+
+        $html = \html_writer::start_div('jb-pagination-container d-flex justify-content-between align-items-center mt-4 mb-3');
+
+        // Results info.
+        $start = ($page * $perpage) + 1;
+        $end = min(($page + 1) * $perpage, $total);
+        $html .= \html_writer::tag('div',
+            get_string('showingxofy', 'local_jobboard', (object)['start' => $start, 'end' => $end, 'total' => $total]),
+            ['class' => 'text-muted small']
+        );
+
+        // Perpage selector + pagination.
+        $html .= \html_writer::start_div('d-flex align-items-center');
+        $html .= self::perpage_selector($baseurl, $perpage, $total);
+
+        if ($total > $perpage) {
+            $html .= \html_writer::div($OUTPUT->paging_bar($total, $page, $perpage, $baseurl), 'ml-3');
+        }
+
+        $html .= \html_writer::end_div();
+        $html .= \html_writer::end_div();
+
+        return $html;
+    }
+
+    /**
+     * Render bulk actions toolbar with select all functionality.
+     *
+     * @param string $formid Form ID for the bulk action form.
+     * @param array $actions Available bulk actions.
+     * @param string $itemclass CSS class for selectable items.
+     * @return string HTML output.
+     */
+    public static function bulk_actions_toolbar(string $formid, array $actions, string $itemclass = 'jb-bulk-item'): string {
+        $html = \html_writer::start_div('jb-bulk-toolbar alert alert-secondary d-none mb-3', ['id' => $formid . '-toolbar']);
+
+        $html .= \html_writer::start_div('d-flex justify-content-between align-items-center');
+
+        // Left side: select all checkbox and count.
+        $html .= \html_writer::start_div('d-flex align-items-center');
+        $html .= \html_writer::tag('label', '', [
+            'class' => 'custom-control custom-checkbox mr-3 mb-0',
+            'for' => $formid . '-select-all',
+        ]);
+        $html .= \html_writer::empty_tag('input', [
+            'type' => 'checkbox',
+            'class' => 'custom-control-input jb-select-all',
+            'id' => $formid . '-select-all',
+            'data-target' => '.' . $itemclass,
+        ]);
+        $html .= \html_writer::tag('label',
+            get_string('selectall', 'local_jobboard'),
+            ['class' => 'custom-control-label', 'for' => $formid . '-select-all']
+        );
+        $html .= \html_writer::tag('span', '0', [
+            'class' => 'badge badge-primary ml-2 jb-selected-count',
+            'id' => $formid . '-count',
+        ]);
+        $html .= \html_writer::tag('span', get_string('selected', 'local_jobboard'), ['class' => 'ml-1 small']);
+        $html .= \html_writer::end_div();
+
+        // Right side: action buttons.
+        $html .= \html_writer::start_div('jb-bulk-actions');
+        foreach ($actions as $action) {
+            $attrs = [
+                'class' => 'btn btn-sm ' . ($action['class'] ?? 'btn-outline-secondary') . ' ml-2 jb-bulk-action',
+                'data-action' => $action['action'],
+                'data-confirm' => $action['confirm'] ?? '',
+                'data-form' => $formid,
+                'disabled' => 'disabled',
+            ];
+            if (!empty($action['icon'])) {
+                $html .= \html_writer::tag('button',
+                    '<i class="fa fa-' . $action['icon'] . ' mr-1"></i>' . s($action['label']),
+                    $attrs
+                );
+            } else {
+                $html .= \html_writer::tag('button', s($action['label']), $attrs);
+            }
+        }
+        $html .= \html_writer::end_div();
+
+        $html .= \html_writer::end_div();
+        $html .= \html_writer::end_div();
+
+        return $html;
+    }
+
+    /**
+     * Render a confirmation modal.
+     *
+     * @param string $id Modal ID.
+     * @param string $title Modal title.
+     * @param string $message Confirmation message.
+     * @param string $confirmLabel Confirm button label.
+     * @param string $confirmClass Confirm button class.
+     * @return string HTML output.
+     */
+    public static function confirmation_modal(string $id, string $title, string $message,
+                                               string $confirmLabel = null, string $confirmClass = 'btn-danger'): string {
+        if ($confirmLabel === null) {
+            $confirmLabel = get_string('confirm');
+        }
+
+        $html = '
+        <div class="modal fade jb-confirm-modal" id="' . s($id) . '" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-warning">
+                        <h5 class="modal-title">
+                            <i class="fa fa-exclamation-triangle mr-2"></i>' . s($title) . '
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="' . get_string('close') . '">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="jb-modal-message">' . s($message) . '</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">' . get_string('cancel') . '</button>
+                        <button type="button" class="btn ' . s($confirmClass) . ' jb-modal-confirm">' . s($confirmLabel) . '</button>
+                    </div>
+                </div>
+            </div>
+        </div>';
+
+        return $html;
+    }
+
+    /**
+     * Get JavaScript for bulk actions and modals.
+     *
+     * @return string JavaScript code.
+     */
+    public static function get_bulk_actions_js(): string {
+        return <<<'JS'
+<script>
+(function() {
+    // Select all functionality
+    document.querySelectorAll('.jb-select-all').forEach(function(selectAll) {
+        selectAll.addEventListener('change', function() {
+            var target = this.dataset.target;
+            var checkboxes = document.querySelectorAll(target);
+            checkboxes.forEach(function(cb) {
+                cb.checked = selectAll.checked;
+            });
+            updateBulkToolbar(this);
+        });
+    });
+
+    // Individual checkbox change
+    document.querySelectorAll('.jb-bulk-item').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            updateBulkToolbar(this);
+        });
+    });
+
+    function updateBulkToolbar(element) {
+        var form = element.closest('form') || document;
+        var toolbar = form.querySelector('.jb-bulk-toolbar');
+        if (!toolbar) return;
+
+        var checkboxes = form.querySelectorAll('.jb-bulk-item');
+        var checked = form.querySelectorAll('.jb-bulk-item:checked');
+        var count = checked.length;
+
+        // Update count
+        var countEl = toolbar.querySelector('.jb-selected-count');
+        if (countEl) countEl.textContent = count;
+
+        // Show/hide toolbar
+        if (count > 0) {
+            toolbar.classList.remove('d-none');
+        } else {
+            toolbar.classList.add('d-none');
+        }
+
+        // Enable/disable action buttons
+        toolbar.querySelectorAll('.jb-bulk-action').forEach(function(btn) {
+            btn.disabled = count === 0;
+        });
+
+        // Update select all checkbox
+        var selectAll = form.querySelector('.jb-select-all');
+        if (selectAll) {
+            selectAll.checked = checkboxes.length > 0 && checkboxes.length === checked.length;
+            selectAll.indeterminate = count > 0 && count < checkboxes.length;
+        }
+    }
+
+    // Bulk action buttons
+    document.querySelectorAll('.jb-bulk-action').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var action = this.dataset.action;
+            var confirmMsg = this.dataset.confirm;
+            var formId = this.dataset.form;
+            var form = document.getElementById(formId);
+
+            if (!form) return;
+
+            if (confirmMsg) {
+                // Show confirmation modal
+                var modal = document.getElementById('jb-confirm-modal');
+                if (modal) {
+                    modal.querySelector('.jb-modal-message').textContent = confirmMsg;
+                    modal.querySelector('.jb-modal-confirm').onclick = function() {
+                        submitBulkAction(form, action);
+                        $(modal).modal('hide');
+                    };
+                    $(modal).modal('show');
+                } else if (confirm(confirmMsg)) {
+                    submitBulkAction(form, action);
+                }
+            } else {
+                submitBulkAction(form, action);
+            }
+        });
+    });
+
+    function submitBulkAction(form, action) {
+        // Set the action
+        var actionInput = form.querySelector('input[name="bulkaction"]');
+        if (!actionInput) {
+            actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'bulkaction';
+            form.appendChild(actionInput);
+        }
+        actionInput.value = action;
+        form.submit();
+    }
+})();
+</script>
+JS;
+    }
 }

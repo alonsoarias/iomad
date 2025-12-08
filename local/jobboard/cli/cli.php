@@ -97,6 +97,7 @@ list($options, $unrecognized) = cli_get_params([
     'update' => false,
     'status' => 'draft',
     'publish' => false,
+    'public' => false,
     'reset' => false,
     'reset-convocatorias' => false,
     'verbose' => false,
@@ -111,6 +112,7 @@ list($options, $unrecognized) = cli_get_params([
     'u' => 'update',
     's' => 'status',
     'p' => 'publish',
+    'P' => 'public',
     'r' => 'reset',
     'v' => 'verbose',
     'j' => 'export-json',
@@ -150,6 +152,8 @@ OPTIONS:
 MOODLE-ONLY OPTIONS (require config.php):
   -p, --publish           AUTO-CREATE convocatoria and PUBLISH vacancies
                           (Recommended for first import)
+  -P, --public            Make vacancies PUBLIC (visible to non-logged users)
+                          Without this, vacancies are internal only
   -r, --reset             DELETE all existing vacancies before import
   --reset-convocatorias   Also delete convocatorias (use with --reset)
   -c, --convocatoria=ID   Use existing convocatoria ID
@@ -257,6 +261,7 @@ echo "Auto-publish: " . ($options['publish'] ? 'YES (will create convocatoria)' 
 echo "Status: {$options['status']}" . ($options['publish'] ? ' (auto-set by --publish)' : '') . "\n";
 echo "Dry run: " . ($dryrun ? 'YES' : 'NO') . "\n";
 echo "Update existing: " . ($options['update'] ? 'YES' : 'NO') . "\n";
+echo "Publication type: " . ($options['public'] ? 'PUBLIC (visible without login)' : 'INTERNAL (login required)') . "\n";
 if ($options['convocatoria']) {
     echo "Convocatoria ID: {$options['convocatoria']}\n";
 }
@@ -465,7 +470,7 @@ if ($shouldpublish && empty($convocatoriaid)) {
         $convrecord->status = 'open';
         $convrecord->companyid = !empty($options['company']) ? (int) $options['company'] : null;
         $convrecord->departmentid = !empty($options['department']) ? (int) $options['department'] : null;
-        $convrecord->publicationtype = 'internal';
+        $convrecord->publicationtype = $options['public'] ? 'public' : 'internal';
         $convrecord->terms = '';
         $convrecord->createdby = $adminuser->id;
         $convrecord->timecreated = $now;
@@ -592,7 +597,7 @@ foreach ($allprofiles as $code => $profile) {
 
     // Status.
     $record->status = $options['status'];
-    $record->publicationtype = 'internal';
+    $record->publicationtype = $options['public'] ? 'public' : 'internal';
 
     // Audit fields.
     $record->createdby = $adminuser->id;

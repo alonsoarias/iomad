@@ -132,6 +132,70 @@ if ($action && $vacancyid && in_array($action, ['publish', 'unpublish', 'close',
     }
 }
 
+// Handle bulk actions.
+$bulkaction = optional_param('bulkaction', '', PARAM_ALPHA);
+$selectedids = optional_param_array('selected', [], PARAM_INT);
+
+if ($bulkaction && !empty($selectedids) && confirm_sesskey()) {
+    $redirecturl = new moodle_url('/local/jobboard/index.php', ['view' => 'manage']);
+    $successcount = 0;
+    $errorcount = 0;
+
+    foreach ($selectedids as $vid) {
+        try {
+            $v = \local_jobboard\vacancy::get($vid);
+            if (!$v) {
+                continue;
+            }
+
+            switch ($bulkaction) {
+                case 'publish':
+                    if (has_capability('local/jobboard:publishvacancy', $context) && $v->can_publish()) {
+                        $v->publish();
+                        $successcount++;
+                    }
+                    break;
+                case 'unpublish':
+                    if (has_capability('local/jobboard:editvacancy', $context) && $v->status === 'published') {
+                        $v->unpublish();
+                        $successcount++;
+                    }
+                    break;
+                case 'close':
+                    if (has_capability('local/jobboard:editvacancy', $context) && $v->status === 'published') {
+                        $v->close();
+                        $successcount++;
+                    }
+                    break;
+                case 'delete':
+                    if (has_capability('local/jobboard:deletevacancy', $context) && $v->can_delete()) {
+                        $v->delete();
+                        $successcount++;
+                    }
+                    break;
+            }
+        } catch (Exception $e) {
+            $errorcount++;
+        }
+    }
+
+    if ($successcount > 0) {
+        $msgkey = 'items' . $bulkaction . 'ed';
+        if ($bulkaction === 'publish') {
+            $msgkey = 'itemspublished';
+        } elseif ($bulkaction === 'delete') {
+            $msgkey = 'itemsdeleted';
+        } elseif ($bulkaction === 'close') {
+            $msgkey = 'itemsclosed';
+        }
+        \core\notification::success(get_string($msgkey, 'local_jobboard', $successcount));
+    }
+    if ($errorcount > 0) {
+        \core\notification::error(get_string('bulkactionerrors', 'local_jobboard', $errorcount));
+    }
+    redirect($redirecturl);
+}
+
 // Build filters.
 $filters = [];
 
@@ -313,17 +377,7 @@ echo ui_helper::filter_form(
 );
 
 // ============================================================================
-// RESULTS INFO
-// ============================================================================
-$showing = new stdClass();
-$showing->from = $total > 0 ? ($page * $perpage) + 1 : 0;
-$showing->to = min(($page + 1) * $perpage, $total);
-$showing->total = $total;
-echo html_writer::tag('p', get_string('showing', 'local_jobboard', $showing),
-    ['class' => 'text-muted small mb-3']);
-
-// ============================================================================
-// VACANCIES TABLE
+// VACANCIES TABLE WITH BULK ACTIONS
 // ============================================================================
 if (empty($vacancies)) {
     echo ui_helper::empty_state(
@@ -336,7 +390,49 @@ if (empty($vacancies)) {
         ]
     );
 } else {
+    // Start form for bulk actions.
+    echo html_writer::start_tag('form', [
+        'method' => 'post',
+        'action' => new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
+        'id' => 'jb-bulk-form',
+    ]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+
+    // Bulk actions toolbar.
+    $bulkActions = [
+        [
+            'action' => 'publish',
+            'label' => get_string('bulkpublish', 'local_jobboard'),
+            'icon' => 'check-circle',
+            'class' => 'btn-outline-success',
+            'confirm' => get_string('confirmpublish', 'local_jobboard'),
+        ],
+        [
+            'action' => 'unpublish',
+            'label' => get_string('bulkunpublish', 'local_jobboard'),
+            'icon' => 'eye-slash',
+            'class' => 'btn-outline-warning',
+            'confirm' => get_string('confirmunpublish', 'local_jobboard'),
+        ],
+        [
+            'action' => 'close',
+            'label' => get_string('bulkclose', 'local_jobboard'),
+            'icon' => 'times-circle',
+            'class' => 'btn-outline-secondary',
+            'confirm' => get_string('confirmclose', 'local_jobboard'),
+        ],
+        [
+            'action' => 'delete',
+            'label' => get_string('bulkdelete', 'local_jobboard'),
+            'icon' => 'trash',
+            'class' => 'btn-outline-danger',
+            'confirm' => get_string('confirmdelete', 'local_jobboard'),
+        ],
+    ];
+    echo ui_helper::bulk_actions_toolbar('jb-bulk-form', $bulkActions, 'jb-bulk-item');
+
     $headers = [
+        '<input type="checkbox" class="jb-select-all" data-target=".jb-bulk-item" id="select-all-header">',
         get_string('thcode', 'local_jobboard'),
         get_string('thtitle', 'local_jobboard'),
         get_string('thstatus', 'local_jobboard'),
@@ -349,6 +445,14 @@ if (empty($vacancies)) {
     $rows = [];
     foreach ($vacancies as $vacancy) {
         $row = [];
+
+        // Checkbox for bulk selection.
+        $row[] = html_writer::empty_tag('input', [
+            'type' => 'checkbox',
+            'name' => 'selected[]',
+            'value' => $vacancy->id,
+            'class' => 'jb-bulk-item',
+        ]);
 
         // Code.
         $row[] = html_writer::tag('code', s($vacancy->code), ['class' => 'font-weight-bold']);
@@ -470,22 +574,34 @@ if (empty($vacancies)) {
     }
 
     echo ui_helper::data_table($headers, $rows);
+
+    // Close form.
+    echo html_writer::end_tag('form');
+
+    // Confirmation modal.
+    echo ui_helper::confirmation_modal(
+        'jb-confirm-modal',
+        get_string('confirmaction', 'local_jobboard'),
+        get_string('confirmdelete', 'local_jobboard'),
+        get_string('confirm'),
+        'btn-danger'
+    );
+
+    // Bulk actions JavaScript.
+    echo ui_helper::get_bulk_actions_js();
 }
 
 // ============================================================================
-// PAGINATION
+// PAGINATION WITH PERPAGE SELECTOR
 // ============================================================================
-if ($total > $perpage) {
-    $baseurl = new moodle_url('/local/jobboard/index.php', [
-        'view' => 'manage',
-        'search' => $search,
-        'status' => $status,
-        'companyid' => $companyid,
-        'convocatoriaid' => $convocatoriaid,
-        'perpage' => $perpage,
-    ]);
-    echo $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
-}
+$baseurl = new moodle_url('/local/jobboard/index.php', [
+    'view' => 'manage',
+    'search' => $search,
+    'status' => $status,
+    'companyid' => $companyid,
+    'convocatoriaid' => $convocatoriaid,
+]);
+echo ui_helper::pagination_bar($total, $page, $perpage, $baseurl);
 
 echo html_writer::end_div(); // local-jobboard-manage
 

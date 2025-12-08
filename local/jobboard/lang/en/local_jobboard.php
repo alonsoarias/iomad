@@ -2321,3 +2321,26 @@ $string['showingresults'] = 'Showing results';
 $string['trend'] = 'Trend';
 $string['trydifferentfilters'] = 'Try adjusting your filters to see more results.';
 $string['vacancysummary'] = 'Vacancy Summary';
+
+// Pagination and bulk actions (v2.0.25).
+$string['recordsperpage'] = 'Records per page';
+$string['entries'] = 'entries';
+$string['showingxofy'] = 'Showing {$a->start} to {$a->end} of {$a->total} entries';
+$string['selectall'] = 'Select all';
+$string['selected'] = 'selected';
+$string['bulkactions'] = 'Bulk actions';
+$string['bulkdelete'] = 'Delete selected';
+$string['bulkpublish'] = 'Publish selected';
+$string['bulkunpublish'] = 'Unpublish selected';
+$string['bulkclose'] = 'Close selected';
+$string['confirmdelete'] = 'Are you sure you want to delete the selected items? This action cannot be undone.';
+$string['confirmpublish'] = 'Are you sure you want to publish the selected items?';
+$string['confirmunpublish'] = 'Are you sure you want to unpublish the selected items?';
+$string['confirmclose'] = 'Are you sure you want to close the selected items?';
+$string['itemsdeleted'] = '{$a} item(s) deleted successfully';
+$string['itemspublished'] = '{$a} item(s) published successfully';
+$string['itemsunpublished'] = '{$a} item(s) unpublished successfully';
+$string['itemsclosed'] = '{$a} item(s) closed successfully';
+$string['noitemsselected'] = 'No items selected';
+$string['confirmaction'] = 'Confirm action';
+$string['bulkactionerrors'] = '{$a} item(s) could not be processed due to errors';
