@@ -602,195 +602,28 @@ class ui_helper {
     }
 
     /**
+     * Initialize bulk actions AMD module.
+     *
+     * This method should be called once per page to initialize the bulk actions functionality.
+     * It loads the AMD module that handles bulk selection, actions, and confirmation modals.
+     *
+     * @return void
+     */
+    public static function init_bulk_actions(): void {
+        global $PAGE;
+        $PAGE->requires->js_call_amd('local_jobboard/bulk_actions', 'init');
+    }
+
+    /**
      * Get JavaScript for bulk actions and modals.
      *
-     * @return string JavaScript code.
+     * @deprecated since version 2.0.29 - Use init_bulk_actions() instead which loads AMD module.
+     * @return string Empty string (functionality moved to AMD module).
      */
     public static function get_bulk_actions_js(): string {
-        return <<<'JS'
-<script>
-(function() {
-    'use strict';
-
-    // Modal helper functions (Bootstrap 4 compatible).
-    var JBModal = {
-        show: function(modal) {
-            if (!modal) return;
-            modal.classList.add('show');
-            modal.style.display = 'block';
-            modal.setAttribute('aria-hidden', 'false');
-            document.body.classList.add('modal-open');
-            // Add backdrop.
-            var backdrop = document.createElement('div');
-            backdrop.className = 'modal-backdrop fade show';
-            backdrop.id = 'jb-modal-backdrop';
-            document.body.appendChild(backdrop);
-        },
-        hide: function(modal) {
-            if (!modal) return;
-            modal.classList.remove('show');
-            modal.style.display = 'none';
-            modal.setAttribute('aria-hidden', 'true');
-            document.body.classList.remove('modal-open');
-            // Remove backdrop.
-            var backdrop = document.getElementById('jb-modal-backdrop');
-            if (backdrop) backdrop.remove();
-        }
-    };
-
-    // Select all functionality.
-    document.querySelectorAll('.jb-select-all').forEach(function(selectAll) {
-        selectAll.addEventListener('change', function() {
-            var target = this.dataset.target;
-            var checkboxes = document.querySelectorAll(target);
-            checkboxes.forEach(function(cb) {
-                cb.checked = selectAll.checked;
-            });
-            updateBulkToolbar(this);
-        });
-    });
-
-    // Individual checkbox change.
-    document.querySelectorAll('.jb-bulk-item').forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            updateBulkToolbar(this);
-        });
-    });
-
-    function updateBulkToolbar(element) {
-        var form = element.closest('form') || document;
-        var toolbar = form.querySelector('.jb-bulk-toolbar');
-        if (!toolbar) return;
-
-        var checkboxes = form.querySelectorAll('.jb-bulk-item');
-        var checked = form.querySelectorAll('.jb-bulk-item:checked');
-        var count = checked.length;
-
-        // Update count.
-        var countEl = toolbar.querySelector('.jb-selected-count');
-        if (countEl) countEl.textContent = count;
-
-        // Show/hide toolbar.
-        if (count > 0) {
-            toolbar.classList.remove('d-none');
-        } else {
-            toolbar.classList.add('d-none');
-        }
-
-        // Enable/disable action buttons.
-        toolbar.querySelectorAll('.jb-bulk-action').forEach(function(btn) {
-            btn.disabled = count === 0;
-        });
-
-        // Update select all checkbox.
-        var selectAll = form.querySelector('.jb-select-all');
-        if (selectAll) {
-            selectAll.checked = checkboxes.length > 0 && checkboxes.length === checked.length;
-            selectAll.indeterminate = count > 0 && count < checkboxes.length;
-        }
-    }
-
-    // Bulk action buttons.
-    document.querySelectorAll('.jb-bulk-action').forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            var action = this.dataset.action;
-            var confirmMsg = this.dataset.confirm;
-            var formId = this.dataset.form;
-            var form = document.getElementById(formId);
-
-            if (!form) return;
-
-            if (confirmMsg) {
-                showConfirmModal(confirmMsg, function() {
-                    submitBulkAction(form, action);
-                });
-            } else {
-                submitBulkAction(form, action);
-            }
-        });
-    });
-
-    // Individual action buttons with confirmation.
-    document.querySelectorAll('.jb-confirm-trigger').forEach(function(trigger) {
-        trigger.addEventListener('click', function(e) {
-            e.preventDefault();
-            var confirmMsg = this.dataset.confirm;
-            var url = this.href;
-
-            if (confirmMsg) {
-                showConfirmModal(confirmMsg, function() {
-                    window.location.href = url;
-                });
-            } else {
-                window.location.href = url;
-            }
-        });
-    });
-
-    function showConfirmModal(message, onConfirm) {
-        var modal = document.getElementById('jb-confirm-modal');
-        if (modal) {
-            var msgEl = modal.querySelector('.jb-modal-message');
-            var confirmBtn = modal.querySelector('.jb-modal-confirm');
-            var cancelBtn = modal.querySelector('[data-dismiss="modal"]');
-            var closeBtn = modal.querySelector('.close');
-
-            if (msgEl) msgEl.textContent = message;
-
-            // Clone and replace to remove old event listeners.
-            var newConfirmBtn = confirmBtn.cloneNode(true);
-            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
-
-            newConfirmBtn.addEventListener('click', function() {
-                JBModal.hide(modal);
-                if (onConfirm) onConfirm();
-            });
-
-            // Cancel/close buttons.
-            if (cancelBtn) {
-                cancelBtn.onclick = function() { JBModal.hide(modal); };
-            }
-            if (closeBtn) {
-                closeBtn.onclick = function() { JBModal.hide(modal); };
-            }
-
-            // Close on backdrop click.
-            modal.onclick = function(e) {
-                if (e.target === modal) JBModal.hide(modal);
-            };
-
-            // Close on Escape key.
-            document.addEventListener('keydown', function escHandler(e) {
-                if (e.key === 'Escape') {
-                    JBModal.hide(modal);
-                    document.removeEventListener('keydown', escHandler);
-                }
-            });
-
-            JBModal.show(modal);
-        } else {
-            // Fallback to native confirm if modal not found.
-            if (confirm(message) && onConfirm) {
-                onConfirm();
-            }
-        }
-    }
-
-    function submitBulkAction(form, action) {
-        // Set the action.
-        var actionInput = form.querySelector('input[name="bulkaction"]');
-        if (!actionInput) {
-            actionInput = document.createElement('input');
-            actionInput.type = 'hidden';
-            actionInput.name = 'bulkaction';
-            form.appendChild(actionInput);
-        }
-        actionInput.value = action;
-        form.submit();
-    }
-})();
-</script>
-JS;
+        // Functionality has been moved to AMD module local_jobboard/bulk_actions.
+        // Call init_bulk_actions() to initialize the module.
+        self::init_bulk_actions();
+        return '';
     }
 }

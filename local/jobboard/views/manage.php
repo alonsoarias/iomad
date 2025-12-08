@@ -587,8 +587,8 @@ if (empty($vacancies)) {
         'btn-danger'
     );
 
-    // Bulk actions JavaScript.
-    echo ui_helper::get_bulk_actions_js();
+    // Initialize bulk actions AMD module.
+    ui_helper::init_bulk_actions();
 }
 
 // ============================================================================
