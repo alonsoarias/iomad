@@ -493,4 +493,16 @@ if ($total > $perpage) {
 
 echo html_writer::end_div(); // local-jobboard-convocatorias
 
+// Confirmation modal.
+echo ui_helper::confirmation_modal(
+    'jb-confirm-modal',
+    get_string('confirmaction', 'local_jobboard'),
+    get_string('confirmdelete', 'local_jobboard'),
+    get_string('confirm'),
+    'btn-danger'
+);
+
+// JavaScript for confirmation modals.
+echo ui_helper::get_bulk_actions_js();
+
 echo $OUTPUT->footer();

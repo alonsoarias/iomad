@@ -181,8 +181,11 @@ class ui_helper {
                 'title' => $action['title'] ?? $action['label'] ?? '',
             ];
 
+            // Use data attribute for modal confirmation instead of onclick confirm().
             if (!empty($action['confirm'])) {
-                $attrs['onclick'] = "return confirm('" . addslashes($action['confirm']) . "');";
+                $attrs['data-confirm'] = $action['confirm'];
+                $attrs['data-confirm-action'] = 'link';
+                $attrs['class'] .= ' jb-confirm-trigger';
             }
 
             if (!empty($action['disabled'])) {
@@ -607,7 +610,35 @@ class ui_helper {
         return <<<'JS'
 <script>
 (function() {
-    // Select all functionality
+    'use strict';
+
+    // Modal helper functions (Bootstrap 4 compatible).
+    var JBModal = {
+        show: function(modal) {
+            if (!modal) return;
+            modal.classList.add('show');
+            modal.style.display = 'block';
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            // Add backdrop.
+            var backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.id = 'jb-modal-backdrop';
+            document.body.appendChild(backdrop);
+        },
+        hide: function(modal) {
+            if (!modal) return;
+            modal.classList.remove('show');
+            modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+            // Remove backdrop.
+            var backdrop = document.getElementById('jb-modal-backdrop');
+            if (backdrop) backdrop.remove();
+        }
+    };
+
+    // Select all functionality.
     document.querySelectorAll('.jb-select-all').forEach(function(selectAll) {
         selectAll.addEventListener('change', function() {
             var target = this.dataset.target;
@@ -619,7 +650,7 @@ class ui_helper {
         });
     });
 
-    // Individual checkbox change
+    // Individual checkbox change.
     document.querySelectorAll('.jb-bulk-item').forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
             updateBulkToolbar(this);
@@ -635,23 +666,23 @@ class ui_helper {
         var checked = form.querySelectorAll('.jb-bulk-item:checked');
         var count = checked.length;
 
-        // Update count
+        // Update count.
         var countEl = toolbar.querySelector('.jb-selected-count');
         if (countEl) countEl.textContent = count;
 
-        // Show/hide toolbar
+        // Show/hide toolbar.
         if (count > 0) {
             toolbar.classList.remove('d-none');
         } else {
             toolbar.classList.add('d-none');
         }
 
-        // Enable/disable action buttons
+        // Enable/disable action buttons.
         toolbar.querySelectorAll('.jb-bulk-action').forEach(function(btn) {
             btn.disabled = count === 0;
         });
 
-        // Update select all checkbox
+        // Update select all checkbox.
         var selectAll = form.querySelector('.jb-select-all');
         if (selectAll) {
             selectAll.checked = checkboxes.length > 0 && checkboxes.length === checked.length;
@@ -659,7 +690,7 @@ class ui_helper {
         }
     }
 
-    // Bulk action buttons
+    // Bulk action buttons.
     document.querySelectorAll('.jb-bulk-action').forEach(function(btn) {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -671,26 +702,83 @@ class ui_helper {
             if (!form) return;
 
             if (confirmMsg) {
-                // Show confirmation modal
-                var modal = document.getElementById('jb-confirm-modal');
-                if (modal) {
-                    modal.querySelector('.jb-modal-message').textContent = confirmMsg;
-                    modal.querySelector('.jb-modal-confirm').onclick = function() {
-                        submitBulkAction(form, action);
-                        $(modal).modal('hide');
-                    };
-                    $(modal).modal('show');
-                } else if (confirm(confirmMsg)) {
+                showConfirmModal(confirmMsg, function() {
                     submitBulkAction(form, action);
-                }
+                });
             } else {
                 submitBulkAction(form, action);
             }
         });
     });
 
+    // Individual action buttons with confirmation.
+    document.querySelectorAll('.jb-confirm-trigger').forEach(function(trigger) {
+        trigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            var confirmMsg = this.dataset.confirm;
+            var url = this.href;
+
+            if (confirmMsg) {
+                showConfirmModal(confirmMsg, function() {
+                    window.location.href = url;
+                });
+            } else {
+                window.location.href = url;
+            }
+        });
+    });
+
+    function showConfirmModal(message, onConfirm) {
+        var modal = document.getElementById('jb-confirm-modal');
+        if (modal) {
+            var msgEl = modal.querySelector('.jb-modal-message');
+            var confirmBtn = modal.querySelector('.jb-modal-confirm');
+            var cancelBtn = modal.querySelector('[data-dismiss="modal"]');
+            var closeBtn = modal.querySelector('.close');
+
+            if (msgEl) msgEl.textContent = message;
+
+            // Clone and replace to remove old event listeners.
+            var newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+            newConfirmBtn.addEventListener('click', function() {
+                JBModal.hide(modal);
+                if (onConfirm) onConfirm();
+            });
+
+            // Cancel/close buttons.
+            if (cancelBtn) {
+                cancelBtn.onclick = function() { JBModal.hide(modal); };
+            }
+            if (closeBtn) {
+                closeBtn.onclick = function() { JBModal.hide(modal); };
+            }
+
+            // Close on backdrop click.
+            modal.onclick = function(e) {
+                if (e.target === modal) JBModal.hide(modal);
+            };
+
+            // Close on Escape key.
+            document.addEventListener('keydown', function escHandler(e) {
+                if (e.key === 'Escape') {
+                    JBModal.hide(modal);
+                    document.removeEventListener('keydown', escHandler);
+                }
+            });
+
+            JBModal.show(modal);
+        } else {
+            // Fallback to native confirm if modal not found.
+            if (confirm(message) && onConfirm) {
+                onConfirm();
+            }
+        }
+    }
+
     function submitBulkAction(form, action) {
-        // Set the action
+        // Set the action.
         var actionInput = form.querySelector('input[name="bulkaction"]');
         if (!actionInput) {
             actionInput = document.createElement('input');
