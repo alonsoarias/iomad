@@ -3,7 +3,7 @@
 [![Moodle 4.1+](https://img.shields.io/badge/Moodle-4.1%2B-orange.svg)](https://moodle.org)
 [![PHP 7.4+](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://php.net)
 [![License GPL-3.0](https://img.shields.io/badge/License-GPL%20v3-green.svg)](http://www.gnu.org/copyleft/gpl.html)
-[![Version 2.0.16](https://img.shields.io/badge/Version-2.0.16-brightgreen.svg)]()
+[![Version 2.0.24](https://img.shields.io/badge/Version-2.0.24-brightgreen.svg)]()
 [![IOMAD Compatible](https://img.shields.io/badge/IOMAD-Compatible-blue.svg)]()
 
 Plugin para Moodle que implementa un sistema completo de gestión de convocatorias, vacantes y postulaciones para profesores cátedra. Diseñado específicamente para instituciones educativas en Colombia, compatible con IOMAD multi-tenant.
@@ -396,7 +396,7 @@ local/jobboard/
 ├── db/
 │   ├── access.php              # 34 capabilities
 │   ├── install.php             # Script de instalación (roles)
-│   ├── install.xml             # Esquema de BD (21 tablas)
+│   ├── install.xml             # Esquema de BD (24 tablas)
 │   ├── services.php            # Definición de web services
 │   ├── upgrade.php             # Migraciones de BD
 │   └── tours/                  # 15 User Tours JSON
@@ -462,11 +462,11 @@ npx eslint amd/src/
 
 Ver [CHANGELOG.md](CHANGELOG.md) para historial completo de versiones.
 
-### Versión Actual: 2.0.2 (2025-12-06)
+### Versión Actual: 2.0.24 (2025-12-08)
 
-- Aislamiento completo de estilos de temas remui/inteb
-- Overrides CSS con prefijo `.path-local-jobboard`
-- README.md y CHANGELOG.md reescritos completamente
+- Corrección de selectores CSS en User Tours para compatibilidad con plantillas Mustache
+- Verificación integral de integridad del plugin completada
+- 102 archivos PHP, 39 templates Mustache, 24 tablas de BD, 34 capabilities, 15 User Tours
 
 ---
 
@@ -504,7 +504,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 ---
 
-**Versión**: 2.0.2
+**Versión**: 2.0.24
 **Última actualización**: Diciembre 2025
 **Moodle**: 4.1 - 4.5
 **Estado**: Estable

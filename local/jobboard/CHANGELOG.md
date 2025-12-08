@@ -7,6 +7,51 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.24] - 2025-12-08
+
+### Corregido
+- **Selectores CSS de tours corregidos para coincidir con plantillas Mustache**
+  - Todos los 15 tours revisados y actualizados con selectores precisos
+  - Verificación de correspondencia con templates reales
+
+### Verificado
+- **Verificación integral de integridad del plugin completada**
+  - 102 archivos PHP verificados (0 errores de sintaxis)
+  - 39 templates Mustache verificados
+  - 24 tablas de base de datos en install.xml
+  - 34 capabilities en db/access.php
+  - 15 User Tours validados (JSON válido)
+  - 1860 strings EN / 1860 strings ES (paridad perfecta)
+  - Privacy API: 10 tablas cubiertas
+
+### Técnico
+- **version.php**: 2025120742
+
+---
+
+## [2.0.23] - 2025-12-08
+
+### Corregido
+- **Conteo de pasos en tours alineado con strings de idioma disponibles**
+  - Tours ajustados para usar solo los steps con strings definidos
+  - Eliminados pasos huérfanos sin traducciones
+
+### Técnico
+- **version.php**: Incrementado a 2025120741 (fcc2321a)
+
+---
+
+## [2.0.22] - 2025-12-07
+
+### Corregido
+- **Formato configdata corregido para compatibilidad con Moodle**
+  - Estructura JSON de tours corregida para import correcto
+
+### Técnico
+- **version.php**: Incrementado a 2025120740 (db31b21b)
+
+---
+
 ## [2.0.21] - 2025-12-07
 
 ### Mejorado
