@@ -1761,6 +1761,111 @@
     text-shadow: none !important;
 }
 
+/* ---- Custom Select Dropdown ---- */
+.local-jobboard-public .jb-custom-select {
+    position: relative;
+    width: 100%;
+    font-size: 0.95rem;
+}
+
+.local-jobboard-public .jb-select-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    color: #212529;
+    font-size: 0.95rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    user-select: none;
+}
+
+.local-jobboard-public .jb-select-trigger:hover {
+    border-color: #adb5bd;
+}
+
+.local-jobboard-public .jb-custom-select.open .jb-select-trigger {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.local-jobboard-public .jb-select-trigger i {
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    color: #6c757d;
+    transition: transform 0.2s;
+}
+
+.local-jobboard-public .jb-custom-select.open .jb-select-trigger i {
+    transform: rotate(180deg);
+}
+
+.local-jobboard-public .jb-select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: none;
+    max-height: 250px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 0 0.5rem 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.local-jobboard-public .jb-custom-select.open .jb-select-options {
+    display: block;
+}
+
+.local-jobboard-public .jb-select-option {
+    padding: 0.625rem 0.875rem;
+    color: #212529;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.1s;
+    font-size: 0.95rem;
+}
+
+.local-jobboard-public .jb-select-option:hover {
+    background-color: #f8f9fa;
+}
+
+.local-jobboard-public .jb-select-option.selected {
+    background-color: #e7f1ff;
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+.local-jobboard-public .jb-select-option:last-child {
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+/* Scrollbar styling for dropdown */
+.local-jobboard-public .jb-select-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.local-jobboard-public .jb-select-options::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.local-jobboard-public .jb-select-options::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.local-jobboard-public .jb-select-options::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
 .local-jobboard-public .jb-filter-actions {
     display: flex;
     gap: 0.75rem;
