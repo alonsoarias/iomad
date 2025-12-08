@@ -714,10 +714,31 @@
     border-radius: 0.5rem;
 }
 
+/* Filter card and form styles */
+.path-local-jobboard .jb-filter-card {
+    border: none;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
 .path-local-jobboard .jb-filter-form {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.5rem;
+    background: transparent;
+}
+
+.path-local-jobboard .jb-filter-form .form-control,
+.path-local-jobboard .jb-filter-form .custom-select {
+    border-radius: 0.375rem;
+    border-color: #dee2e6;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.path-local-jobboard .jb-filter-form .form-control:focus,
+.path-local-jobboard .jb-filter-form .custom-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+.path-local-jobboard .jb-filter-form .btn {
+    border-radius: 0.375rem;
 }
 
 .path-local-jobboard .jb-actions .btn {

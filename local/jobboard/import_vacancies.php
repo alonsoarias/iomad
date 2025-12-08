@@ -597,6 +597,15 @@ $breadcrumbs = [
 ];
 echo ui_helper::page_header(get_string('importvacancies', 'local_jobboard'), $breadcrumbs);
 
+// Back button.
+echo html_writer::start_div('mb-4');
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
+    html_writer::tag('i', '', ['class' => 'fa fa-arrow-left mr-2']) . get_string('backtoconvocatorias', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary']
+);
+echo html_writer::end_div();
+
 // CSV format help.
 echo html_writer::start_div('card mb-4');
 echo html_writer::start_div('card-header');

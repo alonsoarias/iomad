@@ -7,6 +7,32 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.0.37] - 2025-12-08
+
+### Corregido
+- **Cadenas de idioma faltantes**
+  - Añadidas: `vacancy_status_draft` y `vacancy_status_published` (EN/ES)
+  - Corrige error en import_vacancies.php al mostrar selector de estado
+
+### Mejorado
+- **Filtros de vista pública (`view=public`)**
+  - Formulario de filtros ahora envuelto en card con shadow para mejor visual
+  - Controles de formulario con tamaño `form-control-sm` para mejor usabilidad
+  - Estilos CSS mejorados con gradiente sutil y focus states
+  - Soporte agregado para campo tipo `date` en filtros
+  - Responsive: columnas adaptables a móvil (`col-sm-6`)
+
+### Añadido
+- **Botón "Volver a Convocatorias" en import_vacancies.php**
+  - Navegación clara de regreso después de importar vacantes
+
+### Técnico
+- **ui_helper::filter_form()** refactorizado para mejor consistencia visual
+- **styles.css**: Nuevos estilos para `.jb-filter-card` y mejoras en `.jb-filter-form`
+- **version.php**: Incrementado a 2.0.37 (2025120855)
+
+---
+
 ## [2.0.36] - 2025-12-08
 
 ### Corregido

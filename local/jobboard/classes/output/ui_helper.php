@@ -301,10 +301,14 @@ class ui_helper {
      */
     public static function filter_form(string $actionUrl, array $filters, array $currentValues = [],
                                         array $hiddenFields = []): string {
-        $html = \html_writer::start_tag('form', [
+        // Wrap in card for visual consistency.
+        $html = \html_writer::start_div('card shadow-sm mb-4 jb-filter-card');
+        $html .= \html_writer::start_div('card-body py-3');
+
+        $html .= \html_writer::start_tag('form', [
             'method' => 'get',
             'action' => $actionUrl,
-            'class' => 'jb-filter-form mb-4',
+            'class' => 'jb-filter-form mb-0',
         ]);
 
         // Hidden fields.
@@ -319,13 +323,13 @@ class ui_helper {
         $html .= \html_writer::start_div('row align-items-end');
 
         foreach ($filters as $filter) {
-            $colClass = $filter['col'] ?? 'col-md-3';
-            $html .= \html_writer::start_div($colClass . ' mb-2');
+            $colClass = $filter['col'] ?? 'col-md-3 col-sm-6';
+            $html .= \html_writer::start_div($colClass . ' mb-2 mb-md-0');
 
             if (!empty($filter['label'])) {
                 $html .= \html_writer::tag('label', s($filter['label']), [
-                    'for' => $filter['name'],
-                    'class' => 'form-label small text-muted',
+                    'for' => 'filter_' . $filter['name'],
+                    'class' => 'form-label small text-muted mb-1',
                 ]);
             }
 
@@ -336,9 +340,9 @@ class ui_helper {
                     $html .= \html_writer::empty_tag('input', [
                         'type' => 'text',
                         'name' => $filter['name'],
-                        'id' => $filter['name'],
+                        'id' => 'filter_' . $filter['name'],
                         'value' => $value,
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-sm',
                         'placeholder' => $filter['placeholder'] ?? '',
                     ]);
                     break;
@@ -349,8 +353,18 @@ class ui_helper {
                         $filter['name'],
                         $value,
                         null,
-                        ['class' => 'form-control', 'id' => $filter['name']]
+                        ['class' => 'form-control form-control-sm custom-select custom-select-sm', 'id' => 'filter_' . $filter['name']]
                     );
+                    break;
+
+                case 'date':
+                    $html .= \html_writer::empty_tag('input', [
+                        'type' => 'date',
+                        'name' => $filter['name'],
+                        'id' => 'filter_' . $filter['name'],
+                        'value' => $value,
+                        'class' => 'form-control form-control-sm',
+                    ]);
                     break;
             }
 
@@ -358,16 +372,21 @@ class ui_helper {
         }
 
         // Submit button.
-        $html .= \html_writer::start_div('col-md-auto mb-2');
-        $html .= \html_writer::empty_tag('input', [
-            'type' => 'submit',
-            'value' => get_string('filter', 'local_jobboard'),
-            'class' => 'btn btn-secondary',
-        ]);
+        $html .= \html_writer::start_div('col-md-auto mb-2 mb-md-0');
+        $html .= \html_writer::tag('button',
+            '<i class="fa fa-search mr-1"></i>' . get_string('search'),
+            [
+                'type' => 'submit',
+                'class' => 'btn btn-primary btn-sm',
+            ]
+        );
         $html .= \html_writer::end_div();
 
         $html .= \html_writer::end_div(); // row
         $html .= \html_writer::end_tag('form');
+
+        $html .= \html_writer::end_div(); // card-body
+        $html .= \html_writer::end_div(); // card
 
         return $html;
     }
