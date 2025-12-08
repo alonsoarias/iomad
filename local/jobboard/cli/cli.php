@@ -87,6 +87,8 @@ list($options, $unrecognized) = cli_get_params([
     'help' => false,
     'input' => null,
     'convocatoria' => null,
+    'convocatoria-name' => null,
+    'convocatoria-code' => null,
     'company' => null,
     'department' => null,
     'opendate' => null,
@@ -94,6 +96,7 @@ list($options, $unrecognized) = cli_get_params([
     'dryrun' => false,
     'update' => false,
     'status' => 'draft',
+    'publish' => false,
     'verbose' => false,
     'export-json' => null,
 ], [
@@ -105,6 +108,7 @@ list($options, $unrecognized) = cli_get_params([
     'd' => 'dryrun',
     'u' => 'update',
     's' => 'status',
+    'p' => 'publish',
     'v' => 'verbose',
     'j' => 'export-json',
 ]);
@@ -125,6 +129,11 @@ Mode: $moodlemode
 Automated import of professional profiles from extracted PDF text files
 into the local_jobboard vacancy system.
 
+IMPORTANT: To see vacancies in the system, you need:
+  1. A convocatoria (call) to group vacancies
+  2. Vacancies with status 'published'
+  3. Use --publish to automatically create convocatoria and publish
+
 USAGE:
   php cli.php [options]
 
@@ -136,7 +145,11 @@ OPTIONS:
   -v, --verbose           Show detailed output
 
 MOODLE-ONLY OPTIONS (require config.php):
-  -c, --convocatoria=ID   Convocatoria ID to associate vacancies with
+  -p, --publish           AUTO-CREATE convocatoria and PUBLISH vacancies
+                          (Recommended for first import)
+  -c, --convocatoria=ID   Use existing convocatoria ID
+  --convocatoria-name=NAME  Name for new convocatoria (with --publish)
+  --convocatoria-code=CODE  Code for new convocatoria (with --publish)
   --company=ID            Default IOMAD company ID
   --department=ID         Default IOMAD department ID
   -o, --opendate=DATE     Opening date (YYYY-MM-DD), default: today
@@ -146,27 +159,28 @@ MOODLE-ONLY OPTIONS (require config.php):
   -s, --status=STATUS     Initial status: draft|published (default: draft)
 
 EXAMPLES:
+  # RECOMMENDED: Full import with convocatoria creation and publish
+  php cli.php --publish
+
+  # With custom convocatoria name and dates
+  php cli.php --publish --convocatoria-name="Convocatoria Docentes 2026-1" \\
+              --opendate=2026-01-15 --closedate=2026-02-15
+
   # Parse only and export JSON (works without Moodle)
   php cli.php --export-json=perfiles.json --verbose
 
   # Dry run to preview import (requires Moodle)
   php cli.php --dryrun --verbose
 
-  # Full import with specific dates (requires Moodle)
-  php cli.php --opendate=2026-01-15 --closedate=2026-02-15
-
-  # Import and associate with convocatoria (requires Moodle)
-  php cli.php --convocatoria=1 --company=2
+  # Import to existing convocatoria
+  php cli.php --convocatoria=1 --status=published
 
 PROCESS:
   1. Reads text files from PERFILESPROFESORES_TEXT directory
-  2. Parses each file to extract profile data:
-     - Code (FCAS-XX, FII-XX)
-     - Contract type (OCASIONAL TIEMPO COMPLETO, CATEDRA)
-     - Academic program
-     - Professional profile requirements
-     - Courses to teach
-  3. Creates/updates vacancies in local_jobboard_vacancy table (if Moodle available)
+  2. Parses each file to extract profile data
+  3. If --publish: Creates convocatoria first
+  4. Creates/updates vacancies linked to convocatoria
+  5. If --publish: Sets status to 'published' and opens convocatoria
 
 EOT;
 
@@ -225,7 +239,8 @@ cli_heading('ISER Job Board - Profile Import');
 echo "Input directory: $inputdir\n";
 echo "Open date: " . date('Y-m-d', $opendate) . "\n";
 echo "Close date: " . date('Y-m-d', $closedate) . "\n";
-echo "Status: {$options['status']}\n";
+echo "Auto-publish: " . ($options['publish'] ? 'YES (will create convocatoria)' : 'NO') . "\n";
+echo "Status: {$options['status']}" . ($options['publish'] ? ' (auto-set by --publish)' : '') . "\n";
 echo "Dry run: " . ($dryrun ? 'YES' : 'NO') . "\n";
 echo "Update existing: " . ($options['update'] ? 'YES' : 'NO') . "\n";
 if ($options['convocatoria']) {
@@ -316,7 +331,72 @@ if (!$moodleavailable) {
 }
 
 echo "\n";
-cli_heading('Phase 2: Creating Vacancies');
+
+// Determine if we should publish (auto-create convocatoria).
+$shouldpublish = $options['publish'];
+if ($shouldpublish) {
+    $options['status'] = 'published';
+}
+
+// ============================================================
+// PHASE 2A: CREATE OR GET CONVOCATORIA
+// ============================================================
+
+$convocatoriaid = !empty($options['convocatoria']) ? (int) $options['convocatoria'] : null;
+
+if ($shouldpublish && empty($convocatoriaid)) {
+    cli_heading('Phase 2A: Creating Convocatoria');
+
+    // Generate convocatoria details.
+    $convcode = $options['convocatoria-code'] ?: 'CONV-' . date('Y') . '-' . date('md');
+    $convname = $options['convocatoria-name'] ?: 'Convocatoria Docentes ISER ' . date('Y') . '-' . ceil(date('n') / 6);
+
+    // Check if convocatoria with this code exists.
+    $existingconv = $DB->get_record('local_jobboard_convocatoria', ['code' => $convcode]);
+
+    if ($existingconv) {
+        echo "Using existing convocatoria: $convcode (ID: {$existingconv->id})\n";
+        $convocatoriaid = $existingconv->id;
+    } else if (!$dryrun) {
+        $adminuser = get_admin();
+        $convrecord = new stdClass();
+        $convrecord->code = $convcode;
+        $convrecord->name = $convname;
+        $convrecord->description = '<p>Convocatoria para perfiles profesionales docentes.</p>' .
+            '<p>Total de perfiles: ' . count($allprofiles) . ' (FCAS: ' . $parsestats['fcas'] . ', FII: ' . $parsestats['fii'] . ')</p>';
+        $convrecord->startdate = $opendate;
+        $convrecord->enddate = $closedate;
+        $convrecord->status = 'open';
+        $convrecord->companyid = !empty($options['company']) ? (int) $options['company'] : null;
+        $convrecord->departmentid = !empty($options['department']) ? (int) $options['department'] : null;
+        $convrecord->publicationtype = 'internal';
+        $convrecord->terms = '';
+        $convrecord->createdby = $adminuser->id;
+        $convrecord->timecreated = $now;
+
+        $convocatoriaid = $DB->insert_record('local_jobboard_convocatoria', $convrecord);
+        echo "Created convocatoria: $convname\n";
+        echo "  Code: $convcode\n";
+        echo "  ID: $convocatoriaid\n";
+        echo "  Status: open\n";
+        echo "  Period: " . date('Y-m-d', $opendate) . " to " . date('Y-m-d', $closedate) . "\n";
+    } else {
+        echo "DRY RUN: Would create convocatoria '$convname' ($convcode)\n";
+        $convocatoriaid = 0; // Placeholder for dry run.
+    }
+} else if (!empty($convocatoriaid)) {
+    $existingconv = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
+    if (!$existingconv) {
+        cli_error("Convocatoria with ID $convocatoriaid not found");
+    }
+    echo "Using convocatoria: {$existingconv->name} (ID: $convocatoriaid)\n";
+}
+
+// ============================================================
+// PHASE 2B: CREATE VACANCIES
+// ============================================================
+
+cli_heading('Phase 2B: Creating Vacancies');
 
 $adminuser = get_admin();
 $importstats = ['created' => 0, 'updated' => 0, 'skipped' => 0, 'errors' => 0];
@@ -406,8 +486,8 @@ foreach ($allprofiles as $code => $profile) {
         }
     }
 
-    // Convocatoria.
-    $record->convocatoriaid = !empty($options['convocatoria']) ? (int) $options['convocatoria'] : null;
+    // Convocatoria (use the one we created/found earlier).
+    $record->convocatoriaid = $convocatoriaid;
 
     // Dates and positions.
     $record->opendate = $opendate;
@@ -464,13 +544,31 @@ foreach ($allprofiles as $code => $profile) {
 echo "\n";
 cli_heading('Import Summary');
 echo "Profiles parsed: {$parsestats['profiles']}\n";
+if ($convocatoriaid) {
+    echo "Convocatoria ID: $convocatoriaid\n";
+}
 echo "Vacancies created: {$importstats['created']}\n";
 echo "Vacancies updated: {$importstats['updated']}\n";
 echo "Vacancies skipped: {$importstats['skipped']}\n";
 echo "Errors: {$importstats['errors']}\n";
+echo "Vacancy status: {$options['status']}\n";
 
 if ($dryrun) {
     echo "\n*** DRY RUN - No changes were made to the database ***\n";
+} else if ($importstats['created'] > 0 || $importstats['updated'] > 0) {
+    echo "\n";
+    echo "=== NEXT STEPS ===\n";
+    if ($options['status'] === 'published' && $convocatoriaid) {
+        echo "Vacancies are now PUBLISHED and visible in the system.\n";
+        echo "Access: Site Administration > Local plugins > Job Board\n";
+        echo "Or browse: /local/jobboard/?view=browse_convocatorias\n";
+    } else if ($options['status'] === 'draft') {
+        echo "Vacancies are in DRAFT status and NOT visible yet.\n";
+        echo "To publish them:\n";
+        echo "  1. Create/use a convocatoria\n";
+        echo "  2. Run: php cli.php --publish --update\n";
+        echo "  Or manually: Admin > Local plugins > Job Board > Manage\n";
+    }
 }
 
 exit($importstats['errors'] > 0 ? 1 : 0);
