@@ -6,7 +6,12 @@
 
 Se analizo la estructura de IOMAD (companies/departments) y del plugin local_jobboard
 para crear scripts CLI que permitan importar los perfiles profesionales como vacantes.
-Se generaron **197 perfiles** parseados y listos para importacion.
+Se genero un **CLI unificado** (`cli.php`) que automaticamente:
+1. Parsea los archivos de texto extraidos de los PDFs
+2. Genera JSON con los perfiles estructurados
+3. Importa las vacantes a la base de datos de Moodle
+
+Se extrajeron **197 perfiles** listos para importacion.
 
 ---
 
@@ -58,24 +63,94 @@ IOMAD ISER (virtual.iser.edu.co)
 
 ---
 
-## 3. Scripts CLI Creados
+## 3. CLI Unificado
 
-### 3.1 parse_profiles_v2.php
+### 3.1 cli.php (Principal)
 
-**Ubicacion:** `local/jobboard/cli/parse_profiles_v2.php`
+**Ubicacion:** `local/jobboard/cli/cli.php`
 
-**Funcion:** Parsea los archivos de texto extraidos de los PDFs y genera un archivo JSON
-estructurado con todos los perfiles.
+**Funcion:** Script unificado que automaticamente:
+1. Lee los archivos de texto de `PERFILESPROFESORES_TEXT`
+2. Parsea y extrae los perfiles profesionales
+3. Importa las vacantes a la base de datos (si Moodle esta disponible)
 
-**Uso:**
+**Modos de operacion:**
+
+- **Modo Moodle:** Ejecuta parsing + importacion a base de datos
+- **Modo Standalone:** Solo parsing (cuando no hay config.php de Moodle)
+
+**Uso basico:**
 ```bash
-php local/jobboard/cli/parse_profiles_v2.php \
+# Importacion completa (desde directorio de Moodle)
+php local/jobboard/cli/cli.php
+
+# Con opciones
+php local/jobboard/cli/cli.php \
     --input=local/jobboard/PERFILESPROFESORES_TEXT \
-    --output=local/jobboard/perfiles_2026.json \
-    --verbose
+    --convocatoria=1 \
+    --company=2 \
+    --opendate=2026-01-15 \
+    --closedate=2026-02-15 \
+    --status=draft
+
+# Solo parsing (modo standalone o con opcion)
+php local/jobboard/cli/cli.php --export-json=perfiles.json
+
+# Simulacion sin cambios en DB
+php local/jobboard/cli/cli.php --dryrun
 ```
 
-**Salida:** Archivo JSON con estructura:
+**Opciones:**
+| Opcion | Descripcion |
+|--------|-------------|
+| `--input=DIR` | Directorio con archivos .txt (default: PERFILESPROFESORES_TEXT) |
+| `--export-json=FILE` | Exportar perfiles a archivo JSON |
+| `--convocatoria=ID` | ID de convocatoria para asociar |
+| `--company=ID` | ID de company IOMAD por defecto |
+| `--department=ID` | ID de department IOMAD por defecto |
+| `--opendate=DATE` | Fecha apertura (YYYY-MM-DD), default: ahora |
+| `--closedate=DATE` | Fecha cierre (YYYY-MM-DD), default: +30 dias |
+| `--dryrun` | Simular sin crear registros |
+| `--update` | Actualizar vacantes existentes (por codigo) |
+| `--status=STATUS` | Estado inicial: draft/published (default: draft) |
+| `--verbose` | Mostrar informacion detallada |
+| `--help` | Mostrar ayuda |
+
+**Salida:**
+```
+==============================================
+Phase 1: Parsing Profile Text Files
+==============================================
+Input directory: /path/to/PERFILESPROFESORES_TEXT
+Found 33 text files
+
+Processing: FCAS-PERFILES_PROFESORES_2026_p01.txt ... found 9 profiles
+Processing: FCAS-PERFILES_PROFESORES_2026_p02.txt ... found 13 profiles
+...
+
+Parsing complete:
+  Files processed: 33
+  Profiles found: 197
+    - FCAS: 156
+    - FII: 41
+
+==============================================
+Phase 2: Importing Vacancies to Database
+==============================================
+[1/197] CREATED: FCAS-01 (ID: 1)
+[2/197] CREATED: FCAS-02 (ID: 2)
+...
+
+Import Summary
+==============
+Total processed: 197
+Created: 197
+Updated: 0
+Skipped: 0
+Errors: 0
+```
+
+**Estructura JSON generada:**
 ```json
 {
   "generated": "2025-12-08 15:38:22",
@@ -100,44 +175,19 @@ php local/jobboard/cli/parse_profiles_v2.php \
 }
 ```
 
-### 3.2 import_vacancies.php
+---
 
-**Ubicacion:** `local/jobboard/cli/import_vacancies.php`
+### 3.2 Scripts auxiliares (Deprecados)
 
-**Funcion:** Importa las vacantes desde el archivo JSON a la base de datos de Moodle,
-creando registros en la tabla `local_jobboard_vacancy`.
+Los siguientes scripts fueron reemplazados por `cli.php`:
 
-**Uso:**
-```bash
-# Simulacion (no crea registros)
-php local/jobboard/cli/import_vacancies.php \
-    --file=local/jobboard/perfiles_2026.json \
-    --opendate=2026-01-15 \
-    --closedate=2026-02-15 \
-    --dryrun
+| Script | Funcion | Estado |
+|--------|---------|--------|
+| `parse_profiles.php` | Parser v1 | Deprecado |
+| `parse_profiles_v2.php` | Parser v2 mejorado | Integrado en cli.php |
+| `import_vacancies.php` | Importacion desde JSON | Integrado en cli.php |
 
-# Importacion real
-php local/jobboard/cli/import_vacancies.php \
-    --file=local/jobboard/perfiles_2026.json \
-    --convocatoria=1 \
-    --company=2 \
-    --opendate=2026-01-15 \
-    --closedate=2026-02-15 \
-    --status=draft
-```
-
-**Opciones:**
-| Opcion | Descripcion |
-|--------|-------------|
-| `--file` | Archivo JSON de entrada (requerido) |
-| `--convocatoria` | ID de convocatoria para asociar |
-| `--company` | ID de company IOMAD por defecto |
-| `--department` | ID de department IOMAD por defecto |
-| `--opendate` | Fecha apertura (YYYY-MM-DD) |
-| `--closedate` | Fecha cierre (YYYY-MM-DD) |
-| `--dryrun` | Simular sin crear registros |
-| `--update` | Actualizar vacantes existentes |
-| `--status` | Estado inicial (draft/published) |
+> **Nota:** Estos scripts siguen funcionando de forma independiente pero se recomienda usar el CLI unificado.
 
 ---
 
@@ -235,11 +285,11 @@ Crear una convocatoria en el plugin local_jobboard para agrupar las vacantes:
 - Fechas: Enero 15 - Febrero 15, 2026
 - Estado: draft
 
-### Paso 3: Importar Vacantes (Dry Run)
+### Paso 3: Importar con CLI Unificado (Dry Run)
 
 ```bash
-php local/jobboard/cli/import_vacancies.php \
-    --file=local/jobboard/perfiles_2026.json \
+# Simulacion - no crea registros
+php local/jobboard/cli/cli.php \
     --convocatoria=1 \
     --opendate=2026-01-15 \
     --closedate=2026-02-15 \
@@ -249,8 +299,8 @@ php local/jobboard/cli/import_vacancies.php \
 ### Paso 4: Importar Vacantes (Real)
 
 ```bash
-php local/jobboard/cli/import_vacancies.php \
-    --file=local/jobboard/perfiles_2026.json \
+# Importacion completa automatica
+php local/jobboard/cli/cli.php \
     --convocatoria=1 \
     --company=1 \
     --opendate=2026-01-15 \
@@ -271,9 +321,10 @@ php local/jobboard/cli/import_vacancies.php \
 
 | Archivo | Descripcion |
 |---------|-------------|
+| `cli/cli.php` | **CLI Unificado** - script principal |
 | `cli/parse_profiles.php` | Parser v1 (deprecado) |
-| `cli/parse_profiles_v2.php` | Parser v2 mejorado |
-| `cli/import_vacancies.php` | Script de importacion |
+| `cli/parse_profiles_v2.php` | Parser v2 (integrado en cli.php) |
+| `cli/import_vacancies.php` | Importador (integrado en cli.php) |
 | `perfiles_2026.json` | JSON con 197 perfiles parseados |
 
 ---
@@ -302,7 +353,9 @@ php local/jobboard/cli/import_vacancies.php \
 
 ## 9. Estado
 
-- [x] **COMPLETADO** - Scripts CLI creados y funcionales
+- [x] **COMPLETADO** - CLI unificado (cli.php) creado y funcional
+- [x] **COMPLETADO** - Parsing de 197 perfiles verificado
+- [x] **COMPLETADO** - Documentacion actualizada
 
 ---
 
@@ -310,7 +363,7 @@ php local/jobboard/cli/import_vacancies.php \
 
 1. Configurar companies y departments en IOMAD segun arquitectura
 2. Crear convocatoria para agrupar vacantes
-3. Ejecutar importacion en entorno de pruebas
+3. Ejecutar importacion con: `php local/jobboard/cli/cli.php --dryrun`
 4. Validar datos importados
 5. Ajustar y completar informacion faltante
 6. Publicar convocatoria
