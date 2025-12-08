@@ -97,6 +97,8 @@ list($options, $unrecognized) = cli_get_params([
     'update' => false,
     'status' => 'draft',
     'publish' => false,
+    'reset' => false,
+    'reset-convocatorias' => false,
     'verbose' => false,
     'export-json' => null,
 ], [
@@ -109,6 +111,7 @@ list($options, $unrecognized) = cli_get_params([
     'u' => 'update',
     's' => 'status',
     'p' => 'publish',
+    'r' => 'reset',
     'v' => 'verbose',
     'j' => 'export-json',
 ]);
@@ -147,6 +150,8 @@ OPTIONS:
 MOODLE-ONLY OPTIONS (require config.php):
   -p, --publish           AUTO-CREATE convocatoria and PUBLISH vacancies
                           (Recommended for first import)
+  -r, --reset             DELETE all existing vacancies before import
+  --reset-convocatorias   Also delete convocatorias (use with --reset)
   -c, --convocatoria=ID   Use existing convocatoria ID
   --convocatoria-name=NAME  Name for new convocatoria (with --publish)
   --convocatoria-code=CODE  Code for new convocatoria (with --publish)
@@ -161,6 +166,12 @@ MOODLE-ONLY OPTIONS (require config.php):
 EXAMPLES:
   # RECOMMENDED: Full import with convocatoria creation and publish
   php cli.php --publish
+
+  # RESET and reimport: Delete all vacancies and start fresh
+  php cli.php --reset --publish
+
+  # FULL RESET: Delete vacancies AND convocatorias, then reimport
+  php cli.php --reset --reset-convocatorias --publish
 
   # With custom convocatoria name and dates
   php cli.php --publish --convocatoria-name="Convocatoria Docentes 2026-1" \\
@@ -239,6 +250,9 @@ cli_heading('ISER Job Board - Profile Import');
 echo "Input directory: $inputdir\n";
 echo "Open date: " . date('Y-m-d', $opendate) . "\n";
 echo "Close date: " . date('Y-m-d', $closedate) . "\n";
+if ($options['reset']) {
+    echo "RESET MODE: YES - Will delete existing vacancies" . ($options['reset-convocatorias'] ? ' and convocatorias' : '') . "\n";
+}
 echo "Auto-publish: " . ($options['publish'] ? 'YES (will create convocatoria)' : 'NO') . "\n";
 echo "Status: {$options['status']}" . ($options['publish'] ? ' (auto-set by --publish)' : '') . "\n";
 echo "Dry run: " . ($dryrun ? 'YES' : 'NO') . "\n";
@@ -336,6 +350,88 @@ echo "\n";
 $shouldpublish = $options['publish'];
 if ($shouldpublish) {
     $options['status'] = 'published';
+}
+
+// ============================================================
+// PHASE 2-RESET: DELETE EXISTING DATA (if --reset)
+// ============================================================
+
+if ($options['reset']) {
+    cli_heading('Phase 2-RESET: Deleting Existing Data');
+
+    $resetstats = ['vacancies' => 0, 'convocatorias' => 0, 'applications' => 0];
+
+    // First, count what will be deleted.
+    $vacancycount = $DB->count_records('local_jobboard_vacancy');
+    $convcount = $DB->count_records('local_jobboard_convocatoria');
+
+    echo "Found $vacancycount vacancies";
+    if ($options['reset-convocatorias']) {
+        echo " and $convcount convocatorias";
+    }
+    echo " to delete.\n";
+
+    if ($dryrun) {
+        echo "DRY RUN: Would delete $vacancycount vacancies";
+        if ($options['reset-convocatorias']) {
+            echo " and $convcount convocatorias";
+        }
+        echo "\n";
+        $resetstats['vacancies'] = $vacancycount;
+        $resetstats['convocatorias'] = $options['reset-convocatorias'] ? $convcount : 0;
+    } else {
+        // Delete related data first (applications, documents, etc.).
+        // Get vacancy IDs first.
+        $vacancyids = $DB->get_fieldset_select('local_jobboard_vacancy', 'id', '1=1');
+
+        if (!empty($vacancyids)) {
+            // Delete applications and related data.
+            list($insql, $params) = $DB->get_in_or_equal($vacancyids, SQL_PARAMS_NAMED, 'vid');
+
+            // Get application IDs for document deletion.
+            $appids = $DB->get_fieldset_select('local_jobboard_application', 'id', "vacancyid $insql", $params);
+
+            if (!empty($appids)) {
+                list($appinsql, $appparams) = $DB->get_in_or_equal($appids, SQL_PARAMS_NAMED, 'aid');
+
+                // Delete documents.
+                $docids = $DB->get_fieldset_select('local_jobboard_document', 'id', "applicationid $appinsql", $appparams);
+                if (!empty($docids)) {
+                    list($docinsql, $docparams) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED, 'did');
+                    $DB->delete_records_select('local_jobboard_doc_validation', "documentid $docinsql", $docparams);
+                    $DB->delete_records_select('local_jobboard_document', "id $docinsql", $docparams);
+                }
+
+                // Delete workflow logs.
+                $DB->delete_records_select('local_jobboard_workflow_log', "applicationid $appinsql", $appparams);
+
+                // Delete applications.
+                $DB->delete_records_select('local_jobboard_application', "id $appinsql", $appparams);
+                $resetstats['applications'] = count($appids);
+            }
+
+            // Delete document requirements.
+            $DB->delete_records_select('local_jobboard_doc_requirement', "vacancyid $insql", $params);
+        }
+
+        // Delete all vacancies.
+        $DB->delete_records('local_jobboard_vacancy');
+        $resetstats['vacancies'] = $vacancycount;
+        echo "Deleted $vacancycount vacancies";
+        if ($resetstats['applications'] > 0) {
+            echo " and {$resetstats['applications']} applications";
+        }
+        echo "\n";
+
+        // Delete convocatorias if requested.
+        if ($options['reset-convocatorias']) {
+            $DB->delete_records('local_jobboard_convocatoria');
+            $resetstats['convocatorias'] = $convcount;
+            echo "Deleted $convcount convocatorias\n";
+        }
+
+        echo "Reset complete.\n";
+    }
 }
 
 // ============================================================
