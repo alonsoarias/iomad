@@ -1334,13 +1334,126 @@
    Application Progress Steps
    ========================================================================== */
 
-.path-local-jobboard .jb-progress-steps .jb-step-icon {
-    width: 24px;
-    height: 24px;
+.path-local-jobboard .jb-progress-steps {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.path-local-jobboard .jb-step {
+    min-width: 70px;
+}
+
+.path-local-jobboard .jb-step-icon {
+    width: 36px;
+    height: 36px;
+    background: #dee2e6;
+    color: #6c757d;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.65rem;
+    font-size: 0.85rem;
+}
+
+.path-local-jobboard .jb-step.active .jb-step-icon {
+    background: #007bff;
+    color: #fff;
+}
+
+.path-local-jobboard .jb-step.completed .jb-step-icon {
+    background: #28a745;
+    color: #fff;
+}
+
+.path-local-jobboard .jb-step-connector {
+    height: 3px;
+    background: #dee2e6;
+    margin-top: -18px;
+}
+
+.path-local-jobboard .jb-sidebar-card {
+    border: none;
+    border-radius: 8px;
+}
+
+.path-local-jobboard .jb-collapse-icon {
+    transition: transform 0.3s ease;
+}
+
+.path-local-jobboard .collapsed .jb-collapse-icon {
+    transform: rotate(-90deg);
+}
+
+/* ==========================================================================
+   Review Page Components
+   ========================================================================== */
+
+.local-jobboard-review .list-group-item {
+    transition: background-color 0.2s ease;
+}
+
+.local-jobboard-review .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.local-jobboard-review .card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.local-jobboard-review .card:hover {
+    transform: translateY(-2px);
+}
+
+.path-local-jobboard .jb-guidelines-card,
+.path-local-jobboard .jb-tips-card,
+.path-local-jobboard .jb-help-card {
+    border: none;
+    border-radius: 8px;
+}
+
+.path-local-jobboard .jb-pending-card {
+    animation: jb-pulse 2s infinite;
+}
+
+@keyframes jb-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+}
+
+.path-local-jobboard .jb-complete-card {
+    animation: jb-celebrate 0.5s ease-out;
+}
+
+@keyframes jb-celebrate {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* Document item styling */
+.path-local-jobboard .jb-document-item {
+    border-left: 4px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.path-local-jobboard .jb-doc-pending {
+    border-left-color: #ffc107;
+    background-color: #fffef5;
+}
+
+.path-local-jobboard .jb-doc-approved {
+    border-left-color: #28a745;
+}
+
+.path-local-jobboard .jb-doc-rejected {
+    border-left-color: #dc3545;
+}
+
+.path-local-jobboard .jb-doc-actions .btn {
+    margin-bottom: 3px;
 }
 
 /* ==========================================================================

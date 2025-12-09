@@ -318,39 +318,9 @@ echo '</div>'; // .col-lg-4
 echo '</div>'; // .row
 echo '</div>'; // .jb-apply-container
 
-// Custom styles.
-echo '<style>
-.jb-progress-steps { background:#f8f9fa; padding:15px 20px; border-radius:8px; border:1px solid #e9ecef; }
-.jb-step { min-width:70px; }
-.jb-step-icon { width:36px; height:36px; background:#dee2e6; color:#6c757d; transition:all 0.3s; }
-.jb-step.active .jb-step-icon { background:#007bff; color:#fff; }
-.jb-step.completed .jb-step-icon { background:#28a745; color:#fff; }
-.jb-step-connector { height:3px; background:#dee2e6; margin-top:-18px; }
-.jb-sidebar-card { border:none; border-radius:8px; }
-.jb-collapse-icon { transition:transform 0.3s; }
-.collapsed .jb-collapse-icon { transform:rotate(-90deg); }
-</style>';
-
-// JavaScript for progress tracking.
-$PAGE->requires->js_amd_inline('
-require(["jquery"], function($) {
-    $("[data-toggle=tooltip]").tooltip();
-    var sections = ["consentheader", "documentsheader", "additionalheader", "declarationheader"];
-    var stepMap = {"consentheader":0, "documentsheader":1, "additionalheader":2, "declarationheader":3};
-    sections.forEach(function(id) {
-        var el = document.getElementById("id_" + id);
-        if (el) {
-            el.addEventListener("click", function() {
-                var step = stepMap[id];
-                $(".jb-step").each(function(i) {
-                    $(this).removeClass("active completed");
-                    if (i < step) $(this).addClass("completed");
-                    if (i === step) $(this).addClass("active");
-                });
-            });
-        }
-    });
-});
-');
+// Initialize JavaScript for progress tracking via AMD module.
+$PAGE->requires->js_call_amd('local_jobboard/apply_progress', 'init', [[
+    'initialStep' => 0
+]]);
 
 echo $OUTPUT->footer();

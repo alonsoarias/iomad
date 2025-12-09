@@ -466,8 +466,8 @@ class ui_helper {
         $html .= \html_writer::tag('span', get_string('show') . ':', ['class' => 'mr-2 small text-muted']);
 
         // Build select manually to ensure proper visibility with all themes.
-        $html .= '<select class="form-control form-control-sm d-inline-block w-auto" ';
-        $html .= 'onchange="window.location.href=this.value" ';
+        // Uses jb-perpage-select class for AMD module initialization.
+        $html .= '<select class="form-control form-control-sm d-inline-block w-auto jb-perpage-select" ';
         $html .= 'aria-label="' . s(get_string('recordsperpage', 'local_jobboard')) . '" ';
         $html .= 'style="color: #495057 !important; background-color: #fff !important; ';
         $html .= 'appearance: menulist !important; -webkit-appearance: menulist !important; ';

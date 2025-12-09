@@ -509,8 +509,8 @@ if (!$applicationid) {
             '<i class="fa fa-check-double mr-1"></i>' . get_string('validateall', 'local_jobboard'),
             ['class' => 'btn btn-success btn-sm jb-btn-validateall',
              'data-toggle' => 'tooltip',
-             'title' => get_string('approveall_confirm', 'local_jobboard'),
-             'onclick' => 'return confirm("' . s(get_string('approveall_confirm', 'local_jobboard')) . '");']
+             'title' => get_string('validateall', 'local_jobboard'),
+             'data-confirm' => get_string('approveall_confirm', 'local_jobboard')]
         );
     }
     echo html_writer::end_div();
@@ -852,58 +852,8 @@ if (!$applicationid) {
 
 echo html_writer::end_div(); // local-jobboard-review
 
-// Additional styles.
-echo html_writer::tag('style', '
-.local-jobboard-review .list-group-item {
-    transition: background-color 0.2s ease;
-}
-.local-jobboard-review .list-group-item:hover {
-    background-color: #f8f9fa;
-}
-.local-jobboard-review .card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.local-jobboard-review .card:hover {
-    transform: translateY(-2px);
-}
-/* Progress steps styling */
-.jb-progress-steps { background:#f8f9fa; padding:15px 20px; border-radius:8px; border:1px solid #e9ecef; }
-.jb-step { min-width:80px; }
-.jb-step-icon { width:40px; height:40px; background:#dee2e6; color:#6c757d; transition:all 0.3s; }
-.jb-step.active .jb-step-icon { background:#007bff; color:#fff; }
-.jb-step.completed .jb-step-icon { background:#28a745; color:#fff; }
-.jb-step-connector { height:3px; background:#dee2e6; margin-top:-20px; }
-/* Cards styling */
-.jb-guidelines-card { border:none; border-radius:8px; }
-.jb-collapse-icon { transition:transform 0.3s; }
-.collapsed .jb-collapse-icon { transform:rotate(-90deg); }
-.jb-tips-card { border-radius:8px; }
-.jb-help-card { border-radius:8px; }
-.jb-pending-card { animation: pulse 2s infinite; }
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
-}
-.jb-complete-card { animation: celebrate 0.5s ease-out; }
-@keyframes celebrate {
-    0% { transform: scale(0.95); }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); }
-}
-/* Document item styling */
-.jb-document-item { border-left: 4px solid transparent; transition: all 0.2s ease; }
-.jb-doc-pending { border-left-color: #ffc107; background-color: #fffef5; }
-.jb-doc-approved { border-left-color: #28a745; }
-.jb-doc-rejected { border-left-color: #dc3545; }
-.jb-doc-actions .btn { margin-bottom: 3px; }
-');
-
-// JavaScript for tooltips.
-$PAGE->requires->js_amd_inline('
-require(["jquery"], function($) {
-    $("[data-toggle=tooltip]").tooltip();
-});
-');
+// Initialize JavaScript via AMD modules.
+$PAGE->requires->js_call_amd('local_jobboard/tooltips', 'init');
+$PAGE->requires->js_call_amd('local_jobboard/confirm_action', 'init');
 
 echo $OUTPUT->footer();

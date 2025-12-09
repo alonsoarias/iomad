@@ -321,7 +321,7 @@ if (empty($vacancies)) {
                 echo html_writer::link(
                     new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]),
                     get_string('apply', 'local_jobboard'),
-                    ['class' => 'btn btn-sm btn-success', 'onclick' => 'event.stopPropagation();']
+                    ['class' => 'btn btn-sm btn-success jb-card-action']
                 );
             }
         } elseif ($isVacClosed) {
@@ -363,5 +363,11 @@ echo html_writer::link(
 echo html_writer::end_div();
 
 echo html_writer::end_div(); // local-jobboard-view-convocatoria
+
+// Initialize JavaScript via AMD modules.
+$PAGE->requires->js_call_amd('local_jobboard/card_actions', 'init', [[
+    'buttonSelector' => '.jb-vacancy-card .jb-card-action',
+    'cardSelector' => '.jb-vacancy-card'
+]]);
 
 echo $OUTPUT->footer();
