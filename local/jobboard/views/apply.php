@@ -158,28 +158,199 @@ if ($data = $mform->get_data()) {
 // Output page.
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(get_string('applytovacancy', 'local_jobboard') . ': ' . format_string($vacancy->title));
+// Include inline styles.
+echo \local_jobboard\output\ui_helper::get_inline_styles();
 
-// Show deadline warning if close to deadline.
+// Calculate days until close.
 $daysuntilclose = ($vacancy->closedate - time()) / (24 * 60 * 60);
-if ($daysuntilclose <= 3) {
-    echo $OUTPUT->notification(
-        get_string('deadlinewarning', 'local_jobboard', ceil($daysuntilclose)),
-        \core\output\notification::NOTIFY_WARNING
-    );
+
+// Main container with two-column layout.
+echo '<div class="jb-apply-container">';
+echo '<div class="row">';
+
+// Main content area (left column).
+echo '<div class="col-lg-8">';
+echo '<div class="jb-content-area">';
+
+// Page header.
+echo '<div class="jb-page-header mb-4">';
+echo '<h2 class="mb-2">' . get_string('applytovacancy', 'local_jobboard') . '</h2>';
+echo '<p class="lead text-muted">' . format_string($vacancy->title) . '</p>';
+echo '</div>';
+
+// Progress indicator.
+echo '<div class="jb-progress-steps mb-4" data-toggle="tooltip" ';
+echo 'title="' . s(get_string('applicationsteps_tooltip', 'local_jobboard')) . '">';
+echo '<div class="d-flex justify-content-between align-items-center">';
+$steps = [
+    ['icon' => 'fa-file-signature', 'label' => get_string('step_consent', 'local_jobboard')],
+    ['icon' => 'fa-upload', 'label' => get_string('step_documents', 'local_jobboard')],
+    ['icon' => 'fa-envelope-open-text', 'label' => get_string('step_coverletter', 'local_jobboard')],
+    ['icon' => 'fa-paper-plane', 'label' => get_string('step_submit', 'local_jobboard')],
+];
+foreach ($steps as $i => $step) {
+    $activeclass = $i === 0 ? 'active' : '';
+    echo '<div class="jb-step text-center ' . $activeclass . '" data-step="' . ($i + 1) . '">';
+    echo '<div class="jb-step-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-1">';
+    echo '<i class="fa ' . $step['icon'] . '"></i>';
+    echo '</div>';
+    echo '<small class="d-block text-truncate" style="max-width:80px;">' . $step['label'] . '</small>';
+    echo '</div>';
+    if ($i < count($steps) - 1) {
+        echo '<div class="jb-step-connector flex-grow-1 mx-2"></div>';
+    }
+}
+echo '</div>';
+echo '</div>';
+
+// Deadline warning.
+if ($daysuntilclose <= 3 && $daysuntilclose > 0) {
+    echo '<div class="alert alert-danger d-flex align-items-center mb-4" role="alert">';
+    echo '<i class="fa fa-exclamation-triangle fa-2x mr-3"></i>';
+    echo '<div>';
+    echo '<strong>' . get_string('deadlinewarning_title', 'local_jobboard') . '</strong><br>';
+    echo get_string('deadlinewarning', 'local_jobboard', ceil($daysuntilclose));
+    echo '</div>';
+    echo '</div>';
 }
 
-// Show application guidelines.
-echo '<div class="application-guidelines mb-4">';
-echo '<h4>' . get_string('applicationguidelines', 'local_jobboard') . '</h4>';
-echo '<ul>';
-echo '<li>' . get_string('guideline1', 'local_jobboard') . '</li>';
-echo '<li>' . get_string('guideline2', 'local_jobboard') . '</li>';
-echo '<li>' . get_string('guideline3', 'local_jobboard') . '</li>';
+// Guidelines card (collapsible).
+echo '<div class="card jb-guidelines-card mb-4" id="guidelines-card">';
+echo '<div class="card-header bg-info text-white" style="cursor:pointer;" ';
+echo 'data-toggle="collapse" data-target="#guidelines-collapse" aria-expanded="true">';
+echo '<div class="d-flex justify-content-between align-items-center">';
+echo '<span><i class="fa fa-info-circle mr-2"></i>' . get_string('applicationguidelines', 'local_jobboard') . '</span>';
+echo '<i class="fa fa-chevron-down jb-collapse-icon"></i>';
+echo '</div>';
+echo '</div>';
+echo '<div class="collapse show" id="guidelines-collapse">';
+echo '<div class="card-body">';
+echo '<ul class="mb-0 pl-3">';
+echo '<li class="mb-2">' . get_string('guideline1', 'local_jobboard') . '</li>';
+echo '<li class="mb-2">' . get_string('guideline2', 'local_jobboard') . '</li>';
+echo '<li class="mb-2">' . get_string('guideline3', 'local_jobboard') . '</li>';
 echo '<li>' . get_string('guideline4', 'local_jobboard') . '</li>';
 echo '</ul>';
 echo '</div>';
+echo '</div>';
+echo '</div>';
 
+// Display the form.
 $mform->display();
+
+echo '</div>'; // .jb-content-area
+echo '</div>'; // .col-lg-8
+
+// Sidebar (right column).
+echo '<div class="col-lg-4">';
+
+// Vacancy summary card.
+echo '<div class="card jb-sidebar-card shadow-sm mb-4 sticky-top" style="top:20px;">';
+echo '<div class="card-header bg-primary text-white">';
+echo '<i class="fa fa-briefcase mr-2"></i>' . get_string('vacancysummary', 'local_jobboard');
+echo '</div>';
+echo '<div class="card-body">';
+echo '<p class="mb-2"><strong>' . get_string('code', 'local_jobboard') . ':</strong><br>';
+echo '<code class="bg-light p-1">' . format_string($vacancy->code) . '</code></p>';
+echo '<p class="mb-2"><strong>' . get_string('title', 'local_jobboard') . ':</strong><br>';
+echo '<small>' . format_string($vacancy->title) . '</small></p>';
+
+if (!empty($vacancy->location)) {
+    echo '<p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-2"></i>';
+    echo format_string($vacancy->location) . '</p>';
+}
+
+$vacancyrecord = $vacancy->get_record();
+if (!empty($vacancyrecord->modality)) {
+    $modalities = \local_jobboard_get_modalities();
+    $modalityName = $modalities[$vacancyrecord->modality] ?? $vacancyrecord->modality;
+    echo '<p class="mb-2"><i class="fa fa-graduation-cap text-primary mr-2"></i>' . $modalityName . '</p>';
+}
+
+echo '<hr>';
+echo '<p class="mb-2"><i class="fa fa-calendar-times text-danger mr-2"></i>';
+echo '<strong>' . get_string('closedate', 'local_jobboard') . ':</strong><br>';
+echo userdate($vacancy->closedate, get_string('strftimedatetime', 'langconfig')) . '</p>';
+
+// Time remaining badge.
+if ($daysuntilclose > 0) {
+    $badgeclass = $daysuntilclose <= 3 ? 'badge-danger' : ($daysuntilclose <= 7 ? 'badge-warning' : 'badge-success');
+    echo '<span class="badge ' . $badgeclass . ' p-2">';
+    echo '<i class="fa fa-clock mr-1"></i>';
+    echo get_string('daysremaining', 'local_jobboard', ceil($daysuntilclose));
+    echo '</span>';
+}
+echo '</div>';
+echo '</div>';
+
+// Help card.
+echo '<div class="card jb-sidebar-card shadow-sm mb-4">';
+echo '<div class="card-header bg-secondary text-white">';
+echo '<i class="fa fa-question-circle mr-2"></i>' . get_string('needhelp', 'local_jobboard');
+echo '</div>';
+echo '<div class="card-body">';
+echo '<p class="small mb-3">' . get_string('applyhelp_text', 'local_jobboard') . '</p>';
+echo '<a href="#" class="btn btn-outline-secondary btn-sm btn-block" data-action="tool_usertours/resetpagetour">';
+echo '<i class="fa fa-play-circle mr-1"></i>' . get_string('restarttour', 'local_jobboard');
+echo '</a>';
+echo '</div>';
+echo '</div>';
+
+// Document checklist.
+if (!empty($requireddocs)) {
+    echo '<div class="card jb-sidebar-card shadow-sm">';
+    echo '<div class="card-header bg-warning text-dark">';
+    echo '<i class="fa fa-clipboard-list mr-2"></i>' . get_string('documentchecklist', 'local_jobboard');
+    echo '</div>';
+    echo '<ul class="list-group list-group-flush">';
+    foreach ($requireddocs as $doc) {
+        $requiredmark = !empty($doc->isrequired) ? '<span class="text-danger">*</span>' : '';
+        echo '<li class="list-group-item d-flex justify-content-between align-items-center py-2">';
+        echo '<small>' . format_string($doc->name) . ' ' . $requiredmark . '</small>';
+        echo '<i class="fa fa-circle text-muted" style="font-size:8px;"></i>';
+        echo '</li>';
+    }
+    echo '</ul>';
+    echo '</div>';
+}
+
+echo '</div>'; // .col-lg-4
+echo '</div>'; // .row
+echo '</div>'; // .jb-apply-container
+
+// Custom styles.
+echo '<style>
+.jb-progress-steps { background:#f8f9fa; padding:15px 20px; border-radius:8px; border:1px solid #e9ecef; }
+.jb-step { min-width:70px; }
+.jb-step-icon { width:36px; height:36px; background:#dee2e6; color:#6c757d; transition:all 0.3s; }
+.jb-step.active .jb-step-icon { background:#007bff; color:#fff; }
+.jb-step.completed .jb-step-icon { background:#28a745; color:#fff; }
+.jb-step-connector { height:3px; background:#dee2e6; margin-top:-18px; }
+.jb-sidebar-card { border:none; border-radius:8px; }
+.jb-collapse-icon { transition:transform 0.3s; }
+.collapsed .jb-collapse-icon { transform:rotate(-90deg); }
+</style>';
+
+// JavaScript for progress tracking.
+$PAGE->requires->js_amd_inline('
+require(["jquery"], function($) {
+    $("[data-toggle=tooltip]").tooltip();
+    var sections = ["consentheader", "documentsheader", "additionalheader", "declarationheader"];
+    var stepMap = {"consentheader":0, "documentsheader":1, "additionalheader":2, "declarationheader":3};
+    sections.forEach(function(id) {
+        var el = document.getElementById("id_" + id);
+        if (el) {
+            el.addEventListener("click", function() {
+                var step = stepMap[id];
+                $(".jb-step").each(function(i) {
+                    $(this).removeClass("active completed");
+                    if (i < step) $(this).addClass("completed");
+                    if (i === step) $(this).addClass("active");
+                });
+            });
+        }
+    });
+});
+');
 
 echo $OUTPUT->footer();

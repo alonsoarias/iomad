@@ -91,40 +91,35 @@ define(['jquery', 'core/str'], function($, Str) {
             departmentSelect.empty();
             departmentSelect.prop('disabled', false);
 
-            /**
-             * Add options to the select element.
-             * @param {string} placeholder The placeholder text.
-             */
-            var addOptions = function(placeholder) {
-                departmentSelect.append($('<option>', {
-                    value: 0,
-                    text: placeholder
-                }));
+            // Determine placeholder text (use default first, then update async if needed).
+            var defaultPlaceholder = allLabel || 'Seleccionar modalidad...';
 
-                // Add department options.
-                if (response.success && response.departments && response.departments.length > 0) {
-                    $.each(response.departments, function(index, dept) {
-                        var option = $('<option>', {
-                            value: dept.id,
-                            text: dept.name
-                        });
-                        // Preselect if specified.
-                        if (preselect && parseInt(preselect, 10) === parseInt(dept.id, 10)) {
-                            option.prop('selected', true);
-                        }
-                        departmentSelect.append(option);
+            // Add placeholder option immediately.
+            var placeholderOption = $('<option>', {
+                value: 0,
+                text: defaultPlaceholder
+            });
+            departmentSelect.append(placeholderOption);
+
+            // Add department options.
+            if (response.success && response.departments && response.departments.length > 0) {
+                $.each(response.departments, function(index, dept) {
+                    var option = $('<option>', {
+                        value: dept.id,
+                        text: dept.name
                     });
-                }
-            };
+                    // Preselect if specified.
+                    if (preselect && parseInt(preselect, 10) === parseInt(dept.id, 10)) {
+                        option.prop('selected', true);
+                    }
+                    departmentSelect.append(option);
+                });
+            }
 
-            // Add placeholder option.
-            if (allLabel) {
-                addOptions(allLabel);
-            } else {
+            // Update placeholder text asynchronously (doesn't block options).
+            if (!allLabel) {
                 Str.get_string('selectdepartment', 'local_jobboard').done(function(str) {
-                    addOptions(str);
-                }).fail(function() {
-                    addOptions(placeholderText);
+                    placeholderOption.text(str);
                 });
             }
 

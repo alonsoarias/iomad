@@ -2406,3 +2406,16 @@ $string['required'] = 'Required';
 $string['example'] = 'Example';
 $string['row'] = 'Row';
 $string['andmore'] = 'And {$a} more...';
+
+// ============================================================================
+// Strings for improved apply view - 2025-12-09
+// ============================================================================
+$string['step_consent'] = 'Consent';
+$string['step_documents'] = 'Documents';
+$string['step_coverletter'] = 'Letter';
+$string['step_submit'] = 'Submit';
+$string['applicationsteps_tooltip'] = 'Application progress. Complete each section in order.';
+$string['deadlinewarning_title'] = 'Deadline approaching!';
+$string['applyhelp_text'] = 'If you have questions about completing your application, start the guided tour or contact support.';
+$string['restarttour'] = 'Start Guided Tour';
+$string['documentchecklist'] = 'Document Checklist';

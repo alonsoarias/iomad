@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120978;  // v2.0.60: Add modality field to form, fix contracttype mapping, salary as textarea.
+$plugin->version = 2025120979;  // v2.0.61: Improve profile parsing for pipe-delimited tabular format.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.60';
+$plugin->release = '2.0.61';

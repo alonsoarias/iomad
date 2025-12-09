@@ -2797,3 +2797,16 @@ $string['required'] = 'Requerido';
 $string['example'] = 'Ejemplo';
 $string['row'] = 'Fila';
 $string['andmore'] = 'Y {$a} más...';
+
+// ============================================================================
+// Cadenas para vista de postulación mejorada - 2025-12-09
+// ============================================================================
+$string['step_consent'] = 'Consentimiento';
+$string['step_documents'] = 'Documentos';
+$string['step_coverletter'] = 'Carta';
+$string['step_submit'] = 'Enviar';
+$string['applicationsteps_tooltip'] = 'Progreso de su postulación. Complete cada sección en orden.';
+$string['deadlinewarning_title'] = '¡Fecha límite próxima!';
+$string['applyhelp_text'] = 'Si tiene dudas sobre cómo completar su postulación, inicie el tour guiado o contacte a soporte.';
+$string['restarttour'] = 'Iniciar Tour Guiado';
+$string['documentchecklist'] = 'Lista de Documentos';

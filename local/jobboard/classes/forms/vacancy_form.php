@@ -269,6 +269,13 @@ class vacancy_form extends \moodleform {
 
             // Department selector (IOMAD).
             $iomadinfo = \local_jobboard_get_iomad_info();
+
+            // Get current department ID for preselection (define outside block for JS access).
+            $currentdeptid = 0;
+            if ($isedit && !empty($vacancy->departmentid)) {
+                $currentdeptid = (int) $vacancy->departmentid;
+            }
+
             if ($iomadinfo['has_departments']) {
                 // Initial options with placeholder - populated via AJAX.
                 $departments = [0 => get_string('selectdepartment', 'local_jobboard')];
@@ -282,10 +289,9 @@ class vacancy_form extends \moodleform {
                 $mform->setType('departmentid', PARAM_INT);
                 $mform->addHelpButton('departmentid', 'iomad_department', 'local_jobboard');
 
-                // Get current department ID for preselection.
-                $currentdeptid = 0;
-                if ($isedit && !empty($vacancy->departmentid)) {
-                    $currentdeptid = (int) $vacancy->departmentid;
+                // Set default value when editing.
+                if ($currentdeptid > 0) {
+                    $mform->setDefault('departmentid', $currentdeptid);
                 }
             }
         }
