@@ -59,11 +59,11 @@ $string['tawkto_embed_urldesc'] = 'Introduce la URL de incrustación proporciona
 
 // Protección de contenido
 $string['themesettingscopypaste'] = 'Protección de contenido';
-$string['themesettingscopypaste_desc'] = 'Evita que ciertos roles puedan copiar y pegar contenido.';
-$string['copypaste_prevention'] = 'Prevención de copia y pegado';
-$string['copypaste_preventiondesc'] = 'Evita que ciertos roles puedan copiar y pegar contenido.';
+$string['themesettingscopypaste_desc'] = 'Evita que ciertos roles puedan copiar, pegar contenido y realizar capturas de pantalla.';
+$string['copypaste_prevention'] = 'Prevención de copia, pegado y capturas';
+$string['copypaste_preventiondesc'] = 'Activa la protección de contenido que incluye: bloqueo de copiar/pegar, bloqueo de clic derecho, prevención de capturas de pantalla (PrintScreen, herramientas de recorte, capturas de Mac), bloqueo de impresión y protección del portapapeles.';
 $string['copypaste_roles'] = 'Roles a proteger';
-$string['copypaste_rolesdesc'] = 'Selecciona los roles a los que se aplicará la prevención de copia y pegado.';
+$string['copypaste_rolesdesc'] = 'Selecciona los roles a los que se aplicará la protección de contenido (copiar/pegar, capturas de pantalla, etc.).';
 
 // Configuración del carrusel
 $string['carouselsettings'] = 'Configuración del carrusel';

@@ -59,11 +59,11 @@ $string['tawkto_embed_urldesc'] = 'Enter the embed URL provided by Tawk.to.';
 
 // Content protection
 $string['themesettingscopypaste'] = 'Content protection';
-$string['themesettingscopypaste_desc'] = 'Prevent certain roles from copying and pasting content.';
-$string['copypaste_prevention'] = 'Copy and paste prevention';
-$string['copypaste_preventiondesc'] = 'Prevent certain roles from copying and pasting content.';
+$string['themesettingscopypaste_desc'] = 'Prevent certain roles from copying, pasting content and taking screenshots.';
+$string['copypaste_prevention'] = 'Copy, paste and screenshot prevention';
+$string['copypaste_preventiondesc'] = 'Enable content protection that includes: copy/paste blocking, right-click blocking, screenshot prevention (PrintScreen, snipping tools, Mac screenshots), print blocking and clipboard protection.';
 $string['copypaste_roles'] = 'Roles to protect';
-$string['copypaste_rolesdesc'] = 'Select the roles to which copy and paste prevention will be applied.';
+$string['copypaste_rolesdesc'] = 'Select the roles to which content protection (copy/paste, screenshots, etc.) will be applied.';
 
 // Carousel settings
 $string['carouselsettings'] = 'Carousel settings';
