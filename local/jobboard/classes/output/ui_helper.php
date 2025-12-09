@@ -348,13 +348,21 @@ class ui_helper {
                     break;
 
                 case 'select':
-                    $html .= \html_writer::select(
-                        $filter['options'],
-                        $filter['name'],
-                        $value,
-                        null,
-                        ['class' => 'form-control form-control-sm custom-select custom-select-sm', 'id' => 'filter_' . $filter['name']]
-                    );
+                    // Build select manually to ensure proper visibility with all themes.
+                    $selectId = 'filter_' . $filter['name'];
+                    $html .= '<select name="' . s($filter['name']) . '" id="' . $selectId . '" ';
+                    $html .= 'class="form-control form-control-sm" ';
+                    $html .= 'style="color: #495057 !important; background-color: #fff !important; ';
+                    $html .= 'appearance: menulist !important; -webkit-appearance: menulist !important; ';
+                    $html .= '-moz-appearance: menulist !important;">';
+                    foreach ($filter['options'] as $optVal => $optLabel) {
+                        $selected = ((string)$optVal === (string)$value) ? ' selected="selected"' : '';
+                        // Use value as label if label is empty.
+                        $displayLabel = ($optLabel !== '' && $optLabel !== null) ? $optLabel : $optVal;
+                        $html .= '<option value="' . s($optVal) . '"' . $selected . ' style="color: #495057 !important;">';
+                        $html .= s($displayLabel) . '</option>';
+                    }
+                    $html .= '</select>';
                     break;
 
                 case 'date':
@@ -449,25 +457,24 @@ class ui_helper {
         $html = \html_writer::start_div('jb-perpage-selector d-inline-flex align-items-center');
         $html .= \html_writer::tag('span', get_string('show') . ':', ['class' => 'mr-2 small text-muted']);
 
-        $select = \html_writer::start_tag('select', [
-            'class' => 'form-control form-control-sm d-inline-block w-auto',
-            'onchange' => 'window.location.href=this.value',
-            'aria-label' => get_string('recordsperpage', 'local_jobboard'),
-        ]);
+        // Build select manually to ensure proper visibility with all themes.
+        $html .= '<select class="form-control form-control-sm d-inline-block w-auto" ';
+        $html .= 'onchange="window.location.href=this.value" ';
+        $html .= 'aria-label="' . s(get_string('recordsperpage', 'local_jobboard')) . '" ';
+        $html .= 'style="color: #495057 !important; background-color: #fff !important; ';
+        $html .= 'appearance: menulist !important; -webkit-appearance: menulist !important; ';
+        $html .= '-moz-appearance: menulist !important;">';
 
         foreach ($options as $option) {
             $url = clone $baseurl;
             $url->param('perpage', $option);
             $url->param('page', 0);
-            $selected = ($option == $currentperpage) ? ' selected' : '';
-            $select .= \html_writer::tag('option', $option, [
-                'value' => $url->out(false),
-                'selected' => $option == $currentperpage ? 'selected' : null,
-            ]);
+            $selected = ($option == $currentperpage) ? ' selected="selected"' : '';
+            $html .= '<option value="' . s($url->out(false)) . '"' . $selected;
+            $html .= ' style="color: #495057 !important;">' . $option . '</option>';
         }
 
-        $select .= \html_writer::end_tag('select');
-        $html .= $select;
+        $html .= '</select>';
 
         $html .= \html_writer::tag('span', get_string('entries', 'local_jobboard'), ['class' => 'ml-2 small text-muted']);
         $html .= \html_writer::end_div();

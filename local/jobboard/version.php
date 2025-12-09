@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120865;  // v2.0.47: Refactor public view to follow dashboard pattern, add target=_blank for login/signup.
+$plugin->version = 2025120866;  // v2.0.48: Fix departments loading in signup, fix combobox visibility in filters.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.47';
+$plugin->release = '2.0.48';

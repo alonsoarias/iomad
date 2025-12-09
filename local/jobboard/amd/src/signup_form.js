@@ -26,13 +26,28 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
      * Initialize the signup form handlers.
      */
     var init = function() {
-        var companySelect = $('#id_companyid_signup');
-        var departmentSelect = $('#id_departmentid_signup');
+        // Use multiple selectors to find the company and department fields.
+        // Moodle forms may generate different IDs depending on form name.
+        var companySelect = $('select[name="companyid"]');
+        var departmentSelect = $('select[name="departmentid"]');
+
+        // Fallback to ID-based selectors if name-based didn't work.
+        if (!companySelect.length) {
+            companySelect = $('#id_companyid_signup, [id$="_companyid"]').first();
+        }
+        if (!departmentSelect.length) {
+            departmentSelect = $('#id_departmentid_signup, [id$="_departmentid"]').first();
+        }
 
         // Exit if elements don't exist (not an IOMAD installation).
         if (!companySelect.length || !departmentSelect.length) {
+            // eslint-disable-next-line no-console
+            console.log('JobBoard signup_form: Company or department selects not found');
             return;
         }
+
+        // eslint-disable-next-line no-console
+        console.log('JobBoard signup_form: Initialized with', companySelect.attr('id'), departmentSelect.attr('id'));
 
         /**
          * Load departments for the selected company.
