@@ -1324,12 +1324,13 @@ function local_jobboard_get_dashboard_stats(int $userid, bool $isadmin = false, 
     // My applications count.
     $stats['my_applications'] = $DB->count_records('local_jobboard_application', ['userid' => $userid]);
 
-    // Available vacancies (published and open).
+    // Available vacancies (published and open - dates from convocatoria).
     $sql = "SELECT COUNT(*)
-            FROM {local_jobboard_vacancy}
-            WHERE status = 'published'
-            AND opendate <= :now1
-            AND closedate >= :now2";
+            FROM {local_jobboard_vacancy} v
+            LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
+            WHERE v.status = 'published'
+            AND (c.startdate IS NULL OR c.startdate <= :now1)
+            AND (c.enddate IS NULL OR c.enddate >= :now2)";
     $stats['available_vacancies'] = (int) $DB->count_records_sql($sql, ['now1' => $now, 'now2' => $now]);
 
     // Pending documents for my applications.

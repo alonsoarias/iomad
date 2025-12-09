@@ -2761,6 +2761,16 @@ $string['notemplates'] = 'No email templates found. Templates will be created au
 $string['customized'] = 'Customized';
 $string['customize'] = 'Customize';
 $string['default'] = 'Default';
+$string['backtotemplates'] = 'Back to templates';
+$string['confirmreset'] = 'Are you sure you want to reset this template to its default values? This action cannot be undone.';
+$string['quickhelp'] = 'Quick Help';
+$string['templatehelp_placeholders'] = 'Use placeholders like {fullname} or {vacancy_title} to insert dynamic content.';
+$string['templatehelp_html'] = 'You can use HTML formatting in the email body for rich text emails.';
+$string['templatehelp_reset'] = 'Click "Reset" on a customized template to restore the default text.';
+$string['preview'] = 'Preview';
+$string['preview_hint'] = 'Save the template to see a preview with sample data.';
+$string['templatesubject_help'] = 'Enter the email subject line. You can use placeholders which will be replaced with actual values.';
+$string['templatebody_help'] = 'Enter the email body content. Use the HTML editor for formatting and include placeholders for dynamic content.';
 
 // Template names.
 $string['template_application_received'] = 'Application Received';
