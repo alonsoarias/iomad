@@ -5,6 +5,17 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.75] - 2025-12-09
+
+### Fase 10C: Limpieza de CLI
+
+#### Verified
+- CLI scripts (`cli.php`, `import_vacancies.php`) do not contain salary/remuneration references
+- CLI opendate/closedate parameters correctly apply to convocatoria (not vacancy)
+- No changes required - CLI already clean
+
+---
+
 ## [2.0.74] - 2025-12-09
 
 ### Fase 10B: Eliminación de Campos Obsoletos
@@ -58,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 2.0.75 | 2025-12-09 | Phase 10C: CLI cleanup (verified clean) |
 | 2.0.74 | 2025-12-09 | Phase 10B: Remove obsolete fields |
 | 2.0.73 | 2025-12-09 | Phase 10A: Robust audit system |
 | 2.0.72-beta | 2025-12-10 | Base version for Phase 10 optimization |
