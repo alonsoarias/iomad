@@ -64,7 +64,6 @@ class block_mycourses extends block_base {
     public function applicable_formats() {
         return ['all' => false,
                 'my' => true,
-                'my-index' => true,
                 'local-iomadcustompage' => true,
                ];
     }
