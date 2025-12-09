@@ -67,8 +67,11 @@ class doctype_form extends \moodleform {
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
 
         // Description.
-        $mform->addElement('textarea', 'description', get_string('description'), ['rows' => 3, 'cols' => 60]);
-        $mform->setType('description', PARAM_TEXT);
+        $mform->addElement('editor', 'description_editor', get_string('description'), null, [
+            'maxfiles' => 0,
+            'noclean' => false,
+            'context' => \context_system::instance(),
+        ]);
 
         // Category.
         $categories = [
@@ -98,9 +101,11 @@ class doctype_form extends \moodleform {
         $mform->addHelpButton('externalurl', 'externalurl', 'local_jobboard');
 
         // Requirements text.
-        $mform->addElement('textarea', 'requirements', get_string('validationrequirements', 'local_jobboard'),
-            ['rows' => 3, 'cols' => 60]);
-        $mform->setType('requirements', PARAM_TEXT);
+        $mform->addElement('editor', 'requirements_editor', get_string('validationrequirements', 'local_jobboard'), null, [
+            'maxfiles' => 0,
+            'noclean' => false,
+            'context' => \context_system::instance(),
+        ]);
 
         // Default max age days.
         $mform->addElement('text', 'defaultmaxagedays', get_string('defaultmaxagedays', 'local_jobboard'), ['size' => 5]);
@@ -144,10 +149,12 @@ class doctype_form extends \moodleform {
         $mform->addHelpButton('profession_exempt_arr', 'professionexempt', 'local_jobboard');
 
         // Conditional note.
-        $mform->addElement('textarea', 'conditional_note', get_string('conditionalnote', 'local_jobboard'),
-            ['rows' => 2, 'cols' => 60]);
-        $mform->setType('conditional_note', PARAM_TEXT);
-        $mform->addHelpButton('conditional_note', 'conditionalnote', 'local_jobboard');
+        $mform->addElement('editor', 'conditional_note_editor', get_string('conditionalnote', 'local_jobboard'), null, [
+            'maxfiles' => 0,
+            'noclean' => false,
+            'context' => \context_system::instance(),
+        ]);
+        $mform->addHelpButton('conditional_note_editor', 'conditionalnote', 'local_jobboard');
 
         // Configuration header.
         $mform->addElement('header', 'configheader', get_string('configuration', 'local_jobboard'));
@@ -176,6 +183,21 @@ class doctype_form extends \moodleform {
             if (!empty($doctype->profession_exempt)) {
                 $doctype->profession_exempt_arr = json_decode($doctype->profession_exempt, true) ?? [];
             }
+
+            // Prepare editor fields.
+            $doctype->description_editor = [
+                'text' => $doctype->description ?? '',
+                'format' => FORMAT_HTML,
+            ];
+            $doctype->requirements_editor = [
+                'text' => $doctype->requirements ?? '',
+                'format' => FORMAT_HTML,
+            ];
+            $doctype->conditional_note_editor = [
+                'text' => $doctype->conditional_note ?? '',
+                'format' => FORMAT_HTML,
+            ];
+
             $this->set_data($doctype);
         }
     }
@@ -244,6 +266,22 @@ class doctype_form extends \moodleform {
                 $data->profession_exempt = null;
             }
             unset($data->profession_exempt_arr);
+
+            // Extract text from editor fields.
+            if (isset($data->description_editor) && is_array($data->description_editor)) {
+                $data->description = $data->description_editor['text'] ?? '';
+            }
+            unset($data->description_editor);
+
+            if (isset($data->requirements_editor) && is_array($data->requirements_editor)) {
+                $data->requirements = $data->requirements_editor['text'] ?? '';
+            }
+            unset($data->requirements_editor);
+
+            if (isset($data->conditional_note_editor) && is_array($data->conditional_note_editor)) {
+                $data->conditional_note = $data->conditional_note_editor['text'] ?? '';
+            }
+            unset($data->conditional_note_editor);
         }
 
         return $data;

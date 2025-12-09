@@ -67,7 +67,7 @@ if ($applicationid) {
     $applicant = $DB->get_record('user', ['id' => $application->userid]);
 
     // Get all documents for this application.
-    $documents = document::get_for_application($applicationid, false);
+    $documents = document::get_by_application($applicationid, false);
 
     if (empty($documents)) {
         throw new moodle_exception('nodocuments', 'local_jobboard');
@@ -286,7 +286,7 @@ function export_vacancy_documents_zip(array $applications, string $zipfilename, 
         ));
 
         // Get documents for this application.
-        $documents = document::get_for_application($app->id, false);
+        $documents = document::get_by_application($app->id, false);
 
         foreach ($documents as $doc) {
             // Get the stored file.
