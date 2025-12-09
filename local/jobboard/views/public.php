@@ -138,8 +138,14 @@ if ($isiomad && !empty($companyid)) {
 
 // Department filter (IOMAD).
 if ($isiomad && !empty($departmentid)) {
-    $conditions[] = "v.departmentid = :filterdepartmentid";
-    $params['filterdepartmentid'] = $departmentid;
+    // Check if departmentid column exists before using it.
+    $dbman = $DB->get_manager();
+    $table = new xmldb_table('local_jobboard_vacancy');
+    $field = new xmldb_field('departmentid');
+    if ($dbman->field_exists($table, $field)) {
+        $conditions[] = "v.departmentid = :filterdepartmentid";
+        $params['filterdepartmentid'] = $departmentid;
+    }
 }
 
 // Build WHERE clause.
