@@ -222,10 +222,11 @@ echo '<h2 class="mb-2">' . get_string('applytovacancy', 'local_jobboard') . '</h
 echo '<p class="lead text-muted">' . format_string($vacancy->title) . '</p>';
 echo '</div>';
 
-// Progress indicator - Tab navigation with steps.
+// Progress indicator - Tab navigation with 5 steps.
 echo '<div class="jb-progress-steps mb-4" id="application-progress">';
 echo '<div class="d-flex justify-content-between align-items-center">';
 $steps = [
+    ['icon' => 'fa-user-check', 'label' => get_string('step_profile', 'local_jobboard'), 'target' => 'id_profilereviewheader'],
     ['icon' => 'fa-file-signature', 'label' => get_string('step_consent', 'local_jobboard'), 'target' => 'id_consentheader'],
     ['icon' => 'fa-upload', 'label' => get_string('step_documents', 'local_jobboard'), 'target' => 'id_documentsheader'],
     ['icon' => 'fa-envelope-open-text', 'label' => get_string('step_coverletter', 'local_jobboard'), 'target' => 'id_additionalheader'],

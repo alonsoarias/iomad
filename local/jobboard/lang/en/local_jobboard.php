@@ -2432,10 +2432,18 @@ $string['andmore'] = 'And {$a} more...';
 // ============================================================================
 // Strings for improved apply view - 2025-12-09
 // ============================================================================
+$string['step_profile'] = 'Profile';
 $string['step_consent'] = 'Consent';
 $string['step_documents'] = 'Documents';
 $string['step_coverletter'] = 'Letter';
 $string['step_submit'] = 'Submit';
+$string['profilereview'] = 'Review Profile';
+$string['profilereview_info'] = 'Please verify your personal information below is correct before starting your application. If you need to make changes, click the "Edit Profile" button.';
+$string['editprofile'] = 'Edit Profile';
+$string['personalinfo'] = 'Personal Information';
+$string['fullname'] = 'Full Name';
+$string['education'] = 'Education';
+$string['educationlevel'] = 'Education Level';
 $string['applicationsteps_tooltip'] = 'Application progress. Complete each section in order.';
 $string['deadlinewarning_title'] = 'Deadline approaching!';
 $string['applyhelp_text'] = 'If you have questions about completing your application, start the guided tour or contact support.';

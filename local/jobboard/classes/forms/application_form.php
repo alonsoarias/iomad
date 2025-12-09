@@ -85,7 +85,80 @@ class application_form extends moodleform {
         $mform->addElement('hidden', 'vacancyid', $vacancy->id);
         $mform->setType('vacancyid', PARAM_INT);
 
-        // Vacancy information header.
+        // TAB 1: Profile review section - shows user's profile for verification.
+        $mform->addElement('header', 'profilereviewheader', get_string('profilereview', 'local_jobboard'));
+        $mform->setExpanded('profilereviewheader', true);
+
+        // Get applicant profile for review.
+        $applicantprofile = $DB->get_record('local_jobboard_applicant_profile', ['userid' => $USER->id]);
+        if ($applicantprofile) {
+            $profilehtml = '<div class="jb-profile-review">';
+            $profilehtml .= '<div class="alert alert-info mb-3">';
+            $profilehtml .= '<i class="fa fa-user-check mr-2"></i>';
+            $profilehtml .= get_string('profilereview_info', 'local_jobboard');
+            $profilehtml .= '</div>';
+
+            $profilehtml .= '<div class="card mb-3">';
+            $profilehtml .= '<div class="card-body">';
+            $profilehtml .= '<div class="row">';
+
+            // Personal information.
+            $profilehtml .= '<div class="col-md-6">';
+            $profilehtml .= '<h6 class="text-primary"><i class="fa fa-user mr-2"></i>' .
+                get_string('personalinfo', 'local_jobboard') . '</h6>';
+            $profilehtml .= '<dl class="row small mb-0">';
+            $profilehtml .= '<dt class="col-5">' . get_string('fullname', 'local_jobboard') . '</dt>';
+            $profilehtml .= '<dd class="col-7">' . fullname($USER) . '</dd>';
+            $profilehtml .= '<dt class="col-5">' . get_string('email') . '</dt>';
+            $profilehtml .= '<dd class="col-7">' . format_string($USER->email) . '</dd>';
+            if (!empty($applicantprofile->phone)) {
+                $profilehtml .= '<dt class="col-5">' . get_string('phone') . '</dt>';
+                $profilehtml .= '<dd class="col-7">' . format_string($applicantprofile->phone) . '</dd>';
+            }
+            if (!empty($applicantprofile->documentnumber)) {
+                $profilehtml .= '<dt class="col-5">' . get_string('documentnumber', 'local_jobboard') . '</dt>';
+                $profilehtml .= '<dd class="col-7">' . format_string($applicantprofile->documentnumber) . '</dd>';
+            }
+            $profilehtml .= '</dl>';
+            $profilehtml .= '</div>';
+
+            // Education and address.
+            $profilehtml .= '<div class="col-md-6">';
+            $profilehtml .= '<h6 class="text-primary"><i class="fa fa-graduation-cap mr-2"></i>' .
+                get_string('education', 'local_jobboard') . '</h6>';
+            $profilehtml .= '<dl class="row small mb-0">';
+            if (!empty($applicantprofile->educationlevel)) {
+                $edukey = 'signup_edu_' . $applicantprofile->educationlevel;
+                $edulevel = get_string_manager()->string_exists($edukey, 'local_jobboard')
+                    ? get_string($edukey, 'local_jobboard')
+                    : ucfirst($applicantprofile->educationlevel);
+                $profilehtml .= '<dt class="col-5">' . get_string('educationlevel', 'local_jobboard') . '</dt>';
+                $profilehtml .= '<dd class="col-7">' . $edulevel . '</dd>';
+            }
+            if (!empty($applicantprofile->city)) {
+                $profilehtml .= '<dt class="col-5">' . get_string('city') . '</dt>';
+                $profilehtml .= '<dd class="col-7">' . format_string($applicantprofile->city) . '</dd>';
+            }
+            $profilehtml .= '</dl>';
+            $profilehtml .= '</div>';
+
+            $profilehtml .= '</div>'; // row
+            $profilehtml .= '</div>'; // card-body
+            $profilehtml .= '</div>'; // card
+
+            // Edit profile link.
+            $profileurl = new \moodle_url('/local/jobboard/updateprofile.php');
+            $profilehtml .= '<div class="text-right">';
+            $profilehtml .= '<a href="' . $profileurl->out() . '" class="btn btn-sm btn-outline-primary" target="_blank">';
+            $profilehtml .= '<i class="fa fa-edit mr-1"></i>' . get_string('editprofile', 'local_jobboard');
+            $profilehtml .= '</a>';
+            $profilehtml .= '</div>';
+
+            $profilehtml .= '</div>';
+            $mform->addElement('html', $profilehtml);
+        }
+
+        // Vacancy information header (now part of profile review section).
         $mform->addElement('header', 'vacancyheader', get_string('vacancyinfo', 'local_jobboard'));
 
         $vacancyhtml = '<div class="vacancy-summary">';

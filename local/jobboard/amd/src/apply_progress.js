@@ -27,10 +27,11 @@ define(['jquery'], function($) {
     'use strict';
 
     /**
-     * Section IDs to step index mapping.
+     * Section IDs to step index mapping (5-tab interface).
      * @type {Object}
      */
     var SECTION_HEADERS = [
+        'id_profilereviewheader',
         'id_consentheader',
         'id_documentsheader',
         'id_additionalheader',
@@ -47,7 +48,7 @@ define(['jquery'], function($) {
      * Total number of steps.
      * @type {number}
      */
-    var totalSteps = 4;
+    var totalSteps = 5;
 
     /**
      * Track completed sections.
@@ -238,8 +239,8 @@ define(['jquery'], function($) {
             }
         });
 
-        // Special validation for consent section.
-        if (currentStep === 0) {
+        // Special validation for consent section (step 1, index 1).
+        if (currentStep === 1) {
             var consentChecked = $('#id_consentaccepted').is(':checked');
             var signatureFilled = $('#id_digitalsignature').val().trim() !== '';
             if (!consentChecked || !signatureFilled) {
@@ -253,8 +254,8 @@ define(['jquery'], function($) {
             }
         }
 
-        // Special validation for declaration section.
-        if (currentStep === 3) {
+        // Special validation for declaration section (step 5, index 4).
+        if (currentStep === 4) {
             var declarationChecked = $('#id_declarationaccepted').is(':checked');
             if (!declarationChecked) {
                 isValid = false;
