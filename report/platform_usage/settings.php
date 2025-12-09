@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// Add link in the reports section.
+// Add link in the reports section (Site Administration > Reports).
 $ADMIN->add('reports', new admin_externalpage(
     'report_platform_usage',
     get_string('pluginname', 'report_platform_usage'),
@@ -32,10 +32,9 @@ $ADMIN->add('reports', new admin_externalpage(
     'report/platform_usage:view'
 ));
 
-// Add settings page.
-if ($hassiteconfig) {
-    $settings = new admin_settingpage('report_platform_usage_settings',
-        get_string('settings', 'report_platform_usage'));
+// Add settings to the $settings page created by Moodle core.
+// The $settings variable is pre-created by admin/settings/plugins.php before including this file.
+if ($hassiteconfig && isset($settings)) {
 
     // Session limit for dedication calculation.
     $settings->add(new admin_setting_configduration(
@@ -85,6 +84,4 @@ if ($hassiteconfig) {
         get_string('setting_enable_cache_desc', 'report_platform_usage'),
         1
     ));
-
-    $ADMIN->add('reports', $settings);
 }
