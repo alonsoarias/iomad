@@ -44,6 +44,7 @@ list($options, $unrecognized) = cli_get_params([
     'dryrun' => false,
     'update' => false,
     'status' => 'draft',
+    'verbose' => false,
     'help' => false,
 ], [
     'f' => 'file',
@@ -53,6 +54,7 @@ list($options, $unrecognized) = cli_get_params([
     'd' => 'dryrun',
     'u' => 'update',
     's' => 'status',
+    'v' => 'verbose',
     'h' => 'help',
 ]);
 
@@ -74,6 +76,7 @@ Options:
   -d, --dryrun             Simulate import without creating records
   -u, --update             Update existing vacancies (by code)
   -s, --status=STATUS      Initial status: draft, published (default: draft)
+  -v, --verbose            Show detailed information about company/department mapping
   -h, --help               Print this help
 
 Example:
@@ -181,7 +184,37 @@ echo "Close date: " . date('Y-m-d H:i', $closedate) . "\n";
 echo "Status: {$options['status']}\n";
 echo "Dry run: " . ($options['dryrun'] ? 'YES' : 'NO') . "\n";
 echo "Update existing: " . ($options['update'] ? 'YES' : 'NO') . "\n";
+echo "Verbose: " . ($options['verbose'] ? 'YES' : 'NO') . "\n";
 echo "\n";
+
+// Show available companies and departments in verbose mode.
+if ($options['verbose']) {
+    cli_heading("Available IOMAD Companies and Departments");
+
+    // Get unique faculties from JSON.
+    $faculties = [];
+    foreach ($vacancies as $v) {
+        if (!empty($v['faculty'])) {
+            $faculties[strtoupper(trim($v['faculty']))] = true;
+        }
+    }
+
+    foreach (array_keys($faculties) as $faculty) {
+        $company = $DB->get_record('company', ['shortname' => $faculty]);
+        if ($company) {
+            echo "\nCompany: {$company->name} (ID: {$company->id}, shortname: {$company->shortname})\n";
+            $depts = $DB->get_records('department', ['company' => $company->id], 'parent ASC, name ASC');
+            echo "  Departments:\n";
+            foreach ($depts as $dept) {
+                $type = ($dept->parent == 0) ? 'ROOT' : 'CHILD';
+                echo "    - ID: {$dept->id}, Name: '{$dept->name}', Parent: {$dept->parent} ($type)\n";
+            }
+        } else {
+            echo "\nWARNING: Company not found for faculty: $faculty\n";
+        }
+    }
+    echo "\n";
+}
 
 // Get admin user for createdby.
 $adminuser = get_admin();
@@ -216,8 +249,21 @@ function get_company_id($shortname) {
 }
 
 /**
+ * Get all child departments for a company (for debugging).
+ */
+function get_company_departments($companyid) {
+    global $DB;
+
+    $sql = "SELECT id, name, parent FROM {department}
+            WHERE company = :company
+            ORDER BY parent ASC, name ASC";
+    return $DB->get_records_sql($sql, ['company' => $companyid]);
+}
+
+/**
  * Get IOMAD department by name within a company.
  * Only returns child departments (parent > 0), excluding the root department.
+ * Uses case-insensitive matching.
  */
 function get_department_id($companyid, $name) {
     global $DB, $departmentmap;
@@ -228,9 +274,19 @@ function get_department_id($companyid, $name) {
     }
 
     // Only get child departments (parent > 0) - exclude root department.
+    // Use LOWER for case-insensitive matching.
     $sql = "SELECT id, name FROM {department}
-            WHERE company = :company AND name = :name AND parent > 0";
+            WHERE company = :company AND LOWER(name) = LOWER(:name) AND parent > 0";
     $dept = $DB->get_record_sql($sql, ['company' => $companyid, 'name' => $name]);
+    if ($dept) {
+        $departmentmap[$key] = $dept->id;
+        return $dept->id;
+    }
+
+    // Try partial match if exact match fails.
+    $sql = "SELECT id, name FROM {department}
+            WHERE company = :company AND LOWER(name) LIKE LOWER(:pattern) AND parent > 0";
+    $dept = $DB->get_record_sql($sql, ['company' => $companyid, 'pattern' => '%' . $name . '%']);
     if ($dept) {
         $departmentmap[$key] = $dept->id;
         return $dept->id;
@@ -254,8 +310,8 @@ function get_first_child_department($companyid) {
     // Get first child department (parent > 0).
     $sql = "SELECT id, name FROM {department}
             WHERE company = :company AND parent > 0
-            ORDER BY name ASC LIMIT 1";
-    $dept = $DB->get_record_sql($sql, ['company' => $companyid]);
+            ORDER BY name ASC";
+    $dept = $DB->get_record_sql($sql, ['company' => $companyid], IGNORE_MULTIPLE);
     if ($dept) {
         $departmentmap[$key] = $dept->id;
         return $dept->id;
