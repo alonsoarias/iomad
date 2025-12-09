@@ -1008,21 +1008,27 @@ function local_jobboard_get_user_age(?int $userid = null): ?int {
 /**
  * Format a timestamp for display.
  *
- * @param int $timestamp Unix timestamp.
+ * @param int|null $timestamp Unix timestamp.
  * @param string $format Date format (strftime format).
- * @return string Formatted date.
+ * @return string Formatted date or empty string if null.
  */
-function local_jobboard_format_date(int $timestamp, string $format = '%d/%m/%Y'): string {
+function local_jobboard_format_date(?int $timestamp, string $format = '%d/%m/%Y'): string {
+    if ($timestamp === null || $timestamp === 0) {
+        return '';
+    }
     return userdate($timestamp, $format);
 }
 
 /**
  * Format a timestamp for datetime display.
  *
- * @param int $timestamp Unix timestamp.
- * @return string Formatted datetime.
+ * @param int|null $timestamp Unix timestamp.
+ * @return string Formatted datetime or empty string if null.
  */
-function local_jobboard_format_datetime(int $timestamp): string {
+function local_jobboard_format_datetime(?int $timestamp): string {
+    if ($timestamp === null || $timestamp === 0) {
+        return '';
+    }
     return userdate($timestamp, '%d/%m/%Y %H:%M');
 }
 

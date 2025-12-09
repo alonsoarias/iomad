@@ -1265,5 +1265,42 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121010, 'local', 'jobboard');
     }
 
+    // Step 10: Add companyid field to email_template table for multi-tenant support.
+    if ($oldversion < 2025121012) {
+        $table = new xmldb_table('local_jobboard_email_template');
+
+        // Check if table exists (may have been created by earlier upgrade).
+        if ($dbman->table_exists($table)) {
+            // Add companyid field if it doesn't exist.
+            $field = new xmldb_field('companyid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'id');
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+
+            // Add code field if using templatekey (rename compatibility).
+            $codefield = new xmldb_field('code', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'companyid');
+            if (!$dbman->field_exists($table, $codefield)) {
+                // Check if templatekey exists and migrate data.
+                $templatekeyfield = new xmldb_field('templatekey');
+                if ($dbman->field_exists($table, $templatekeyfield)) {
+                    // Add code field.
+                    $dbman->add_field($table, $codefield);
+                    // Copy data from templatekey to code.
+                    $DB->execute("UPDATE {local_jobboard_email_template} SET code = templatekey WHERE code IS NULL");
+                } else {
+                    $dbman->add_field($table, $codefield);
+                }
+            }
+
+            // Add index on companyid and code.
+            $index = new xmldb_index('companyid_code_idx', XMLDB_INDEX_NOTUNIQUE, ['companyid', 'code']);
+            if (!$dbman->index_exists($table, $index)) {
+                $dbman->add_index($table, $index);
+            }
+        }
+
+        upgrade_plugin_savepoint(true, 2025121012, 'local', 'jobboard');
+    }
+
     return true;
 }
