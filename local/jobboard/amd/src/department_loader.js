@@ -32,24 +32,36 @@ define(['jquery', 'core/str'], function($, Str) {
      * @param {jQuery} departmentSelect The department select element.
      * @param {number} companyId The company ID.
      * @param {number} preselect Optional department ID to preselect.
+     * @param {string} allLabel Optional label for "All" option (used in filters).
      */
-    var loadDepartments = function(departmentSelect, companyId, preselect) {
+    var loadDepartments = function(departmentSelect, companyId, preselect, allLabel) {
         // Clear current options.
         departmentSelect.empty();
 
+        // Determine the placeholder text.
+        var placeholderKey = allLabel ? null : 'selectdepartment';
+        var placeholderText = allLabel || 'Seleccionar modalidad...';
+
         if (!companyId || companyId === '0' || companyId === 0) {
             // No company selected, add placeholder.
-            Str.get_string('selectdepartment', 'local_jobboard').done(function(str) {
+            if (placeholderKey) {
+                Str.get_string(placeholderKey, 'local_jobboard').done(function(str) {
+                    departmentSelect.append($('<option>', {
+                        value: 0,
+                        text: str
+                    }));
+                }).fail(function() {
+                    departmentSelect.append($('<option>', {
+                        value: 0,
+                        text: placeholderText
+                    }));
+                });
+            } else {
                 departmentSelect.append($('<option>', {
                     value: 0,
-                    text: str
+                    text: placeholderText
                 }));
-            }).fail(function() {
-                departmentSelect.append($('<option>', {
-                    value: 0,
-                    text: 'Seleccionar modalidad...'
-                }));
-            });
+            }
             return;
         }
 
@@ -79,11 +91,14 @@ define(['jquery', 'core/str'], function($, Str) {
             departmentSelect.empty();
             departmentSelect.prop('disabled', false);
 
-            // Add placeholder option.
-            Str.get_string('selectdepartment', 'local_jobboard').done(function(str) {
+            /**
+             * Add options to the select element.
+             * @param {string} placeholder The placeholder text.
+             */
+            var addOptions = function(placeholder) {
                 departmentSelect.append($('<option>', {
                     value: 0,
-                    text: str
+                    text: placeholder
                 }));
 
                 // Add department options.
@@ -100,41 +115,41 @@ define(['jquery', 'core/str'], function($, Str) {
                         departmentSelect.append(option);
                     });
                 }
-            }).fail(function() {
-                // Fallback if string not found.
-                departmentSelect.append($('<option>', {
-                    value: 0,
-                    text: 'Seleccionar modalidad...'
-                }));
+            };
 
-                if (response.success && response.departments && response.departments.length > 0) {
-                    $.each(response.departments, function(index, dept) {
-                        var option = $('<option>', {
-                            value: dept.id,
-                            text: dept.name
-                        });
-                        if (preselect && parseInt(preselect, 10) === parseInt(dept.id, 10)) {
-                            option.prop('selected', true);
-                        }
-                        departmentSelect.append(option);
-                    });
-                }
-            });
+            // Add placeholder option.
+            if (allLabel) {
+                addOptions(allLabel);
+            } else {
+                Str.get_string('selectdepartment', 'local_jobboard').done(function(str) {
+                    addOptions(str);
+                }).fail(function() {
+                    addOptions(placeholderText);
+                });
+            }
 
         }).fail(function(jqXHR, textStatus, errorThrown) {
             departmentSelect.empty();
             departmentSelect.prop('disabled', false);
-            Str.get_string('selectdepartment', 'local_jobboard').done(function(str) {
+
+            if (allLabel) {
                 departmentSelect.append($('<option>', {
                     value: 0,
-                    text: str
+                    text: allLabel
                 }));
-            }).fail(function() {
-                departmentSelect.append($('<option>', {
-                    value: 0,
-                    text: 'Seleccionar modalidad...'
-                }));
-            });
+            } else {
+                Str.get_string('selectdepartment', 'local_jobboard').done(function(str) {
+                    departmentSelect.append($('<option>', {
+                        value: 0,
+                        text: str
+                    }));
+                }).fail(function() {
+                    departmentSelect.append($('<option>', {
+                        value: 0,
+                        text: placeholderText
+                    }));
+                });
+            }
             // eslint-disable-next-line no-console
             console.error('Error loading departments:', textStatus, errorThrown);
         });

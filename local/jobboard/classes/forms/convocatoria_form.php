@@ -102,10 +102,24 @@ class convocatoria_form extends \moodleform {
         $mform->addHelpButton('publicationtype', 'publicationtype', 'local_jobboard');
 
         // Header: Company (IOMAD only).
-        if ($isiomad && !empty($companies)) {
+        if ($isiomad) {
             $mform->addElement('header', 'companyheader', get_string('company', 'local_jobboard'));
 
-            $companyoptions = [0 => get_string('allcompanies', 'local_jobboard')] + $companies;
+            // Company selector - initial options with placeholder, populated via AJAX.
+            $companyoptions = [0 => get_string('allcompanies', 'local_jobboard')];
+
+            // Get current company ID for preselection.
+            $currentcompanyid = 0;
+            if ($isedit && !empty($convocatoria->companyid)) {
+                $currentcompanyid = (int) $convocatoria->companyid;
+                // Pre-load current company.
+                global $DB;
+                $currentcompany = $DB->get_record('company', ['id' => $currentcompanyid]);
+                if ($currentcompany) {
+                    $companyoptions[$currentcompany->id] = format_string($currentcompany->name);
+                }
+            }
+
             $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companyoptions, [
                 'id' => 'id_companyid',
             ]);
@@ -118,18 +132,24 @@ class convocatoria_form extends \moodleform {
                 $currentdeptid = (int) $convocatoria->departmentid;
             }
 
-            // Department selector (populated via AJAX).
+            // Department selector - initial options with placeholder, populated via AJAX.
+            $departmentoptions = [0 => get_string('selectdepartment', 'local_jobboard')];
+            if ($currentcompanyid > 0) {
+                $departmentoptions += \local_jobboard_get_departments($currentcompanyid);
+            }
+
             $mform->addElement('select', 'departmentid', get_string('department', 'local_jobboard'),
-                [0 => get_string('selectdepartment', 'local_jobboard')], [
+                $departmentoptions, [
                 'id' => 'id_departmentid',
             ]);
             $mform->setType('departmentid', PARAM_INT);
             $mform->addHelpButton('departmentid', 'convocatoria_departmentid', 'local_jobboard');
 
-            // Add JavaScript to update departments when company changes.
+            // Add JavaScript for AJAX loading of companies and departments.
             global $PAGE;
             $PAGE->requires->js_call_amd('local_jobboard/convocatoria_form', 'init', [[
-                'preselect' => $currentdeptid,
+                'companyPreselect' => $currentcompanyid,
+                'departmentPreselect' => $currentdeptid,
             ]]);
         }
 

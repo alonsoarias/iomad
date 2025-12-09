@@ -244,27 +244,33 @@ class signup_form extends moodleform {
         // ==========================================
         // SECTION 5: Company Selection (IOMAD only)
         // ==========================================
-        if ($isiomad && !empty($companies)) {
+        if ($isiomad) {
             $mform->addElement('header', 'companyheader', get_string('signup_companyinfo', 'local_jobboard'));
             $mform->setExpanded('companyheader', true);
 
             $mform->addElement('html', '<div class="alert alert-info">' .
                 get_string('signup_company_help', 'local_jobboard') . '</div>');
 
-            // Company selector.
-            $companyoptions = [0 => get_string('selectcompany', 'local_jobboard')] + $companies;
+            // Company selector - initial options with placeholder, populated via AJAX.
+            $companyoptions = [0 => get_string('selectcompany', 'local_jobboard')];
             $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companyoptions, [
                 'id' => 'id_companyid_signup',
             ]);
             $mform->addRule('companyid', get_string('required'), 'required', null, 'client');
             $mform->addHelpButton('companyid', 'companyid', 'local_jobboard');
 
-            // Department selector (will be populated via AJAX).
+            // Department selector - populated via AJAX when company is selected.
             $mform->addElement('select', 'departmentid', get_string('department', 'local_jobboard'),
                 [0 => get_string('selectdepartment', 'local_jobboard')], [
                 'id' => 'id_departmentid_signup',
             ]);
             $mform->addHelpButton('departmentid', 'departmentid', 'local_jobboard');
+
+            // Add JavaScript for AJAX loading of companies and departments.
+            global $PAGE;
+            $PAGE->requires->js_call_amd('local_jobboard/signup_form', 'init', [[
+                'loadCompaniesAjax' => true,
+            ]]);
         }
 
         // ==========================================

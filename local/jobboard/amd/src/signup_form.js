@@ -14,13 +14,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * AMD module for signup form with dynamic department loading.
+ * AMD module for signup form with dynamic company and department loading.
  *
  * @module     local_jobboard/signup_form
  * @copyright  2024 ISER
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'core/str', 'local_jobboard/department_loader'], function($, Str, DepartmentLoader) {
+define([
+    'jquery',
+    'core/str',
+    'local_jobboard/department_loader',
+    'local_jobboard/company_loader'
+], function($, Str, DepartmentLoader, CompanyLoader) {
     'use strict';
 
     /**
@@ -28,16 +33,32 @@ define(['jquery', 'core/str', 'local_jobboard/department_loader'], function($, S
      *
      * @param {Object} options Configuration options.
      * @param {number} options.preselect Optional department ID to preselect.
+     * @param {number} options.companyPreselect Optional company ID to preselect.
+     * @param {boolean} options.loadCompaniesAjax Whether to load companies via AJAX.
      */
     var init = function(options) {
         options = options || {};
 
-        // Initialize department loader with signup form context.
-        DepartmentLoader.init({
-            companySelector: '#id_companyid_signup, select[name="companyid"]',
-            departmentSelector: '#id_departmentid_signup, select[name="departmentid"]',
-            preselect: options.preselect
-        });
+        var companySelect = $('#id_companyid_signup');
+        var departmentSelect = $('#id_departmentid_signup');
+
+        // Initialize company/department loaders based on available elements.
+        if (companySelect.length && options.loadCompaniesAjax) {
+            // Use company loader for AJAX loading of companies and departments.
+            CompanyLoader.init({
+                companySelector: '#id_companyid_signup',
+                departmentSelector: '#id_departmentid_signup',
+                preselect: options.companyPreselect,
+                departmentPreselect: options.preselect
+            });
+        } else if (companySelect.length) {
+            // Fall back to department loader only (companies already loaded server-side).
+            DepartmentLoader.init({
+                companySelector: '#id_companyid_signup, select[name="companyid"]',
+                departmentSelector: '#id_departmentid_signup, select[name="departmentid"]',
+                preselect: options.preselect
+            });
+        }
 
         // Add password strength indicator.
         var passwordField = $('#id_password');

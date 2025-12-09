@@ -194,8 +194,26 @@ class vacancy_form extends \moodleform {
         $mform->addElement('header', 'convocatoriaheader', get_string('convocatoria', 'local_jobboard'));
 
         // Convocatoria selector (REQUIRED - vacancies must belong to a convocatoria).
-        $convocatorias = ['' => get_string('selectconvocatoria', 'local_jobboard')] + \local_jobboard_get_convocatorias(0, '', true);
-        $mform->addElement('select', 'convocatoriaid', get_string('convocatoria', 'local_jobboard'), $convocatorias, [
+        // Initial options with placeholder - will be populated via AJAX.
+        $convocatoriaoptions = ['' => get_string('selectconvocatoria', 'local_jobboard')];
+
+        // Get current convocatoria ID for preselection.
+        $currentconvocatoriaid = 0;
+        if ($isedit && !empty($vacancy->convocatoriaid)) {
+            $currentconvocatoriaid = (int) $vacancy->convocatoriaid;
+        } elseif ($defaultconvocatoriaid) {
+            $currentconvocatoriaid = (int) $defaultconvocatoriaid;
+        }
+
+        // Pre-load current convocatoria if editing or has default.
+        if ($currentconvocatoriaid > 0) {
+            $currentconv = \local_jobboard_get_convocatoria($currentconvocatoriaid);
+            if ($currentconv) {
+                $convocatoriaoptions[$currentconv->id] = $currentconv->code . ' - ' . $currentconv->name;
+            }
+        }
+
+        $mform->addElement('select', 'convocatoriaid', get_string('convocatoria', 'local_jobboard'), $convocatoriaoptions, [
             'id' => 'id_convocatoriaid',
         ]);
         $mform->setType('convocatoriaid', PARAM_INT);
@@ -206,34 +224,47 @@ class vacancy_form extends \moodleform {
         }
 
         // Company and Department (Iomad multi-tenant).
-        if (\local_jobboard_is_iomad_installed()) {
+        $isiomad = \local_jobboard_is_iomad_installed();
+        if ($isiomad) {
             // Header for IOMAD section.
             $mform->addElement('header', 'iomadsection', get_string('iomadsettings', 'local_jobboard'));
 
-            // Company selector.
-            $companies = [0 => get_string('selectcompany', 'local_jobboard')] + \local_jobboard_get_companies();
-            $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companies, [
-                'id' => 'id_companyid',
-            ]);
-            $mform->setType('companyid', PARAM_INT);
-            $mform->addHelpButton('companyid', 'company', 'local_jobboard');
+            // Company selector - initial options with placeholder, populated via AJAX.
+            $companyoptions = [0 => get_string('selectcompany', 'local_jobboard')];
 
             // Pre-select current user's company.
             $defaultcompanyid = 0;
             if (!$isedit) {
                 $usercompanyid = \local_jobboard_get_user_companyid();
                 if ($usercompanyid) {
-                    $mform->setDefault('companyid', $usercompanyid);
                     $defaultcompanyid = $usercompanyid;
                 }
             } else if ($vacancy && $vacancy->companyid) {
                 $defaultcompanyid = (int) $vacancy->companyid;
             }
 
+            // Pre-load current company if editing or has default.
+            if ($defaultcompanyid > 0) {
+                global $DB;
+                $currentcompany = $DB->get_record('company', ['id' => $defaultcompanyid]);
+                if ($currentcompany) {
+                    $companyoptions[$currentcompany->id] = format_string($currentcompany->name);
+                }
+            }
+
+            $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companyoptions, [
+                'id' => 'id_companyid',
+            ]);
+            $mform->setType('companyid', PARAM_INT);
+            $mform->addHelpButton('companyid', 'company', 'local_jobboard');
+            if ($defaultcompanyid) {
+                $mform->setDefault('companyid', $defaultcompanyid);
+            }
+
             // Department selector (IOMAD).
             $iomadinfo = \local_jobboard_get_iomad_info();
             if ($iomadinfo['has_departments']) {
-                // Get departments for the selected/default company.
+                // Initial options with placeholder - populated via AJAX.
                 $departments = [0 => get_string('selectdepartment', 'local_jobboard')];
                 if ($defaultcompanyid > 0) {
                     $departments += \local_jobboard_get_departments($defaultcompanyid);
@@ -250,15 +281,25 @@ class vacancy_form extends \moodleform {
                 if ($isedit && !empty($vacancy->departmentid)) {
                     $currentdeptid = (int) $vacancy->departmentid;
                 }
-
-                // Add JavaScript to update departments when company changes.
-                global $PAGE;
-                $PAGE->requires->js_call_amd('local_jobboard/vacancy_form', 'init', [[
-                    'preselect' => $currentdeptid,
-                ]]);
             }
+        }
 
-            // Publication type for IOMAD (public or internal).
+        // Add JavaScript for AJAX loading of companies, departments, and convocatorias.
+        global $PAGE;
+        $jsoptions = [
+            'convocatoriaPreselect' => $currentconvocatoriaid,
+            'includeAllConvocatorias' => true,
+        ];
+
+        if ($isiomad) {
+            $jsoptions['companyPreselect'] = $defaultcompanyid ?? 0;
+            $jsoptions['departmentPreselect'] = $currentdeptid ?? 0;
+        }
+
+        $PAGE->requires->js_call_amd('local_jobboard/vacancy_form', 'init', [$jsoptions]);
+
+        // Publication type for IOMAD (public or internal).
+        if ($isiomad) {
             $pubtypes = [
                 'public' => get_string('publicationtype:public', 'local_jobboard'),
                 'internal' => get_string('publicationtype:internal', 'local_jobboard'),
