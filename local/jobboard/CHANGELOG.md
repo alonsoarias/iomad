@@ -5,6 +5,110 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-12-09
+
+### Fase 10 Complete: Release Version
+
+This version completes the Phase 10 optimization with all verification phases.
+
+#### Phases Completed (10A-10U)
+
+**10A - Robust Audit System (v2.0.73)**
+- Added action/entity constants to audit class
+- Enhanced document::delete() with previous state capture
+- Standardized audit logging across all classes
+
+**10B - Remove Obsolete Fields (v2.0.74)**
+- Removed salary field from vacancy
+- Removed extemporaneous fields and date fields from vacancy
+- Removed TI from signup form
+- Backward compatibility via __get() magic method
+
+**10C - CLI Cleanup (v2.0.75)**
+- Verified CLI scripts have no salary/remuneration references
+- opendate/closedate correctly apply to convocatoria
+
+**10D - Document Logic (v2.0.76)**
+- Age exemption threshold implemented (50+ exempt from libreta_militar)
+- Conditional notes for optional documents
+- Gender-based document filtering
+
+**10E - Application Restrictions (v2.0.77)**
+- allow_multiple_applications and max_applications_per_user in convocatoria
+- Validation in apply.php
+- Experience requirement for occasional contracts (2 years)
+
+**10F - Document Types Management (v2.0.78)**
+- Full CRUD in admin/doctypes.php
+- Manual sorting, unique code validation
+- Audit logging for all changes
+
+**10G - Exemption System (v2.0.79)**
+- convocatoria_exemption.php for convocatoria-level exemptions
+- Vacancies inherit from convocatoria automatically
+- ISER personnel exemptions for historic staff
+
+**10H - Document Review System (v2.0.80)**
+- validate_document.php with preview
+- document_services.php for preview generation
+- review_ui.js, document_preview.js for UI
+- bulk_validate.php for mass validation
+
+**10I - HTML Editor Fields (v2.0.81)**
+- Editor elements in 7 form classes
+- vacancy_form, convocatoria_form, application_form, etc.
+
+**10J - ZIP Export (v2.0.82)**
+- export_documents.php with hierarchical structure
+- Export by application, vacancy, convocatoria, or company
+- Structured folder format: Company/Vacancy_Code/Applicant/
+
+**10K - Public Convocatoria View (v2.0.83)**
+- public.php for unauthenticated access
+- browse_convocatorias.php for public browsing
+
+**10L - Email Templates (v2.0.84)**
+- admin/templates.php for template management
+- email_template.php class
+- email_template_form.php for editing
+
+**10M - Review Interface Analysis (v2.0.85)**
+- Existing review system analyzed
+- Template patterns documented
+
+**10N - Apply Tabs Redesign (v2.0.86)**
+- Progress steps in apply.php
+- Tab-based document categories
+- Navigation between sections
+
+**10O - Import/Export System (v2.0.87)**
+- CLI import for vacancies and profiles
+- JSON data format support
+- import_vacancies.php, import_exemptions.php
+
+**10P - Navigation Styles (v2.0.88)**
+- Verified styles.css compatibility
+- No conflicting sidebar styles found
+
+**10Q - Language Strings (v2.0.89)**
+- EN and ES language files synchronized
+- ~1860 strings in each language
+
+**10R - IOMAD Company Management (v2.0.90)**
+- Company filtering in vacancy views
+- User company assignment in profile
+- IOMAD integration functions
+
+**10T - Reports by Convocatoria (v2.0.91)**
+- Reports filtered by convocatoria
+- views/reports.php implementation
+
+**10U - Final Verification (v2.1.0)**
+- All phases verified complete
+- Version bumped to 2.1.0 (stable release)
+
+---
+
 ## [2.0.79] - 2025-12-09
 
 ### Fase 10G: Sistema de Excepciones por Convocatoria
@@ -139,6 +243,19 @@ User → ISER Exemption → Reduced docs for historic personnel
 
 | Version | Date | Description |
 |---------|------|-------------|
+| **2.1.0** | **2025-12-09** | **Phase 10 Complete - Stable Release** |
+| 2.0.91 | 2025-12-09 | Phase 10T: Reports by convocatoria |
+| 2.0.90 | 2025-12-09 | Phase 10R: IOMAD company management |
+| 2.0.89 | 2025-12-09 | Phase 10Q: Language strings sync |
+| 2.0.88 | 2025-12-09 | Phase 10P: Navigation styles |
+| 2.0.87 | 2025-12-09 | Phase 10O: Import/export system |
+| 2.0.86 | 2025-12-09 | Phase 10N: Apply tabs redesign |
+| 2.0.85 | 2025-12-09 | Phase 10M: Review interface |
+| 2.0.84 | 2025-12-09 | Phase 10L: Email templates |
+| 2.0.83 | 2025-12-09 | Phase 10K: Public convocatoria view |
+| 2.0.82 | 2025-12-09 | Phase 10J: ZIP export |
+| 2.0.81 | 2025-12-09 | Phase 10I: HTML editor fields |
+| 2.0.80 | 2025-12-09 | Phase 10H: Document review system |
 | 2.0.79 | 2025-12-09 | Phase 10G: Convocatoria exemption system |
 | 2.0.78 | 2025-12-09 | Phase 10F: Document types management |
 | 2.0.77 | 2025-12-09 | Phase 10E: Application restrictions per convocatoria |
