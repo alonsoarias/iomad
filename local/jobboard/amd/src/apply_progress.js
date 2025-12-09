@@ -14,10 +14,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * AMD module for application form progress tracking.
+ * AMD module for application form tab-based navigation.
  *
- * Handles the progress indicator steps, clickable navigation,
- * and scroll-spy functionality for the application form.
+ * Handles the progress indicator steps and tab switching
+ * functionality for the application form.
  *
  * @module     local_jobboard/apply_progress
  * @copyright  2024 ISER
@@ -30,12 +30,24 @@ define(['jquery'], function($) {
      * Section IDs to step index mapping.
      * @type {Object}
      */
-    var SECTION_STEP_MAP = {
-        'id_consentheader': 0,
-        'id_documentsheader': 1,
-        'id_additionalheader': 2,
-        'id_declarationheader': 3
-    };
+    var SECTION_HEADERS = [
+        'id_consentheader',
+        'id_documentsheader',
+        'id_additionalheader',
+        'id_declarationheader'
+    ];
+
+    /**
+     * Current active step (0-indexed).
+     * @type {number}
+     */
+    var currentStep = 0;
+
+    /**
+     * Total number of steps.
+     * @type {number}
+     */
+    var totalSteps = 4;
 
     /**
      * Track completed sections.
@@ -44,110 +56,268 @@ define(['jquery'], function($) {
     var completedSections = new Set();
 
     /**
+     * Language strings.
+     * @type {Object}
+     */
+    var strings = {
+        previous: 'Previous',
+        next: 'Next',
+        submit: 'Submit Application',
+        step: 'Step',
+        of: 'of',
+        completerequiredfields: 'Please complete all required fields before continuing.'
+    };
+
+    /**
+     * Tab mode enabled.
+     * @type {boolean}
+     */
+    var tabMode = false;
+
+    /**
+     * Get the fieldset container for a section header.
+     *
+     * @param {string} headerId The header element ID.
+     * @return {jQuery} The fieldset element.
+     */
+    var getSectionFieldset = function(headerId) {
+        var $header = $('#' + headerId);
+        // In Moodle forms, the header is inside a fieldset.
+        return $header.closest('fieldset');
+    };
+
+    /**
+     * Show a specific tab/section.
+     *
+     * @param {number} stepIndex The step index to show (0-indexed).
+     */
+    var showTab = function(stepIndex) {
+        if (stepIndex < 0 || stepIndex >= totalSteps) {
+            return;
+        }
+
+        // Hide all sections.
+        SECTION_HEADERS.forEach(function(headerId) {
+            var $fieldset = getSectionFieldset(headerId);
+            $fieldset.addClass('jb-tab-hidden');
+        });
+
+        // Show the target section.
+        var targetHeader = SECTION_HEADERS[stepIndex];
+        var $targetFieldset = getSectionFieldset(targetHeader);
+        $targetFieldset.removeClass('jb-tab-hidden');
+
+        // Expand the header if collapsed.
+        var $header = $('#' + targetHeader);
+        if ($header.hasClass('collapsed')) {
+            $header.removeClass('collapsed');
+            $header.attr('aria-expanded', 'true');
+        }
+
+        // Update current step.
+        currentStep = stepIndex;
+
+        // Update progress steps UI.
+        updateProgressSteps(stepIndex);
+
+        // Update navigation buttons.
+        updateNavigationButtons();
+
+        // Scroll to top of form.
+        $('html, body').animate({
+            scrollTop: $('#application-progress').offset().top - 20
+        }, 300);
+    };
+
+    /**
      * Update progress steps UI.
      *
-     * @param {number} currentStep The current active step index.
+     * @param {number} activeStep The current active step index.
      */
-    var updateProgressSteps = function(currentStep) {
+    var updateProgressSteps = function(activeStep) {
         $('.jb-step').each(function(i) {
             var $step = $(this);
             $step.removeClass('active');
+            $step.attr('aria-selected', 'false');
 
-            if (i < currentStep || completedSections.has(i)) {
+            if (completedSections.has(i)) {
                 $step.addClass('completed');
-                // Show checkmark, hide number.
                 $step.find('.jb-step-number').addClass('d-none');
                 $step.find('.jb-step-checkmark').removeClass('d-none');
             } else {
                 $step.removeClass('completed');
-                // Show number, hide checkmark.
                 $step.find('.jb-step-number').removeClass('d-none');
                 $step.find('.jb-step-checkmark').addClass('d-none');
             }
 
-            if (i === currentStep) {
+            if (i === activeStep) {
                 $step.addClass('active');
+                $step.attr('aria-selected', 'true');
+            }
+        });
+
+        // Update step connectors.
+        $('.jb-step-connector').each(function(i) {
+            if (i < activeStep || completedSections.has(i)) {
+                $(this).addClass('completed');
+            } else {
+                $(this).removeClass('completed');
             }
         });
     };
 
     /**
-     * Smooth scroll to target element.
-     *
-     * @param {string} targetId The target element ID.
+     * Update navigation buttons based on current step.
      */
-    var scrollToSection = function(targetId) {
-        var $target = $('#' + targetId);
-        if ($target.length) {
-            // Expand the header if it's collapsed.
-            var $content = $target.next('.fcontainer, .fitem, .collapsible-actions');
-            if ($target.hasClass('collapsed')) {
-                $target.removeClass('collapsed');
-                $target.attr('aria-expanded', 'true');
-            }
+    var updateNavigationButtons = function() {
+        var $navContainer = $('#jb-tab-navigation');
+        $navContainer.removeClass('d-none').empty();
 
-            // Scroll with offset for fixed header.
-            var offset = 80;
-            $('html, body').animate({
-                scrollTop: $target.offset().top - offset
-            }, 300);
+        var html = '<div class="d-flex justify-content-between align-items-center">';
+
+        // Previous button (hidden on first step).
+        if (currentStep > 0) {
+            html += '<button type="button" class="btn btn-outline-secondary jb-btn-prev">';
+            html += '<i class="fa fa-arrow-left mr-2"></i>' + strings.previous;
+            html += '</button>';
+        } else {
+            html += '<div></div>'; // Placeholder for alignment.
         }
-    };
 
-    /**
-     * Initialize clickable progress step handlers.
-     */
-    var initStepClickHandlers = function() {
-        $('.jb-step[data-target]').on('click', function(e) {
+        // Step indicator.
+        html += '<span class="text-muted small">';
+        html += strings.step + ' ' + (currentStep + 1) + ' ' + strings.of + ' ' + totalSteps;
+        html += '</span>';
+
+        // Next button or show submit button on last step.
+        if (currentStep < totalSteps - 1) {
+            html += '<button type="button" class="btn btn-primary jb-btn-next">';
+            html += strings.next + ' <i class="fa fa-arrow-right ml-2"></i>';
+            html += '</button>';
+        } else {
+            // On last step, show a hint about the submit button.
+            html += '<span class="text-success small">';
+            html += '<i class="fa fa-check-circle mr-1"></i>' + strings.submit;
+            html += '</span>';
+        }
+
+        html += '</div>';
+
+        $navContainer.html(html);
+
+        // Bind button events.
+        $navContainer.find('.jb-btn-prev').on('click', function(e) {
             e.preventDefault();
+            goToPreviousStep();
+        });
 
-            var targetId = $(this).data('target');
-            var stepIndex = parseInt($(this).data('step'), 10) - 1;
-
-            scrollToSection(targetId);
-            updateProgressSteps(stepIndex);
+        $navContainer.find('.jb-btn-next').on('click', function(e) {
+            e.preventDefault();
+            goToNextStep();
         });
     };
 
     /**
-     * Initialize section header click handlers for backward compatibility.
+     * Validate current section before moving to next.
+     *
+     * @return {boolean} True if validation passes.
      */
-    var initSectionHandlers = function() {
-        var sections = Object.keys(SECTION_STEP_MAP);
+    var validateCurrentSection = function() {
+        var headerId = SECTION_HEADERS[currentStep];
+        var $fieldset = getSectionFieldset(headerId);
 
-        sections.forEach(function(sectionId) {
-            var el = document.getElementById(sectionId);
-            if (el) {
-                el.addEventListener('click', function() {
-                    var step = SECTION_STEP_MAP[sectionId];
-                    updateProgressSteps(step);
-                });
+        var isValid = true;
+
+        // Check required fields in current section.
+        $fieldset.find('input[required], select[required], textarea[required]').each(function() {
+            if (!this.checkValidity()) {
+                isValid = false;
+                $(this).addClass('is-invalid');
+            } else {
+                $(this).removeClass('is-invalid');
             }
         });
+
+        // Special validation for consent section.
+        if (currentStep === 0) {
+            var consentChecked = $('#id_consentaccepted').is(':checked');
+            var signatureFilled = $('#id_digitalsignature').val().trim() !== '';
+            if (!consentChecked || !signatureFilled) {
+                isValid = false;
+                if (!consentChecked) {
+                    $('#id_consentaccepted').addClass('is-invalid');
+                }
+                if (!signatureFilled) {
+                    $('#id_digitalsignature').addClass('is-invalid');
+                }
+            }
+        }
+
+        // Special validation for declaration section.
+        if (currentStep === 3) {
+            var declarationChecked = $('#id_declarationaccepted').is(':checked');
+            if (!declarationChecked) {
+                isValid = false;
+                $('#id_declarationaccepted').addClass('is-invalid');
+            }
+        }
+
+        return isValid;
     };
 
     /**
-     * Initialize scroll-spy to update progress as user scrolls.
+     * Go to the next step.
      */
-    var initScrollSpy = function() {
-        var sections = Object.keys(SECTION_STEP_MAP);
-        var offset = 150; // Offset from top.
+    var goToNextStep = function() {
+        if (currentStep >= totalSteps - 1) {
+            return;
+        }
 
-        $(window).on('scroll', function() {
-            var scrollPos = $(window).scrollTop() + offset;
-            var currentStep = 0;
+        // Validate current section.
+        if (!validateCurrentSection()) {
+            // Show validation message.
+            showValidationAlert();
+            return;
+        }
 
-            sections.forEach(function(sectionId, index) {
-                var $section = $('#' + sectionId);
-                if ($section.length && $section.offset().top <= scrollPos) {
-                    currentStep = index;
-                }
+        // Mark current section as completed.
+        markSectionCompleted(currentStep);
+
+        // Go to next step.
+        showTab(currentStep + 1);
+    };
+
+    /**
+     * Go to the previous step.
+     */
+    var goToPreviousStep = function() {
+        if (currentStep <= 0) {
+            return;
+        }
+
+        showTab(currentStep - 1);
+    };
+
+    /**
+     * Show validation alert.
+     */
+    var showValidationAlert = function() {
+        // Remove existing alert.
+        $('.jb-validation-alert').remove();
+
+        var $alert = $('<div class="alert alert-warning jb-validation-alert mt-3 mb-3">' +
+            '<i class="fa fa-exclamation-triangle mr-2"></i>' +
+            strings.completerequiredfields +
+            '</div>');
+
+        $('#jb-tab-navigation').after($alert);
+
+        // Auto-dismiss after 5 seconds.
+        setTimeout(function() {
+            $alert.fadeOut(function() {
+                $(this).remove();
             });
-
-            // Update active step without removing completed status.
-            $('.jb-step').removeClass('active');
-            $('.jb-step').eq(currentStep).addClass('active');
-        });
+        }, 5000);
     };
 
     /**
@@ -157,40 +327,38 @@ define(['jquery'], function($) {
      */
     var markSectionCompleted = function(stepIndex) {
         completedSections.add(stepIndex);
-        var $step = $('.jb-step').eq(stepIndex);
-        $step.addClass('completed');
-        $step.find('.jb-step-number').addClass('d-none');
-        $step.find('.jb-step-checkmark').removeClass('d-none');
+        updateProgressSteps(currentStep);
     };
 
     /**
-     * Check for filled form fields and mark sections complete.
+     * Initialize clickable progress step handlers.
      */
-    var checkFormCompletion = function() {
-        // Check consent section.
-        var consentChecked = $('#id_consentaccepted').is(':checked');
-        var signatureFilled = $('#id_digitalsignature').val().trim() !== '';
-        if (consentChecked && signatureFilled) {
-            markSectionCompleted(0);
-        }
+    var initStepClickHandlers = function() {
+        $('.jb-step[data-target]').on('click', function(e) {
+            e.preventDefault();
 
-        // Check if any files are uploaded (documents section).
-        var hasFiles = $('input[name^="doc_"]').filter(function() {
-            return $(this).val() !== '';
-        }).length > 0;
-        if (hasFiles) {
-            markSectionCompleted(1);
-        }
+            var stepIndex = parseInt($(this).data('step'), 10) - 1;
 
-        // Check declaration section.
-        var declarationChecked = $('#id_declarationaccepted').is(':checked');
-        if (declarationChecked) {
-            markSectionCompleted(3);
-        }
+            // Only allow going to completed steps or current step.
+            if (stepIndex <= currentStep || completedSections.has(stepIndex - 1)) {
+                // Validate before moving forward.
+                if (stepIndex > currentStep && !validateCurrentSection()) {
+                    showValidationAlert();
+                    return;
+                }
+
+                // Mark current as completed if moving forward.
+                if (stepIndex > currentStep) {
+                    markSectionCompleted(currentStep);
+                }
+
+                showTab(stepIndex);
+            }
+        });
     };
 
     /**
-     * Initialize form field change listeners.
+     * Initialize form field change listeners for auto-completion detection.
      */
     var initFormListeners = function() {
         // Consent checkbox and signature.
@@ -198,14 +366,21 @@ define(['jquery'], function($) {
             var consentChecked = $('#id_consentaccepted').is(':checked');
             var signatureFilled = $('#id_digitalsignature').val().trim() !== '';
             if (consentChecked && signatureFilled) {
-                markSectionCompleted(0);
+                $(this).removeClass('is-invalid');
             }
         });
 
         // Declaration checkbox.
         $('#id_declarationaccepted').on('change', function() {
             if ($(this).is(':checked')) {
-                markSectionCompleted(3);
+                $(this).removeClass('is-invalid');
+            }
+        });
+
+        // Clear validation state on input.
+        $('input, select, textarea').on('input change', function() {
+            if (this.checkValidity()) {
+                $(this).removeClass('is-invalid');
             }
         });
     };
@@ -218,13 +393,44 @@ define(['jquery'], function($) {
     };
 
     /**
+     * Add CSS for hidden tabs.
+     */
+    var addTabStyles = function() {
+        if ($('#jb-tab-styles').length === 0) {
+            var styles = '<style id="jb-tab-styles">' +
+                '.jb-tab-hidden { display: none !important; }' +
+                '.jb-step { cursor: pointer; transition: all 0.2s ease; }' +
+                '.jb-step:hover:not(.active) { opacity: 0.8; }' +
+                '.jb-step.completed .jb-step-icon { background-color: #28a745 !important; border-color: #28a745 !important; }' +
+                '.jb-step-connector.completed { background-color: #28a745 !important; }' +
+                '.jb-validation-alert { animation: fadeIn 0.3s ease; }' +
+                '@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }' +
+                '</style>';
+            $('head').append(styles);
+        }
+    };
+
+    /**
      * Initialize the module.
      *
      * @param {Object} options Configuration options.
      * @param {number} options.initialStep Initial step to highlight (default: 0).
+     * @param {boolean} options.tabMode Enable tab mode (default: false).
+     * @param {Object} options.strings Language strings.
      */
     var init = function(options) {
         options = options || {};
+
+        // Set tab mode.
+        tabMode = options.tabMode || false;
+
+        // Set language strings.
+        if (options.strings) {
+            $.extend(strings, options.strings);
+        }
+
+        // Add tab styles.
+        addTabStyles();
 
         // Initialize tooltips.
         initTooltips();
@@ -232,27 +438,26 @@ define(['jquery'], function($) {
         // Initialize clickable step handlers.
         initStepClickHandlers();
 
-        // Initialize section handlers.
-        initSectionHandlers();
-
-        // Initialize scroll spy.
-        initScrollSpy();
-
         // Initialize form listeners.
         initFormListeners();
 
-        // Check initial form completion.
-        checkFormCompletion();
-
-        // Set initial step if provided.
-        if (typeof options.initialStep === 'number') {
-            updateProgressSteps(options.initialStep);
+        if (tabMode) {
+            // Initialize tab mode - show only first section.
+            showTab(options.initialStep || 0);
+        } else {
+            // Legacy scroll mode.
+            if (typeof options.initialStep === 'number') {
+                updateProgressSteps(options.initialStep);
+            }
         }
     };
 
     return {
         init: init,
+        showTab: showTab,
         updateProgressSteps: updateProgressSteps,
-        markSectionCompleted: markSectionCompleted
+        markSectionCompleted: markSectionCompleted,
+        goToNextStep: goToNextStep,
+        goToPreviousStep: goToPreviousStep
     };
 });

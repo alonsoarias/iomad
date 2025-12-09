@@ -222,7 +222,7 @@ echo '<h2 class="mb-2">' . get_string('applytovacancy', 'local_jobboard') . '</h
 echo '<p class="lead text-muted">' . format_string($vacancy->title) . '</p>';
 echo '</div>';
 
-// Progress indicator - clickable steps with section navigation.
+// Progress indicator - Tab navigation with steps.
 echo '<div class="jb-progress-steps mb-4" id="application-progress">';
 echo '<div class="d-flex justify-content-between align-items-center">';
 $steps = [
@@ -233,12 +233,12 @@ $steps = [
 ];
 foreach ($steps as $i => $step) {
     $activeclass = $i === 0 ? 'active' : '';
-    echo '<a href="#' . $step['target'] . '" class="jb-step text-center text-decoration-none ' . $activeclass . '" ';
-    echo 'data-step="' . ($i + 1) . '" data-target="' . $step['target'] . '" role="button" ';
-    echo 'title="' . s(get_string('clicktojump', 'local_jobboard')) . '">';
+    echo '<a href="#" class="jb-step text-center text-decoration-none ' . $activeclass . '" ';
+    echo 'data-step="' . ($i + 1) . '" data-target="' . $step['target'] . '" role="tab" ';
+    echo 'aria-selected="' . ($i === 0 ? 'true' : 'false') . '">';
     echo '<div class="jb-step-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-1">';
     echo '<span class="jb-step-number">' . ($i + 1) . '</span>';
-    echo '<i class="fa ' . $step['icon'] . ' jb-step-checkmark d-none"></i>';
+    echo '<i class="fa fa-check jb-step-checkmark d-none"></i>';
     echo '</div>';
     echo '<small class="d-block text-truncate" style="max-width:80px;">' . $step['label'] . '</small>';
     echo '</a>';
@@ -248,6 +248,9 @@ foreach ($steps as $i => $step) {
 }
 echo '</div>';
 echo '</div>';
+
+// Tab navigation buttons container (will be populated by JS).
+echo '<div id="jb-tab-navigation" class="d-none mb-3"></div>';
 
 // Deadline warning.
 if ($daysuntilclose <= 3 && $daysuntilclose > 0) {
@@ -422,9 +425,18 @@ echo html_writer::end_div(); // .row
 
 echo '</div>'; // .jb-apply-container
 
-// Initialize JavaScript for progress tracking via AMD module.
+// Initialize JavaScript for tab-based navigation via AMD module.
 $PAGE->requires->js_call_amd('local_jobboard/apply_progress', 'init', [[
-    'initialStep' => 0
+    'initialStep' => 0,
+    'tabMode' => true,
+    'strings' => [
+        'previous' => get_string('previous'),
+        'next' => get_string('next'),
+        'submit' => get_string('submit', 'local_jobboard'),
+        'step' => get_string('step', 'local_jobboard'),
+        'of' => get_string('of', 'local_jobboard'),
+        'completerequiredfields' => get_string('completerequiredfields', 'local_jobboard'),
+    ],
 ]]);
 
 // Initialize application confirmation modal.

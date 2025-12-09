@@ -2935,3 +2935,9 @@ $string['templatehelp_html'] = 'You can use HTML formatting in the email body fo
 $string['templatehelp_reset'] = 'Click "Reset" to restore a template to its default content.';
 $string['templatesubject_help'] = 'The subject line of the email. You can use placeholders like {vacancy_code}.';
 $string['templatebody_help'] = 'The body content of the email. Use the editor to format text and include placeholders for dynamic content.';
+
+// Tab-based application form.
+$string['submit'] = 'Submit Application';
+$string['step'] = 'Step';
+$string['of'] = 'of';
+$string['completerequiredfields'] = 'Please complete all required fields before continuing.';
