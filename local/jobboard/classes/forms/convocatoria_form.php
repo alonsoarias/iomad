@@ -281,7 +281,7 @@ class convocatoria_form extends \moodleform {
         $data->max_applications_per_user = $convocatoria->max_applications_per_user ?? 0;
 
         // Load document exemptions for this convocatoria.
-        $data->exempted_doctypes = \local_jobboard\convocatoria_exemption::get_exempted_doctype_ids($convocatoria->id);
+        $data->exempted_doctypes = \local_jobboard\convocatoria_exemption::get_exempted_doctype_ids((int) $convocatoria->id);
 
         $this->set_data($data);
     }

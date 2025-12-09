@@ -2718,6 +2718,7 @@ $string['legacyconvocatoria_desc'] = 'Auto-created convocatoria for vacancies wi
 
 // Application limits per convocatoria.
 $string['applicationlimits'] = 'Application Limits';
+$string['allowmultipleapplications_convocatoria'] = 'Allow Multiple Applications';
 $string['allowmultipleapplications_convocatoria_desc'] = 'Allow applicants to apply for multiple vacancies within this call';
 $string['allowmultipleapplications_convocatoria_help'] = 'If enabled, applicants can submit applications for more than one vacancy in this call. You can set a maximum limit below.';
 $string['maxapplicationsperuser'] = 'Maximum applications per user';

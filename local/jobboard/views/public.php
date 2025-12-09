@@ -864,8 +864,22 @@ function local_jobboard_render_public_vacancy_detail($vacancy, $context, $islogg
     }
 
     // Dates from convocatoria.
-    $opendate = $vacancy->get_open_date();
-    $closedate = $vacancy->get_close_date();
+    $opendate = null;
+    $closedate = null;
+    if (!empty($vacancy->convocatoriaid)) {
+        $convocatoria = \local_jobboard_get_convocatoria($vacancy->convocatoriaid);
+        if ($convocatoria) {
+            $opendate = $convocatoria->startdate;
+            $closedate = $convocatoria->enddate;
+        }
+    }
+    // Fallback to current time if no dates available.
+    if (empty($opendate)) {
+        $opendate = time();
+    }
+    if (empty($closedate)) {
+        $closedate = time() + (30 * 24 * 60 * 60); // 30 days from now.
+    }
 
     echo html_writer::tag('dt', get_string('opendate', 'local_jobboard'), ['class' => 'col-sm-5']);
     echo html_writer::tag('dd', userdate($opendate, get_string('strftimedate', 'langconfig')), ['class' => 'col-sm-7']);
