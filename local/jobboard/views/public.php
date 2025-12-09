@@ -589,11 +589,15 @@ function local_jobboard_render_public_vacancy_detail($vacancy, $context, $islogg
 
     $contracttypes = local_jobboard_get_contract_types();
 
-    // Get convocatoria info.
+    // Get convocatoria info and populate dates.
     $convocatoria = null;
     if (!empty($vacancy->convocatoriaid)) {
         $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $vacancy->convocatoriaid]);
     }
+
+    // Populate dates from convocatoria (opendate/closedate no longer exist on vacancy).
+    $vacancy->opendate = $convocatoria->startdate ?? 0;
+    $vacancy->closedate = $convocatoria->enddate ?? 0;
 
     $PAGE->set_title($vacancy->title);
     $PAGE->set_heading($vacancy->title);
