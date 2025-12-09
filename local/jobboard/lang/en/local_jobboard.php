@@ -2644,3 +2644,42 @@ $string['multipledocs_notice'] = 'Multiple certificates in one file';
 $string['multipledocs_titulo_academico'] = 'If you have multiple degrees (undergraduate, postgraduate, specialization), combine all certificates into a single PDF file.';
 $string['multipledocs_formacion_complementaria'] = 'If you have multiple complementary training certificates, combine all into a single PDF file.';
 $string['multipledocs_certificacion_laboral'] = 'If you have multiple employment certificates, combine all into a single PDF file ordered by date (most recent first).';
+
+// ============================================================================
+// reCAPTCHA and Security Settings (v2.0.71)
+// ============================================================================
+$string['recaptchasettings'] = 'reCAPTCHA Settings';
+$string['recaptchasettings_desc'] = 'Configure reCAPTCHA to prevent spam and abuse on registration and profile update forms.';
+$string['recaptcha_enabled'] = 'Enable reCAPTCHA';
+$string['recaptcha_enabled_desc'] = 'Enable reCAPTCHA verification on signup and profile update forms.';
+$string['recaptcha_version'] = 'reCAPTCHA Version';
+$string['recaptcha_version_desc'] = 'Select which version of reCAPTCHA to use.';
+$string['recaptcha_v2'] = 'reCAPTCHA v2 (Checkbox)';
+$string['recaptcha_v3'] = 'reCAPTCHA v3 (Invisible)';
+$string['recaptcha_sitekey'] = 'Site Key';
+$string['recaptcha_sitekey_desc'] = 'Enter the reCAPTCHA site key from Google reCAPTCHA console.';
+$string['recaptcha_secretkey'] = 'Secret Key';
+$string['recaptcha_secretkey_desc'] = 'Enter the reCAPTCHA secret key from Google reCAPTCHA console.';
+$string['recaptcha_v3_threshold'] = 'v3 Score Threshold';
+$string['recaptcha_v3_threshold_desc'] = 'Minimum score (0.0-1.0) required to pass verification. Default: 0.5';
+$string['recaptcha_required'] = 'Please complete the security verification.';
+$string['recaptcha_failed'] = 'Security verification failed. Please try again.';
+$string['verification'] = 'Security Verification';
+
+// ============================================================================
+// Account Credentials Management (v2.0.71)
+// ============================================================================
+$string['username_differs_idnumber'] = 'Your username is different from your ID number. You can update it to match your identification number for easier login.';
+$string['update_username'] = 'Update username';
+$string['update_username_desc'] = 'Change my username to match my ID number';
+$string['password_change_optional'] = 'Leave the password fields empty if you don\'t want to change your password. Fill in all fields only if you want to set a new password.';
+$string['currentpassword'] = 'Current password';
+$string['currentpassword_help'] = 'Enter your current password to verify your identity. This is required if you want to change your email or password.';
+$string['confirmpassword'] = 'Confirm new password';
+$string['currentpassword_required'] = 'Current password is required to change email or password.';
+$string['currentpassword_invalid'] = 'The current password you entered is incorrect.';
+$string['passwordsdiffer'] = 'The passwords do not match.';
+$string['email_updated'] = 'Your email address has been updated.';
+$string['password_updated'] = 'Your password has been updated.';
+$string['username_updated'] = 'Your username has been updated to: {$a}';
+$string['completeprofile_required'] = 'Please complete your profile information before applying for this vacancy.';

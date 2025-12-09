@@ -61,15 +61,60 @@ class updateprofile_form extends moodleform {
         $mform->setType('vacancyid', PARAM_INT);
 
         // ==========================================
-        // SECTION 1: Account Information (Read-only)
+        // SECTION 1: Account Information
         // ==========================================
         $mform->addElement('header', 'accountheader', get_string('signup_account_header', 'local_jobboard'));
         $mform->setExpanded('accountheader', true);
 
-        // Email (read-only).
-        $mform->addElement('static', 'email_display', get_string('email'), $user->email ?? '');
-        $mform->addElement('hidden', 'email', $user->email ?? '');
-        $mform->setType('email', PARAM_EMAIL);
+        // Check if username differs from idnumber (needs update option).
+        $usernameneedsupdate = !empty($user->idnumber) && $user->username !== strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $user->idnumber));
+
+        // Username field - show if different from idnumber.
+        if ($usernameneedsupdate) {
+            $mform->addElement('static', 'username_notice', '',
+                '<div class="alert alert-warning">' .
+                '<i class="fa fa-exclamation-triangle mr-2"></i>' .
+                get_string('username_differs_idnumber', 'local_jobboard') .
+                '</div>');
+            $mform->addElement('advcheckbox', 'update_username',
+                get_string('update_username', 'local_jobboard'),
+                get_string('update_username_desc', 'local_jobboard'));
+        }
+
+        // Email (editable).
+        $mform->addElement('text', 'email', get_string('email'), 'maxlength="100" size="40"');
+        $mform->setType('email', PARAM_RAW_TRIMMED);
+        $mform->addRule('email', get_string('required'), 'required', null, 'client');
+        $mform->addRule('email', get_string('invalidemail'), 'email', null, 'client');
+        $mform->addHelpButton('email', 'signup_email', 'local_jobboard');
+
+        // Store original email for comparison.
+        $mform->addElement('hidden', 'original_email', $user->email ?? '');
+        $mform->setType('original_email', PARAM_EMAIL);
+
+        // Password change section.
+        $mform->addElement('static', 'password_info', '',
+            '<div class="alert alert-info mt-3">' .
+            '<i class="fa fa-info-circle mr-2"></i>' .
+            get_string('password_change_optional', 'local_jobboard') .
+            '</div>');
+
+        // Current password (required if changing password or email).
+        $mform->addElement('passwordunmask', 'currentpassword',
+            get_string('currentpassword', 'local_jobboard'), 'maxlength="32" size="25"');
+        $mform->setType('currentpassword', PARAM_RAW);
+        $mform->addHelpButton('currentpassword', 'currentpassword', 'local_jobboard');
+
+        // New password (optional).
+        $mform->addElement('passwordunmask', 'newpassword',
+            get_string('newpassword'), 'maxlength="32" size="25"');
+        $mform->setType('newpassword', PARAM_RAW);
+        $mform->addHelpButton('newpassword', 'signup_password', 'local_jobboard');
+
+        // Confirm new password.
+        $mform->addElement('passwordunmask', 'newpassword2',
+            get_string('confirmpassword', 'local_jobboard'), 'maxlength="32" size="25"');
+        $mform->setType('newpassword2', PARAM_RAW);
 
         // ==========================================
         // SECTION 2: Personal Information
@@ -285,6 +330,39 @@ class updateprofile_form extends moodleform {
             ]]);
         }
 
+        // ==========================================
+        // SECTION 6: reCAPTCHA (if enabled)
+        // ==========================================
+        $recaptchaenabled = get_config('local_jobboard', 'recaptcha_enabled');
+        if ($recaptchaenabled) {
+            $sitekey = get_config('local_jobboard', 'recaptcha_sitekey');
+            $version = get_config('local_jobboard', 'recaptcha_version') ?: 'v2';
+
+            if (!empty($sitekey)) {
+                $mform->addElement('header', 'recaptchaheader', get_string('verification', 'local_jobboard'));
+                $mform->setExpanded('recaptchaheader', true);
+
+                if ($version === 'v3') {
+                    // reCAPTCHA v3 - invisible, handled via JavaScript.
+                    $mform->addElement('hidden', 'recaptcha_response', '');
+                    $mform->setType('recaptcha_response', PARAM_TEXT);
+                    $mform->addElement('html',
+                        '<script src="https://www.google.com/recaptcha/api.js?render=' . s($sitekey) . '"></script>');
+                } else {
+                    // reCAPTCHA v2 - visible checkbox.
+                    $mform->addElement('html',
+                        '<div class="form-group row fitem">' .
+                        '<div class="col-md-3"></div>' .
+                        '<div class="col-md-9">' .
+                        '<div class="g-recaptcha" data-sitekey="' . s($sitekey) . '"></div>' .
+                        '<script src="https://www.google.com/recaptcha/api.js" async defer></script>' .
+                        '</div></div>');
+                    $mform->addElement('hidden', 'recaptcha_version', 'v2');
+                    $mform->setType('recaptcha_version', PARAM_TEXT);
+                }
+            }
+        }
+
         // Submit button.
         $this->add_action_buttons(true, get_string('updateprofile_submit', 'local_jobboard'));
     }
@@ -297,10 +375,105 @@ class updateprofile_form extends moodleform {
      * @return array Validation errors.
      */
     public function validation($data, $files) {
-        global $DB;
+        global $CFG, $DB;
 
         $errors = parent::validation($data, $files);
         $userid = $this->_customdata['userid'] ?? 0;
+        $user = $DB->get_record('user', ['id' => $userid]);
+
+        // Email validation.
+        $newemail = trim($data['email'] ?? '');
+        $originalemail = $data['original_email'] ?? '';
+        $emailchanged = ($newemail !== $originalemail);
+
+        if (empty($newemail)) {
+            $errors['email'] = get_string('required');
+        } else if (!validate_email($newemail)) {
+            $errors['email'] = get_string('invalidemail');
+        } else if ($emailchanged) {
+            // Check if new email already exists.
+            $existing = $DB->get_record('user', ['email' => $newemail]);
+            if ($existing && $existing->id != $userid) {
+                $errors['email'] = get_string('emailexists');
+            }
+        }
+
+        // Password validation.
+        $newpassword = $data['newpassword'] ?? '';
+        $newpassword2 = $data['newpassword2'] ?? '';
+        $currentpassword = $data['currentpassword'] ?? '';
+
+        // If changing password or email, require current password.
+        if (!empty($newpassword) || $emailchanged) {
+            if (empty($currentpassword)) {
+                $errors['currentpassword'] = get_string('currentpassword_required', 'local_jobboard');
+            } else {
+                // Verify current password.
+                if (!validate_internal_user_password($user, $currentpassword)) {
+                    $errors['currentpassword'] = get_string('currentpassword_invalid', 'local_jobboard');
+                }
+            }
+        }
+
+        // Validate new password if provided.
+        if (!empty($newpassword)) {
+            if ($newpassword !== $newpassword2) {
+                $errors['newpassword2'] = get_string('passwordsdiffer', 'local_jobboard');
+            }
+            // Check password policy.
+            $errmsg = '';
+            if (!check_password_policy($newpassword, $errmsg)) {
+                $errors['newpassword'] = $errmsg;
+            }
+        }
+
+        // reCAPTCHA validation.
+        $recaptchaenabled = get_config('local_jobboard', 'recaptcha_enabled');
+        if ($recaptchaenabled) {
+            $secretkey = get_config('local_jobboard', 'recaptcha_secretkey');
+            $version = get_config('local_jobboard', 'recaptcha_version') ?: 'v2';
+
+            if (!empty($secretkey)) {
+                $response = $version === 'v3'
+                    ? ($data['recaptcha_response'] ?? '')
+                    : ($_POST['g-recaptcha-response'] ?? '');
+
+                if (empty($response)) {
+                    $errors['recaptcha_response'] = get_string('recaptcha_required', 'local_jobboard');
+                } else {
+                    // Verify with Google.
+                    $verifyurl = 'https://www.google.com/recaptcha/api/siteverify';
+                    $verifydata = [
+                        'secret' => $secretkey,
+                        'response' => $response,
+                        'remoteip' => getremoteaddr(),
+                    ];
+
+                    $options = [
+                        'http' => [
+                            'method' => 'POST',
+                            'header' => 'Content-type: application/x-www-form-urlencoded',
+                            'content' => http_build_query($verifydata),
+                        ],
+                    ];
+                    $context = stream_context_create($options);
+                    $result = @file_get_contents($verifyurl, false, $context);
+
+                    if ($result) {
+                        $resultdata = json_decode($result);
+                        if (!$resultdata->success) {
+                            $errors['recaptcha_response'] = get_string('recaptcha_failed', 'local_jobboard');
+                        } else if ($version === 'v3') {
+                            // Check score for v3.
+                            $threshold = get_config('local_jobboard', 'recaptcha_v3_threshold') ?: 0.5;
+                            if (($resultdata->score ?? 0) < $threshold) {
+                                $errors['recaptcha_response'] = get_string('recaptcha_failed', 'local_jobboard');
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // First name validation.
         if (empty(trim($data['firstname']))) {
@@ -318,7 +491,6 @@ class updateprofile_form extends moodleform {
         }
 
         // ID number validation (only if editable).
-        $user = $DB->get_record('user', ['id' => $userid]);
         if (empty($user->idnumber) && empty(trim($data['idnumber'] ?? ''))) {
             $errors['idnumber'] = get_string('required');
         } else if (empty($user->idnumber) && !empty($data['idnumber'])) {

@@ -257,6 +257,62 @@ if ($hassiteconfig) {
         ''
     ));
 
+    // ==========================================================================
+    // reCAPTCHA settings.
+    // ==========================================================================
+    $settings->add(new admin_setting_heading(
+        'local_jobboard/recaptchaheading',
+        get_string('recaptchasettings', 'local_jobboard'),
+        get_string('recaptchasettings_desc', 'local_jobboard')
+    ));
+
+    // Enable reCAPTCHA.
+    $settings->add(new admin_setting_configcheckbox(
+        'local_jobboard/recaptcha_enabled',
+        get_string('recaptcha_enabled', 'local_jobboard'),
+        get_string('recaptcha_enabled_desc', 'local_jobboard'),
+        0
+    ));
+
+    // reCAPTCHA version.
+    $recaptchaversions = [
+        'v2' => get_string('recaptcha_v2', 'local_jobboard'),
+        'v3' => get_string('recaptcha_v3', 'local_jobboard'),
+    ];
+    $settings->add(new admin_setting_configselect(
+        'local_jobboard/recaptcha_version',
+        get_string('recaptcha_version', 'local_jobboard'),
+        get_string('recaptcha_version_desc', 'local_jobboard'),
+        'v2',
+        $recaptchaversions
+    ));
+
+    // reCAPTCHA site key.
+    $settings->add(new admin_setting_configtext(
+        'local_jobboard/recaptcha_sitekey',
+        get_string('recaptcha_sitekey', 'local_jobboard'),
+        get_string('recaptcha_sitekey_desc', 'local_jobboard'),
+        '',
+        PARAM_TEXT
+    ));
+
+    // reCAPTCHA secret key.
+    $settings->add(new admin_setting_configpasswordunmask(
+        'local_jobboard/recaptcha_secretkey',
+        get_string('recaptcha_secretkey', 'local_jobboard'),
+        get_string('recaptcha_secretkey_desc', 'local_jobboard'),
+        ''
+    ));
+
+    // reCAPTCHA v3 threshold (0.0 - 1.0).
+    $settings->add(new admin_setting_configtext(
+        'local_jobboard/recaptcha_v3_threshold',
+        get_string('recaptcha_v3_threshold', 'local_jobboard'),
+        get_string('recaptcha_v3_threshold_desc', 'local_jobboard'),
+        '0.5',
+        PARAM_FLOAT
+    ));
+
     // Enable encryption.
     $settings->add(new admin_setting_configcheckbox(
         'local_jobboard/enableencryption',

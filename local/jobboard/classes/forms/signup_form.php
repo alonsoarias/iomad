@@ -320,11 +320,37 @@ class signup_form extends moodleform {
         $mform->addRule('dataaccuracy', get_string('signup_dataaccuracy_required', 'local_jobboard'),
             'nonzero', null, 'client');
 
-        // reCAPTCHA if enabled.
-        if (!empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey)) {
-            $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'));
-            $mform->addHelpButton('recaptcha_element', 'recaptcha', 'auth');
-            $mform->closeHeaderBefore('recaptcha_element');
+        // ==========================================
+        // SECTION 7: reCAPTCHA (if enabled)
+        // ==========================================
+        $recaptchaenabled = get_config('local_jobboard', 'recaptcha_enabled');
+        if ($recaptchaenabled) {
+            $sitekey = get_config('local_jobboard', 'recaptcha_sitekey');
+            $version = get_config('local_jobboard', 'recaptcha_version') ?: 'v2';
+
+            if (!empty($sitekey)) {
+                $mform->addElement('header', 'recaptchaheader', get_string('verification', 'local_jobboard'));
+                $mform->setExpanded('recaptchaheader', true);
+
+                if ($version === 'v3') {
+                    // reCAPTCHA v3 - invisible, handled via JavaScript.
+                    $mform->addElement('hidden', 'recaptcha_response', '');
+                    $mform->setType('recaptcha_response', PARAM_TEXT);
+                    $mform->addElement('html',
+                        '<script src="https://www.google.com/recaptcha/api.js?render=' . s($sitekey) . '"></script>');
+                } else {
+                    // reCAPTCHA v2 - visible checkbox.
+                    $mform->addElement('html',
+                        '<div class="form-group row fitem">' .
+                        '<div class="col-md-3"></div>' .
+                        '<div class="col-md-9">' .
+                        '<div class="g-recaptcha" data-sitekey="' . s($sitekey) . '"></div>' .
+                        '<script src="https://www.google.com/recaptcha/api.js" async defer></script>' .
+                        '</div></div>');
+                    $mform->addElement('hidden', 'recaptcha_version', 'v2');
+                    $mform->setType('recaptcha_version', PARAM_TEXT);
+                }
+            }
         }
 
         // Submit button.
@@ -494,11 +520,49 @@ class signup_form extends moodleform {
         }
 
         // reCAPTCHA validation.
-        if (!empty($CFG->recaptchapublickey) && !empty($CFG->recaptchaprivatekey)) {
-            $recaptchaelement = $this->_form->getElement('recaptcha_element');
-            if (!empty($recaptchaelement)) {
-                if (!$recaptchaelement->verify($data['g-recaptcha-response'] ?? '')) {
-                    $errors['recaptcha_element'] = get_string('incorrectpleasetryagain', 'auth');
+        $recaptchaenabled = get_config('local_jobboard', 'recaptcha_enabled');
+        if ($recaptchaenabled) {
+            $secretkey = get_config('local_jobboard', 'recaptcha_secretkey');
+            $version = get_config('local_jobboard', 'recaptcha_version') ?: 'v2';
+
+            if (!empty($secretkey)) {
+                $response = $version === 'v3'
+                    ? ($data['recaptcha_response'] ?? '')
+                    : ($_POST['g-recaptcha-response'] ?? '');
+
+                if (empty($response)) {
+                    $errors['recaptcha_response'] = get_string('recaptcha_required', 'local_jobboard');
+                } else {
+                    // Verify with Google.
+                    $verifyurl = 'https://www.google.com/recaptcha/api/siteverify';
+                    $verifydata = [
+                        'secret' => $secretkey,
+                        'response' => $response,
+                        'remoteip' => getremoteaddr(),
+                    ];
+
+                    $options = [
+                        'http' => [
+                            'method' => 'POST',
+                            'header' => 'Content-type: application/x-www-form-urlencoded',
+                            'content' => http_build_query($verifydata),
+                        ],
+                    ];
+                    $context = stream_context_create($options);
+                    $result = @file_get_contents($verifyurl, false, $context);
+
+                    if ($result) {
+                        $resultdata = json_decode($result);
+                        if (!$resultdata->success) {
+                            $errors['recaptcha_response'] = get_string('recaptcha_failed', 'local_jobboard');
+                        } else if ($version === 'v3') {
+                            // Check score for v3.
+                            $threshold = get_config('local_jobboard', 'recaptcha_v3_threshold') ?: 0.5;
+                            if (($resultdata->score ?? 0) < $threshold) {
+                                $errors['recaptcha_response'] = get_string('recaptcha_failed', 'local_jobboard');
+                            }
+                        }
+                    }
                 }
             }
         }

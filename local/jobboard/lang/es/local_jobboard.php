@@ -3035,3 +3035,42 @@ $string['multipledocs_notice'] = 'Múltiples certificados en un solo archivo';
 $string['multipledocs_titulo_academico'] = 'Si tiene varios títulos (pregrado, posgrado, especialización), combínelos todos en un solo archivo PDF.';
 $string['multipledocs_formacion_complementaria'] = 'Si tiene múltiples certificados de formación complementaria, combínelos todos en un solo archivo PDF.';
 $string['multipledocs_certificacion_laboral'] = 'Si tiene múltiples certificaciones laborales, combínelas todas en un solo archivo PDF ordenadas por fecha (más reciente primero).';
+
+// ============================================================================
+// Configuración de reCAPTCHA y Seguridad (v2.0.71)
+// ============================================================================
+$string['recaptchasettings'] = 'Configuración de reCAPTCHA';
+$string['recaptchasettings_desc'] = 'Configure reCAPTCHA para prevenir spam y abuso en los formularios de registro y actualización de perfil.';
+$string['recaptcha_enabled'] = 'Habilitar reCAPTCHA';
+$string['recaptcha_enabled_desc'] = 'Habilitar verificación reCAPTCHA en los formularios de registro y actualización de perfil.';
+$string['recaptcha_version'] = 'Versión de reCAPTCHA';
+$string['recaptcha_version_desc'] = 'Seleccione qué versión de reCAPTCHA usar.';
+$string['recaptcha_v2'] = 'reCAPTCHA v2 (Casilla de verificación)';
+$string['recaptcha_v3'] = 'reCAPTCHA v3 (Invisible)';
+$string['recaptcha_sitekey'] = 'Clave del sitio';
+$string['recaptcha_sitekey_desc'] = 'Ingrese la clave del sitio reCAPTCHA desde la consola de Google reCAPTCHA.';
+$string['recaptcha_secretkey'] = 'Clave secreta';
+$string['recaptcha_secretkey_desc'] = 'Ingrese la clave secreta reCAPTCHA desde la consola de Google reCAPTCHA.';
+$string['recaptcha_v3_threshold'] = 'Umbral de puntuación v3';
+$string['recaptcha_v3_threshold_desc'] = 'Puntuación mínima (0.0-1.0) requerida para aprobar la verificación. Por defecto: 0.5';
+$string['recaptcha_required'] = 'Por favor complete la verificación de seguridad.';
+$string['recaptcha_failed'] = 'La verificación de seguridad falló. Por favor intente de nuevo.';
+$string['verification'] = 'Verificación de Seguridad';
+
+// ============================================================================
+// Gestión de Credenciales de Cuenta (v2.0.71)
+// ============================================================================
+$string['username_differs_idnumber'] = 'Su nombre de usuario es diferente a su número de identificación. Puede actualizarlo para que coincida con su número de documento para un inicio de sesión más fácil.';
+$string['update_username'] = 'Actualizar nombre de usuario';
+$string['update_username_desc'] = 'Cambiar mi nombre de usuario para que coincida con mi número de identificación';
+$string['password_change_optional'] = 'Deje los campos de contraseña vacíos si no desea cambiar su contraseña. Complete todos los campos solo si desea establecer una nueva contraseña.';
+$string['currentpassword'] = 'Contraseña actual';
+$string['currentpassword_help'] = 'Ingrese su contraseña actual para verificar su identidad. Esto es requerido si desea cambiar su correo electrónico o contraseña.';
+$string['confirmpassword'] = 'Confirmar nueva contraseña';
+$string['currentpassword_required'] = 'La contraseña actual es requerida para cambiar el correo electrónico o la contraseña.';
+$string['currentpassword_invalid'] = 'La contraseña actual que ingresó es incorrecta.';
+$string['passwordsdiffer'] = 'Las contraseñas no coinciden.';
+$string['email_updated'] = 'Su correo electrónico ha sido actualizado.';
+$string['password_updated'] = 'Su contraseña ha sido actualizada.';
+$string['username_updated'] = 'Su nombre de usuario ha sido actualizado a: {$a}';
+$string['completeprofile_required'] = 'Por favor complete la información de su perfil antes de postularse a esta vacante.';

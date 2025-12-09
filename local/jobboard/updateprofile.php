@@ -157,6 +157,32 @@ if ($data = $mform->get_data()) {
         $updateuser->idnumber = trim($data->idnumber);
     }
 
+    // Update email if changed.
+    $newemail = trim($data->email ?? '');
+    if (!empty($newemail) && $newemail !== $user->email) {
+        $updateuser->email = $newemail;
+        // Log email change for audit.
+        \core\notification::info(get_string('email_updated', 'local_jobboard'));
+    }
+
+    // Update username if requested (when differs from idnumber).
+    if (!empty($data->update_username) && !empty($user->idnumber)) {
+        $newusername = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $user->idnumber));
+        if ($newusername !== $user->username) {
+            // Check if new username is available.
+            if (!$DB->record_exists('user', ['username' => $newusername])) {
+                $updateuser->username = $newusername;
+                \core\notification::info(get_string('username_updated', 'local_jobboard', $newusername));
+            }
+        }
+    }
+
+    // Update password if provided.
+    if (!empty($data->newpassword)) {
+        $updateuser->password = hash_internal_user_password($data->newpassword);
+        \core\notification::info(get_string('password_updated', 'local_jobboard'));
+    }
+
     $DB->update_record('user', $updateuser);
 
     // Update or create extended profile.
