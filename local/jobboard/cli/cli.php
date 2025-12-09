@@ -1727,18 +1727,13 @@ function parse_section_profiles($section) {
 
 /**
  * Parse a single profile block - REWRITTEN for better extraction.
+ * Handles both pipe-delimited tabular format and free text.
  * @param string $code Profile code (e.g., FCAS-01).
  * @param string $block Raw text block for this profile.
  * @param array $source Source info (faculty, modality, location).
  * @return array|null Profile data or null if invalid.
  */
 function parse_profile_block($code, $block, $source) {
-    // Normalize whitespace but preserve some structure.
-    $normalized = preg_replace('/[ \t]+/', ' ', $block);
-    $normalized = preg_replace('/\n\s*\n+/', "\n", $normalized);
-    $normalized = trim($normalized);
-    $oneline = preg_replace('/\s+/', ' ', $normalized);
-
     $profile = [
         'code' => $code,
         'faculty' => $source['faculty'] ?: (strpos($code, 'FCAS') === 0 ? 'FCAS' : 'FII'),
@@ -1749,6 +1744,98 @@ function parse_profile_block($code, $block, $source) {
         'profile' => '',
         'courses' => [],
     ];
+
+    // =====================
+    // DETECT TABULAR FORMAT (pipe-delimited)
+    // =====================
+    // Format: CODE | CONTRACT TYPE | PROGRAM | PROFILE | COURSE1 | COURSE2 | ...
+    if (strpos($block, '|') !== false) {
+        // This is tabular format - parse by pipe delimiter.
+        $parts = array_map('trim', explode('|', $block));
+
+        // First part might be empty or contain the code - skip it.
+        if (empty($parts[0]) || preg_match('/^' . preg_quote($code, '/') . '$/i', $parts[0])) {
+            array_shift($parts);
+        }
+
+        // Extract contract type (first non-empty part).
+        foreach ($parts as $idx => $part) {
+            if (preg_match('/OCASIONAL\s+TIEMPO\s+COMPLETO/iu', $part)) {
+                $profile['contracttype'] = 'OCASIONAL TIEMPO COMPLETO';
+                unset($parts[$idx]);
+                break;
+            } else if (preg_match('/^C[ÁA]TEDRA$/iu', trim($part))) {
+                $profile['contracttype'] = 'CATEDRA';
+                unset($parts[$idx]);
+                break;
+            }
+        }
+        $parts = array_values($parts);
+
+        // Extract program (look for TECNOLOGÍA/TÉCNICA pattern).
+        foreach ($parts as $idx => $part) {
+            if (preg_match('/^(TECNOLOG[IÍ]A\s+EN|T[EÉ]CNICA\s+PROFESIONAL\s+EN|TODOS\s+LOS\s+PROGRAMAS)/iu', trim($part))) {
+                $profile['program'] = clean_program_name(trim($part));
+                unset($parts[$idx]);
+                break;
+            }
+        }
+        $parts = array_values($parts);
+
+        // Extract professional profile (first substantial text that looks like a profession).
+        foreach ($parts as $idx => $part) {
+            $part = trim($part);
+            if (strlen($part) > 15 && preg_match('/(?:PROFESIONAL|INGENIER|LICENCIAD|ADMINISTRAD|CONTADOR|ECONOMISTA|PSIC[OÓ]LOG|TRABAJADOR|TECN[OÓ]LOG|QU[IÍ]MICO|ARQUITECTO|MICROBIO|COMUNICADOR|ABOGAD|M[EÉ]DICO|ZOOTECNISTA|AGR[OÓ]NOMO)/iu', $part)) {
+                // This looks like a professional profile.
+                $profile['profile'] = clean_profile_text($part);
+                unset($parts[$idx]);
+                break;
+            }
+        }
+        $parts = array_values($parts);
+
+        // Remaining parts are courses.
+        $courses = [];
+        foreach ($parts as $part) {
+            $part = trim($part);
+            // Skip empty or header-like content.
+            if (empty($part)) continue;
+            if (preg_match('/^(?:POSIBLES|CURSOS?\s*PARA|ORIENTAR)/iu', $part)) continue;
+            // Clean "ORIENTAR LOS CURSOS DE:" prefix.
+            $part = preg_replace('/^ORIENTAR\s+(?:LOS?\s+)?CURSOS?\s*(?:DE)?\s*:?\s*/iu', '', $part);
+            $part = preg_replace('/^ORIENTAR\s+(?:EL\s+)?CURSO\s*(?:DE)?\s*:?\s*/iu', '', $part);
+            $part = trim($part);
+
+            if (is_valid_course($part)) {
+                // May contain multiple courses separated by - or ,
+                $subcourses = preg_split('/\s*[-–]\s*(?=[A-ZÁÉÍÓÚÑ])/u', $part);
+                foreach ($subcourses as $sc) {
+                    $sc = trim($sc);
+                    if (is_valid_course($sc)) {
+                        $courses[] = clean_course_name($sc);
+                    }
+                }
+            }
+        }
+        $profile['courses'] = array_values(array_unique($courses));
+
+        // Validate profile has meaningful data.
+        if (empty($profile['contracttype']) && empty($profile['program']) &&
+            empty($profile['profile']) && empty($profile['courses'])) {
+            return null;
+        }
+
+        return $profile;
+    }
+
+    // =====================
+    // FALLBACK: Free text format parsing
+    // =====================
+    // Normalize whitespace but preserve some structure.
+    $normalized = preg_replace('/[ \t]+/', ' ', $block);
+    $normalized = preg_replace('/\n\s*\n+/', "\n", $normalized);
+    $normalized = trim($normalized);
+    $oneline = preg_replace('/\s+/', ' ', $normalized);
 
     // =====================
     // 1. CONTRACT TYPE
@@ -1903,6 +1990,41 @@ function is_valid_course($c) {
     }
 
     return true;
+}
+
+/**
+ * Clean up a program name.
+ * @param string $p Program name.
+ * @return string Cleaned program name.
+ */
+function clean_program_name($p) {
+    $p = trim($p);
+    // Clean extra spaces.
+    $p = preg_replace('/\s+/', ' ', $p);
+    // Remove trailing punctuation.
+    $p = preg_replace('/[\.\,;:]+$/', '', $p);
+    // Standardize case for TECNOLOGÍA/TÉCNICA.
+    $p = preg_replace('/TECNOLOG[IÍ]A/iu', 'TECNOLOGÍA', $p);
+    $p = preg_replace('/T[EÉ]CNICA/iu', 'TÉCNICA', $p);
+    return trim($p);
+}
+
+/**
+ * Clean up professional profile text.
+ * @param string $p Profile text.
+ * @return string Cleaned profile text.
+ */
+function clean_profile_text($p) {
+    $p = trim($p);
+    // Clean extra spaces.
+    $p = preg_replace('/\s+/', ' ', $p);
+    // Remove trailing punctuation.
+    $p = preg_replace('/[\.\,;:]+$/', '', $p);
+    // Clean up common patterns.
+    $p = preg_replace('/\s*\/\s*/', ' / ', $p);
+    // Remove redundant "O AREAS AFINES" at the end if it appears multiple times.
+    $p = preg_replace('/(\s+O\s+[AÁ]REAS?\s+AFINES?)+$/iu', ' O ÁREAS AFINES', $p);
+    return trim($p);
 }
 
 /**
