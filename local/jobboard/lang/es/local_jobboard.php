@@ -2982,3 +2982,9 @@ $string['changesaved'] = 'Sus cambios han sido guardados.';
 $string['documentsaved'] = 'Documento guardado exitosamente.';
 $string['applicationsaved'] = 'Postulación guardada como borrador.';
 $string['reviewsaved'] = 'Revisión guardada exitosamente.';
+
+// ============================================================================
+// Mejoras de navegación UX (v2.0.64)
+// ============================================================================
+$string['backtovacancy'] = 'Volver a la vacante';
+$string['backtodashboard'] = 'Volver al Panel';

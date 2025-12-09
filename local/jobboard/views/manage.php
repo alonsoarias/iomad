@@ -635,6 +635,27 @@ $baseurl = new moodle_url('/local/jobboard/index.php', [
 ]);
 echo ui_helper::pagination_bar($total, $page, $perpage, $baseurl);
 
+// ============================================================================
+// NAVIGATION FOOTER - Back to Dashboard
+// ============================================================================
+echo html_writer::start_div('jb-navigation-footer d-flex justify-content-between align-items-center mt-4 py-3 border-top');
+
+// Back button (left side).
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php'),
+    '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtodashboard', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary']
+);
+
+// Manage convocatorias link (right side).
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
+    get_string('manageconvocatorias', 'local_jobboard') . ' <i class="fa fa-arrow-right ml-2"></i>',
+    ['class' => 'btn btn-link text-muted']
+);
+
+echo html_writer::end_div(); // .jb-navigation-footer
+
 echo html_writer::end_div(); // local-jobboard-manage
 
 echo $OUTPUT->footer();

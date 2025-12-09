@@ -2591,3 +2591,9 @@ $string['changesaved'] = 'Your changes have been saved.';
 $string['documentsaved'] = 'Document saved successfully.';
 $string['applicationsaved'] = 'Application saved as draft.';
 $string['reviewsaved'] = 'Review saved successfully.';
+
+// ============================================================================
+// Navigation UX improvements (v2.0.64)
+// ============================================================================
+$string['backtovacancy'] = 'Back to vacancy';
+$string['backtodashboard'] = 'Back to Dashboard';

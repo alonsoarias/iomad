@@ -309,6 +309,27 @@ if ($total > $perpage) {
     echo $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
 }
 
+// ============================================================================
+// NAVIGATION FOOTER - Back to Dashboard
+// ============================================================================
+echo html_writer::start_div('jb-navigation-footer d-flex justify-content-between align-items-center mt-4 py-3 border-top');
+
+// Back button (left side).
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php'),
+    '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtodashboard', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary']
+);
+
+// Browse vacancies link (right side).
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']),
+    get_string('browservacancies', 'local_jobboard') . ' <i class="fa fa-arrow-right ml-2"></i>',
+    ['class' => 'btn btn-link text-muted']
+);
+
+echo html_writer::end_div(); // .jb-navigation-footer
+
 echo html_writer::end_div(); // local-jobboard-browse-convocatorias
 
 echo $OUTPUT->footer();

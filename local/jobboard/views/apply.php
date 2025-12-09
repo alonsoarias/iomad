@@ -316,6 +316,32 @@ if (!empty($requireddocs)) {
 
 echo '</div>'; // .col-lg-4
 echo '</div>'; // .row
+
+// ============================================================================
+// NAVIGATION FOOTER - Back to vacancy
+// ============================================================================
+echo html_writer::start_div('row mt-4');
+echo html_writer::start_div('col-12');
+echo html_writer::start_div('jb-navigation-footer d-flex justify-content-between align-items-center py-3 border-top');
+
+// Back button (left side).
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]),
+    '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtovacancy', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary']
+);
+
+// Browse vacancies link (right side).
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']),
+    get_string('browservacancies', 'local_jobboard') . ' <i class="fa fa-arrow-right ml-2"></i>',
+    ['class' => 'btn btn-link text-muted']
+);
+
+echo html_writer::end_div(); // .jb-navigation-footer
+echo html_writer::end_div(); // .col-12
+echo html_writer::end_div(); // .row
+
 echo '</div>'; // .jb-apply-container
 
 // Initialize JavaScript for progress tracking via AMD module.
