@@ -351,15 +351,15 @@ class ui_helper {
                     // Build select manually to ensure proper visibility with all themes.
                     $selectId = 'filter_' . $filter['name'];
                     $html .= '<select name="' . s($filter['name']) . '" id="' . $selectId . '" ';
-                    $html .= 'class="form-control form-control-sm" ';
+                    $html .= 'class="form-control form-control-sm jb-filter-select" ';
                     $html .= 'style="color: #495057 !important; background-color: #fff !important; ';
                     $html .= 'appearance: menulist !important; -webkit-appearance: menulist !important; ';
-                    $html .= '-moz-appearance: menulist !important;">';
+                    $html .= '-moz-appearance: menulist !important; text-indent: 0.01px !important;">';
                     foreach ($filter['options'] as $optVal => $optLabel) {
                         $selected = ((string)$optVal === (string)$value) ? ' selected="selected"' : '';
                         // Use value as label if label is empty.
                         $displayLabel = ($optLabel !== '' && $optLabel !== null) ? $optLabel : $optVal;
-                        $html .= '<option value="' . s($optVal) . '"' . $selected . ' style="color: #495057 !important;">';
+                        $html .= '<option value="' . s($optVal) . '"' . $selected . ' style="color: #495057 !important; background-color: #fff !important;">';
                         $html .= s($displayLabel) . '</option>';
                     }
                     $html .= '</select>';

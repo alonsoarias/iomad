@@ -1704,59 +1704,86 @@
 
 /* Force visibility on all select dropdowns - override theme */
 .local-jobboard-public select,
-.local-jobboard-public select option {
+.local-jobboard-public select option,
+.local-jobboard-dashboard select,
+.local-jobboard-dashboard select option,
+.jb-filter-form select,
+.jb-filter-form select option {
     color: #212529 !important;
     background-color: #fff !important;
     -webkit-text-fill-color: #212529 !important;
     opacity: 1 !important;
 }
 
-.local-jobboard-public select option:checked {
+.local-jobboard-public select option:checked,
+.local-jobboard-dashboard select option:checked,
+.jb-filter-form select option:checked {
     background: linear-gradient(#e9ecef, #e9ecef) !important;
     background-color: #e9ecef !important;
     color: #212529 !important;
 }
 
 .local-jobboard-public .jb-filter-input:focus,
-.local-jobboard-public .jb-filter-select:focus {
+.local-jobboard-public .jb-filter-select:focus,
+.local-jobboard-dashboard .jb-filter-input:focus,
+.local-jobboard-dashboard .jb-filter-select:focus,
+.jb-filter-form .jb-filter-select:focus {
     border-color: var(--jb-primary);
     box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
     outline: none;
 }
 
 /* Override Firefox focusring that sets color: transparent */
-.local-jobboard-public .jb-filter-select:-moz-focusring {
+.local-jobboard-public .jb-filter-select:-moz-focusring,
+.local-jobboard-dashboard .jb-filter-select:-moz-focusring,
+.jb-filter-form .jb-filter-select:-moz-focusring,
+.jb-filter-form select:-moz-focusring {
     color: #212529 !important;
     text-shadow: none !important;
 }
 
 /* Override IE/Edge select value styling */
-.local-jobboard-public .jb-filter-select::-ms-value {
+.local-jobboard-public .jb-filter-select::-ms-value,
+.local-jobboard-dashboard .jb-filter-select::-ms-value,
+.jb-filter-form .jb-filter-select::-ms-value,
+.jb-filter-form select::-ms-value {
     color: #212529 !important;
     background-color: #fff !important;
 }
 
 /* Override any webkit text fill issues */
 .local-jobboard-public .jb-filter-select,
-.local-jobboard-public .jb-filter-select option {
+.local-jobboard-public .jb-filter-select option,
+.local-jobboard-dashboard .jb-filter-select,
+.local-jobboard-dashboard .jb-filter-select option,
+.jb-filter-form .jb-filter-select,
+.jb-filter-form .jb-filter-select option,
+.jb-filter-form select,
+.jb-filter-form select option {
     -webkit-text-fill-color: #212529 !important;
     color: #212529 !important;
 }
 
 /* Ensure the select element itself has proper colors */
-.jb-filter-select {
+.jb-filter-select,
+.jb-filter-form select {
+    color: #212529 !important;
+    background-color: #fff !important;
+    -webkit-text-fill-color: #212529 !important;
+    appearance: menulist !important;
+    -webkit-appearance: menulist !important;
+    -moz-appearance: menulist !important;
+}
+
+.jb-filter-select option,
+.jb-filter-form select option {
     color: #212529 !important;
     background-color: #fff !important;
     -webkit-text-fill-color: #212529 !important;
 }
 
-.jb-filter-select option {
-    color: #212529 !important;
-    background-color: #fff !important;
-    -webkit-text-fill-color: #212529 !important;
-}
-
-.jb-filter-select:-moz-focusring {
+.jb-filter-select:-moz-focusring,
+.jb-filter-form select:-moz-focusring {
     color: #212529 !important;
     text-shadow: none !important;
 }
