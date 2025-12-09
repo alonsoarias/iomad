@@ -57,11 +57,8 @@ class vacancy_test extends \advanced_testcase {
             'description' => 'Test description',
             'contracttype' => 'catedra',
             'duration' => '6 months',
-            'salary' => '$1000',
             'location' => 'Bogotá',
             'department' => 'Engineering',
-            'opendate' => time(),
-            'closedate' => time() + (30 * 24 * 60 * 60), // 30 days from now.
             'positions' => 2,
             'requirements' => 'Bachelor degree required',
             'desirable' => 'Master degree preferred',

@@ -422,12 +422,10 @@ if ($mform->is_cancelled()) {
             $record->requirements = $reqhtml;
             $record->contracttype = $contracttype;
             $record->duration = $isocasional ? 'Período académico (semestral)' : 'Por horas según programación académica';
-            $record->salary = $isocasional ? 'Según escala salarial institucional' : 'Valor hora cátedra según escalafón';
             $record->location = $locationinfo['name'];
             $record->department = $program ?: $facultyname;
             $record->convocatoriaid = $data->convocatoriaid;
-            $record->opendate = $convocatoria->startdate;
-            $record->closedate = $convocatoria->enddate;
+            // Note: opendate and closedate are inherited from convocatoria.
             $record->positions = 1;
             $record->status = $data->status;
             $record->publicationtype = $convocatoria->publicationtype ?? 'internal';

@@ -2941,3 +2941,61 @@ $string['submit'] = 'Submit Application';
 $string['step'] = 'Step';
 $string['of'] = 'of';
 $string['completerequiredfields'] = 'Please complete all required fields before continuing.';
+
+// ============================================================================
+// Document Types CRUD (Phase 10F)
+// ============================================================================
+$string['adddoctype'] = 'Add Document Type';
+$string['editdoctype'] = 'Edit Document Type';
+$string['confirmdeletedoctype'] = 'Confirm Delete Document Type';
+$string['confirmdeletedoctype_msg'] = 'Are you sure you want to delete the document type "{$a}"? This action cannot be undone.';
+$string['error:doctypeinuse'] = 'Cannot delete: this document type is used by {$a} document(s).';
+$string['error:codealreadyexists'] = 'A document type with this code already exists.';
+$string['error:invalidcode'] = 'Invalid code format. Use only letters, numbers, and underscores, starting with a letter.';
+$string['error:invalidage'] = 'Age must be between 18 and 100 years.';
+$string['error:invalidurl'] = 'Please enter a valid URL.';
+$string['basicinfo'] = 'Basic Information';
+$string['sortorder'] = 'Sort Order';
+$string['externalurl'] = 'External URL';
+$string['externalurl_help'] = 'URL where applicants can obtain this document (e.g., government website).';
+$string['validationrequirements'] = 'Validation Requirements';
+$string['defaultmaxagedays'] = 'Maximum Document Age (days)';
+$string['defaultmaxagedays_help'] = 'Maximum number of days since the document issue date. Leave empty for no limit.';
+$string['exemptions'] = 'Exemptions & Conditions';
+$string['iserexempted'] = 'ISER Staff Exempt';
+$string['iserexempted_help'] = 'Historic ISER staff are exempt from providing this document.';
+$string['gendercondition'] = 'Gender Condition';
+$string['gendercondition_help'] = 'Restrict this document requirement to a specific gender.';
+$string['allapplicants'] = 'All Applicants';
+$string['menonly'] = 'Men Only';
+$string['womenonly'] = 'Women Only';
+$string['ageexemptionthreshold'] = 'Age Exemption Threshold';
+$string['ageexemptionthreshold_help'] = 'Applicants at or above this age are exempt from this document. Example: 50 for military service card.';
+$string['professionexempt'] = 'Education Levels Exempt';
+$string['professionexempt_help'] = 'Education levels that are exempt from this document requirement.';
+$string['conditionalnote'] = 'Conditional Note';
+$string['conditionalnote_help'] = 'Explanatory note shown when this document is conditional (e.g., "Only required if you have a professional title").';
+$string['configuration'] = 'Configuration';
+$string['checklistitems'] = 'Validation Checklist Items';
+$string['checklistitems_help'] = 'Enter checklist items for reviewers, one per line. These items will be shown when validating documents of this type.';
+$string['doctype_isrequired_help'] = 'This document is required for all standard applications.';
+$string['hasnote'] = 'Has Note';
+$string['doctypeshelp'] = 'Document types define what documents applicants need to upload. Configure requirements, exemptions, and validation rules here.';
+
+// Document categories.
+$string['doccategory_identity'] = 'Identity';
+$string['doccategory_academic'] = 'Academic';
+$string['doccategory_professional'] = 'Professional';
+$string['doccategory_background'] = 'Background Checks';
+$string['doccategory_financial'] = 'Financial';
+$string['doccategory_health'] = 'Health';
+
+// ============================================================================
+// Public Convocatoria View (Phase 10K)
+// ============================================================================
+$string['loginrequired'] = 'Login Required';
+$string['loginrequired_desc'] = 'To apply for positions in this call, you need to create an account or log in with your existing credentials.';
+$string['error:convocatorianotfound'] = 'The requested call for applications was not found.';
+$string['error:convocatoriaclosed'] = 'This call for applications is no longer accepting submissions.';
+$string['nopublicvacancies'] = 'No public vacancies available in this call at the moment.';
+$string['viewdetails'] = 'View Details';

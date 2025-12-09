@@ -241,14 +241,6 @@ if (!empty($vacancy->duration)) {
     echo html_writer::end_tag('li');
 }
 
-// Salary.
-if (!empty($vacancy->salary)) {
-    echo html_writer::start_tag('li', ['class' => 'list-group-item d-flex justify-content-between align-items-center']);
-    echo html_writer::tag('span', '<i class="fa fa-money-bill-wave text-muted mr-2"></i>' . get_string('salary', 'local_jobboard'));
-    echo html_writer::tag('strong', s($vacancy->salary));
-    echo html_writer::end_tag('li');
-}
-
 // Location.
 if (!empty($vacancy->location)) {
     echo html_writer::start_tag('li', ['class' => 'list-group-item d-flex justify-content-between align-items-center']);

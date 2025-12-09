@@ -863,17 +863,16 @@ function local_jobboard_render_public_vacancy_detail($vacancy, $context, $islogg
         echo html_writer::tag('dd', s($vacancy->duration), ['class' => 'col-sm-7']);
     }
 
-    if (!empty($vacancy->salary)) {
-        echo html_writer::tag('dt', get_string('salary', 'local_jobboard'), ['class' => 'col-sm-5']);
-        echo html_writer::tag('dd', s($vacancy->salary), ['class' => 'col-sm-7']);
-    }
+    // Dates from convocatoria.
+    $opendate = $vacancy->get_open_date();
+    $closedate = $vacancy->get_close_date();
 
     echo html_writer::tag('dt', get_string('opendate', 'local_jobboard'), ['class' => 'col-sm-5']);
-    echo html_writer::tag('dd', userdate($vacancy->opendate, get_string('strftimedate', 'langconfig')), ['class' => 'col-sm-7']);
+    echo html_writer::tag('dd', userdate($opendate, get_string('strftimedate', 'langconfig')), ['class' => 'col-sm-7']);
 
     echo html_writer::tag('dt', get_string('closedate', 'local_jobboard'), ['class' => 'col-sm-5']);
     $closeDateClass = $isurgent ? 'col-sm-7 text-danger font-weight-bold' : 'col-sm-7';
-    echo html_writer::tag('dd', userdate($vacancy->closedate, get_string('strftimedate', 'langconfig')), ['class' => $closeDateClass]);
+    echo html_writer::tag('dd', userdate($closedate, get_string('strftimedate', 'langconfig')), ['class' => $closeDateClass]);
 
     echo html_writer::end_tag('dl');
 

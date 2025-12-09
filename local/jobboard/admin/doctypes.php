@@ -17,6 +17,8 @@
 /**
  * Document types management page for local_jobboard.
  *
+ * Provides full CRUD interface for managing document types.
+ *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -24,6 +26,8 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
+
+use local_jobboard\forms\doctype_form;
 
 admin_externalpage_setup('local_jobboard_doctypes');
 
@@ -33,7 +37,7 @@ $id = optional_param('id', 0, PARAM_INT);
 $context = context_system::instance();
 $pageurl = new moodle_url('/local/jobboard/admin/doctypes.php');
 
-// Handle actions.
+// Handle toggle action.
 if ($action === 'toggle' && $id && confirm_sesskey()) {
     $doctype = $DB->get_record('local_jobboard_doctype', ['id' => $id], '*', MUST_EXIST);
     $doctype->enabled = $doctype->enabled ? 0 : 1;
@@ -42,12 +46,181 @@ if ($action === 'toggle' && $id && confirm_sesskey()) {
     redirect($pageurl, get_string('changessaved'), null, \core\output\notification::NOTIFY_SUCCESS);
 }
 
-// Get all document types.
+// Handle delete action.
+if ($action === 'delete' && $id && confirm_sesskey()) {
+    $doctype = $DB->get_record('local_jobboard_doctype', ['id' => $id], '*', MUST_EXIST);
+
+    // Check if doctype is in use.
+    $inuse = $DB->count_records('local_jobboard_document', ['documenttype' => $doctype->code]);
+    if ($inuse > 0) {
+        redirect($pageurl, get_string('error:doctypeinuse', 'local_jobboard', $inuse),
+            null, \core\output\notification::NOTIFY_ERROR);
+    }
+
+    $DB->delete_records('local_jobboard_doctype', ['id' => $id]);
+    redirect($pageurl, get_string('doctypedeleted', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+}
+
+// Handle move up/down actions.
+if (($action === 'moveup' || $action === 'movedown') && $id && confirm_sesskey()) {
+    $doctype = $DB->get_record('local_jobboard_doctype', ['id' => $id], '*', MUST_EXIST);
+    $currentorder = (int) $doctype->sortorder;
+
+    if ($action === 'moveup') {
+        // Find the item above.
+        $swap = $DB->get_record_sql(
+            'SELECT * FROM {local_jobboard_doctype} WHERE sortorder < ? ORDER BY sortorder DESC LIMIT 1',
+            [$currentorder]
+        );
+    } else {
+        // Find the item below.
+        $swap = $DB->get_record_sql(
+            'SELECT * FROM {local_jobboard_doctype} WHERE sortorder > ? ORDER BY sortorder ASC LIMIT 1',
+            [$currentorder]
+        );
+    }
+
+    if ($swap) {
+        // Swap the sort orders.
+        $DB->set_field('local_jobboard_doctype', 'sortorder', $swap->sortorder, ['id' => $doctype->id]);
+        $DB->set_field('local_jobboard_doctype', 'sortorder', $currentorder, ['id' => $swap->id]);
+    }
+
+    redirect($pageurl);
+}
+
+// Handle add/edit actions.
+if ($action === 'add' || ($action === 'edit' && $id)) {
+    $doctype = null;
+    if ($action === 'edit') {
+        $doctype = $DB->get_record('local_jobboard_doctype', ['id' => $id], '*', MUST_EXIST);
+    }
+
+    $customdata = ['doctype' => $doctype];
+    $mform = new doctype_form($pageurl, $customdata);
+
+    if ($mform->is_cancelled()) {
+        redirect($pageurl);
+    }
+
+    if ($data = $mform->get_data()) {
+        $now = time();
+
+        if ($doctype) {
+            // Update existing.
+            $record = new stdClass();
+            $record->id = $doctype->id;
+            $record->name = $data->name;
+            $record->description = $data->description ?? '';
+            $record->category = $data->category ?? '';
+            $record->isrequired = $data->isrequired ?? 0;
+            $record->externalurl = $data->externalurl ?? '';
+            $record->requirements = $data->requirements ?? '';
+            $record->defaultmaxagedays = $data->defaultmaxagedays ?? null;
+            $record->iserexempted = $data->iserexempted ?? 0;
+            $record->gender_condition = $data->gender_condition ?? null;
+            $record->age_exemption_threshold = $data->age_exemption_threshold ?: null;
+            $record->profession_exempt = $data->profession_exempt ?? null;
+            $record->conditional_note = $data->conditional_note ?? '';
+            $record->checklistitems = $data->checklistitems ?? '';
+            $record->sortorder = $data->sortorder ?? 0;
+            $record->enabled = $data->enabled ?? 1;
+            $record->timemodified = $now;
+
+            $DB->update_record('local_jobboard_doctype', $record);
+            redirect($pageurl, get_string('doctypeupdated', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+        } else {
+            // Create new.
+            $record = new stdClass();
+            $record->code = $data->code;
+            $record->name = $data->name;
+            $record->description = $data->description ?? '';
+            $record->category = $data->category ?? '';
+            $record->isrequired = $data->isrequired ?? 0;
+            $record->externalurl = $data->externalurl ?? '';
+            $record->requirements = $data->requirements ?? '';
+            $record->defaultmaxagedays = $data->defaultmaxagedays ?? null;
+            $record->iserexempted = $data->iserexempted ?? 0;
+            $record->gender_condition = $data->gender_condition ?? null;
+            $record->age_exemption_threshold = $data->age_exemption_threshold ?: null;
+            $record->profession_exempt = $data->profession_exempt ?? null;
+            $record->conditional_note = $data->conditional_note ?? '';
+            $record->checklistitems = $data->checklistitems ?? '';
+            $record->sortorder = $data->sortorder ?? 0;
+            $record->enabled = $data->enabled ?? 1;
+            $record->timecreated = $now;
+            $record->timemodified = $now;
+
+            $DB->insert_record('local_jobboard_doctype', $record);
+            redirect($pageurl, get_string('doctypecreated', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+        }
+    }
+
+    // Display the form.
+    $title = $doctype ? get_string('editdoctype', 'local_jobboard') : get_string('adddoctype', 'local_jobboard');
+    $PAGE->set_title($title);
+
+    echo $OUTPUT->header();
+
+    // Back button.
+    echo html_writer::start_div('mb-4');
+    echo html_writer::link($pageurl, '<i class="fa fa-arrow-left mr-2"></i>' . get_string('back'),
+        ['class' => 'btn btn-outline-secondary']);
+    echo html_writer::end_div();
+
+    echo $OUTPUT->heading($title);
+
+    $mform->display();
+
+    echo $OUTPUT->footer();
+    exit;
+}
+
+// Handle confirm delete action.
+if ($action === 'confirmdelete' && $id) {
+    $doctype = $DB->get_record('local_jobboard_doctype', ['id' => $id], '*', MUST_EXIST);
+
+    echo $OUTPUT->header();
+    echo $OUTPUT->heading(get_string('confirmdeletedoctype', 'local_jobboard'));
+
+    // Check usage.
+    $inuse = $DB->count_records('local_jobboard_document', ['documenttype' => $doctype->code]);
+
+    if ($inuse > 0) {
+        echo $OUTPUT->notification(get_string('error:doctypeinuse', 'local_jobboard', $inuse), 'warning');
+        echo html_writer::link($pageurl, get_string('back'), ['class' => 'btn btn-primary']);
+    } else {
+        $name = get_string_manager()->string_exists('doctype_' . $doctype->code, 'local_jobboard')
+            ? get_string('doctype_' . $doctype->code, 'local_jobboard')
+            : $doctype->name;
+
+        echo html_writer::tag('p', get_string('confirmdeletedoctype_msg', 'local_jobboard', $name));
+
+        $deleteurl = new moodle_url($pageurl, ['action' => 'delete', 'id' => $id, 'sesskey' => sesskey()]);
+        echo html_writer::start_div('mt-3');
+        echo html_writer::link($deleteurl, get_string('delete'), ['class' => 'btn btn-danger mr-2']);
+        echo html_writer::link($pageurl, get_string('cancel'), ['class' => 'btn btn-secondary']);
+        echo html_writer::end_div();
+    }
+
+    echo $OUTPUT->footer();
+    exit;
+}
+
+// Default: List all document types.
 $doctypes = $DB->get_records('local_jobboard_doctype', null, 'sortorder ASC, code ASC');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('managedoctypes', 'local_jobboard'));
 
+// Add button.
+$addurl = new moodle_url($pageurl, ['action' => 'add']);
+echo html_writer::start_div('mb-4');
+echo html_writer::link($addurl, '<i class="fa fa-plus mr-2"></i>' . get_string('adddoctype', 'local_jobboard'),
+    ['class' => 'btn btn-primary']);
+echo html_writer::end_div();
+
+// Help text.
 echo '<div class="alert alert-info">' . get_string('doctypeshelp', 'local_jobboard') . '</div>';
 
 if (empty($doctypes)) {
@@ -55,6 +228,7 @@ if (empty($doctypes)) {
 } else {
     $table = new html_table();
     $table->head = [
+        get_string('sortorder', 'local_jobboard'),
         get_string('code', 'local_jobboard'),
         get_string('name'),
         get_string('category', 'local_jobboard'),
@@ -63,13 +237,20 @@ if (empty($doctypes)) {
         get_string('status'),
         get_string('actions'),
     ];
-    $table->attributes['class'] = 'generaltable';
+    $table->attributes['class'] = 'generaltable table-striped';
+
+    $totalcount = count($doctypes);
+    $index = 0;
 
     foreach ($doctypes as $dt) {
+        $index++;
+
+        // Status badge.
         $statusbadge = $dt->enabled
             ? '<span class="badge badge-success">' . get_string('enabled', 'local_jobboard') . '</span>'
             : '<span class="badge badge-secondary">' . get_string('disabled', 'local_jobboard') . '</span>';
 
+        // Required badge.
         $isrequired = $dt->isrequired ?? 0;
         $requiredbadge = $isrequired
             ? '<span class="badge badge-primary">' . get_string('yes') . '</span>'
@@ -119,31 +300,71 @@ if (empty($doctypes)) {
         // Conditional note.
         if (!empty($dt->conditional_note)) {
             $conditions[] = '<span class="badge badge-light border" title="' . s($dt->conditional_note) . '">' .
-                '<i class="fa fa-info-circle"></i> ' . get_string('conditional_document_note', 'local_jobboard', '') . '</span>';
+                '<i class="fa fa-info-circle"></i> ' . get_string('hasnote', 'local_jobboard') . '</span>';
         }
 
         $conditionshtml = !empty($conditions) ? implode('<br>', $conditions) : '-';
 
-        $toggleurl = new moodle_url($pageurl, ['action' => 'toggle', 'id' => $dt->id, 'sesskey' => sesskey()]);
-        $togglelabel = $dt->enabled ? get_string('disable') : get_string('enable');
-        $actions = html_writer::link($toggleurl, $togglelabel, ['class' => 'btn btn-sm btn-outline-secondary']);
+        // Build actions.
+        $actions = [];
 
+        // Move up/down.
+        if ($index > 1) {
+            $moveupurl = new moodle_url($pageurl, ['action' => 'moveup', 'id' => $dt->id, 'sesskey' => sesskey()]);
+            $actions[] = html_writer::link($moveupurl, '<i class="fa fa-arrow-up"></i>',
+                ['class' => 'btn btn-sm btn-outline-secondary', 'title' => get_string('moveup')]);
+        } else {
+            $actions[] = '<span class="btn btn-sm btn-outline-secondary disabled"><i class="fa fa-arrow-up"></i></span>';
+        }
+
+        if ($index < $totalcount) {
+            $movedownurl = new moodle_url($pageurl, ['action' => 'movedown', 'id' => $dt->id, 'sesskey' => sesskey()]);
+            $actions[] = html_writer::link($movedownurl, '<i class="fa fa-arrow-down"></i>',
+                ['class' => 'btn btn-sm btn-outline-secondary', 'title' => get_string('movedown')]);
+        } else {
+            $actions[] = '<span class="btn btn-sm btn-outline-secondary disabled"><i class="fa fa-arrow-down"></i></span>';
+        }
+
+        // Edit.
+        $editurl = new moodle_url($pageurl, ['action' => 'edit', 'id' => $dt->id]);
+        $actions[] = html_writer::link($editurl, '<i class="fa fa-edit"></i>',
+            ['class' => 'btn btn-sm btn-outline-primary', 'title' => get_string('edit')]);
+
+        // Toggle enable/disable.
+        $toggleurl = new moodle_url($pageurl, ['action' => 'toggle', 'id' => $dt->id, 'sesskey' => sesskey()]);
+        $toggleicon = $dt->enabled ? 'fa-eye-slash' : 'fa-eye';
+        $toggletitle = $dt->enabled ? get_string('disable') : get_string('enable');
+        $actions[] = html_writer::link($toggleurl, '<i class="fa ' . $toggleicon . '"></i>',
+            ['class' => 'btn btn-sm btn-outline-secondary', 'title' => $toggletitle]);
+
+        // Delete.
+        $deleteurl = new moodle_url($pageurl, ['action' => 'confirmdelete', 'id' => $dt->id]);
+        $actions[] = html_writer::link($deleteurl, '<i class="fa fa-trash"></i>',
+            ['class' => 'btn btn-sm btn-outline-danger', 'title' => get_string('delete')]);
+
+        $actionshtml = html_writer::start_div('btn-group btn-group-sm', ['role' => 'group']);
+        $actionshtml .= implode('', $actions);
+        $actionshtml .= html_writer::end_div();
+
+        // Name with translation.
         $name = get_string_manager()->string_exists('doctype_' . $dt->code, 'local_jobboard')
             ? get_string('doctype_' . $dt->code, 'local_jobboard')
-            : $dt->code;
+            : $dt->name;
 
+        // Category with translation.
         $category = !empty($dt->category) && get_string_manager()->string_exists('doccategory_' . $dt->category, 'local_jobboard')
             ? get_string('doccategory_' . $dt->category, 'local_jobboard')
             : ($dt->category ?? '-');
 
         $table->data[] = [
-            format_string($dt->code),
+            $dt->sortorder,
+            html_writer::tag('code', format_string($dt->code)),
             $name,
             $category,
             $requiredbadge,
             $conditionshtml,
             $statusbadge,
-            $actions,
+            $actionshtml,
         ];
     }
 

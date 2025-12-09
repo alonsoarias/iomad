@@ -144,7 +144,6 @@ class vacancies extends base {
         if ($detailed) {
             $data['description'] = $vacancy->description;
             $data['duration'] = $vacancy->duration;
-            $data['salary'] = $vacancy->salary;
             $data['requirements'] = $vacancy->requirements;
             $data['desirable'] = $vacancy->desirable;
             $data['created_at'] = date('Y-m-d\TH:i:sP', $vacancy->timecreated);

@@ -106,6 +106,48 @@ class vacancy {
     public const PUBLICATION_TYPES = ['public', 'internal'];
 
     /**
+     * Magic getter for backward compatibility with removed fields.
+     *
+     * Provides access to opendate and closedate properties (now derived from convocatoria).
+     *
+     * @param string $name The property name.
+     * @return mixed The property value or null.
+     */
+    public function __get(string $name) {
+        switch ($name) {
+            case 'opendate':
+                return $this->get_open_date();
+            case 'closedate':
+                return $this->get_close_date();
+            case 'salary':
+                // Salary field has been removed - return empty string for compatibility.
+                return '';
+            case 'isextemporaneous':
+                // Extemporaneous field has been removed - always return 0.
+                return 0;
+            case 'extemporaneousreason':
+                // Extemporaneous reason has been removed - return empty string.
+                return '';
+            default:
+                // Check if property exists in record (for any unmapped fields).
+                if ($this->record !== null && property_exists($this->record, $name)) {
+                    return $this->record->$name;
+                }
+                return null;
+        }
+    }
+
+    /**
+     * Magic isset check for backward compatibility with removed fields.
+     *
+     * @param string $name The property name.
+     * @return bool Whether the property is set.
+     */
+    public function __isset(string $name): bool {
+        return in_array($name, ['opendate', 'closedate', 'salary', 'isextemporaneous', 'extemporaneousreason']);
+    }
+
+    /**
      * Constructor.
      *
      * @param int|\stdClass|null $idorrecord Vacancy ID, database record, or null.

@@ -611,7 +611,6 @@ class renderer extends plugin_renderer_base {
             'contracttypelabel' => $contracttypelabel,
             'positions' => $vacancy->positions ?? 1,
             'duration' => $vacancy->duration ?? '',
-            'salary' => $vacancy->salary ?? '',
             'status' => $vacancy->status,
             'statuslabel' => get_string('status:' . $vacancy->status, 'local_jobboard'),
             'statuscolor' => $this->get_status_class($vacancy->status),

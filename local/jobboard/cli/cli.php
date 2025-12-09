@@ -377,28 +377,6 @@ $ISER_SEDES = [
     ],
 ];
 
-// Salary scales according to Decreto 598/2025 for Technical/Technological Institutions.
-// These are the official rates for public technical institutions like ISER.
-$SALARY_SCALES_2025 = [
-    // Full-time positions (monthly salary).
-    'fulltime' => [
-        'titular' => 5212876,      // Profesor Titular.
-        'asociado' => 4841007,     // Profesor Asociado.
-        'asistente' => 4499477,    // Profesor Asistente.
-        'auxiliar' => 3849684,     // Profesor Auxiliar.
-        'sin_titulo' => 2743366,   // Sin título universitario.
-    ],
-    // Hourly rates for cátedra (per class hour).
-    'catedra' => [
-        'A' => 45308, // Titular + Maestría/Doctorado.
-        'B' => 42030, // Asociado + Maestría/Doctorado.
-        'C' => 39004, // Asistente + Maestría/Doctorado.
-        'D' => 32032, // Auxiliar + Especialización.
-        'E' => 25371, // Título universitario/profesional.
-        'F' => 17129, // Sin título o experto.
-    ],
-];
-
 // Modalidades educativas según arquitectura IOMAD ISER.
 $ISER_MODALIDADES = [
     'PRESENCIAL' => ['name' => 'Presencial', 'shortname' => 'PRESENCIAL'],
@@ -1157,16 +1135,7 @@ foreach ($allprofiles as $code => $profile) {
         $deschtml .= "</ul>\n";
     }
 
-    // Contract type info with salary details from Decreto 598/2025.
-    // Determine academic level from profile (affects salary display).
-    $descHasDoctorado = preg_match('/DOCTOR|Ph\.?D/i', $proftext);
-    $descHasMaestria = preg_match('/MAESTR|MAGISTER|M\.?Sc/i', $proftext);
-    $descHasEspecializacion = preg_match('/ESPECIALIZ|ESPECIALISTA/i', $proftext);
-    $descHasPosgrado = preg_match('/POSGRADO/i', $proftext) || $descHasDoctorado || $descHasMaestria || $descHasEspecializacion;
-
-    // Helper for formatting salary in description.
-    $fmtSal = function($amt) { return '$' . number_format($amt, 0, ',', '.'); };
-
+    // Contract type information.
     $deschtml .= "<h4>Información de la Vinculación</h4>\n";
     $deschtml .= "<table class=\"table table-sm\">\n";
     $deschtml .= "<tr><th>Tipo de Vinculación</th><td>";
@@ -1175,60 +1144,12 @@ foreach ($allprofiles as $code => $profile) {
         $deschtml .= "<span class=\"badge badge-primary\">Ocasional Tiempo Completo</span>";
         $deschtml .= "</td></tr>\n";
         $deschtml .= "<tr><th>Duración</th><td>4 meses (período académico semestral) - Contrato laboral a término fijo</td></tr>\n";
-
-        // Calculate salary based on academic level.
-        if ($descHasDoctorado) {
-            $salMin = $fmtSal($SALARY_SCALES_2025['fulltime']['asociado']);
-            $salMax = $fmtSal($SALARY_SCALES_2025['fulltime']['titular']);
-            $categ = 'Profesor Asociado/Titular';
-        } else if ($descHasMaestria) {
-            $salMin = $fmtSal($SALARY_SCALES_2025['fulltime']['asistente']);
-            $salMax = $fmtSal($SALARY_SCALES_2025['fulltime']['asociado']);
-            $categ = 'Profesor Asistente/Asociado';
-        } else if ($descHasEspecializacion || $descHasPosgrado) {
-            $salMin = $fmtSal($SALARY_SCALES_2025['fulltime']['auxiliar']);
-            $salMax = $fmtSal($SALARY_SCALES_2025['fulltime']['asistente']);
-            $categ = 'Profesor Auxiliar/Asistente';
-        } else {
-            $salMin = $fmtSal($SALARY_SCALES_2025['fulltime']['auxiliar']);
-            $salMax = $salMin;
-            $categ = 'Profesor Auxiliar';
-        }
-
-        $deschtml .= "<tr><th>Categoría</th><td><strong>{$categ}</strong></td></tr>\n";
-        $deschtml .= "<tr><th>Remuneración</th><td><strong>{$salMin} - {$salMax} COP/mes</strong> ";
-        $deschtml .= "<small class=\"text-muted\">(Decreto 598/2025 - Instituciones Técnicas Profesionales)</small></td></tr>\n";
         $deschtml .= "<tr><th>Prestaciones</th><td>Seguridad social, prima de servicios, vacaciones (30 días/año)</td></tr>\n";
         $deschtml .= "<tr><th>Dedicación</th><td>Tiempo completo (40 horas semanales)</td></tr>\n";
-
     } else {
         $deschtml .= "<span class=\"badge badge-info\">Cátedra</span>";
         $deschtml .= "</td></tr>\n";
         $deschtml .= "<tr><th>Duración</th><td>Semestre académico (16 semanas) - Contrato de prestación de servicios</td></tr>\n";
-
-        // Calculate hourly rate based on academic level.
-        if ($descHasDoctorado) {
-            $hourly = $SALARY_SCALES_2025['catedra']['A'];
-            $lvl = 'Nivel A (Titular + Doctorado)';
-        } else if ($descHasMaestria) {
-            $hourly = $SALARY_SCALES_2025['catedra']['B'];
-            $lvl = 'Nivel B (Asociado + Maestría)';
-        } else if ($descHasEspecializacion || $descHasPosgrado) {
-            $hourly = $SALARY_SCALES_2025['catedra']['D'];
-            $lvl = 'Nivel D (Auxiliar + Especialización)';
-        } else {
-            $hourly = $SALARY_SCALES_2025['catedra']['E'];
-            $lvl = 'Nivel E (Título Universitario)';
-        }
-
-        $monthMin = $fmtSal($hourly * 12 * 4);
-        $monthMax = $fmtSal($hourly * 16 * 4);
-
-        $deschtml .= "<tr><th>Nivel Salarial</th><td><strong>{$lvl}</strong></td></tr>\n";
-        $deschtml .= "<tr><th>Valor Hora</th><td><strong>" . $fmtSal($hourly) . " COP/hora</strong> ";
-        $deschtml .= "<small class=\"text-muted\">(Decreto 598/2025)</small></td></tr>\n";
-        $deschtml .= "<tr><th>Estimado Mensual</th><td>{$monthMin} - {$monthMax} COP ";
-        $deschtml .= "<small class=\"text-muted\">(según carga 12-16 hrs/semana)</small></td></tr>\n";
         $deschtml .= "<tr><th>Dedicación</th><td>Por horas según programación académica</td></tr>\n";
     }
 
@@ -1237,90 +1158,18 @@ foreach ($allprofiles as $code => $profile) {
     $deschtml .= "<tr><th>Facultad</th><td>{$facultyName}</td></tr>\n";
     $deschtml .= "</table>\n";
 
-    // Legal reference.
-    $deschtml .= "<p class=\"small text-muted mt-2\"><i class=\"fa fa-info-circle\"></i> ";
-    $deschtml .= "Remuneración según Decreto 598 de 2025 para Instituciones Técnicas Profesionales del Orden Nacional. ";
-    $deschtml .= "Los valores corresponden a las asignaciones básicas mensuales vigentes desde el 1 de enero de 2025.</p>\n";
-
     $deschtml .= "</div>\n";
     $record->description = $deschtml;
 
     // Contract type and duration.
     $record->contracttype = $contracttype;
 
-    // Determine academic level from profile text (affects salary scale).
-    // Decreto 598/2025 establishes specific rates per academic level.
-    $hasDoctorado = preg_match('/DOCTOR|Ph\.?D/i', $proftext);
-    $hasMaestria = preg_match('/MAESTR|MAGISTER|M\.?Sc/i', $proftext);
-    $hasEspecializacion = preg_match('/ESPECIALIZ|ESPECIALISTA/i', $proftext);
-    $hasPosgrado = preg_match('/POSGRADO/i', $proftext) || $hasDoctorado || $hasMaestria || $hasEspecializacion;
-
-    // Format salary for display.
-    $formatSalary = function($amount) {
-        return '$' . number_format($amount, 0, ',', '.');
-    };
-
     if ($isOcasional) {
-        // Docente Ocasional Tiempo Completo - Decreto 598/2025.
-        // Salary based on academic category (Auxiliar, Asistente, Asociado, Titular).
+        // Docente Ocasional Tiempo Completo.
         $record->duration = '4 meses (período académico semestral) - Contrato laboral a término fijo';
-
-        if ($hasDoctorado) {
-            // Doctorado -> Profesor Titular o Asociado.
-            $salaryMin = $SALARY_SCALES_2025['fulltime']['asociado'];
-            $salaryMax = $SALARY_SCALES_2025['fulltime']['titular'];
-            $category = 'Profesor Asociado/Titular';
-        } else if ($hasMaestria) {
-            // Maestría -> Profesor Asistente o Asociado.
-            $salaryMin = $SALARY_SCALES_2025['fulltime']['asistente'];
-            $salaryMax = $SALARY_SCALES_2025['fulltime']['asociado'];
-            $category = 'Profesor Asistente/Asociado';
-        } else if ($hasEspecializacion || $hasPosgrado) {
-            // Especialización -> Profesor Auxiliar o Asistente.
-            $salaryMin = $SALARY_SCALES_2025['fulltime']['auxiliar'];
-            $salaryMax = $SALARY_SCALES_2025['fulltime']['asistente'];
-            $category = 'Profesor Auxiliar/Asistente';
-        } else {
-            // Solo pregrado -> Profesor Auxiliar.
-            $salaryMin = $SALARY_SCALES_2025['fulltime']['auxiliar'];
-            $salaryMax = $SALARY_SCALES_2025['fulltime']['auxiliar'];
-            $category = 'Profesor Auxiliar';
-        }
-
-        $record->salary = $formatSalary($salaryMin) . ' - ' . $formatSalary($salaryMax) . ' COP/mes (' . $category . '). ' .
-            'Según Decreto 598/2025 para Instituciones Técnicas Profesionales. ' .
-            'Incluye prestaciones sociales, seguridad social, prima de servicios y vacaciones (30 días/año).';
-
     } else {
-        // Docente de Cátedra - Decreto 598/2025.
-        // Hourly rate based on academic level (Niveles A-F).
+        // Docente de Cátedra.
         $record->duration = 'Semestre académico (16 semanas) - Contrato de prestación de servicios por horas';
-
-        if ($hasDoctorado) {
-            // Nivel A: Titular + Maestría/Doctorado.
-            $hourlyRate = $SALARY_SCALES_2025['catedra']['A'];
-            $level = 'Nivel A (Titular + Doctorado)';
-        } else if ($hasMaestria) {
-            // Nivel B o C: Asociado/Asistente + Maestría.
-            $hourlyRate = $SALARY_SCALES_2025['catedra']['B'];
-            $level = 'Nivel B (Asociado + Maestría)';
-        } else if ($hasEspecializacion || $hasPosgrado) {
-            // Nivel D: Auxiliar + Especialización.
-            $hourlyRate = $SALARY_SCALES_2025['catedra']['D'];
-            $level = 'Nivel D (Auxiliar + Especialización)';
-        } else {
-            // Nivel E: Título universitario.
-            $hourlyRate = $SALARY_SCALES_2025['catedra']['E'];
-            $level = 'Nivel E (Título Universitario)';
-        }
-
-        // Calculate monthly estimate (typical 12-16 hours/week x 4 weeks).
-        $monthlyMin = $hourlyRate * 12 * 4; // 12 hrs/week.
-        $monthlyMax = $hourlyRate * 16 * 4; // 16 hrs/week.
-
-        $record->salary = $formatSalary($hourlyRate) . ' COP/hora cátedra (' . $level . '). ' .
-            'Decreto 598/2025. Pago mensual estimado: ' . $formatSalary($monthlyMin) . ' - ' . $formatSalary($monthlyMax) . ' COP ' .
-            '(según carga horaria 12-16 hrs/semana). Incluye factor prestacional. No genera relación laboral.';
     }
 
     // Location (text field).
@@ -1404,18 +1253,12 @@ foreach ($allprofiles as $code => $profile) {
         $record->departmentid = !empty($options['department']) ? (int) $options['department'] : null;
     }
 
-    // Convocatoria and dates.
+    // Convocatoria (dates are inherited from convocatoria).
     $record->convocatoriaid = $convocatoriaid;
-    $record->opendate = $opendate;
-    $record->closedate = $closedate;
 
     // Number of positions - always 1 per vacancy (each profile = 1 position).
     // Multiple profiles don't mean multiple positions per vacancy.
     $record->positions = 1;
-
-    // Extemporaneous fields - explicitly set (not extemporaneous by default).
-    $record->isextemporaneous = 0;
-    $record->extemporaneousreason = null;
 
     // Status and publication type.
     $record->status = $options['status'];

@@ -13,17 +13,12 @@
         <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Full vacancy description"/>
         <FIELD NAME="contracttype" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Type of contract"/>
         <FIELD NAME="duration" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Contract duration"/>
-        <FIELD NAME="salary" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Salary information with Decreto 598/2025 details"/>
         <FIELD NAME="location" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Work location"/>
         <FIELD NAME="modality" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Educational modality: Presencial, A Distancia, Virtual, Híbrida"/>
         <FIELD NAME="department" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Department or unit"/>
         <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Iomad company/tenant ID"/>
         <FIELD NAME="departmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD department ID"/>
         <FIELD NAME="convocatoriaid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Parent convocatoria ID"/>
-        <FIELD NAME="isextemporaneous" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 if vacancy has dates different from convocatoria"/>
-        <FIELD NAME="extemporaneousreason" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Reason for extemporaneous dates"/>
-        <FIELD NAME="opendate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy opening date (timestamp)"/>
-        <FIELD NAME="closedate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy closing date (timestamp)"/>
         <FIELD NAME="positions" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Number of available positions"/>
         <FIELD NAME="requirements" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Minimum requirements"/>
         <FIELD NAME="desirable" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Desirable requirements"/>
@@ -46,8 +41,6 @@
         <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>
         <INDEX NAME="departmentid_idx" UNIQUE="false" FIELDS="departmentid"/>
         <INDEX NAME="convocatoriaid_idx" UNIQUE="false" FIELDS="convocatoriaid"/>
-        <INDEX NAME="opendate_idx" UNIQUE="false" FIELDS="opendate"/>
-        <INDEX NAME="closedate_idx" UNIQUE="false" FIELDS="closedate"/>
         <INDEX NAME="company_status_idx" UNIQUE="false" FIELDS="companyid, status"/>
         <INDEX NAME="publicationtype_idx" UNIQUE="false" FIELDS="publicationtype"/>
         <INDEX NAME="status_pubtype_idx" UNIQUE="false" FIELDS="status, publicationtype"/>
@@ -227,6 +220,8 @@
         <FIELD NAME="ipaddress" TYPE="char" LENGTH="45" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="useragent" TYPE="char" LENGTH="512" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="extradata" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Additional data (JSON)"/>
+        <FIELD NAME="previousvalue" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Previous value before change (JSON)"/>
+        <FIELD NAME="newvalue" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="New value after change (JSON)"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -356,7 +351,9 @@
         <FIELD NAME="isrequired" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Document required for standard applications"/>
         <FIELD NAME="iserexempted" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Exempted for ISER historic personnel"/>
         <FIELD NAME="gender_condition" TYPE="char" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Gender condition: M=men only, F=women only, null=all"/>
+        <FIELD NAME="age_exemption_threshold" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Age in years at which user is exempt from this document (e.g., 50 for libreta militar)"/>
         <FIELD NAME="profession_exempt" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON array of education types exempt from this requirement"/>
+        <FIELD NAME="conditional_note" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Conditional explanatory note shown in application form when document is optional"/>
         <FIELD NAME="category" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Document category for grouping"/>
         <FIELD NAME="defaultmaxagedays" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="sortorder" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -619,6 +616,8 @@
         <FIELD NAME="departmentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD department ID"/>
         <FIELD NAME="publicationtype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="internal" SEQUENCE="false" COMMENT="Publication type: public or internal"/>
         <FIELD NAME="terms" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Terms and conditions for this convocatoria"/>
+        <FIELD NAME="allow_multiple_applications" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="1 if users can apply to multiple vacancies in this convocatoria"/>
+        <FIELD NAME="max_applications_per_user" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Maximum applications per user in this convocatoria (0=unlimited)"/>
         <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

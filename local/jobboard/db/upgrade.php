@@ -1302,5 +1302,117 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121012, 'local', 'jobboard');
     }
 
+    // ===================================================================
+    // Phase 10: Optimization and Regulatory Adjustments (v2.1.0)
+    // ===================================================================
+
+    // Step 11: Add previousvalue/newvalue fields to audit table for robust auditing.
+    if ($oldversion < 2025121020) {
+        $table = new xmldb_table('local_jobboard_audit');
+
+        // Add previousvalue field.
+        $field = new xmldb_field('previousvalue', XMLDB_TYPE_TEXT, null, null, null, null, null, 'extradata');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add newvalue field.
+        $field = new xmldb_field('newvalue', XMLDB_TYPE_TEXT, null, null, null, null, null, 'previousvalue');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2025121020, 'local', 'jobboard');
+    }
+
+    // Step 12: Remove deprecated vacancy fields (salary, isextemporaneous, extemporaneousreason, opendate, closedate).
+    if ($oldversion < 2025121021) {
+        $table = new xmldb_table('local_jobboard_vacancy');
+
+        // Drop indexes first.
+        $index = new xmldb_index('opendate_idx', XMLDB_INDEX_NOTUNIQUE, ['opendate']);
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        $index = new xmldb_index('closedate_idx', XMLDB_INDEX_NOTUNIQUE, ['closedate']);
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        // Drop fields - salary.
+        $field = new xmldb_field('salary');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Drop fields - isextemporaneous.
+        $field = new xmldb_field('isextemporaneous');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Drop fields - extemporaneousreason.
+        $field = new xmldb_field('extemporaneousreason');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Drop fields - opendate.
+        $field = new xmldb_field('opendate');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Drop fields - closedate.
+        $field = new xmldb_field('closedate');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2025121021, 'local', 'jobboard');
+    }
+
+    // Step 13: Add age_exemption_threshold and conditional_note to doctype table.
+    if ($oldversion < 2025121022) {
+        $table = new xmldb_table('local_jobboard_doctype');
+
+        // Add age_exemption_threshold field.
+        $field = new xmldb_field('age_exemption_threshold', XMLDB_TYPE_INTEGER, '3', null, null, null, null, 'gender_condition');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add conditional_note field.
+        $field = new xmldb_field('conditional_note', XMLDB_TYPE_TEXT, null, null, null, null, null, 'profession_exempt');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Update libreta militar to have age exemption of 50.
+        $DB->execute("UPDATE {local_jobboard_doctype} SET age_exemption_threshold = 50 WHERE code = 'LIBRETA_MILITAR'");
+
+        upgrade_plugin_savepoint(true, 2025121022, 'local', 'jobboard');
+    }
+
+    // Step 14: Add application restriction fields to convocatoria table.
+    if ($oldversion < 2025121023) {
+        $table = new xmldb_table('local_jobboard_convocatoria');
+
+        // Add allow_multiple_applications field.
+        $field = new xmldb_field('allow_multiple_applications', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'terms');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add max_applications_per_user field.
+        $field = new xmldb_field('max_applications_per_user', XMLDB_TYPE_INTEGER, '3', null, XMLDB_NOTNULL, null, '1', 'allow_multiple_applications');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2025121023, 'local', 'jobboard');
+    }
+
     return true;
 }

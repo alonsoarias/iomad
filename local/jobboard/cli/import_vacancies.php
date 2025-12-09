@@ -436,12 +436,8 @@ foreach ($vacancies as $index => $vdata) {
     }
     $record->departmentid = $departmentid;
 
-    // Convocatoria.
+    // Convocatoria (dates are inherited from convocatoria).
     $record->convocatoriaid = !empty($options['convocatoria']) ? (int) $options['convocatoria'] : null;
-
-    // Dates.
-    $record->opendate = $opendate;
-    $record->closedate = $closedate;
 
     // Positions (default 1).
     $record->positions = (int) ($vdata['positions'] ?? 1);
