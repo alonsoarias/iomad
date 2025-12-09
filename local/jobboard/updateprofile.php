@@ -98,7 +98,11 @@ $defaultdata->city = $user->city;
 $defaultdata->country = $user->country;
 $defaultdata->institution = $user->institution;
 $defaultdata->department_region = $user->department;
-$defaultdata->description = $user->description;
+// Format description for editor element.
+$defaultdata->description = [
+    'text' => $user->description ?? '',
+    'format' => $user->descriptionformat ?? FORMAT_HTML,
+];
 $defaultdata->companyid = $usercompanyid;
 $defaultdata->departmentid = $userdepartmentid;
 
@@ -138,7 +142,13 @@ if ($data = $mform->get_data()) {
     $updateuser->country = $data->country ?? '';
     $updateuser->institution = trim($data->institution ?? '');
     $updateuser->department = trim($data->department_region ?? '');
-    $updateuser->description = trim($data->description ?? '');
+    // Handle editor data format (array with 'text' and 'format' keys).
+    if (is_array($data->description ?? null)) {
+        $updateuser->description = $data->description['text'] ?? '';
+        $updateuser->descriptionformat = $data->description['format'] ?? FORMAT_HTML;
+    } else {
+        $updateuser->description = trim($data->description ?? '');
+    }
     $updateuser->timemodified = time();
 
     // Update idnumber if empty.

@@ -14,20 +14,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Vacancy form AMD module for local_jobboard.
+ * Convocatoria form AMD module for local_jobboard.
  *
  * Handles dynamic loading of departments based on company selection.
  *
- * @module     local_jobboard/vacancy_form
+ * @module     local_jobboard/convocatoria_form
  * @copyright  2024 ISER
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 define(['jquery', 'local_jobboard/department_loader'], function($, DepartmentLoader) {
     'use strict';
 
     /**
-     * Initialize the vacancy form handlers.
+     * Initialize the convocatoria form handlers.
      *
      * @param {Object} options Configuration options.
      * @param {number} options.preselect Optional department ID to preselect.
@@ -35,10 +34,10 @@ define(['jquery', 'local_jobboard/department_loader'], function($, DepartmentLoa
     var init = function(options) {
         options = options || {};
 
-        // Initialize department loader with vacancy form selectors.
+        // Initialize department loader with convocatoria form selectors.
         DepartmentLoader.init({
-            companySelector: '#id_companyid',
-            departmentSelector: '#id_departmentid',
+            companySelector: '#id_companyid, select[name="companyid"]',
+            departmentSelector: '#id_departmentid, select[name="departmentid"]',
             preselect: options.preselect
         });
     };

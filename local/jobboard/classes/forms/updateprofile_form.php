@@ -222,10 +222,14 @@ class updateprofile_form extends moodleform {
         ];
         $mform->addElement('select', 'experience_years', get_string('signup_experience_years', 'local_jobboard'), $experienceoptions);
 
-        // Professional profile / brief description.
-        $mform->addElement('textarea', 'description', get_string('signup_professional_profile', 'local_jobboard'),
-            ['rows' => 4, 'cols' => 60, 'maxlength' => 1000]);
-        $mform->setType('description', PARAM_TEXT);
+        // Professional profile / brief description (rich text editor).
+        $mform->addElement('editor', 'description', get_string('signup_professional_profile', 'local_jobboard'), null, [
+            'maxfiles' => 0,
+            'noclean' => false,
+            'maxbytes' => 0,
+            'rows' => 6,
+        ]);
+        $mform->setType('description', PARAM_RAW);
         $mform->addHelpButton('description', 'signup_professional_profile', 'local_jobboard');
 
         // ==========================================
@@ -245,11 +249,14 @@ class updateprofile_form extends moodleform {
             ]);
             $mform->addRule('companyid', get_string('required'), 'required', null, 'client');
 
+            // Get current department ID for preselection.
+            $userdeptid = $this->_customdata['userdepartmentid'] ?? 0;
+
             // Department selector (will be populated via AJAX).
             $departmentoptions = [0 => get_string('selectdepartment', 'local_jobboard')];
             // If user already has a company, load its departments.
             if (!empty($usercompanyid)) {
-                $departments = local_jobboard_get_departments($usercompanyid);
+                $departments = \local_jobboard_get_departments($usercompanyid);
                 if (!empty($departments)) {
                     $departmentoptions = $departmentoptions + $departments;
                 }
@@ -258,6 +265,12 @@ class updateprofile_form extends moodleform {
                 $departmentoptions, [
                 'id' => 'id_departmentid_signup',
             ]);
+
+            // Add JavaScript to update departments when company changes.
+            global $PAGE;
+            $PAGE->requires->js_call_amd('local_jobboard/signup_form', 'init', [[
+                'preselect' => $userdeptid,
+            ]]);
         }
 
         // Submit button.

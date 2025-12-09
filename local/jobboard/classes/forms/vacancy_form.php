@@ -245,9 +245,17 @@ class vacancy_form extends \moodleform {
                 $mform->setType('departmentid', PARAM_INT);
                 $mform->addHelpButton('departmentid', 'iomad_department', 'local_jobboard');
 
+                // Get current department ID for preselection.
+                $currentdeptid = 0;
+                if ($isedit && !empty($vacancy->departmentid)) {
+                    $currentdeptid = (int) $vacancy->departmentid;
+                }
+
                 // Add JavaScript to update departments when company changes.
                 global $PAGE;
-                $PAGE->requires->js_call_amd('local_jobboard/vacancy_form', 'init', []);
+                $PAGE->requires->js_call_amd('local_jobboard/vacancy_form', 'init', [[
+                    'preselect' => $currentdeptid,
+                ]]);
             }
 
             // Publication type for IOMAD (public or internal).

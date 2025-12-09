@@ -188,10 +188,14 @@ class application_form extends moodleform {
         // Additional information section.
         $mform->addElement('header', 'additionalheader', get_string('additionalinfo', 'local_jobboard'));
 
-        // Cover letter / motivation.
-        $mform->addElement('textarea', 'coverletter', get_string('coverletter', 'local_jobboard'),
-            ['rows' => 8, 'cols' => 60]);
-        $mform->setType('coverletter', PARAM_TEXT);
+        // Cover letter / motivation (rich text editor).
+        $mform->addElement('editor', 'coverletter', get_string('coverletter', 'local_jobboard'), null, [
+            'maxfiles' => 0,
+            'noclean' => false,
+            'maxbytes' => 0,
+            'rows' => 8,
+        ]);
+        $mform->setType('coverletter', PARAM_RAW);
         $mform->addHelpButton('coverletter', 'coverletter', 'local_jobboard');
 
         // Declaration.

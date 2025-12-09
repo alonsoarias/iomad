@@ -99,6 +99,16 @@ if ($data = $mform->get_data()) {
     // Process the application.
     try {
         // Create application record.
+        // Handle editor format for coverletter (array with 'text' and 'format' keys).
+        $coverletter = null;
+        if (!empty($data->coverletter)) {
+            if (is_array($data->coverletter)) {
+                $coverletter = $data->coverletter['text'] ?? '';
+            } else {
+                $coverletter = $data->coverletter;
+            }
+        }
+
         $applicationdata = [
             'vacancyid' => $vacancyid,
             'userid' => $USER->id,
@@ -107,7 +117,7 @@ if ($data = $mform->get_data()) {
             'consentip' => getremoteaddr(),
             'digitalsignature' => $data->digitalsignature,
             'isexemption' => $isexemption ? 1 : 0,
-            'coverletter' => $data->coverletter ?? null,
+            'coverletter' => $coverletter,
         ];
 
         $application = application::create($applicationdata);

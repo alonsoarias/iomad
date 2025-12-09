@@ -20,139 +20,24 @@
  * @copyright  2024 ISER
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Ajax, Notification, Str) {
+define(['jquery', 'core/str', 'local_jobboard/department_loader'], function($, Str, DepartmentLoader) {
+    'use strict';
 
     /**
      * Initialize the signup form handlers.
+     *
+     * @param {Object} options Configuration options.
+     * @param {number} options.preselect Optional department ID to preselect.
      */
-    var init = function() {
-        // Use multiple selectors to find the company and department fields.
-        // Moodle forms may generate different IDs depending on form name.
-        var companySelect = $('select[name="companyid"]');
-        var departmentSelect = $('select[name="departmentid"]');
+    var init = function(options) {
+        options = options || {};
 
-        // Fallback to ID-based selectors if name-based didn't work.
-        if (!companySelect.length) {
-            companySelect = $('#id_companyid_signup, [id$="_companyid"]').first();
-        }
-        if (!departmentSelect.length) {
-            departmentSelect = $('#id_departmentid_signup, [id$="_departmentid"]').first();
-        }
-
-        // Exit if elements don't exist (not an IOMAD installation).
-        if (!companySelect.length || !departmentSelect.length) {
-            // eslint-disable-next-line no-console
-            console.log('JobBoard signup_form: Company or department selects not found');
-            return;
-        }
-
-        // eslint-disable-next-line no-console
-        console.log('JobBoard signup_form: Initialized with', companySelect.attr('id'), departmentSelect.attr('id'));
-
-        /**
-         * Load departments for the selected company.
-         *
-         * @param {number} companyId The selected company ID.
-         */
-        var loadDepartments = function(companyId) {
-            // Clear current options.
-            departmentSelect.empty();
-
-            if (!companyId || companyId === '0') {
-                // No company selected, add placeholder.
-                Str.get_string('selectdepartment', 'local_jobboard').done(function(str) {
-                    departmentSelect.append($('<option>', {
-                        value: 0,
-                        text: str
-                    }));
-                });
-                return;
-            }
-
-            // Show loading state.
-            departmentSelect.prop('disabled', true);
-            Str.get_string('loading', 'local_jobboard').done(function(str) {
-                departmentSelect.append($('<option>', {
-                    value: 0,
-                    text: str + '...'
-                }));
-            });
-
-            // Fetch departments via AJAX endpoint.
-            $.ajax({
-                url: M.cfg.wwwroot + '/local/jobboard/ajax/get_departments.php',
-                method: 'GET',
-                data: {
-                    companyid: parseInt(companyId, 10)
-                },
-                dataType: 'json'
-            }).done(function(response) {
-                departmentSelect.empty();
-                departmentSelect.prop('disabled', false);
-
-                // Add placeholder option.
-                Str.get_string('selectdepartment', 'local_jobboard').done(function(str) {
-                    departmentSelect.append($('<option>', {
-                        value: 0,
-                        text: str
-                    }));
-
-                    // Add department options.
-                    if (response.success && response.departments && response.departments.length > 0) {
-                        $.each(response.departments, function(index, dept) {
-                            departmentSelect.append($('<option>', {
-                                value: dept.id,
-                                text: dept.name
-                            }));
-                        });
-                    }
-                }).fail(function() {
-                    // Fallback if string not found.
-                    departmentSelect.append($('<option>', {
-                        value: 0,
-                        text: 'Select department...'
-                    }));
-
-                    if (response.success && response.departments && response.departments.length > 0) {
-                        $.each(response.departments, function(index, dept) {
-                            departmentSelect.append($('<option>', {
-                                value: dept.id,
-                                text: dept.name
-                            }));
-                        });
-                    }
-                });
-
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                departmentSelect.empty();
-                departmentSelect.prop('disabled', false);
-                Str.get_string('selectdepartment', 'local_jobboard').done(function(str) {
-                    departmentSelect.append($('<option>', {
-                        value: 0,
-                        text: str
-                    }));
-                }).fail(function() {
-                    departmentSelect.append($('<option>', {
-                        value: 0,
-                        text: 'Select department...'
-                    }));
-                });
-                // eslint-disable-next-line no-console
-                console.error('Error loading departments:', textStatus, errorThrown);
-            });
-        };
-
-        // Handle company change.
-        companySelect.on('change', function() {
-            var companyId = $(this).val();
-            loadDepartments(companyId);
+        // Initialize department loader with signup form context.
+        DepartmentLoader.init({
+            companySelector: '#id_companyid_signup, select[name="companyid"]',
+            departmentSelector: '#id_departmentid_signup, select[name="departmentid"]',
+            preselect: options.preselect
         });
-
-        // Load departments if company is pre-selected.
-        var initialCompany = companySelect.val();
-        if (initialCompany && initialCompany !== '0') {
-            loadDepartments(initialCompany);
-        }
 
         // Add password strength indicator.
         var passwordField = $('#id_password');

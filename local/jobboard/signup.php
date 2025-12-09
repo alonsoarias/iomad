@@ -267,8 +267,14 @@ function create_user_from_form($data, $isiomad) {
     $user->country = $data->country ?? '';
     $user->institution = trim($data->institution ?? '');
     $user->department = trim($data->department_region ?? '');
-    $user->description = trim($data->description ?? '');
-    $user->descriptionformat = FORMAT_HTML;
+    // Handle editor data format (array with 'text' and 'format' keys).
+    if (is_array($data->description ?? null)) {
+        $user->description = $data->description['text'] ?? '';
+        $user->descriptionformat = $data->description['format'] ?? FORMAT_HTML;
+    } else {
+        $user->description = trim($data->description ?? '');
+        $user->descriptionformat = FORMAT_HTML;
+    }
     $user->lang = current_language();
     $user->calendartype = $CFG->calendartype;
     $user->timezone = $CFG->timezone ?? '99';

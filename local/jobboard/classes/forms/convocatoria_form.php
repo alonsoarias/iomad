@@ -106,15 +106,31 @@ class convocatoria_form extends \moodleform {
             $mform->addElement('header', 'companyheader', get_string('company', 'local_jobboard'));
 
             $companyoptions = [0 => get_string('allcompanies', 'local_jobboard')] + $companies;
-            $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companyoptions);
+            $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companyoptions, [
+                'id' => 'id_companyid',
+            ]);
             $mform->setType('companyid', PARAM_INT);
             $mform->addHelpButton('companyid', 'convocatoria_companyid', 'local_jobboard');
 
-            // Department selector (populated via AJAX or simple select).
+            // Get current department ID for preselection.
+            $currentdeptid = 0;
+            if ($isedit && !empty($convocatoria->departmentid)) {
+                $currentdeptid = (int) $convocatoria->departmentid;
+            }
+
+            // Department selector (populated via AJAX).
             $mform->addElement('select', 'departmentid', get_string('department', 'local_jobboard'),
-                [0 => get_string('selectdepartment', 'local_jobboard')]);
+                [0 => get_string('selectdepartment', 'local_jobboard')], [
+                'id' => 'id_departmentid',
+            ]);
             $mform->setType('departmentid', PARAM_INT);
             $mform->addHelpButton('departmentid', 'convocatoria_departmentid', 'local_jobboard');
+
+            // Add JavaScript to update departments when company changes.
+            global $PAGE;
+            $PAGE->requires->js_call_amd('local_jobboard/convocatoria_form', 'init', [[
+                'preselect' => $currentdeptid,
+            ]]);
         }
 
         // Header: Terms and Conditions.

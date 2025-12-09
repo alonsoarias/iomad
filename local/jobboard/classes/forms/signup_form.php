@@ -231,10 +231,14 @@ class signup_form extends moodleform {
         ];
         $mform->addElement('select', 'experience_years', get_string('signup_experience_years', 'local_jobboard'), $experienceoptions);
 
-        // Professional profile / brief description.
-        $mform->addElement('textarea', 'description', get_string('signup_professional_profile', 'local_jobboard'),
-            ['rows' => 4, 'cols' => 60, 'maxlength' => 1000]);
-        $mform->setType('description', PARAM_TEXT);
+        // Professional profile / brief description (rich text editor).
+        $mform->addElement('editor', 'description', get_string('signup_professional_profile', 'local_jobboard'), null, [
+            'maxfiles' => 0,
+            'noclean' => false,
+            'maxbytes' => 0,
+            'rows' => 6,
+        ]);
+        $mform->setType('description', PARAM_RAW);
         $mform->addHelpButton('description', 'signup_professional_profile', 'local_jobboard');
 
         // ==========================================
