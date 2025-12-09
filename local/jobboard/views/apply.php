@@ -70,6 +70,9 @@ if ($exemption) {
     $exemptioninfo = $exemption;
 }
 
+// Get user's gender from preference (set during signup/profile update).
+$usergender = get_user_preference('local_jobboard_gender', '', $USER->id);
+
 // Get required document types.
 $requireddocs = exemption::get_required_doctypes($USER->id, true);
 
@@ -87,6 +90,7 @@ $customdata = [
         'exemptiontype' => $exemptioninfo->exemptiontype,
         'documentref' => $exemptioninfo->documentref,
     ] : null,
+    'usergender' => $usergender,
 ];
 
 $mform = new application_form(null, $customdata);

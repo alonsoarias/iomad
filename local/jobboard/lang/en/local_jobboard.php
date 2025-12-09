@@ -2631,3 +2631,9 @@ $string['doccat_legal_desc'] = 'Background checks and legal clearances';
 // Document field labels.
 $string['docrequirements'] = 'View requirements';
 $string['optional'] = 'Optional';
+
+// Multiple documents notice.
+$string['multipledocs_notice'] = 'Multiple certificates in one file';
+$string['multipledocs_titulo_academico'] = 'If you have multiple degrees (undergraduate, postgraduate, specialization), combine all certificates into a single PDF file.';
+$string['multipledocs_formacion_complementaria'] = 'If you have multiple complementary training certificates, combine all into a single PDF file.';
+$string['multipledocs_certificacion_laboral'] = 'If you have multiple employment certificates, combine all into a single PDF file ordered by date (most recent first).';

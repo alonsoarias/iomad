@@ -3022,3 +3022,9 @@ $string['doccat_legal_desc'] = 'Certificados de antecedentes y verificaciones le
 // Etiquetas de campos de documentos.
 $string['docrequirements'] = 'Ver requisitos';
 $string['optional'] = 'Opcional';
+
+// Aviso de múltiples documentos.
+$string['multipledocs_notice'] = 'Múltiples certificados en un solo archivo';
+$string['multipledocs_titulo_academico'] = 'Si tiene varios títulos (pregrado, posgrado, especialización), combínelos todos en un solo archivo PDF.';
+$string['multipledocs_formacion_complementaria'] = 'Si tiene múltiples certificados de formación complementaria, combínelos todos en un solo archivo PDF.';
+$string['multipledocs_certificacion_laboral'] = 'Si tiene múltiples certificaciones laborales, combínelas todas en un solo archivo PDF ordenadas por fecha (más reciente primero).';

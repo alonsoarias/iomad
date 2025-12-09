@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120984;  // v2.0.66: Redesign apply form with tabbed document categories and descriptions.
+$plugin->version = 2025120985;  // v2.0.67: Filter docs by gender, add multiple-file notices.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.66';
+$plugin->release = '2.0.67';

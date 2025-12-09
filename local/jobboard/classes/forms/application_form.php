@@ -50,6 +50,24 @@ class application_form extends moodleform {
         $requireddocs = $this->_customdata['requireddocs'] ?? [];
         $isexemption = $this->_customdata['isexemption'] ?? false;
         $exemptioninfo = $this->_customdata['exemptioninfo'] ?? null;
+        $usergender = $this->_customdata['usergender'] ?? '';
+
+        // Filter documents based on user's gender.
+        // gender_condition: 'M' = men only, 'F' = women only, null = all.
+        $requireddocs = array_filter($requireddocs, function($doctype) use ($usergender) {
+            if (empty($doctype->gender_condition)) {
+                return true; // No gender restriction.
+            }
+            // If user's gender matches the condition, show the document.
+            return $usergender === $doctype->gender_condition;
+        });
+
+        // Document codes that accept multiple certificates in a single file.
+        $multipledocs = [
+            'titulo_academico',
+            'formacion_complementaria',
+            'certificacion_laboral',
+        ];
 
         // Hidden fields.
         $mform->addElement('hidden', 'vacancyid', $vacancy->id);
@@ -225,6 +243,7 @@ class application_form extends moodleform {
                 foreach ($catdata['docs'] as $doctype) {
                     $fieldname = 'doc_' . $doctype->code;
                     $required = !empty($doctype->isrequired);
+                    $ismultiple = in_array($doctype->code, $multipledocs);
 
                     // Document card wrapper.
                     $dochtml = '<div class="jb-document-field mb-4 p-3 border rounded bg-white">';
@@ -244,6 +263,15 @@ class application_form extends moodleform {
                         $dochtml .= '<div class="alert alert-info py-2 px-3 mb-2">';
                         $dochtml .= '<i class="fa fa-info-circle mr-2"></i>';
                         $dochtml .= '<span>' . format_string($doctype->description) . '</span>';
+                        $dochtml .= '</div>';
+                    }
+
+                    // Multiple documents notice - prominent warning for certificates that may have multiple files.
+                    if ($ismultiple) {
+                        $dochtml .= '<div class="alert alert-warning py-2 px-3 mb-2">';
+                        $dochtml .= '<i class="fa fa-file-pdf mr-2"></i>';
+                        $dochtml .= '<strong>' . get_string('multipledocs_notice', 'local_jobboard') . '</strong><br>';
+                        $dochtml .= '<small>' . get_string('multipledocs_' . $doctype->code, 'local_jobboard') . '</small>';
                         $dochtml .= '</div>';
                     }
 
@@ -350,8 +378,17 @@ class application_form extends moodleform {
             $errors['digitalsignature'] = get_string('signaturetoooshort', 'local_jobboard');
         }
 
-        // Validate required documents.
+        // Filter documents by gender (same logic as definition).
         $requireddocs = $this->_customdata['requireddocs'] ?? [];
+        $usergender = $this->_customdata['usergender'] ?? '';
+        $requireddocs = array_filter($requireddocs, function($doctype) use ($usergender) {
+            if (empty($doctype->gender_condition)) {
+                return true;
+            }
+            return $usergender === $doctype->gender_condition;
+        });
+
+        // Validate required documents.
         foreach ($requireddocs as $doctype) {
             if (!empty($doctype->isrequired)) {
                 $fieldname = 'doc_' . $doctype->code;
@@ -422,6 +459,15 @@ class application_form extends moodleform {
 
         $documents = [];
         $requireddocs = $this->_customdata['requireddocs'] ?? [];
+        $usergender = $this->_customdata['usergender'] ?? '';
+
+        // Filter by gender.
+        $requireddocs = array_filter($requireddocs, function($doctype) use ($usergender) {
+            if (empty($doctype->gender_condition)) {
+                return true;
+            }
+            return $usergender === $doctype->gender_condition;
+        });
 
         foreach ($requireddocs as $doctype) {
             $fieldname = 'doc_' . $doctype->code;
