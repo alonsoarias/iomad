@@ -2613,3 +2613,21 @@ $string['tip_deadline'] = 'Submit before the deadline expires';
 $string['viewfaq'] = 'Frequently Asked Questions';
 $string['contactsupport'] = 'Contact Support';
 $string['viewvacancydetails'] = 'View vacancy details';
+
+// Document categories.
+$string['doccat_employment'] = 'Employment';
+$string['doccat_employment_desc'] = 'Work history and employment-related documents';
+$string['doccat_identification'] = 'Identification';
+$string['doccat_identification_desc'] = 'Personal identification documents';
+$string['doccat_academic'] = 'Academic';
+$string['doccat_academic_desc'] = 'Degrees, certifications and academic records';
+$string['doccat_financial'] = 'Financial';
+$string['doccat_financial_desc'] = 'Tax and banking documents';
+$string['doccat_health'] = 'Health & Social Security';
+$string['doccat_health_desc'] = 'Health insurance and pension affiliation';
+$string['doccat_legal'] = 'Legal Background';
+$string['doccat_legal_desc'] = 'Background checks and legal clearances';
+
+// Document field labels.
+$string['docrequirements'] = 'View requirements';
+$string['optional'] = 'Optional';

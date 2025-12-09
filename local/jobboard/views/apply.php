@@ -319,13 +319,6 @@ echo '<li>' . get_string('tip_deadline', 'local_jobboard') . '</li>';
 echo '</ul>';
 echo '</div>';
 
-echo '<hr class="my-3">';
-
-// Contact/Support link.
-echo '<a href="mailto:' . get_config('local_jobboard', 'support_email') . '" class="btn btn-outline-primary btn-sm btn-block mb-2">';
-echo '<i class="fa fa-envelope mr-1"></i>' . get_string('contactsupport', 'local_jobboard');
-echo '</a>';
-
 // Back to vacancy details.
 echo '<a href="' . (new moodle_url('/local/jobboard/index.php', ['view' => 'public', 'id' => $vacancyid]))->out() . '" ';
 echo 'class="btn btn-outline-secondary btn-sm btn-block">';

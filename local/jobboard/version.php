@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120983;  // v2.0.65: Fix public view to show IOMAD company/department, improve apply UX.
+$plugin->version = 2025120984;  // v2.0.66: Redesign apply form with tabbed document categories and descriptions.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.65';
+$plugin->release = '2.0.66';

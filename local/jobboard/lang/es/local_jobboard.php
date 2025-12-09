@@ -3004,3 +3004,21 @@ $string['tip_deadline'] = 'Envíe antes de que expire el plazo';
 $string['viewfaq'] = 'Preguntas Frecuentes';
 $string['contactsupport'] = 'Contactar Soporte';
 $string['viewvacancydetails'] = 'Ver detalles de la vacante';
+
+// Categorías de documentos.
+$string['doccat_employment'] = 'Laboral';
+$string['doccat_employment_desc'] = 'Historial laboral y documentos de empleo';
+$string['doccat_identification'] = 'Identificación';
+$string['doccat_identification_desc'] = 'Documentos de identificación personal';
+$string['doccat_academic'] = 'Académico';
+$string['doccat_academic_desc'] = 'Títulos, certificaciones y registros académicos';
+$string['doccat_financial'] = 'Financiero';
+$string['doccat_financial_desc'] = 'Documentos tributarios y bancarios';
+$string['doccat_health'] = 'Salud y Seguridad Social';
+$string['doccat_health_desc'] = 'Afiliación a salud y pensión';
+$string['doccat_legal'] = 'Antecedentes';
+$string['doccat_legal_desc'] = 'Certificados de antecedentes y verificaciones legales';
+
+// Etiquetas de campos de documentos.
+$string['docrequirements'] = 'Ver requisitos';
+$string['optional'] = 'Opcional';

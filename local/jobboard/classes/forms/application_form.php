@@ -126,7 +126,7 @@ class application_form extends moodleform {
         $fullname = fullname($USER);
         $mform->setDefault('digitalsignature', $fullname);
 
-        // Documents section.
+        // Documents section with tabbed interface by category.
         if (!empty($requireddocs)) {
             $mform->addElement('header', 'documentsheader', get_string('requireddocuments', 'local_jobboard'));
             $mform->setExpanded('documentsheader', true);
@@ -151,38 +151,140 @@ class application_form extends moodleform {
                 'accepted_types' => explode(',', $acceptedtypes),
             ];
 
+            // Group documents by category.
+            $categories = [
+                'employment' => ['icon' => 'fa-briefcase', 'docs' => []],
+                'identification' => ['icon' => 'fa-id-card', 'docs' => []],
+                'academic' => ['icon' => 'fa-graduation-cap', 'docs' => []],
+                'financial' => ['icon' => 'fa-university', 'docs' => []],
+                'health' => ['icon' => 'fa-heartbeat', 'docs' => []],
+                'legal' => ['icon' => 'fa-gavel', 'docs' => []],
+            ];
+
             foreach ($requireddocs as $doctype) {
-                $fieldname = 'doc_' . $doctype->code;
-                $required = !empty($doctype->isrequired);
-
-                // Document type label with required indicator.
-                $label = format_string($doctype->name);
-                if ($required) {
-                    $label .= ' <span class="text-danger">*</span>';
+                $cat = $doctype->category ?? 'employment';
+                if (!isset($categories[$cat])) {
+                    $cat = 'employment';
                 }
-
-                // File manager for document upload.
-                $mform->addElement('filemanager', $fieldname, $label, null, $fileoptions);
-
-                if ($required) {
-                    $mform->addRule($fieldname, get_string('documentrequired', 'local_jobboard', $doctype->name),
-                        'required', null, 'client');
-                }
-
-                // Help text for document type.
-                if (!empty($doctype->description)) {
-                    $mform->addElement('static', $fieldname . '_help', '', '<small class="text-muted">' .
-                        format_string($doctype->description) . '</small>');
-                }
-
-                // Issue date for certain document types.
-                if (in_array($doctype->code, ['antecedentes_procuraduria', 'antecedentes_contraloria',
-                    'antecedentes_policia', 'rnmc', 'sijin', 'libreta_militar', 'certificado_medico'])) {
-                    $mform->addElement('date_selector', $fieldname . '_issuedate',
-                        get_string('documentissuedate', 'local_jobboard'));
-                    $mform->hideIf($fieldname . '_issuedate', $fieldname, 'eq', 0);
-                }
+                $categories[$cat]['docs'][] = $doctype;
             }
+
+            // Remove empty categories.
+            $categories = array_filter($categories, function($cat) {
+                return !empty($cat['docs']);
+            });
+
+            // Build tabbed interface.
+            $tabshtml = '<div class="jb-document-tabs mb-4">';
+            $tabshtml .= '<ul class="nav nav-pills nav-fill mb-3" id="docCategoryTabs" role="tablist">';
+
+            $first = true;
+            foreach ($categories as $catkey => $catdata) {
+                $active = $first ? 'active' : '';
+                $selected = $first ? 'true' : 'false';
+                $doccount = count($catdata['docs']);
+                $requiredcount = count(array_filter($catdata['docs'], function($d) {
+                    return !empty($d->isrequired);
+                }));
+                $badge = $requiredcount > 0 ? '<span class="badge badge-danger ml-1">' . $requiredcount . '</span>' : '';
+
+                $tabshtml .= '<li class="nav-item" role="presentation">';
+                $tabshtml .= '<a class="nav-link ' . $active . '" id="tab-' . $catkey . '" ';
+                $tabshtml .= 'data-toggle="pill" href="#panel-' . $catkey . '" role="tab" ';
+                $tabshtml .= 'aria-controls="panel-' . $catkey . '" aria-selected="' . $selected . '">';
+                $tabshtml .= '<i class="fa ' . $catdata['icon'] . ' mr-1"></i>';
+                $tabshtml .= '<span class="d-none d-md-inline">' . get_string('doccat_' . $catkey, 'local_jobboard') . '</span>';
+                $tabshtml .= $badge;
+                $tabshtml .= '</a></li>';
+                $first = false;
+            }
+
+            $tabshtml .= '</ul>';
+            $tabshtml .= '<div class="tab-content" id="docCategoryTabsContent">';
+
+            $mform->addElement('html', $tabshtml);
+
+            // Render each category panel with its documents.
+            $first = true;
+            foreach ($categories as $catkey => $catdata) {
+                $activeclass = $first ? 'show active' : '';
+
+                $panelhtml = '<div class="tab-pane fade ' . $activeclass . '" id="panel-' . $catkey . '" ';
+                $panelhtml .= 'role="tabpanel" aria-labelledby="tab-' . $catkey . '">';
+                $panelhtml .= '<div class="card border-0 shadow-sm">';
+                $panelhtml .= '<div class="card-header bg-light">';
+                $panelhtml .= '<h5 class="mb-0"><i class="fa ' . $catdata['icon'] . ' mr-2 text-primary"></i>';
+                $panelhtml .= get_string('doccat_' . $catkey, 'local_jobboard');
+                $panelhtml .= '</h5>';
+                $panelhtml .= '<small class="text-muted">' . get_string('doccat_' . $catkey . '_desc', 'local_jobboard') . '</small>';
+                $panelhtml .= '</div>';
+                $panelhtml .= '<div class="card-body">';
+                $mform->addElement('html', $panelhtml);
+
+                // Add document fields for this category.
+                foreach ($catdata['docs'] as $doctype) {
+                    $fieldname = 'doc_' . $doctype->code;
+                    $required = !empty($doctype->isrequired);
+
+                    // Document card wrapper.
+                    $dochtml = '<div class="jb-document-field mb-4 p-3 border rounded bg-white">';
+                    $dochtml .= '<div class="d-flex justify-content-between align-items-start mb-2">';
+                    $dochtml .= '<h6 class="mb-0">';
+                    $dochtml .= format_string($doctype->name);
+                    if ($required) {
+                        $dochtml .= ' <span class="badge badge-danger">' . get_string('required') . '</span>';
+                    } else {
+                        $dochtml .= ' <span class="badge badge-secondary">' . get_string('optional', 'local_jobboard') . '</span>';
+                    }
+                    $dochtml .= '</h6>';
+                    $dochtml .= '</div>';
+
+                    // Description in a prominent box.
+                    if (!empty($doctype->description)) {
+                        $dochtml .= '<div class="alert alert-info py-2 px-3 mb-2">';
+                        $dochtml .= '<i class="fa fa-info-circle mr-2"></i>';
+                        $dochtml .= '<span>' . format_string($doctype->description) . '</span>';
+                        $dochtml .= '</div>';
+                    }
+
+                    // Requirements in collapsible section.
+                    if (!empty($doctype->requirements)) {
+                        $dochtml .= '<details class="mb-2">';
+                        $dochtml .= '<summary class="text-primary" style="cursor:pointer;">';
+                        $dochtml .= '<i class="fa fa-list-ul mr-1"></i>' . get_string('docrequirements', 'local_jobboard');
+                        $dochtml .= '</summary>';
+                        $dochtml .= '<div class="small text-muted mt-1 pl-3">' . format_string($doctype->requirements) . '</div>';
+                        $dochtml .= '</details>';
+                    }
+
+                    $dochtml .= '</div>';
+                    $mform->addElement('html', $dochtml);
+
+                    // File manager for document upload (label hidden, shown in card above).
+                    $mform->addElement('filemanager', $fieldname, '', null, $fileoptions);
+
+                    if ($required) {
+                        $mform->addRule($fieldname, get_string('documentrequired', 'local_jobboard', $doctype->name),
+                            'required', null, 'client');
+                    }
+
+                    // Issue date for certain document types.
+                    if (in_array($doctype->code, ['antecedentes_disciplinarios', 'antecedentes_fiscales',
+                        'antecedentes_judiciales', 'medidas_correctivas', 'inhabilidades', 'redam',
+                        'libreta_militar', 'certificado_medico', 'eps', 'pension'])) {
+                        $mform->addElement('date_selector', $fieldname . '_issuedate',
+                            get_string('documentissuedate', 'local_jobboard'));
+                        $mform->hideIf($fieldname . '_issuedate', $fieldname, 'eq', 0);
+                    }
+                }
+
+                // Close card-body and card.
+                $mform->addElement('html', '</div></div></div>');
+                $first = false;
+            }
+
+            // Close tab-content and tabs container.
+            $mform->addElement('html', '</div></div>');
         }
 
         // Additional information section.
