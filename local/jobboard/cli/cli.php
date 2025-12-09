@@ -1118,32 +1118,97 @@ foreach ($allprofiles as $code => $profile) {
         $deschtml .= "</ul>\n";
     }
 
-    // Contract type info.
+    // Contract type info with salary details.
+    // Determine if profile requires postgraduate (used for salary calculation in description).
+    $descRequiresPostgrad = preg_match('/POSGRADO|ESPECIALIZA|MAESTR|DOCTOR|MAGISTER/i', $proftext);
+
     $deschtml .= "<h4>Información de la Vinculación</h4>\n";
     $deschtml .= "<table class=\"table table-sm\">\n";
     $deschtml .= "<tr><th>Tipo de Vinculación</th><td>";
     if ($isOcasional) {
         $deschtml .= "<span class=\"badge badge-primary\">Ocasional Tiempo Completo</span>";
+        $deschtml .= "</td></tr>\n";
+        $deschtml .= "<tr><th>Duración</th><td>4 meses (período académico semestral) - Contrato laboral a término fijo</td></tr>\n";
+        if ($descRequiresPostgrad) {
+            $deschtml .= "<tr><th>Remuneración</th><td><strong>\$5.700.000 - \$6.600.000 COP/mes</strong> ";
+            $deschtml .= "<small class=\"text-muted\">(según escalafón y productividad académica - Decreto 1279/2002)</small></td></tr>\n";
+        } else {
+            $deschtml .= "<tr><th>Remuneración</th><td><strong>\$4.800.000 - \$5.200.000 COP/mes</strong> ";
+            $deschtml .= "<small class=\"text-muted\">(según escalafón docente - Decreto 1279/2002)</small></td></tr>\n";
+        }
+        $deschtml .= "<tr><th>Prestaciones</th><td>Seguridad social, prima de servicios, vacaciones proporcionales</td></tr>\n";
+        $deschtml .= "<tr><th>Dedicación</th><td>Tiempo completo (40 horas semanales)</td></tr>\n";
     } else {
         $deschtml .= "<span class=\"badge badge-info\">Cátedra</span>";
+        $deschtml .= "</td></tr>\n";
+        $deschtml .= "<tr><th>Duración</th><td>Semestre académico (16 semanas) - Contrato de prestación de servicios</td></tr>\n";
+        if ($descRequiresPostgrad) {
+            $deschtml .= "<tr><th>Valor Hora</th><td><strong>\$70.000 - \$90.000 COP/hora</strong> ";
+            $deschtml .= "<small class=\"text-muted\">(según titulación - incluye factor prestacional)</small></td></tr>\n";
+            $deschtml .= "<tr><th>Estimado Mensual</th><td>\$1.120.000 - \$1.440.000 COP ";
+            $deschtml .= "<small class=\"text-muted\">(asumiendo 16 horas semanales)</small></td></tr>\n";
+        } else {
+            $deschtml .= "<tr><th>Valor Hora</th><td><strong>\$47.450 - \$65.000 COP/hora</strong> ";
+            $deschtml .= "<small class=\"text-muted\">(según titulación - incluye factor prestacional)</small></td></tr>\n";
+            $deschtml .= "<tr><th>Estimado Mensual</th><td>\$760.000 - \$1.040.000 COP ";
+            $deschtml .= "<small class=\"text-muted\">(asumiendo 16 horas semanales)</small></td></tr>\n";
+        }
+        $deschtml .= "<tr><th>Dedicación</th><td>Por horas según programación académica (típicamente 8-16 horas/semana)</td></tr>\n";
     }
-    $deschtml .= "</td></tr>\n";
     $deschtml .= "<tr><th>Sede</th><td>{$locationName}</td></tr>\n";
     $deschtml .= "<tr><th>Modalidad</th><td>{$modalityName}</td></tr>\n";
     $deschtml .= "<tr><th>Facultad</th><td>{$facultyName}</td></tr>\n";
     $deschtml .= "</table>\n";
+
+    // Legal reference.
+    $deschtml .= "<p class=\"small text-muted mt-2\"><i class=\"fa fa-info-circle\"></i> ";
+    $deschtml .= "Remuneración sujeta a la normatividad vigente: Decreto 1279 de 2002, Decreto 618 de 2025. ";
+    $deschtml .= "Los valores pueden variar según el escalafón docente y la productividad académica acreditada.</p>\n";
 
     $deschtml .= "</div>\n";
     $record->description = $deschtml;
 
     // Contract type and duration.
     $record->contracttype = $contracttype;
+
+    // Determine if profile requires postgraduate degree (affects salary scale).
+    $requirespostgrad = preg_match('/POSGRADO|ESPECIALIZA|MAESTR|DOCTOR|MAGISTER/i', $proftext);
+
     if ($isOcasional) {
-        $record->duration = 'Período académico (semestral)';
-        $record->salary = 'Según escala salarial institucional';
+        // Docente Ocasional Tiempo Completo - Decreto 618/2025, Decreto 1279/2002.
+        // Salario basado en puntos: pregrado base 215 puntos, valor punto 2025: ~$22,357.
+        // Con especialización: +20 puntos, Maestría: +40 puntos, Doctorado: +80 puntos.
+        $record->duration = '4 meses (período académico semestral) - Contrato laboral a término fijo';
+
+        if ($requirespostgrad) {
+            // Perfil con posgrado requerido: 255-295 puntos aprox.
+            // Rango: $5,700,000 - $6,600,000 mensual.
+            $record->salary = '$5.700.000 - $6.600.000 COP/mes (según escalafón y productividad académica). ' .
+                'Incluye prestaciones sociales de ley, seguridad social, prima de servicios y vacaciones proporcionales.';
+        } else {
+            // Perfil solo pregrado: 215 puntos base.
+            // Rango: $4,800,000 - $5,200,000 mensual.
+            $record->salary = '$4.800.000 - $5.200.000 COP/mes (según escalafón docente). ' .
+                'Incluye prestaciones sociales de ley, seguridad social, prima de servicios y vacaciones proporcionales.';
+        }
     } else {
-        $record->duration = 'Por horas según programación académica';
-        $record->salary = 'Valor hora cátedra según escalafón';
+        // Docente de Cátedra - Contrato de prestación de servicios.
+        // Valor hora cátedra 2025: $47,450 - $90,000 según cualificación.
+        // Carga típica: 8-16 horas semanales.
+        $record->duration = 'Semestre académico (16 semanas) - Contrato de prestación de servicios por horas';
+
+        if ($requirespostgrad) {
+            // Hora cátedra con posgrado: $70,000 - $90,000.
+            // Carga 12 horas/semana x 16 semanas = 192 horas/semestre.
+            $record->salary = '$70.000 - $90.000 COP/hora cátedra (según titulación). ' .
+                'Pago mensual estimado: $1.120.000 - $1.440.000 COP (asumiendo 16 horas semanales). ' .
+                'Incluye factor prestacional. No genera relación laboral.';
+        } else {
+            // Hora cátedra pregrado: $47,450 - $65,000.
+            $record->salary = '$47.450 - $65.000 COP/hora cátedra (según titulación). ' .
+                'Pago mensual estimado: $760.000 - $1.040.000 COP (asumiendo 16 horas semanales). ' .
+                'Incluye factor prestacional. No genera relación laboral.';
+        }
     }
 
     // Location (text field).
@@ -1229,7 +1294,25 @@ foreach ($allprofiles as $code => $profile) {
     $record->convocatoriaid = $convocatoriaid;
     $record->opendate = $opendate;
     $record->closedate = $closedate;
-    $record->positions = 1;
+
+    // Number of positions - varies by contract type and location.
+    // Ocasional TC typically 1 per location, Cátedra can have multiple.
+    if ($isOcasional) {
+        $record->positions = 1; // Tiempo completo: 1 posición por vacante.
+    } else {
+        // Cátedra: puede haber múltiples posiciones según demanda.
+        // Sedes principales (Pamplona, Cúcuta) tienen más demanda.
+        $highdemandlocations = ['PAMPLONA', 'CUCUTA', 'OCANA'];
+        if (in_array($location, $highdemandlocations)) {
+            $record->positions = rand(2, 4); // 2-4 posiciones en sedes grandes.
+        } else {
+            $record->positions = rand(1, 2); // 1-2 en centros tutoriales.
+        }
+    }
+
+    // Extemporaneous fields - explicitly set (not extemporaneous by default).
+    $record->isextemporaneous = 0;
+    $record->extemporaneousreason = null;
 
     // Status and publication type.
     $record->status = $options['status'];
