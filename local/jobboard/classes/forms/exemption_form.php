@@ -150,7 +150,7 @@ class exemption_form extends \moodleform {
         // Notes.
         $mform->addElement('header', 'notesheader', get_string('additionalinfo', 'local_jobboard'));
 
-        $mform->addElement('textarea', 'notes', get_string('notes'), ['rows' => 4, 'cols' => 50]);
+        $mform->addElement('textarea', 'notes', get_string('notes', 'local_jobboard'), ['rows' => 4, 'cols' => 50]);
         $mform->setType('notes', PARAM_TEXT);
 
         // Buttons.

@@ -85,8 +85,8 @@ if ($vacancyid) {
     return;
 }
 
-// Build query conditions.
-$conditions = ["v.status = :status", "v.closedate >= :now"];
+// Build query conditions (dates from convocatoria).
+$conditions = ["v.status = :status", "(c.enddate IS NULL OR c.enddate >= :now)"];
 $params = ['status' => 'published', 'now' => time()];
 
 // Filter by publication type.
@@ -151,15 +151,20 @@ if ($isiomad && !empty($departmentid)) {
 // Build WHERE clause.
 $where = 'WHERE ' . implode(' AND ', $conditions);
 
-// Get total count.
-$total = $DB->count_records_sql("SELECT COUNT(*) FROM {local_jobboard_vacancy} v $where", $params);
+// Get total count (join with convocatoria for date filtering).
+$countsql = "SELECT COUNT(*)
+               FROM {local_jobboard_vacancy} v
+               LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
+              $where";
+$total = $DB->count_records_sql($countsql, $params);
 
 // Get records with convocatoria info.
-$sql = "SELECT v.*, c.name as convocatoria_name, c.code as convocatoria_code
+$sql = "SELECT v.*, c.name as convocatoria_name, c.code as convocatoria_code,
+               COALESCE(c.enddate, 0) as closedate
           FROM {local_jobboard_vacancy} v
           LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
          $where
-         ORDER BY v.closedate ASC, v.timecreated DESC";
+         ORDER BY c.enddate ASC, v.timecreated DESC";
 $vacancies = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
 
 // Get available filter options.
