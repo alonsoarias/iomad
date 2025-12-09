@@ -51,6 +51,7 @@ class application_form extends moodleform {
         $isexemption = $this->_customdata['isexemption'] ?? false;
         $exemptioninfo = $this->_customdata['exemptioninfo'] ?? null;
         $usergender = $this->_customdata['usergender'] ?? '';
+        $userage = $this->_customdata['userage'] ?? null;
 
         // Filter documents based on user's gender.
         // gender_condition: 'M' = men only, 'F' = women only, null = all.
@@ -60,6 +61,17 @@ class application_form extends moodleform {
             }
             // If user's gender matches the condition, show the document.
             return $usergender === $doctype->gender_condition;
+        });
+
+        // Filter documents based on user's age (age exemptions).
+        // age_exemption_threshold: users at or above this age are exempt from this document.
+        $requireddocs = array_filter($requireddocs, function($doctype) use ($userage) {
+            if ($userage === null || empty($doctype->age_exemption_threshold)) {
+                return true; // No age restriction or age unknown.
+            }
+            $threshold = (int) $doctype->age_exemption_threshold;
+            // If user is at or above threshold, they're exempt from this document.
+            return $userage < $threshold;
         });
 
         // Document codes that accept multiple certificates in a single file.
@@ -85,8 +97,22 @@ class application_form extends moodleform {
             $vacancyhtml .= '<p><strong>' . get_string('location', 'local_jobboard') . ':</strong> ' .
                 format_string($vacancy->location) . '</p>';
         }
-        $vacancyhtml .= '<p><strong>' . get_string('closedate', 'local_jobboard') . ':</strong> ' .
-            userdate($vacancy->closedate, get_string('strftimedatetime', 'langconfig')) . '</p>';
+        // Get closedate from convocatoria (dates are now inherited from convocatoria).
+        $closedate = null;
+        if (!empty($vacancy->convocatoriaid)) {
+            $convocatoria = \local_jobboard_get_convocatoria($vacancy->convocatoriaid);
+            if ($convocatoria && !empty($convocatoria->enddate)) {
+                $closedate = $convocatoria->enddate;
+            }
+        }
+        // Fallback to vacancy closedate if it exists (backwards compatibility).
+        if (empty($closedate) && !empty($vacancy->closedate)) {
+            $closedate = $vacancy->closedate;
+        }
+        if ($closedate) {
+            $vacancyhtml .= '<p><strong>' . get_string('closedate', 'local_jobboard') . ':</strong> ' .
+                userdate($closedate, get_string('strftimedatetime', 'langconfig')) . '</p>';
+        }
         $vacancyhtml .= '</div>';
         $mform->addElement('html', $vacancyhtml);
 
@@ -266,6 +292,15 @@ class application_form extends moodleform {
                         $dochtml .= '</div>';
                     }
 
+                    // Conditional note (e.g., tarjeta_profesional requirement for teachers).
+                    if (!empty($doctype->conditional_note)) {
+                        $dochtml .= '<div class="alert alert-secondary py-2 px-3 mb-2">';
+                        $dochtml .= '<i class="fa fa-exclamation-triangle mr-2"></i>';
+                        $dochtml .= '<small>' . get_string('conditional_document_note', 'local_jobboard',
+                            format_string($doctype->conditional_note)) . '</small>';
+                        $dochtml .= '</div>';
+                    }
+
                     // Multiple documents notice - prominent warning for certificates that may have multiple files.
                     if ($ismultiple) {
                         $dochtml .= '<div class="alert alert-warning py-2 px-3 mb-2">';
@@ -378,14 +413,25 @@ class application_form extends moodleform {
             $errors['digitalsignature'] = get_string('signaturetoooshort', 'local_jobboard');
         }
 
-        // Filter documents by gender (same logic as definition).
+        // Filter documents by gender and age (same logic as definition).
         $requireddocs = $this->_customdata['requireddocs'] ?? [];
         $usergender = $this->_customdata['usergender'] ?? '';
+        $userage = $this->_customdata['userage'] ?? null;
+
         $requireddocs = array_filter($requireddocs, function($doctype) use ($usergender) {
             if (empty($doctype->gender_condition)) {
                 return true;
             }
             return $usergender === $doctype->gender_condition;
+        });
+
+        // Filter by age.
+        $requireddocs = array_filter($requireddocs, function($doctype) use ($userage) {
+            if ($userage === null || empty($doctype->age_exemption_threshold)) {
+                return true;
+            }
+            $threshold = (int) $doctype->age_exemption_threshold;
+            return $userage < $threshold;
         });
 
         // Validate required documents.
@@ -460,6 +506,7 @@ class application_form extends moodleform {
         $documents = [];
         $requireddocs = $this->_customdata['requireddocs'] ?? [];
         $usergender = $this->_customdata['usergender'] ?? '';
+        $userage = $this->_customdata['userage'] ?? null;
 
         // Filter by gender.
         $requireddocs = array_filter($requireddocs, function($doctype) use ($usergender) {
@@ -467,6 +514,15 @@ class application_form extends moodleform {
                 return true;
             }
             return $usergender === $doctype->gender_condition;
+        });
+
+        // Filter by age.
+        $requireddocs = array_filter($requireddocs, function($doctype) use ($userage) {
+            if ($userage === null || empty($doctype->age_exemption_threshold)) {
+                return true;
+            }
+            $threshold = (int) $doctype->age_exemption_threshold;
+            return $userage < $threshold;
         });
 
         foreach ($requireddocs as $doctype) {

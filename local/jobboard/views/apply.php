@@ -51,11 +51,33 @@ if (!$vacancy->is_open_for_applications()) {
     throw new moodle_exception('vacancynotopen', 'local_jobboard');
 }
 
-// Check user hasn't already applied.
+// Check user hasn't already applied to this specific vacancy.
 if (application::user_has_applied($USER->id, $vacancyid)) {
     redirect(
         new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
         get_string('alreadyapplied', 'local_jobboard'),
+        null,
+        \core\output\notification::NOTIFY_WARNING
+    );
+}
+
+// Check convocatoria-level application restrictions.
+$applicationcheck = \local_jobboard_can_user_apply_to_vacancy($USER->id, $vacancyid);
+if (!$applicationcheck['can_apply']) {
+    redirect(
+        new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']),
+        $applicationcheck['reason'],
+        null,
+        \core\output\notification::NOTIFY_WARNING
+    );
+}
+
+// Check experience requirements for occasional contracts.
+$experiencecheck = \local_jobboard_check_experience_requirements($USER->id, $vacancyid);
+if (!$experiencecheck['meets_requirements']) {
+    redirect(
+        new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]),
+        $experiencecheck['reason'],
         null,
         \core\output\notification::NOTIFY_WARNING
     );
@@ -86,6 +108,9 @@ if ($exemption) {
 // Get user's gender from applicant profile.
 $usergender = $applicantprofile->gender ?? '';
 
+// Get user's age for document exemptions.
+$userage = \local_jobboard_get_user_age($USER->id);
+
 // Get required document types.
 $requireddocs = exemption::get_required_doctypes($USER->id, true);
 
@@ -104,6 +129,7 @@ $customdata = [
         'documentref' => $exemptioninfo->documentref,
     ] : null,
     'usergender' => $usergender,
+    'userage' => $userage,
 ];
 
 $mform = new application_form(null, $customdata);
@@ -178,8 +204,9 @@ echo $OUTPUT->header();
 // Include inline styles.
 echo \local_jobboard\output\ui_helper::get_inline_styles();
 
-// Calculate days until close.
-$daysuntilclose = ($vacancy->closedate - time()) / (24 * 60 * 60);
+// Calculate days until close (dates now come from convocatoria).
+$closedate = $vacancy->get_close_date();
+$daysuntilclose = ($closedate - time()) / (24 * 60 * 60);
 
 // Main container with two-column layout.
 echo '<div class="jb-apply-container">';
@@ -305,7 +332,7 @@ if (!empty($departmentName)) {
 echo '<hr>';
 echo '<p class="mb-2"><i class="fa fa-calendar-times text-danger mr-2"></i>';
 echo '<strong>' . get_string('closedate', 'local_jobboard') . ':</strong><br>';
-echo userdate($vacancy->closedate, get_string('strftimedatetime', 'langconfig')) . '</p>';
+echo userdate($closedate, get_string('strftimedatetime', 'langconfig')) . '</p>';
 
 // Time remaining badge.
 if ($daysuntilclose > 0) {

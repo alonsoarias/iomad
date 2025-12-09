@@ -32,6 +32,9 @@ require_once($CFG->libdir . '/formslib.php');
 
 /**
  * Form for creating and editing vacancies.
+ *
+ * Note: As of v2.1.0, vacancies no longer have their own dates.
+ * Dates are inherited from the associated convocatoria.
  */
 class vacancy_form extends \moodleform {
 
@@ -83,11 +86,6 @@ class vacancy_form extends \moodleform {
         $mform->setType('duration', PARAM_TEXT);
         $mform->addHelpButton('duration', 'duration', 'local_jobboard');
 
-        // Salary (textarea for detailed salary info including Decreto 598/2025 data).
-        $mform->addElement('textarea', 'salary', get_string('salary', 'local_jobboard'), ['rows' => 3, 'cols' => 60]);
-        $mform->setType('salary', PARAM_TEXT);
-        $mform->addHelpButton('salary', 'salary', 'local_jobboard');
-
         // Location (Centro Tutorial / Sede).
         $mform->addElement('text', 'location', get_string('location', 'local_jobboard'), ['size' => 60, 'maxlength' => 255]);
         $mform->setType('location', PARAM_TEXT);
@@ -104,103 +102,10 @@ class vacancy_form extends \moodleform {
         $mform->setType('department', PARAM_TEXT);
         $mform->addHelpButton('department', 'department', 'local_jobboard');
 
-        // Header: Dates and Positions.
-        $mform->addElement('header', 'datepositions', get_string('opendate', 'local_jobboard'));
-
-        // Get convocatoria info if set.
-        $convocatoriarecord = null;
-        $hasconvocatoria = false;
-        if ($defaultconvocatoriaid > 0) {
-            $convocatoriarecord = \local_jobboard_get_convocatoria($defaultconvocatoriaid);
-            $hasconvocatoria = !empty($convocatoriarecord);
-        } else if ($isedit && !empty($vacancy->convocatoriaid)) {
-            $convocatoriarecord = \local_jobboard_get_convocatoria($vacancy->convocatoriaid);
-            $hasconvocatoria = !empty($convocatoriarecord);
-        }
-
-        // If vacancy belongs to a convocatoria, show info and extemporaneous toggle.
-        if ($hasconvocatoria && $convocatoriarecord) {
-            // Show convocatoria dates info.
-            $convdates = userdate($convocatoriarecord->startdate, '%d/%m/%Y %H:%M') . ' - ' .
-                         userdate($convocatoriarecord->enddate, '%d/%m/%Y %H:%M');
-            $mform->addElement('static', 'convocatoria_dates_info',
-                get_string('convocatoriadates', 'local_jobboard'),
-                \html_writer::tag('strong', s($convocatoriarecord->name)) . '<br>' .
-                \html_writer::tag('span', $convdates, ['class' => 'badge badge-info'])
-            );
-
-            // Extemporaneous toggle.
-            $mform->addElement('advcheckbox', 'isextemporaneous',
-                get_string('isextemporaneous', 'local_jobboard'),
-                get_string('isextemporaneous_desc', 'local_jobboard'),
-                ['id' => 'id_isextemporaneous'],
-                [0, 1]
-            );
-            $mform->addHelpButton('isextemporaneous', 'isextemporaneous', 'local_jobboard');
-            $mform->setDefault('isextemporaneous', 0);
-
-            // Extemporaneous reason (required when extemporaneous is checked).
-            $mform->addElement('textarea', 'extemporaneousreason',
-                get_string('extemporaneousreason', 'local_jobboard'),
-                ['rows' => 3, 'cols' => 50]
-            );
-            $mform->setType('extemporaneousreason', PARAM_TEXT);
-            $mform->addHelpButton('extemporaneousreason', 'extemporaneousreason', 'local_jobboard');
-            $mform->hideIf('extemporaneousreason', 'isextemporaneous', 'eq', 0);
-        }
-
-        // Opening date.
-        $mform->addElement('date_time_selector', 'opendate', get_string('opendate', 'local_jobboard'));
-        $mform->addRule('opendate', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
-        $mform->addHelpButton('opendate', 'opendate', 'local_jobboard');
-
-        // Closing date.
-        $mform->addElement('date_time_selector', 'closedate', get_string('closedate', 'local_jobboard'));
-        $mform->addRule('closedate', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
-        $mform->addHelpButton('closedate', 'closedate', 'local_jobboard');
-
-        // Set default dates from convocatoria if not editing and has convocatoria.
-        if ($hasconvocatoria && $convocatoriarecord && !$isedit) {
-            $mform->setDefault('opendate', $convocatoriarecord->startdate);
-            $mform->setDefault('closedate', $convocatoriarecord->enddate);
-        }
-
-        // Hide date fields when using convocatoria dates (non-extemporaneous).
-        if ($hasconvocatoria) {
-            $mform->hideIf('opendate', 'isextemporaneous', 'eq', 0);
-            $mform->hideIf('closedate', 'isextemporaneous', 'eq', 0);
-        }
-
-        // Number of positions.
-        $mform->addElement('text', 'positions', get_string('positions', 'local_jobboard'), ['size' => 5]);
-        $mform->setType('positions', PARAM_INT);
-        $mform->setDefault('positions', 1);
-        $mform->addHelpButton('positions', 'positions', 'local_jobboard');
-
-        // Header: Requirements.
-        $mform->addElement('header', 'requirementsheader', get_string('requirements', 'local_jobboard'));
-
-        // Minimum requirements.
-        $mform->addElement('editor', 'requirements', get_string('requirements', 'local_jobboard'), null, [
-            'maxfiles' => 0,
-            'noclean' => false,
-        ]);
-        $mform->setType('requirements', PARAM_RAW);
-        $mform->addHelpButton('requirements', 'requirements', 'local_jobboard');
-
-        // Desirable requirements.
-        $mform->addElement('editor', 'desirable', get_string('desirable', 'local_jobboard'), null, [
-            'maxfiles' => 0,
-            'noclean' => false,
-        ]);
-        $mform->setType('desirable', PARAM_RAW);
-        $mform->addHelpButton('desirable', 'desirable', 'local_jobboard');
-
-        // Header: Convocatoria.
+        // Header: Convocatoria and Positions.
         $mform->addElement('header', 'convocatoriaheader', get_string('convocatoria', 'local_jobboard'));
 
         // Convocatoria selector (REQUIRED - vacancies must belong to a convocatoria).
-        // Initial options with placeholder - will be populated via AJAX.
         $convocatoriaoptions = ['' => get_string('selectconvocatoria', 'local_jobboard')];
 
         // Get current convocatoria ID for preselection.
@@ -228,6 +133,55 @@ class vacancy_form extends \moodleform {
         if ($defaultconvocatoriaid && !$isedit) {
             $mform->setDefault('convocatoriaid', $defaultconvocatoriaid);
         }
+
+        // Show convocatoria dates info (read-only).
+        $convocatoriarecord = null;
+        if ($currentconvocatoriaid > 0) {
+            $convocatoriarecord = \local_jobboard_get_convocatoria($currentconvocatoriaid);
+        }
+
+        if ($convocatoriarecord) {
+            $convdates = userdate($convocatoriarecord->startdate, '%d/%m/%Y %H:%M') . ' - ' .
+                         userdate($convocatoriarecord->enddate, '%d/%m/%Y %H:%M');
+            $mform->addElement('static', 'convocatoria_dates_info',
+                get_string('convocatoriadates', 'local_jobboard'),
+                \html_writer::tag('span', $convdates, ['class' => 'badge badge-info'])
+            );
+        }
+
+        // Informational note about dates.
+        $mform->addElement('static', 'dates_info', '',
+            \html_writer::tag('div',
+                '<i class="fa fa-info-circle"></i> ' .
+                get_string('vacancy_inherits_dates', 'local_jobboard'),
+                ['class' => 'alert alert-info']
+            )
+        );
+
+        // Number of positions.
+        $mform->addElement('text', 'positions', get_string('positions', 'local_jobboard'), ['size' => 5]);
+        $mform->setType('positions', PARAM_INT);
+        $mform->setDefault('positions', 1);
+        $mform->addHelpButton('positions', 'positions', 'local_jobboard');
+
+        // Header: Requirements.
+        $mform->addElement('header', 'requirementsheader', get_string('requirements', 'local_jobboard'));
+
+        // Minimum requirements.
+        $mform->addElement('editor', 'requirements', get_string('requirements', 'local_jobboard'), null, [
+            'maxfiles' => 0,
+            'noclean' => false,
+        ]);
+        $mform->setType('requirements', PARAM_RAW);
+        $mform->addHelpButton('requirements', 'requirements', 'local_jobboard');
+
+        // Desirable requirements.
+        $mform->addElement('editor', 'desirable', get_string('desirable', 'local_jobboard'), null, [
+            'maxfiles' => 0,
+            'noclean' => false,
+        ]);
+        $mform->setType('desirable', PARAM_RAW);
+        $mform->addHelpButton('desirable', 'desirable', 'local_jobboard');
 
         // Company and Department (Iomad multi-tenant).
         $isiomad = \local_jobboard_is_iomad_installed();
@@ -270,7 +224,7 @@ class vacancy_form extends \moodleform {
             // Department selector (IOMAD).
             $iomadinfo = \local_jobboard_get_iomad_info();
 
-            // Get current department ID for preselection (define outside block for JS access).
+            // Get current department ID for preselection.
             $currentdeptid = 0;
             if ($isedit && !empty($vacancy->departmentid)) {
                 $currentdeptid = (int) $vacancy->departmentid;
@@ -294,6 +248,20 @@ class vacancy_form extends \moodleform {
                     $mform->setDefault('departmentid', $currentdeptid);
                 }
             }
+
+            // Publication type for IOMAD (public or internal).
+            $pubtypes = [
+                'public' => get_string('publicationtype:public', 'local_jobboard'),
+                'internal' => get_string('publicationtype:internal', 'local_jobboard'),
+            ];
+            $mform->addElement('select', 'publicationtype', get_string('publicationtype', 'local_jobboard'), $pubtypes);
+            $mform->setType('publicationtype', PARAM_ALPHA);
+            $mform->setDefault('publicationtype', 'public');
+            $mform->addHelpButton('publicationtype', 'publicationtype', 'local_jobboard');
+        } else {
+            // For non-IOMAD installations, default to public.
+            $mform->addElement('hidden', 'publicationtype', 'public');
+            $mform->setType('publicationtype', PARAM_ALPHA);
         }
 
         // Add JavaScript for AJAX loading of companies, departments, and convocatorias.
@@ -309,22 +277,6 @@ class vacancy_form extends \moodleform {
         }
 
         $PAGE->requires->js_call_amd('local_jobboard/vacancy_form', 'init', [$jsoptions]);
-
-        // Publication type for IOMAD (public or internal).
-        if ($isiomad) {
-            $pubtypes = [
-                'public' => get_string('publicationtype:public', 'local_jobboard'),
-                'internal' => get_string('publicationtype:internal', 'local_jobboard'),
-            ];
-            $mform->addElement('select', 'publicationtype', get_string('publicationtype', 'local_jobboard'), $pubtypes);
-            $mform->setType('publicationtype', PARAM_ALPHA);
-            $mform->setDefault('publicationtype', 'public');
-            $mform->addHelpButton('publicationtype', 'publicationtype', 'local_jobboard');
-        } else {
-            // For non-IOMAD installations, default to public.
-            $mform->addElement('hidden', 'publicationtype', 'public');
-            $mform->setType('publicationtype', PARAM_ALPHA);
-        }
 
         // Hidden vacancy ID for editing.
         $mform->addElement('hidden', 'id');
@@ -356,36 +308,6 @@ class vacancy_form extends \moodleform {
             $errors['convocatoriaid'] = get_string('error:convocatoriarequired', 'local_jobboard');
         }
 
-        // Get convocatoria if set.
-        $convocatoriarecord = $convocatoriaid ? \local_jobboard_get_convocatoria($convocatoriaid) : null;
-
-        // Handle extemporaneous validation.
-        $isextemporaneous = !empty($data['isextemporaneous']);
-
-        if ($convocatoriarecord && $isextemporaneous) {
-            // Extemporaneous reason is required when enabled.
-            if (empty(trim($data['extemporaneousreason'] ?? ''))) {
-                $errors['extemporaneousreason'] = get_string('error:extemporaneousreasonrequired', 'local_jobboard');
-            }
-        }
-
-        // Validate dates - use convocatoria dates if not extemporaneous.
-        $opendate = $data['opendate'] ?? 0;
-        $closedate = $data['closedate'] ?? 0;
-
-        if ($convocatoriarecord && !$isextemporaneous) {
-            // Use convocatoria dates - no validation needed here as they come from convocatoria.
-            $opendate = $convocatoriarecord->startdate;
-            $closedate = $convocatoriarecord->enddate;
-        } else {
-            // Validate custom dates.
-            if (!empty($opendate) && !empty($closedate)) {
-                if ($closedate <= $opendate) {
-                    $errors['closedate'] = get_string('error:invaliddates', 'local_jobboard');
-                }
-            }
-        }
-
         // Validate positions.
         if (isset($data['positions']) && $data['positions'] < 1) {
             $errors['positions'] = get_string('error:requiredfield', 'local_jobboard');
@@ -407,18 +329,13 @@ class vacancy_form extends \moodleform {
         $data->description = ['text' => $vacancy->description, 'format' => FORMAT_HTML];
         $data->contracttype = $vacancy->contracttype;
         $data->duration = $vacancy->duration;
-        $data->salary = $vacancy->salary;
         $data->location = $vacancy->location;
         $data->modality = $vacancy->modality ?? '';
         $data->department = $vacancy->department;
         $data->companyid = $vacancy->companyid;
         $data->departmentid = $vacancy->departmentid ?? 0;
         $data->convocatoriaid = $vacancy->convocatoriaid ?? 0;
-        $data->isextemporaneous = $vacancy->isextemporaneous ?? 0;
-        $data->extemporaneousreason = $vacancy->extemporaneousreason ?? '';
         $data->publicationtype = $vacancy->publicationtype ?? 'public';
-        $data->opendate = $vacancy->opendate;
-        $data->closedate = $vacancy->closedate;
         $data->positions = $vacancy->positions;
         $data->requirements = ['text' => $vacancy->requirements, 'format' => FORMAT_HTML];
         $data->desirable = ['text' => $vacancy->desirable, 'format' => FORMAT_HTML];

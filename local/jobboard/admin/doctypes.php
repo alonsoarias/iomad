@@ -110,6 +110,18 @@ if (empty($doctypes)) {
             $conditions[] = '<span class="badge badge-secondary">' . get_string('doc_condition_iser_exempt', 'local_jobboard') . '</span>';
         }
 
+        // Age exemption threshold.
+        if (!empty($dt->age_exemption_threshold)) {
+            $conditions[] = '<span class="badge badge-success">' .
+                get_string('age_exempt_notice', 'local_jobboard', (int) $dt->age_exemption_threshold) . '</span>';
+        }
+
+        // Conditional note.
+        if (!empty($dt->conditional_note)) {
+            $conditions[] = '<span class="badge badge-light border" title="' . s($dt->conditional_note) . '">' .
+                '<i class="fa fa-info-circle"></i> ' . get_string('conditional_document_note', 'local_jobboard', '') . '</span>';
+        }
+
         $conditionshtml = !empty($conditions) ? implode('<br>', $conditions) : '-';
 
         $toggleurl = new moodle_url($pageurl, ['action' => 'toggle', 'id' => $dt->id, 'sesskey' => sesskey()]);

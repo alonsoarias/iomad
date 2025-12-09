@@ -2683,3 +2683,89 @@ $string['email_updated'] = 'Your email address has been updated.';
 $string['password_updated'] = 'Your password has been updated.';
 $string['username_updated'] = 'Your username has been updated to: {$a}';
 $string['completeprofile_required'] = 'Please complete your profile information before applying for this vacancy.';
+
+// ============================================================================
+// Phase 10 - Version 2.1.0: Major Refactoring
+// ============================================================================
+
+// Vacancy dates now come from convocatoria.
+$string['vacancy_inherits_dates'] = 'Vacancy dates are inherited from the selected convocatoria. To modify dates, edit the convocatoria.';
+$string['legacyconvocatoria'] = 'Legacy Convocatoria';
+$string['legacyconvocatoria_desc'] = 'Auto-created convocatoria for vacancies without an assigned convocatoria during the upgrade to v2.1.0.';
+
+// Application limits per convocatoria.
+$string['applicationlimits'] = 'Application Limits';
+$string['allowmultipleapplications_convocatoria_desc'] = 'Allow applicants to apply for multiple vacancies within this call';
+$string['allowmultipleapplications_convocatoria_help'] = 'If enabled, applicants can submit applications for more than one vacancy in this call. You can set a maximum limit below.';
+$string['maxapplicationsperuser'] = 'Maximum applications per user';
+$string['maxapplicationsperuser_help'] = 'Maximum number of applications a single user can submit in this call. Set to 0 for unlimited. Only applies when multiple applications are allowed.';
+$string['error:singleapplicationonly'] = 'The call "{$a}" only allows one application per person. Your current application must be finalized (selected, rejected, or withdrawn) before you can apply for another vacancy in this call.';
+$string['error:applicationlimitreached'] = 'You have reached the maximum number of applications ({$a->max}) for the call "{$a->convocatoria}". You currently have {$a->current} active application(s).';
+$string['singleapplication_notice'] = 'This call only allows one application per person. Choose carefully which vacancy to apply for.';
+$string['maxapplications_notice'] = 'This call allows a maximum of {$a} applications per person.';
+
+// Experience requirement for occasional contracts.
+$string['error:occasionalrequiresexperience'] = 'Occasional contracts require at least 2 years of full-time equivalent work experience.';
+
+// Tarjeta profesional conditional note.
+$string['tarjeta_profesional_note'] = 'The professional license is optional. However, it is MANDATORY for: Engineering, Architecture, Law, Medicine, Nursing, Accounting, Psychology, and other regulated professions according to Colombian law.';
+
+// Age exemption.
+$string['age_exempt_notice'] = 'This document is not required for applicants aged {$a} years or older.';
+
+// Audit actions.
+$string['audit_action_create'] = 'Create';
+$string['audit_action_update'] = 'Update';
+$string['audit_action_delete'] = 'Delete';
+$string['audit_action_view'] = 'View';
+$string['audit_action_download'] = 'Download';
+$string['audit_action_validate'] = 'Validate';
+$string['audit_action_reject'] = 'Reject';
+$string['audit_action_submit'] = 'Submit';
+$string['audit_action_transition'] = 'Status change';
+$string['audit_action_email_sent'] = 'Email sent';
+$string['audit_action_login'] = 'Login';
+$string['audit_action_export'] = 'Export';
+$string['audit_action_upload'] = 'Upload';
+
+// Audit entities.
+$string['audit_entity_vacancy'] = 'Vacancy';
+$string['audit_entity_application'] = 'Application';
+$string['audit_entity_document'] = 'Document';
+$string['audit_entity_exemption'] = 'Exemption';
+$string['audit_entity_convocatoria'] = 'Call';
+$string['audit_entity_config'] = 'Configuration';
+$string['audit_entity_user'] = 'User';
+$string['audit_entity_email_template'] = 'Email Template';
+
+// Email templates.
+$string['emailtemplates'] = 'Email Templates';
+$string['emailtemplates_desc'] = 'Customize the email notifications sent by the Job Board system.';
+$string['templatekey'] = 'Template Key';
+$string['availableplaceholders'] = 'Available Placeholders';
+$string['placeholders_help'] = 'Click on a placeholder to copy it. Insert placeholders in the subject or body to include dynamic content.';
+$string['templateenabled'] = 'Template enabled';
+$string['resettodefault'] = 'Reset to default';
+$string['templateupdated'] = 'Email template updated successfully';
+$string['templatereset'] = 'Template has been reset to default values';
+$string['previewemail'] = 'Preview Email';
+$string['managetemplates'] = 'Manage email templates';
+
+// Review complete notification.
+$string['notification_review_complete_subject'] = 'Document Review Complete - {$a->vacancy}';
+$string['notification_review_complete_body'] = '<p>Dear {$a->user_name},</p>
+
+<p>The review of your documents for the vacancy <strong>{$a->vacancy_title}</strong> has been completed.</p>
+
+<p><strong>The following documents require corrections:</strong></p>
+<ul>
+{$a->documents_list}
+</ul>
+
+<p>Please upload corrected versions of these documents at:<br>
+<a href="{$a->reupload_url}">{$a->reupload_url}</a></p>
+
+<p>Once you have uploaded the corrected documents, they will be reviewed again.</p>
+
+<p>Sincerely,<br>
+{$a->site_name}</p>';

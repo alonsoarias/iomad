@@ -133,12 +133,12 @@ class updateprofile_form extends moodleform {
         $mform->addRule('lastname', get_string('required'), 'required', null, 'client');
 
         // Document type.
+        // Note: TI (Tarjeta de Identidad) removed - it's for minors and not applicable for job applications.
         $doctypes = [
             '' => get_string('select') . '...',
             'cc' => get_string('signup_doctype_cc', 'local_jobboard'),
             'ce' => get_string('signup_doctype_ce', 'local_jobboard'),
             'passport' => get_string('signup_doctype_passport', 'local_jobboard'),
-            'ti' => get_string('signup_doctype_ti', 'local_jobboard'),
             'pep' => get_string('signup_doctype_pep', 'local_jobboard'),
             'ppt' => get_string('signup_doctype_ppt', 'local_jobboard'),
             'other' => get_string('other'),

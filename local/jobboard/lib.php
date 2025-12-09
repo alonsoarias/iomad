@@ -762,6 +762,117 @@ function local_jobboard_get_convocatoria(int $convocatoriaid) {
 }
 
 /**
+ * Check if user can apply to a vacancy based on convocatoria restrictions.
+ *
+ * This checks:
+ * - Single application restriction per convocatoria (if allow_multiple_applications is false)
+ * - Maximum applications per user per convocatoria
+ *
+ * @param int $userid The user ID.
+ * @param int $vacancyid The vacancy ID they want to apply to.
+ * @return array ['can_apply' => bool, 'reason' => string|null]
+ */
+function local_jobboard_can_user_apply_to_vacancy(int $userid, int $vacancyid): array {
+    global $DB;
+
+    // Get vacancy and its convocatoria.
+    $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid]);
+    if (!$vacancy || empty($vacancy->convocatoriaid)) {
+        // No convocatoria restrictions - allow.
+        return ['can_apply' => true, 'reason' => null];
+    }
+
+    $convocatoria = local_jobboard_get_convocatoria($vacancy->convocatoriaid);
+    if (!$convocatoria) {
+        return ['can_apply' => true, 'reason' => null];
+    }
+
+    // Check if multiple applications are allowed.
+    $allowmultiple = !empty($convocatoria->allow_multiple_applications);
+    $maxapplications = isset($convocatoria->max_applications_per_user) ? (int) $convocatoria->max_applications_per_user : 0;
+
+    // Count user's existing applications to vacancies in this convocatoria.
+    $sql = "SELECT COUNT(a.id)
+            FROM {local_jobboard_application} a
+            JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+            WHERE a.userid = :userid
+              AND v.convocatoriaid = :convocatoriaid
+              AND a.status != 'withdrawn'";
+
+    $existingcount = $DB->count_records_sql($sql, [
+        'userid' => $userid,
+        'convocatoriaid' => $convocatoria->id,
+    ]);
+
+    // If multiple applications are not allowed, check if user already has one.
+    if (!$allowmultiple && $existingcount > 0) {
+        return [
+            'can_apply' => false,
+            'reason' => get_string('error:singleapplicationonly', 'local_jobboard'),
+        ];
+    }
+
+    // If there's a maximum limit, check if user has reached it.
+    if ($maxapplications > 0 && $existingcount >= $maxapplications) {
+        return [
+            'can_apply' => false,
+            'reason' => get_string('error:applicationlimitreached', 'local_jobboard', $maxapplications),
+        ];
+    }
+
+    return ['can_apply' => true, 'reason' => null];
+}
+
+/**
+ * Check if user meets experience requirements for a vacancy.
+ *
+ * Occasional contracts require a minimum of 2 years of related work experience.
+ *
+ * @param int $userid The user ID.
+ * @param int $vacancyid The vacancy ID.
+ * @return array ['meets_requirements' => bool, 'reason' => string|null]
+ */
+function local_jobboard_check_experience_requirements(int $userid, int $vacancyid): array {
+    global $DB;
+
+    // Get vacancy.
+    $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid]);
+    if (!$vacancy) {
+        return ['meets_requirements' => true, 'reason' => null];
+    }
+
+    // Check if this is an occasional contract.
+    if (empty($vacancy->contracttype) || $vacancy->contracttype !== 'occasional') {
+        // Not an occasional contract - no experience requirement.
+        return ['meets_requirements' => true, 'reason' => null];
+    }
+
+    // Occasional contracts require minimum 2 years experience.
+    // Get user's experience from applicant profile.
+    $profile = $DB->get_record('local_jobboard_applicant_profile', ['userid' => $userid]);
+    if (!$profile) {
+        // No profile - fail the check.
+        return [
+            'meets_requirements' => false,
+            'reason' => get_string('error:occasionalrequiresexperience', 'local_jobboard'),
+        ];
+    }
+
+    // Experience is stored as years in the profile.
+    $experienceyears = !empty($profile->experience_years) ? (int) $profile->experience_years : 0;
+    $minrequired = 2;
+
+    if ($experienceyears < $minrequired) {
+        return [
+            'meets_requirements' => false,
+            'reason' => get_string('error:occasionalrequiresexperience', 'local_jobboard'),
+        ];
+    }
+
+    return ['meets_requirements' => true, 'reason' => null];
+}
+
+/**
  * Get IOMAD installation type and details.
  *
  * @return array Installation info with keys: is_iomad, version, has_departments.
@@ -836,6 +947,62 @@ function local_jobboard_get_user_exemption(?int $userid = null) {
          LIMIT 1",
         ['userid' => $userid, 'now1' => $now, 'now2' => $now]
     );
+}
+
+/**
+ * Get user's age in years based on birthdate.
+ *
+ * @param int|null $userid User ID or null for current user.
+ * @return int|null Age in years or null if birthdate not set.
+ */
+function local_jobboard_get_user_age(?int $userid = null): ?int {
+    global $DB, $USER;
+
+    $userid = $userid ?? $USER->id;
+
+    // Check for birthdate in user_info_data (custom profile field).
+    $birthdatefield = $DB->get_record('user_info_field', ['shortname' => 'birthdate']);
+    if (!$birthdatefield) {
+        // Try alternative field names.
+        $birthdatefield = $DB->get_record('user_info_field', ['shortname' => 'fecha_nacimiento']);
+    }
+
+    if (!$birthdatefield) {
+        return null;
+    }
+
+    $birthdatedata = $DB->get_record('user_info_data', [
+        'userid' => $userid,
+        'fieldid' => $birthdatefield->id,
+    ]);
+
+    if (!$birthdatedata || empty($birthdatedata->data)) {
+        return null;
+    }
+
+    $birthdate = $birthdatedata->data;
+
+    // Handle different date formats.
+    $timestamp = null;
+    if (is_numeric($birthdate)) {
+        // Unix timestamp.
+        $timestamp = (int) $birthdate;
+    } else {
+        // Try to parse as date string.
+        $timestamp = strtotime($birthdate);
+    }
+
+    if (!$timestamp || $timestamp <= 0) {
+        return null;
+    }
+
+    // Calculate age.
+    $birthDateTime = new \DateTime();
+    $birthDateTime->setTimestamp($timestamp);
+    $now = new \DateTime();
+    $age = $now->diff($birthDateTime)->y;
+
+    return $age;
 }
 
 /**
@@ -955,16 +1122,19 @@ function local_jobboard_get_all_doctypes(): array {
  * - Gender condition (e.g., libreta_militar only for men)
  * - Profession exemptions (e.g., tarjeta_profesional not for licenciados)
  * - ISER exemption status (documents already in file for previous ISER employees)
+ * - Age exemption (e.g., libreta_militar exempt for 50+ years)
  *
  * @param string|null $gender The applicant's gender (M, F, O, N).
  * @param string|null $educationlevel The applicant's education level code.
  * @param bool $isiserexempted Whether the applicant is ISER exempted.
+ * @param int|null $userage The applicant's age in years (for age exemptions).
  * @return array Array of document type objects that are required for this applicant.
  */
 function local_jobboard_get_required_doctypes_for_applicant(
     ?string $gender = null,
     ?string $educationlevel = null,
-    bool $isiserexempted = false
+    bool $isiserexempted = false,
+    ?int $userage = null
 ): array {
     global $DB;
 
@@ -1001,6 +1171,18 @@ function local_jobboard_get_required_doctypes_for_applicant(
             continue;
         }
 
+        // Check age exemption (e.g., libreta_militar exempt for 50+ years).
+        if ($userage !== null && !empty($doctype->age_exemption_threshold)) {
+            $threshold = (int) $doctype->age_exemption_threshold;
+            if ($userage >= $threshold) {
+                // Document not required for users at or above age threshold.
+                // Mark as age-exempted for display purposes but don't include in required list.
+                $doctype->is_age_exempted = true;
+                $doctype->age_exemption_reason = get_string('age_exempt_notice', 'local_jobboard', $threshold);
+                continue;
+            }
+        }
+
         $required[$doctype->code] = $doctype;
     }
 
@@ -1013,14 +1195,16 @@ function local_jobboard_get_required_doctypes_for_applicant(
  * @param string|null $gender The applicant's gender for filtering.
  * @param string|null $educationlevel The applicant's education level for filtering.
  * @param bool $isiserexempted Whether the applicant is ISER exempted.
+ * @param int|null $userage The applicant's age in years (for age exemptions).
  * @return array Associative array of category => doctypes.
  */
 function local_jobboard_get_doctypes_by_category(
     ?string $gender = null,
     ?string $educationlevel = null,
-    bool $isiserexempted = false
+    bool $isiserexempted = false,
+    ?int $userage = null
 ): array {
-    $doctypes = local_jobboard_get_required_doctypes_for_applicant($gender, $educationlevel, $isiserexempted);
+    $doctypes = local_jobboard_get_required_doctypes_for_applicant($gender, $educationlevel, $isiserexempted, $userage);
     $grouped = [];
 
     foreach ($doctypes as $doctype) {
@@ -1070,15 +1254,17 @@ function local_jobboard_get_category_name(string $category): string {
  * @param string|null $gender The applicant's gender.
  * @param string|null $educationlevel The applicant's education level.
  * @param bool $isiserexempted Whether the applicant is ISER exempted.
+ * @param int|null $userage The applicant's age in years.
  * @return bool True if the document is required.
  */
 function local_jobboard_is_document_required(
     string $doccode,
     ?string $gender = null,
     ?string $educationlevel = null,
-    bool $isiserexempted = false
+    bool $isiserexempted = false,
+    ?int $userage = null
 ): bool {
-    $required = local_jobboard_get_required_doctypes_for_applicant($gender, $educationlevel, $isiserexempted);
+    $required = local_jobboard_get_required_doctypes_for_applicant($gender, $educationlevel, $isiserexempted, $userage);
     return isset($required[$doccode]);
 }
 

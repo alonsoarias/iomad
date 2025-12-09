@@ -3074,3 +3074,144 @@ $string['email_updated'] = 'Su correo electrónico ha sido actualizado.';
 $string['password_updated'] = 'Su contraseña ha sido actualizada.';
 $string['username_updated'] = 'Su nombre de usuario ha sido actualizado a: {$a}';
 $string['completeprofile_required'] = 'Por favor complete la información de su perfil antes de postularse a esta vacante.';
+
+// ============================================================================
+// Fase 10 - Refactorización Mayor v2.1.0
+// ============================================================================
+
+// Herencia de fechas de vacante desde convocatoria.
+$string['vacancy_inherits_dates'] = 'Las fechas de apertura y cierre de la vacante se heredan de la convocatoria asociada.';
+$string['legacyconvocatoria'] = 'Convocatoria Heredada';
+$string['legacyconvocatoria_desc'] = 'Convocatoria creada automáticamente durante la migración para vacantes sin convocatoria asignada.';
+$string['convocatoriadates'] = 'Fechas de la convocatoria';
+
+// Límites de aplicaciones por convocatoria.
+$string['applicationlimits'] = 'Límites de aplicaciones';
+$string['allowmultipleapplications_convocatoria'] = 'Permitir múltiples aplicaciones';
+$string['allowmultipleapplications_convocatoria_desc'] = 'Si se habilita, los usuarios pueden aplicar a múltiples vacantes dentro de esta convocatoria.';
+$string['maxapplicationsperuser'] = 'Máximo de aplicaciones por usuario';
+$string['maxapplicationsperuser_desc'] = 'Número máximo de aplicaciones que un usuario puede enviar a esta convocatoria (0 = sin límite).';
+$string['error:singleapplicationonly'] = 'Solo puede aplicar a una vacante por convocatoria. Ya tiene una aplicación activa en esta convocatoria.';
+$string['error:applicationlimitreached'] = 'Ha alcanzado el límite máximo de {$a} aplicaciones para esta convocatoria.';
+
+// Requisito de experiencia para contratos ocasionales.
+$string['error:occasionalrequiresexperience'] = 'Los contratos ocasionales requieren un mínimo de 2 años de experiencia laboral relacionada.';
+$string['occasionalcontract_experience_notice'] = 'Nota: Los contratos de tipo ocasional requieren un mínimo de 2 años de experiencia laboral relacionada.';
+
+// Tarjeta profesional opcional.
+$string['tarjeta_profesional_note'] = 'Este documento es obligatorio para aspirantes a cargos docentes que requieran título profesional (Art. 6 Ley 1188/2008).';
+$string['conditional_document_note'] = 'Nota: {$a}';
+
+// Exención de documentos por edad.
+$string['age_exempt_notice'] = 'Este documento no es requerido para personas mayores de {$a} años.';
+$string['document_age_exemption'] = 'Exento por edad';
+
+// Acciones de auditoría.
+$string['audit_action_create'] = 'Crear';
+$string['audit_action_update'] = 'Actualizar';
+$string['audit_action_delete'] = 'Eliminar';
+$string['audit_action_view'] = 'Ver';
+$string['audit_action_download'] = 'Descargar';
+$string['audit_action_validate'] = 'Validar';
+$string['audit_action_reject'] = 'Rechazar';
+$string['audit_action_submit'] = 'Enviar';
+$string['audit_action_transition'] = 'Cambio de estado';
+$string['audit_action_email_sent'] = 'Correo enviado';
+$string['audit_action_login'] = 'Inicio de sesión';
+$string['audit_action_export'] = 'Exportar';
+$string['audit_action_upload'] = 'Subir archivo';
+
+// Entidades de auditoría.
+$string['audit_entity_vacancy'] = 'Vacante';
+$string['audit_entity_application'] = 'Aplicación';
+$string['audit_entity_document'] = 'Documento';
+$string['audit_entity_exemption'] = 'Exención';
+$string['audit_entity_convocatoria'] = 'Convocatoria';
+$string['audit_entity_config'] = 'Configuración';
+$string['audit_entity_user'] = 'Usuario';
+$string['audit_entity_email_template'] = 'Plantilla de correo';
+
+// Campos de auditoría.
+$string['previousvalue'] = 'Valor anterior';
+$string['newvalue'] = 'Nuevo valor';
+$string['audittrail'] = 'Historial de auditoría';
+$string['viewaudittrail'] = 'Ver historial de auditoría';
+
+// Plantillas de correo electrónico.
+$string['emailtemplates'] = 'Plantillas de correo electrónico';
+$string['emailtemplate'] = 'Plantilla de correo';
+$string['templatekey'] = 'Clave de plantilla';
+$string['templatesubject'] = 'Asunto';
+$string['templatebody'] = 'Cuerpo del mensaje';
+$string['availableplaceholders'] = 'Marcadores disponibles';
+$string['emailtemplate_saved'] = 'Plantilla de correo guardada correctamente.';
+$string['emailtemplate_deleted'] = 'Plantilla de correo eliminada.';
+$string['restoreddefault'] = 'Restaurar valores por defecto';
+$string['emailtemplate_restored'] = 'Plantilla restaurada a los valores por defecto.';
+
+// Claves de plantillas de correo.
+$string['template_application_received'] = 'Aplicación recibida';
+$string['template_application_approved'] = 'Aplicación aprobada';
+$string['template_application_rejected'] = 'Aplicación rechazada';
+$string['template_document_rejected'] = 'Documento rechazado';
+$string['template_review_complete'] = 'Revisión completada';
+
+// Notificación de revisión completada (documentos).
+$string['notification_review_complete_subject'] = 'Revisión de documentos completada - {$a->vacancytitle}';
+$string['notification_review_complete_body'] = 'Estimado/a {$a->fullname},
+
+La revisión de sus documentos para la vacante "{$a->vacancytitle}" ha sido completada.
+
+{$a->summary}
+
+{$a->action_required}
+
+Para ver el estado detallado de su aplicación, visite:
+{$a->applicationurl}
+
+Atentamente,
+{$a->sitename}';
+
+// Revisión de documentos estilo mod_assign.
+$string['documentreview'] = 'Revisión de documentos';
+$string['reviewdocuments'] = 'Revisar documentos';
+$string['documentstatus'] = 'Estado del documento';
+$string['documentobservations'] = 'Observaciones';
+$string['requiresreupload'] = 'Requiere nueva carga';
+$string['markasinvalid'] = 'Marcar como inválido';
+$string['markasvalid'] = 'Marcar como válido';
+$string['savereview'] = 'Guardar revisión';
+$string['sendnotification'] = 'Enviar notificación al aplicante';
+$string['reviewsaved'] = 'Revisión guardada correctamente.';
+$string['documentsummary'] = 'Resumen de documentos';
+$string['approveddocuments'] = 'Documentos aprobados';
+$string['rejecteddocuments'] = 'Documentos rechazados';
+$string['pendingdocuments'] = 'Documentos pendientes';
+
+// Exportación ZIP.
+$string['exportzip'] = 'Exportar ZIP';
+$string['exportzipdesc'] = 'Exportar aplicaciones y documentos en archivo ZIP estructurado por compañía.';
+$string['exportinprogress'] = 'Exportación en progreso...';
+$string['exportcomplete'] = 'Exportación completada';
+$string['zipstructure'] = 'Estructura del archivo';
+$string['includeapplicantfolders'] = 'Incluir carpetas por aplicante';
+$string['includeapplicationdata'] = 'Incluir datos de aplicación (JSON)';
+
+// Vista pública de convocatoria.
+$string['viewconvocatoria'] = 'Ver convocatoria';
+$string['convocatoriapublic'] = 'Información de la convocatoria';
+$string['convocatoriavacancies'] = 'Vacantes de esta convocatoria';
+$string['convocatoriaclosed'] = 'Esta convocatoria está cerrada.';
+$string['convocatorianotstarted'] = 'Esta convocatoria aún no ha iniciado.';
+
+// Página apply rediseñada con tabs.
+$string['tab_vacancyinfo'] = 'Información de la vacante';
+$string['tab_personaldata'] = 'Datos personales';
+$string['tab_documents'] = 'Documentos';
+$string['tab_review'] = 'Revisar y enviar';
+$string['applicationsteps'] = 'Pasos de la aplicación';
+$string['step_x_of_y'] = 'Paso {$a->current} de {$a->total}';
+$string['nextstep'] = 'Siguiente';
+$string['previousstep'] = 'Anterior';
+$string['saveandcontinue'] = 'Guardar y continuar';
+$string['reviewapplication'] = 'Revisar aplicación';

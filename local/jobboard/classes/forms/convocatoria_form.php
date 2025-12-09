@@ -164,6 +164,27 @@ class convocatoria_form extends \moodleform {
         $mform->setType('terms', PARAM_RAW);
         $mform->addHelpButton('terms', 'convocatoriaterms', 'local_jobboard');
 
+        // Header: Application Restrictions.
+        $mform->addElement('header', 'applicationlimitsheader', get_string('applicationlimits', 'local_jobboard'));
+
+        // Allow multiple applications per convocatoria.
+        $mform->addElement('advcheckbox', 'allow_multiple_applications',
+            get_string('allowmultipleapplications_convocatoria', 'local_jobboard'),
+            get_string('allowmultipleapplications_convocatoria_desc', 'local_jobboard'),
+            [], [0, 1]);
+        $mform->setDefault('allow_multiple_applications', 0);
+
+        // Maximum applications per user.
+        $mform->addElement('text', 'max_applications_per_user',
+            get_string('maxapplicationsperuser', 'local_jobboard'),
+            ['size' => 5]);
+        $mform->setType('max_applications_per_user', PARAM_INT);
+        $mform->setDefault('max_applications_per_user', 0);
+        $mform->addHelpButton('max_applications_per_user', 'maxapplicationsperuser', 'local_jobboard');
+
+        // Only show max applications when multiple are allowed.
+        $mform->hideIf('max_applications_per_user', 'allow_multiple_applications', 'eq', 0);
+
         // Submit buttons.
         $this->add_action_buttons(true, $isedit ? get_string('savechanges') : get_string('addconvocatoria', 'local_jobboard'));
     }
@@ -217,6 +238,9 @@ class convocatoria_form extends \moodleform {
         $data->companyid = $convocatoria->companyid ?? 0;
         $data->departmentid = $convocatoria->departmentid ?? 0;
         $data->terms = ['text' => $convocatoria->terms ?? '', 'format' => FORMAT_HTML];
+        // Application restriction fields.
+        $data->allow_multiple_applications = $convocatoria->allow_multiple_applications ?? 0;
+        $data->max_applications_per_user = $convocatoria->max_applications_per_user ?? 0;
 
         $this->set_data($data);
     }

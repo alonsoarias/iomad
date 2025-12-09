@@ -51,9 +51,6 @@ class vacancy {
     /** @var string The contract duration. */
     public $duration = '';
 
-    /** @var string The salary information. */
-    public $salary = '';
-
     /** @var string The work location. */
     public $location = '';
 
@@ -69,11 +66,8 @@ class vacancy {
     /** @var int|null The parent convocatoria ID. */
     public $convocatoriaid = null;
 
-    /** @var int The opening date timestamp. */
-    public $opendate = 0;
-
-    /** @var int The closing date timestamp. */
-    public $closedate = 0;
+    /** @var \stdClass|null Cached convocatoria record. */
+    protected $convocatoria_cache = null;
 
     /** @var int The number of available positions. */
     public $positions = 1;
@@ -154,14 +148,11 @@ class vacancy {
         $this->description = $record->description ?? '';
         $this->contracttype = $record->contracttype ?? '';
         $this->duration = $record->duration ?? '';
-        $this->salary = $record->salary ?? '';
         $this->location = $record->location ?? '';
         $this->department = $record->department ?? '';
         $this->companyid = $record->companyid ? (int) $record->companyid : null;
         $this->departmentid = isset($record->departmentid) && $record->departmentid ? (int) $record->departmentid : null;
         $this->convocatoriaid = isset($record->convocatoriaid) && $record->convocatoriaid ? (int) $record->convocatoriaid : null;
-        $this->opendate = (int) $record->opendate;
-        $this->closedate = (int) $record->closedate;
         $this->positions = (int) $record->positions;
         $this->requirements = $record->requirements ?? '';
         $this->desirable = $record->desirable ?? '';
@@ -349,8 +340,8 @@ class vacancy {
     protected function set_from_data(\stdClass $data): void {
         $fields = [
             'code', 'title', 'description', 'contracttype', 'duration',
-            'salary', 'location', 'department', 'companyid', 'departmentid',
-            'convocatoriaid', 'opendate', 'closedate', 'positions',
+            'location', 'department', 'companyid', 'departmentid',
+            'convocatoriaid', 'positions',
             'requirements', 'desirable', 'status', 'publicationtype',
         ];
 
@@ -395,21 +386,9 @@ class vacancy {
                 get_string('vacancytitle', 'local_jobboard');
         }
 
-        if (empty($this->opendate)) {
-            $errors[] = get_string('error:requiredfield', 'local_jobboard') . ': ' .
-                get_string('opendate', 'local_jobboard');
-        }
-
-        if (empty($this->closedate)) {
-            $errors[] = get_string('error:requiredfield', 'local_jobboard') . ': ' .
-                get_string('closedate', 'local_jobboard');
-        }
-
-        // Validate dates.
-        if ($this->opendate && $this->closedate) {
-            if ($this->closedate <= $this->opendate) {
-                $errors[] = get_string('error:invaliddates', 'local_jobboard');
-            }
+        // Convocatoria is required (v2.1.0+: dates come from convocatoria).
+        if (empty($this->convocatoriaid)) {
+            $errors[] = get_string('error:convocatoriarequired', 'local_jobboard');
         }
 
         // Validate unique code.
@@ -466,14 +445,11 @@ class vacancy {
             'description' => $this->description,
             'contracttype' => $this->contracttype,
             'duration' => $this->duration,
-            'salary' => $this->salary,
             'location' => $this->location,
             'department' => $this->department,
             'companyid' => $this->companyid,
             'departmentid' => $this->departmentid,
             'convocatoriaid' => $this->convocatoriaid,
-            'opendate' => $this->opendate,
-            'closedate' => $this->closedate,
             'positions' => $this->positions,
             'requirements' => $this->requirements,
             'desirable' => $this->desirable,
@@ -484,6 +460,26 @@ class vacancy {
             'timecreated' => $this->timecreated,
             'timemodified' => $this->timemodified,
         ];
+    }
+
+    /**
+     * Get the opening date from convocatoria.
+     *
+     * @return int The opening date timestamp.
+     */
+    public function get_open_date(): int {
+        $convocatoria = $this->get_convocatoria();
+        return $convocatoria ? (int) $convocatoria->startdate : 0;
+    }
+
+    /**
+     * Get the closing date from convocatoria.
+     *
+     * @return int The closing date timestamp.
+     */
+    public function get_close_date(): int {
+        $convocatoria = $this->get_convocatoria();
+        return $convocatoria ? (int) $convocatoria->enddate : 0;
     }
 
     /**
@@ -555,13 +551,14 @@ class vacancy {
             return false;
         }
 
-        // Must have required fields.
-        if (empty($this->code) || empty($this->title) || empty($this->opendate) || empty($this->closedate)) {
+        // Must have required fields and convocatoria.
+        if (empty($this->code) || empty($this->title) || empty($this->convocatoriaid)) {
             return false;
         }
 
-        // Close date must be in the future.
-        if ($this->closedate <= time()) {
+        // Close date (from convocatoria) must be in the future.
+        $closedate = $this->get_close_date();
+        if ($closedate <= time()) {
             return false;
         }
 
@@ -665,20 +662,14 @@ class vacancy {
     /**
      * Reopen a closed vacancy.
      *
-     * @param int|null $newclosedate Optional new close date timestamp.
+     * Note: As of v2.1.0, vacancy dates come from convocatoria.
+     * To extend dates, update the convocatoria instead.
+     *
      * @throws \moodle_exception If reopen not allowed.
      */
-    public function reopen(?int $newclosedate = null): void {
+    public function reopen(): void {
         if (!$this->can_reopen()) {
             throw new \moodle_exception('error:cannotreopen', 'local_jobboard');
-        }
-
-        global $DB;
-
-        // Update close date if provided.
-        if ($newclosedate !== null && $newclosedate > time()) {
-            $this->closedate = $newclosedate;
-            $DB->set_field('local_jobboard_vacancy', 'closedate', $this->closedate, ['id' => $this->id]);
         }
 
         $this->change_status('published');
@@ -776,9 +767,11 @@ class vacancy {
      */
     public function is_open(): bool {
         $now = time();
+        $opendate = $this->get_open_date();
+        $closedate = $this->get_close_date();
         return $this->status === 'published' &&
-               $this->opendate <= $now &&
-               $this->closedate >= $now;
+               $opendate <= $now &&
+               $closedate >= $now;
     }
 
     /**
