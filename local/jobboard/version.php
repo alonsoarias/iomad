@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120987;  // v2.0.69: Require complete profile only for applicants, fix gender retrieval.
+$plugin->version = 2025120988;  // v2.0.70: Mark profile complete on signup registration.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.69';
+$plugin->release = '2.0.70';

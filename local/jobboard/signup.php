@@ -379,6 +379,7 @@ function store_extended_profile($userid, $data) {
     $profile->degree_title = trim($data->degree_title ?? '');
     $profile->expertise_area = trim($data->expertise_area ?? '');
     $profile->experience_years = $data->experience_years ?? '';
+    $profile->profile_complete = 1; // Mark as complete since they filled full signup form.
     $profile->timecreated = time();
     $profile->timemodified = time();
 
@@ -395,6 +396,7 @@ function store_extended_profile($userid, $data) {
         set_user_preference('local_jobboard_degree_title', $profile->degree_title, $userid);
         set_user_preference('local_jobboard_expertise_area', $profile->expertise_area, $userid);
         set_user_preference('local_jobboard_experience_years', $profile->experience_years, $userid);
+        set_user_preference('local_jobboard_profile_complete', '1', $userid);
     }
 }
 
