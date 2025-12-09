@@ -40,7 +40,6 @@ define([
         options = options || {};
 
         var companySelect = $('#id_companyid_signup');
-        var departmentSelect = $('#id_departmentid_signup');
 
         // Initialize company/department loaders based on available elements.
         if (companySelect.length && options.loadCompaniesAjax) {
