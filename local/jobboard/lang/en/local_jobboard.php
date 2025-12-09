@@ -2741,15 +2741,127 @@ $string['audit_entity_email_template'] = 'Email Template';
 // Email templates.
 $string['emailtemplates'] = 'Email Templates';
 $string['emailtemplates_desc'] = 'Customize the email notifications sent by the Job Board system.';
+$string['emailtemplates_help'] = 'Customize the email notifications sent to applicants. Use placeholders to include dynamic content. Changes apply immediately.';
+$string['emailtemplate'] = 'Email Template';
 $string['templatekey'] = 'Template Key';
+$string['templatesubject'] = 'Subject';
+$string['templatebody'] = 'Message Body';
 $string['availableplaceholders'] = 'Available Placeholders';
-$string['placeholders_help'] = 'Click on a placeholder to copy it. Insert placeholders in the subject or body to include dynamic content.';
+$string['placeholders_help'] = 'Insert these placeholders in the subject or body. They will be replaced with actual values when the email is sent.';
 $string['templateenabled'] = 'Template enabled';
 $string['resettodefault'] = 'Reset to default';
+$string['restoreddefault'] = 'Restore Default';
 $string['templateupdated'] = 'Email template updated successfully';
+$string['emailtemplate_saved'] = 'Email template saved successfully.';
+$string['emailtemplate_restored'] = 'Template restored to default values.';
 $string['templatereset'] = 'Template has been reset to default values';
 $string['previewemail'] = 'Preview Email';
 $string['managetemplates'] = 'Manage email templates';
+$string['notemplates'] = 'No email templates found. Templates will be created automatically when needed.';
+$string['customized'] = 'Customized';
+$string['customize'] = 'Customize';
+$string['default'] = 'Default';
+
+// Template names.
+$string['template_application_received'] = 'Application Received';
+$string['template_docs_validated'] = 'Documents Validated';
+$string['template_docs_rejected'] = 'Documents Rejected';
+$string['template_review_complete'] = 'Review Complete';
+$string['template_interview'] = 'Interview Scheduled';
+$string['template_selected'] = 'Application Selected';
+$string['template_rejected'] = 'Application Rejected';
+
+// Default email template strings (used as fallback).
+$string['email_application_received_subject'] = 'Application Received - {vacancy_code}';
+$string['email_application_received_body'] = 'Dear {fullname},
+
+Your application for "{vacancy_title}" (Code: {vacancy_code}) has been received.
+
+You can track your application status at:
+{application_url}
+
+Best regards,
+{sitename}';
+
+$string['email_docs_validated_subject'] = 'Documents Validated - {vacancy_code}';
+$string['email_docs_validated_body'] = 'Dear {fullname},
+
+Your documents for the application to "{vacancy_title}" have been validated.
+
+You can view your application at:
+{application_url}
+
+Best regards,
+{sitename}';
+
+$string['email_docs_rejected_subject'] = 'Document Review - Action Required - {vacancy_code}';
+$string['email_docs_rejected_body'] = 'Dear {fullname},
+
+Some documents for your application to "{vacancy_title}" require attention.
+
+Rejected documents:
+{rejected_docs}
+
+Observations:
+{observations}
+
+Please review and reupload at:
+{application_url}
+
+Best regards,
+{sitename}';
+
+$string['email_review_complete_subject'] = 'Document Review Complete - {vacancy_code}';
+$string['email_review_complete_body'] = 'Dear {fullname},
+
+The review of your documents for "{vacancy_title}" has been completed.
+
+{summary}
+
+{action_required}
+
+View details at:
+{application_url}
+
+Best regards,
+{sitename}';
+
+$string['email_interview_subject'] = 'Interview Scheduled - {vacancy_code}';
+$string['email_interview_body'] = 'Dear {fullname},
+
+You have been scheduled for an interview for "{vacancy_title}".
+
+Date: {interview_date}
+Location: {interview_location}
+
+{interview_notes}
+
+Best regards,
+{sitename}';
+
+$string['email_selected_subject'] = 'Congratulations! - {vacancy_code}';
+$string['email_selected_body'] = 'Dear {fullname},
+
+Congratulations! You have been selected for "{vacancy_title}".
+
+{notes}
+
+Best regards,
+{sitename}';
+
+$string['email_rejected_subject'] = 'Application Update - {vacancy_code}';
+$string['email_rejected_body'] = 'Dear {fullname},
+
+Thank you for your interest in "{vacancy_title}".
+
+After careful consideration, we regret to inform you that your application was not successful this time.
+
+{notes}
+
+We encourage you to apply for future opportunities.
+
+Best regards,
+{sitename}';
 
 // Review complete notification.
 $string['notification_review_complete_subject'] = 'Document Review Complete - {$a->vacancy}';

@@ -220,9 +220,11 @@ if (empty($vacancies)) {
     echo html_writer::start_div('row');
 
     foreach ($vacancies as $vacancy) {
-        $vacDaysRemaining = local_jobboard_days_between($now, $vacancy->closedate);
+        // Get closedate from convocatoria if not on vacancy.
+        $vacClosedate = !empty($vacancy->closedate) ? $vacancy->closedate : $convocatoria->enddate;
+        $vacDaysRemaining = local_jobboard_days_between($now, $vacClosedate);
         $isVacUrgent = ($vacDaysRemaining <= 7 && $vacDaysRemaining >= 0);
-        $isVacClosed = ($vacancy->closedate < $now || $vacancy->status === 'closed');
+        $isVacClosed = ($vacClosedate < $now || $vacancy->status === 'closed');
 
         // Card column.
         echo html_writer::start_div('col-lg-4 col-md-6 mb-4');
@@ -300,7 +302,7 @@ if (empty($vacancies)) {
         // Close date.
         $closeDateClass = $isVacUrgent ? 'text-warning font-weight-bold' : 'text-muted';
         echo html_writer::tag('small',
-            '<i class="fa fa-calendar-times mr-1"></i>' . local_jobboard_format_date($vacancy->closedate),
+            '<i class="fa fa-calendar-times mr-1"></i>' . local_jobboard_format_date($vacClosedate),
             ['class' => $closeDateClass]
         );
 
