@@ -148,6 +148,15 @@ if ($data = $form->get_data()) {
                 'status' => $convocatoria->status,
             ]);
 
+            // Update document exemptions.
+            if (isset($data->exempted_doctypes) && is_array($data->exempted_doctypes)) {
+                \local_jobboard\convocatoria_exemption::set_exemptions(
+                    $convocatoria->id,
+                    $data->exempted_doctypes,
+                    $data->exemption_reason ?? null
+                );
+            }
+
             $message = get_string('convocatoriaupdated', 'local_jobboard');
 
             // Redirect back to edit page to continue editing.
@@ -187,6 +196,15 @@ if ($data = $form->get_data()) {
                 'publicationtype' => $newconvocatoria->publicationtype,
                 'companyid' => $newconvocatoria->companyid ?? null,
             ]);
+
+            // Set document exemptions if any were selected.
+            if (isset($data->exempted_doctypes) && is_array($data->exempted_doctypes) && !empty($data->exempted_doctypes)) {
+                \local_jobboard\convocatoria_exemption::set_exemptions(
+                    $newid,
+                    $data->exempted_doctypes,
+                    $data->exemption_reason ?? null
+                );
+            }
 
             $message = get_string('convocatoriacreated', 'local_jobboard');
 

@@ -1414,5 +1414,33 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121023, 'local', 'jobboard');
     }
 
+    // Step 15: Create convocatoria document exemptions table for global exemptions per convocatoria.
+    if ($oldversion < 2025121028) {
+        // Create the new table for convocatoria-level document exemptions.
+        $table = new xmldb_table('local_jobboard_conv_docexempt');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('convocatoriaid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('doctypeid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('exemptionreason', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('createdby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('convocatoriaid_fk', XMLDB_KEY_FOREIGN, ['convocatoriaid'], 'local_jobboard_convocatoria', ['id']);
+        $table->add_key('doctypeid_fk', XMLDB_KEY_FOREIGN, ['doctypeid'], 'local_jobboard_doctype', ['id']);
+        $table->add_key('createdby_fk', XMLDB_KEY_FOREIGN, ['createdby'], 'user', ['id']);
+
+        $table->add_index('conv_doctype_unique', XMLDB_INDEX_UNIQUE, ['convocatoriaid', 'doctypeid']);
+        $table->add_index('convocatoriaid_idx', XMLDB_INDEX_NOTUNIQUE, ['convocatoriaid']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_plugin_savepoint(true, 2025121028, 'local', 'jobboard');
+    }
+
     return true;
 }

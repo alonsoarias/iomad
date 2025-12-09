@@ -361,6 +361,21 @@ $string['novacancies'] = 'No vacancies available';
 $string['daysleft'] = '{$a} days left';
 $string['convocatorias_dashboard_desc'] = 'Create and manage job calls that group related vacancies.';
 
+// Convocatoria document exemptions.
+$string['convocatoriadocexemptions'] = 'Document Exemptions';
+$string['exempteddoctypes'] = 'Exempted Document Types';
+$string['exempteddoctypes_help'] = 'Select document types that are NOT required for applicants in this call. All selected documents will be exempted for ALL applicants in this convocatoria. This is a global exemption at the call level.';
+$string['exemptionreason'] = 'Exemption Reason';
+$string['exemptionreason_help'] = 'Provide a reason for exempting the selected documents. This will be recorded for audit purposes and may be displayed to applicants.';
+$string['error:convocatorianotfound'] = 'Call not found';
+$string['error:doctypenotfound'] = 'Document type not found';
+$string['error:alreadyexempted'] = 'This document type is already exempted for this call';
+$string['docexemptioncreated'] = 'Document exemption added successfully';
+$string['docexemptiondeleted'] = 'Document exemption removed successfully';
+$string['nodocexemptions'] = 'No document exemptions configured for this call';
+$string['alldocumentsrequired'] = 'All document types are required';
+$string['exempteddocumentscount'] = '{$a} document type(s) exempted';
+
 // Extemporaneous vacancies.
 $string['isextemporaneous'] = 'Extemporaneous vacancy';
 $string['isextemporaneous_desc'] = 'Enable custom dates different from the call dates';

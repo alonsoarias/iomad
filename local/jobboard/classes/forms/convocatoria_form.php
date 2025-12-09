@@ -185,6 +185,44 @@ class convocatoria_form extends \moodleform {
         // Only show max applications when multiple are allowed.
         $mform->hideIf('max_applications_per_user', 'allow_multiple_applications', 'eq', 0);
 
+        // Header: Document Exemptions.
+        $mform->addElement('header', 'docexemptionsheader', get_string('convocatoriadocexemptions', 'local_jobboard'));
+        $mform->setExpanded('docexemptionsheader', false);
+
+        // Get all enabled document types.
+        global $DB;
+        $doctypes = $DB->get_records('local_jobboard_doctype', ['enabled' => 1], 'sortorder ASC, name ASC');
+        $doctypeoptions = [];
+        foreach ($doctypes as $dt) {
+            // Use translated name if available.
+            $name = get_string_manager()->string_exists('doctype_' . $dt->code, 'local_jobboard')
+                ? get_string('doctype_' . $dt->code, 'local_jobboard')
+                : $dt->name;
+
+            // Add category if available.
+            if (!empty($dt->category)) {
+                $categoryName = get_string_manager()->string_exists('doccategory_' . $dt->category, 'local_jobboard')
+                    ? get_string('doccategory_' . $dt->category, 'local_jobboard')
+                    : ucfirst($dt->category);
+                $name = "[{$categoryName}] " . $name;
+            }
+
+            $doctypeoptions[$dt->id] = $name;
+        }
+
+        // Multi-select for exempted document types.
+        $select = $mform->addElement('select', 'exempted_doctypes',
+            get_string('exempteddoctypes', 'local_jobboard'), $doctypeoptions);
+        $select->setMultiple(true);
+        $mform->addHelpButton('exempted_doctypes', 'exempteddoctypes', 'local_jobboard');
+
+        // Exemption reason (default reason for all).
+        $mform->addElement('textarea', 'exemption_reason',
+            get_string('exemptionreason', 'local_jobboard'),
+            ['rows' => 2, 'cols' => 60]);
+        $mform->setType('exemption_reason', PARAM_TEXT);
+        $mform->addHelpButton('exemption_reason', 'exemptionreason', 'local_jobboard');
+
         // Submit buttons.
         $this->add_action_buttons(true, $isedit ? get_string('savechanges') : get_string('addconvocatoria', 'local_jobboard'));
     }
@@ -242,6 +280,37 @@ class convocatoria_form extends \moodleform {
         $data->allow_multiple_applications = $convocatoria->allow_multiple_applications ?? 0;
         $data->max_applications_per_user = $convocatoria->max_applications_per_user ?? 0;
 
+        // Load document exemptions for this convocatoria.
+        $data->exempted_doctypes = \local_jobboard\convocatoria_exemption::get_exempted_doctype_ids($convocatoria->id);
+
         $this->set_data($data);
+    }
+
+    /**
+     * Get processed data from form.
+     *
+     * @return object|null Form data or null if not submitted/cancelled.
+     */
+    public function get_data() {
+        $data = parent::get_data();
+
+        if ($data) {
+            // Process description editor.
+            if (isset($data->description) && is_array($data->description)) {
+                $data->description = $data->description['text'] ?? '';
+            }
+
+            // Process terms editor.
+            if (isset($data->terms) && is_array($data->terms)) {
+                $data->terms = $data->terms['text'] ?? '';
+            }
+
+            // Ensure exempted_doctypes is an array.
+            if (!isset($data->exempted_doctypes) || !is_array($data->exempted_doctypes)) {
+                $data->exempted_doctypes = [];
+            }
+        }
+
+        return $data;
     }
 }

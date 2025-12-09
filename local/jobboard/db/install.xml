@@ -602,7 +602,30 @@
       </INDEXES>
     </TABLE>
 
-    <!-- Table 24: Convocatorias (Calls/Campaigns) -->
+    <!-- Table 24: Convocatoria Document Exemptions (global) -->
+    <TABLE NAME="local_jobboard_conv_docexempt" COMMENT="Document types exempted at convocatoria level (apply to all applicants)">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="convocatoriaid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Convocatoria ID"/>
+        <FIELD NAME="doctypeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Document type being exempted"/>
+        <FIELD NAME="exemptionreason" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Reason for exemption"/>
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="convocatoriaid_fk" TYPE="foreign" FIELDS="convocatoriaid" REFTABLE="local_jobboard_convocatoria" REFFIELDS="id"/>
+        <KEY NAME="doctypeid_fk" TYPE="foreign" FIELDS="doctypeid" REFTABLE="local_jobboard_doctype" REFFIELDS="id"/>
+        <KEY NAME="createdby_fk" TYPE="foreign" FIELDS="createdby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="conv_doctype_unique" UNIQUE="true" FIELDS="convocatoriaid, doctypeid"/>
+        <INDEX NAME="convocatoriaid_idx" UNIQUE="false" FIELDS="convocatoriaid"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table 25: Convocatorias (Calls/Campaigns) -->
     <TABLE NAME="local_jobboard_convocatoria" COMMENT="Job calls/campaigns that group related vacancies">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
