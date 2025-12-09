@@ -1432,8 +1432,8 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         $table->add_key('doctypeid_fk', XMLDB_KEY_FOREIGN, ['doctypeid'], 'local_jobboard_doctype', ['id']);
         $table->add_key('createdby_fk', XMLDB_KEY_FOREIGN, ['createdby'], 'user', ['id']);
 
+        // Unique index for convocatoria-doctype combination (foreign keys create their own indexes).
         $table->add_index('conv_doctype_unique', XMLDB_INDEX_UNIQUE, ['convocatoriaid', 'doctypeid']);
-        $table->add_index('convocatoriaid_idx', XMLDB_INDEX_NOTUNIQUE, ['convocatoriaid']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);

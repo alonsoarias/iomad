@@ -621,7 +621,6 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="conv_doctype_unique" UNIQUE="true" FIELDS="convocatoriaid, doctypeid"/>
-        <INDEX NAME="convocatoriaid_idx" UNIQUE="false" FIELDS="convocatoriaid"/>
       </INDEXES>
     </TABLE>
 
