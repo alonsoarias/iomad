@@ -621,10 +621,15 @@ function local_jobboard_is_iomad_installed(): bool {
 /**
  * Get list of departments for a company (IOMAD).
  *
+ * Only returns child departments (parent > 0), excluding the root department.
+ * In IOMAD, each company has a root department (parent = 0) that serves as
+ * a container, and the actual departments are children of this root.
+ *
  * @param int $companyid The company ID.
+ * @param bool $includeroot Whether to include the root department (default: false).
  * @return array Department ID => name.
  */
-function local_jobboard_get_departments(int $companyid): array {
+function local_jobboard_get_departments(int $companyid, bool $includeroot = false): array {
     global $DB;
 
     if (!$companyid) {
@@ -637,7 +642,19 @@ function local_jobboard_get_departments(int $companyid): array {
         return [];
     }
 
-    $departments = $DB->get_records('department', ['company' => $companyid], 'name ASC', 'id, name');
+    // Build query conditions - exclude root department by default.
+    $conditions = ['company' => $companyid];
+    $sql = "SELECT id, name, parent FROM {department} WHERE company = :company";
+    $params = ['company' => $companyid];
+
+    if (!$includeroot) {
+        // Only get child departments (parent > 0).
+        $sql .= " AND parent > 0";
+    }
+
+    $sql .= " ORDER BY name ASC";
+
+    $departments = $DB->get_records_sql($sql, $params);
 
     $result = [];
     foreach ($departments as $dept) {
