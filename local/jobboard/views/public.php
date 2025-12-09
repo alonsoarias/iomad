@@ -254,101 +254,109 @@ if ($isloggedin) {
 echo html_writer::end_div();
 
 // ============================================================================
-// FILTER SECTION (Using ui_helper::filter_form pattern)
+// FILTER SECTION (Direct HTML for maximum compatibility)
 // ============================================================================
-// Build location options with defensive string handling.
-$allLocationsStr = get_string('alllocations', 'local_jobboard');
-if (empty($allLocationsStr)) {
-    $allLocationsStr = 'Todas las ubicaciones'; // Fallback.
-}
-$locationOptions = ['' => $allLocationsStr];
-foreach ($locations as $loc) {
-    if (!empty($loc)) {
-        $locationOptions[$loc] = $loc;
+echo html_writer::start_div('card shadow-sm mb-4');
+echo html_writer::start_div('card-body py-3');
+
+$formurl = new moodle_url('/local/jobboard/index.php');
+echo html_writer::start_tag('form', ['method' => 'get', 'action' => $formurl->out_omit_querystring(), 'class' => 'jb-filter-form mb-0']);
+echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'view', 'value' => 'public']);
+
+echo html_writer::start_div('row align-items-end');
+
+// Search field.
+echo html_writer::start_div('col-md-3 col-sm-6 mb-2 mb-md-0');
+echo html_writer::tag('label', get_string('search'), ['for' => 'filter-search', 'class' => 'form-label small text-muted mb-1']);
+echo html_writer::empty_tag('input', [
+    'type' => 'text',
+    'name' => 'search',
+    'id' => 'filter-search',
+    'value' => $search,
+    'placeholder' => get_string('searchplaceholder', 'local_jobboard'),
+    'class' => 'form-control form-control-sm',
+]);
+echo html_writer::end_div();
+
+// Location select.
+$locationOptions = ['' => get_string('alllocations', 'local_jobboard')] + ($locations ?: []);
+echo html_writer::start_div('col-md-2 col-sm-6 mb-2 mb-md-0');
+echo html_writer::tag('label', get_string('location', 'local_jobboard'), ['for' => 'filter-location', 'class' => 'form-label small text-muted mb-1']);
+echo '<select name="location" id="filter-location" class="form-control form-control-sm jb-filter-select">';
+foreach ($locationOptions as $val => $label) {
+    $selected = ($location === (string)$val) ? ' selected="selected"' : '';
+    $optionText = !empty($label) ? s($label) : s($val);
+    if (empty($optionText)) {
+        $optionText = get_string('alllocations', 'local_jobboard');
     }
+    echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
+echo '</select>';
+echo html_writer::end_div();
 
-// Build modality options with defensive string handling.
-$allModalitiesStr = get_string('allmodalities', 'local_jobboard');
-if (empty($allModalitiesStr)) {
-    $allModalitiesStr = 'Todas las modalidades'; // Fallback.
-}
-$modalityOptions = ['' => $allModalitiesStr];
-foreach ($modalities as $mod) {
-    if (!empty($mod)) {
-        $modalityOptions[$mod] = $mod;
+// Modality select.
+$modalityOptions = ['' => get_string('allmodalities', 'local_jobboard')] + ($modalities ?: []);
+echo html_writer::start_div('col-md-2 col-sm-6 mb-2 mb-md-0');
+echo html_writer::tag('label', get_string('modality', 'local_jobboard'), ['for' => 'filter-modality', 'class' => 'form-label small text-muted mb-1']);
+echo '<select name="modality" id="filter-modality" class="form-control form-control-sm jb-filter-select">';
+foreach ($modalityOptions as $val => $label) {
+    $selected = ($modality === (string)$val) ? ' selected="selected"' : '';
+    $optionText = !empty($label) ? s($label) : s($val);
+    if (empty($optionText)) {
+        $optionText = get_string('allmodalities', 'local_jobboard');
     }
+    echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
+echo '</select>';
+echo html_writer::end_div();
 
-// Build contract type options.
-$allContractStr = get_string('allcontracttypes', 'local_jobboard');
-if (empty($allContractStr)) {
-    $allContractStr = 'Todos los tipos'; // Fallback.
+// Contract type select.
+$contractOptions = ['' => get_string('allcontracttypes', 'local_jobboard')] + $contracttypes;
+echo html_writer::start_div('col-md-2 col-sm-6 mb-2 mb-md-0');
+echo html_writer::tag('label', get_string('contracttype', 'local_jobboard'), ['for' => 'filter-contract', 'class' => 'form-label small text-muted mb-1']);
+echo '<select name="contracttype" id="filter-contract" class="form-control form-control-sm jb-filter-select">';
+foreach ($contractOptions as $val => $label) {
+    $selected = ($contracttype === (string)$val) ? ' selected="selected"' : '';
+    $optionText = !empty($label) ? s($label) : s($val);
+    if (empty($optionText)) {
+        $optionText = get_string('allcontracttypes', 'local_jobboard');
+    }
+    echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
 }
-$contractOptions = ['' => $allContractStr] + $contracttypes;
+echo '</select>';
+echo html_writer::end_div();
 
-// Build convocatoria options.
-$allConvocatoriasStr = get_string('allconvocatorias', 'local_jobboard');
-if (empty($allConvocatoriasStr)) {
-    $allConvocatoriasStr = 'Todas las convocatorias'; // Fallback.
-}
-$convocatoriaOptions = [0 => $allConvocatoriasStr];
+// Convocatoria select.
+$convocatoriaOptions = [0 => get_string('allconvocatorias', 'local_jobboard')];
 foreach ($convocatorias as $conv) {
     $convocatoriaOptions[$conv->id] = format_string($conv->code . ' - ' . $conv->name);
 }
+echo html_writer::start_div('col-md-2 col-sm-6 mb-2 mb-md-0');
+echo html_writer::tag('label', get_string('convocatoria', 'local_jobboard'), ['for' => 'filter-convocatoria', 'class' => 'form-label small text-muted mb-1']);
+echo '<select name="convocatoria" id="filter-convocatoria" class="form-control form-control-sm jb-filter-select">';
+foreach ($convocatoriaOptions as $val => $label) {
+    $selected = ($convocatoriaid == $val) ? ' selected="selected"' : '';
+    $optionText = !empty($label) ? s($label) : s($val);
+    if (empty($optionText)) {
+        $optionText = get_string('allconvocatorias', 'local_jobboard');
+    }
+    echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
+}
+echo '</select>';
+echo html_writer::end_div();
 
-$filters = [
-    [
-        'type' => 'text',
-        'name' => 'search',
-        'label' => get_string('search'),
-        'placeholder' => get_string('searchplaceholder', 'local_jobboard'),
-        'col' => 'col-md-3 col-sm-6',
-    ],
-    [
-        'type' => 'select',
-        'name' => 'location',
-        'label' => get_string('location', 'local_jobboard'),
-        'options' => $locationOptions,
-        'col' => 'col-md-2 col-sm-6',
-    ],
-    [
-        'type' => 'select',
-        'name' => 'modality',
-        'label' => get_string('modality', 'local_jobboard'),
-        'options' => $modalityOptions,
-        'col' => 'col-md-2 col-sm-6',
-    ],
-    [
-        'type' => 'select',
-        'name' => 'contracttype',
-        'label' => get_string('contracttype', 'local_jobboard'),
-        'options' => $contractOptions,
-        'col' => 'col-md-2 col-sm-6',
-    ],
-    [
-        'type' => 'select',
-        'name' => 'convocatoria',
-        'label' => get_string('convocatoria', 'local_jobboard'),
-        'options' => $convocatoriaOptions,
-        'col' => 'col-md-2 col-sm-6',
-    ],
-];
-
-$currentFilters = [
-    'search' => $search,
-    'location' => $location,
-    'modality' => $modality,
-    'contracttype' => $contracttype,
-    'convocatoria' => $convocatoriaid,
-];
-
-echo ui_helper::filter_form(
-    (new moodle_url('/local/jobboard/index.php'))->out(false),
-    $filters,
-    $currentFilters,
-    ['view' => 'public']
+// Search button.
+echo html_writer::start_div('col-md-auto mb-2 mb-md-0');
+echo html_writer::tag('button',
+    '<i class="fa fa-search mr-1"></i>' . get_string('search'),
+    ['type' => 'submit', 'class' => 'btn btn-primary btn-sm']
 );
+echo html_writer::end_div();
+
+echo html_writer::end_div(); // row
+echo html_writer::end_tag('form');
+echo html_writer::end_div(); // card-body
+echo html_writer::end_div(); // card
 
 // Clear filters link.
 if (!empty($search) || !empty($contracttype) || !empty($location) || !empty($modality) || $convocatoriaid) {
