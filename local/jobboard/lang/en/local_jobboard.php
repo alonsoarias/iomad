@@ -2881,3 +2881,35 @@ $string['notification_review_complete_body'] = '<p>Dear {$a->user_name},</p>
 
 <p>Sincerely,<br>
 {$a->site_name}</p>';
+
+// Review notification strings.
+$string['reviewsubmitted_with_notification'] = 'Review submitted and applicant notified.';
+$string['reviewhasrejected'] = '{$a} document(s) rejected. The applicant will need to resubmit.';
+$string['reviewallapproved'] = 'All documents approved. The applicant will proceed to the next step.';
+$string['reviewobservations'] = 'Observations (optional)';
+$string['reviewobservations_placeholder'] = 'Enter any additional comments for the applicant...';
+$string['applicantwillbenotified'] = 'The applicant will receive an email notification.';
+$string['noobservations'] = 'No additional observations.';
+$string['noreason'] = 'No reason provided.';
+$string['none'] = 'None';
+$string['documentsreviewed'] = 'Documents reviewed';
+$string['documentsapproved'] = 'Documents approved';
+$string['documentsrejected'] = 'Documents rejected';
+$string['rejecteddocuments'] = 'Rejected documents';
+$string['email_action_reupload'] = 'Please review the rejected documents and upload corrected versions.';
+$string['viewapplication'] = 'View Application';
+
+// Message provider for document review.
+$string['messageprovider:documentreview'] = 'Document review notifications';
+
+// Export strings.
+$string['novacanciesinconvocatoria'] = 'No vacancies found in this call for applications.';
+$string['novacanciesforcompany'] = 'No vacancies found for this company.';
+$string['companynotfound'] = 'Company not found.';
+$string['exportdocuments'] = 'Export Documents';
+$string['exportbyconvocatoria'] = 'Export by Call';
+$string['exportbycompany'] = 'Export by Company';
+$string['exportmanifest'] = 'Export Manifest';
+
+// Apply page enhancements.
+$string['clicktojump'] = 'Click to jump to this section';

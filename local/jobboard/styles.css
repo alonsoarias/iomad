@@ -1343,6 +1343,17 @@
 
 .path-local-jobboard .jb-step {
     min-width: 70px;
+    cursor: pointer;
+    color: inherit;
+}
+
+.path-local-jobboard .jb-step:hover {
+    text-decoration: none;
+}
+
+.path-local-jobboard .jb-step:hover .jb-step-icon {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .path-local-jobboard .jb-step-icon {
@@ -1355,6 +1366,16 @@
     align-items: center;
     justify-content: center;
     font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.path-local-jobboard .jb-step-number,
+.path-local-jobboard .jb-step-checkmark {
+    font-size: 0.85rem;
+}
+
+.path-local-jobboard .jb-step-checkmark {
+    font-size: 0.75rem;
 }
 
 .path-local-jobboard .jb-step.active .jb-step-icon {
@@ -1367,10 +1388,19 @@
     color: #fff;
 }
 
+.path-local-jobboard .jb-step.completed.active .jb-step-icon {
+    background: linear-gradient(135deg, #28a745 0%, #007bff 100%);
+}
+
 .path-local-jobboard .jb-step-connector {
     height: 3px;
     background: #dee2e6;
     margin-top: -18px;
+    transition: background-color 0.3s ease;
+}
+
+.path-local-jobboard .jb-step.completed + .jb-step-connector {
+    background: #28a745;
 }
 
 .path-local-jobboard .jb-sidebar-card {

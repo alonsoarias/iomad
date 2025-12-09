@@ -595,4 +595,185 @@ class document {
     public function get_filesize_display(): string {
         return display_size($this->filesize);
     }
+
+    /**
+     * Get all documents for an application.
+     *
+     * @param int $applicationid The application ID.
+     * @param bool $includesuperseded Include superseded documents.
+     * @return array Array of document objects with status property.
+     */
+    public static function get_by_application(int $applicationid, bool $includesuperseded = false): array {
+        global $DB;
+
+        $where = 'applicationid = :applicationid';
+        $params = ['applicationid' => $applicationid];
+
+        if (!$includesuperseded) {
+            $where .= ' AND issuperseded = 0';
+        }
+
+        $sql = "SELECT d.*, dv.status as validation_status, dv.reason as validation_reason,
+                       dv.reviewedby, dv.timereviewed
+                  FROM {local_jobboard_document} d
+             LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
+                 WHERE d.{$where}
+              ORDER BY d.timecreated ASC";
+
+        $records = $DB->get_records_sql($sql, $params);
+        $documents = [];
+
+        foreach ($records as $record) {
+            $doc = new self();
+            $doc->load_from_record($record);
+            // Add status property for easy access.
+            $doc->status = $record->validation_status ?? 'pending';
+            $doc->validation_reason = $record->validation_reason ?? '';
+            $doc->reviewedby = $record->reviewedby ?? null;
+            $doc->timereviewed = $record->timereviewed ?? null;
+            $documents[$doc->id] = $doc;
+        }
+
+        return $documents;
+    }
+
+    /**
+     * Validate (approve) a document.
+     *
+     * @param int $userid The reviewer's user ID.
+     * @return bool True on success.
+     */
+    public function validate(int $userid): bool {
+        global $DB;
+
+        $validation = $this->get_validation();
+
+        if ($validation) {
+            $validation->status = 'approved';
+            $validation->reason = null;
+            $validation->reviewedby = $userid;
+            $validation->timereviewed = time();
+            $DB->update_record('local_jobboard_doc_validation', $validation);
+        } else {
+            $validation = new \stdClass();
+            $validation->documentid = $this->id;
+            $validation->status = 'approved';
+            $validation->reviewedby = $userid;
+            $validation->timereviewed = time();
+            $validation->timecreated = time();
+            $DB->insert_record('local_jobboard_doc_validation', $validation);
+        }
+
+        // Clear cached validation.
+        $this->validation = null;
+
+        // Log audit.
+        audit::log('document_validated', 'document', $this->id, [
+            'documenttype' => $this->documenttype,
+            'reviewedby' => $userid,
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Reject a document with reason.
+     *
+     * @param int $userid The reviewer's user ID.
+     * @param string $reason The rejection reason.
+     * @return bool True on success.
+     */
+    public function reject(int $userid, string $reason): bool {
+        global $DB;
+
+        $validation = $this->get_validation();
+
+        if ($validation) {
+            $validation->status = 'rejected';
+            $validation->reason = $reason;
+            $validation->reviewedby = $userid;
+            $validation->timereviewed = time();
+            $DB->update_record('local_jobboard_doc_validation', $validation);
+        } else {
+            $validation = new \stdClass();
+            $validation->documentid = $this->id;
+            $validation->status = 'rejected';
+            $validation->reason = $reason;
+            $validation->reviewedby = $userid;
+            $validation->timereviewed = time();
+            $validation->timecreated = time();
+            $DB->insert_record('local_jobboard_doc_validation', $validation);
+        }
+
+        // Clear cached validation.
+        $this->validation = null;
+
+        // Log audit.
+        audit::log('document_rejected', 'document', $this->id, [
+            'documenttype' => $this->documenttype,
+            'reviewedby' => $userid,
+            'reason' => $reason,
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Get documents statistics for an application.
+     *
+     * @param int $applicationid The application ID.
+     * @return array Stats: total, pending, approved, rejected.
+     */
+    public static function get_stats(int $applicationid): array {
+        global $DB;
+
+        $sql = "SELECT
+                    COUNT(*) as total,
+                    SUM(CASE WHEN dv.status IS NULL OR dv.status = 'pending' THEN 1 ELSE 0 END) as pending,
+                    SUM(CASE WHEN dv.status = 'approved' THEN 1 ELSE 0 END) as approved,
+                    SUM(CASE WHEN dv.status = 'rejected' THEN 1 ELSE 0 END) as rejected
+                FROM {local_jobboard_document} d
+                LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
+                WHERE d.applicationid = :applicationid AND d.issuperseded = 0";
+
+        $stats = $DB->get_record_sql($sql, ['applicationid' => $applicationid]);
+
+        return [
+            'total' => (int) ($stats->total ?? 0),
+            'pending' => (int) ($stats->pending ?? 0),
+            'approved' => (int) ($stats->approved ?? 0),
+            'rejected' => (int) ($stats->rejected ?? 0),
+        ];
+    }
+
+    /**
+     * Get rejected documents for an application.
+     *
+     * @param int $applicationid The application ID.
+     * @return array Array of rejected documents with reasons.
+     */
+    public static function get_rejected(int $applicationid): array {
+        global $DB;
+
+        $sql = "SELECT d.*, dv.reason as validation_reason
+                  FROM {local_jobboard_document} d
+                  JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
+                 WHERE d.applicationid = :applicationid
+                   AND d.issuperseded = 0
+                   AND dv.status = 'rejected'
+              ORDER BY d.timecreated ASC";
+
+        $records = $DB->get_records_sql($sql, ['applicationid' => $applicationid]);
+        $documents = [];
+
+        foreach ($records as $record) {
+            $doc = new self();
+            $doc->load_from_record($record);
+            $doc->status = 'rejected';
+            $doc->validation_reason = $record->validation_reason ?? '';
+            $documents[] = $doc;
+        }
+
+        return $documents;
+    }
 }

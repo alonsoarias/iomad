@@ -32,6 +32,7 @@ require_once($CFG->libdir . '/tablelib.php');
 use local_jobboard\application;
 use local_jobboard\document;
 use local_jobboard\vacancy;
+use local_jobboard\review_notifier;
 use local_jobboard\output\ui_helper;
 
 // Require review capability.
@@ -88,8 +89,26 @@ if ($action && confirm_sesskey()) {
         case 'markreviewed':
             if ($applicationid) {
                 $app = new application($applicationid);
-                $app->update_status('docs_validated', $USER->id);
-                \core\notification::success(get_string('reviewsubmitted', 'local_jobboard'));
+                $stats = document::get_stats($applicationid);
+                $observations = optional_param('observations', '', PARAM_TEXT);
+
+                // Determine status based on document review outcome.
+                if ($stats['rejected'] > 0) {
+                    $newstatus = 'docs_rejected';
+                } else {
+                    $newstatus = 'docs_validated';
+                }
+
+                $app->update_status($newstatus, $USER->id);
+
+                // Send consolidated email notification.
+                try {
+                    review_notifier::notify($applicationid, $observations);
+                    \core\notification::success(get_string('reviewsubmitted_with_notification', 'local_jobboard'));
+                } catch (\Exception $e) {
+                    debugging('Failed to send review notification: ' . $e->getMessage(), DEBUG_DEVELOPER);
+                    \core\notification::success(get_string('reviewsubmitted', 'local_jobboard'));
+                }
             }
             break;
     }
@@ -796,26 +815,73 @@ if (!$applicationid) {
     // Complete review button.
     $allReviewed = ($docStats['pending'] === 0);
     if ($allReviewed && !in_array($application->status, ['docs_validated', 'docs_rejected'])) {
-        echo html_writer::start_div('card shadow-sm mb-4 border-success jb-complete-card');
-        echo html_writer::start_div('card-body text-center');
+        $hasRejected = ($docStats['rejected'] > 0);
+        $cardBorder = $hasRejected ? 'border-warning' : 'border-success';
+        $iconClass = $hasRejected ? 'fa-exclamation-triangle text-warning' : 'fa-check-circle text-success';
+        $textClass = $hasRejected ? 'text-warning' : 'text-success';
+        $btnClass = $hasRejected ? 'btn-warning' : 'btn-success';
+
+        echo html_writer::start_div('card shadow-sm mb-4 ' . $cardBorder . ' jb-complete-card');
+        echo html_writer::start_div('card-body');
 
         echo html_writer::tag('p',
-            '<i class="fa fa-check-circle fa-2x text-success mb-2"></i><br>' .
+            '<i class="fa ' . $iconClass . ' fa-2x mb-2"></i><br>' .
             get_string('alldocsreviewed', 'local_jobboard'),
-            ['class' => 'text-success font-weight-bold']
+            ['class' => $textClass . ' font-weight-bold text-center']
         );
 
+        // Show summary of review outcome.
+        if ($hasRejected) {
+            echo html_writer::div(
+                '<i class="fa fa-info-circle mr-1"></i>' .
+                get_string('reviewhasrejected', 'local_jobboard', $docStats['rejected']),
+                'alert alert-warning small mb-3'
+            );
+        } else {
+            echo html_writer::div(
+                '<i class="fa fa-check mr-1"></i>' .
+                get_string('reviewallapproved', 'local_jobboard'),
+                'alert alert-success small mb-3'
+            );
+        }
+
+        // Form for submitting review with observations.
         $markUrl = new moodle_url('/local/jobboard/index.php', [
             'view' => 'review',
             'applicationid' => $applicationid,
-            'action' => 'markreviewed',
-            'sesskey' => sesskey(),
         ]);
-        echo html_writer::link($markUrl,
-            '<i class="fa fa-clipboard-check mr-2"></i>' . get_string('submitreview', 'local_jobboard'),
-            ['class' => 'btn btn-success btn-lg btn-block', 'data-toggle' => 'tooltip',
-             'title' => get_string('reviewcompletetooltip', 'local_jobboard')]
+        echo html_writer::start_tag('form', [
+            'method' => 'post',
+            'action' => $markUrl->out(false),
+            'class' => 'jb-complete-review-form',
+        ]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'markreviewed']);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'vacancyid', 'value' => $vacancyid]);
+
+        // Observations textarea (optional).
+        echo html_writer::tag('label', get_string('reviewobservations', 'local_jobboard'),
+            ['for' => 'observations', 'class' => 'small font-weight-bold']
         );
+        echo html_writer::tag('textarea', '', [
+            'name' => 'observations',
+            'id' => 'observations',
+            'class' => 'form-control mb-3',
+            'rows' => 3,
+            'placeholder' => get_string('reviewobservations_placeholder', 'local_jobboard'),
+        ]);
+
+        echo html_writer::div(
+            '<i class="fa fa-envelope mr-1"></i>' . get_string('applicantwillbenotified', 'local_jobboard'),
+            'small text-muted mb-3'
+        );
+
+        echo html_writer::tag('button',
+            '<i class="fa fa-clipboard-check mr-2"></i>' . get_string('submitreview', 'local_jobboard'),
+            ['type' => 'submit', 'class' => 'btn ' . $btnClass . ' btn-lg btn-block']
+        );
+
+        echo html_writer::end_tag('form');
 
         echo html_writer::end_div();
         echo html_writer::end_div();

@@ -222,24 +222,26 @@ echo '<h2 class="mb-2">' . get_string('applytovacancy', 'local_jobboard') . '</h
 echo '<p class="lead text-muted">' . format_string($vacancy->title) . '</p>';
 echo '</div>';
 
-// Progress indicator.
-echo '<div class="jb-progress-steps mb-4" data-toggle="tooltip" ';
-echo 'title="' . s(get_string('applicationsteps_tooltip', 'local_jobboard')) . '">';
+// Progress indicator - clickable steps with section navigation.
+echo '<div class="jb-progress-steps mb-4" id="application-progress">';
 echo '<div class="d-flex justify-content-between align-items-center">';
 $steps = [
-    ['icon' => 'fa-file-signature', 'label' => get_string('step_consent', 'local_jobboard')],
-    ['icon' => 'fa-upload', 'label' => get_string('step_documents', 'local_jobboard')],
-    ['icon' => 'fa-envelope-open-text', 'label' => get_string('step_coverletter', 'local_jobboard')],
-    ['icon' => 'fa-paper-plane', 'label' => get_string('step_submit', 'local_jobboard')],
+    ['icon' => 'fa-file-signature', 'label' => get_string('step_consent', 'local_jobboard'), 'target' => 'id_consentheader'],
+    ['icon' => 'fa-upload', 'label' => get_string('step_documents', 'local_jobboard'), 'target' => 'id_documentsheader'],
+    ['icon' => 'fa-envelope-open-text', 'label' => get_string('step_coverletter', 'local_jobboard'), 'target' => 'id_additionalheader'],
+    ['icon' => 'fa-paper-plane', 'label' => get_string('step_submit', 'local_jobboard'), 'target' => 'id_declarationheader'],
 ];
 foreach ($steps as $i => $step) {
     $activeclass = $i === 0 ? 'active' : '';
-    echo '<div class="jb-step text-center ' . $activeclass . '" data-step="' . ($i + 1) . '">';
+    echo '<a href="#' . $step['target'] . '" class="jb-step text-center text-decoration-none ' . $activeclass . '" ';
+    echo 'data-step="' . ($i + 1) . '" data-target="' . $step['target'] . '" role="button" ';
+    echo 'title="' . s(get_string('clicktojump', 'local_jobboard')) . '">';
     echo '<div class="jb-step-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-1">';
-    echo '<i class="fa ' . $step['icon'] . '"></i>';
+    echo '<span class="jb-step-number">' . ($i + 1) . '</span>';
+    echo '<i class="fa ' . $step['icon'] . ' jb-step-checkmark d-none"></i>';
     echo '</div>';
     echo '<small class="d-block text-truncate" style="max-width:80px;">' . $step['label'] . '</small>';
-    echo '</div>';
+    echo '</a>';
     if ($i < count($steps) - 1) {
         echo '<div class="jb-step-connector flex-grow-1 mx-2"></div>';
     }
