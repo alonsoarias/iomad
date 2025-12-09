@@ -150,6 +150,9 @@ if ($action === 'edit' && $code) {
     // Display the form.
     $mform->display();
 
+    // Initialize live preview JavaScript.
+    $PAGE->requires->js_call_amd('local_jobboard/email_template_preview', 'init', [[]]);
+
     echo $OUTPUT->footer();
     exit;
 }

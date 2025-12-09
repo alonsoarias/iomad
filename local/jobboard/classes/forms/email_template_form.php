@@ -120,12 +120,19 @@ class email_template_form extends \moodleform {
             $mform->addElement('html', $placeholderhtml);
         }
 
-        // Preview section (shown after saving).
-        $mform->addElement('header', 'previewheader', get_string('preview', 'local_jobboard'));
-        $mform->setExpanded('previewheader', false);
+        // Preview section with live updates.
+        $mform->addElement('header', 'previewheader', get_string('livepreview', 'local_jobboard'));
+        $mform->setExpanded('previewheader', true);
 
         $previewhtml = '<div id="template-preview" class="border rounded p-3 bg-light">';
-        $previewhtml .= '<p class="text-muted">' . get_string('preview_hint', 'local_jobboard') . '</p>';
+        $previewhtml .= '<div class="text-center text-muted py-4">';
+        $previewhtml .= '<i class="fa fa-spinner fa-spin fa-2x mb-2"></i>';
+        $previewhtml .= '<p>' . get_string('preview_loading', 'local_jobboard') . '</p>';
+        $previewhtml .= '</div>';
+        $previewhtml .= '</div>';
+        $previewhtml .= '<div class="alert alert-info mt-2 small">';
+        $previewhtml .= '<i class="fa fa-info-circle mr-1"></i>';
+        $previewhtml .= get_string('preview_hint', 'local_jobboard');
         $previewhtml .= '</div>';
         $mform->addElement('html', $previewhtml);
 

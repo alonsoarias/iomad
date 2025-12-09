@@ -2783,7 +2783,9 @@ $string['templatehelp_placeholders'] = 'Use placeholders like {fullname} or {vac
 $string['templatehelp_html'] = 'You can use HTML formatting in the email body for rich text emails.';
 $string['templatehelp_reset'] = 'Click "Reset" on a customized template to restore the default text.';
 $string['preview'] = 'Preview';
-$string['preview_hint'] = 'Save the template to see a preview with sample data.';
+$string['preview_hint'] = 'The preview shows how your email will look with sample data. Edit the template and see changes in real-time.';
+$string['livepreview'] = 'Live Preview';
+$string['preview_loading'] = 'Loading preview...';
 $string['templatesubject_help'] = 'Enter the email subject line. You can use placeholders which will be replaced with actual values.';
 $string['templatebody_help'] = 'Enter the email body content. Use the HTML editor for formatting and include placeholders for dynamic content.';
 
@@ -2939,17 +2941,8 @@ $string['exportmanifest'] = 'Export Manifest';
 // Apply page enhancements.
 $string['clicktojump'] = 'Click to jump to this section';
 
-// Email template editor.
+// Email template editor (live preview).
 $string['backtotemplates'] = 'Back to templates';
-$string['confirmreset'] = 'Are you sure you want to reset this template to its default content?';
-$string['preview'] = 'Preview';
-$string['preview_hint'] = 'Save the template to see a preview with sample data.';
-$string['quickhelp'] = 'Quick Help';
-$string['templatehelp_placeholders'] = 'Use placeholders like {fullname} to insert dynamic content. Available placeholders are shown when editing.';
-$string['templatehelp_html'] = 'You can use HTML formatting in the email body for better presentation.';
-$string['templatehelp_reset'] = 'Click "Reset" to restore a template to its default content.';
-$string['templatesubject_help'] = 'The subject line of the email. You can use placeholders like {vacancy_code}.';
-$string['templatebody_help'] = 'The body content of the email. Use the editor to format text and include placeholders for dynamic content.';
 
 // Tab-based application form.
 $string['submit'] = 'Submit Application';
