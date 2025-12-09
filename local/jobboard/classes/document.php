@@ -200,11 +200,16 @@ class document {
         $validation->timecreated = time();
         $DB->insert_record('local_jobboard_doc_validation', $validation);
 
-        // Log audit.
-        audit::log('document_uploaded', 'document', $document->id, [
-            'documenttype' => $documenttype,
-            'filename' => $document->filename,
-        ]);
+        // Log audit with new values (no previous value for upload).
+        $newstate = $document->to_record();
+        audit::log(
+            audit::ACTION_UPLOAD,
+            audit::ENTITY_DOCUMENT,
+            $document->id,
+            ['documenttype' => $documenttype, 'filename' => $document->filename, 'applicationid' => $applicationid],
+            null,
+            (array) $newstate
+        );
 
         // Trigger event.
         $event = \local_jobboard\event\document_uploaded::create([
@@ -647,6 +652,7 @@ class document {
         global $DB;
 
         $validation = $this->get_validation();
+        $oldstatus = $validation ? $validation->status : 'pending';
 
         if ($validation) {
             $validation->status = 'approved';
@@ -667,11 +673,15 @@ class document {
         // Clear cached validation.
         $this->validation = null;
 
-        // Log audit.
-        audit::log('document_validated', 'document', $this->id, [
-            'documenttype' => $this->documenttype,
-            'reviewedby' => $userid,
-        ]);
+        // Log audit with proper transition tracking.
+        audit::log_transition(
+            audit::ENTITY_DOCUMENT,
+            $this->id,
+            'status',
+            $oldstatus,
+            'approved',
+            ['documenttype' => $this->documenttype, 'reviewedby' => $userid, 'applicationid' => $this->applicationid]
+        );
 
         return true;
     }
@@ -687,6 +697,7 @@ class document {
         global $DB;
 
         $validation = $this->get_validation();
+        $oldstatus = $validation ? $validation->status : 'pending';
 
         if ($validation) {
             $validation->status = 'rejected';
@@ -708,12 +719,15 @@ class document {
         // Clear cached validation.
         $this->validation = null;
 
-        // Log audit.
-        audit::log('document_rejected', 'document', $this->id, [
-            'documenttype' => $this->documenttype,
-            'reviewedby' => $userid,
-            'reason' => $reason,
-        ]);
+        // Log audit with proper transition tracking.
+        audit::log_transition(
+            audit::ENTITY_DOCUMENT,
+            $this->id,
+            'status',
+            $oldstatus,
+            'rejected',
+            ['documenttype' => $this->documenttype, 'reviewedby' => $userid, 'reason' => $reason, 'applicationid' => $this->applicationid]
+        );
 
         return true;
     }

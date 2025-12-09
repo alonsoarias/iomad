@@ -173,29 +173,14 @@ if ($hassiteconfig) {
     ));
 
     // ==========================================================================
-    // Application limits settings.
+    // Application limits info.
     // ==========================================================================
+    // NOTE: Application limits (allow multiple, max per user) are now configured
+    // per convocatoria, not globally. See the convocatoria edit form for these settings.
     $settings->add(new admin_setting_heading(
         'local_jobboard/applicationlimitsheading',
         get_string('applicationlimits', 'local_jobboard'),
-        get_string('applicationlimits_desc', 'local_jobboard')
-    ));
-
-    // Allow multiple applications.
-    $settings->add(new admin_setting_configcheckbox(
-        'local_jobboard/allow_multiple_applications',
-        get_string('allowmultipleapplications', 'local_jobboard'),
-        get_string('allowmultipleapplications_desc', 'local_jobboard'),
-        1
-    ));
-
-    // Maximum active applications.
-    $settings->add(new admin_setting_configtext(
-        'local_jobboard/max_active_applications',
-        get_string('maxactiveapplications', 'local_jobboard'),
-        get_string('maxactiveapplications_desc', 'local_jobboard'),
-        0,
-        PARAM_INT
+        get_string('applicationlimits_perconvocatoria_desc', 'local_jobboard')
     ));
 
     // Document settings header.

@@ -7,6 +7,419 @@ y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
 ---
 
+## [2.1.0] - 2025-12-09
+
+### Fase 10 Completa: Optimización y Ajustes Normativos
+
+Esta versión mayor completa toda la Fase 10 de optimización del plugin.
+
+#### Fases 10M-S Verificadas
+
+**10M: Análisis mod_assign**
+- Sistema de revisión ya implementado con patrón mod_assign
+- Navegación anterior/siguiente integrada en 10H
+
+**10N: Formulario de Aplicación con Pestañas**
+- Interfaz de pestañas Bootstrap (nav-pills)
+- 5 categorías de documentos: identidad, académico, laboral, legal, otros
+- Indicadores visuales de progreso por categoría
+
+**10O: Sistema Import/Export**
+- `import_vacancies.php` - Importación masiva de vacantes
+- `export_documents.php` - Exportación ZIP con jerarquía
+- `import_exemptions.php` - Importación de exenciones
+- CLI tools para automatización
+
+**10P: Estilos de Navegación**
+- Estilos sidebar correctamente implementados para vista de detalle
+- Responsive design para móviles
+
+**10Q: Strings de Idioma**
+- ~3000 strings en inglés (EN)
+- ~3200 strings en español (ES)
+- Cobertura completa de todas las funcionalidades
+
+**10R: IOMAD Company Management**
+- `updateprofile.php` integrado con IOMAD
+- Asignación automática de empresa/departamento
+- Función `update_user_company()`
+
+**10S: Verificación Final**
+- Plugin completamente funcional
+- Todas las 19 fases implementadas
+- Madurez: STABLE
+
+### Resumen de Fase 10 Completa
+
+| Fase | Descripción | Estado |
+|------|-------------|--------|
+| 10A | Sistema de auditoría robusto | ✅ |
+| 10B | Eliminación campos deprecados | ✅ |
+| 10C | Actualización CLI | ✅ |
+| 10D | Lógica de documentos | ✅ |
+| 10E | Restricciones de aplicación | ✅ |
+| 10F | Admin doctypes completo | ✅ |
+| 10G | Sistema de exenciones | ✅ |
+| 10H | Sistema de revisión mod_assign | ✅ |
+| 10I | Editor HTML campos | ✅ |
+| 10J | Exportación ZIP jerárquica | ✅ |
+| 10K | Vista pública convocatorias | ✅ |
+| 10L | Plantillas de email | ✅ |
+| 10M | Análisis mod_assign | ✅ |
+| 10N | Pestañas en formulario | ✅ |
+| 10O | Sistema import/export | ✅ |
+| 10P | Estilos navegación | ✅ |
+| 10Q | Strings de idioma | ✅ |
+| 10R | IOMAD company mgmt | ✅ |
+| 10S | Verificación final | ✅ |
+
+### Técnico
+- **version.php**: 2.1.0 (2025120950)
+- **maturity**: MATURITY_STABLE
+- Compatible: Moodle 4.1 - 4.5
+- Multi-tenant: IOMAD soportado
+
+---
+
+## [2.0.85] - 2025-12-09
+
+### Fase 10L: Personalización de Plantillas de Email
+
+#### Verificado
+- **Sistema completo de plantillas de email**
+
+- **Clase `email_template.php`:**
+  - 7 tipos de plantillas: application_received, docs_validated, docs_rejected, review_complete, interview, selected, rejected
+  - Placeholders específicos por tipo ({fullname}, {vacancy_code}, {vacancy_title}, etc.)
+  - Soporte multi-tenant (companyid)
+  - Método render() para sustitución de placeholders
+  - Instalación de plantillas por defecto
+
+- **Interfaz administrativa `admin/templates.php`:**
+  - Lista de plantillas en formato de tarjetas
+  - Editor HTML para personalizar cuerpo del email
+  - Indicador de estado (personalizado/predeterminado)
+  - Botón de reset a valores por defecto
+  - Vista previa en tiempo real (AMD: email_template_preview)
+
+- **Formulario `email_template_form.php`:**
+  - Editor HTML integrado para el cuerpo
+  - Guía de placeholders disponibles
+  - Validación de campos obligatorios
+
+### Técnico
+- **version.php**: Incrementado a 2.0.85 (2025120942)
+- No requirió cambios, sistema completo existente
+
+---
+
+## [2.0.84] - 2025-12-09
+
+### Fase 10K: Vista Pública de Convocatorias
+
+#### Verificado
+- **Sistema de página pública completo ya implementado**
+
+- **Vistas públicas:**
+  - `views/public.php` - Listado principal de vacantes públicas
+  - `views/public_convocatoria.php` - Detalle de convocatoria pública
+  - `public.php` - Redireccionador a `?view=public`
+
+- **Configuración de página pública (settings.php):**
+  - `enable_public_page` - Habilitar/deshabilitar
+  - `public_page_title` - Título personalizable
+  - `public_page_description` - Descripción personalizable
+  - `show_public_nav_link` - Mostrar en navegación
+
+- **Campo publicationtype en vacantes:**
+  - Valores: `public` (visible sin login) / `internal`
+  - Índices optimizados para consultas
+  - Filtrado automático en vistas públicas
+
+- **Integración:**
+  - Navegación automática para usuarios no logueados
+  - Registro de auditoría para vistas públicas
+  - CLI soporta `--public` flag para vacantes
+
+### Técnico
+- **version.php**: Incrementado a 2.0.84 (2025120941)
+- No requirió cambios, funcionalidad completa existente
+
+---
+
+## [2.0.83] - 2025-12-09
+
+### Fase 10J: Exportación ZIP con Jerarquía
+
+#### Verificado
+- **Sistema de exportación ZIP completo ya implementado en `export_documents.php`**
+
+- **Modos de exportación:**
+  - Single application: `?applicationid=X`
+  - Vacancy: `?vacancyid=X` (todas las aplicaciones)
+  - Convocatoria: `?convocatoriaid=X` (todas las vacantes)
+  - Company: `?companyid=X` (multi-tenant IOMAD)
+
+- **Estructura de carpetas jerárquica:**
+  ```
+  Vacancy_Code/
+    └── Applicant_LastName_FirstName_ID/
+        └── DocumentType/
+            └── filename.pdf
+  ```
+
+- **Características adicionales:**
+  - MANIFEST.txt con metadatos del export (fecha, estadísticas)
+  - Registro de auditoría para todas las exportaciones
+  - Verificación de permisos (`local/jobboard:exportdata`)
+  - Limpieza automática de archivos temporales
+
+### Técnico
+- **version.php**: Incrementado a 2.0.83 (2025120940)
+- No requirió cambios, solo verificación de funcionalidad existente
+
+---
+
+## [2.0.82] - 2025-12-09
+
+### Fase 10I: Editor HTML para Campos de Texto
+
+#### Verificado
+- **Editor HTML ya implementado en todos los campos principales**
+  - 12 campos con editor HTML distribuidos en 7 formularios
+
+- **Formularios con editor:**
+  - `vacancy_form.php`: description, requirements, desirable
+  - `convocatoria_form.php`: description, terms
+  - `application_form.php`: coverletter
+  - `doctype_form.php`: description_editor, requirements_editor, conditional_note_editor
+  - `email_template_form.php`: body_editor
+  - `signup_form.php`: description (perfil profesional)
+  - `updateprofile_form.php`: description (perfil profesional)
+
+- **Campos que permanecen como texto plano** (correcto por diseño):
+  - Notas administrativas (exemption_form)
+  - Listas de IP (api_token_form)
+  - Razones de exención (texto corto)
+  - Items de checklist (formato línea por línea)
+
+### Técnico
+- **version.php**: Incrementado a 2.0.82 (2025120939)
+- No requirió cambios, solo verificación
+
+---
+
+## [2.0.81] - 2025-12-09
+
+### Fase 10H: Sistema de Revisión estilo mod_assign
+
+#### Añadido
+- **Navegación anterior/siguiente en vista de revisión**
+  - Botones "Aplicación anterior" y "Siguiente aplicación" para navegar entre aplicaciones pendientes
+  - Indicador de posición (ej: "Aplicación 3 de 10")
+  - Filtrado por vacante y multi-tenant (IOMAD)
+  - Similar al flujo de calificación de mod_assign
+
+#### Verificado
+- **Sistema de revisión ya implementado con características completas**
+  - Interfaz de dos columnas (documentos + información)
+  - Indicador de pasos de progreso (examinar, validar, completar)
+  - Estadísticas de documentos (total, aprobados, rechazados, pendientes)
+  - Botones de aprobar/rechazar individuales para cada documento
+  - Modal para motivo de rechazo
+  - Botón "Validar todos" para aprobación masiva
+  - Observaciones del revisor al completar revisión
+  - Atajos de teclado (review_shortcuts.js)
+
+- **Notificación por email consolidada**
+  - Clase `review_notifier` envía email al completar revisión
+  - Plantillas separadas para `docs_validated` y `docs_rejected`
+  - Lista detallada de documentos rechazados con razones
+  - Observaciones del revisor incluidas en el email
+  - Soporte para plantillas por empresa (IOMAD)
+  - Registro de auditoría de notificaciones enviadas
+
+### Técnico
+- **version.php**: Incrementado a 2.0.81 (2025120938)
+- Navegación mod_assign style integrada en `views/review.php`
+
+---
+
+## [2.0.80] - 2025-12-09
+
+### Fase 10G: Sistema de Exenciones Global por Convocatoria
+
+#### Integrado
+- **Exenciones de convocatoria en flujo de aplicación**
+  - `views/apply.php` ahora usa `convocatoria_exemption::get_required_doctypes_for_convocatoria()`
+  - Los documentos exentos a nivel de convocatoria se filtran automáticamente
+  - Se mantiene compatibilidad con exenciones por usuario (ISER histórico)
+
+#### Verificado
+- **Sistema de exenciones ya implementado**
+  - Tabla `local_jobboard_conv_docexempt` para exenciones globales por convocatoria
+  - Clase `convocatoria_exemption` con métodos completos (create, delete, get_exempted_doctype_ids)
+  - UI de gestión en formulario de convocatoria (`exempted_doctypes` multiselect)
+  - Métodos de resumen y copia entre convocatorias
+
+- **Indicadores de exención en listas**
+  - Badge "Exención" mostrado en `manage_applications.php` para aplicantes exentos
+  - Aviso de exención en `views/applications.php` para usuarios con exención activa
+
+### Técnico
+- **version.php**: Incrementado a 2.0.80 (2025120937)
+- Integración de `convocatoria_exemption` con flujo de aplicación
+
+---
+
+## [2.0.79] - 2025-12-09
+
+### Fase 10F: Admin doctypes.php - Auditoría Completa y Validación
+
+#### Añadido
+- **Registro de auditoría completo en admin/doctypes.php**
+  - Auditoría para acción CREATE con ACTION_CREATE, ENTITY_CONFIG
+  - Auditoría para acción UPDATE con previousvalue/newvalue tracking
+  - Auditoría para acción DELETE con código y nombre del doctype
+  - Auditoría para acción TOGGLE (ya existente, ahora con log_transition)
+
+- **Validación de código único al crear doctype**
+  - Verifica que no exista otro doctype con el mismo código
+  - Usa string existente `error:codealreadyexists` para mensaje de error
+
+### Técnico
+- **version.php**: Incrementado a 2.0.79 (2025120936)
+- Sintaxis PHP validada correctamente
+
+---
+
+## [2.0.78] - 2025-12-09
+
+### Fase 10E: Restricción de Aplicaciones por Convocatoria
+
+#### Modificado
+- **Configuración global removida de settings.php**
+  - Eliminados campos `allow_multiple_applications` y `max_active_applications` globales
+  - Los límites ahora se configuran exclusivamente por convocatoria
+  - Nuevo string informativo `applicationlimits_perconvocatoria_desc`
+
+#### Verificado
+- **Campos de convocatoria ya implementados**
+  - `allow_multiple_applications`: Checkbox en formulario de convocatoria
+  - `max_applications_per_user`: Campo numérico con visibilidad condicional
+  - Validación implementada en `lib.php:local_jobboard_can_user_apply_to_vacancy()`
+  - Mensajes de error claros cuando se exceden límites
+
+- **Validación de experiencia para contratos ocasionales**
+  - `local_jobboard_check_experience_requirements()` verifica 2 años mínimos
+  - Solo aplica a vacantes con `contracttype = 'occasional'`
+
+### Técnico
+- **version.php**: Incrementado a 2.0.78 (2025120935)
+- Strings EN/ES sincronizados para nueva descripción
+
+---
+
+## [2.0.77] - 2025-12-09
+
+### Fase 10D: Lógica de Documentos (Exención Edad 50, Tarjeta Profesional)
+
+#### Verificado
+- **Exención automática por edad (≥50 años)**
+  - Campo `age_exemption_threshold` en tabla `local_jobboard_doctype`
+  - Lógica de filtrado implementada en `application_form.php` y `lib.php`
+  - Documentos con umbral de edad se ocultan automáticamente para usuarios calificados
+
+- **Tarjeta profesional opcional con nota condicional**
+  - Campo `conditional_note` en tabla `local_jobboard_doctype`
+  - Notas condicionales mostradas en formulario de aplicación
+  - String `tarjeta_profesional_note` configurado para profesiones reguladas
+
+- **Filtrado por género**
+  - Campo `gender_condition` para documentos específicos por género (ej: libreta militar)
+  - Lógica de filtrado implementada en formularios
+
+#### Añadido
+- **Strings de idioma faltantes en inglés**
+  - `conditional_document_note`: Nota condicional para documentos
+  - `document_age_exemption`: Indicador de exención por edad
+
+### Técnico
+- **version.php**: Incrementado a 2.0.77 (2025120934)
+
+---
+
+## [2.0.76] - 2025-12-09
+
+### Fase 10C: Actualizar CLI - Eliminar Remuneración
+
+#### Verificado
+- **CLI sin referencias a salary/remuneración**
+  - Archivos `cli/cli.php`, `cli/import_vacancies.php`, `cli/parse_profiles*.php` verificados
+  - No se encontraron variables, constantes o funciones relacionadas con salarios
+  - No se requieren cambios - la limpieza ya estaba completada
+
+### Técnico
+- **version.php**: Incrementado a 2.0.76 (2025120933)
+
+---
+
+## [2.0.75] - 2025-12-09
+
+### Fase 10B: Remover Campos Obsoletos
+
+#### Eliminado
+- **Campos de vacante eliminados de la lógica de código**
+  - `isextemporaneous` y `extemporaneousreason`: Ya no se asignan en formularios
+  - `opendate` y `closedate`: Las fechas ahora se heredan de convocatoria exclusivamente
+  - Limpieza de referencias en `edit.php` y `views/convocatorias.php`
+
+- **Tarjeta de Identidad (TI) removida del registro**
+  - Ya no es opción en el selector de tipo de documento
+  - Comentario documentando la razón (no aplica para solicitantes de empleo)
+
+#### Mejorado
+- **Publicación de vacantes simplificada**
+  - `views/convocatorias.php`: Query de publicación ya no depende de campos extemporáneos
+  - Las vacantes heredan fechas de su convocatoria padre automáticamente
+
+### Técnico
+- **version.php**: Incrementado a 2.0.75 (2025120932)
+- Campos backward-compatible via métodos `__get` en `vacancy.php`
+
+---
+
+## [2.0.74] - 2025-12-09
+
+### Fase 10A: Sistema de Auditoría Robusto
+
+#### Mejorado
+- **Sistema de auditoría mejorado con valores anteriores y nuevos**
+  - Llamadas a `audit::log()` ahora utilizan parámetros `previousvalue` y `newvalue`
+  - Captura del estado previo antes de actualizaciones para trazabilidad completa
+  - Uso de constantes de clase para acciones y entidades (`ACTION_CREATE`, `ENTITY_VACANCY`, etc.)
+
+- **Clase `vacancy.php`**
+  - `create()`: Registra nuevo estado en `newvalue`
+  - `update()`: Captura estado previo antes de actualización, registra ambos valores
+  - `delete()`: Captura estado antes de eliminación en `previousvalue`
+  - `change_status()`: Usa `log_transition()` para rastrear cambios de estado
+
+- **Clase `application.php`**
+  - `create()`: Registra nuevo estado de aplicación
+  - `change_status()`: Usa `log_transition()` para transiciones de estado
+  - `withdraw()`: Registra transición de retiro con razón
+
+- **Clase `document.php`**
+  - `create_from_file()`: Registra documento subido con nuevo estado
+  - `validate()`: Registra transición de estado de validación
+  - `reject()`: Registra transición de rechazo con razón
+
+### Técnico
+- **version.php**: Incrementado a 2.0.74 (2025120931)
+
+---
+
 ## [2.0.37] - 2025-12-08
 
 ### Corregido

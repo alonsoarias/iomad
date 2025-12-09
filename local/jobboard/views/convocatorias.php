@@ -95,16 +95,11 @@ if ($action && $convocatoriaid && confirm_sesskey()) {
             $convocatoria->modifiedby = $USER->id;
             $DB->update_record('local_jobboard_convocatoria', $convocatoria);
 
-            // Publish all draft vacancies in this convocatoria and sync dates.
-            $DB->execute("UPDATE {local_jobboard_vacancy}
-                          SET status = 'published', opendate = ?, closedate = ?, timemodified = ?
-                          WHERE convocatoriaid = ? AND status = 'draft' AND isextemporaneous = 0",
-                [$convocatoria->startdate, $convocatoria->enddate, time(), $convocatoriaid]);
-
-            // For extemporaneous vacancies, only change status (keep their custom dates).
+            // Publish all draft vacancies in this convocatoria.
+            // Note: Vacancy dates are now inherited from convocatoria, not stored in vacancy.
             $DB->execute("UPDATE {local_jobboard_vacancy}
                           SET status = 'published', timemodified = ?
-                          WHERE convocatoriaid = ? AND status = 'draft' AND isextemporaneous = 1",
+                          WHERE convocatoriaid = ? AND status = 'draft'",
                 [time(), $convocatoriaid]);
 
             // Audit log.

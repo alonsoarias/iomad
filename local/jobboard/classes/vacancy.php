@@ -290,8 +290,16 @@ class vacancy {
         unset($record->id);
         $vacancy->id = $DB->insert_record('local_jobboard_vacancy', $record);
 
-        // Log audit.
-        audit::log('vacancy_created', 'vacancy', $vacancy->id);
+        // Log audit with new values (no previous value for creation).
+        $newstate = $vacancy->to_record();
+        audit::log(
+            audit::ACTION_CREATE,
+            audit::ENTITY_VACANCY,
+            $vacancy->id,
+            ['code' => $vacancy->code, 'title' => $vacancy->title],
+            null,
+            (array) $newstate
+        );
 
         // Trigger event.
         $event = \local_jobboard\event\vacancy_created::create([
@@ -317,6 +325,9 @@ class vacancy {
             throw new \moodle_exception('error:cannotedit', 'local_jobboard');
         }
 
+        // Capture previous state for audit logging.
+        $previousstate = $this->to_record();
+
         $this->set_from_data($data);
         $this->modifiedby = $USER->id;
         $this->timemodified = time();
@@ -330,8 +341,16 @@ class vacancy {
         $record = $this->to_record();
         $DB->update_record('local_jobboard_vacancy', $record);
 
-        // Log audit.
-        audit::log('vacancy_updated', 'vacancy', $this->id);
+        // Log audit with previous and new values.
+        $newstate = $this->to_record();
+        audit::log(
+            audit::ACTION_UPDATE,
+            audit::ENTITY_VACANCY,
+            $this->id,
+            ['code' => $this->code, 'title' => $this->title],
+            (array) $previousstate,
+            (array) $newstate
+        );
 
         // Trigger event.
         $event = \local_jobboard\event\vacancy_updated::create([
@@ -354,16 +373,23 @@ class vacancy {
             throw new \moodle_exception('error:cannotdelete', 'local_jobboard');
         }
 
+        // Capture state before deletion for audit.
+        $previousstate = $this->to_record();
+
         // Delete related records.
         $DB->delete_records('local_jobboard_vacancy_field', ['vacancyid' => $this->id]);
         $DB->delete_records('local_jobboard_doc_requirement', ['vacancyid' => $this->id]);
         $DB->delete_records('local_jobboard_vacancy', ['id' => $this->id]);
 
-        // Log audit.
-        audit::log('vacancy_deleted', 'vacancy', $this->id, [
-            'code' => $this->code,
-            'title' => $this->title,
-        ]);
+        // Log audit with previous values (no new value for deletion).
+        audit::log(
+            audit::ACTION_DELETE,
+            audit::ENTITY_VACANCY,
+            $this->id,
+            ['code' => $this->code, 'title' => $this->title],
+            (array) $previousstate,
+            null
+        );
 
         // Trigger event.
         $event = \local_jobboard\event\vacancy_deleted::create([
@@ -795,11 +821,15 @@ class vacancy {
             'timemodified' => $this->timemodified,
         ]);
 
-        // Log audit.
-        audit::log('vacancy_status_changed', 'vacancy', $this->id, [
-            'old_status' => $oldstatus,
-            'new_status' => $newstatus,
-        ]);
+        // Log audit with previous and new status using proper transition logging.
+        audit::log_transition(
+            audit::ENTITY_VACANCY,
+            $this->id,
+            'status',
+            $oldstatus,
+            $newstatus,
+            ['code' => $this->code, 'title' => $this->title]
+        );
     }
 
     /**

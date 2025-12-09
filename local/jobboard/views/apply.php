@@ -32,6 +32,7 @@ use local_jobboard\vacancy;
 use local_jobboard\application;
 use local_jobboard\document;
 use local_jobboard\exemption;
+use local_jobboard\convocatoria_exemption;
 use local_jobboard\forms\application_form;
 
 // Parameters.
@@ -111,13 +112,38 @@ $usergender = $applicantprofile->gender ?? '';
 // Get user's age for document exemptions.
 $userage = \local_jobboard_get_user_age($USER->id);
 
-// Get all document types (required and optional).
-$requireddocs = exemption::get_required_doctypes($USER->id, false);
+// Get convocatoria ID from vacancy for exemption filtering.
+$convocatoriaid = $vacancy->convocatoriaid ?? 0;
+
+// Get all document types filtered by:
+// 1. Convocatoria-level exemptions (documents exempted for ALL applicants in this convocatoria)
+// 2. User-level exemptions (ISER historic staff, etc.)
+if ($convocatoriaid) {
+    // Start with doctypes filtered by convocatoria exemptions.
+    $requireddocs = convocatoria_exemption::get_required_doctypes_for_convocatoria($convocatoriaid, false, true);
+} else {
+    // Fallback: Get all enabled document types.
+    $requireddocs = $DB->get_records('local_jobboard_doctype', ['enabled' => 1], 'sortorder ASC');
+}
+
+// Further filter by user exemption if user has one.
+if ($isexemption && $exemption) {
+    $exemptedcodes = $exemption->get_required_document_codes();
+    if (!empty($exemptedcodes)) {
+        $requireddocs = array_filter($requireddocs, fn($dt) => in_array($dt->code, $exemptedcodes));
+    }
+}
 
 // Set up page.
 $PAGE->set_title(get_string('applytovacancy', 'local_jobboard'));
 $PAGE->set_heading(get_string('applytovacancy', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
+
+// Get convocatoria exemption summary for display.
+$convexemptionsummary = null;
+if ($convocatoriaid) {
+    $convexemptionsummary = convocatoria_exemption::get_exemption_summary($convocatoriaid);
+}
 
 // Create form.
 $customdata = [
@@ -130,6 +156,8 @@ $customdata = [
     ] : null,
     'usergender' => $usergender,
     'userage' => $userage,
+    'convocatoriaid' => $convocatoriaid,
+    'convexemptionsummary' => $convexemptionsummary,
 ];
 
 $mform = new application_form(null, $customdata);

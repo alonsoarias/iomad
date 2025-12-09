@@ -40,9 +40,21 @@ $pageurl = new moodle_url('/local/jobboard/admin/doctypes.php');
 // Handle toggle action.
 if ($action === 'toggle' && $id && confirm_sesskey()) {
     $doctype = $DB->get_record('local_jobboard_doctype', ['id' => $id], '*', MUST_EXIST);
+    $oldstatus = $doctype->enabled;
     $doctype->enabled = $doctype->enabled ? 0 : 1;
     $doctype->timemodified = time();
     $DB->update_record('local_jobboard_doctype', $doctype);
+
+    // Audit log.
+    \local_jobboard\audit::log_transition(
+        \local_jobboard\audit::ENTITY_CONFIG,
+        $id,
+        'enabled',
+        $oldstatus ? 'enabled' : 'disabled',
+        $doctype->enabled ? 'enabled' : 'disabled',
+        ['code' => $doctype->code, 'name' => $doctype->name, 'entity' => 'doctype']
+    );
+
     redirect($pageurl, get_string('changessaved'), null, \core\output\notification::NOTIFY_SUCCESS);
 }
 
@@ -58,6 +70,15 @@ if ($action === 'delete' && $id && confirm_sesskey()) {
     }
 
     $DB->delete_records('local_jobboard_doctype', ['id' => $id]);
+
+    // Audit log.
+    \local_jobboard\audit::log(
+        \local_jobboard\audit::ACTION_DELETE,
+        \local_jobboard\audit::ENTITY_CONFIG,
+        $id,
+        ['code' => $doctype->code, 'name' => $doctype->name, 'entity' => 'doctype']
+    );
+
     redirect($pageurl, get_string('doctypedeleted', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
 }
 
@@ -128,9 +149,26 @@ if ($action === 'add' || ($action === 'edit' && $id)) {
             $record->timemodified = $now;
 
             $DB->update_record('local_jobboard_doctype', $record);
+
+            // Audit log.
+            \local_jobboard\audit::log(
+                \local_jobboard\audit::ACTION_UPDATE,
+                \local_jobboard\audit::ENTITY_CONFIG,
+                $doctype->id,
+                ['code' => $doctype->code, 'name' => $data->name, 'entity' => 'doctype'],
+                (array) $doctype,
+                (array) $record
+            );
+
             redirect($pageurl, get_string('doctypeupdated', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
         } else {
             // Create new.
+            // Validate unique code.
+            if ($DB->record_exists('local_jobboard_doctype', ['code' => $data->code])) {
+                redirect($pageurl, get_string('error:codealreadyexists', 'local_jobboard'),
+                    null, \core\output\notification::NOTIFY_ERROR);
+            }
+
             $record = new stdClass();
             $record->code = $data->code;
             $record->name = $data->name;
@@ -151,7 +189,16 @@ if ($action === 'add' || ($action === 'edit' && $id)) {
             $record->timecreated = $now;
             $record->timemodified = $now;
 
-            $DB->insert_record('local_jobboard_doctype', $record);
+            $newid = $DB->insert_record('local_jobboard_doctype', $record);
+
+            // Audit log.
+            \local_jobboard\audit::log(
+                \local_jobboard\audit::ACTION_CREATE,
+                \local_jobboard\audit::ENTITY_CONFIG,
+                $newid,
+                ['code' => $record->code, 'name' => $record->name, 'entity' => 'doctype']
+            );
+
             redirect($pageurl, get_string('doctypecreated', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
         }
     }

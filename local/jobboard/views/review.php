@@ -433,6 +433,36 @@ if (!$applicationid) {
     }
     $totalDocs = count($documents);
 
+    // ============================================================================
+    // PREVIOUS/NEXT NAVIGATION (mod_assign style)
+    // ============================================================================
+    // Get all applications pending review in the same queue.
+    $navwhere = "a.status IN ('submitted', 'under_review')";
+    $navparams = [];
+    if ($vacancyid) {
+        $navwhere .= " AND a.vacancyid = :vacancyid";
+        $navparams['vacancyid'] = $vacancyid;
+    }
+    // Multi-tenant filter.
+    if (\local_jobboard_is_iomad_installed() && !has_capability('local/jobboard:viewallvacancies', $context)) {
+        $usercompanyid = \local_jobboard_get_user_companyid();
+        if ($usercompanyid) {
+            $navwhere .= " AND v.companyid = :companyid";
+            $navparams['companyid'] = $usercompanyid;
+        }
+    }
+    $navsql = "SELECT a.id FROM {local_jobboard_application} a
+               JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+               WHERE {$navwhere}
+               ORDER BY a.timecreated ASC";
+    $navapplications = $DB->get_records_sql($navsql, $navparams);
+    $navids = array_keys($navapplications);
+    $currentindex = array_search($applicationid, $navids);
+    $previd = ($currentindex > 0) ? $navids[$currentindex - 1] : null;
+    $nextid = ($currentindex !== false && $currentindex < count($navids) - 1) ? $navids[$currentindex + 1] : null;
+    $navposition = ($currentindex !== false) ? ($currentindex + 1) : 0;
+    $navtotal = count($navids);
+
     // Page header.
     $breadcrumbs = [
         get_string('dashboard', 'local_jobboard') => new moodle_url('/local/jobboard/index.php'),
@@ -489,6 +519,59 @@ if (!$applicationid) {
     }
     echo '</div>';
     echo '</div>';
+
+    // ============================================================================
+    // PREVIOUS/NEXT NAVIGATION BAR (mod_assign style)
+    // ============================================================================
+    if ($navtotal > 1) {
+        echo html_writer::start_div('jb-review-navigation d-flex justify-content-between align-items-center p-3 bg-light rounded mb-4');
+
+        // Previous button.
+        if ($previd) {
+            $prevurl = new moodle_url('/local/jobboard/index.php', [
+                'view' => 'review',
+                'applicationid' => $previd,
+                'vacancyid' => $vacancyid,
+            ]);
+            echo html_writer::link($prevurl,
+                '<i class="fa fa-chevron-left mr-2"></i>' . get_string('previousapplication', 'local_jobboard'),
+                ['class' => 'btn btn-outline-primary', 'title' => get_string('previousapplication', 'local_jobboard')]
+            );
+        } else {
+            echo html_writer::tag('span',
+                '<i class="fa fa-chevron-left mr-2"></i>' . get_string('previousapplication', 'local_jobboard'),
+                ['class' => 'btn btn-outline-secondary disabled']
+            );
+        }
+
+        // Position indicator.
+        echo html_writer::start_div('text-center');
+        echo html_writer::tag('span',
+            get_string('applicationof', 'local_jobboard', ['current' => $navposition, 'total' => $navtotal]),
+            ['class' => 'badge badge-pill badge-primary px-3 py-2']
+        );
+        echo html_writer::end_div();
+
+        // Next button.
+        if ($nextid) {
+            $nexturl = new moodle_url('/local/jobboard/index.php', [
+                'view' => 'review',
+                'applicationid' => $nextid,
+                'vacancyid' => $vacancyid,
+            ]);
+            echo html_writer::link($nexturl,
+                get_string('nextapplication', 'local_jobboard') . ' <i class="fa fa-chevron-right ml-2"></i>',
+                ['class' => 'btn btn-outline-primary', 'title' => get_string('nextapplication', 'local_jobboard')]
+            );
+        } else {
+            echo html_writer::tag('span',
+                get_string('nextapplication', 'local_jobboard') . ' <i class="fa fa-chevron-right ml-2"></i>',
+                ['class' => 'btn btn-outline-secondary disabled']
+            );
+        }
+
+        echo html_writer::end_div();
+    }
 
     // ============================================================================
     // STATISTICS ROW

@@ -267,8 +267,16 @@ class application {
         // Log workflow.
         $application->log_workflow_change(null, 'submitted', get_string('applicationsubmitted', 'local_jobboard'));
 
-        // Log audit.
-        audit::log('application_created', 'application', $application->id);
+        // Log audit with new values (no previous value for creation).
+        $newstate = $application->to_record();
+        audit::log(
+            audit::ACTION_CREATE,
+            audit::ENTITY_APPLICATION,
+            $application->id,
+            ['vacancyid' => $application->vacancyid, 'userid' => $application->userid],
+            null,
+            (array) $newstate
+        );
 
         // Trigger event.
         $event = \local_jobboard\event\application_created::create([
@@ -349,11 +357,15 @@ class application {
         // Log workflow change.
         $this->log_workflow_change($oldstatus, $newstatus, $comments, $changedby);
 
-        // Log audit.
-        audit::log('application_status_changed', 'application', $this->id, [
-            'old_status' => $oldstatus,
-            'new_status' => $newstatus,
-        ]);
+        // Log audit with proper transition tracking.
+        audit::log_transition(
+            audit::ENTITY_APPLICATION,
+            $this->id,
+            'status',
+            $oldstatus,
+            $newstatus,
+            ['vacancyid' => $this->vacancyid, 'userid' => $this->userid]
+        );
 
         // Trigger event.
         $event = \local_jobboard\event\application_status_changed::create([
@@ -413,8 +425,15 @@ class application {
         // Log workflow change.
         $this->log_workflow_change($oldstatus, 'withdrawn', $reason);
 
-        // Log audit.
-        audit::log('application_withdrawn', 'application', $this->id);
+        // Log audit with proper transition tracking.
+        audit::log_transition(
+            audit::ENTITY_APPLICATION,
+            $this->id,
+            'status',
+            $oldstatus,
+            'withdrawn',
+            ['vacancyid' => $this->vacancyid, 'userid' => $this->userid, 'reason' => $reason]
+        );
     }
 
     /**

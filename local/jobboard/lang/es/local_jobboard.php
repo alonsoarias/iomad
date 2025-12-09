@@ -1565,6 +1565,7 @@ $string['showpublicnavlink_desc'] = 'Mostrar un enlace a la página de vacantes 
 // Configuración de límites de postulación.
 $string['applicationlimits'] = 'Límites de Postulación';
 $string['applicationlimits_desc'] = 'Configure cuántas postulaciones pueden enviar los usuarios.';
+$string['applicationlimits_perconvocatoria_desc'] = 'Los límites de postulación (permitir múltiples, máximo por usuario) ahora se configuran por convocatoria. Edite cada convocatoria para establecer estas restricciones.';
 $string['allowmultipleapplications'] = 'Permitir múltiples postulaciones';
 $string['allowmultipleapplications_desc'] = 'Permitir a los usuarios postularse a múltiples vacantes simultáneamente.';
 $string['maxactiveapplications'] = 'Máximo de postulaciones activas';

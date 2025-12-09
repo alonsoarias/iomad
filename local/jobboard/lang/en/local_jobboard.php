@@ -841,6 +841,7 @@ $string['showpublicnavlink_desc'] = 'Show a link to the public vacancies page in
 // Application limits settings.
 $string['applicationlimits'] = 'Application Limits';
 $string['applicationlimits_desc'] = 'Configure how many applications users can submit.';
+$string['applicationlimits_perconvocatoria_desc'] = 'Application limits (allow multiple applications, maximum per user) are now configured per convocatoria. Edit each convocatoria to set these restrictions.';
 $string['allowmultipleapplications'] = 'Allow multiple applications';
 $string['allowmultipleapplications_desc'] = 'Allow users to apply for multiple vacancies simultaneously.';
 $string['maxactiveapplications'] = 'Maximum active applications';
@@ -2733,6 +2734,10 @@ $string['error:occasionalrequiresexperience'] = 'Occasional contracts require at
 
 // Tarjeta profesional conditional note.
 $string['tarjeta_profesional_note'] = 'The professional license is optional. However, it is MANDATORY for: Engineering, Architecture, Law, Medicine, Nursing, Accounting, Psychology, and other regulated professions according to Colombian law.';
+
+// Conditional document notes.
+$string['conditional_document_note'] = 'Note: {$a}';
+$string['document_age_exemption'] = 'Exempt due to age';
 
 // Age exemption.
 $string['age_exempt_notice'] = 'This document is not required for applicants aged {$a} years or older.';
