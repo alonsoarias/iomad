@@ -470,6 +470,20 @@ function local_jobboard_get_contract_types(): array {
 }
 
 /**
+ * Get available educational modalities.
+ *
+ * @return array List of modality code => name.
+ */
+function local_jobboard_get_modalities(): array {
+    return [
+        'presencial' => get_string('modality:presencial', 'local_jobboard'),
+        'distancia' => get_string('modality:distancia', 'local_jobboard'),
+        'virtual' => get_string('modality:virtual', 'local_jobboard'),
+        'hibrida' => get_string('modality:hibrida', 'local_jobboard'),
+    ];
+}
+
+/**
  * Get allowed state transitions for applications.
  *
  * @return array From status => array of allowed to statuses.

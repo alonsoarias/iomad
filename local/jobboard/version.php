@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120977;  // v2.0.59: Fix CLI department=modality and positions=1 per vacancy.
+$plugin->version = 2025120978;  // v2.0.60: Add modality field to form, fix contracttype mapping, salary as textarea.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.59';
+$plugin->release = '2.0.60';

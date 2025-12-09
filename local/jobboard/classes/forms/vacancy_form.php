@@ -83,17 +83,23 @@ class vacancy_form extends \moodleform {
         $mform->setType('duration', PARAM_TEXT);
         $mform->addHelpButton('duration', 'duration', 'local_jobboard');
 
-        // Salary.
-        $mform->addElement('text', 'salary', get_string('salary', 'local_jobboard'), ['size' => 40, 'maxlength' => 100]);
+        // Salary (textarea for detailed salary info including Decreto 598/2025 data).
+        $mform->addElement('textarea', 'salary', get_string('salary', 'local_jobboard'), ['rows' => 3, 'cols' => 60]);
         $mform->setType('salary', PARAM_TEXT);
         $mform->addHelpButton('salary', 'salary', 'local_jobboard');
 
-        // Location.
+        // Location (Centro Tutorial / Sede).
         $mform->addElement('text', 'location', get_string('location', 'local_jobboard'), ['size' => 60, 'maxlength' => 255]);
         $mform->setType('location', PARAM_TEXT);
         $mform->addHelpButton('location', 'location', 'local_jobboard');
 
-        // Department.
+        // Modality (educational modality).
+        $modalities = ['' => get_string('selectmodality', 'local_jobboard')] + \local_jobboard_get_modalities();
+        $mform->addElement('select', 'modality', get_string('modality', 'local_jobboard'), $modalities);
+        $mform->setType('modality', PARAM_ALPHANUMEXT);
+        $mform->addHelpButton('modality', 'modality', 'local_jobboard');
+
+        // Department (text field - usually same as modality for ISER).
         $mform->addElement('text', 'department', get_string('department', 'local_jobboard'), ['size' => 60, 'maxlength' => 255]);
         $mform->setType('department', PARAM_TEXT);
         $mform->addHelpButton('department', 'department', 'local_jobboard');
@@ -397,6 +403,7 @@ class vacancy_form extends \moodleform {
         $data->duration = $vacancy->duration;
         $data->salary = $vacancy->salary;
         $data->location = $vacancy->location;
+        $data->modality = $vacancy->modality ?? '';
         $data->department = $vacancy->department;
         $data->companyid = $vacancy->companyid;
         $data->departmentid = $vacancy->departmentid ?? 0;

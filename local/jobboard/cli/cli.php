@@ -1096,8 +1096,24 @@ foreach ($allprofiles as $code => $profile) {
     } else {
         $modalitykey = 'PRESENCIAL';
     }
-    $contracttype = $profile['contracttype'] ?: 'CATEDRA';
-    $isOcasional = stripos($contracttype, 'OCASIONAL') !== false;
+    $contracttypeRaw = $profile['contracttype'] ?: 'CATEDRA';
+    $isOcasional = stripos($contracttypeRaw, 'OCASIONAL') !== false;
+
+    // Map contract type from JSON to form-expected keys.
+    // Form expects: catedra, temporal, termino_fijo, prestacion_servicios, planta.
+    if ($isOcasional) {
+        $contracttype = 'temporal'; // Ocasional Tiempo Completo -> temporal.
+    } else if (stripos($contracttypeRaw, 'CATEDRA') !== false || stripos($contracttypeRaw, 'CÁTEDRA') !== false) {
+        $contracttype = 'catedra';
+    } else if (stripos($contracttypeRaw, 'PLANTA') !== false) {
+        $contracttype = 'planta';
+    } else if (stripos($contracttypeRaw, 'PRESTACION') !== false || stripos($contracttypeRaw, 'SERVICIOS') !== false) {
+        $contracttype = 'prestacion_servicios';
+    } else if (stripos($contracttypeRaw, 'FIJO') !== false) {
+        $contracttype = 'termino_fijo';
+    } else {
+        $contracttype = 'catedra'; // Default to catedra.
+    }
 
     // Title: Program + Brief Profile.
     $record->title = $program ?: "Docente {$faculty}";
@@ -1310,10 +1326,12 @@ foreach ($allprofiles as $code => $profile) {
     // Location (text field).
     $record->location = $locationName;
 
-    // Modality (educational modality).
-    $record->modality = $modalityName;
+    // Modality (educational modality) - use key for form compatibility.
+    // Form expects: presencial, distancia, virtual, hibrida (lowercase).
+    $modalityFormKey = strtolower($modalitykey);
+    $record->modality = $modalityFormKey;
 
-    // Department (text field = modality, NOT program).
+    // Department (text field = modality display name).
     $record->department = $modalityName;
 
     // Build requirements.

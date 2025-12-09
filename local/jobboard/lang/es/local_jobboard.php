@@ -384,6 +384,15 @@ $string['contract:termino_fijo'] = 'Término Fijo';
 $string['contract:prestacion_servicios'] = 'Prestación de Servicios';
 $string['contract:planta'] = 'Planta';
 
+// Educational modalities.
+$string['modality'] = 'Modalidad';
+$string['modality_help'] = 'Modalidad educativa del programa académico.';
+$string['modality:presencial'] = 'Presencial';
+$string['modality:distancia'] = 'A Distancia';
+$string['modality:virtual'] = 'Virtual';
+$string['modality:hibrida'] = 'Híbrida';
+$string['selectmodality'] = 'Seleccione modalidad...';
+
 // Actions.
 $string['create'] = 'Crear';
 $string['edit'] = 'Editar';
