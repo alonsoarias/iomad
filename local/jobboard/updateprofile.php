@@ -81,6 +81,7 @@ $formdata = [
     'isiomad' => $isiomad,
     'userid' => $USER->id,
     'usercompanyid' => $usercompanyid,
+    'userdepartmentid' => $userdepartmentid,
 ];
 
 $mform = new \local_jobboard\forms\updateprofile_form(null, $formdata);
@@ -226,11 +227,6 @@ if ($vacancy) {
 
 // Display the form.
 $mform->display();
-
-// JavaScript for dynamic department loading.
-if ($isiomad) {
-    $PAGE->requires->js_call_amd('local_jobboard/signup_form', 'init', []);
-}
 
 echo $OUTPUT->footer();
 

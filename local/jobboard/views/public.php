@@ -36,13 +36,16 @@ if (!$enablepublic) {
     throw new moodle_exception('error:publicpagedisabled', 'local_jobboard');
 }
 
+// Check if IOMAD is installed.
+$isiomad = local_jobboard_is_iomad_installed();
+
 // Optional parameters.
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 12, PARAM_INT);
 $search = optional_param('search', '', PARAM_TEXT);
 $contracttype = optional_param('contracttype', '', PARAM_ALPHA);
-$location = optional_param('location', '', PARAM_TEXT);
-$modality = optional_param('modality', '', PARAM_TEXT);
+$companyid = optional_param('companyid', 0, PARAM_INT);
+$departmentid = optional_param('departmentid', 0, PARAM_INT);
 $publicationtype = optional_param('type', '', PARAM_ALPHA);
 $vacancyid = optional_param('id', 0, PARAM_INT);
 $convocatoriaid = optional_param('convocatoria', 0, PARAM_INT);
@@ -127,33 +130,16 @@ if (!empty($contracttype)) {
     $params['contracttype'] = $contracttype;
 }
 
-// Location filter.
-if (!empty($location)) {
-    $conditions[] = $DB->sql_like('v.location', ':location', false);
-    $params['location'] = '%' . $DB->sql_like_escape($location) . '%';
+// Company filter (IOMAD).
+if ($isiomad && !empty($companyid)) {
+    $conditions[] = "v.companyid = :filtercompanyid";
+    $params['filtercompanyid'] = $companyid;
 }
 
-// Get modalities for filter (safely handle if column doesn't exist yet).
-$modalities = [];
-try {
-    $dbman = $DB->get_manager();
-    $table = new xmldb_table('local_jobboard_vacancy');
-    $field = new xmldb_field('modality');
-    if ($dbman->field_exists($table, $field)) {
-        $modalities = $DB->get_records_sql_menu(
-            "SELECT DISTINCT modality, modality FROM {local_jobboard_vacancy}
-             WHERE status = 'published' AND modality IS NOT NULL AND modality != ''
-             ORDER BY modality"
-        );
-    }
-} catch (Exception $e) {
-    $modalities = [];
-}
-
-// Modality filter (only if column exists).
-if (!empty($modality) && !empty($modalities)) {
-    $conditions[] = $DB->sql_like('v.modality', ':modality', false);
-    $params['modality'] = '%' . $DB->sql_like_escape($modality) . '%';
+// Department filter (IOMAD).
+if ($isiomad && !empty($departmentid)) {
+    $conditions[] = "v.departmentid = :filterdepartmentid";
+    $params['filterdepartmentid'] = $departmentid;
 }
 
 // Build WHERE clause.
@@ -172,11 +158,18 @@ $vacancies = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
 
 // Get available filter options.
 $contracttypes = local_jobboard_get_contract_types();
-$locations = $DB->get_records_sql_menu(
-    "SELECT DISTINCT location, location FROM {local_jobboard_vacancy}
-     WHERE status = 'published' AND location IS NOT NULL AND location != ''
-     ORDER BY location"
-);
+
+// Get companies for filter (IOMAD).
+$companies = [];
+if ($isiomad) {
+    $companies = local_jobboard_get_companies();
+}
+
+// Get departments for selected company (IOMAD).
+$departments = [];
+if ($isiomad && !empty($companyid)) {
+    $departments = local_jobboard_get_departments($companyid);
+}
 
 // Get open convocatorias for filter.
 $convocatorias = $DB->get_records_sql(
@@ -278,37 +271,39 @@ echo html_writer::empty_tag('input', [
 ]);
 echo html_writer::end_div();
 
-// Location select.
-$locationOptions = ['' => get_string('alllocations', 'local_jobboard')] + ($locations ?: []);
-echo html_writer::start_div('col-md-2 col-sm-6 mb-2 mb-md-0');
-echo html_writer::tag('label', get_string('location', 'local_jobboard'), ['for' => 'filter-location', 'class' => 'form-label small text-muted mb-1']);
-echo '<select name="location" id="filter-location" class="form-control form-control-sm jb-filter-select">';
-foreach ($locationOptions as $val => $label) {
-    $selected = ($location === (string)$val) ? ' selected="selected"' : '';
-    $optionText = !empty($label) ? s($label) : s($val);
-    if (empty($optionText)) {
-        $optionText = get_string('alllocations', 'local_jobboard');
+// Company select (IOMAD - Ubicación).
+if ($isiomad && !empty($companies)) {
+    $companyOptions = [0 => get_string('alllocations', 'local_jobboard')] + $companies;
+    echo html_writer::start_div('col-md-2 col-sm-6 mb-2 mb-md-0');
+    echo html_writer::tag('label', get_string('location', 'local_jobboard'), ['for' => 'filter-companyid', 'class' => 'form-label small text-muted mb-1']);
+    echo '<select name="companyid" id="filter-companyid" class="form-control form-control-sm jb-filter-select">';
+    foreach ($companyOptions as $val => $label) {
+        $selected = ($companyid == $val) ? ' selected="selected"' : '';
+        $optionText = !empty($label) ? s($label) : '';
+        if (empty($optionText)) {
+            $optionText = get_string('alllocations', 'local_jobboard');
+        }
+        echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
     }
-    echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
-}
-echo '</select>';
-echo html_writer::end_div();
+    echo '</select>';
+    echo html_writer::end_div();
 
-// Modality select.
-$modalityOptions = ['' => get_string('allmodalities', 'local_jobboard')] + ($modalities ?: []);
-echo html_writer::start_div('col-md-2 col-sm-6 mb-2 mb-md-0');
-echo html_writer::tag('label', get_string('modality', 'local_jobboard'), ['for' => 'filter-modality', 'class' => 'form-label small text-muted mb-1']);
-echo '<select name="modality" id="filter-modality" class="form-control form-control-sm jb-filter-select">';
-foreach ($modalityOptions as $val => $label) {
-    $selected = ($modality === (string)$val) ? ' selected="selected"' : '';
-    $optionText = !empty($label) ? s($label) : s($val);
-    if (empty($optionText)) {
-        $optionText = get_string('allmodalities', 'local_jobboard');
+    // Department select (IOMAD - Modalidad).
+    $departmentOptions = [0 => get_string('allmodalities', 'local_jobboard')] + $departments;
+    echo html_writer::start_div('col-md-2 col-sm-6 mb-2 mb-md-0');
+    echo html_writer::tag('label', get_string('modality', 'local_jobboard'), ['for' => 'filter-departmentid', 'class' => 'form-label small text-muted mb-1']);
+    echo '<select name="departmentid" id="filter-departmentid" class="form-control form-control-sm jb-filter-select">';
+    foreach ($departmentOptions as $val => $label) {
+        $selected = ($departmentid == $val) ? ' selected="selected"' : '';
+        $optionText = !empty($label) ? s($label) : '';
+        if (empty($optionText)) {
+            $optionText = get_string('allmodalities', 'local_jobboard');
+        }
+        echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
     }
-    echo '<option value="' . s($val) . '"' . $selected . '>' . $optionText . '</option>';
+    echo '</select>';
+    echo html_writer::end_div();
 }
-echo '</select>';
-echo html_writer::end_div();
 
 // Contract type select.
 $contractOptions = ['' => get_string('allcontracttypes', 'local_jobboard')] + $contracttypes;
@@ -358,8 +353,19 @@ echo html_writer::end_tag('form');
 echo html_writer::end_div(); // card-body
 echo html_writer::end_div(); // card
 
+// Add JavaScript for AJAX department loading (IOMAD).
+if ($isiomad && !empty($companies)) {
+    $allModalitiesLabel = get_string('allmodalities', 'local_jobboard');
+    $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+        'companySelector' => '#filter-companyid',
+        'departmentSelector' => '#filter-departmentid',
+        'preselect' => $departmentid,
+        'allLabel' => $allModalitiesLabel,
+    ]]);
+}
+
 // Clear filters link.
-if (!empty($search) || !empty($contracttype) || !empty($location) || !empty($modality) || $convocatoriaid) {
+if (!empty($search) || !empty($contracttype) || $companyid || $departmentid || $convocatoriaid) {
     echo html_writer::start_div('mb-3');
     echo html_writer::link(
         new moodle_url('/local/jobboard/index.php', ['view' => 'public']),
@@ -520,8 +526,8 @@ if (empty($vacancies)) {
             'view' => 'public',
             'search' => $search,
             'contracttype' => $contracttype,
-            'location' => $location,
-            'modality' => $modality,
+            'companyid' => $companyid,
+            'departmentid' => $departmentid,
             'convocatoria' => $convocatoriaid,
             'type' => $publicationtype,
         ]);
