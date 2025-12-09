@@ -5,6 +5,24 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.76] - 2025-12-09
+
+### Fase 10D: Lógica de Documentos (Edad y Tarjeta Profesional)
+
+#### Verified Implementation
+- Age exemption logic in `application_form.php` filters documents by user age
+- `age_exemption_threshold` field in doctype table (set to 50 for libreta_militar)
+- `conditional_note` field displayed for optional documents
+- Users ≥50 years are automatically exempt from libreta_militar
+- Tarjeta profesional marked as optional with conditional note
+
+#### Technical Details
+- Document filtering applies in form definition, validation, and data retrieval
+- Age calculated from applicant_profile.birthdate
+- Gender condition filtering also implemented (M = men only, F = women only)
+
+---
+
 ## [2.0.75] - 2025-12-09
 
 ### Fase 10C: Limpieza de CLI
@@ -69,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 2.0.76 | 2025-12-09 | Phase 10D: Document logic (age exemption, conditional notes) |
 | 2.0.75 | 2025-12-09 | Phase 10C: CLI cleanup (verified clean) |
 | 2.0.74 | 2025-12-09 | Phase 10B: Remove obsolete fields |
 | 2.0.73 | 2025-12-09 | Phase 10A: Robust audit system |
