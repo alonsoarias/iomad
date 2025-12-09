@@ -2597,3 +2597,17 @@ $string['reviewsaved'] = 'Review saved successfully.';
 // ============================================================================
 $string['backtovacancy'] = 'Back to vacancy';
 $string['backtodashboard'] = 'Back to Dashboard';
+$string['backtoreviewlist'] = 'Back to review list';
+
+// Unsaved changes warning.
+$string['unsavedchanges'] = 'Unsaved changes';
+$string['unsavedchangeswarning'] = 'You have unsaved changes. Are you sure you want to leave this page? Your changes will be lost.';
+$string['leave'] = 'Leave';
+$string['stay'] = 'Stay';
+
+// Application help sidebar enhancements.
+$string['quicktips'] = 'Quick Tips';
+$string['tip_saveoften'] = 'Complete all required fields before submitting';
+$string['tip_checkdocs'] = 'Ensure documents are clear and legible';
+$string['tip_deadline'] = 'Submit before the deadline expires';
+$string['viewfaq'] = 'Frequently Asked Questions';

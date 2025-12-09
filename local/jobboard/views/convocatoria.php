@@ -424,6 +424,27 @@ $form->display();
 echo html_writer::end_div(); // card-body
 echo html_writer::end_div(); // card
 
+// ============================================================================
+// NAVIGATION FOOTER
+// ============================================================================
+echo html_writer::start_div('jb-navigation-footer d-flex justify-content-between align-items-center mt-4 py-3 border-top');
+
+// Back button (left side).
+echo html_writer::link(
+    $returnurl,
+    '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtoconvocatorias', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary']
+);
+
+// Dashboard link (right side).
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php'),
+    get_string('backtodashboard', 'local_jobboard') . ' <i class="fa fa-arrow-right ml-2"></i>',
+    ['class' => 'btn btn-link text-muted']
+);
+
+echo html_writer::end_div(); // .jb-navigation-footer
+
 echo html_writer::end_div(); // local-jobboard-convocatoria
 
 // Additional styles.

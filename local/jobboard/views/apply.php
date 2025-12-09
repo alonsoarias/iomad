@@ -283,16 +283,37 @@ if ($daysuntilclose > 0) {
 echo '</div>';
 echo '</div>';
 
-// Help card.
+// Help card - Enhanced with more resources.
 echo '<div class="card jb-sidebar-card shadow-sm mb-4">';
 echo '<div class="card-header bg-secondary text-white">';
 echo '<i class="fa fa-question-circle mr-2"></i>' . get_string('needhelp', 'local_jobboard');
 echo '</div>';
 echo '<div class="card-body">';
 echo '<p class="small mb-3">' . get_string('applyhelp_text', 'local_jobboard') . '</p>';
-echo '<a href="#" class="btn btn-outline-secondary btn-sm btn-block" data-action="tool_usertours/resetpagetour">';
+
+// Quick tips.
+echo '<div class="small mb-3">';
+echo '<p class="font-weight-bold mb-2"><i class="fa fa-lightbulb text-warning mr-1"></i>' . get_string('quicktips', 'local_jobboard') . '</p>';
+echo '<ul class="mb-0 pl-3">';
+echo '<li class="mb-1">' . get_string('tip_saveoften', 'local_jobboard') . '</li>';
+echo '<li class="mb-1">' . get_string('tip_checkdocs', 'local_jobboard') . '</li>';
+echo '<li>' . get_string('tip_deadline', 'local_jobboard') . '</li>';
+echo '</ul>';
+echo '</div>';
+
+echo '<hr class="my-3">';
+
+// Action buttons.
+echo '<a href="#" class="btn btn-outline-secondary btn-sm btn-block mb-2" data-action="tool_usertours/resetpagetour">';
 echo '<i class="fa fa-play-circle mr-1"></i>' . get_string('restarttour', 'local_jobboard');
 echo '</a>';
+
+// FAQ link.
+echo '<a href="' . (new moodle_url('/local/jobboard/index.php', ['view' => 'faq']))->out() . '" ';
+echo 'class="btn btn-outline-info btn-sm btn-block" target="_blank">';
+echo '<i class="fa fa-book mr-1"></i>' . get_string('viewfaq', 'local_jobboard');
+echo '</a>';
+
 echo '</div>';
 echo '</div>';
 
@@ -358,5 +379,11 @@ $PAGE->requires->js_call_amd('local_jobboard/application_confirm', 'init', [[
 
 // Initialize loading states.
 $PAGE->requires->js_call_amd('local_jobboard/loading_states', 'init', []);
+
+// Initialize form unsaved warning.
+$PAGE->requires->js_call_amd('local_jobboard/form_unsaved_warning', 'init', [[
+    'formSelector' => 'form.mform',
+    'excludedLinks' => ['.jb-navigation-footer a.btn-link'],
+]]);
 
 echo $OUTPUT->footer();

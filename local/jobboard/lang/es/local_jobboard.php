@@ -2988,3 +2988,17 @@ $string['reviewsaved'] = 'Revisión guardada exitosamente.';
 // ============================================================================
 $string['backtovacancy'] = 'Volver a la vacante';
 $string['backtodashboard'] = 'Volver al Panel';
+$string['backtoreviewlist'] = 'Volver a la lista de revisiones';
+
+// Advertencia de cambios sin guardar.
+$string['unsavedchanges'] = 'Cambios sin guardar';
+$string['unsavedchangeswarning'] = 'Tiene cambios sin guardar. ¿Está seguro de que desea salir de esta página? Sus cambios se perderán.';
+$string['leave'] = 'Salir';
+$string['stay'] = 'Quedarse';
+
+// Mejoras del sidebar de ayuda en postulaciones.
+$string['quicktips'] = 'Consejos Rápidos';
+$string['tip_saveoften'] = 'Complete todos los campos requeridos antes de enviar';
+$string['tip_checkdocs'] = 'Asegúrese de que los documentos sean claros y legibles';
+$string['tip_deadline'] = 'Envíe antes de que expire el plazo';
+$string['viewfaq'] = 'Preguntas Frecuentes';
