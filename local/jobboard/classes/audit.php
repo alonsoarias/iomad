@@ -51,6 +51,14 @@ class audit {
     const ACTION_LOGIN = 'login';
     const ACTION_EXPORT = 'export';
     const ACTION_UPLOAD = 'upload';
+    const ACTION_APPROVE = 'approve';
+    const ACTION_REVOKE = 'revoke';
+    const ACTION_ASSIGN = 'assign';
+    const ACTION_REOPEN = 'reopen';
+    const ACTION_PUBLISH = 'publish';
+    const ACTION_CLOSE = 'close';
+    const ACTION_REUPLOAD = 'reupload';
+    const ACTION_IMPORT = 'import';
 
     // Entity constants.
     const ENTITY_VACANCY = 'vacancy';
@@ -61,6 +69,17 @@ class audit {
     const ENTITY_CONFIG = 'config';
     const ENTITY_USER = 'user';
     const ENTITY_EMAIL_TEMPLATE = 'email_template';
+    const ENTITY_INTERVIEW = 'interview';
+    const ENTITY_COMMITTEE = 'committee';
+    const ENTITY_EVALUATION = 'evaluation';
+    const ENTITY_DECISION = 'decision';
+    const ENTITY_CONSENT = 'consent';
+    const ENTITY_PROFILE = 'applicant_profile';
+    const ENTITY_DOCTYPE = 'doctype';
+    const ENTITY_NOTIFICATION = 'notification';
+    const ENTITY_API_TOKEN = 'api_token';
+    const ENTITY_DOC_REQUIREMENT = 'doc_requirement';
+    const ENTITY_WORKFLOW_LOG = 'workflow_log';
 
     /**
      * Log an action to the audit table with enhanced tracking.

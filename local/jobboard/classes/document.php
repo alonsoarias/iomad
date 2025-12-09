@@ -515,6 +515,9 @@ class document {
     public function delete(): void {
         global $DB;
 
+        // Capture state before deletion for audit.
+        $previousstate = $this->to_record();
+
         // Delete file.
         $file = $this->get_stored_file();
         if ($file) {
@@ -527,8 +530,15 @@ class document {
         // Delete document record.
         $DB->delete_records('local_jobboard_document', ['id' => $this->id]);
 
-        // Log audit.
-        audit::log('document_deleted', 'document', $this->id);
+        // Log audit with previous values (no new value for deletion).
+        audit::log(
+            audit::ACTION_DELETE,
+            audit::ENTITY_DOCUMENT,
+            $this->id,
+            ['documenttype' => $this->documenttype, 'filename' => $this->filename, 'applicationid' => $this->applicationid],
+            (array) $previousstate,
+            null
+        );
     }
 
     /**

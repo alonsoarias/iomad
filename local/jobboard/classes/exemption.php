@@ -232,11 +232,28 @@ class exemption {
 
         $exemption = self::get($id);
 
-        // Log audit event.
-        audit::log('exemption_created', 'local_jobboard_exemption', $id, [
+        // Capture new state for audit.
+        $newstate = [
+            'id' => $id,
             'userid' => $userid,
             'exemptiontype' => $type,
-        ]);
+            'documentref' => $record->documentref,
+            'validfrom' => $record->validfrom,
+            'validuntil' => $record->validuntil,
+            'notes' => $record->notes,
+            'createdby' => $record->createdby,
+            'timecreated' => $record->timecreated,
+        ];
+
+        // Log audit with new values (no previous value for creation).
+        audit::log(
+            audit::ACTION_CREATE,
+            audit::ENTITY_EXEMPTION,
+            $id,
+            ['userid' => $userid, 'exemptiontype' => $type],
+            null,
+            $newstate
+        );
 
         return $exemption;
     }
@@ -267,10 +284,20 @@ class exemption {
         $result = $DB->update_record('local_jobboard_exemption', $record);
 
         if ($result) {
-            audit::log('exemption_revoked', 'local_jobboard_exemption', $this->id, [
-                'userid' => $this->userid,
-                'reason' => $reason,
-            ]);
+            // Log audit with transition tracking.
+            audit::log_transition(
+                audit::ENTITY_EXEMPTION,
+                $this->id,
+                'status',
+                'active',
+                'revoked',
+                [
+                    'userid' => $this->userid,
+                    'reason' => $reason,
+                    'revokedby' => $this->revokedby,
+                    'timerevoked' => $this->timerevoked,
+                ]
+            );
         }
 
         return $result;
