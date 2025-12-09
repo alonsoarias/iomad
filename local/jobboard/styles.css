@@ -2725,3 +2725,689 @@
         border: 1px solid #ccc !important;
     }
 }
+
+/* ==========================================================================
+   UX IMPROVEMENTS - 2025-12-09
+   Progress Steps, Loading States, Enhanced Accessibility
+   ========================================================================== */
+
+/* ==========================================================================
+   Progress Steps Indicator
+   Used in signup form and application process
+   ========================================================================== */
+
+.path-local-jobboard .jb-progress-container {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.path-local-jobboard .jb-progress-steps {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: step;
+    position: relative;
+}
+
+.path-local-jobboard .jb-progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: 10%;
+    width: 80%;
+    height: 3px;
+    background: #e9ecef;
+    z-index: 0;
+}
+
+.path-local-jobboard .jb-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 0 0.5rem;
+}
+
+.path-local-jobboard .jb-step-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    font-size: 1.25rem;
+    transition: all 0.3s ease;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.path-local-jobboard .jb-step-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.path-local-jobboard .jb-step.active .jb-step-icon {
+    background: #007bff;
+    color: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+}
+
+.path-local-jobboard .jb-step.active .jb-step-label {
+    color: #007bff;
+    font-weight: 600;
+}
+
+.path-local-jobboard .jb-step.completed .jb-step-icon {
+    background: #28a745;
+    color: #fff;
+}
+
+.path-local-jobboard .jb-step.completed .jb-step-label {
+    color: #28a745;
+}
+
+.path-local-jobboard .jb-step.completed::after {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    width: 100%;
+    height: 3px;
+    background: #28a745;
+    z-index: -1;
+}
+
+.path-local-jobboard .jb-step:last-child.completed::after {
+    display: none;
+}
+
+/* ==========================================================================
+   Loading States
+   Consistent loading indicators across the plugin
+   ========================================================================== */
+
+/* Button loading state */
+.path-local-jobboard .btn.is-loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.path-local-jobboard .btn.is-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: jb-spin 0.75s linear infinite;
+}
+
+.path-local-jobboard .btn-primary.is-loading::after {
+    border-color: rgba(255,255,255,0.5);
+    border-right-color: transparent;
+}
+
+@keyframes jb-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Loading overlay */
+.path-local-jobboard .jb-loading-overlay {
+    position: relative;
+}
+
+.path-local-jobboard .jb-loading-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: 100;
+    display: none;
+    border-radius: inherit;
+}
+
+.path-local-jobboard .jb-loading-overlay::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 3px solid #e9ecef;
+    border-top-color: #007bff;
+    border-radius: 50%;
+    animation: jb-spin 0.8s linear infinite;
+    z-index: 101;
+    display: none;
+}
+
+.path-local-jobboard .jb-loading-overlay.is-loading::before,
+.path-local-jobboard .jb-loading-overlay.is-loading::after {
+    display: block;
+}
+
+/* Skeleton loading */
+.path-local-jobboard .jb-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: jb-skeleton-pulse 1.5s ease-in-out infinite;
+    border-radius: 4px;
+}
+
+@keyframes jb-skeleton-pulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.path-local-jobboard .jb-skeleton-text {
+    height: 1rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.path-local-jobboard .jb-skeleton-text.short {
+    width: 60%;
+}
+
+.path-local-jobboard .jb-skeleton-title {
+    height: 1.5rem;
+    width: 80%;
+    margin-bottom: 1rem;
+}
+
+.path-local-jobboard .jb-skeleton-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.path-local-jobboard .jb-skeleton-card {
+    height: 200px;
+    border-radius: 0.5rem;
+}
+
+/* ==========================================================================
+   Confirmation Modal Enhancements
+   ========================================================================== */
+
+.path-local-jobboard .jb-confirm-modal .modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.path-local-jobboard .jb-confirm-modal .modal-body {
+    padding-top: 0.5rem;
+}
+
+.path-local-jobboard .jb-confirm-modal .jb-confirm-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 2rem;
+}
+
+.path-local-jobboard .jb-confirm-modal .jb-confirm-icon.success {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.path-local-jobboard .jb-confirm-modal .jb-confirm-icon.warning {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+.path-local-jobboard .jb-confirm-modal .jb-confirm-icon.danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.path-local-jobboard .jb-confirm-modal .jb-confirm-icon.info {
+    background: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+}
+
+.path-local-jobboard .jb-confirm-modal .jb-confirm-checklist {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.path-local-jobboard .jb-confirm-modal .jb-confirm-checklist li {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.path-local-jobboard .jb-confirm-modal .jb-confirm-checklist li:last-child {
+    border-bottom: none;
+}
+
+.path-local-jobboard .jb-confirm-modal .jb-confirm-checklist .fa-check-circle {
+    color: #28a745;
+    margin-right: 0.75rem;
+}
+
+/* ==========================================================================
+   Document Checklist Improvements
+   ========================================================================== */
+
+.path-local-jobboard .jb-document-checklist {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.path-local-jobboard .jb-document-checklist .jb-doc-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.2s ease;
+}
+
+.path-local-jobboard .jb-document-checklist .jb-doc-item:last-child {
+    border-bottom: none;
+}
+
+.path-local-jobboard .jb-document-checklist .jb-doc-item:hover {
+    background-color: #f8f9fa;
+}
+
+.path-local-jobboard .jb-document-checklist .jb-doc-item.is-required {
+    border-left: 3px solid #dc3545;
+}
+
+.path-local-jobboard .jb-document-checklist .jb-doc-item.is-uploaded {
+    border-left: 3px solid #28a745;
+}
+
+.path-local-jobboard .jb-document-checklist .jb-doc-info {
+    flex: 1;
+}
+
+.path-local-jobboard .jb-document-checklist .jb-doc-name {
+    font-weight: 500;
+    color: #343a40;
+    margin-bottom: 0.25rem;
+}
+
+.path-local-jobboard .jb-document-checklist .jb-doc-desc {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.path-local-jobboard .jb-document-checklist .jb-doc-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.path-local-jobboard .jb-document-checklist .jb-doc-status-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.path-local-jobboard .jb-doc-status-icon.pending {
+    background: #e9ecef;
+    color: #6c757d;
+}
+
+.path-local-jobboard .jb-doc-status-icon.uploaded {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.path-local-jobboard .jb-doc-status-icon.rejected {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+/* Document progress bar */
+.path-local-jobboard .jb-docs-progress {
+    margin-bottom: 1.5rem;
+}
+
+.path-local-jobboard .jb-docs-progress-bar {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.path-local-jobboard .jb-docs-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+/* ==========================================================================
+   Review Panel Statistics
+   ========================================================================== */
+
+.path-local-jobboard .jb-review-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.path-local-jobboard .jb-review-stat {
+    flex: 1;
+    text-align: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    border-left: 4px solid transparent;
+}
+
+.path-local-jobboard .jb-review-stat.approved {
+    border-left-color: #28a745;
+}
+
+.path-local-jobboard .jb-review-stat.rejected {
+    border-left-color: #dc3545;
+}
+
+.path-local-jobboard .jb-review-stat.pending {
+    border-left-color: #ffc107;
+}
+
+.path-local-jobboard .jb-review-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.path-local-jobboard .jb-review-stat-value.approved { color: #28a745; }
+.path-local-jobboard .jb-review-stat-value.rejected { color: #dc3545; }
+.path-local-jobboard .jb-review-stat-value.pending { color: #ffc107; }
+
+.path-local-jobboard .jb-review-stat-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Circular progress indicator */
+.path-local-jobboard .jb-progress-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(#28a745 var(--progress, 0%), #e9ecef 0%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.path-local-jobboard .jb-progress-circle::before {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.path-local-jobboard .jb-progress-circle-value {
+    position: relative;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #343a40;
+}
+
+/* ==========================================================================
+   Keyboard Shortcuts Help Panel
+   ========================================================================== */
+
+.path-local-jobboard .jb-shortcuts-help {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background: #343a40;
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    max-width: 400px;
+}
+
+.path-local-jobboard .jb-shortcuts-help kbd {
+    background: rgba(255,255,255,0.2);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    margin: 0 0.25rem;
+}
+
+.path-local-jobboard .jb-shortcuts-modal .jb-shortcut-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.path-local-jobboard .jb-shortcuts-modal .jb-shortcut-row:last-child {
+    border-bottom: none;
+}
+
+.path-local-jobboard .jb-shortcuts-modal kbd {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   Enhanced Focus States for Accessibility
+   ========================================================================== */
+
+.path-local-jobboard *:focus {
+    outline: none;
+}
+
+.path-local-jobboard *:focus-visible {
+    outline: 3px solid #80bdff;
+    outline-offset: 2px;
+}
+
+.path-local-jobboard .btn:focus-visible {
+    outline: 3px solid #80bdff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.path-local-jobboard .form-control:focus-visible,
+.path-local-jobboard .custom-select:focus-visible {
+    border-color: #80bdff;
+    outline: 3px solid rgba(0, 123, 255, 0.25);
+    outline-offset: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.path-local-jobboard .card:focus-within {
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Skip link */
+.path-local-jobboard .jb-skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.path-local-jobboard .jb-skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+    width: auto;
+    height: auto;
+    padding: 0.75rem 1.5rem;
+    background: #007bff;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ==========================================================================
+   Vacancy Card Hover Improvements
+   ========================================================================== */
+
+.path-local-jobboard .jb-vacancy-card.jb-hoverable {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.path-local-jobboard .jb-vacancy-card.jb-hoverable:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.path-local-jobboard .jb-vacancy-card.jb-urgent {
+    animation: jb-pulse-border 2s infinite;
+}
+
+@keyframes jb-pulse-border {
+    0%, 100% { border-color: #ffc107; }
+    50% { border-color: #fd7e14; }
+}
+
+/* ==========================================================================
+   Form Validation Visual Feedback
+   ========================================================================== */
+
+.path-local-jobboard .form-control.is-validating {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%236c757d' stroke-width='8' fill='none' stroke-dasharray='62.83 62.83'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 50 50' to='360 50 50' dur='1s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    padding-right: calc(1.5em + 0.75rem);
+}
+
+.path-local-jobboard .jb-field-feedback {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.path-local-jobboard .jb-field-feedback.valid {
+    color: #28a745;
+}
+
+.path-local-jobboard .jb-field-feedback.invalid {
+    color: #dc3545;
+}
+
+/* ==========================================================================
+   Empty State Improvements
+   ========================================================================== */
+
+.path-local-jobboard .jb-empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    border: 2px dashed #dee2e6;
+}
+
+.path-local-jobboard .jb-empty-state-icon {
+    font-size: 4rem;
+    color: #dee2e6;
+    margin-bottom: 1rem;
+}
+
+.path-local-jobboard .jb-empty-state-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.path-local-jobboard .jb-empty-state-text {
+    color: #868e96;
+    margin-bottom: 1.5rem;
+}
+
+/* ==========================================================================
+   Responsive Adjustments for Progress Steps
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .path-local-jobboard .jb-progress-steps {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+    }
+
+    .path-local-jobboard .jb-step {
+        min-width: 80px;
+        flex: 0 0 auto;
+    }
+
+    .path-local-jobboard .jb-step-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .path-local-jobboard .jb-step-label {
+        font-size: 0.65rem;
+    }
+
+    .path-local-jobboard .jb-progress-steps::before {
+        top: 20px;
+    }
+
+    .path-local-jobboard .jb-review-stats {
+        flex-direction: column;
+    }
+
+    .path-local-jobboard .jb-shortcuts-help {
+        display: none;
+    }
+}

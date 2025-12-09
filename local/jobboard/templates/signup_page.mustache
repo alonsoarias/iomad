@@ -57,6 +57,33 @@
         <span class="text-danger">*</span> {{requiredfieldstext}}
     </p>
 
+    {{! Progress Steps Indicator }}
+    <div class="jb-progress-container mb-4" id="jb-signup-progress">
+        <p class="text-muted small mb-2 text-center">{{#str}}signup_progress, local_jobboard{{/str}}</p>
+        <ul class="jb-progress-steps" role="progressbar" aria-label="{{#str}}signup_progress, local_jobboard{{/str}}">
+            <li class="jb-step active" data-step="0" data-section="accountheader">
+                <div class="jb-step-icon"><i class="fa fa-key" aria-hidden="true"></i></div>
+                <span class="jb-step-label">{{#str}}signup_step_account, local_jobboard{{/str}}</span>
+            </li>
+            <li class="jb-step" data-step="1" data-section="personalinfo">
+                <div class="jb-step-icon"><i class="fa fa-user" aria-hidden="true"></i></div>
+                <span class="jb-step-label">{{#str}}signup_step_personal, local_jobboard{{/str}}</span>
+            </li>
+            <li class="jb-step" data-step="2" data-section="contactinfo">
+                <div class="jb-step-icon"><i class="fa fa-phone" aria-hidden="true"></i></div>
+                <span class="jb-step-label">{{#str}}signup_step_contact, local_jobboard{{/str}}</span>
+            </li>
+            <li class="jb-step" data-step="3" data-section="academicheader">
+                <div class="jb-step-icon"><i class="fa fa-graduation-cap" aria-hidden="true"></i></div>
+                <span class="jb-step-label">{{#str}}signup_step_academic, local_jobboard{{/str}}</span>
+            </li>
+            <li class="jb-step" data-step="4" data-section="termsheader">
+                <div class="jb-step-icon"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+                <span class="jb-step-label">{{#str}}signup_step_confirm, local_jobboard{{/str}}</span>
+            </li>
+        </ul>
+    </div>
+
     {{! The form content }}
     <div class="card">
         <div class="card-body">

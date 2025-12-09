@@ -323,4 +323,14 @@ $PAGE->requires->js_call_amd('local_jobboard/apply_progress', 'init', [[
     'initialStep' => 0
 ]]);
 
+// Initialize application confirmation modal.
+$PAGE->requires->js_call_amd('local_jobboard/application_confirm', 'init', [[
+    'formSelector' => 'form.mform',
+    'totalDocs' => count($requireddocs),
+    'uploadedDocs' => 0,
+]]);
+
+// Initialize loading states.
+$PAGE->requires->js_call_amd('local_jobboard/loading_states', 'init', []);
+
 echo $OUTPUT->footer();

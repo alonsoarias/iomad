@@ -2836,3 +2836,149 @@ $string['needsattention'] = 'Requiere Atención';
 $string['allclear'] = 'Todo en Orden';
 $string['documentsremaining'] = '{$a} documento(s) pendiente(s)';
 $string['reviewcompletetooltip'] = 'Todos los documentos revisados. Haga clic para completar el proceso de revisión.';
+
+// ============================================================================
+// Cadenas de Mejora UX - 2025-12-09
+// Navegación y Feedback
+// ============================================================================
+$string['invalidview'] = 'La vista solicitada no existe.';
+$string['redirectedtodashboard'] = 'Ha sido redirigido al panel principal.';
+$string['actioncompleted'] = 'Acción completada exitosamente.';
+$string['actionfailed'] = 'No se pudo completar la acción. Por favor intente de nuevo.';
+$string['loadinginprogress'] = 'Cargando...';
+$string['processingrequest'] = 'Procesando su solicitud...';
+$string['pleasewait'] = 'Por favor espere...';
+
+// Pasos de Progreso de Registro
+$string['signup_step_account'] = 'Cuenta';
+$string['signup_step_personal'] = 'Datos Personales';
+$string['signup_step_contact'] = 'Contacto';
+$string['signup_step_academic'] = 'Formación';
+$string['signup_step_company'] = 'Empresa';
+$string['signup_step_confirm'] = 'Confirmar';
+$string['signup_progress'] = 'Progreso del Registro';
+$string['signup_fields_required'] = '{$a} campos requeridos';
+$string['signup_section_complete'] = 'Sección completa';
+$string['signup_section_incomplete'] = 'Sección incompleta';
+
+// Bienvenida Dashboard
+$string['welcomeback'] = '¡Bienvenido/a de nuevo, {$a}!';
+$string['dashboardwelcome'] = '¿Qué le gustaría hacer hoy?';
+$string['dashboardwelcome_candidate'] = 'Encuentre y postúlese a oportunidades laborales que coincidan con su perfil.';
+$string['dashboardwelcome_employer'] = 'Gestione sus vacantes y revise las postulaciones de candidatos.';
+$string['thisweek'] = 'esta semana';
+$string['thismonth'] = 'este mes';
+$string['noactivity'] = 'Sin actividad reciente';
+$string['quickactions_title'] = 'Acciones Rápidas';
+$string['recentactivity'] = 'Actividad Reciente';
+$string['pendingitems'] = 'Elementos Pendientes';
+
+// Proceso de Postulación
+$string['applyingto'] = 'Usted está postulándose a:';
+$string['applicationfor'] = 'Postulación para: {$a}';
+$string['closingsoon'] = 'Cierra en {$a} días';
+$string['closingtoday'] = '¡Cierra hoy!';
+$string['closingtomorrow'] = 'Cierra mañana';
+$string['alreadyclosed'] = 'Esta vacante está cerrada';
+$string['documentsprogress'] = 'Documentos subidos';
+$string['documentsprogress_detail'] = '{$a->uploaded} de {$a->total} documentos';
+$string['alldocumentsuploaded'] = 'Todos los documentos requeridos han sido subidos';
+$string['missingdocuments'] = '{$a} documento(s) requerido(s) faltante(s)';
+
+// Modal de Confirmación de Postulación
+$string['confirmapplication'] = 'Confirmar su postulación';
+$string['confirmapplication_title'] = '¿Listo para enviar?';
+$string['confirmapplication_text'] = 'Por favor verifique lo siguiente antes de enviar su postulación:';
+$string['confirmapplication_docs'] = 'Todos los documentos requeridos han sido subidos';
+$string['confirmapplication_data'] = 'Su información personal es precisa y está actualizada';
+$string['confirmapplication_consent'] = 'Ha leído y aceptado los términos y condiciones';
+$string['confirmapplication_final'] = 'Una vez enviada, no podrá modificar su postulación. ¿Está seguro de que desea continuar?';
+$string['confirmsubmit'] = 'Sí, enviar mi postulación';
+$string['cancelsubmit'] = 'Cancelar, déjeme revisar';
+$string['applicationsubmitting'] = 'Enviando su postulación...';
+$string['applicationsubmitted_success'] = '¡Su postulación ha sido enviada exitosamente!';
+$string['applicationsubmitted_next'] = 'Recibirá un correo de confirmación en breve. Puede hacer seguimiento al estado de su postulación en "Mis Postulaciones".';
+
+// Estado de Documentos
+$string['docstatus_pending'] = 'Pendiente de subir';
+$string['docstatus_uploading'] = 'Subiendo...';
+$string['docstatus_uploaded'] = 'Subido';
+$string['docstatus_validating'] = 'En revisión';
+$string['docstatus_approved'] = 'Aprobado';
+$string['docstatus_rejected'] = 'Rechazado';
+$string['docstatus_expired'] = 'Expirado';
+$string['docupload_success'] = 'Documento subido exitosamente';
+$string['docupload_error'] = 'Error al subir el documento';
+$string['docremove_confirm'] = '¿Está seguro de que desea eliminar este documento?';
+
+// Panel de Revisión
+$string['reviewprogress'] = 'Progreso de Revisión';
+$string['reviewprogress_detail'] = '{$a->reviewed} de {$a->total} documentos revisados';
+$string['documentsapproved'] = 'Aprobados';
+$string['documentsrejected'] = 'Rechazados';
+$string['documentspending'] = 'Pendientes';
+$string['reviewcomplete'] = 'Revisión Completa';
+$string['reviewincomplete'] = 'Revisión Incompleta';
+$string['startreview'] = 'Iniciar Revisión';
+$string['continuereview'] = 'Continuar Revisión';
+$string['reviewsummary'] = 'Resumen de Revisión';
+
+// Atajos de Teclado
+$string['keyboardshortcuts'] = 'Atajos de Teclado';
+$string['shortcut_approve'] = 'Aprobar documento';
+$string['shortcut_reject'] = 'Rechazar documento';
+$string['shortcut_next'] = 'Siguiente documento';
+$string['shortcut_previous'] = 'Documento anterior';
+$string['shortcut_save'] = 'Guardar cambios';
+$string['shortcut_help'] = 'Mostrar ayuda de atajos';
+$string['shortcutshelp_title'] = 'Atajos de Teclado Disponibles';
+
+// Resumen de Términos
+$string['termssummary'] = 'Puntos Clave';
+$string['termssummary_intro'] = 'Al enviar esta postulación, usted acepta:';
+$string['termssummary_1'] = 'Sus datos serán procesados de acuerdo con nuestra política de privacidad';
+$string['termssummary_2'] = 'Puede solicitar la eliminación de sus datos en cualquier momento';
+$string['termssummary_3'] = 'Su postulación puede ser compartida con personal autorizado de selección';
+$string['termssummary_4'] = 'Toda la información proporcionada debe ser precisa y veraz';
+$string['viewfullterms'] = 'Ver términos y condiciones completos';
+$string['hidefullterms'] = 'Ocultar términos completos';
+
+// Validación de Formularios
+$string['validating'] = 'Validando...';
+$string['fieldvalid'] = 'Este campo es válido';
+$string['fieldinvalid'] = 'Por favor revise este campo';
+$string['formhasserrors'] = 'Por favor corrija los errores antes de continuar';
+$string['allfieldsvalid'] = 'Todos los campos son válidos';
+
+// Accesibilidad
+$string['skiptomaincontent'] = 'Saltar al contenido principal';
+$string['skiptoform'] = 'Saltar al formulario';
+$string['clickfordetails'] = 'Clic para ver detalles';
+$string['expandsection'] = 'Expandir sección';
+$string['collapsesection'] = 'Contraer sección';
+$string['opensinnewwindow'] = 'Abre en nueva ventana';
+$string['requiredfield'] = 'Campo requerido';
+$string['optionalfield'] = 'Campo opcional';
+$string['currentstep'] = 'Paso actual';
+$string['completedstep'] = 'Paso completado';
+$string['pendingstep'] = 'Paso pendiente';
+
+// Estados de Carga
+$string['loading_vacancies'] = 'Cargando vacantes...';
+$string['loading_applications'] = 'Cargando postulaciones...';
+$string['loading_documents'] = 'Cargando documentos...';
+$string['loading_data'] = 'Cargando datos...';
+$string['savingchanges'] = 'Guardando cambios...';
+$string['uploadingfile'] = 'Subiendo archivo...';
+
+// Estados Vacíos
+$string['novacancies_candidate'] = 'No hay vacantes disponibles en este momento. Vuelva más tarde para ver nuevas oportunidades.';
+$string['noapplications_candidate'] = 'Aún no se ha postulado a ninguna vacante. Explore las posiciones disponibles para comenzar.';
+$string['noapplications_employer'] = 'Aún no se han recibido postulaciones para esta vacante.';
+$string['nodocuments_review'] = 'No hay documentos pendientes de revisión.';
+
+// Mensajes de Éxito
+$string['changesaved'] = 'Sus cambios han sido guardados.';
+$string['documentsaved'] = 'Documento guardado exitosamente.';
+$string['applicationsaved'] = 'Postulación guardada como borrador.';
+$string['reviewsaved'] = 'Revisión guardada exitosamente.';

@@ -856,4 +856,18 @@ echo html_writer::end_div(); // local-jobboard-review
 $PAGE->requires->js_call_amd('local_jobboard/tooltips', 'init');
 $PAGE->requires->js_call_amd('local_jobboard/confirm_action', 'init');
 
+// Initialize keyboard shortcuts for review.
+if ($applicationid) {
+    $PAGE->requires->js_call_amd('local_jobboard/review_shortcuts', 'init', [[
+        'documentSelector' => '.jb-doc-item',
+        'approveSelector' => '.jb-btn-approve',
+        'rejectSelector' => '.jb-btn-reject',
+        'saveSelector' => '#saveReviewBtn',
+        'showHelpOnStart' => true,
+    ]]);
+}
+
+// Initialize loading states.
+$PAGE->requires->js_call_amd('local_jobboard/loading_states', 'init', []);
+
 echo $OUTPUT->footer();

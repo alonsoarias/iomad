@@ -231,6 +231,28 @@ if ($isiomad) {
     $PAGE->requires->js_call_amd('local_jobboard/signup_form', 'init', []);
 }
 
+// Initialize progress steps indicator.
+$PAGE->requires->js_call_amd('local_jobboard/progress_steps', 'init', [[
+    'containerId' => 'jb-signup-progress',
+    'steps' => [
+        ['icon' => 'key', 'label' => get_string('signup_step_account', 'local_jobboard')],
+        ['icon' => 'user', 'label' => get_string('signup_step_personal', 'local_jobboard')],
+        ['icon' => 'phone', 'label' => get_string('signup_step_contact', 'local_jobboard')],
+        ['icon' => 'graduation-cap', 'label' => get_string('signup_step_academic', 'local_jobboard')],
+        ['icon' => 'check-circle', 'label' => get_string('signup_step_confirm', 'local_jobboard')],
+    ],
+    'sectionMap' => [
+        'accountheader' => 0,
+        'personalinfo' => 1,
+        'contactinfo' => 2,
+        'academicheader' => 3,
+        'termsheader' => 4,
+    ],
+]]);
+
+// Initialize loading states for form submission.
+$PAGE->requires->js_call_amd('local_jobboard/loading_states', 'init', []);
+
 echo $OUTPUT->footer();
 
 /**

@@ -2445,3 +2445,149 @@ $string['needsattention'] = 'Needs Attention';
 $string['allclear'] = 'All Clear';
 $string['documentsremaining'] = '{$a} document(s) remaining';
 $string['reviewcompletetooltip'] = 'All documents reviewed. Click to complete the review process.';
+
+// ============================================================================
+// UX Improvement Strings - 2025-12-09
+// Navigation & Feedback
+// ============================================================================
+$string['invalidview'] = 'The requested view does not exist.';
+$string['redirectedtodashboard'] = 'You have been redirected to the dashboard.';
+$string['actioncompleted'] = 'Action completed successfully.';
+$string['actionfailed'] = 'The action could not be completed. Please try again.';
+$string['loadinginprogress'] = 'Loading...';
+$string['processingrequest'] = 'Processing your request...';
+$string['pleasewait'] = 'Please wait...';
+
+// Signup Progress Steps
+$string['signup_step_account'] = 'Account';
+$string['signup_step_personal'] = 'Personal Info';
+$string['signup_step_contact'] = 'Contact';
+$string['signup_step_academic'] = 'Education';
+$string['signup_step_company'] = 'Company';
+$string['signup_step_confirm'] = 'Confirm';
+$string['signup_progress'] = 'Registration Progress';
+$string['signup_fields_required'] = '{$a} required fields';
+$string['signup_section_complete'] = 'Section complete';
+$string['signup_section_incomplete'] = 'Section incomplete';
+
+// Dashboard Welcome
+$string['welcomeback'] = 'Welcome back, {$a}!';
+$string['dashboardwelcome'] = 'What would you like to do today?';
+$string['dashboardwelcome_candidate'] = 'Find and apply for job opportunities that match your profile.';
+$string['dashboardwelcome_employer'] = 'Manage your vacancies and review candidate applications.';
+$string['thisweek'] = 'this week';
+$string['thismonth'] = 'this month';
+$string['noactivity'] = 'No recent activity';
+$string['quickactions_title'] = 'Quick Actions';
+$string['recentactivity'] = 'Recent Activity';
+$string['pendingitems'] = 'Pending Items';
+
+// Application Process
+$string['applyingto'] = 'You are applying to:';
+$string['applicationfor'] = 'Application for: {$a}';
+$string['closingsoon'] = 'Closes in {$a} days';
+$string['closingtoday'] = 'Closes today!';
+$string['closingtomorrow'] = 'Closes tomorrow';
+$string['alreadyclosed'] = 'This vacancy is closed';
+$string['documentsprogress'] = 'Documents uploaded';
+$string['documentsprogress_detail'] = '{$a->uploaded} of {$a->total} documents';
+$string['alldocumentsuploaded'] = 'All required documents uploaded';
+$string['missingdocuments'] = '{$a} required document(s) missing';
+
+// Application Confirmation Modal
+$string['confirmapplication'] = 'Confirm your application';
+$string['confirmapplication_title'] = 'Ready to submit?';
+$string['confirmapplication_text'] = 'Please verify the following before submitting your application:';
+$string['confirmapplication_docs'] = 'All required documents have been uploaded';
+$string['confirmapplication_data'] = 'Your personal information is accurate and up-to-date';
+$string['confirmapplication_consent'] = 'You have read and accepted the terms and conditions';
+$string['confirmapplication_final'] = 'Once submitted, you cannot modify your application. Are you sure you want to proceed?';
+$string['confirmsubmit'] = 'Yes, submit my application';
+$string['cancelsubmit'] = 'Cancel, let me review';
+$string['applicationsubmitting'] = 'Submitting your application...';
+$string['applicationsubmitted_success'] = 'Your application has been submitted successfully!';
+$string['applicationsubmitted_next'] = 'You will receive a confirmation email shortly. You can track your application status in "My Applications".';
+
+// Document Status
+$string['docstatus_pending'] = 'Pending upload';
+$string['docstatus_uploading'] = 'Uploading...';
+$string['docstatus_uploaded'] = 'Uploaded';
+$string['docstatus_validating'] = 'Under review';
+$string['docstatus_approved'] = 'Approved';
+$string['docstatus_rejected'] = 'Rejected';
+$string['docstatus_expired'] = 'Expired';
+$string['docupload_success'] = 'Document uploaded successfully';
+$string['docupload_error'] = 'Error uploading document';
+$string['docremove_confirm'] = 'Are you sure you want to remove this document?';
+
+// Review Panel
+$string['reviewprogress'] = 'Review Progress';
+$string['reviewprogress_detail'] = '{$a->reviewed} of {$a->total} documents reviewed';
+$string['documentsapproved'] = 'Approved';
+$string['documentsrejected'] = 'Rejected';
+$string['documentspending'] = 'Pending';
+$string['reviewcomplete'] = 'Review Complete';
+$string['reviewincomplete'] = 'Review Incomplete';
+$string['startreview'] = 'Start Review';
+$string['continuereview'] = 'Continue Review';
+$string['reviewsummary'] = 'Review Summary';
+
+// Keyboard Shortcuts
+$string['keyboardshortcuts'] = 'Keyboard Shortcuts';
+$string['shortcut_approve'] = 'Approve document';
+$string['shortcut_reject'] = 'Reject document';
+$string['shortcut_next'] = 'Next document';
+$string['shortcut_previous'] = 'Previous document';
+$string['shortcut_save'] = 'Save changes';
+$string['shortcut_help'] = 'Show shortcuts help';
+$string['shortcutshelp_title'] = 'Available Keyboard Shortcuts';
+
+// Terms Summary
+$string['termssummary'] = 'Key Points';
+$string['termssummary_intro'] = 'By submitting this application, you agree to:';
+$string['termssummary_1'] = 'Your data will be processed according to our privacy policy';
+$string['termssummary_2'] = 'You can request deletion of your data at any time';
+$string['termssummary_3'] = 'Your application may be shared with authorized hiring personnel';
+$string['termssummary_4'] = 'All information provided must be accurate and truthful';
+$string['viewfullterms'] = 'View full terms and conditions';
+$string['hidefullterms'] = 'Hide full terms';
+
+// Form Validation
+$string['validating'] = 'Validating...';
+$string['fieldvalid'] = 'This field is valid';
+$string['fieldinvalid'] = 'Please check this field';
+$string['formhasserrors'] = 'Please correct the errors before continuing';
+$string['allfieldsvalid'] = 'All fields are valid';
+
+// Accessibility
+$string['skiptomaincontent'] = 'Skip to main content';
+$string['skiptoform'] = 'Skip to form';
+$string['clickfordetails'] = 'Click for details';
+$string['expandsection'] = 'Expand section';
+$string['collapsesection'] = 'Collapse section';
+$string['opensinnewwindow'] = 'Opens in new window';
+$string['requiredfield'] = 'Required field';
+$string['optionalfield'] = 'Optional field';
+$string['currentstep'] = 'Current step';
+$string['completedstep'] = 'Completed step';
+$string['pendingstep'] = 'Pending step';
+
+// Loading States
+$string['loading_vacancies'] = 'Loading vacancies...';
+$string['loading_applications'] = 'Loading applications...';
+$string['loading_documents'] = 'Loading documents...';
+$string['loading_data'] = 'Loading data...';
+$string['savingchanges'] = 'Saving changes...';
+$string['uploadingfile'] = 'Uploading file...';
+
+// Empty States
+$string['novacancies_candidate'] = 'No vacancies available at the moment. Check back later for new opportunities.';
+$string['noapplications_candidate'] = 'You haven\'t applied to any vacancies yet. Browse available positions to get started.';
+$string['noapplications_employer'] = 'No applications received yet for this vacancy.';
+$string['nodocuments_review'] = 'No documents pending review.';
+
+// Success Messages
+$string['changesaved'] = 'Your changes have been saved.';
+$string['documentsaved'] = 'Document saved successfully.';
+$string['applicationsaved'] = 'Application saved as draft.';
+$string['reviewsaved'] = 'Review saved successfully.';
