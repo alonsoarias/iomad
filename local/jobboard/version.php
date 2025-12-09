@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025121030;  // v2.1.0: Phase 10 - 5-tab application form interface.
+$plugin->version = 2025121030;
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '2.1.0-beta';
+$plugin->release = '2.0.72-beta';
