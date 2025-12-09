@@ -5,6 +5,28 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.79] - 2025-12-09
+
+### Fase 10G: Sistema de Excepciones por Convocatoria
+
+#### Verified Implementation
+- `convocatoria_exemption.php` manages document exemptions at convocatoria level
+- `exemption.php` manages ISER historic personnel exemptions (user-level)
+- Vacancies inherit exemptions from convocatoria via `get_required_doctypes_for_convocatoria()`
+- No individual vacancy-level exemption configuration exists (correct architecture)
+- Form in `convocatoria.php` allows selecting which documents to exempt
+- Exemption summary displayed in apply.php
+- Copy exemptions between convocatorias supported
+
+#### Architecture
+```
+Convocatoria → Document Exemptions → Apply to ALL applicants in convocatoria
+                                   → Vacancies inherit automatically
+User → ISER Exemption → Reduced docs for historic personnel
+```
+
+---
+
 ## [2.0.78] - 2025-12-09
 
 ### Fase 10F: Gestión Completa de Tipos de Documento
@@ -117,6 +139,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 2.0.79 | 2025-12-09 | Phase 10G: Convocatoria exemption system |
 | 2.0.78 | 2025-12-09 | Phase 10F: Document types management |
 | 2.0.77 | 2025-12-09 | Phase 10E: Application restrictions per convocatoria |
 | 2.0.76 | 2025-12-09 | Phase 10D: Document logic (age exemption, conditional notes) |
