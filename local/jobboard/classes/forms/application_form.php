@@ -172,7 +172,7 @@ class application_form extends moodleform {
 
         // Documents section with tabbed interface by category.
         if (!empty($requireddocs)) {
-            $mform->addElement('header', 'documentsheader', get_string('requireddocuments', 'local_jobboard'));
+            $mform->addElement('header', 'documentsheader', get_string('documents', 'local_jobboard'));
             $mform->setExpanded('documentsheader', true);
 
             $mform->addElement('html', '<div class="alert alert-warning">' .

@@ -111,8 +111,8 @@ $usergender = $applicantprofile->gender ?? '';
 // Get user's age for document exemptions.
 $userage = \local_jobboard_get_user_age($USER->id);
 
-// Get required document types.
-$requireddocs = exemption::get_required_doctypes($USER->id, true);
+// Get all document types (required and optional).
+$requireddocs = exemption::get_required_doctypes($USER->id, false);
 
 // Set up page.
 $PAGE->set_title(get_string('applytovacancy', 'local_jobboard'));
