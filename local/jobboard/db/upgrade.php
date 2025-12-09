@@ -1074,6 +1074,25 @@ function xmldb_local_jobboard_upgrade($oldversion) {
     if ($oldversion < 2025121002) {
         $table = new xmldb_table('local_jobboard_doctype');
 
+        // First ensure prerequisite fields exist (may be missing in older installations).
+        // gender_condition field.
+        $genderfield = new xmldb_field('gender_condition', XMLDB_TYPE_CHAR, '1', null, null, null, null, 'iserexempted');
+        if (!$dbman->field_exists($table, $genderfield)) {
+            $dbman->add_field($table, $genderfield);
+        }
+
+        // profession_exempt field.
+        $professionfield = new xmldb_field('profession_exempt', XMLDB_TYPE_TEXT, null, null, null, null, null, 'gender_condition');
+        if (!$dbman->field_exists($table, $professionfield)) {
+            $dbman->add_field($table, $professionfield);
+        }
+
+        // category field.
+        $categoryfield = new xmldb_field('category', XMLDB_TYPE_CHAR, '50', null, null, null, null, 'profession_exempt');
+        if (!$dbman->field_exists($table, $categoryfield)) {
+            $dbman->add_field($table, $categoryfield);
+        }
+
         // Add age_exemption_threshold field.
         $field = new xmldb_field('age_exemption_threshold', XMLDB_TYPE_INTEGER, '3', null, null, null, null, 'category');
         if (!$dbman->field_exists($table, $field)) {
