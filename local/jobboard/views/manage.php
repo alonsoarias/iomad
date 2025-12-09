@@ -502,9 +502,11 @@ if (empty($vacancies)) {
         // Status badge.
         $row[] = ui_helper::status_badge($vacancy->status, 'vacancy');
 
-        // Dates.
-        $row[] = html_writer::tag('small', local_jobboard_format_date($vacancy->opendate));
-        $row[] = html_writer::tag('small', local_jobboard_format_date($vacancy->closedate));
+        // Dates (from convocatoria).
+        $opendate = $vacancy->get_open_date();
+        $closedate = $vacancy->get_close_date();
+        $row[] = html_writer::tag('small', $opendate ? local_jobboard_format_date($opendate) : '-');
+        $row[] = html_writer::tag('small', $closedate ? local_jobboard_format_date($closedate) : '-');
 
         // Applications count.
         $appcount = $vacancy->get_application_count();

@@ -108,6 +108,25 @@ class email_template {
     ];
 
     /**
+     * Check if companyid column exists in email_template table.
+     *
+     * @return bool True if column exists.
+     */
+    protected static function has_companyid_column(): bool {
+        global $DB;
+        static $hascompanyid = null;
+
+        if ($hascompanyid === null) {
+            $dbman = $DB->get_manager();
+            $table = new \xmldb_table('local_jobboard_email_template');
+            $field = new \xmldb_field('companyid');
+            $hascompanyid = $dbman->field_exists($table, $field);
+        }
+
+        return $hascompanyid;
+    }
+
+    /**
      * Get a template by code, optionally for a specific company.
      *
      * @param string $code Template code.
@@ -117,8 +136,10 @@ class email_template {
     public static function get(string $code, int $companyid = 0): ?self {
         global $DB;
 
+        $hascompanyid = self::has_companyid_column();
+
         // First try company-specific template.
-        if ($companyid > 0) {
+        if ($companyid > 0 && $hascompanyid) {
             $record = $DB->get_record('local_jobboard_email_template', [
                 'code' => $code,
                 'companyid' => $companyid,
@@ -128,11 +149,21 @@ class email_template {
             }
         }
 
-        // Fall back to global template (companyid = 0).
-        $record = $DB->get_record('local_jobboard_email_template', [
-            'code' => $code,
-            'companyid' => 0,
-        ]);
+        // Fall back to global template.
+        $record = null;
+        if ($hascompanyid) {
+            $record = $DB->get_record('local_jobboard_email_template', [
+                'code' => $code,
+                'companyid' => 0,
+            ]);
+        } else {
+            // Try by code only if companyid column doesn't exist.
+            $record = $DB->get_record('local_jobboard_email_template', ['code' => $code]);
+            // Or try templatekey for backwards compatibility.
+            if (!$record) {
+                $record = $DB->get_record('local_jobboard_email_template', ['templatekey' => $code]);
+            }
+        }
 
         if (!$record) {
             // Return default template from language strings.
@@ -223,28 +254,46 @@ class email_template {
     public static function save(string $code, string $subject, string $body, int $companyid = 0): int {
         global $DB, $USER;
 
-        $existing = $DB->get_record('local_jobboard_email_template', [
-            'code' => $code,
-            'companyid' => $companyid,
-        ]);
+        $hascompanyid = self::has_companyid_column();
+
+        // Find existing record.
+        $existing = null;
+        if ($hascompanyid) {
+            $existing = $DB->get_record('local_jobboard_email_template', [
+                'code' => $code,
+                'companyid' => $companyid,
+            ]);
+        } else {
+            $existing = $DB->get_record('local_jobboard_email_template', ['code' => $code]);
+            if (!$existing) {
+                $existing = $DB->get_record('local_jobboard_email_template', ['templatekey' => $code]);
+            }
+        }
 
         if ($existing) {
             $existing->subject = $subject;
             $existing->body = $body;
             $existing->timemodified = time();
-            $existing->usermodified = $USER->id;
+            if (property_exists($existing, 'usermodified')) {
+                $existing->usermodified = $USER->id;
+            }
+            if (property_exists($existing, 'modifiedby')) {
+                $existing->modifiedby = $USER->id;
+            }
             $DB->update_record('local_jobboard_email_template', $existing);
             return $existing->id;
         }
 
+        // Create new record.
         $record = new \stdClass();
         $record->code = $code;
         $record->subject = $subject;
         $record->body = $body;
-        $record->companyid = $companyid;
+        if ($hascompanyid) {
+            $record->companyid = $companyid;
+        }
         $record->timecreated = time();
         $record->timemodified = time();
-        $record->usermodified = $USER->id;
 
         return $DB->insert_record('local_jobboard_email_template', $record);
     }
@@ -259,10 +308,21 @@ class email_template {
     public static function reset_to_default(string $code, int $companyid = 0): bool {
         global $DB;
 
-        return $DB->delete_records('local_jobboard_email_template', [
-            'code' => $code,
-            'companyid' => $companyid,
-        ]);
+        $hascompanyid = self::has_companyid_column();
+
+        if ($hascompanyid) {
+            return $DB->delete_records('local_jobboard_email_template', [
+                'code' => $code,
+                'companyid' => $companyid,
+            ]);
+        } else {
+            // Try by code first, then by templatekey.
+            $deleted = $DB->delete_records('local_jobboard_email_template', ['code' => $code]);
+            if (!$deleted) {
+                $deleted = $DB->delete_records('local_jobboard_email_template', ['templatekey' => $code]);
+            }
+            return $deleted;
+        }
     }
 
     /**

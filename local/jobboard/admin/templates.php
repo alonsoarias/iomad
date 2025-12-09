@@ -17,6 +17,8 @@
 /**
  * Email templates management page for local_jobboard.
  *
+ * Provides interface to customize email notifications sent to applicants.
+ *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,15 +28,64 @@ require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 use local_jobboard\email_template;
+use local_jobboard\forms\email_template_form;
 
 admin_externalpage_setup('local_jobboard_templates');
 
 $action = optional_param('action', '', PARAM_ALPHA);
 $code = optional_param('code', '', PARAM_ALPHANUMEXT);
-$id = optional_param('id', 0, PARAM_INT);
 
 $context = context_system::instance();
 $pageurl = new moodle_url('/local/jobboard/admin/templates.php');
+
+/**
+ * Check if companyid column exists in email_template table.
+ *
+ * @return bool True if column exists.
+ */
+function local_jobboard_email_template_has_companyid(): bool {
+    global $DB;
+    $dbman = $DB->get_manager();
+    $table = new xmldb_table('local_jobboard_email_template');
+    $field = new xmldb_field('companyid');
+    return $dbman->field_exists($table, $field);
+}
+
+/**
+ * Get templates from database safely.
+ *
+ * @param int $companyid Company ID (0 for global).
+ * @return array Array of template records.
+ */
+function local_jobboard_get_templates(int $companyid = 0): array {
+    global $DB;
+
+    $hascompanyid = local_jobboard_email_template_has_companyid();
+
+    if ($hascompanyid) {
+        return $DB->get_records('local_jobboard_email_template', ['companyid' => $companyid], 'code ASC');
+    } else {
+        return $DB->get_records('local_jobboard_email_template', [], 'code ASC');
+    }
+}
+
+/**
+ * Count templates in database safely.
+ *
+ * @param int $companyid Company ID (0 for global).
+ * @return int Count of templates.
+ */
+function local_jobboard_count_templates(int $companyid = 0): int {
+    global $DB;
+
+    $hascompanyid = local_jobboard_email_template_has_companyid();
+
+    if ($hascompanyid) {
+        return $DB->count_records('local_jobboard_email_template', ['companyid' => $companyid]);
+    } else {
+        return $DB->count_records('local_jobboard_email_template');
+    }
+}
 
 // Handle reset action.
 if ($action === 'reset' && $code && confirm_sesskey()) {
@@ -42,153 +93,113 @@ if ($action === 'reset' && $code && confirm_sesskey()) {
     redirect($pageurl, get_string('emailtemplate_restored', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
 }
 
-// Handle edit action.
+// Handle edit action - show form.
 if ($action === 'edit' && $code) {
     $template = email_template::get($code, 0);
+    if (!$template) {
+        // Get default template if not customized yet.
+        $template = email_template::get_default($code);
+    }
+
     $placeholders = email_template::get_placeholders($code);
 
-    $mform = new \MoodleQuickForm('edittemplate', 'post', $pageurl);
-    $mform->addElement('hidden', 'action', 'save');
-    $mform->setType('action', PARAM_ALPHA);
-    $mform->addElement('hidden', 'code', $code);
-    $mform->setType('code', PARAM_ALPHANUMEXT);
+    $customdata = [
+        'code' => $code,
+        'template' => $template,
+        'placeholders' => $placeholders,
+    ];
 
-    // Subject.
-    $mform->addElement('text', 'subject', get_string('templatesubject', 'local_jobboard'), ['size' => 80]);
-    $mform->setType('subject', PARAM_TEXT);
-    $mform->setDefault('subject', $template ? $template->subject : '');
-    $mform->addRule('subject', get_string('required'), 'required', null, 'client');
+    $mform = new email_template_form($pageurl, $customdata);
 
-    // Body.
-    $mform->addElement('textarea', 'body', get_string('templatebody', 'local_jobboard'), ['rows' => 15, 'cols' => 80]);
-    $mform->setType('body', PARAM_RAW);
-    $mform->setDefault('body', $template ? $template->body : '');
-    $mform->addRule('body', get_string('required'), 'required', null, 'client');
+    // Handle form submission.
+    if ($mform->is_cancelled()) {
+        redirect($pageurl);
+    }
 
-    // Submit buttons.
-    $buttonarray = [];
-    $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
-    $buttonarray[] = $mform->createElement('cancel');
-    $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+    if ($data = $mform->get_data()) {
+        $subject = $data->subject;
+        $body = $data->body_editor['text'] ?? '';
 
-    echo $OUTPUT->header();
+        email_template::save($code, $subject, $body, 0);
+        redirect($pageurl, get_string('emailtemplate_saved', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
+    }
 
-    // Title.
+    // Display the form.
     $templatename = get_string_manager()->string_exists('template_' . $code, 'local_jobboard')
         ? get_string('template_' . $code, 'local_jobboard')
         : $code;
+
+    $PAGE->set_title(get_string('emailtemplate', 'local_jobboard') . ': ' . $templatename);
+
+    echo $OUTPUT->header();
+
+    // Breadcrumb-style navigation.
+    echo html_writer::start_div('mb-4');
+    echo html_writer::link($pageurl, '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtotemplates', 'local_jobboard'),
+        ['class' => 'btn btn-outline-secondary']);
+    echo html_writer::end_div();
+
     echo $OUTPUT->heading(get_string('emailtemplate', 'local_jobboard') . ': ' . $templatename);
 
-    // Back link.
-    echo html_writer::link($pageurl, '<i class="fa fa-arrow-left mr-2"></i>' . get_string('back'),
-        ['class' => 'btn btn-outline-secondary mb-3']);
-
-    echo html_writer::start_div('row');
-
-    // Form column.
-    echo html_writer::start_div('col-lg-8');
-    echo html_writer::start_div('card shadow-sm mb-4');
-    echo html_writer::start_div('card-body');
-    $mform->display();
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-
-    // Placeholders column.
-    echo html_writer::start_div('col-lg-4');
-    echo html_writer::start_div('card shadow-sm mb-4');
-    echo html_writer::start_div('card-header bg-info text-white');
-    echo '<i class="fa fa-tags mr-2"></i>' . get_string('availableplaceholders', 'local_jobboard');
-    echo html_writer::end_div();
-    echo html_writer::start_div('card-body');
-    echo '<p class="small text-muted">' . get_string('placeholders_help', 'local_jobboard') . '</p>';
-    echo '<ul class="list-unstyled mb-0">';
-    foreach ($placeholders as $placeholder => $desc) {
-        echo '<li class="mb-2">';
-        echo '<code class="bg-light px-2 py-1">' . s($placeholder) . '</code>';
-        echo '<br><small class="text-muted">' . s($desc) . '</small>';
-        echo '</li>';
+    // Show description for the template type.
+    $desckey = 'template_' . $code . '_desc';
+    if (get_string_manager()->string_exists($desckey, 'local_jobboard')) {
+        echo html_writer::div(get_string($desckey, 'local_jobboard'), 'alert alert-info');
     }
-    echo '</ul>';
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-    echo html_writer::end_div();
 
-    echo html_writer::end_div(); // row.
+    // Display the form.
+    $mform->display();
 
     echo $OUTPUT->footer();
     exit;
 }
 
-// Handle save action.
-if ($action === 'save' && $code && confirm_sesskey()) {
-    $subject = required_param('subject', PARAM_TEXT);
-    $body = required_param('body', PARAM_RAW);
-
-    email_template::save($code, $subject, $body, 0);
-    redirect($pageurl, get_string('emailtemplate_saved', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
-}
-
 // Install default templates if needed.
-$existingcount = $DB->count_records('local_jobboard_email_template', ['companyid' => 0]);
+$existingcount = local_jobboard_count_templates(0);
 if ($existingcount === 0) {
     email_template::install_defaults();
 }
 
-// Get all templates.
-$templates = $DB->get_records('local_jobboard_email_template', ['companyid' => 0], 'code ASC');
+// Get all templates from database.
+$templates = local_jobboard_get_templates(0);
 
 // Also check for missing templates that have language string defaults.
 $allcodes = email_template::get_all_codes();
-$dbcodes = array_column($templates, 'code');
+$dbcodes = array_map(function($tpl) {
+    return $tpl->code ?? $tpl->templatekey ?? '';
+}, $templates);
 $missingcodes = array_diff($allcodes, $dbcodes);
 
+// Display the templates list.
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('emailtemplates', 'local_jobboard'));
 
-echo '<div class="alert alert-info">';
-echo '<i class="fa fa-info-circle mr-2"></i>';
-echo get_string('emailtemplates_help', 'local_jobboard');
-echo '</div>';
+// Help text.
+echo html_writer::start_div('alert alert-info d-flex align-items-start');
+echo html_writer::tag('i', '', ['class' => 'fa fa-info-circle fa-2x mr-3 mt-1']);
+echo html_writer::start_div();
+echo html_writer::tag('strong', get_string('emailtemplates', 'local_jobboard'));
+echo html_writer::tag('p', get_string('emailtemplates_help', 'local_jobboard'), ['class' => 'mb-0 mt-1']);
+echo html_writer::end_div();
+echo html_writer::end_div();
 
 if (empty($templates) && empty($missingcodes)) {
     echo $OUTPUT->notification(get_string('notemplates', 'local_jobboard'), 'info');
 } else {
-    $table = new html_table();
-    $table->head = [
-        get_string('templatekey', 'local_jobboard'),
-        get_string('templatesubject', 'local_jobboard'),
-        get_string('status'),
-        get_string('actions'),
-    ];
-    $table->attributes['class'] = 'generaltable table-hover';
+    // Card-based layout for templates.
+    echo html_writer::start_div('row');
 
-    // Add database templates.
+    // Database templates (customized).
     foreach ($templates as $tpl) {
-        $templatename = get_string_manager()->string_exists('template_' . $tpl->code, 'local_jobboard')
-            ? get_string('template_' . $tpl->code, 'local_jobboard')
-            : $tpl->code;
+        $tplcode = $tpl->code ?? $tpl->templatekey ?? 'unknown';
+        $templatename = get_string_manager()->string_exists('template_' . $tplcode, 'local_jobboard')
+            ? get_string('template_' . $tplcode, 'local_jobboard')
+            : $tplcode;
 
-        $editurl = new moodle_url($pageurl, ['action' => 'edit', 'code' => $tpl->code]);
-        $reseturl = new moodle_url($pageurl, ['action' => 'reset', 'code' => $tpl->code, 'sesskey' => sesskey()]);
-
-        $actions = html_writer::link($editurl, '<i class="fa fa-edit mr-1"></i>' . get_string('edit'),
-            ['class' => 'btn btn-sm btn-primary mr-1']);
-        $actions .= html_writer::link($reseturl, '<i class="fa fa-undo mr-1"></i>' . get_string('restoreddefault', 'local_jobboard'),
-            ['class' => 'btn btn-sm btn-outline-secondary', 'onclick' => "return confirm('" .
-                get_string('confirm') . "');"]);
-
-        $statusbadge = '<span class="badge badge-success">' . get_string('customized', 'local_jobboard') . '</span>';
-
-        $table->data[] = [
-            html_writer::tag('strong', s($templatename)) . '<br><code class="small text-muted">' . s($tpl->code) . '</code>',
-            format_string($tpl->subject),
-            $statusbadge,
-            $actions,
-        ];
+        echo render_template_card($tplcode, $templatename, $tpl->subject, true, $pageurl);
     }
 
-    // Add missing templates (using defaults).
+    // Missing templates (using defaults).
     foreach ($missingcodes as $missingcode) {
         $defaultTemplate = email_template::get_default($missingcode);
         if (!$defaultTemplate) {
@@ -199,21 +210,85 @@ if (empty($templates) && empty($missingcodes)) {
             ? get_string('template_' . $missingcode, 'local_jobboard')
             : $missingcode;
 
-        $editurl = new moodle_url($pageurl, ['action' => 'edit', 'code' => $missingcode]);
-        $actions = html_writer::link($editurl, '<i class="fa fa-edit mr-1"></i>' . get_string('customize', 'local_jobboard'),
-            ['class' => 'btn btn-sm btn-outline-primary']);
-
-        $statusbadge = '<span class="badge badge-secondary">' . get_string('default', 'local_jobboard') . '</span>';
-
-        $table->data[] = [
-            html_writer::tag('strong', s($templatename)) . '<br><code class="small text-muted">' . s($missingcode) . '</code>',
-            format_string($defaultTemplate->subject),
-            $statusbadge,
-            $actions,
-        ];
+        echo render_template_card($missingcode, $templatename, $defaultTemplate->subject, false, $pageurl);
     }
 
-    echo html_writer::table($table);
+    echo html_writer::end_div(); // .row
 }
 
+// Quick help section.
+echo html_writer::start_div('card mt-4 shadow-sm');
+echo html_writer::start_div('card-header bg-secondary text-white');
+echo '<i class="fa fa-question-circle mr-2"></i>' . get_string('quickhelp', 'local_jobboard');
+echo html_writer::end_div();
+echo html_writer::start_div('card-body');
+echo html_writer::start_tag('ul', ['class' => 'mb-0']);
+echo html_writer::tag('li', get_string('templatehelp_placeholders', 'local_jobboard'));
+echo html_writer::tag('li', get_string('templatehelp_html', 'local_jobboard'));
+echo html_writer::tag('li', get_string('templatehelp_reset', 'local_jobboard'));
+echo html_writer::end_tag('ul');
+echo html_writer::end_div();
+echo html_writer::end_div();
+
 echo $OUTPUT->footer();
+
+/**
+ * Render a template card.
+ *
+ * @param string $code Template code.
+ * @param string $name Template display name.
+ * @param string $subject Template subject.
+ * @param bool $iscustomized Whether template is customized.
+ * @param moodle_url $pageurl Base page URL.
+ * @return string HTML output.
+ */
+function render_template_card(string $code, string $name, string $subject, bool $iscustomized, moodle_url $pageurl): string {
+    $editurl = new moodle_url($pageurl, ['action' => 'edit', 'code' => $code]);
+    $reseturl = new moodle_url($pageurl, ['action' => 'reset', 'code' => $code, 'sesskey' => sesskey()]);
+
+    $borderclass = $iscustomized ? 'border-success' : 'border-secondary';
+    $statusclass = $iscustomized ? 'badge-success' : 'badge-secondary';
+    $statustext = $iscustomized ? get_string('customized', 'local_jobboard') : get_string('default', 'local_jobboard');
+
+    $html = html_writer::start_div('col-lg-6 col-xl-4 mb-4');
+    $html .= html_writer::start_div('card h-100 shadow-sm ' . $borderclass);
+
+    // Card header.
+    $html .= html_writer::start_div('card-header d-flex justify-content-between align-items-center');
+    $html .= html_writer::tag('span', $name, ['class' => 'font-weight-bold']);
+    $html .= html_writer::tag('span', $statustext, ['class' => 'badge ' . $statusclass]);
+    $html .= html_writer::end_div();
+
+    // Card body.
+    $html .= html_writer::start_div('card-body');
+    $html .= html_writer::tag('code', s($code), ['class' => 'small text-muted d-block mb-2']);
+    $html .= html_writer::tag('p', '<strong>' . get_string('subject') . ':</strong>', ['class' => 'mb-1 small']);
+    $html .= html_writer::tag('p', format_string($subject), ['class' => 'text-muted small mb-0 text-truncate']);
+    $html .= html_writer::end_div();
+
+    // Card footer with actions.
+    $html .= html_writer::start_div('card-footer bg-transparent');
+
+    // Edit button.
+    $html .= html_writer::link($editurl,
+        '<i class="fa fa-edit mr-1"></i>' . get_string('edit'),
+        ['class' => 'btn btn-sm btn-primary mr-2']
+    );
+
+    // Reset button (only for customized templates).
+    if ($iscustomized) {
+        $html .= html_writer::link($reseturl,
+            '<i class="fa fa-undo mr-1"></i>' . get_string('reset'),
+            [
+                'class' => 'btn btn-sm btn-outline-secondary',
+                'onclick' => "return confirm('" . get_string('confirmreset', 'local_jobboard') . "');",
+            ]
+        );
+    }
+
+    $html .= html_writer::end_div();
+    $html .= html_writer::end_div(); // .card
+    $html .= html_writer::end_div(); // .col
+
+    return $html;
+}

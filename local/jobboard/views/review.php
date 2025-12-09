@@ -177,7 +177,8 @@ if (!$applicationid) {
                   WHERE {$where}";
     $total = $DB->count_records_sql($countsql, $params);
 
-    $sql = "SELECT a.*, v.title as vacancy_title, v.code as vacancy_code, v.closedate,
+    $sql = "SELECT a.*, v.title as vacancy_title, v.code as vacancy_code,
+                   COALESCE(c.enddate, 0) as closedate,
                    u.firstname, u.lastname, u.email,
                    (SELECT COUNT(*) FROM {local_jobboard_document} d WHERE d.applicationid = a.id AND d.issuperseded = 0) as doccount,
                    (SELECT COUNT(*) FROM {local_jobboard_document} d
@@ -187,6 +188,7 @@ if (!$applicationid) {
                    ) as pendingcount
             FROM {local_jobboard_application} a
             JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+            LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
             JOIN {user} u ON u.id = a.userid
             WHERE {$where}
             ORDER BY a.timecreated ASC";
