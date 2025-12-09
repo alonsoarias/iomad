@@ -5,6 +5,22 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.78] - 2025-12-09
+
+### Fase 10F: Gestión Completa de Tipos de Documento
+
+#### Verified Implementation
+- Full CRUD interface in `admin/doctypes.php`
+- Fields: code, name, description, category, isrequired, externalurl, requirements
+- Additional fields: age_exemption_threshold, conditional_note, gender_condition, profession_exempt
+- Manual sorting with moveup/movedown actions
+- Unique code validation on create (lines 167-170)
+- Audit logging for all actions (create, update, delete, toggle)
+- Enabled/disabled toggle with status badges
+- Conditions displayed: gender, age exemption, profession, ISER exemption
+
+---
+
 ## [2.0.77] - 2025-12-09
 
 ### Fase 10E: Restricción de Aplicaciones por Convocatoria
@@ -101,6 +117,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 2.0.78 | 2025-12-09 | Phase 10F: Document types management |
 | 2.0.77 | 2025-12-09 | Phase 10E: Application restrictions per convocatoria |
 | 2.0.76 | 2025-12-09 | Phase 10D: Document logic (age exemption, conditional notes) |
 | 2.0.75 | 2025-12-09 | Phase 10C: CLI cleanup (verified clean) |
