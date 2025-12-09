@@ -5,6 +5,28 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.74] - 2025-12-09
+
+### Fase 10B: Eliminación de Campos Obsoletos
+
+#### Removed
+- Field `salary` from vacancy table (regulatory requirement - no salary information)
+- Fields `isextemporaneous`, `extemporaneousreason` from vacancy table (vacancies now inherit dates from convocatoria)
+- Fields `opendate`, `closedate` from vacancy table (dates now exclusively from convocatoria)
+- "Tarjeta de Identidad" (TI) option from signup form (not applicable for job applications)
+
+#### Changed
+- Vacancy class `__get()` magic method provides backward compatibility for removed fields
+- Vacancy dates now obtained from associated convocatoria automatically
+- CLI scripts use opendate/closedate parameters for convocatoria, not vacancy
+
+#### Notes
+- Database migration removes columns if they exist
+- Existing code using `$vacancy->opendate` will transparently get convocatoria dates
+- Existing code using `$vacancy->salary` will get empty string
+
+---
+
 ## [2.0.73] - 2025-12-09
 
 ### Fase 10A: Sistema de Auditoría Robusta
@@ -36,5 +58,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date | Description |
 |---------|------|-------------|
+| 2.0.74 | 2025-12-09 | Phase 10B: Remove obsolete fields |
 | 2.0.73 | 2025-12-09 | Phase 10A: Robust audit system |
 | 2.0.72-beta | 2025-12-10 | Base version for Phase 10 optimization |
