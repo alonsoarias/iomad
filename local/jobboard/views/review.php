@@ -410,14 +410,76 @@ if (!$applicationid) {
     );
 
     // ============================================================================
+    // PROGRESS STEPS INDICATOR
+    // ============================================================================
+    echo '<div class="jb-progress-steps mb-4" data-toggle="tooltip" ';
+    echo 'title="' . s(get_string('reviewsteps_tooltip', 'local_jobboard')) . '">';
+    echo '<div class="d-flex justify-content-between align-items-center">';
+    $reviewSteps = [
+        ['icon' => 'fa-download', 'label' => get_string('step_examine', 'local_jobboard')],
+        ['icon' => 'fa-check-double', 'label' => get_string('step_validate', 'local_jobboard')],
+        ['icon' => 'fa-clipboard-check', 'label' => get_string('step_complete', 'local_jobboard')],
+    ];
+    // Determine current step based on progress.
+    $currentStep = 0;
+    if ($docStats['approved'] + $docStats['rejected'] > 0) {
+        $currentStep = 1;
+    }
+    if ($docStats['pending'] === 0) {
+        $currentStep = 2;
+    }
+    foreach ($reviewSteps as $i => $step) {
+        $stepClass = '';
+        if ($i < $currentStep) {
+            $stepClass = 'completed';
+        } else if ($i === $currentStep) {
+            $stepClass = 'active';
+        }
+        echo '<div class="jb-step text-center ' . $stepClass . '" data-step="' . ($i + 1) . '">';
+        echo '<div class="jb-step-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-1">';
+        echo '<i class="fa ' . $step['icon'] . '"></i>';
+        echo '</div>';
+        echo '<small class="d-block text-truncate" style="max-width:100px;">' . $step['label'] . '</small>';
+        echo '</div>';
+        if ($i < count($reviewSteps) - 1) {
+            echo '<div class="jb-step-connector flex-grow-1 mx-2"></div>';
+        }
+    }
+    echo '</div>';
+    echo '</div>';
+
+    // ============================================================================
     // STATISTICS ROW
     // ============================================================================
-    echo html_writer::start_div('row mb-4');
+    echo html_writer::start_div('row mb-4 jb-stats-row');
     echo ui_helper::stat_card((string)$totalDocs, get_string('documents', 'local_jobboard'), 'primary', 'file-alt');
     echo ui_helper::stat_card((string)$docStats['approved'], get_string('docstatus:approved', 'local_jobboard'), 'success', 'check-circle');
     echo ui_helper::stat_card((string)$docStats['rejected'], get_string('docstatus:rejected', 'local_jobboard'), 'danger', 'times-circle');
     echo ui_helper::stat_card((string)$docStats['pending'], get_string('docstatus:pending', 'local_jobboard'), 'warning', 'clock');
     echo html_writer::end_div();
+
+    // ============================================================================
+    // GUIDELINES CARD (Collapsible)
+    // ============================================================================
+    echo '<div class="card jb-guidelines-card mb-4" id="review-guidelines-card">';
+    echo '<div class="card-header bg-info text-white" style="cursor:pointer;" ';
+    echo 'data-toggle="collapse" data-target="#review-guidelines-collapse" aria-expanded="true">';
+    echo '<div class="d-flex justify-content-between align-items-center">';
+    echo '<span><i class="fa fa-info-circle mr-2"></i>' . get_string('reviewguidelines', 'local_jobboard') . '</span>';
+    echo '<i class="fa fa-chevron-down jb-collapse-icon"></i>';
+    echo '</div>';
+    echo '</div>';
+    echo '<div class="collapse show" id="review-guidelines-collapse">';
+    echo '<div class="card-body">';
+    echo '<ul class="mb-0 pl-3">';
+    echo '<li class="mb-2">' . get_string('guideline_review1', 'local_jobboard') . '</li>';
+    echo '<li class="mb-2">' . get_string('guideline_review2', 'local_jobboard') . '</li>';
+    echo '<li class="mb-2">' . get_string('guideline_review3', 'local_jobboard') . '</li>';
+    echo '<li>' . get_string('guideline_review4', 'local_jobboard') . '</li>';
+    echo '</ul>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
 
     // ============================================================================
     // TWO COLUMN LAYOUT
@@ -445,7 +507,10 @@ if (!$applicationid) {
         ]);
         echo html_writer::link($validateAllUrl,
             '<i class="fa fa-check-double mr-1"></i>' . get_string('validateall', 'local_jobboard'),
-            ['class' => 'btn btn-success btn-sm']
+            ['class' => 'btn btn-success btn-sm jb-btn-validateall',
+             'data-toggle' => 'tooltip',
+             'title' => get_string('approveall_confirm', 'local_jobboard'),
+             'onclick' => 'return confirm("' . s(get_string('approveall_confirm', 'local_jobboard')) . '");']
         );
     }
     echo html_writer::end_div();
@@ -458,7 +523,7 @@ if (!$applicationid) {
             'p-4'
         );
     } else {
-        echo html_writer::start_div('list-group list-group-flush');
+        echo html_writer::start_div('list-group list-group-flush jb-document-list');
 
         foreach ($documents as $doc) {
             // Status styling.
@@ -469,7 +534,7 @@ if (!$applicationid) {
             ];
             $config = $statusConfig[$doc->status] ?? $statusConfig['pending'];
 
-            echo html_writer::start_div('list-group-item');
+            echo html_writer::start_div('list-group-item jb-document-item jb-doc-' . $doc->status);
             echo html_writer::start_div('d-flex w-100 justify-content-between align-items-start');
 
             // Document info.
@@ -514,14 +579,15 @@ if (!$applicationid) {
             echo html_writer::end_div();
 
             // Actions.
-            echo html_writer::start_div('btn-group-vertical ml-3');
+            echo html_writer::start_div('btn-group-vertical ml-3 jb-doc-actions');
 
             // Download button.
             $downloadUrl = $doc->get_download_url();
             if ($downloadUrl) {
                 echo html_writer::link($downloadUrl,
                     '<i class="fa fa-download"></i>',
-                    ['class' => 'btn btn-sm btn-outline-primary', 'target' => '_blank', 'title' => get_string('download')]
+                    ['class' => 'btn btn-sm btn-outline-primary jb-btn-download', 'target' => '_blank',
+                     'data-toggle' => 'tooltip', 'title' => get_string('download')]
                 );
             }
 
@@ -536,14 +602,15 @@ if (!$applicationid) {
                 ]);
                 echo html_writer::link($validateUrl,
                     '<i class="fa fa-check"></i>',
-                    ['class' => 'btn btn-sm btn-success', 'title' => get_string('approve', 'local_jobboard')]
+                    ['class' => 'btn btn-sm btn-success jb-btn-approve',
+                     'data-toggle' => 'tooltip', 'title' => get_string('approve', 'local_jobboard')]
                 );
 
-                // Reject button with modal trigger.
+                // Reject button with modal trigger (tooltip via title, modal via JS).
                 echo html_writer::tag('button',
                     '<i class="fa fa-times"></i>',
                     [
-                        'class' => 'btn btn-sm btn-danger',
+                        'class' => 'btn btn-sm btn-danger jb-btn-reject',
                         'data-toggle' => 'modal',
                         'data-target' => '#rejectModal' . $doc->id,
                         'title' => get_string('reject', 'local_jobboard'),
@@ -708,7 +775,7 @@ if (!$applicationid) {
     // Complete review button.
     $allReviewed = ($docStats['pending'] === 0);
     if ($allReviewed && !in_array($application->status, ['docs_validated', 'docs_rejected'])) {
-        echo html_writer::start_div('card shadow-sm mb-4 border-success');
+        echo html_writer::start_div('card shadow-sm mb-4 border-success jb-complete-card');
         echo html_writer::start_div('card-body text-center');
 
         echo html_writer::tag('p',
@@ -725,12 +792,58 @@ if (!$applicationid) {
         ]);
         echo html_writer::link($markUrl,
             '<i class="fa fa-clipboard-check mr-2"></i>' . get_string('submitreview', 'local_jobboard'),
-            ['class' => 'btn btn-success btn-lg btn-block']
+            ['class' => 'btn btn-success btn-lg btn-block', 'data-toggle' => 'tooltip',
+             'title' => get_string('reviewcompletetooltip', 'local_jobboard')]
         );
 
         echo html_writer::end_div();
         echo html_writer::end_div();
+    } else if ($docStats['pending'] > 0) {
+        // Show pending indicator.
+        echo html_writer::start_div('card shadow-sm mb-4 border-warning jb-pending-card');
+        echo html_writer::start_div('card-body text-center');
+        echo html_writer::tag('p',
+            '<i class="fa fa-clock fa-2x text-warning mb-2"></i><br>' .
+            '<span class="text-warning font-weight-bold">' . get_string('needsattention', 'local_jobboard') . '</span>',
+            ['class' => 'mb-2']
+        );
+        echo html_writer::tag('p',
+            get_string('documentsremaining', 'local_jobboard', $docStats['pending']),
+            ['class' => 'text-muted small mb-0']
+        );
+        echo html_writer::end_div();
+        echo html_writer::end_div();
     }
+
+    // Tips card.
+    echo html_writer::start_div('card shadow-sm mb-4 jb-tips-card');
+    echo html_writer::tag('div',
+        '<i class="fa fa-lightbulb mr-2"></i>' . get_string('reviewtips', 'local_jobboard'),
+        ['class' => 'card-header bg-light']
+    );
+    echo html_writer::start_div('card-body p-3');
+    echo '<ul class="small mb-0 pl-3">';
+    echo '<li class="mb-1"><i class="fa fa-download text-primary mr-1"></i>' . get_string('tip_download', 'local_jobboard') . '</li>';
+    echo '<li class="mb-1"><i class="fa fa-eye text-primary mr-1"></i>' . get_string('tip_legible', 'local_jobboard') . '</li>';
+    echo '<li class="mb-1"><i class="fa fa-clipboard-check text-primary mr-1"></i>' . get_string('tip_complete', 'local_jobboard') . '</li>';
+    echo '<li><i class="fa fa-shield-alt text-primary mr-1"></i>' . get_string('tip_authentic', 'local_jobboard') . '</li>';
+    echo '</ul>';
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+
+    // Help card.
+    echo html_writer::start_div('card shadow-sm mb-4 jb-help-card');
+    echo html_writer::tag('div',
+        '<i class="fa fa-question-circle mr-2"></i>' . get_string('needhelp', 'local_jobboard'),
+        ['class' => 'card-header bg-secondary text-white']
+    );
+    echo html_writer::start_div('card-body');
+    echo html_writer::tag('p', get_string('reviewhelp_text', 'local_jobboard'), ['class' => 'small mb-3']);
+    echo '<a href="#" class="btn btn-outline-secondary btn-sm btn-block" data-action="tool_usertours/resetpagetour">';
+    echo '<i class="fa fa-play-circle mr-1"></i>' . get_string('restarttour', 'local_jobboard');
+    echo '</a>';
+    echo html_writer::end_div();
+    echo html_writer::end_div();
 
     echo html_writer::end_div(); // col-lg-4
 
@@ -753,6 +866,44 @@ echo html_writer::tag('style', '
 .local-jobboard-review .card:hover {
     transform: translateY(-2px);
 }
+/* Progress steps styling */
+.jb-progress-steps { background:#f8f9fa; padding:15px 20px; border-radius:8px; border:1px solid #e9ecef; }
+.jb-step { min-width:80px; }
+.jb-step-icon { width:40px; height:40px; background:#dee2e6; color:#6c757d; transition:all 0.3s; }
+.jb-step.active .jb-step-icon { background:#007bff; color:#fff; }
+.jb-step.completed .jb-step-icon { background:#28a745; color:#fff; }
+.jb-step-connector { height:3px; background:#dee2e6; margin-top:-20px; }
+/* Cards styling */
+.jb-guidelines-card { border:none; border-radius:8px; }
+.jb-collapse-icon { transition:transform 0.3s; }
+.collapsed .jb-collapse-icon { transform:rotate(-90deg); }
+.jb-tips-card { border-radius:8px; }
+.jb-help-card { border-radius:8px; }
+.jb-pending-card { animation: pulse 2s infinite; }
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+}
+.jb-complete-card { animation: celebrate 0.5s ease-out; }
+@keyframes celebrate {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+/* Document item styling */
+.jb-document-item { border-left: 4px solid transparent; transition: all 0.2s ease; }
+.jb-doc-pending { border-left-color: #ffc107; background-color: #fffef5; }
+.jb-doc-approved { border-left-color: #28a745; }
+.jb-doc-rejected { border-left-color: #dc3545; }
+.jb-doc-actions .btn { margin-bottom: 3px; }
+');
+
+// JavaScript for tooltips.
+$PAGE->requires->js_amd_inline('
+require(["jquery"], function($) {
+    $("[data-toggle=tooltip]").tooltip();
+});
 ');
 
 echo $OUTPUT->footer();

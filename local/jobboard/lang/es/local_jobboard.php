@@ -2005,22 +2005,22 @@ $string['tour_review_name'] = 'Tour de Revision de Documentos';
 $string['tour_review_description'] = 'Aprenda a revisar y validar documentos de postulantes';
 $string['tour_review_step1_title'] = 'Centro de Revision de Documentos';
 $string['tour_review_step1_content'] = 'Bienvenido al centro de revision de documentos! Como revisor, es responsable de validar los documentos de los postulantes para asegurar que cumplan con los requisitos.';
-$string['tour_review_step2_title'] = 'Filtro de Vacante';
-$string['tour_review_step2_content'] = 'Use este filtro para enfocarse en postulaciones de una vacante especifica. Esto le ayuda a gestionar su carga de trabajo al revisar multiples posiciones.';
-$string['tour_review_step3_title'] = 'Cola de Postulaciones';
-$string['tour_review_step3_content'] = 'Esta tabla muestra todas las postulaciones pendientes de revision. Cada fila muestra la vacante, informacion del postulante, estado, cantidad de documentos y documentos pendientes.';
-$string['tour_review_step4_title'] = 'Indicadores Pendientes';
-$string['tour_review_step4_content'] = 'La insignia roja muestra cuantos documentos aun estan pendientes de validacion. Priorice postulaciones con documentos pendientes para avanzar en el proceso.';
-$string['tour_review_step5_title'] = 'Detalles de Postulacion';
-$string['tour_review_step5_content'] = 'Al revisar una postulacion, vera la informacion del postulante y detalles de la vacante. Revise este contexto antes de validar documentos.';
-$string['tour_review_step6_title'] = 'Lista de Documentos';
-$string['tour_review_step6_content'] = 'Todos los documentos cargados se listan aqui con su estado actual. Cada documento muestra el tipo, nombre de archivo, fecha de carga y estado de validacion.';
+$string['tour_review_step2_title'] = 'Progreso de Revision';
+$string['tour_review_step2_content'] = 'Estos pasos muestran su progreso: Examinar (descargar y verificar documentos), Validar (aprobar o rechazar cada uno), y Completar (finalizar la revision). Los pasos completados se vuelven verdes.';
+$string['tour_review_step3_title'] = 'Resumen de Estadisticas';
+$string['tour_review_step3_content'] = 'Las estadisticas rapidas muestran el total de documentos, cuantos estan aprobados, rechazados y pendientes. Uselas para monitorear su progreso de un vistazo.';
+$string['tour_review_step4_title'] = 'Guia de Revision';
+$string['tour_review_step4_content'] = 'Lea estas pautas antes de revisar. Le recuerdan descargar documentos, verificar legibilidad, proporcionar razones claras de rechazo, y completar todas las revisiones antes de finalizar.';
+$string['tour_review_step5_title'] = 'Lista de Documentos';
+$string['tour_review_step5_content'] = 'Todos los documentos cargados se listan aqui. Los pendientes tienen borde amarillo, los aprobados verde, y los rechazados rojo. Cada uno muestra tipo, nombre y estado actual.';
+$string['tour_review_step6_title'] = 'Estado del Documento';
+$string['tour_review_step6_content'] = 'El indicador de color muestra el estado de cada documento. Los documentos pendientes requieren su atencion. Despues de validar, vera quien lo reviso y cuando.';
 $string['tour_review_step7_title'] = 'Acciones de Validacion';
-$string['tour_review_step7_content'] = 'Para cada documento, puede Aprobar (si cumple requisitos) o Rechazar (si hay problemas). Al rechazar, debe proporcionar una razon para que el postulante sepa que corregir.';
-$string['tour_review_step8_title'] = 'Acciones Masivas';
-$string['tour_review_step8_content'] = 'Para acelerar el proceso de revision, puede validar todos los documentos pendientes a la vez si todos cumplen los requisitos.';
+$string['tour_review_step7_content'] = 'Para cada documento: Descargue para examinar, haga clic en el check verde para Aprobar, o la X roja para Rechazar. Al rechazar, proporcione una razon clara para que el postulante pueda volver a enviar.';
+$string['tour_review_step8_title'] = 'Consejos de Revision';
+$string['tour_review_step8_content'] = 'Esta barra lateral proporciona recordatorios utiles: descargar documentos, verificar legibilidad, comprobar completitud y autenticar cuando sea posible. Siga estos consejos para revisiones exhaustivas.';
 $string['tour_review_step9_title'] = 'Feliz Revision!';
-$string['tour_review_step9_content'] = 'Recuerde: la validacion cuidadosa de documentos es crucial para la integridad del proceso de seleccion. Tomese su tiempo para verificar cada documento a fondo.';
+$string['tour_review_step9_content'] = 'Cuando todos los documentos esten revisados, aparecera un boton de completar. Recuerde: la validacion cuidadosa es crucial para la integridad del proceso de seleccion. Tomese su tiempo!';
 
 // Tour: Gestion de Vacantes.
 $string['tour_manage_name'] = 'Tour de Gestion de Vacantes';
@@ -2810,3 +2810,29 @@ $string['deadlinewarning_title'] = '¡Fecha límite próxima!';
 $string['applyhelp_text'] = 'Si tiene dudas sobre cómo completar su postulación, inicie el tour guiado o contacte a soporte.';
 $string['restarttour'] = 'Iniciar Tour Guiado';
 $string['documentchecklist'] = 'Lista de Documentos';
+
+// ============================================================================
+// Cadenas para vista de revisión mejorada - 2025-12-09
+// ============================================================================
+$string['reviewsteps_tooltip'] = 'Progreso de revisión: examine cada documento y apruebe o rechace.';
+$string['reviewhelp_text'] = 'Para cada documento, descárguelo y examínelo cuidadosamente. Luego apruebe si cumple los requisitos o rechace con una explicación clara.';
+$string['step_examine'] = 'Examinar';
+$string['step_validate'] = 'Validar';
+$string['step_complete'] = 'Completar';
+$string['reviewguidelines'] = 'Guía de Revisión';
+$string['guideline_review1'] = 'Descargue y abra cada documento para verificar su contenido y autenticidad.';
+$string['guideline_review2'] = 'Verifique que los documentos sean legibles, completos y correspondan al tipo requerido.';
+$string['guideline_review3'] = 'Al rechazar un documento, proporcione una razón clara para que el postulante sepa qué corregir.';
+$string['guideline_review4'] = 'Complete todas las revisiones de documentos antes de marcar la postulación como revisada.';
+$string['quickactions'] = 'Acciones Rápidas';
+$string['approveall_confirm'] = '¿Está seguro de aprobar todos los documentos pendientes? Esta acción no se puede deshacer.';
+$string['documentchecklist_reviewer'] = 'Documentos a Revisar';
+$string['reviewtips'] = 'Consejos de Revisión';
+$string['tip_download'] = 'Descargue cada documento para verificar su contenido';
+$string['tip_legible'] = 'Asegúrese de que los documentos sean claros y legibles';
+$string['tip_complete'] = 'Verifique que toda la información requerida esté presente';
+$string['tip_authentic'] = 'Verifique la autenticidad del documento cuando sea posible';
+$string['needsattention'] = 'Requiere Atención';
+$string['allclear'] = 'Todo en Orden';
+$string['documentsremaining'] = '{$a} documento(s) pendiente(s)';
+$string['reviewcompletetooltip'] = 'Todos los documentos revisados. Haga clic para completar el proceso de revisión.';
