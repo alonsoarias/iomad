@@ -1313,8 +1313,8 @@ foreach ($allprofiles as $code => $profile) {
     // Modality (educational modality).
     $record->modality = $modalityName;
 
-    // Department (text field = program name).
-    $record->department = $program ?: $facultyName;
+    // Department (text field = modality, NOT program).
+    $record->department = $modalityName;
 
     // Build requirements.
     $reqhtml = "<div class=\"vacancy-requirements\">\n";
@@ -1391,20 +1391,9 @@ foreach ($allprofiles as $code => $profile) {
     $record->opendate = $opendate;
     $record->closedate = $closedate;
 
-    // Number of positions - varies by contract type and location.
-    // Ocasional TC typically 1 per location, Cátedra can have multiple.
-    if ($isOcasional) {
-        $record->positions = 1; // Tiempo completo: 1 posición por vacante.
-    } else {
-        // Cátedra: puede haber múltiples posiciones según demanda.
-        // Sedes principales (Pamplona, Cúcuta) tienen más demanda.
-        $highdemandlocations = ['PAMPLONA', 'CUCUTA', 'OCANA'];
-        if (in_array($location, $highdemandlocations)) {
-            $record->positions = rand(2, 4); // 2-4 posiciones en sedes grandes.
-        } else {
-            $record->positions = rand(1, 2); // 1-2 en centros tutoriales.
-        }
-    }
+    // Number of positions - always 1 per vacancy (each profile = 1 position).
+    // Multiple profiles don't mean multiple positions per vacancy.
+    $record->positions = 1;
 
     // Extemporaneous fields - explicitly set (not extemporaneous by default).
     $record->isextemporaneous = 0;
