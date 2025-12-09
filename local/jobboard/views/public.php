@@ -256,19 +256,43 @@ echo html_writer::end_div();
 // ============================================================================
 // FILTER SECTION (Using ui_helper::filter_form pattern)
 // ============================================================================
-$locationOptions = ['' => get_string('alllocations', 'local_jobboard')];
+// Build location options with defensive string handling.
+$allLocationsStr = get_string('alllocations', 'local_jobboard');
+if (empty($allLocationsStr)) {
+    $allLocationsStr = 'Todas las ubicaciones'; // Fallback.
+}
+$locationOptions = ['' => $allLocationsStr];
 foreach ($locations as $loc) {
-    $locationOptions[$loc] = $loc;
+    if (!empty($loc)) {
+        $locationOptions[$loc] = $loc;
+    }
 }
 
-$modalityOptions = ['' => get_string('allmodalities', 'local_jobboard')];
+// Build modality options with defensive string handling.
+$allModalitiesStr = get_string('allmodalities', 'local_jobboard');
+if (empty($allModalitiesStr)) {
+    $allModalitiesStr = 'Todas las modalidades'; // Fallback.
+}
+$modalityOptions = ['' => $allModalitiesStr];
 foreach ($modalities as $mod) {
-    $modalityOptions[$mod] = $mod;
+    if (!empty($mod)) {
+        $modalityOptions[$mod] = $mod;
+    }
 }
 
-$contractOptions = ['' => get_string('allcontracttypes', 'local_jobboard')] + $contracttypes;
+// Build contract type options.
+$allContractStr = get_string('allcontracttypes', 'local_jobboard');
+if (empty($allContractStr)) {
+    $allContractStr = 'Todos los tipos'; // Fallback.
+}
+$contractOptions = ['' => $allContractStr] + $contracttypes;
 
-$convocatoriaOptions = [0 => get_string('allconvocatorias', 'local_jobboard')];
+// Build convocatoria options.
+$allConvocatoriasStr = get_string('allconvocatorias', 'local_jobboard');
+if (empty($allConvocatoriasStr)) {
+    $allConvocatoriasStr = 'Todas las convocatorias'; // Fallback.
+}
+$convocatoriaOptions = [0 => $allConvocatoriasStr];
 foreach ($convocatorias as $conv) {
     $convocatoriaOptions[$conv->id] = format_string($conv->code . ' - ' . $conv->name);
 }

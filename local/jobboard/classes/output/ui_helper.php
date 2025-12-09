@@ -357,8 +357,16 @@ class ui_helper {
                     $html .= '-moz-appearance: menulist !important; text-indent: 0.01px !important;">';
                     foreach ($filter['options'] as $optVal => $optLabel) {
                         $selected = ((string)$optVal === (string)$value) ? ' selected="selected"' : '';
-                        // Use value as label if label is empty.
-                        $displayLabel = ($optLabel !== '' && $optLabel !== null) ? $optLabel : $optVal;
+                        // Determine display label with multiple fallbacks.
+                        $displayLabel = '';
+                        if (is_string($optLabel) && trim($optLabel) !== '') {
+                            $displayLabel = $optLabel;
+                        } elseif (is_string($optVal) && trim($optVal) !== '') {
+                            $displayLabel = $optVal;
+                        } else {
+                            // Fallback: use filter name + "All" as placeholder.
+                            $displayLabel = get_string('all') . '...';
+                        }
                         $html .= '<option value="' . s($optVal) . '"' . $selected . ' style="color: #495057 !important; background-color: #fff !important;">';
                         $html .= s($displayLabel) . '</option>';
                     }
