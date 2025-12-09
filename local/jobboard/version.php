@@ -28,8 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025120870;  // v2.0.52: Restore direct HTML filter selects for compatibility.
+$plugin->version = 2025120871;  // v2.0.53: Update CLI import to use faculty as company and filter child departments.
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '2.0.52';
+$plugin->release = '2.0.53';

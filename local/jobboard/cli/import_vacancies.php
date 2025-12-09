@@ -90,10 +90,18 @@ JSON format expected:
       "courses": ["SISTEMATIZACION DE EXPERIENCIAS", "SUJETO Y FAMILIA"],
       "faculty": "FCAS",
       "modality": "PRESENCIAL",
-      "location": "PAMPLONA"
+      "location": "PAMPLONA",
+      "company_shortname": "FCAS",
+      "department_name": "Presencial"
     }
   ]
 }
+
+Notes:
+  - faculty: Used as company_shortname if company_shortname is not provided
+  - modality: Mapped to department name (PRESENCIAL->Presencial, A DISTANCIA->A Distancia, etc.)
+  - department_name: Explicit department name (overrides modality mapping)
+  - Only child departments (parent > 0) are used, root departments are excluded
 
 EOT;
 
@@ -209,6 +217,7 @@ function get_company_id($shortname) {
 
 /**
  * Get IOMAD department by name within a company.
+ * Only returns child departments (parent > 0), excluding the root department.
  */
 function get_department_id($companyid, $name) {
     global $DB, $departmentmap;
@@ -218,7 +227,35 @@ function get_department_id($companyid, $name) {
         return $departmentmap[$key];
     }
 
-    $dept = $DB->get_record('department', ['company' => $companyid, 'name' => $name]);
+    // Only get child departments (parent > 0) - exclude root department.
+    $sql = "SELECT id, name FROM {department}
+            WHERE company = :company AND name = :name AND parent > 0";
+    $dept = $DB->get_record_sql($sql, ['company' => $companyid, 'name' => $name]);
+    if ($dept) {
+        $departmentmap[$key] = $dept->id;
+        return $dept->id;
+    }
+
+    return null;
+}
+
+/**
+ * Get first child department for a company if no specific department is found.
+ * This is useful as a fallback when modality doesn't match any department name.
+ */
+function get_first_child_department($companyid) {
+    global $DB, $departmentmap;
+
+    $key = "{$companyid}_first";
+    if (isset($departmentmap[$key])) {
+        return $departmentmap[$key];
+    }
+
+    // Get first child department (parent > 0).
+    $sql = "SELECT id, name FROM {department}
+            WHERE company = :company AND parent > 0
+            ORDER BY name ASC LIMIT 1";
+    $dept = $DB->get_record_sql($sql, ['company' => $companyid]);
     if ($dept) {
         $departmentmap[$key] = $dept->id;
         return $dept->id;
@@ -285,6 +322,9 @@ foreach ($vacancies as $index => $vdata) {
     // Location.
     $record->location = trim($vdata['location'] ?? 'PAMPLONA');
 
+    // Modality.
+    $record->modality = trim($vdata['modality'] ?? 'PRESENCIAL');
+
     // Department (text field) = program.
     $record->department = $program;
 
@@ -295,29 +335,47 @@ foreach ($vacancies as $index => $vdata) {
     $record->desirable = '';
 
     // IOMAD company ID.
+    // Priority: CLI option > company_shortname field > faculty field.
     $companyid = null;
     if (!empty($options['company'])) {
         $companyid = (int) $options['company'];
     } else if (!empty($vdata['company_shortname'])) {
         $companyid = get_company_id($vdata['company_shortname']);
+    } else if (!empty($vdata['faculty'])) {
+        // Use faculty as company shortname (e.g., FCAS, FII).
+        $companyid = get_company_id(strtoupper(trim($vdata['faculty'])));
     }
     $record->companyid = $companyid;
 
-    // IOMAD department ID (based on modality).
+    // IOMAD department ID (child department only, based on modality).
+    // Priority: CLI option > department_name field > modality mapping > first child.
     $departmentid = null;
     if (!empty($options['department'])) {
         $departmentid = (int) $options['department'];
-    } else if ($companyid && !empty($vdata['modality'])) {
-        $modality = strtoupper(trim($vdata['modality']));
-        $deptname = match($modality) {
-            'PRESENCIAL' => 'Presencial',
-            'A DISTANCIA', 'DISTANCIA' => 'A Distancia',
-            'VIRTUAL' => 'Virtual',
-            'HIBRIDA', 'HÍBRIDA' => 'Híbrida',
-            default => null,
-        };
-        if ($deptname) {
-            $departmentid = get_department_id($companyid, $deptname);
+    } else if ($companyid) {
+        // Try department_name field first.
+        if (!empty($vdata['department_name'])) {
+            $departmentid = get_department_id($companyid, trim($vdata['department_name']));
+        }
+
+        // Try modality mapping if department not found.
+        if (!$departmentid && !empty($vdata['modality'])) {
+            $modality = strtoupper(trim($vdata['modality']));
+            $deptname = match($modality) {
+                'PRESENCIAL' => 'Presencial',
+                'A DISTANCIA', 'DISTANCIA' => 'A Distancia',
+                'VIRTUAL' => 'Virtual',
+                'HIBRIDA', 'HÍBRIDA' => 'Híbrida',
+                default => null,
+            };
+            if ($deptname) {
+                $departmentid = get_department_id($companyid, $deptname);
+            }
+        }
+
+        // Fallback: use first child department if no specific match.
+        if (!$departmentid) {
+            $departmentid = get_first_child_department($companyid);
         }
     }
     $record->departmentid = $departmentid;
@@ -340,9 +398,14 @@ foreach ($vacancies as $index => $vdata) {
     $record->createdby = $adminuser->id;
     $record->timecreated = $now;
 
+    // Build info string for verbose output.
+    $companyinfo = $companyid ? "company=$companyid" : "no company";
+    $deptinfo = $departmentid ? "dept=$departmentid" : "no dept";
+    $info = "[$companyinfo, $deptinfo, {$record->modality}]";
+
     // Dry run?
     if ($options['dryrun']) {
-        echo "[$num/$totalcount] DRY RUN: $code - {$record->title}\n";
+        echo "[$num/$totalcount] DRY RUN: $code $info\n";
         if ($existing) {
             $updated++;
         } else {
@@ -358,11 +421,11 @@ foreach ($vacancies as $index => $vdata) {
             $record->modifiedby = $adminuser->id;
             $record->timemodified = $now;
             $DB->update_record('local_jobboard_vacancy', $record);
-            echo "[$num/$totalcount] UPDATED: $code\n";
+            echo "[$num/$totalcount] UPDATED: $code $info\n";
             $updated++;
         } else {
             $id = $DB->insert_record('local_jobboard_vacancy', $record);
-            echo "[$num/$totalcount] CREATED: $code (ID: $id)\n";
+            echo "[$num/$totalcount] CREATED: $code (ID: $id) $info\n";
             $created++;
         }
     } catch (Exception $e) {
