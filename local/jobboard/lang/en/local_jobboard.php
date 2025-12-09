@@ -2164,7 +2164,13 @@ $string['viewmyreviews'] = 'View my reviews';
 // Additional help strings for tooltips
 // ============================================================================
 
-// Signup form help strings.
+// Signup form help strings - titles.
+$string['signup_email'] = 'Email Address';
+$string['signup_phone'] = 'Phone Number';
+$string['companyid'] = 'Company Selection';
+$string['departmentid'] = 'Department Selection';
+
+// Signup form help strings - content.
 $string['signup_email_help'] = 'Enter a valid email address. It will be used to send your account confirmation and important notifications about the selection process.';
 $string['signup_doctype_help'] = 'Select the type of identification document you will use for registration. This document must match the identification number you enter.';
 $string['signup_birthdate_help'] = 'Select your date of birth. You must be at least 18 years old to apply for vacancies.';

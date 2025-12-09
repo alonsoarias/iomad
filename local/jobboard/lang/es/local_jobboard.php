@@ -2531,7 +2531,13 @@ $string['viewmyreviews'] = 'Ver mis revisiones';
 // Cadenas de ayuda adicionales para tooltips (Help strings)
 // ============================================================================
 
-// Signup form help strings.
+// Signup form help strings - títulos.
+$string['signup_email'] = 'Correo Electrónico';
+$string['signup_phone'] = 'Número de Teléfono';
+$string['companyid'] = 'Selección de Empresa';
+$string['departmentid'] = 'Selección de Departamento';
+
+// Signup form help strings - contenido.
 $string['signup_email_help'] = 'Ingrese una dirección de correo electrónico válida. Se utilizará para enviar la confirmación de su cuenta y notificaciones importantes sobre el proceso de selección.';
 $string['signup_doctype_help'] = 'Seleccione el tipo de documento de identidad que utilizará para el registro. Este documento debe coincidir con el número de identificación que ingrese.';
 $string['signup_birthdate_help'] = 'Seleccione su fecha de nacimiento. Debe ser mayor de 18 años para postularse a las vacantes.';
