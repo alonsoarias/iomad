@@ -61,6 +61,19 @@ if (application::user_has_applied($USER->id, $vacancyid)) {
     );
 }
 
+// Check if user has completed their applicant profile.
+// Only applicants need to have complete profiles - this doesn't affect regular users/students.
+$applicantprofile = $DB->get_record('local_jobboard_applicant_profile', ['userid' => $USER->id]);
+if (!$applicantprofile || empty($applicantprofile->profile_complete)) {
+    // Redirect to profile update page with vacancy context.
+    redirect(
+        new moodle_url('/local/jobboard/updateprofile.php', ['vacancyid' => $vacancyid]),
+        get_string('completeprofile_required', 'local_jobboard'),
+        null,
+        \core\output\notification::NOTIFY_WARNING
+    );
+}
+
 // Check for ISER exemption.
 $isexemption = false;
 $exemptioninfo = null;
@@ -70,8 +83,8 @@ if ($exemption) {
     $exemptioninfo = $exemption;
 }
 
-// Get user's gender from preference (set during signup/profile update).
-$usergender = get_user_preference('local_jobboard_gender', '', $USER->id);
+// Get user's gender from applicant profile.
+$usergender = $applicantprofile->gender ?? '';
 
 // Get required document types.
 $requireddocs = exemption::get_required_doctypes($USER->id, true);

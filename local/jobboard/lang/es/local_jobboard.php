@@ -2401,6 +2401,7 @@ $string['updateprofile_success'] = 'Su perfil ha sido actualizado exitosamente.'
 $string['updateprofile_company_required'] = 'Por favor seleccione una empresa/departamento para continuar con su postulación.';
 $string['updateprofile_continue_apply'] = 'Continuar a la Postulación';
 $string['updateprofile_submit'] = 'Actualizar Perfil y Continuar';
+$string['completeprofile_required'] = 'Debe completar la información de su perfil antes de postularse a esta vacante. Por favor complete los campos requeridos a continuación.';
 
 // Tour: Convocatorias.
 $string['tour_convocatorias_name'] = 'Tour de Gestion de Convocatorias';

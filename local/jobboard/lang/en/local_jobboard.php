@@ -2039,6 +2039,7 @@ $string['updateprofile_success'] = 'Your profile has been updated successfully.'
 $string['updateprofile_company_required'] = 'Please select a company/department to continue with your application.';
 $string['updateprofile_continue_apply'] = 'Continue to Application';
 $string['updateprofile_submit'] = 'Update Profile and Continue';
+$string['completeprofile_required'] = 'You must complete your profile information before applying for this vacancy. Please fill in the required fields below.';
 
 // Tour: Convocatorias.
 $string['tour_convocatorias_name'] = 'Calls/Campaigns Management Tour';
