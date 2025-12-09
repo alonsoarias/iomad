@@ -634,20 +634,45 @@ function local_jobboard_render_public_vacancy_detail($vacancy, $context, $islogg
         );
     }
 
-    // Quick meta.
+    // Quick meta badges - Using IOMAD company/department names.
     echo html_writer::start_div('d-flex flex-wrap gap-3 mb-3');
-    if (!empty($vacancy->location)) {
+
+    // Location badge (Company name from IOMAD).
+    if (!empty($vacancy->companyid)) {
+        $companyName = local_jobboard_get_company_name($vacancy->companyid);
+        if (!empty($companyName)) {
+            echo html_writer::tag('span',
+                '<i class="fa fa-map-marker-alt mr-1"></i> ' . s($companyName),
+                ['class' => 'badge badge-light text-dark p-2']
+            );
+        }
+    } elseif (!empty($vacancy->location)) {
+        // Fallback to location field if no IOMAD company.
         echo html_writer::tag('span',
             '<i class="fa fa-map-marker-alt mr-1"></i> ' . s($vacancy->location),
             ['class' => 'badge badge-light text-dark p-2']
         );
     }
-    if (!empty($vacancy->modality)) {
+
+    // Modality badge (Department name from IOMAD).
+    if (!empty($vacancy->departmentid)) {
+        $departmentName = local_jobboard_get_department_name($vacancy->departmentid);
+        if (!empty($departmentName)) {
+            echo html_writer::tag('span',
+                '<i class="fa fa-laptop-house mr-1"></i> ' . s($departmentName),
+                ['class' => 'badge badge-light text-dark p-2']
+            );
+        }
+    } elseif (!empty($vacancy->modality)) {
+        // Fallback to modality field if no IOMAD department.
+        $modalities = local_jobboard_get_modalities();
+        $modalityLabel = $modalities[$vacancy->modality] ?? $vacancy->modality;
         echo html_writer::tag('span',
-            '<i class="fa fa-laptop-house mr-1"></i> ' . s($vacancy->modality),
+            '<i class="fa fa-laptop-house mr-1"></i> ' . s($modalityLabel),
             ['class' => 'badge badge-light text-dark p-2']
         );
     }
+
     if (!empty($vacancy->contracttype) && isset($contracttypes[$vacancy->contracttype])) {
         echo html_writer::tag('span',
             '<i class="fa fa-briefcase mr-1"></i> ' . $contracttypes[$vacancy->contracttype],
@@ -794,6 +819,30 @@ function local_jobboard_render_public_vacancy_detail($vacancy, $context, $islogg
 
     echo html_writer::start_tag('dl', ['class' => 'row mb-0']);
 
+    // Location (Company name from IOMAD).
+    if (!empty($vacancy->companyid)) {
+        $companyName = local_jobboard_get_company_name($vacancy->companyid);
+        if (!empty($companyName)) {
+            echo html_writer::tag('dt', get_string('location', 'local_jobboard'), ['class' => 'col-sm-5']);
+            echo html_writer::tag('dd',
+                '<i class="fa fa-map-marker-alt text-primary mr-1"></i> ' . s($companyName),
+                ['class' => 'col-sm-7']
+            );
+        }
+    }
+
+    // Modality (Department name from IOMAD).
+    if (!empty($vacancy->departmentid)) {
+        $departmentName = local_jobboard_get_department_name($vacancy->departmentid);
+        if (!empty($departmentName)) {
+            echo html_writer::tag('dt', get_string('modality', 'local_jobboard'), ['class' => 'col-sm-5']);
+            echo html_writer::tag('dd',
+                '<i class="fa fa-laptop-house text-info mr-1"></i> ' . s($departmentName),
+                ['class' => 'col-sm-7']
+            );
+        }
+    }
+
     if (!empty($vacancy->duration)) {
         echo html_writer::tag('dt', get_string('duration', 'local_jobboard'), ['class' => 'col-sm-5']);
         echo html_writer::tag('dd', s($vacancy->duration), ['class' => 'col-sm-7']);
@@ -802,11 +851,6 @@ function local_jobboard_render_public_vacancy_detail($vacancy, $context, $islogg
     if (!empty($vacancy->salary)) {
         echo html_writer::tag('dt', get_string('salary', 'local_jobboard'), ['class' => 'col-sm-5']);
         echo html_writer::tag('dd', s($vacancy->salary), ['class' => 'col-sm-7']);
-    }
-
-    if (!empty($vacancy->department)) {
-        echo html_writer::tag('dt', get_string('department', 'local_jobboard'), ['class' => 'col-sm-5']);
-        echo html_writer::tag('dd', s($vacancy->department), ['class' => 'col-sm-7']);
     }
 
     echo html_writer::tag('dt', get_string('opendate', 'local_jobboard'), ['class' => 'col-sm-5']);

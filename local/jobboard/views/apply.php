@@ -255,16 +255,34 @@ echo '<code class="bg-light p-1">' . format_string($vacancy->code) . '</code></p
 echo '<p class="mb-2"><strong>' . get_string('title', 'local_jobboard') . ':</strong><br>';
 echo '<small>' . format_string($vacancy->title) . '</small></p>';
 
-if (!empty($vacancy->location)) {
+// Location from IOMAD company.
+$companyName = $vacancy->get_company_name();
+if (!empty($companyName)) {
+    echo '<p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-2"></i>';
+    echo '<strong>' . get_string('location', 'local_jobboard') . ':</strong> ';
+    echo format_string($companyName) . '</p>';
+} elseif (!empty($vacancy->location)) {
+    // Fallback to location field.
     echo '<p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-2"></i>';
     echo format_string($vacancy->location) . '</p>';
 }
 
-$vacancyrecord = $vacancy->get_record();
-if (!empty($vacancyrecord->modality)) {
-    $modalities = \local_jobboard_get_modalities();
-    $modalityName = $modalities[$vacancyrecord->modality] ?? $vacancyrecord->modality;
-    echo '<p class="mb-2"><i class="fa fa-graduation-cap text-primary mr-2"></i>' . $modalityName . '</p>';
+// Modality from IOMAD department.
+$departmentName = $vacancy->get_department_name();
+if (!empty($departmentName)) {
+    echo '<p class="mb-2"><i class="fa fa-laptop-house text-info mr-2"></i>';
+    echo '<strong>' . get_string('modality', 'local_jobboard') . ':</strong> ';
+    echo format_string($departmentName) . '</p>';
+} else {
+    $vacancyrecord = $vacancy->get_record();
+    if (!empty($vacancyrecord->modality)) {
+        // Fallback to modality field.
+        $modalities = \local_jobboard_get_modalities();
+        $modalityName = $modalities[$vacancyrecord->modality] ?? $vacancyrecord->modality;
+        echo '<p class="mb-2"><i class="fa fa-laptop-house text-info mr-2"></i>';
+        echo '<strong>' . get_string('modality', 'local_jobboard') . ':</strong> ';
+        echo $modalityName . '</p>';
+    }
 }
 
 echo '<hr>';
@@ -303,15 +321,15 @@ echo '</div>';
 
 echo '<hr class="my-3">';
 
-// Action buttons.
-echo '<a href="#" class="btn btn-outline-secondary btn-sm btn-block mb-2" data-action="tool_usertours/resetpagetour">';
-echo '<i class="fa fa-play-circle mr-1"></i>' . get_string('restarttour', 'local_jobboard');
+// Contact/Support link.
+echo '<a href="mailto:' . get_config('local_jobboard', 'support_email') . '" class="btn btn-outline-primary btn-sm btn-block mb-2">';
+echo '<i class="fa fa-envelope mr-1"></i>' . get_string('contactsupport', 'local_jobboard');
 echo '</a>';
 
-// FAQ link.
-echo '<a href="' . (new moodle_url('/local/jobboard/index.php', ['view' => 'faq']))->out() . '" ';
-echo 'class="btn btn-outline-info btn-sm btn-block" target="_blank">';
-echo '<i class="fa fa-book mr-1"></i>' . get_string('viewfaq', 'local_jobboard');
+// Back to vacancy details.
+echo '<a href="' . (new moodle_url('/local/jobboard/index.php', ['view' => 'public', 'id' => $vacancyid]))->out() . '" ';
+echo 'class="btn btn-outline-secondary btn-sm btn-block">';
+echo '<i class="fa fa-info-circle mr-1"></i>' . get_string('viewvacancydetails', 'local_jobboard');
 echo '</a>';
 
 echo '</div>';

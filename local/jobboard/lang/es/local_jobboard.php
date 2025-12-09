@@ -3002,3 +3002,5 @@ $string['tip_saveoften'] = 'Complete todos los campos requeridos antes de enviar
 $string['tip_checkdocs'] = 'Asegúrese de que los documentos sean claros y legibles';
 $string['tip_deadline'] = 'Envíe antes de que expire el plazo';
 $string['viewfaq'] = 'Preguntas Frecuentes';
+$string['contactsupport'] = 'Contactar Soporte';
+$string['viewvacancydetails'] = 'Ver detalles de la vacante';

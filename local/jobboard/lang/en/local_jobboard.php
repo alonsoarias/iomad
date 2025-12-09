@@ -2611,3 +2611,5 @@ $string['tip_saveoften'] = 'Complete all required fields before submitting';
 $string['tip_checkdocs'] = 'Ensure documents are clear and legible';
 $string['tip_deadline'] = 'Submit before the deadline expires';
 $string['viewfaq'] = 'Frequently Asked Questions';
+$string['contactsupport'] = 'Contact Support';
+$string['viewvacancydetails'] = 'View vacancy details';
