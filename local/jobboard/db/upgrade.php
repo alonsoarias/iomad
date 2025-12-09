@@ -1031,5 +1031,21 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025120860, 'local', 'jobboard');
     }
 
+    // Version 2025120976: Change salary field from char(100) to TEXT for detailed Decreto 598/2025 info.
+    if ($oldversion < 2025120976) {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        $table = new xmldb_table('local_jobboard_vacancy');
+
+        // Change salary field type from char(100) to text.
+        $field = new xmldb_field('salary', XMLDB_TYPE_TEXT, null, null, null, null, null, 'duration');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->change_field_type($table, $field);
+        }
+
+        upgrade_plugin_savepoint(true, 2025120976, 'local', 'jobboard');
+    }
+
     return true;
 }
