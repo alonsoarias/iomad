@@ -39,9 +39,13 @@ $perpage = optional_param('perpage', 25, PARAM_INT);
 $search = optional_param('search', '', PARAM_TEXT);
 $status = optional_param('status', '', PARAM_ALPHA);
 $companyid = optional_param('companyid', 0, PARAM_INT);
+$departmentid = optional_param('departmentid', 0, PARAM_INT);
 $convocatoriaid = optional_param('convocatoriaid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
 $vacancyid = optional_param('id', 0, PARAM_INT);
+
+// Check if IOMAD is installed.
+$isiomad = local_jobboard_is_iomad_installed();
 
 // Page setup.
 $PAGE->set_pagelayout('standard');
@@ -211,6 +215,10 @@ if ($companyid) {
     $filters['companyid'] = $companyid;
 }
 
+if ($departmentid) {
+    $filters['departmentid'] = $departmentid;
+}
+
 if ($convocatoriaid) {
     $filters['convocatoriaid'] = $convocatoriaid;
 }
@@ -354,13 +362,25 @@ $filterDefinitions = [
     ],
 ];
 
-// Company filter for Iomad.
-if (local_jobboard_is_iomad_installed() && has_capability('local/jobboard:viewallvacancies', $context)) {
+// Company and Department filters for IOMAD.
+if ($isiomad && has_capability('local/jobboard:viewallvacancies', $context)) {
     $filterDefinitions[] = [
         'type' => 'select',
         'name' => 'companyid',
         'options' => [0 => get_string('allcompanies', 'local_jobboard')] + local_jobboard_get_companies(),
-        'col' => 'col-md-3',
+        'col' => 'col-md-2',
+    ];
+
+    // Department filter - populated via AJAX when company is selected.
+    $departmentOptions = [0 => get_string('alldepartments', 'local_jobboard')];
+    if ($companyid) {
+        $departmentOptions += local_jobboard_get_departments($companyid);
+    }
+    $filterDefinitions[] = [
+        'type' => 'select',
+        'name' => 'departmentid',
+        'options' => $departmentOptions,
+        'col' => 'col-md-2',
     ];
 }
 
@@ -372,9 +392,20 @@ if ($convocatoriaid) {
 echo ui_helper::filter_form(
     (new moodle_url('/local/jobboard/index.php'))->out(false),
     $filterDefinitions,
-    ['search' => $search, 'status' => $status, 'companyid' => $companyid],
+    ['search' => $search, 'status' => $status, 'companyid' => $companyid, 'departmentid' => $departmentid],
     $hiddenFields
 );
+
+// Add JavaScript for AJAX department loading (IOMAD).
+if ($isiomad && has_capability('local/jobboard:viewallvacancies', $context)) {
+    $allDepartmentsLabel = get_string('alldepartments', 'local_jobboard');
+    $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+        'companySelector' => '#companyid',
+        'departmentSelector' => '#departmentid',
+        'preselect' => $departmentid,
+        'allLabel' => $allDepartmentsLabel,
+    ]]);
+}
 
 // ============================================================================
 // VACANCIES TABLE WITH BULK ACTIONS
@@ -599,6 +630,7 @@ $baseurl = new moodle_url('/local/jobboard/index.php', [
     'search' => $search,
     'status' => $status,
     'companyid' => $companyid,
+    'departmentid' => $departmentid,
     'convocatoriaid' => $convocatoriaid,
 ]);
 echo ui_helper::pagination_bar($total, $page, $perpage, $baseurl);

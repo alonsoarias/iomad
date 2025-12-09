@@ -925,6 +925,12 @@ class vacancy {
             $params['companyid'] = $filters['companyid'];
         }
 
+        // Filter by department.
+        if (!empty($filters['departmentid'])) {
+            $where[] = 'departmentid = :departmentid';
+            $params['departmentid'] = $filters['departmentid'];
+        }
+
         // Filter by convocatoria.
         if (!empty($filters['convocatoriaid'])) {
             $where[] = 'convocatoriaid = :convocatoriaid';
