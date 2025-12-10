@@ -49,7 +49,7 @@ require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
 // Main routing parameters.
-$view = optional_param('view', 'dashboard', PARAM_ALPHA);
+$view = optional_param('view', 'dashboard', PARAM_ALPHANUMEXT);
 $action = optional_param('action', '', PARAM_ALPHA);
 $id = optional_param('id', 0, PARAM_INT);
 
