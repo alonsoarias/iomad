@@ -63,6 +63,22 @@ $isloggedin = isloggedin() && !isguestuser();
 $canviewinternal = $isloggedin && has_capability('local/jobboard:viewinternalvacancies', $context);
 $canapply = $isloggedin && has_capability('local/jobboard:apply', $context);
 
+// Additional capabilities for role-based quick access.
+$caps = [];
+if ($isloggedin) {
+    $caps = [
+        'configure' => has_capability('local/jobboard:configure', $context),
+        'createvacancy' => has_capability('local/jobboard:createvacancy', $context),
+        'manageconvocatorias' => has_capability('local/jobboard:manageconvocatorias', $context),
+        'reviewdocuments' => has_capability('local/jobboard:reviewdocuments', $context),
+        'viewallapplications' => has_capability('local/jobboard:viewallapplications', $context),
+        'viewreports' => has_capability('local/jobboard:viewreports', $context),
+        'apply' => $canapply,
+    ];
+}
+$isManager = !empty($caps['configure']) || !empty($caps['createvacancy']) || !empty($caps['manageconvocatorias']);
+$isReviewer = !empty($caps['reviewdocuments']);
+
 // Set page title from config or default.
 $pagetitle = get_config('local_jobboard', 'public_page_title');
 if (empty($pagetitle)) {
@@ -577,14 +593,46 @@ echo html_writer::end_div();
 echo html_writer::tag('i', '', ['class' => 'fa fa-briefcase fa-3x opacity-25']);
 echo html_writer::end_div();
 
-// Quick access for logged-in users.
+// Quick access for logged-in users based on their role.
 if ($isloggedin) {
     echo html_writer::start_div('mt-3 pt-3 border-top border-light');
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
-        '<i class="fa fa-clipboard-list mr-2"></i>' . get_string('viewmyapplications', 'local_jobboard'),
-        ['class' => 'btn btn-light btn-sm']
-    );
+
+    // Dashboard access for managers/admins.
+    if ($isManager) {
+        echo html_writer::link(
+            new moodle_url('/local/jobboard/index.php', ['view' => 'dashboard']),
+            '<i class="fa fa-tachometer-alt mr-2"></i>' . get_string('dashboard', 'local_jobboard'),
+            ['class' => 'btn btn-light btn-sm mr-2']
+        );
+    }
+
+    // My reviews for reviewers.
+    if ($isReviewer) {
+        echo html_writer::link(
+            new moodle_url('/local/jobboard/index.php', ['view' => 'myreviews']),
+            '<i class="fa fa-clipboard-check mr-2"></i>' . get_string('myreviews', 'local_jobboard'),
+            ['class' => 'btn btn-light btn-sm mr-2']
+        );
+    }
+
+    // My applications for applicants.
+    if (!empty($caps['apply'])) {
+        echo html_writer::link(
+            new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
+            '<i class="fa fa-folder-open mr-2"></i>' . get_string('myapplications', 'local_jobboard'),
+            ['class' => 'btn btn-light btn-sm mr-2']
+        );
+    }
+
+    // Reports for those with access.
+    if (!empty($caps['viewreports'])) {
+        echo html_writer::link(
+            new moodle_url('/local/jobboard/index.php', ['view' => 'reports']),
+            '<i class="fa fa-chart-bar mr-2"></i>' . get_string('reports', 'local_jobboard'),
+            ['class' => 'btn btn-outline-light btn-sm']
+        );
+    }
+
     echo html_writer::end_div();
 }
 
@@ -741,6 +789,85 @@ if (empty($convocatorias)) {
     }
 
     echo html_writer::end_div(); // row
+}
+
+// ============================================================================
+// SHARE THIS PAGE (Social Networks)
+// ============================================================================
+if (!empty($convocatorias)) {
+    $shareUrl = (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false);
+    $shareTitle = rawurlencode($pagetitle);
+    $shareText = rawurlencode($pagetitle . ' - ' . get_string('openvacancies', 'local_jobboard'));
+
+    echo html_writer::start_div('card shadow-sm mt-4 mb-4');
+    echo html_writer::start_div('card-body');
+    echo html_writer::start_div('d-flex flex-wrap justify-content-between align-items-center');
+
+    echo html_writer::start_div('mb-2 mb-md-0');
+    echo html_writer::tag('h6',
+        '<i class="fa fa-share-alt text-primary mr-2"></i>' . get_string('sharepage', 'local_jobboard'),
+        ['class' => 'mb-0']
+    );
+    echo html_writer::end_div();
+
+    echo html_writer::start_div();
+
+    // Facebook.
+    $fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareUrl);
+    echo html_writer::link($fbUrl,
+        '<i class="fab fa-facebook-f"></i>',
+        [
+            'class' => 'btn btn-outline-primary rounded-circle mx-1',
+            'style' => 'width: 40px; height: 40px; line-height: 28px;',
+            'target' => '_blank',
+            'title' => get_string('shareonfacebook', 'local_jobboard'),
+            'rel' => 'noopener noreferrer',
+        ]
+    );
+
+    // Twitter/X.
+    $twUrl = 'https://twitter.com/intent/tweet?text=' . $shareText . '&url=' . rawurlencode($shareUrl);
+    echo html_writer::link($twUrl,
+        '<i class="fab fa-twitter"></i>',
+        [
+            'class' => 'btn btn-outline-info rounded-circle mx-1',
+            'style' => 'width: 40px; height: 40px; line-height: 28px;',
+            'target' => '_blank',
+            'title' => get_string('shareontwitter', 'local_jobboard'),
+            'rel' => 'noopener noreferrer',
+        ]
+    );
+
+    // LinkedIn.
+    $liUrl = 'https://www.linkedin.com/shareArticle?mini=true&url=' . rawurlencode($shareUrl) . '&title=' . $shareTitle;
+    echo html_writer::link($liUrl,
+        '<i class="fab fa-linkedin-in"></i>',
+        [
+            'class' => 'btn btn-outline-primary rounded-circle mx-1',
+            'style' => 'width: 40px; height: 40px; line-height: 28px;',
+            'target' => '_blank',
+            'title' => get_string('shareonlinkedin', 'local_jobboard'),
+            'rel' => 'noopener noreferrer',
+        ]
+    );
+
+    // WhatsApp.
+    $waUrl = 'https://wa.me/?text=' . $shareText . '%20' . rawurlencode($shareUrl);
+    echo html_writer::link($waUrl,
+        '<i class="fab fa-whatsapp"></i>',
+        [
+            'class' => 'btn btn-outline-success rounded-circle mx-1',
+            'style' => 'width: 40px; height: 40px; line-height: 28px;',
+            'target' => '_blank',
+            'title' => 'WhatsApp',
+            'rel' => 'noopener noreferrer',
+        ]
+    );
+
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+    echo html_writer::end_div();
 }
 
 // ============================================================================

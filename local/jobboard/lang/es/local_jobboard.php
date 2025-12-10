@@ -3334,3 +3334,6 @@ $string['committees'] = 'Comités de selección';
 $string['committees_desc'] = 'Gestionar miembros del comité de selección';
 $string['committees_access_hint'] = 'Acceso desde gestión de vacantes';
 $string['apitokens_desc'] = 'Gestionar tokens de acceso API para integraciones externas';
+
+// Vista pública - Accesos rápidos por rol.
+$string['sharepage'] = 'Compartir esta página';

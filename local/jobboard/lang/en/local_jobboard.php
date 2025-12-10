@@ -3149,3 +3149,6 @@ $string['committees'] = 'Selection Committees';
 $string['committees_desc'] = 'Manage selection committee members';
 $string['committees_access_hint'] = 'Access from vacancy management';
 $string['apitokens_desc'] = 'Manage API access tokens for external integrations';
+
+// Public view - Role-based quick access.
+$string['sharepage'] = 'Share this page';
