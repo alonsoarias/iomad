@@ -267,14 +267,17 @@ $string['importedapplications'] = 'Applications: {$a->inserted} inserted, {$a->s
 $string['importeddocuments'] = 'Documents: {$a->inserted} inserted, {$a->skipped} skipped';
 $string['importedfiles'] = 'Files: {$a->inserted} inserted, {$a->skipped} skipped';
 $string['importingfrom'] = 'Importing from {$a->site} (v{$a->version}) exported on {$a->date}';
-$string['fullexport_info'] = 'Select which data to include in the export. The ZIP file can be imported into another Moodle instance with JobBoard installed.';
+$string['fullexport'] = 'Complete Export';
+$string['fullexport_info'] = 'This will export ALL plugin data including applications, documents, files, and configurations. The ZIP file can be imported into another Moodle IOMAD instance with JobBoard installed.';
+$string['datatorexport'] = 'Data to export';
+$string['exportwarning_files'] = 'The export includes files and may take some time to generate. Please wait...';
+$string['documents'] = 'Documents';
+$string['files'] = 'Files';
 $string['migrationinfo_title'] = 'About Migration';
-$string['migrationinfo_desc'] = 'This tool allows you to transfer all JobBoard data between Moodle instances. Export creates a ZIP file with database records and files. Import reads the ZIP and restores the data with ID mapping for related records.';
+$string['migrationinfo_desc'] = 'This tool allows you to transfer ALL JobBoard data between Moodle instances. Export creates a ZIP file with all database records and files. Import reads the ZIP and restores the data with ID mapping for related records. No data is optional - everything is exported.';
 $string['exporterror'] = 'Export error';
 $string['applications'] = 'Applications';
-$string['includesfiles'] = '(includes files)';
-$string['allfiles'] = 'All files';
-$string['largeexport'] = '(may be large)';
+$string['auditlogs'] = 'Audit logs';
 
 // Messages.
 $string['vacancycreated'] = 'Vacancy created successfully';

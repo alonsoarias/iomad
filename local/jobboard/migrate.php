@@ -55,57 +55,100 @@ define('JOBBOARD_FILE_AREAS', [
 ]);
 
 /**
- * Export form class.
+ * Export form class - exports ALL data, no options.
  */
 class migrate_export_form extends moodleform {
     /**
      * Form definition.
      */
     protected function definition() {
+        global $DB;
+
         $mform = $this->_form;
 
-        $mform->addElement('header', 'exporthdr', get_string('exportdata', 'local_jobboard'));
+        $mform->addElement('header', 'exporthdr', get_string('fullexport', 'local_jobboard'));
 
-        $mform->addElement('static', 'exportinfo', '',
-            '<div class="alert alert-info">' .
+        // Show what will be exported (informational only).
+        $counts = local_jobboard_get_export_counts();
+
+        $infohtml = '<div class="alert alert-info mb-3">' .
             '<i class="fa fa-info-circle mr-2"></i>' .
-            get_string('fullexport_info', 'local_jobboard') .
-            '</div>'
-        );
+            '<strong>' . get_string('fullexport_info', 'local_jobboard') . '</strong>' .
+            '</div>';
 
-        // What to export - all checked by default.
-        $mform->addElement('advcheckbox', 'export_doctypes', '', get_string('doctypes', 'local_jobboard'));
-        $mform->setDefault('export_doctypes', 1);
+        $infohtml .= '<div class="card mb-3"><div class="card-body py-2">' .
+            '<h6 class="card-title mb-2"><i class="fa fa-database mr-2"></i>' . get_string('datatorexport', 'local_jobboard') . '</h6>' .
+            '<div class="row small">';
 
-        $mform->addElement('advcheckbox', 'export_emailtemplates', '', get_string('emailtemplates', 'local_jobboard'));
-        $mform->setDefault('export_emailtemplates', 1);
+        $infohtml .= '<div class="col-md-6">' .
+            '<ul class="list-unstyled mb-0">' .
+            '<li><i class="fa fa-check text-success mr-1"></i>' . get_string('doctypes', 'local_jobboard') . ': <strong>' . $counts['doctypes'] . '</strong></li>' .
+            '<li><i class="fa fa-check text-success mr-1"></i>' . get_string('emailtemplates', 'local_jobboard') . ': <strong>' . $counts['email_templates'] . '</strong></li>' .
+            '<li><i class="fa fa-check text-success mr-1"></i>' . get_string('convocatorias', 'local_jobboard') . ': <strong>' . $counts['convocatorias'] . '</strong></li>' .
+            '<li><i class="fa fa-check text-success mr-1"></i>' . get_string('vacancies', 'local_jobboard') . ': <strong>' . $counts['vacancies'] . '</strong></li>' .
+            '</ul></div>';
 
-        $mform->addElement('advcheckbox', 'export_convocatorias', '', get_string('convocatorias', 'local_jobboard'));
-        $mform->setDefault('export_convocatorias', 1);
+        $infohtml .= '<div class="col-md-6">' .
+            '<ul class="list-unstyled mb-0">' .
+            '<li><i class="fa fa-check text-success mr-1"></i>' . get_string('applications', 'local_jobboard') . ': <strong>' . $counts['applications'] . '</strong></li>' .
+            '<li><i class="fa fa-check text-success mr-1"></i>' . get_string('documents', 'local_jobboard') . ': <strong>' . $counts['documents'] . '</strong></li>' .
+            '<li><i class="fa fa-check text-success mr-1"></i>' . get_string('exemptions', 'local_jobboard') . ': <strong>' . $counts['exemptions'] . '</strong></li>' .
+            '<li><i class="fa fa-check text-success mr-1"></i>' . get_string('files', 'local_jobboard') . ': <strong>' . $counts['files'] . '</strong></li>' .
+            '</ul></div>';
 
-        $mform->addElement('advcheckbox', 'export_vacancies', '', get_string('vacancies', 'local_jobboard'));
-        $mform->setDefault('export_vacancies', 1);
+        $infohtml .= '</div></div></div>';
 
-        $mform->addElement('advcheckbox', 'export_settings', '', get_string('pluginsettings', 'local_jobboard'));
-        $mform->setDefault('export_settings', 1);
+        // Warning about file size.
+        if ($counts['files'] > 0) {
+            $infohtml .= '<div class="alert alert-warning">' .
+                '<i class="fa fa-exclamation-triangle mr-2"></i>' .
+                get_string('exportwarning_files', 'local_jobboard') .
+                '</div>';
+        }
 
-        $mform->addElement('advcheckbox', 'export_exemptions', '', get_string('exemptions', 'local_jobboard'));
-        $mform->setDefault('export_exemptions', 1);
+        $mform->addElement('static', 'exportinfo', '', $infohtml);
 
-        $mform->addElement('advcheckbox', 'export_applications', '',
-            get_string('applications', 'local_jobboard') . ' ' .
-            html_writer::tag('span', get_string('includesfiles', 'local_jobboard'), ['class' => 'badge badge-warning'])
-        );
-        $mform->setDefault('export_applications', 0);
-
-        $mform->addElement('advcheckbox', 'export_files', '',
-            get_string('allfiles', 'local_jobboard') . ' ' .
-            html_writer::tag('span', get_string('largeexport', 'local_jobboard'), ['class' => 'badge badge-danger'])
-        );
-        $mform->setDefault('export_files', 0);
+        // Hidden fields to always export everything.
+        $mform->addElement('hidden', 'export_all', 1);
+        $mform->setType('export_all', PARAM_INT);
 
         $this->add_action_buttons(true, get_string('exportdownload', 'local_jobboard'));
     }
+}
+
+/**
+ * Get counts of data to be exported.
+ *
+ * @return array Counts by type.
+ */
+function local_jobboard_get_export_counts(): array {
+    global $DB;
+
+    $context = context_system::instance();
+    $fs = get_file_storage();
+
+    $counts = [
+        'doctypes' => $DB->count_records('local_jobboard_doctype'),
+        'email_templates' => $DB->count_records('local_jobboard_email_template'),
+        'convocatorias' => $DB->count_records('local_jobboard_convocatoria'),
+        'vacancies' => $DB->count_records('local_jobboard_vacancy'),
+        'applications' => $DB->count_records('local_jobboard_application'),
+        'documents' => $DB->count_records('local_jobboard_document'),
+        'exemptions' => $DB->count_records('local_jobboard_exemption'),
+        'files' => 0,
+    ];
+
+    // Count files in all areas.
+    foreach (JOBBOARD_FILE_AREAS as $filearea) {
+        $files = $fs->get_area_files($context->id, 'local_jobboard', $filearea, false, 'id', false);
+        foreach ($files as $file) {
+            if ($file->get_filename() !== '.') {
+                $counts['files']++;
+            }
+        }
+    }
+
+    return $counts;
 }
 
 /**
@@ -137,12 +180,11 @@ class migrate_import_form extends moodleform {
 }
 
 /**
- * Export all plugin data to ZIP.
+ * Export ALL plugin data to ZIP - complete migration package.
  *
- * @param array $options Export options.
  * @return string Path to the created ZIP file.
  */
-function local_jobboard_export_full(array $options): string {
+function local_jobboard_export_full(): string {
     global $DB, $CFG;
 
     $data = [
@@ -153,6 +195,7 @@ function local_jobboard_export_full(array $options): string {
         'export_date' => userdate(time()),
         'moodle_version' => $CFG->version,
         'site_name' => $CFG->shortname,
+        'full_export' => true,
     ];
 
     // Create temp directory.
@@ -161,183 +204,136 @@ function local_jobboard_export_full(array $options): string {
     mkdir($filesdir, 0777, true);
 
     $filecount = 0;
+    $fs = get_file_storage();
+    $context = context_system::instance();
 
-    // Export document types.
-    if (!empty($options['export_doctypes'])) {
-        $doctypes = $DB->get_records('local_jobboard_doctype', [], 'sortorder ASC');
-        $data['doctypes'] = array_values(array_map(function($dt) {
-            unset($dt->id);
-            return $dt;
-        }, $doctypes));
-    }
+    // =========================================================================
+    // 1. EXPORT DOCUMENT TYPES
+    // =========================================================================
+    $doctypes = $DB->get_records('local_jobboard_doctype', [], 'sortorder ASC');
+    $data['doctypes'] = array_values(array_map(function($dt) {
+        $dt->original_id = $dt->id;
+        unset($dt->id);
+        return $dt;
+    }, $doctypes));
 
-    // Export email templates.
-    if (!empty($options['export_emailtemplates'])) {
-        $templates = $DB->get_records('local_jobboard_email_template', [], 'code ASC');
-        $data['email_templates'] = array_values(array_map(function($tpl) {
-            unset($tpl->id);
-            return $tpl;
-        }, $templates));
-    }
+    // =========================================================================
+    // 2. EXPORT EMAIL TEMPLATES
+    // =========================================================================
+    $templates = $DB->get_records('local_jobboard_email_template', [], 'code ASC');
+    $data['email_templates'] = array_values(array_map(function($tpl) {
+        unset($tpl->id);
+        return $tpl;
+    }, $templates));
 
-    // Export convocatorias with exemptions.
-    if (!empty($options['export_convocatorias'])) {
-        $convocatorias = $DB->get_records('local_jobboard_convocatoria', [], 'code ASC');
-        foreach ($convocatorias as &$conv) {
-            // Get exemptions with doctype codes.
-            $exemptions = $DB->get_records_sql(
-                "SELECT e.*, d.code as doctype_code
-                   FROM {local_jobboard_conv_docexempt} e
-                   JOIN {local_jobboard_doctype} d ON d.id = e.doctypeid
-                  WHERE e.convocatoriaid = ?",
-                [$conv->id]
-            );
-            $conv->exemptions = array_values($exemptions);
-            $conv->original_id = $conv->id;
-            unset($conv->id);
-        }
-        $data['convocatorias'] = array_values($convocatorias);
-    }
-
-    // Export vacancies with convocatoria codes.
-    if (!empty($options['export_vacancies'])) {
-        $vacancies = $DB->get_records_sql(
-            "SELECT v.*, c.code as convocatoria_code
-               FROM {local_jobboard_vacancy} v
-               LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
-              ORDER BY v.code ASC"
-        );
-        foreach ($vacancies as &$vac) {
-            $vac->original_id = $vac->id;
-            unset($vac->id);
-        }
-        $data['vacancies'] = array_values($vacancies);
-    }
-
-    // Export plugin settings.
-    if (!empty($options['export_settings'])) {
-        $allconfig = $DB->get_records('config_plugins', ['plugin' => 'local_jobboard']);
-        $settings = [];
-        foreach ($allconfig as $cfg) {
-            $settings[$cfg->name] = $cfg->value;
-        }
-        $data['settings'] = $settings;
-    }
-
-    // Export user exemptions with user identifiers.
-    if (!empty($options['export_exemptions'])) {
+    // =========================================================================
+    // 3. EXPORT CONVOCATORIAS WITH EXEMPTIONS
+    // =========================================================================
+    $convocatorias = $DB->get_records('local_jobboard_convocatoria', [], 'code ASC');
+    foreach ($convocatorias as &$conv) {
+        // Get exemptions with doctype codes.
         $exemptions = $DB->get_records_sql(
-            "SELECT e.*, u.username, u.email, u.idnumber
-               FROM {local_jobboard_exemption} e
-               JOIN {user} u ON u.id = e.userid
-              ORDER BY u.username"
+            "SELECT e.*, d.code as doctype_code
+               FROM {local_jobboard_conv_docexempt} e
+               JOIN {local_jobboard_doctype} d ON d.id = e.doctypeid
+              WHERE e.convocatoriaid = ?",
+            [$conv->id]
         );
-        foreach ($exemptions as &$ex) {
-            unset($ex->id, $ex->userid);
-        }
-        $data['exemptions'] = array_values($exemptions);
+        $conv->exemptions = array_values($exemptions);
+        $conv->original_id = $conv->id;
+        unset($conv->id);
     }
+    $data['convocatorias'] = array_values($convocatorias);
 
-    // Export applications with documents and files.
-    if (!empty($options['export_applications'])) {
-        $applications = $DB->get_records_sql(
-            "SELECT a.*, u.username, u.email, u.idnumber,
-                    v.code as vacancy_code, c.code as convocatoria_code
-               FROM {local_jobboard_application} a
-               JOIN {user} u ON u.id = a.userid
-               JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
-               LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
-              ORDER BY a.id"
+    // =========================================================================
+    // 4. EXPORT VACANCIES
+    // =========================================================================
+    $vacancies = $DB->get_records_sql(
+        "SELECT v.*, c.code as convocatoria_code
+           FROM {local_jobboard_vacancy} v
+           LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
+          ORDER BY v.code ASC"
+    );
+    foreach ($vacancies as &$vac) {
+        $vac->original_id = $vac->id;
+        unset($vac->id);
+    }
+    $data['vacancies'] = array_values($vacancies);
+
+    // =========================================================================
+    // 5. EXPORT PLUGIN SETTINGS
+    // =========================================================================
+    $allconfig = $DB->get_records('config_plugins', ['plugin' => 'local_jobboard']);
+    $settings = [];
+    foreach ($allconfig as $cfg) {
+        $settings[$cfg->name] = $cfg->value;
+    }
+    $data['settings'] = $settings;
+
+    // =========================================================================
+    // 6. EXPORT USER EXEMPTIONS
+    // =========================================================================
+    $exemptions = $DB->get_records_sql(
+        "SELECT e.*, u.username, u.email, u.idnumber
+           FROM {local_jobboard_exemption} e
+           JOIN {user} u ON u.id = e.userid
+          ORDER BY u.username"
+    );
+    foreach ($exemptions as &$ex) {
+        $ex->original_id = $ex->id;
+        unset($ex->id, $ex->userid);
+    }
+    $data['exemptions'] = array_values($exemptions);
+
+    // =========================================================================
+    // 7. EXPORT APPLICATIONS WITH DOCUMENTS AND FILES
+    // =========================================================================
+    $applications = $DB->get_records_sql(
+        "SELECT a.*, u.username, u.email, u.idnumber,
+                v.code as vacancy_code, c.code as convocatoria_code
+           FROM {local_jobboard_application} a
+           JOIN {user} u ON u.id = a.userid
+           JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+           LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
+          ORDER BY a.id"
+    );
+
+    foreach ($applications as &$app) {
+        $app->original_id = $app->id;
+
+        // Get documents for this application.
+        $documents = $DB->get_records_sql(
+            "SELECT d.*, dt.code as doctype_code
+               FROM {local_jobboard_document} d
+               JOIN {local_jobboard_doctype} dt ON dt.id = d.doctypeid
+              WHERE d.applicationid = ?",
+            [$app->id]
         );
 
-        foreach ($applications as &$app) {
-            $app->original_id = $app->id;
+        foreach ($documents as &$doc) {
+            $doc->original_id = $doc->id;
 
-            // Get documents for this application.
-            $documents = $DB->get_records_sql(
-                "SELECT d.*, dt.code as doctype_code
-                   FROM {local_jobboard_document} d
-                   JOIN {local_jobboard_doctype} dt ON dt.id = d.doctypeid
-                  WHERE d.applicationid = ?",
-                [$app->id]
+            // Get files for this document/application.
+            $files = $fs->get_area_files(
+                $context->id,
+                'local_jobboard',
+                'application_documents',
+                $app->id,
+                'itemid, filepath, filename',
+                false
             );
 
-            // Get files for documents.
-            $fs = get_file_storage();
-            $context = context_system::instance();
-
-            foreach ($documents as &$doc) {
-                $doc->original_id = $doc->id;
-
-                // Get the file.
-                $files = $fs->get_area_files(
-                    $context->id,
-                    'local_jobboard',
-                    'application_documents',
-                    $doc->applicationid,
-                    'itemid, filepath, filename',
-                    false
-                );
-
-                $doc->files = [];
-                foreach ($files as $file) {
-                    if ($file->get_filename() !== '.') {
-                        $filehash = $file->get_contenthash();
-                        $filename = $filehash . '_' . $file->get_filename();
-
-                        // Copy file to export directory.
-                        $file->copy_content_to($filesdir . '/' . $filename);
-                        $filecount++;
-
-                        $doc->files[] = [
-                            'filename' => $file->get_filename(),
-                            'filepath' => $file->get_filepath(),
-                            'mimetype' => $file->get_mimetype(),
-                            'filesize' => $file->get_filesize(),
-                            'export_filename' => $filename,
-                        ];
-                    }
-                }
-
-                unset($doc->id);
-            }
-
-            $app->documents = array_values($documents);
-
-            // Get validations.
-            $validations = $DB->get_records('local_jobboard_doc_validation', ['applicationid' => $app->id]);
-            foreach ($validations as &$val) {
-                unset($val->id);
-            }
-            $app->validations = array_values($validations);
-
-            unset($app->id, $app->userid, $app->vacancyid);
-        }
-
-        $data['applications'] = array_values($applications);
-    }
-
-    // Export all files if requested (without applications).
-    if (!empty($options['export_files']) && empty($options['export_applications'])) {
-        $fs = get_file_storage();
-        $context = context_system::instance();
-
-        $data['files_metadata'] = [];
-
-        foreach (JOBBOARD_FILE_AREAS as $filearea) {
-            $files = $fs->get_area_files($context->id, 'local_jobboard', $filearea, false, 'id', false);
-
+            $doc->files = [];
             foreach ($files as $file) {
                 if ($file->get_filename() !== '.') {
                     $filehash = $file->get_contenthash();
                     $filename = $filehash . '_' . $file->get_filename();
 
+                    // Copy file to export directory.
                     $file->copy_content_to($filesdir . '/' . $filename);
                     $filecount++;
 
-                    $data['files_metadata'][] = [
-                        'filearea' => $filearea,
-                        'itemid' => $file->get_itemid(),
+                    $doc->files[] = [
                         'filename' => $file->get_filename(),
                         'filepath' => $file->get_filepath(),
                         'mimetype' => $file->get_mimetype(),
@@ -346,36 +342,100 @@ function local_jobboard_export_full(array $options): string {
                     ];
                 }
             }
+
+            unset($doc->id);
+        }
+
+        $app->documents = array_values($documents);
+
+        // Get validations.
+        $validations = $DB->get_records('local_jobboard_doc_validation', ['applicationid' => $app->id]);
+        foreach ($validations as &$val) {
+            $val->original_id = $val->id;
+            unset($val->id);
+        }
+        $app->validations = array_values($validations);
+
+        unset($app->id, $app->userid, $app->vacancyid);
+    }
+    $data['applications'] = array_values($applications);
+
+    // =========================================================================
+    // 8. EXPORT ALL FILES FROM ALL AREAS
+    // =========================================================================
+    $data['files_metadata'] = [];
+
+    foreach (JOBBOARD_FILE_AREAS as $filearea) {
+        $files = $fs->get_area_files($context->id, 'local_jobboard', $filearea, false, 'id', false);
+
+        foreach ($files as $file) {
+            if ($file->get_filename() !== '.') {
+                $filehash = $file->get_contenthash();
+                $filename = $filehash . '_' . $file->get_filename();
+
+                // Only copy if not already copied (avoid duplicates).
+                if (!file_exists($filesdir . '/' . $filename)) {
+                    $file->copy_content_to($filesdir . '/' . $filename);
+                    $filecount++;
+                }
+
+                $data['files_metadata'][] = [
+                    'filearea' => $filearea,
+                    'itemid' => $file->get_itemid(),
+                    'filename' => $file->get_filename(),
+                    'filepath' => $file->get_filepath(),
+                    'mimetype' => $file->get_mimetype(),
+                    'filesize' => $file->get_filesize(),
+                    'export_filename' => $filename,
+                ];
+            }
         }
     }
 
-    // Export applicant profiles.
-    if (!empty($options['export_applications'])) {
-        $profiles = $DB->get_records_sql(
-            "SELECT p.*, u.username, u.email, u.idnumber
-               FROM {local_jobboard_applicant_profile} p
-               JOIN {user} u ON u.id = p.userid
-              ORDER BY u.username"
-        );
-        foreach ($profiles as &$prof) {
-            unset($prof->id, $prof->userid);
-        }
-        $data['applicant_profiles'] = array_values($profiles);
+    // =========================================================================
+    // 9. EXPORT APPLICANT PROFILES
+    // =========================================================================
+    $profiles = $DB->get_records_sql(
+        "SELECT p.*, u.username, u.email, u.idnumber
+           FROM {local_jobboard_applicant_profile} p
+           JOIN {user} u ON u.id = p.userid
+          ORDER BY u.username"
+    );
+    foreach ($profiles as &$prof) {
+        $prof->original_id = $prof->id;
+        unset($prof->id, $prof->userid);
     }
+    $data['applicant_profiles'] = array_values($profiles);
 
-    // Export consents.
-    if (!empty($options['export_applications'])) {
-        $consents = $DB->get_records_sql(
-            "SELECT c.*, u.username, u.email, u.idnumber
-               FROM {local_jobboard_consent} c
-               JOIN {user} u ON u.id = c.userid
-              ORDER BY c.timecreated"
-        );
-        foreach ($consents as &$con) {
-            unset($con->id, $con->userid);
-        }
-        $data['consents'] = array_values($consents);
+    // =========================================================================
+    // 10. EXPORT CONSENTS
+    // =========================================================================
+    $consents = $DB->get_records_sql(
+        "SELECT c.*, u.username, u.email, u.idnumber
+           FROM {local_jobboard_consent} c
+           JOIN {user} u ON u.id = c.userid
+          ORDER BY c.timecreated"
+    );
+    foreach ($consents as &$con) {
+        $con->original_id = $con->id;
+        unset($con->id, $con->userid);
     }
+    $data['consents'] = array_values($consents);
+
+    // =========================================================================
+    // 11. EXPORT AUDIT LOGS (for reference)
+    // =========================================================================
+    $audits = $DB->get_records_sql(
+        "SELECT a.*, u.username, u.email
+           FROM {local_jobboard_audit} a
+           LEFT JOIN {user} u ON u.id = a.userid
+          ORDER BY a.timecreated DESC
+          LIMIT 10000"
+    );
+    foreach ($audits as &$audit) {
+        unset($audit->id, $audit->userid);
+    }
+    $data['audit_logs'] = array_values($audits);
 
     $data['file_count'] = $filecount;
 
@@ -869,13 +929,14 @@ function local_jobboard_import_full(string $filepath, bool $overwrite = false, b
     return $results;
 }
 
-// Handle export action.
+// Handle export action - exports ALL data, no options.
 if ($action === 'export') {
     $exportform = new migrate_export_form();
 
-    if ($data = $exportform->get_data()) {
+    if ($exportform->get_data()) {
         try {
-            $zipfile = local_jobboard_export_full((array) $data);
+            // Export everything - full migration package.
+            $zipfile = local_jobboard_export_full();
 
             // Send file for download.
             $filename = basename($zipfile);

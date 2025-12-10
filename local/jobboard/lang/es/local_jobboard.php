@@ -451,14 +451,17 @@ $string['importedapplications'] = 'Postulaciones: {$a->inserted} insertadas, {$a
 $string['importeddocuments'] = 'Documentos: {$a->inserted} insertados, {$a->skipped} omitidos';
 $string['importedfiles'] = 'Archivos: {$a->inserted} insertados, {$a->skipped} omitidos';
 $string['importingfrom'] = 'Importando desde {$a->site} (v{$a->version}) exportado el {$a->date}';
-$string['fullexport_info'] = 'Seleccione qué datos incluir en la exportación. El archivo ZIP puede importarse en otra instancia de Moodle con JobBoard instalado.';
+$string['fullexport'] = 'Exportación Completa';
+$string['fullexport_info'] = 'Esto exportará TODOS los datos del plugin incluyendo postulaciones, documentos, archivos y configuraciones. El archivo ZIP puede importarse en otra instancia de Moodle IOMAD con JobBoard instalado.';
+$string['datatorexport'] = 'Datos a exportar';
+$string['exportwarning_files'] = 'La exportación incluye archivos y puede tomar tiempo en generarse. Por favor espere...';
+$string['documents'] = 'Documentos';
+$string['files'] = 'Archivos';
 $string['migrationinfo_title'] = 'Acerca de la Migración';
-$string['migrationinfo_desc'] = 'Esta herramienta permite transferir todos los datos de JobBoard entre instancias de Moodle. La exportación crea un archivo ZIP con registros de base de datos y archivos. La importación lee el ZIP y restaura los datos con mapeo de IDs para registros relacionados.';
+$string['migrationinfo_desc'] = 'Esta herramienta permite transferir TODOS los datos de JobBoard entre instancias de Moodle. La exportación crea un archivo ZIP con todos los registros de base de datos y archivos. La importación lee el ZIP y restaura los datos con mapeo de IDs para registros relacionados. Ningún dato es opcional - todo se exporta.';
 $string['exporterror'] = 'Error de exportación';
 $string['applications'] = 'Postulaciones';
-$string['includesfiles'] = '(incluye archivos)';
-$string['allfiles'] = 'Todos los archivos';
-$string['largeexport'] = '(puede ser grande)';
+$string['auditlogs'] = 'Registros de auditoría';
 
 // Messages.
 $string['vacancycreated'] = 'Vacante creada exitosamente';
