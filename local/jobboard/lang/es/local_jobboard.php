@@ -1609,6 +1609,17 @@ $string['applynow'] = 'Postularse Ahora';
 $string['alreadyapplied'] = 'Ya se ha postulado a esta vacante.';
 $string['applicationstatus'] = 'Estado de la postulación';
 $string['noapplypermission'] = 'No tiene permiso para postularse a vacantes.';
+$string['youhaveapplied'] = 'Ya te has postulado';
+$string['viewmyapplication'] = 'Ver mi postulación';
+$string['viewallapplications'] = 'Ver todas mis postulaciones';
+$string['applyforposition'] = 'Postularme a esta vacante';
+$string['applynow_desc'] = '¿Listo para postularte? Envía tu postulación ahora y da el siguiente paso en tu carrera.';
+$string['noapplycapability'] = 'No tienes permiso para postularte a vacantes.';
+$string['quicklinks'] = 'Enlaces rápidos';
+$string['othervacancies'] = 'Otras vacantes de esta convocatoria';
+$string['allconvocatorias'] = 'Todas las convocatorias';
+$string['share'] = 'Compartir';
+$string['searchvacancies'] = 'Buscar vacantes...';
 $string['all'] = 'Todos';
 
 // Configuración de página pública.

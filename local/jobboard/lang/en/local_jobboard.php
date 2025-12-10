@@ -897,6 +897,17 @@ $string['applicationstatus'] = 'Application status';
 $string['viewmyapplications'] = 'View My Applications';
 $string['loginrequiredtoapply'] = 'You must be logged in to apply for this vacancy.';
 $string['noapplypermission'] = 'You do not have permission to apply for vacancies.';
+$string['youhaveapplied'] = 'You have applied';
+$string['viewmyapplication'] = 'View my application';
+$string['viewallapplications'] = 'View all my applications';
+$string['applyforposition'] = 'Apply for this position';
+$string['applynow_desc'] = 'Ready to apply? Submit your application now and take the next step in your career.';
+$string['noapplycapability'] = 'You do not have permission to apply for vacancies.';
+$string['quicklinks'] = 'Quick links';
+$string['othervacancies'] = 'Other vacancies in this convocatoria';
+$string['allconvocatorias'] = 'All convocatorias';
+$string['share'] = 'Share';
+$string['searchvacancies'] = 'Search vacancies...';
 $string['all'] = 'All';
 
 // Public page settings.
