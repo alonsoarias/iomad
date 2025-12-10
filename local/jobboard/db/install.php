@@ -670,6 +670,7 @@ function local_jobboard_create_roles(): void {
             'local/jobboard:assignreviewers',
             'local/jobboard:viewreports',
             'local/jobboard:viewevaluations',
+            'local/jobboard:manageworkflow',
         ];
 
         foreach ($coordinatorcaps as $cap) {

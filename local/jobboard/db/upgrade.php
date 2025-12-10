@@ -42,6 +42,15 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121100, 'local', 'jobboard');
     }
 
+    // Version 2.2.1 - Update role capabilities and ensure completeness.
+    if ($oldversion < 2025121101) {
+        // Update existing roles with any missing capabilities.
+        local_jobboard_upgrade_update_role_capabilities();
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121101, 'local', 'jobboard');
+    }
+
     return true;
 }
 
@@ -113,6 +122,7 @@ function local_jobboard_upgrade_create_roles(): void {
             'local/jobboard:assignreviewers',
             'local/jobboard:viewreports',
             'local/jobboard:viewevaluations',
+            'local/jobboard:manageworkflow',
         ];
 
         foreach ($coordinatorcaps as $cap) {
@@ -146,5 +156,79 @@ function local_jobboard_upgrade_create_roles(): void {
         }
 
         set_role_contextlevels($committeeroleid, [CONTEXT_SYSTEM]);
+    }
+}
+
+/**
+ * Update existing role capabilities for the Job Board plugin.
+ *
+ * This function ensures all plugin roles have the complete set of required capabilities,
+ * adding any that might be missing from previous versions.
+ *
+ * @return void
+ */
+function local_jobboard_upgrade_update_role_capabilities(): void {
+    global $DB;
+
+    // Ensure capabilities are loaded.
+    update_capabilities('local_jobboard');
+
+    $systemcontext = context_system::instance();
+
+    // Define complete capability sets for each role.
+    $roleconfigs = [
+        'jobboard_reviewer' => [
+            'local/jobboard:view',
+            'local/jobboard:viewinternal',
+            'local/jobboard:review',
+            'local/jobboard:validatedocuments',
+            'local/jobboard:reviewdocuments',
+            'local/jobboard:downloadanydocument',
+        ],
+        'jobboard_coordinator' => [
+            'local/jobboard:view',
+            'local/jobboard:viewinternal',
+            'local/jobboard:manage',
+            'local/jobboard:createvacancy',
+            'local/jobboard:editvacancy',
+            'local/jobboard:publishvacancy',
+            'local/jobboard:viewallvacancies',
+            'local/jobboard:viewallapplications',
+            'local/jobboard:changeapplicationstatus',
+            'local/jobboard:assignreviewers',
+            'local/jobboard:viewreports',
+            'local/jobboard:viewevaluations',
+            'local/jobboard:manageworkflow',
+        ],
+        'jobboard_committee' => [
+            'local/jobboard:view',
+            'local/jobboard:viewinternal',
+            'local/jobboard:evaluate',
+            'local/jobboard:viewevaluations',
+            'local/jobboard:downloadanydocument',
+        ],
+    ];
+
+    foreach ($roleconfigs as $shortname => $requiredcaps) {
+        $role = $DB->get_record('role', ['shortname' => $shortname]);
+        if (!$role) {
+            // Role doesn't exist, will be created by local_jobboard_upgrade_create_roles().
+            continue;
+        }
+
+        // Get currently assigned capabilities for this role at system context.
+        $currentcaps = $DB->get_records('role_capabilities', [
+            'roleid' => $role->id,
+            'contextid' => $systemcontext->id,
+        ], '', 'capability, permission');
+
+        $currentcapnames = array_keys($currentcaps);
+
+        // Assign any missing capabilities.
+        foreach ($requiredcaps as $cap) {
+            if (!in_array($cap, $currentcapnames)) {
+                assign_capability($cap, CAP_ALLOW, $role->id, $systemcontext->id);
+            }
+        }
     }
 }
