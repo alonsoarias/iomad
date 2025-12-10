@@ -507,6 +507,7 @@ $string['changesaved'] = 'Cambios guardados exitosamente';
 
 // Errors.
 $string['error:vacancynotfound'] = 'Vacante no encontrada';
+$string['error:vacancynotpublic'] = 'Esta vacante no está disponible públicamente';
 $string['error:applicationnotfound'] = 'Postulación no encontrada';
 $string['error:documentnotfound'] = 'Documento no encontrado';
 $string['error:codeexists'] = 'Ya existe una vacante con este código';

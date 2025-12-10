@@ -323,6 +323,7 @@ $string['changesaved'] = 'Changes saved successfully';
 
 // Errors.
 $string['error:vacancynotfound'] = 'Vacancy not found';
+$string['error:vacancynotpublic'] = 'This vacancy is not publicly available';
 $string['error:applicationnotfound'] = 'Application not found';
 $string['error:documentnotfound'] = 'Document not found';
 $string['error:codeexists'] = 'A vacancy with this code already exists';
