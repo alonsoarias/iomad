@@ -258,6 +258,86 @@ if ($isloggedin) {
 echo html_writer::end_div();
 
 // ============================================================================
+// ACTIVE CONVOCATORIAS SECTION (with links to detail)
+// ============================================================================
+if (!empty($convocatorias)) {
+    // Get full convocatoria data for display.
+    $convIds = array_keys($convocatorias);
+    list($insql, $inparams) = $DB->get_in_or_equal($convIds, SQL_PARAMS_NAMED);
+    $fullConvocatorias = $DB->get_records_sql(
+        "SELECT c.*,
+                (SELECT COUNT(*) FROM {local_jobboard_vacancy} v
+                 WHERE v.convocatoriaid = c.id AND v.status = 'published') as vacancy_count
+           FROM {local_jobboard_convocatoria} c
+          WHERE c.id $insql
+          ORDER BY c.enddate ASC",
+        $inparams
+    );
+
+    echo html_writer::start_div('card shadow-sm mb-4 border-info');
+    echo html_writer::start_div('card-header bg-info text-white d-flex justify-content-between align-items-center');
+    echo html_writer::tag('h5', '<i class="fa fa-folder-open mr-2"></i>' . get_string('activeconvocatorias', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::tag('span', count($fullConvocatorias), ['class' => 'badge badge-light']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+
+    echo html_writer::start_div('row');
+    foreach ($fullConvocatorias as $conv) {
+        $convDaysRemaining = max(0, (int) floor(($conv->enddate - time()) / 86400));
+        $isConvUrgent = $convDaysRemaining <= 7;
+
+        echo html_writer::start_div('col-lg-4 col-md-6 mb-3');
+
+        $convCardClass = $isConvUrgent ? 'card h-100 border-warning' : 'card h-100';
+        echo html_writer::start_div($convCardClass);
+
+        echo html_writer::start_div('card-body py-3');
+
+        // Code and status.
+        echo html_writer::start_div('d-flex justify-content-between align-items-start mb-2');
+        echo html_writer::tag('code', s($conv->code), ['class' => 'small']);
+        if ($isConvUrgent) {
+            echo html_writer::tag('span', '<i class="fa fa-clock mr-1"></i>' . $convDaysRemaining . 'd', ['class' => 'badge badge-warning']);
+        }
+        echo html_writer::end_div();
+
+        // Name as link.
+        echo html_writer::tag('h6',
+            html_writer::link(
+                new moodle_url('/local/jobboard/index.php', ['view' => 'public_convocatoria', 'id' => $conv->id]),
+                format_string($conv->name),
+                ['class' => 'text-dark']
+            ),
+            ['class' => 'card-title mb-2']
+        );
+
+        // Stats.
+        echo html_writer::start_div('small text-muted');
+        echo html_writer::tag('span', '<i class="fa fa-briefcase mr-1"></i>' . $conv->vacancy_count . ' ' . get_string('vacancies', 'local_jobboard'), ['class' => 'mr-3']);
+        echo html_writer::tag('span', '<i class="fa fa-calendar-times mr-1"></i>' . userdate($conv->enddate, get_string('strftimedate', 'langconfig')));
+        echo html_writer::end_div();
+
+        echo html_writer::end_div(); // card-body
+
+        // Card footer with action.
+        echo html_writer::start_div('card-footer bg-transparent py-2');
+        echo html_writer::link(
+            new moodle_url('/local/jobboard/index.php', ['view' => 'public_convocatoria', 'id' => $conv->id]),
+            '<i class="fa fa-eye mr-1"></i>' . get_string('viewdetails', 'local_jobboard'),
+            ['class' => 'btn btn-sm btn-outline-info btn-block']
+        );
+        echo html_writer::end_div();
+
+        echo html_writer::end_div(); // card
+        echo html_writer::end_div(); // col
+    }
+    echo html_writer::end_div(); // row
+
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
+}
+
+// ============================================================================
 // FILTER SECTION (Direct HTML for maximum compatibility)
 // ============================================================================
 echo html_writer::start_div('card shadow-sm mb-4');
