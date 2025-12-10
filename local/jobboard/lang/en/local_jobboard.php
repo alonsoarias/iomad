@@ -3174,3 +3174,70 @@ $string['apitokens_desc'] = 'Manage API access tokens for external integrations'
 
 // Public view - Role-based quick access.
 $string['sharepage'] = 'Share this page';
+
+// ============================================================================
+// Role Management (v2.2.0)
+// ============================================================================
+$string['manageroles'] = 'Role Management';
+$string['manageroles_desc'] = 'Assign users to plugin roles (Reviewer, Coordinator, Committee)';
+$string['managecommittees'] = 'Manage Committees';
+$string['usersassigned'] = '{$a} user(s) assigned successfully';
+$string['userunassigned'] = 'User unassigned successfully';
+$string['totalassignedusers'] = 'Total Assigned Users';
+$string['selectroletoassign'] = 'Select a role to manage';
+$string['usersassignedcount'] = 'users assigned';
+$string['capabilities'] = 'Capabilities';
+$string['manageusers'] = 'Manage Users';
+$string['rolenotcreated'] = 'Role not created. Please upgrade the plugin.';
+$string['invalidrole'] = 'Invalid role selected';
+$string['backtorolelist'] = 'Back to role list';
+$string['assignedusers'] = 'Assigned Users';
+$string['nousersassigned'] = 'No users assigned to this role yet';
+$string['assigned'] = 'Assigned';
+$string['unassign'] = 'Unassign';
+$string['confirmunassign'] = 'Are you sure you want to unassign this user from this role?';
+$string['assignnewusers'] = 'Assign New Users';
+$string['searchusers'] = 'Search Users';
+$string['searchusersplaceholder'] = 'Type to filter users...';
+$string['selectusers'] = 'Select Users';
+$string['selectmultiplehelp'] = 'Hold Ctrl (or Cmd on Mac) to select multiple users';
+$string['assignselected'] = 'Assign Selected';
+$string['pluginsettings'] = 'Plugin Settings';
+
+// Capability descriptions for role preview.
+$string['cap_review'] = 'Review';
+$string['cap_validate'] = 'Validate Docs';
+$string['cap_download'] = 'Download';
+$string['cap_manage'] = 'Manage';
+$string['cap_createvacancy'] = 'Create Vacancies';
+$string['cap_assignreviewers'] = 'Assign Reviewers';
+$string['cap_viewreports'] = 'View Reports';
+$string['cap_evaluate'] = 'Evaluate';
+$string['cap_viewevaluations'] = 'View Evaluations';
+
+// ============================================================================
+// Committee Management (v2.2.0)
+// ============================================================================
+$string['totalcommittees'] = 'Total Committees';
+$string['activecommittees'] = 'Active Committees';
+$string['totalcommmembers'] = 'Total Members';
+$string['selectvacancy'] = 'Select a vacancy...';
+$string['allcommittees'] = 'All Committees';
+$string['vacancieswithoutcommittee'] = 'Vacancies Without Committee';
+$string['backtolist'] = 'Back to list';
+$string['changerole'] = 'Change Role';
+$string['committeedefaultname'] = 'Selection Committee for {$a}';
+$string['chairhelp'] = 'The chair leads the selection committee and has final decision authority.';
+$string['nosecretaryoptional'] = 'No secretary (optional)';
+$string['optional'] = 'optional';
+$string['evaluatorshelp'] = 'Select additional evaluators. Hold Ctrl/Cmd to select multiple.';
+$string['committeeautoroleassign'] = 'When you create this committee, all members will automatically be assigned the "Selection Committee Member" role in the plugin, granting them the necessary permissions to evaluate candidates.';
+$string['committeecreateerror'] = 'Failed to create committee. Please check if a committee already exists for this vacancy.';
+$string['memberadderror'] = 'Failed to add member. The user may already be a member of this committee.';
+$string['memberremoveerror'] = 'Failed to remove member. Cannot remove the only evaluating member.';
+$string['rolechangeerror'] = 'Failed to change role. Please try again.';
+$string['applicantranking'] = 'Applicant Ranking';
+$string['rank'] = 'Rank';
+$string['avgscore'] = 'Avg Score';
+$string['votes'] = 'Votes';
+$string['selectuser'] = 'Select a user...';

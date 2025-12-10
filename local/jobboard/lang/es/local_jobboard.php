@@ -3359,3 +3359,69 @@ $string['apitokens_desc'] = 'Gestionar tokens de acceso API para integraciones e
 
 // Vista pública - Accesos rápidos por rol.
 $string['sharepage'] = 'Compartir esta página';
+
+// ============================================================================
+// Gestión de Roles (v2.2.0)
+// ============================================================================
+$string['manageroles'] = 'Gestión de Roles';
+$string['manageroles_desc'] = 'Asignar usuarios a roles del plugin (Revisor, Coordinador, Comité)';
+$string['managecommittees'] = 'Gestionar Comités';
+$string['usersassigned'] = '{$a} usuario(s) asignado(s) exitosamente';
+$string['userunassigned'] = 'Usuario desasignado exitosamente';
+$string['totalassignedusers'] = 'Total de Usuarios Asignados';
+$string['selectroletoassign'] = 'Seleccione un rol para gestionar';
+$string['usersassignedcount'] = 'usuarios asignados';
+$string['capabilities'] = 'Capacidades';
+$string['manageusers'] = 'Gestionar Usuarios';
+$string['rolenotcreated'] = 'Rol no creado. Por favor actualice el plugin.';
+$string['invalidrole'] = 'Rol seleccionado inválido';
+$string['backtorolelist'] = 'Volver a la lista de roles';
+$string['assignedusers'] = 'Usuarios Asignados';
+$string['nousersassigned'] = 'No hay usuarios asignados a este rol aún';
+$string['assigned'] = 'Asignado';
+$string['unassign'] = 'Desasignar';
+$string['confirmunassign'] = '¿Está seguro de que desea desasignar a este usuario de este rol?';
+$string['assignnewusers'] = 'Asignar Nuevos Usuarios';
+$string['searchusers'] = 'Buscar Usuarios';
+$string['searchusersplaceholder'] = 'Escriba para filtrar usuarios...';
+$string['selectusers'] = 'Seleccionar Usuarios';
+$string['selectmultiplehelp'] = 'Mantenga presionado Ctrl (o Cmd en Mac) para seleccionar múltiples usuarios';
+$string['assignselected'] = 'Asignar Seleccionados';
+$string['pluginsettings'] = 'Configuración del Plugin';
+
+// Descripciones de capacidades para vista previa de rol.
+$string['cap_review'] = 'Revisar';
+$string['cap_validate'] = 'Validar Docs';
+$string['cap_download'] = 'Descargar';
+$string['cap_manage'] = 'Gestionar';
+$string['cap_createvacancy'] = 'Crear Vacantes';
+$string['cap_assignreviewers'] = 'Asignar Revisores';
+$string['cap_viewreports'] = 'Ver Reportes';
+$string['cap_evaluate'] = 'Evaluar';
+$string['cap_viewevaluations'] = 'Ver Evaluaciones';
+
+// ============================================================================
+// Gestión de Comités (v2.2.0)
+// ============================================================================
+$string['totalcommittees'] = 'Total de Comités';
+$string['activecommittees'] = 'Comités Activos';
+$string['totalcommmembers'] = 'Total de Miembros';
+$string['selectvacancy'] = 'Seleccione una vacante...';
+$string['allcommittees'] = 'Todos los Comités';
+$string['vacancieswithoutcommittee'] = 'Vacantes Sin Comité';
+$string['backtolist'] = 'Volver a la lista';
+$string['changerole'] = 'Cambiar Rol';
+$string['committeedefaultname'] = 'Comité de Selección para {$a}';
+$string['chairhelp'] = 'El presidente lidera el comité de selección y tiene la autoridad de decisión final.';
+$string['nosecretaryoptional'] = 'Sin secretario (opcional)';
+$string['evaluatorshelp'] = 'Seleccione evaluadores adicionales. Mantenga Ctrl/Cmd para seleccionar varios.';
+$string['committeeautoroleassign'] = 'Al crear este comité, todos los miembros recibirán automáticamente el rol "Miembro del Comité de Selección" en el plugin, otorgándoles los permisos necesarios para evaluar candidatos.';
+$string['committeecreateerror'] = 'Error al crear el comité. Verifique si ya existe un comité para esta vacante.';
+$string['memberadderror'] = 'Error al agregar miembro. El usuario podría ya ser miembro de este comité.';
+$string['memberremoveerror'] = 'Error al eliminar miembro. No se puede eliminar el único miembro evaluador.';
+$string['rolechangeerror'] = 'Error al cambiar el rol. Por favor intente nuevamente.';
+$string['applicantranking'] = 'Clasificación de Aspirantes';
+$string['rank'] = 'Posición';
+$string['avgscore'] = 'Puntuación Promedio';
+$string['votes'] = 'Votos';
+$string['selectuser'] = 'Seleccione un usuario...';

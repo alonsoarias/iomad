@@ -17,15 +17,18 @@
 /**
  * Selection committee management page.
  *
+ * Create, edit, and manage selection committees for vacancies.
+ * Assign users with different roles (chair, evaluator, secretary, observer).
+ *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(__DIR__ . '/../../config.php');
-require_once($CFG->libdir . '/formslib.php');
 
 use local_jobboard\committee;
+use local_jobboard\output\ui_helper;
 
 require_login();
 
@@ -33,386 +36,728 @@ $context = context_system::instance();
 require_capability('local/jobboard:manageworkflow', $context);
 
 // Parameters.
-$vacancyid = required_param('vacancy', PARAM_INT);
+$vacancyid = optional_param('vacancyid', 0, PARAM_INT);
+// Support old parameter name for backwards compatibility.
+if (!$vacancyid) {
+    $vacancyid = optional_param('vacancy', 0, PARAM_INT);
+}
 $action = optional_param('action', '', PARAM_ALPHA);
+$committeeid = optional_param('id', 0, PARAM_INT);
+$userid = optional_param('userid', 0, PARAM_INT);
 
-// Get vacancy info.
-$vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid], '*', MUST_EXIST);
-
-// Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/manage_committee.php', ['vacancy' => $vacancyid]));
+// Page setup.
+$PAGE->set_url(new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $vacancyid]));
 $PAGE->set_context($context);
-$PAGE->set_title(get_string('managecommittee', 'local_jobboard'));
-$PAGE->set_heading(get_string('managecommittee', 'local_jobboard'));
+$PAGE->set_title(get_string('committees', 'local_jobboard'));
+$PAGE->set_heading(get_string('committees', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
+$PAGE->requires->css('/local/jobboard/styles.css');
 
-// Get existing committee.
-$committee = committee::get_for_vacancy($vacancyid);
+// Role definitions.
+$memberroles = [
+    committee::ROLE_CHAIR => [
+        'name' => get_string('role_chair', 'local_jobboard'),
+        'icon' => 'user-tie',
+        'color' => 'danger',
+    ],
+    committee::ROLE_SECRETARY => [
+        'name' => get_string('role_secretary', 'local_jobboard'),
+        'icon' => 'user-edit',
+        'color' => 'primary',
+    ],
+    committee::ROLE_EVALUATOR => [
+        'name' => get_string('role_evaluator', 'local_jobboard'),
+        'icon' => 'user-check',
+        'color' => 'success',
+    ],
+    committee::ROLE_OBSERVER => [
+        'name' => get_string('role_observer', 'local_jobboard'),
+        'icon' => 'user-clock',
+        'color' => 'secondary',
+    ],
+];
 
 // Handle actions.
-if ($action === 'addmember' && confirm_sesskey()) {
-    $userid = required_param('userid', PARAM_INT);
-    $role = required_param('role', PARAM_ALPHA);
+if ($action === 'create' && confirm_sesskey()) {
+    $vacancyid = required_param('vacancyid', PARAM_INT);
+    $name = required_param('name', PARAM_TEXT);
 
-    if ($committee) {
-        if (committee::add_member($committee->id, $userid, $role)) {
-            redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancy' => $vacancyid]),
-                get_string('memberadded', 'local_jobboard'), null,
-                \core\output\notification::NOTIFY_SUCCESS);
+    // Get selected members.
+    $chairid = required_param('chair', PARAM_INT);
+    $members = [
+        ['userid' => $chairid, 'role' => committee::ROLE_CHAIR],
+    ];
+
+    // Optional members.
+    $secretaryid = optional_param('secretary', 0, PARAM_INT);
+    if ($secretaryid) {
+        $members[] = ['userid' => $secretaryid, 'role' => committee::ROLE_SECRETARY];
+    }
+
+    $evaluatorids = optional_param_array('evaluators', [], PARAM_INT);
+    foreach ($evaluatorids as $eid) {
+        if ($eid && $eid != $chairid && $eid != $secretaryid) {
+            $members[] = ['userid' => $eid, 'role' => committee::ROLE_EVALUATOR];
         }
     }
-}
 
-if ($action === 'removemember' && confirm_sesskey()) {
-    $userid = required_param('userid', PARAM_INT);
-
-    if ($committee) {
-        if (committee::remove_member($committee->id, $userid)) {
-            redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancy' => $vacancyid]),
-                get_string('memberremoved', 'local_jobboard'), null,
-                \core\output\notification::NOTIFY_SUCCESS);
-        }
-    }
-}
-
-if ($action === 'changerole' && confirm_sesskey()) {
-    $userid = required_param('userid', PARAM_INT);
-    $newrole = required_param('newrole', PARAM_ALPHA);
-
-    if ($committee) {
-        if (committee::update_member_role($committee->id, $userid, $newrole)) {
-            redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancy' => $vacancyid]),
-                get_string('rolechanged', 'local_jobboard'), null,
-                \core\output\notification::NOTIFY_SUCCESS);
-        }
-    }
-}
-
-// Create committee form.
-class create_committee_form extends moodleform {
-    protected function definition() {
-        global $DB;
-
-        $mform = $this->_form;
-        $vacancyid = $this->_customdata['vacancyid'];
-        $vacancy = $this->_customdata['vacancy'];
-
-        $mform->addElement('hidden', 'vacancy', $vacancyid);
-        $mform->setType('vacancy', PARAM_INT);
-
-        $mform->addElement('header', 'committeeheader', get_string('createcommittee', 'local_jobboard'));
-
-        // Committee name.
-        $mform->addElement('text', 'name', get_string('committeename', 'local_jobboard'), ['size' => 50]);
-        $mform->setType('name', PARAM_TEXT);
-        $mform->setDefault('name', get_string('defaultcommitteename', 'local_jobboard', $vacancy->title));
-        $mform->addRule('name', get_string('required'), 'required', null, 'client');
-
-        // Chair selection.
-        $context = \context_system::instance();
-        $potentialusers = get_users_by_capability($context, 'local/jobboard:manageworkflow',
-            'u.id, u.firstname, u.lastname, u.email', 'u.lastname, u.firstname');
-
-        $useroptions = [];
-        foreach ($potentialusers as $user) {
-            $useroptions[$user->id] = fullname($user) . ' (' . $user->email . ')';
-        }
-
-        $mform->addElement('select', 'chair', get_string('committeechair', 'local_jobboard'), $useroptions);
-        $mform->addRule('chair', get_string('required'), 'required', null, 'client');
-
-        // Initial members.
-        $select = $mform->addElement('select', 'members', get_string('initialmembers', 'local_jobboard'),
-            $useroptions);
-        $select->setMultiple(true);
-        $mform->addHelpButton('members', 'initialmembers', 'local_jobboard');
-
-        $this->add_action_buttons(true, get_string('createcommittee', 'local_jobboard'));
-    }
-}
-
-// Create committee if not exists.
-if (!$committee) {
-    $mform = new create_committee_form(null, ['vacancyid' => $vacancyid, 'vacancy' => $vacancy]);
-
-    if ($mform->is_cancelled()) {
-        redirect(new moodle_url('/local/jobboard/view_vacancy.php', ['id' => $vacancyid]));
-    } else if ($data = $mform->get_data()) {
-        // Build members array.
-        $members = [];
-        $members[] = ['userid' => $data->chair, 'role' => committee::ROLE_CHAIR];
-
-        if (!empty($data->members)) {
-            foreach ($data->members as $memberid) {
-                if ($memberid != $data->chair) {
-                    $members[] = ['userid' => $memberid, 'role' => committee::ROLE_EVALUATOR];
+    $committeeid = committee::create($vacancyid, $name, $members);
+    if ($committeeid) {
+        // Assign the jobboard_committee role to all members.
+        $committeerole = $DB->get_record('role', ['shortname' => 'jobboard_committee']);
+        if ($committeerole) {
+            foreach ($members as $member) {
+                if (!$DB->record_exists('role_assignments', [
+                    'roleid' => $committeerole->id,
+                    'contextid' => $context->id,
+                    'userid' => $member['userid'],
+                ])) {
+                    role_assign($committeerole->id, $member['userid'], $context->id);
                 }
             }
         }
 
-        $committeeid = committee::create($vacancyid, $data->name, $members);
-
-        if ($committeeid) {
-            redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancy' => $vacancyid]),
-                get_string('committeecreated', 'local_jobboard'), null,
-                \core\output\notification::NOTIFY_SUCCESS);
-        }
+        \core\notification::success(get_string('committeecreated', 'local_jobboard'));
+    } else {
+        \core\notification::error(get_string('committeecreateerror', 'local_jobboard'));
     }
-
-    // Display create form.
-    echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('createcommittee', 'local_jobboard'));
-
-    echo '<div class="alert alert-info">';
-    echo '<strong>' . get_string('vacancy', 'local_jobboard') . ':</strong> ' .
-        format_string($vacancy->code . ' - ' . $vacancy->title);
-    echo '</div>';
-
-    $mform->display();
-    echo $OUTPUT->footer();
-    exit;
+    redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $vacancyid]));
 }
 
-// Display committee management.
+if ($action === 'addmember' && confirm_sesskey()) {
+    // Support both parameter styles.
+    $cid = $committeeid ?: optional_param('committee', 0, PARAM_INT);
+    $uid = $userid ?: optional_param('userid', 0, PARAM_INT);
+    $role = optional_param('memberrole', '', PARAM_ALPHA);
+    if (!$role) {
+        $role = optional_param('role', committee::ROLE_EVALUATOR, PARAM_ALPHA);
+    }
+
+    if ($cid && $uid) {
+        $result = committee::add_member($cid, $uid, $role);
+        if ($result) {
+            // Assign the jobboard_committee role.
+            $committeerole = $DB->get_record('role', ['shortname' => 'jobboard_committee']);
+            if ($committeerole) {
+                if (!$DB->record_exists('role_assignments', [
+                    'roleid' => $committeerole->id,
+                    'contextid' => $context->id,
+                    'userid' => $uid,
+                ])) {
+                    role_assign($committeerole->id, $uid, $context->id);
+                }
+            }
+            \core\notification::success(get_string('memberadded', 'local_jobboard'));
+        } else {
+            \core\notification::error(get_string('memberadderror', 'local_jobboard'));
+        }
+
+        // Get vacancy ID from committee.
+        $comm = $DB->get_record('local_jobboard_committee', ['id' => $cid]);
+        redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $comm->vacancyid]));
+    }
+}
+
+if ($action === 'removemember' && confirm_sesskey()) {
+    $cid = $committeeid ?: optional_param('committee', 0, PARAM_INT);
+    $uid = $userid ?: optional_param('userid', 0, PARAM_INT);
+
+    if ($cid && $uid) {
+        $result = committee::remove_member($cid, $uid);
+        if ($result) {
+            \core\notification::success(get_string('memberremoved', 'local_jobboard'));
+        } else {
+            \core\notification::error(get_string('memberremoveerror', 'local_jobboard'));
+        }
+
+        $comm = $DB->get_record('local_jobboard_committee', ['id' => $cid]);
+        redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $comm->vacancyid]));
+    }
+}
+
+if ($action === 'changerole' && confirm_sesskey()) {
+    $cid = $committeeid ?: optional_param('committee', 0, PARAM_INT);
+    $uid = $userid ?: optional_param('userid', 0, PARAM_INT);
+    $newrole = required_param('newrole', PARAM_ALPHA);
+
+    if ($cid && $uid) {
+        $result = committee::update_member_role($cid, $uid, $newrole);
+        if ($result) {
+            \core\notification::success(get_string('rolechanged', 'local_jobboard'));
+        } else {
+            \core\notification::error(get_string('rolechangeerror', 'local_jobboard'));
+        }
+
+        $comm = $DB->get_record('local_jobboard_committee', ['id' => $cid]);
+        redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $comm->vacancyid]));
+    }
+}
+
+// Get statistics.
+$totalcommittees = $DB->count_records('local_jobboard_committee');
+$activecommittees = $DB->count_records('local_jobboard_committee', ['status' => 'active']);
+$totalmembers = $DB->count_records('local_jobboard_committee_member');
+
+// Get vacancies that can have committees (published or closed).
+$vacancies = $DB->get_records_select('local_jobboard_vacancy',
+    "status IN ('published', 'closed')", null, 'code ASC', 'id, code, title, status');
+
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(get_string('managecommittee', 'local_jobboard'));
+echo html_writer::start_div('local-jobboard-committees');
 
-// Vacancy info.
-echo '<div class="card mb-4">';
-echo '<div class="card-body">';
-echo '<h5>' . format_string($vacancy->code . ' - ' . $vacancy->title) . '</h5>';
-echo '<p class="mb-0"><strong>' . get_string('committeename', 'local_jobboard') . ':</strong> ' .
-    format_string($committee->name) . '</p>';
-echo '</div>';
-echo '</div>';
+// ============================================================================
+// PAGE HEADER
+// ============================================================================
+echo ui_helper::page_header(
+    get_string('committees', 'local_jobboard'),
+    [],
+    [
+        [
+            'url' => new moodle_url('/local/jobboard/admin/roles.php'),
+            'label' => get_string('manageroles', 'local_jobboard'),
+            'icon' => 'user-tag',
+            'class' => 'btn btn-outline-primary',
+        ],
+        [
+            'url' => new moodle_url('/local/jobboard/index.php'),
+            'label' => get_string('dashboard', 'local_jobboard'),
+            'icon' => 'tachometer-alt',
+            'class' => 'btn btn-outline-secondary',
+        ],
+    ]
+);
 
-// Committee members.
-echo '<div class="card mb-4">';
-echo '<div class="card-header d-flex justify-content-between align-items-center">';
-echo '<h5 class="mb-0">' . get_string('committeemembers', 'local_jobboard') . '</h5>';
-echo '<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addMemberModal">';
-echo '<i class="fa fa-plus mr-1"></i>' . get_string('addmember', 'local_jobboard');
-echo '</button>';
-echo '</div>';
-echo '<div class="card-body">';
+// ============================================================================
+// STATISTICS CARDS
+// ============================================================================
+echo html_writer::start_div('row mb-4');
+echo ui_helper::stat_card((string) $totalcommittees, get_string('totalcommittees', 'local_jobboard'), 'primary', 'users');
+echo ui_helper::stat_card((string) $activecommittees, get_string('activecommittees', 'local_jobboard'), 'success', 'users-cog');
+echo ui_helper::stat_card((string) $totalmembers, get_string('totalcommmembers', 'local_jobboard'), 'info', 'user-friends');
+echo html_writer::end_div();
 
-if (!empty($committee->members)) {
-    $table = new html_table();
-    $table->head = [
-        get_string('name'),
-        get_string('email'),
-        get_string('role', 'local_jobboard'),
-        get_string('actions'),
-    ];
-    $table->attributes['class'] = 'table table-striped';
+// ============================================================================
+// VACANCY FILTER
+// ============================================================================
+$vacancyoptions = [0 => get_string('selectvacancy', 'local_jobboard')];
+foreach ($vacancies as $v) {
+    $vacancyoptions[$v->id] = format_string($v->code . ' - ' . $v->title);
+}
 
-    foreach ($committee->members as $member) {
-        // Role badge.
-        $roleclass = 'secondary';
-        if ($member->role === 'chair') {
-            $roleclass = 'primary';
-        } else if ($member->role === 'secretary') {
-            $roleclass = 'info';
-        } else if ($member->role === 'observer') {
-            $roleclass = 'warning';
-        }
+$filterdefs = [
+    [
+        'type' => 'select',
+        'name' => 'vacancyid',
+        'label' => get_string('vacancy', 'local_jobboard'),
+        'options' => $vacancyoptions,
+        'col' => 'col-md-6',
+    ],
+];
 
-        // Role dropdown.
-        $roleactions = '<div class="dropdown d-inline-block mr-2">';
-        $roleactions .= '<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" ' .
-            'data-toggle="dropdown">' . get_string('role_' . $member->role, 'local_jobboard') . '</button>';
-        $roleactions .= '<div class="dropdown-menu">';
-        foreach (['chair', 'evaluator', 'secretary', 'observer'] as $role) {
-            $roleactions .= '<a class="dropdown-item' . ($member->role === $role ? ' active' : '') . '" href="' .
-                new moodle_url('/local/jobboard/manage_committee.php', [
-                    'vacancy' => $vacancyid,
-                    'action' => 'changerole',
-                    'userid' => $member->userid,
-                    'newrole' => $role,
-                    'sesskey' => sesskey(),
-                ]) . '">' . get_string('role_' . $role, 'local_jobboard') . '</a>';
-        }
-        $roleactions .= '</div></div>';
+echo ui_helper::filter_form(
+    (new moodle_url('/local/jobboard/manage_committee.php'))->out(false),
+    $filterdefs,
+    ['vacancyid' => $vacancyid],
+    []
+);
 
-        // Remove button.
-        $removeurl = new moodle_url('/local/jobboard/manage_committee.php', [
-            'vacancy' => $vacancyid,
-            'action' => 'removemember',
-            'userid' => $member->userid,
-            'sesskey' => sesskey(),
-        ]);
-        $removeactions = '<a href="' . $removeurl . '" class="btn btn-sm btn-outline-danger" ' .
-            'onclick="return confirm(\'' . get_string('confirmremovemember', 'local_jobboard') . '\')">' .
-            '<i class="fa fa-times"></i></a>';
+// ============================================================================
+// COMMITTEES LIST OR DETAILS
+// ============================================================================
+if (empty($vacancyid)) {
+    // Show list of all committees.
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-white d-flex justify-content-between align-items-center');
+    echo html_writer::tag('h5',
+        '<i class="fa fa-users text-primary mr-2"></i>' . get_string('allcommittees', 'local_jobboard'),
+        ['class' => 'mb-0']
+    );
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
 
-        $table->data[] = [
-            fullname($member),
-            $member->email,
-            $roleactions,
-            $removeactions,
+    $sql = "SELECT c.*, v.code as vacancy_code, v.title as vacancy_title,
+                   (SELECT COUNT(*) FROM {local_jobboard_committee_member} WHERE committeeid = c.id) as membercount
+              FROM {local_jobboard_committee} c
+              JOIN {local_jobboard_vacancy} v ON v.id = c.vacancyid
+             ORDER BY c.timecreated DESC";
+    $committees = $DB->get_records_sql($sql);
+
+    if (empty($committees)) {
+        echo ui_helper::empty_state(get_string('nocommittees', 'local_jobboard'), 'users');
+    } else {
+        $headers = [
+            get_string('vacancy', 'local_jobboard'),
+            get_string('committeename', 'local_jobboard'),
+            get_string('members', 'local_jobboard'),
+            get_string('status'),
+            get_string('actions'),
         ];
+
+        $rows = [];
+        foreach ($committees as $comm) {
+            $vacancylink = html_writer::link(
+                new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $comm->vacancyid]),
+                format_string($comm->vacancy_code . ' - ' . $comm->vacancy_title)
+            );
+
+            $statusbadge = $comm->status === 'active'
+                ? '<span class="badge badge-success">' . get_string('active', 'local_jobboard') . '</span>'
+                : '<span class="badge badge-secondary">' . $comm->status . '</span>';
+
+            $actions = html_writer::link(
+                new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $comm->vacancyid]),
+                '<i class="fa fa-edit"></i>',
+                ['class' => 'btn btn-sm btn-outline-primary', 'title' => get_string('manage', 'local_jobboard')]
+            );
+
+            $rows[] = [
+                $vacancylink,
+                format_string($comm->name),
+                html_writer::tag('span', $comm->membercount, ['class' => 'badge badge-info']),
+                $statusbadge,
+                $actions,
+            ];
+        }
+
+        echo ui_helper::data_table($headers, $rows);
     }
 
-    echo html_writer::table($table);
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+
+    // Vacancies without committees.
+    $vacancieswithoutcomm = [];
+    foreach ($vacancies as $v) {
+        if (!$DB->record_exists('local_jobboard_committee', ['vacancyid' => $v->id])) {
+            $vacancieswithoutcomm[] = $v;
+        }
+    }
+
+    if (!empty($vacancieswithoutcomm)) {
+        echo html_writer::start_div('card shadow-sm mb-4 border-warning');
+        echo html_writer::start_div('card-header bg-warning text-dark');
+        echo html_writer::tag('h6',
+            '<i class="fa fa-exclamation-triangle mr-2"></i>' . get_string('vacancieswithoutcommittee', 'local_jobboard'),
+            ['class' => 'mb-0']
+        );
+        echo html_writer::end_div();
+        echo html_writer::start_div('card-body');
+
+        echo html_writer::start_div('list-group');
+        foreach ($vacancieswithoutcomm as $v) {
+            echo html_writer::start_div('list-group-item d-flex justify-content-between align-items-center');
+            echo html_writer::tag('span', format_string($v->code . ' - ' . $v->title));
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $v->id]),
+                '<i class="fa fa-plus mr-1"></i>' . get_string('createcommittee', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-warning']
+            );
+            echo html_writer::end_div();
+        }
+        echo html_writer::end_div();
+
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+    }
+
 } else {
-    echo '<p class="text-muted">' . get_string('nomembers', 'local_jobboard') . '</p>';
-}
+    // Show committee for selected vacancy.
+    $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid], '*', MUST_EXIST);
+    $existingcommittee = committee::get_for_vacancy($vacancyid);
 
-echo '</div>';
-echo '</div>';
+    // Back button.
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/manage_committee.php'),
+        '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtolist', 'local_jobboard'),
+        ['class' => 'btn btn-outline-secondary btn-sm mb-3']
+    );
 
-// Evaluation criteria.
-echo '<div class="card mb-4">';
-echo '<div class="card-header">';
-echo '<h5 class="mb-0">' . get_string('evaluationcriteria', 'local_jobboard') . '</h5>';
-echo '</div>';
-echo '<div class="card-body">';
+    // Vacancy header.
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-primary text-white');
+    echo html_writer::start_div('d-flex justify-content-between align-items-center');
+    echo html_writer::tag('h5',
+        '<i class="fa fa-briefcase mr-2"></i>' . format_string($vacancy->code . ' - ' . $vacancy->title),
+        ['class' => 'mb-0']
+    );
+    echo ui_helper::status_badge($vacancy->status, 'vacancy');
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+    echo html_writer::end_div();
 
-$criteria = committee::get_criteria($vacancyid);
-if (!empty($criteria)) {
-    echo '<table class="table table-sm">';
-    echo '<thead><tr>';
-    echo '<th>' . get_string('criterion', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('weight', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('maxscore', 'local_jobboard') . '</th>';
-    echo '</tr></thead>';
-    echo '<tbody>';
-    foreach ($criteria as $criterion) {
-        echo '<tr>';
-        echo '<td>' . format_string($criterion->name);
-        if (!empty($criterion->description)) {
-            echo '<br><small class="text-muted">' . format_string($criterion->description) . '</small>';
+    if ($existingcommittee) {
+        // Show existing committee.
+        echo html_writer::start_div('card shadow-sm mb-4');
+        echo html_writer::start_div('card-header bg-success text-white d-flex justify-content-between align-items-center');
+        echo html_writer::tag('h5',
+            '<i class="fa fa-users mr-2"></i>' . format_string($existingcommittee->name),
+            ['class' => 'mb-0']
+        );
+        echo html_writer::tag('span',
+            count($existingcommittee->members) . ' ' . get_string('members', 'local_jobboard'),
+            ['class' => 'badge badge-light']
+        );
+        echo html_writer::end_div();
+        echo html_writer::start_div('card-body');
+
+        // Members list.
+        if (!empty($existingcommittee->members)) {
+            echo html_writer::start_div('row');
+            foreach ($existingcommittee->members as $member) {
+                $roledef = $memberroles[$member->role] ?? $memberroles[committee::ROLE_EVALUATOR];
+
+                echo html_writer::start_div('col-lg-3 col-md-4 col-sm-6 mb-3');
+                echo html_writer::start_div('card h-100 border-0 bg-light');
+                echo html_writer::start_div('card-body text-center');
+
+                // Avatar.
+                echo html_writer::tag('div',
+                    html_writer::tag('i', '', ['class' => "fa fa-{$roledef['icon']} fa-2x text-{$roledef['color']}"]),
+                    ['class' => "jb-icon-circle bg-{$roledef['color']}-light mb-2 mx-auto", 'style' => 'width:60px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:50%;']
+                );
+
+                // Name.
+                echo html_writer::tag('h6', fullname($member), ['class' => 'mb-1']);
+
+                // Role badge.
+                echo html_writer::tag('span', $roledef['name'], ['class' => "badge badge-{$roledef['color']} mb-2"]);
+
+                // Email.
+                echo html_writer::tag('small', $member->email, ['class' => 'd-block text-muted mb-2']);
+
+                // Actions.
+                echo html_writer::start_div('btn-group btn-group-sm');
+
+                // Change role dropdown.
+                echo html_writer::start_div('dropdown');
+                echo html_writer::tag('button',
+                    '<i class="fa fa-exchange-alt"></i>',
+                    [
+                        'class' => 'btn btn-sm btn-outline-secondary dropdown-toggle',
+                        'type' => 'button',
+                        'data-toggle' => 'dropdown',
+                        'aria-haspopup' => 'true',
+                        'aria-expanded' => 'false',
+                        'title' => get_string('changerole', 'local_jobboard'),
+                    ]
+                );
+                echo html_writer::start_div('dropdown-menu');
+                foreach ($memberroles as $rolecode => $roleinfo) {
+                    if ($rolecode !== $member->role) {
+                        $changeurl = new moodle_url('/local/jobboard/manage_committee.php', [
+                            'action' => 'changerole',
+                            'id' => $existingcommittee->id,
+                            'userid' => $member->userid,
+                            'newrole' => $rolecode,
+                            'sesskey' => sesskey(),
+                        ]);
+                        echo html_writer::link($changeurl, $roleinfo['name'], ['class' => 'dropdown-item']);
+                    }
+                }
+                echo html_writer::end_div();
+                echo html_writer::end_div();
+
+                // Remove button.
+                $removeurl = new moodle_url('/local/jobboard/manage_committee.php', [
+                    'action' => 'removemember',
+                    'id' => $existingcommittee->id,
+                    'userid' => $member->userid,
+                    'sesskey' => sesskey(),
+                ]);
+                echo html_writer::link($removeurl,
+                    '<i class="fa fa-user-minus"></i>',
+                    [
+                        'class' => 'btn btn-sm btn-outline-danger',
+                        'title' => get_string('removemember', 'local_jobboard'),
+                        'onclick' => "return confirm('" . get_string('confirmremovemember', 'local_jobboard') . "');",
+                    ]
+                );
+                echo html_writer::end_div();
+
+                echo html_writer::end_div();
+                echo html_writer::end_div();
+                echo html_writer::end_div();
+            }
+            echo html_writer::end_div();
         }
-        echo '</td>';
-        echo '<td>' . $criterion->weight . '</td>';
-        echo '<td>' . $criterion->maxscore . '</td>';
-        echo '</tr>';
-    }
-    echo '</tbody></table>';
-} else {
-    echo '<p class="text-muted">' . get_string('nocriteria', 'local_jobboard') . '</p>';
-}
 
-echo '<a href="' . new moodle_url('/local/jobboard/edit_criteria.php', ['vacancy' => $vacancyid]) .
-    '" class="btn btn-outline-secondary">' .
-    '<i class="fa fa-edit mr-1"></i>' . get_string('editcriteria', 'local_jobboard') . '</a>';
+        echo html_writer::end_div();
+        echo html_writer::end_div();
 
-echo '</div>';
-echo '</div>';
+        // Add member form.
+        echo html_writer::start_div('card shadow-sm mb-4 border-primary');
+        echo html_writer::start_div('card-header bg-primary text-white');
+        echo html_writer::tag('h6',
+            '<i class="fa fa-user-plus mr-2"></i>' . get_string('addmember', 'local_jobboard'),
+            ['class' => 'mb-0']
+        );
+        echo html_writer::end_div();
+        echo html_writer::start_div('card-body');
 
-// Ranking & Evaluations.
-$ranking = committee::get_ranking($vacancyid);
-if (!empty($ranking)) {
-    echo '<div class="card mb-4">';
-    echo '<div class="card-header">';
-    echo '<h5 class="mb-0">' . get_string('applicantranking', 'local_jobboard') . '</h5>';
-    echo '</div>';
-    echo '<div class="card-body">';
-
-    echo '<table class="table table-striped">';
-    echo '<thead><tr>';
-    echo '<th>' . get_string('rank', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('applicant', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('avgscore', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('votes', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('status') . '</th>';
-    echo '<th>' . get_string('actions') . '</th>';
-    echo '</tr></thead>';
-    echo '<tbody>';
-
-    foreach ($ranking as $app) {
-        $statusclass = 'secondary';
-        if ($app->status === 'selected') {
-            $statusclass = 'success';
-        } else if ($app->status === 'rejected') {
-            $statusclass = 'danger';
+        // Get existing member user IDs.
+        $existingmemberids = array_column((array) $existingcommittee->members, 'userid');
+        if (empty($existingmemberids)) {
+            $existingmemberids = [0];
         }
 
-        echo '<tr>';
-        echo '<td><strong>#' . $app->rank . '</strong></td>';
-        echo '<td>' . fullname($app) . '<br><small class="text-muted">' . $app->email . '</small></td>';
-        echo '<td>' . round($app->avg_score, 1) . '</td>';
-        echo '<td>';
-        echo '<span class="badge badge-success">' . $app->approve_votes . ' ✓</span> ';
-        echo '<span class="badge badge-danger">' . $app->reject_votes . ' ✗</span>';
-        echo '</td>';
-        echo '<td><span class="badge badge-' . $statusclass . '">' .
-            get_string('status_' . $app->status, 'local_jobboard') . '</span></td>';
-        echo '<td>';
-        echo '<a href="' . new moodle_url('/local/jobboard/evaluate_application.php', [
-            'application' => $app->id,
-            'committee' => $committee->id,
-        ]) . '" class="btn btn-sm btn-outline-primary">' . get_string('evaluate', 'local_jobboard') . '</a>';
+        // Get available users.
+        $sql = "SELECT u.id, u.firstname, u.lastname, u.email
+                  FROM {user} u
+                 WHERE u.deleted = 0
+                   AND u.suspended = 0
+                   AND u.id NOT IN (" . implode(',', $existingmemberids) . ")
+                   AND u.id > 1
+                 ORDER BY u.lastname, u.firstname
+                 LIMIT 200";
+        $availableusers = $DB->get_records_sql($sql);
 
-        if (!in_array($app->status, ['selected', 'rejected'])) {
-            echo ' <a href="' . new moodle_url('/local/jobboard/make_decision.php', [
-                'application' => $app->id,
-                'committee' => $committee->id,
-            ]) . '" class="btn btn-sm btn-outline-success">' . get_string('decide', 'local_jobboard') . '</a>';
+        echo html_writer::start_tag('form', [
+            'method' => 'post',
+            'action' => new moodle_url('/local/jobboard/manage_committee.php'),
+            'class' => 'form-inline',
+        ]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'addmember']);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => $existingcommittee->id]);
+
+        echo html_writer::start_div('form-group mr-2 mb-2');
+        echo html_writer::start_tag('select', ['name' => 'userid', 'class' => 'form-control', 'required' => 'required']);
+        echo html_writer::tag('option', get_string('selectuser', 'local_jobboard'), ['value' => '']);
+        foreach ($availableusers as $user) {
+            echo html_writer::tag('option', fullname($user) . ' (' . $user->email . ')', ['value' => $user->id]);
         }
-        echo '</td>';
-        echo '</tr>';
-    }
+        echo html_writer::end_tag('select');
+        echo html_writer::end_div();
 
-    echo '</tbody></table>';
-    echo '</div>';
-    echo '</div>';
+        echo html_writer::start_div('form-group mr-2 mb-2');
+        echo html_writer::start_tag('select', ['name' => 'memberrole', 'class' => 'form-control', 'required' => 'required']);
+        foreach ($memberroles as $rolecode => $roleinfo) {
+            echo html_writer::tag('option', $roleinfo['name'], ['value' => $rolecode]);
+        }
+        echo html_writer::end_tag('select');
+        echo html_writer::end_div();
+
+        echo html_writer::tag('button',
+            '<i class="fa fa-user-plus mr-1"></i>' . get_string('addmember', 'local_jobboard'),
+            ['type' => 'submit', 'class' => 'btn btn-primary mb-2']
+        );
+
+        echo html_writer::end_tag('form');
+
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+
+        // Ranking & Evaluations.
+        $ranking = committee::get_ranking($vacancyid);
+        if (!empty($ranking)) {
+            echo html_writer::start_div('card shadow-sm mb-4');
+            echo html_writer::start_div('card-header bg-white');
+            echo html_writer::tag('h5',
+                '<i class="fa fa-trophy text-warning mr-2"></i>' . get_string('applicantranking', 'local_jobboard'),
+                ['class' => 'mb-0']
+            );
+            echo html_writer::end_div();
+            echo html_writer::start_div('card-body');
+
+            $headers = [
+                get_string('rank', 'local_jobboard'),
+                get_string('applicant', 'local_jobboard'),
+                get_string('avgscore', 'local_jobboard'),
+                get_string('votes', 'local_jobboard'),
+                get_string('status'),
+            ];
+
+            $rows = [];
+            foreach ($ranking as $app) {
+                $statusclass = 'secondary';
+                if ($app->status === 'selected') {
+                    $statusclass = 'success';
+                } else if ($app->status === 'rejected') {
+                    $statusclass = 'danger';
+                }
+
+                $rankbadge = html_writer::tag('span', '#' . $app->rank, [
+                    'class' => 'badge badge-' . ($app->rank <= 3 ? 'warning' : 'secondary'),
+                ]);
+
+                $applicantinfo = html_writer::tag('strong', fullname($app)) .
+                    html_writer::tag('br') .
+                    html_writer::tag('small', $app->email, ['class' => 'text-muted']);
+
+                $votes = html_writer::tag('span', $app->approve_votes, ['class' => 'badge badge-success mr-1']) .
+                    html_writer::tag('span', $app->reject_votes, ['class' => 'badge badge-danger']);
+
+                $statusbadge = html_writer::tag('span',
+                    get_string('status_' . $app->status, 'local_jobboard'),
+                    ['class' => "badge badge-{$statusclass}"]
+                );
+
+                $rows[] = [
+                    $rankbadge,
+                    $applicantinfo,
+                    round($app->avg_score, 1),
+                    $votes,
+                    $statusbadge,
+                ];
+            }
+
+            echo ui_helper::data_table($headers, $rows);
+
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+    } else {
+        // Create committee form.
+        echo html_writer::start_div('card shadow-sm mb-4 border-success');
+        echo html_writer::start_div('card-header bg-success text-white');
+        echo html_writer::tag('h5',
+            '<i class="fa fa-users mr-2"></i>' . get_string('createcommittee', 'local_jobboard'),
+            ['class' => 'mb-0']
+        );
+        echo html_writer::end_div();
+        echo html_writer::start_div('card-body');
+
+        // Get available users.
+        $sql = "SELECT u.id, u.firstname, u.lastname, u.email
+                  FROM {user} u
+                 WHERE u.deleted = 0
+                   AND u.suspended = 0
+                   AND u.id > 1
+                 ORDER BY u.lastname, u.firstname
+                 LIMIT 200";
+        $availableusers = $DB->get_records_sql($sql);
+
+        echo html_writer::start_tag('form', [
+            'method' => 'post',
+            'action' => new moodle_url('/local/jobboard/manage_committee.php'),
+        ]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'create']);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'vacancyid', 'value' => $vacancyid]);
+
+        // Committee name.
+        echo html_writer::start_div('form-group');
+        echo html_writer::tag('label', get_string('committeename', 'local_jobboard'), ['for' => 'name']);
+        $defaultname = get_string('committeedefaultname', 'local_jobboard', format_string($vacancy->code));
+        echo html_writer::empty_tag('input', [
+            'type' => 'text',
+            'name' => 'name',
+            'id' => 'name',
+            'class' => 'form-control',
+            'value' => $defaultname,
+            'required' => 'required',
+        ]);
+        echo html_writer::end_div();
+
+        // Chair (required).
+        echo html_writer::start_div('form-group');
+        echo html_writer::tag('label',
+            '<i class="fa fa-user-tie text-danger mr-1"></i>' . get_string('role_chair', 'local_jobboard') .
+            ' <span class="text-danger">*</span>',
+            ['for' => 'chair']
+        );
+        echo html_writer::start_tag('select', [
+            'name' => 'chair',
+            'id' => 'chair',
+            'class' => 'form-control',
+            'required' => 'required',
+        ]);
+        echo html_writer::tag('option', get_string('selectuser', 'local_jobboard'), ['value' => '']);
+        foreach ($availableusers as $user) {
+            echo html_writer::tag('option', fullname($user) . ' (' . $user->email . ')', ['value' => $user->id]);
+        }
+        echo html_writer::end_tag('select');
+        echo html_writer::tag('small',
+            get_string('chairhelp', 'local_jobboard'),
+            ['class' => 'form-text text-muted']
+        );
+        echo html_writer::end_div();
+
+        // Secretary (optional).
+        echo html_writer::start_div('form-group');
+        echo html_writer::tag('label',
+            '<i class="fa fa-user-edit text-primary mr-1"></i>' . get_string('role_secretary', 'local_jobboard'),
+            ['for' => 'secretary']
+        );
+        echo html_writer::start_tag('select', ['name' => 'secretary', 'id' => 'secretary', 'class' => 'form-control']);
+        echo html_writer::tag('option', get_string('nosecretaryoptional', 'local_jobboard'), ['value' => '']);
+        foreach ($availableusers as $user) {
+            echo html_writer::tag('option', fullname($user) . ' (' . $user->email . ')', ['value' => $user->id]);
+        }
+        echo html_writer::end_tag('select');
+        echo html_writer::end_div();
+
+        // Evaluators (optional multiple).
+        echo html_writer::start_div('form-group');
+        echo html_writer::tag('label',
+            '<i class="fa fa-user-check text-success mr-1"></i>' . get_string('role_evaluator', 'local_jobboard') .
+            ' (' . get_string('optional', 'local_jobboard') . ')',
+            ['for' => 'evaluators']
+        );
+        echo html_writer::start_tag('select', [
+            'name' => 'evaluators[]',
+            'id' => 'evaluators',
+            'class' => 'form-control',
+            'multiple' => 'multiple',
+            'size' => '5',
+        ]);
+        foreach ($availableusers as $user) {
+            echo html_writer::tag('option', fullname($user) . ' (' . $user->email . ')', ['value' => $user->id]);
+        }
+        echo html_writer::end_tag('select');
+        echo html_writer::tag('small',
+            get_string('evaluatorshelp', 'local_jobboard'),
+            ['class' => 'form-text text-muted']
+        );
+        echo html_writer::end_div();
+
+        // Info alert.
+        echo html_writer::start_div('alert alert-info');
+        echo html_writer::tag('i', '', ['class' => 'fa fa-info-circle mr-2']);
+        echo get_string('committeeautoroleassign', 'local_jobboard');
+        echo html_writer::end_div();
+
+        echo html_writer::tag('button',
+            '<i class="fa fa-check mr-2"></i>' . get_string('createcommittee', 'local_jobboard'),
+            ['type' => 'submit', 'class' => 'btn btn-success btn-lg']
+        );
+
+        echo html_writer::end_tag('form');
+
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+    }
 }
 
-// Add member modal.
-echo '<div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog">';
-echo '<div class="modal-dialog" role="document">';
-echo '<div class="modal-content">';
-echo '<div class="modal-header">';
-echo '<h5 class="modal-title">' . get_string('addmember', 'local_jobboard') . '</h5>';
-echo '<button type="button" class="close" data-dismiss="modal">';
-echo '<span>&times;</span>';
-echo '</button>';
-echo '</div>';
-echo '<form method="get" action="">';
-echo '<div class="modal-body">';
-echo '<input type="hidden" name="vacancy" value="' . $vacancyid . '">';
-echo '<input type="hidden" name="action" value="addmember">';
-echo '<input type="hidden" name="sesskey" value="' . sesskey() . '">';
+// ============================================================================
+// NAVIGATION FOOTER
+// ============================================================================
+echo html_writer::start_div('card mt-4 bg-light');
+echo html_writer::start_div('card-body d-flex flex-wrap align-items-center justify-content-center');
 
-// User selection.
-$potentialusers = get_users_by_capability($context, 'local/jobboard:manageworkflow',
-    'u.id, u.firstname, u.lastname, u.email', 'u.lastname, u.firstname');
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php'),
+    '<i class="fa fa-tachometer-alt mr-2"></i>' . get_string('dashboard', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary m-1']
+);
 
-// Exclude existing members.
-$existingids = array_column($committee->members, 'userid');
+echo html_writer::link(
+    new moodle_url('/local/jobboard/admin/roles.php'),
+    '<i class="fa fa-user-tag mr-2"></i>' . get_string('manageroles', 'local_jobboard'),
+    ['class' => 'btn btn-outline-primary m-1']
+);
 
-echo '<div class="form-group">';
-echo '<label for="userid">' . get_string('user') . '</label>';
-echo '<select name="userid" id="userid" class="form-control" required>';
-echo '<option value="">' . get_string('select') . '</option>';
-foreach ($potentialusers as $user) {
-    if (!in_array($user->id, $existingids)) {
-        echo '<option value="' . $user->id . '">' . fullname($user) . ' (' . $user->email . ')</option>';
-    }
-}
-echo '</select>';
-echo '</div>';
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php', ['view' => 'review']),
+    '<i class="fa fa-clipboard-check mr-2"></i>' . get_string('reviewapplications', 'local_jobboard'),
+    ['class' => 'btn btn-outline-info m-1']
+);
 
-echo '<div class="form-group">';
-echo '<label for="role">' . get_string('role', 'local_jobboard') . '</label>';
-echo '<select name="role" id="role" class="form-control" required>';
-echo '<option value="evaluator">' . get_string('role_evaluator', 'local_jobboard') . '</option>';
-echo '<option value="secretary">' . get_string('role_secretary', 'local_jobboard') . '</option>';
-echo '<option value="observer">' . get_string('role_observer', 'local_jobboard') . '</option>';
-echo '<option value="chair">' . get_string('role_chair', 'local_jobboard') . '</option>';
-echo '</select>';
-echo '</div>';
+echo html_writer::end_div();
+echo html_writer::end_div();
 
-echo '</div>';
-echo '<div class="modal-footer">';
-echo '<button type="button" class="btn btn-secondary" data-dismiss="modal">' . get_string('cancel') . '</button>';
-echo '<button type="submit" class="btn btn-primary">' . get_string('add') . '</button>';
-echo '</div>';
-echo '</form>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
+echo html_writer::end_div(); // local-jobboard-committees
 
 echo $OUTPUT->footer();

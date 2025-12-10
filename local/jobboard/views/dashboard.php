@@ -381,7 +381,11 @@ if ($canManageContent) {
             echo html_writer::start_div();
             echo html_writer::tag('h6', get_string('committees', 'local_jobboard'), ['class' => 'mb-1']);
             echo html_writer::tag('small', get_string('committees_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
-            echo html_writer::tag('span', get_string('committees_access_hint', 'local_jobboard'), ['class' => 'd-block small text-muted']);
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/manage_committee.php'),
+                '<i class="fa fa-users-cog mr-1"></i>' . get_string('managecommittees', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-info']
+            );
             echo html_writer::end_div();
             echo html_writer::end_div();
             echo html_writer::end_div();
@@ -563,6 +567,24 @@ if ($canManageContent) {
 
         // Additional Admin Row - API & Advanced Tools.
         echo html_writer::start_div('row mb-4');
+
+        // Role Management.
+        echo html_writer::start_div('col-md-3 col-sm-6 mb-3');
+        echo html_writer::start_div('card border-0 bg-light h-100');
+        echo html_writer::start_div('card-body d-flex align-items-center');
+        echo html_writer::tag('i', '', ['class' => 'fa fa-user-tag fa-2x text-success mr-3']);
+        echo html_writer::start_div();
+        echo html_writer::tag('h6', get_string('manageroles', 'local_jobboard'), ['class' => 'mb-1']);
+        echo html_writer::tag('small', get_string('manageroles_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+        echo html_writer::link(
+            new moodle_url('/local/jobboard/admin/roles.php'),
+            '<i class="fa fa-users-cog mr-1"></i>' . get_string('manage', 'local_jobboard'),
+            ['class' => 'btn btn-sm btn-outline-success']
+        );
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+        echo html_writer::end_div();
 
         // API Tokens.
         if (has_capability('local/jobboard:manageapitokens', $context)) {
