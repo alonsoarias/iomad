@@ -3241,3 +3241,18 @@ $string['rank'] = 'Rank';
 $string['avgscore'] = 'Avg Score';
 $string['votes'] = 'Votes';
 $string['selectuser'] = 'Select a user...';
+
+// ============================================================================
+// Email Templates UI (v2.2.2)
+// ============================================================================
+$string['totaltemplates'] = 'Total Templates';
+$string['customizedtemplates'] = 'Customized';
+$string['defaulttemplates'] = 'Using Defaults';
+$string['aboutemailtemplates'] = 'About Email Templates';
+$string['templatelist'] = 'Template List';
+$string['templates'] = 'templates';
+$string['templatename'] = 'Template Name';
+$string['templatecode'] = 'Code';
+$string['templatenotfound'] = 'Template not found';
+$string['htmlsupport'] = 'HTML Support';
+$string['placeholders'] = 'Placeholders';

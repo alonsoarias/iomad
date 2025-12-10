@@ -3425,3 +3425,18 @@ $string['rank'] = 'Posición';
 $string['avgscore'] = 'Puntuación Promedio';
 $string['votes'] = 'Votos';
 $string['selectuser'] = 'Seleccione un usuario...';
+
+// ============================================================================
+// Interfaz de Plantillas de Email (v2.2.2)
+// ============================================================================
+$string['totaltemplates'] = 'Total de Plantillas';
+$string['customizedtemplates'] = 'Personalizadas';
+$string['defaulttemplates'] = 'Usando Predeterminadas';
+$string['aboutemailtemplates'] = 'Acerca de las Plantillas de Email';
+$string['templatelist'] = 'Lista de Plantillas';
+$string['templates'] = 'plantillas';
+$string['templatename'] = 'Nombre de Plantilla';
+$string['templatecode'] = 'Código';
+$string['templatenotfound'] = 'Plantilla no encontrada';
+$string['htmlsupport'] = 'Soporte HTML';
+$string['placeholders'] = 'Marcadores';

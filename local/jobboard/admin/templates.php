@@ -18,6 +18,7 @@
  * Email templates management page for local_jobboard.
  *
  * Provides interface to customize email notifications sent to applicants.
+ * Redesigned with ui_helper for consistent UX pattern.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -29,6 +30,7 @@ require_once($CFG->libdir . '/adminlib.php');
 
 use local_jobboard\email_template;
 use local_jobboard\forms\email_template_form;
+use local_jobboard\output\ui_helper;
 
 admin_externalpage_setup('local_jobboard_templates');
 
@@ -37,6 +39,8 @@ $code = optional_param('code', '', PARAM_ALPHANUMEXT);
 
 $context = context_system::instance();
 $pageurl = new moodle_url('/local/jobboard/admin/templates.php');
+
+$PAGE->requires->css('/local/jobboard/styles.css');
 
 /**
  * Check if companyid column exists in email_template table.
@@ -101,6 +105,10 @@ if ($action === 'edit' && $code) {
         $template = email_template::get_default($code);
     }
 
+    if (!$template) {
+        redirect($pageurl, get_string('templatenotfound', 'local_jobboard'), null, \core\output\notification::NOTIFY_ERROR);
+    }
+
     $placeholders = email_template::get_placeholders($code);
 
     $customdata = [
@@ -124,7 +132,7 @@ if ($action === 'edit' && $code) {
         redirect($pageurl, get_string('emailtemplate_saved', 'local_jobboard'), null, \core\output\notification::NOTIFY_SUCCESS);
     }
 
-    // Display the form.
+    // Display the edit form.
     $templatename = get_string_manager()->string_exists('template_' . $code, 'local_jobboard')
         ? get_string('template_' . $code, 'local_jobboard')
         : $code;
@@ -133,29 +141,113 @@ if ($action === 'edit' && $code) {
 
     echo $OUTPUT->header();
 
-    // Breadcrumb-style navigation.
-    echo html_writer::start_div('mb-4');
-    echo html_writer::link($pageurl, '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtotemplates', 'local_jobboard'),
-        ['class' => 'btn btn-outline-secondary']);
-    echo html_writer::end_div();
+    echo html_writer::start_div('local-jobboard-templates');
 
-    echo $OUTPUT->heading(get_string('emailtemplate', 'local_jobboard') . ': ' . $templatename);
+    // Page header with back button.
+    echo ui_helper::page_header(
+        get_string('emailtemplates', 'local_jobboard'),
+        [],
+        [
+            [
+                'url' => $pageurl,
+                'label' => get_string('backtotemplates', 'local_jobboard'),
+                'icon' => 'arrow-left',
+                'class' => 'btn btn-outline-secondary',
+            ],
+        ]
+    );
+
+    // Template info card.
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-primary text-white d-flex justify-content-between align-items-center');
+    echo html_writer::tag('h5',
+        '<i class="fa fa-edit mr-2"></i>' . get_string('edittemplate', 'local_jobboard') . ': ' . $templatename,
+        ['class' => 'mb-0']
+    );
+    echo html_writer::tag('code', $code, ['class' => 'badge badge-light']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
 
     // Show description for the template type.
     $desckey = 'template_' . $code . '_desc';
     if (get_string_manager()->string_exists($desckey, 'local_jobboard')) {
-        echo html_writer::div(get_string($desckey, 'local_jobboard'), 'alert alert-info');
+        echo html_writer::start_div('alert alert-info d-flex align-items-start mb-4');
+        echo html_writer::tag('i', '', ['class' => 'fa fa-info-circle fa-lg mr-3 mt-1']);
+        echo html_writer::tag('div', get_string($desckey, 'local_jobboard'));
+        echo html_writer::end_div();
+    }
+
+    // Available placeholders.
+    if (!empty($placeholders)) {
+        echo html_writer::start_div('card bg-light mb-4');
+        echo html_writer::start_div('card-header');
+        echo html_writer::tag('h6',
+            '<i class="fa fa-code mr-2"></i>' . get_string('availableplaceholders', 'local_jobboard'),
+            ['class' => 'mb-0']
+        );
+        echo html_writer::end_div();
+        echo html_writer::start_div('card-body');
+        echo html_writer::start_div('row');
+        foreach ($placeholders as $placeholder => $description) {
+            echo html_writer::start_div('col-md-6 col-lg-4 mb-2');
+            echo html_writer::tag('code', $placeholder, ['class' => 'text-primary']);
+            echo html_writer::tag('br');
+            echo html_writer::tag('small', $description, ['class' => 'text-muted']);
+            echo html_writer::end_div();
+        }
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+        echo html_writer::end_div();
     }
 
     // Display the form.
     $mform->display();
 
-    // Initialize live preview JavaScript.
-    $PAGE->requires->js_call_amd('local_jobboard/email_template_preview', 'init', [[]]);
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
+
+    // Live preview section.
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-success text-white');
+    echo html_writer::tag('h5',
+        '<i class="fa fa-eye mr-2"></i>' . get_string('livepreview', 'local_jobboard'),
+        ['class' => 'mb-0']
+    );
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+    echo html_writer::div('', '', ['id' => 'template-preview']);
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+
+    // Navigation footer.
+    echo html_writer::start_div('card mt-4 bg-light');
+    echo html_writer::start_div('card-body d-flex flex-wrap align-items-center justify-content-center');
+    echo html_writer::link(
+        $pageurl,
+        '<i class="fa fa-envelope mr-2"></i>' . get_string('emailtemplates', 'local_jobboard'),
+        ['class' => 'btn btn-outline-secondary m-1']
+    );
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/index.php'),
+        '<i class="fa fa-tachometer-alt mr-2"></i>' . get_string('dashboard', 'local_jobboard'),
+        ['class' => 'btn btn-outline-primary m-1']
+    );
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+
+    echo html_writer::end_div(); // local-jobboard-templates
+
+    // Initialize live preview JavaScript (only if needed).
+    // Note: The email_template_preview module provides live preview functionality.
+    // If module is not available, preview will update on form submission.
 
     echo $OUTPUT->footer();
     exit;
 }
+
+// ============================================================================
+// TEMPLATES LIST VIEW
+// ============================================================================
 
 // Install default templates if needed.
 $existingcount = local_jobboard_count_templates(0);
@@ -173,24 +265,84 @@ $dbcodes = array_map(function($tpl) {
 }, $templates);
 $missingcodes = array_diff($allcodes, $dbcodes);
 
+// Calculate statistics.
+$totalTemplates = count($templates) + count($missingcodes);
+$customizedTemplates = 0;
+$defaultTemplates = 0;
+
+foreach ($templates as $tpl) {
+    $customizedTemplates++;
+}
+$defaultTemplates = count($missingcodes);
+
 // Display the templates list.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('emailtemplates', 'local_jobboard'));
 
-// Help text.
-echo html_writer::start_div('alert alert-info d-flex align-items-start');
-echo html_writer::tag('i', '', ['class' => 'fa fa-info-circle fa-2x mr-3 mt-1']);
+echo html_writer::start_div('local-jobboard-templates');
+
+// ============================================================================
+// PAGE HEADER WITH ACTIONS
+// ============================================================================
+echo ui_helper::page_header(
+    get_string('emailtemplates', 'local_jobboard'),
+    [],
+    [
+        [
+            'url' => new moodle_url('/local/jobboard/index.php'),
+            'label' => get_string('dashboard', 'local_jobboard'),
+            'icon' => 'tachometer-alt',
+            'class' => 'btn btn-outline-secondary',
+        ],
+    ]
+);
+
+// ============================================================================
+// STATISTICS CARDS
+// ============================================================================
+echo html_writer::start_div('row mb-4');
+echo ui_helper::stat_card((string) $totalTemplates, get_string('totaltemplates', 'local_jobboard'), 'primary', 'envelope');
+echo ui_helper::stat_card((string) $customizedTemplates, get_string('customizedtemplates', 'local_jobboard'), 'success', 'edit');
+echo ui_helper::stat_card((string) $defaultTemplates, get_string('defaulttemplates', 'local_jobboard'), 'secondary', 'file-alt');
+echo html_writer::end_div();
+
+// ============================================================================
+// INFO CARD
+// ============================================================================
+echo html_writer::start_div('card shadow-sm mb-4 border-info');
+echo html_writer::start_div('card-body d-flex align-items-start');
+echo html_writer::tag('i', '', ['class' => 'fa fa-info-circle fa-2x text-info mr-3']);
 echo html_writer::start_div();
-echo html_writer::tag('strong', get_string('emailtemplates', 'local_jobboard'));
-echo html_writer::tag('p', get_string('emailtemplates_help', 'local_jobboard'), ['class' => 'mb-0 mt-1']);
+echo html_writer::tag('h6', get_string('aboutemailtemplates', 'local_jobboard'), ['class' => 'mb-1']);
+echo html_writer::tag('p', get_string('emailtemplates_help', 'local_jobboard'), ['class' => 'text-muted mb-0']);
 echo html_writer::end_div();
 echo html_writer::end_div();
+echo html_writer::end_div();
+
+// ============================================================================
+// TEMPLATES TABLE
+// ============================================================================
+echo html_writer::start_div('card shadow-sm mb-4');
+echo html_writer::start_div('card-header bg-white d-flex justify-content-between align-items-center');
+echo html_writer::tag('h5',
+    '<i class="fa fa-envelope text-primary mr-2"></i>' . get_string('templatelist', 'local_jobboard'),
+    ['class' => 'mb-0']
+);
+echo html_writer::tag('span', $totalTemplates . ' ' . get_string('templates', 'local_jobboard'), ['class' => 'badge badge-primary']);
+echo html_writer::end_div();
+echo html_writer::start_div('card-body');
 
 if (empty($templates) && empty($missingcodes)) {
-    echo $OUTPUT->notification(get_string('notemplates', 'local_jobboard'), 'info');
+    echo ui_helper::empty_state(get_string('notemplates', 'local_jobboard'), 'envelope');
 } else {
-    // Card-based layout for templates.
-    echo html_writer::start_div('row');
+    $headers = [
+        get_string('templatename', 'local_jobboard'),
+        get_string('templatecode', 'local_jobboard'),
+        get_string('subject'),
+        get_string('status'),
+        get_string('actions'),
+    ];
+
+    $rows = [];
 
     // Database templates (customized).
     foreach ($templates as $tpl) {
@@ -199,7 +351,34 @@ if (empty($templates) && empty($missingcodes)) {
             ? get_string('template_' . $tplcode, 'local_jobboard')
             : $tplcode;
 
-        echo render_template_card($tplcode, $templatename, $tpl->subject, true, $pageurl);
+        $editurl = new moodle_url($pageurl, ['action' => 'edit', 'code' => $tplcode]);
+        $reseturl = new moodle_url($pageurl, ['action' => 'reset', 'code' => $tplcode, 'sesskey' => sesskey()]);
+
+        $nameCell = html_writer::tag('strong', format_string($templatename));
+
+        $codeCell = html_writer::tag('code', $tplcode, ['class' => 'text-muted']);
+
+        $subjectCell = html_writer::tag('span', format_string($tpl->subject), ['class' => 'text-truncate d-inline-block', 'style' => 'max-width: 250px;']);
+
+        $statusCell = html_writer::tag('span',
+            '<i class="fa fa-check-circle mr-1"></i>' . get_string('customized', 'local_jobboard'),
+            ['class' => 'badge badge-success']
+        );
+
+        $actions = html_writer::link($editurl,
+            '<i class="fa fa-edit"></i>',
+            ['class' => 'btn btn-sm btn-outline-primary mr-1', 'title' => get_string('edit')]
+        );
+        $actions .= html_writer::link($reseturl,
+            '<i class="fa fa-undo"></i>',
+            [
+                'class' => 'btn btn-sm btn-outline-warning',
+                'title' => get_string('resettodefault', 'local_jobboard'),
+                'onclick' => "return confirm('" . get_string('confirmreset', 'local_jobboard') . "');",
+            ]
+        );
+
+        $rows[] = [$nameCell, $codeCell, $subjectCell, $statusCell, $actions];
     }
 
     // Missing templates (using defaults).
@@ -213,85 +392,117 @@ if (empty($templates) && empty($missingcodes)) {
             ? get_string('template_' . $missingcode, 'local_jobboard')
             : $missingcode;
 
-        echo render_template_card($missingcode, $templatename, $defaultTemplate->subject, false, $pageurl);
+        $editurl = new moodle_url($pageurl, ['action' => 'edit', 'code' => $missingcode]);
+
+        $nameCell = html_writer::tag('strong', format_string($templatename));
+
+        $codeCell = html_writer::tag('code', $missingcode, ['class' => 'text-muted']);
+
+        $subjectCell = html_writer::tag('span', format_string($defaultTemplate->subject), ['class' => 'text-truncate d-inline-block', 'style' => 'max-width: 250px;']);
+
+        $statusCell = html_writer::tag('span',
+            '<i class="fa fa-file-alt mr-1"></i>' . get_string('default', 'local_jobboard'),
+            ['class' => 'badge badge-secondary']
+        );
+
+        $actions = html_writer::link($editurl,
+            '<i class="fa fa-edit"></i>',
+            ['class' => 'btn btn-sm btn-outline-primary', 'title' => get_string('customize', 'local_jobboard')]
+        );
+
+        $rows[] = [$nameCell, $codeCell, $subjectCell, $statusCell, $actions];
     }
 
-    echo html_writer::end_div(); // .row
+    echo ui_helper::data_table($headers, $rows);
 }
 
-// Quick help section.
-echo html_writer::start_div('card mt-4 shadow-sm');
+echo html_writer::end_div(); // card-body
+echo html_writer::end_div(); // card
+
+// ============================================================================
+// QUICK HELP SECTION
+// ============================================================================
+echo html_writer::start_div('card shadow-sm mb-4');
 echo html_writer::start_div('card-header bg-secondary text-white');
-echo '<i class="fa fa-question-circle mr-2"></i>' . get_string('quickhelp', 'local_jobboard');
+echo html_writer::tag('h6',
+    '<i class="fa fa-question-circle mr-2"></i>' . get_string('quickhelp', 'local_jobboard'),
+    ['class' => 'mb-0']
+);
 echo html_writer::end_div();
 echo html_writer::start_div('card-body');
-echo html_writer::start_tag('ul', ['class' => 'mb-0']);
-echo html_writer::tag('li', get_string('templatehelp_placeholders', 'local_jobboard'));
-echo html_writer::tag('li', get_string('templatehelp_html', 'local_jobboard'));
-echo html_writer::tag('li', get_string('templatehelp_reset', 'local_jobboard'));
-echo html_writer::end_tag('ul');
+
+echo html_writer::start_div('row');
+
+// Placeholders help.
+echo html_writer::start_div('col-md-4 mb-3 mb-md-0');
+echo html_writer::start_div('d-flex align-items-start');
+echo html_writer::tag('i', '', ['class' => 'fa fa-code text-primary fa-lg mr-3 mt-1']);
+echo html_writer::start_div();
+echo html_writer::tag('h6', get_string('placeholders', 'local_jobboard'), ['class' => 'mb-1']);
+echo html_writer::tag('small', get_string('templatehelp_placeholders', 'local_jobboard'), ['class' => 'text-muted']);
 echo html_writer::end_div();
 echo html_writer::end_div();
+echo html_writer::end_div();
+
+// HTML help.
+echo html_writer::start_div('col-md-4 mb-3 mb-md-0');
+echo html_writer::start_div('d-flex align-items-start');
+echo html_writer::tag('i', '', ['class' => 'fa fa-html5 text-warning fa-lg mr-3 mt-1']);
+echo html_writer::start_div();
+echo html_writer::tag('h6', get_string('htmlsupport', 'local_jobboard'), ['class' => 'mb-1']);
+echo html_writer::tag('small', get_string('templatehelp_html', 'local_jobboard'), ['class' => 'text-muted']);
+echo html_writer::end_div();
+echo html_writer::end_div();
+echo html_writer::end_div();
+
+// Reset help.
+echo html_writer::start_div('col-md-4');
+echo html_writer::start_div('d-flex align-items-start');
+echo html_writer::tag('i', '', ['class' => 'fa fa-undo text-info fa-lg mr-3 mt-1']);
+echo html_writer::start_div();
+echo html_writer::tag('h6', get_string('resettodefault', 'local_jobboard'), ['class' => 'mb-1']);
+echo html_writer::tag('small', get_string('templatehelp_reset', 'local_jobboard'), ['class' => 'text-muted']);
+echo html_writer::end_div();
+echo html_writer::end_div();
+echo html_writer::end_div();
+
+echo html_writer::end_div(); // row
+echo html_writer::end_div(); // card-body
+echo html_writer::end_div(); // card
+
+// ============================================================================
+// NAVIGATION FOOTER
+// ============================================================================
+echo html_writer::start_div('card mt-4 bg-light');
+echo html_writer::start_div('card-body d-flex flex-wrap align-items-center justify-content-center');
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php'),
+    '<i class="fa fa-tachometer-alt mr-2"></i>' . get_string('dashboard', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary m-1']
+);
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/admin/doctypes.php'),
+    '<i class="fa fa-file-alt mr-2"></i>' . get_string('doctypes', 'local_jobboard'),
+    ['class' => 'btn btn-outline-primary m-1']
+);
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/admin/roles.php'),
+    '<i class="fa fa-user-tag mr-2"></i>' . get_string('manageroles', 'local_jobboard'),
+    ['class' => 'btn btn-outline-info m-1']
+);
+
+echo html_writer::link(
+    new moodle_url('/admin/settings.php', ['section' => 'local_jobboard']),
+    '<i class="fa fa-cog mr-2"></i>' . get_string('pluginsettings', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary m-1']
+);
+
+echo html_writer::end_div();
+echo html_writer::end_div();
+
+echo html_writer::end_div(); // local-jobboard-templates
 
 echo $OUTPUT->footer();
-
-/**
- * Render a template card.
- *
- * @param string $code Template code.
- * @param string $name Template display name.
- * @param string $subject Template subject.
- * @param bool $iscustomized Whether template is customized.
- * @param moodle_url $pageurl Base page URL.
- * @return string HTML output.
- */
-function render_template_card(string $code, string $name, string $subject, bool $iscustomized, moodle_url $pageurl): string {
-    $editurl = new moodle_url($pageurl, ['action' => 'edit', 'code' => $code]);
-    $reseturl = new moodle_url($pageurl, ['action' => 'reset', 'code' => $code, 'sesskey' => sesskey()]);
-
-    $borderclass = $iscustomized ? 'border-success' : 'border-secondary';
-    $statusclass = $iscustomized ? 'badge-success' : 'badge-secondary';
-    $statustext = $iscustomized ? get_string('customized', 'local_jobboard') : get_string('default', 'local_jobboard');
-
-    $html = html_writer::start_div('col-lg-6 col-xl-4 mb-4');
-    $html .= html_writer::start_div('card h-100 shadow-sm ' . $borderclass);
-
-    // Card header.
-    $html .= html_writer::start_div('card-header d-flex justify-content-between align-items-center');
-    $html .= html_writer::tag('span', $name, ['class' => 'font-weight-bold']);
-    $html .= html_writer::tag('span', $statustext, ['class' => 'badge ' . $statusclass]);
-    $html .= html_writer::end_div();
-
-    // Card body.
-    $html .= html_writer::start_div('card-body');
-    $html .= html_writer::tag('code', s($code), ['class' => 'small text-muted d-block mb-2']);
-    $html .= html_writer::tag('p', '<strong>' . get_string('subject') . ':</strong>', ['class' => 'mb-1 small']);
-    $html .= html_writer::tag('p', format_string($subject), ['class' => 'text-muted small mb-0 text-truncate']);
-    $html .= html_writer::end_div();
-
-    // Card footer with actions.
-    $html .= html_writer::start_div('card-footer bg-transparent');
-
-    // Edit button.
-    $html .= html_writer::link($editurl,
-        '<i class="fa fa-edit mr-1"></i>' . get_string('edit'),
-        ['class' => 'btn btn-sm btn-primary mr-2']
-    );
-
-    // Reset button (only for customized templates).
-    if ($iscustomized) {
-        $html .= html_writer::link($reseturl,
-            '<i class="fa fa-undo mr-1"></i>' . get_string('reset'),
-            [
-                'class' => 'btn btn-sm btn-outline-secondary',
-                'onclick' => "return confirm('" . get_string('confirmreset', 'local_jobboard') . "');",
-            ]
-        );
-    }
-
-    $html .= html_writer::end_div();
-    $html .= html_writer::end_div(); // .card
-    $html .= html_writer::end_div(); // .col
-
-    return $html;
-}
