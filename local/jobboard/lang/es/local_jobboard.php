@@ -3290,3 +3290,38 @@ $string['reviewapplication'] = 'Revisar aplicación';
 
 // Strings para vista pública.
 $string['vacanciesavailable'] = 'Hay {$a} vacantes disponibles en esta convocatoria';
+
+// Dashboard strings.
+$string['role_administrator'] = 'Administrador';
+$string['role_manager'] = 'Gestor';
+$string['role_applicant'] = 'Aplicante';
+$string['dashboard_manager_welcome'] = 'Gestiona convocatorias, vacantes y revisa aplicaciones.';
+$string['dashboard_reviewer_welcome'] = 'Revisa documentos y evalúa candidatos asignados.';
+$string['viewpublicpage'] = 'Ver página pública';
+$string['overview'] = 'Resumen';
+$string['contentmanagement'] = 'Gestión de contenido';
+$string['active'] = 'Activas';
+$string['draft'] = 'Borrador';
+$string['viewall'] = 'Ver todo';
+$string['addnew'] = 'Agregar';
+$string['pending'] = 'Pendiente';
+$string['total'] = 'Total';
+$string['reviewall'] = 'Revisar todo';
+$string['reportsanddata'] = 'Reportes y datos';
+$string['exportdata'] = 'Exportar datos';
+$string['exportdata_desc'] = 'Exportar datos de aplicaciones y documentos';
+$string['systemconfiguration'] = 'Configuración del sistema';
+$string['emailtemplates'] = 'Plantillas de correo';
+$string['emailtemplates_desc'] = 'Configurar plantillas de notificación por correo';
+$string['exemptions'] = 'Exenciones';
+$string['adminonly'] = 'Solo administradores';
+$string['reviewoverview'] = 'Resumen de revisiones';
+$string['mypendingreviews'] = 'Mis revisiones pendientes';
+$string['completedreviews'] = 'Revisiones completadas';
+$string['pendingreviews_alert'] = 'Tienes {$a} revisiones pendientes';
+$string['allapplications'] = 'Todas las aplicaciones';
+$string['allapplications_desc'] = 'Ver y buscar todas las aplicaciones del sistema';
+$string['explore'] = 'Explorar';
+$string['welcometojobboard'] = 'Bienvenido a la Bolsa de Empleo';
+$string['vieweronly_desc'] = 'Actualmente solo tienes acceso para ver las vacantes públicas disponibles.';
+$string['viewpublicvacancies'] = 'Ver vacantes públicas';
