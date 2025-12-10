@@ -119,15 +119,6 @@ class vacancy {
                 return $this->get_open_date();
             case 'closedate':
                 return $this->get_close_date();
-            case 'salary':
-                // Salary field has been removed - return empty string for compatibility.
-                return '';
-            case 'isextemporaneous':
-                // Extemporaneous field has been removed - always return 0.
-                return 0;
-            case 'extemporaneousreason':
-                // Extemporaneous reason has been removed - return empty string.
-                return '';
             default:
                 // Check if property exists in record (for any unmapped fields).
                 if ($this->record !== null && property_exists($this->record, $name)) {
@@ -144,7 +135,7 @@ class vacancy {
      * @return bool Whether the property is set.
      */
     public function __isset(string $name): bool {
-        return in_array($name, ['opendate', 'closedate', 'salary', 'isextemporaneous', 'extemporaneousreason']);
+        return in_array($name, ['opendate', 'closedate']);
     }
 
     /**

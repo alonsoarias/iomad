@@ -200,10 +200,7 @@
                         <dd class="mb-2">{{vacancy.duration}}</dd>
                         {{/vacancy.duration}}
 
-                        {{#vacancy.salary}}
-                        <dt class="text-muted small">{{#str}}salary, local_jobboard{{/str}}</dt>
-                        <dd class="mb-2">{{vacancy.salary}}</dd>
-                        {{/vacancy.salary}}
+                        {{! Salary field removed in Phase 10 }}
 
                         {{#vacancy.department}}
                         <dt class="text-muted small">{{#str}}department, local_jobboard{{/str}}</dt>

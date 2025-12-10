@@ -162,20 +162,7 @@ $string['duration_help'] = 'Duración estimada del contrato o período de vincul
 - Mencione si existe posibilidad de renovación o prórroga
 - Para docentes, puede indicar el período académico
 - Si depende de un proyecto, indique la duración esperada del mismo';
-$string['salary'] = 'Salario';
-$string['salary_help'] = 'Información sobre remuneración y beneficios económicos.
-
-**Puede incluir:**
-- Rango salarial (ej: "$3.000.000 - $4.500.000 según experiencia")
-- Salario exacto si está definido
-- Referencia a escalafón docente (si aplica)
-- Información sobre bonificaciones o beneficios adicionales
-- Periodicidad del pago (mensual, quincenal)
-
-**Ejemplo para docentes:**
-"Según escalafón docente. Categoría Instructor: $3.200.000 - Categoría Asistente: $4.100.000. Incluye prima de servicios y vacaciones legales."
-
-**Nota:** Este campo es opcional. Si prefiere no publicar esta información, puede dejarlo en blanco o indicar "A convenir según perfil del candidato".';
+// Campo salary eliminado en Fase 10 - remuneración manejada externamente.
 $string['location'] = 'Ubicación';
 $string['location_help'] = 'Lugar físico donde se desempeñarán las funciones del cargo.
 
@@ -553,15 +540,8 @@ $string['activeconvocatorias_alert'] = 'Hay {$a} convocatorias activas disponibl
 $string['novacancies'] = 'No hay vacantes disponibles';
 $string['daysleft'] = '{$a} días restantes';
 
-// Vacantes extemporáneas.
-$string['isextemporaneous'] = 'Vacante extemporánea';
-$string['isextemporaneous_desc'] = 'Habilitar fechas personalizadas diferentes a las de la convocatoria';
-$string['isextemporaneous_help'] = 'Cuando está habilitado, puede establecer fechas de apertura y cierre personalizadas para esta vacante que difieren de las fechas de la convocatoria. Se requiere una justificación para fines de auditoría.';
-$string['extemporaneousreason'] = 'Justificación de fechas extemporáneas';
-$string['extemporaneousreason_help'] = 'Explique por qué esta vacante necesita fechas diferentes a la convocatoria. Esto es requerido para fines de auditoría y cumplimiento.';
+// Vacantes extemporáneas eliminadas en Fase 10 - fechas ahora a nivel de convocatoria.
 $string['convocatoriadates'] = 'Fechas de la convocatoria';
-$string['error:extemporaneousreasonrequired'] = 'Se requiere una justificación cuando se usan fechas extemporáneas';
-$string['extemporaneousvacancy'] = 'Extemporánea';
 $string['usingconvocatoriadates'] = 'Usando fechas de la convocatoria';
 
 // External links.
@@ -2119,7 +2099,7 @@ $string['tour_vacancy_step4_content'] = 'Preste atencion a la fecha de cierre! S
 $string['tour_vacancy_step5_title'] = 'Boton Postularse';
 $string['tour_vacancy_step5_content'] = 'Haga clic en este boton para iniciar su postulacion. Es posible que necesite iniciar sesion primero si aun no lo ha hecho.';
 $string['tour_vacancy_step6_title'] = 'Detalles Adicionales';
-$string['tour_vacancy_step6_content'] = 'Revise detalles adicionales como duracion, informacion salarial, departamento y fechas importantes antes de postularse.';
+$string['tour_vacancy_step6_content'] = 'Revise detalles adicionales como duración, tipo de contrato, departamento y fechas importantes antes de postularse.';
 $string['tour_vacancy_step7_title'] = 'Navegación';
 $string['tour_vacancy_step7_content'] = 'Use este botón para volver a la página anterior - ya sea la lista de convocatorias o la lista de vacantes, dependiendo de cómo llegó aquí.';
 $string['tour_vacancy_step8_title'] = '¡Listo para Postularse!';

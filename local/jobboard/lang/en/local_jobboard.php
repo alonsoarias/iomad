@@ -98,8 +98,7 @@ $string['contracttype'] = 'Contract type';
 $string['contracttype_help'] = 'Select the employment contract type for this position. Options typically include: Full-time (dedicated), Part-time (hourly), Temporary, Fixed-term. The contract type affects benefits, schedule expectations, and compensation.';
 $string['duration'] = 'Duration';
 $string['duration_help'] = 'Specify the expected duration of the contract. For permanent positions, you can indicate "Indefinite". For temporary or fixed-term contracts, specify the period (e.g., "6 months", "1 academic year", "Until December 2025").';
-$string['salary'] = 'Salary';
-$string['salary_help'] = 'Enter the salary or compensation range for this position. You can specify a fixed amount, a range (e.g., "$2,000 - $2,500"), or reference a salary scale. This field is optional but recommended for transparency.';
+// Salary field removed in Phase 10 - compensation handled externally.
 $string['location'] = 'Location';
 $string['location_help'] = 'Specify where the position will be performed. Include campus name, city, or indicate if remote work is possible. Example: "Main Campus - Bogota", "Virtual/Remote", or "Hybrid - 3 days on-site".';
 $string['modality'] = 'Modality';
@@ -376,15 +375,8 @@ $string['nodocexemptions'] = 'No document exemptions configured for this call';
 $string['alldocumentsrequired'] = 'All document types are required';
 $string['exempteddocumentscount'] = '{$a} document type(s) exempted';
 
-// Extemporaneous vacancies.
-$string['isextemporaneous'] = 'Extemporaneous vacancy';
-$string['isextemporaneous_desc'] = 'Enable custom dates different from the call dates';
-$string['isextemporaneous_help'] = 'When enabled, you can set custom opening and closing dates for this vacancy that differ from the parent call dates. A reason must be provided for audit purposes.';
-$string['extemporaneousreason'] = 'Reason for extemporaneous dates';
-$string['extemporaneousreason_help'] = 'Explain why this vacancy needs dates different from the call. This is required for audit and compliance purposes.';
+// Extemporaneous vacancies removed in Phase 10 - dates now managed at convocatoria level.
 $string['convocatoriadates'] = 'Call dates';
-$string['error:extemporaneousreasonrequired'] = 'A reason is required when using extemporaneous dates';
-$string['extemporaneousvacancy'] = 'Extemporaneous';
 $string['usingconvocatoriadates'] = 'Using call dates';
 
 // External links.
@@ -1774,7 +1766,7 @@ $string['tour_vacancy_step4_content'] = 'Pay attention to the closing date! If i
 $string['tour_vacancy_step5_title'] = 'Apply Button';
 $string['tour_vacancy_step5_content'] = 'Click this button to start your application. You may need to log in first if you haven\'t already.';
 $string['tour_vacancy_step6_title'] = 'Additional Details';
-$string['tour_vacancy_step6_content'] = 'Review additional details like duration, salary information, department, and important dates before applying.';
+$string['tour_vacancy_step6_content'] = 'Review additional details like duration, contract type, department, and important dates before applying.';
 $string['tour_vacancy_step7_title'] = 'Navigation';
 $string['tour_vacancy_step7_content'] = 'Use this back button to return to the previous page - either the convocatoria list or the vacancies list, depending on how you navigated here.';
 $string['tour_vacancy_step8_title'] = 'Ready to Apply!';
