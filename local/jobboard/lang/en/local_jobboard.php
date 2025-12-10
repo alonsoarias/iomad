@@ -3140,3 +3140,12 @@ $string['explore'] = 'Explore';
 $string['welcometojobboard'] = 'Welcome to the Job Board';
 $string['vieweronly_desc'] = 'You currently only have access to view public vacancies available.';
 $string['viewpublicvacancies'] = 'View Public Vacancies';
+
+// Dashboard - Workflow Management.
+$string['workflowmanagement'] = 'Workflow Management';
+$string['assignreviewers_desc'] = 'Assign reviewers to applications and vacancies';
+$string['bulkvalidation_desc'] = 'Validate multiple documents at once';
+$string['committees'] = 'Selection Committees';
+$string['committees_desc'] = 'Manage selection committee members';
+$string['committees_access_hint'] = 'Access from vacancy management';
+$string['apitokens_desc'] = 'Manage API access tokens for external integrations';

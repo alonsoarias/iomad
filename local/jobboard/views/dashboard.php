@@ -323,7 +323,76 @@ if ($canManageContent) {
     echo html_writer::end_div(); // row
 
     // ========================================================================
-    // SECTION 3: REPORTS & DATA
+    // SECTION 3: WORKFLOW MANAGEMENT
+    // ========================================================================
+    if ($caps['manageworkflow'] || $caps['assignreviewers'] || $caps['reviewdocuments']) {
+        echo html_writer::tag('h4',
+            '<i class="fa fa-sitemap mr-2"></i>' . get_string('workflowmanagement', 'local_jobboard'),
+            ['class' => 'mb-3']
+        );
+        echo html_writer::start_div('row mb-4');
+
+        // Assign Reviewers.
+        if ($caps['manageworkflow'] || $caps['assignreviewers']) {
+            echo html_writer::start_div('col-md-4 col-sm-6 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
+            echo html_writer::start_div('card-body d-flex align-items-center');
+            echo html_writer::tag('i', '', ['class' => 'fa fa-user-plus fa-2x text-primary mr-3']);
+            echo html_writer::start_div();
+            echo html_writer::tag('h6', get_string('assignreviewers', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('assignreviewers_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/assign_reviewer.php'),
+                '<i class="fa fa-users-cog mr-1"></i>' . get_string('assignreviewers', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-primary']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+        // Bulk Document Validation.
+        if ($caps['reviewdocuments'] || $caps['validatedocuments']) {
+            echo html_writer::start_div('col-md-4 col-sm-6 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
+            echo html_writer::start_div('card-body d-flex align-items-center');
+            echo html_writer::tag('i', '', ['class' => 'fa fa-tasks fa-2x text-success mr-3']);
+            echo html_writer::start_div();
+            echo html_writer::tag('h6', get_string('bulkvalidation', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('bulkvalidation_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/bulk_validate.php'),
+                '<i class="fa fa-check-double mr-1"></i>' . get_string('bulkvalidation', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-success']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+        // Selection Committees (if manageworkflow).
+        if ($caps['manageworkflow']) {
+            echo html_writer::start_div('col-md-4 col-sm-6 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
+            echo html_writer::start_div('card-body d-flex align-items-center');
+            echo html_writer::tag('i', '', ['class' => 'fa fa-users fa-2x text-info mr-3']);
+            echo html_writer::start_div();
+            echo html_writer::tag('h6', get_string('committees', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('committees_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::tag('span', get_string('committees_access_hint', 'local_jobboard'), ['class' => 'd-block small text-muted']);
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+        echo html_writer::end_div(); // row
+    }
+
+    // ========================================================================
+    // SECTION 4: REPORTS & DATA
     // ========================================================================
     if ($caps['viewreports'] || $caps['exportdata']) {
         echo html_writer::tag('h4',
@@ -453,7 +522,7 @@ if ($canManageContent) {
             echo html_writer::tag('h6', get_string('emailtemplates', 'local_jobboard'), ['class' => 'mb-1']);
             echo html_writer::tag('small', get_string('emailtemplates_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
             echo html_writer::link(
-                new moodle_url('/local/jobboard/admin/email_templates.php'),
+                new moodle_url('/local/jobboard/admin/templates.php'),
                 '<i class="fa fa-edit mr-1"></i>' . get_string('manage', 'local_jobboard'),
                 ['class' => 'btn btn-sm btn-outline-info']
             );
@@ -472,10 +541,42 @@ if ($canManageContent) {
             echo html_writer::start_div();
             echo html_writer::tag('h6', get_string('exemptions', 'local_jobboard'), ['class' => 'mb-1']);
             echo html_writer::tag('small', get_string('manageexemptions_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::start_div('btn-group btn-group-sm');
             echo html_writer::link(
                 new moodle_url('/local/jobboard/manage_exemptions.php'),
-                '<i class="fa fa-id-card mr-1"></i>' . get_string('manage', 'local_jobboard'),
-                ['class' => 'btn btn-sm btn-outline-warning']
+                '<i class="fa fa-list mr-1"></i>' . get_string('manage', 'local_jobboard'),
+                ['class' => 'btn btn-outline-warning']
+            );
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/import_exemptions.php'),
+                '<i class="fa fa-upload mr-1"></i>' . get_string('import', 'local_jobboard'),
+                ['class' => 'btn btn-outline-secondary']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+        echo html_writer::end_div(); // row
+
+        // Additional Admin Row - API & Advanced Tools.
+        echo html_writer::start_div('row mb-4');
+
+        // API Tokens.
+        if (has_capability('local/jobboard:manageapitokens', $context)) {
+            echo html_writer::start_div('col-md-3 col-sm-6 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
+            echo html_writer::start_div('card-body d-flex align-items-center');
+            echo html_writer::tag('i', '', ['class' => 'fa fa-key fa-2x text-danger mr-3']);
+            echo html_writer::start_div();
+            echo html_writer::tag('h6', get_string('apitokens', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('apitokens_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/admin/tokens.php'),
+                '<i class="fa fa-cog mr-1"></i>' . get_string('manage', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-danger']
             );
             echo html_writer::end_div();
             echo html_writer::end_div();
@@ -557,7 +658,7 @@ if ($isReviewer && !$canManageContent) {
     echo html_writer::start_div('row mb-4');
 
     // My Reviews.
-    echo html_writer::start_div('col-lg-6 mb-4');
+    echo html_writer::start_div('col-lg-4 mb-4');
     echo html_writer::start_div('card h-100 shadow-sm border-left-warning');
     echo html_writer::start_div('card-body');
     echo html_writer::start_div('d-flex align-items-center mb-3');
@@ -587,9 +688,27 @@ if ($isReviewer && !$canManageContent) {
     echo html_writer::end_div();
     echo html_writer::end_div();
 
+    // Bulk Validation.
+    echo html_writer::start_div('col-lg-4 mb-4');
+    echo html_writer::start_div('card h-100 shadow-sm border-left-success');
+    echo html_writer::start_div('card-body');
+    echo html_writer::start_div('d-flex align-items-center mb-3');
+    echo html_writer::tag('i', '', ['class' => 'fa fa-check-double fa-2x text-success mr-3']);
+    echo html_writer::tag('h4', get_string('bulkvalidation', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::tag('p', get_string('bulkvalidation_desc', 'local_jobboard'), ['class' => 'text-muted']);
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/bulk_validate.php'),
+        '<i class="fa fa-arrow-right mr-2"></i>' . get_string('bulkvalidation', 'local_jobboard'),
+        ['class' => 'btn btn-success']
+    );
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+
     // Browse Applications (if can view all).
     if ($caps['viewallapplications']) {
-        echo html_writer::start_div('col-lg-6 mb-4');
+        echo html_writer::start_div('col-lg-4 mb-4');
         echo html_writer::start_div('card h-100 shadow-sm border-left-info');
         echo html_writer::start_div('card-body');
         echo html_writer::start_div('d-flex align-items-center mb-3');

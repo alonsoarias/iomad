@@ -3325,3 +3325,12 @@ $string['explore'] = 'Explorar';
 $string['welcometojobboard'] = 'Bienvenido a la Bolsa de Empleo';
 $string['vieweronly_desc'] = 'Actualmente solo tienes acceso para ver las vacantes públicas disponibles.';
 $string['viewpublicvacancies'] = 'Ver vacantes públicas';
+
+// Dashboard - Gestión de flujo de trabajo.
+$string['workflowmanagement'] = 'Gestión de flujo de trabajo';
+$string['assignreviewers_desc'] = 'Asignar revisores a aplicaciones y vacantes';
+$string['bulkvalidation_desc'] = 'Validar múltiples documentos a la vez';
+$string['committees'] = 'Comités de selección';
+$string['committees_desc'] = 'Gestionar miembros del comité de selección';
+$string['committees_access_hint'] = 'Acceso desde gestión de vacantes';
+$string['apitokens_desc'] = 'Gestionar tokens de acceso API para integraciones externas';
