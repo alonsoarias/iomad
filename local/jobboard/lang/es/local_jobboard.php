@@ -423,6 +423,31 @@ $string['exportdocuments_desc'] = 'Exportar documentos de postulaciones como ZIP
 $string['manageexemptions'] = 'Gestionar Exenciones';
 $string['manageexemptions_desc'] = 'Gestionar exenciones de documentos por usuario';
 
+// Strings de migración.
+$string['migrateplugin'] = 'Migrar Plugin';
+$string['migrateplugin_desc'] = 'Exportar o importar configuración y datos del plugin entre instancias de Moodle';
+$string['exportdata'] = 'Exportar Datos';
+$string['exportdata_desc'] = 'Exportar configuración del plugin a un archivo JSON que puede importarse en otra instancia.';
+$string['importdata'] = 'Importar Datos';
+$string['importdata_desc'] = 'Importar configuración del plugin desde un archivo JSON previamente exportado.';
+$string['migrationfile'] = 'Archivo de migración (JSON)';
+$string['overwriteexisting'] = 'Sobrescribir registros existentes';
+$string['dryrunmode'] = 'Modo prueba (previsualizar sin guardar)';
+$string['exportdownload'] = 'Descargar Exportación';
+$string['importupload'] = 'Subir e Importar';
+$string['importwarning'] = 'Advertencia: La importación modificará su base de datos. Use el modo prueba primero para previsualizar los cambios.';
+$string['invalidmigrationfile'] = 'Archivo de migración inválido. Por favor suba un archivo de exportación JobBoard válido.';
+$string['dryrunresults'] = 'Resultados del Modo Prueba (sin cambios realizados):';
+$string['importerror'] = 'Error de importación';
+$string['pluginsettings'] = 'Configuración del plugin';
+$string['exemptions'] = 'Exenciones de usuario';
+$string['importeddoctypes'] = 'Tipos de documento: {$a->inserted} insertados, {$a->updated} actualizados, {$a->skipped} omitidos';
+$string['importedemails'] = 'Plantillas de email: {$a->inserted} insertadas, {$a->updated} actualizadas, {$a->skipped} omitidas';
+$string['importedconvocatorias'] = 'Convocatorias: {$a->inserted} insertadas, {$a->updated} actualizadas, {$a->skipped} omitidas';
+$string['importedvacancies'] = 'Vacantes: {$a->inserted} insertadas, {$a->updated} actualizadas, {$a->skipped} omitidas';
+$string['importedsettings'] = 'Configuraciones: {$a} actualizadas';
+$string['importedexemptions'] = 'Exenciones: {$a->inserted} insertadas, {$a->updated} actualizadas, {$a->skipped} omitidas';
+
 // Messages.
 $string['vacancycreated'] = 'Vacante creada exitosamente';
 $string['vacancyupdated'] = 'Vacante actualizada exitosamente';

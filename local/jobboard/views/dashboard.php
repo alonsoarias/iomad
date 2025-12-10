@@ -315,6 +315,26 @@ if ($canmanage) {
         echo html_writer::end_div();
     }
 
+    // Full Plugin Migration.
+    if (has_capability('local/jobboard:configure', $context)) {
+        echo html_writer::start_div('col-md-4 mb-3');
+        echo html_writer::start_div('card border-0 bg-light h-100 border-left-danger');
+        echo html_writer::start_div('card-body d-flex align-items-center');
+        echo html_writer::tag('i', '', ['class' => 'fa fa-exchange-alt fa-2x text-danger mr-3']);
+        echo html_writer::start_div();
+        echo html_writer::tag('h6', get_string('migrateplugin', 'local_jobboard'), ['class' => 'mb-1']);
+        echo html_writer::tag('small', get_string('migrateplugin_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+        echo html_writer::link(
+            new moodle_url('/local/jobboard/migrate.php'),
+            '<i class="fa fa-exchange-alt mr-1"></i>' . get_string('migrateplugin', 'local_jobboard'),
+            ['class' => 'btn btn-sm btn-outline-danger']
+        );
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+    }
+
     echo html_writer::end_div(); // row
 }
 

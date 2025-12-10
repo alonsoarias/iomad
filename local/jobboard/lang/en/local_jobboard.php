@@ -239,6 +239,31 @@ $string['exportdocuments_desc'] = 'Export application documents as ZIP';
 $string['manageexemptions'] = 'Manage Exemptions';
 $string['manageexemptions_desc'] = 'Manage user document exemptions';
 
+// Migration strings.
+$string['migrateplugin'] = 'Migrate Plugin';
+$string['migrateplugin_desc'] = 'Export or import plugin configuration and data between Moodle instances';
+$string['exportdata'] = 'Export Data';
+$string['exportdata_desc'] = 'Export plugin configuration to a JSON file that can be imported in another instance.';
+$string['importdata'] = 'Import Data';
+$string['importdata_desc'] = 'Import plugin configuration from a previously exported JSON file.';
+$string['migrationfile'] = 'Migration file (JSON)';
+$string['overwriteexisting'] = 'Overwrite existing records';
+$string['dryrunmode'] = 'Dry run (preview without saving)';
+$string['exportdownload'] = 'Download Export';
+$string['importupload'] = 'Upload and Import';
+$string['importwarning'] = 'Warning: Import will modify your database. Use dry run first to preview changes.';
+$string['invalidmigrationfile'] = 'Invalid migration file. Please upload a valid JobBoard export file.';
+$string['dryrunresults'] = 'Dry Run Results (no changes made):';
+$string['importerror'] = 'Import error';
+$string['pluginsettings'] = 'Plugin settings';
+$string['exemptions'] = 'User exemptions';
+$string['importeddoctypes'] = 'Document types: {$a->inserted} inserted, {$a->updated} updated, {$a->skipped} skipped';
+$string['importedemails'] = 'Email templates: {$a->inserted} inserted, {$a->updated} updated, {$a->skipped} skipped';
+$string['importedconvocatorias'] = 'Convocatorias: {$a->inserted} inserted, {$a->updated} updated, {$a->skipped} skipped';
+$string['importedvacancies'] = 'Vacancies: {$a->inserted} inserted, {$a->updated} updated, {$a->skipped} skipped';
+$string['importedsettings'] = 'Settings: {$a} updated';
+$string['importedexemptions'] = 'Exemptions: {$a->inserted} inserted, {$a->updated} updated, {$a->skipped} skipped';
+
 // Messages.
 $string['vacancycreated'] = 'Vacancy created successfully';
 $string['vacancyupdated'] = 'Vacancy updated successfully';
