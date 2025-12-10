@@ -18,6 +18,7 @@
  * Dashboard view for local_jobboard.
  *
  * Modern dashboard with role-based content and quick actions.
+ * Organized in logical sections for better UX.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -39,6 +40,9 @@ $canmanage = has_capability('local/jobboard:createvacancy', $context);
 $canreview = has_capability('local/jobboard:reviewdocuments', $context);
 $canapply = has_capability('local/jobboard:apply', $context);
 $canviewreports = has_capability('local/jobboard:viewreports', $context);
+$canconfigure = has_capability('local/jobboard:configure', $context);
+$canmanageexemptions = has_capability('local/jobboard:manageexemptions', $context);
+$canexportdata = has_capability('local/jobboard:exportdata', $context);
 
 // Get statistics.
 $stats = local_jobboard_get_dashboard_stats($USER->id, $canmanage, $canreview);
@@ -65,10 +69,13 @@ echo html_writer::end_div();
 echo html_writer::end_div();
 
 // ============================================================================
-// ADMINISTRATOR DASHBOARD
+// ADMINISTRATOR/MANAGER DASHBOARD
 // ============================================================================
 if ($canmanage) {
-    // Statistics Row.
+
+    // ========================================================================
+    // SECTION 1: STATISTICS
+    // ========================================================================
     echo html_writer::start_div('row mb-4');
     echo ui_helper::stat_card(
         $stats['active_convocatorias'] ?? 0,
@@ -96,8 +103,13 @@ if ($canmanage) {
     );
     echo html_writer::end_div();
 
-    // Quick Actions Grid.
-    echo html_writer::tag('h4', get_string('quickactions', 'local_jobboard'), ['class' => 'mb-3']);
+    // ========================================================================
+    // SECTION 2: QUICK ACTIONS (Main Management)
+    // ========================================================================
+    echo html_writer::tag('h4',
+        '<i class="fa fa-bolt mr-2"></i>' . get_string('quickactions', 'local_jobboard'),
+        ['class' => 'mb-3']
+    );
     echo html_writer::start_div('row');
 
     // Manage Convocatorias Card.
@@ -186,22 +198,29 @@ if ($canmanage) {
 
     echo html_writer::end_div(); // row
 
-    // Secondary Actions Row.
-    if ($canviewreports || has_capability('local/jobboard:configure', $context)) {
+    // ========================================================================
+    // SECTION 3: CONFIGURATION & MANAGEMENT
+    // ========================================================================
+    if ($canviewreports || $canconfigure || $canmanageexemptions) {
+        echo html_writer::tag('h4',
+            '<i class="fa fa-cogs mr-2"></i>' . get_string('configuration', 'local_jobboard'),
+            ['class' => 'mb-3 mt-4']
+        );
         echo html_writer::start_div('row');
 
         // Reports.
         if ($canviewreports) {
-            echo html_writer::start_div('col-md-4 mb-3');
-            echo html_writer::start_div('card border-0 bg-light');
+            echo html_writer::start_div('col-md-3 col-sm-6 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
             echo html_writer::start_div('card-body d-flex align-items-center');
             echo html_writer::tag('i', '', ['class' => 'fa fa-chart-bar fa-2x text-info mr-3']);
             echo html_writer::start_div();
             echo html_writer::tag('h6', get_string('reports', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('reports_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
             echo html_writer::link(
                 new moodle_url('/local/jobboard/index.php', ['view' => 'reports']),
-                get_string('viewreports', 'local_jobboard'),
-                ['class' => 'btn btn-link btn-sm p-0']
+                '<i class="fa fa-chart-line mr-1"></i>' . get_string('viewreports', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-info']
             );
             echo html_writer::end_div();
             echo html_writer::end_div();
@@ -209,18 +228,19 @@ if ($canmanage) {
             echo html_writer::end_div();
         }
 
-        // Settings.
-        if (has_capability('local/jobboard:configure', $context)) {
-            echo html_writer::start_div('col-md-4 mb-3');
-            echo html_writer::start_div('card border-0 bg-light');
+        // Plugin Settings.
+        if ($canconfigure) {
+            echo html_writer::start_div('col-md-3 col-sm-6 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
             echo html_writer::start_div('card-body d-flex align-items-center');
             echo html_writer::tag('i', '', ['class' => 'fa fa-cog fa-2x text-secondary mr-3']);
             echo html_writer::start_div();
-            echo html_writer::tag('h6', get_string('configuration', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('h6', get_string('pluginsettings', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('pluginsettings_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
             echo html_writer::link(
                 new moodle_url('/admin/settings.php', ['section' => 'local_jobboard']),
-                get_string('configure', 'local_jobboard'),
-                ['class' => 'btn btn-link btn-sm p-0']
+                '<i class="fa fa-wrench mr-1"></i>' . get_string('configure', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-secondary']
             );
             echo html_writer::end_div();
             echo html_writer::end_div();
@@ -228,114 +248,175 @@ if ($canmanage) {
             echo html_writer::end_div();
         }
 
-        echo html_writer::end_div();
+        // Document Types.
+        if ($canconfigure) {
+            echo html_writer::start_div('col-md-3 col-sm-6 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
+            echo html_writer::start_div('card-body d-flex align-items-center');
+            echo html_writer::tag('i', '', ['class' => 'fa fa-file-alt fa-2x text-primary mr-3']);
+            echo html_writer::start_div();
+            echo html_writer::tag('h6', get_string('doctypes', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('doctypes_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/doctypes.php'),
+                '<i class="fa fa-list mr-1"></i>' . get_string('manage', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-primary']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+        // Manage User Exemptions.
+        if ($canmanageexemptions) {
+            echo html_writer::start_div('col-md-3 col-sm-6 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
+            echo html_writer::start_div('card-body d-flex align-items-center');
+            echo html_writer::tag('i', '', ['class' => 'fa fa-user-shield fa-2x text-warning mr-3']);
+            echo html_writer::start_div();
+            echo html_writer::tag('h6', get_string('manageexemptions', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('manageexemptions_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/manage_exemptions.php'),
+                '<i class="fa fa-id-card mr-1"></i>' . get_string('manage', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-warning']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+        echo html_writer::end_div(); // row
     }
 
     // ========================================================================
-    // MIGRATION/IMPORT TOOLS SECTION
+    // SECTION 4: DATA IMPORT/EXPORT TOOLS
     // ========================================================================
-    echo html_writer::tag('h4', '<i class="fa fa-exchange-alt mr-2"></i>' . get_string('migrationtools', 'local_jobboard'), ['class' => 'mb-3 mt-4']);
-    echo html_writer::start_div('row');
-
-    // Import Vacancies.
-    echo html_writer::start_div('col-md-4 mb-3');
-    echo html_writer::start_div('card border-0 bg-light h-100');
-    echo html_writer::start_div('card-body d-flex align-items-center');
-    echo html_writer::tag('i', '', ['class' => 'fa fa-file-import fa-2x text-primary mr-3']);
-    echo html_writer::start_div();
-    echo html_writer::tag('h6', get_string('importvacancies', 'local_jobboard'), ['class' => 'mb-1']);
-    echo html_writer::tag('small', get_string('importvacancies_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/import_vacancies.php'),
-        '<i class="fa fa-upload mr-1"></i>' . get_string('import', 'local_jobboard'),
-        ['class' => 'btn btn-sm btn-outline-primary']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-
-    // Import Exemptions.
-    if (has_capability('local/jobboard:manageexemptions', $context)) {
-        echo html_writer::start_div('col-md-4 mb-3');
-        echo html_writer::start_div('card border-0 bg-light h-100');
-        echo html_writer::start_div('card-body d-flex align-items-center');
-        echo html_writer::tag('i', '', ['class' => 'fa fa-user-shield fa-2x text-success mr-3']);
-        echo html_writer::start_div();
-        echo html_writer::tag('h6', get_string('importexemptions', 'local_jobboard'), ['class' => 'mb-1']);
-        echo html_writer::tag('small', get_string('importexemptions_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
-        echo html_writer::link(
-            new moodle_url('/local/jobboard/import_exemptions.php'),
-            '<i class="fa fa-upload mr-1"></i>' . get_string('import', 'local_jobboard'),
-            ['class' => 'btn btn-sm btn-outline-success']
+    if ($canmanage || $canexportdata) {
+        echo html_writer::tag('h4',
+            '<i class="fa fa-database mr-2"></i>' . get_string('datatools', 'local_jobboard'),
+            ['class' => 'mb-3 mt-4']
         );
-        echo html_writer::end_div();
-        echo html_writer::end_div();
-        echo html_writer::end_div();
-        echo html_writer::end_div();
+        echo html_writer::start_div('row');
+
+        // Import Vacancies from CSV.
+        if ($canmanage) {
+            echo html_writer::start_div('col-md-4 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
+            echo html_writer::start_div('card-body d-flex align-items-center');
+            echo html_writer::tag('i', '', ['class' => 'fa fa-file-csv fa-2x text-primary mr-3']);
+            echo html_writer::start_div();
+            echo html_writer::tag('h6', get_string('importvacancies', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('importvacancies_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/import_vacancies.php'),
+                '<i class="fa fa-upload mr-1"></i>' . get_string('import', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-primary']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+        // Import Exemptions from CSV.
+        if ($canmanageexemptions) {
+            echo html_writer::start_div('col-md-4 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
+            echo html_writer::start_div('card-body d-flex align-items-center');
+            echo html_writer::tag('i', '', ['class' => 'fa fa-file-import fa-2x text-success mr-3']);
+            echo html_writer::start_div();
+            echo html_writer::tag('h6', get_string('importexemptions', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('importexemptions_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/import_exemptions.php'),
+                '<i class="fa fa-upload mr-1"></i>' . get_string('import', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-success']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+        // Export Documents ZIP.
+        if ($canexportdata) {
+            echo html_writer::start_div('col-md-4 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
+            echo html_writer::start_div('card-body d-flex align-items-center');
+            echo html_writer::tag('i', '', ['class' => 'fa fa-file-archive fa-2x text-info mr-3']);
+            echo html_writer::start_div();
+            echo html_writer::tag('h6', get_string('exportdocuments', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('exportdocuments_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
+                '<i class="fa fa-download mr-1"></i>' . get_string('export', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-info']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
+        echo html_writer::end_div(); // row
     }
 
-    // Export Documents.
-    if (has_capability('local/jobboard:exportdata', $context)) {
-        echo html_writer::start_div('col-md-4 mb-3');
-        echo html_writer::start_div('card border-0 bg-light h-100');
-        echo html_writer::start_div('card-body d-flex align-items-center');
-        echo html_writer::tag('i', '', ['class' => 'fa fa-file-export fa-2x text-info mr-3']);
-        echo html_writer::start_div();
-        echo html_writer::tag('h6', get_string('exportdocuments', 'local_jobboard'), ['class' => 'mb-1']);
-        echo html_writer::tag('small', get_string('exportdocuments_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
-        echo html_writer::link(
-            new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
-            '<i class="fa fa-download mr-1"></i>' . get_string('export', 'local_jobboard'),
-            ['class' => 'btn btn-sm btn-outline-info']
+    // ========================================================================
+    // SECTION 5: SYSTEM MIGRATION (Admin Only)
+    // ========================================================================
+    if ($canconfigure) {
+        echo html_writer::tag('h4',
+            '<i class="fa fa-server mr-2"></i>' . get_string('systemmigration', 'local_jobboard'),
+            ['class' => 'mb-3 mt-4']
+        );
+
+        echo html_writer::start_div('row');
+        echo html_writer::start_div('col-12');
+
+        // Full Plugin Migration - Highlighted card.
+        echo html_writer::start_div('card border-danger shadow-sm');
+        echo html_writer::start_div('card-header bg-danger text-white');
+        echo html_writer::tag('h5',
+            '<i class="fa fa-exchange-alt mr-2"></i>' . get_string('migrateplugin', 'local_jobboard'),
+            ['class' => 'mb-0']
         );
         echo html_writer::end_div();
-        echo html_writer::end_div();
-        echo html_writer::end_div();
-        echo html_writer::end_div();
-    }
+        echo html_writer::start_div('card-body');
 
-    // Manage Exemptions.
-    if (has_capability('local/jobboard:manageexemptions', $context)) {
-        echo html_writer::start_div('col-md-4 mb-3');
-        echo html_writer::start_div('card border-0 bg-light h-100');
-        echo html_writer::start_div('card-body d-flex align-items-center');
-        echo html_writer::tag('i', '', ['class' => 'fa fa-id-card fa-2x text-warning mr-3']);
-        echo html_writer::start_div();
-        echo html_writer::tag('h6', get_string('manageexemptions', 'local_jobboard'), ['class' => 'mb-1']);
-        echo html_writer::tag('small', get_string('manageexemptions_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
-        echo html_writer::link(
-            new moodle_url('/local/jobboard/manage_exemptions.php'),
-            '<i class="fa fa-cog mr-1"></i>' . get_string('manage', 'local_jobboard'),
-            ['class' => 'btn btn-sm btn-outline-warning']
-        );
-        echo html_writer::end_div();
-        echo html_writer::end_div();
-        echo html_writer::end_div();
-        echo html_writer::end_div();
-    }
+        echo html_writer::start_div('row align-items-center');
 
-    // Full Plugin Migration.
-    if (has_capability('local/jobboard:configure', $context)) {
-        echo html_writer::start_div('col-md-4 mb-3');
-        echo html_writer::start_div('card border-0 bg-light h-100 border-left-danger');
-        echo html_writer::start_div('card-body d-flex align-items-center');
-        echo html_writer::tag('i', '', ['class' => 'fa fa-exchange-alt fa-2x text-danger mr-3']);
-        echo html_writer::start_div();
-        echo html_writer::tag('h6', get_string('migrateplugin', 'local_jobboard'), ['class' => 'mb-1']);
-        echo html_writer::tag('small', get_string('migrateplugin_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+        // Description column.
+        echo html_writer::start_div('col-md-8');
+        echo html_writer::tag('p', get_string('migrateplugin_full_desc', 'local_jobboard'), ['class' => 'mb-2']);
+        echo html_writer::start_tag('ul', ['class' => 'small text-muted mb-0']);
+        echo html_writer::tag('li', get_string('migrate_includes_doctypes', 'local_jobboard'));
+        echo html_writer::tag('li', get_string('migrate_includes_convocatorias', 'local_jobboard'));
+        echo html_writer::tag('li', get_string('migrate_includes_vacancies', 'local_jobboard'));
+        echo html_writer::tag('li', get_string('migrate_includes_applications', 'local_jobboard'));
+        echo html_writer::tag('li', get_string('migrate_includes_files', 'local_jobboard'));
+        echo html_writer::end_tag('ul');
+        echo html_writer::end_div();
+
+        // Button column.
+        echo html_writer::start_div('col-md-4 text-md-right mt-3 mt-md-0');
         echo html_writer::link(
             new moodle_url('/local/jobboard/migrate.php'),
-            '<i class="fa fa-exchange-alt mr-1"></i>' . get_string('migrateplugin', 'local_jobboard'),
-            ['class' => 'btn btn-sm btn-outline-danger']
+            '<i class="fa fa-exchange-alt mr-2"></i>' . get_string('openmigrationtool', 'local_jobboard'),
+            ['class' => 'btn btn-danger btn-lg']
         );
         echo html_writer::end_div();
-        echo html_writer::end_div();
-        echo html_writer::end_div();
-        echo html_writer::end_div();
-    }
 
-    echo html_writer::end_div(); // row
+        echo html_writer::end_div(); // row
+
+        echo html_writer::end_div(); // card-body
+        echo html_writer::end_div(); // card
+
+        echo html_writer::end_div(); // col-12
+        echo html_writer::end_div(); // row
+    }
 }
 
 // ============================================================================
@@ -498,7 +579,5 @@ if ($canreview && !$canmanage) {
 }
 
 echo html_writer::end_div(); // local-jobboard-dashboard
-
-// Styles consolidated in styles.css - Dashboard Page Styles section.
 
 echo $OUTPUT->footer();

@@ -463,6 +463,20 @@ $string['exporterror'] = 'Error de exportación';
 $string['applications'] = 'Postulaciones';
 $string['auditlogs'] = 'Registros de auditoría';
 
+// Secciones del dashboard.
+$string['datatools'] = 'Importar/Exportar Datos';
+$string['systemmigration'] = 'Migración del Sistema';
+$string['reports_desc'] = 'Ver estadísticas y reportes';
+$string['pluginsettings_desc'] = 'Configurar opciones del plugin';
+$string['doctypes_desc'] = 'Gestionar tipos de documentos requeridos';
+$string['migrateplugin_full_desc'] = 'Transferir TODOS los datos del plugin a otra instancia de Moodle IOMAD. Crea un respaldo completo que puede restaurarse en una nueva instalación.';
+$string['migrate_includes_doctypes'] = 'Tipos de documento y configuraciones';
+$string['migrate_includes_convocatorias'] = 'Convocatorias con excepciones';
+$string['migrate_includes_vacancies'] = 'Todas las vacantes y configuraciones';
+$string['migrate_includes_applications'] = 'Postulaciones con documentos';
+$string['migrate_includes_files'] = 'Todos los archivos cargados';
+$string['openmigrationtool'] = 'Abrir Herramienta de Migración';
+
 // Messages.
 $string['vacancycreated'] = 'Vacante creada exitosamente';
 $string['vacancyupdated'] = 'Vacante actualizada exitosamente';
