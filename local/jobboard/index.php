@@ -57,7 +57,7 @@ $id = optional_param('id', 0, PARAM_INT);
 $context = context_system::instance();
 
 // Define views that do NOT require authentication.
-$publicviews = ['public', 'public_convocatoria'];
+$publicviews = ['public', 'public_convocatoria', 'public_vacancy'];
 
 // Verify authentication based on view.
 if (!in_array($view, $publicviews)) {
@@ -158,6 +158,11 @@ switch ($view) {
     case 'public_convocatoria':
         // Public convocatoria view page - no authentication required.
         require(__DIR__ . '/views/public_convocatoria.php');
+        break;
+
+    case 'public_vacancy':
+        // Public vacancy detail view - no authentication required.
+        require(__DIR__ . '/views/public_vacancy.php');
         break;
 
     default:
