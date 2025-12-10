@@ -258,7 +258,7 @@ if ($canmanage) {
             echo html_writer::tag('h6', get_string('doctypes', 'local_jobboard'), ['class' => 'mb-1']);
             echo html_writer::tag('small', get_string('doctypes_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
             echo html_writer::link(
-                new moodle_url('/local/jobboard/doctypes.php'),
+                new moodle_url('/local/jobboard/admin/doctypes.php'),
                 '<i class="fa fa-list mr-1"></i>' . get_string('manage', 'local_jobboard'),
                 ['class' => 'btn btn-sm btn-outline-primary']
             );
