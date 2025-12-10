@@ -3104,3 +3104,4 @@ $string['error:convocatorianotfound'] = 'The requested call for applications was
 $string['error:convocatoriaclosed'] = 'This call for applications is no longer accepting submissions.';
 $string['nopublicvacancies'] = 'No public vacancies available in this call at the moment.';
 $string['viewdetails'] = 'View Details';
+$string['vacanciesavailable'] = 'There are {$a} vacancies available in this call';

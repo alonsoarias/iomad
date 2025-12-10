@@ -3287,3 +3287,6 @@ $string['nextstep'] = 'Siguiente';
 $string['previousstep'] = 'Anterior';
 $string['saveandcontinue'] = 'Guardar y continuar';
 $string['reviewapplication'] = 'Revisar aplicación';
+
+// Strings para vista pública.
+$string['vacanciesavailable'] = 'Hay {$a} vacantes disponibles en esta convocatoria';
