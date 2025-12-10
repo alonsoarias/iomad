@@ -226,6 +226,18 @@ $string['validate'] = 'Validate';
 $string['reject'] = 'Reject';
 $string['approve'] = 'Approve';
 $string['resubmit'] = 'Resubmit';
+$string['manage'] = 'Manage';
+
+// Migration tools.
+$string['migrationtools'] = 'Migration Tools';
+$string['importvacancies'] = 'Import Vacancies';
+$string['importvacancies_desc'] = 'Import vacancies from CSV file';
+$string['importexemptions'] = 'Import Exemptions';
+$string['importexemptions_desc'] = 'Import ISER exemptions from CSV';
+$string['exportdocuments'] = 'Export Documents';
+$string['exportdocuments_desc'] = 'Export application documents as ZIP';
+$string['manageexemptions'] = 'Manage Exemptions';
+$string['manageexemptions_desc'] = 'Manage user document exemptions';
 
 // Messages.
 $string['vacancycreated'] = 'Vacancy created successfully';

@@ -410,6 +410,18 @@ $string['validate'] = 'Validar';
 $string['reject'] = 'Rechazar';
 $string['approve'] = 'Aprobar';
 $string['resubmit'] = 'Reenviar';
+$string['manage'] = 'Gestionar';
+
+// Herramientas de migración.
+$string['migrationtools'] = 'Herramientas de Migración';
+$string['importvacancies'] = 'Importar Vacantes';
+$string['importvacancies_desc'] = 'Importar vacantes desde archivo CSV';
+$string['importexemptions'] = 'Importar Exenciones';
+$string['importexemptions_desc'] = 'Importar exenciones ISER desde CSV';
+$string['exportdocuments'] = 'Exportar Documentos';
+$string['exportdocuments_desc'] = 'Exportar documentos de postulaciones como ZIP';
+$string['manageexemptions'] = 'Gestionar Exenciones';
+$string['manageexemptions_desc'] = 'Gestionar exenciones de documentos por usuario';
 
 // Messages.
 $string['vacancycreated'] = 'Vacante creada exitosamente';
