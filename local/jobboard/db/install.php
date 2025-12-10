@@ -612,6 +612,10 @@ function local_jobboard_install_tours(): void {
 function local_jobboard_create_roles(): void {
     global $DB;
 
+    // Ensure capabilities are loaded before trying to assign them.
+    // During installation, access.php capabilities may not be in the DB yet.
+    update_capabilities('local_jobboard');
+
     $systemcontext = context_system::instance();
 
     // Role: Document Reviewer.
