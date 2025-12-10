@@ -477,6 +477,19 @@ $string['migrate_includes_applications'] = 'Postulaciones con documentos';
 $string['migrate_includes_files'] = 'Todos los archivos cargados';
 $string['openmigrationtool'] = 'Abrir Herramienta de Migración';
 
+// Cadenas de vista pública.
+$string['totalpositions'] = 'Posiciones Totales';
+$string['closingsoon'] = 'Próximas a Cerrar';
+$string['closesindays'] = 'Cierra en {$a} días';
+$string['noconvocatorias'] = 'No hay convocatorias activas en este momento';
+$string['startdate'] = 'Fecha de Inicio';
+$string['enddate'] = 'Fecha de Cierre';
+$string['vacancy'] = 'Vacante';
+$string['public'] = 'Pública';
+$string['internal'] = 'Interna';
+$string['type'] = 'Tipo';
+$string['convocatoria_footer_info'] = 'Esta convocatoria tiene {$a->vacancies} vacantes con {$a->positions} posiciones disponibles en total.';
+
 // Messages.
 $string['vacancycreated'] = 'Vacante creada exitosamente';
 $string['vacancyupdated'] = 'Vacante actualizada exitosamente';
