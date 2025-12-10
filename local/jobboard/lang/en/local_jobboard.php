@@ -670,6 +670,13 @@ $string['api:token:yourtoken'] = 'Your new API token';
 $string['api:token:warning'] = 'Warning: This is the only time this token will be displayed. Make sure to copy it now.';
 $string['api:token:notoken'] = 'No API tokens have been created yet.';
 
+// Token statistics.
+$string['totaltokens'] = 'Total Tokens';
+$string['activetokens'] = 'Active Tokens';
+$string['revokedtokens'] = 'Revoked Tokens';
+$string['usedtoday'] = 'Used Today';
+$string['tokenslist'] = 'API Tokens List';
+
 // API Token Statuses.
 $string['api:token:status:active'] = 'Active';
 $string['api:token:status:disabled'] = 'Disabled';
@@ -1158,7 +1165,8 @@ $string['rejectreason_incomplete'] = 'Incomplete document';
 $string['rejectreason_wrongtype'] = 'Wrong document type';
 $string['rejectreason_mismatch'] = 'Information mismatch';
 $string['validated'] = 'Validated';
-$string['pendingvalidation'] = 'Pending validation';
+$string['pendingvalidation'] = 'Pending Validation';
+$string['documenttypes'] = 'Document Types';
 $string['pending'] = 'Pending';
 
 // Validation checklist items.
@@ -1209,7 +1217,11 @@ $string['selectreviewer'] = 'Select reviewer';
 $string['workload'] = 'Workload';
 $string['currentworkload'] = 'Current workload';
 $string['maxworkload'] = 'Maximum workload';
-$string['availablereviewers'] = 'Available reviewers';
+$string['availablereviewers'] = 'Available Reviewers';
+$string['unassignedapplications'] = 'Unassigned Applications';
+$string['totalassigned'] = 'Total Assigned';
+$string['avgworkload'] = 'Avg. Workload';
+$string['pendingassignment'] = 'pending assignment';
 $string['noassignments'] = 'No pending assignments';
 $string['pendingassignments'] = 'Pending assignments';
 $string['assignedto'] = 'Assigned to';
@@ -1344,9 +1356,11 @@ $string['urgentattentionneeded'] = 'Urgent attention needed';
 $string['nourgentitems'] = 'No urgent items';
 
 // ISER Exemptions extended.
-$string['activeexemptions'] = 'Active exemptions';
-$string['expiredexemptions'] = 'Expired exemptions';
-$string['revokedexemptions'] = 'Revoked exemptions';
+$string['totalexemptions'] = 'Total Exemptions';
+$string['activeexemptions'] = 'Active Exemptions';
+$string['expiredexemptions'] = 'Expired Exemptions';
+$string['revokedexemptions'] = 'Revoked Exemptions';
+$string['exemptionlist'] = 'Exemption List';
 $string['revoked'] = 'Revoked';
 $string['expired'] = 'Expired';
 $string['revoke'] = 'Revoke';
@@ -2443,6 +2457,7 @@ $string['nodata'] = 'No data available';
 $string['nohistory'] = 'No history available';
 $string['novacanciesyet'] = 'There are no vacancies yet';
 $string['pendingdocsalert'] = 'You have pending documents that require attention.';
+$string['pendingbytype'] = 'Pending by Type';
 $string['percentage'] = 'Percentage';
 $string['performance'] = 'Performance';
 $string['showingresults'] = 'Showing results';
@@ -3086,6 +3101,13 @@ $string['checklistitems_help'] = 'Enter checklist items for reviewers, one per l
 $string['doctype_isrequired_help'] = 'This document is required for all standard applications.';
 $string['hasnote'] = 'Has Note';
 $string['doctypeshelp'] = 'Document types define what documents applicants need to upload. Configure requirements, exemptions, and validation rules here.';
+$string['totaldoctypes'] = 'Total Document Types';
+$string['enableddoctypes'] = 'Enabled Types';
+$string['requireddoctypes'] = 'Required Types';
+$string['conditionaldoctypes'] = 'Conditional Types';
+$string['aboutdoctypes'] = 'About Document Types';
+$string['doctypelist'] = 'Document Type List';
+$string['items'] = 'items';
 
 // Document categories.
 $string['doccategory_identity'] = 'Identity';

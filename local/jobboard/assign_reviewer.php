@@ -17,6 +17,8 @@
 /**
  * Assign reviewers to applications.
  *
+ * Modern redesign with consistent UX pattern using ui_helper.
+ *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,6 +28,7 @@ require_once(__DIR__ . '/../../config.php');
 
 use local_jobboard\reviewer;
 use local_jobboard\application;
+use local_jobboard\output\ui_helper;
 
 $vacancyid = optional_param('vacancyid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
@@ -41,6 +44,7 @@ $PAGE->set_context($context);
 $PAGE->set_title(get_string('assignreviewer', 'local_jobboard'));
 $PAGE->set_heading(get_string('assignreviewer', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
+$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle actions.
 if ($action === 'assign') {
@@ -90,32 +94,95 @@ if ($vacancyid) {
 $unassignedresult = application::get_list($filters, 'timecreated', 'ASC', 0, 100);
 $unassigned = $unassignedresult['applications'];
 
+// Calculate stats.
+$totalUnassigned = count($unassigned);
+$totalReviewers = count($reviewers);
+$avgWorkload = 0;
+$totalAssigned = 0;
+foreach ($reviewers as $rev) {
+    $totalAssigned += $rev->workload;
+}
+if ($totalReviewers > 0) {
+    $avgWorkload = round($totalAssigned / $totalReviewers, 1);
+}
+
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(get_string('assignreviewer', 'local_jobboard'));
+echo html_writer::start_div('local-jobboard-assign-reviewer');
 
-// Vacancy filter.
-echo '<form class="form-inline mb-4" method="get">';
-echo '<label class="mr-2">' . get_string('vacancy', 'local_jobboard') . '</label>';
-echo '<select name="vacancyid" class="form-control mr-2">';
-echo '<option value="0">' . get_string('allvacancies', 'local_jobboard') . '</option>';
+// ============================================================================
+// PAGE HEADER WITH ACTIONS
+// ============================================================================
+echo ui_helper::page_header(
+    get_string('assignreviewer', 'local_jobboard'),
+    [],
+    [
+        [
+            'url' => new moodle_url('/local/jobboard/index.php'),
+            'label' => get_string('dashboard', 'local_jobboard'),
+            'icon' => 'tachometer-alt',
+            'class' => 'btn btn-outline-secondary',
+        ],
+        [
+            'url' => new moodle_url('/local/jobboard/index.php', ['view' => 'review']),
+            'label' => get_string('reviewapplications', 'local_jobboard'),
+            'icon' => 'clipboard-check',
+            'class' => 'btn btn-outline-primary',
+        ],
+    ]
+);
+
+// ============================================================================
+// STATS CARDS
+// ============================================================================
+echo html_writer::start_div('row mb-4');
+echo ui_helper::stat_card((string)$totalUnassigned, get_string('unassignedapplications', 'local_jobboard'), 'warning', 'exclamation-triangle');
+echo ui_helper::stat_card((string)$totalReviewers, get_string('availablereviewers', 'local_jobboard'), 'primary', 'users');
+echo ui_helper::stat_card((string)$totalAssigned, get_string('totalassigned', 'local_jobboard'), 'success', 'check-circle');
+echo ui_helper::stat_card((string)$avgWorkload, get_string('avgworkload', 'local_jobboard'), 'info', 'chart-bar');
+echo html_writer::end_div();
+
+// ============================================================================
+// VACANCY FILTER
+// ============================================================================
+$vacancyOptions = [0 => get_string('allvacancies', 'local_jobboard')];
 foreach ($vacancies as $v) {
-    $selected = ($vacancyid == $v->id) ? 'selected' : '';
-    echo "<option value=\"{$v->id}\" {$selected}>" . format_string($v->code . ' - ' . $v->title) . '</option>';
+    $vacancyOptions[$v->id] = format_string($v->code . ' - ' . $v->title);
 }
-echo '</select>';
-echo '<button type="submit" class="btn btn-primary">' . get_string('filter') . '</button>';
-echo '</form>';
 
-// Reviewer workload summary.
-echo '<div class="card mb-4">';
-echo '<div class="card-header"><h5>' . get_string('reviewerworkload', 'local_jobboard') . '</h5></div>';
-echo '<div class="card-body">';
+$filterDefinitions = [
+    [
+        'type' => 'select',
+        'name' => 'vacancyid',
+        'label' => get_string('vacancy', 'local_jobboard'),
+        'options' => $vacancyOptions,
+        'col' => 'col-md-6',
+    ],
+];
+
+echo ui_helper::filter_form(
+    (new moodle_url('/local/jobboard/assign_reviewer.php'))->out(false),
+    $filterDefinitions,
+    ['vacancyid' => $vacancyid],
+    []
+);
+
+// ============================================================================
+// REVIEWER WORKLOAD SUMMARY
+// ============================================================================
+echo html_writer::start_div('card shadow-sm mb-4');
+echo html_writer::start_div('card-header bg-white d-flex justify-content-between align-items-center');
+echo html_writer::tag('h5', '<i class="fa fa-users text-primary mr-2"></i>' .
+    get_string('reviewerworkload', 'local_jobboard'), ['class' => 'mb-0']);
+echo html_writer::tag('span', $totalReviewers . ' ' . get_string('reviewers', 'local_jobboard'),
+    ['class' => 'badge badge-secondary']);
+echo html_writer::end_div();
+echo html_writer::start_div('card-body');
 
 if (empty($reviewers)) {
-    echo '<p>' . get_string('noreviewers', 'local_jobboard') . '</p>';
+    echo ui_helper::empty_state(get_string('noreviewers', 'local_jobboard'), 'users');
 } else {
-    echo '<div class="row">';
+    echo html_writer::start_div('row');
     foreach ($reviewers as $rev) {
         $workloadclass = 'success';
         if ($rev->workload > 15) {
@@ -124,111 +191,238 @@ if (empty($reviewers)) {
             $workloadclass = 'warning';
         }
 
-        echo '<div class="col-md-4 col-sm-6 mb-3">';
-        echo '<div class="card">';
-        echo '<div class="card-body">';
-        echo '<h6>' . fullname($rev) . '</h6>';
-        echo '<span class="badge badge-' . $workloadclass . '">' . $rev->workload . ' ' .
-            get_string('activeassignments', 'local_jobboard') . '</span>';
+        echo html_writer::start_div('col-lg-4 col-md-6 mb-3');
+        echo html_writer::start_div('card h-100 border-left border-' . $workloadclass);
+        echo html_writer::start_div('card-body');
+
+        echo html_writer::tag('h6', '<i class="fa fa-user text-muted mr-2"></i>' . fullname($rev), ['class' => 'mb-2']);
+
+        echo html_writer::tag('span', $rev->workload . ' ' . get_string('activeassignments', 'local_jobboard'),
+            ['class' => 'badge badge-' . $workloadclass . ' mb-2']);
+
         if (isset($rev->stats)) {
-            echo '<br><small class="text-muted">';
-            echo get_string('reviewed', 'local_jobboard') . ': ' . $rev->stats['reviewed'];
-            echo ' | ' . get_string('avgtime', 'local_jobboard') . ': ' . $rev->stats['avg_review_time'] . 'h';
-            echo '</small>';
+            echo html_writer::start_div('small text-muted mt-2');
+            echo '<i class="fa fa-check mr-1"></i>' . get_string('reviewed', 'local_jobboard') . ': ' .
+                html_writer::tag('strong', $rev->stats['reviewed']);
+            echo ' <span class="mx-2">|</span> ';
+            echo '<i class="fa fa-clock mr-1"></i>' . get_string('avgtime', 'local_jobboard') . ': ' .
+                html_writer::tag('strong', $rev->stats['avg_review_time'] . 'h');
+            echo html_writer::end_div();
         }
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
+
+        echo html_writer::end_div(); // card-body
+        echo html_writer::end_div(); // card
+        echo html_writer::end_div(); // col
     }
-    echo '</div>';
+    echo html_writer::end_div(); // row
 }
-echo '</div>';
-echo '</div>';
 
-// Auto-assign section.
-echo '<div class="card mb-4">';
-echo '<div class="card-header"><h5>' . get_string('autoassign', 'local_jobboard') . '</h5></div>';
-echo '<div class="card-body">';
-echo '<form method="post" action="' . $PAGE->url . '" class="form-inline">';
-echo '<input type="hidden" name="sesskey" value="' . sesskey() . '">';
-echo '<input type="hidden" name="action" value="autoassign">';
-echo '<label class="mr-2">' . get_string('maxperreviewer', 'local_jobboard') . '</label>';
-echo '<input type="number" name="maxperreviewer" value="20" min="1" max="100" class="form-control mr-2" style="width: 100px">';
-echo '<button type="submit" class="btn btn-primary">' . get_string('autoassignall', 'local_jobboard') . '</button>';
-echo '</form>';
-echo '<small class="text-muted mt-2 d-block">' . get_string('autoassignhelp', 'local_jobboard') . '</small>';
-echo '</div>';
-echo '</div>';
+echo html_writer::end_div(); // card-body
+echo html_writer::end_div(); // card
 
-// Manual assignment section.
-echo '<div class="card mb-4">';
-echo '<div class="card-header"><h5>' . get_string('manualassign', 'local_jobboard') . '</h5></div>';
-echo '<div class="card-body">';
+// ============================================================================
+// AUTO-ASSIGN SECTION
+// ============================================================================
+echo html_writer::start_div('card shadow-sm mb-4 border-info');
+echo html_writer::start_div('card-header bg-info text-white');
+echo html_writer::tag('h5', '<i class="fa fa-magic mr-2"></i>' .
+    get_string('autoassign', 'local_jobboard'), ['class' => 'mb-0']);
+echo html_writer::end_div();
+echo html_writer::start_div('card-body');
+
+echo html_writer::start_tag('form', [
+    'method' => 'post',
+    'action' => $PAGE->url,
+    'class' => 'd-flex flex-wrap align-items-center',
+]);
+echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'autoassign']);
+
+echo html_writer::start_div('form-group mr-3 mb-2');
+echo html_writer::tag('label', get_string('maxperreviewer', 'local_jobboard'), ['for' => 'maxperreviewer', 'class' => 'mr-2']);
+echo html_writer::empty_tag('input', [
+    'type' => 'number',
+    'name' => 'maxperreviewer',
+    'id' => 'maxperreviewer',
+    'value' => '20',
+    'min' => '1',
+    'max' => '100',
+    'class' => 'form-control',
+    'style' => 'width: 100px;',
+]);
+echo html_writer::end_div();
+
+echo html_writer::tag('button',
+    '<i class="fa fa-magic mr-2"></i>' . get_string('autoassignall', 'local_jobboard'),
+    ['type' => 'submit', 'class' => 'btn btn-light mb-2']
+);
+
+echo html_writer::end_tag('form');
+
+echo html_writer::tag('small',
+    '<i class="fa fa-info-circle mr-1"></i>' . get_string('autoassignhelp', 'local_jobboard'),
+    ['class' => 'text-white-50 mt-2 d-block']
+);
+
+echo html_writer::end_div(); // card-body
+echo html_writer::end_div(); // card
+
+// ============================================================================
+// MANUAL ASSIGNMENT SECTION
+// ============================================================================
+echo html_writer::start_div('card shadow-sm mb-4');
+echo html_writer::start_div('card-header bg-white d-flex justify-content-between align-items-center');
+echo html_writer::tag('h5', '<i class="fa fa-hand-pointer text-primary mr-2"></i>' .
+    get_string('manualassign', 'local_jobboard'), ['class' => 'mb-0']);
+echo html_writer::tag('span', $totalUnassigned . ' ' . get_string('pendingassignment', 'local_jobboard'),
+    ['class' => 'badge badge-warning']);
+echo html_writer::end_div();
+echo html_writer::start_div('card-body');
 
 if (empty($unassigned)) {
-    echo '<p>' . get_string('nounassignedapplications', 'local_jobboard') . '</p>';
+    echo ui_helper::empty_state(get_string('nounassignedapplications', 'local_jobboard'), 'check-circle');
 } else {
-    echo '<form method="post" action="' . $PAGE->url . '">';
-    echo '<input type="hidden" name="sesskey" value="' . sesskey() . '">';
-    echo '<input type="hidden" name="action" value="assign">';
+    echo html_writer::start_tag('form', ['method' => 'post', 'action' => $PAGE->url]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'assign']);
 
     // Reviewer selection.
-    echo '<div class="form-group mb-3">';
-    echo '<label>' . get_string('assignto', 'local_jobboard') . '</label>';
-    echo '<select name="reviewerid" class="form-control" required>';
-    echo '<option value="">' . get_string('selectreviewer', 'local_jobboard') . '</option>';
+    echo html_writer::start_div('row mb-4');
+    echo html_writer::start_div('col-md-6');
+    echo html_writer::start_div('form-group');
+    echo html_writer::tag('label',
+        '<i class="fa fa-user-plus mr-2"></i>' . get_string('assignto', 'local_jobboard'),
+        ['for' => 'reviewerid', 'class' => 'font-weight-bold']);
+    echo html_writer::start_tag('select', [
+        'name' => 'reviewerid',
+        'id' => 'reviewerid',
+        'class' => 'form-control',
+        'required' => 'required',
+    ]);
+    echo html_writer::tag('option', get_string('selectreviewer', 'local_jobboard'), ['value' => '']);
     foreach ($reviewers as $rev) {
-        echo '<option value="' . $rev->id . '">' . fullname($rev) . ' (' . $rev->workload . ' ' .
-            get_string('assigned', 'local_jobboard') . ')</option>';
+        $workloadIndicator = '';
+        if ($rev->workload > 15) {
+            $workloadIndicator = ' [HIGH]';
+        } else if ($rev->workload > 10) {
+            $workloadIndicator = ' [MEDIUM]';
+        }
+        echo html_writer::tag('option',
+            fullname($rev) . ' (' . $rev->workload . ' ' . get_string('assigned', 'local_jobboard') . ')' . $workloadIndicator,
+            ['value' => $rev->id]
+        );
     }
-    echo '</select>';
-    echo '</div>';
+    echo html_writer::end_tag('select');
+    echo html_writer::end_div(); // form-group
+    echo html_writer::end_div(); // col
+    echo html_writer::end_div(); // row
 
-    // Select all.
-    echo '<div class="mb-2">';
-    echo '<div class="form-check">';
-    echo '<input type="checkbox" class="form-check-input" id="selectallapp">';
-    echo '<label class="form-check-label" for="selectallapp">' . get_string('selectall') . '</label>';
-    echo '</div>';
-    echo '</div>';
+    // Select all checkbox.
+    echo html_writer::start_div('custom-control custom-checkbox mb-3');
+    echo html_writer::empty_tag('input', [
+        'type' => 'checkbox',
+        'class' => 'custom-control-input',
+        'id' => 'selectallapp',
+    ]);
+    echo html_writer::tag('label',
+        get_string('selectall'),
+        ['class' => 'custom-control-label font-weight-bold', 'for' => 'selectallapp']
+    );
+    echo html_writer::end_div();
 
     // Applications table.
-    echo '<table class="table table-striped">';
-    echo '<thead><tr>';
-    echo '<th width="40"></th>';
-    echo '<th>' . get_string('applicant', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('vacancy', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('status', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('dateapplied', 'local_jobboard') . '</th>';
-    echo '</tr></thead>';
-    echo '<tbody>';
+    $headers = [
+        '',
+        get_string('applicant', 'local_jobboard'),
+        get_string('vacancy', 'local_jobboard'),
+        get_string('status', 'local_jobboard'),
+        get_string('dateapplied', 'local_jobboard'),
+    ];
 
+    $rows = [];
     foreach ($unassigned as $app) {
-        echo '<tr>';
-        echo '<td><input type="checkbox" name="applications[]" value="' . $app->id . '" class="app-checkbox"></td>';
-        echo '<td>' . format_string($app->userfirstname . ' ' . $app->userlastname) . '</td>';
-        echo '<td>' . format_string($app->vacancy_code ?? '') . '</td>';
-        echo '<td>' . get_string('status_' . $app->status, 'local_jobboard') . '</td>';
-        echo '<td>' . userdate($app->timecreated, get_string('strftimedatetime', 'langconfig')) . '</td>';
-        echo '</tr>';
+        $checkbox = html_writer::empty_tag('input', [
+            'type' => 'checkbox',
+            'name' => 'applications[]',
+            'value' => $app->id,
+            'class' => 'app-checkbox',
+        ]);
+
+        $applicantName = format_string($app->userfirstname . ' ' . $app->userlastname);
+
+        $statusClass = 'secondary';
+        if ($app->status === 'submitted') {
+            $statusClass = 'info';
+        } else if ($app->status === 'under_review') {
+            $statusClass = 'warning';
+        }
+        $statusBadge = html_writer::tag('span',
+            get_string('status_' . $app->status, 'local_jobboard'),
+            ['class' => 'badge badge-' . $statusClass]
+        );
+
+        $rows[] = [
+            $checkbox,
+            html_writer::tag('strong', $applicantName),
+            format_string($app->vacancy_code ?? ''),
+            $statusBadge,
+            userdate($app->timecreated, '%Y-%m-%d %H:%M'),
+        ];
     }
 
-    echo '</tbody></table>';
+    echo ui_helper::data_table($headers, $rows);
 
-    echo '<button type="submit" class="btn btn-primary">' . get_string('assignselected', 'local_jobboard') . '</button>';
-    echo '</form>';
+    echo html_writer::start_div('mt-3');
+    echo html_writer::tag('button',
+        '<i class="fa fa-user-plus mr-2"></i>' . get_string('assignselected', 'local_jobboard'),
+        ['type' => 'submit', 'class' => 'btn btn-primary']
+    );
+    echo html_writer::end_div();
 
-    echo '<script>
-    document.getElementById("selectallapp").addEventListener("change", function() {
-        var checkboxes = document.querySelectorAll(".app-checkbox");
-        checkboxes.forEach(function(cb) {
-            cb.checked = this.checked;
-        }.bind(this));
-    });
-    </script>';
+    echo html_writer::end_tag('form');
+
+    // JavaScript for select all.
+    echo html_writer::script('
+        document.getElementById("selectallapp").addEventListener("change", function() {
+            var checkboxes = document.querySelectorAll(".app-checkbox");
+            var self = this;
+            checkboxes.forEach(function(cb) {
+                cb.checked = self.checked;
+            });
+        });
+    ');
 }
 
-echo '</div>';
-echo '</div>';
+echo html_writer::end_div(); // card-body
+echo html_writer::end_div(); // card
+
+// ============================================================================
+// NAVIGATION FOOTER
+// ============================================================================
+echo html_writer::start_div('card mt-4 bg-light');
+echo html_writer::start_div('card-body d-flex flex-wrap align-items-center justify-content-center');
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php'),
+    '<i class="fa fa-tachometer-alt mr-2"></i>' . get_string('dashboard', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary m-1']
+);
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php', ['view' => 'review']),
+    '<i class="fa fa-clipboard-check mr-2"></i>' . get_string('reviewapplications', 'local_jobboard'),
+    ['class' => 'btn btn-outline-primary m-1']
+);
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/bulk_validate.php'),
+    '<i class="fa fa-check-double mr-2"></i>' . get_string('bulkvalidation', 'local_jobboard'),
+    ['class' => 'btn btn-outline-success m-1']
+);
+
+echo html_writer::end_div();
+echo html_writer::end_div();
+
+echo html_writer::end_div(); // local-jobboard-assign-reviewer
 
 echo $OUTPUT->footer();

@@ -17,7 +17,7 @@
 /**
  * Reports view for local_jobboard.
  *
- * This file is included by index.php and should not be accessed directly.
+ * Modern redesign with consistent UX pattern using ui_helper.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 use local_jobboard\bulk_validator;
 use local_jobboard\reviewer;
+use local_jobboard\output\ui_helper;
 
 // Require reports capability.
 require_capability('local/jobboard:viewreports', $context);
@@ -51,6 +52,7 @@ if (!$dateto) {
 $PAGE->set_title(get_string('reports', 'local_jobboard'));
 $PAGE->set_heading(get_string('reports', 'local_jobboard'));
 $PAGE->set_pagelayout('report');
+$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle export.
 if ($format === 'csv' || $format === 'excel' || $format === 'pdf') {
@@ -63,19 +65,57 @@ $vacancies = $DB->get_records_select('local_jobboard_vacancy', '1=1', null, 'cod
 
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(get_string('reports', 'local_jobboard'));
+echo html_writer::start_div('local-jobboard-reports');
 
-// Report type tabs.
+// ============================================================================
+// PAGE HEADER WITH EXPORT ACTIONS
+// ============================================================================
+$exportbaseurl = new moodle_url('/local/jobboard/index.php', [
+    'view' => 'reports',
+    'report' => $reporttype,
+    'vacancyid' => $vacancyid,
+    'datefrom' => $datefrom,
+    'dateto' => $dateto,
+]);
+
+echo ui_helper::page_header(
+    get_string('reports', 'local_jobboard'),
+    [],
+    [
+        [
+            'url' => new moodle_url($exportbaseurl, ['format' => 'csv']),
+            'label' => 'CSV',
+            'icon' => 'file-csv',
+            'class' => 'btn btn-outline-secondary btn-sm',
+        ],
+        [
+            'url' => new moodle_url($exportbaseurl, ['format' => 'excel']),
+            'label' => 'Excel',
+            'icon' => 'file-excel',
+            'class' => 'btn btn-outline-success btn-sm',
+        ],
+        [
+            'url' => new moodle_url($exportbaseurl, ['format' => 'pdf']),
+            'label' => 'PDF',
+            'icon' => 'file-pdf',
+            'class' => 'btn btn-outline-danger btn-sm',
+        ],
+    ]
+);
+
+// ============================================================================
+// REPORT TYPE TABS
+// ============================================================================
 $reporttypes = [
-    'overview' => get_string('reportoverview', 'local_jobboard'),
-    'applications' => get_string('reportapplications', 'local_jobboard'),
-    'documents' => get_string('reportdocuments', 'local_jobboard'),
-    'reviewers' => get_string('reportreviewers', 'local_jobboard'),
-    'timeline' => get_string('reporttimeline', 'local_jobboard'),
+    'overview' => ['label' => get_string('reportoverview', 'local_jobboard'), 'icon' => 'chart-pie'],
+    'applications' => ['label' => get_string('reportapplications', 'local_jobboard'), 'icon' => 'file-alt'],
+    'documents' => ['label' => get_string('reportdocuments', 'local_jobboard'), 'icon' => 'folder-open'],
+    'reviewers' => ['label' => get_string('reportreviewers', 'local_jobboard'), 'icon' => 'user-check'],
+    'timeline' => ['label' => get_string('reporttimeline', 'local_jobboard'), 'icon' => 'calendar-alt'],
 ];
 
-echo '<ul class="nav nav-tabs mb-4">';
-foreach ($reporttypes as $type => $name) {
+echo html_writer::start_tag('ul', ['class' => 'nav nav-pills mb-4 flex-wrap']);
+foreach ($reporttypes as $type => $info) {
     $active = ($reporttype === $type) ? 'active' : '';
     $url = new moodle_url('/local/jobboard/index.php', [
         'view' => 'reports',
@@ -84,60 +124,59 @@ foreach ($reporttypes as $type => $name) {
         'datefrom' => $datefrom,
         'dateto' => $dateto,
     ]);
-    echo '<li class="nav-item">';
-    echo '<a class="nav-link ' . $active . '" href="' . $url . '">' . $name . '</a>';
-    echo '</li>';
+    echo html_writer::start_tag('li', ['class' => 'nav-item']);
+    echo html_writer::link($url,
+        '<i class="fa fa-' . $info['icon'] . ' mr-2"></i>' . $info['label'],
+        ['class' => 'nav-link ' . $active]
+    );
+    echo html_writer::end_tag('li');
 }
-echo '</ul>';
+echo html_writer::end_tag('ul');
 
-// Filters.
-echo '<form class="form-inline mb-4" method="get" action="' . new moodle_url('/local/jobboard/index.php') . '">';
-echo '<input type="hidden" name="view" value="reports">';
-echo '<input type="hidden" name="report" value="' . $reporttype . '">';
-
-echo '<div class="form-group mr-3">';
-echo '<label class="mr-2">' . get_string('vacancy', 'local_jobboard') . '</label>';
-echo '<select name="vacancyid" class="form-control">';
-echo '<option value="0">' . get_string('allvacancies', 'local_jobboard') . '</option>';
+// ============================================================================
+// FILTERS
+// ============================================================================
+$vacancyOptions = [0 => get_string('allvacancies', 'local_jobboard')];
 foreach ($vacancies as $v) {
-    $selected = ($vacancyid == $v->id) ? 'selected' : '';
-    echo "<option value=\"{$v->id}\" {$selected}>" . format_string($v->code) . '</option>';
+    $vacancyOptions[$v->id] = format_string($v->code . ' - ' . $v->title);
 }
-echo '</select>';
-echo '</div>';
 
-echo '<div class="form-group mr-3">';
-echo '<label class="mr-2">' . get_string('datefrom', 'local_jobboard') . '</label>';
-echo '<input type="date" name="datefrom" class="form-control" value="' . date('Y-m-d', $datefrom) . '">';
-echo '</div>';
+$filterDefinitions = [
+    [
+        'type' => 'select',
+        'name' => 'vacancyid',
+        'label' => get_string('vacancy', 'local_jobboard'),
+        'options' => $vacancyOptions,
+        'col' => 'col-md-4',
+    ],
+    [
+        'type' => 'date',
+        'name' => 'datefrom',
+        'label' => get_string('datefrom', 'local_jobboard'),
+        'col' => 'col-md-3',
+    ],
+    [
+        'type' => 'date',
+        'name' => 'dateto',
+        'label' => get_string('dateto', 'local_jobboard'),
+        'col' => 'col-md-3',
+    ],
+];
 
-echo '<div class="form-group mr-3">';
-echo '<label class="mr-2">' . get_string('dateto', 'local_jobboard') . '</label>';
-echo '<input type="date" name="dateto" class="form-control" value="' . date('Y-m-d', $dateto) . '">';
-echo '</div>';
+echo ui_helper::filter_form(
+    (new moodle_url('/local/jobboard/index.php'))->out(false),
+    $filterDefinitions,
+    [
+        'vacancyid' => $vacancyid,
+        'datefrom' => date('Y-m-d', $datefrom),
+        'dateto' => date('Y-m-d', $dateto),
+    ],
+    ['view' => 'reports', 'report' => $reporttype]
+);
 
-echo '<button type="submit" class="btn btn-primary mr-2">' . get_string('filter') . '</button>';
-
-// Export buttons.
-$exportbaseurl = new moodle_url('/local/jobboard/index.php', [
-    'view' => 'reports',
-    'report' => $reporttype,
-    'vacancyid' => $vacancyid,
-    'datefrom' => $datefrom,
-    'dateto' => $dateto,
-]);
-echo '<div class="btn-group">';
-echo '<a href="' . $exportbaseurl . '&format=csv" class="btn btn-outline-secondary">' .
-    get_string('exportcsv', 'local_jobboard') . '</a>';
-echo '<a href="' . $exportbaseurl . '&format=excel" class="btn btn-outline-secondary">' .
-    get_string('exportexcel', 'local_jobboard') . '</a>';
-echo '<a href="' . $exportbaseurl . '&format=pdf" class="btn btn-outline-secondary">' .
-    get_string('exportpdf', 'local_jobboard') . '</a>';
-echo '</div>';
-
-echo '</form>';
-
-// Render specific report.
+// ============================================================================
+// RENDER SPECIFIC REPORT
+// ============================================================================
 switch ($reporttype) {
     case 'overview':
         local_jobboard_render_overview_report($vacancyid, $datefrom, $dateto);
@@ -155,6 +194,39 @@ switch ($reporttype) {
         local_jobboard_render_timeline_report($vacancyid, $datefrom, $dateto);
         break;
 }
+
+// ============================================================================
+// NAVIGATION FOOTER
+// ============================================================================
+echo html_writer::start_div('card mt-4 bg-light');
+echo html_writer::start_div('card-body d-flex flex-wrap align-items-center justify-content-center');
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php'),
+    '<i class="fa fa-tachometer-alt mr-2"></i>' . get_string('dashboard', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary m-1']
+);
+
+if (has_capability('local/jobboard:viewallapplications', $context)) {
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/index.php', ['view' => 'manage']),
+        '<i class="fa fa-briefcase mr-2"></i>' . get_string('managevacancies', 'local_jobboard'),
+        ['class' => 'btn btn-outline-primary m-1']
+    );
+}
+
+if (has_capability('local/jobboard:reviewdocuments', $context)) {
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/bulk_validate.php'),
+        '<i class="fa fa-check-double mr-2"></i>' . get_string('bulkvalidation', 'local_jobboard'),
+        ['class' => 'btn btn-outline-success m-1']
+    );
+}
+
+echo html_writer::end_div();
+echo html_writer::end_div();
+
+echo html_writer::end_div(); // local-jobboard-reports
 
 echo $OUTPUT->footer();
 
@@ -188,46 +260,19 @@ function local_jobboard_render_overview_report(int $vacancyid, int $datefrom, in
         "SELECT COUNT(*) FROM {local_jobboard_application} a
           WHERE a.timecreated BETWEEN :from AND :to AND a.status = 'rejected' {$vacancywhere}", $params);
 
-    echo '<div class="row mb-4">';
-
-    echo '<div class="col-md-3">';
-    echo '<div class="card text-center">';
-    echo '<div class="card-body">';
-    echo '<h2>' . $totalapps . '</h2>';
-    echo '<p>' . get_string('totalapplications', 'local_jobboard') . '</p>';
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
-
-    echo '<div class="col-md-3">';
-    echo '<div class="card text-center bg-success text-white">';
-    echo '<div class="card-body">';
-    echo '<h2>' . $selectedapps . '</h2>';
-    echo '<p>' . get_string('selected', 'local_jobboard') . '</p>';
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
-
-    echo '<div class="col-md-3">';
-    echo '<div class="card text-center bg-danger text-white">';
-    echo '<div class="card-body">';
-    echo '<h2>' . $rejectedapps . '</h2>';
-    echo '<p>' . get_string('rejected', 'local_jobboard') . '</p>';
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
+    $pendingapps = $DB->count_records_sql(
+        "SELECT COUNT(*) FROM {local_jobboard_application} a
+          WHERE a.timecreated BETWEEN :from AND :to AND a.status IN ('submitted', 'under_review') {$vacancywhere}", $params);
 
     $selectionrate = $totalapps > 0 ? round(($selectedapps / $totalapps) * 100, 1) : 0;
-    echo '<div class="col-md-3">';
-    echo '<div class="card text-center">';
-    echo '<div class="card-body">';
-    echo '<h2>' . $selectionrate . '%</h2>';
-    echo '<p>' . get_string('selectionrate', 'local_jobboard') . '</p>';
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
 
-    echo '</div>';
+    // Stats cards using ui_helper.
+    echo html_writer::start_div('row mb-4');
+    echo ui_helper::stat_card((string)$totalapps, get_string('totalapplications', 'local_jobboard'), 'primary', 'file-alt');
+    echo ui_helper::stat_card((string)$selectedapps, get_string('selected', 'local_jobboard'), 'success', 'trophy');
+    echo ui_helper::stat_card((string)$rejectedapps, get_string('rejected', 'local_jobboard'), 'danger', 'times-circle');
+    echo ui_helper::stat_card($selectionrate . '%', get_string('selectionrate', 'local_jobboard'), 'info', 'chart-line');
+    echo html_writer::end_div();
 
     // Applications by status chart data.
     $statusdata = $DB->get_records_sql(
@@ -236,23 +281,75 @@ function local_jobboard_render_overview_report(int $vacancyid, int $datefrom, in
           WHERE a.timecreated BETWEEN :from AND :to {$vacancywhere}
           GROUP BY a.status", $params);
 
-    echo '<div class="card mb-4">';
-    echo '<div class="card-header">' . get_string('applicationsbystatus', 'local_jobboard') . '</div>';
-    echo '<div class="card-body">';
-    echo '<table class="table">';
-    echo '<thead><tr><th>' . get_string('status', 'local_jobboard') . '</th><th>' . get_string('count', 'local_jobboard') . '</th><th></th></tr></thead>';
-    echo '<tbody>';
-    foreach ($statusdata as $row) {
-        $pct = $totalapps > 0 ? round(($row->count / $totalapps) * 100) : 0;
-        echo '<tr>';
-        echo '<td>' . get_string('status_' . $row->status, 'local_jobboard') . '</td>';
-        echo '<td>' . $row->count . '</td>';
-        echo '<td><div class="progress"><div class="progress-bar" style="width: ' . $pct . '%">' . $pct . '%</div></div></td>';
-        echo '</tr>';
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-white d-flex justify-content-between align-items-center');
+    echo html_writer::tag('h5', '<i class="fa fa-chart-bar text-primary mr-2"></i>' .
+        get_string('applicationsbystatus', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+
+    if (empty($statusdata)) {
+        echo ui_helper::empty_state(get_string('nodata', 'local_jobboard'), 'chart-bar');
+    } else {
+        echo html_writer::start_div('table-responsive');
+        echo html_writer::start_tag('table', ['class' => 'table table-hover']);
+        echo html_writer::start_tag('thead', ['class' => 'thead-light']);
+        echo html_writer::tag('tr',
+            html_writer::tag('th', get_string('status', 'local_jobboard')) .
+            html_writer::tag('th', get_string('count', 'local_jobboard'), ['class' => 'text-center']) .
+            html_writer::tag('th', get_string('percentage', 'local_jobboard'))
+        );
+        echo html_writer::end_tag('thead');
+        echo html_writer::start_tag('tbody');
+
+        foreach ($statusdata as $row) {
+            $pct = $totalapps > 0 ? round(($row->count / $totalapps) * 100) : 0;
+            $statusColor = local_jobboard_get_status_color($row->status);
+
+            echo html_writer::start_tag('tr');
+            echo html_writer::tag('td',
+                html_writer::tag('span', get_string('status_' . $row->status, 'local_jobboard'),
+                    ['class' => 'badge badge-' . $statusColor])
+            );
+            echo html_writer::tag('td', html_writer::tag('strong', $row->count), ['class' => 'text-center']);
+            echo html_writer::tag('td',
+                html_writer::start_div('progress', ['style' => 'height: 20px;']) .
+                html_writer::div($pct . '%', 'progress-bar bg-' . $statusColor, [
+                    'role' => 'progressbar',
+                    'style' => 'width: ' . $pct . '%',
+                ]) .
+                html_writer::end_div()
+            );
+            echo html_writer::end_tag('tr');
+        }
+
+        echo html_writer::end_tag('tbody');
+        echo html_writer::end_tag('table');
+        echo html_writer::end_div();
     }
-    echo '</tbody></table>';
-    echo '</div>';
-    echo '</div>';
+
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
+}
+
+/**
+ * Get Bootstrap color class for status.
+ *
+ * @param string $status Application status.
+ * @return string Bootstrap color class.
+ */
+function local_jobboard_get_status_color(string $status): string {
+    $colors = [
+        'submitted' => 'info',
+        'under_review' => 'warning',
+        'docs_validated' => 'success',
+        'docs_rejected' => 'danger',
+        'interview' => 'purple',
+        'selected' => 'success',
+        'rejected' => 'secondary',
+        'withdrawn' => 'dark',
+    ];
+    return $colors[$status] ?? 'secondary';
 }
 
 /**
@@ -283,31 +380,42 @@ function local_jobboard_render_applications_report(int $vacancyid, int $datefrom
           GROUP BY v.id, v.code, v.title
           ORDER BY total DESC", $params);
 
-    echo '<div class="card mb-4">';
-    echo '<div class="card-header">' . get_string('applicationsbyvacancy', 'local_jobboard') . '</div>';
-    echo '<div class="card-body">';
-    echo '<table class="table table-striped">';
-    echo '<thead><tr>';
-    echo '<th>' . get_string('vacancy', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('total') . '</th>';
-    echo '<th>' . get_string('selected', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('rejected', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('pending', 'local_jobboard') . '</th>';
-    echo '</tr></thead>';
-    echo '<tbody>';
-    foreach ($byvacancy as $row) {
-        $pending = $row->total - $row->selected - $row->rejected;
-        echo '<tr>';
-        echo '<td>' . format_string($row->code . ' - ' . $row->title) . '</td>';
-        echo '<td>' . $row->total . '</td>';
-        echo '<td class="text-success">' . $row->selected . '</td>';
-        echo '<td class="text-danger">' . $row->rejected . '</td>';
-        echo '<td class="text-warning">' . $pending . '</td>';
-        echo '</tr>';
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-white');
+    echo html_writer::tag('h5', '<i class="fa fa-briefcase text-primary mr-2"></i>' .
+        get_string('applicationsbyvacancy', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+
+    if (empty($byvacancy)) {
+        echo ui_helper::empty_state(get_string('nodata', 'local_jobboard'), 'briefcase');
+    } else {
+        $headers = [
+            get_string('vacancy', 'local_jobboard'),
+            get_string('total'),
+            get_string('selected', 'local_jobboard'),
+            get_string('rejected', 'local_jobboard'),
+            get_string('pending', 'local_jobboard'),
+        ];
+
+        $rows = [];
+        foreach ($byvacancy as $row) {
+            $pending = $row->total - $row->selected - $row->rejected;
+            $rows[] = [
+                html_writer::tag('strong', format_string($row->code)) .
+                    html_writer::tag('span', ' - ' . format_string($row->title), ['class' => 'text-muted']),
+                html_writer::tag('span', $row->total, ['class' => 'badge badge-primary']),
+                html_writer::tag('span', $row->selected, ['class' => 'badge badge-success']),
+                html_writer::tag('span', $row->rejected, ['class' => 'badge badge-danger']),
+                html_writer::tag('span', $pending, ['class' => 'badge badge-warning']),
+            ];
+        }
+
+        echo ui_helper::data_table($headers, $rows);
     }
-    echo '</tbody></table>';
-    echo '</div>';
-    echo '</div>';
+
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
 }
 
 /**
@@ -321,71 +429,111 @@ function local_jobboard_render_documents_report(int $vacancyid, int $datefrom, i
     $stats = bulk_validator::get_validation_stats($vacancyid ?: null, $datefrom);
     $rejectionreasons = bulk_validator::get_rejection_reasons_stats($vacancyid ?: null, $datefrom);
 
-    echo '<div class="row mb-4">';
+    // Stats cards.
+    echo html_writer::start_div('row mb-4');
+    echo ui_helper::stat_card((string)$stats['total'], get_string('totaldocuments', 'local_jobboard'), 'primary', 'folder');
+    echo ui_helper::stat_card($stats['validated'] . ' (' . $stats['validation_rate'] . '%)',
+        get_string('validated', 'local_jobboard'), 'success', 'check-circle');
+    echo ui_helper::stat_card($stats['rejected'] . ' (' . $stats['rejection_rate'] . '%)',
+        get_string('rejected', 'local_jobboard'), 'danger', 'times-circle');
+    echo ui_helper::stat_card($stats['avg_validation_time_hours'] . 'h',
+        get_string('avgvalidationtime', 'local_jobboard'), 'info', 'clock');
+    echo html_writer::end_div();
 
-    // Validation stats.
-    echo '<div class="col-md-6">';
-    echo '<div class="card h-100">';
-    echo '<div class="card-header">' . get_string('validationsummary', 'local_jobboard') . '</div>';
-    echo '<div class="card-body">';
-    echo '<table class="table">';
-    echo '<tr><td>' . get_string('totaldocuments', 'local_jobboard') . '</td><td><strong>' . $stats['total'] . '</strong></td></tr>';
-    echo '<tr class="text-success"><td>' . get_string('validated', 'local_jobboard') . '</td><td>' . $stats['validated'] . ' (' . $stats['validation_rate'] . '%)</td></tr>';
-    echo '<tr class="text-danger"><td>' . get_string('rejected', 'local_jobboard') . '</td><td>' . $stats['rejected'] . ' (' . $stats['rejection_rate'] . '%)</td></tr>';
-    echo '<tr class="text-warning"><td>' . get_string('pending', 'local_jobboard') . '</td><td>' . $stats['pending'] . '</td></tr>';
-    echo '<tr><td>' . get_string('avgvalidationtime', 'local_jobboard') . '</td><td>' . $stats['avg_validation_time_hours'] . ' ' . get_string('hours') . '</td></tr>';
-    echo '</table>';
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
+    echo html_writer::start_div('row');
 
     // Rejection reasons.
-    echo '<div class="col-md-6">';
-    echo '<div class="card h-100">';
-    echo '<div class="card-header">' . get_string('rejectionreasons', 'local_jobboard') . '</div>';
-    echo '<div class="card-body">';
+    echo html_writer::start_div('col-lg-6 mb-4');
+    echo html_writer::start_div('card shadow-sm h-100');
+    echo html_writer::start_div('card-header bg-white');
+    echo html_writer::tag('h5', '<i class="fa fa-exclamation-triangle text-warning mr-2"></i>' .
+        get_string('rejectionreasons', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+
     if (empty($rejectionreasons)) {
-        echo '<p>' . get_string('norejections', 'local_jobboard') . '</p>';
+        echo html_writer::tag('p', get_string('norejections', 'local_jobboard'), ['class' => 'text-muted mb-0']);
     } else {
-        echo '<table class="table">';
+        echo html_writer::start_tag('ul', ['class' => 'list-group list-group-flush']);
         foreach ($rejectionreasons as $reason) {
             $reasontext = get_string('rejectreason_' . $reason->rejectreason, 'local_jobboard');
-            echo '<tr><td>' . $reasontext . '</td><td>' . $reason->count . '</td></tr>';
+            echo html_writer::tag('li',
+                html_writer::tag('span', $reasontext) .
+                html_writer::tag('span', $reason->count, ['class' => 'badge badge-danger badge-pill float-right']),
+                ['class' => 'list-group-item d-flex justify-content-between align-items-center']
+            );
         }
-        echo '</table>';
+        echo html_writer::end_tag('ul');
     }
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
 
-    echo '</div>';
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
+    echo html_writer::end_div(); // col
 
-    // By document type.
-    echo '<div class="card mb-4">';
-    echo '<div class="card-header">' . get_string('bydocumenttype', 'local_jobboard') . '</div>';
-    echo '<div class="card-body">';
-    echo '<table class="table table-striped">';
-    echo '<thead><tr>';
-    echo '<th>' . get_string('documenttype', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('total') . '</th>';
-    echo '<th>' . get_string('validated', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('rejected', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('pending', 'local_jobboard') . '</th>';
-    echo '</tr></thead>';
-    echo '<tbody>';
+    // Pending by type.
+    echo html_writer::start_div('col-lg-6 mb-4');
+    echo html_writer::start_div('card shadow-sm h-100');
+    echo html_writer::start_div('card-header bg-white');
+    echo html_writer::tag('h5', '<i class="fa fa-clock text-info mr-2"></i>' .
+        get_string('pendingbytype', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+
+    if (empty($stats['by_type'])) {
+        echo html_writer::tag('p', get_string('nodata', 'local_jobboard'), ['class' => 'text-muted mb-0']);
+    } else {
+        echo html_writer::start_tag('ul', ['class' => 'list-group list-group-flush']);
+        foreach ($stats['by_type'] as $row) {
+            if ($row->pending > 0) {
+                $typename = get_string('doctype_' . $row->documenttype, 'local_jobboard');
+                echo html_writer::tag('li',
+                    html_writer::tag('span', $typename) .
+                    html_writer::tag('span', $row->pending, ['class' => 'badge badge-warning badge-pill float-right']),
+                    ['class' => 'list-group-item d-flex justify-content-between align-items-center']
+                );
+            }
+        }
+        echo html_writer::end_tag('ul');
+    }
+
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
+    echo html_writer::end_div(); // col
+
+    echo html_writer::end_div(); // row
+
+    // By document type table.
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-white');
+    echo html_writer::tag('h5', '<i class="fa fa-file-alt text-primary mr-2"></i>' .
+        get_string('bydocumenttype', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+
+    $headers = [
+        get_string('documenttype', 'local_jobboard'),
+        get_string('total'),
+        get_string('validated', 'local_jobboard'),
+        get_string('rejected', 'local_jobboard'),
+        get_string('pending', 'local_jobboard'),
+    ];
+
+    $rows = [];
     foreach ($stats['by_type'] as $row) {
         $typename = get_string('doctype_' . $row->documenttype, 'local_jobboard');
-        echo '<tr>';
-        echo '<td>' . $typename . '</td>';
-        echo '<td>' . $row->total . '</td>';
-        echo '<td class="text-success">' . $row->validated . '</td>';
-        echo '<td class="text-danger">' . $row->rejected . '</td>';
-        echo '<td class="text-warning">' . $row->pending . '</td>';
-        echo '</tr>';
+        $rows[] = [
+            html_writer::tag('strong', $typename),
+            html_writer::tag('span', $row->total, ['class' => 'badge badge-secondary']),
+            html_writer::tag('span', $row->validated, ['class' => 'badge badge-success']),
+            html_writer::tag('span', $row->rejected, ['class' => 'badge badge-danger']),
+            html_writer::tag('span', $row->pending, ['class' => 'badge badge-warning']),
+        ];
     }
-    echo '</tbody></table>';
-    echo '</div>';
-    echo '</div>';
+
+    echo ui_helper::data_table($headers, $rows);
+
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
 }
 
 /**
@@ -398,32 +546,49 @@ function local_jobboard_render_documents_report(int $vacancyid, int $datefrom, i
 function local_jobboard_render_reviewers_report(int $vacancyid, int $datefrom, int $dateto): void {
     $reviewers = reviewer::get_all_with_workload();
 
-    echo '<div class="card mb-4">';
-    echo '<div class="card-header">' . get_string('reviewerperformance', 'local_jobboard') . '</div>';
-    echo '<div class="card-body">';
-    echo '<table class="table table-striped">';
-    echo '<thead><tr>';
-    echo '<th>' . get_string('reviewer', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('currentworkload', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('reviewed', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('validated', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('rejected', 'local_jobboard') . '</th>';
-    echo '<th>' . get_string('avgtime', 'local_jobboard') . '</th>';
-    echo '</tr></thead>';
-    echo '<tbody>';
-    foreach ($reviewers as $rev) {
-        echo '<tr>';
-        echo '<td>' . fullname($rev) . '</td>';
-        echo '<td>' . $rev->workload . '</td>';
-        echo '<td>' . ($rev->stats['reviewed'] ?? 0) . '</td>';
-        echo '<td class="text-success">' . ($rev->stats['validated'] ?? 0) . '</td>';
-        echo '<td class="text-danger">' . ($rev->stats['rejected'] ?? 0) . '</td>';
-        echo '<td>' . ($rev->stats['avg_review_time'] ?? 0) . 'h</td>';
-        echo '</tr>';
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-white');
+    echo html_writer::tag('h5', '<i class="fa fa-users text-primary mr-2"></i>' .
+        get_string('reviewerperformance', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+
+    if (empty($reviewers)) {
+        echo ui_helper::empty_state(get_string('noreviewers', 'local_jobboard'), 'users');
+    } else {
+        $headers = [
+            get_string('reviewer', 'local_jobboard'),
+            get_string('currentworkload', 'local_jobboard'),
+            get_string('reviewed', 'local_jobboard'),
+            get_string('validated', 'local_jobboard'),
+            get_string('rejected', 'local_jobboard'),
+            get_string('avgtime', 'local_jobboard'),
+        ];
+
+        $rows = [];
+        foreach ($reviewers as $rev) {
+            $workloadClass = 'success';
+            if ($rev->workload > 15) {
+                $workloadClass = 'danger';
+            } elseif ($rev->workload > 10) {
+                $workloadClass = 'warning';
+            }
+
+            $rows[] = [
+                html_writer::tag('strong', fullname($rev)),
+                html_writer::tag('span', $rev->workload, ['class' => 'badge badge-' . $workloadClass]),
+                ($rev->stats['reviewed'] ?? 0),
+                html_writer::tag('span', ($rev->stats['validated'] ?? 0), ['class' => 'text-success']),
+                html_writer::tag('span', ($rev->stats['rejected'] ?? 0), ['class' => 'text-danger']),
+                ($rev->stats['avg_review_time'] ?? 0) . 'h',
+            ];
+        }
+
+        echo ui_helper::data_table($headers, $rows);
     }
-    echo '</tbody></table>';
-    echo '</div>';
-    echo '</div>';
+
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
 }
 
 /**
@@ -452,18 +617,58 @@ function local_jobboard_render_timeline_report(int $vacancyid, int $datefrom, in
 
     $daily = $DB->get_records_sql($sql, $params);
 
-    echo '<div class="card mb-4">';
-    echo '<div class="card-header">' . get_string('dailyapplications', 'local_jobboard') . '</div>';
-    echo '<div class="card-body">';
-    echo '<table class="table table-striped">';
-    echo '<thead><tr><th>' . get_string('date') . '</th><th>' . get_string('applications', 'local_jobboard') . '</th></tr></thead>';
-    echo '<tbody>';
+    // Calculate max for visual bar.
+    $maxcount = 0;
     foreach ($daily as $row) {
-        echo '<tr><td>' . $row->day . '</td><td>' . $row->count . '</td></tr>';
+        if ($row->count > $maxcount) {
+            $maxcount = $row->count;
+        }
     }
-    echo '</tbody></table>';
-    echo '</div>';
-    echo '</div>';
+
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-white');
+    echo html_writer::tag('h5', '<i class="fa fa-calendar-alt text-primary mr-2"></i>' .
+        get_string('dailyapplications', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+
+    if (empty($daily)) {
+        echo ui_helper::empty_state(get_string('nodata', 'local_jobboard'), 'calendar-times');
+    } else {
+        echo html_writer::start_div('table-responsive');
+        echo html_writer::start_tag('table', ['class' => 'table table-hover']);
+        echo html_writer::start_tag('thead', ['class' => 'thead-light']);
+        echo html_writer::tag('tr',
+            html_writer::tag('th', get_string('date')) .
+            html_writer::tag('th', get_string('applications', 'local_jobboard'), ['class' => 'text-center']) .
+            html_writer::tag('th', '', ['style' => 'width: 50%;'])
+        );
+        echo html_writer::end_tag('thead');
+        echo html_writer::start_tag('tbody');
+
+        foreach ($daily as $row) {
+            $pct = $maxcount > 0 ? round(($row->count / $maxcount) * 100) : 0;
+            echo html_writer::start_tag('tr');
+            echo html_writer::tag('td', html_writer::tag('code', $row->day));
+            echo html_writer::tag('td', html_writer::tag('strong', $row->count), ['class' => 'text-center']);
+            echo html_writer::tag('td',
+                html_writer::start_div('progress', ['style' => 'height: 20px;']) .
+                html_writer::div('', 'progress-bar bg-primary', [
+                    'role' => 'progressbar',
+                    'style' => 'width: ' . $pct . '%',
+                ]) .
+                html_writer::end_div()
+            );
+            echo html_writer::end_tag('tr');
+        }
+
+        echo html_writer::end_tag('tbody');
+        echo html_writer::end_tag('table');
+        echo html_writer::end_div();
+    }
+
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
 }
 
 /**

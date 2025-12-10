@@ -17,7 +17,7 @@
 /**
  * Document types management page for local_jobboard.
  *
- * Provides full CRUD interface for managing document types.
+ * Modern redesign with consistent UX pattern using ui_helper.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -28,6 +28,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 use local_jobboard\forms\doctype_form;
+use local_jobboard\output\ui_helper;
 
 admin_externalpage_setup('local_jobboard_doctypes');
 
@@ -36,6 +37,7 @@ $id = optional_param('id', 0, PARAM_INT);
 
 $context = context_system::instance();
 $pageurl = new moodle_url('/local/jobboard/admin/doctypes.php');
+$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle toggle action.
 if ($action === 'toggle' && $id && confirm_sesskey()) {
@@ -209,15 +211,31 @@ if ($action === 'add' || ($action === 'edit' && $id)) {
 
     echo $OUTPUT->header();
 
-    // Back button.
-    echo html_writer::start_div('mb-4');
-    echo html_writer::link($pageurl, '<i class="fa fa-arrow-left mr-2"></i>' . get_string('back'),
-        ['class' => 'btn btn-outline-secondary']);
+    echo html_writer::start_div('local-jobboard-doctypes');
+
+    // Back button and title.
+    echo ui_helper::page_header($title, [], [
+        [
+            'url' => $pageurl,
+            'label' => get_string('back'),
+            'icon' => 'arrow-left',
+            'class' => 'btn btn-outline-secondary',
+        ],
+    ]);
+
+    // Form card.
+    echo html_writer::start_div('card shadow-sm');
+    echo html_writer::start_div('card-header bg-white');
+    echo html_writer::tag('h5',
+        '<i class="fa fa-' . ($doctype ? 'edit' : 'plus') . ' text-primary mr-2"></i>' . $title,
+        ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+    $mform->display();
+    echo html_writer::end_div();
     echo html_writer::end_div();
 
-    echo $OUTPUT->heading($title);
-
-    $mform->display();
+    echo html_writer::end_div();
 
     echo $OUTPUT->footer();
     exit;
@@ -228,27 +246,50 @@ if ($action === 'confirmdelete' && $id) {
     $doctype = $DB->get_record('local_jobboard_doctype', ['id' => $id], '*', MUST_EXIST);
 
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('confirmdeletedoctype', 'local_jobboard'));
+
+    echo html_writer::start_div('local-jobboard-doctypes');
 
     // Check usage.
     $inuse = $DB->count_records('local_jobboard_document', ['documenttype' => $doctype->code]);
 
+    echo html_writer::start_div('card shadow-sm');
+    echo html_writer::start_div('card-header bg-warning');
+    echo html_writer::tag('h5',
+        '<i class="fa fa-exclamation-triangle mr-2"></i>' . get_string('confirmdeletedoctype', 'local_jobboard'),
+        ['class' => 'mb-0']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body');
+
     if ($inuse > 0) {
-        echo $OUTPUT->notification(get_string('error:doctypeinuse', 'local_jobboard', $inuse), 'warning');
-        echo html_writer::link($pageurl, get_string('back'), ['class' => 'btn btn-primary']);
+        echo html_writer::div(
+            '<i class="fa fa-times-circle mr-2"></i>' . get_string('error:doctypeinuse', 'local_jobboard', $inuse),
+            'alert alert-danger'
+        );
+        echo html_writer::link($pageurl, '<i class="fa fa-arrow-left mr-2"></i>' . get_string('back'),
+            ['class' => 'btn btn-secondary']);
     } else {
         $name = get_string_manager()->string_exists('doctype_' . $doctype->code, 'local_jobboard')
             ? get_string('doctype_' . $doctype->code, 'local_jobboard')
             : $doctype->name;
 
         echo html_writer::tag('p', get_string('confirmdeletedoctype_msg', 'local_jobboard', $name));
+        echo html_writer::tag('p',
+            '<strong>' . get_string('code', 'local_jobboard') . ':</strong> <code>' . s($doctype->code) . '</code>',
+            ['class' => 'text-muted']);
 
         $deleteurl = new moodle_url($pageurl, ['action' => 'delete', 'id' => $id, 'sesskey' => sesskey()]);
-        echo html_writer::start_div('mt-3');
-        echo html_writer::link($deleteurl, get_string('delete'), ['class' => 'btn btn-danger mr-2']);
-        echo html_writer::link($pageurl, get_string('cancel'), ['class' => 'btn btn-secondary']);
+        echo html_writer::start_div('mt-4');
+        echo html_writer::link($deleteurl, '<i class="fa fa-trash mr-2"></i>' . get_string('delete'),
+            ['class' => 'btn btn-danger mr-2']);
+        echo html_writer::link($pageurl, '<i class="fa fa-times mr-2"></i>' . get_string('cancel'),
+            ['class' => 'btn btn-secondary']);
         echo html_writer::end_div();
     }
+
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+
+    echo html_writer::end_div();
 
     echo $OUTPUT->footer();
     exit;
@@ -257,25 +298,95 @@ if ($action === 'confirmdelete' && $id) {
 // Default: List all document types.
 $doctypes = $DB->get_records('local_jobboard_doctype', null, 'sortorder ASC, code ASC');
 
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('managedoctypes', 'local_jobboard'));
+// Calculate stats.
+$totalDoctypes = count($doctypes);
+$enabledDoctypes = 0;
+$requiredDoctypes = 0;
+$conditionalDoctypes = 0;
+foreach ($doctypes as $dt) {
+    if ($dt->enabled) {
+        $enabledDoctypes++;
+    }
+    if (!empty($dt->isrequired)) {
+        $requiredDoctypes++;
+    }
+    if (!empty($dt->gender_condition) || !empty($dt->profession_exempt) || !empty($dt->age_exemption_threshold)) {
+        $conditionalDoctypes++;
+    }
+}
 
-// Add button.
+echo $OUTPUT->header();
+
+echo html_writer::start_div('local-jobboard-doctypes');
+
+// ============================================================================
+// PAGE HEADER WITH ACTIONS
+// ============================================================================
 $addurl = new moodle_url($pageurl, ['action' => 'add']);
-echo html_writer::start_div('mb-4');
-echo html_writer::link($addurl, '<i class="fa fa-plus mr-2"></i>' . get_string('adddoctype', 'local_jobboard'),
-    ['class' => 'btn btn-primary']);
+echo ui_helper::page_header(
+    get_string('managedoctypes', 'local_jobboard'),
+    [],
+    [
+        [
+            'url' => $addurl,
+            'label' => get_string('adddoctype', 'local_jobboard'),
+            'icon' => 'plus',
+            'class' => 'btn btn-primary',
+        ],
+        [
+            'url' => new moodle_url('/local/jobboard/index.php'),
+            'label' => get_string('dashboard', 'local_jobboard'),
+            'icon' => 'tachometer-alt',
+            'class' => 'btn btn-outline-secondary',
+        ],
+    ]
+);
+
+// ============================================================================
+// STATS CARDS
+// ============================================================================
+echo html_writer::start_div('row mb-4');
+echo ui_helper::stat_card((string)$totalDoctypes, get_string('totaldoctypes', 'local_jobboard'), 'primary', 'folder');
+echo ui_helper::stat_card((string)$enabledDoctypes, get_string('enableddoctypes', 'local_jobboard'), 'success', 'check-circle');
+echo ui_helper::stat_card((string)$requiredDoctypes, get_string('requireddoctypes', 'local_jobboard'), 'info', 'star');
+echo ui_helper::stat_card((string)$conditionalDoctypes, get_string('conditionaldoctypes', 'local_jobboard'), 'warning', 'filter');
 echo html_writer::end_div();
 
-// Help text.
-echo '<div class="alert alert-info">' . get_string('doctypeshelp', 'local_jobboard') . '</div>';
+// ============================================================================
+// HELP INFO
+// ============================================================================
+echo ui_helper::info_card(
+    get_string('aboutdoctypes', 'local_jobboard'),
+    get_string('doctypeshelp', 'local_jobboard'),
+    'info',
+    'info-circle'
+);
 
+// ============================================================================
+// DOCUMENT TYPES TABLE
+// ============================================================================
 if (empty($doctypes)) {
-    echo $OUTPUT->notification(get_string('nodoctypes', 'local_jobboard'), 'info');
+    echo ui_helper::empty_state(
+        get_string('nodoctypes', 'local_jobboard'),
+        'folder-open',
+        [
+            'url' => $addurl,
+            'label' => get_string('adddoctype', 'local_jobboard'),
+            'class' => 'btn btn-primary',
+        ]
+    );
 } else {
-    $table = new html_table();
-    $table->head = [
-        get_string('sortorder', 'local_jobboard'),
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-white d-flex justify-content-between align-items-center');
+    echo html_writer::tag('h5', '<i class="fa fa-list text-primary mr-2"></i>' .
+        get_string('doctypelist', 'local_jobboard'), ['class' => 'mb-0']);
+    echo html_writer::tag('span', $totalDoctypes . ' ' . get_string('items', 'local_jobboard'),
+        ['class' => 'badge badge-secondary']);
+    echo html_writer::end_div();
+    echo html_writer::start_div('card-body p-0');
+
+    $headers = [
+        '<span class="text-muted">#</span>',
         get_string('code', 'local_jobboard'),
         get_string('name'),
         get_string('category', 'local_jobboard'),
@@ -284,8 +395,8 @@ if (empty($doctypes)) {
         get_string('status'),
         get_string('actions'),
     ];
-    $table->attributes['class'] = 'generaltable table-striped';
 
+    $rows = [];
     $totalcount = count($doctypes);
     $index = 0;
 
@@ -301,7 +412,7 @@ if (empty($doctypes)) {
         $isrequired = $dt->isrequired ?? 0;
         $requiredbadge = $isrequired
             ? '<span class="badge badge-primary">' . get_string('yes') . '</span>'
-            : '<span class="badge badge-secondary">' . get_string('no') . '</span>';
+            : '<span class="badge badge-light">' . get_string('no') . '</span>';
 
         // Build conditions display.
         $conditions = [];
@@ -350,7 +461,7 @@ if (empty($doctypes)) {
                 '<i class="fa fa-info-circle"></i> ' . get_string('hasnote', 'local_jobboard') . '</span>';
         }
 
-        $conditionshtml = !empty($conditions) ? implode('<br>', $conditions) : '-';
+        $conditionshtml = !empty($conditions) ? implode('<br>', $conditions) : '<span class="text-muted">-</span>';
 
         // Build actions.
         $actions = [];
@@ -403,10 +514,10 @@ if (empty($doctypes)) {
             ? get_string('doccategory_' . $dt->category, 'local_jobboard')
             : ($dt->category ?? '-');
 
-        $table->data[] = [
-            $dt->sortorder,
+        $rows[] = [
+            html_writer::tag('span', $dt->sortorder, ['class' => 'text-muted font-weight-light']),
             html_writer::tag('code', format_string($dt->code)),
-            $name,
+            html_writer::tag('strong', $name),
             $category,
             $requiredbadge,
             $conditionshtml,
@@ -415,7 +526,41 @@ if (empty($doctypes)) {
         ];
     }
 
-    echo html_writer::table($table);
+    echo ui_helper::data_table($headers, $rows, ['class' => 'mb-0']);
+
+    echo html_writer::end_div(); // card-body
+    echo html_writer::end_div(); // card
 }
+
+// ============================================================================
+// NAVIGATION FOOTER
+// ============================================================================
+echo html_writer::start_div('card mt-4 bg-light');
+echo html_writer::start_div('card-body d-flex flex-wrap align-items-center justify-content-center');
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/index.php'),
+    '<i class="fa fa-tachometer-alt mr-2"></i>' . get_string('dashboard', 'local_jobboard'),
+    ['class' => 'btn btn-outline-secondary m-1']
+);
+
+echo html_writer::link(
+    new moodle_url('/local/jobboard/admin/templates.php'),
+    '<i class="fa fa-envelope mr-2"></i>' . get_string('emailtemplates', 'local_jobboard'),
+    ['class' => 'btn btn-outline-primary m-1']
+);
+
+if (has_capability('local/jobboard:manageapitokens', $context)) {
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/admin/tokens.php'),
+        '<i class="fa fa-key mr-2"></i>' . get_string('apitokens', 'local_jobboard'),
+        ['class' => 'btn btn-outline-warning m-1']
+    );
+}
+
+echo html_writer::end_div();
+echo html_writer::end_div();
+
+echo html_writer::end_div(); // local-jobboard-doctypes
 
 echo $OUTPUT->footer();
