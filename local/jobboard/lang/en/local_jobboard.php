@@ -263,6 +263,18 @@ $string['importedconvocatorias'] = 'Convocatorias: {$a->inserted} inserted, {$a-
 $string['importedvacancies'] = 'Vacancies: {$a->inserted} inserted, {$a->updated} updated, {$a->skipped} skipped';
 $string['importedsettings'] = 'Settings: {$a} updated';
 $string['importedexemptions'] = 'Exemptions: {$a->inserted} inserted, {$a->updated} updated, {$a->skipped} skipped';
+$string['importedapplications'] = 'Applications: {$a->inserted} inserted, {$a->skipped} skipped';
+$string['importeddocuments'] = 'Documents: {$a->inserted} inserted, {$a->skipped} skipped';
+$string['importedfiles'] = 'Files: {$a->inserted} inserted, {$a->skipped} skipped';
+$string['importingfrom'] = 'Importing from {$a->site} (v{$a->version}) exported on {$a->date}';
+$string['fullexport_info'] = 'Select which data to include in the export. The ZIP file can be imported into another Moodle instance with JobBoard installed.';
+$string['migrationinfo_title'] = 'About Migration';
+$string['migrationinfo_desc'] = 'This tool allows you to transfer all JobBoard data between Moodle instances. Export creates a ZIP file with database records and files. Import reads the ZIP and restores the data with ID mapping for related records.';
+$string['exporterror'] = 'Export error';
+$string['applications'] = 'Applications';
+$string['includesfiles'] = '(includes files)';
+$string['allfiles'] = 'All files';
+$string['largeexport'] = '(may be large)';
 
 // Messages.
 $string['vacancycreated'] = 'Vacancy created successfully';
