@@ -584,3 +584,40 @@ $string['help_application'] = 'Una postulación es enviada por un candidato para
 $string['help_reviewer'] = 'Un revisor evalúa y valida los documentos de las postulaciones';
 $string['help_committee'] = 'Un comité de selección toma las decisiones finales de contratación';
 $string['help_program_reviewer'] = 'Los revisores por programa son asignados a programas académicos específicos para revisar postulaciones';
+
+// =============================================================================
+// PÁGINA DE GESTIÓN DE REVISORES POR PROGRAMA
+// =============================================================================
+$string['programreviewers'] = 'Revisores por Programa';
+$string['program_reviewers_desc'] = 'Gestionar revisores asignados a programas académicos';
+$string['programreviewerhelp'] = 'Asigne revisores a programas académicos específicos para revisar postulaciones';
+$string['totalreviewers'] = 'Total de Revisores';
+$string['activereviewers'] = 'Revisores Activos';
+$string['leadreviewers'] = 'Revisores Líderes';
+$string['programswithreviewers'] = 'Programas con Revisores';
+$string['noprogramswithreviewers'] = 'Ningún programa tiene revisores asignados aún';
+$string['addreviewer'] = 'Agregar Revisor';
+$string['addreviewerstoprogram'] = 'Agregar revisores a este programa';
+$string['assignedreviewers'] = 'Revisores Asignados';
+$string['noreviewersforprogram'] = 'No hay revisores asignados a este programa';
+$string['nousersavailable'] = 'No hay usuarios disponibles con capacidad de revisor';
+$string['selectuser'] = 'Seleccionar usuario...';
+$string['revieweradded'] = 'Revisor agregado exitosamente';
+$string['revieweradderror'] = 'Error al agregar revisor';
+$string['reviewerremoved'] = 'Revisor eliminado exitosamente';
+$string['reviewerremoveerror'] = 'Error al eliminar revisor';
+$string['rolechanged'] = 'Rol cambiado exitosamente';
+$string['rolechangeerror'] = 'Error al cambiar rol';
+$string['statuschanged'] = 'Estado cambiado exitosamente';
+$string['statuschangeerror'] = 'Error al cambiar estado';
+$string['confirmremovereviewer'] = '¿Está seguro que desea eliminar este revisor?';
+$string['changerole'] = 'Cambiar Rol';
+$string['backtolist'] = 'Volver a la lista';
+$string['activate'] = 'Activar';
+$string['deactivate'] = 'Desactivar';
+$string['manage'] = 'Gestionar';
+$string['remove'] = 'Eliminar';
+$string['role'] = 'Rol';
+$string['user'] = 'Usuario';
+$string['email'] = 'Correo';
+$string['help'] = 'Ayuda';

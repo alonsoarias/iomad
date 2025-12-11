@@ -302,26 +302,6 @@ $capabilities = [
     ],
 
     // =========================================================================
-    // API access.
-    // =========================================================================
-
-    'local/jobboard:useapi' => [
-        'captype' => 'read',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [
-            'manager' => CAP_ALLOW,
-        ],
-    ],
-
-    'local/jobboard:accessapi' => [
-        'captype' => 'read',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [
-            'manager' => CAP_ALLOW,
-        ],
-    ],
-
-    // =========================================================================
     // Configuration and administration.
     // =========================================================================
 

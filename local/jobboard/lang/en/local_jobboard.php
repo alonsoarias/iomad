@@ -584,3 +584,40 @@ $string['help_application'] = 'An application is submitted by a candidate for a 
 $string['help_reviewer'] = 'A reviewer evaluates and validates application documents';
 $string['help_committee'] = 'A selection committee makes final hiring decisions';
 $string['help_program_reviewer'] = 'Program reviewers are assigned to specific academic programs to review applications';
+
+// =============================================================================
+// PROGRAM REVIEWERS MANAGEMENT PAGE
+// =============================================================================
+$string['programreviewers'] = 'Program Reviewers';
+$string['program_reviewers_desc'] = 'Manage reviewers assigned to academic programs';
+$string['programreviewerhelp'] = 'Assign reviewers to specific academic programs to review applications';
+$string['totalreviewers'] = 'Total Reviewers';
+$string['activereviewers'] = 'Active Reviewers';
+$string['leadreviewers'] = 'Lead Reviewers';
+$string['programswithreviewers'] = 'Programs with Reviewers';
+$string['noprogramswithreviewers'] = 'No programs have reviewers assigned yet';
+$string['addreviewer'] = 'Add Reviewer';
+$string['addreviewerstoprogram'] = 'Add reviewers to this program';
+$string['assignedreviewers'] = 'Assigned Reviewers';
+$string['noreviewersforprogram'] = 'No reviewers assigned to this program';
+$string['nousersavailable'] = 'No users available with reviewer capability';
+$string['selectuser'] = 'Select user...';
+$string['revieweradded'] = 'Reviewer added successfully';
+$string['revieweradderror'] = 'Error adding reviewer';
+$string['reviewerremoved'] = 'Reviewer removed successfully';
+$string['reviewerremoveerror'] = 'Error removing reviewer';
+$string['rolechanged'] = 'Role changed successfully';
+$string['rolechangeerror'] = 'Error changing role';
+$string['statuschanged'] = 'Status changed successfully';
+$string['statuschangeerror'] = 'Error changing status';
+$string['confirmremovereviewer'] = 'Are you sure you want to remove this reviewer?';
+$string['changerole'] = 'Change Role';
+$string['backtolist'] = 'Back to list';
+$string['activate'] = 'Activate';
+$string['deactivate'] = 'Deactivate';
+$string['manage'] = 'Manage';
+$string['remove'] = 'Remove';
+$string['role'] = 'Role';
+$string['user'] = 'User';
+$string['email'] = 'Email';
+$string['help'] = 'Help';
