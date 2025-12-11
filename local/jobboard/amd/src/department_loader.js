@@ -40,7 +40,7 @@ define(['jquery', 'core/str'], function($, Str) {
 
         // Determine the placeholder text.
         var placeholderKey = allLabel ? null : 'selectdepartment';
-        var placeholderText = allLabel || 'Seleccionar modalidad...';
+        var placeholderText = allLabel || 'Select modality...';
 
         if (!companyId || companyId === '0' || companyId === 0) {
             // No company selected, add placeholder.
@@ -75,7 +75,7 @@ define(['jquery', 'core/str'], function($, Str) {
         }).fail(function() {
             departmentSelect.append($('<option>', {
                 value: 0,
-                text: 'Cargando...'
+                text: 'Loading...'
             }));
         });
 
@@ -92,7 +92,7 @@ define(['jquery', 'core/str'], function($, Str) {
             departmentSelect.prop('disabled', false);
 
             // Determine placeholder text (use default first, then update async if needed).
-            var defaultPlaceholder = allLabel || 'Seleccionar modalidad...';
+            var defaultPlaceholder = allLabel || 'Select modality...';
 
             // Add placeholder option immediately.
             var placeholderOption = $('<option>', {

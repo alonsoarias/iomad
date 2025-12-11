@@ -71,7 +71,7 @@ define(['jquery', 'core/str'], function($, Str) {
         // Add placeholder option.
         selectElement.append($('<option>', {
             value: '',
-            text: placeholder || 'Seleccionar convocatoria...'
+            text: placeholder || 'Select call...'
         }));
 
         // Add convocatoria options.
@@ -119,7 +119,7 @@ define(['jquery', 'core/str'], function($, Str) {
                 placeholder = str;
                 loadInitialConvocatorias();
             }).fail(function() {
-                placeholder = 'Seleccionar convocatoria...';
+                placeholder = 'Select call...';
                 loadInitialConvocatorias();
             });
         } else {
@@ -305,7 +305,7 @@ define(['jquery', 'core/str'], function($, Str) {
             return;
         }
 
-        var placeholder = options.allLabel || 'Todas las convocatorias';
+        var placeholder = options.allLabel || 'All calls';
 
         // Load convocatorias.
         var params = {

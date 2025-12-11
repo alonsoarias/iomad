@@ -74,7 +74,7 @@ define(['jquery', 'core/str', 'local_jobboard/department_loader'], function($, S
         // Add placeholder option.
         selectElement.append($('<option>', {
             value: 0,
-            text: placeholder || 'Seleccionar...'
+            text: placeholder || 'Select...'
         }));
 
         // Add company options.
