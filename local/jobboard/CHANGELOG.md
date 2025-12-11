@@ -5,6 +5,29 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.16] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `admin/roles.php` from 505 lines to ~119 lines (76% reduction)
+- Role management page now uses renderer pattern with Mustache template
+- Created `templates/pages/admin_roles.mustache` with complete jb-* CSS classes
+- All role management functionality preserved: assign, unassign, role selection
+
+### Added
+- `render_admin_roles_page()` method in renderer for admin roles view
+- `prepare_admin_roles_page_data()` method in renderer with full role data preparation
+- Statistics cards showing total users and users per role
+- Role cards with capabilities preview
+- User assignment form with search filtering
+- Assigned users table with unassign actions
+
+### Technical Notes
+- Supports all three plugin roles: reviewer, coordinator, committee
+- Role assignment actions handled in PHP, display delegated to template
+- JavaScript for user search filtering via `js_init_code()`
+- **Begins Phase 2 (Roles/Permissions) per AGENTS.md**
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+
 ## [3.1.15] - 2025-12-11
 
 ### Changed

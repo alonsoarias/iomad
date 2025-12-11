@@ -1,0 +1,284 @@
+{{!
+    @template local_jobboard/pages/admin_roles
+
+    Role management page template.
+    Uses jb-* CSS classes for consistent styling.
+
+    Context variables:
+    * pagetitle - Page title string
+    * totalusers - Total assigned users count
+    * pluginroles - Array of plugin roles with stats
+    * selectedrole - Currently selected role (null if none)
+    * assignedusers - Array of users assigned to selected role
+    * availableusers - Array of users available for assignment
+    * dashboardurl - URL to dashboard
+    * committeeurl - URL to committee management
+    * settingsurl - URL to plugin settings
+
+    Example context (json):
+    {
+        "pagetitle": "Manage Roles",
+        "selectedrole": null
+    }
+}}
+<div class="jb-admin-roles" data-region="jobboard-admin-roles">
+    {{! Page Header }}}
+    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <h1 class="jb-fs-3 jb-mb-0">
+            <i class="fa fa-user-tag jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{#str}}manageroles, local_jobboard{{/str}}
+        </h1>
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+            {{#str}}dashboard, local_jobboard{{/str}}
+        </a>
+    </header>
+
+    {{! Statistics Cards }}}
+    <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-info">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{totalusers}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}totalassignedusers, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{#pluginroles}}
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <a href="{{manageurl}}" class="jb-text-decoration-none">
+                <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-{{color}} jb-clickable">
+                    <div class="jb-card-body jb-d-flex jb-align-items-center">
+                        <div class="jb-stat-icon jb-mr-3">
+                            <i class="fa fa-{{icon}}" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{usercount}}</div>
+                            <div class="jb-stat-label jb-small jb-text-muted">{{name}}</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {{/pluginroles}}
+    </section>
+
+    {{^selectedrole}}
+    {{! Role Selection View }}}
+    <section aria-labelledby="roles-heading">
+        <h4 class="jb-mb-3" id="roles-heading">
+            <i class="fa fa-user-tag jb-mr-2" aria-hidden="true"></i>
+            {{#str}}selectroletoassign, local_jobboard{{/str}}
+        </h4>
+
+        <div class="jb-row">
+            {{#pluginroles}}
+            <div class="jb-col-lg-4 jb-col-md-6 jb-mb-4">
+                <div class="jb-card jb-card-shadow jb-h-100">
+                    <div class="jb-card-body">
+                        {{! Role Header }}}
+                        <div class="jb-d-flex jb-align-items-center jb-mb-3">
+                            <div class="jb-icon-circle jb-bg-{{color}}-light jb-mr-3">
+                                <i class="fa fa-{{icon}} jb-fs-4 jb-text-{{color}}" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h5 class="jb-mb-0">{{name}}</h5>
+                                <small class="jb-text-muted">{{usercount}} {{#str}}usersassignedcount, local_jobboard{{/str}}</small>
+                            </div>
+                        </div>
+
+                        {{! Description }}}
+                        <p class="jb-text-muted jb-small jb-mb-3">{{description}}</p>
+
+                        {{! Capabilities Preview }}}
+                        {{#hascaps}}
+                        <div class="jb-mb-3">
+                            <small class="jb-d-block jb-text-muted jb-mb-1">{{#str}}capabilities, local_jobboard{{/str}}:</small>
+                            {{#capspreview}}
+                            <span class="jb-badge jb-badge-light jb-mr-1 jb-mb-1">{{.}}</span>
+                            {{/capspreview}}
+                        </div>
+                        {{/hascaps}}
+
+                        {{! Actions }}}
+                        <div class="jb-d-flex">
+                            {{#roleexists}}
+                            <a href="{{manageurl}}" class="jb-btn jb-btn-{{color}} jb-btn-sm">
+                                <i class="fa fa-users-cog jb-mr-1" aria-hidden="true"></i>
+                                {{#str}}manageusers, local_jobboard{{/str}}
+                            </a>
+                            {{/roleexists}}
+                            {{^roleexists}}
+                            <span class="jb-text-danger jb-small">
+                                <i class="fa fa-exclamation-triangle jb-mr-1" aria-hidden="true"></i>
+                                {{#str}}rolenotcreated, local_jobboard{{/str}}
+                            </span>
+                            {{/roleexists}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/pluginroles}}
+        </div>
+    </section>
+    {{/selectedrole}}
+
+    {{#selectedrole}}
+    {{! Single Role Management View }}}
+    <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-sm jb-mb-3">
+        <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+        {{#str}}backtorolelist, local_jobboard{{/str}}
+    </a>
+
+    {{! Role Header Card }}}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="selected-role-heading">
+        <div class="jb-card-header jb-bg-{{selectedrole.color}} jb-text-white">
+            <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+                <h5 class="jb-mb-0" id="selected-role-heading">
+                    <i class="fa fa-{{selectedrole.icon}} jb-mr-2" aria-hidden="true"></i>
+                    {{selectedrole.name}}
+                </h5>
+                <span class="jb-badge jb-badge-light">{{selectedrole.usercount}} {{#str}}users{{/str}}</span>
+            </div>
+        </div>
+        <div class="jb-card-body">
+            <p class="jb-text-muted jb-mb-0">{{selectedrole.description}}</p>
+        </div>
+    </section>
+
+    <div class="jb-row">
+        {{! Left Column: Assigned Users }}}
+        <div class="jb-col-lg-7 jb-mb-4">
+            <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="assigned-users-heading">
+                <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <h6 class="jb-mb-0" id="assigned-users-heading">
+                        <i class="fa fa-users jb-mr-2" aria-hidden="true"></i>
+                        {{#str}}assignedusers, local_jobboard{{/str}}
+                    </h6>
+                    <span class="jb-badge jb-badge-primary">{{assignedusercount}} {{#str}}users{{/str}}</span>
+                </div>
+                <div class="jb-card-body">
+                    {{#hasassignedusers}}
+                    <div class="jb-table-responsive">
+                        <table class="jb-table jb-table-hover">
+                            <thead class="jb-thead-light">
+                                <tr>
+                                    <th>{{#str}}user{{/str}}</th>
+                                    <th>{{#str}}email{{/str}}</th>
+                                    <th>{{#str}}assigned, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}actions{{/str}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#assignedusers}}
+                                <tr>
+                                    <td>
+                                        <strong>{{fullname}}</strong>
+                                        <br><small class="jb-text-muted">#{{id}}</small>
+                                    </td>
+                                    <td>{{email}}</td>
+                                    <td>{{assigneddate}}</td>
+                                    <td>
+                                        <a href="{{unassignurl}}" class="jb-btn jb-btn-sm jb-btn-outline-danger"
+                                           title="{{#str}}unassign, local_jobboard{{/str}}"
+                                           onclick="return confirm('{{#str}}confirmunassign, local_jobboard{{/str}}');">
+                                            <i class="fa fa-user-minus" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {{/assignedusers}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/hasassignedusers}}
+                    {{^hasassignedusers}}
+                    <div class="jb-empty-state jb-text-center jb-py-4">
+                        <i class="fa fa-user-plus fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                        <p class="jb-text-muted">{{#str}}nousersassigned, local_jobboard{{/str}}</p>
+                    </div>
+                    {{/hasassignedusers}}
+                </div>
+            </section>
+        </div>
+
+        {{! Right Column: Assign New Users }}}
+        <div class="jb-col-lg-5 jb-mb-4">
+            <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="assign-users-heading">
+                <div class="jb-card-header jb-bg-success jb-text-white">
+                    <h6 class="jb-mb-0" id="assign-users-heading">
+                        <i class="fa fa-user-plus jb-mr-2" aria-hidden="true"></i>
+                        {{#str}}assignnewusers, local_jobboard{{/str}}
+                    </h6>
+                </div>
+                <div class="jb-card-body">
+                    <form method="post" action="{{assignformurl}}" id="assignform">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="assign">
+                        <input type="hidden" name="role" value="{{selectedrole.shortname}}">
+
+                        {{! Search Input }}}
+                        <div class="jb-form-group jb-mb-3">
+                            <label class="jb-form-label" for="usersearch">{{#str}}searchusers, local_jobboard{{/str}}</label>
+                            <input type="text" class="jb-form-control" id="usersearch"
+                                   placeholder="{{#str}}searchusersplaceholder, local_jobboard{{/str}}" autocomplete="off">
+                        </div>
+
+                        {{! User Selection }}}
+                        <div class="jb-form-group jb-mb-3">
+                            <label class="jb-form-label">{{#str}}selectusers, local_jobboard{{/str}}</label>
+                            <select name="userids[]" id="userselect" class="jb-form-control" multiple size="10">
+                                {{#availableusers}}
+                                <option value="{{id}}">{{fullname}} ({{email}})</option>
+                                {{/availableusers}}
+                            </select>
+                            <small class="jb-form-text jb-text-muted">{{#str}}selectmultiplehelp, local_jobboard{{/str}}</small>
+                        </div>
+
+                        <button type="submit" class="jb-btn jb-btn-success jb-btn-block">
+                            <i class="fa fa-user-plus jb-mr-2" aria-hidden="true"></i>
+                            {{#str}}assignselected, local_jobboard{{/str}}
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+    {{/selectedrole}}
+
+    {{! Navigation Footer }}}
+    <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
+        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
+                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+            <a href="{{committeeurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
+                <i class="fa fa-users jb-mr-2" aria-hidden="true"></i>
+                {{#str}}committees, local_jobboard{{/str}}
+            </a>
+            <a href="{{settingsurl}}" class="jb-btn jb-btn-outline-info jb-m-1">
+                <i class="fa fa-cog jb-mr-2" aria-hidden="true"></i>
+                {{#str}}pluginsettings, local_jobboard{{/str}}
+            </a>
+        </div>
+    </footer>
+</div>
+
+{{#selectedrole}}
+{{! JavaScript for user search filtering }}}
+{{#js}}
+document.getElementById('usersearch').addEventListener('keyup', function() {
+    var filter = this.value.toLowerCase();
+    var options = document.querySelectorAll('#userselect option');
+    options.forEach(function(option) {
+        var text = option.textContent.toLowerCase();
+        option.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+{{/js}}
+{{/selectedrole}}

@@ -4666,4 +4666,193 @@ class renderer extends plugin_renderer_base {
             'hasdata' => !empty($rows),
         ];
     }
+
+    /**
+     * Render the admin roles page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_admin_roles_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/admin_roles', $data);
+    }
+
+    /**
+     * Prepare admin roles page data for template.
+     *
+     * @param string|null $selectedroleshortname Currently selected role shortname.
+     * @param \context $context Current context.
+     * @return array Template data.
+     */
+    public function prepare_admin_roles_page_data(?string $selectedroleshortname, \context $context): array {
+        global $DB;
+
+        // Define the plugin roles.
+        $pluginroles = [
+            'jobboard_reviewer' => [
+                'name' => get_string('role_reviewer', 'local_jobboard'),
+                'description' => get_string('role_reviewer_desc', 'local_jobboard'),
+                'icon' => 'clipboard-check',
+                'color' => 'warning',
+                'capspreview' => [
+                    get_string('cap_review', 'local_jobboard'),
+                    get_string('cap_validate', 'local_jobboard'),
+                    get_string('cap_download', 'local_jobboard'),
+                ],
+            ],
+            'jobboard_coordinator' => [
+                'name' => get_string('role_coordinator', 'local_jobboard'),
+                'description' => get_string('role_coordinator_desc', 'local_jobboard'),
+                'icon' => 'user-tie',
+                'color' => 'primary',
+                'capspreview' => [
+                    get_string('cap_manage', 'local_jobboard'),
+                    get_string('cap_createvacancy', 'local_jobboard'),
+                    get_string('cap_assignreviewers', 'local_jobboard'),
+                    get_string('cap_viewreports', 'local_jobboard'),
+                ],
+            ],
+            'jobboard_committee' => [
+                'name' => get_string('role_committee', 'local_jobboard'),
+                'description' => get_string('role_committee_desc', 'local_jobboard'),
+                'icon' => 'users',
+                'color' => 'success',
+                'capspreview' => [
+                    get_string('cap_evaluate', 'local_jobboard'),
+                    get_string('cap_viewevaluations', 'local_jobboard'),
+                    get_string('cap_download', 'local_jobboard'),
+                ],
+            ],
+        ];
+
+        // Get role statistics.
+        $totalusers = 0;
+        $rolesdata = [];
+
+        foreach ($pluginroles as $shortname => $roledef) {
+            $role = $DB->get_record('role', ['shortname' => $shortname]);
+            $usercount = 0;
+
+            if ($role) {
+                $usercount = $DB->count_records('role_assignments', [
+                    'roleid' => $role->id,
+                    'contextid' => $context->id,
+                ]);
+            }
+
+            $totalusers += $usercount;
+
+            $rolesdata[] = [
+                'shortname' => $shortname,
+                'name' => $roledef['name'],
+                'description' => $roledef['description'],
+                'icon' => $roledef['icon'],
+                'color' => $roledef['color'],
+                'usercount' => $usercount,
+                'roleexists' => !empty($role),
+                'roleid' => $role->id ?? 0,
+                'capspreview' => $roledef['capspreview'],
+                'hascaps' => !empty($roledef['capspreview']),
+                'manageurl' => (new moodle_url('/local/jobboard/admin/roles.php', ['role' => $shortname]))->out(false),
+            ];
+        }
+
+        // Base data.
+        $data = [
+            'pagetitle' => get_string('manageroles', 'local_jobboard'),
+            'totalusers' => $totalusers,
+            'pluginroles' => $rolesdata,
+            'selectedrole' => null,
+            'backurl' => (new moodle_url('/local/jobboard/admin/roles.php'))->out(false),
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'committeeurl' => (new moodle_url('/local/jobboard/manage_committee.php'))->out(false),
+            'settingsurl' => (new moodle_url('/admin/settings.php', ['section' => 'local_jobboard']))->out(false),
+            'assignformurl' => (new moodle_url('/local/jobboard/admin/roles.php'))->out(false),
+            'sesskey' => sesskey(),
+            'hasassignedusers' => false,
+            'assignedusers' => [],
+            'assignedusercount' => 0,
+            'availableusers' => [],
+        ];
+
+        // If a role is selected, get user details.
+        if ($selectedroleshortname && isset($pluginroles[$selectedroleshortname])) {
+            $roledef = $pluginroles[$selectedroleshortname];
+            $role = $DB->get_record('role', ['shortname' => $selectedroleshortname]);
+
+            if ($role) {
+                // Find role in rolesdata.
+                $selectedroledata = null;
+                foreach ($rolesdata as $r) {
+                    if ($r['shortname'] === $selectedroleshortname) {
+                        $selectedroledata = $r;
+                        break;
+                    }
+                }
+
+                $data['selectedrole'] = $selectedroledata;
+
+                // Get assigned users.
+                $sql = "SELECT u.id, u.firstname, u.lastname, u.email, ra.timemodified as assigneddate
+                          FROM {role_assignments} ra
+                          JOIN {user} u ON u.id = ra.userid
+                         WHERE ra.roleid = :roleid AND ra.contextid = :contextid
+                         ORDER BY u.lastname, u.firstname";
+                $assignedusers = $DB->get_records_sql($sql, [
+                    'roleid' => $role->id,
+                    'contextid' => $context->id,
+                ]);
+
+                $assigneduserids = array_keys($assignedusers);
+                $assignedusersdata = [];
+
+                foreach ($assignedusers as $user) {
+                    $assignedusersdata[] = [
+                        'id' => $user->id,
+                        'fullname' => fullname($user),
+                        'email' => $user->email,
+                        'assigneddate' => userdate($user->assigneddate, get_string('strftimedateshort')),
+                        'unassignurl' => (new moodle_url('/local/jobboard/admin/roles.php', [
+                            'action' => 'unassign',
+                            'role' => $selectedroleshortname,
+                            'userid' => $user->id,
+                            'sesskey' => sesskey(),
+                        ]))->out(false),
+                    ];
+                }
+
+                $data['assignedusers'] = $assignedusersdata;
+                $data['hasassignedusers'] = !empty($assignedusersdata);
+                $data['assignedusercount'] = count($assignedusersdata);
+
+                // Get available users (not already assigned).
+                if (empty($assigneduserids)) {
+                    $assigneduserids = [0];
+                }
+
+                $sql = "SELECT u.id, u.firstname, u.lastname, u.email
+                          FROM {user} u
+                         WHERE u.deleted = 0
+                           AND u.suspended = 0
+                           AND u.id NOT IN (" . implode(',', $assigneduserids) . ")
+                           AND u.id > 1
+                         ORDER BY u.lastname, u.firstname
+                         LIMIT 200";
+                $availableusers = $DB->get_records_sql($sql);
+
+                $availableusersdata = [];
+                foreach ($availableusers as $user) {
+                    $availableusersdata[] = [
+                        'id' => $user->id,
+                        'fullname' => fullname($user),
+                        'email' => $user->email,
+                    ];
+                }
+
+                $data['availableusers'] = $availableusersdata;
+            }
+        }
+
+        return $data;
+    }
 }
