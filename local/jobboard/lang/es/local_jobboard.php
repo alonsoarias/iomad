@@ -3438,3 +3438,235 @@ $string['pending'] = 'Pendiente';
 $string['completed'] = 'Completado';
 $string['selectuser'] = 'Seleccione un usuario...';
 $string['facultyreviewerhelp'] = 'Los revisores de facultad son responsables de validar los documentos enviados por los aspirantes. Los revisores líderes también pueden asignar trabajo a otros revisores. El rol jobboard_reviewer se asignará automáticamente al agregar un usuario como revisor.';
+
+// ============================================================================
+// Email Templates v3.0 - Refactorización Completa
+// ============================================================================
+
+// Interfaz de gestión de plantillas.
+$string['email_templates'] = 'Plantillas de Correo';
+$string['edit_template'] = 'Editar Plantilla';
+$string['back_to_templates'] = 'Volver a Plantillas';
+$string['install_defaults'] = 'Instalar Predeterminadas';
+$string['total_templates'] = 'Total de Plantillas';
+$string['templates_enabled'] = 'Habilitadas';
+$string['templates_disabled'] = 'Deshabilitadas';
+$string['template_categories'] = 'Categorías';
+$string['no_templates'] = 'No se encontraron plantillas. Haga clic en "Instalar Predeterminadas" para crear las plantillas por defecto.';
+$string['all'] = 'Todas';
+$string['enabled'] = 'Habilitada';
+$string['disabled'] = 'Deshabilitada';
+$string['toggle_status'] = 'Cambiar Estado';
+$string['reset_to_default'] = 'Restaurar Predeterminado';
+$string['confirm_reset'] = '¿Está seguro de que desea restaurar esta plantilla a sus valores predeterminados? Se perderán todas las personalizaciones.';
+
+// Campos del formulario de plantilla.
+$string['template_info'] = 'Información de la Plantilla';
+$string['template_name'] = 'Nombre de la Plantilla';
+$string['template_code'] = 'Código de Plantilla';
+$string['template_category'] = 'Categoría';
+$string['template_description'] = 'Descripción';
+$string['template_content'] = 'Contenido del Correo';
+$string['template_subject'] = 'Asunto del Correo';
+$string['template_subject_help'] = 'El asunto del correo. Puede usar marcadores como {vacancy_title} que serán reemplazados por valores reales.';
+$string['template_body'] = 'Cuerpo del Correo';
+$string['template_body_help'] = 'El contenido principal del correo. Use formato HTML y marcadores para crear contenido dinámico.';
+$string['template_settings'] = 'Configuración de la Plantilla';
+$string['template_enabled'] = 'Habilitada';
+$string['template_enabled_desc'] = 'Cuando está habilitada, esta plantilla se usará para enviar notificaciones.';
+$string['template_priority'] = 'Prioridad';
+$string['template_priority_help'] = 'Prioridad de orden de visualización. Los números menores aparecen primero.';
+$string['template_preview'] = 'Vista Previa';
+$string['template_preview_hint'] = 'Haga clic en "Actualizar" o edite el contenido para ver una vista previa con datos de ejemplo.';
+$string['refresh'] = 'Actualizar';
+$string['available_placeholders'] = 'Marcadores Disponibles';
+$string['placeholders_help'] = 'Haga clic en un marcador para copiarlo. Péguelo en los campos de asunto o cuerpo para incluir contenido dinámico.';
+$string['copy_placeholder'] = 'Copiar al portapapeles';
+
+// Categorías de plantillas.
+$string['template_category_application'] = 'Aplicación';
+$string['template_category_documents'] = 'Documentos';
+$string['template_category_interview'] = 'Entrevista';
+$string['template_category_selection'] = 'Selección';
+$string['template_category_system'] = 'Sistema';
+
+// Nombres de plantillas.
+$string['template_application_received'] = 'Aplicación Recibida';
+$string['template_under_review'] = 'En Revisión';
+$string['template_docs_validated'] = 'Documentos Validados';
+$string['template_docs_rejected'] = 'Documentos Rechazados';
+$string['template_review_complete'] = 'Revisión Completada';
+$string['template_interview_scheduled'] = 'Entrevista Programada';
+$string['template_interview_reminder'] = 'Recordatorio de Entrevista';
+$string['template_interview_completed'] = 'Entrevista Completada';
+$string['template_selected'] = 'Seleccionado';
+$string['template_rejected'] = 'Rechazado';
+$string['template_waitlist'] = 'Lista de Espera';
+$string['template_vacancy_closing'] = 'Convocatoria por Cerrar';
+$string['template_new_vacancy'] = 'Nueva Convocatoria';
+$string['template_reviewer_assigned'] = 'Revisor Asignado';
+
+// Descripciones de plantillas.
+$string['template_application_received_desc'] = 'Se envía cuando un aspirante completa exitosamente su aplicación.';
+$string['template_under_review_desc'] = 'Se envía cuando una aplicación pasa a la etapa de revisión.';
+$string['template_docs_validated_desc'] = 'Se envía cuando todos los documentos han sido aprobados por el revisor.';
+$string['template_docs_rejected_desc'] = 'Se envía cuando uno o más documentos requieren corrección.';
+$string['template_review_complete_desc'] = 'Se envía cuando se completa el proceso de revisión documental.';
+$string['template_interview_scheduled_desc'] = 'Se envía cuando se programa una entrevista para el aspirante.';
+$string['template_interview_reminder_desc'] = 'Se envía como recordatorio antes de la entrevista programada.';
+$string['template_interview_completed_desc'] = 'Se envía después de que la entrevista ha sido completada.';
+$string['template_selected_desc'] = 'Se envía cuando el aspirante es seleccionado para el cargo.';
+$string['template_rejected_desc'] = 'Se envía cuando el aspirante no es seleccionado para el cargo.';
+$string['template_waitlist_desc'] = 'Se envía cuando el aspirante queda en lista de espera.';
+$string['template_vacancy_closing_desc'] = 'Se envía para recordar a los usuarios que una convocatoria está por cerrar.';
+$string['template_new_vacancy_desc'] = 'Se envía para notificar a los usuarios sobre una nueva convocatoria.';
+$string['template_reviewer_assigned_desc'] = 'Se envía a los revisores cuando se les asigna una nueva aplicación para revisar.';
+
+// Mensajes de éxito/error.
+$string['template_saved_success'] = 'Plantilla guardada exitosamente.';
+$string['template_reset_success'] = 'La plantilla ha sido restaurada a sus valores predeterminados.';
+$string['template_enabled_success'] = 'La plantilla ha sido habilitada.';
+$string['template_disabled_success'] = 'La plantilla ha sido deshabilitada.';
+$string['template_deleted_success'] = 'La plantilla ha sido eliminada.';
+$string['template_delete_failed'] = 'Error al eliminar la plantilla.';
+$string['template_not_found'] = 'Plantilla no encontrada.';
+$string['templates_installed'] = 'Se han instalado {$a} plantillas predeterminadas.';
+
+// Sección de ayuda.
+$string['template_help_title'] = 'Ayuda Rápida';
+$string['template_help_placeholders'] = 'Use marcadores como {user_fullname} para incluir contenido dinámico que cambia para cada destinatario.';
+$string['template_help_html'] = 'Las plantillas soportan formato HTML completo. Use la barra de herramientas del editor para formatear texto, agregar enlaces y crear listas.';
+$string['template_help_tenant'] = 'Puede crear plantillas específicas por empresa que sobrescriban los valores predeterminados globales para cada centro tutorial.';
+$string['html_support'] = 'Soporte HTML';
+$string['multi_tenant'] = 'Multi-Empresa';
+
+// Asuntos de plantillas predeterminadas (v3.0).
+$string['email_application_received_subject'] = 'Aplicación Recibida - {vacancy_code}';
+$string['email_application_received_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Hemos recibido su aplicación para la convocatoria <strong>{vacancy_title}</strong> (Código: {vacancy_code}).</p>
+<p>Puede consultar el estado de su aplicación en cualquier momento desde: <a href="{application_url}">{application_url}</a></p>
+<p>Le notificaremos cuando haya actualizaciones en su proceso.</p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_under_review_subject'] = 'Su aplicación está en revisión - {vacancy_code}';
+$string['email_under_review_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Su aplicación para la convocatoria <strong>{vacancy_title}</strong> está siendo revisada por nuestro equipo evaluador.</p>
+<p>Este proceso puede tomar algunos días. Le notificaremos cuando haya novedades.</p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_docs_validated_subject'] = 'Documentos Validados - {vacancy_code}';
+$string['email_docs_validated_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Sus documentos para la convocatoria <strong>{vacancy_title}</strong> han sido validados exitosamente.</p>
+<p>Total de documentos revisados: {documents_count}</p>
+<p>Su aplicación continuará al siguiente paso del proceso de selección.</p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_docs_rejected_subject'] = 'Documentos Requieren Corrección - {vacancy_code}';
+$string['email_docs_rejected_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Algunos documentos de su aplicación para la convocatoria <strong>{vacancy_title}</strong> requieren corrección:</p>
+<p><strong>Documentos rechazados:</strong></p>
+<pre>{rejected_docs}</pre>
+<p><strong>Observaciones del revisor:</strong></p>
+<p>{observations}</p>
+<p>Por favor ingrese a la plataforma para corregir y reenviar los documentos antes de: {resubmit_deadline}</p>
+<p><a href="{application_url}">Ir a mi aplicación</a></p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_review_complete_subject'] = 'Revisión de Documentos Completada - {vacancy_code}';
+$string['email_review_complete_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>La revisión de sus documentos para la convocatoria <strong>{vacancy_title}</strong> ha sido completada.</p>
+<p><strong>Resumen:</strong></p>
+<pre>{review_summary}</pre>
+<p>{action_required}</p>
+<p>Para más detalles, visite: <a href="{application_url}">{application_url}</a></p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_interview_scheduled_subject'] = 'Entrevista Programada - {vacancy_code}';
+$string['email_interview_scheduled_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Ha sido programado/a para una entrevista para la convocatoria <strong>{vacancy_title}</strong>.</p>
+<p><strong>Detalles de la entrevista:</strong></p>
+<ul>
+<li><strong>Fecha:</strong> {interview_date}</li>
+<li><strong>Hora:</strong> {interview_time}</li>
+<li><strong>Duración aproximada:</strong> {interview_duration}</li>
+<li><strong>Modalidad:</strong> {interview_type}</li>
+<li><strong>Lugar/Enlace:</strong> {interview_location}</li>
+</ul>
+<p><strong>Notas adicionales:</strong></p>
+<p>{interview_notes}</p>
+<p>Por favor confirme su asistencia respondiendo a este correo.</p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_interview_reminder_subject'] = 'Recordatorio: Entrevista en {hours_until} horas - {vacancy_code}';
+$string['email_interview_reminder_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Le recordamos que su entrevista para la convocatoria <strong>{vacancy_title}</strong> está próxima.</p>
+<p><strong>Fecha:</strong> {interview_date} a las {interview_time}</p>
+<p><strong>Lugar:</strong> {interview_location}</p>
+<p>Le esperamos.</p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_interview_completed_subject'] = 'Entrevista Completada - {vacancy_code}';
+$string['email_interview_completed_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Gracias por participar en la entrevista para la convocatoria <strong>{vacancy_title}</strong>.</p>
+<p>{interview_feedback}</p>
+<p><strong>Próximos pasos:</strong></p>
+<p>{next_steps}</p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_selected_subject'] = '¡Felicitaciones! Ha sido seleccionado/a - {vacancy_code}';
+$string['email_selected_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Nos complace informarle que ha sido <strong>seleccionado/a</strong> para la convocatoria <strong>{vacancy_title}</strong>.</p>
+<p>{selection_notes}</p>
+<p><strong>Próximos pasos:</strong></p>
+<p>{next_steps}</p>
+<p><strong>Información de contacto:</strong></p>
+<p>{contact_info}</p>
+<p>¡Bienvenido/a a nuestro equipo!</p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_rejected_subject'] = 'Resultado del Proceso de Selección - {vacancy_code}';
+$string['email_rejected_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Agradecemos su participación en el proceso de selección para la convocatoria <strong>{vacancy_title}</strong>.</p>
+<p>Después de una cuidadosa evaluación, lamentamos informarle que en esta ocasión no ha sido seleccionado/a para continuar en el proceso.</p>
+<p>{feedback}</p>
+<p>Le invitamos a participar en futuras convocatorias que se ajusten a su perfil profesional.</p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_waitlist_subject'] = 'Lista de Espera - {vacancy_code}';
+$string['email_waitlist_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Le informamos que ha quedado en <strong>lista de espera</strong> para la convocatoria <strong>{vacancy_title}</strong>.</p>
+<p>Su posición actual es: <strong>#{waitlist_position}</strong></p>
+<p>{notification_note}</p>
+<p>Le contactaremos en caso de que se presente alguna vacante.</p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_vacancy_closing_subject'] = 'Convocatoria por cerrar - {vacancy_code}';
+$string['email_vacancy_closing_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Le informamos que la convocatoria <strong>{vacancy_title}</strong> cerrará en <strong>{days_remaining} día(s)</strong>.</p>
+<p><strong>Fecha de cierre:</strong> {close_date}</p>
+<p>Si está interesado/a, puede aplicar antes de la fecha límite en:</p>
+<p><a href="{vacancy_url}">{vacancy_url}</a></p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_new_vacancy_subject'] = 'Nueva Convocatoria Disponible - {vacancy_code}';
+$string['email_new_vacancy_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Le informamos sobre una nueva convocatoria disponible:</p>
+<p><strong>{vacancy_title}</strong> (Código: {vacancy_code})</p>
+<p>{vacancy_description}</p>
+<p><strong>Facultad:</strong> {faculty_name}</p>
+<p><strong>Fecha de apertura:</strong> {open_date}</p>
+<p><strong>Fecha de cierre:</strong> {close_date}</p>
+<p>Para más información y aplicar, visite:</p>
+<p><a href="{vacancy_url}">{vacancy_url}</a></p>
+<p>Atentamente,<br>{site_name}</p>';
+
+$string['email_reviewer_assigned_subject'] = 'Nueva aplicación para revisar - {vacancy_code}';
+$string['email_reviewer_assigned_body'] = '<p>Estimado/a {user_fullname},</p>
+<p>Se le ha asignado una nueva aplicación para revisar:</p>
+<p><strong>Convocatoria:</strong> {vacancy_title} ({vacancy_code})</p>
+<p><strong>Aspirante:</strong> {applicant_name}</p>
+<p><strong>Documentos a revisar:</strong> {documents_count}</p>
+<p><strong>Fecha límite de revisión:</strong> {deadline}</p>
+<p>Puede acceder a la aplicación desde:</p>
+<p><a href="{application_url}">{application_url}</a></p>
+<p>Atentamente,<br>{site_name}</p>';

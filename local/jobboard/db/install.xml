@@ -350,25 +350,35 @@
       </INDEXES>
     </TABLE>
 
-    <!-- Table 14: Email templates -->
-    <TABLE NAME="local_jobboard_email_template" COMMENT="Email notification templates">
+    <!-- Table 14: Email templates - Refactored v3.0 -->
+    <TABLE NAME="local_jobboard_email_template" COMMENT="Email notification templates with multi-tenant support">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Template code"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="body" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="bodyformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="0=MOODLE, 1=HTML, 2=PLAIN"/>
-        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Unique template code: application_received, docs_validated, etc."/>
+        <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="IOMAD Company ID (0 = global template)"/>
+        <FIELD NAME="category" TYPE="char" LENGTH="30" NOTNULL="true" DEFAULT="application" SEQUENCE="false" COMMENT="Category: application, documents, interview, selection, system"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Human-readable template name"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Template description and usage"/>
+        <FIELD NAME="subject" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Email subject with placeholders"/>
+        <FIELD NAME="body" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Email body (HTML) with placeholders"/>
+        <FIELD NAME="bodyformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Format: 0=MOODLE, 1=HTML, 2=PLAIN"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Whether this template is active"/>
+        <FIELD NAME="is_default" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Whether this is a system default template"/>
+        <FIELD NAME="priority" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Display order priority"/>
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="User who created"/>
+        <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="User who last modified"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="companyid_fk" TYPE="foreign" FIELDS="companyid" REFTABLE="company" REFFIELDS="id" COMMENT="Foreign key to IOMAD company"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="code_unique" UNIQUE="true" FIELDS="code"/>
+        <INDEX NAME="code_company_unique" UNIQUE="true" FIELDS="code, companyid" COMMENT="Unique template per company"/>
+        <INDEX NAME="category_idx" UNIQUE="false" FIELDS="category"/>
         <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
+        <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>
       </INDEXES>
     </TABLE>
 

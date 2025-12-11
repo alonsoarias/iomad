@@ -199,6 +199,110 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121105, 'local', 'jobboard');
     }
 
+    // Version 3.0.0 - Email Templates Refactoring.
+    // Add new fields for multi-tenant support and categories.
+    if ($oldversion < 2025121106) {
+        $dbman = $DB->get_manager();
+        $table = new xmldb_table('local_jobboard_email_template');
+
+        // Add companyid field for multi-tenant support (0 = global).
+        $field = new xmldb_field('companyid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'code');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add category field.
+        $field = new xmldb_field('category', XMLDB_TYPE_CHAR, '30', null, XMLDB_NOTNULL, null, 'application', 'companyid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add description field.
+        $field = new xmldb_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null, 'name');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add is_default field.
+        $field = new xmldb_field('is_default', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'enabled');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add priority field.
+        $field = new xmldb_field('priority', XMLDB_TYPE_INTEGER, '3', null, XMLDB_NOTNULL, null, '0', 'is_default');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add createdby field.
+        $field = new xmldb_field('createdby', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'priority');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add modifiedby field.
+        $field = new xmldb_field('modifiedby', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'createdby');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Drop old unique index on code (will create new composite index).
+        $index = new xmldb_index('code_unique', XMLDB_INDEX_UNIQUE, ['code']);
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        // Create new composite unique index on code + companyid.
+        $index = new xmldb_index('code_company_unique', XMLDB_INDEX_UNIQUE, ['code', 'companyid']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Create index on category.
+        $index = new xmldb_index('category_idx', XMLDB_INDEX_NOTUNIQUE, ['category']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Create index on companyid.
+        $index = new xmldb_index('companyid_idx', XMLDB_INDEX_NOTUNIQUE, ['companyid']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Migrate existing templates: determine category from code.
+        $categorymapping = [
+            'application_received' => 'application',
+            'under_review' => 'application',
+            'docs_validated' => 'documents',
+            'docs_rejected' => 'documents',
+            'review_complete' => 'documents',
+            'interview_scheduled' => 'interview',
+            'interview_reminder' => 'interview',
+            'interview_completed' => 'interview',
+            'selected' => 'selection',
+            'rejected' => 'selection',
+            'waitlist' => 'selection',
+            'vacancy_closing' => 'system',
+            'new_vacancy' => 'system',
+            'reviewer_assigned' => 'system',
+        ];
+
+        foreach ($categorymapping as $code => $category) {
+            $DB->execute(
+                "UPDATE {local_jobboard_email_template} SET category = :category WHERE code = :code",
+                ['category' => $category, 'code' => $code]
+            );
+        }
+
+        // Mark existing templates as defaults.
+        $DB->execute("UPDATE {local_jobboard_email_template} SET is_default = 1 WHERE companyid = 0");
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121106, 'local', 'jobboard');
+    }
+
     return true;
 }
 

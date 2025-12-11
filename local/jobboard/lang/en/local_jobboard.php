@@ -3257,3 +3257,235 @@ $string['pending'] = 'Pending';
 $string['completed'] = 'Completed';
 $string['selectuser'] = 'Select a user...';
 $string['facultyreviewerhelp'] = 'Faculty reviewers are responsible for validating documents submitted by applicants. Lead reviewers can also assign work to other reviewers. The jobboard_reviewer role will be automatically assigned when adding a user as a reviewer.';
+
+// ============================================================================
+// Email Templates v3.0 - Complete Refactoring
+// ============================================================================
+
+// Template management UI.
+$string['email_templates'] = 'Email Templates';
+$string['edit_template'] = 'Edit Template';
+$string['back_to_templates'] = 'Back to Templates';
+$string['install_defaults'] = 'Install Defaults';
+$string['total_templates'] = 'Total Templates';
+$string['templates_enabled'] = 'Enabled';
+$string['templates_disabled'] = 'Disabled';
+$string['template_categories'] = 'Categories';
+$string['no_templates'] = 'No templates found. Click "Install Defaults" to create the default templates.';
+$string['all'] = 'All';
+$string['enabled'] = 'Enabled';
+$string['disabled'] = 'Disabled';
+$string['toggle_status'] = 'Toggle Status';
+$string['reset_to_default'] = 'Reset to Default';
+$string['confirm_reset'] = 'Are you sure you want to reset this template to its default values? Any customizations will be lost.';
+
+// Template form fields.
+$string['template_info'] = 'Template Information';
+$string['template_name'] = 'Template Name';
+$string['template_code'] = 'Template Code';
+$string['template_category'] = 'Category';
+$string['template_description'] = 'Description';
+$string['template_content'] = 'Email Content';
+$string['template_subject'] = 'Email Subject';
+$string['template_subject_help'] = 'The subject line of the email. You can use placeholders like {vacancy_title} that will be replaced with actual values.';
+$string['template_body'] = 'Email Body';
+$string['template_body_help'] = 'The main content of the email. Use HTML formatting and placeholders to create dynamic content.';
+$string['template_settings'] = 'Template Settings';
+$string['template_enabled'] = 'Enabled';
+$string['template_enabled_desc'] = 'When enabled, this template will be used for sending notifications.';
+$string['template_priority'] = 'Priority';
+$string['template_priority_help'] = 'Display order priority. Lower numbers appear first.';
+$string['template_preview'] = 'Preview';
+$string['template_preview_hint'] = 'Click "Refresh" or edit the content above to see a preview with sample data.';
+$string['refresh'] = 'Refresh';
+$string['available_placeholders'] = 'Available Placeholders';
+$string['placeholders_help'] = 'Click on a placeholder to copy it. Paste it in the subject or body fields to include dynamic content.';
+$string['copy_placeholder'] = 'Copy to clipboard';
+
+// Template categories.
+$string['template_category_application'] = 'Application';
+$string['template_category_documents'] = 'Documents';
+$string['template_category_interview'] = 'Interview';
+$string['template_category_selection'] = 'Selection';
+$string['template_category_system'] = 'System';
+
+// Template names.
+$string['template_application_received'] = 'Application Received';
+$string['template_under_review'] = 'Under Review';
+$string['template_docs_validated'] = 'Documents Validated';
+$string['template_docs_rejected'] = 'Documents Rejected';
+$string['template_review_complete'] = 'Review Complete';
+$string['template_interview_scheduled'] = 'Interview Scheduled';
+$string['template_interview_reminder'] = 'Interview Reminder';
+$string['template_interview_completed'] = 'Interview Completed';
+$string['template_selected'] = 'Selected';
+$string['template_rejected'] = 'Rejected';
+$string['template_waitlist'] = 'Waitlist';
+$string['template_vacancy_closing'] = 'Vacancy Closing';
+$string['template_new_vacancy'] = 'New Vacancy';
+$string['template_reviewer_assigned'] = 'Reviewer Assigned';
+
+// Template descriptions.
+$string['template_application_received_desc'] = 'Sent when an applicant successfully submits their application.';
+$string['template_under_review_desc'] = 'Sent when an application moves to the review stage.';
+$string['template_docs_validated_desc'] = 'Sent when all documents have been approved by the reviewer.';
+$string['template_docs_rejected_desc'] = 'Sent when one or more documents require correction.';
+$string['template_review_complete_desc'] = 'Sent when the document review process is completed.';
+$string['template_interview_scheduled_desc'] = 'Sent when an interview is scheduled for the applicant.';
+$string['template_interview_reminder_desc'] = 'Sent as a reminder before the scheduled interview.';
+$string['template_interview_completed_desc'] = 'Sent after the interview has been completed.';
+$string['template_selected_desc'] = 'Sent when the applicant is selected for the position.';
+$string['template_rejected_desc'] = 'Sent when the applicant is not selected for the position.';
+$string['template_waitlist_desc'] = 'Sent when the applicant is placed on a waiting list.';
+$string['template_vacancy_closing_desc'] = 'Sent to remind users that a vacancy is about to close.';
+$string['template_new_vacancy_desc'] = 'Sent to notify users about a new vacancy.';
+$string['template_reviewer_assigned_desc'] = 'Sent to reviewers when they are assigned a new application to review.';
+
+// Success/error messages.
+$string['template_saved_success'] = 'Template saved successfully.';
+$string['template_reset_success'] = 'Template has been reset to default values.';
+$string['template_enabled_success'] = 'Template has been enabled.';
+$string['template_disabled_success'] = 'Template has been disabled.';
+$string['template_deleted_success'] = 'Template has been deleted.';
+$string['template_delete_failed'] = 'Failed to delete template.';
+$string['template_not_found'] = 'Template not found.';
+$string['templates_installed'] = '{$a} default templates have been installed.';
+
+// Help section.
+$string['template_help_title'] = 'Quick Help';
+$string['template_help_placeholders'] = 'Use placeholders like {user_fullname} to include dynamic content that changes for each recipient.';
+$string['template_help_html'] = 'Templates support full HTML formatting. Use the editor toolbar to format text, add links, and create lists.';
+$string['template_help_tenant'] = 'You can create company-specific templates that override the global defaults for each tutorial center.';
+$string['html_support'] = 'HTML Support';
+$string['multi_tenant'] = 'Multi-Tenant';
+
+// Default template subjects (v3.0).
+$string['email_application_received_subject'] = 'Application Received - {vacancy_code}';
+$string['email_application_received_body'] = '<p>Dear {user_fullname},</p>
+<p>We have received your application for the vacancy <strong>{vacancy_title}</strong> (Code: {vacancy_code}).</p>
+<p>You can check the status of your application at any time: <a href="{application_url}">{application_url}</a></p>
+<p>We will notify you when there are updates to your process.</p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_under_review_subject'] = 'Your application is under review - {vacancy_code}';
+$string['email_under_review_body'] = '<p>Dear {user_fullname},</p>
+<p>Your application for the vacancy <strong>{vacancy_title}</strong> is now being reviewed by our evaluation team.</p>
+<p>This process may take a few days. We will notify you when there are updates.</p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_docs_validated_subject'] = 'Documents Validated - {vacancy_code}';
+$string['email_docs_validated_body'] = '<p>Dear {user_fullname},</p>
+<p>Your documents for the vacancy <strong>{vacancy_title}</strong> have been successfully validated.</p>
+<p>Total documents reviewed: {documents_count}</p>
+<p>Your application will continue to the next stage of the selection process.</p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_docs_rejected_subject'] = 'Documents Require Correction - {vacancy_code}';
+$string['email_docs_rejected_body'] = '<p>Dear {user_fullname},</p>
+<p>Some documents from your application for the vacancy <strong>{vacancy_title}</strong> require correction:</p>
+<p><strong>Rejected documents:</strong></p>
+<pre>{rejected_docs}</pre>
+<p><strong>Reviewer observations:</strong></p>
+<p>{observations}</p>
+<p>Please log in to the platform to correct and resubmit the documents before: {resubmit_deadline}</p>
+<p><a href="{application_url}">Go to my application</a></p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_review_complete_subject'] = 'Document Review Complete - {vacancy_code}';
+$string['email_review_complete_body'] = '<p>Dear {user_fullname},</p>
+<p>The review of your documents for the vacancy <strong>{vacancy_title}</strong> has been completed.</p>
+<p><strong>Summary:</strong></p>
+<pre>{review_summary}</pre>
+<p>{action_required}</p>
+<p>For more details, visit: <a href="{application_url}">{application_url}</a></p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_interview_scheduled_subject'] = 'Interview Scheduled - {vacancy_code}';
+$string['email_interview_scheduled_body'] = '<p>Dear {user_fullname},</p>
+<p>You have been scheduled for an interview for the vacancy <strong>{vacancy_title}</strong>.</p>
+<p><strong>Interview details:</strong></p>
+<ul>
+<li><strong>Date:</strong> {interview_date}</li>
+<li><strong>Time:</strong> {interview_time}</li>
+<li><strong>Duration:</strong> {interview_duration}</li>
+<li><strong>Type:</strong> {interview_type}</li>
+<li><strong>Location/Link:</strong> {interview_location}</li>
+</ul>
+<p><strong>Additional notes:</strong></p>
+<p>{interview_notes}</p>
+<p>Please confirm your attendance by replying to this email.</p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_interview_reminder_subject'] = 'Reminder: Interview in {hours_until} hours - {vacancy_code}';
+$string['email_interview_reminder_body'] = '<p>Dear {user_fullname},</p>
+<p>This is a reminder that your interview for the vacancy <strong>{vacancy_title}</strong> is coming up.</p>
+<p><strong>Date:</strong> {interview_date} at {interview_time}</p>
+<p><strong>Location:</strong> {interview_location}</p>
+<p>We look forward to seeing you.</p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_interview_completed_subject'] = 'Interview Completed - {vacancy_code}';
+$string['email_interview_completed_body'] = '<p>Dear {user_fullname},</p>
+<p>Thank you for participating in the interview for the vacancy <strong>{vacancy_title}</strong>.</p>
+<p>{interview_feedback}</p>
+<p><strong>Next steps:</strong></p>
+<p>{next_steps}</p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_selected_subject'] = 'Congratulations! You have been selected - {vacancy_code}';
+$string['email_selected_body'] = '<p>Dear {user_fullname},</p>
+<p>We are pleased to inform you that you have been <strong>selected</strong> for the vacancy <strong>{vacancy_title}</strong>.</p>
+<p>{selection_notes}</p>
+<p><strong>Next steps:</strong></p>
+<p>{next_steps}</p>
+<p><strong>Contact information:</strong></p>
+<p>{contact_info}</p>
+<p>Welcome to our team!</p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_rejected_subject'] = 'Selection Process Result - {vacancy_code}';
+$string['email_rejected_body'] = '<p>Dear {user_fullname},</p>
+<p>Thank you for participating in the selection process for the vacancy <strong>{vacancy_title}</strong>.</p>
+<p>After careful evaluation, we regret to inform you that you have not been selected to continue in this process.</p>
+<p>{feedback}</p>
+<p>We invite you to participate in future vacancies that match your professional profile.</p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_waitlist_subject'] = 'Waiting List - {vacancy_code}';
+$string['email_waitlist_body'] = '<p>Dear {user_fullname},</p>
+<p>We inform you that you have been placed on the <strong>waiting list</strong> for the vacancy <strong>{vacancy_title}</strong>.</p>
+<p>Your current position is: <strong>#{waitlist_position}</strong></p>
+<p>{notification_note}</p>
+<p>We will contact you if a position becomes available.</p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_vacancy_closing_subject'] = 'Vacancy closing soon - {vacancy_code}';
+$string['email_vacancy_closing_body'] = '<p>Dear {user_fullname},</p>
+<p>We inform you that the vacancy <strong>{vacancy_title}</strong> will close in <strong>{days_remaining} day(s)</strong>.</p>
+<p><strong>Closing date:</strong> {close_date}</p>
+<p>If you are interested, you can apply before the deadline at:</p>
+<p><a href="{vacancy_url}">{vacancy_url}</a></p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_new_vacancy_subject'] = 'New Vacancy Available - {vacancy_code}';
+$string['email_new_vacancy_body'] = '<p>Dear {user_fullname},</p>
+<p>We inform you about a new vacancy available:</p>
+<p><strong>{vacancy_title}</strong> (Code: {vacancy_code})</p>
+<p>{vacancy_description}</p>
+<p><strong>Faculty:</strong> {faculty_name}</p>
+<p><strong>Opening date:</strong> {open_date}</p>
+<p><strong>Closing date:</strong> {close_date}</p>
+<p>For more information and to apply, visit:</p>
+<p><a href="{vacancy_url}">{vacancy_url}</a></p>
+<p>Best regards,<br>{site_name}</p>';
+
+$string['email_reviewer_assigned_subject'] = 'New application to review - {vacancy_code}';
+$string['email_reviewer_assigned_body'] = '<p>Dear {user_fullname},</p>
+<p>You have been assigned a new application to review:</p>
+<p><strong>Vacancy:</strong> {vacancy_title} ({vacancy_code})</p>
+<p><strong>Applicant:</strong> {applicant_name}</p>
+<p><strong>Documents to review:</strong> {documents_count}</p>
+<p><strong>Review deadline:</strong> {deadline}</p>
+<p>You can access the application from:</p>
+<p><a href="{application_url}">{application_url}</a></p>
+<p>Best regards,<br>{site_name}</p>';
