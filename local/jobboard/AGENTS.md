@@ -29,551 +29,319 @@ El plugin opera en un entorno IOMAD multi-tenant con estructura de 4 niveles:
 NIVEL 1: INSTANCIA IOMAD
          virtual.iser.edu.co
               │
-NIVEL 2: COMPANIES (13 Centros Tutoriales)
+NIVEL 2: COMPANIES (16 Centros Tutoriales)
+         ├── Pamplona (Sede Principal)
          ├── Cúcuta
-         ├── Ocaña
-         ├── El Tarra
          ├── Tibú
+         ├── Ocaña
          ├── Toledo
+         ├── El Tarra
          ├── Sardinata
-         ├── San Vicente de Chucurí
+         ├── San Vicente del Chucurí
          ├── Pueblo Bello
-         ├── Salazar de las Palmas
          ├── San Pablo
          ├── Santa Rosa del Sur
+         ├── Fundación
          ├── Cimitarra
+         ├── Salazar
+         ├── Tame
          └── Saravena
               │
 NIVEL 3: DEPARTMENTS (Modalidades por Centro)
          ├── Presencial
-         ├── Distancia
+         ├── A Distancia
          ├── Virtual
          └── Híbrida
               │
 NIVEL 4: SUB-DEPARTMENTS (Facultades por Modalidad)
-         ├── Facultad de Ciencias Administrativas y Sociales
-         └── Facultad de Ingenierías e Informática
+         ├── Facultad de Ciencias Administrativas y Sociales (FCAS)
+         └── Facultad de Ingenierías e Informática (FII)
 ```
 
-### PARTE B: Estructura Académica (Contenido Compartido)
+### PARTE B: Estructura Académica
 
 ```
-CATEGORÍAS DE CURSOS (Course Categories)
-    │
-    ├── FACULTAD DE CIENCIAS ADMINISTRATIVAS Y SOCIALES
-    │       ├── Tecnología en Gestión Empresarial
-    │       ├── Tecnología en Gestión Comunitaria
-    │       ├── Tecnología en Gestión de Mercadeo
-    │       └── Técnica Prof. en Seguridad y Salud en el Trabajo
-    │
-    └── FACULTAD DE INGENIERÍAS E INFORMÁTICA
-            ├── Tecnología Agropecuaria
-            ├── Tecnología en Procesos Agroindustriales
-            ├── Tecnología en Gestión Industrial
-            ├── Tecnología en Gestión de Redes y Sistemas Teleinformáticos
-            ├── Tecnología en Gestión y Construcción de Obras Civiles
-            └── Técnica Prof. en Producción de Frutas y Hortalizas
+FACULTAD DE CIENCIAS ADMINISTRATIVAS Y SOCIALES (FCAS)
+├── Tecnología en Gestión Empresarial
+├── Tecnología en Gestión Comunitaria
+├── Tecnología en Gestión de Mercadeo
+└── Técnica Prof. en Seguridad y Salud en el Trabajo
+
+FACULTAD DE INGENIERÍAS E INFORMÁTICA (FII)
+├── Tecnología Agropecuaria
+├── Tecnología en Procesos Agroindustriales
+├── Tecnología en Gestión Industrial
+├── Tecnología en Gestión de Redes y Sistemas Teleinformáticos
+├── Tecnología en Gestión y Construcción de Obras Civiles
+└── Técnica Prof. en Producción de Frutas y Hortalizas
 ```
-
-### PARTE C: Mecanismo de Conexión
-
-| Mecanismo | Función |
-|-----------|---------|
-| **SHARED COURSES** | Comparte asignaturas a Companies/Departments |
-| **LICENSES** | Controla acceso y cupos por centro/modalidad/periodo |
-| **COHORTS** | Agrupa estudiantes: `[CENTRO]-[MOD]-[PROG]-[SEM]-[PERIODO]` |
-
-Ejemplo de cohorte: `CUCU-DIS-TECGES-3SEM-2025-1`
 
 ---
 
-## ⚠️ REFACTORIZACIONES OBLIGATORIAS
+## Estado Actual del Plugin (Análisis)
 
-### 1. RECREACIÓN DE ROLES Y PERMISOS
+### Estructura de Archivos Existente
 
-**ESTADO:** Los roles actuales deben ser **COMPLETAMENTE RECREADOS** para garantizar la correcta asignación de permisos según la nueva lógica de negocio.
+```
+local/jobboard/
+├── index.php                      # Router centralizado
+├── lib.php                        # Funciones principales
+├── settings.php                   # Configuración admin
+├── version.php                    # Versión del plugin
+├── styles.css                     # Estilos CSS
+│
+├── views/                         # 17 vistas PHP
+│   ├── dashboard.php
+│   ├── browse_convocatorias.php
+│   ├── convocatorias.php
+│   ├── convocatoria.php
+│   ├── view_convocatoria.php
+│   ├── vacancies.php
+│   ├── vacancy.php
+│   ├── apply.php
+│   ├── applications.php
+│   ├── application.php
+│   ├── manage.php
+│   ├── review.php
+│   ├── myreviews.php
+│   ├── reports.php
+│   ├── public.php
+│   ├── public_convocatoria.php
+│   └── public_vacancy.php
+│
+├── templates/                     # ~39 plantillas Mustache
+│   ├── dashboard.mustache
+│   ├── dashboard_widget.mustache
+│   ├── application_row.mustache
+│   ├── components/
+│   │   ├── page_header.mustache
+│   │   ├── stat_card.mustache
+│   │   └── filter_form.mustache
+│   └── pages/
+│       ├── dashboard.mustache
+│       ├── manage.mustache
+│       ├── apply.mustache
+│       ├── application_detail.mustache
+│       ├── vacancy_detail.mustache
+│       └── review.mustache
+│
+├── amd/                           # ~15 módulos JavaScript
+│   ├── src/
+│   │   ├── public_filters.js
+│   │   ├── department_loader.js
+│   │   ├── company_loader.js
+│   │   ├── convocatoria_loader.js
+│   │   ├── tooltips.js
+│   │   ├── signup_form.js
+│   │   ├── apply_progress.js
+│   │   ├── review_ui.js
+│   │   ├── card_actions.js
+│   │   ├── confirm_action.js
+│   │   ├── review_shortcuts.js
+│   │   └── loading_states.js
+│   └── build/                     # JS compilado (NO EDITAR)
+│
+├── db/
+│   ├── install.xml                # Esquema de BD
+│   ├── install.php                # Instalación
+│   ├── upgrade.php                # Migraciones
+│   ├── access.php                 # ~30 capabilities
+│   ├── services.php               # Web services
+│   └── tours/                     # 15 User Tours JSON
+│       ├── tour_dashboard.json
+│       ├── tour_public.json
+│       ├── tour_convocatorias.json
+│       ├── tour_convocatoria_manage.json
+│       ├── tour_vacancies.json
+│       ├── tour_vacancy.json
+│       ├── tour_manage.json
+│       ├── tour_apply.json
+│       ├── tour_application.json
+│       ├── tour_myapplications.json
+│       ├── tour_documents.json
+│       ├── tour_review.json
+│       ├── tour_myreviews.json
+│       ├── tour_validate_document.json
+│       └── tour_reports.json
+│
+├── classes/
+│   ├── output/renderer.php
+│   ├── audit.php
+│   ├── document.php
+│   ├── reviewer.php
+│   └── external/api.php
+│
+├── cli/
+│   ├── cli.php                    # Importador de perfiles v2.2
+│   └── parse_profiles_v2.php
+│
+├── admin/                         # Páginas administrativas
+│   ├── doctypes.php
+│   ├── email_templates.php
+│   └── exemptions.php
+│
+└── lang/
+    ├── en/local_jobboard.php      # ~1860 strings
+    └── es/local_jobboard.php      # ~1860 strings
+```
 
-**RAZÓN:** La lógica actual no contempla:
-- Comités por FACULTAD (no por vacante)
-- Revisores por PROGRAMA (no globales)
-- Jerarquía de permisos basada en la estructura IOMAD de 4 niveles
+### Roles Existentes (3)
+
+| Shortname | Nombre | Capabilities Asignadas |
+|-----------|--------|------------------------|
+| `jobboard_reviewer` | Revisor de Documentos | view, viewinternal, review, validatedocuments, reviewdocuments, downloadanydocument |
+| `jobboard_coordinator` | Coordinador de Selección | view, viewinternal, manage, createvacancy, editvacancy, publishvacancy, viewallvacancies, viewallapplications, changeapplicationstatus, assignreviewers, viewreports, viewevaluations, manageworkflow |
+| `jobboard_committee` | Miembro del Comité | view, viewinternal, evaluate, viewevaluations, downloadanydocument |
+
+### Capabilities Existentes (~30)
+
+| Grupo | Capabilities |
+|-------|--------------|
+| **Vista general** | `view`, `viewinternal`, `viewpublicvacancies` |
+| **Gestión vacantes** | `manage`, `createvacancy`, `editvacancy`, `deletevacancy`, `publishvacancy`, `viewallvacancies` |
+| **Convocatorias** | `manageconvocatorias` |
+| **Postulaciones** | `apply`, `viewownapplications`, `viewallapplications`, `changeapplicationstatus` |
+| **Revisión** | `review`, `validatedocuments`, `reviewdocuments`, `assignreviewers`, `downloadanydocument` |
+| **Evaluación** | `evaluate`, `viewevaluations` |
+| **Workflow** | `manageworkflow` |
+| **Reportes** | `viewreports`, `exportreports`, `exportdata` |
+| **Administración** | `configure`, `managedoctypes`, `manageemailtemplates`, `manageexemptions` |
+
+### Tablas de Base de Datos Existentes
+
+| Tabla | Descripción |
+|-------|-------------|
+| `local_jobboard_convocatoria` | Convocatorias |
+| `local_jobboard_vacancy` | Vacantes |
+| `local_jobboard_application` | Postulaciones |
+| `local_jobboard_document` | Documentos subidos |
+| `local_jobboard_doc_validation` | Validaciones de documentos |
+| `local_jobboard_doctype` | Tipos de documento |
+| `local_jobboard_email_template` | Plantillas de email |
+| `local_jobboard_email_strings` | Strings de email por idioma |
+| `local_jobboard_exemption` | Excepciones por edad |
+| `local_jobboard_config` | Configuración |
+| `local_jobboard_audit` | Auditoría |
+| `local_jobboard_applicant_profile` | Perfiles de postulantes |
+| `local_jobboard_consent` | Consentimientos |
+
+---
+
+## ⚠️ PROBLEMAS IDENTIFICADOS Y REFACTORIZACIONES REQUERIDAS
+
+### 1. MEZCLA DE CLASES CSS (Bootstrap + jb-*)
+
+**PROBLEMA:** Los templates Mustache actuales mezclan clases Bootstrap con clases propias `jb-*`.
+
+**Ejemplo del estado actual en `dashboard.mustache`:**
+```html
+<!-- PROBLEMA: Mezcla de Bootstrap y jb-* -->
+<div class="card shadow-sm mb-4">           <!-- Bootstrap -->
+    <div class="card-header bg-light">      <!-- Bootstrap -->
+        <div class="jb-stat-card">          <!-- Propio -->
+```
+
+**Clases Bootstrap usadas actualmente (ELIMINAR):**
+- Layout: `row`, `col-*`, `col-md-*`, `col-lg-*`, `mb-*`, `mt-*`, `p-*`
+- Cards: `card`, `card-header`, `card-body`, `card-footer`, `shadow-sm`
+- Botones: `btn`, `btn-primary`, `btn-secondary`, `btn-outline-*`, `btn-sm`, `btn-lg`, `btn-block`, `btn-group`
+- Tablas: `table`, `table-hover`, `table-responsive`, `thead-light`
+- Badges: `badge`, `badge-*`
+- Alertas: `alert`, `alert-*`, `alert-dismissible`
+- Formularios: `form-control`, `form-group`, `form-row`, `input-group`
+- Texto: `text-muted`, `text-primary`, `text-*`, `font-weight-*`
+- Utilidades: `d-flex`, `d-none`, `justify-content-*`, `align-items-*`
+- Otros: `list-group`, `list-group-item`, `progress`, `progress-bar`
 
 **ACCIÓN REQUERIDA:**
-1. Eliminar roles existentes del plugin
-2. Recrear roles con nueva estructura de capabilities
-3. Implementar asignación contextual (por facultad/programa)
-4. Migrar asignaciones existentes (si las hay)
-5. Actualizar `db/access.php` con capabilities reorganizadas
-6. Crear upgrade en `db/upgrade.php` para la migración
+1. Auditar TODOS los templates Mustache
+2. Crear clases `jb-*` equivalentes para cada clase Bootstrap
+3. Reemplazar sistemáticamente en cada template
+4. Actualizar `styles.css` con el sistema CSS personalizado completo
 
-### 2. RECREACIÓN DE FLUJOS DE TRABAJO
+### 2. USER TOURS CON SELECTORES OBSOLETOS
 
-**ESTADO:** Los flujos de trabajo actuales deben ser **RECREADOS** para garantizar:
-- Separación clara de responsabilidades (revisor vs comité)
-- Flujo secuencial obligatorio
-- Validaciones en cada transición de estado
-- Auditoría completa de cada paso
+**PROBLEMA:** Los 15 tours existentes usan selectores que mezclan Bootstrap y clases propias.
 
-**ACCIÓN REQUERIDA:**
-1. Documentar flujo actual (si existe)
-2. Diseñar nuevo flujo según lógica de negocio
-3. Implementar máquina de estados en `classes/workflow.php`
-4. Crear validadores para cada transición
-5. Integrar con sistema de auditoría
-6. Actualizar notificaciones por email
-
-### 3. MIGRACIÓN A CSS PERSONALIZADO
-
-**ESTADO:** Se debe **ELIMINAR TODA DEPENDENCIA DE BOOTSTRAP** y crear un sistema de clases CSS propias para garantizar independencia gráfica total del plugin.
+**Ejemplo de selectores problemáticos encontrados:**
+```json
+// tour_manage.json - Selectores actuales
+".table.table-hover"        // Bootstrap
+".thead-light"              // Bootstrap  
+".badge"                    // Bootstrap
+".btn-group.btn-group-sm"   // Bootstrap
+".card.shadow-sm"           // Bootstrap
+```
 
 **ACCIÓN REQUERIDA:**
-1. Auditar todos los templates Mustache existentes
-2. Crear sistema de clases CSS con prefijo `jb-*`
-3. Reemplazar clases Bootstrap por clases propias
-4. Crear `styles.css` completo y autocontenido
-5. Probar en todos los themes (Boost, Classic, Remui, Flavor)
-6. Documentar sistema de clases en este archivo
-
-### 4. MIGRACIÓN DE VISTAS A MUSTACHE
-
-**ESTADO:** Todas las vistas PHP que generen HTML directamente deben ser **MIGRADAS A PLANTILLAS MUSTACHE**.
-
-**RAZÓN:**
-- Separación de lógica y presentación
-- Reutilización de componentes
-- Mantenibilidad del código
-- Compatibilidad con themes de Moodle
-
-**ACCIÓN REQUERIDA:**
-1. Identificar todas las vistas PHP con HTML embebido
-2. Crear plantillas Mustache correspondientes
-3. Crear renderers en `classes/output/`
-4. Migrar datos a contexto para plantillas
-5. Eliminar HTML directo de archivos PHP
-6. Verificar renderizado en diferentes themes
-
-### 5. RECREACIÓN DE USER TOURS
-
-**ESTADO:** Los User Tours actuales deben ser **COMPLETAMENTE RECREADOS** debido a:
-- Cambios en la interfaz de usuario
-- Selectores CSS obsoletos o incorrectos
-- Nueva estructura de vistas
-- Nuevo sistema de clases CSS
-
-**ACCIÓN REQUERIDA:**
-1. Eliminar todos los tours existentes en `db/tours/`
-2. Documentar nuevos flujos de usuario
-3. Crear nuevos tours con selectores actualizados
+1. RECREAR COMPLETAMENTE los 15 tours
+2. Usar SOLO selectores con clases `jb-*`
+3. Validar cada selector con DevTools antes de implementar
 4. Probar cada tour paso a paso en la interfaz
-5. Validar selectores con DevTools del navegador
-6. Verificar en diferentes themes
 
-**REFERENCIA:** Analizar implementación de tours en el repositorio de Moodle core y otros plugins del mismo repositorio donde se encuentra el plugin.
+### 3. ROLES SIN CONTEXTO DE FACULTAD/PROGRAMA
 
-### 6. RECREACIÓN DE MÓDULOS AMD
-
-**ESTADO:** Los módulos JavaScript AMD deben ser **RECREADOS** para:
-- Eliminar dependencias de Bootstrap JS
-- Usar módulos core de Moodle
-- Implementar nueva lógica de UI
-- Soportar nuevos componentes CSS personalizados
+**PROBLEMA:** Los roles actuales son globales (CONTEXT_SYSTEM) y no contemplan:
+- Asignación de revisores por PROGRAMA
+- Comités de selección por FACULTAD
+- Filtrado de postulaciones según contexto del usuario
 
 **ACCIÓN REQUERIDA:**
-1. Auditar módulos AMD existentes en `amd/src/`
-2. Identificar dependencias de Bootstrap
-3. Reemplazar con módulos core de Moodle
-4. Implementar lógica para componentes `jb-*`
-5. Compilar con `grunt amd --root=local/jobboard`
-6. Probar funcionalidad en todos los navegadores
+1. RECREAR los 3 roles existentes con nueva lógica
+2. Crear tablas de asignación por facultad/programa
+3. Implementar filtrado de datos según contexto
+4. Actualizar capabilities en `db/access.php`
 
-**REFERENCIA:** Analizar implementación de módulos AMD en Moodle core y otros plugins del repositorio para seguir patrones establecidos.
+### 4. TABLAS FALTANTES PARA NUEVA LÓGICA
 
----
+**PROBLEMA:** No existen tablas para soportar la estructura de facultades/programas.
 
-## Análisis del Repositorio
-
-### OBLIGATORIO ANTES DE IMPLEMENTAR
-
-Antes de realizar cualquier implementación, el agente DEBE analizar:
-
+**TABLAS A CREAR:**
 ```
-ANÁLISIS REQUERIDO
-│
-├── MOODLE CORE
-│   ├── lib/amd/src/           → Patrones de módulos AMD
-│   ├── lib/templates/         → Patrones de plantillas Mustache
-│   ├── admin/tool/usertours/  → Estructura de User Tours
-│   └── theme/boost/           → Clases CSS de referencia
-│
-├── PLUGINS DEL REPOSITORIO
-│   ├── local/*/               → Plugins locales existentes
-│   ├── mod/*/                 → Módulos de actividad
-│   └── block/*/               → Bloques
-│
-└── IOMAD
-    ├── local/iomad/           → Integración multi-tenant
-    └── blocks/iomad_*/        → Bloques IOMAD
+local_jobboard_faculty           # Facultades (FCAS, FII)
+local_jobboard_program           # Programas por facultad
+local_jobboard_committee         # Comités por facultad y convocatoria
+local_jobboard_committee_member  # Miembros del comité
+local_jobboard_reviewer_program  # Asignación de revisores por programa
 ```
 
-**PROPÓSITO DEL ANÁLISIS:**
-- Identificar patrones de código reutilizables
-- Seguir convenciones establecidas en el repositorio
-- Evitar reinventar soluciones existentes
-- Garantizar compatibilidad con IOMAD
+### 5. MÓDULOS AMD CON DEPENDENCIAS PROBLEMÁTICAS
 
----
+**PROBLEMA:** Algunos módulos AMD dependen de jQuery y Bootstrap JS.
 
-## Sistema CSS Personalizado
+**Módulos a revisar:**
+- `tooltips.js` - Usa `$(selector).tooltip()` de Bootstrap
+- `public_filters.js` - Usa jQuery directamente
+- `review_ui.js` - Inicializa tooltips Bootstrap
 
-### Política de Estilos
+**ACCIÓN REQUERIDA:**
+1. Auditar cada módulo AMD
+2. Reemplazar `$(selector).tooltip()` por solución propia o core de Moodle
+3. Minimizar uso de jQuery donde sea posible
+4. Usar módulos core de Moodle: `core/ajax`, `core/notification`, `core/templates`
 
-**REGLA FUNDAMENTAL:** El plugin NO debe usar clases de Bootstrap ni de ningún framework CSS externo. Debe tener su propio sistema de clases para garantizar independencia gráfica.
+### 6. VISTAS PHP CON HTML DIRECTO
 
-### Prefijo de Clases
+**PROBLEMA:** Algunas vistas PHP generan HTML directamente en lugar de usar templates.
 
-Todas las clases CSS del plugin deben usar el prefijo `jb-` (jobboard).
-
-### Categorías de Componentes CSS
-
-| Categoría | Prefijo | Descripción |
-|-----------|---------|-------------|
-| Variables | `--jb-*` | Custom properties (colores, espaciado, etc.) |
-| Layout | `jb-container`, `jb-row`, `jb-col-*` | Sistema de grid |
-| Cards | `jb-card`, `jb-card-header`, `jb-card-body` | Tarjetas |
-| Botones | `jb-btn`, `jb-btn-primary`, `jb-btn-*` | Botones |
-| Formularios | `jb-form-*` | Campos de formulario |
-| Tablas | `jb-table`, `jb-table-*` | Tablas de datos |
-| Badges | `jb-badge`, `jb-badge-*` | Etiquetas de estado |
-| Alertas | `jb-alert`, `jb-alert-*` | Mensajes de alerta |
-| Tabs | `jb-tabs`, `jb-tab-*` | Pestañas |
-| Modal | `jb-modal`, `jb-modal-*` | Ventanas modales |
-| Paginación | `jb-pagination`, `jb-page-*` | Paginación |
-| Timeline | `jb-timeline`, `jb-timeline-*` | Historial/timeline |
-| Estados | `jb-status`, `jb-status-*` | Indicadores de estado |
-| Utilidades | `jb-text-*`, `jb-mt-*`, `jb-d-*` | Helpers |
-
-### Variables CSS Requeridas
-
-| Tipo | Variables |
-|------|-----------|
-| Colores primarios | `--jb-primary`, `--jb-primary-hover`, `--jb-primary-light` |
-| Colores secundarios | `--jb-secondary`, `--jb-secondary-hover` |
-| Colores de estado | `--jb-success`, `--jb-warning`, `--jb-danger`, `--jb-info` |
-| Colores neutros | `--jb-gray-50` a `--jb-gray-900`, `--jb-white` |
-| Tipografía | `--jb-font-family`, `--jb-font-size-*` |
-| Espaciado | `--jb-spacing-xs` a `--jb-spacing-2xl` |
-| Bordes | `--jb-border-radius-*`, `--jb-border-color` |
-| Sombras | `--jb-shadow-sm`, `--jb-shadow`, `--jb-shadow-md`, `--jb-shadow-lg` |
-| Transiciones | `--jb-transition` |
-
----
-
-## Lógica de Negocio: Comité de Selección
-
-### Estructura del Comité
-
-```
-COMITÉ DE SELECCIÓN
-│
-├── Ámbito: Por FACULTAD (no por vacante)
-│   ├── Comité Facultad de Ciencias Administrativas y Sociales
-│   └── Comité Facultad de Ingenierías e Informática
-│
-├── Composición:
-│   ├── Presidente del Comité (1)
-│   ├── Secretario (1)
-│   └── Miembros evaluadores (N)
-│
-├── Funciones:
-│   ├── Evaluar candidatos con documentos VALIDADOS
-│   ├── Realizar entrevistas
-│   ├── Calificar según criterios establecidos
-│   ├── Emitir concepto de selección
-│   └── Firmar actas de selección
-│
-└── Restricciones:
-    ├── NO puede validar documentos (eso es del revisor)
-    ├── Solo ve postulaciones con docs_validated = true
-    └── Un miembro puede pertenecer a múltiples comités
+**Ejemplo encontrado en `view_convocatoria.php`:**
+```php
+// HTML directo mezclado con lógica
+echo html_writer::start_div('card shadow-sm mb-4');
+echo html_writer::tag('div', $content, ['class' => 'card-header bg-light']);
 ```
 
-### Flujo del Comité
-
-```
-1. RECEPCIÓN
-   └── El comité recibe postulaciones con documentos validados
-   
-2. EVALUACIÓN INDIVIDUAL
-   ├── Cada miembro evalúa al candidato
-   ├── Califica según criterios predefinidos
-   └── Registra observaciones
-
-3. DELIBERACIÓN
-   ├── Se consolidan evaluaciones
-   ├── Se discuten casos
-   └── Se toman decisiones
-
-4. DECISIÓN
-   ├── Seleccionado → Estado: selected
-   ├── Rechazado → Estado: rejected
-   └── En espera → Estado: waitlisted
-
-5. NOTIFICACIÓN
-   └── Sistema envía email al postulante
-```
-
-### Vista: Crear Comité de Selección
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ CREAR COMITÉ DE SELECCIÓN                                   │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│ Facultad: [Dropdown con facultades]                         │
-│                                                             │
-│ Convocatoria: [Dropdown con convocatorias activas]          │
-│                                                             │
-│ ─────────────────────────────────────────────────────────── │
-│                                                             │
-│ AGREGAR MIEMBROS                                            │
-│                                                             │
-│ Buscar usuario: [________________] [🔍 Buscar]              │
-│                 (por username, nombre o email)              │
-│                                                             │
-│ Resultados:                                                 │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ ☐ jperez - Juan Pérez - jperez@iser.edu.co             │ │
-│ │ ☐ mgarcia - María García - mgarcia@iser.edu.co         │ │
-│ └─────────────────────────────────────────────────────────┘ │
-│                                                             │
-│ Miembros seleccionados:                                     │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ • Juan Pérez (jperez) - Rol: [Presidente ▼] [Eliminar] │ │
-│ │ • María García (mgarcia) - Rol: [Miembro ▼] [Eliminar] │ │
-│ └─────────────────────────────────────────────────────────┘ │
-│                                                             │
-│                            [Cancelar] [Guardar Comité]      │
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Lógica de Negocio: Revisores
-
-### Estructura de Revisores
-
-```
-REVISORES DE DOCUMENTOS
-│
-├── Ámbito: Por PROGRAMA ACADÉMICO
-│   ├── Revisor de Tecnología en Gestión Empresarial
-│   ├── Revisor de Tecnología Agropecuaria
-│   └── ... (uno o más por programa)
-│
-├── Funciones:
-│   ├── Revisar documentos de postulantes
-│   ├── Verificar autenticidad y vigencia
-│   ├── Aprobar o rechazar documentos
-│   ├── Escribir observaciones
-│   └── Solicitar correcciones
-│
-├── Restricciones:
-│   ├── NO puede evaluar candidatos (eso es del comité)
-│   ├── NO puede ver postulaciones de otros programas
-│   └── Solo trabaja con postulaciones en estado under_review
-│
-└── Asignación:
-    ├── Manual: Coordinador asigna revisor
-    └── Automática: Por programa de la vacante
-```
-
-### Flujo del Revisor
-
-```
-1. ASIGNACIÓN
-   └── Revisor es asignado a programa(s) académico(s)
-
-2. RECEPCIÓN
-   ├── Ve postulaciones de SUS programas
-   └── Solo en estado under_review
-
-3. REVISIÓN DE DOCUMENTOS
-   ├── Abre cada documento
-   ├── Verifica checklist según tipo de documento
-   ├── Marca como: aprobado / rechazado / pendiente corrección
-   └── Escribe observaciones si es necesario
-
-4. FINALIZACIÓN
-   ├── Si TODOS aprobados → Estado: docs_validated
-   ├── Si alguno rechazado → Estado: docs_rejected
-   └── Sistema notifica al postulante
-
-5. CORRECCIONES
-   ├── Postulante sube documento corregido
-   └── Revisor vuelve a evaluar
-```
-
-### Vista: Asignar Revisores por Programa
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ ASIGNAR REVISORES POR PROGRAMA                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│ Facultad: [Ciencias Administrativas y Sociales ▼]           │
-│                                                             │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ PROGRAMA                     │ REVISORES ASIGNADOS      │ │
-│ ├─────────────────────────────────────────────────────────┤ │
-│ │ Tecnología en Gestión        │ • jperez (Juan Pérez)   │ │
-│ │ Empresarial                  │ • mrodriguez            │ │
-│ │                              │ [+ Agregar revisor]      │ │
-│ ├─────────────────────────────────────────────────────────┤ │
-│ │ Tecnología en Gestión        │ (Sin revisores)          │ │
-│ │ Comunitaria                  │ [+ Agregar revisor]      │ │
-│ ├─────────────────────────────────────────────────────────┤ │
-│ │ Tecnología en Gestión        │ • agarcia               │ │
-│ │ de Mercadeo                  │ [+ Agregar revisor]      │ │
-│ └─────────────────────────────────────────────────────────┘ │
-│                                                             │
-│ Modal: Agregar Revisor                                      │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ Buscar: [________________] (username)                   │ │
-│ │                                                         │ │
-│ │ Resultados:                                             │ │
-│ │ ○ lmartinez - Luis Martínez                            │ │
-│ │ ○ clopez - Carlos López                                │ │
-│ │                                                         │ │
-│ │                         [Cancelar] [Asignar]           │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Flujo de Trabajo: Postulación Completa
-
-### Diagrama de Estados
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        FLUJO DE POSTULACIÓN                             │
-└─────────────────────────────────────────────────────────────────────────┘
-
-[POSTULANTE]                    [REVISOR]                    [COMITÉ]
-     │                              │                            │
-     ▼                              │                            │
-┌─────────┐                         │                            │
-│ Aplica  │                         │                            │
-│ vacante │                         │                            │
-└────┬────┘                         │                            │
-     │                              │                            │
-     ▼                              │                            │
-┌─────────┐                         │                            │
-│ Carga   │                         │                            │
-│ docs    │                         │                            │
-└────┬────┘                         │                            │
-     │                              │                            │
-     ▼                              │                            │
-┌─────────────────┐                 │                            │
-│ submitted       │                 │                            │
-│ (Postulación    │                 │                            │
-│ enviada)        │                 │                            │
-└────────┬────────┘                 │                            │
-         │                          │                            │
-         │ [Sistema asigna          │                            │
-         │  revisor por programa]   │                            │
-         ▼                          │                            │
-┌─────────────────┐                 │                            │
-│ under_review    │◄────────────────┤                            │
-│ (En revisión)   │                 │                            │
-└────────┬────────┘                 │                            │
-         │                          │                            │
-         │                          ▼                            │
-         │                   ┌─────────────┐                     │
-         │                   │ Revisor     │                     │
-         │                   │ evalúa docs │                     │
-         │                   └──────┬──────┘                     │
-         │                          │                            │
-         │            ┌─────────────┴─────────────┐              │
-         │            ▼                           ▼              │
-         │     ┌─────────────┐             ┌─────────────┐       │
-         │     │ Todos       │             │ Alguno      │       │
-         │     │ aprobados   │             │ rechazado   │       │
-         │     └──────┬──────┘             └──────┬──────┘       │
-         │            │                           │              │
-         │            ▼                           ▼              │
-         │     ┌─────────────────┐        ┌─────────────────┐    │
-         │     │ docs_validated  │        │ docs_rejected   │    │
-         │     │ (Docs válidos)  │        │ (Docs rechaz.)  │    │
-         │     └────────┬────────┘        └────────┬────────┘    │
-         │              │                          │              │
-         │              │                          ▼              │
-         │              │                   ┌─────────────┐       │
-         │              │                   │ Postulante  │       │
-         │              │                   │ corrige     │       │
-         │              │                   └──────┬──────┘       │
-         │              │                          │              │
-         │              │                          │ [Sube        │
-         │              │                          │  nuevos      │
-         │              │                          │  docs]       │
-         │              │                          │              │
-         │              │                          ▼              │
-         │              │            ┌─────────────────────┐      │
-         │              │            │ Vuelve a            │      │
-         │              │            │ under_review        │──────┘
-         │              │            └─────────────────────┘
-         │              │
-         │              │ [Pasa a comité de la facultad]
-         │              │
-         │              ▼                            │
-         │       ┌─────────────┐                     │
-         │       │ interview   │◄────────────────────┤
-         │       │ (Entrevista)│                     │
-         │       └──────┬──────┘                     │
-         │              │                            │
-         │              │                            ▼
-         │              │                     ┌─────────────┐
-         │              │                     │ Comité      │
-         │              │                     │ evalúa      │
-         │              │                     └──────┬──────┘
-         │              │                            │
-         │              │              ┌─────────────┴─────────────┐
-         │              │              ▼                           ▼
-         │              │       ┌─────────────┐             ┌─────────────┐
-         │              │       │ Seleccionado│             │ Rechazado   │
-         │              │       └──────┬──────┘             └──────┬──────┘
-         │              │              │                           │
-         │              │              ▼                           ▼
-         │              │       ┌─────────────────┐        ┌─────────────────┐
-         │              │       │ selected        │        │ rejected        │
-         │              │       │ (Seleccionado)  │        │ (No seleccion.) │
-         │              │       └─────────────────┘        └─────────────────┘
-         │              │
-         ▼              ▼
-   [Email de     [Email de
-   notificación] notificación]
-```
-
-### Estados y Transiciones
-
-| Estado Actual | Estados Siguientes Permitidos | Quién Ejecuta |
-|---------------|------------------------------|---------------|
-| `draft` | `submitted` | Postulante |
-| `submitted` | `under_review`, `withdrawn` | Sistema, Postulante |
-| `under_review` | `docs_validated`, `docs_rejected` | Revisor |
-| `docs_validated` | `interview`, `rejected` | Comité, Coordinador |
-| `docs_rejected` | `under_review`, `withdrawn` | Sistema, Postulante |
-| `interview` | `selected`, `rejected` | Comité |
-| `selected` | (estado final) | - |
-| `rejected` | (estado final) | - |
-| `withdrawn` | (estado final) | - |
+**ACCIÓN REQUERIDA:**
+1. Identificar secciones con HTML directo en cada vista
+2. Crear templates Mustache correspondientes
+3. Usar renderer para pasar datos a templates
+4. Eliminar `html_writer` con clases Bootstrap
 
 ---
 
 ## Reglas de Negocio Críticas
 
-### Organización por Facultad
+### Organización por Facultad (NUEVA LÓGICA)
 
 1. **Vacantes separadas por facultad** - Las vacantes se organizan y filtran por facultad
 2. **Comité de selección por FACULTAD** - NO por vacante. Cada facultad tiene su propio comité
@@ -598,19 +366,16 @@ El formulario de postulación debe ser completamente configurable desde la admin
 | Atributo | Descripción |
 |----------|-------------|
 | **Tipo** | `archivo` (documento a cargar) o `texto` (campo a diligenciar) |
-| **Nombre** | Identificador del documento/campo |
-| **Etiqueta** | Texto visible para el usuario |
 | **Obligatoriedad** | `obligatorio` u `opcional` |
 | **Estado** | `activo` o `inactivo` |
 | **Orden** | Posición en el formulario |
-| **Instrucciones** | Texto de ayuda para el usuario |
 
-**Nota:** La Carta de Intención es un campo de TEXTO que se redacta directamente en el formulario, NO es un archivo a cargar.
+**Nota:** La Carta de Intención es un campo de TEXTO, NO es un archivo a cargar.
 
 ### Postulaciones
 
 - **Límite:** Un postulante solo puede aplicar a UNA vacante por convocatoria
-- **Experiencia ocasional:** Docentes ocasionales requieren 2 años de experiencia laboral equivalente a tiempo completo
+- **Experiencia ocasional:** Docentes ocasionales requieren 2 años de experiencia laboral equivalente
 
 ### Excepciones por Edad (50+ años)
 
@@ -626,320 +391,168 @@ El formulario de postulación debe ser completamente configurable desde la admin
 
 ---
 
-## Estructura de Vistas (REFACTORIZAR)
-
-### Vistas Actuales vs Propuestas
-
-| Vista Actual | Acción | Vista Propuesta |
-|--------------|--------|-----------------|
-| `dashboard.php` | Migrar a Mustache | `views/dashboard.php` + `templates/pages/dashboard.mustache` |
-| `browse_convocatorias.php` | Refactorizar | `views/convocatorias/index.php` |
-| `convocatoria_detail.php` | Refactorizar | `views/convocatorias/view.php` |
-| `vacancies.php` | Refactorizar | `views/vacancies/index.php` |
-| `vacancy_detail.php` | Refactorizar | `views/vacancies/view.php` |
-| `applications.php` | Refactorizar | `views/applications/index.php` |
-| `application_detail.php` | Refactorizar | `views/applications/view.php` |
-| `review.php` | **RECREAR** | `views/review/index.php` (panel revisor) |
-| `myreviews.php` | Consolidar | `views/review/my.php` |
-| `validate_document.php` | Consolidar | `views/review/document.php` |
-| N/A | **CREAR** | `views/committee/index.php` (panel comité) |
-| N/A | **CREAR** | `views/committee/evaluate.php` |
-| `admin/exemptions.php` | Migrar a Mustache | Gestión de excepciones |
-| N/A | **CREAR** | `admin/doctypes.php` (config documentos) |
-| N/A | **CREAR** | `admin/committee.php` (gestión comités) |
-| N/A | **CREAR** | `admin/reviewers.php` (asignación revisores) |
-
-### Estructura de Carpetas Propuesta
+## Flujo de Trabajo: Postulación Completa
 
 ```
-views/
-├── dashboard.php              # Dashboard principal
-│
-├── convocatorias/
-│   ├── index.php             # Lista de convocatorias
-│   ├── view.php              # Detalle de convocatoria
-│   └── create.php            # Crear/editar convocatoria
-│
-├── vacancies/
-│   ├── index.php             # Lista de vacantes (por facultad)
-│   ├── view.php              # Detalle de vacante
-│   └── create.php            # Crear/editar vacante
-│
-├── applications/
-│   ├── index.php             # Mis postulaciones (postulante)
-│   ├── view.php              # Detalle de postulación
-│   ├── create.php            # Formulario de postulación
-│   └── documents.php         # Gestión de documentos
-│
-├── review/                   # PANEL DE REVISOR
-│   ├── index.php             # Postulaciones asignadas
-│   ├── my.php                # Mis revisiones completadas
-│   └── document.php          # Validar documento individual
-│
-├── committee/                # PANEL DE COMITÉ
-│   ├── index.php             # Postulaciones para evaluar
-│   ├── evaluate.php          # Evaluar candidato
-│   └── results.php           # Resultados de evaluación
-│
-├── reports/
-│   ├── index.php             # Índice de reportes
-│   ├── applications.php      # Reporte de postulaciones
-│   ├── documents.php         # Reporte de documentos
-│   └── audit.php             # Consulta de auditoría
-│
-└── public/
-    ├── index.php             # Vista pública de convocatorias
-    └── vacancy.php           # Detalle público de vacante
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        FLUJO DE POSTULACIÓN                             │
+└─────────────────────────────────────────────────────────────────────────┘
+
+[POSTULANTE]                    [REVISOR]                    [COMITÉ]
+     │                              │                            │
+     ▼                              │                            │
+┌─────────┐                         │                            │
+│ Aplica  │                         │                            │
+│ vacante │                         │                            │
+└────┬────┘                         │                            │
+     │                              │                            │
+     ▼                              │                            │
+┌─────────────────┐                 │                            │
+│ submitted       │                 │                            │
+└────────┬────────┘                 │                            │
+         │                          │                            │
+         │ [Asigna revisor          │                            │
+         │  por programa]           │                            │
+         ▼                          │                            │
+┌─────────────────┐                 │                            │
+│ under_review    │◄────────────────┤                            │
+└────────┬────────┘                 │                            │
+         │                          ▼                            │
+         │                   ┌─────────────┐                     │
+         │                   │ Revisor     │                     │
+         │                   │ evalúa docs │                     │
+         │                   └──────┬──────┘                     │
+         │                          │                            │
+         │            ┌─────────────┴─────────────┐              │
+         │            ▼                           ▼              │
+         │     ┌─────────────────┐        ┌─────────────────┐    │
+         │     │ docs_validated  │        │ docs_rejected   │    │
+         │     └────────┬────────┘        └────────┬────────┘    │
+         │              │                          │              │
+         │              │                          ▼              │
+         │              │                   ┌─────────────┐       │
+         │              │                   │ Postulante  │       │
+         │              │                   │ corrige     │       │
+         │              │                   └──────┬──────┘       │
+         │              │                          │              │
+         │              │                          ▼              │
+         │              │                  [Vuelve a under_review]
+         │              │
+         │              │ [Pasa a comité de la facultad]
+         │              ▼                            │
+         │       ┌─────────────┐                     │
+         │       │ interview   │◄────────────────────┤
+         │       └──────┬──────┘                     │
+         │              │                            ▼
+         │              │                     ┌─────────────┐
+         │              │                     │ Comité      │
+         │              │                     │ evalúa      │
+         │              │                     └──────┬──────┘
+         │              │                            │
+         │              │              ┌─────────────┴─────────────┐
+         │              │              ▼                           ▼
+         │              │       ┌─────────────────┐        ┌─────────────────┐
+         │              │       │ selected        │        │ rejected        │
+         │              │       └─────────────────┘        └─────────────────┘
+         ▼              ▼
+   [Email de     [Email de
+   notificación] notificación]
 ```
 
-### Plantillas Mustache Requeridas
+### Estados y Transiciones
 
-```
-templates/
-├── layouts/
-│   └── main.mustache                    # Layout principal con jb-app
-│
-├── components/
-│   ├── card.mustache                    # Componente card
-│   ├── table.mustache                   # Componente tabla
-│   ├── pagination.mustache              # Paginación
-│   ├── modal.mustache                   # Modal
-│   ├── alert.mustache                   # Alertas
-│   ├── badge.mustache                   # Badges de estado
-│   ├── timeline.mustache                # Timeline de historial
-│   ├── status_badge.mustache            # Badge de estado
-│   ├── user_search.mustache             # Buscador de usuarios
-│   └── document_item.mustache           # Item de documento
-│
-├── pages/
-│   ├── dashboard.mustache               # Dashboard
-│   ├── convocatorias_list.mustache      # Lista convocatorias
-│   ├── convocatoria_detail.mustache     # Detalle convocatoria
-│   ├── vacancies_list.mustache          # Lista vacantes por facultad
-│   ├── vacancy_detail.mustache          # Detalle vacante
-│   ├── applications_list.mustache       # Lista postulaciones
-│   ├── application_detail.mustache      # Detalle postulación
-│   ├── application_form.mustache        # Formulario postulación
-│   ├── review_panel.mustache            # Panel del revisor
-│   ├── review_document.mustache         # Revisar documento
-│   ├── committee_panel.mustache         # Panel del comité
-│   ├── committee_evaluate.mustache      # Evaluar candidato
-│   └── public_convocatorias.mustache    # Vista pública
-│
-└── admin/
-    ├── doctypes_list.mustache           # Config tipos documento
-    ├── doctype_form.mustache            # Formulario tipo doc
-    ├── committee_form.mustache          # Crear/editar comité
-    ├── committee_members.mustache       # Miembros del comité
-    ├── reviewers_assignment.mustache    # Asignar revisores
-    └── audit_log.mustache               # Log de auditoría
-```
+| Estado Actual | Estados Siguientes | Quién Ejecuta |
+|---------------|-------------------|---------------|
+| `draft` | `submitted` | Postulante |
+| `submitted` | `under_review`, `withdrawn` | Sistema, Postulante |
+| `under_review` | `docs_validated`, `docs_rejected` | Revisor |
+| `docs_validated` | `interview`, `rejected` | Comité, Coordinador |
+| `docs_rejected` | `under_review`, `withdrawn` | Sistema, Postulante |
+| `interview` | `selected`, `rejected` | Comité |
+| `selected` | (estado final) | - |
+| `rejected` | (estado final) | - |
+| `withdrawn` | (estado final) | - |
 
 ---
 
-## User Tours (RECREAR)
+## Sistema CSS Personalizado (IMPLEMENTAR)
 
-### Tours a Crear
+### Regla Fundamental
 
-| Tour ID | Nombre | Descripción | Audiencia |
-|---------|--------|-------------|-----------|
-| `jb_tour_applicant_first` | Primer inicio postulante | Guía inicial para postulantes | Postulantes nuevos |
-| `jb_tour_apply_vacancy` | Aplicar a vacante | Proceso de postulación paso a paso | Postulantes |
-| `jb_tour_upload_documents` | Subir documentos | Cómo cargar documentos correctamente | Postulantes |
-| `jb_tour_reviewer_panel` | Panel del revisor | Navegación del panel de revisión | Revisores |
-| `jb_tour_review_document` | Revisar documento | Proceso de validación de documentos | Revisores |
-| `jb_tour_committee_panel` | Panel del comité | Navegación del panel de evaluación | Comité |
-| `jb_tour_evaluate_candidate` | Evaluar candidato | Proceso de evaluación | Comité |
-| `jb_tour_admin_doctypes` | Configurar documentos | Gestión de tipos de documento | Admin |
-| `jb_tour_admin_committee` | Gestionar comités | Crear y administrar comités | Admin |
-| `jb_tour_admin_reviewers` | Asignar revisores | Asignación de revisores por programa | Admin |
+**ELIMINAR TODA DEPENDENCIA DE BOOTSTRAP.** El plugin debe usar SOLO clases con prefijo `jb-*`.
 
-### Estructura de Tour JSON
+### Categorías de Clases a Crear
 
-Cada tour debe guardarse en `db/tours/` con estructura:
-
-```
-db/tours/
-├── jb_tour_applicant_first.json
-├── jb_tour_apply_vacancy.json
-├── jb_tour_upload_documents.json
-├── jb_tour_reviewer_panel.json
-├── jb_tour_review_document.json
-├── jb_tour_committee_panel.json
-├── jb_tour_evaluate_candidate.json
-├── jb_tour_admin_doctypes.json
-├── jb_tour_admin_committee.json
-└── jb_tour_admin_reviewers.json
-```
-
-### Consideraciones para Tours
-
-1. **Selectores CSS:** Usar clases `jb-*` propias, NO clases de Bootstrap
-2. **Validación:** Verificar cada selector con DevTools antes de implementar
-3. **Orden de pasos:** Seguir flujo lógico de la tarea
-4. **Textos:** Definir en strings de idioma (EN/ES)
-5. **Condiciones:** Configurar audiencia correctamente (roles/capabilities)
+| Categoría | Prefijo | Clases Ejemplo |
+|-----------|---------|----------------|
+| Variables | `--jb-*` | `--jb-primary`, `--jb-spacing-md` |
+| Layout | `jb-container`, `jb-row`, `jb-col-*` | `jb-col-6`, `jb-col-lg-4` |
+| Cards | `jb-card`, `jb-card-*` | `jb-card-header`, `jb-card-body` |
+| Botones | `jb-btn`, `jb-btn-*` | `jb-btn-primary`, `jb-btn-sm` |
+| Tablas | `jb-table`, `jb-table-*` | `jb-table-hover`, `jb-table-striped` |
+| Badges | `jb-badge`, `jb-badge-*` | `jb-badge-success`, `jb-badge-warning` |
+| Alertas | `jb-alert`, `jb-alert-*` | `jb-alert-info`, `jb-alert-danger` |
+| Formularios | `jb-form-*` | `jb-form-control`, `jb-form-group` |
+| Modal | `jb-modal`, `jb-modal-*` | `jb-modal-header`, `jb-modal-body` |
+| Utilidades | `jb-d-*`, `jb-text-*`, `jb-mt-*` | `jb-d-flex`, `jb-text-muted` |
 
 ---
 
-## Módulos AMD (RECREAR)
+## Prioridades de Refactorización
 
-### Módulos Requeridos
+### Fase 1: CSS y Templates
+1. Crear sistema CSS completo con clases `jb-*` en `styles.css`
+2. Auditar y listar TODAS las clases Bootstrap usadas en templates
+3. Migrar templates uno por uno, empezando por componentes reutilizables
+4. Probar en themes: Boost, Classic, Remui, Flavor
 
-| Módulo | Propósito | Dependencias Core |
-|--------|-----------|-------------------|
-| `local_jobboard/main` | Inicialización principal | `core/ajax`, `core/notification` |
-| `local_jobboard/modal` | Gestión de modales `jb-modal` | `core/modal_factory`, `core/templates` |
-| `local_jobboard/tabs` | Gestión de pestañas `jb-tabs` | (ninguna externa) |
-| `local_jobboard/form` | Validación de formularios | `core/form-autocomplete` |
-| `local_jobboard/user_search` | Búsqueda de usuarios por username | `core/ajax`, `core/templates` |
-| `local_jobboard/document_upload` | Carga de documentos | `core/ajax`, `core/notification` |
-| `local_jobboard/document_review` | Revisión de documentos | `core/ajax`, `core/modal_factory` |
-| `local_jobboard/committee_evaluate` | Evaluación de candidatos | `core/ajax`, `core/templates` |
-| `local_jobboard/status_update` | Actualización de estados | `core/ajax`, `core/notification` |
-| `local_jobboard/timeline` | Renderizado de timeline | `core/templates` |
-| `local_jobboard/pagination` | Paginación AJAX | `core/ajax`, `core/templates` |
+### Fase 2: Roles y Permisos
+1. Crear tablas: `faculty`, `program`, `committee`, `committee_member`, `reviewer_program`
+2. Recrear roles con nueva estructura
+3. Implementar asignación por facultad/programa
+4. Actualizar `db/upgrade.php` para migración
 
-### Estructura de Carpetas AMD
+### Fase 3: Flujos de Trabajo
+1. Crear clase `workflow.php` con máquina de estados
+2. Implementar validadores para cada transición
+3. Integrar con sistema de auditoría
+4. Actualizar notificaciones por email
+
+### Fase 4: Módulos AMD
+1. Auditar dependencias de Bootstrap JS
+2. Reemplazar `$(selector).tooltip()` por solución propia
+3. Usar módulos core de Moodle
+4. Compilar con `grunt amd --root=local/jobboard`
+
+### Fase 5: User Tours
+1. Eliminar todos los tours existentes
+2. Crear nuevos tours con selectores `jb-*`
+3. Validar selectores con DevTools
+4. Probar cada tour completo
+
+---
+
+## Análisis del Repositorio (OBLIGATORIO)
+
+Antes de implementar cualquier cambio, el agente DEBE analizar:
 
 ```
-amd/
-├── src/                      # Fuentes (EDITAR AQUÍ)
-│   ├── main.js
-│   ├── modal.js
-│   ├── tabs.js
-│   ├── form.js
-│   ├── user_search.js
-│   ├── document_upload.js
-│   ├── document_review.js
-│   ├── committee_evaluate.js
-│   ├── status_update.js
-│   ├── timeline.js
-│   └── pagination.js
+ANÁLISIS REQUERIDO
 │
-└── build/                    # Compilados (NO EDITAR)
-    ├── main.min.js
-    ├── modal.min.js
-    └── ...
-```
-
-### Reglas para Módulos AMD
-
-1. **NUNCA** editar archivos en `amd/build/`
-2. **SIEMPRE** compilar después de cambios: `grunt amd --root=local/jobboard`
-3. **NO** usar jQuery directamente si existe equivalente en core
-4. **NO** usar librerías Bootstrap JS
-5. **USAR** módulos core de Moodle para: AJAX, modales, notificaciones, templates
-
----
-
-## Roles y Capabilities
-
-### Roles del Plugin
-
-| Rol | Shortname | Ámbito | Descripción |
-|-----|-----------|--------|-------------|
-| Revisor de Documentos | `jb_reviewer` | Por PROGRAMA | Revisa y valida documentos |
-| Miembro de Comité | `jb_committee` | Por FACULTAD | Evalúa candidatos |
-| Coordinador de Selección | `jb_coordinator` | Sistema | Gestiona todo el proceso |
-
-### Grupos de Capabilities
-
-| Grupo | Capabilities |
-|-------|--------------|
-| **Acceso básico** | `view`, `viewpublic` |
-| **Postulante** | `apply`, `viewownapplications`, `uploaddocuments`, `withdrawapplication` |
-| **Revisor** | `reviewdocuments`, `approvedocument`, `rejectdocument`, `requestdocumentcorrection`, `viewassignedapplications` |
-| **Comité** | `evaluatecandidates`, `selectcandidate`, `rejectcandidate`, `viewfacultyapplications`, `scheduleinterview` |
-| **Coordinador** | `manageconvocatorias`, `managevacancies`, `assignreviewers`, `managecommittee`, `viewallapplications`, `exportdata` |
-| **Administración** | `managedoctypes`, `manageexemptions`, `managetemplates`, `viewaudit`, `configuresettings` |
-
----
-
-## Base de Datos
-
-### Tablas Principales
-
-| Tabla | Descripción |
-|-------|-------------|
-| `local_jobboard_convocatoria` | Convocatorias con PDF adjunto |
-| `local_jobboard_vacancy` | Vacantes académicas por facultad |
-| `local_jobboard_application` | Postulaciones |
-| `local_jobboard_document` | Documentos subidos |
-| `local_jobboard_doctype` | Tipos de documento CONFIGURABLES |
-| `local_jobboard_docvalidation` | Validaciones de documentos |
-| `local_jobboard_audit` | Registro de auditoría |
-
-### Tablas Nuevas Requeridas
-
-| Tabla | Descripción |
-|-------|-------------|
-| `local_jobboard_faculty` | Facultades académicas |
-| `local_jobboard_program` | Programas por facultad |
-| `local_jobboard_committee` | Comités de selección por facultad |
-| `local_jobboard_committee_member` | Miembros del comité |
-| `local_jobboard_reviewer_program` | Asignación de revisores por programa |
-
----
-
-## Sistema de Auditoría
-
-### Acciones a Registrar
-
-| Componente | Acciones |
-|------------|----------|
-| Convocatoria | create, update, delete, publish, close, archive |
-| Vacante | create, update, delete, publish, close |
-| Postulación | create, submit, transition, withdraw |
-| Documento | upload, download, approve, reject, request_correction |
-| Comité | create, update, add_member, remove_member |
-| Revisor | assign, revoke |
-| Configuración | update_doctype, update_exemption, update_template |
-| Email | sent |
-
-### Datos a Registrar
-
-| Campo | Descripción |
-|-------|-------------|
-| `userid` | Usuario que realizó la acción |
-| `action` | Tipo de acción |
-| `component` | Entidad afectada |
-| `itemid` | ID del registro afectado |
-| `previousvalue` | Valor anterior (JSON) |
-| `newvalue` | Valor nuevo (JSON) |
-| `ipaddress` | Dirección IP |
-| `useragent` | Navegador |
-| `timecreated` | Timestamp |
-| `extradata` | Datos adicionales (JSON) |
-
----
-
-## Plantillas de Email
-
-### Templates Requeridos
-
-| Template Key | Descripción |
-|--------------|-------------|
-| `application_received` | Confirmación de postulación |
-| `application_status_changed` | Cambio de estado |
-| `review_complete` | Revisión completada (consolidado) |
-| `document_approved` | Documento aprobado |
-| `document_rejected` | Documento rechazado |
-| `interview_scheduled` | Citación a entrevista |
-| `selected` | Notificación de selección |
-| `rejected` | Notificación de no selección |
-| `vacancy_closing_soon` | Vacante próxima a cerrar |
-
-### Placeholders Disponibles
-
-```
-{USER_NAME}, {USER_EMAIL}, {SITE_NAME}, {SITE_URL}
-{VACANCY_TITLE}, {VACANCY_CODE}, {APPLICATION_DATE}
-{FACULTY_NAME}, {PROGRAM_NAME}
-{OLD_STATUS}, {NEW_STATUS}, {DOCUMENT_TYPE}
-{REJECTION_REASON}, {OBSERVATIONS}, {REUPLOAD_URL}
-{INTERVIEW_DATE}, {INTERVIEW_TIME}, {INTERVIEW_LOCATION}
-{CONVOCATORIA_NAME}, {CONVOCATORIA_PDF_URL}
+├── MOODLE CORE
+│   ├── lib/amd/src/           → Patrones de módulos AMD
+│   ├── lib/templates/         → Patrones de plantillas Mustache
+│   ├── admin/tool/usertours/  → Estructura de User Tours
+│   └── theme/boost/           → Clases CSS de referencia
+│
+├── PLUGINS DEL REPOSITORIO
+│   ├── local/*/               → Plugins locales existentes
+│   ├── mod/*/                 → Módulos de actividad
+│   └── block/*/               → Bloques
+│
+└── IOMAD
+    ├── local/iomad/           → Integración multi-tenant
+    └── blocks/iomad_*/        → Bloques IOMAD
 ```
 
 ---
@@ -956,7 +569,7 @@ amd/
 
 ### Formato CHANGELOG.md
 
-```
+```markdown
 ## [X.Y.Z] - YYYY-MM-DD
 
 ### Added
@@ -983,46 +596,23 @@ amd/
 | `grunt amd --root=local/jobboard` | Compilar JavaScript AMD |
 | `php admin/tool/phpunit/cli/init.php` | Inicializar PHPUnit |
 | `vendor/bin/phpunit --testsuite local_jobboard_testsuite` | Ejecutar tests |
-
----
-
-## Elementos Eliminados/Obsoletos
-
-- ❌ Campo `salary`/`remuneration` en vacantes
-- ❌ Tarjeta de Identidad como tipo de documento
-- ❌ Vacante extemporánea
-- ❌ Fechas de apertura/cierre en vacantes (solo en convocatoria)
-- ❌ Breadcrumb personalizado (usar nativo de Moodle)
-- ❌ Font Awesome (usar pix_icon)
-- ❌ CSS de navegación personalizado
-- ❌ Comité por vacante (ahora es por FACULTAD)
-- ❌ Clases Bootstrap (usar clases `jb-*`)
+| `php admin/tool/phpcs/cli/run.php --standard=moodle local/jobboard` | Validar código |
 
 ---
 
 ## Notas Críticas para Agentes
 
-### Prioridades de Refactorización
-
-1. **PRIMERO:** Analizar repositorio completo (Moodle core, IOMAD, otros plugins)
-2. **SEGUNDO:** Migrar a CSS personalizado (independencia gráfica)
-3. **TERCERO:** Migrar vistas a Mustache
-4. **CUARTO:** Recrear roles y capabilities
-5. **QUINTO:** Recrear flujos de trabajo
-6. **SEXTO:** Recrear módulos AMD
-7. **SÉPTIMO:** Recrear User Tours
-
 ### Reglas Absolutas
 
-1. **ANALIZAR** el repositorio antes de implementar cualquier cosa
+1. **ANALIZAR** el repositorio completo antes de implementar
 2. **NO USAR BOOTSTRAP** - Solo clases con prefijo `jb-*`
-3. **MIGRAR A MUSTACHE** - Todas las vistas deben usar plantillas
-4. **RECREAR USER TOURS** - Con selectores actualizados
-5. **RECREAR MÓDULOS AMD** - Sin dependencias de Bootstrap JS
+3. **RECREAR USER TOURS** - Con selectores actualizados
+4. **RECREAR MÓDULOS AMD** - Sin dependencias de Bootstrap JS
+5. **RECREAR ROLES** - Con contexto de facultad/programa
 6. **VALIDAR SIEMPRE** en plataforma antes de commit
 7. **NO improvisar** cambios directamente en producción
 8. **Respetar** la arquitectura IOMAD de 4 niveles
-9. **Mantener** paridad de strings EN/ES
+9. **Mantener** paridad de strings EN/ES (~1860 strings)
 10. **Documentar** TODO en CHANGELOG
 11. **Comité de selección** es por FACULTAD, no por vacante
 12. **Revisores** se asignan por PROGRAMA
@@ -1042,7 +632,6 @@ amd/
 
 - **Ley 1581/2012** - Habeas Data (Colombia)
 - **GDPR** - Privacy API de Moodle implementada
-- Privacy Provider para tablas con datos personales
 
 ### Contratación
 
@@ -1062,4 +651,4 @@ amd/
 ---
 
 *Última actualización: Diciembre 2025*
-*Plugin local_jobboard para Moodle 4.1-4.5 con IOMAD*
+*Plugin local_jobboard v3.0.8 para Moodle 4.1-4.5 con IOMAD*
