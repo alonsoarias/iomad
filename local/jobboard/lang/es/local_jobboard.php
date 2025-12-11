@@ -71,7 +71,6 @@ $string['jobboard:exportdata'] = 'Exportar datos';
 $string['jobboard:manageexemptions'] = 'Gestionar excepciones ISER';
 $string['jobboard:useapi'] = 'Usar API REST';
 $string['jobboard:accessapi'] = 'Acceder a la API REST';
-$string['jobboard:manageapitokens'] = 'Gestionar tokens API';
 $string['jobboard:configure'] = 'Configurar bolsa de empleo';
 $string['jobboard:managedoctypes'] = 'Gestionar tipos de documentos';
 $string['jobboard:manageemailtemplates'] = 'Gestionar plantillas de correo';
@@ -697,16 +696,7 @@ $string['dataretentiondays'] = 'Días de retención de datos';
 $string['enableapi'] = 'Habilitar API REST';
 
 // API.
-$string['apitokens'] = 'Tokens API';
-$string['createtoken'] = 'Crear token';
-$string['tokenname'] = 'Nombre del token';
-$string['tokenpermissions'] = 'Permisos';
-$string['tokenipwhitelist'] = 'Lista blanca de IPs';
-$string['tokenexpiry'] = 'Fecha de expiración';
-$string['tokencreated'] = 'Token creado exitosamente';
-$string['tokenrevoked'] = 'Token revocado';
-$string['ratelimit'] = 'Límite de solicitudes';
-$string['ratelimitexceeded'] = 'Límite de solicitudes excedido';
+$string['apiwebservices'] = 'Servicios Web';
 
 // Audit.
 $string['auditlog'] = 'Registro de auditoría';
@@ -1362,50 +1352,6 @@ $string['decisionrecorded'] = 'Decisión registrada exitosamente';
 $string['applicantselected'] = 'Postulante seleccionado';
 $string['applicantrejected'] = 'Postulante no seleccionado';
 
-// Phase 5: Gestión de Tokens API.
-$string['managetokens'] = 'Gestionar Tokens API';
-$string['api:manageapitokens'] = 'Gestionar Tokens API';
-$string['api:token:create'] = 'Crear Token';
-$string['api:token:created'] = 'Token creado exitosamente. Asegúrese de copiar el token ahora ya que no se mostrará de nuevo.';
-$string['api:token:description'] = 'Descripción del token';
-$string['api:token:description_help'] = 'Un nombre descriptivo para identificar este token y su propósito';
-$string['api:token:validity'] = 'Período de Validez';
-$string['api:token:validfrom'] = 'Válido desde';
-$string['api:token:validfrom_help'] = 'La fecha desde la cual el token será válido. Dejar vacío para validez inmediata.';
-$string['api:token:validuntil'] = 'Válido hasta';
-$string['api:token:validuntil_help'] = 'La fecha hasta la cual el token permanece válido. Dejar vacío para sin expiración.';
-$string['api:token:ipwhitelist'] = 'Lista Blanca de IP';
-$string['api:token:ipwhitelist_help'] = 'Ingrese una dirección IP o rango CIDR por línea. Dejar vacío para permitir todas las IPs. Ejemplo: 192.168.1.0/24';
-$string['api:token:revoke'] = 'Revocar Token';
-$string['api:token:delete'] = 'Eliminar Token';
-$string['api:token:enable'] = 'Habilitar Token';
-$string['api:token:disable'] = 'Deshabilitar Token';
-$string['api:token:confirmrevoke'] = '¿Está seguro de que desea revocar este token API? Esta acción deshabilitará el token inmediatamente.';
-$string['api:token:confirmdelete'] = '¿Está seguro de que desea eliminar permanentemente este token API? Esta acción no se puede deshacer.';
-$string['api:token:revoked'] = 'El token ha sido revocado';
-$string['api:token:deleted'] = 'El token ha sido eliminado';
-$string['api:token:notfound'] = 'Token no encontrado';
-$string['api:token:lastused'] = 'Último uso';
-$string['api:token:never'] = 'Nunca';
-$string['api:token:copytoclipboard'] = 'Copiar al portapapeles';
-$string['api:token:copied'] = 'Token copiado al portapapeles';
-$string['api:token:yourtoken'] = 'Su nuevo token API';
-$string['api:token:warning'] = 'Advertencia: Esta es la única vez que se mostrará este token. Asegúrese de copiarlo ahora.';
-$string['api:token:notoken'] = 'Aún no se han creado tokens API.';
-
-// Estadísticas de tokens.
-$string['totaltokens'] = 'Total de Tokens';
-$string['activetokens'] = 'Tokens Activos';
-$string['revokedtokens'] = 'Tokens Revocados';
-$string['usedtoday'] = 'Usados Hoy';
-$string['tokenslist'] = 'Lista de Tokens API';
-
-// Estados de Token API.
-$string['api:token:status:active'] = 'Activo';
-$string['api:token:status:disabled'] = 'Deshabilitado';
-$string['api:token:status:expired'] = 'Expirado';
-$string['api:token:status:not_yet_valid'] = 'Aún no válido';
-
 // Permisos API.
 $string['permissions'] = 'Permisos';
 $string['api:permission:view_vacancies'] = 'Ver listado de vacantes';
@@ -1417,20 +1363,9 @@ $string['api:permission:upload_documents'] = 'Subir documentos';
 $string['api:permission:view_documents'] = 'Ver documentos';
 
 // Errores API.
-$string['api:error:unauthorized'] = 'No autorizado: Token API inválido o faltante';
 $string['api:error:forbidden'] = 'Prohibido: No tiene permiso para acceder a este recurso';
 $string['api:error:notfound'] = 'No encontrado: El recurso solicitado no existe';
-$string['api:error:ratelimit'] = 'Límite de tasa excedido. Por favor intente más tarde.';
 $string['api:error:invalidrequest'] = 'Solicitud inválida';
-$string['api:error:ipnotallowed'] = 'Acceso denegado: Su dirección IP no está en la lista blanca';
-$string['api:error:tokendisabled'] = 'El token está deshabilitado';
-$string['api:error:tokenexpired'] = 'El token ha expirado';
-$string['api:error:tokennotyetvalid'] = 'El token aún no es válido';
-
-// Encabezados de respuesta API.
-$string['api:ratelimit:limit'] = 'Límite de tasa';
-$string['api:ratelimit:remaining'] = 'Solicitudes restantes';
-$string['api:ratelimit:reset'] = 'Tiempo de reinicio';
 
 // Encriptación.
 $string['encryption:enabled'] = 'La encriptación de archivos está habilitada';
@@ -1502,11 +1437,6 @@ $string['privacy:metadata:local_jobboard_audit:userid'] = 'El ID del usuario que
 $string['privacy:metadata:local_jobboard_audit:action'] = 'La acción realizada';
 $string['privacy:metadata:local_jobboard_audit:ipaddress'] = 'La dirección IP desde la cual se realizó la acción';
 $string['privacy:metadata:local_jobboard_audit:timecreated'] = 'Cuándo se realizó la acción';
-
-$string['privacy:metadata:local_jobboard_api_token'] = 'Tokens API creados por usuarios';
-$string['privacy:metadata:local_jobboard_api_token:userid'] = 'El ID del usuario propietario del token';
-$string['privacy:metadata:local_jobboard_api_token:description'] = 'Descripción del propósito del token';
-$string['privacy:metadata:local_jobboard_api_token:timecreated'] = 'Cuándo se creó el token';
 
 $string['privacy:metadata:local_jobboard_notification'] = 'Registros de notificaciones para usuarios';
 $string['privacy:metadata:local_jobboard_notification:userid'] = 'El ID del usuario que recibió la notificación';
@@ -2285,13 +2215,6 @@ $string['validationsummary'] = 'Resumen de validacion';
 $string['api:authheader'] = 'Encabezado de autorizacion';
 $string['api:baseurl'] = 'URL base';
 $string['api:info'] = 'Informacion de API';
-$string['api:ratelimit'] = 'Limite de solicitudes';
-$string['api:requestsperhour'] = 'solicitudes por hora';
-$string['api:token:copywarning'] = 'Este token solo se mostrara una vez. Copielo ahora y guardelo de forma segura.';
-$string['api:token:deleteconfirm'] = 'Esta seguro de que desea eliminar permanentemente este token de API? Esta accion no se puede deshacer.';
-$string['api:token:none'] = 'No se encontraron tokens de API';
-$string['api:token:revokeconfirm'] = 'Esta seguro de que desea revocar este token de API? Ya no funcionara para autenticacion.';
-$string['api:token:usage'] = 'Uso del token';
 
 // Reportes y estadisticas.
 $string['applicationsbyvacancy'] = 'Postulaciones por vacante';
@@ -3355,8 +3278,6 @@ $string['bulkvalidation_desc'] = 'Validar múltiples documentos a la vez';
 $string['committees'] = 'Comités de selección';
 $string['committees_desc'] = 'Gestionar miembros del comité de selección';
 $string['committees_access_hint'] = 'Acceso desde gestión de vacantes';
-$string['apitokens_desc'] = 'Gestionar tokens de acceso API para integraciones externas';
-
 // Vista pública - Accesos rápidos por rol.
 $string['sharepage'] = 'Compartir esta página';
 
