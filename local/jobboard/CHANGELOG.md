@@ -5,6 +5,32 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.10] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored 2 public views to renderer + template pattern:
+  - `views/public_convocatoria.php`: 400 lines → ~96 lines
+  - `views/public_vacancy.php`: 503 lines → ~98 lines
+- Both public views now use clean renderer pattern with Mustache templates
+
+### Added
+- New `templates/pages/public_convocatoria.mustache` for public convocatoria details
+- New `templates/pages/public_vacancy.mustache` for public vacancy details
+- `prepare_public_convocatoria_page_data()` method in renderer
+- `render_public_convocatoria_page()` method in renderer
+- `prepare_public_vacancy_page_data()` method in renderer
+- `render_public_vacancy_page()` method in renderer
+- `get_convocatoria_status_class()` helper method in renderer
+- Social sharing links (Facebook, Twitter, LinkedIn, WhatsApp) with jb-* styling
+- Deadline progress bars for both public views
+
+### Technical Notes
+- Public pages accessible to anonymous users
+- Login CTA with return URL for non-authenticated users
+- Share links properly encoded for social networks
+- All templates use jb-* CSS classes only (no Bootstrap)
+- Consistent breadcrumb navigation across public views
+
 ## [3.1.9] - 2025-12-11
 
 ### Changed

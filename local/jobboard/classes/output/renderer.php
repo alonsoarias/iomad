@@ -2914,4 +2914,292 @@ class renderer extends plugin_renderer_base {
             'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
         ];
     }
+
+    /**
+     * Render public convocatoria page.
+     *
+     * @param array $data Template data.
+     * @return string HTML output.
+     */
+    public function render_public_convocatoria_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/public_convocatoria', $data);
+    }
+
+    /**
+     * Prepare public convocatoria page data.
+     *
+     * @param object $convocatoria The convocatoria record.
+     * @param int $totalvacancies Total vacancy count.
+     * @param int $totalpositions Total positions count.
+     * @param bool $isloggedin Whether user is logged in.
+     * @return array Template data.
+     */
+    public function prepare_public_convocatoria_page_data(
+        object $convocatoria,
+        int $totalvacancies,
+        int $totalpositions,
+        bool $isloggedin
+    ): array {
+        $now = time();
+        $daysremaining = max(0, (int) ceil(($convocatoria->enddate - $now) / 86400));
+        $isopen = ($convocatoria->status === 'open' && $convocatoria->enddate >= $now);
+        $isclosingsoon = ($daysremaining <= 7 && $daysremaining > 0 && $isopen);
+        $isclosed = !$isopen;
+
+        // Status styling.
+        $statuscolor = 'secondary';
+        $statusicon = 'lock';
+        $statusmessage = get_string('convocatoriaclosed', 'local_jobboard');
+
+        if (!$isclosed) {
+            if ($isclosingsoon) {
+                $statuscolor = 'warning';
+                $statusicon = 'clock';
+                $statusmessage = get_string('closesindays', 'local_jobboard', $daysremaining);
+            } else {
+                $statuscolor = 'success';
+                $statusicon = 'door-open';
+                $statusmessage = get_string('convocatoria_status_open', 'local_jobboard');
+            }
+        }
+
+        // Progress calculation.
+        $totaldays = max(1, (int) floor(($convocatoria->enddate - $convocatoria->startdate) / 86400));
+        $elapseddays = max(0, (int) floor(($now - $convocatoria->startdate) / 86400));
+        $progresspercent = min(100, ($elapseddays / $totaldays) * 100);
+        $progresscolor = $progresspercent > 80 ? 'danger' : ($progresspercent > 50 ? 'warning' : 'success');
+
+        // Breadcrumbs.
+        $breadcrumbs = [
+            ['label' => get_string('publicpagetitle', 'local_jobboard'), 'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false)],
+            ['label' => format_string($convocatoria->name), 'url' => null, 'active' => true],
+        ];
+
+        // Share links.
+        $shareurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'public_convocatoria', 'id' => $convocatoria->id]))->out(false);
+        $sharetitle = rawurlencode($convocatoria->name);
+        $sharetext = rawurlencode(get_string('convocatoria', 'local_jobboard') . ': ' . $convocatoria->name);
+
+        $sharelinks = [
+            'facebook' => 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareurl),
+            'twitter' => 'https://twitter.com/intent/tweet?text=' . $sharetext . '&url=' . rawurlencode($shareurl),
+            'linkedin' => 'https://www.linkedin.com/shareArticle?mini=true&url=' . rawurlencode($shareurl) . '&title=' . $sharetitle,
+            'whatsapp' => 'https://wa.me/?text=' . $sharetext . '%20' . rawurlencode($shareurl),
+        ];
+
+        return [
+            'breadcrumbs' => $breadcrumbs,
+            'convocatoria' => [
+                'id' => $convocatoria->id,
+                'code' => $convocatoria->code,
+                'name' => format_string($convocatoria->name),
+                'description' => !empty($convocatoria->description) ? format_text($convocatoria->description, FORMAT_HTML) : null,
+                'terms' => !empty($convocatoria->terms) ? format_text($convocatoria->terms, FORMAT_HTML) : null,
+                'startdateformatted' => userdate($convocatoria->startdate, get_string('strftimedate', 'langconfig')),
+                'enddateformatted' => userdate($convocatoria->enddate, get_string('strftimedate', 'langconfig')),
+                'status' => $convocatoria->status,
+                'statuslabel' => get_string('convocatoria_status_' . $convocatoria->status, 'local_jobboard'),
+                'statuscolor' => $this->get_convocatoria_status_class($convocatoria->status),
+            ],
+            'totalvacancies' => $totalvacancies,
+            'totalpositions' => $totalpositions,
+            'isopen' => $isopen,
+            'isclosed' => $isclosed,
+            'isclosingsoon' => $isclosingsoon,
+            'daysremaining' => $daysremaining,
+            'statuscolor' => $statuscolor,
+            'statusicon' => $statusicon,
+            'statusmessage' => $statusmessage,
+            'progresspercent' => $progresspercent,
+            'progresscolor' => $progresscolor,
+            'isloggedin' => $isloggedin,
+            'sharelinks' => $sharelinks,
+            'vacanciesurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public', 'convocatoriaid' => $convocatoria->id]))->out(false),
+            'loginurl' => (new moodle_url('/login/index.php'))->out(false),
+            'signupurl' => (new moodle_url('/local/jobboard/signup.php'))->out(false),
+            'backurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false),
+        ];
+    }
+
+    /**
+     * Render public vacancy page.
+     *
+     * @param array $data Template data.
+     * @return string HTML output.
+     */
+    public function render_public_vacancy_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/public_vacancy', $data);
+    }
+
+    /**
+     * Prepare public vacancy page data.
+     *
+     * @param object $vacancy The vacancy record.
+     * @param object|null $convocatoria The convocatoria record.
+     * @param bool $isloggedin Whether user is logged in.
+     * @param bool $canapply Whether user can apply.
+     * @param bool $hasapplied Whether user has already applied.
+     * @param object|null $userapplication User's application if exists.
+     * @return array Template data.
+     */
+    public function prepare_public_vacancy_page_data(
+        object $vacancy,
+        ?object $convocatoria,
+        bool $isloggedin,
+        bool $canapply,
+        bool $hasapplied,
+        ?object $userapplication
+    ): array {
+        // Calculate timing.
+        $closedate = $convocatoria ? $convocatoria->enddate : ($vacancy->closedate ?? time());
+        $daysremaining = max(0, (int) floor(($closedate - time()) / 86400));
+        $isurgent = $daysremaining <= 7;
+        $isclosed = ($closedate < time());
+
+        // Status styling.
+        $statuscolor = 'success';
+        $statusicon = 'door-open';
+        $statusmessage = get_string('vacancyopen', 'local_jobboard');
+
+        if ($hasapplied) {
+            $statuscolor = 'info';
+            $statusicon = 'check-circle';
+            $statusmessage = get_string('alreadyapplied', 'local_jobboard');
+        } elseif ($isclosed) {
+            $statuscolor = 'secondary';
+            $statusicon = 'lock';
+            $statusmessage = get_string('vacancyclosed', 'local_jobboard');
+        } elseif ($isurgent) {
+            $statuscolor = 'warning';
+            $statusicon = 'clock';
+            $statusmessage = get_string('closesindays', 'local_jobboard', $daysremaining);
+        }
+
+        // Progress calculation.
+        $progresspercent = 0;
+        $progresscolor = 'success';
+        if ($convocatoria && !$isclosed) {
+            $totaldays = max(1, (int) floor(($convocatoria->enddate - $convocatoria->startdate) / 86400));
+            $elapseddays = max(0, (int) floor((time() - $convocatoria->startdate) / 86400));
+            $progresspercent = min(100, ($elapseddays / $totaldays) * 100);
+            $progresscolor = $progresspercent > 80 ? 'danger' : ($progresspercent > 50 ? 'warning' : 'success');
+        }
+
+        // Breadcrumbs.
+        $breadcrumbs = [
+            ['label' => get_string('publicpagetitle', 'local_jobboard'), 'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false)],
+        ];
+        if ($convocatoria) {
+            $breadcrumbs[] = [
+                'label' => format_string($convocatoria->name),
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public', 'convocatoriaid' => $convocatoria->id]))->out(false),
+            ];
+        }
+        $breadcrumbs[] = ['label' => format_string($vacancy->title), 'url' => null, 'active' => true];
+
+        // Contract types.
+        $contracttypes = \local_jobboard_get_contract_types();
+        $contracttypelabel = !empty($vacancy->contracttype) ? ($contracttypes[$vacancy->contracttype] ?? $vacancy->contracttype) : null;
+
+        // Company name.
+        $companyname = null;
+        if (!empty($vacancy->companyid)) {
+            $companyname = \local_jobboard_get_company_name($vacancy->companyid);
+        }
+
+        // Convocatoria data.
+        $convdata = null;
+        if ($convocatoria) {
+            $convdata = [
+                'id' => $convocatoria->id,
+                'code' => $convocatoria->code,
+                'name' => format_string($convocatoria->name),
+                'startdateformatted' => userdate($convocatoria->startdate, get_string('strftimedate', 'langconfig')),
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public_convocatoria', 'id' => $convocatoria->id]))->out(false),
+            ];
+        }
+
+        // Share links.
+        $shareurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'public_vacancy', 'id' => $vacancy->id]))->out(false);
+        $sharetitle = rawurlencode($vacancy->title);
+        $sharetext = rawurlencode(get_string('sharethisvacancy', 'local_jobboard') . ': ' . $vacancy->title);
+
+        $sharelinks = [
+            'facebook' => 'https://www.facebook.com/sharer/sharer.php?u=' . rawurlencode($shareurl),
+            'twitter' => 'https://twitter.com/intent/tweet?text=' . $sharetext . '&url=' . rawurlencode($shareurl),
+            'linkedin' => 'https://www.linkedin.com/shareArticle?mini=true&url=' . rawurlencode($shareurl) . '&title=' . $sharetitle,
+            'whatsapp' => 'https://wa.me/?text=' . $sharetext . '%20' . rawurlencode($shareurl),
+        ];
+
+        // Back navigation.
+        $backurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false);
+        $backlabel = get_string('backtoconvocatorias', 'local_jobboard');
+        if ($convocatoria) {
+            $backurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'public', 'convocatoriaid' => $convocatoria->id]))->out(false);
+            $backlabel = get_string('backtoconvocatoria', 'local_jobboard');
+        }
+
+        // Login URL with return.
+        $wantsurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]))->out(false);
+        $loginurl = (new moodle_url('/login/index.php', ['wantsurl' => $wantsurl]))->out(false);
+
+        return [
+            'breadcrumbs' => $breadcrumbs,
+            'vacancy' => [
+                'id' => $vacancy->id,
+                'code' => $vacancy->code,
+                'title' => format_string($vacancy->title),
+                'description' => !empty($vacancy->description) ? format_text($vacancy->description, FORMAT_HTML) : null,
+                'requirements' => !empty($vacancy->requirements) ? format_text($vacancy->requirements, FORMAT_HTML) : null,
+                'desirable' => !empty($vacancy->desirable) ? format_text($vacancy->desirable, FORMAT_HTML) : null,
+                'location' => $vacancy->location ?? null,
+                'department' => $vacancy->department ?? null,
+                'duration' => $vacancy->duration ?? null,
+                'contracttype' => $vacancy->contracttype ?? null,
+                'contracttypelabel' => $contracttypelabel,
+                'companyname' => $companyname,
+                'positions' => $vacancy->positions,
+                'status' => $vacancy->status,
+                'statuslabel' => get_string('status:' . $vacancy->status, 'local_jobboard'),
+                'statuscolor' => $this->get_status_class($vacancy->status),
+            ],
+            'convocatoria' => $convdata,
+            'isloggedin' => $isloggedin,
+            'canapply' => $canapply,
+            'hasapplied' => $hasapplied,
+            'isurgent' => $isurgent,
+            'isclosed' => $isclosed,
+            'daysremaining' => $daysremaining,
+            'closedateformatted' => userdate($closedate, get_string('strftimedate', 'langconfig')),
+            'progresspercent' => $progresspercent,
+            'progresscolor' => $progresscolor,
+            'statuscolor' => $statuscolor,
+            'statusicon' => $statusicon,
+            'statusmessage' => $statusmessage,
+            'sharelinks' => $sharelinks,
+            'applyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]))->out(false),
+            'loginurl' => $loginurl,
+            'signupurl' => (new moodle_url('/local/jobboard/signup.php'))->out(false),
+            'viewapplicationurl' => $userapplication ? (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $userapplication->id]))->out(false) : null,
+            'myapplicationsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
+            'backurl' => $backurl,
+            'backlabel' => $backlabel,
+        ];
+    }
+
+    /**
+     * Get convocatoria status CSS class.
+     *
+     * @param string $status The convocatoria status.
+     * @return string CSS class.
+     */
+    protected function get_convocatoria_status_class(string $status): string {
+        $classes = [
+            'draft' => 'secondary',
+            'open' => 'success',
+            'closed' => 'warning',
+            'archived' => 'dark',
+        ];
+        return $classes[$status] ?? 'secondary';
+    }
 }
