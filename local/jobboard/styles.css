@@ -1,0 +1,269 @@
+/**
+ * Estilos mínimos para local_jobboard
+ *
+ * Solo clases esenciales que Bootstrap no cubre.
+ * Se prefieren utilidades de Bootstrap cuando sea posible.
+ *
+ * @package   local_jobboard
+ * @copyright 2024 ISER
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/* ==========================================================================
+   Selectores de filtro y formulario
+   ========================================================================== */
+.jb-filter-select,
+.jb-perpage-select {
+    min-width: 120px;
+}
+
+.jb-wide-select {
+    min-width: 300px;
+}
+
+.jb-narrow-input {
+    width: 100px;
+}
+
+.jb-narrow-container {
+    max-width: 600px;
+}
+
+/* ==========================================================================
+   Vista previa de documentos
+   ========================================================================== */
+.jb-preview-iframe {
+    height: 450px;
+}
+
+.jb-preview-container {
+    min-height: 200px;
+}
+
+.jb-scroll-container {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+/* ==========================================================================
+   Tablas y celdas
+   ========================================================================== */
+.jb-truncate-cell {
+    max-width: 200px;
+}
+
+.jb-code-block {
+    max-height: 300px;
+    overflow: auto;
+}
+
+/* ==========================================================================
+   Íconos y avatares
+   ========================================================================== */
+.jb-icon-circle {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.jb-avatar-circle {
+    width: 60px;
+    height: 60px;
+}
+
+.jb-small-dot {
+    font-size: 8px;
+}
+
+/* ==========================================================================
+   Pasos de progreso
+   ========================================================================== */
+.jb-progress-steps {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.jb-step {
+    flex: 0 0 auto;
+    min-width: 60px;
+    max-width: 100px;
+    color: inherit;
+}
+
+.jb-step.active .jb-step-icon {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.jb-step.completed .jb-step-icon {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.jb-step.completed .jb-step-number {
+    display: none;
+}
+
+.jb-step.completed .jb-step-checkmark {
+    display: inline !important;
+}
+
+.jb-step-icon {
+    width: 32px;
+    height: 32px;
+    background-color: #e9ecef;
+    transition: background-color 0.2s;
+}
+
+.jb-step-label {
+    max-width: 80px;
+    font-size: 0.75rem;
+}
+
+.jb-step-connector {
+    height: 2px;
+    background-color: #dee2e6;
+    margin-top: 16px;
+}
+
+.jb-step.completed + .jb-step-connector,
+.jb-step.completed ~ .jb-step-connector {
+    background-color: #28a745;
+}
+
+/* ==========================================================================
+   Elementos colapsables
+   ========================================================================== */
+.jb-collapse-header {
+    cursor: pointer;
+}
+
+.jb-collapse-icon {
+    transition: transform 0.2s;
+}
+
+.jb-collapse-header[aria-expanded="false"] .jb-collapse-icon {
+    transform: rotate(-90deg);
+}
+
+/* ==========================================================================
+   Sidebar sticky
+   ========================================================================== */
+.jb-sticky-sidebar {
+    top: 20px;
+}
+
+/* ==========================================================================
+   Tarjetas y secciones
+   ========================================================================== */
+.jb-vacancy-card,
+.jb-convocatoria-card,
+.jb-application-card,
+.jb-action-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.jb-vacancy-card:hover,
+.jb-convocatoria-card:hover,
+.jb-application-card:hover,
+.jb-action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.jb-stat-card {
+    transition: transform 0.2s;
+}
+
+.jb-stat-card.cursor-pointer:hover {
+    transform: translateY(-2px);
+}
+
+.jb-stat-value {
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+/* ==========================================================================
+   Secciones de bienvenida
+   ========================================================================== */
+.jb-welcome-section,
+.jb-welcome-banner {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+/* ==========================================================================
+   Listas de documentos
+   ========================================================================== */
+.jb-document-list .jb-document-item {
+    transition: background-color 0.2s;
+}
+
+.jb-document-item.jb-doc-approved {
+    border-left: 3px solid #28a745;
+}
+
+.jb-document-item.jb-doc-rejected {
+    border-left: 3px solid #dc3545;
+}
+
+.jb-document-item.jb-doc-pending {
+    border-left: 3px solid #ffc107;
+}
+
+/* ==========================================================================
+   Toolbar de acciones masivas
+   ========================================================================== */
+.jb-bulk-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* ==========================================================================
+   Footer de navegación
+   ========================================================================== */
+.jb-navigation-footer {
+    background-color: #f8f9fa;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* ==========================================================================
+   Utilidades adicionales
+   ========================================================================== */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Colores de fondo claros para íconos */
+.bg-primary-light {
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.bg-success-light {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.bg-warning-light {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.bg-danger-light {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.bg-info-light {
+    background-color: rgba(23, 162, 184, 0.1);
+}
+
+.bg-secondary-light {
+    background-color: rgba(108, 117, 125, 0.1);
+}
