@@ -5,6 +5,27 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.9] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `views/view_convocatoria.php` from 375 lines to ~110 lines
+- View convocatoria page now uses renderer pattern with Mustache template
+- Updated `templates/pages/review.mustache` with complete jb-* CSS classes
+
+### Added
+- New `templates/pages/view_convocatoria.mustache` for applicant convocatoria browsing
+- `prepare_view_convocatoria_page_data()` method in renderer
+- `render_view_convocatoria_page()` method in renderer
+- Convocatoria detail with vacancy cards, apply buttons, and status indicators
+- Previous/next navigation in review template for reviewer workflow
+
+### Technical Notes
+- View convocatoria shows vacancy cards with urgency indicators
+- Apply status shown per vacancy (applied/not applied)
+- Review template fully migrated to jb-* CSS classes
+- AMD module initialization preserved for card actions
+- Zero Bootstrap dependencies in templates
+
 ## [3.1.8] - 2025-12-11
 
 ### Changed
