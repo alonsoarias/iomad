@@ -5,6 +5,46 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.20] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `validate_document.php` from 383 lines to ~87 lines (77% reduction)
+- Single document validation page now uses renderer pattern with Mustache template
+- Created `templates/pages/validate_document.mustache` with complete jb-* CSS classes
+- All document validation functionality preserved: preview, checklist, approve/reject
+
+### Added
+- `render_validate_document_page()` method in renderer for document validation view
+- `prepare_validate_document_page_data()` method in renderer with full data preparation
+- `get_validation_checklist()` protected method for document type-specific checklists
+- Document information card with type, filename, upload date, and issue date
+- Document preview with conversion support (PDF, images, converting, failed states)
+- Preview button, download link, and inline preview container
+- Applicant information card with name, email, and ID number
+- Dynamic validation checklist based on document type
+- Approve form with optional notes textarea
+- Reject form with required reason dropdown and optional notes
+- Six rejection reasons: illegible, expired, incomplete, wrongtype, mismatch, other
+
+### Technical Notes
+- Supports 12 document types with specific checklist items:
+  - cedula (ID card): number, photo verification
+  - antecedentes_* (background checks): date, status verification
+  - titulo_* (academic titles): institution, date, program verification
+  - acta_grado (graduation certificate): number, date verification
+  - tarjeta_profesional (professional card): number, profession verification
+  - rut (tax ID): NIT, updated verification
+  - eps (health): active status, entity verification
+  - pension (pension): fund, active status verification
+  - certificado_medico (medical): date, aptitude verification
+  - libreta_militar (military): class, number verification
+- Document conversion status: ready, converting, failed, pending
+- Uses document_services for preview URL and conversion handling
+- Session key validation for approve/reject actions preserved
+- JavaScript AMD module for document preview functionality
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+- **Continues Phase 3 (Workflows) per AGENTS.md**
+
 ## [3.1.19] - 2025-12-11
 
 ### Changed

@@ -1,0 +1,262 @@
+{{!
+    @template local_jobboard/pages/validate_document
+
+    Single document validation page template.
+    Uses jb-* CSS classes for consistent styling.
+
+    Context variables:
+    * pagetitle - Page title string
+    * document - Document data (id, type, typename, filename, uploadeddate, issuedate)
+    * applicant - Applicant data (fullname, email, idnumber)
+    * application - Application data (id)
+    * preview - Preview data (downloadurl, previewurl, mimetype, canpreview, isconverting, isfailed, statusbadge)
+    * checklist - Validation checklist items array
+    * haschecklist - Boolean if has checklist items
+    * rejectreasons - Rejection reason options
+    * approveformurl - URL for approve form
+    * rejectformurl - URL for reject form
+    * backurl - URL to go back
+    * sesskey - Session key
+
+    Example context (json):
+    {
+        "document": {"id": 1, "typename": "Cédula"}
+    }
+}}
+<div class="jb-validate-document" data-region="jobboard-validate-document">
+    {{! Page Header }}
+    <header class="jb-page-header jb-mb-4">
+        <h1 class="jb-fs-3 jb-mb-0">
+            <i class="fa fa-file-check jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h1>
+    </header>
+
+    {{! Document Information Card }}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="docinfo-heading">
+        <div class="jb-card-header">
+            <h5 class="jb-mb-0" id="docinfo-heading">
+                <i class="fa fa-file-alt jb-text-info jb-mr-2" aria-hidden="true"></i>
+                {{#str}}documentinfo, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-row">
+                <div class="jb-col-md-6">
+                    <p><strong>{{#str}}documenttype, local_jobboard{{/str}}:</strong> {{document.typename}}</p>
+                    <p><strong>{{#str}}filename, local_jobboard{{/str}}:</strong> <code>{{document.filename}}</code></p>
+                </div>
+                <div class="jb-col-md-6">
+                    <p><strong>{{#str}}uploaded, local_jobboard{{/str}}:</strong> {{document.uploadeddate}}</p>
+                    {{#document.issuedate}}
+                    <p><strong>{{#str}}documentissuedate, local_jobboard{{/str}}:</strong> {{document.issuedate}}</p>
+                    {{/document.issuedate}}
+                </div>
+            </div>
+
+            {{! Preview Buttons }}
+            {{#preview.downloadurl}}
+            <div class="jb-mb-3">
+                <button type="button" class="jb-btn jb-btn-primary jb-mr-2"
+                        data-preview-url="{{preview.previewurl}}"
+                        data-preview-filename="{{document.filename}}"
+                        data-preview-mimetype="{{preview.mimetype}}">
+                    <i class="fa fa-eye jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}previewdocument, local_jobboard{{/str}}
+                </button>
+                <a href="{{preview.downloadurl}}" class="jb-btn jb-btn-outline-secondary" target="_blank">
+                    <i class="fa fa-download jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}download{{/str}}
+                </a>
+                {{#preview.showstatus}}
+                <span class="jb-ml-3 jb-badge jb-badge-{{preview.statuscolor}}" id="conversion-status"
+                      data-documentid="{{document.id}}">{{preview.statusmessage}}</span>
+                {{/preview.showstatus}}
+            </div>
+            {{/preview.downloadurl}}
+
+            {{! Inline Preview Container }}
+            {{#preview.canpreview}}
+            <div class="jb-document-inline-preview jb-mb-3">
+                <div class="jb-card">
+                    <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+                        <span>{{#str}}documentpreview, local_jobboard{{/str}}</span>
+                        <button type="button" class="jb-btn jb-btn-sm jb-btn-outline-secondary" id="toggle-preview">
+                            {{#str}}togglepreview, local_jobboard{{/str}}
+                        </button>
+                    </div>
+                    <div class="jb-card-body jb-preview-content" id="preview-container">
+                        {{#preview.ispdf}}
+                        <iframe src="{{preview.previewurl}}#toolbar=0&navpanes=0"
+                                class="jb-preview-iframe jb-w-100 jb-border-0"
+                                title="{{#str}}documentpreview, local_jobboard{{/str}}"></iframe>
+                        {{/preview.ispdf}}
+                        {{#preview.isimage}}
+                        <img src="{{preview.downloadurl}}" class="jb-img-fluid jb-mw-100" alt="{{document.filename}}">
+                        {{/preview.isimage}}
+                    </div>
+                </div>
+            </div>
+            {{/preview.canpreview}}
+
+            {{#preview.isconverting}}
+            <div class="jb-document-inline-preview jb-mb-3">
+                <div class="jb-card">
+                    <div class="jb-card-header">{{#str}}documentpreview, local_jobboard{{/str}}</div>
+                    <div class="jb-card-body jb-text-center" id="preview-container">
+                        <div class="jb-conversion-progress">
+                            <i class="fa fa-spinner fa-spin fa-3x jb-mb-3" aria-hidden="true"></i>
+                            <p>{{#str}}conversioninprogress, local_jobboard{{/str}}</p>
+                            <p class="jb-text-muted">{{#str}}conversionwait, local_jobboard{{/str}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/preview.isconverting}}
+
+            {{#preview.isfailed}}
+            <div class="jb-document-inline-preview jb-mb-3">
+                <div class="jb-card">
+                    <div class="jb-card-header">{{#str}}documentpreview, local_jobboard{{/str}}</div>
+                    <div class="jb-card-body jb-text-center" id="preview-container">
+                        <div class="jb-alert jb-alert-warning">
+                            <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                            {{#str}}conversionfailed, local_jobboard{{/str}}
+                        </div>
+                        <p>
+                            <a href="{{preview.downloadurl}}" class="jb-btn jb-btn-outline-primary" target="_blank">
+                                <i class="fa fa-download jb-mr-1" aria-hidden="true"></i>
+                                {{#str}}downloadtoview, local_jobboard{{/str}}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {{/preview.isfailed}}
+        </div>
+    </section>
+
+    {{! Applicant Information Card }}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="applicant-heading">
+        <div class="jb-card-header">
+            <h5 class="jb-mb-0" id="applicant-heading">
+                <i class="fa fa-user jb-text-success jb-mr-2" aria-hidden="true"></i>
+                {{#str}}applicantinfo, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-row">
+                <div class="jb-col-md-6">
+                    <p><strong>{{#str}}name{{/str}}:</strong> {{applicant.fullname}}</p>
+                    <p><strong>{{#str}}email{{/str}}:</strong> {{applicant.email}}</p>
+                </div>
+                <div class="jb-col-md-6">
+                    {{#applicant.idnumber}}
+                    <p><strong>{{#str}}idnumber{{/str}}:</strong> {{applicant.idnumber}}</p>
+                    {{/applicant.idnumber}}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! Validation Checklist Card }}
+    {{#haschecklist}}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="checklist-heading">
+        <div class="jb-card-header">
+            <h5 class="jb-mb-0" id="checklist-heading">
+                <i class="fa fa-tasks jb-text-warning jb-mr-2" aria-hidden="true"></i>
+                {{#str}}validationchecklist, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <ul class="jb-list-group jb-mb-3">
+                {{#checklist}}
+                <li class="jb-list-group-item">
+                    <div class="jb-form-check">
+                        <input class="jb-form-check-input checklist-item" type="checkbox" id="check_{{id}}">
+                        <label class="jb-form-check-label" for="check_{{id}}">{{text}}</label>
+                    </div>
+                </li>
+                {{/checklist}}
+            </ul>
+        </div>
+    </section>
+    {{/haschecklist}}
+
+    {{! Validation Decision Card }}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="decision-heading">
+        <div class="jb-card-header">
+            <h5 class="jb-mb-0" id="decision-heading">
+                <i class="fa fa-gavel jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                {{#str}}validationdecision, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-row">
+                {{! Approve Form }}
+                <div class="jb-col-md-6 jb-mb-3 jb-mb-md-0">
+                    <div class="jb-card jb-border-success jb-h-100">
+                        <div class="jb-card-body">
+                            <h6 class="jb-card-title jb-text-success">
+                                <i class="fa fa-check jb-mr-2" aria-hidden="true"></i>
+                                {{#str}}approvedocument, local_jobboard{{/str}}
+                            </h6>
+                            <form method="post" action="{{approveformurl}}">
+                                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                <div class="jb-form-group jb-mb-3">
+                                    <label for="notes_approve">{{#str}}notes, local_jobboard{{/str}}</label>
+                                    <textarea name="notes" id="notes_approve" class="jb-form-control" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="jb-btn jb-btn-success jb-btn-lg jb-btn-block">
+                                    <i class="fa fa-check jb-mr-2" aria-hidden="true"></i>
+                                    {{#str}}approvedocument, local_jobboard{{/str}}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {{! Reject Form }}
+                <div class="jb-col-md-6">
+                    <div class="jb-card jb-border-danger jb-h-100">
+                        <div class="jb-card-body">
+                            <h6 class="jb-card-title jb-text-danger">
+                                <i class="fa fa-times jb-mr-2" aria-hidden="true"></i>
+                                {{#str}}rejectdocument, local_jobboard{{/str}}
+                            </h6>
+                            <form method="post" action="{{rejectformurl}}">
+                                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                <div class="jb-form-group jb-mb-3">
+                                    <label for="rejectreason">
+                                        {{#str}}rejectreason, local_jobboard{{/str}}
+                                        <span class="jb-text-danger">*</span>
+                                    </label>
+                                    <select name="rejectreason" id="rejectreason" class="jb-form-control" required>
+                                        <option value="">{{#str}}selectreason, local_jobboard{{/str}}</option>
+                                        {{#rejectreasons}}
+                                        <option value="{{code}}">{{label}}</option>
+                                        {{/rejectreasons}}
+                                    </select>
+                                </div>
+                                <div class="jb-form-group jb-mb-3">
+                                    <label for="notes_reject">{{#str}}additionalnotes, local_jobboard{{/str}}</label>
+                                    <textarea name="notes" id="notes_reject" class="jb-form-control" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="jb-btn jb-btn-danger jb-btn-lg jb-btn-block">
+                                    <i class="fa fa-times jb-mr-2" aria-hidden="true"></i>
+                                    {{#str}}rejectdocument, local_jobboard{{/str}}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! Back Button }}
+    <a href="{{backurl}}" class="jb-btn jb-btn-secondary">
+        <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+        {{#str}}back{{/str}}
+    </a>
+</div>

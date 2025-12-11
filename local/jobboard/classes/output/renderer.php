@@ -5535,4 +5535,227 @@ class renderer extends plugin_renderer_base {
 
         return $data;
     }
+
+    /**
+     * Render the document validation page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_validate_document_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/validate_document', $data);
+    }
+
+    /**
+     * Prepare document validation page data for template.
+     *
+     * @param \local_jobboard\document $document The document to validate.
+     * @param \local_jobboard\application $application The related application.
+     * @return array Template data.
+     */
+    public function prepare_validate_document_page_data(
+        \local_jobboard\document $document,
+        \local_jobboard\application $application
+    ): array {
+        global $DB;
+
+        // Get applicant user.
+        $applicant = $DB->get_record('user', ['id' => $application->userid]);
+
+        // Get document type name.
+        $typename = get_string('doctype_' . $document->documenttype, 'local_jobboard');
+
+        // Prepare document data.
+        $documentdata = [
+            'id' => $document->id,
+            'type' => $document->documenttype,
+            'typename' => $typename,
+            'filename' => format_string($document->filename),
+            'uploadeddate' => userdate($document->timecreated, get_string('strftimedatetime', 'langconfig')),
+            'issuedate' => !empty($document->issuedate) ?
+                userdate($document->issuedate, get_string('strftimedate', 'langconfig')) : null,
+        ];
+
+        // Get preview info.
+        $downloadurl = $document->get_download_url();
+        $previewinfo = \local_jobboard\document_services::get_preview_info($document);
+
+        $previewurl = $previewinfo['url'] ?: ($downloadurl ? $downloadurl->out(false) : null);
+        $previewmime = $previewinfo['mimetype'];
+
+        // Determine preview capabilities.
+        $canpreview = ($previewinfo['status'] === 'ready' && $previewinfo['url']);
+        $directpreview = in_array($document->mimetype, \local_jobboard\document_services::DIRECT_PREVIEW_MIMETYPES);
+        $showpreview = $canpreview || $directpreview;
+
+        $ispdf = ($previewmime === 'application/pdf' && $previewinfo['url']);
+        $isimage = (strpos($document->mimetype, 'image/') === 0);
+
+        // Get status color.
+        $statuscolor = 'secondary';
+        if ($previewinfo['status'] === 'ready') {
+            $statuscolor = 'success';
+        } else if ($previewinfo['status'] === 'converting') {
+            $statuscolor = 'info';
+        } else if ($previewinfo['status'] === 'failed') {
+            $statuscolor = 'danger';
+        }
+
+        $previewdata = [
+            'downloadurl' => $downloadurl ? $downloadurl->out(false) : null,
+            'previewurl' => $previewurl,
+            'mimetype' => $previewmime,
+            'canpreview' => $showpreview,
+            'isconverting' => ($previewinfo['status'] === 'converting'),
+            'isfailed' => ($previewinfo['can_convert'] && $previewinfo['status'] === 'failed'),
+            'ispdf' => $ispdf,
+            'isimage' => $isimage,
+            'showstatus' => $previewinfo['can_convert'],
+            'statuscolor' => $statuscolor,
+            'statusmessage' => \local_jobboard\document_services::get_status_message($previewinfo['status']),
+        ];
+
+        // Prepare applicant data.
+        $applicantdata = [
+            'fullname' => fullname($applicant),
+            'email' => $applicant->email,
+            'idnumber' => !empty($applicant->idnumber) ? format_string($applicant->idnumber) : null,
+        ];
+
+        // Get validation checklist.
+        $checklistdata = [];
+        $checklistitems = $this->get_validation_checklist($document->documenttype);
+        $idx = 0;
+        foreach ($checklistitems as $item) {
+            $checklistdata[] = [
+                'id' => $idx++,
+                'text' => $item,
+            ];
+        }
+
+        // Rejection reasons.
+        $reasons = [
+            'illegible' => get_string('rejectreason_illegible', 'local_jobboard'),
+            'expired' => get_string('rejectreason_expired', 'local_jobboard'),
+            'incomplete' => get_string('rejectreason_incomplete', 'local_jobboard'),
+            'wrongtype' => get_string('rejectreason_wrongtype', 'local_jobboard'),
+            'mismatch' => get_string('rejectreason_mismatch', 'local_jobboard'),
+            'other' => get_string('other'),
+        ];
+        $rejectreasons = [];
+        foreach ($reasons as $code => $label) {
+            $rejectreasons[] = [
+                'code' => $code,
+                'label' => $label,
+            ];
+        }
+
+        // Build URLs.
+        $baseurl = new moodle_url('/local/jobboard/validate_document.php', ['id' => $document->id]);
+        $backurl = new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]);
+
+        return [
+            'pagetitle' => get_string('validatedocument', 'local_jobboard'),
+            'document' => $documentdata,
+            'applicant' => $applicantdata,
+            'application' => ['id' => $application->id],
+            'preview' => $previewdata,
+            'checklist' => $checklistdata,
+            'haschecklist' => !empty($checklistdata),
+            'rejectreasons' => $rejectreasons,
+            'approveformurl' => (new moodle_url($baseurl, ['action' => 'validate']))->out(false),
+            'rejectformurl' => (new moodle_url($baseurl, ['action' => 'reject']))->out(false),
+            'backurl' => $backurl->out(false),
+            'sesskey' => sesskey(),
+        ];
+    }
+
+    /**
+     * Get validation checklist items for a document type.
+     *
+     * @param string $doctype Document type code.
+     * @return array Checklist items.
+     */
+    protected function get_validation_checklist(string $doctype): array {
+        $common = [
+            get_string('checklist_legible', 'local_jobboard'),
+            get_string('checklist_complete', 'local_jobboard'),
+            get_string('checklist_namematch', 'local_jobboard'),
+        ];
+
+        $specific = [];
+        switch ($doctype) {
+            case 'cedula':
+                $specific = [
+                    get_string('checklist_cedula_number', 'local_jobboard'),
+                    get_string('checklist_cedula_photo', 'local_jobboard'),
+                ];
+                break;
+            case 'antecedentes_procuraduria':
+            case 'antecedentes_contraloria':
+            case 'antecedentes_policia':
+            case 'rnmc':
+            case 'sijin':
+                $specific = [
+                    get_string('checklist_background_date', 'local_jobboard'),
+                    get_string('checklist_background_status', 'local_jobboard'),
+                ];
+                break;
+            case 'titulo_pregrado':
+            case 'titulo_postgrado':
+            case 'titulo_especializacion':
+            case 'titulo_maestria':
+            case 'titulo_doctorado':
+                $specific = [
+                    get_string('checklist_title_institution', 'local_jobboard'),
+                    get_string('checklist_title_date', 'local_jobboard'),
+                    get_string('checklist_title_program', 'local_jobboard'),
+                ];
+                break;
+            case 'acta_grado':
+                $specific = [
+                    get_string('checklist_acta_number', 'local_jobboard'),
+                    get_string('checklist_acta_date', 'local_jobboard'),
+                ];
+                break;
+            case 'tarjeta_profesional':
+                $specific = [
+                    get_string('checklist_tarjeta_number', 'local_jobboard'),
+                    get_string('checklist_tarjeta_profession', 'local_jobboard'),
+                ];
+                break;
+            case 'rut':
+                $specific = [
+                    get_string('checklist_rut_nit', 'local_jobboard'),
+                    get_string('checklist_rut_updated', 'local_jobboard'),
+                ];
+                break;
+            case 'eps':
+                $specific = [
+                    get_string('checklist_eps_active', 'local_jobboard'),
+                    get_string('checklist_eps_entity', 'local_jobboard'),
+                ];
+                break;
+            case 'pension':
+                $specific = [
+                    get_string('checklist_pension_fund', 'local_jobboard'),
+                    get_string('checklist_pension_active', 'local_jobboard'),
+                ];
+                break;
+            case 'certificado_medico':
+                $specific = [
+                    get_string('checklist_medical_date', 'local_jobboard'),
+                    get_string('checklist_medical_aptitude', 'local_jobboard'),
+                ];
+                break;
+            case 'libreta_militar':
+                $specific = [
+                    get_string('checklist_military_class', 'local_jobboard'),
+                    get_string('checklist_military_number', 'local_jobboard'),
+                ];
+                break;
+        }
+
+        return array_merge($common, $specific);
+    }
 }
