@@ -95,40 +95,6 @@ $functions = [
     ],
 
     // =========================================================================
-    // TOKEN MANAGEMENT FUNCTIONS
-    // =========================================================================
-
-    'local_jobboard_revoke_token' => [
-        'classname' => 'local_jobboard\external\api',
-        'methodname' => 'revoke_token',
-        'description' => 'Revoke an API token',
-        'type' => 'write',
-        'ajax' => true,
-        'loginrequired' => true,
-        'capabilities' => 'local/jobboard:manageapitokens',
-    ],
-
-    'local_jobboard_enable_token' => [
-        'classname' => 'local_jobboard\external\api',
-        'methodname' => 'enable_token',
-        'description' => 'Enable an API token',
-        'type' => 'write',
-        'ajax' => true,
-        'loginrequired' => true,
-        'capabilities' => 'local/jobboard:manageapitokens',
-    ],
-
-    'local_jobboard_delete_token' => [
-        'classname' => 'local_jobboard\external\api',
-        'methodname' => 'delete_token',
-        'description' => 'Delete an API token',
-        'type' => 'write',
-        'ajax' => true,
-        'loginrequired' => true,
-        'capabilities' => 'local/jobboard:manageapitokens',
-    ],
-
-    // =========================================================================
     // IOMAD FUNCTIONS
     // =========================================================================
 
@@ -155,10 +121,6 @@ $services = [
             'local_jobboard_get_applications',
             'local_jobboard_get_application',
             'local_jobboard_check_application_limit',
-            // Token management.
-            'local_jobboard_revoke_token',
-            'local_jobboard_enable_token',
-            'local_jobboard_delete_token',
             // IOMAD functions.
             'local_jobboard_get_departments',
         ],

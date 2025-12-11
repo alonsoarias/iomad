@@ -77,7 +77,6 @@ class audit {
     const ENTITY_PROFILE = 'applicant_profile';
     const ENTITY_DOCTYPE = 'doctype';
     const ENTITY_NOTIFICATION = 'notification';
-    const ENTITY_API_TOKEN = 'api_token';
     const ENTITY_DOC_REQUIREMENT = 'doc_requirement';
     const ENTITY_WORKFLOW_LOG = 'workflow_log';
 

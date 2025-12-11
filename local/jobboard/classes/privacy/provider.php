@@ -145,19 +145,6 @@ class provider implements
             'privacy:metadata:notification'
         );
 
-        // API tokens table.
-        $collection->add_database_table(
-            'local_jobboard_api_token',
-            [
-                'userid' => 'privacy:metadata:apitoken:userid',
-                'description' => 'privacy:metadata:apitoken:description',
-                'permissions' => 'privacy:metadata:apitoken:permissions',
-                'lastused' => 'privacy:metadata:apitoken:lastused',
-                'timecreated' => 'privacy:metadata:apitoken:timecreated',
-            ],
-            'privacy:metadata:apitoken'
-        );
-
         // Interviewer table (interview panel members).
         $collection->add_database_table(
             'local_jobboard_interviewer',
@@ -228,13 +215,11 @@ class provider implements
                       UNION
                       SELECT 1 FROM {local_jobboard_notification} n WHERE n.userid = :userid4
                       UNION
-                      SELECT 1 FROM {local_jobboard_api_token} t WHERE t.userid = :userid5
+                      SELECT 1 FROM {local_jobboard_interviewer} i WHERE i.userid = :userid5
                       UNION
-                      SELECT 1 FROM {local_jobboard_interviewer} i WHERE i.userid = :userid6
+                      SELECT 1 FROM {local_jobboard_committee_member} cm WHERE cm.userid = :userid6
                       UNION
-                      SELECT 1 FROM {local_jobboard_committee_member} cm WHERE cm.userid = :userid7
-                      UNION
-                      SELECT 1 FROM {local_jobboard_evaluation} ev WHERE ev.userid = :userid8
+                      SELECT 1 FROM {local_jobboard_evaluation} ev WHERE ev.userid = :userid7
                   )";
 
         $contextlist->add_from_sql($sql, [
@@ -246,7 +231,6 @@ class provider implements
             'userid5' => $userid,
             'userid6' => $userid,
             'userid7' => $userid,
-            'userid8' => $userid,
         ]);
 
         return $contextlist;
@@ -278,10 +262,6 @@ class provider implements
 
         // Get users from notifications.
         $sql = "SELECT DISTINCT userid FROM {local_jobboard_notification}";
-        $userlist->add_from_sql('userid', $sql, []);
-
-        // Get users from API tokens.
-        $sql = "SELECT DISTINCT userid FROM {local_jobboard_api_token}";
         $userlist->add_from_sql('userid', $sql, []);
 
         // Get users from interviewers.
@@ -323,9 +303,6 @@ class provider implements
 
         // Export notifications.
         self::export_notifications($user->id, $context);
-
-        // Export API tokens.
-        self::export_api_tokens($user->id, $context);
 
         // Export interviewer assignments.
         self::export_interviewer_data($user->id, $context);
@@ -524,38 +501,6 @@ class provider implements
     }
 
     /**
-     * Export user API tokens.
-     *
-     * @param int $userid User ID.
-     * @param \context $context The context.
-     */
-    private static function export_api_tokens(int $userid, \context $context): void {
-        global $DB;
-
-        $tokens = $DB->get_records('local_jobboard_api_token', ['userid' => $userid]);
-
-        $data = [];
-        foreach ($tokens as $token) {
-            $data[] = [
-                'description' => $token->description,
-                'permissions' => $token->permissions,
-                'enabled' => $token->enabled ? 'Yes' : 'No',
-                'valid_from' => $token->validfrom ? userdate($token->validfrom, '%Y-%m-%d') : null,
-                'valid_until' => $token->validuntil ? userdate($token->validuntil, '%Y-%m-%d') : null,
-                'last_used' => $token->lastused ? userdate($token->lastused) : 'Never',
-                'created' => userdate($token->timecreated),
-            ];
-        }
-
-        if (!empty($data)) {
-            writer::with_context($context)->export_data(
-                [get_string('apitokens', 'local_jobboard')],
-                (object) ['api_tokens' => $data]
-            );
-        }
-    }
-
-    /**
      * Export user interviewer assignments.
      *
      * @param int $userid User ID.
@@ -746,9 +691,6 @@ class provider implements
 
         // Delete notifications.
         $DB->delete_records('local_jobboard_notification', ['userid' => $userid]);
-
-        // Delete API tokens.
-        $DB->delete_records('local_jobboard_api_token', ['userid' => $userid]);
 
         // Delete interviewer assignments.
         $DB->delete_records('local_jobboard_interviewer', ['userid' => $userid]);

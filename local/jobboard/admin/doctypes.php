@@ -550,14 +550,6 @@ echo html_writer::link(
     ['class' => 'btn btn-outline-primary m-1']
 );
 
-if (has_capability('local/jobboard:manageapitokens', $context)) {
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/admin/tokens.php'),
-        '<i class="fa fa-key mr-2"></i>' . get_string('apitokens', 'local_jobboard'),
-        ['class' => 'btn btn-outline-warning m-1']
-    );
-}
-
 echo html_writer::end_div();
 echo html_writer::end_div();
 

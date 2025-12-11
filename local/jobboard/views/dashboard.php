@@ -586,26 +586,6 @@ if ($canManageContent) {
         echo html_writer::end_div();
         echo html_writer::end_div();
 
-        // API Tokens.
-        if (has_capability('local/jobboard:manageapitokens', $context)) {
-            echo html_writer::start_div('col-md-3 col-sm-6 mb-3');
-            echo html_writer::start_div('card border-0 bg-light h-100');
-            echo html_writer::start_div('card-body d-flex align-items-center');
-            echo html_writer::tag('i', '', ['class' => 'fa fa-key fa-2x text-danger mr-3']);
-            echo html_writer::start_div();
-            echo html_writer::tag('h6', get_string('apitokens', 'local_jobboard'), ['class' => 'mb-1']);
-            echo html_writer::tag('small', get_string('apitokens_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
-            echo html_writer::link(
-                new moodle_url('/local/jobboard/admin/tokens.php'),
-                '<i class="fa fa-cog mr-1"></i>' . get_string('manage', 'local_jobboard'),
-                ['class' => 'btn btn-sm btn-outline-danger']
-            );
-            echo html_writer::end_div();
-            echo html_writer::end_div();
-            echo html_writer::end_div();
-            echo html_writer::end_div();
-        }
-
         echo html_writer::end_div(); // row
 
         // Migration Tool (separate card for visibility).

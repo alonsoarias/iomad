@@ -321,14 +321,6 @@ $capabilities = [
         ],
     ],
 
-    'local/jobboard:manageapitokens' => [
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => [
-            'manager' => CAP_ALLOW,
-        ],
-    ],
-
     // =========================================================================
     // Configuration and administration.
     // =========================================================================

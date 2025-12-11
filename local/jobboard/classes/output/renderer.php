@@ -190,41 +190,6 @@ class renderer extends plugin_renderer_base {
     }
 
     /**
-     * Render API token row.
-     *
-     * @param \local_jobboard\api_token $token The token object.
-     * @param bool $canrevoke Whether user can revoke.
-     * @param bool $candelete Whether user can delete.
-     * @return string HTML output.
-     */
-    public function render_api_token_row(
-        \local_jobboard\api_token $token,
-        bool $canrevoke = true,
-        bool $candelete = true
-    ): string {
-        $data = [
-            'id' => $token->id,
-            'description' => $token->description,
-            'maskedtoken' => substr($token->token, 0, 8) . '...' . substr($token->token, -8),
-            'permissions' => array_map(function($perm) {
-                return get_string('api:permission:' . $perm, 'local_jobboard');
-            }, $token->permissions),
-            'status' => $token->get_status(),
-            'statusclass' => $this->get_token_status_class($token->get_status()),
-            'statuslabel' => get_string('api:token:status:' . $token->get_status(), 'local_jobboard'),
-            'lastused' => $token->lastused ?
-                userdate($token->lastused, get_string('strftimedatetime')) :
-                get_string('api:token:never', 'local_jobboard'),
-            'timecreated' => userdate($token->timecreated, get_string('strftimedatetime')),
-            'enabled' => $token->enabled,
-            'canrevoke' => $canrevoke,
-            'candelete' => $candelete,
-        ];
-
-        return $this->render_from_template('local_jobboard/api_token_row', $data);
-    }
-
-    /**
      * Get CSS class for vacancy status.
      *
      * @param string $status Status code.
@@ -256,22 +221,6 @@ class renderer extends plugin_renderer_base {
             'selected' => 'success',
             'rejected' => 'secondary',
             'withdrawn' => 'secondary',
-        ];
-        return $classes[$status] ?? 'secondary';
-    }
-
-    /**
-     * Get CSS class for token status.
-     *
-     * @param string $status Status code.
-     * @return string CSS class.
-     */
-    protected function get_token_status_class(string $status): string {
-        $classes = [
-            'active' => 'success',
-            'disabled' => 'secondary',
-            'expired' => 'danger',
-            'not_yet_valid' => 'warning',
         ];
         return $classes[$status] ?? 'secondary';
     }

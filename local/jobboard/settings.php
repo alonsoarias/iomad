@@ -58,13 +58,6 @@ if ($hassiteconfig) {
     ));
 
     $ADMIN->add('local_jobboard_category', new admin_externalpage(
-        'local_jobboard_tokens',
-        get_string('apitokens', 'local_jobboard'),
-        new moodle_url('/local/jobboard/admin/tokens.php'),
-        'local/jobboard:manageapitokens'
-    ));
-
-    $ADMIN->add('local_jobboard_category', new admin_externalpage(
         'local_jobboard_convocatorias',
         get_string('manageconvocatorias', 'local_jobboard'),
         new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),

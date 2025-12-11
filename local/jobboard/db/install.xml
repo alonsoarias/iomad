@@ -312,33 +312,7 @@
       </INDEXES>
     </TABLE>
 
-    <!-- Table 12: API Tokens -->
-    <TABLE NAME="local_jobboard_api_token" COMMENT="API access tokens">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="token" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false" COMMENT="Hashed token"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="permissions" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Allowed permissions (JSON array)"/>
-        <FIELD NAME="ipwhitelist" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="IP whitelist (JSON array)"/>
-        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-        <FIELD NAME="validfrom" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="validuntil" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="lastused" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
-      </KEYS>
-      <INDEXES>
-        <INDEX NAME="token_unique" UNIQUE="true" FIELDS="token"/>
-        <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
-        <INDEX NAME="user_enabled_idx" UNIQUE="false" FIELDS="userid, enabled"/>
-      </INDEXES>
-    </TABLE>
-
-    <!-- Table 13: Document type definitions (predefined types) -->
+    <!-- Table 12: Document type definitions (predefined types) -->
     <TABLE NAME="local_jobboard_doctype" COMMENT="Predefined document types">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>

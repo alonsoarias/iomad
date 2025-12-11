@@ -196,38 +196,6 @@ class local_jobboard_generator extends testing_module_generator {
     }
 
     /**
-     * Create an API token.
-     *
-     * @param array|stdClass $record Data for the token.
-     * @return array The token info with raw token and api_token object.
-     */
-    public function create_api_token($record = null): array {
-        global $USER;
-
-        $record = (array) $record;
-
-        $defaults = [
-            'userid' => $USER->id,
-            'description' => 'Test API Token',
-            'permissions' => ['view_vacancies', 'view_vacancy_details'],
-            'ipwhitelist' => [],
-            'validfrom' => null,
-            'validuntil' => null,
-        ];
-
-        $record = array_merge($defaults, $record);
-
-        return \local_jobboard\api_token::create(
-            $record['userid'],
-            $record['description'],
-            $record['permissions'],
-            $record['ipwhitelist'],
-            $record['validfrom'],
-            $record['validuntil']
-        );
-    }
-
-    /**
      * Create an audit log entry.
      *
      * @param array|stdClass $record Data for the audit log.

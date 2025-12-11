@@ -149,6 +149,24 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121103, 'local', 'jobboard');
     }
 
+    // Version 2.3.1 - Remove API token functionality.
+    if ($oldversion < 2025121104) {
+        $dbman = $DB->get_manager();
+
+        // Drop the API token table if it exists.
+        $table = new xmldb_table('local_jobboard_api_token');
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+        // Remove API-related configuration settings.
+        unset_config('api_enabled', 'local_jobboard');
+        unset_config('api_rate_limit', 'local_jobboard');
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121104, 'local', 'jobboard');
+    }
+
     return true;
 }
 

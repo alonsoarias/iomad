@@ -104,9 +104,6 @@ class cleanup_old_data extends \core\task\scheduled_task {
         // Cleanup old applications based on retention policy.
         $deletedapps = $this->cleanup_old_applications($applicationthreshold);
 
-        // Cleanup expired API tokens.
-        $deletedtokens = $this->cleanup_expired_tokens();
-
         // Cleanup expired exemptions.
         $deletedexemptions = $this->cleanup_expired_exemptions();
 
@@ -120,9 +117,6 @@ class cleanup_old_data extends \core\task\scheduled_task {
         if ($deletedapps > 0) {
             mtrace("  - Old applications archived/deleted: {$deletedapps}");
         }
-        if ($deletedtokens > 0) {
-            mtrace("  - Expired API tokens deleted: {$deletedtokens}");
-        }
         if ($deletedexemptions > 0) {
             mtrace("  - Expired exemptions cleaned: {$deletedexemptions}");
         }
@@ -133,7 +127,6 @@ class cleanup_old_data extends \core\task\scheduled_task {
             'audit_logs' => $deletedaudit,
             'documents' => $deleteddocs,
             'applications' => $deletedapps,
-            'tokens' => $deletedtokens,
         ]);
     }
 
@@ -197,26 +190,6 @@ class cleanup_old_data extends \core\task\scheduled_task {
         }
 
         return $processed;
-    }
-
-    /**
-     * Cleanup expired API tokens.
-     *
-     * @return int Number of tokens deleted.
-     */
-    protected function cleanup_expired_tokens(): int {
-        global $DB;
-
-        $now = time();
-
-        // Delete tokens that expired more than 30 days ago.
-        $threshold = $now - (30 * 24 * 60 * 60);
-
-        return $DB->delete_records_select(
-            'local_jobboard_api_token',
-            "validuntil IS NOT NULL AND validuntil < :threshold",
-            ['threshold' => $threshold]
-        );
     }
 
     /**

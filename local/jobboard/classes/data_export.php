@@ -174,7 +174,6 @@ class data_export {
             ],
             'applications' => [],
             'exemptions' => [],
-            'api_tokens' => [],
             'notifications' => [],
             'audit_summary' => [],
         ];
@@ -251,21 +250,6 @@ class data_export {
                 'is_revoked' => (bool) $ex->timerevoked,
                 'revoke_reason' => $ex->revokereason,
                 'created' => userdate($ex->timecreated),
-            ];
-        }
-
-        // API tokens (without the actual token values for security).
-        $tokens = $DB->get_records('local_jobboard_api_token', ['userid' => $this->userid]);
-        foreach ($tokens as $token) {
-            $data['api_tokens'][] = [
-                'id' => $token->id,
-                'description' => $token->description,
-                'permissions' => json_decode($token->permissions ?? '[]', true),
-                'is_enabled' => (bool) $token->enabled,
-                'valid_from' => $token->validfrom ? userdate($token->validfrom, '%Y-%m-%d') : null,
-                'valid_until' => $token->validuntil ? userdate($token->validuntil, '%Y-%m-%d') : null,
-                'last_used' => $token->lastused ? userdate($token->lastused) : null,
-                'created' => userdate($token->timecreated),
             ];
         }
 
