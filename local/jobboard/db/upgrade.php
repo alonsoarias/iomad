@@ -303,6 +303,137 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121106, 'local', 'jobboard');
     }
 
+    // Version 3.0.1 - Program Reviewers (replacing faculty reviewers).
+    // Reviewers are now assigned to academic programs (course categories) instead of companies/faculties.
+    if ($oldversion < 2025121107) {
+        $dbman = $DB->get_manager();
+
+        // ====================================================================
+        // 1. Create program_reviewer table (linked to course_categories).
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_program_reviewer');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('categoryid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('role', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'reviewer');
+        $table->add_field('status', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'active');
+        $table->add_field('addedby', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('categoryid_fk', XMLDB_KEY_FOREIGN, ['categoryid'], 'course_categories', ['id']);
+        $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
+        $table->add_key('addedby_fk', XMLDB_KEY_FOREIGN, ['addedby'], 'user', ['id']);
+
+        $table->add_index('categoryid_idx', XMLDB_INDEX_NOTUNIQUE, ['categoryid']);
+        $table->add_index('category_user_idx', XMLDB_INDEX_UNIQUE, ['categoryid', 'userid']);
+        $table->add_index('userid_idx', XMLDB_INDEX_NOTUNIQUE, ['userid']);
+        $table->add_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // ====================================================================
+        // 2. Migrate data from faculty_reviewer to program_reviewer.
+        // Map company departments to course categories (programs).
+        // ====================================================================
+        $oldtable = new xmldb_table('local_jobboard_faculty_reviewer');
+        if ($dbman->table_exists($oldtable)) {
+            // Get all faculty reviewers.
+            $facultyreviewers = $DB->get_records('local_jobboard_faculty_reviewer');
+
+            foreach ($facultyreviewers as $fr) {
+                // Try to find course categories linked to this company.
+                // In IOMAD, departments can be linked to course categories.
+                // We'll try to find matching categories by looking at department names.
+                $company = $DB->get_record('company', ['id' => $fr->companyid]);
+                if ($company) {
+                    // Find categories that might match this company's programs.
+                    // This is a best-effort migration - manual review may be needed.
+                    $sql = "SELECT cc.id
+                              FROM {course_categories} cc
+                              JOIN {department} d ON d.name = cc.name
+                             WHERE d.company = :companyid
+                               AND d.parent > 0
+                             LIMIT 10";
+                    $categories = $DB->get_records_sql($sql, ['companyid' => $fr->companyid]);
+
+                    foreach ($categories as $cat) {
+                        // Check if this assignment already exists.
+                        if (!$DB->record_exists('local_jobboard_program_reviewer', [
+                            'categoryid' => $cat->id,
+                            'userid' => $fr->userid,
+                        ])) {
+                            $newrecord = new stdClass();
+                            $newrecord->categoryid = $cat->id;
+                            $newrecord->userid = $fr->userid;
+                            $newrecord->role = $fr->role;
+                            $newrecord->status = $fr->status;
+                            $newrecord->addedby = $fr->addedby;
+                            $newrecord->timecreated = $fr->timecreated;
+                            $newrecord->timemodified = time();
+                            $DB->insert_record('local_jobboard_program_reviewer', $newrecord);
+                        }
+                    }
+                }
+            }
+
+            // Drop the old faculty_reviewer table.
+            $dbman->drop_table($oldtable);
+        }
+
+        // ====================================================================
+        // 3. Create email_strings table for multilingual email support.
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_email_strings');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('templateid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('lang', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('subject', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('body', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('signature', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('templateid_fk', XMLDB_KEY_FOREIGN, ['templateid'], 'local_jobboard_email_template', ['id']);
+
+        $table->add_index('templateid_idx', XMLDB_INDEX_NOTUNIQUE, ['templateid']);
+        $table->add_index('lang_idx', XMLDB_INDEX_NOTUNIQUE, ['lang']);
+        $table->add_index('template_lang_idx', XMLDB_INDEX_UNIQUE, ['templateid', 'lang']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Migrate existing template content to email_strings table.
+        $templates = $DB->get_records('local_jobboard_email_template');
+        foreach ($templates as $template) {
+            // Check if strings already exist for this template.
+            if (!$DB->record_exists('local_jobboard_email_strings', ['templateid' => $template->id])) {
+                // Detect language from template content or use default.
+                $lang = !empty($template->lang) ? $template->lang : 'en';
+
+                $strings = new stdClass();
+                $strings->templateid = $template->id;
+                $strings->lang = $lang;
+                $strings->subject = $template->subject;
+                $strings->body = $template->body;
+                $strings->signature = !empty($template->signature) ? $template->signature : '';
+                $strings->timecreated = time();
+
+                $DB->insert_record('local_jobboard_email_strings', $strings);
+            }
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121107, 'local', 'jobboard');
+    }
+
     return true;
 }
 
