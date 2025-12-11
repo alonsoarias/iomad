@@ -5,6 +5,40 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.18] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `manage_committee.php` from 909 lines to ~200 lines (78% reduction)
+- Selection committee management page now uses renderer pattern with Mustache template
+- Created `templates/pages/committee.mustache` with complete jb-* CSS classes
+- All committee management functionality preserved: create, add/remove members, change roles
+
+### Added
+- `render_committee_page()` method in renderer for committee view
+- `prepare_committee_page_data()` method in renderer with full data preparation
+- `prepare_committee_list_data()` protected method for list view
+- `prepare_committee_company_data()` protected method for company/faculty view
+- `prepare_committee_vacancy_data()` protected method for legacy vacancy view
+- Three view modes: list view (all committees), company view (faculty committee), vacancy view (legacy)
+- Statistics cards: total committees, active committees, total members
+- Faculty filter dropdown with auto-submit
+- Committees table with faculty, name, members, status, and actions
+- Faculties without committee warning section with create links
+- Committee member cards with role icons, colors, and role change dropdown
+- Add member form with user search and role selection
+- Create committee form with chair (required), secretary, and evaluators selection
+- Faculty vacancies list showing vacancy status
+
+### Technical Notes
+- Supports IOMAD company/faculty structure for selection committees
+- Four committee roles: chair (danger), secretary (primary), evaluator (success), observer (secondary)
+- User search filters by firstname, lastname, email, and username
+- Role assignment via jobboard_committee Moodle role
+- Legacy vacancy committee support with redirect to company view
+- Session key validation for all actions preserved
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+- **COMPLETES Phase 2 (Roles/Permissions) per AGENTS.md**
+
 ## [3.1.17] - 2025-12-11
 
 ### Changed

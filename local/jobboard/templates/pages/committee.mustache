@@ -1,0 +1,562 @@
+{{!
+    @template local_jobboard/pages/committee
+
+    Selection committee management page template.
+    Uses jb-* CSS classes for consistent styling.
+
+    Context variables:
+    * pagetitle - Page title string
+    * islistview - Boolean if showing committees list
+    * iscompanyview - Boolean if showing company committee
+    * isvacancyview - Boolean if showing legacy vacancy committee
+    * stats - Statistics data (totalcommittees, activecommittees, totalmembers)
+    * companies - Available companies for filter
+    * selectedcompanyid - Currently selected company ID
+    * committees - All committees for list view
+    * hascommittees - Boolean if has committees
+    * companieswithoutcommittee - Companies without committees
+    * hascompanieswithoutcommittee - Boolean if has companies without
+    * company - Current company data (when iscompanyview)
+    * existingcommittee - Existing committee for company/vacancy
+    * hasexistingcommittee - Boolean if has committee
+    * memberroles - Role definitions array
+    * availableusers - Users available for assignment
+    * hasavailableusers - Boolean if has available users
+    * usersearch - Current user search string
+    * facultyvacancies - Vacancies in current faculty
+    * hasfacultyvacancies - Boolean if has vacancies
+    * vacancy - Current vacancy data (when isvacancyview)
+    * filterformurl - URL for filter form
+    * backurl - URL to go back
+    * dashboardurl - URL to dashboard
+    * rolesurl - URL to roles management
+    * reviewurl - URL to review applications
+
+    Example context (json):
+    {
+        "islistview": true,
+        "stats": {"totalcommittees": 5, "activecommittees": 4}
+    }
+}}
+<div class="jb-committee-management" data-region="jobboard-committee">
+    {{! Page Header }}
+    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <h1 class="jb-fs-3 jb-mb-0">
+            <i class="fa fa-users jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h1>
+        <div class="jb-btn-group">
+            <a href="{{rolesurl}}" class="jb-btn jb-btn-outline-primary">
+                <i class="fa fa-user-tag jb-mr-2" aria-hidden="true"></i>
+                {{#str}}manageroles, local_jobboard{{/str}}
+            </a>
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
+                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+        </div>
+    </header>
+
+    {{! Statistics Cards }}
+    <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        <div class="jb-col-lg-4 jb-col-md-4 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-primary">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.totalcommittees}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}totalcommittees, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-4 jb-col-md-4 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-users-cog" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.activecommittees}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}activecommittees, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-4 jb-col-md-4 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-info">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-user-friends" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.totalmembers}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}totalcommmembers, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! Faculty Filter Form }}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-label="{{#str}}filter{{/str}}">
+        <div class="jb-card-body">
+            <form method="get" action="{{filterformurl}}" class="jb-form-inline">
+                <div class="jb-form-group jb-mr-3">
+                    <label class="jb-sr-only" for="companyid">{{#str}}faculty, local_jobboard{{/str}}</label>
+                    <select name="companyid" id="companyid" class="jb-form-control" onchange="this.form.submit()">
+                        <option value="0">{{#str}}selectfaculty, local_jobboard{{/str}}</option>
+                        {{#companies}}
+                        <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+                        {{/companies}}
+                    </select>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    {{#islistview}}
+    {{! ================================================================== }}
+    {{! LIST VIEW - All Committees }}
+    {{! ================================================================== }}
+
+    {{! All Committees Table }}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="committees-heading">
+        <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+            <h5 class="jb-mb-0" id="committees-heading">
+                <i class="fa fa-users jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                {{#str}}allcommittees, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{#hascommittees}}
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-hover">
+                    <thead class="jb-thead-light">
+                        <tr>
+                            <th>{{#str}}faculty, local_jobboard{{/str}}</th>
+                            <th>{{#str}}committeename, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}members, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}status{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}actions{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#committees}}
+                        <tr>
+                            <td>
+                                <a href="{{manageurl}}" class="jb-text-decoration-none">
+                                    <i class="fa fa-building jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                                    {{entityname}}
+                                </a>
+                            </td>
+                            <td>{{name}}</td>
+                            <td class="jb-text-center">
+                                <span class="jb-badge jb-badge-info">{{membercount}}</span>
+                            </td>
+                            <td class="jb-text-center">
+                                {{#isactive}}
+                                <span class="jb-badge jb-badge-success">{{#str}}active, local_jobboard{{/str}}</span>
+                                {{/isactive}}
+                                {{^isactive}}
+                                <span class="jb-badge jb-badge-secondary">{{status}}</span>
+                                {{/isactive}}
+                            </td>
+                            <td class="jb-text-center">
+                                <a href="{{manageurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary"
+                                   title="{{#str}}manage, local_jobboard{{/str}}">
+                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {{/committees}}
+                    </tbody>
+                </table>
+            </div>
+            {{/hascommittees}}
+            {{^hascommittees}}
+            <div class="jb-empty-state jb-text-center jb-py-4">
+                <i class="fa fa-users fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                <p class="jb-text-muted">{{#str}}nocommittees, local_jobboard{{/str}}</p>
+            </div>
+            {{/hascommittees}}
+        </div>
+    </section>
+
+    {{! Faculties Without Committee }}
+    {{#hascompanieswithoutcommittee}}
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-border-warning" aria-labelledby="nocommittee-heading">
+        <div class="jb-card-header jb-bg-warning jb-text-dark">
+            <h6 class="jb-mb-0" id="nocommittee-heading">
+                <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                {{#str}}facultieswithoutcommittee, local_jobboard{{/str}}
+            </h6>
+        </div>
+        <div class="jb-card-body">
+            <ul class="jb-list-group">
+                {{#companieswithoutcommittee}}
+                <li class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <span>
+                        <i class="fa fa-building jb-text-warning jb-mr-2" aria-hidden="true"></i>
+                        {{name}}
+                    </span>
+                    <a href="{{createurl}}" class="jb-btn jb-btn-sm jb-btn-warning">
+                        <i class="fa fa-plus jb-mr-1" aria-hidden="true"></i>
+                        {{#str}}createcommittee, local_jobboard{{/str}}
+                    </a>
+                </li>
+                {{/companieswithoutcommittee}}
+            </ul>
+        </div>
+    </section>
+    {{/hascompanieswithoutcommittee}}
+    {{/islistview}}
+
+    {{#iscompanyview}}
+    {{! ================================================================== }}
+    {{! COMPANY VIEW - Faculty Committee Management }}
+    {{! ================================================================== }}
+
+    {{! Back Button }}
+    <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-sm jb-mb-3">
+        <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+        {{#str}}backtolist, local_jobboard{{/str}}
+    </a>
+
+    {{! Faculty Header }}
+    <section class="jb-card jb-card-shadow jb-mb-4">
+        <div class="jb-card-header jb-bg-primary jb-text-white">
+            <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+                <h5 class="jb-mb-0">
+                    <i class="fa fa-building jb-mr-2" aria-hidden="true"></i>
+                    {{company.name}}
+                </h5>
+                <span class="jb-badge jb-badge-light">{{company.vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}</span>
+            </div>
+        </div>
+    </section>
+
+    {{#hasexistingcommittee}}
+    {{! Existing Committee Display }}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="committee-heading">
+        <div class="jb-card-header jb-bg-success jb-text-white jb-d-flex jb-justify-content-between jb-align-items-center">
+            <h5 class="jb-mb-0" id="committee-heading">
+                <i class="fa fa-users jb-mr-2" aria-hidden="true"></i>
+                {{existingcommittee.name}}
+            </h5>
+            <span class="jb-badge jb-badge-light">{{existingcommittee.membercount}} {{#str}}members, local_jobboard{{/str}}</span>
+        </div>
+        <div class="jb-card-body">
+            {{#existingcommittee.hasmembers}}
+            <div class="jb-row">
+                {{#existingcommittee.members}}
+                <div class="jb-col-lg-3 jb-col-md-4 jb-col-sm-6 jb-mb-3">
+                    <div class="jb-card jb-h-100 jb-border-0 jb-bg-light">
+                        <div class="jb-card-body jb-text-center">
+                            {{! Avatar }}
+                            <div class="jb-icon-circle jb-avatar-circle jb-bg-{{rolecolor}}-light jb-mb-2 jb-mx-auto">
+                                <i class="fa fa-{{roleicon}} jb-fs-4 jb-text-{{rolecolor}}" aria-hidden="true"></i>
+                            </div>
+
+                            {{! Name }}
+                            <h6 class="jb-mb-1">{{fullname}}</h6>
+
+                            {{! Username }}
+                            <small class="jb-d-block jb-text-info jb-mb-1">@{{username}}</small>
+
+                            {{! Role Badge }}
+                            <span class="jb-badge jb-badge-{{rolecolor}} jb-mb-2">{{rolename}}</span>
+
+                            {{! Email }}
+                            <small class="jb-d-block jb-text-muted jb-mb-2">{{email}}</small>
+
+                            {{! Actions }}
+                            <div class="jb-btn-group jb-btn-group-sm">
+                                {{! Change Role Dropdown }}
+                                <div class="jb-dropdown">
+                                    <button class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-dropdown-toggle"
+                                            type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                            title="{{#str}}changerole, local_jobboard{{/str}}">
+                                        <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                                    </button>
+                                    <div class="jb-dropdown-menu">
+                                        {{#availableroles}}
+                                        <a href="{{changeurl}}" class="jb-dropdown-item">{{name}}</a>
+                                        {{/availableroles}}
+                                    </div>
+                                </div>
+
+                                {{! Remove Button }}
+                                <a href="{{removeurl}}" class="jb-btn jb-btn-sm jb-btn-outline-danger"
+                                   title="{{#str}}removemember, local_jobboard{{/str}}"
+                                   onclick="return confirm('{{#str}}confirmremovemember, local_jobboard{{/str}}');">
+                                    <i class="fa fa-user-minus" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/existingcommittee.members}}
+            </div>
+            {{/existingcommittee.hasmembers}}
+            {{^existingcommittee.hasmembers}}
+            <div class="jb-empty-state jb-text-center jb-py-4">
+                <i class="fa fa-user-plus fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                <p class="jb-text-muted">{{#str}}nomembers, local_jobboard{{/str}}</p>
+            </div>
+            {{/existingcommittee.hasmembers}}
+        </div>
+    </section>
+
+    {{! Add Member Form }}
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-border-primary" aria-labelledby="addmember-heading">
+        <div class="jb-card-header jb-bg-primary jb-text-white">
+            <h6 class="jb-mb-0" id="addmember-heading">
+                <i class="fa fa-user-plus jb-mr-2" aria-hidden="true"></i>
+                {{#str}}addmember, local_jobboard{{/str}}
+            </h6>
+        </div>
+        <div class="jb-card-body">
+            {{! User Search Form }}
+            <form method="get" action="{{filterformurl}}" class="jb-mb-3">
+                <input type="hidden" name="companyid" value="{{company.id}}">
+                <div class="jb-input-group">
+                    <input type="text" name="usersearch" class="jb-form-control"
+                           placeholder="{{#str}}searchbyusername, local_jobboard{{/str}}"
+                           value="{{usersearch}}">
+                    <div class="jb-input-group-append">
+                        <button type="submit" class="jb-btn jb-btn-outline-secondary">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            {{! Add Member Form }}
+            <form method="post" action="{{addmemberformurl}}" class="jb-form-inline">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="addmember">
+                <input type="hidden" name="id" value="{{existingcommittee.id}}">
+
+                <div class="jb-form-group jb-mr-2 jb-mb-2">
+                    <label class="jb-sr-only" for="userid">{{#str}}selectuser, local_jobboard{{/str}}</label>
+                    <select name="userid" id="userid" class="jb-form-control" required>
+                        <option value="">{{#str}}selectuser, local_jobboard{{/str}}</option>
+                        {{#availableusers}}
+                        <option value="{{id}}">{{fullname}} (@{{username}}) - {{email}}</option>
+                        {{/availableusers}}
+                    </select>
+                </div>
+
+                <div class="jb-form-group jb-mr-2 jb-mb-2">
+                    <label class="jb-sr-only" for="memberrole">{{#str}}role{{/str}}</label>
+                    <select name="memberrole" id="memberrole" class="jb-form-control" required>
+                        {{#memberroles}}
+                        <option value="{{code}}">{{name}}</option>
+                        {{/memberroles}}
+                    </select>
+                </div>
+
+                <button type="submit" class="jb-btn jb-btn-primary jb-mb-2">
+                    <i class="fa fa-user-plus jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}addmember, local_jobboard{{/str}}
+                </button>
+            </form>
+        </div>
+    </section>
+
+    {{! Faculty Vacancies }}
+    {{#hasfacultyvacancies}}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="vacancies-heading">
+        <div class="jb-card-header jb-bg-white">
+            <h5 class="jb-mb-0" id="vacancies-heading">
+                <i class="fa fa-briefcase jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                {{#str}}facultyvacancies, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <ul class="jb-list-group">
+                {{#facultyvacancies}}
+                <li class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <span>
+                        <i class="fa fa-briefcase jb-text-info jb-mr-2" aria-hidden="true"></i>
+                        {{code}} - {{title}}
+                    </span>
+                    <span class="jb-badge jb-badge-{{statuscolor}}">{{statuslabel}}</span>
+                </li>
+                {{/facultyvacancies}}
+            </ul>
+        </div>
+    </section>
+    {{/hasfacultyvacancies}}
+
+    {{/hasexistingcommittee}}
+
+    {{^hasexistingcommittee}}
+    {{! Create Committee Form }}
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-border-success" aria-labelledby="create-heading">
+        <div class="jb-card-header jb-bg-success jb-text-white">
+            <h5 class="jb-mb-0" id="create-heading">
+                <i class="fa fa-users jb-mr-2" aria-hidden="true"></i>
+                {{#str}}createcommittee, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{! User Search Form }}
+            <form method="get" action="{{filterformurl}}" class="jb-mb-3">
+                <input type="hidden" name="companyid" value="{{company.id}}">
+                <div class="jb-input-group">
+                    <input type="text" name="usersearch" class="jb-form-control"
+                           placeholder="{{#str}}searchbyusername, local_jobboard{{/str}}"
+                           value="{{usersearch}}">
+                    <div class="jb-input-group-append">
+                        <button type="submit" class="jb-btn jb-btn-outline-secondary">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            {{! Create Form }}
+            <form method="post" action="{{createformurl}}">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="create">
+                <input type="hidden" name="companyid" value="{{company.id}}">
+
+                {{! Committee Name }}
+                <div class="jb-form-group jb-mb-3">
+                    <label class="jb-form-label" for="name">{{#str}}committeename, local_jobboard{{/str}}</label>
+                    <input type="text" name="name" id="name" class="jb-form-control"
+                           value="{{defaultcommitteename}}" required>
+                </div>
+
+                {{! Chair (Required) }}
+                <div class="jb-form-group jb-mb-3">
+                    <label class="jb-form-label" for="chair">
+                        <i class="fa fa-user-tie jb-text-danger jb-mr-1" aria-hidden="true"></i>
+                        {{#str}}role_chair, local_jobboard{{/str}}
+                        <span class="jb-text-danger">*</span>
+                    </label>
+                    <select name="chair" id="chair" class="jb-form-control" required>
+                        <option value="">{{#str}}selectuser, local_jobboard{{/str}}</option>
+                        {{#availableusers}}
+                        <option value="{{id}}">{{fullname}} (@{{username}}) - {{email}}</option>
+                        {{/availableusers}}
+                    </select>
+                    <small class="jb-form-text jb-text-muted">{{#str}}chairhelp, local_jobboard{{/str}}</small>
+                </div>
+
+                {{! Secretary (Optional) }}
+                <div class="jb-form-group jb-mb-3">
+                    <label class="jb-form-label" for="secretary">
+                        <i class="fa fa-user-edit jb-text-primary jb-mr-1" aria-hidden="true"></i>
+                        {{#str}}role_secretary, local_jobboard{{/str}}
+                    </label>
+                    <select name="secretary" id="secretary" class="jb-form-control">
+                        <option value="">{{#str}}nosecretaryoptional, local_jobboard{{/str}}</option>
+                        {{#availableusers}}
+                        <option value="{{id}}">{{fullname}} (@{{username}}) - {{email}}</option>
+                        {{/availableusers}}
+                    </select>
+                </div>
+
+                {{! Evaluators (Optional Multiple) }}
+                <div class="jb-form-group jb-mb-3">
+                    <label class="jb-form-label" for="evaluators">
+                        <i class="fa fa-user-check jb-text-success jb-mr-1" aria-hidden="true"></i>
+                        {{#str}}role_evaluator, local_jobboard{{/str}}
+                        ({{#str}}optional, local_jobboard{{/str}})
+                    </label>
+                    <select name="evaluators[]" id="evaluators" class="jb-form-control" multiple size="5">
+                        {{#availableusers}}
+                        <option value="{{id}}">{{fullname}} (@{{username}}) - {{email}}</option>
+                        {{/availableusers}}
+                    </select>
+                    <small class="jb-form-text jb-text-muted">{{#str}}evaluatorshelp, local_jobboard{{/str}}</small>
+                </div>
+
+                {{! Info Alert }}
+                <div class="jb-alert jb-alert-info jb-mb-3">
+                    <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}committeeautoroleassign, local_jobboard{{/str}}
+                </div>
+
+                <button type="submit" class="jb-btn jb-btn-success jb-btn-lg">
+                    <i class="fa fa-check jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}createcommittee, local_jobboard{{/str}}
+                </button>
+            </form>
+        </div>
+    </section>
+    {{/hasexistingcommittee}}
+
+    {{/iscompanyview}}
+
+    {{#isvacancyview}}
+    {{! ================================================================== }}
+    {{! VACANCY VIEW - Legacy Support }}
+    {{! ================================================================== }}
+
+    {{! Back Button }}
+    <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-sm jb-mb-3">
+        <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+        {{#str}}backtolist, local_jobboard{{/str}}
+    </a>
+
+    {{! Legacy Warning }}
+    <div class="jb-alert jb-alert-warning jb-mb-3">
+        <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+        {{#str}}legacyvacancycommittee, local_jobboard{{/str}}
+    </div>
+
+    {{! Vacancy Header }}
+    <section class="jb-card jb-card-shadow jb-mb-4">
+        <div class="jb-card-header jb-bg-primary jb-text-white">
+            <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+                <h5 class="jb-mb-0">
+                    <i class="fa fa-briefcase jb-mr-2" aria-hidden="true"></i>
+                    {{vacancy.code}} - {{vacancy.title}}
+                </h5>
+                <span class="jb-badge jb-badge-{{vacancy.statuscolor}}">{{vacancy.statuslabel}}</span>
+            </div>
+        </div>
+    </section>
+
+    {{#hasexistingcommittee}}
+    <section class="jb-card jb-card-shadow jb-mb-4">
+        <div class="jb-card-body">
+            <p>{{#str}}existingvacancycommittee, local_jobboard{{/str}}: <strong>{{existingcommittee.name}}</strong></p>
+            <p>{{#str}}membercount, local_jobboard{{/str}}: <span class="jb-badge jb-badge-info">{{existingcommittee.membercount}}</span></p>
+        </div>
+    </section>
+    {{/hasexistingcommittee}}
+
+    {{^hasexistingcommittee}}
+    <div class="jb-empty-state jb-text-center jb-py-4">
+        <i class="fa fa-users fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+        <p class="jb-text-muted">{{#str}}nocommitteeforthisvacancy, local_jobboard{{/str}}</p>
+    </div>
+    {{/hasexistingcommittee}}
+
+    {{/isvacancyview}}
+
+    {{! Navigation Footer }}
+    <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
+        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
+                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+            <a href="{{rolesurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
+                <i class="fa fa-user-tag jb-mr-2" aria-hidden="true"></i>
+                {{#str}}manageroles, local_jobboard{{/str}}
+            </a>
+            <a href="{{reviewurl}}" class="jb-btn jb-btn-outline-info jb-m-1">
+                <i class="fa fa-clipboard-check jb-mr-2" aria-hidden="true"></i>
+                {{#str}}reviewapplications, local_jobboard{{/str}}
+            </a>
+        </div>
+    </footer>
+</div>
