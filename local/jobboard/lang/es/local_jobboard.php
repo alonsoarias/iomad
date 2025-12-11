@@ -429,3 +429,41 @@ $string['convocatoriavacancycount'] = '{$a} vacantes';
 $string['noresults'] = 'No se encontraron resultados';
 $string['applied'] = 'Postulado';
 $string['backtodashboard'] = 'Volver al Panel';
+
+// Página de detalle de vacante (v3.1.8).
+$string['vacancyopen'] = 'Esta vacante está abierta y acepta postulaciones.';
+$string['backtoconvocatoria'] = 'Volver a la convocatoria';
+$string['backtovacancies'] = 'Volver a vacantes';
+$string['deadlineprogress'] = 'Progreso del plazo';
+$string['daysremaining'] = 'días restantes';
+$string['modifiedby'] = 'Modificado por';
+$string['readytoapply'] = '¿Listo para postular?';
+$string['applynowdesc'] = 'Envía tu postulación y documentos de respaldo para ser considerado para esta posición.';
+$string['cannotapply'] = 'No puedes postular a esta vacante.';
+$string['logintoapply'] = 'Por favor inicia sesión para postular a esta vacante.';
+$string['vacancydescription'] = 'Descripción';
+$string['closingsoondays'] = 'Por cerrar pronto';
+
+// Página de detalle de postulación (v3.1.8).
+$string['currentstatus'] = 'Estado actual';
+$string['vacancyinfo'] = 'Información de la vacante';
+$string['uploadeddocuments'] = 'Documentos cargados';
+$string['applicationdetails'] = 'Detalles de la postulación';
+$string['reviewapplications'] = 'Revisar postulaciones';
+$string['backtoapplications'] = 'Volver a mis postulaciones';
+$string['backtoreviewlist'] = 'Volver a lista de revisión';
+$string['reviewdocuments_desc'] = 'Revisa y valida los documentos presentados por el postulante.';
+$string['exemptionapplied'] = 'Exención aplicada';
+$string['coverletter'] = 'Carta de presentación';
+$string['digitalsignature'] = 'Firma digital';
+$string['consentgiven'] = 'Consentimiento otorgado';
+$string['workflowactions'] = 'Acciones de flujo de trabajo';
+$string['changestatus'] = 'Cambiar estado';
+$string['optionalnotes'] = 'Notas opcionales';
+$string['updatestatus'] = 'Actualizar estado';
+$string['withdrawapplication'] = 'Retirar postulación';
+$string['confirmwithdraw'] = '¿Estás seguro de que deseas retirar esta postulación? Esta acción no se puede deshacer.';
+$string['applicationwithdrawn'] = 'Postulación retirada exitosamente.';
+$string['cannotwithdraw'] = 'Esta postulación no puede ser retirada en esta etapa.';
+$string['statuschanged'] = 'Estado de la postulación actualizado exitosamente.';
+$string['invalidtransition'] = 'Esta transición de estado no está permitida.';

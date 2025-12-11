@@ -2337,4 +2337,421 @@ class renderer extends plugin_renderer_base {
             'reviewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'applicationid' => $application->id]))->out(false),
         ];
     }
+
+    /**
+     * Render vacancy detail page.
+     *
+     * @param array $data Template data prepared by prepare_vacancy_detail_page_data().
+     * @return string HTML output.
+     */
+    public function render_vacancy_detail_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/vacancy_detail', $data);
+    }
+
+    /**
+     * Prepare vacancy detail page data.
+     *
+     * @param \local_jobboard\vacancy $vacancy The vacancy object.
+     * @param object|null $convocatoria Optional convocatoria record.
+     * @param bool $canapply Whether user can apply.
+     * @param bool $hasapplied Whether user has already applied.
+     * @param bool $canedit Whether user can edit the vacancy.
+     * @param bool $canmanage Whether user can manage vacancies.
+     * @param array $applicationstats Application stats for managers (optional).
+     * @return array Template data.
+     */
+    public function prepare_vacancy_detail_page_data(
+        \local_jobboard\vacancy $vacancy,
+        ?object $convocatoria,
+        bool $canapply,
+        bool $hasapplied,
+        bool $canedit,
+        bool $canmanage,
+        array $applicationstats = []
+    ): array {
+        global $CFG, $USER;
+
+        // Calculate dates and progress.
+        $daysremaining = \local_jobboard_days_between(time(), $vacancy->closedate);
+        $isurgent = ($daysremaining <= 7 && $daysremaining >= 0);
+        $isclosed = ($vacancy->closedate < time() || $vacancy->status === 'closed');
+
+        // Progress calculation.
+        $totaldays = \local_jobboard_days_between($vacancy->opendate, $vacancy->closedate);
+        $elapseddays = \local_jobboard_days_between($vacancy->opendate, time());
+        $progresspercent = $totaldays > 0 ? min(100, round(($elapseddays / $totaldays) * 100)) : 100;
+        $progresscolor = 'success';
+        if ($progresspercent > 80) {
+            $progresscolor = 'danger';
+        } elseif ($progresspercent > 50) {
+            $progresscolor = 'warning';
+        }
+
+        // Status info for banner.
+        $statuscolor = 'info';
+        $statusicon = 'info-circle';
+        $statusmessage = get_string('vacancyopen', 'local_jobboard');
+
+        if ($hasapplied) {
+            $statuscolor = 'info';
+            $statusicon = 'check-circle';
+            $statusmessage = get_string('error:alreadyapplied', 'local_jobboard');
+        } elseif ($isclosed) {
+            $statuscolor = 'secondary';
+            $statusicon = 'lock';
+            $statusmessage = get_string('error:vacancyclosed', 'local_jobboard');
+        } elseif ($isurgent) {
+            $statuscolor = 'warning';
+            $statusicon = 'clock';
+            $statusmessage = get_string('closingsoondays', 'local_jobboard', $daysremaining);
+        } else {
+            $statuscolor = 'success';
+            $statusicon = 'door-open';
+        }
+
+        // Breadcrumbs.
+        $breadcrumbs = [
+            ['label' => get_string('dashboard', 'local_jobboard'), 'url' => (new moodle_url('/local/jobboard/index.php'))->out(false)],
+        ];
+        if ($convocatoria) {
+            $breadcrumbs[] = [
+                'label' => get_string('convocatorias', 'local_jobboard'),
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']))->out(false),
+            ];
+            $breadcrumbs[] = [
+                'label' => format_string($convocatoria->name),
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]))->out(false),
+            ];
+        } else {
+            $breadcrumbs[] = [
+                'label' => get_string('vacancies', 'local_jobboard'),
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']))->out(false),
+            ];
+        }
+        $breadcrumbs[] = ['label' => format_string($vacancy->title), 'url' => null, 'active' => true];
+
+        // Contract types.
+        $contracttypes = \local_jobboard_get_contract_types();
+        $contracttypelabel = $contracttypes[$vacancy->contracttype] ?? $vacancy->contracttype;
+
+        // Company name for IOMAD.
+        $companyname = '';
+        if ($vacancy->companyid) {
+            $companyname = $vacancy->get_company_name();
+        }
+
+        // Prepare convocatoria data.
+        $convdata = null;
+        if ($convocatoria) {
+            $convdata = [
+                'id' => $convocatoria->id,
+                'name' => format_string($convocatoria->name),
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]))->out(false),
+            ];
+        }
+
+        // Back navigation.
+        $backurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']))->out(false);
+        $backlabel = get_string('backtovacancies', 'local_jobboard');
+        if ($convocatoria) {
+            $backurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]))->out(false);
+            $backlabel = get_string('backtoconvocatoria', 'local_jobboard');
+        }
+
+        // Created/Modified by info for managers.
+        $createdbyname = '';
+        $modifiedbyname = '';
+        $timecreatedformatted = '';
+        if ($canmanage) {
+            $createdbyname = fullname(\core_user::get_user($vacancy->createdby));
+            $timecreatedformatted = \local_jobboard_format_datetime($vacancy->timecreated);
+            if ($vacancy->modifiedby) {
+                $modifiedbyname = fullname(\core_user::get_user($vacancy->modifiedby));
+            }
+        }
+
+        return [
+            'breadcrumbs' => $breadcrumbs,
+            'vacancy' => [
+                'id' => $vacancy->id,
+                'code' => $vacancy->code,
+                'title' => format_string($vacancy->title),
+                'description' => format_text($vacancy->description ?? '', FORMAT_HTML),
+                'requirements' => format_text($vacancy->requirements ?? '', FORMAT_HTML),
+                'desirable' => format_text($vacancy->desirable ?? '', FORMAT_HTML),
+                'location' => $vacancy->location ?? '',
+                'department' => $vacancy->department ?? '',
+                'companyname' => $companyname,
+                'duration' => $vacancy->duration ?? '',
+                'contracttype' => $vacancy->contracttype,
+                'contracttypelabel' => $contracttypelabel,
+                'positions' => $vacancy->positions,
+                'status' => $vacancy->status,
+                'statuslabel' => get_string('status_' . $vacancy->status, 'local_jobboard'),
+                'statuscolor' => $this->get_status_class($vacancy->status),
+                'opendateformatted' => \local_jobboard_format_date($vacancy->opendate),
+                'closedateformatted' => \local_jobboard_format_date($vacancy->closedate),
+            ],
+            'convocatoria' => $convdata,
+            'statuscolor' => $statuscolor,
+            'statusicon' => $statusicon,
+            'statusmessage' => $statusmessage,
+            'canapply' => $canapply && !$isclosed,
+            'hasapplied' => $hasapplied,
+            'canedit' => $canedit,
+            'canmanage' => $canmanage,
+            'isurgent' => $isurgent,
+            'isclosed' => $isclosed,
+            'daysremaining' => $daysremaining,
+            'progresspercent' => $progresspercent,
+            'progresscolor' => $progresscolor,
+            'isloggedin' => isloggedin() && !isguestuser(),
+            'applicationstats' => !empty($applicationstats) ? $applicationstats : null,
+            'applyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]))->out(false),
+            'editurl' => (new moodle_url('/local/jobboard/edit.php', ['id' => $vacancy->id]))->out(false),
+            'myapplicationsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
+            'loginurl' => (new moodle_url('/login/index.php'))->out(false),
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'backurl' => $backurl,
+            'backlabel' => $backlabel,
+            'createdbyname' => $createdbyname,
+            'modifiedbyname' => $modifiedbyname,
+            'timecreatedformatted' => $timecreatedformatted,
+        ];
+    }
+
+    /**
+     * Render application detail page.
+     *
+     * @param array $data Template data prepared by prepare_application_detail_page_data().
+     * @return string HTML output.
+     */
+    public function render_application_detail_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/application_detail', $data);
+    }
+
+    /**
+     * Prepare application detail page data.
+     *
+     * @param \local_jobboard\application $application The application object.
+     * @param \local_jobboard\vacancy $vacancy The vacancy object.
+     * @param object $applicant The applicant user record.
+     * @param array $documents Array of document objects.
+     * @param array $history Status history array.
+     * @param bool $isowner Whether current user owns the application.
+     * @param bool $canreview Whether current user can review.
+     * @param bool $canmanage Whether current user can manage workflow.
+     * @param array $workflowactions Available workflow transitions.
+     * @param object|null $exemption Active exemption record.
+     * @return array Template data.
+     */
+    public function prepare_application_detail_page_data(
+        \local_jobboard\application $application,
+        \local_jobboard\vacancy $vacancy,
+        object $applicant,
+        array $documents,
+        array $history,
+        bool $isowner,
+        bool $canreview,
+        bool $canmanage,
+        array $workflowactions = [],
+        ?object $exemption = null
+    ): array {
+        // Status styling.
+        $statuscolor = 'info';
+        $statusicon = 'info-circle';
+
+        switch ($application->status) {
+            case 'docs_validated':
+            case 'selected':
+                $statuscolor = 'success';
+                $statusicon = 'check-circle';
+                break;
+            case 'docs_rejected':
+            case 'rejected':
+                $statuscolor = 'danger';
+                $statusicon = 'times-circle';
+                break;
+            case 'withdrawn':
+                $statuscolor = 'secondary';
+                $statusicon = 'ban';
+                break;
+            case 'interview':
+                $statuscolor = 'warning';
+                $statusicon = 'calendar-check';
+                break;
+            case 'under_review':
+                $statuscolor = 'warning';
+                $statusicon = 'clock';
+                break;
+            case 'submitted':
+                $statuscolor = 'info';
+                $statusicon = 'paper-plane';
+                break;
+        }
+
+        // Breadcrumbs.
+        $breadcrumbs = [
+            ['label' => get_string('dashboard', 'local_jobboard'), 'url' => (new moodle_url('/local/jobboard/index.php'))->out(false)],
+        ];
+        if ($isowner) {
+            $breadcrumbs[] = [
+                'label' => get_string('myapplications', 'local_jobboard'),
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
+            ];
+        } else {
+            $breadcrumbs[] = [
+                'label' => get_string('reviewapplications', 'local_jobboard'),
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $application->vacancyid]))->out(false),
+            ];
+        }
+        $breadcrumbs[] = [
+            'label' => get_string('application', 'local_jobboard') . ' #' . $application->id,
+            'url' => null,
+            'active' => true,
+        ];
+
+        // Prepare documents data.
+        $documentsdata = [];
+        foreach ($documents as $doc) {
+            $docstatus = $doc->status ?? 'pending';
+            $docstatuscolor = 'warning';
+            $docstatusicon = 'clock';
+            $filecolor = 'secondary';
+
+            switch ($docstatus) {
+                case 'approved':
+                    $docstatuscolor = 'success';
+                    $docstatusicon = 'check-circle';
+                    $filecolor = 'success';
+                    break;
+                case 'rejected':
+                    $docstatuscolor = 'danger';
+                    $docstatusicon = 'times-circle';
+                    $filecolor = 'danger';
+                    break;
+            }
+
+            $documentsdata[] = [
+                'id' => $doc->id,
+                'typename' => $doc->get_doctype_name(),
+                'filename' => format_string($doc->filename),
+                'status' => $docstatus,
+                'statuslabel' => get_string('docstatus:' . $docstatus, 'local_jobboard'),
+                'statuscolor' => $docstatuscolor,
+                'statusicon' => $docstatusicon,
+                'filecolor' => $filecolor,
+                'downloadurl' => $doc->get_download_url() ? $doc->get_download_url()->out(false) : null,
+                'rejectreason' => $doc->rejectreason ?? null,
+                'canreupload' => $isowner && $docstatus === 'rejected' && in_array($application->status, ['docs_rejected', 'submitted']),
+                'reuploadurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id, 'reupload' => $doc->id]))->out(false),
+            ];
+        }
+
+        // Prepare history data.
+        $historydata = [];
+        foreach ($history as $entry) {
+            $hstatuscolor = $this->get_application_status_class($entry->newstatus);
+            $changedbyname = '';
+            if (!empty($entry->changedby)) {
+                $changedbyuser = \core_user::get_user($entry->changedby);
+                $changedbyname = $changedbyuser ? fullname($changedbyuser) : '';
+            }
+
+            $historydata[] = [
+                'status' => $entry->newstatus,
+                'statuslabel' => get_string('status_' . $entry->newstatus, 'local_jobboard'),
+                'statuscolor' => $hstatuscolor,
+                'timeformatted' => userdate($entry->timecreated, get_string('strftimedatetime', 'langconfig')),
+                'notes' => $entry->notes ?? null,
+                'changedbyname' => $changedbyname,
+            ];
+        }
+
+        // Prepare workflow actions.
+        $workflowdata = [];
+        foreach ($workflowactions as $status) {
+            $workflowdata[] = [
+                'value' => $status,
+                'label' => get_string('status_' . $status, 'local_jobboard'),
+            ];
+        }
+
+        // Can withdraw?
+        $canwithdraw = $isowner && in_array($application->status, ['submitted', 'under_review']);
+
+        // Back navigation.
+        $backurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false);
+        $backlabel = get_string('backtoapplications', 'local_jobboard');
+        if (!$isowner) {
+            $backurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $application->vacancyid]))->out(false);
+            $backlabel = get_string('backtoreviewlist', 'local_jobboard');
+        }
+
+        // Applicant info (for reviewers).
+        $applicantdata = null;
+        if ($canreview || $canmanage) {
+            $applicantdata = [
+                'fullname' => fullname($applicant),
+                'email' => $applicant->email,
+                'idnumber' => $applicant->idnumber ?? null,
+                'phone' => $applicant->phone1 ?? null,
+            ];
+        }
+
+        // Exemption info.
+        $hasexemption = false;
+        $exemptiontype = '';
+        $exemptionref = '';
+        if ($exemption) {
+            $hasexemption = true;
+            $exemptiontype = get_string('exemptiontype_' . $exemption->exemptiontype, 'local_jobboard');
+            $exemptionref = $exemption->documentref ?? '';
+        }
+
+        return [
+            'breadcrumbs' => $breadcrumbs,
+            'application' => [
+                'id' => $application->id,
+                'status' => $application->status,
+                'statuslabel' => get_string('status_' . $application->status, 'local_jobboard'),
+                'statuscolor' => $statuscolor,
+                'statusicon' => $statusicon,
+                'statusnotes' => $application->statusnotes ?? null,
+                'dateapplied' => userdate($application->timecreated, get_string('strftimedate', 'langconfig')),
+                'digitalsignature' => $application->digitalsignature ?? null,
+                'consenttimestamp' => !empty($application->consenttimestamp) ?
+                    userdate($application->consenttimestamp, get_string('strftimedate', 'langconfig')) : null,
+                'coverletter' => !empty($application->coverletter) ? nl2br(format_string($application->coverletter)) : null,
+            ],
+            'vacancy' => [
+                'id' => $vacancy->id,
+                'code' => $vacancy->code,
+                'title' => format_string($vacancy->title),
+                'location' => $vacancy->location ?? null,
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancy->id]))->out(false),
+            ],
+            'applicant' => $applicantdata,
+            'hasexemption' => $hasexemption,
+            'exemptiontype' => $exemptiontype,
+            'exemptionref' => $exemptionref,
+            'documents' => $documentsdata,
+            'hasdocuments' => !empty($documentsdata),
+            'documentcount' => count($documentsdata),
+            'history' => $historydata,
+            'hashistory' => !empty($historydata),
+            'isowner' => $isowner,
+            'canreview' => $canreview && !$isowner,
+            'canmanage' => $canmanage,
+            'canwithdraw' => $canwithdraw,
+            'workflowactions' => $workflowdata,
+            'hasworkflowactions' => !empty($workflowdata),
+            'sesskey' => sesskey(),
+            'workflowurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'withdrawurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id, 'action' => 'withdraw']))->out(false),
+            'reviewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'applicationid' => $application->id]))->out(false),
+            'backurl' => $backurl,
+            'backlabel' => $backlabel,
+        ];
+    }
 }

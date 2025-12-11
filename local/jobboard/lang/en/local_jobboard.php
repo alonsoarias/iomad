@@ -429,3 +429,41 @@ $string['convocatoriavacancycount'] = '{$a} vacancies';
 $string['noresults'] = 'No results found';
 $string['applied'] = 'Applied';
 $string['backtodashboard'] = 'Back to Dashboard';
+
+// Vacancy detail page (v3.1.8).
+$string['vacancyopen'] = 'This vacancy is open and accepting applications.';
+$string['backtoconvocatoria'] = 'Back to convocatoria';
+$string['backtovacancies'] = 'Back to vacancies';
+$string['deadlineprogress'] = 'Deadline progress';
+$string['daysremaining'] = 'days remaining';
+$string['modifiedby'] = 'Modified by';
+$string['readytoapply'] = 'Ready to apply?';
+$string['applynowdesc'] = 'Submit your application and supporting documents to be considered for this position.';
+$string['cannotapply'] = 'You cannot apply to this vacancy.';
+$string['logintoapply'] = 'Please log in to apply for this vacancy.';
+$string['vacancydescription'] = 'Description';
+$string['closingsoondays'] = 'Closing soon';
+
+// Application detail page (v3.1.8).
+$string['currentstatus'] = 'Current status';
+$string['vacancyinfo'] = 'Vacancy information';
+$string['uploadeddocuments'] = 'Uploaded documents';
+$string['applicationdetails'] = 'Application details';
+$string['reviewapplications'] = 'Review applications';
+$string['backtoapplications'] = 'Back to my applications';
+$string['backtoreviewlist'] = 'Back to review list';
+$string['reviewdocuments_desc'] = 'Review and validate the applicant\'s submitted documents.';
+$string['exemptionapplied'] = 'Exemption applied';
+$string['coverletter'] = 'Cover letter';
+$string['digitalsignature'] = 'Digital signature';
+$string['consentgiven'] = 'Consent given';
+$string['workflowactions'] = 'Workflow actions';
+$string['changestatus'] = 'Change status';
+$string['optionalnotes'] = 'Optional notes';
+$string['updatestatus'] = 'Update status';
+$string['withdrawapplication'] = 'Withdraw application';
+$string['confirmwithdraw'] = 'Are you sure you want to withdraw this application? This action cannot be undone.';
+$string['applicationwithdrawn'] = 'Application withdrawn successfully.';
+$string['cannotwithdraw'] = 'This application cannot be withdrawn at this stage.';
+$string['statuschanged'] = 'Application status updated successfully.';
+$string['invalidtransition'] = 'This status transition is not allowed.';

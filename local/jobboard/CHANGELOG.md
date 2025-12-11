@@ -5,6 +5,34 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.8] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored 2 detail views to renderer + template pattern:
+  - `views/vacancy.php`: 461 lines → ~105 lines (clean separation of concerns)
+  - `views/application.php`: 515 lines → ~145 lines (workflow actions preserved)
+- Updated `templates/pages/vacancy_detail.mustache` with complete jb-* CSS classes
+- Updated `templates/pages/application_detail.mustache` with complete jb-* CSS classes
+
+### Added
+- `prepare_vacancy_detail_page_data()` method in renderer
+- `render_vacancy_detail_page()` method in renderer
+- `prepare_application_detail_page_data()` method in renderer
+- `render_application_detail_page()` method in renderer
+- Vacancy detail page with breadcrumbs, apply CTA, and progress bar
+- Application detail page with document table, status history, and workflow actions
+- New language strings for detail pages (EN/ES):
+  - vacancyopen, backtoconvocatoria, backtovacancies, deadlineprogress, daysremaining
+  - currentstatus, vacancyinfo, uploadeddocuments, applicationdetails, workflowactions
+  - And more (see lang files for complete list)
+
+### Technical Notes
+- Vacancy detail shows deadline progress and urgent warnings
+- Application detail preserves withdraw and status change workflows
+- Exemption info displayed for reviewers when applicable
+- All templates use jb-* CSS classes only (no Bootstrap)
+- Status history timeline with color-coded entries
+
 ## [3.1.7] - 2025-12-11
 
 ### Changed

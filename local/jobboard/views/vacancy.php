@@ -17,7 +17,7 @@
 /**
  * Vacancy detail view for local_jobboard.
  *
- * Modern redesign with improved layout and UX.
+ * Uses renderer + Mustache template for clean separation of concerns.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -27,8 +27,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
-
-use local_jobboard\output\ui_helper;
 
 // Parameters.
 $id = required_param('id', PARAM_INT);
@@ -48,7 +46,7 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title($vacancy->title);
 $PAGE->set_heading($vacancy->title);
 
-// Load convocatoria if vacancy belongs to one (for breadcrumbs).
+// Load convocatoria if vacancy belongs to one.
 $convocatoria = null;
 if ($vacancy->convocatoriaid) {
     $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $vacancy->convocatoriaid]);
@@ -60,301 +58,16 @@ if ($vacancy->convocatoriaid) {
 // Check capabilities.
 $canmanage = has_capability('local/jobboard:createvacancy', $context);
 $canapply = has_capability('local/jobboard:apply', $context);
+$canedit = $canmanage && $vacancy->can_edit();
 
 // Check if user already applied.
-$hasApplied = $DB->record_exists('local_jobboard_application', [
+$hasapplied = $DB->record_exists('local_jobboard_application', [
     'vacancyid' => $vacancy->id,
     'userid' => $USER->id,
 ]);
 
-// Calculate days remaining.
-$daysRemaining = local_jobboard_days_between(time(), $vacancy->closedate);
-$isUrgent = ($daysRemaining <= 7 && $daysRemaining >= 0);
-$isClosed = ($vacancy->closedate < time() || $vacancy->status === 'closed');
-
-echo $OUTPUT->header();
-echo ui_helper::get_inline_styles();
-
-echo html_writer::start_div('local-jobboard-vacancy-detail');
-
-// ============================================================================
-// PAGE HEADER
-// ============================================================================
-$breadcrumbs = [
-    get_string('dashboard', 'local_jobboard') => new moodle_url('/local/jobboard/index.php'),
-];
-
-// Add convocatoria to breadcrumbs if vacancy belongs to one.
-if ($convocatoria) {
-    $breadcrumbs[get_string('convocatorias', 'local_jobboard')] = new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']);
-    $breadcrumbs[s($convocatoria->name)] = new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]);
-} else {
-    $breadcrumbs[get_string('vacancies', 'local_jobboard')] = new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']);
-}
-
-$breadcrumbs[s($vacancy->title)] = null;
-
-$headerActions = [];
-if ($vacancy->is_open() && $canapply && !$hasApplied) {
-    $headerActions[] = [
-        'url' => new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]),
-        'label' => get_string('apply', 'local_jobboard'),
-        'icon' => 'paper-plane',
-        'class' => 'btn btn-success btn-lg',
-    ];
-}
-if ($canmanage && $vacancy->can_edit()) {
-    $headerActions[] = [
-        'url' => new moodle_url('/local/jobboard/edit.php', ['id' => $vacancy->id]),
-        'label' => get_string('edit', 'local_jobboard'),
-        'icon' => 'edit',
-        'class' => 'btn btn-outline-primary',
-    ];
-}
-
-echo ui_helper::page_header(
-    s($vacancy->title),
-    $breadcrumbs,
-    $headerActions
-);
-
-// ============================================================================
-// STATUS BANNER
-// ============================================================================
-$bannerClass = 'alert d-flex justify-content-between align-items-center mb-4';
-$bannerIcon = 'info-circle';
-
-if ($hasApplied) {
-    $bannerClass .= ' alert-info';
-    $bannerMessage = get_string('error:alreadyapplied', 'local_jobboard');
-    $bannerIcon = 'check-circle';
-} elseif ($isClosed) {
-    $bannerClass .= ' alert-secondary';
-    $bannerMessage = get_string('error:vacancyclosed', 'local_jobboard');
-    $bannerIcon = 'lock';
-} elseif ($isUrgent) {
-    $bannerClass .= ' alert-warning';
-    $bannerMessage = get_string('closingsoondays', 'local_jobboard', $daysRemaining);
-    $bannerIcon = 'clock';
-} else {
-    $bannerClass .= ' alert-success';
-    $bannerMessage = get_string('vacancyopen', 'local_jobboard');
-    $bannerIcon = 'door-open';
-}
-
-echo html_writer::start_div($bannerClass);
-echo html_writer::tag('span',
-    '<i class="fa fa-' . $bannerIcon . ' mr-2"></i>' . $bannerMessage,
-    ['class' => 'font-weight-medium']
-);
-echo html_writer::start_div();
-echo ui_helper::status_badge($vacancy->status, 'vacancy');
-echo html_writer::tag('code', ' ' . s($vacancy->code), ['class' => 'ml-2']);
-echo html_writer::end_div();
-echo html_writer::end_div();
-
-// ============================================================================
-// MAIN CONTENT
-// ============================================================================
-echo html_writer::start_div('row');
-
-// Left column - Main content.
-echo html_writer::start_div('col-lg-8');
-
-// Description card.
-if (!empty($vacancy->description)) {
-    echo html_writer::start_div('card shadow-sm mb-4');
-    echo html_writer::start_div('card-header bg-white');
-    echo html_writer::tag('h5',
-        '<i class="fa fa-file-alt text-primary mr-2"></i>' . get_string('vacancydescription', 'local_jobboard'),
-        ['class' => 'mb-0']
-    );
-    echo html_writer::end_div();
-    echo html_writer::start_div('card-body');
-    echo format_text($vacancy->description, FORMAT_HTML, ['context' => $context]);
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-}
-
-// Requirements card.
-if (!empty($vacancy->requirements)) {
-    echo html_writer::start_div('card shadow-sm mb-4');
-    echo html_writer::start_div('card-header bg-white');
-    echo html_writer::tag('h5',
-        '<i class="fa fa-list-check text-warning mr-2"></i>' . get_string('requirements', 'local_jobboard'),
-        ['class' => 'mb-0']
-    );
-    echo html_writer::end_div();
-    echo html_writer::start_div('card-body');
-    echo format_text($vacancy->requirements, FORMAT_HTML, ['context' => $context]);
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-}
-
-// Desirable card.
-if (!empty($vacancy->desirable)) {
-    echo html_writer::start_div('card shadow-sm mb-4');
-    echo html_writer::start_div('card-header bg-white');
-    echo html_writer::tag('h5',
-        '<i class="fa fa-star text-info mr-2"></i>' . get_string('desirable', 'local_jobboard'),
-        ['class' => 'mb-0']
-    );
-    echo html_writer::end_div();
-    echo html_writer::start_div('card-body');
-    echo format_text($vacancy->desirable, FORMAT_HTML, ['context' => $context]);
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-}
-
-echo html_writer::end_div(); // col-lg-8
-
-// Right column - Sidebar.
-echo html_writer::start_div('col-lg-4');
-
-// Key details card.
-echo html_writer::start_div('card shadow-sm mb-4');
-echo html_writer::start_div('card-header bg-primary text-white');
-echo html_writer::tag('h5',
-    '<i class="fa fa-info-circle mr-2"></i>' . get_string('details', 'local_jobboard'),
-    ['class' => 'mb-0']
-);
-echo html_writer::end_div();
-echo html_writer::start_div('card-body p-0');
-
-echo html_writer::start_tag('ul', ['class' => 'list-group list-group-flush']);
-
-// Contract type.
-if (!empty($vacancy->contracttype)) {
-    $contracttypes = local_jobboard_get_contract_types();
-    echo html_writer::start_tag('li', ['class' => 'list-group-item d-flex justify-content-between align-items-center']);
-    echo html_writer::tag('span', '<i class="fa fa-file-contract text-muted mr-2"></i>' . get_string('contracttype', 'local_jobboard'));
-    echo html_writer::tag('strong', $contracttypes[$vacancy->contracttype] ?? $vacancy->contracttype);
-    echo html_writer::end_tag('li');
-}
-
-// Duration.
-if (!empty($vacancy->duration)) {
-    echo html_writer::start_tag('li', ['class' => 'list-group-item d-flex justify-content-between align-items-center']);
-    echo html_writer::tag('span', '<i class="fa fa-hourglass-half text-muted mr-2"></i>' . get_string('duration', 'local_jobboard'));
-    echo html_writer::tag('strong', s($vacancy->duration));
-    echo html_writer::end_tag('li');
-}
-
-// Location.
-if (!empty($vacancy->location)) {
-    echo html_writer::start_tag('li', ['class' => 'list-group-item d-flex justify-content-between align-items-center']);
-    echo html_writer::tag('span', '<i class="fa fa-map-marker-alt text-muted mr-2"></i>' . get_string('location', 'local_jobboard'));
-    echo html_writer::tag('strong', s($vacancy->location));
-    echo html_writer::end_tag('li');
-}
-
-// Department.
-if (!empty($vacancy->department)) {
-    echo html_writer::start_tag('li', ['class' => 'list-group-item d-flex justify-content-between align-items-center']);
-    echo html_writer::tag('span', '<i class="fa fa-building text-muted mr-2"></i>' . get_string('department', 'local_jobboard'));
-    echo html_writer::tag('strong', s($vacancy->department));
-    echo html_writer::end_tag('li');
-}
-
-// Company (Iomad).
-if ($vacancy->companyid) {
-    echo html_writer::start_tag('li', ['class' => 'list-group-item d-flex justify-content-between align-items-center']);
-    echo html_writer::tag('span', '<i class="fa fa-industry text-muted mr-2"></i>' . get_string('company', 'local_jobboard'));
-    echo html_writer::tag('strong', s($vacancy->get_company_name()));
-    echo html_writer::end_tag('li');
-}
-
-// Positions.
-echo html_writer::start_tag('li', ['class' => 'list-group-item d-flex justify-content-between align-items-center']);
-echo html_writer::tag('span', '<i class="fa fa-users text-muted mr-2"></i>' . get_string('positions', 'local_jobboard'));
-echo html_writer::tag('span', $vacancy->positions, ['class' => 'badge badge-primary badge-pill']);
-echo html_writer::end_tag('li');
-
-echo html_writer::end_tag('ul');
-echo html_writer::end_div(); // card-body
-echo html_writer::end_div(); // card
-
-// Dates card.
-echo html_writer::start_div('card shadow-sm mb-4');
-echo html_writer::start_div('card-header bg-white');
-echo html_writer::tag('h5',
-    '<i class="fa fa-calendar-alt text-primary mr-2"></i>' . get_string('dates', 'local_jobboard'),
-    ['class' => 'mb-0']
-);
-echo html_writer::end_div();
-echo html_writer::start_div('card-body');
-
-// Opening date.
-echo html_writer::start_div('d-flex justify-content-between mb-2');
-echo html_writer::tag('span', get_string('opendate', 'local_jobboard'), ['class' => 'text-muted']);
-echo html_writer::tag('strong', local_jobboard_format_date($vacancy->opendate));
-echo html_writer::end_div();
-
-// Closing date.
-$closeDateClass = $isUrgent ? 'text-warning' : ($isClosed ? 'text-secondary' : 'text-success');
-echo html_writer::start_div('d-flex justify-content-between mb-2');
-echo html_writer::tag('span', get_string('closedate', 'local_jobboard'), ['class' => 'text-muted']);
-echo html_writer::start_div();
-echo html_writer::tag('strong', local_jobboard_format_date($vacancy->closedate), ['class' => $closeDateClass]);
-if (!$isClosed && $daysRemaining >= 0) {
-    echo html_writer::tag('span', ' (' . $daysRemaining . ' ' . get_string('days', 'local_jobboard') . ')',
-        ['class' => 'small ' . $closeDateClass]);
-}
-echo html_writer::end_div();
-echo html_writer::end_div();
-
-// Progress bar for deadline.
-if (!$isClosed) {
-    $totalDays = local_jobboard_days_between($vacancy->opendate, $vacancy->closedate);
-    $elapsedDays = local_jobboard_days_between($vacancy->opendate, time());
-    $progress = $totalDays > 0 ? min(100, ($elapsedDays / $totalDays) * 100) : 100;
-    $progressClass = $progress > 80 ? 'bg-danger' : ($progress > 50 ? 'bg-warning' : 'bg-success');
-
-    echo html_writer::start_div('progress mt-3', ['style' => 'height: 8px;']);
-    echo html_writer::div('', 'progress-bar ' . $progressClass, [
-        'role' => 'progressbar',
-        'style' => 'width: ' . $progress . '%',
-        'aria-valuenow' => $progress,
-        'aria-valuemin' => '0',
-        'aria-valuemax' => '100',
-    ]);
-    echo html_writer::end_div();
-    echo html_writer::tag('small', get_string('deadlineprogress', 'local_jobboard'), ['class' => 'text-muted']);
-}
-
-echo html_writer::end_div(); // card-body
-echo html_writer::end_div(); // card
-
-// Apply CTA card (if not applied and open).
-if ($vacancy->is_open() && $canapply && !$hasApplied) {
-    echo html_writer::start_div('card shadow-sm mb-4 border-success');
-    echo html_writer::start_div('card-body text-center');
-    echo html_writer::tag('h5', get_string('readytoapply', 'local_jobboard'), ['class' => 'card-title']);
-    echo html_writer::tag('p', get_string('applynowdesc', 'local_jobboard'), ['class' => 'card-text text-muted']);
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]),
-        '<i class="fa fa-paper-plane mr-2"></i>' . get_string('apply', 'local_jobboard'),
-        ['class' => 'btn btn-success btn-lg btn-block']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-} elseif ($hasApplied) {
-    echo html_writer::start_div('card shadow-sm mb-4 border-info');
-    echo html_writer::start_div('card-body text-center');
-    echo html_writer::tag('h5',
-        '<i class="fa fa-check-circle text-info mr-2"></i>' . get_string('applied', 'local_jobboard'),
-        ['class' => 'card-title']
-    );
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
-        get_string('viewmyapplications', 'local_jobboard'),
-        ['class' => 'btn btn-outline-info']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-}
-
-// Statistics card (for managers).
+// Build application stats for managers.
+$applicationstats = [];
 if ($canmanage) {
     $appcount = $vacancy->get_application_count();
     $pendingcount = $vacancy->get_application_count('submitted');
@@ -362,99 +75,31 @@ if ($canmanage) {
     $validatedcount = $vacancy->get_application_count('docs_validated');
     $selectedcount = $vacancy->get_application_count('selected');
 
-    echo html_writer::start_div('card shadow-sm mb-4');
-    echo html_writer::start_div('card-header bg-white');
-    echo html_writer::tag('h5',
-        '<i class="fa fa-chart-bar text-primary mr-2"></i>' . get_string('applicationstats', 'local_jobboard'),
-        ['class' => 'mb-0']
-    );
-    echo html_writer::end_div();
-    echo html_writer::start_div('card-body');
-
-    echo html_writer::start_div('row text-center');
-    echo html_writer::div(
-        html_writer::tag('div', $appcount, ['class' => 'h3 mb-0 text-primary']) .
-        html_writer::tag('small', get_string('total', 'local_jobboard'), ['class' => 'text-muted']),
-        'col-6 mb-3'
-    );
-    echo html_writer::div(
-        html_writer::tag('div', $pendingcount, ['class' => 'h3 mb-0 text-warning']) .
-        html_writer::tag('small', get_string('appstatus:submitted', 'local_jobboard'), ['class' => 'text-muted']),
-        'col-6 mb-3'
-    );
-    echo html_writer::div(
-        html_writer::tag('div', $reviewcount, ['class' => 'h3 mb-0 text-info']) .
-        html_writer::tag('small', get_string('appstatus:under_review', 'local_jobboard'), ['class' => 'text-muted']),
-        'col-6'
-    );
-    echo html_writer::div(
-        html_writer::tag('div', $selectedcount, ['class' => 'h3 mb-0 text-success']) .
-        html_writer::tag('small', get_string('appstatus:selected', 'local_jobboard'), ['class' => 'text-muted']),
-        'col-6'
-    );
-    echo html_writer::end_div();
-
     if ($appcount > 0) {
-        echo html_writer::div('', 'border-top my-3');
-        echo html_writer::link(
-            new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancy->id]),
-            '<i class="fa fa-eye mr-2"></i>' . get_string('reviewapplications', 'local_jobboard'),
-            ['class' => 'btn btn-outline-primary btn-block']
-        );
+        $applicationstats = [
+            'total' => $appcount,
+            'pending' => $pendingcount + $reviewcount,
+            'validated' => $validatedcount + $selectedcount,
+            'manageurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancy->id]))->out(false),
+        ];
     }
-
-    echo html_writer::end_div();
-    echo html_writer::end_div();
 }
 
-echo html_writer::end_div(); // col-lg-4
-echo html_writer::end_div(); // row
+// Get the renderer.
+$renderer = $PAGE->get_renderer('local_jobboard');
 
-// ============================================================================
-// METADATA (for managers)
-// ============================================================================
-if ($canmanage) {
-    echo html_writer::start_div('card shadow-sm mt-4');
-    echo html_writer::start_div('card-body bg-light py-2');
-    echo html_writer::start_div('row small text-muted');
-    echo html_writer::div(
-        '<i class="fa fa-user mr-1"></i>' . get_string('createdby', 'local_jobboard') . ': ' .
-        fullname(\core_user::get_user($vacancy->createdby)) . ' - ' .
-        local_jobboard_format_datetime($vacancy->timecreated),
-        'col-md-6'
-    );
-    if ($vacancy->modifiedby) {
-        echo html_writer::div(
-            '<i class="fa fa-edit mr-1"></i>' . get_string('modifiedby', 'local_jobboard') . ': ' .
-            fullname(\core_user::get_user($vacancy->modifiedby)) . ' - ' .
-            local_jobboard_format_datetime($vacancy->timemodified),
-            'col-md-6'
-        );
-    }
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-}
+// Prepare template data using the renderer.
+$data = $renderer->prepare_vacancy_detail_page_data(
+    $vacancy,
+    $convocatoria,
+    $canapply,
+    $hasapplied,
+    $canedit,
+    $canmanage,
+    $applicationstats
+);
 
-// ============================================================================
-// BACK BUTTON
-// ============================================================================
-echo html_writer::start_div('mt-4');
-if ($convocatoria) {
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]),
-        '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtoconvocatoria', 'local_jobboard'),
-        ['class' => 'btn btn-outline-secondary']
-    );
-} else {
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']),
-        '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtovacancies', 'local_jobboard'),
-        ['class' => 'btn btn-outline-secondary']
-    );
-}
-echo html_writer::end_div();
-
-echo html_writer::end_div(); // local-jobboard-vacancy-detail
-
+// Output the page.
+echo $OUTPUT->header();
+echo $renderer->render_vacancy_detail_page($data);
 echo $OUTPUT->footer();
