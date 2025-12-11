@@ -5,6 +5,21 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.3] - 2025-12-11
+
+### Added
+- **Complete language files**: English (`lang/en/local_jobboard.php`) and Spanish (`lang/es/local_jobboard.php`)
+  - ~200 language strings for full plugin internationalization
+  - Dashboard strings, role labels, welcome messages
+  - Capability strings, status labels, action buttons
+  - Error messages, notifications, privacy metadata
+  - IOMAD multi-tenant labels (Centro, Facultad, Programa)
+
+### Technical Notes
+- All hardcoded strings replaced with language string calls
+- Supports Moodle language switching
+- Spanish translation complete for ISER deployment
+
 ## [3.1.2] - 2025-12-11
 
 ### Added
