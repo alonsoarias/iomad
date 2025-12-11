@@ -5,6 +5,33 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.17] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `manage_program_reviewers.php` from 434 lines to ~113 lines (74% reduction)
+- Program reviewers management page now uses renderer pattern with Mustache template
+- Created `templates/pages/program_reviewers.mustache` with complete jb-* CSS classes
+- All reviewer management functionality preserved: add, remove, change role, toggle status
+
+### Added
+- `render_program_reviewers_page()` method in renderer for program reviewers view
+- `prepare_program_reviewers_page_data()` method in renderer with full data preparation
+- Two view modes: list view (all programs overview) and program view (single program management)
+- Statistics cards: total reviewers, active reviewers, lead reviewers, programs with reviewers
+- Programs with reviewers table with reviewer and lead counts
+- Category hierarchy list for adding reviewers to any program
+- Add reviewer form with user selection and role dropdown
+- Assigned reviewers table with change role, toggle status, and remove actions
+
+### Technical Notes
+- Supports IOMAD category/program hierarchy
+- Reviewer roles: reviewer, lead_reviewer
+- Reviewer status: active, inactive with toggle functionality
+- Available users filtered by jobboard_reviewer, manager, or admin roles
+- Session key validation for all actions preserved
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+- **Continues Phase 2 (Roles/Permissions) per AGENTS.md**
+
 ## [3.1.16] - 2025-12-11
 
 ### Changed

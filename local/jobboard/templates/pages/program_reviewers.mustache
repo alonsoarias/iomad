@@ -1,0 +1,322 @@
+{{!
+    @template local_jobboard/pages/program_reviewers
+
+    Program reviewers management page template.
+    Uses jb-* CSS classes for consistent styling.
+
+    Context variables:
+    * pagetitle - Page title string
+    * islistview - Boolean if showing programs list
+    * isprogramview - Boolean if showing single program
+    * program - Current program data (when isprogramview)
+    * stats - Statistics data (when islistview)
+    * programswithreviewers - Programs with assigned reviewers
+    * allcategories - All course categories for selection
+    * reviewers - Assigned reviewers for program
+    * hasreviewers - Boolean if has reviewers
+    * availableusers - Users available for assignment
+    * hasavailableusers - Boolean if has available users
+    * dashboardurl - URL to dashboard
+    * backurl - URL to go back
+
+    Example context (json):
+    {
+        "islistview": true,
+        "stats": {"total": 5, "active": 4}
+    }
+}}
+<div class="jb-program-reviewers" data-region="jobboard-program-reviewers">
+    {{! Page Header }}}
+    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <h1 class="jb-fs-3 jb-mb-0">
+            <i class="fa fa-user-check jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h1>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-{{backicon}} jb-mr-2" aria-hidden="true"></i>
+            {{backlabel}}
+        </a>
+    </header>
+
+    {{#islistview}}
+    {{! ================================================================== }}}
+    {{! LIST VIEW - Programs Overview }}}
+    {{! ================================================================== }}}
+
+    {{! Statistics Cards }}}
+    <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-primary">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.totalreviewers}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}totalreviewers, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.active}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}activereviewers, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-warning">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.leadreviewers}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}leadreviewers, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-info">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.programswithreviewers}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}programswithreviewers, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! Programs with Reviewers Table }}}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="programs-heading">
+        <div class="jb-card-header jb-bg-primary jb-text-white">
+            <h5 class="jb-mb-0" id="programs-heading">
+                <i class="fa fa-graduation-cap jb-mr-2" aria-hidden="true"></i>
+                {{#str}}programswithreviewers, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{#hasprogramswithreviewers}}
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-hover">
+                    <thead class="jb-thead-light">
+                        <tr>
+                            <th>{{#str}}program, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}reviewers, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}leadreviewers, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}actions{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#programswithreviewers}}
+                        <tr>
+                            <td>
+                                <i class="fa fa-folder jb-text-warning jb-mr-2" aria-hidden="true"></i>
+                                {{name}}
+                            </td>
+                            <td class="jb-text-center">
+                                <span class="jb-badge jb-badge-info">{{reviewercount}}</span>
+                            </td>
+                            <td class="jb-text-center">
+                                <span class="jb-badge jb-badge-warning">{{leadcount}}</span>
+                            </td>
+                            <td class="jb-text-center">
+                                <a href="{{manageurl}}" class="jb-btn jb-btn-sm jb-btn-primary">
+                                    <i class="fa fa-users jb-mr-1" aria-hidden="true"></i>
+                                    {{#str}}manage{{/str}}
+                                </a>
+                            </td>
+                        </tr>
+                        {{/programswithreviewers}}
+                    </tbody>
+                </table>
+            </div>
+            {{/hasprogramswithreviewers}}
+            {{^hasprogramswithreviewers}}
+            <div class="jb-empty-state jb-text-center jb-py-4">
+                <i class="fa fa-graduation-cap fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                <p class="jb-text-muted">{{#str}}noprogramswithreviewers, local_jobboard{{/str}}</p>
+            </div>
+            {{/hasprogramswithreviewers}}
+        </div>
+    </section>
+
+    {{! All Categories List }}}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="addreviewers-heading">
+        <div class="jb-card-header jb-bg-secondary jb-text-white">
+            <h5 class="jb-mb-0" id="addreviewers-heading">
+                <i class="fa fa-plus-circle jb-mr-2" aria-hidden="true"></i>
+                {{#str}}addreviewerstoprogram, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{#hasallcategories}}
+            <ul class="jb-list-group">
+                {{#allcategories}}
+                <li class="jb-list-group-item">
+                    <a href="{{selecturl}}" class="jb-d-flex jb-justify-content-between jb-align-items-center jb-text-decoration-none">
+                        <span>
+                            {{{indent}}}
+                            <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
+                            {{name}}
+                        </span>
+                        {{#hasreviewers}}
+                        <span class="jb-badge jb-badge-success">{{reviewercount}}</span>
+                        {{/hasreviewers}}
+                    </a>
+                </li>
+                {{/allcategories}}
+            </ul>
+            {{/hasallcategories}}
+        </div>
+    </section>
+    {{/islistview}}
+
+    {{#isprogramview}}
+    {{! ================================================================== }}}
+    {{! PROGRAM VIEW - Single Program Reviewers }}}
+    {{! ================================================================== }}}
+
+    {{! Add Reviewer Form }}}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="add-reviewer-heading">
+        <div class="jb-card-header jb-bg-success jb-text-white">
+            <h5 class="jb-mb-0" id="add-reviewer-heading">
+                <i class="fa fa-user-plus jb-mr-2" aria-hidden="true"></i>
+                {{#str}}addreviewer, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{#hasavailableusers}}
+            <form method="post" action="{{addformurl}}" class="jb-form-inline jb-d-flex jb-flex-wrap jb-align-items-end">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="add">
+                <input type="hidden" name="categoryid" value="{{program.id}}">
+
+                <div class="jb-form-group jb-mr-3 jb-mb-2">
+                    <label class="jb-sr-only" for="userid">{{#str}}selectuser, local_jobboard{{/str}}</label>
+                    <select name="userid" id="userid" class="jb-form-control">
+                        <option value="">{{#str}}selectuser, local_jobboard{{/str}}</option>
+                        {{#availableusers}}
+                        <option value="{{id}}">{{fullname}} ({{email}})</option>
+                        {{/availableusers}}
+                    </select>
+                </div>
+
+                <div class="jb-form-group jb-mr-3 jb-mb-2">
+                    <label class="jb-sr-only" for="role">{{#str}}role{{/str}}</label>
+                    <select name="role" id="role" class="jb-form-control">
+                        <option value="reviewer">{{#str}}role_reviewer, local_jobboard{{/str}}</option>
+                        <option value="lead">{{#str}}role_lead_reviewer, local_jobboard{{/str}}</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="jb-btn jb-btn-success jb-mb-2">
+                    <i class="fa fa-plus jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}add{{/str}}
+                </button>
+            </form>
+            {{/hasavailableusers}}
+            {{^hasavailableusers}}
+            <p class="jb-text-muted jb-mb-0">{{#str}}nousersavailable, local_jobboard{{/str}}</p>
+            {{/hasavailableusers}}
+        </div>
+    </section>
+
+    {{! Current Reviewers Table }}}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="reviewers-heading">
+        <div class="jb-card-header jb-bg-primary jb-text-white">
+            <h5 class="jb-mb-0" id="reviewers-heading">
+                <i class="fa fa-users jb-mr-2" aria-hidden="true"></i>
+                {{#str}}assignedreviewers, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{#hasreviewers}}
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-hover">
+                    <thead class="jb-thead-light">
+                        <tr>
+                            <th>{{#str}}user{{/str}}</th>
+                            <th>{{#str}}email{{/str}}</th>
+                            <th>{{#str}}role{{/str}}</th>
+                            <th>{{#str}}status{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}actions{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#reviewers}}
+                        <tr class="{{#isinactive}}jb-bg-light{{/isinactive}}">
+                            <td>
+                                <strong>{{fullname}}</strong>
+                            </td>
+                            <td>{{email}}</td>
+                            <td>
+                                {{#islead}}
+                                <span class="jb-badge jb-badge-warning">{{#str}}role_lead_reviewer, local_jobboard{{/str}}</span>
+                                {{/islead}}
+                                {{^islead}}
+                                <span class="jb-badge jb-badge-info">{{#str}}role_reviewer, local_jobboard{{/str}}</span>
+                                {{/islead}}
+                            </td>
+                            <td>
+                                {{#isactive}}
+                                <span class="jb-badge jb-badge-success">{{#str}}active{{/str}}</span>
+                                {{/isactive}}
+                                {{^isactive}}
+                                <span class="jb-badge jb-badge-secondary">{{#str}}inactive, local_jobboard{{/str}}</span>
+                                {{/isactive}}
+                            </td>
+                            <td class="jb-text-center">
+                                <a href="{{changeroleurl}}" class="jb-btn jb-btn-sm jb-btn-outline-info jb-mr-1"
+                                   title="{{#str}}changerole, local_jobboard{{/str}}">
+                                    <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                                </a>
+                                <a href="{{togglestatusurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-mr-1"
+                                   title="{{togglestatustitle}}">
+                                    <i class="fa {{togglestatusicon}}" aria-hidden="true"></i>
+                                </a>
+                                <a href="{{removeurl}}" class="jb-btn jb-btn-sm jb-btn-outline-danger"
+                                   title="{{#str}}remove{{/str}}"
+                                   onclick="return confirm('{{#str}}confirmremovereviewer, local_jobboard{{/str}}');">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {{/reviewers}}
+                    </tbody>
+                </table>
+            </div>
+            {{/hasreviewers}}
+            {{^hasreviewers}}
+            <div class="jb-empty-state jb-text-center jb-py-4">
+                <i class="fa fa-user-plus fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                <p class="jb-text-muted">{{#str}}noreviewersforprogram, local_jobboard{{/str}}</p>
+            </div>
+            {{/hasreviewers}}
+        </div>
+    </section>
+    {{/isprogramview}}
+
+    {{! Help Section }}}
+    <section class="jb-card jb-card-shadow jb-bg-light jb-mb-4" aria-labelledby="help-heading">
+        <div class="jb-card-body">
+            <h6 class="jb-mb-3" id="help-heading">
+                <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                {{#str}}help{{/str}}
+            </h6>
+            <p class="jb-text-muted jb-mb-0">{{#str}}programreviewerhelp, local_jobboard{{/str}}</p>
+        </div>
+    </section>
+</div>

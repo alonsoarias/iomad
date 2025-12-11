@@ -4855,4 +4855,182 @@ class renderer extends plugin_renderer_base {
 
         return $data;
     }
+
+    /**
+     * Render the program reviewers page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_program_reviewers_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/program_reviewers', $data);
+    }
+
+    /**
+     * Prepare program reviewers page data for template.
+     *
+     * @param int $categoryid Category/program ID (0 for list view).
+     * @return array Template data.
+     */
+    public function prepare_program_reviewers_page_data(int $categoryid): array {
+        global $DB;
+
+        $pageurl = new moodle_url('/local/jobboard/manage_program_reviewers.php');
+
+        // Base data.
+        $data = [
+            'pagetitle' => get_string('programreviewers', 'local_jobboard'),
+            'islistview' => ($categoryid == 0),
+            'isprogramview' => ($categoryid > 0),
+            'backurl' => '',
+            'backicon' => '',
+            'backlabel' => '',
+            'sesskey' => sesskey(),
+            'addformurl' => $pageurl->out(false),
+        ];
+
+        if ($categoryid == 0) {
+            // List view.
+            $data['backurl'] = (new moodle_url('/local/jobboard/index.php'))->out(false);
+            $data['backicon'] = 'tachometer-alt';
+            $data['backlabel'] = get_string('dashboard', 'local_jobboard');
+
+            // Get statistics.
+            $stats = \local_jobboard\program_reviewer::get_statistics();
+            $data['stats'] = [
+                'totalreviewers' => $stats['users_as_reviewers'] ?? 0,
+                'active' => $stats['active'] ?? 0,
+                'leadreviewers' => $stats['lead_reviewers'] ?? 0,
+                'programswithreviewers' => $stats['programs_with_reviewers'] ?? 0,
+            ];
+
+            // Programs with reviewers.
+            $programsWithReviewers = \local_jobboard\program_reviewer::get_programs_with_reviewers();
+            $programsdata = [];
+            foreach ($programsWithReviewers as $program) {
+                $programsdata[] = [
+                    'id' => $program->id,
+                    'name' => format_string($program->name),
+                    'reviewercount' => (int) $program->reviewer_count,
+                    'leadcount' => (int) $program->lead_count,
+                    'manageurl' => (new moodle_url($pageurl, ['categoryid' => $program->id]))->out(false),
+                ];
+            }
+            $data['programswithreviewers'] = $programsdata;
+            $data['hasprogramswithreviewers'] = !empty($programsdata);
+
+            // All categories.
+            $allcategories = $DB->get_records('course_categories', [], 'sortorder', 'id, name, parent, depth');
+            $categoriesdata = [];
+
+            // Create lookup for programs with reviewers.
+            $reviewerLookup = [];
+            foreach ($programsWithReviewers as $p) {
+                $reviewerLookup[$p->id] = $p->reviewer_count;
+            }
+
+            foreach ($allcategories as $cat) {
+                $indent = str_repeat('&nbsp;&nbsp;&nbsp;', $cat->depth);
+                $icon = $cat->depth == 1 ? 'building' : 'graduation-cap';
+                $hasReviewers = isset($reviewerLookup[$cat->id]);
+
+                $categoriesdata[] = [
+                    'id' => $cat->id,
+                    'name' => format_string($cat->name),
+                    'indent' => $indent,
+                    'icon' => $icon,
+                    'hasreviewers' => $hasReviewers,
+                    'reviewercount' => $hasReviewers ? $reviewerLookup[$cat->id] : 0,
+                    'selecturl' => (new moodle_url($pageurl, ['categoryid' => $cat->id]))->out(false),
+                ];
+            }
+            $data['allcategories'] = $categoriesdata;
+            $data['hasallcategories'] = !empty($categoriesdata);
+
+        } else {
+            // Single program view.
+            $category = $DB->get_record('course_categories', ['id' => $categoryid], '*', MUST_EXIST);
+
+            $data['pagetitle'] = get_string('programreviewers', 'local_jobboard') . ': ' . format_string($category->name);
+            $data['backurl'] = $pageurl->out(false);
+            $data['backicon'] = 'arrow-left';
+            $data['backlabel'] = get_string('backtolist', 'local_jobboard');
+            $data['program'] = [
+                'id' => $category->id,
+                'name' => format_string($category->name),
+            ];
+
+            // Get reviewers for this program.
+            $reviewers = \local_jobboard\program_reviewer::get_for_program($categoryid, false);
+            $reviewersdata = [];
+            $assignedids = [];
+
+            foreach ($reviewers as $reviewer) {
+                $assignedids[] = $reviewer->userid;
+                $isactive = ($reviewer->status === \local_jobboard\program_reviewer::STATUS_ACTIVE);
+                $islead = ($reviewer->role === \local_jobboard\program_reviewer::ROLE_LEAD);
+                $newrole = $islead ? \local_jobboard\program_reviewer::ROLE_REVIEWER : \local_jobboard\program_reviewer::ROLE_LEAD;
+
+                $reviewersdata[] = [
+                    'id' => $reviewer->id,
+                    'userid' => $reviewer->userid,
+                    'fullname' => fullname($reviewer),
+                    'email' => $reviewer->email,
+                    'isactive' => $isactive,
+                    'isinactive' => !$isactive,
+                    'islead' => $islead,
+                    'changeroleurl' => (new moodle_url($pageurl, [
+                        'action' => 'changerole',
+                        'categoryid' => $categoryid,
+                        'userid' => $reviewer->userid,
+                        'newrole' => $newrole,
+                        'sesskey' => sesskey(),
+                    ]))->out(false),
+                    'togglestatusurl' => (new moodle_url($pageurl, [
+                        'action' => 'togglestatus',
+                        'categoryid' => $categoryid,
+                        'userid' => $reviewer->userid,
+                        'sesskey' => sesskey(),
+                    ]))->out(false),
+                    'togglestatusicon' => $isactive ? 'fa-toggle-on jb-text-success' : 'fa-toggle-off',
+                    'togglestatustitle' => $isactive
+                        ? get_string('deactivate', 'local_jobboard')
+                        : get_string('activate', 'local_jobboard'),
+                    'removeurl' => (new moodle_url($pageurl, [
+                        'action' => 'remove',
+                        'categoryid' => $categoryid,
+                        'userid' => $reviewer->userid,
+                        'sesskey' => sesskey(),
+                    ]))->out(false),
+                ];
+            }
+            $data['reviewers'] = $reviewersdata;
+            $data['hasreviewers'] = !empty($reviewersdata);
+
+            // Get available users.
+            $sql = "SELECT DISTINCT u.id, u.firstname, u.lastname, u.email
+                      FROM {user} u
+                      JOIN {role_assignments} ra ON ra.userid = u.id
+                      JOIN {role} r ON r.id = ra.roleid
+                     WHERE u.deleted = 0 AND u.suspended = 0
+                       AND (r.shortname = 'jobboard_reviewer' OR r.shortname = 'manager' OR r.shortname = 'admin')
+                  ORDER BY u.lastname, u.firstname";
+            $potentialusers = $DB->get_records_sql($sql);
+
+            $availableusers = [];
+            foreach ($potentialusers as $user) {
+                if (!in_array($user->id, $assignedids)) {
+                    $availableusers[] = [
+                        'id' => $user->id,
+                        'fullname' => fullname($user),
+                        'email' => $user->email,
+                    ];
+                }
+            }
+            $data['availableusers'] = $availableusers;
+            $data['hasavailableusers'] = !empty($availableusers);
+        }
+
+        return $data;
+    }
 }
