@@ -1851,3 +1851,17 @@ $string['withdrawapplication'] = 'Retirar postulación';
 $string['womenonly'] = 'Solo mujeres';
 $string['workflowactions'] = 'Acciones de flujo de trabajo';
 $string['workflowmanagement'] = 'Gestión de flujo de trabajo';
+
+// Nombres de columnas CSV.
+$string['csvcolumn_code'] = 'Código';
+$string['csvcolumn_contracttype'] = 'Tipo de contrato';
+$string['csvcolumn_courses'] = 'Cursos';
+$string['csvcolumn_faculty'] = 'Facultad';
+$string['csvcolumn_location'] = 'Ubicación';
+$string['csvcolumn_modality'] = 'Modalidad';
+$string['csvcolumn_profile'] = 'Perfil';
+$string['csvcolumn_program'] = 'Programa';
+
+// Acciones de edición.
+$string['editdoctype'] = 'Editar tipo de documento';
+$string['editexemption'] = 'Editar exención';
