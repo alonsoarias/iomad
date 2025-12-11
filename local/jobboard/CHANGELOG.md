@@ -5,6 +5,30 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.11] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `views/review.php` from 1066 lines to ~268 lines
+- Document review page now uses renderer pattern with Mustache template
+- Business logic preserved: validate, reject, validateall, markreviewed actions
+- Multi-tenant (IOMAD) filtering preserved for review queue
+
+### Added
+- `prepare_review_page_data()` method in renderer for review view
+- `prepare_review_list_data()` protected method for applications queue
+- `prepare_review_single_application_data()` protected method for document review
+- Review list mode: filter by vacancy, stats cards, pagination
+- Single app mode: document list, validation actions, progress tracking
+- Previous/next navigation between applications in review queue
+
+### Technical Notes
+- All rendering delegated to `templates/pages/review.mustache` (already migrated in v3.1.9)
+- Stats cards: pending review count, pending documents, urgent deadlines
+- Document validation workflow fully functional via renderer data
+- Modal forms for rejection with reason preserved
+- Review completion with observations and email notification preserved
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+
 ## [3.1.10] - 2025-12-11
 
 ### Changed
