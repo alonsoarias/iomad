@@ -89,13 +89,13 @@ local/jobboard/
 ├── index.php                      # Router centralizado
 ├── lib.php                        # Funciones principales
 ├── settings.php                   # Configuración admin
-├── version.php                    # Versión del plugin
-├── styles.css                     # Estilos CSS (jb-*)
+├── version.php                    # Versión 3.1.23 (2025121138)
+├── styles.css                     # ⚠️ NO EXISTE - CREAR DESDE CERO
 ├── bulk_validate.php              # Validación masiva
 ├── assign_reviewer.php            # Asignación de revisores
 ├── migrate.php                    # Exportación de datos
 │
-├── views/                         # 17 vistas PHP
+├── views/                         # 17 vistas PHP ✅
 │   ├── dashboard.php
 │   ├── browse_convocatorias.php
 │   ├── convocatorias.php
@@ -114,7 +114,7 @@ local/jobboard/
 │   ├── public_convocatoria.php
 │   └── public_vacancy.php
 │
-├── templates/                     # ~39+ plantillas Mustache
+├── templates/                     # ~50 plantillas Mustache ✅
 │   ├── dashboard.mustache
 │   ├── components/
 │   │   ├── page_header.mustache
@@ -127,10 +127,16 @@ local/jobboard/
 │       ├── application_detail.mustache
 │       ├── bulk_validate.mustache
 │       ├── assign_reviewer.mustache
-│       └── review.mustache
+│       ├── committee.mustache
+│       ├── public.mustache
+│       ├── public_vacancy.mustache
+│       ├── reports.mustache
+│       ├── review.mustache
+│       ├── vacancy_detail.mustache
+│       └── ... (~50 templates total)
 │
-├── amd/                           # ~15 módulos JavaScript
-│   ├── src/
+├── amd/                           # ⚠️ NO EXISTE - CREAR DESDE CERO
+│   ├── src/                       # ~15 módulos JavaScript (PENDIENTE)
 │   │   ├── public_filters.js
 │   │   ├── department_loader.js
 │   │   ├── company_loader.js
@@ -146,32 +152,34 @@ local/jobboard/
 │   └── build/                     # JS compilado (NO EDITAR)
 │
 ├── db/
-│   ├── install.xml                # Esquema de BD
+│   ├── install.xml                # Esquema de BD ✅
 │   ├── install.php                # Instalación + doctypes predeterminados
 │   ├── upgrade.php                # Migraciones
-│   ├── access.php                 # ~34 capabilities
+│   ├── access.php                 # 26 capabilities (de 34 especificadas)
 │   ├── services.php               # Web services
-│   └── tours/                     # 15 User Tours JSON
+│   └── tours/                     # ⚠️ NO EXISTE - 15 User Tours (PENDIENTE)
 │
-├── classes/
-│   ├── output/renderer.php        # Renderer principal
-│   ├── audit.php                  # Sistema de auditoría
-│   ├── document.php               # Gestión de documentos
-│   ├── reviewer.php               # Asignación de revisores
-│   ├── application.php            # Gestión de postulaciones
-│   ├── bulk_validator.php         # Validación masiva
-│   ├── exemption.php              # Excepciones de documentos
-│   ├── email_template.php         # Plantillas de email
-│   ├── privacy/provider.php       # GDPR/Habeas Data
-│   ├── forms/
-│   │   └── exemption_form.php
-│   └── external/api.php           # Web services API
+├── classes/                       # ~40 clases implementadas ✅
+│   ├── output/
+│   │   └── renderer.php           # ⚠️ 6,162 líneas - FRAGMENTAR
+│   ├── audit.php
+│   ├── document.php
+│   ├── reviewer.php
+│   ├── application.php
+│   ├── bulk_validator.php
+│   ├── exemption.php
+│   ├── email_template.php
+│   ├── privacy/provider.php       # GDPR implementado ✅
+│   ├── forms/                     # 7 formularios ✅
+│   ├── event/                     # 8 eventos ✅
+│   ├── task/                      # 3 tareas programadas ✅
+│   └── external/api.php
 │
 ├── cli/
 │   ├── cli.php                    # Importador de perfiles v2.2
-│   ├── parse_profiles.php         # Parser de texto
-│   ├── parse_profiles_v2.php      # Parser mejorado
-│   └── import_vacancies.php       # Importador JSON
+│   ├── parse_profiles.php
+│   ├── parse_profiles_v2.php
+│   └── import_vacancies.php
 │
 ├── admin/                         # Páginas administrativas
 │   ├── doctypes.php
@@ -181,6 +189,9 @@ local/jobboard/
 ├── lang/                          # ⚠️ NO EXISTE - CREAR DESDE CERO
 │   ├── en/local_jobboard.php      # ~1860+ strings (PENDIENTE)
 │   └── es/local_jobboard.php      # ~1860+ strings (PENDIENTE)
+│
+├── CHANGELOG.md                   # ⚠️ NO EXISTE - CREAR
+└── README.md                      # ⚠️ NO EXISTE - CREAR
 ```
 
 ### Estructura Propuesta: Renderers Fragmentados
@@ -305,39 +316,81 @@ classes/output/                    # REFACTORIZACIÓN PENDIENTE
 
 ## ⚠️ PROBLEMAS IDENTIFICADOS Y PENDIENTES DE RESOLUCIÓN
 
-### 1. MEZCLA DE CLASES CSS (Bootstrap + jb-*)
+### MÉTRICAS DEL DIAGNÓSTICO (Diciembre 2025)
 
-**ESTADO:** 🔴 Pendiente de auditoría completa
+| Métrica | Valor |
+|---------|-------|
+| Archivos PHP analizados | 62 |
+| Templates Mustache | 50 |
+| **Clases Bootstrap a migrar** | **1,224 ocurrencias** |
+| Strings de idioma faltantes | ~1,860+ |
+| Líneas de renderer.php | **6,162** |
+| Renderers a crear | 10 |
+| Módulos AMD faltantes | 15 |
+| User Tours faltantes | 15 |
+| Capabilities implementadas | 26 de 34 (77%) |
 
-**PROBLEMA:** Algunos templates Mustache aún mezclan clases Bootstrap con clases propias `jb-*`.
+---
 
-**CLASES BOOTSTRAP A ELIMINAR:**
+### 1. STYLES.CSS NO EXISTE
+
+**ESTADO:** 🔴 NO EXISTE - Crear desde cero
+
+**PROBLEMA:** El archivo `styles.css` con el sistema de clases `jb-*` NO EXISTE. No hay ningún CSS propio del plugin.
+
+**ACCIÓN REQUERIDA:**
+1. Crear `styles.css` en la raíz del plugin
+2. Implementar sistema CSS completo con prefijo `jb-*`
+3. Crear equivalentes para TODAS las 1,224 ocurrencias de clases Bootstrap
+4. Asegurar compatibilidad con themes: Boost, Classic, Remui, Flavor
+
+### 2. CLASES BOOTSTRAP EN TEMPLATES (1,224 ocurrencias)
+
+**ESTADO:** 🔴 Crítico - Migración masiva requerida
+
+**PROBLEMA:** Los templates Mustache usan clases Bootstrap directamente.
+
+**TEMPLATES MÁS AFECTADOS:**
+
+| Template | Ocurrencias |
+|----------|-------------|
+| pages/committee.mustache | 72 |
+| pages/public.mustache | 65 |
+| pages/reports.mustache | 64 |
+| pages/review.mustache | 59 |
+| pages/dashboard.mustache | 53 |
+| pages/vacancy_detail.mustache | 48 |
+| pages/application_detail.mustache | 48 |
+| pages/bulk_validate.mustache | 47 |
+| pages/assign_reviewer.mustache | 47 |
+| pages/public_vacancy.mustache | 47 |
+
+**CLASES BOOTSTRAP DETECTADAS:**
 ```
-Layout: row, col-*, mb-*, mt-*, p-*
-Cards: card, card-header, card-body, shadow-sm
-Botones: btn, btn-primary, btn-secondary, btn-outline-*
+Layout: row, col-*, mb-*, mt-*, p-*, d-flex, d-none
+Cards: card, card-header, card-body, card-footer, shadow-sm
+Botones: btn, btn-primary, btn-secondary, btn-outline-*, btn-sm, btn-lg
 Tablas: table, table-hover, table-responsive, thead-light
-Badges: badge, badge-*
-Alertas: alert, alert-*
-Formularios: form-control, form-group
-Texto: text-muted, text-primary, font-weight-*
-Utilidades: d-flex, d-none, justify-content-*, align-items-*
+Badges: badge, badge-danger, badge-secondary, badge-*
+Alertas: alert, alert-danger, alert-info, alert-*
+Formularios: form-control, form-group, input-group
+Texto: text-muted, text-primary, font-weight-bold
+Flex: justify-content-*, align-items-*
 ```
 
 **ACCIÓN REQUERIDA:**
-1. Auditar TODOS los templates Mustache
-2. Listar clases Bootstrap usadas por archivo
-3. Crear equivalentes `jb-*` en styles.css
-4. Migrar sistemáticamente
-5. Probar en themes: Boost, Classic, Remui, Flavor
+1. Crear styles.css con equivalentes jb-* para cada clase Bootstrap
+2. Migrar los 50 templates uno por uno
+3. Comenzar por templates de pages/ (mayor impacto)
+4. Probar en themes: Boost, Classic, Remui, Flavor
 
-### 2. USER TOURS CON SELECTORES OBSOLETOS
+### 3. USER TOURS NO EXISTEN
 
-**ESTADO:** 🔴 Requiere recreación completa
+**ESTADO:** 🔴 NO EXISTE - Crear desde cero
 
-**PROBLEMA:** Los 15 tours existentes usan selectores que pueden no coincidir con la interfaz actual.
+**PROBLEMA:** La carpeta `db/tours/` NO EXISTE. Los 15 User Tours especificados no han sido creados.
 
-**TOURS A RECREAR:**
+**TOURS A CREAR:**
 ```
 tour_dashboard.json
 tour_public.json
@@ -357,30 +410,42 @@ tour_reports.json
 ```
 
 **ACCIÓN REQUERIDA:**
-1. Eliminar todos los tours existentes
-2. Validar selectores con DevTools
-3. Recrear tours con selectores `jb-*`
+1. Crear carpeta `db/tours/`
+2. Crear los 15 tours con selectores `jb-*`
+3. Validar selectores con DevTools
 4. Probar cada tour paso a paso
 
-### 3. MÓDULOS AMD CON DEPENDENCIAS PROBLEMÁTICAS
+### 4. MÓDULOS AMD NO EXISTEN
 
-**ESTADO:** 🟡 Requiere auditoría
+**ESTADO:** 🔴 NO EXISTE - Crear desde cero
 
-**PROBLEMA:** Algunos módulos AMD dependen de jQuery y Bootstrap JS.
+**PROBLEMA:** La carpeta `amd/` NO EXISTE. Los 15 módulos JavaScript especificados no han sido creados.
 
-**MÓDULOS A REVISAR:**
-- `tooltips.js` - Usa `$(selector).tooltip()` de Bootstrap
-- `public_filters.js` - Usa jQuery directamente
-- `review_ui.js` - Inicializa tooltips Bootstrap
+**MÓDULOS A CREAR:**
+```
+amd/src/
+├── public_filters.js
+├── department_loader.js
+├── company_loader.js
+├── convocatoria_loader.js
+├── tooltips.js
+├── signup_form.js
+├── apply_progress.js
+├── review_ui.js
+├── card_actions.js
+├── confirm_action.js
+├── review_shortcuts.js
+└── loading_states.js
+```
 
 **ACCIÓN REQUERIDA:**
-1. Auditar cada módulo AMD
-2. Reemplazar `$(selector).tooltip()` por core/tooltip de Moodle
-3. Minimizar uso de jQuery
+1. Crear carpeta `amd/src/`
+2. Crear los 15 módulos JavaScript
+3. NO usar jQuery ni Bootstrap JS
 4. Usar módulos core: `core/ajax`, `core/notification`, `core/templates`
 5. Compilar con `grunt amd --root=local/jobboard`
 
-### 5. RENDERER.PHP DEMASIADO GRANDE
+### 5. RENDERER.PHP DEMASIADO GRANDE (6,162 líneas)
 
 **ESTADO:** 🟡 Requiere refactorización
 
@@ -632,7 +697,7 @@ lang/es/local_jobboard.php    # Español (obligatorio para ISER)
  * Language strings for local_jobboard.
  *
  * @package   local_jobboard
- * @copyright 2025 ISER - Instituto Superior de Educación Rural
+ * @copyright 2024-2025 ISER - Instituto Superior de Educación Rural
  * @author    Alonso Arias <soporteplataformas@iser.edu.co>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -736,7 +801,7 @@ Ubicación: Pamplona, Norte de Santander, Colombia
  * [Descripción del archivo]
  *
  * @package   local_jobboard
- * @copyright 2025 ISER - Instituto Superior de Educación Rural
+ * @copyright 2024-2025 ISER - Instituto Superior de Educación Rural
  * @author    Alonso Arias <soporteplataformas@iser.edu.co>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -902,57 +967,34 @@ tests/privacy_provider_test.php
 
 ## Plan de Implementación por Fases
 
-### Fase 1: Auditoría CSS
-1. Crear script de auditoría de clases Bootstrap
-2. Listar TODAS las clases Bootstrap usadas por archivo
-3. Crear sistema CSS completo con clases `jb-*` en `styles.css`
-4. Migrar templates uno por uno
+### Fase 1: Infraestructura Crítica (MÁXIMA PRIORIDAD)
+
+**Objetivo:** Crear los archivos fundamentales que NO EXISTEN.
+
+1. **Crear `styles.css`** con sistema CSS completo `jb-*`
+   - Equivalentes para TODAS las clases Bootstrap usadas (1,224 ocurrencias)
+   - Compatibilidad con themes: Boost, Classic, Remui, Flavor
+   
+2. **Crear archivos de idioma** (NO EXISTEN)
+   - `lang/en/local_jobboard.php` (~1860+ strings)
+   - `lang/es/local_jobboard.php` (~1860+ strings)
+   
+3. **Crear documentación básica**
+   - `CHANGELOG.md`
+   - `README.md`
+   
+4. **Actualizar `version.php`** con nueva versión
+
+### Fase 2: Migración CSS (50 templates)
+
+1. Migrar templates de `pages/` (mayor impacto - 10 archivos principales)
+2. Migrar templates de `components/`
+3. Migrar templates raíz
+4. Migrar templates de `reports/`
 5. Probar en themes: Boost, Classic, Remui, Flavor
 
-### Fase 2: User Tours
-1. Eliminar todos los tours existentes
-2. Documentar selectores actuales con DevTools
-3. Crear nuevos tours con selectores `jb-*`
-4. Probar cada tour completo
+### Fase 3: Refactorización del Renderer (6,162 líneas)
 
-### Fase 3: Interfaz de Revisión
-1. Diseñar interfaz estilo mod_assign
-2. Crear templates y AMD
-3. Implementar navegación sin recarga
-4. Agregar atajos de teclado
-
-### Fase 4: Excepciones Globales
-1. Modificar esquema de BD
-2. Crear interfaz de gestión
-3. Implementar lógica de elegibilidad automática
-4. Migrar excepciones existentes
-
-### Fase 5: Plantillas Email con Preview
-1. Crear editor con variables
-2. Implementar preview en tiempo real
-3. Agregar historial de cambios
-
-### Fase 6: Reportes por Convocatoria
-1. Modificar todas las vistas de reportes
-2. Agregar filtro obligatorio
-3. Actualizar exportaciones
-
-### Fase 7: Cadenas de Idiomas (CREAR DESDE CERO)
-1. Crear archivo `lang/en/local_jobboard.php` con estructura base
-2. Crear archivo `lang/es/local_jobboard.php` con estructura base
-3. Documentar TODAS las strings existentes en el código
-4. Crear strings para capabilities (~34)
-5. Crear strings para roles (~10)
-6. Crear strings para estados y acciones (~200)
-7. Crear strings para formularios y validación (~300)
-8. Crear strings para mensajes de error (~150)
-9. Crear strings para User Tours (~200)
-10. Crear strings para Privacy API (~50)
-11. Crear strings para CLI (~30)
-12. Validar paridad absoluta EN/ES (~1860+ strings totales)
-13. Eliminar TODA string hardcodeada en PHP y templates
-
-### Fase 8: Refactorización del Renderer
 1. Analizar renderer.php actual y documentar todos los métodos
 2. Crear estructura de archivos para renderers especializados
 3. Extraer `renderer_dashboard.php` (dashboard y widgets)
@@ -964,16 +1006,62 @@ tests/privacy_provider_test.php
 9. Extraer `renderer_reports.php` (reportes)
 10. Extraer `renderer_admin.php` (páginas administrativas)
 11. Extraer `renderer_public.php` (vistas públicas)
-12. Actualizar renderer.php como delegador
+12. Actualizar renderer.php como delegador (~100 líneas)
 13. Probar TODAS las vistas afectadas
-14. Actualizar documentación
 
-### Fase 9: Documentación del Plugin
+### Fase 4: Módulos AMD (NO EXISTEN)
+
+1. Crear carpeta `amd/src/`
+2. Crear los 15 módulos JavaScript especificados
+3. NO usar jQuery ni Bootstrap JS
+4. Usar módulos core de Moodle
+5. Compilar con `grunt amd --root=local/jobboard`
+
+### Fase 5: User Tours (NO EXISTEN)
+
+1. Crear carpeta `db/tours/`
+2. Crear los 15 tours con selectores `jb-*`
+3. Validar selectores con DevTools
+4. Probar cada tour completo
+
+### Fase 6: Interfaz de Revisión
+
+1. Diseñar interfaz estilo mod_assign
+2. Crear templates y AMD
+3. Implementar navegación sin recarga
+4. Agregar atajos de teclado
+
+### Fase 7: Excepciones Globales
+
+1. Modificar esquema de BD
+2. Crear interfaz de gestión
+3. Implementar lógica de elegibilidad automática
+4. Migrar excepciones existentes
+
+### Fase 8: Plantillas Email con Preview
+
+1. Crear editor con variables
+2. Implementar preview en tiempo real
+3. Agregar historial de cambios
+
+### Fase 9: Reportes por Convocatoria
+
+1. Modificar todas las vistas de reportes
+2. Agregar filtro obligatorio
+3. Actualizar exportaciones
+
+### Fase 10: Capabilities Faltantes
+
+1. Implementar las 8 capabilities faltantes (de 34 especificadas)
+2. Actualizar `db/access.php`
+3. Actualizar roles
+
+### Fase 11: Documentación Completa
+
 1. Actualizar headers PHPDoc en TODOS los archivos PHP
-2. Crear/actualizar README.md completo
-3. Mantener CHANGELOG.md al día
-4. Documentar clases y métodos públicos
-5. Actualizar información de contacto en version.php
+2. Completar README.md con guía de instalación
+3. Documentar clases y métodos públicos
+4. Actualizar información de contacto en version.php
 
 ---
 
@@ -1010,26 +1098,28 @@ jq '.steps[].targetvalue' db/tours/*.json
 
 1. **ANALIZAR** el repositorio completo antes de implementar
 2. **SOLO CLASES jb-*** - No usar clases Bootstrap directamente
-3. **RECREAR USER TOURS** - Con selectores actualizados
-4. **RECREAR MÓDULOS AMD** - Sin dependencias de Bootstrap JS
-5. **VALIDAR SIEMPRE** en plataforma antes de commit
-6. **NO improvisar** cambios directamente en producción
-7. **Respetar** la arquitectura IOMAD de 4 niveles
-8. **CREAR STRINGS** desde cero - Los archivos de idioma NO EXISTEN
-9. **Paridad EN/ES** - Toda string debe existir en AMBOS idiomas
-10. **NO hardcodear** strings en PHP ni templates - usar get_string() SIEMPRE
-11. **Documentar** TODO en CHANGELOG
-12. **ACTUALIZAR DOCUMENTACIÓN** con información de contacto correcta
-13. **FRAGMENTAR RENDERER** - Dividir en renderers especializados por área
-14. **Comité de selección** es por FACULTAD, no por vacante
-15. **Revisores** se asignan por PROGRAMA
-16. **Formulario de postulación** es PERSONALIZABLE desde admin
-17. **Carta de intención** es campo de TEXTO, no archivo
-18. **Convocatoria** debe tener PDF adjunto con detalle completo
-19. **Auditoría ROBUSTA** - registrar TODAS las acciones
-20. Un postulante = UNA vacante por convocatoria
-21. La validación de documentos es 100% MANUAL
-22. **Búsqueda de usuarios** por username al crear comités
+3. **styles.css NO EXISTE** - Crear sistema CSS completo desde cero
+4. **amd/ NO EXISTE** - Crear los 15 módulos JavaScript desde cero
+5. **db/tours/ NO EXISTE** - Crear los 15 User Tours desde cero
+6. **lang/ NO EXISTE** - Crear ~1860+ strings en EN y ES desde cero
+7. **VALIDAR SIEMPRE** en plataforma antes de commit
+8. **NO improvisar** cambios directamente en producción
+9. **Respetar** la arquitectura IOMAD de 4 niveles
+10. **Paridad EN/ES** - Toda string debe existir en AMBOS idiomas
+11. **NO hardcodear** strings en PHP ni templates - usar get_string() SIEMPRE
+12. **Documentar** TODO en CHANGELOG.md
+13. **ACTUALIZAR DOCUMENTACIÓN** con información de contacto correcta
+14. **FRAGMENTAR RENDERER** - 6,162 líneas es inaceptable, dividir en 10 renderers
+15. **Comité de selección** es por FACULTAD, no por vacante
+16. **Revisores** se asignan por PROGRAMA
+17. **Formulario de postulación** es PERSONALIZABLE desde admin
+18. **Carta de intención** es campo de TEXTO, no archivo
+19. **Convocatoria** debe tener PDF adjunto con detalle completo
+20. **Auditoría ROBUSTA** - registrar TODAS las acciones
+21. Un postulante = UNA vacante por convocatoria
+22. La validación de documentos es 100% MANUAL
+23. **Búsqueda de usuarios** por username al crear comités
+24. **Capabilities:** Solo 26 de 34 implementadas (77%) - completar las 8 faltantes
 
 ---
 
