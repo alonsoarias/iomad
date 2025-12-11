@@ -5,6 +5,38 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.15] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `views/reports.php` from 833 lines to ~317 lines (62% reduction)
+- Reports page now uses renderer pattern with Mustache template
+- Updated `templates/pages/reports.mustache` with complete jb-* CSS classes
+- All 5 report types preserved: overview, applications, documents, reviewers, timeline
+- Export functionality preserved: CSV, Excel, PDF formats
+
+### Added
+- `prepare_reports_page_data()` method in renderer for reports view
+- `prepare_overview_report_data()` protected method for summary statistics
+- `prepare_applications_report_data()` protected method for vacancy breakdown
+- `prepare_documents_report_data()` protected method for document validation stats
+- `prepare_reviewers_report_data()` protected method for reviewer performance
+- `prepare_timeline_report_data()` protected method for daily application trends
+- `get_application_status_color()` helper method for status badge colors
+- Report type tabs with icons and active state
+- Filter form with vacancy selector and date range pickers
+- Statistics cards for each report type
+- Progress bars for status percentages in overview
+- Navigation footer with dashboard and quick action links
+
+### Technical Notes
+- All report data generation moved to renderer methods
+- Template uses report type flags (isoverview, isapplications, etc.) for conditional sections
+- Export function kept in view file for simplicity
+- Document stats fetched via bulk_validator class
+- Reviewer stats fetched via reviewer class
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+- **COMPLETES Mustache migration for all major views**
+
 ## [3.1.14] - 2025-12-11
 
 ### Changed
