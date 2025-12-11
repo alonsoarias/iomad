@@ -327,9 +327,8 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         $table->add_key('userid_fk', XMLDB_KEY_FOREIGN, ['userid'], 'user', ['id']);
         $table->add_key('addedby_fk', XMLDB_KEY_FOREIGN, ['addedby'], 'user', ['id']);
 
-        $table->add_index('categoryid_idx', XMLDB_INDEX_NOTUNIQUE, ['categoryid']);
+        // Note: Foreign keys automatically create indexes, so we only add additional indexes.
         $table->add_index('category_user_idx', XMLDB_INDEX_UNIQUE, ['categoryid', 'userid']);
-        $table->add_index('userid_idx', XMLDB_INDEX_NOTUNIQUE, ['userid']);
         $table->add_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
 
         if (!$dbman->table_exists($table)) {
@@ -402,9 +401,9 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         $table->add_key('templateid_fk', XMLDB_KEY_FOREIGN, ['templateid'], 'local_jobboard_email_template', ['id']);
 
-        $table->add_index('templateid_idx', XMLDB_INDEX_NOTUNIQUE, ['templateid']);
-        $table->add_index('lang_idx', XMLDB_INDEX_NOTUNIQUE, ['lang']);
+        // Note: templateid_fk creates an index automatically, so we only add additional indexes.
         $table->add_index('template_lang_idx', XMLDB_INDEX_UNIQUE, ['templateid', 'lang']);
+        $table->add_index('lang_idx', XMLDB_INDEX_NOTUNIQUE, ['lang']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);

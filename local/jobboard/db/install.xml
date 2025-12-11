@@ -668,9 +668,8 @@
         <KEY NAME="addedby_fk" TYPE="foreign" FIELDS="addedby" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="categoryid_idx" UNIQUE="false" FIELDS="categoryid"/>
+        <!-- Note: Foreign keys automatically create indexes, so categoryid and userid indexes are not needed -->
         <INDEX NAME="category_user_idx" UNIQUE="true" FIELDS="categoryid, userid" COMMENT="User can only be reviewer once per program"/>
-        <INDEX NAME="userid_idx" UNIQUE="false" FIELDS="userid" COMMENT="To find all programs a user reviews"/>
         <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
       </INDEXES>
     </TABLE>
@@ -690,7 +689,9 @@
         <KEY NAME="templateid_fk" TYPE="foreign" FIELDS="templateid" REFTABLE="local_jobboard_email_template" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="template_lang_idx" UNIQUE="false" FIELDS="templateid, lang"/>
+        <!-- Note: templateid_fk creates an index, so we only need the composite unique index -->
+        <INDEX NAME="template_lang_idx" UNIQUE="true" FIELDS="templateid, lang" COMMENT="One entry per template per language"/>
+        <INDEX NAME="lang_idx" UNIQUE="false" FIELDS="lang"/>
       </INDEXES>
     </TABLE>
   </TABLES>
