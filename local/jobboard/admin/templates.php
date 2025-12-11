@@ -43,7 +43,6 @@ $companyid = optional_param('companyid', 0, PARAM_INT);
 $context = context_system::instance();
 $pageurl = new moodle_url('/local/jobboard/admin/templates.php');
 
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // =============================================================================
 // HANDLE ACTIONS
@@ -358,8 +357,7 @@ if (empty($templates)) {
         $subjectPreview = shorten_text(strip_tags($template->subject), 40);
         echo html_writer::tag('td',
             html_writer::tag('span', s($subjectPreview), [
-                'class' => 'text-truncate d-inline-block',
-                'style' => 'max-width: 200px;',
+                'class' => 'text-truncate d-inline-block jb-truncate-cell',
                 'title' => s($template->subject),
             ])
         );

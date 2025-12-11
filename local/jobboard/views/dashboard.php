@@ -39,7 +39,6 @@ use local_jobboard\output\ui_helper;
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('dashboard', 'local_jobboard'));
 $PAGE->set_heading(get_string('jobboard', 'local_jobboard'));
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // ============================================================================
 // USER CAPABILITIES

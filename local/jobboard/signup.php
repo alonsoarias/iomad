@@ -79,7 +79,6 @@ $PAGE->set_title(get_string('signup_title', 'local_jobboard'));
 $PAGE->set_heading(get_string('signup_title', 'local_jobboard'));
 
 // Add custom CSS for the signup form.
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Check IOMAD installation and get companies.
 $isiomad = local_jobboard_is_iomad_installed();
@@ -147,7 +146,7 @@ if ($data = $mform->get_data()) {
                 ['class' => 'lead text-muted']);
 
             // Detailed instructions.
-            echo html_writer::start_div('alert alert-info text-start mt-4 mx-auto', ['style' => 'max-width: 600px;']);
+            echo html_writer::start_div('alert alert-info text-start mt-4 mx-auto jb-narrow-container');
             echo html_writer::tag('h5', html_writer::tag('i', '', ['class' => 'fa fa-envelope me-2']) .
                 get_string('signup_email_instructions_title', 'local_jobboard'));
             echo html_writer::start_tag('ol', ['class' => 'mb-0']);

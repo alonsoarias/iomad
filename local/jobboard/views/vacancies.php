@@ -53,7 +53,6 @@ if ($convocatoriaid) {
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('vacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('vacancies', 'local_jobboard'));
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Build filters.
 $filters = [

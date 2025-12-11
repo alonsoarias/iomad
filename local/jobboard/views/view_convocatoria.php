@@ -43,7 +43,6 @@ $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $convoca
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title($convocatoria->name);
 $PAGE->set_heading($convocatoria->name);
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Log view.
 \local_jobboard\audit::log('convocatoria_viewed', 'convocatoria', $convocatoria->id);

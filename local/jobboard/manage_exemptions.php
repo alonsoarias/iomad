@@ -51,7 +51,6 @@ $PAGE->set_context($context);
 $PAGE->set_title(get_string('manageexemptions', 'local_jobboard'));
 $PAGE->set_heading(get_string('manageexemptions', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle actions.
 if ($action === 'add' || ($action === 'edit' && $id)) {

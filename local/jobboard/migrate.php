@@ -42,7 +42,6 @@ $PAGE->set_context($context);
 $PAGE->set_title(get_string('migrateplugin', 'local_jobboard'));
 $PAGE->set_heading(get_string('migrateplugin', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // File areas used by the plugin.
 define('JOBBOARD_FILE_AREAS', [

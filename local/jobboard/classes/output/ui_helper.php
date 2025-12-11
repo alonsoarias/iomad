@@ -351,10 +351,7 @@ class ui_helper {
                     // Build select manually to ensure proper visibility with all themes.
                     $selectId = 'filter_' . $filter['name'];
                     $html .= '<select name="' . s($filter['name']) . '" id="' . $selectId . '" ';
-                    $html .= 'class="form-control form-control-sm jb-filter-select" ';
-                    $html .= 'style="color: #495057 !important; background-color: #fff !important; ';
-                    $html .= 'appearance: menulist !important; -webkit-appearance: menulist !important; ';
-                    $html .= '-moz-appearance: menulist !important; text-indent: 0.01px !important;">';
+                    $html .= 'class="form-control form-control-sm jb-filter-select">';
                     foreach ($filter['options'] as $optVal => $optLabel) {
                         $selected = ((string)$optVal === (string)$value) ? ' selected="selected"' : '';
                         // Determine display label with multiple fallbacks.
@@ -367,7 +364,7 @@ class ui_helper {
                             // Fallback: use filter name + "All" as placeholder.
                             $displayLabel = get_string('all') . '...';
                         }
-                        $html .= '<option value="' . s($optVal) . '"' . $selected . ' style="color: #495057 !important; background-color: #fff !important;">';
+                        $html .= '<option value="' . s($optVal) . '"' . $selected . '>';
                         $html .= s($displayLabel) . '</option>';
                     }
                     $html .= '</select>';
@@ -468,18 +465,14 @@ class ui_helper {
         // Build select manually to ensure proper visibility with all themes.
         // Uses jb-perpage-select class for AMD module initialization.
         $html .= '<select class="form-control form-control-sm d-inline-block w-auto jb-perpage-select" ';
-        $html .= 'aria-label="' . s(get_string('recordsperpage', 'local_jobboard')) . '" ';
-        $html .= 'style="color: #495057 !important; background-color: #fff !important; ';
-        $html .= 'appearance: menulist !important; -webkit-appearance: menulist !important; ';
-        $html .= '-moz-appearance: menulist !important;">';
+        $html .= 'aria-label="' . s(get_string('recordsperpage', 'local_jobboard')) . '">';
 
         foreach ($options as $option) {
             $url = clone $baseurl;
             $url->param('perpage', $option);
             $url->param('page', 0);
             $selected = ($option == $currentperpage) ? ' selected="selected"' : '';
-            $html .= '<option value="' . s($url->out(false)) . '"' . $selected;
-            $html .= ' style="color: #495057 !important;">' . $option . '</option>';
+            $html .= '<option value="' . s($url->out(false)) . '"' . $selected . '>' . $option . '</option>';
         }
 
         $html .= '</select>';

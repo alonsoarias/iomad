@@ -626,3 +626,1228 @@ $string['help'] = 'Ayuda';
 $string['alreadyvalidated'] = 'Documento ya validado';
 $string['bulkrejected'] = 'Rechazado durante validación masiva';
 $string['interviewscheduled'] = 'Entrevista ha sido programada';
+
+// =============================================================================
+// CADENAS FALTANTES - Lista auto-generada
+// =============================================================================
+
+// Dashboard y navegación.
+$string['aboutdoctypes'] = 'Acerca de tipos de documento';
+$string['activeassignments'] = 'Asignaciones activas';
+$string['activecommittees'] = 'Comités activos';
+$string['activeconvocatorias'] = 'Convocatorias activas';
+$string['activeconvocatorias_alert'] = 'Hay convocatorias abiertas para postulaciones';
+$string['activeexemptions'] = 'Exenciones activas';
+$string['addconvocatoria'] = 'Agregar convocatoria';
+$string['adddoctype'] = 'Agregar tipo de documento';
+$string['addexemption'] = 'Agregar exención';
+$string['additionalinfo'] = 'Información adicional';
+$string['additionalnotes'] = 'Notas adicionales';
+$string['addmember'] = 'Agregar miembro';
+$string['addnew'] = 'Agregar nuevo';
+$string['addvacancy'] = 'Agregar vacante';
+$string['adminonly'] = 'Solo administrador';
+$string['age_exempt_notice'] = 'Aplica exención por edad';
+$string['ageexemptionthreshold'] = 'Umbral de exención por edad';
+
+// Postulante y postulaciones.
+$string['allapplicants'] = 'Todos los postulantes';
+$string['allapplications'] = 'Todas las postulaciones';
+$string['allapplications_desc'] = 'Ver y gestionar todas las postulaciones';
+$string['allcommittees'] = 'Todos los comités';
+$string['allcompanies'] = 'Todas las empresas';
+$string['allcontracttypes'] = 'Todos los tipos de contrato';
+$string['alldepartments'] = 'Todos los departamentos';
+$string['alldocsreviewed'] = 'Todos los documentos revisados';
+$string['allowedformats'] = 'Formatos permitidos';
+$string['allowedformats_desc'] = 'Formatos de archivo permitidos';
+$string['allowmultipleapplications_convocatoria'] = 'Permitir múltiples postulaciones';
+$string['allowmultipleapplications_convocatoria_desc'] = 'Permitir a usuarios postularse a múltiples vacantes';
+$string['allstatuses'] = 'Todos los estados';
+$string['allvacancies'] = 'Todas las vacantes';
+$string['allvalidated'] = 'Todos validados';
+$string['alreadyapplied'] = 'Ya te has postulado a esta vacante';
+$string['andmore'] = 'y {$a} más';
+$string['antecedentesmaxdays'] = 'Antigüedad máxima de antecedentes (días)';
+$string['applicant'] = 'Postulante';
+$string['applicantinfo'] = 'Información del postulante';
+$string['applicantwillbenotified'] = 'El postulante será notificado';
+$string['applicationdetails'] = 'Detalles de la postulación';
+$string['applicationerror'] = 'Error procesando postulación';
+$string['applicationguidelines'] = 'Instrucciones de postulación';
+$string['applicationlimits'] = 'Límites de postulación';
+$string['applicationlimits_perconvocatoria_desc'] = 'Postulaciones máximas por convocatoria';
+$string['applicationof'] = 'Postulación {$a->current} de {$a->total}';
+$string['applicationsbystatus'] = 'Postulaciones por estado';
+$string['applicationsbyvacancy'] = 'Postulaciones por vacante';
+$string['applicationstats'] = 'Estadísticas de postulaciones';
+$string['applicationsubmitted'] = 'Postulación enviada exitosamente';
+$string['applicationwithdrawn'] = 'Postulación retirada';
+$string['applied'] = 'Postulado';
+$string['apply'] = 'Postularse';
+$string['applyhelp_text'] = 'Complete todos los campos y cargue los documentos';
+$string['applynow_desc'] = 'Comience su postulación ahora';
+$string['applynowdesc'] = 'Postularse ahora';
+$string['applytovacancy'] = 'Postularse a vacante';
+$string['approve'] = 'Aprobar';
+$string['approveall_confirm'] = '¿Aprobar todos los documentos?';
+$string['approvedocument'] = 'Aprobar documento';
+$string['approveselected'] = 'Aprobar seleccionados';
+
+// Estados de postulación.
+$string['appstatus:docs_rejected'] = 'Documentos rechazados';
+$string['appstatus:docs_validated'] = 'Documentos validados';
+$string['appstatus:interview'] = 'Entrevista programada';
+$string['appstatus:rejected'] = 'Rechazado';
+$string['appstatus:selected'] = 'Seleccionado';
+$string['appstatus:submitted'] = 'Enviado';
+$string['appstatus:under_review'] = 'En revisión';
+$string['appstatus:withdrawn'] = 'Retirado';
+
+// Archivo y asignar.
+$string['archiveconvocatoria'] = 'Archivar convocatoria';
+$string['assigned'] = 'Asignado';
+$string['assignedusers'] = 'Usuarios asignados';
+$string['assignnewusers'] = 'Asignar nuevos usuarios';
+$string['assignreviewer'] = 'Asignar revisor';
+$string['assignreviewers'] = 'Asignar revisores';
+$string['assignreviewers_desc'] = 'Gestionar asignaciones de revisores';
+$string['assignselected'] = 'Asignar seleccionados';
+$string['assignto'] = 'Asignar a';
+$string['auditlog'] = 'Registro de auditoría';
+$string['autoassign'] = 'Auto-asignar';
+$string['autoassignall'] = 'Auto-asignar todos';
+$string['autoassigncomplete'] = 'Auto-asignación completada';
+$string['autoassignhelp'] = 'Distribuir postulaciones automáticamente';
+$string['autovalidated'] = 'Auto-validado';
+$string['available_placeholders'] = 'Marcadores disponibles';
+$string['available_vacancies_alert'] = 'Vacantes disponibles para postulación';
+$string['availablereviewers'] = 'Revisores disponibles';
+$string['availablevacancies'] = 'Vacantes disponibles';
+$string['avgtime'] = 'Tiempo promedio';
+$string['avgvalidationtime'] = 'Tiempo promedio de validación';
+$string['avgworkload'] = 'Carga de trabajo promedio';
+
+// Navegación hacia atrás.
+$string['back_to_templates'] = 'Volver a plantillas';
+$string['backtoapplications'] = 'Volver a postulaciones';
+$string['backtoconvocatoria'] = 'Volver a convocatoria';
+$string['backtoconvocatorias'] = 'Volver a convocatorias';
+$string['backtodashboard'] = 'Volver al panel';
+$string['backtomanage'] = 'Volver a gestión';
+$string['backtoreviewlist'] = 'Volver a lista de revisiones';
+$string['backtorolelist'] = 'Volver a roles';
+$string['backtovacancies'] = 'Volver a vacantes';
+$string['backtovacancy'] = 'Volver a vacante';
+$string['basicinfo'] = 'Información básica';
+$string['briefdescription'] = 'Descripción breve';
+$string['browse_vacancies_desc'] = 'Explorar vacantes disponibles';
+$string['browseconvocatorias'] = 'Explorar convocatorias';
+$string['browservacancies'] = 'Explorar vacantes';
+$string['browsevacancies'] = 'Explorar vacantes';
+
+// Acciones masivas.
+$string['bulkactionerrors'] = 'Errores en acción masiva';
+$string['bulkactions'] = 'Acciones masivas';
+$string['bulkclose'] = 'Cerrar seleccionados';
+$string['bulkdelete'] = 'Eliminar seleccionados';
+$string['bulkpublish'] = 'Publicar seleccionados';
+$string['bulkunpublish'] = 'Despublicar seleccionados';
+$string['bulkvalidation'] = 'Validación masiva';
+$string['bulkvalidation_desc'] = 'Validar múltiples documentos a la vez';
+$string['bulkvalidationcomplete'] = 'Validación masiva completada';
+$string['bydocumenttype'] = 'Por tipo de documento';
+
+// Cancelado y capacidades.
+$string['cancelledby'] = 'Cancelado por';
+$string['cap_assignreviewers'] = 'Asignar revisores';
+$string['cap_createvacancy'] = 'Crear vacantes';
+$string['cap_download'] = 'Descargar documentos';
+$string['cap_evaluate'] = 'Evaluar candidatos';
+$string['cap_manage'] = 'Gestionar tablero de empleo';
+$string['cap_review'] = 'Revisar documentos';
+$string['cap_validate'] = 'Validar documentos';
+$string['cap_viewevaluations'] = 'Ver evaluaciones';
+$string['cap_viewreports'] = 'Ver reportes';
+$string['capabilities'] = 'Capacidades';
+$string['category'] = 'Categoría';
+$string['chairhelp'] = 'Información del presidente del comité';
+$string['changestatus'] = 'Cambiar estado';
+
+// Items de lista de verificación.
+$string['checklist_acta_date'] = 'Fecha de graduación visible';
+$string['checklist_acta_number'] = 'Número de acta visible';
+$string['checklist_background_date'] = 'Fecha de expedición reciente';
+$string['checklist_background_status'] = 'Estado es claro';
+$string['checklist_cedula_number'] = 'Número de cédula visible';
+$string['checklist_cedula_photo'] = 'Foto visible';
+$string['checklist_complete'] = 'Documento completo';
+$string['checklist_eps_active'] = 'Afiliación activa';
+$string['checklist_eps_entity'] = 'Nombre de EPS visible';
+$string['checklist_legible'] = 'Documento legible';
+$string['checklist_medical_aptitude'] = 'Estado de aptitud claro';
+$string['checklist_medical_date'] = 'Fecha de examen válida';
+$string['checklist_military_class'] = 'Clase militar especificada';
+$string['checklist_military_number'] = 'Número de libreta visible';
+$string['checklist_namematch'] = 'Nombre coincide con postulación';
+$string['checklist_pension_active'] = 'Afiliación activa';
+$string['checklist_pension_fund'] = 'Nombre del fondo visible';
+$string['checklist_rut_nit'] = 'Número NIT/RUT visible';
+$string['checklist_rut_updated'] = 'Fecha de actualización reciente';
+$string['checklist_tarjeta_number'] = 'Número de tarjeta visible';
+$string['checklist_tarjeta_profession'] = 'Profesión coincide con requisitos';
+$string['checklist_title_date'] = 'Fecha de graduación visible';
+$string['checklist_title_institution'] = 'Nombre de institución visible';
+$string['checklist_title_program'] = 'Nombre del programa visible';
+$string['checklistitems'] = 'Items de lista de verificación';
+$string['clearfilters'] = 'Limpiar filtros';
+$string['close'] = 'Cerrar';
+$string['closeconvocatoria'] = 'Cerrar convocatoria';
+$string['closedate'] = 'Fecha de cierre';
+$string['closesindays'] = 'Cierra en {$a} días';
+$string['closingdate'] = 'Fecha de cierre';
+$string['closingsoon'] = 'Próximo a cerrar';
+$string['closingsoondays'] = 'Días antes de alerta de cierre';
+$string['code'] = 'Código';
+$string['column'] = 'Columna';
+
+// Comité.
+$string['committeeautoroleassign'] = 'Auto-asignar roles de comité';
+$string['committeecreated'] = 'Comité creado exitosamente';
+$string['committeecreateerror'] = 'Error creando comité';
+$string['committeename'] = 'Nombre del comité';
+$string['committees_desc'] = 'Gestionar comités de selección';
+$string['company'] = 'Empresa';
+$string['completedreviews'] = 'Revisiones completadas';
+$string['completeinterview'] = 'Completar entrevista';
+$string['completeprofile_required'] = 'Complete su perfil antes de postularse';
+$string['completerequiredfields'] = 'Complete todos los campos requeridos';
+$string['conditional_document_note'] = 'Este documento tiene condiciones';
+$string['conditionaldoctypes'] = 'Tipos de documento condicionales';
+$string['conditionalnote'] = 'Nota condicional';
+$string['conditions'] = 'Condiciones';
+$string['configuration'] = 'Configuración';
+$string['configure'] = 'Configurar';
+$string['confirm_reset'] = 'Confirmar reinicio';
+
+// Confirmar acciones.
+$string['confirmaction'] = 'Confirmar acción';
+$string['confirmarchiveconvocatoria'] = 'Confirmar archivar convocatoria';
+$string['confirmcancel'] = 'Confirmar cancelación';
+$string['confirmclose'] = 'Confirmar cierre';
+$string['confirmcloseconvocatoria'] = 'Confirmar cerrar convocatoria';
+$string['confirmdelete'] = 'Confirmar eliminación';
+$string['confirmdeletedoctype'] = 'Confirmar eliminar tipo de documento';
+$string['confirmdeletedoctype_msg'] = '¿Está seguro de eliminar este tipo de documento?';
+$string['confirmdeletevacancy'] = 'Confirmar eliminar vacante';
+$string['confirmdeletevconvocatoria'] = 'Confirmar eliminar convocatoria';
+$string['confirmnoshow'] = 'Confirmar inasistencia';
+$string['confirmopenconvocatoria'] = 'Confirmar abrir convocatoria';
+$string['confirmpassword'] = 'Confirmar contraseña';
+$string['confirmpublish'] = 'Confirmar publicación';
+$string['confirmremovemember'] = 'Confirmar eliminar miembro';
+$string['confirmreopen'] = 'Confirmar reapertura';
+$string['confirmreopenconvocatoria'] = 'Confirmar reabrir convocatoria';
+$string['confirmrevokeexemption'] = 'Confirmar revocar exención';
+$string['confirmunassign'] = 'Confirmar desasignar';
+$string['confirmunpublish'] = 'Confirmar despublicar';
+$string['confirmwithdraw'] = 'Confirmar retirar postulación';
+
+// Consentimiento.
+$string['consentaccepttext'] = 'Acepto los términos y condiciones';
+$string['consentgiven'] = 'Consentimiento otorgado';
+$string['consentheader'] = 'Términos y consentimiento';
+$string['consentrequired'] = 'El consentimiento es requerido';
+$string['contactemail'] = 'Correo de contacto';
+$string['contentmanagement'] = 'Gestión de contenido';
+
+// Tipos de contrato.
+$string['contract:catedra'] = 'Cátedra';
+$string['contract:planta'] = 'Planta';
+$string['contract:prestacion_servicios'] = 'Prestación de servicios';
+$string['contract:temporal'] = 'Temporal';
+$string['contract:termino_fijo'] = 'Término fijo';
+$string['contracttype'] = 'Tipo de contrato';
+
+// Conversión.
+$string['conversionfailed'] = 'Conversión fallida';
+$string['conversioninprogress'] = 'Conversión en progreso';
+$string['conversionpending'] = 'Conversión pendiente';
+$string['conversionready'] = 'Conversión lista';
+$string['conversionwait'] = 'Por favor espere mientras se convierte el documento';
+
+// Cadenas de convocatoria.
+$string['convocatoria_status_archived'] = 'Archivada';
+$string['convocatoriaactive'] = 'Convocatoria activa';
+$string['convocatoriaarchived'] = 'Convocatoria archivada';
+$string['convocatoriaclosed'] = 'Convocatoria cerrada';
+$string['convocatoriaclosedmsg'] = 'Esta convocatoria ha sido cerrada';
+$string['convocatoriacode'] = 'Código de convocatoria';
+$string['convocatoriacreated'] = 'Convocatoria creada exitosamente';
+$string['convocatoriadates'] = 'Fechas de convocatoria';
+$string['convocatoriadeleted'] = 'Convocatoria eliminada';
+$string['convocatoriadescription'] = 'Descripción de convocatoria';
+$string['convocatoriadetails'] = 'Detalles de convocatoria';
+$string['convocatoriadocexemptions'] = 'Exenciones de documentos';
+$string['convocatoriaenddate'] = 'Fecha de fin';
+$string['convocatoriahelp'] = 'Ayuda de convocatorias';
+$string['convocatorianame'] = 'Nombre de convocatoria';
+$string['convocatoriaopened'] = 'Convocatoria abierta';
+$string['convocatoriapdf'] = 'PDF de convocatoria';
+$string['convocatoriareopened'] = 'Convocatoria reabierta';
+$string['convocatorias_dashboard_desc'] = 'Gestionar todas las convocatorias';
+$string['convocatoriastartdate'] = 'Fecha de inicio';
+$string['convocatoriastatus'] = 'Estado de convocatoria';
+$string['convocatoriaterms'] = 'Términos de convocatoria';
+$string['convocatoriaupdated'] = 'Convocatoria actualizada';
+$string['convocatoriavacancies'] = 'Vacantes de convocatoria';
+$string['convocatoriavacancycount'] = 'Número de vacantes';
+$string['copy_placeholder'] = 'Copiar marcador';
+$string['count'] = 'Cantidad';
+$string['courses'] = 'Cursos';
+$string['coverletter'] = 'Carta de presentación';
+$string['create'] = 'Crear';
+$string['createaccounttoapply'] = 'Crear cuenta para postularse';
+$string['createcommittee'] = 'Crear comité';
+$string['createcompanies'] = 'Crear empresas';
+$string['createdby'] = 'Creado por';
+$string['createvacancyinconvocatoriadesc'] = 'Crear vacante en esta convocatoria';
+
+// Importación CSV.
+$string['csvdelimiter'] = 'Delimitador CSV';
+$string['csvexample'] = 'Ejemplo CSV';
+$string['csvexample_desc'] = 'Formato de ejemplo CSV';
+$string['csvexample_tip'] = 'Use este formato para importaciones';
+$string['csvfile'] = 'Archivo CSV';
+$string['csvformat'] = 'Formato CSV';
+$string['csvformat_desc'] = 'Formato CSV esperado';
+$string['csvimporterror'] = 'Error de importación CSV';
+$string['csvinvalidtype'] = 'Tipo inválido en CSV';
+$string['csvlineerror'] = 'Error en línea {$a}';
+$string['csvusernotfound'] = 'Usuario no encontrado';
+$string['currentpassword'] = 'Contraseña actual';
+$string['currentpassword_invalid'] = 'Contraseña actual inválida';
+$string['currentpassword_required'] = 'Se requiere contraseña actual';
+$string['currentstatus'] = 'Estado actual';
+$string['currentworkload'] = 'Carga de trabajo actual';
+$string['dailyapplications'] = 'Postulaciones diarias';
+
+// Cadenas del dashboard.
+$string['dashboard_admin_welcome'] = 'Bienvenido, Administrador';
+$string['dashboard_applicant_welcome'] = 'Bienvenido al Tablero de Empleo';
+$string['dashboard_manager_welcome'] = 'Bienvenido, Gestor';
+$string['dashboard_reviewer_welcome'] = 'Bienvenido, Revisor';
+
+// Exportación de datos.
+$string['dataexport'] = 'Exportación de datos';
+$string['dataexport:consent'] = 'Información de consentimiento';
+$string['dataexport:exportdate'] = 'Fecha de exportación';
+$string['dataexport:personal'] = 'Datos personales';
+$string['dataexport:title'] = 'Reporte de exportación de datos';
+$string['dataexport:userinfo'] = 'Información del usuario';
+$string['dataretentiondays'] = 'Días de retención de datos';
+$string['datatorexport'] = 'Datos a exportar';
+$string['datatreatmentpolicytitle'] = 'Política de tratamiento de datos';
+
+// Fecha y hora.
+$string['dateandtime'] = 'Fecha y hora';
+$string['dateapplied'] = 'Fecha de postulación';
+$string['datefrom'] = 'Desde fecha';
+$string['dates'] = 'Fechas';
+$string['datesubmitted'] = 'Fecha de envío';
+$string['dateto'] = 'Hasta fecha';
+$string['days'] = 'días';
+$string['daysleft'] = 'Días restantes';
+$string['daysremaining'] = '{$a} días restantes';
+$string['deadlineprogress'] = 'Progreso de plazo';
+$string['deadlinewarning'] = 'Solo quedan {$a} días para postularse';
+$string['deadlinewarning_title'] = '¡Fecha límite próxima!';
+
+// Declaración.
+$string['declaration'] = 'Declaración';
+$string['declarationaccept'] = 'Acepto la declaración';
+$string['declarationrequired'] = 'La declaración es requerida';
+$string['declarationtext'] = 'Texto de declaración';
+$string['defaultdatatreatmentpolicy'] = 'Política de tratamiento de datos por defecto';
+$string['defaultexemptiontype'] = 'Tipo de exención por defecto';
+$string['defaultmaxagedays'] = 'Antigüedad máxima de documento por defecto (días)';
+$string['defaultstatus'] = 'Estado por defecto';
+$string['defaultvalidfrom'] = 'Válido desde por defecto';
+$string['defaultvaliduntil'] = 'Válido hasta por defecto';
+$string['department'] = 'Departamento';
+$string['desirable'] = 'Deseable';
+$string['digitalsignature'] = 'Firma digital';
+$string['disabled'] = 'Deshabilitado';
+
+// Condiciones de documento.
+$string['doc_condition_iser_exempt'] = 'Exento ISER';
+$string['doc_condition_men_only'] = 'Solo hombres';
+$string['doc_condition_profession_exempt'] = 'Profesión exenta';
+$string['doc_condition_women_only'] = 'Solo mujeres';
+
+// Categorías de documento.
+$string['doccategory_academic'] = 'Académico';
+$string['doccategory_background'] = 'Antecedentes';
+$string['doccategory_financial'] = 'Financiero';
+$string['doccategory_health'] = 'Salud';
+$string['doccategory_identity'] = 'Identidad';
+$string['doccategory_professional'] = 'Profesional';
+$string['docrequirements'] = 'Requisitos del documento';
+
+// Estado de documento.
+$string['docstatus:approved'] = 'Aprobado';
+$string['docstatus:pending'] = 'Pendiente';
+$string['docstatus:rejected'] = 'Rechazado';
+
+// Nombres de tipos de documento.
+$string['doctype_antecedentes_contraloria'] = 'Antecedentes Contraloría';
+$string['doctype_antecedentes_policia'] = 'Antecedentes Policía';
+$string['doctype_antecedentes_procuraduria'] = 'Antecedentes Procuraduría';
+$string['doctype_cedula'] = 'Cédula de ciudadanía';
+$string['doctype_certificado_medico'] = 'Certificado médico';
+$string['doctype_cuenta_bancaria'] = 'Certificado cuenta bancaria';
+$string['doctype_eps'] = 'Certificado EPS';
+$string['doctype_isrequired_help'] = 'Este documento es obligatorio';
+$string['doctype_libreta_militar'] = 'Libreta militar';
+$string['doctype_pension'] = 'Certificado pensión';
+$string['doctype_rnmc'] = 'Certificado RNMC';
+$string['doctype_rut'] = 'RUT';
+$string['doctype_sigep'] = 'Formato SIGEP';
+$string['doctype_tarjeta_profesional'] = 'Tarjeta profesional';
+$string['doctype_titulo_postgrado'] = 'Título de posgrado';
+$string['doctype_titulo_pregrado'] = 'Título de pregrado';
+$string['doctypecreated'] = 'Tipo de documento creado';
+$string['doctypedeleted'] = 'Tipo de documento eliminado';
+$string['doctypelist'] = 'Tipos de documento';
+$string['doctypes_desc'] = 'Gestionar tipos de documento';
+$string['doctypeshelp'] = 'Configurar documentos requeridos';
+$string['doctypeupdated'] = 'Tipo de documento actualizado';
+
+// Acciones de documento.
+$string['documentchecklist'] = 'Lista de verificación de documentos';
+$string['documentexpired'] = 'Documento ha expirado';
+$string['documentinfo'] = 'Información del documento';
+$string['documentissuedate'] = 'Fecha de expedición';
+$string['documentlist'] = 'Lista de documentos';
+$string['documentnotfound'] = 'Documento no encontrado';
+$string['documentnumber'] = 'Número de documento';
+$string['documentpreview'] = 'Vista previa del documento';
+$string['documentref'] = 'Referencia de documento';
+$string['documentref_desc'] = 'Referencia externa del documento';
+$string['documentrejected'] = 'Documento rechazado';
+$string['documentrequired'] = 'Este documento es requerido';
+$string['documentreuploaded'] = 'Documento recargado';
+$string['documentsapproved'] = 'Documentos aprobados';
+$string['documentsettings'] = 'Configuración de documentos';
+$string['documentshelp'] = 'Ayuda de documentos';
+$string['documentsrejected'] = 'Documentos rechazados';
+$string['documentsremaining'] = '{$a} documentos restantes';
+$string['documentsreviewed'] = 'Documentos revisados';
+$string['documentsvalidated'] = 'Documentos validados';
+$string['documenttype'] = 'Tipo de documento';
+$string['documenttypes'] = 'Tipos de documento';
+$string['documentvalidated'] = 'Documento validado';
+$string['downloadcsvtemplate'] = 'Descargar plantilla CSV';
+$string['downloadtoview'] = 'Descargar para ver';
+$string['draft'] = 'Borrador';
+$string['dryrunmode'] = 'Modo de prueba';
+$string['dryrunresults'] = 'Resultados de prueba';
+$string['duration'] = 'Duración';
+$string['edit_template'] = 'Editar plantilla';
+$string['editconvocatoria'] = 'Editar convocatoria';
+$string['editprofile'] = 'Editar perfil';
+$string['education'] = 'Educación';
+$string['educationlevel'] = 'Nivel educativo';
+$string['email_action_reupload'] = 'Por favor recargue el documento';
+$string['email_updated'] = 'Correo actualizado';
+$string['emailnotmatch'] = 'Los correos no coinciden';
+$string['emailtemplates'] = 'Plantillas de correo';
+$string['emailtemplates_desc'] = 'Configurar notificaciones por correo';
+$string['enableapi'] = 'Habilitar API';
+$string['enabled'] = 'Habilitado';
+$string['enableddoctypes'] = 'Tipos de documento habilitados';
+$string['enableencryption'] = 'Habilitar encriptación';
+$string['enablepublicpage'] = 'Habilitar página pública';
+$string['enablepublicpage_desc'] = 'Mostrar página de vacantes públicas';
+$string['enableselfregistration'] = 'Habilitar auto-registro';
+$string['enableselfregistration_desc'] = 'Permitir a usuarios crear cuentas';
+$string['encoding'] = 'Codificación';
+$string['encryption:backupinstructions'] = 'Respaldar clave de encriptación';
+$string['encryption:nokeytobackup'] = 'No hay clave de encriptación para respaldar';
+$string['enddate'] = 'Fecha de fin';
+$string['entries'] = 'entradas';
+$string['epsmaxdays'] = 'Antigüedad máxima certificado EPS (días)';
+
+// Mensajes de error.
+$string['error:alreadyapplied'] = 'Ya se ha postulado';
+$string['error:applicationlimitreached'] = 'Límite de postulaciones alcanzado';
+$string['error:cannotdelete_hasapplications'] = 'No se puede eliminar: tiene postulaciones';
+$string['error:cannotdeleteconvocatoria'] = 'No se puede eliminar convocatoria';
+$string['error:cannotreopenconvocatoria'] = 'No se puede reabrir convocatoria';
+$string['error:codealreadyexists'] = 'El código ya existe';
+$string['error:codeexists'] = 'Este código ya está en uso';
+$string['error:consentrequired'] = 'El consentimiento es requerido';
+$string['error:convocatoriacodeexists'] = 'El código de convocatoria ya existe';
+$string['error:convocatoriadatesinvalid'] = 'Fechas de convocatoria inválidas';
+$string['error:convocatoriahasnovacancies'] = 'La convocatoria no tiene vacantes';
+$string['error:convocatoriarequired'] = 'La convocatoria es requerida';
+$string['error:doctypeinuse'] = 'El tipo de documento está en uso';
+$string['error:invalidage'] = 'Edad inválida';
+$string['error:invalidcode'] = 'Código inválido';
+$string['error:invaliddates'] = 'Fechas inválidas';
+$string['error:invalidpublicationtype'] = 'Tipo de publicación inválido';
+$string['error:invalidstatus'] = 'Estado inválido';
+$string['error:invalidurl'] = 'URL inválida';
+$string['error:occasionalrequiresexperience'] = 'Posición ocasional requiere experiencia';
+$string['error:pastdate'] = 'La fecha no puede estar en el pasado';
+$string['error:requiredfield'] = 'Este campo es requerido';
+$string['error:schedulingconflict'] = 'Conflicto de programación';
+$string['error:singleapplicationonly'] = 'Solo se permite una postulación';
+$string['error:vacancyclosed'] = 'La vacante está cerrada';
+$string['error:vacancynotfound'] = 'Vacante no encontrada';
+$string['evaluations'] = 'Evaluaciones';
+$string['evaluatorshelp'] = 'Ayuda de evaluadores';
+
+// Cadenas de eventos.
+$string['event:applicationcreated'] = 'Postulación creada';
+$string['event:documentuploaded'] = 'Documento cargado';
+$string['event:statuschanged'] = 'Estado cambiado';
+$string['event:vacancyclosed'] = 'Vacante cerrada';
+$string['event:vacancycreated'] = 'Vacante creada';
+$string['event:vacancydeleted'] = 'Vacante eliminada';
+$string['event:vacancypublished'] = 'Vacante publicada';
+$string['event:vacancyupdated'] = 'Vacante actualizada';
+$string['example'] = 'Ejemplo';
+
+// Cadenas de exención.
+$string['exempteddocs'] = 'Documentos exentos';
+$string['exempteddocs_desc'] = 'Documentos exentos de requisitos';
+$string['exempteddoctypes'] = 'Tipos de documento exentos';
+$string['exemption'] = 'Exención';
+$string['exemptionactive'] = 'Exención activa';
+$string['exemptionapplied'] = 'Exención aplicada';
+$string['exemptioncreated'] = 'Exención creada';
+$string['exemptiondetails'] = 'Detalles de exención';
+$string['exemptionerror'] = 'Error de exención';
+$string['exemptionlist'] = 'Lista de exenciones';
+$string['exemptionnotice'] = 'Aviso de exención';
+$string['exemptionreason'] = 'Razón de exención';
+$string['exemptionreduceddocs'] = 'Requisitos de documentos reducidos';
+$string['exemptionrevoked'] = 'Exención revocada';
+$string['exemptionrevokeerror'] = 'Error revocando exención';
+$string['exemptions'] = 'Exenciones';
+$string['exemptiontype'] = 'Tipo de exención';
+$string['exemptiontype_desc'] = 'Tipo de exención';
+$string['exemptiontype_documentos_recientes'] = 'Documentos recientes';
+$string['exemptiontype_historico_iser'] = 'Histórico ISER';
+$string['exemptiontype_recontratacion'] = 'Recontratación';
+$string['exemptiontype_traslado_interno'] = 'Traslado interno';
+$string['exemptionupdated'] = 'Exención actualizada';
+$string['exemptionusagehistory'] = 'Historial de uso de exención';
+$string['existingvacancycommittee'] = 'Comité de vacante existente';
+$string['expired'] = 'Expirado';
+$string['expiredexemptions'] = 'Exenciones expiradas';
+$string['explore'] = 'Explorar';
+$string['explorevacancias'] = 'Explorar vacantes';
+$string['export'] = 'Exportar';
+$string['exportcsv'] = 'Exportar a CSV';
+$string['exportdata'] = 'Exportar datos';
+$string['exportdata_desc'] = 'Exportar datos de postulaciones';
+$string['exportdownload'] = 'Descargar exportación';
+$string['exporterror'] = 'Error de exportación';
+$string['exportexcel'] = 'Exportar a Excel';
+$string['exportwarning_files'] = 'Advertencia: archivos adjuntos no incluidos';
+$string['externalurl'] = 'URL externa';
+
+// Facultad y archivos.
+$string['facultieswithoutcommittee'] = 'Facultades sin comité';
+$string['facultycommitteedefaultname'] = 'Comité de facultad';
+$string['facultyvacancies'] = 'Vacantes de facultad';
+$string['filename'] = 'Nombre de archivo';
+$string['files'] = 'Archivos';
+$string['fullexport'] = 'Exportación completa';
+$string['fullexport_info'] = 'Exportar todos los datos';
+$string['fullname'] = 'Nombre completo';
+$string['gendercondition'] = 'Condición de género';
+$string['generalsettings'] = 'Configuración general';
+$string['generatedon'] = 'Generado el';
+$string['gotocreateconvocatoria'] = 'Crear nueva convocatoria';
+
+// Directrices.
+$string['guideline1'] = 'Revise cuidadosamente los requisitos de documentos';
+$string['guideline2'] = 'Cargue documentos legibles en formato PDF';
+$string['guideline3'] = 'Asegúrese de que la información personal sea correcta';
+$string['guideline4'] = 'Envíe antes de la fecha límite';
+$string['guideline_review1'] = 'Verificar autenticidad del documento';
+$string['guideline_review2'] = 'Revisar todos los items de la lista';
+$string['guideline_review3'] = 'Proporcionar razones claras para rechazo';
+$string['guideline_review4'] = 'Notificar al postulante de cualquier problema';
+$string['hasnote'] = 'Tiene notas';
+$string['html_support'] = 'HTML soportado';
+
+// Importar.
+$string['import'] = 'Importar';
+$string['importcomplete'] = 'Importación completa';
+$string['importdata'] = 'Importar datos';
+$string['importdata_desc'] = 'Importar datos desde archivo';
+$string['importedapplications'] = 'Postulaciones importadas';
+$string['importedconvocatorias'] = 'Convocatorias importadas';
+$string['importeddoctypes'] = 'Tipos de documento importados';
+$string['importeddocuments'] = 'Documentos importados';
+$string['importedemails'] = 'Correos importados';
+$string['importedexemptions'] = 'Exenciones importadas';
+$string['importedfiles'] = 'Archivos importados';
+$string['importednote'] = 'Nota de importación';
+$string['importedsettings'] = 'Configuración importada';
+$string['importedskipped'] = 'Omitidos';
+$string['importedsuccess'] = 'Importado exitosamente';
+$string['importedvacancies'] = 'Vacantes importadas';
+$string['importerror'] = 'Error de importación';
+$string['importerror_alreadyexempt'] = 'El usuario ya tiene exención';
+$string['importerror_createfailed'] = 'Error al crear registro';
+$string['importerror_usernotfound'] = 'Usuario no encontrado';
+$string['importerror_vacancyexists'] = 'La vacante ya existe';
+$string['importerrors'] = 'Errores de importación';
+$string['importexemptions'] = 'Importar exenciones';
+$string['importingfrom'] = 'Importando desde';
+$string['importinstructions'] = 'Instrucciones de importación';
+$string['importinstructionstext'] = 'Siga el formato CSV indicado';
+$string['importoptions'] = 'Opciones de importación';
+$string['importresults'] = 'Resultados de importación';
+$string['importupload'] = 'Cargar archivo';
+$string['importvacancies'] = 'Importar vacantes';
+$string['importvacancies_desc'] = 'Importar vacantes desde CSV';
+$string['importvacancies_help'] = 'Ayuda para importar vacantes';
+$string['importwarning'] = 'Advertencia de importación';
+$string['inprogress'] = 'En progreso';
+$string['inputtype'] = 'Tipo de entrada';
+$string['inputtype_file'] = 'Carga de archivo';
+$string['inputtype_number'] = 'Número';
+$string['inputtype_text'] = 'Texto';
+$string['inputtype_url'] = 'URL';
+$string['install_defaults'] = 'Instalar valores por defecto';
+$string['institutionname'] = 'Nombre de institución';
+$string['internal'] = 'Interno';
+
+// Entrevista.
+$string['interviewcancelled'] = 'Entrevista cancelada';
+$string['interviewcompleted'] = 'Entrevista completada';
+$string['interviewdate'] = 'Fecha de entrevista';
+$string['interviewers'] = 'Entrevistadores';
+$string['interviewfeedback'] = 'Retroalimentación de entrevista';
+$string['interviewinstructions'] = 'Instrucciones de entrevista';
+$string['interviews'] = 'Entrevistas';
+$string['interviewscheduleerror'] = 'Error programando entrevista';
+$string['interviewtype'] = 'Tipo de entrevista';
+$string['interviewtype_inperson'] = 'Presencial';
+$string['interviewtype_phone'] = 'Telefónica';
+$string['interviewtype_video'] = 'Videollamada';
+$string['invalidmigrationfile'] = 'Archivo de migración inválido';
+$string['invalidrole'] = 'Rol inválido';
+$string['iomad_department'] = 'Departamento IOMAD';
+$string['iomadoptions'] = 'Opciones IOMAD';
+$string['iomadsettings'] = 'Configuración IOMAD';
+$string['iserexempted'] = 'Exento ISER';
+$string['iserexempted_help'] = 'Este documento está exento para usuarios ISER';
+$string['items'] = 'elementos';
+$string['jobboard'] = 'Bolsa de Empleo';
+$string['legacyvacancycommittee'] = 'Comité de vacante heredado';
+$string['location'] = 'Ubicación';
+$string['locationorurl'] = 'Ubicación o URL';
+$string['loginrequiredtoapply'] = 'Inicie sesión para postularse';
+$string['mainmenutitle'] = 'Bolsa de Empleo';
+$string['mainmenutitle_desc'] = 'Título en el menú principal';
+
+// Cadenas de gestión.
+$string['manageapplications'] = 'Gestionar postulaciones';
+$string['managecommittees'] = 'Gestionar comités';
+$string['manageconvocatorias'] = 'Gestionar convocatorias';
+$string['managedoctypes'] = 'Gestionar tipos de documento';
+$string['manageexemptions'] = 'Gestionar exenciones';
+$string['manageexemptions_desc'] = 'Agregar y gestionar exenciones';
+$string['manageroles'] = 'Gestionar roles';
+$string['manageroles_desc'] = 'Configurar roles de comité';
+$string['manageusers'] = 'Gestionar usuarios';
+$string['managevacancies'] = 'Gestionar vacantes';
+$string['manualassign'] = 'Asignación manual';
+$string['markedasnoshow'] = 'Marcado como inasistente';
+$string['markednoshow'] = 'Inasistente';
+$string['maxapplicationsperuser'] = 'Postulaciones máximas por usuario';
+$string['maxfilesize'] = 'Tamaño máximo de archivo';
+$string['maxperreviewer'] = 'Máximo por revisor';
+$string['memberadded'] = 'Miembro agregado';
+$string['memberadderror'] = 'Error agregando miembro';
+$string['membercount'] = 'Cantidad de miembros';
+$string['memberremoved'] = 'Miembro eliminado';
+$string['memberremoveerror'] = 'Error eliminando miembro';
+$string['members'] = 'Miembros';
+$string['menonly'] = 'Solo hombres';
+
+// Migración.
+$string['migrate_includes_applications'] = 'Incluye postulaciones';
+$string['migrate_includes_convocatorias'] = 'Incluye convocatorias';
+$string['migrate_includes_doctypes'] = 'Incluye tipos de documento';
+$string['migrate_includes_vacancies'] = 'Incluye vacantes';
+$string['migrateplugin'] = 'Migrar plugin';
+$string['migrateplugin_desc'] = 'Migrar desde versión anterior';
+$string['migrateplugin_full_desc'] = 'Migración completa del plugin';
+$string['migrationfile'] = 'Archivo de migración';
+$string['migrationinfo_desc'] = 'Información de migración';
+$string['migrationinfo_title'] = 'Migración';
+
+// Modalidad.
+$string['modality:distancia'] = 'Distancia';
+$string['modality:hibrida'] = 'Híbrida';
+$string['modality:presencial'] = 'Presencial';
+$string['modality:virtual'] = 'Virtual';
+$string['modifiedby'] = 'Modificado por';
+$string['multi_tenant'] = 'Multi-inquilino';
+$string['multipledocs_notice'] = 'Se permiten múltiples documentos';
+$string['myapplicationcount'] = 'Mis postulaciones';
+$string['myapplications_desc'] = 'Ver sus postulaciones';
+$string['mypendingreviews'] = 'Mis revisiones pendientes';
+$string['myreviews'] = 'Mis revisiones';
+$string['myreviews_desc'] = 'Ver sus asignaciones de revisión';
+
+// Navegación.
+$string['navigationsettings'] = 'Configuración de navegación';
+$string['navigationsettings_desc'] = 'Configurar opciones de navegación';
+$string['needhelp'] = '¿Necesita ayuda?';
+$string['needsattention'] = 'Requiere atención';
+$string['newdocument'] = 'Nuevo documento';
+$string['newvacancy'] = 'Nueva vacante';
+$string['nextapplication'] = 'Siguiente postulación';
+$string['no_templates'] = 'No se encontraron plantillas';
+$string['noapplicationsfound'] = 'No se encontraron postulaciones';
+$string['noassignments'] = 'Sin asignaciones';
+$string['nocommitteeforthisvacancy'] = 'Sin comité para esta vacante';
+$string['nocommittees'] = 'Sin comités';
+$string['noconvocatorias'] = 'Sin convocatorias';
+$string['noconvocatoriasavailable'] = 'No hay convocatorias disponibles';
+$string['nodata'] = 'Sin datos';
+$string['nodoctypes'] = 'Sin tipos de documento';
+$string['nodocuments'] = 'Sin documentos';
+$string['nodocumentspending'] = 'Sin documentos pendientes';
+$string['nodocumentstoreview'] = 'Sin documentos para revisar';
+$string['noexemptions'] = 'Sin exenciones';
+$string['noexemptionusage'] = 'Sin uso de exención';
+$string['noexpiry'] = 'Sin vencimiento';
+$string['noobservations'] = 'Sin observaciones';
+$string['noreason'] = 'Sin razón proporcionada';
+$string['norejections'] = 'Sin rechazos';
+$string['noreviewers'] = 'Sin revisores';
+$string['nosecretaryoptional'] = 'Secretario opcional';
+$string['noshow'] = 'Inasistencia';
+$string['notes'] = 'Notas';
+$string['notes_desc'] = 'Notas adicionales';
+$string['notifications'] = 'Notificaciones';
+$string['nounassignedapplications'] = 'Sin postulaciones no asignadas';
+$string['nousersassigned'] = 'Sin usuarios asignados';
+$string['novacancies'] = 'Sin vacantes';
+$string['novacanciesfound'] = 'No se encontraron vacantes';
+$string['numdocs'] = 'Número de documentos';
+$string['of'] = 'de';
+
+// Abrir y resumen.
+$string['openconvocatoria'] = 'Abrir convocatoria';
+$string['opendate'] = 'Fecha de apertura';
+$string['openmigrationtool'] = 'Abrir herramienta de migración';
+$string['openvacancies'] = 'Vacantes abiertas';
+$string['optionalcolumns'] = 'Columnas opcionales';
+$string['optionalnotes'] = 'Notas opcionales';
+$string['overallrating'] = 'Calificación general';
+$string['overview'] = 'Resumen';
+$string['overwriteexisting'] = 'Sobrescribir existentes';
+$string['password_change_optional'] = 'Deje en blanco para mantener contraseña actual';
+$string['password_updated'] = 'Contraseña actualizada';
+$string['passwordsdiffer'] = 'Las contraseñas no coinciden';
+
+// Pendiente.
+$string['pending'] = 'Pendiente';
+$string['pending_docs_alert'] = 'Documentos pendientes de revisión';
+$string['pendingassignment'] = 'Asignación pendiente';
+$string['pendingassignments'] = 'Asignaciones pendientes';
+$string['pendingbytype'] = 'Pendientes por tipo';
+$string['pendingdocs'] = 'Documentos pendientes';
+$string['pendingdocuments'] = 'Documentos pendientes';
+$string['pendingreview'] = 'Revisión pendiente';
+$string['pendingreviews'] = 'Revisiones pendientes';
+$string['pendingreviews_alert'] = 'Tiene revisiones pendientes';
+$string['pendingvalidation'] = 'Validación pendiente';
+$string['pensionmaxdays'] = 'Antigüedad máxima certificado pensión (días)';
+$string['percentage'] = 'Porcentaje';
+$string['period'] = 'Período';
+$string['personalinfo'] = 'Información personal';
+$string['placeholders'] = 'Marcadores';
+$string['placeholders_help'] = 'Marcadores disponibles para plantillas';
+$string['pluginsettings'] = 'Configuración del plugin';
+$string['pluginsettings_desc'] = 'Configurar ajustes del plugin';
+$string['positions'] = 'Posiciones';
+$string['previewconfirm'] = 'Confirmar vista previa';
+$string['previewdocument'] = 'Vista previa de documento';
+$string['previewmode'] = 'Modo vista previa';
+$string['previewmodenotice'] = 'Modo vista previa - cambios no guardados';
+$string['previewonly'] = 'Solo vista previa';
+$string['previewtotal'] = 'Total a previsualizar';
+$string['previewunavailable'] = 'Vista previa no disponible';
+$string['previousapplication'] = 'Postulación anterior';
+$string['professionexempt'] = 'Profesión exenta';
+$string['profilereview'] = 'Revisión de perfil';
+$string['profilereview_info'] = 'Revise y actualice su perfil';
+$string['public'] = 'Público';
+$string['publicationtype'] = 'Tipo de publicación';
+$string['publicationtype:internal'] = 'Interno';
+$string['publicationtype:public'] = 'Público';
+$string['publicpagedesc'] = 'Descripción de página pública';
+$string['publicpagedescription'] = 'Descripción de página pública';
+$string['publicpagedescription_desc'] = 'Descripción para página pública';
+$string['publicpagesettings'] = 'Configuración de página pública';
+$string['publicpagesettings_desc'] = 'Configurar página pública';
+$string['publicpagetitle'] = 'Título de página pública';
+$string['publicpagetitle_desc'] = 'Título para página pública';
+$string['publicvacancies'] = 'Vacantes públicas';
+$string['publish'] = 'Publicar';
+$string['published'] = 'Publicado';
+$string['publishedvacancies'] = 'Vacantes publicadas';
+
+// Acciones rápidas.
+$string['quickactions'] = 'Acciones rápidas';
+$string['quicktips'] = 'Consejos rápidos';
+
+// Calificaciones.
+$string['rating_excellent'] = 'Excelente';
+$string['rating_fair'] = 'Regular';
+$string['rating_good'] = 'Bueno';
+$string['rating_poor'] = 'Deficiente';
+$string['rating_verygood'] = 'Muy bueno';
+$string['readytoapply'] = 'Listo para postularse';
+
+// reCAPTCHA.
+$string['recaptcha_enabled'] = 'Habilitar reCAPTCHA';
+$string['recaptcha_enabled_desc'] = 'Requerir reCAPTCHA para registro';
+$string['recaptcha_failed'] = 'Verificación reCAPTCHA falló';
+$string['recaptcha_required'] = 'Por favor complete el reCAPTCHA';
+$string['recaptcha_secretkey'] = 'Clave secreta';
+$string['recaptcha_secretkey_desc'] = 'Clave secreta reCAPTCHA';
+$string['recaptcha_sitekey'] = 'Clave del sitio';
+$string['recaptcha_sitekey_desc'] = 'Clave del sitio reCAPTCHA';
+$string['recaptcha_v2'] = 'reCAPTCHA v2';
+$string['recaptcha_v3'] = 'reCAPTCHA v3';
+$string['recaptcha_v3_threshold'] = 'Umbral de puntuación';
+$string['recaptcha_v3_threshold_desc'] = 'Puntuación mínima para v3';
+$string['recaptcha_version'] = 'Versión reCAPTCHA';
+$string['recaptcha_version_desc'] = 'Seleccionar versión reCAPTCHA';
+$string['recaptchasettings'] = 'Configuración reCAPTCHA';
+$string['recaptchasettings_desc'] = 'Configurar reCAPTCHA';
+
+// Recomendaciones.
+$string['recommend_furtherreview'] = 'Recomendar revisión adicional';
+$string['recommend_hire'] = 'Recomendar contratación';
+$string['recommend_reject'] = 'Recomendar rechazo';
+$string['recommendation'] = 'Recomendación';
+$string['recordsperpage'] = 'Registros por página';
+$string['refresh'] = 'Actualizar';
+
+// Rechazar.
+$string['reject'] = 'Rechazar';
+$string['rejectdocument'] = 'Rechazar documento';
+$string['rejected'] = 'Rechazado';
+$string['rejecteddocuments'] = 'Documentos rechazados';
+$string['rejectionreason'] = 'Razón de rechazo';
+$string['rejectionreasons'] = 'Razones de rechazo';
+$string['rejectreason'] = 'Razón del rechazo';
+$string['rejectreason_expired'] = 'El documento ha expirado';
+$string['rejectreason_illegible'] = 'El documento es ilegible';
+$string['rejectreason_incomplete'] = 'El documento está incompleto';
+$string['rejectreason_mismatch'] = 'La información no coincide';
+$string['rejectreason_placeholder'] = 'Ingrese razón de rechazo';
+$string['rejectreason_wrongtype'] = 'Tipo de documento incorrecto';
+$string['rejectselected'] = 'Rechazar seleccionados';
+$string['removemember'] = 'Eliminar miembro';
+$string['reopen'] = 'Reabrir';
+$string['reopenconvocatoria'] = 'Reabrir convocatoria';
+
+// Reportes.
+$string['reportapplications'] = 'Reporte de postulaciones';
+$string['reportdocuments'] = 'Reporte de documentos';
+$string['reportoverview'] = 'Reporte general';
+$string['reportreviewers'] = 'Reporte de revisores';
+$string['reports_desc'] = 'Ver y exportar reportes';
+$string['reportsanddata'] = 'Reportes y datos';
+$string['reporttimeline'] = 'Reporte de línea de tiempo';
+$string['requiredcolumns'] = 'Columnas requeridas';
+$string['requireddoctypes'] = 'Tipos de documento requeridos';
+$string['requirements'] = 'Requisitos';
+$string['rescheduledby'] = 'Reprogramado por';
+$string['reschedulednote'] = 'Nota de reprogramación';
+$string['reset_to_default'] = 'Restablecer a valores por defecto';
+$string['restarttour'] = 'Reiniciar tour';
+$string['result'] = 'Resultado';
+$string['reuploaddocument'] = 'Recargar documento';
+$string['reuploadhelp'] = 'Cargar una versión corregida';
+
+// Revisar.
+$string['review_dashboard_desc'] = 'Panel de revisión';
+$string['reviewall'] = 'Revisar todos';
+$string['reviewallapproved'] = 'Todas las revisiones aprobadas';
+$string['reviewapplication'] = 'Revisar postulación';
+$string['reviewapplications'] = 'Revisar postulaciones';
+$string['reviewdocuments'] = 'Revisar documentos';
+$string['reviewed'] = 'Revisado';
+$string['reviewedby'] = 'Revisado por';
+$string['reviewerassigned'] = 'Revisor asignado';
+$string['reviewerperformance'] = 'Desempeño del revisor';
+$string['reviewertasks'] = 'Tareas del revisor';
+$string['reviewerunassigned'] = 'Revisor desasignado';
+$string['reviewerworkload'] = 'Carga de trabajo del revisor';
+$string['reviewguidelines'] = 'Directrices de revisión';
+$string['reviewhasrejected'] = 'La revisión tiene rechazos';
+$string['reviewhelp_text'] = 'Texto de ayuda de revisión';
+$string['reviewobservations'] = 'Observaciones de revisión';
+$string['reviewobservations_placeholder'] = 'Ingrese observaciones';
+$string['reviewoverview'] = 'Resumen de revisión';
+$string['reviewprogress'] = 'Progreso de revisión';
+$string['reviewsteps_tooltip'] = 'Pasos de revisión';
+$string['reviewsubmitted'] = 'Revisión enviada';
+$string['reviewsubmitted_with_notification'] = 'Revisión enviada y postulante notificado';
+$string['reviewtips'] = 'Consejos de revisión';
+
+// Revocar.
+$string['revoke'] = 'Revocar';
+$string['revoked'] = 'Revocado';
+$string['revokedby'] = 'Revocado por';
+$string['revokedexemptions'] = 'Exenciones revocadas';
+$string['revokeexemption'] = 'Revocar exención';
+$string['revokereason'] = 'Razón de revocación';
+
+// Roles.
+$string['role_administrator'] = 'Administrador';
+$string['role_applicant'] = 'Postulante';
+$string['role_chair'] = 'Presidente del comité';
+$string['role_committee'] = 'Miembro del comité';
+$string['role_committee_desc'] = 'Puede evaluar candidatos';
+$string['role_coordinator'] = 'Coordinador';
+$string['role_coordinator_desc'] = 'Coordina el proceso de selección';
+$string['role_evaluator'] = 'Evaluador';
+$string['role_manager'] = 'Gestor';
+$string['role_observer'] = 'Observador';
+$string['role_reviewer_desc'] = 'Puede revisar y validar documentos';
+$string['role_secretary'] = 'Secretario del comité';
+$string['rolenotcreated'] = 'Rol no creado';
+$string['row'] = 'Fila';
+$string['samplecsv'] = 'CSV de ejemplo';
+$string['saveresults'] = 'Guardar resultados';
+$string['scheduledinterviews'] = 'Entrevistas programadas';
+$string['scheduleinterview'] = 'Programar entrevista';
+$string['schedulenewinterview'] = 'Programar nueva entrevista';
+
+// Buscar.
+$string['searchapplicant'] = 'Buscar postulante';
+$string['searchbyusername'] = 'Buscar por nombre de usuario';
+$string['searchuser'] = 'Buscar usuario';
+$string['searchusers'] = 'Buscar usuarios';
+$string['searchusersplaceholder'] = 'Escriba para buscar usuarios';
+$string['searchvacancies'] = 'Buscar vacantes';
+$string['securitysettings'] = 'Configuración de seguridad';
+$string['selectall'] = 'Seleccionar todo';
+$string['selectatleastone'] = 'Seleccione al menos uno';
+$string['selectbackgrounddocs'] = 'Seleccionar documentos de antecedentes';
+$string['selectcompany'] = 'Seleccionar empresa';
+$string['selectcontracttype'] = 'Seleccionar tipo de contrato';
+$string['selectconvocatoria'] = 'Seleccionar convocatoria';
+$string['selectconvocatoriafirst'] = 'Seleccione una convocatoria primero';
+$string['selectdepartment'] = 'Seleccionar departamento';
+$string['selected'] = 'Seleccionado';
+$string['selectfaculty'] = 'Seleccionar facultad';
+$string['selectidentitydocs'] = 'Seleccionar documentos de identidad';
+$string['selectinterviewers'] = 'Seleccionar entrevistadores';
+$string['selectionrate'] = 'Tasa de selección';
+$string['selectmodality'] = 'Seleccionar modalidad';
+$string['selectmultiplehelp'] = 'Mantenga Ctrl para seleccionar múltiples';
+$string['selectreason'] = 'Seleccionar razón';
+$string['selectreviewer'] = 'Seleccionar revisor';
+$string['selectroletoassign'] = 'Seleccionar rol a asignar';
+$string['selecttype'] = 'Seleccionar tipo';
+$string['selectusers'] = 'Seleccionar usuarios';
+
+// Compartir.
+$string['share'] = 'Compartir';
+$string['shareonfacebook'] = 'Compartir en Facebook';
+$string['shareonlinkedin'] = 'Compartir en LinkedIn';
+$string['shareontwitter'] = 'Compartir en Twitter';
+$string['sharepage'] = 'Compartir página';
+$string['sharethisvacancy'] = 'Compartir esta vacante';
+$string['showing'] = 'Mostrando';
+$string['showingxofy'] = 'Mostrando {$a->from} a {$a->to} de {$a->total}';
+$string['showinmainmenu'] = 'Mostrar en menú principal';
+$string['showinmainmenu_desc'] = 'Mostrar bolsa de empleo en menú principal';
+$string['showpublicnavlink'] = 'Mostrar enlace público de navegación';
+$string['showpublicnavlink_desc'] = 'Mostrar enlace a vacantes públicas';
+$string['signaturetoooshort'] = 'Firma muy corta';
+
+// Cadenas de registro.
+$string['signup_academic_header'] = 'Información académica';
+$string['signup_account_header'] = 'Información de cuenta';
+$string['signup_already_account'] = '¿Ya tiene una cuenta?';
+$string['signup_applying_for'] = 'Postulándose a';
+$string['signup_birthdate'] = 'Fecha de nacimiento';
+$string['signup_birthdate_minage'] = 'Edad mínima requerida';
+$string['signup_check_spam'] = 'Revise su carpeta de spam';
+$string['signup_company_help'] = 'Seleccione su ubicación';
+$string['signup_companyinfo'] = 'Información de ubicación';
+$string['signup_contactinfo'] = 'Información de contacto';
+$string['signup_createaccount'] = 'Crear cuenta';
+$string['signup_dataaccuracy_accept'] = 'Confirmo que mi información es correcta';
+$string['signup_dataaccuracy_required'] = 'Confirmación de exactitud de datos requerida';
+$string['signup_datatreatment_accept'] = 'Acepto la política de tratamiento de datos';
+$string['signup_datatreatment_required'] = 'Aceptación de tratamiento de datos requerida';
+$string['signup_degree_title'] = 'Título de grado';
+$string['signup_department_region'] = 'Departamento/Región';
+$string['signup_doctype'] = 'Tipo de documento';
+$string['signup_doctype_cc'] = 'Cédula de ciudadanía';
+$string['signup_doctype_ce'] = 'Cédula de extranjería';
+$string['signup_doctype_passport'] = 'Pasaporte';
+$string['signup_doctype_pep'] = 'Permiso especial';
+$string['signup_doctype_ppt'] = 'Permiso temporal';
+$string['signup_edu_doctor'] = 'Doctorado';
+$string['signup_edu_doctorate'] = 'Doctorado';
+$string['signup_edu_especialista'] = 'Especialista';
+$string['signup_edu_highschool'] = 'Bachiller';
+$string['signup_edu_magister'] = 'Magíster';
+$string['signup_edu_masters'] = 'Maestría';
+$string['signup_edu_postdoctorate'] = 'Postdoctorado';
+$string['signup_edu_profesional'] = 'Profesional';
+$string['signup_edu_specialization'] = 'Especialización';
+$string['signup_edu_technical'] = 'Técnico';
+$string['signup_edu_technological'] = 'Tecnológico';
+$string['signup_edu_tecnico'] = 'Técnico';
+$string['signup_edu_tecnologo'] = 'Tecnólogo';
+$string['signup_edu_undergraduate'] = 'Pregrado';
+$string['signup_education_level'] = 'Nivel educativo';
+$string['signup_email_instruction_1'] = 'Revise su bandeja de entrada';
+$string['signup_email_instruction_2'] = 'Haga clic en el enlace de confirmación';
+$string['signup_email_instruction_3'] = 'Complete su perfil';
+$string['signup_email_instructions_title'] = 'Siguientes pasos';
+$string['signup_error_creating'] = 'Error creando cuenta';
+$string['signup_exp_1_3'] = '1-3 años';
+$string['signup_exp_3_5'] = '3-5 años';
+$string['signup_exp_5_10'] = '5-10 años';
+$string['signup_exp_less_1'] = 'Menos de 1 año';
+$string['signup_exp_more_10'] = 'Más de 10 años';
+$string['signup_exp_none'] = 'Sin experiencia';
+$string['signup_experience_years'] = 'Años de experiencia';
+$string['signup_expertise_area'] = 'Área de experiencia';
+$string['signup_gender'] = 'Género';
+$string['signup_gender_female'] = 'Femenino';
+$string['signup_gender_male'] = 'Masculino';
+$string['signup_gender_other'] = 'Otro';
+$string['signup_gender_prefer_not'] = 'Prefiero no decir';
+$string['signup_idnumber'] = 'Número de documento';
+$string['signup_idnumber_exists'] = 'Este número de documento ya está registrado';
+$string['signup_idnumber_exists_as_user'] = 'Ya existe usuario con este documento';
+$string['signup_idnumber_tooshort'] = 'El número de documento es muy corto';
+$string['signup_intro'] = 'Cree su cuenta para postularse';
+$string['signup_personalinfo'] = 'Información personal';
+$string['signup_phone_home'] = 'Teléfono fijo';
+$string['signup_phone_mobile'] = 'Teléfono móvil';
+$string['signup_privacy_text'] = 'Texto de política de privacidad';
+$string['signup_professional_profile'] = 'Perfil profesional';
+$string['signup_required_fields'] = 'Campos requeridos';
+$string['signup_step_academic'] = 'Académico';
+$string['signup_step_account'] = 'Cuenta';
+$string['signup_step_confirm'] = 'Confirmar';
+$string['signup_step_contact'] = 'Contacto';
+$string['signup_step_personal'] = 'Personal';
+$string['signup_success_message'] = 'Cuenta creada. Revise {$a} para confirmación.';
+$string['signup_success_title'] = 'Registro exitoso';
+$string['signup_terms_accept'] = 'Acepto los términos y condiciones';
+$string['signup_terms_required'] = 'Aceptación de términos requerida';
+$string['signup_termsheader'] = 'Términos y condiciones';
+$string['signup_title'] = 'Crear cuenta';
+$string['signup_username_is_idnumber'] = 'Su usuario será su número de documento';
+
+// Ordenar e iniciar.
+$string['sortby'] = 'Ordenar por';
+$string['sortorder'] = 'Orden de clasificación';
+$string['startdate'] = 'Fecha de inicio';
+
+// Cadenas de estado.
+$string['status:assigned'] = 'Asignado';
+$string['status:closed'] = 'Cerrado';
+$string['status:draft'] = 'Borrador';
+$string['status:published'] = 'Publicado';
+$string['statushistory'] = 'Historial de estados';
+
+// Pasos.
+$string['step'] = 'Paso';
+$string['step_complete'] = 'Completar';
+$string['step_consent'] = 'Consentimiento';
+$string['step_coverletter'] = 'Carta de presentación';
+$string['step_documents'] = 'Documentos';
+$string['step_examine'] = 'Examinar';
+$string['step_profile'] = 'Perfil';
+$string['step_submit'] = 'Enviar';
+$string['step_validate'] = 'Validar';
+
+// Enviar.
+$string['submit'] = 'Enviar';
+$string['submitapplication'] = 'Enviar postulación';
+$string['submitreview'] = 'Enviar revisión';
+$string['systemconfiguration'] = 'Configuración del sistema';
+$string['systemmigration'] = 'Migración del sistema';
+
+// Tareas.
+$string['task:checkclosingvacancies'] = 'Verificar vacantes por cerrar';
+$string['task:cleanupolddata'] = 'Limpiar datos antiguos';
+$string['task:sendnotifications'] = 'Enviar notificaciones';
+
+// Cadenas de plantilla.
+$string['template_categories'] = 'Categorías de plantillas';
+$string['template_category'] = 'Categoría de plantilla';
+$string['template_content'] = 'Contenido de plantilla';
+$string['template_delete_failed'] = 'Error al eliminar plantilla';
+$string['template_deleted_success'] = 'Plantilla eliminada';
+$string['template_description'] = 'Descripción de plantilla';
+$string['template_disabled_success'] = 'Plantilla deshabilitada';
+$string['template_enabled'] = 'Plantilla habilitada';
+$string['template_enabled_desc'] = 'Habilitar esta plantilla';
+$string['template_enabled_success'] = 'Plantilla habilitada';
+$string['template_help_html'] = 'HTML soportado';
+$string['template_help_placeholders'] = 'Use marcadores para contenido dinámico';
+$string['template_help_tenant'] = 'Las plantillas pueden ser específicas por empresa';
+$string['template_help_title'] = 'Ayuda de plantillas';
+$string['template_info'] = 'Información de plantilla';
+$string['template_preview_hint'] = 'La vista previa aparecerá aquí';
+$string['template_priority'] = 'Prioridad de plantilla';
+$string['template_reset_success'] = 'Plantilla restablecida';
+$string['template_saved_success'] = 'Plantilla guardada';
+$string['template_settings'] = 'Configuración de plantilla';
+$string['templates_disabled'] = 'Plantillas deshabilitadas';
+$string['templates_enabled'] = 'Plantillas habilitadas';
+$string['templates_installed'] = 'Plantillas instaladas';
+
+// Encabezados de tabla.
+$string['thactions'] = 'Acciones';
+$string['thcode'] = 'Código';
+$string['thstatus'] = 'Estado';
+$string['thtitle'] = 'Título';
+
+// Consejos.
+$string['tip_authentic'] = 'Asegure la autenticidad de documentos';
+$string['tip_checkdocs'] = 'Revise todos los documentos cuidadosamente';
+$string['tip_complete'] = 'Complete todos los campos';
+$string['tip_deadline'] = 'Envíe antes de la fecha límite';
+$string['tip_download'] = 'Descargue para revisión sin conexión';
+$string['tip_legible'] = 'Los documentos deben ser legibles';
+$string['tip_saveoften'] = 'Guarde su trabajo frecuentemente';
+$string['title'] = 'Título';
+$string['toggle_status'] = 'Cambiar estado';
+$string['togglepreview'] = 'Alternar vista previa';
+
+// Totales.
+$string['total'] = 'Total';
+$string['total_templates'] = 'Total de plantillas';
+$string['totalapplications'] = 'Total de postulaciones';
+$string['totalassigned'] = 'Total asignados';
+$string['totalassignedusers'] = 'Total de usuarios asignados';
+$string['totalcommittees'] = 'Total de comités';
+$string['totalcommmembers'] = 'Total de miembros de comité';
+$string['totalconvocatorias'] = 'Total de convocatorias';
+$string['totaldoctypes'] = 'Total de tipos de documento';
+$string['totaldocuments'] = 'Total de documentos';
+$string['totalexemptions'] = 'Total de exenciones';
+$string['totalpositions'] = 'Total de posiciones';
+$string['totalvacancies'] = 'Total de vacantes';
+$string['type'] = 'Tipo';
+
+// Desasignar.
+$string['unassign'] = 'Desasignar';
+$string['unassignedapplications'] = 'Postulaciones no asignadas';
+$string['unknownvacancy'] = 'Vacante desconocida';
+$string['unpublish'] = 'Despublicar';
+
+// Actualizar.
+$string['update_username'] = 'Actualizar nombre de usuario';
+$string['update_username_desc'] = 'Permitir actualización de nombre de usuario';
+$string['updateexisting'] = 'Actualizar existentes';
+$string['updateprofile_intro'] = 'Actualice su información de perfil';
+$string['updateprofile_submit'] = 'Actualizar perfil';
+$string['updateprofile_success'] = 'Perfil actualizado exitosamente';
+$string['updateprofile_title'] = 'Actualizar perfil';
+$string['updatestatus'] = 'Actualizar estado';
+
+// Cargar.
+$string['uploaddocument'] = 'Cargar documento';
+$string['uploaded'] = 'Cargado';
+$string['uploadeddocuments'] = 'Documentos cargados';
+$string['uploadfailed'] = 'Carga fallida';
+$string['uploadnewfile'] = 'Cargar nuevo archivo';
+$string['urgent'] = 'Urgente';
+$string['useridentifier'] = 'Identificador de usuario';
+$string['username_differs_idnumber'] = 'Nombre de usuario difiere del número de documento';
+$string['username_updated'] = 'Nombre de usuario actualizado';
+$string['usernotfound'] = 'Usuario no encontrado';
+$string['usersassigned'] = 'Usuarios asignados';
+$string['usersassignedcount'] = '{$a} usuarios asignados';
+$string['userunassigned'] = 'Usuario desasignado';
+
+// Vacantes.
+$string['vacancies_created'] = 'Vacantes creadas';
+$string['vacancies_dashboard_desc'] = 'Gestionar todas las vacantes';
+$string['vacancies_skipped'] = 'Vacantes omitidas';
+$string['vacancies_updated'] = 'Vacantes actualizadas';
+$string['vacanciesavailable'] = 'Vacantes disponibles';
+$string['vacanciesforconvocatoria'] = 'Vacantes para esta convocatoria';
+$string['vacanciesfound'] = '{$a} vacantes encontradas';
+$string['vacancy_inherits_dates'] = 'La vacante hereda fechas de convocatoria';
+$string['vacancy_status_published'] = 'Publicada';
+$string['vacancyclosed'] = 'Vacante cerrada';
+$string['vacancycode'] = 'Código de vacante';
+$string['vacancycreated'] = 'Vacante creada';
+$string['vacancydeleted'] = 'Vacante eliminada';
+$string['vacancydescription'] = 'Descripción de vacante';
+$string['vacancyinfo'] = 'Información de vacante';
+$string['vacancynotfound'] = 'Vacante no encontrada';
+$string['vacancyopen'] = 'Vacante abierta';
+$string['vacancypublished'] = 'Vacante publicada';
+$string['vacancyreopened'] = 'Vacante reabierta';
+$string['vacancysummary'] = 'Resumen de vacante';
+$string['vacancytitle'] = 'Título de vacante';
+$string['vacancyunpublished'] = 'Vacante despublicada';
+$string['vacancyupdated'] = 'Vacante actualizada';
+
+// Validar.
+$string['validate'] = 'Validar';
+$string['validateall'] = 'Validar todos';
+$string['validated'] = 'Validado';
+$string['validatedocument'] = 'Validar documento';
+$string['validationchecklist'] = 'Lista de verificación de validación';
+$string['validationdecision'] = 'Decisión de validación';
+$string['validationrequirements'] = 'Requisitos de validación';
+$string['validfrom'] = 'Válido desde';
+$string['validityperiod'] = 'Período de validez';
+$string['validuntil'] = 'Válido hasta';
+$string['verification'] = 'Verificación';
+
+// Ver.
+$string['viewall'] = 'Ver todos';
+$string['viewapplication'] = 'Ver postulación';
+$string['viewconvocatoria'] = 'Ver convocatoria';
+$string['viewdetails'] = 'Ver detalles';
+$string['vieweronly_desc'] = 'Acceso solo lectura';
+$string['viewmyapplication'] = 'Ver mi postulación';
+$string['viewmyapplications'] = 'Ver mis postulaciones';
+$string['viewmyreviews'] = 'Ver mis revisiones';
+$string['viewpublicpage'] = 'Ver página pública';
+$string['viewpublicvacancies'] = 'Ver vacantes públicas';
+$string['viewreports'] = 'Ver reportes';
+$string['viewvacancies'] = 'Ver vacantes';
+$string['viewvacancy'] = 'Ver vacante';
+$string['viewvacancydetails'] = 'Ver detalles de vacante';
+$string['wanttoapply'] = '¿Desea postularse?';
+$string['welcometojobboard'] = 'Bienvenido a la Bolsa de Empleo';
+$string['withdraw'] = 'Retirar';
+$string['withdrawapplication'] = 'Retirar postulación';
+$string['womenonly'] = 'Solo mujeres';
+$string['workflowactions'] = 'Acciones de flujo de trabajo';
+$string['workflowmanagement'] = 'Gestión de flujo de trabajo';

@@ -45,7 +45,6 @@ $perpage = optional_param('perpage', 20, PARAM_INT);
 $PAGE->set_title(get_string('myreviews', 'local_jobboard'));
 $PAGE->set_heading(get_string('myreviews', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Get my stats.
 $mystats = reviewer::get_reviewer_stats($USER->id);
@@ -436,20 +435,5 @@ echo html_writer::end_div();
 echo html_writer::end_div();
 
 echo html_writer::end_div(); // local-jobboard-myreviews
-
-// Additional styles.
-echo html_writer::tag('style', '
-.local-jobboard-myreviews .card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.local-jobboard-myreviews .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important;
-}
-.local-jobboard-myreviews .progress-bar {
-    font-size: 0.75rem;
-    font-weight: bold;
-}
-');
 
 echo $OUTPUT->footer();

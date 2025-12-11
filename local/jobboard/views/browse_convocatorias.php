@@ -41,7 +41,6 @@ $status = optional_param('status', 'open', PARAM_ALPHA);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('convocatorias', 'local_jobboard'));
 $PAGE->set_heading(get_string('convocatorias', 'local_jobboard'));
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Check IOMAD installation.
 $isiomad = local_jobboard_is_iomad_installed();

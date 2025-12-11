@@ -52,7 +52,6 @@ if (!$dateto) {
 $PAGE->set_title(get_string('reports', 'local_jobboard'));
 $PAGE->set_heading(get_string('reports', 'local_jobboard'));
 $PAGE->set_pagelayout('report');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle export.
 if ($format === 'csv' || $format === 'excel' || $format === 'pdf') {

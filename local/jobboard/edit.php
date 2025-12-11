@@ -61,7 +61,6 @@ $PAGE->set_url(new moodle_url('/local/jobboard/edit.php', ['id' => $id, 'convoca
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Get convocatoria info.
 $convocatoriarecord = null;

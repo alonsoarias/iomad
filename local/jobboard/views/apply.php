@@ -269,7 +269,7 @@ foreach ($steps as $i => $step) {
     echo '<span class="jb-step-number">' . ($i + 1) . '</span>';
     echo '<i class="fa fa-check jb-step-checkmark d-none"></i>';
     echo '</div>';
-    echo '<small class="d-block text-truncate" style="max-width:80px;">' . $step['label'] . '</small>';
+    echo '<small class="d-block text-truncate jb-step-label">' . $step['label'] . '</small>';
     echo '</a>';
     if ($i < count($steps) - 1) {
         echo '<div class="jb-step-connector flex-grow-1 mx-2"></div>';
@@ -294,7 +294,7 @@ if ($daysuntilclose <= 3 && $daysuntilclose > 0) {
 
 // Guidelines card (collapsible).
 echo '<div class="card jb-guidelines-card mb-4" id="guidelines-card">';
-echo '<div class="card-header bg-info text-white" style="cursor:pointer;" ';
+echo '<div class="card-header bg-info text-white jb-collapse-header" ';
 echo 'data-toggle="collapse" data-target="#guidelines-collapse" aria-expanded="true">';
 echo '<div class="d-flex justify-content-between align-items-center">';
 echo '<span><i class="fa fa-info-circle mr-2"></i>' . get_string('applicationguidelines', 'local_jobboard') . '</span>';
@@ -323,7 +323,7 @@ echo '</div>'; // .col-lg-8
 echo '<div class="col-lg-4">';
 
 // Vacancy summary card.
-echo '<div class="card jb-sidebar-card shadow-sm mb-4 sticky-top" style="top:20px;">';
+echo '<div class="card jb-sidebar-card shadow-sm mb-4 sticky-top jb-sticky-sidebar">';
 echo '<div class="card-header bg-primary text-white">';
 echo '<i class="fa fa-briefcase mr-2"></i>' . get_string('vacancysummary', 'local_jobboard');
 echo '</div>';
@@ -417,7 +417,7 @@ if (!empty($requireddocs)) {
         $requiredmark = !empty($doc->isrequired) ? '<span class="text-danger">*</span>' : '';
         echo '<li class="list-group-item d-flex justify-content-between align-items-center py-2">';
         echo '<small>' . format_string($doc->name) . ' ' . $requiredmark . '</small>';
-        echo '<i class="fa fa-circle text-muted" style="font-size:8px;"></i>';
+        echo '<i class="fa fa-circle text-muted jb-small-dot"></i>';
         echo '</li>';
     }
     echo '</ul>';

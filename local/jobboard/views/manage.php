@@ -51,7 +51,6 @@ $isiomad = local_jobboard_is_iomad_installed();
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('managevacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('managevacancies', 'local_jobboard'));
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle actions that don't need sesskey (just redirects).
 if ($action === 'create') {

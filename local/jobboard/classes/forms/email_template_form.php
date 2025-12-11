@@ -281,7 +281,7 @@ class email_template_form extends \moodleform {
         // Preview body.
         $html .= '<div class="preview-section">';
         $html .= '<label class="text-muted small text-uppercase">' . get_string('template_body', 'local_jobboard') . '</label>';
-        $html .= '<div id="preview-body" class="border rounded p-3 bg-white" style="min-height: 200px;">';
+        $html .= '<div id="preview-body" class="border rounded p-3 bg-white jb-preview-container">';
         $html .= '<span class="text-muted">' . get_string('template_preview_hint', 'local_jobboard') . '</span>';
         $html .= '</div>';
         $html .= '</div>';

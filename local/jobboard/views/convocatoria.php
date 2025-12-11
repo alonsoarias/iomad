@@ -57,7 +57,6 @@ if ($convocatoriaid) {
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Base URLs.
 $returnurl = new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']);
@@ -464,18 +463,5 @@ echo html_writer::link(
 echo html_writer::end_div(); // .jb-navigation-footer
 
 echo html_writer::end_div(); // local-jobboard-convocatoria
-
-// Additional styles.
-echo html_writer::tag('style', '
-.local-jobboard-convocatoria .mform {
-    max-width: 100%;
-}
-.local-jobboard-convocatoria .fitem {
-    margin-bottom: 1rem;
-}
-.local-jobboard-convocatoria .list-group-item:hover {
-    background-color: #f8f9fa;
-}
-');
 
 echo $OUTPUT->footer();

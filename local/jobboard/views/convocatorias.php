@@ -44,7 +44,6 @@ $convocatoriaid = optional_param('id', 0, PARAM_INT);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('manageconvocatorias', 'local_jobboard'));
 $PAGE->set_heading(get_string('manageconvocatorias', 'local_jobboard'));
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Base URL for this page.
 $baseurl = new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']);

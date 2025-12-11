@@ -69,7 +69,6 @@ if ($vacancy->convocatoriaid) {
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title($vacancy->title);
 $PAGE->set_heading($vacancy->title);
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Get contract types for display.
 $contracttypes = local_jobboard_get_contract_types();

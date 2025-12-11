@@ -42,7 +42,6 @@ $PAGE->set_url($pageurl);
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title(get_string('programreviewers', 'local_jobboard'));
 $PAGE->set_heading(get_string('programreviewers', 'local_jobboard'));
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle actions.
 if ($action && confirm_sesskey()) {
@@ -167,7 +166,7 @@ if ($categoryid > 0) {
         foreach ($availableusers as $user) {
             $useroptions[$user->id] = fullname($user) . ' (' . $user->email . ')';
         }
-        echo html_writer::select($useroptions, 'userid', '', false, ['class' => 'form-control mr-2', 'style' => 'min-width: 300px;']);
+        echo html_writer::select($useroptions, 'userid', '', false, ['class' => 'form-control mr-2 jb-wide-select']);
 
         // Role select.
         $roleoptions = [

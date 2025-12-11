@@ -59,7 +59,6 @@ $vacancy = vacancy::get($application->vacancyid);
 $PAGE->set_title(get_string('viewapplication', 'local_jobboard'));
 $PAGE->set_heading(get_string('viewapplication', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle actions.
 if ($action === 'withdraw' && $isowner) {

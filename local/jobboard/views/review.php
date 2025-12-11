@@ -50,7 +50,6 @@ $perpage = optional_param('perpage', 20, PARAM_INT);
 $PAGE->set_title(get_string('reviewdocuments', 'local_jobboard'));
 $PAGE->set_heading(get_string('reviewdocuments', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle actions.
 if ($action && confirm_sesskey()) {
@@ -511,7 +510,7 @@ if (!$applicationid) {
         echo '<div class="jb-step-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-1">';
         echo '<i class="fa ' . $step['icon'] . '"></i>';
         echo '</div>';
-        echo '<small class="d-block text-truncate" style="max-width:100px;">' . $step['label'] . '</small>';
+        echo '<small class="d-block text-truncate jb-step-label">' . $step['label'] . '</small>';
         echo '</div>';
         if ($i < count($reviewSteps) - 1) {
             echo '<div class="jb-step-connector flex-grow-1 mx-2"></div>';
@@ -587,7 +586,7 @@ if (!$applicationid) {
     // GUIDELINES CARD (Collapsible)
     // ============================================================================
     echo '<div class="card jb-guidelines-card mb-4" id="review-guidelines-card">';
-    echo '<div class="card-header bg-info text-white" style="cursor:pointer;" ';
+    echo '<div class="card-header bg-info text-white jb-collapse-header" ';
     echo 'data-toggle="collapse" data-target="#review-guidelines-collapse" aria-expanded="true">';
     echo '<div class="d-flex justify-content-between align-items-center">';
     echo '<span><i class="fa fa-info-circle mr-2"></i>' . get_string('reviewguidelines', 'local_jobboard') . '</span>';

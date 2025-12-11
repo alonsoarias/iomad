@@ -386,7 +386,7 @@ class application_form extends moodleform {
                     // Requirements in collapsible section.
                     if (!empty($doctype->requirements)) {
                         $dochtml .= '<details class="mb-2">';
-                        $dochtml .= '<summary class="text-primary" style="cursor:pointer;">';
+                        $dochtml .= '<summary class="text-primary jb-collapse-header">';
                         $dochtml .= '<i class="fa fa-list-ul mr-1"></i>' . get_string('docrequirements', 'local_jobboard');
                         $dochtml .= '</summary>';
                         $dochtml .= '<div class="small text-muted mt-1 pl-3">' . format_string($doctype->requirements) . '</div>';

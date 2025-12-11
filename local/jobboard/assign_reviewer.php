@@ -44,7 +44,6 @@ $PAGE->set_context($context);
 $PAGE->set_title(get_string('assignreviewer', 'local_jobboard'));
 $PAGE->set_heading(get_string('assignreviewer', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle actions.
 if ($action === 'assign') {
@@ -247,8 +246,7 @@ echo html_writer::empty_tag('input', [
     'value' => '20',
     'min' => '1',
     'max' => '100',
-    'class' => 'form-control',
-    'style' => 'width: 100px;',
+    'class' => 'form-control jb-narrow-input',
 ]);
 echo html_writer::end_div();
 

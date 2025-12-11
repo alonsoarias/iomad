@@ -87,7 +87,6 @@ if (empty($pagetitle)) {
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 $PAGE->set_pagelayout('standard');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Get contract types for display.
 $contracttypes = local_jobboard_get_contract_types();

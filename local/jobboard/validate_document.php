@@ -138,17 +138,17 @@ if ($downloadurl) {
         echo '<button type="button" class="btn btn-sm btn-outline-secondary" id="toggle-preview">' .
             get_string('togglepreview', 'local_jobboard') . '</button>';
         echo '</div>';
-        echo '<div class="card-body preview-content" id="preview-container" style="max-height: 500px; overflow: auto;">';
+        echo '<div class="card-body preview-content" id="preview-container">';
 
         if ($previewmime === 'application/pdf' && $previewinfo['url']) {
             // Use iframe for PDF preview (original or converted).
             echo '<iframe src="' . $previewinfo['url'] . '#toolbar=0&navpanes=0" ' .
-                'style="width: 100%; height: 450px; border: none;" ' .
+                'class="jb-preview-iframe w-100 border-0" ' .
                 'title="' . get_string('documentpreview', 'local_jobboard') . '"></iframe>';
         } else if (strpos($document->mimetype, 'image/') === 0) {
             // Direct image display.
-            echo '<img src="' . $downloadurl . '" class="img-fluid" ' .
-                'alt="' . s($document->filename) . '" style="max-width: 100%;">';
+            echo '<img src="' . $downloadurl . '" class="img-fluid mw-100" ' .
+                'alt="' . s($document->filename) . '">';
         }
 
         echo '</div>';

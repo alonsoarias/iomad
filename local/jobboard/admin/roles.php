@@ -47,7 +47,6 @@ $PAGE->set_context($context);
 $PAGE->set_title(get_string('manageroles', 'local_jobboard'));
 $PAGE->set_heading(get_string('manageroles', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Define the plugin roles.
 $pluginroles = [

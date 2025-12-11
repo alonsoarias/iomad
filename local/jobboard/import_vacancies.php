@@ -96,7 +96,6 @@ $PAGE->set_context($context);
 $PAGE->set_title(get_string('importvacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('importvacancies', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Get convocatorias for dropdown.
 $convocatorias = $DB->get_records_menu('local_jobboard_convocatoria', null, 'name ASC', 'id, name');
@@ -484,7 +483,7 @@ if ($mform->is_cancelled()) {
                 $table->data[] = [
                     $row['row'],
                     $row['code'],
-                    html_writer::tag('span', $row['title'], ['class' => 'text-truncate', 'style' => 'max-width:200px;display:inline-block']),
+                    html_writer::tag('span', $row['title'], ['class' => 'text-truncate d-inline-block jb-truncate-cell']),
                     $row['location'],
                     $row['modality'],
                     $row['contracttype'],
@@ -660,7 +659,7 @@ FII-001,OCASIONAL TIEMPO COMPLETO,TECNOLOGÍA EN GESTIÓN INDUSTRIAL,INGENIERO I
 FII-002,CATEDRA,TODOS LOS PROGRAMAS,LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO,ALGEBRA Y TRIGONOMETRÍA|MATEMÁTICAS|ESTADÍSTICA,PAMPLONA,PRESENCIAL,FII
 CSV;
 
-echo html_writer::start_tag('pre', ['class' => 'bg-light p-3 rounded border', 'style' => 'font-size: 0.75rem; overflow-x: auto;']);
+echo html_writer::start_tag('pre', ['class' => 'bg-light p-3 rounded border small jb-code-block']);
 echo html_writer::tag('code', htmlspecialchars($csvexample));
 echo html_writer::end_tag('pre');
 

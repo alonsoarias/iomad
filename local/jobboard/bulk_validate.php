@@ -47,7 +47,6 @@ $PAGE->set_context($context);
 $PAGE->set_title(get_string('bulkvalidation', 'local_jobboard'));
 $PAGE->set_heading(get_string('bulkvalidation', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle bulk actions.
 if ($action === 'validate' || $action === 'reject') {

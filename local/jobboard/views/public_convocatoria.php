@@ -57,7 +57,6 @@ if ($convocatoria->status !== 'open' || $convocatoria->enddate < $now) {
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title($convocatoria->name);
 $PAGE->set_heading($convocatoria->name);
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Log view (anonymous).
 \local_jobboard\audit::log('public_convocatoria_viewed', 'convocatoria', $convocatoria->id);

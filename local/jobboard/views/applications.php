@@ -44,7 +44,6 @@ $status = optional_param('status', '', PARAM_ALPHA);
 $PAGE->set_title(get_string('myapplications', 'local_jobboard'));
 $PAGE->set_heading(get_string('myapplications', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Get user's applications.
 $filters = ['userid' => $USER->id];

@@ -301,7 +301,7 @@ class signup_form extends moodleform {
         if (!empty($datatreatmenttext)) {
             $mform->addElement('html', '<div class="data-treatment-policy my-3 p-3 border rounded"><strong>' .
                 get_string('datatreatmentpolicytitle', 'local_jobboard') . '</strong><br>' .
-                '<div class="small mt-2" style="max-height: 150px; overflow-y: auto;">' .
+                '<div class="small mt-2 jb-scroll-container">' .
                 format_text($datatreatmenttext, FORMAT_HTML) . '</div></div>');
         }
 

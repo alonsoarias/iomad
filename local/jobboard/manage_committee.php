@@ -60,7 +60,6 @@ $PAGE->set_context($context);
 $PAGE->set_title(get_string('committees', 'local_jobboard'));
 $PAGE->set_heading(get_string('committees', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Role definitions.
 $memberroles = [
@@ -453,7 +452,7 @@ if (empty($companyid) && empty($vacancyid)) {
                 // Avatar.
                 echo html_writer::tag('div',
                     html_writer::tag('i', '', ['class' => "fa fa-{$roledef['icon']} fa-2x text-{$roledef['color']}"]),
-                    ['class' => "jb-icon-circle bg-{$roledef['color']}-light mb-2 mx-auto", 'style' => 'width:60px;height:60px;display:flex;align-items:center;justify-content:center;border-radius:50%;']
+                    ['class' => "jb-icon-circle jb-avatar-circle bg-{$roledef['color']}-light mb-2 mx-auto"]
                 );
 
                 // Name.

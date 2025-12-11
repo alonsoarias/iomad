@@ -37,7 +37,6 @@ $id = optional_param('id', 0, PARAM_INT);
 
 $context = context_system::instance();
 $pageurl = new moodle_url('/local/jobboard/admin/doctypes.php');
-$PAGE->requires->css('/local/jobboard/styles.css');
 
 // Handle toggle action.
 if ($action === 'toggle' && $id && confirm_sesskey()) {
