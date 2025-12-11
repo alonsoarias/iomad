@@ -3188,22 +3188,6 @@ class renderer extends plugin_renderer_base {
     }
 
     /**
-     * Get convocatoria status CSS class.
-     *
-     * @param string $status The convocatoria status.
-     * @return string CSS class.
-     */
-    protected function get_convocatoria_status_class(string $status): string {
-        $classes = [
-            'draft' => 'secondary',
-            'open' => 'success',
-            'closed' => 'warning',
-            'archived' => 'dark',
-        ];
-        return $classes[$status] ?? 'secondary';
-    }
-
-    /**
      * Prepare data for review page template.
      *
      * Handles both list mode (all applications pending review) and single application review mode.
