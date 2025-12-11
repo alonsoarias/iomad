@@ -5398,4 +5398,141 @@ class renderer extends plugin_renderer_base {
 
         return $data;
     }
+
+    /**
+     * Render the bulk validation page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_bulk_validate_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/bulk_validate', $data);
+    }
+
+    /**
+     * Prepare bulk validation page data for template.
+     *
+     * @param int $vacancyid Vacancy filter ID (0 for all).
+     * @param string $documenttype Document type filter.
+     * @param \context $context Page context for capability checks.
+     * @return array Template data.
+     */
+    public function prepare_bulk_validate_page_data(int $vacancyid, string $documenttype, \context $context): array {
+        global $DB;
+
+        $pageurl = new moodle_url('/local/jobboard/bulk_validate.php');
+
+        // Get vacancy list for filter.
+        $vacancies = $DB->get_records_select('local_jobboard_vacancy',
+            "status IN ('published', 'closed')", null, 'code ASC', 'id, code, title');
+
+        $vacanciesdata = [];
+        foreach ($vacancies as $v) {
+            $vacanciesdata[] = [
+                'id' => $v->id,
+                'label' => format_string($v->code . ' - ' . $v->title),
+                'selected' => ($v->id == $vacancyid),
+            ];
+        }
+
+        // Get pending documents by type.
+        $pendingbytype = \local_jobboard\bulk_validator::get_pending_by_type($vacancyid ?: null);
+
+        // Calculate stats.
+        $totalPending = 0;
+        $typeCount = count($pendingbytype);
+        foreach ($pendingbytype as $dt) {
+            $totalPending += $dt->count;
+        }
+
+        // Prepare pending by type data.
+        $pendingtypedata = [];
+        $documenttypesdata = [];
+        foreach ($pendingbytype as $dt) {
+            $typename = get_string('doctype_' . $dt->documenttype, 'local_jobboard');
+            $isSelected = ($documenttype === $dt->documenttype);
+
+            $pendingtypedata[] = [
+                'documenttype' => $dt->documenttype,
+                'typename' => $typename,
+                'count' => (int) $dt->count,
+                'isselected' => $isSelected,
+                'selecturl' => (new moodle_url($pageurl, [
+                    'vacancyid' => $vacancyid,
+                    'documenttype' => $dt->documenttype,
+                ]))->out(false),
+            ];
+
+            $documenttypesdata[] = [
+                'code' => $dt->documenttype,
+                'label' => $typename . ' (' . $dt->count . ')',
+                'selected' => $isSelected,
+            ];
+        }
+
+        // Rejection reasons.
+        $reasons = ['illegible', 'expired', 'incomplete', 'wrongtype', 'mismatch'];
+        $rejectreasons = [];
+        foreach ($reasons as $reason) {
+            $rejectreasons[] = [
+                'code' => $reason,
+                'label' => get_string('rejectreason_' . $reason, 'local_jobboard'),
+            ];
+        }
+
+        // Base data.
+        $data = [
+            'pagetitle' => get_string('bulkvalidation', 'local_jobboard'),
+            'stats' => [
+                'totalpending' => $totalPending,
+                'typecount' => $typeCount,
+            ],
+            'vacancies' => $vacanciesdata,
+            'selectedvacancyid' => $vacancyid,
+            'documenttypes' => $documenttypesdata,
+            'selecteddocumenttype' => $documenttype,
+            'pendingbytype' => $pendingtypedata,
+            'haspendingbytype' => !empty($pendingtypedata),
+            'rejectreasons' => $rejectreasons,
+            'filterformurl' => $pageurl->out(false),
+            'actionformurl' => $pageurl->out(false),
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'reviewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
+            'assignreviewerurl' => (new moodle_url('/local/jobboard/assign_reviewer.php'))->out(false),
+            'reportsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'reports']))->out(false),
+            'canviewreports' => has_capability('local/jobboard:viewreports', $context),
+            'sesskey' => sesskey(),
+            'hastypeselected' => !empty($documenttype),
+        ];
+
+        // If document type selected, get the documents.
+        if (!empty($documenttype)) {
+            $documents = \local_jobboard\bulk_validator::get_pending_documents_by_type($documenttype, $vacancyid ?: null);
+            $typename = get_string('doctype_' . $documenttype, 'local_jobboard');
+
+            $documentsdata = [];
+            foreach ($documents as $doc) {
+                $docobj = \local_jobboard\document::get($doc->id);
+                $downloadurl = $docobj ? $docobj->get_download_url() : null;
+
+                $documentsdata[] = [
+                    'id' => $doc->id,
+                    'applicantname' => format_string($doc->firstname . ' ' . $doc->lastname),
+                    'applicantemail' => $doc->email,
+                    'vacancycode' => format_string($doc->vacancy_code),
+                    'filename' => format_string($doc->filename),
+                    'uploadeddate' => userdate($doc->timecreated, '%Y-%m-%d %H:%M'),
+                    'downloadurl' => $downloadurl ? $downloadurl->out(false) : null,
+                    'validateurl' => (new moodle_url('/local/jobboard/validate_document.php', ['id' => $doc->id]))->out(false),
+                ];
+            }
+
+            $data['typename'] = $typename;
+            $data['documents'] = $documentsdata;
+            $data['hasdocuments'] = !empty($documentsdata);
+            $data['documentcount'] = count($documentsdata);
+        }
+
+        return $data;
+    }
 }

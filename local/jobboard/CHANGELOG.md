@@ -5,6 +5,35 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.19] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `bulk_validate.php` from 402 lines to ~84 lines (79% reduction)
+- Bulk document validation page now uses renderer pattern with Mustache template
+- Created `templates/pages/bulk_validate.mustache` with complete jb-* CSS classes
+- All bulk validation functionality preserved: approve/reject multiple documents
+
+### Added
+- `render_bulk_validate_page()` method in renderer for bulk validation view
+- `prepare_bulk_validate_page_data()` method in renderer with full data preparation
+- Statistics cards: pending documents count, document types count
+- Vacancy and document type filter dropdowns
+- Pending by type summary with clickable cards
+- Documents table with checkboxes for bulk selection
+- Bulk action panel with approve/reject cards
+- Approval notes textarea and rejection reason dropdown
+- Select all checkbox with JavaScript functionality
+- Document download/view and individual validate links
+
+### Technical Notes
+- Uses `bulk_validator` class for document operations
+- Supports vacancy filtering for multi-tenant scenarios
+- Five rejection reasons: illegible, expired, incomplete, wrongtype, mismatch
+- Session key validation for bulk actions preserved
+- JavaScript for select-all checkbox functionality
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+- **BEGINS Phase 3 (Workflows) per AGENTS.md**
+
 ## [3.1.18] - 2025-12-11
 
 ### Changed
