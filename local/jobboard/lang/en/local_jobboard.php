@@ -621,3 +621,8 @@ $string['role'] = 'Role';
 $string['user'] = 'User';
 $string['email'] = 'Email';
 $string['help'] = 'Help';
+
+// Bulk validation and document review.
+$string['alreadyvalidated'] = 'Document already validated';
+$string['bulkrejected'] = 'Rejected during bulk validation';
+$string['interviewscheduled'] = 'Interview has been scheduled';

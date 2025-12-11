@@ -125,8 +125,8 @@ class email_template {
     /** @var string Email body. */
     public string $body = '';
 
-    /** @var int Body format (FORMAT_HTML, FORMAT_PLAIN, etc.). */
-    public int $bodyformat = FORMAT_HTML;
+    /** @var int Body format (FORMAT_HTML = 1, FORMAT_PLAIN = 0, etc.). */
+    public int $bodyformat = 1; // FORMAT_HTML value, using literal for PHP autoload compatibility.
 
     /** @var bool Whether template is enabled. */
     public bool $enabled = true;

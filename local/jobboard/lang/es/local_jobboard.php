@@ -621,3 +621,8 @@ $string['role'] = 'Rol';
 $string['user'] = 'Usuario';
 $string['email'] = 'Correo';
 $string['help'] = 'Ayuda';
+
+// Validación masiva y revisión de documentos.
+$string['alreadyvalidated'] = 'Documento ya validado';
+$string['bulkrejected'] = 'Rechazado durante validación masiva';
+$string['interviewscheduled'] = 'Entrevista ha sido programada';

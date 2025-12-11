@@ -67,7 +67,13 @@ class bulk_validator {
                     continue;
                 }
 
-                $document->validate($isvalid, $rejectreason, $notes);
+                global $USER;
+                if ($isvalid) {
+                    $document->validate($USER->id);
+                } else {
+                    $reason = $rejectreason ?: ($notes ?: get_string('bulkrejected', 'local_jobboard'));
+                    $document->reject($USER->id, $reason);
+                }
                 $results['success']++;
 
             } catch (\Exception $e) {

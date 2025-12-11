@@ -598,7 +598,10 @@ class committee {
         $DB->insert_record('local_jobboard_decision', $record);
 
         // Update application status.
-        application::update_status($applicationid, $decision, $reason);
+        $app = application::get($applicationid);
+        if ($app) {
+            $app->change_status($decision, $reason);
+        }
 
         // Trigger event.
         $eventclass = $decision === 'selected' ?

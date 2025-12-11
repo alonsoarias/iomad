@@ -190,14 +190,12 @@ class data_export {
                 'vacancy_code' => $vacancy ? $vacancy->code : 'N/A',
                 'vacancy_title' => $vacancy ? $vacancy->title : 'N/A',
                 'status' => $app->status,
-                'digital_signature' => $app->digitalsignature,
-                'cover_letter' => $app->coverletter,
                 'is_iser_exemption' => (bool) $app->isexemption,
-                'exemption_reason' => $app->exemptionreason,
-                'consent_given' => (bool) $app->consentgiven,
-                'consent_timestamp' => $app->consenttimestamp
-                    ? userdate($app->consenttimestamp) : null,
-                'consent_ip' => $app->consentip,
+                'exemption_reason' => $app->exemptionreason ?? '',
+                'consent_given' => !empty($app->consenttext),
+                'consent_timestamp' => $app->consenttime
+                    ? userdate($app->consenttime) : null,
+                'consent_ip' => $app->consentip ?? '',
                 'created' => userdate($app->timecreated),
                 'modified' => $app->timemodified ? userdate($app->timemodified) : null,
                 'documents' => [],
@@ -217,7 +215,7 @@ class data_export {
                     'issue_date' => $doc->issuedate ? userdate($doc->issuedate, '%Y-%m-%d') : null,
                     'is_superseded' => (bool) $doc->issuperseded,
                     'validation_status' => $validation
-                        ? ($validation->isvalid ? 'approved' : 'pending') : 'pending',
+                        ? ($validation->status ?? 'pending') : 'pending',
                     'uploaded' => userdate($doc->timecreated),
                 ];
             }
@@ -258,9 +256,9 @@ class data_export {
             'timecreated DESC', '*', 0, 100);
         foreach ($notifications as $notif) {
             $data['notifications'][] = [
-                'template' => $notif->templatecode,
-                'status' => $notif->status,
-                'sent' => $notif->timesent ? userdate($notif->timesent) : null,
+                'type' => $notif->notificationtype ?? '',
+                'subject' => $notif->subject ?? '',
+                'sent' => !empty($notif->issent) ? userdate($notif->timecreated) : null,
                 'created' => userdate($notif->timecreated),
             ];
         }

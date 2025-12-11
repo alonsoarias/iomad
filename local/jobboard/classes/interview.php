@@ -126,9 +126,16 @@ class interview {
             $DB->insert_record('local_jobboard_interviewer', $interviewer);
         }
 
-        // Update application status.
-        application::update_status($applicationid, 'interview',
-            get_string('interviewscheduled', 'local_jobboard'));
+        // Update application status if not already at interview stage.
+        $app = application::get($applicationid);
+        if ($app && $app->status !== 'interview') {
+            try {
+                $app->change_status('interview', get_string('interviewscheduled', 'local_jobboard'));
+            } catch (\Exception $e) {
+                // Status transition may not be allowed, continue anyway.
+                debugging('Could not update application status: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            }
+        }
 
         // Trigger event.
         \local_jobboard\event\interview_scheduled::create([

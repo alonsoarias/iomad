@@ -465,8 +465,8 @@ class program_reviewer {
             $reviewer->completed_count = $DB->count_records_sql(
                 "SELECT COUNT(DISTINCT a.id)
                    FROM {local_jobboard_application} a
-                   JOIN {local_jobboard_doc_validation} dv ON dv.validatedby = :userid
-                   JOIN {local_jobboard_document} d ON d.id = dv.documentid AND d.applicationid = a.id
+                   JOIN {local_jobboard_document} d ON d.applicationid = a.id
+                   JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id AND dv.reviewedby = :userid
                   WHERE a.status IN ('docs_validated', 'docs_rejected')",
                 ['userid' => $reviewer->userid]
             );
