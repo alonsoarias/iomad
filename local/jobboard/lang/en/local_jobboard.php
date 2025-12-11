@@ -350,3 +350,24 @@ $string['auditaction'] = 'Action';
 $string['audituser'] = 'User';
 $string['audittime'] = 'Time';
 $string['auditdetails'] = 'Details';
+
+// Applications page additional strings.
+$string['browsevacancies'] = 'Browse Vacancies';
+$string['allstatuses'] = 'All statuses';
+$string['inprogress'] = 'In Progress';
+$string['showingxtoy'] = 'Showing {$a->from} to {$a->to} of {$a->total}';
+$string['noapplicationsdesc'] = 'You haven\'t applied to any vacancies yet. Start by browsing available opportunities.';
+$string['unknownvacancy'] = 'Unknown Vacancy';
+$string['exemptionactive'] = 'Exemption Active';
+$string['exemptiontype_iser'] = 'ISER Member';
+$string['exemptiontype_age'] = 'Age-based Exemption';
+$string['exemptiontype_disability'] = 'Disability Exemption';
+$string['documentstatus'] = 'Document Status';
+$string['approved'] = 'Approved';
+$string['rejected'] = 'Rejected';
+$string['uploaddocsreminder'] = 'Please upload required documents to continue.';
+$string['viewdetails'] = 'View Details';
+$string['withdraw'] = 'Withdraw';
+$string['confirmwithdraw'] = 'Are you sure you want to withdraw this application? This action cannot be undone.';
+$string['breadcrumb'] = 'Breadcrumb';
+$string['pagination'] = 'Page navigation';

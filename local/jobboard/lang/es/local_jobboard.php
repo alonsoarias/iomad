@@ -350,3 +350,24 @@ $string['auditaction'] = 'Acción';
 $string['audituser'] = 'Usuario';
 $string['audittime'] = 'Hora';
 $string['auditdetails'] = 'Detalles';
+
+// Página de postulaciones - strings adicionales.
+$string['browsevacancies'] = 'Explorar Vacantes';
+$string['allstatuses'] = 'Todos los estados';
+$string['inprogress'] = 'En Progreso';
+$string['showingxtoy'] = 'Mostrando {$a->from} a {$a->to} de {$a->total}';
+$string['noapplicationsdesc'] = 'Aún no has postulado a ninguna vacante. Comienza explorando las oportunidades disponibles.';
+$string['unknownvacancy'] = 'Vacante Desconocida';
+$string['exemptionactive'] = 'Exención Activa';
+$string['exemptiontype_iser'] = 'Miembro ISER';
+$string['exemptiontype_age'] = 'Exención por Edad';
+$string['exemptiontype_disability'] = 'Exención por Discapacidad';
+$string['documentstatus'] = 'Estado de Documentos';
+$string['approved'] = 'Aprobado';
+$string['rejected'] = 'Rechazado';
+$string['uploaddocsreminder'] = 'Por favor sube los documentos requeridos para continuar.';
+$string['viewdetails'] = 'Ver Detalles';
+$string['withdraw'] = 'Retirar';
+$string['confirmwithdraw'] = '¿Estás seguro de que deseas retirar esta postulación? Esta acción no se puede deshacer.';
+$string['breadcrumb'] = 'Ruta de navegación';
+$string['pagination'] = 'Navegación de páginas';

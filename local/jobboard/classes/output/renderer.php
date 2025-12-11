@@ -969,6 +969,188 @@ class renderer extends plugin_renderer_base {
     }
 
     /**
+     * Prepare applications page data for template.
+     *
+     * @param int $userid User ID.
+     * @param array $applications Array of application records.
+     * @param int $total Total number of applications.
+     * @param array $stats Application statistics.
+     * @param string $status Current status filter.
+     * @param int $page Current page.
+     * @param int $perpage Items per page.
+     * @param object|null $exemption User exemption if any.
+     * @return array Complete template data.
+     */
+    public function prepare_applications_page_data(
+        int $userid,
+        array $applications,
+        int $total,
+        array $stats,
+        string $status,
+        int $page,
+        int $perpage,
+        ?object $exemption = null
+    ): array {
+        global $OUTPUT;
+
+        // Progress steps for applications.
+        $progresssteps = ['submitted', 'under_review', 'docs_validated', 'interview', 'selected'];
+
+        // Prepare application data.
+        $applicationdata = [];
+        foreach ($applications as $app) {
+            // Determine current step index.
+            $currentindex = array_search($app->status, $progresssteps);
+            if ($currentindex === false) {
+                $currentindex = -1;
+            }
+
+            // Prepare progress steps.
+            $steps = [];
+            foreach ($progresssteps as $i => $step) {
+                $steps[] = [
+                    'step' => $step,
+                    'completed' => $i < $currentindex,
+                    'current' => $i === $currentindex,
+                ];
+            }
+
+            // Calculate progress percent.
+            $progresspercent = $currentindex >= 0 ? (($currentindex + 1) / count($progresssteps)) * 100 : 0;
+
+            // Document counts.
+            $doccount = $app->document_count ?? 0;
+            $docsapproved = $app->docs_approved ?? 0;
+            $docsrejected = $app->docs_rejected ?? 0;
+            $docspending = max(0, $doccount - $docsapproved - $docsrejected);
+
+            // Can withdraw?
+            $canwithdraw = in_array($app->status, ['submitted', 'under_review']);
+
+            $applicationdata[] = [
+                'id' => $app->id,
+                'vacancyid' => $app->vacancyid,
+                'vacancycode' => $app->vacancy_code ?? '',
+                'vacancytitle' => format_string($app->vacancy_title ?? get_string('unknownvacancy', 'local_jobboard')),
+                'vacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $app->vacancyid]))->out(false),
+                'convocatorianame' => !empty($app->convocatoria_name) ? format_string($app->convocatoria_name) : null,
+                'status' => $app->status,
+                'statuslabel' => get_string('appstatus:' . $app->status, 'local_jobboard'),
+                'statuscolor' => $this->get_application_status_class($app->status),
+                'dateapplied' => userdate($app->timecreated, get_string('strftimedate', 'langconfig')),
+                'progresssteps' => $steps,
+                'progresspercent' => round($progresspercent),
+                'documentcount' => $doccount,
+                'docsapproved' => $docsapproved,
+                'docsrejected' => $docsrejected,
+                'docspending' => $docspending,
+                'haspendingdocs' => $docspending > 0 && in_array($app->status, ['submitted', 'under_review', 'docs_rejected']),
+                'statusnotes' => !empty($app->statusnotes) ? format_string($app->statusnotes) : null,
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]))->out(false),
+                'withdrawurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id, 'action' => 'withdraw']))->out(false),
+                'canwithdraw' => $canwithdraw,
+            ];
+        }
+
+        // Prepare filter form.
+        $statusoptions = [['value' => '', 'label' => get_string('allstatuses', 'local_jobboard'), 'selected' => empty($status)]];
+        $statuses = ['submitted', 'under_review', 'docs_validated', 'docs_rejected', 'interview', 'selected', 'rejected', 'withdrawn'];
+        foreach ($statuses as $s) {
+            $statusoptions[] = [
+                'value' => $s,
+                'label' => get_string('appstatus:' . $s, 'local_jobboard'),
+                'selected' => $status === $s,
+            ];
+        }
+
+        $filterform = [
+            'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'hiddenfields' => [
+                ['name' => 'view', 'value' => 'applications'],
+            ],
+            'fields' => [
+                [
+                    'name' => 'status',
+                    'label' => get_string('status', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $statusoptions,
+                    'col' => 'jb-col-md-4',
+                ],
+            ],
+        ];
+
+        // Showing info.
+        $showinginfo = '';
+        if ($total > 0) {
+            $from = ($page * $perpage) + 1;
+            $to = min(($page + 1) * $perpage, $total);
+            $showinginfo = get_string('showingxtoy', 'local_jobboard', (object)['from' => $from, 'to' => $to, 'total' => $total]);
+        }
+
+        // Pagination.
+        $pagination = '';
+        if ($total > $perpage) {
+            $baseurl = new moodle_url('/local/jobboard/index.php', [
+                'view' => 'applications',
+                'status' => $status,
+            ]);
+            $pagination = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
+        }
+
+        // Stats cards.
+        $statscards = [
+            [
+                'value' => (string)($stats['total'] ?? 0),
+                'label' => get_string('myapplications', 'local_jobboard'),
+                'icon' => 'file-alt',
+                'color' => 'primary',
+            ],
+            [
+                'value' => (string)(($stats['submitted'] ?? 0) + ($stats['under_review'] ?? 0)),
+                'label' => get_string('inprogress', 'local_jobboard'),
+                'icon' => 'spinner',
+                'color' => 'info',
+            ],
+            [
+                'value' => (string)($stats['docs_validated'] ?? 0),
+                'label' => get_string('validationapproved', 'local_jobboard'),
+                'icon' => 'check-circle',
+                'color' => 'success',
+            ],
+            [
+                'value' => (string)($stats['selected'] ?? 0),
+                'label' => get_string('appstatus:selected', 'local_jobboard'),
+                'icon' => 'trophy',
+                'color' => 'success',
+            ],
+        ];
+
+        // Exemption data.
+        $exemptiondata = null;
+        if ($exemption) {
+            $exemptiondata = [
+                'type' => $exemption->exemptiontype,
+                'typeformatted' => get_string('exemptiontype_' . $exemption->exemptiontype, 'local_jobboard'),
+                'documentref' => !empty($exemption->documentref) ? format_string($exemption->documentref) : null,
+            ];
+        }
+
+        return [
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'browseurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']))->out(false),
+            'hasexemption' => !empty($exemption),
+            'exemption' => $exemptiondata,
+            'stats' => $statscards,
+            'pendingdocscount' => $stats['pending_docs'] ?? 0,
+            'filterform' => $filterform,
+            'showinginfo' => $showinginfo,
+            'hasapplications' => !empty($applicationdata),
+            'applications' => $applicationdata,
+            'pagination' => $pagination,
+        ];
+    }
+
+    /**
      * Prepare vacancy data for templates.
      *
      * @param object $vacancy Vacancy record.

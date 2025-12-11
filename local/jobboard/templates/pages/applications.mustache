@@ -4,13 +4,16 @@
     My applications list page template.
 
     Context variables:
-    * pageheader - Page header data
+    * hasexemption - Boolean if user has active exemption
+    * exemption - Exemption data {type, typeformatted, documentref}
     * stats - Array of stat cards
+    * pendingdocscount - Number of pending documents
     * filterform - Filter form data
+    * showinginfo - Showing X-Y of Z text
     * hasapplications - Boolean
     * applications - Array of application data
     * pagination - Pagination HTML
-    * progresssteps - Steps for progress indicator
+    * browseurl - URL to browse vacancies
 
     Example context (json):
     {
@@ -20,115 +23,194 @@
 }}
 <div class="local-jobboard-applications" data-region="jobboard-applications">
     {{! Page Header }}
-    {{> local_jobboard/components/page_header }}
+    <div class="jb-page-header jb-mb-4">
+        <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="jb-mb-3">
+            <ol class="jb-breadcrumb">
+                <li class="jb-breadcrumb-item">
+                    <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
+                </li>
+                <li class="jb-breadcrumb-item jb-active" aria-current="page">
+                    {{#str}}myapplications, local_jobboard{{/str}}
+                </li>
+            </ol>
+        </nav>
+        <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-flex-wrap">
+            <h1 class="jb-fs-4 jb-mb-0">{{#str}}myapplications, local_jobboard{{/str}}</h1>
+            <a href="{{browseurl}}" class="jb-btn jb-btn-primary">
+                <i class="fa fa-search jb-mr-2" aria-hidden="true"></i>
+                {{#str}}browsevacancies, local_jobboard{{/str}}
+            </a>
+        </div>
+    </div>
+
+    {{! Exemption Notice }}
+    {{#hasexemption}}
+    <div class="jb-alert jb-alert-success jb-d-flex jb-align-items-center jb-mb-4" role="alert">
+        <i class="fa fa-certificate fa-2x jb-mr-3 jb-text-success" aria-hidden="true"></i>
+        <div>
+            <strong class="jb-d-block">{{#str}}exemptionactive, local_jobboard{{/str}}</strong>
+            <span class="jb-text-muted">
+                {{exemption.typeformatted}}
+                {{#exemption.documentref}}
+                ({{exemption.documentref}})
+                {{/exemption.documentref}}
+            </span>
+        </div>
+    </div>
+    {{/hasexemption}}
 
     {{! Statistics Row }}
     {{#stats.0}}
-    <section class="row mb-4" role="region" aria-label="{{#str}}applicationstatistics, local_jobboard{{/str}}">
+    <section class="jb-row jb-mb-4" role="region" aria-label="{{#str}}applicantstatistics, local_jobboard{{/str}}">
         {{#stats}}
-        <div class="col-lg-3 col-md-6 mb-3">
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
             {{> local_jobboard/components/stat_card }}
         </div>
         {{/stats}}
     </section>
     {{/stats.0}}
 
+    {{! Pending Actions Alert }}
+    {{#pendingdocscount}}
+    <div class="jb-alert jb-alert-warning jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4" role="alert">
+        <span>
+            <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+            {{#str}}pending_docs_alert, local_jobboard, {{pendingdocscount}}{{/str}}
+        </span>
+    </div>
+    {{/pendingdocscount}}
+
     {{! Filter Form }}
     {{#filterform}}
-    {{> local_jobboard/components/filter_form }}
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-body">
+            <form method="get" action="{{filterform.action}}" class="jb-filter-form">
+                {{#filterform.hiddenfields}}
+                <input type="hidden" name="{{name}}" value="{{value}}">
+                {{/filterform.hiddenfields}}
+                <div class="jb-row jb-align-items-end">
+                    {{#filterform.fields}}
+                    <div class="{{col}} jb-mb-2">
+                        {{#isselect}}
+                        <label for="filter-{{name}}" class="jb-form-label jb-small jb-text-muted">{{label}}</label>
+                        <select name="{{name}}" id="filter-{{name}}" class="jb-form-select">
+                            {{#options}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/options}}
+                        </select>
+                        {{/isselect}}
+                    </div>
+                    {{/filterform.fields}}
+                    <div class="jb-col-auto jb-mb-2">
+                        <button type="submit" class="jb-btn jb-btn-secondary">
+                            <i class="fa fa-filter jb-mr-1" aria-hidden="true"></i>
+                            {{#str}}filter, local_jobboard{{/str}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     {{/filterform}}
+
+    {{! Results Info }}
+    {{#showinginfo}}
+    <p class="jb-text-muted jb-small jb-mb-3">{{showinginfo}}</p>
+    {{/showinginfo}}
 
     {{! Applications List }}
     {{#hasapplications}}
-    <section class="row" aria-label="{{#str}}applicationlist, local_jobboard{{/str}}">
+    <section class="jb-row" aria-label="{{#str}}myapplications, local_jobboard{{/str}}">
         {{#applications}}
-        <div class="col-lg-6 mb-4">
-            <article class="card h-100 shadow-sm jb-application-card" data-application-id="{{id}}" aria-labelledby="app-title-{{id}}">
+        <div class="jb-col-lg-6 jb-mb-4">
+            <article class="jb-card jb-card-h100 jb-card-shadow jb-application-card" data-application-id="{{id}}" aria-labelledby="app-title-{{id}}">
                 {{! Card Header with Status }}
-                <div class="card-header bg-{{statuscolor}} text-white d-flex justify-content-between align-items-center">
+                <div class="jb-card-header jb-card-header-{{statuscolor}} jb-text-white jb-d-flex jb-justify-content-between jb-align-items-center">
                     <div>
-                        <span class="badge badge-light mr-2" aria-label="{{#str}}vacancycode, local_jobboard{{/str}}: {{vacancycode}}">{{vacancycode}}</span>
-                        <span class="font-weight-bold">{{statuslabel}}</span>
+                        {{#vacancycode}}
+                        <span class="jb-badge jb-badge-light jb-mr-2">{{vacancycode}}</span>
+                        {{/vacancycode}}
+                        <span class="jb-fw-bold">{{statuslabel}}</span>
                     </div>
-                    {{#urgent}}
-                    <span class="badge badge-warning" role="status">
-                        <i class="fa fa-exclamation-triangle mr-1" aria-hidden="true"></i>
-                        {{#str}}urgent, local_jobboard{{/str}}
-                    </span>
-                    {{/urgent}}
+                    <small>{{dateapplied}}</small>
                 </div>
 
                 {{! Card Body }}
-                <div class="card-body">
-                    <h2 class="card-title h5 mb-2" id="app-title-{{id}}">{{vacancytitle}}</h2>
+                <div class="jb-card-body">
+                    <h2 class="jb-card-title jb-fs-5 jb-mb-2" id="app-title-{{id}}">
+                        <a href="{{vacancyurl}}" class="jb-text-dark">{{vacancytitle}}</a>
+                    </h2>
 
-                    {{#convocatoria}}
-                    <p class="small text-muted mb-2">
-                        <i class="fa fa-folder-open mr-1" aria-hidden="true"></i>
-                        <span class="sr-only">{{#str}}convocatoria, local_jobboard{{/str}}:</span>
-                        {{convocatoria}}
+                    {{#convocatorianame}}
+                    <p class="jb-small jb-text-muted jb-mb-2">
+                        <i class="fa fa-folder-open jb-mr-1" aria-hidden="true"></i>
+                        {{convocatorianame}}
                     </p>
-                    {{/convocatoria}}
+                    {{/convocatorianame}}
 
                     {{! Progress Indicator }}
-                    <div class="jb-progress-steps mb-3" role="progressbar" aria-valuenow="{{progresspercent}}" aria-valuemin="0" aria-valuemax="100" aria-label="{{#str}}applicationprogress, local_jobboard{{/str}}">
-                        <div class="d-flex justify-content-between small">
+                    <div class="jb-progress-tracker jb-mb-3">
+                        <div class="jb-d-flex jb-justify-content-between jb-small jb-text-muted jb-mb-1">
                             {{#progresssteps}}
-                            <div class="text-center flex-fill">
-                                <div class="jb-step-icon rounded-circle mx-auto mb-1
-                                     {{#completed}}bg-success text-white{{/completed}}
-                                     {{#current}}bg-primary text-white{{/current}}
-                                     {{^completed}}{{^current}}bg-light text-muted{{/current}}{{/completed}}"
-                                     aria-hidden="true">
-                                    {{#completed}}<i class="fa fa-check"></i>{{/completed}}
-                                    {{#current}}<i class="fa fa-circle"></i>{{/current}}
-                                    {{^completed}}{{^current}}<i class="fa fa-circle"></i>{{/current}}{{/completed}}
-                                </div>
-                                <span class="d-none d-md-block {{#current}}font-weight-bold{{/current}}">{{label}}</span>
-                            </div>
+                            <span class="fa fa-circle {{#completed}}jb-text-success{{/completed}} {{#current}}jb-text-primary{{/current}}" aria-hidden="true"></span>
                             {{/progresssteps}}
                         </div>
-                        <div class="progress mt-2" style="height: 4px;">
-                            <div class="progress-bar bg-success" style="width: {{progresspercent}}%;"></div>
+                        <div class="jb-progress" style="height: 4px;">
+                            <div class="jb-progress-bar jb-bg-success" role="progressbar" style="width: {{progresspercent}}%;" aria-valuenow="{{progresspercent}}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
 
                     {{! Document Status }}
-                    <div class="row small text-center" role="group" aria-label="{{#str}}documentstatus, local_jobboard{{/str}}">
-                        <div class="col-4">
-                            <span class="badge badge-success badge-pill" aria-label="{{docsapproved}} {{#str}}approved, local_jobboard{{/str}}">{{docsapproved}}</span>
-                            <div class="text-muted">{{#str}}approved, local_jobboard{{/str}}</div>
+                    <div class="jb-row jb-small jb-text-center" role="group" aria-label="{{#str}}documentstatus, local_jobboard{{/str}}">
+                        <div class="jb-col-4">
+                            <span class="jb-badge jb-badge-success">{{docsapproved}}</span>
+                            <div class="jb-text-muted">{{#str}}approved, local_jobboard{{/str}}</div>
                         </div>
-                        <div class="col-4">
-                            <span class="badge badge-warning badge-pill" aria-label="{{docspending}} {{#str}}pending, local_jobboard{{/str}}">{{docspending}}</span>
-                            <div class="text-muted">{{#str}}pending, local_jobboard{{/str}}</div>
+                        <div class="jb-col-4">
+                            <span class="jb-badge jb-badge-warning">{{docspending}}</span>
+                            <div class="jb-text-muted">{{#str}}pending, local_jobboard{{/str}}</div>
                         </div>
-                        <div class="col-4">
-                            <span class="badge badge-danger badge-pill" aria-label="{{docsrejected}} {{#str}}rejected, local_jobboard{{/str}}">{{docsrejected}}</span>
-                            <div class="text-muted">{{#str}}rejected, local_jobboard{{/str}}</div>
+                        <div class="jb-col-4">
+                            <span class="jb-badge jb-badge-danger">{{docsrejected}}</span>
+                            <div class="jb-text-muted">{{#str}}rejected, local_jobboard{{/str}}</div>
                         </div>
                     </div>
 
+                    {{! Status Notes }}
+                    {{#statusnotes}}
+                    <div class="jb-mt-2 jb-text-muted jb-small">
+                        <i class="fa fa-comment jb-mr-1" aria-hidden="true"></i>
+                        <em>{{statusnotes}}</em>
+                    </div>
+                    {{/statusnotes}}
+
                     {{! Pending Docs Alert }}
                     {{#haspendingdocs}}
-                    <div class="alert alert-warning mt-3 mb-0 py-2" role="alert">
-                        <i class="fa fa-exclamation-circle mr-1" aria-hidden="true"></i>
-                        {{#str}}pendingdocsalert, local_jobboard{{/str}}
+                    <div class="jb-alert jb-alert-warning jb-mt-3 jb-mb-0 jb-py-2" role="alert">
+                        <i class="fa fa-exclamation-circle jb-mr-1" aria-hidden="true"></i>
+                        {{#str}}uploaddocsreminder, local_jobboard{{/str}}
                     </div>
                     {{/haspendingdocs}}
                 </div>
 
                 {{! Card Footer }}
-                <footer class="card-footer bg-white d-flex justify-content-between align-items-center">
-                    <small class="text-muted">
-                        <i class="fa fa-calendar mr-1" aria-hidden="true"></i>
-                        <span class="sr-only">{{#str}}dateapplied, local_jobboard{{/str}}:</span>
-                        {{dateapplied}}
+                <footer class="jb-card-footer jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <small class="jb-text-muted">
+                        <i class="fa fa-file-alt jb-mr-1" aria-hidden="true"></i>
+                        {{documentcount}} {{#str}}documents, local_jobboard{{/str}}
                     </small>
-                    <a href="{{viewurl}}" class="btn btn-primary btn-sm" aria-label="{{#str}}viewdetails, local_jobboard{{/str}}: {{vacancytitle}}">
-                        {{#str}}viewdetails, local_jobboard{{/str}}
-                        <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
-                    </a>
+                    <div>
+                        {{#canwithdraw}}
+                        <a href="{{withdrawurl}}" class="jb-btn jb-btn-sm jb-btn-outline-danger jb-mr-2" onclick="return confirm('{{#str}}confirmwithdraw, local_jobboard{{/str}}');">
+                            <i class="fa fa-times jb-mr-1" aria-hidden="true"></i>
+                            {{#str}}withdraw, local_jobboard{{/str}}
+                        </a>
+                        {{/canwithdraw}}
+                        <a href="{{viewurl}}" class="jb-btn jb-btn-sm jb-btn-primary">
+                            {{#str}}viewdetails, local_jobboard{{/str}}
+                            <i class="fa fa-arrow-right jb-ml-1" aria-hidden="true"></i>
+                        </a>
+                    </div>
                 </footer>
             </article>
         </div>
@@ -138,24 +220,21 @@
 
     {{! Empty State }}
     {{^hasapplications}}
-    <div class="jb-empty-state text-center py-5" role="status" aria-live="polite">
-        <div aria-hidden="true">
-            <i class="fa fa-file-alt fa-4x text-muted mb-3"></i>
-        </div>
-        <h2 class="h4 text-muted">{{#str}}noapplications, local_jobboard{{/str}}</h2>
-        <p class="text-muted mb-4">{{#str}}noapplicationsdesc, local_jobboard{{/str}}</p>
-        <a href="{{browseurl}}" class="btn btn-primary">
-            <i class="fa fa-search mr-2" aria-hidden="true"></i>
-            {{#str}}browservacancies, local_jobboard{{/str}}
+    <div class="jb-empty-state jb-text-center jb-py-5" role="status">
+        <i class="fa fa-file-alt fa-4x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+        <h2 class="jb-fs-4 jb-text-muted">{{#str}}noapplications, local_jobboard{{/str}}</h2>
+        <p class="jb-text-muted jb-mb-4">{{#str}}noapplicationsdesc, local_jobboard{{/str}}</p>
+        <a href="{{browseurl}}" class="jb-btn jb-btn-primary">
+            <i class="fa fa-search jb-mr-2" aria-hidden="true"></i>
+            {{#str}}browsevacancies, local_jobboard{{/str}}
         </a>
     </div>
     {{/hasapplications}}
 
     {{! Pagination }}
     {{#pagination}}
-    <nav class="mt-4" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
+    <nav class="jb-mt-4" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
         {{{pagination}}}
     </nav>
     {{/pagination}}
 </div>
-{{! Styles moved to styles.css - jb-application-card section }}

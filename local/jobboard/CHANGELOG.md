@@ -5,6 +5,25 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.4] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `views/applications.php` from 360 lines to ~100 lines
+- Applications page now uses renderer pattern with Mustache template
+- Updated `templates/pages/applications.mustache` with complete jb-* CSS classes
+- Added `prepare_applications_page_data()` method to renderer class
+
+### Added
+- Application card component with progress tracking
+- Exemption notice display
+- Filter form with status dropdown
+- Document status counters (approved/pending/rejected)
+
+### Technical Notes
+- Zero Bootstrap dependencies in applications template
+- Follows MVC pattern with clean separation of concerns
+- All strings internationalized (EN/ES)
+
 ## [3.1.3] - 2025-12-11
 
 ### Added
