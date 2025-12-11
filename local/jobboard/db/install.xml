@@ -354,6 +354,7 @@
         <FIELD NAME="age_exemption_threshold" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="Age in years at which user is exempt from this document (e.g., 50 for libreta militar)"/>
         <FIELD NAME="profession_exempt" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="JSON array of education types exempt from this requirement"/>
         <FIELD NAME="conditional_note" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Conditional explanatory note shown in application form when document is optional"/>
+        <FIELD NAME="input_type" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="file" SEQUENCE="false" COMMENT="Input type: file, text, url, number"/>
         <FIELD NAME="category" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Document category for grouping"/>
         <FIELD NAME="defaultmaxagedays" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="sortorder" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -371,6 +372,7 @@
         <INDEX NAME="iserexempted_idx" UNIQUE="false" FIELDS="iserexempted"/>
         <INDEX NAME="gender_idx" UNIQUE="false" FIELDS="gender_condition"/>
         <INDEX NAME="category_idx" UNIQUE="false" FIELDS="category"/>
+        <INDEX NAME="input_type_idx" UNIQUE="false" FIELDS="input_type"/>
       </INDEXES>
     </TABLE>
 
@@ -444,11 +446,12 @@
       </INDEXES>
     </TABLE>
 
-    <!-- Table 17: Selection committee -->
-    <TABLE NAME="local_jobboard_committee" COMMENT="Selection committees for vacancies">
+    <!-- Table 17: Selection committee (per faculty/company, not per vacancy) -->
+    <TABLE NAME="local_jobboard_committee" COMMENT="Selection committees for faculties/companies">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="vacancyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD company/faculty ID - committee is per faculty"/>
+        <FIELD NAME="vacancyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Legacy: specific vacancy if not faculty-wide"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="active" SEQUENCE="false"/>
         <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -457,10 +460,10 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="vacancyid_fk" TYPE="foreign" FIELDS="vacancyid" REFTABLE="local_jobboard_vacancy" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="vacancyid_idx" UNIQUE="true" FIELDS="vacancyid"/>
+        <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>
+        <INDEX NAME="vacancyid_idx" UNIQUE="false" FIELDS="vacancyid"/>
       </INDEXES>
     </TABLE>
 
@@ -631,6 +634,9 @@
         <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Unique convocatoria code"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Convocatoria title/name"/>
         <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Full description"/>
+        <FIELD NAME="brief_description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Brief description for listing pages"/>
+        <FIELD NAME="pdf_contenthash" TYPE="char" LENGTH="40" NOTNULL="false" SEQUENCE="false" COMMENT="Moodle file contenthash for PDF document"/>
+        <FIELD NAME="pdf_filename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Original filename of PDF document"/>
         <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Start date for applications"/>
         <FIELD NAME="enddate" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="End date for applications"/>
         <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" COMMENT="Status: draft, open, closed, archived"/>

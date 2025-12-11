@@ -313,12 +313,8 @@ class document {
             return false;
         }
 
-        // Check MIME type.
-        $allowedmimes = [
-            'application/pdf',
-            'image/jpeg',
-            'image/png',
-        ];
+        // Get allowed MIME types from configuration.
+        $allowedmimes = self::get_allowed_mimetypes();
 
         if (!in_array($file->get_mimetype(), $allowedmimes)) {
             return false;
@@ -333,6 +329,42 @@ class document {
         }
 
         return true;
+    }
+
+    /**
+     * Get allowed MIME types from configuration.
+     *
+     * @return array Array of allowed MIME types.
+     */
+    public static function get_allowed_mimetypes(): array {
+        $formats = get_config('local_jobboard', 'allowedformats');
+        if (empty($formats)) {
+            $formats = 'pdf'; // Default to PDF only.
+        }
+
+        $allowedformats = array_map('trim', explode(',', strtolower($formats)));
+        $mimetypes = [];
+
+        // Map formats to MIME types.
+        $mimemap = [
+            'pdf' => 'application/pdf',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+        ];
+
+        foreach ($allowedformats as $format) {
+            if (isset($mimemap[$format])) {
+                $mimetypes[] = $mimemap[$format];
+            }
+        }
+
+        // Ensure at least PDF is allowed.
+        if (empty($mimetypes)) {
+            $mimetypes[] = 'application/pdf';
+        }
+
+        return array_unique($mimetypes);
     }
 
     /**

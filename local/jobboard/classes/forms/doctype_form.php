@@ -86,6 +86,17 @@ class doctype_form extends \moodleform {
         ];
         $mform->addElement('select', 'category', get_string('category', 'local_jobboard'), $categories);
 
+        // Input type (how applicants provide this document).
+        $inputtypes = [
+            'file' => get_string('inputtype_file', 'local_jobboard'),
+            'text' => get_string('inputtype_text', 'local_jobboard'),
+            'url' => get_string('inputtype_url', 'local_jobboard'),
+            'number' => get_string('inputtype_number', 'local_jobboard'),
+        ];
+        $mform->addElement('select', 'input_type', get_string('inputtype', 'local_jobboard'), $inputtypes);
+        $mform->addHelpButton('input_type', 'inputtype', 'local_jobboard');
+        $mform->setDefault('input_type', 'file');
+
         // Requirements header.
         $mform->addElement('header', 'requirementsheader', get_string('requirements', 'local_jobboard'));
 

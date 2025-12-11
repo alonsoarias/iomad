@@ -3256,3 +3256,42 @@ $string['templatecode'] = 'Code';
 $string['templatenotfound'] = 'Template not found';
 $string['htmlsupport'] = 'HTML Support';
 $string['placeholders'] = 'Placeholders';
+
+// ============================================================================
+// Faculty-based Committees (v2.3.0)
+// ============================================================================
+$string['faculty'] = 'Faculty';
+$string['selectfaculty'] = 'Select a faculty...';
+$string['facultieswithoutcommittee'] = 'Faculties Without Committee';
+$string['facultyvacancies'] = 'Vacancies in this Faculty';
+$string['facultycommitteedefaultname'] = 'Selection Committee - {$a}';
+$string['searchbyusername'] = 'Search by name, email or username...';
+$string['legacyvacancycommittee'] = 'This vacancy uses a legacy committee structure. New committees should be created at the faculty level.';
+$string['existingvacancycommittee'] = 'This vacancy has an existing committee: {$a}';
+$string['membercount'] = 'Members: {$a}';
+$string['nocommitteeforthisvacancy'] = 'No committee exists for this vacancy.';
+
+// ============================================================================
+// Document Type Input Types (v2.3.0)
+// ============================================================================
+$string['inputtype'] = 'Input type';
+$string['inputtype_help'] = 'Select how applicants will provide this document. "File" requires uploading a PDF file, "Text" allows entering text directly, "URL" accepts a link to an external document.';
+$string['inputtype_file'] = 'File upload (PDF)';
+$string['inputtype_text'] = 'Text field';
+$string['inputtype_url'] = 'External URL';
+$string['inputtype_number'] = 'Numeric value';
+
+// ============================================================================
+// Convocatoria PDF (v2.3.0)
+// ============================================================================
+$string['briefdescription'] = 'Brief description';
+$string['briefdescription_help'] = 'A short summary of this call for applications that will be shown in listings. Maximum 500 characters.';
+$string['convocatoriapdf'] = 'Call document (PDF)';
+$string['convocatoriapdf_help'] = 'Upload a PDF file containing the full details of this call for applications. This document will be available for download by applicants.';
+$string['downloadpdf'] = 'Download PDF';
+$string['viewpdf'] = 'View call document';
+
+// ============================================================================
+// PDF-only Configuration (v2.3.0)
+// ============================================================================
+$string['allowedformats_desc'] = 'Comma-separated list of allowed file formats. Default is "pdf" for PDF files only. To allow images, add "jpg,jpeg,png".';

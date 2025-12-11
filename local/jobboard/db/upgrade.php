@@ -51,6 +51,104 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121101, 'local', 'jobboard');
     }
 
+    // Version 2.3.0 - Major structural changes:
+    // - Committee by faculty (company) instead of vacancy
+    // - Add input_type field to document types
+    // - Add PDF and brief description to convocatoria
+    if ($oldversion < 2025121103) {
+        $dbman = $DB->get_manager();
+
+        // ====================================================================
+        // 1. COMMITTEE: Add companyid field and make vacancyid nullable
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_committee');
+
+        // Add companyid field.
+        $field = new xmldb_field('companyid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Drop the unique index on vacancyid (we'll create a non-unique one).
+        $index = new xmldb_index('vacancyid_idx', XMLDB_INDEX_UNIQUE, ['vacancyid']);
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+
+        // Change vacancyid to allow null (for faculty-wide committees).
+        $field = new xmldb_field('vacancyid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'companyid');
+        $dbman->change_field_notnull($table, $field);
+
+        // Create new indexes.
+        $index = new xmldb_index('companyid_idx', XMLDB_INDEX_NOTUNIQUE, ['companyid']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        $index = new xmldb_index('vacancyid_nonunique_idx', XMLDB_INDEX_NOTUNIQUE, ['vacancyid']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Migrate existing committees: set companyid from vacancy.
+        $sql = "UPDATE {local_jobboard_committee} c
+                   SET companyid = (
+                       SELECT v.companyid
+                         FROM {local_jobboard_vacancy} v
+                        WHERE v.id = c.vacancyid
+                   )
+                 WHERE c.companyid IS NULL";
+        $DB->execute($sql);
+
+        // ====================================================================
+        // 2. DOCTYPE: Add input_type field
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_doctype');
+
+        $field = new xmldb_field('input_type', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'file', 'conditional_note');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add index on input_type.
+        $index = new xmldb_index('input_type_idx', XMLDB_INDEX_NOTUNIQUE, ['input_type']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // ====================================================================
+        // 3. CONVOCATORIA: Add PDF and brief description fields
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_convocatoria');
+
+        // Add brief_description field.
+        $field = new xmldb_field('brief_description', XMLDB_TYPE_TEXT, null, null, null, null, null, 'description');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add pdf_contenthash field.
+        $field = new xmldb_field('pdf_contenthash', XMLDB_TYPE_CHAR, '40', null, null, null, null, 'brief_description');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add pdf_filename field.
+        $field = new xmldb_field('pdf_filename', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'pdf_contenthash');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // ====================================================================
+        // 4. Update default file formats setting to PDF only
+        // ====================================================================
+        set_config('allowedformats', 'pdf', 'local_jobboard');
+        set_config('acceptedfiletypes', '.pdf', 'local_jobboard');
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121103, 'local', 'jobboard');
+    }
+
     return true;
 }
 

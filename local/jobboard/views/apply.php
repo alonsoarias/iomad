@@ -478,10 +478,12 @@ $PAGE->requires->js_call_amd('local_jobboard/application_confirm', 'init', [[
 // Initialize loading states.
 $PAGE->requires->js_call_amd('local_jobboard/loading_states', 'init', []);
 
-// Initialize form unsaved warning.
-$PAGE->requires->js_call_amd('local_jobboard/form_unsaved_warning', 'init', [[
-    'formSelector' => 'form.mform',
-    'excludedLinks' => ['.jb-navigation-footer a.btn-link'],
-]]);
+// Form unsaved warning disabled in v2.3.0 due to navigation issues.
+// This was NOT an autosave feature, just a warning that blocked navigation.
+// If re-enabling in the future, consider using a less intrusive approach.
+// $PAGE->requires->js_call_amd('local_jobboard/form_unsaved_warning', 'init', [[
+//     'formSelector' => 'form.mform',
+//     'excludedLinks' => ['.jb-navigation-footer a.btn-link'],
+// ]]);
 
 echo $OUTPUT->footer();

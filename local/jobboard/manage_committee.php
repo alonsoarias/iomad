@@ -17,7 +17,7 @@
 /**
  * Selection committee management page.
  *
- * Create, edit, and manage selection committees for vacancies.
+ * Create, edit, and manage selection committees for faculties/companies.
  * Assign users with different roles (chair, evaluator, secretary, observer).
  *
  * @package   local_jobboard
@@ -36,6 +36,7 @@ $context = context_system::instance();
 require_capability('local/jobboard:manageworkflow', $context);
 
 // Parameters.
+$companyid = optional_param('companyid', 0, PARAM_INT);
 $vacancyid = optional_param('vacancyid', 0, PARAM_INT);
 // Support old parameter name for backwards compatibility.
 if (!$vacancyid) {
@@ -44,9 +45,17 @@ if (!$vacancyid) {
 $action = optional_param('action', '', PARAM_ALPHA);
 $committeeid = optional_param('id', 0, PARAM_INT);
 $userid = optional_param('userid', 0, PARAM_INT);
+$usersearch = optional_param('usersearch', '', PARAM_TEXT);
 
 // Page setup.
-$PAGE->set_url(new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $vacancyid]));
+$urlparams = [];
+if ($companyid) {
+    $urlparams['companyid'] = $companyid;
+}
+if ($vacancyid) {
+    $urlparams['vacancyid'] = $vacancyid;
+}
+$PAGE->set_url(new moodle_url('/local/jobboard/manage_committee.php', $urlparams));
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('committees', 'local_jobboard'));
 $PAGE->set_heading(get_string('committees', 'local_jobboard'));
@@ -79,7 +88,7 @@ $memberroles = [
 
 // Handle actions.
 if ($action === 'create' && confirm_sesskey()) {
-    $vacancyid = required_param('vacancyid', PARAM_INT);
+    $createcompanyid = required_param('companyid', PARAM_INT);
     $name = required_param('name', PARAM_TEXT);
 
     // Get selected members.
@@ -101,7 +110,8 @@ if ($action === 'create' && confirm_sesskey()) {
         }
     }
 
-    $committeeid = committee::create($vacancyid, $name, $members);
+    // Create committee for the faculty/company.
+    $committeeid = committee::create_for_company($createcompanyid, $name, $members);
     if ($committeeid) {
         // Assign the jobboard_committee role to all members.
         $committeerole = $DB->get_record('role', ['shortname' => 'jobboard_committee']);
@@ -121,7 +131,7 @@ if ($action === 'create' && confirm_sesskey()) {
     } else {
         \core\notification::error(get_string('committeecreateerror', 'local_jobboard'));
     }
-    redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $vacancyid]));
+    redirect(new moodle_url('/local/jobboard/manage_committee.php', ['companyid' => $createcompanyid]));
 }
 
 if ($action === 'addmember' && confirm_sesskey()) {
@@ -152,9 +162,10 @@ if ($action === 'addmember' && confirm_sesskey()) {
             \core\notification::error(get_string('memberadderror', 'local_jobboard'));
         }
 
-        // Get vacancy ID from committee.
+        // Get company ID from committee.
         $comm = $DB->get_record('local_jobboard_committee', ['id' => $cid]);
-        redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $comm->vacancyid]));
+        $redirectparams = !empty($comm->companyid) ? ['companyid' => $comm->companyid] : ['vacancyid' => $comm->vacancyid];
+        redirect(new moodle_url('/local/jobboard/manage_committee.php', $redirectparams));
     }
 }
 
@@ -171,7 +182,8 @@ if ($action === 'removemember' && confirm_sesskey()) {
         }
 
         $comm = $DB->get_record('local_jobboard_committee', ['id' => $cid]);
-        redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $comm->vacancyid]));
+        $redirectparams = !empty($comm->companyid) ? ['companyid' => $comm->companyid] : ['vacancyid' => $comm->vacancyid];
+        redirect(new moodle_url('/local/jobboard/manage_committee.php', $redirectparams));
     }
 }
 
@@ -189,7 +201,8 @@ if ($action === 'changerole' && confirm_sesskey()) {
         }
 
         $comm = $DB->get_record('local_jobboard_committee', ['id' => $cid]);
-        redirect(new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $comm->vacancyid]));
+        $redirectparams = !empty($comm->companyid) ? ['companyid' => $comm->companyid] : ['vacancyid' => $comm->vacancyid];
+        redirect(new moodle_url('/local/jobboard/manage_committee.php', $redirectparams));
     }
 }
 
@@ -198,9 +211,22 @@ $totalcommittees = $DB->count_records('local_jobboard_committee');
 $activecommittees = $DB->count_records('local_jobboard_committee', ['status' => 'active']);
 $totalmembers = $DB->count_records('local_jobboard_committee_member');
 
-// Get vacancies that can have committees (published or closed).
+// Get all IOMAD companies (faculties) with vacancies.
+$companies = $DB->get_records_sql("
+    SELECT DISTINCT c.id, c.name, c.shortname
+      FROM {company} c
+     WHERE c.id IN (
+         SELECT DISTINCT companyid FROM {local_jobboard_vacancy} WHERE companyid IS NOT NULL
+         UNION
+         SELECT DISTINCT companyid FROM {local_jobboard_committee} WHERE companyid IS NOT NULL
+     )
+     ORDER BY c.name
+");
+
+// Get vacancies for legacy support (only those without company).
 $vacancies = $DB->get_records_select('local_jobboard_vacancy',
-    "status IN ('published', 'closed')", null, 'code ASC', 'id, code, title, status');
+    "status IN ('published', 'closed') AND (companyid IS NULL OR companyid = 0)",
+    null, 'code ASC', 'id, code, title, status, companyid');
 
 echo $OUTPUT->header();
 
@@ -238,19 +264,19 @@ echo ui_helper::stat_card((string) $totalmembers, get_string('totalcommmembers',
 echo html_writer::end_div();
 
 // ============================================================================
-// VACANCY FILTER
+// FACULTY/COMPANY FILTER (Primary filter)
 // ============================================================================
-$vacancyoptions = [0 => get_string('selectvacancy', 'local_jobboard')];
-foreach ($vacancies as $v) {
-    $vacancyoptions[$v->id] = format_string($v->code . ' - ' . $v->title);
+$companyoptions = [0 => get_string('selectfaculty', 'local_jobboard')];
+foreach ($companies as $c) {
+    $companyoptions[$c->id] = format_string($c->name);
 }
 
 $filterdefs = [
     [
         'type' => 'select',
-        'name' => 'vacancyid',
-        'label' => get_string('vacancy', 'local_jobboard'),
-        'options' => $vacancyoptions,
+        'name' => 'companyid',
+        'label' => get_string('faculty', 'local_jobboard'),
+        'options' => $companyoptions,
         'col' => 'col-md-6',
     ],
 ];
@@ -258,15 +284,15 @@ $filterdefs = [
 echo ui_helper::filter_form(
     (new moodle_url('/local/jobboard/manage_committee.php'))->out(false),
     $filterdefs,
-    ['vacancyid' => $vacancyid],
+    ['companyid' => $companyid],
     []
 );
 
 // ============================================================================
 // COMMITTEES LIST OR DETAILS
 // ============================================================================
-if (empty($vacancyid)) {
-    // Show list of all committees.
+if (empty($companyid) && empty($vacancyid)) {
+    // Show list of all committees grouped by faculty.
     echo html_writer::start_div('card shadow-sm mb-4');
     echo html_writer::start_div('card-header bg-white d-flex justify-content-between align-items-center');
     echo html_writer::tag('h5',
@@ -276,18 +302,20 @@ if (empty($vacancyid)) {
     echo html_writer::end_div();
     echo html_writer::start_div('card-body');
 
-    $sql = "SELECT c.*, v.code as vacancy_code, v.title as vacancy_title,
+    $sql = "SELECT c.*, comp.name as company_name, comp.shortname as company_shortname,
+                   v.code as vacancy_code, v.title as vacancy_title,
                    (SELECT COUNT(*) FROM {local_jobboard_committee_member} WHERE committeeid = c.id) as membercount
               FROM {local_jobboard_committee} c
-              JOIN {local_jobboard_vacancy} v ON v.id = c.vacancyid
-             ORDER BY c.timecreated DESC";
+         LEFT JOIN {company} comp ON comp.id = c.companyid
+         LEFT JOIN {local_jobboard_vacancy} v ON v.id = c.vacancyid
+             ORDER BY comp.name, c.timecreated DESC";
     $committees = $DB->get_records_sql($sql);
 
     if (empty($committees)) {
         echo ui_helper::empty_state(get_string('nocommittees', 'local_jobboard'), 'users');
     } else {
         $headers = [
-            get_string('vacancy', 'local_jobboard'),
+            get_string('faculty', 'local_jobboard'),
             get_string('committeename', 'local_jobboard'),
             get_string('members', 'local_jobboard'),
             get_string('status'),
@@ -296,9 +324,18 @@ if (empty($vacancyid)) {
 
         $rows = [];
         foreach ($committees as $comm) {
-            $vacancylink = html_writer::link(
-                new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $comm->vacancyid]),
-                format_string($comm->vacancy_code . ' - ' . $comm->vacancy_title)
+            // Determine link params based on whether it's a company or vacancy committee.
+            if (!empty($comm->companyid)) {
+                $linkparams = ['companyid' => $comm->companyid];
+                $entityname = format_string($comm->company_name ?: $comm->company_shortname);
+            } else {
+                $linkparams = ['vacancyid' => $comm->vacancyid];
+                $entityname = format_string($comm->vacancy_code . ' - ' . $comm->vacancy_title);
+            }
+
+            $entitylink = html_writer::link(
+                new moodle_url('/local/jobboard/manage_committee.php', $linkparams),
+                $entityname
             );
 
             $statusbadge = $comm->status === 'active'
@@ -306,13 +343,13 @@ if (empty($vacancyid)) {
                 : '<span class="badge badge-secondary">' . $comm->status . '</span>';
 
             $actions = html_writer::link(
-                new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $comm->vacancyid]),
+                new moodle_url('/local/jobboard/manage_committee.php', $linkparams),
                 '<i class="fa fa-edit"></i>',
                 ['class' => 'btn btn-sm btn-outline-primary', 'title' => get_string('manage', 'local_jobboard')]
             );
 
             $rows[] = [
-                $vacancylink,
+                $entitylink,
                 format_string($comm->name),
                 html_writer::tag('span', $comm->membercount, ['class' => 'badge badge-info']),
                 $statusbadge,
@@ -326,30 +363,30 @@ if (empty($vacancyid)) {
     echo html_writer::end_div();
     echo html_writer::end_div();
 
-    // Vacancies without committees.
-    $vacancieswithoutcomm = [];
-    foreach ($vacancies as $v) {
-        if (!$DB->record_exists('local_jobboard_committee', ['vacancyid' => $v->id])) {
-            $vacancieswithoutcomm[] = $v;
+    // Faculties without committees.
+    $companieswithoutcomm = [];
+    foreach ($companies as $c) {
+        if (!$DB->record_exists('local_jobboard_committee', ['companyid' => $c->id])) {
+            $companieswithoutcomm[] = $c;
         }
     }
 
-    if (!empty($vacancieswithoutcomm)) {
+    if (!empty($companieswithoutcomm)) {
         echo html_writer::start_div('card shadow-sm mb-4 border-warning');
         echo html_writer::start_div('card-header bg-warning text-dark');
         echo html_writer::tag('h6',
-            '<i class="fa fa-exclamation-triangle mr-2"></i>' . get_string('vacancieswithoutcommittee', 'local_jobboard'),
+            '<i class="fa fa-exclamation-triangle mr-2"></i>' . get_string('facultieswithoutcommittee', 'local_jobboard'),
             ['class' => 'mb-0']
         );
         echo html_writer::end_div();
         echo html_writer::start_div('card-body');
 
         echo html_writer::start_div('list-group');
-        foreach ($vacancieswithoutcomm as $v) {
+        foreach ($companieswithoutcomm as $c) {
             echo html_writer::start_div('list-group-item d-flex justify-content-between align-items-center');
-            echo html_writer::tag('span', format_string($v->code . ' - ' . $v->title));
+            echo html_writer::tag('span', format_string($c->name));
             echo html_writer::link(
-                new moodle_url('/local/jobboard/manage_committee.php', ['vacancyid' => $v->id]),
+                new moodle_url('/local/jobboard/manage_committee.php', ['companyid' => $c->id]),
                 '<i class="fa fa-plus mr-1"></i>' . get_string('createcommittee', 'local_jobboard'),
                 ['class' => 'btn btn-sm btn-warning']
             );
@@ -361,10 +398,10 @@ if (empty($vacancyid)) {
         echo html_writer::end_div();
     }
 
-} else {
-    // Show committee for selected vacancy.
-    $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid], '*', MUST_EXIST);
-    $existingcommittee = committee::get_for_vacancy($vacancyid);
+} else if ($companyid) {
+    // Show committee for selected faculty/company.
+    $company = $DB->get_record('company', ['id' => $companyid], '*', MUST_EXIST);
+    $existingcommittee = committee::get_for_company($companyid);
 
     // Back button.
     echo html_writer::link(
@@ -373,15 +410,17 @@ if (empty($vacancyid)) {
         ['class' => 'btn btn-outline-secondary btn-sm mb-3']
     );
 
-    // Vacancy header.
+    // Faculty header.
     echo html_writer::start_div('card shadow-sm mb-4');
     echo html_writer::start_div('card-header bg-primary text-white');
     echo html_writer::start_div('d-flex justify-content-between align-items-center');
     echo html_writer::tag('h5',
-        '<i class="fa fa-briefcase mr-2"></i>' . format_string($vacancy->code . ' - ' . $vacancy->title),
+        '<i class="fa fa-building mr-2"></i>' . format_string($company->name),
         ['class' => 'mb-0']
     );
-    echo ui_helper::status_badge($vacancy->status, 'vacancy');
+    // Show number of vacancies in this faculty.
+    $vacancycount = $DB->count_records('local_jobboard_vacancy', ['companyid' => $companyid]);
+    echo html_writer::tag('span', $vacancycount . ' ' . get_string('vacancies', 'local_jobboard'), ['class' => 'badge badge-light']);
     echo html_writer::end_div();
     echo html_writer::end_div();
     echo html_writer::end_div();
@@ -419,6 +458,9 @@ if (empty($vacancyid)) {
 
                 // Name.
                 echo html_writer::tag('h6', fullname($member), ['class' => 'mb-1']);
+
+                // Username badge.
+                echo html_writer::tag('small', '@' . $member->username, ['class' => 'd-block text-info mb-1']);
 
                 // Role badge.
                 echo html_writer::tag('span', $roledef['name'], ['class' => "badge badge-{$roledef['color']} mb-2"]);
@@ -485,7 +527,7 @@ if (empty($vacancyid)) {
         echo html_writer::end_div();
         echo html_writer::end_div();
 
-        // Add member form.
+        // Add member form with username search.
         echo html_writer::start_div('card shadow-sm mb-4 border-primary');
         echo html_writer::start_div('card-header bg-primary text-white');
         echo html_writer::tag('h6',
@@ -501,16 +543,54 @@ if (empty($vacancyid)) {
             $existingmemberids = [0];
         }
 
-        // Get available users.
-        $sql = "SELECT u.id, u.firstname, u.lastname, u.email
+        // User search form.
+        echo html_writer::start_tag('form', [
+            'method' => 'get',
+            'action' => new moodle_url('/local/jobboard/manage_committee.php'),
+            'class' => 'mb-3',
+        ]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'companyid', 'value' => $companyid]);
+        echo html_writer::start_div('input-group');
+        echo html_writer::empty_tag('input', [
+            'type' => 'text',
+            'name' => 'usersearch',
+            'class' => 'form-control',
+            'placeholder' => get_string('searchbyusername', 'local_jobboard'),
+            'value' => $usersearch,
+        ]);
+        echo html_writer::start_div('input-group-append');
+        echo html_writer::tag('button',
+            '<i class="fa fa-search"></i>',
+            ['type' => 'submit', 'class' => 'btn btn-outline-secondary']
+        );
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+        echo html_writer::end_tag('form');
+
+        // Get available users with search including username.
+        $searchsql = '';
+        $searchparams = [];
+        if (!empty($usersearch)) {
+            $searchsql = " AND (u.firstname LIKE :search1 OR u.lastname LIKE :search2
+                           OR u.email LIKE :search3 OR u.username LIKE :search4)";
+            $searchparams = [
+                'search1' => '%' . $usersearch . '%',
+                'search2' => '%' . $usersearch . '%',
+                'search3' => '%' . $usersearch . '%',
+                'search4' => '%' . $usersearch . '%',
+            ];
+        }
+
+        $sql = "SELECT u.id, u.firstname, u.lastname, u.email, u.username
                   FROM {user} u
                  WHERE u.deleted = 0
                    AND u.suspended = 0
                    AND u.id NOT IN (" . implode(',', $existingmemberids) . ")
                    AND u.id > 1
+                   $searchsql
                  ORDER BY u.lastname, u.firstname
                  LIMIT 200";
-        $availableusers = $DB->get_records_sql($sql);
+        $availableusers = $DB->get_records_sql($sql, $searchparams);
 
         echo html_writer::start_tag('form', [
             'method' => 'post',
@@ -525,7 +605,11 @@ if (empty($vacancyid)) {
         echo html_writer::start_tag('select', ['name' => 'userid', 'class' => 'form-control', 'required' => 'required']);
         echo html_writer::tag('option', get_string('selectuser', 'local_jobboard'), ['value' => '']);
         foreach ($availableusers as $user) {
-            echo html_writer::tag('option', fullname($user) . ' (' . $user->email . ')', ['value' => $user->id]);
+            // Include username in the display.
+            echo html_writer::tag('option',
+                fullname($user) . ' (@' . $user->username . ') - ' . $user->email,
+                ['value' => $user->id]
+            );
         }
         echo html_writer::end_tag('select');
         echo html_writer::end_div();
@@ -548,68 +632,36 @@ if (empty($vacancyid)) {
         echo html_writer::end_div();
         echo html_writer::end_div();
 
-        // Ranking & Evaluations.
-        $ranking = committee::get_ranking($vacancyid);
-        if (!empty($ranking)) {
+        // Show vacancies that use this committee.
+        $facultyvacancies = $DB->get_records('local_jobboard_vacancy',
+            ['companyid' => $companyid, 'status' => 'published'],
+            'code ASC', 'id, code, title, status');
+
+        if (!empty($facultyvacancies)) {
             echo html_writer::start_div('card shadow-sm mb-4');
             echo html_writer::start_div('card-header bg-white');
             echo html_writer::tag('h5',
-                '<i class="fa fa-trophy text-warning mr-2"></i>' . get_string('applicantranking', 'local_jobboard'),
+                '<i class="fa fa-briefcase text-primary mr-2"></i>' . get_string('facultyvacancies', 'local_jobboard'),
                 ['class' => 'mb-0']
             );
             echo html_writer::end_div();
             echo html_writer::start_div('card-body');
 
-            $headers = [
-                get_string('rank', 'local_jobboard'),
-                get_string('applicant', 'local_jobboard'),
-                get_string('avgscore', 'local_jobboard'),
-                get_string('votes', 'local_jobboard'),
-                get_string('status'),
-            ];
-
-            $rows = [];
-            foreach ($ranking as $app) {
-                $statusclass = 'secondary';
-                if ($app->status === 'selected') {
-                    $statusclass = 'success';
-                } else if ($app->status === 'rejected') {
-                    $statusclass = 'danger';
-                }
-
-                $rankbadge = html_writer::tag('span', '#' . $app->rank, [
-                    'class' => 'badge badge-' . ($app->rank <= 3 ? 'warning' : 'secondary'),
-                ]);
-
-                $applicantinfo = html_writer::tag('strong', fullname($app)) .
-                    html_writer::tag('br') .
-                    html_writer::tag('small', $app->email, ['class' => 'text-muted']);
-
-                $votes = html_writer::tag('span', $app->approve_votes, ['class' => 'badge badge-success mr-1']) .
-                    html_writer::tag('span', $app->reject_votes, ['class' => 'badge badge-danger']);
-
-                $statusbadge = html_writer::tag('span',
-                    get_string('status_' . $app->status, 'local_jobboard'),
-                    ['class' => "badge badge-{$statusclass}"]
-                );
-
-                $rows[] = [
-                    $rankbadge,
-                    $applicantinfo,
-                    round($app->avg_score, 1),
-                    $votes,
-                    $statusbadge,
-                ];
+            echo html_writer::start_div('list-group');
+            foreach ($facultyvacancies as $v) {
+                echo html_writer::start_div('list-group-item d-flex justify-content-between align-items-center');
+                echo html_writer::tag('span', format_string($v->code . ' - ' . $v->title));
+                echo ui_helper::status_badge($v->status, 'vacancy');
+                echo html_writer::end_div();
             }
-
-            echo ui_helper::data_table($headers, $rows);
+            echo html_writer::end_div();
 
             echo html_writer::end_div();
             echo html_writer::end_div();
         }
 
     } else {
-        // Create committee form.
+        // Create committee form for faculty.
         echo html_writer::start_div('card shadow-sm mb-4 border-success');
         echo html_writer::start_div('card-header bg-success text-white');
         echo html_writer::tag('h5',
@@ -619,15 +671,53 @@ if (empty($vacancyid)) {
         echo html_writer::end_div();
         echo html_writer::start_div('card-body');
 
-        // Get available users.
-        $sql = "SELECT u.id, u.firstname, u.lastname, u.email
+        // User search form.
+        echo html_writer::start_tag('form', [
+            'method' => 'get',
+            'action' => new moodle_url('/local/jobboard/manage_committee.php'),
+            'class' => 'mb-3',
+        ]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'companyid', 'value' => $companyid]);
+        echo html_writer::start_div('input-group');
+        echo html_writer::empty_tag('input', [
+            'type' => 'text',
+            'name' => 'usersearch',
+            'class' => 'form-control',
+            'placeholder' => get_string('searchbyusername', 'local_jobboard'),
+            'value' => $usersearch,
+        ]);
+        echo html_writer::start_div('input-group-append');
+        echo html_writer::tag('button',
+            '<i class="fa fa-search"></i>',
+            ['type' => 'submit', 'class' => 'btn btn-outline-secondary']
+        );
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+        echo html_writer::end_tag('form');
+
+        // Get available users with search including username.
+        $searchsql = '';
+        $searchparams = [];
+        if (!empty($usersearch)) {
+            $searchsql = " AND (u.firstname LIKE :search1 OR u.lastname LIKE :search2
+                           OR u.email LIKE :search3 OR u.username LIKE :search4)";
+            $searchparams = [
+                'search1' => '%' . $usersearch . '%',
+                'search2' => '%' . $usersearch . '%',
+                'search3' => '%' . $usersearch . '%',
+                'search4' => '%' . $usersearch . '%',
+            ];
+        }
+
+        $sql = "SELECT u.id, u.firstname, u.lastname, u.email, u.username
                   FROM {user} u
                  WHERE u.deleted = 0
                    AND u.suspended = 0
                    AND u.id > 1
+                   $searchsql
                  ORDER BY u.lastname, u.firstname
                  LIMIT 200";
-        $availableusers = $DB->get_records_sql($sql);
+        $availableusers = $DB->get_records_sql($sql, $searchparams);
 
         echo html_writer::start_tag('form', [
             'method' => 'post',
@@ -635,12 +725,12 @@ if (empty($vacancyid)) {
         ]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
         echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'create']);
-        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'vacancyid', 'value' => $vacancyid]);
+        echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'companyid', 'value' => $companyid]);
 
         // Committee name.
         echo html_writer::start_div('form-group');
         echo html_writer::tag('label', get_string('committeename', 'local_jobboard'), ['for' => 'name']);
-        $defaultname = get_string('committeedefaultname', 'local_jobboard', format_string($vacancy->code));
+        $defaultname = get_string('facultycommitteedefaultname', 'local_jobboard', format_string($company->name));
         echo html_writer::empty_tag('input', [
             'type' => 'text',
             'name' => 'name',
@@ -666,7 +756,10 @@ if (empty($vacancyid)) {
         ]);
         echo html_writer::tag('option', get_string('selectuser', 'local_jobboard'), ['value' => '']);
         foreach ($availableusers as $user) {
-            echo html_writer::tag('option', fullname($user) . ' (' . $user->email . ')', ['value' => $user->id]);
+            echo html_writer::tag('option',
+                fullname($user) . ' (@' . $user->username . ') - ' . $user->email,
+                ['value' => $user->id]
+            );
         }
         echo html_writer::end_tag('select');
         echo html_writer::tag('small',
@@ -684,7 +777,10 @@ if (empty($vacancyid)) {
         echo html_writer::start_tag('select', ['name' => 'secretary', 'id' => 'secretary', 'class' => 'form-control']);
         echo html_writer::tag('option', get_string('nosecretaryoptional', 'local_jobboard'), ['value' => '']);
         foreach ($availableusers as $user) {
-            echo html_writer::tag('option', fullname($user) . ' (' . $user->email . ')', ['value' => $user->id]);
+            echo html_writer::tag('option',
+                fullname($user) . ' (@' . $user->username . ') - ' . $user->email,
+                ['value' => $user->id]
+            );
         }
         echo html_writer::end_tag('select');
         echo html_writer::end_div();
@@ -704,7 +800,10 @@ if (empty($vacancyid)) {
             'size' => '5',
         ]);
         foreach ($availableusers as $user) {
-            echo html_writer::tag('option', fullname($user) . ' (' . $user->email . ')', ['value' => $user->id]);
+            echo html_writer::tag('option',
+                fullname($user) . ' (@' . $user->username . ') - ' . $user->email,
+                ['value' => $user->id]
+            );
         }
         echo html_writer::end_tag('select');
         echo html_writer::tag('small',
@@ -728,6 +827,53 @@ if (empty($vacancyid)) {
 
         echo html_writer::end_div();
         echo html_writer::end_div();
+    }
+} else if ($vacancyid) {
+    // Legacy support: Show committee for selected vacancy.
+    $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid], '*', MUST_EXIST);
+
+    // If vacancy has a company, redirect to company view.
+    if (!empty($vacancy->companyid)) {
+        redirect(new moodle_url('/local/jobboard/manage_committee.php', ['companyid' => $vacancy->companyid]));
+    }
+
+    $existingcommittee = committee::get_for_vacancy($vacancyid);
+
+    // Back button.
+    echo html_writer::link(
+        new moodle_url('/local/jobboard/manage_committee.php'),
+        '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtolist', 'local_jobboard'),
+        ['class' => 'btn btn-outline-secondary btn-sm mb-3']
+    );
+
+    // Vacancy header with notice.
+    echo html_writer::start_div('alert alert-warning');
+    echo html_writer::tag('i', '', ['class' => 'fa fa-exclamation-triangle mr-2']);
+    echo get_string('legacyvacancycommittee', 'local_jobboard');
+    echo html_writer::end_div();
+
+    echo html_writer::start_div('card shadow-sm mb-4');
+    echo html_writer::start_div('card-header bg-primary text-white');
+    echo html_writer::start_div('d-flex justify-content-between align-items-center');
+    echo html_writer::tag('h5',
+        '<i class="fa fa-briefcase mr-2"></i>' . format_string($vacancy->code . ' - ' . $vacancy->title),
+        ['class' => 'mb-0']
+    );
+    echo ui_helper::status_badge($vacancy->status, 'vacancy');
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+    echo html_writer::end_div();
+
+    if ($existingcommittee) {
+        // Show existing committee info only - suggest migration to faculty.
+        echo html_writer::start_div('card shadow-sm mb-4');
+        echo html_writer::start_div('card-body');
+        echo html_writer::tag('p', get_string('existingvacancycommittee', 'local_jobboard', format_string($existingcommittee->name)));
+        echo html_writer::tag('p', get_string('membercount', 'local_jobboard', count($existingcommittee->members)));
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+    } else {
+        echo ui_helper::empty_state(get_string('nocommitteeforthisvacancy', 'local_jobboard'), 'users');
     }
 }
 

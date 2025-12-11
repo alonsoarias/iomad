@@ -51,8 +51,48 @@ class committee {
     const VOTE_ABSTAIN = 'abstain';
 
     /**
-     * Create a selection committee for a vacancy.
+     * Create a selection committee for a faculty/company.
      *
+     * This is the primary method - committees are now per faculty (company in IOMAD).
+     *
+     * @param int $companyid IOMAD Company/Faculty ID.
+     * @param string $name Committee name.
+     * @param array $members Array of member definitions [userid, role].
+     * @return int|bool Committee ID on success, false on failure.
+     */
+    public static function create_for_company(int $companyid, string $name, array $members = []) {
+        global $DB, $USER;
+
+        // Check if committee already exists for this company.
+        if ($DB->record_exists('local_jobboard_committee', ['companyid' => $companyid])) {
+            return false;
+        }
+
+        $committee = new \stdClass();
+        $committee->companyid = $companyid;
+        $committee->vacancyid = null; // Faculty-wide committee.
+        $committee->name = $name;
+        $committee->status = 'active';
+        $committee->createdby = $USER->id;
+        $committee->timecreated = time();
+
+        $committee->id = $DB->insert_record('local_jobboard_committee', $committee);
+
+        // Add members.
+        foreach ($members as $member) {
+            if (!isset($member['userid']) || !isset($member['role'])) {
+                continue;
+            }
+            self::add_member($committee->id, $member['userid'], $member['role']);
+        }
+
+        return $committee->id;
+    }
+
+    /**
+     * Create a selection committee for a vacancy (legacy support).
+     *
+     * @deprecated Use create_for_company() instead. Committees should be per faculty.
      * @param int $vacancyid Vacancy ID.
      * @param string $name Committee name.
      * @param array $members Array of member definitions [userid, role].
@@ -62,8 +102,18 @@ class committee {
         global $DB, $USER;
 
         // Validate vacancy exists.
-        if (!$DB->record_exists('local_jobboard_vacancy', ['id' => $vacancyid])) {
+        $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid]);
+        if (!$vacancy) {
             return false;
+        }
+
+        // If vacancy has a companyid, check if a committee already exists for that company.
+        if (!empty($vacancy->companyid)) {
+            $existingcommittee = $DB->get_record('local_jobboard_committee', ['companyid' => $vacancy->companyid]);
+            if ($existingcommittee) {
+                // Return the existing company committee.
+                return $existingcommittee->id;
+            }
         }
 
         // Check if committee already exists for this vacancy.
@@ -71,16 +121,8 @@ class committee {
             return false;
         }
 
-        // Need at least one member (chair).
-        $haschair = false;
-        foreach ($members as $member) {
-            if (isset($member['role']) && $member['role'] === self::ROLE_CHAIR) {
-                $haschair = true;
-                break;
-            }
-        }
-
         $committee = new \stdClass();
+        $committee->companyid = $vacancy->companyid ?? null;
         $committee->vacancyid = $vacancyid;
         $committee->name = $name;
         $committee->status = 'active';
@@ -98,6 +140,38 @@ class committee {
         }
 
         return $committee->id;
+    }
+
+    /**
+     * Get committee for a company/faculty.
+     *
+     * @param int $companyid IOMAD Company/Faculty ID.
+     * @return object|bool Committee record with members, or false.
+     */
+    public static function get_for_company(int $companyid) {
+        global $DB;
+
+        $committee = $DB->get_record('local_jobboard_committee', ['companyid' => $companyid]);
+        if (!$committee) {
+            return false;
+        }
+
+        // Get members.
+        $sql = "SELECT cm.*, u.firstname, u.lastname, u.email, u.username
+                  FROM {local_jobboard_committee_member} cm
+                  JOIN {user} u ON u.id = cm.userid
+                 WHERE cm.committeeid = :committeeid
+                 ORDER BY
+                    CASE cm.role
+                        WHEN 'chair' THEN 1
+                        WHEN 'secretary' THEN 2
+                        WHEN 'evaluator' THEN 3
+                        WHEN 'observer' THEN 4
+                    END, u.lastname";
+
+        $committee->members = $DB->get_records_sql($sql, ['committeeid' => $committee->id]);
+
+        return $committee;
     }
 
     /**
@@ -231,19 +305,37 @@ class committee {
     /**
      * Get committee for a vacancy.
      *
+     * First checks for a faculty/company-wide committee, then falls back
+     * to vacancy-specific committee for legacy data.
+     *
      * @param int $vacancyid Vacancy ID.
      * @return object|bool Committee record with members, or false.
      */
     public static function get_for_vacancy(int $vacancyid) {
         global $DB;
 
-        $committee = $DB->get_record('local_jobboard_committee', ['vacancyid' => $vacancyid]);
+        // Get the vacancy to find its company.
+        $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid]);
+        if (!$vacancy) {
+            return false;
+        }
+
+        // First, try to get the faculty/company committee.
+        if (!empty($vacancy->companyid)) {
+            $committee = $DB->get_record('local_jobboard_committee', ['companyid' => $vacancy->companyid]);
+        }
+
+        // Fall back to vacancy-specific committee (legacy).
+        if (empty($committee)) {
+            $committee = $DB->get_record('local_jobboard_committee', ['vacancyid' => $vacancyid]);
+        }
+
         if (!$committee) {
             return false;
         }
 
         // Get members.
-        $sql = "SELECT cm.*, u.firstname, u.lastname, u.email
+        $sql = "SELECT cm.*, u.firstname, u.lastname, u.email, u.username
                   FROM {local_jobboard_committee_member} cm
                   JOIN {user} u ON u.id = cm.userid
                  WHERE cm.committeeid = :committeeid
@@ -258,6 +350,26 @@ class committee {
         $committee->members = $DB->get_records_sql($sql, ['committeeid' => $committee->id]);
 
         return $committee;
+    }
+
+    /**
+     * Get all committees.
+     *
+     * @return array Array of committee records with company/vacancy info.
+     */
+    public static function get_all(): array {
+        global $DB;
+
+        $sql = "SELECT c.*,
+                       comp.name as company_name, comp.shortname as company_shortname,
+                       v.code as vacancy_code, v.title as vacancy_title,
+                       (SELECT COUNT(*) FROM {local_jobboard_committee_member} WHERE committeeid = c.id) as membercount
+                  FROM {local_jobboard_committee} c
+             LEFT JOIN {company} comp ON comp.id = c.companyid
+             LEFT JOIN {local_jobboard_vacancy} v ON v.id = c.vacancyid
+                 ORDER BY comp.name, c.timecreated DESC";
+
+        return $DB->get_records_sql($sql);
     }
 
     /**

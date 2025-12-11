@@ -199,12 +199,12 @@ if ($hassiteconfig) {
         PARAM_INT
     ));
 
-    // Allowed formats.
+    // Allowed formats (PDF only by default).
     $settings->add(new admin_setting_configtext(
         'local_jobboard/allowedformats',
         get_string('allowedformats', 'local_jobboard'),
-        '',
-        'pdf,jpg,jpeg,png',
+        get_string('allowedformats_desc', 'local_jobboard'),
+        'pdf',
         PARAM_TEXT
     ));
 

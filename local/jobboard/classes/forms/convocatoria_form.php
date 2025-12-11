@@ -68,13 +68,29 @@ class convocatoria_form extends \moodleform {
         $mform->addRule('name', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
         $mform->addHelpButton('name', 'convocatorianame', 'local_jobboard');
 
-        // Description.
+        // Brief description (for listings).
+        $mform->addElement('textarea', 'brief_description', get_string('briefdescription', 'local_jobboard'), [
+            'rows' => 3,
+            'cols' => 60,
+            'maxlength' => 500,
+        ]);
+        $mform->setType('brief_description', PARAM_TEXT);
+        $mform->addHelpButton('brief_description', 'briefdescription', 'local_jobboard');
+
+        // Full description.
         $mform->addElement('editor', 'description', get_string('convocatoriadescription', 'local_jobboard'), null, [
             'maxfiles' => 0,
             'noclean' => false,
         ]);
         $mform->setType('description', PARAM_RAW);
         $mform->addHelpButton('description', 'convocatoriadescription', 'local_jobboard');
+
+        // PDF document upload.
+        $mform->addElement('filepicker', 'convocatoria_pdf', get_string('convocatoriapdf', 'local_jobboard'), null, [
+            'accepted_types' => ['.pdf'],
+            'maxfiles' => 1,
+        ]);
+        $mform->addHelpButton('convocatoria_pdf', 'convocatoriapdf', 'local_jobboard');
 
         // Header: Dates.
         $mform->addElement('header', 'datesheader', get_string('dates', 'local_jobboard'));
@@ -265,10 +281,13 @@ class convocatoria_form extends \moodleform {
      * @param stdClass $convocatoria The convocatoria object.
      */
     public function set_data_from_convocatoria($convocatoria) {
+        global $CFG;
+
         $data = new \stdClass();
         $data->id = $convocatoria->id;
         $data->code = $convocatoria->code;
         $data->name = $convocatoria->name;
+        $data->brief_description = $convocatoria->brief_description ?? '';
         $data->description = ['text' => $convocatoria->description ?? '', 'format' => FORMAT_HTML];
         $data->startdate = $convocatoria->startdate;
         $data->enddate = $convocatoria->enddate;
@@ -282,6 +301,19 @@ class convocatoria_form extends \moodleform {
 
         // Load document exemptions for this convocatoria.
         $data->exempted_doctypes = \local_jobboard\convocatoria_exemption::get_exempted_doctype_ids((int) $convocatoria->id);
+
+        // Prepare PDF filepicker draft area if PDF exists.
+        $context = \context_system::instance();
+        $draftitemid = file_get_submitted_draft_itemid('convocatoria_pdf');
+        file_prepare_draft_area(
+            $draftitemid,
+            $context->id,
+            'local_jobboard',
+            'convocatoria_pdf',
+            $convocatoria->id,
+            ['maxfiles' => 1, 'accepted_types' => ['.pdf']]
+        );
+        $data->convocatoria_pdf = $draftitemid;
 
         $this->set_data($data);
     }

@@ -3440,3 +3440,42 @@ $string['templatecode'] = 'Código';
 $string['templatenotfound'] = 'Plantilla no encontrada';
 $string['htmlsupport'] = 'Soporte HTML';
 $string['placeholders'] = 'Marcadores';
+
+// ============================================================================
+// Comités por Facultad (v2.3.0)
+// ============================================================================
+$string['faculty'] = 'Facultad';
+$string['selectfaculty'] = 'Seleccione una facultad...';
+$string['facultieswithoutcommittee'] = 'Facultades Sin Comité';
+$string['facultyvacancies'] = 'Vacantes de esta Facultad';
+$string['facultycommitteedefaultname'] = 'Comité de Selección - {$a}';
+$string['searchbyusername'] = 'Buscar por nombre, correo o usuario...';
+$string['legacyvacancycommittee'] = 'Esta vacante usa una estructura de comité heredada. Los nuevos comités deben crearse a nivel de facultad.';
+$string['existingvacancycommittee'] = 'Esta vacante tiene un comité existente: {$a}';
+$string['membercount'] = 'Miembros: {$a}';
+$string['nocommitteeforthisvacancy'] = 'No existe comité para esta vacante.';
+
+// ============================================================================
+// Tipos de Entrada de Documentos (v2.3.0)
+// ============================================================================
+$string['inputtype'] = 'Tipo de entrada';
+$string['inputtype_help'] = 'Seleccione cómo los aspirantes proporcionarán este documento. "Archivo" requiere subir un PDF, "Texto" permite ingresar texto directamente, "URL" acepta un enlace a un documento externo.';
+$string['inputtype_file'] = 'Carga de archivo (PDF)';
+$string['inputtype_text'] = 'Campo de texto';
+$string['inputtype_url'] = 'URL externa';
+$string['inputtype_number'] = 'Valor numérico';
+
+// ============================================================================
+// PDF de Convocatoria (v2.3.0)
+// ============================================================================
+$string['briefdescription'] = 'Descripción breve';
+$string['briefdescription_help'] = 'Un resumen corto de esta convocatoria que se mostrará en los listados. Máximo 500 caracteres.';
+$string['convocatoriapdf'] = 'Documento de convocatoria (PDF)';
+$string['convocatoriapdf_help'] = 'Suba un archivo PDF con los detalles completos de esta convocatoria. Este documento estará disponible para descarga por los aspirantes.';
+$string['downloadpdf'] = 'Descargar PDF';
+$string['viewpdf'] = 'Ver documento de convocatoria';
+
+// ============================================================================
+// Configuración solo PDF (v2.3.0)
+// ============================================================================
+$string['allowedformats_desc'] = 'Lista de formatos permitidos separados por coma. Por defecto es "pdf" para solo archivos PDF. Para permitir imágenes, agregue "jpg,jpeg,png".';
