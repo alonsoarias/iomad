@@ -433,6 +433,142 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121107, 'local', 'jobboard');
     }
 
+    // Version 3.1.2 - Faculty and Program tables for IOMAD architecture.
+    // Per AGENTS.md: Committees are per FACULTY, Reviewers are per PROGRAM.
+    if ($oldversion < 2025121117) {
+        $dbman = $DB->get_manager();
+
+        // ====================================================================
+        // 1. Create local_jobboard_faculty table.
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_faculty');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('companyid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('code', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('shortname', XMLDB_TYPE_CHAR, '50', null, null, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('enabled', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1');
+        $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        $table->add_index('companyid_idx', XMLDB_INDEX_NOTUNIQUE, ['companyid']);
+        $table->add_index('company_code_unique', XMLDB_INDEX_UNIQUE, ['companyid', 'code']);
+        $table->add_index('enabled_idx', XMLDB_INDEX_NOTUNIQUE, ['enabled']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // ====================================================================
+        // 2. Create local_jobboard_program table.
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_program');
+
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('facultyid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('categoryid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('code', XMLDB_TYPE_CHAR, '50', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('shortname', XMLDB_TYPE_CHAR, '100', null, null, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('modality', XMLDB_TYPE_CHAR, '50', null, null, null, null);
+        $table->add_field('level', XMLDB_TYPE_CHAR, '50', null, null, null, null);
+        $table->add_field('enabled', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1');
+        $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('facultyid_fk', XMLDB_KEY_FOREIGN, ['facultyid'], 'local_jobboard_faculty', ['id']);
+        $table->add_key('categoryid_fk', XMLDB_KEY_FOREIGN, ['categoryid'], 'course_categories', ['id']);
+
+        $table->add_index('faculty_code_unique', XMLDB_INDEX_UNIQUE, ['facultyid', 'code']);
+        $table->add_index('categoryid_idx', XMLDB_INDEX_NOTUNIQUE, ['categoryid']);
+        $table->add_index('enabled_idx', XMLDB_INDEX_NOTUNIQUE, ['enabled']);
+        $table->add_index('modality_idx', XMLDB_INDEX_NOTUNIQUE, ['modality']);
+        $table->add_index('level_idx', XMLDB_INDEX_NOTUNIQUE, ['level']);
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // ====================================================================
+        // 3. Update local_jobboard_committee: add facultyid and description.
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_committee');
+
+        // Add facultyid field.
+        $field = new xmldb_field('facultyid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add description field.
+        $field = new xmldb_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null, 'name');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add foreign key for facultyid.
+        $key = new xmldb_key('facultyid_fk', XMLDB_KEY_FOREIGN, ['facultyid'], 'local_jobboard_faculty', ['id']);
+        $dbman->add_key($table, $key);
+
+        // Add index for facultyid.
+        $index = new xmldb_index('facultyid_idx', XMLDB_INDEX_NOTUNIQUE, ['facultyid']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Add status index.
+        $index = new xmldb_index('status_idx', XMLDB_INDEX_NOTUNIQUE, ['status']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // ====================================================================
+        // 4. Update local_jobboard_program_reviewer: add programid.
+        // ====================================================================
+        $table = new xmldb_table('local_jobboard_program_reviewer');
+
+        // Add programid field.
+        $field = new xmldb_field('programid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add foreign key for programid.
+        $key = new xmldb_key('programid_fk', XMLDB_KEY_FOREIGN, ['programid'], 'local_jobboard_program', ['id']);
+        $dbman->add_key($table, $key);
+
+        // Add unique index for program_user.
+        $index = new xmldb_index('program_user_idx', XMLDB_INDEX_UNIQUE, ['programid', 'userid']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Change category_user_idx to non-unique (for backwards compatibility).
+        $index = new xmldb_index('category_user_idx', XMLDB_INDEX_UNIQUE, ['categoryid', 'userid']);
+        if ($dbman->index_exists($table, $index)) {
+            $dbman->drop_index($table, $index);
+        }
+        $index = new xmldb_index('category_user_idx', XMLDB_INDEX_NOTUNIQUE, ['categoryid', 'userid']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Make categoryid nullable (it's legacy now).
+        $field = new xmldb_field('categoryid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $dbman->change_field_notnull($table, $field);
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121117, 'local', 'jobboard');
+    }
+
     return true;
 }
 

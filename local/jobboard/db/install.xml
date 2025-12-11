@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/jobboard/db" VERSION="20241204" COMMENT="XMLDB file for Moodle local/jobboard - Job Board Plugin for Adjunct Professors"
+<XMLDB PATH="local/jobboard/db" VERSION="20251211" COMMENT="XMLDB file for Moodle local/jobboard - Job Board Plugin for Adjunct Professors"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -430,13 +430,15 @@
       </INDEXES>
     </TABLE>
 
-    <!-- Table 17: Selection committee (per faculty/company, not per vacancy) -->
-    <TABLE NAME="local_jobboard_committee" COMMENT="Selection committees for faculties/companies">
+    <!-- Table 17: Selection committee (per faculty, not per vacancy) -->
+    <TABLE NAME="local_jobboard_committee" COMMENT="Selection committees for faculties - per AGENTS.md committees are faculty-level">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD company/faculty ID - committee is per faculty"/>
+        <FIELD NAME="facultyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Faculty ID - committee is per faculty"/>
+        <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="IOMAD company ID (centro) - legacy or for system-wide committees"/>
         <FIELD NAME="vacancyid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Legacy: specific vacancy if not faculty-wide"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="active" SEQUENCE="false"/>
         <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
@@ -444,10 +446,13 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="facultyid_fk" TYPE="foreign" FIELDS="facultyid" REFTABLE="local_jobboard_faculty" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
+        <INDEX NAME="facultyid_idx" UNIQUE="false" FIELDS="facultyid"/>
         <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>
         <INDEX NAME="vacancyid_idx" UNIQUE="false" FIELDS="vacancyid"/>
+        <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
       </INDEXES>
     </TABLE>
 
@@ -649,11 +654,12 @@
       </INDEXES>
     </TABLE>
 
-    <!-- Table: Program reviewers (document reviewers assigned to academic programs - course categories) -->
-    <TABLE NAME="local_jobboard_program_reviewer" COMMENT="Document reviewers assigned to academic programs (course categories)">
+    <!-- Table: Program reviewers (document reviewers assigned to academic programs) -->
+    <TABLE NAME="local_jobboard_program_reviewer" COMMENT="Document reviewers assigned to academic programs - per AGENTS.md reviewers are program-level">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Course category ID representing the academic program"/>
+        <FIELD NAME="programid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Program ID from local_jobboard_program"/>
+        <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Course category ID (legacy, for backwards compatibility)"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Reviewer user ID"/>
         <FIELD NAME="role" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="reviewer" SEQUENCE="false" COMMENT="Role: lead_reviewer, reviewer"/>
         <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="active" SEQUENCE="false" COMMENT="Status: active, inactive"/>
@@ -663,14 +669,70 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="programid_fk" TYPE="foreign" FIELDS="programid" REFTABLE="local_jobboard_program" REFFIELDS="id"/>
         <KEY NAME="categoryid_fk" TYPE="foreign" FIELDS="categoryid" REFTABLE="course_categories" REFFIELDS="id"/>
         <KEY NAME="userid_fk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
         <KEY NAME="addedby_fk" TYPE="foreign" FIELDS="addedby" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <!-- Note: Foreign keys automatically create indexes, so categoryid and userid indexes are not needed -->
-        <INDEX NAME="category_user_idx" UNIQUE="true" FIELDS="categoryid, userid" COMMENT="User can only be reviewer once per program"/>
+        <INDEX NAME="program_user_idx" UNIQUE="true" FIELDS="programid, userid" COMMENT="User can only be reviewer once per program"/>
+        <INDEX NAME="category_user_idx" UNIQUE="false" FIELDS="categoryid, userid" COMMENT="Legacy index for category-based lookups"/>
         <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table: Faculty - Faculties within each IOMAD company (FCAS, FII) -->
+    <TABLE NAME="local_jobboard_faculty" COMMENT="Faculties within each IOMAD company - supports ISER architecture (FCAS, FII per centro)">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="companyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="IOMAD company ID (centro)"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Faculty code: FCAS, FII"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Faculty name"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Short display name"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>
+        <INDEX NAME="company_code_unique" UNIQUE="true" FIELDS="companyid, code" COMMENT="Unique faculty code per company"/>
+        <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
+      </INDEXES>
+    </TABLE>
+
+    <!-- Table: Program - Academic programs within faculties -->
+    <TABLE NAME="local_jobboard_program" COMMENT="Academic programs within faculties - linked to course categories">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="facultyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Faculty ID"/>
+        <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Course category ID (if linked to Moodle category)"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Program code"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Program name"/>
+        <FIELD NAME="shortname" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="modality" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Program modality: presencial, virtual, hibrida"/>
+        <FIELD NAME="level" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Level: pregrado, posgrado, tecnico"/>
+        <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="5" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="facultyid_fk" TYPE="foreign" FIELDS="facultyid" REFTABLE="local_jobboard_faculty" REFFIELDS="id"/>
+        <KEY NAME="categoryid_fk" TYPE="foreign" FIELDS="categoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="faculty_code_unique" UNIQUE="true" FIELDS="facultyid, code" COMMENT="Unique program code per faculty"/>
+        <INDEX NAME="categoryid_idx" UNIQUE="false" FIELDS="categoryid"/>
+        <INDEX NAME="enabled_idx" UNIQUE="false" FIELDS="enabled"/>
+        <INDEX NAME="modality_idx" UNIQUE="false" FIELDS="modality"/>
+        <INDEX NAME="level_idx" UNIQUE="false" FIELDS="level"/>
       </INDEXES>
     </TABLE>
 

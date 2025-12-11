@@ -5,6 +5,31 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.2] - 2025-12-11
+
+### Added
+- **NEW TABLE**: `local_jobboard_faculty` - Faculties within each IOMAD company (FCAS, FII)
+  - Supports ISER architecture: 2 faculties per centro
+  - Fields: companyid, code, name, shortname, description, enabled, sortorder
+- **NEW TABLE**: `local_jobboard_program` - Academic programs within faculties
+  - Linked to course categories for Moodle integration
+  - Fields: facultyid, categoryid, code, name, modality, level, enabled
+
+### Changed
+- `local_jobboard_committee`: Added `facultyid` field for faculty-level committees
+- `local_jobboard_committee`: Added `description` field
+- `local_jobboard_program_reviewer`: Added `programid` field for program-level reviewers
+- `local_jobboard_program_reviewer`: `categoryid` is now optional (legacy support)
+
+### Technical Notes
+- Per AGENTS.md specification: "Committees are per FACULTY, Reviewers are per PROGRAM"
+- Database schema now supports complete IOMAD 4-level hierarchy:
+  - ISER Universidad (global)
+  - 16 Centros (IOMAD companies)
+  - 2 Facultades per centro (FCAS, FII) - NEW
+  - ~10 Programas per faculty - NEW
+- Upgrade script migrates existing data while maintaining backwards compatibility
+
 ## [3.1.1] - 2025-12-11
 
 ### Added
