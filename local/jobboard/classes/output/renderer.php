@@ -3641,4 +3641,146 @@ class renderer extends plugin_renderer_base {
 
         return $data;
     }
+
+    /**
+     * Prepare data for apply page template.
+     *
+     * @param object $vacancy Vacancy object.
+     * @param array $requireddocs Required document types array.
+     * @param bool $isexemption Whether user has exemption.
+     * @param ?object $exemptioninfo Exemption info object if applicable.
+     * @param string $formhtml Rendered form HTML.
+     * @param int $daysuntilclose Days until vacancy closes.
+     * @return array Template data.
+     */
+    public function prepare_apply_page_data(
+        object $vacancy,
+        array $requireddocs,
+        bool $isexemption,
+        ?object $exemptioninfo,
+        string $formhtml,
+        int $daysuntilclose
+    ): array {
+        $vacancyid = $vacancy->id;
+
+        // Progress steps.
+        $steps = [
+            ['icon' => 'fa-user-check', 'label' => get_string('step_profile', 'local_jobboard'), 'target' => 'id_profilereviewheader'],
+            ['icon' => 'fa-file-signature', 'label' => get_string('step_consent', 'local_jobboard'), 'target' => 'id_consentheader'],
+            ['icon' => 'fa-upload', 'label' => get_string('step_documents', 'local_jobboard'), 'target' => 'id_documentsheader'],
+            ['icon' => 'fa-envelope-open-text', 'label' => get_string('step_coverletter', 'local_jobboard'), 'target' => 'id_additionalheader'],
+            ['icon' => 'fa-paper-plane', 'label' => get_string('step_submit', 'local_jobboard'), 'target' => 'id_declarationheader'],
+        ];
+
+        $stepsdata = [];
+        foreach ($steps as $i => $step) {
+            $stepsdata[] = [
+                'stepnum' => $i + 1,
+                'icon' => $step['icon'],
+                'label' => $step['label'],
+                'target' => $step['target'],
+                'isactive' => ($i === 0),
+                'islast' => ($i === count($steps) - 1),
+            ];
+        }
+
+        // Deadline badge color.
+        $deadlinebadgecolor = 'success';
+        if ($daysuntilclose <= 3) {
+            $deadlinebadgecolor = 'danger';
+        } else if ($daysuntilclose <= 7) {
+            $deadlinebadgecolor = 'warning';
+        }
+
+        // Get vacancy close date.
+        $closedate = 0;
+        if (method_exists($vacancy, 'get_close_date')) {
+            $closedate = $vacancy->get_close_date();
+        } else if (!empty($vacancy->closedate)) {
+            $closedate = $vacancy->closedate;
+        }
+
+        // Determine location (from company or direct field).
+        $location = null;
+        if (method_exists($vacancy, 'get_company_name')) {
+            $location = $vacancy->get_company_name();
+        }
+        if (empty($location) && !empty($vacancy->location)) {
+            $location = $vacancy->location;
+        }
+
+        // Determine modality (from department or direct field).
+        $modality = null;
+        if (method_exists($vacancy, 'get_department_name')) {
+            $modality = $vacancy->get_department_name();
+        }
+        if (empty($modality)) {
+            $vacancyrecord = method_exists($vacancy, 'get_record') ? $vacancy->get_record() : $vacancy;
+            if (!empty($vacancyrecord->modality)) {
+                $modalities = \local_jobboard_get_modalities();
+                $modality = $modalities[$vacancyrecord->modality] ?? $vacancyrecord->modality;
+            }
+        }
+
+        // Guidelines.
+        $guidelines = [
+            get_string('guideline1', 'local_jobboard'),
+            get_string('guideline2', 'local_jobboard'),
+            get_string('guideline3', 'local_jobboard'),
+            get_string('guideline4', 'local_jobboard'),
+        ];
+
+        // Quick tips.
+        $quicktips = [
+            get_string('tip_saveoften', 'local_jobboard'),
+            get_string('tip_checkdocs', 'local_jobboard'),
+            get_string('tip_deadline', 'local_jobboard'),
+        ];
+
+        // Required docs data.
+        $docsdata = [];
+        foreach ($requireddocs as $doc) {
+            $docsdata[] = [
+                'name' => format_string($doc->name),
+                'isrequired' => !empty($doc->isrequired),
+            ];
+        }
+
+        // Exemption info.
+        $exemptiondata = null;
+        if ($isexemption && $exemptioninfo) {
+            $exemptiondata = [
+                'exemptiontype' => $exemptioninfo->exemptiontype ?? '',
+                'documentref' => $exemptioninfo->documentref ?? '',
+            ];
+        }
+
+        return [
+            'vacancy' => [
+                'id' => $vacancy->id,
+                'code' => format_string($vacancy->code),
+                'title' => format_string($vacancy->title),
+                'location' => $location,
+                'modality' => $modality,
+                'closedateformatted' => $closedate ? userdate($closedate, get_string('strftimedatetime', 'langconfig')) : '',
+            ],
+            'steps' => $stepsdata,
+            'daysuntilclose' => $daysuntilclose,
+            'showdeadlinewarning' => ($daysuntilclose <= 3 && $daysuntilclose > 0),
+            'deadlinewarningtext' => get_string('deadlinewarning', 'local_jobboard', ceil($daysuntilclose)),
+            'showdaysremaining' => ($daysuntilclose > 0),
+            'daysremainingtext' => get_string('daysremaining', 'local_jobboard', ceil($daysuntilclose)),
+            'deadlinebadgecolor' => $deadlinebadgecolor,
+            'guidelines' => $guidelines,
+            'isexemption' => $isexemption,
+            'exemptioninfo' => $exemptiondata,
+            'formhtml' => $formhtml,
+            'requireddocs' => $docsdata,
+            'hasrequireddocs' => !empty($docsdata),
+            'quicktips' => $quicktips,
+            'viewvacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public', 'id' => $vacancyid]))->out(false),
+            'backvacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]))->out(false),
+            'browservacanciesurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']))->out(false),
+        ];
+    }
 }

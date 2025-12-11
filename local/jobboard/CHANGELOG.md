@@ -5,6 +5,30 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.12] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `views/apply.php` from 490 lines to ~272 lines
+- Application form page now uses renderer pattern with Mustache template
+- Updated `templates/pages/apply.mustache` with jb-* CSS classes (no Bootstrap)
+- Business logic preserved: capability checks, exemption handling, form processing
+
+### Added
+- `prepare_apply_page_data()` method in renderer for apply view
+- Progress steps navigation in template (5-step wizard UI)
+- Vacancy summary sidebar with deadline countdown
+- Document checklist sidebar
+- Quick tips and help section
+- Exemption info display when applicable
+
+### Technical Notes
+- Form HTML captured via output buffering and passed to template
+- All pre-submission checks preserved (vacancy open, not already applied, profile complete)
+- Document upload and application creation workflow unchanged
+- Convocatoria and user-level document exemptions preserved
+- AMD module initialization for progress steps and confirmation modal
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+
 ## [3.1.11] - 2025-12-11
 
 ### Changed

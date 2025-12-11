@@ -1,209 +1,247 @@
 {{!
     @template local_jobboard/pages/apply
 
-    Apply for vacancy page template.
+    Application form page template.
+    Uses jb-* CSS classes for consistent styling.
 
     Context variables:
-    * pageheader - Page header data
-    * vacancy - Vacancy information
-    * deadlinewarning - Warning if close to deadline
-    * daysuntilclose - Days until closing
-    * guidelines - Array of application guideline strings
+    * vacancy - Vacancy data (code, title, location, modality, closedate, etc.)
+    * steps - Array of progress step items
+    * daysuntilclose - Days remaining until deadline
+    * showdeadlinewarning - Whether to show urgent deadline warning
+    * deadlinewarningtext - Warning message with days
+    * guidelines - Array of guideline strings
+    * requireddocs - Array of required document types
+    * formhtml - Moodle form HTML (rendered by application_form)
     * isexemption - Boolean if user has exemption
     * exemptioninfo - Exemption details if applicable
-    * requireddocs - Array of required documents
-    * form - Moodle form HTML
+    * quicktips - Array of quick tip strings
+    * backvacancyurl - URL to vacancy details
+    * browservacanciesurl - URL to browse vacancies
 
     Example context (json):
     {
-        "vacancy": {"id": 1, "title": "Developer"},
-        "daysuntilclose": 5,
-        "deadlinewarning": true
+        "vacancy": {"code": "VAC-001", "title": "Professor Position"},
+        "showdeadlinewarning": true
     }
 }}
-<div class="local-jobboard-apply" data-region="jobboard-apply">
-    {{! Page Header }}
-    {{> local_jobboard/components/page_header }}
+<div class="jb-apply-container" data-region="jobboard-apply">
+    <div class="jb-row">
+        {{! Main content area (left column) }}
+        <main class="jb-col-lg-8">
+            <div class="jb-content-area">
+                {{! Page Header }}
+                <header class="jb-page-header jb-mb-4">
+                    <h1 class="jb-fs-3 jb-mb-2">{{#str}}applytovacancy, local_jobboard{{/str}}</h1>
+                    <p class="jb-lead jb-text-muted">{{vacancy.title}}</p>
+                </header>
 
-    <div class="row">
-        {{! Left Column - Form }}
-        <main class="col-lg-8">
-            {{! Deadline Warning }}
-            {{#deadlinewarning}}
-            <div class="alert alert-warning mb-4" role="alert">
-                <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>
-                <strong>{{#str}}warning, local_jobboard{{/str}}:</strong>
-                {{#str}}deadlinewarning, local_jobboard, {{daysuntilclose}}{{/str}}
-            </div>
-            {{/deadlinewarning}}
-
-            {{! Exemption Info }}
-            {{#isexemption}}
-            <div class="alert alert-info mb-4" role="status">
-                <i class="fa fa-info-circle mr-2" aria-hidden="true"></i>
-                <strong>{{#str}}exemptionapplied, local_jobboard{{/str}}</strong>
-                <p class="mb-0 mt-2">
-                    {{#str}}exemptiontype, local_jobboard{{/str}}: {{exemptioninfo.type}}<br>
-                    {{#exemptioninfo.documentref}}
-                    {{#str}}documentref, local_jobboard{{/str}}: {{exemptioninfo.documentref}}
-                    {{/exemptioninfo.documentref}}
-                </p>
-            </div>
-            {{/isexemption}}
-
-            {{! Guidelines Card }}
-            <section class="card shadow-sm mb-4" aria-labelledby="guidelines-heading">
-                <div class="card-header bg-light">
-                    <h2 class="h5 mb-0" id="guidelines-heading">
-                        <i class="fa fa-info-circle mr-2" aria-hidden="true"></i>
-                        {{#str}}applicationguidelines, local_jobboard{{/str}}
-                    </h2>
-                </div>
-                <div class="card-body jb-content-area">
-                    <ul class="mb-0">
-                        {{#guidelines}}
-                        <li>{{.}}</li>
-                        {{/guidelines}}
-                    </ul>
-                </div>
-            </section>
-
-            {{! Required Documents Card }}
-            {{#requireddocs.0}}
-            <section class="card shadow-sm mb-4" aria-labelledby="docs-heading">
-                <div class="card-header bg-light">
-                    <h2 class="h5 mb-0" id="docs-heading">
-                        <i class="fa fa-file-alt mr-2" aria-hidden="true"></i>
-                        {{#str}}requireddocuments, local_jobboard{{/str}}
-                    </h2>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush" role="list">
-                        {{#requireddocs}}
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-0" role="listitem">
-                            <div>
-                                <strong>{{name}}</strong>
-                                {{#description}}
-                                <small class="text-muted d-block">{{description}}</small>
-                                {{/description}}
+                {{! Progress Steps }}
+                <nav class="jb-progress-steps jb-mb-4" id="application-progress" aria-label="{{#str}}applicationprogress, local_jobboard{{/str}}">
+                    <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+                        {{#steps}}
+                        <a href="#" class="jb-step jb-text-center jb-text-decoration-none {{#isactive}}jb-active{{/isactive}}"
+                           data-step="{{stepnum}}" data-target="{{target}}" role="tab"
+                           aria-selected="{{#isactive}}true{{/isactive}}{{^isactive}}false{{/isactive}}">
+                            <div class="jb-step-icon jb-rounded-circle jb-d-inline-flex jb-align-items-center jb-justify-content-center jb-mb-1">
+                                <span class="jb-step-number">{{stepnum}}</span>
+                                <i class="fa fa-check jb-step-checkmark jb-d-none" aria-hidden="true"></i>
                             </div>
-                            {{#isrequired}}
-                            <span class="badge badge-danger" aria-label="{{#str}}required, local_jobboard{{/str}}">
-                                {{#str}}required, local_jobboard{{/str}}
-                            </span>
-                            {{/isrequired}}
-                            {{^isrequired}}
-                            <span class="badge badge-secondary" aria-label="{{#str}}optional, local_jobboard{{/str}}">
-                                {{#str}}optional, local_jobboard{{/str}}
-                            </span>
-                            {{/isrequired}}
-                        </li>
-                        {{/requireddocs}}
-                    </ul>
-                </div>
-            </section>
-            {{/requireddocs.0}}
+                            <small class="jb-d-block jb-text-truncate jb-step-label">{{label}}</small>
+                        </a>
+                        {{^islast}}
+                        <div class="jb-step-connector jb-flex-grow-1 jb-mx-2" aria-hidden="true"></div>
+                        {{/islast}}
+                        {{/steps}}
+                    </div>
+                </nav>
 
-            {{! Application Form Card }}
-            <section class="card shadow-sm mb-4" aria-labelledby="form-heading">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="h5 mb-0" id="form-heading">
-                        <i class="fa fa-edit mr-2" aria-hidden="true"></i>
-                        {{#str}}applicationform, local_jobboard{{/str}}
-                    </h2>
+                {{! Tab navigation buttons container (populated by JS) }}
+                <div id="jb-tab-navigation" class="jb-d-none jb-mb-3"></div>
+
+                {{! Deadline Warning }}
+                {{#showdeadlinewarning}}
+                <div class="jb-alert jb-alert-danger jb-d-flex jb-align-items-center jb-mb-4" role="alert">
+                    <i class="fa fa-exclamation-triangle fa-2x jb-mr-3" aria-hidden="true"></i>
+                    <div>
+                        <strong>{{#str}}deadlinewarning_title, local_jobboard{{/str}}</strong><br>
+                        {{deadlinewarningtext}}
+                    </div>
                 </div>
-                <div class="card-body">
-                    {{{form}}}
+                {{/showdeadlinewarning}}
+
+                {{! Exemption Info }}
+                {{#isexemption}}
+                <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4" role="status">
+                    <i class="fa fa-info-circle fa-2x jb-mr-3" aria-hidden="true"></i>
+                    <div>
+                        <strong>{{#str}}exemptionapplied, local_jobboard{{/str}}</strong>
+                        {{#exemptioninfo}}
+                        <p class="jb-mb-0 jb-mt-2">
+                            {{#str}}exemptiontype, local_jobboard{{/str}}: {{exemptiontype}}<br>
+                            {{#documentref}}
+                            {{#str}}documentref, local_jobboard{{/str}}: {{documentref}}
+                            {{/documentref}}
+                        </p>
+                        {{/exemptioninfo}}
+                    </div>
                 </div>
-            </section>
+                {{/isexemption}}
+
+                {{! Guidelines Card (collapsible) }}
+                <section class="jb-card jb-guidelines-card jb-mb-4" id="guidelines-card" aria-labelledby="guidelines-heading">
+                    <div class="jb-card-header jb-bg-info jb-text-white jb-collapse-header"
+                         data-toggle="collapse" data-target="#guidelines-collapse" aria-expanded="true" aria-controls="guidelines-collapse">
+                        <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+                            <span id="guidelines-heading">
+                                <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                                {{#str}}applicationguidelines, local_jobboard{{/str}}
+                            </span>
+                            <i class="fa fa-chevron-down jb-collapse-icon" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="collapse show" id="guidelines-collapse">
+                        <div class="jb-card-body">
+                            <ul class="jb-mb-0 jb-pl-3">
+                                {{#guidelines}}
+                                <li class="jb-mb-2">{{.}}</li>
+                                {{/guidelines}}
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                {{! Application Form }}
+                <div class="jb-application-form" id="application-form-container">
+                    {{{formhtml}}}
+                </div>
+
+            </div>
         </main>
 
-        {{! Right Column - Vacancy Info }}
-        <aside class="col-lg-4">
+        {{! Sidebar (right column) }}
+        <aside class="jb-col-lg-4">
             {{! Vacancy Summary Card }}
-            <section class="card shadow-sm mb-4 sticky-top jb-sidebar-card" aria-labelledby="vacancy-summary-heading">
-                <div class="card-header bg-dark text-white">
-                    <h2 class="h6 mb-0" id="vacancy-summary-heading">
-                        <i class="fa fa-briefcase mr-2" aria-hidden="true"></i>
+            <section class="jb-card jb-sidebar-card jb-card-shadow jb-mb-4 jb-sticky-top jb-sticky-sidebar" aria-labelledby="vacancy-summary-heading">
+                <div class="jb-card-header jb-bg-primary jb-text-white">
+                    <h2 class="jb-fs-6 jb-mb-0" id="vacancy-summary-heading">
+                        <i class="fa fa-briefcase jb-mr-2" aria-hidden="true"></i>
                         {{#str}}vacancysummary, local_jobboard{{/str}}
                     </h2>
                 </div>
-                <div class="card-body">
-                    <p class="mb-1">
-                        <strong>{{vacancy.title}}</strong>
+                <div class="jb-card-body">
+                    <p class="jb-mb-2">
+                        <strong>{{#str}}code, local_jobboard{{/str}}:</strong><br>
+                        <code class="jb-bg-light jb-p-1">{{vacancy.code}}</code>
                     </p>
-                    <p class="text-muted small mb-2">
-                        <span class="badge badge-secondary" aria-label="{{#str}}vacancycode, local_jobboard{{/str}}: {{vacancy.code}}">{{vacancy.code}}</span>
-                    </p>
-
-                    <dl class="jb-definition-list mb-0">
-                        {{#vacancy.location}}
-                        <dt class="sr-only">{{#str}}location, local_jobboard{{/str}}</dt>
-                        <dd class="small mb-1">
-                            <i class="fa fa-map-marker-alt text-muted mr-2" aria-hidden="true"></i>{{vacancy.location}}
-                        </dd>
-                        {{/vacancy.location}}
-
-                        {{#vacancy.contracttypelabel}}
-                        <dt class="sr-only">{{#str}}contracttype, local_jobboard{{/str}}</dt>
-                        <dd class="small mb-1">
-                            <i class="fa fa-briefcase text-muted mr-2" aria-hidden="true"></i>{{vacancy.contracttypelabel}}
-                        </dd>
-                        {{/vacancy.contracttypelabel}}
-
-                        <dt class="sr-only">{{#str}}positions, local_jobboard{{/str}}</dt>
-                        <dd class="small mb-2">
-                            <i class="fa fa-users text-muted mr-2" aria-hidden="true"></i>
-                            {{#str}}positions, local_jobboard{{/str}}: {{vacancy.positions}}
-                        </dd>
-                    </dl>
-
-                    <hr>
-
-                    <p class="small mb-1 {{#vacancy.isurgent}}text-warning font-weight-bold{{/vacancy.isurgent}}">
-                        <i class="fa fa-calendar-times mr-2" aria-hidden="true"></i>
-                        {{#str}}closedate, local_jobboard{{/str}}: <strong>{{vacancy.closedateformatted}}</strong>
+                    <p class="jb-mb-2">
+                        <strong>{{#str}}title, local_jobboard{{/str}}:</strong><br>
+                        <small>{{vacancy.title}}</small>
                     </p>
 
-                    {{#vacancy.isurgent}}
-                    <div class="alert alert-warning py-2 px-3 mb-0 small" role="alert">
-                        <i class="fa fa-exclamation-triangle mr-1" aria-hidden="true"></i>
-                        {{#str}}closesin, local_jobboard, {{vacancy.daysremaining}}{{/str}}
-                    </div>
-                    {{/vacancy.isurgent}}
+                    {{#vacancy.location}}
+                    <p class="jb-mb-2">
+                        <i class="fa fa-map-marker-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                        <strong>{{#str}}location, local_jobboard{{/str}}:</strong>
+                        {{vacancy.location}}
+                    </p>
+                    {{/vacancy.location}}
+
+                    {{#vacancy.modality}}
+                    <p class="jb-mb-2">
+                        <i class="fa fa-laptop-house jb-text-info jb-mr-2" aria-hidden="true"></i>
+                        <strong>{{#str}}modality, local_jobboard{{/str}}:</strong>
+                        {{vacancy.modality}}
+                    </p>
+                    {{/vacancy.modality}}
+
+                    <hr class="jb-my-3">
+
+                    <p class="jb-mb-2">
+                        <i class="fa fa-calendar-times jb-text-danger jb-mr-2" aria-hidden="true"></i>
+                        <strong>{{#str}}closedate, local_jobboard{{/str}}:</strong><br>
+                        {{vacancy.closedateformatted}}
+                    </p>
+
+                    {{#showdaysremaining}}
+                    <span class="jb-badge jb-badge-{{deadlinebadgecolor}} jb-p-2">
+                        <i class="fa fa-clock jb-mr-1" aria-hidden="true"></i>
+                        {{daysremainingtext}}
+                    </span>
+                    {{/showdaysremaining}}
                 </div>
-
-                {{#vacancy.viewurl}}
-                <footer class="card-footer bg-light">
-                    <a href="{{vacancy.viewurl}}" class="btn btn-sm btn-outline-secondary btn-block" aria-label="{{#str}}viewvacancy, local_jobboard{{/str}}: {{vacancy.title}}">
-                        <i class="fa fa-eye mr-1" aria-hidden="true"></i>
-                        {{#str}}viewvacancy, local_jobboard{{/str}}
-                    </a>
-                </footer>
-                {{/vacancy.viewurl}}
             </section>
 
             {{! Help Card }}
-            <section class="card shadow-sm mb-4" aria-labelledby="help-heading">
-                <div class="card-header bg-light">
-                    <h2 class="h6 mb-0" id="help-heading">
-                        <i class="fa fa-question-circle mr-2" aria-hidden="true"></i>
+            <section class="jb-card jb-sidebar-card jb-card-shadow jb-mb-4" aria-labelledby="help-heading">
+                <div class="jb-card-header jb-bg-secondary jb-text-white">
+                    <h2 class="jb-fs-6 jb-mb-0" id="help-heading">
+                        <i class="fa fa-question-circle jb-mr-2" aria-hidden="true"></i>
                         {{#str}}needhelp, local_jobboard{{/str}}
                     </h2>
                 </div>
-                <div class="card-body">
-                    <p class="small text-muted mb-2">
-                        {{#str}}applicationhelptext, local_jobboard{{/str}}
-                    </p>
-                    {{#helpcontactemail}}
-                    <a href="mailto:{{helpcontactemail}}" class="btn btn-sm btn-outline-primary btn-block">
-                        <i class="fa fa-envelope mr-1" aria-hidden="true"></i>
-                        {{#str}}contactus, local_jobboard{{/str}}
+                <div class="jb-card-body">
+                    <p class="jb-small jb-mb-3">{{#str}}applyhelp_text, local_jobboard{{/str}}</p>
+
+                    {{! Quick Tips }}
+                    <div class="jb-small jb-mb-3">
+                        <p class="jb-fw-bold jb-mb-2">
+                            <i class="fa fa-lightbulb jb-text-warning jb-mr-1" aria-hidden="true"></i>
+                            {{#str}}quicktips, local_jobboard{{/str}}
+                        </p>
+                        <ul class="jb-mb-0 jb-pl-3">
+                            {{#quicktips}}
+                            <li class="jb-mb-1">{{.}}</li>
+                            {{/quicktips}}
+                        </ul>
+                    </div>
+
+                    {{! Back to vacancy details }}
+                    <a href="{{viewvacancyurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-sm jb-btn-block">
+                        <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
+                        {{#str}}viewvacancydetails, local_jobboard{{/str}}
                     </a>
-                    {{/helpcontactemail}}
                 </div>
             </section>
+
+            {{! Document Checklist }}
+            {{#hasrequireddocs}}
+            <section class="jb-card jb-sidebar-card jb-card-shadow" aria-labelledby="checklist-heading">
+                <div class="jb-card-header jb-bg-warning jb-text-dark">
+                    <h2 class="jb-fs-6 jb-mb-0" id="checklist-heading">
+                        <i class="fa fa-clipboard-list jb-mr-2" aria-hidden="true"></i>
+                        {{#str}}documentchecklist, local_jobboard{{/str}}
+                    </h2>
+                </div>
+                <ul class="jb-list-group jb-list-group-flush" role="list">
+                    {{#requireddocs}}
+                    <li class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-center jb-py-2">
+                        <small>
+                            {{name}}
+                            {{#isrequired}}<span class="jb-text-danger" aria-label="{{#str}}required{{/str}}">*</span>{{/isrequired}}
+                        </small>
+                        <i class="fa fa-circle jb-text-muted jb-small-dot" aria-hidden="true"></i>
+                    </li>
+                    {{/requireddocs}}
+                </ul>
+            </section>
+            {{/hasrequireddocs}}
         </aside>
     </div>
+
+    {{! Navigation Footer }}
+    <footer class="jb-row jb-mt-4">
+        <div class="jb-col-12">
+            <div class="jb-navigation-footer jb-d-flex jb-justify-content-between jb-align-items-center jb-py-3 jb-border-top">
+                <a href="{{backvacancyurl}}" class="jb-btn jb-btn-outline-secondary">
+                    <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}backtovacancy, local_jobboard{{/str}}
+                </a>
+                <a href="{{browservacanciesurl}}" class="jb-btn jb-btn-link jb-text-muted">
+                    {{#str}}browservacancies, local_jobboard{{/str}}
+                    <i class="fa fa-arrow-right jb-ml-2" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
 </div>
-{{! Styles moved to styles.css - Apply Page Styles section }}
