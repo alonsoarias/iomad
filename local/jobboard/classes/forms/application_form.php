@@ -254,7 +254,7 @@ class application_form extends moodleform {
             // Get accepted file types from settings.
             $acceptedtypes = get_config('local_jobboard', 'acceptedfiletypes');
             if (empty($acceptedtypes)) {
-                $acceptedtypes = '.pdf,.jpg,.jpeg,.png';
+                $acceptedtypes = '.pdf';
             }
             $maxsize = get_config('local_jobboard', 'maxfilesize');
             if (empty($maxsize)) {

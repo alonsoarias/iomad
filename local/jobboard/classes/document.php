@@ -348,9 +348,6 @@ class document {
         // Map formats to MIME types.
         $mimemap = [
             'pdf' => 'application/pdf',
-            'jpg' => 'image/jpeg',
-            'jpeg' => 'image/jpeg',
-            'png' => 'image/png',
         ];
 
         foreach ($allowedformats as $format) {
@@ -598,7 +595,7 @@ class document {
                 $req->vacancyid = $vacancyid;
                 $req->documenttype = $doctype->code;
                 $req->required = 1;
-                $req->acceptedformats = 'pdf,jpg,png';
+                $req->acceptedformats = 'pdf';
                 $req->maxsize = null;
                 $req->requiresissuedate = $doctype->defaultmaxagedays ? 1 : 0;
                 $req->maxagedays = $doctype->defaultmaxagedays;

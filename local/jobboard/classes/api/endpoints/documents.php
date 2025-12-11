@@ -145,8 +145,6 @@ class documents extends base {
         // Validate file type.
         $allowedmimes = [
             'application/pdf',
-            'image/jpeg',
-            'image/png',
         ];
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -155,7 +153,7 @@ class documents extends base {
 
         if (!in_array($mimetype, $allowedmimes)) {
             response::validation_error([
-                'file' => 'Invalid file type. Allowed types: PDF, JPG, PNG',
+                'file' => 'Invalid file type. Allowed types: PDF',
             ]);
         }
 

@@ -74,10 +74,6 @@ class document_services {
      */
     const DIRECT_PREVIEW_MIMETYPES = [
         'application/pdf',
-        'image/jpeg',
-        'image/png',
-        'image/gif',
-        'image/webp',
     ];
 
     /**

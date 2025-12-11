@@ -268,7 +268,7 @@ class api extends \external_api {
                 'id' => (int) $req->id,
                 'documenttype' => $req->documenttype,
                 'required' => (bool) $req->required,
-                'acceptedformats' => $req->acceptedformats ?? 'pdf,jpg,png',
+                'acceptedformats' => $req->acceptedformats ?? 'pdf',
                 'maxsize' => (int) ($req->maxsize ?? 10485760),
                 'maxagedays' => (int) ($req->maxagedays ?? 0),
                 'instructions' => $req->instructions ?? '',

@@ -306,7 +306,7 @@ class local_jobboard_generator extends testing_module_generator {
             'descriptionformat' => FORMAT_HTML,
             'isrequired' => 1,
             'maxvaliditydays' => 365,
-            'allowedformats' => json_encode(['pdf', 'jpg', 'png']),
+            'allowedformats' => json_encode(['pdf']),
             'maxfilesize' => 5242880,
             'sortorder' => 0,
             'enabled' => 1,

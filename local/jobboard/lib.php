@@ -1071,7 +1071,7 @@ function local_jobboard_get_allowed_extensions(): array {
         return array_map('trim', explode(',', $config));
     }
 
-    return ['pdf', 'jpg', 'jpeg', 'png'];
+    return ['pdf'];
 }
 
 /**
@@ -1096,9 +1096,6 @@ function local_jobboard_validate_file_type(stored_file $file, ?array $allowedfor
     $mimetype = $file->get_mimetype();
     $allowedmimes = [
         'pdf' => 'application/pdf',
-        'jpg' => 'image/jpeg',
-        'jpeg' => 'image/jpeg',
-        'png' => 'image/png',
     ];
 
     if (isset($allowedmimes[$extension])) {

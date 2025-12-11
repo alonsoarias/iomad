@@ -96,7 +96,7 @@ class reupload_form extends moodleform {
         // File upload.
         $acceptedtypes = get_config('local_jobboard', 'acceptedfiletypes');
         if (empty($acceptedtypes)) {
-            $acceptedtypes = '.pdf,.jpg,.jpeg,.png';
+            $acceptedtypes = '.pdf';
         }
         $maxsize = get_config('local_jobboard', 'maxfilesize');
         if (empty($maxsize)) {

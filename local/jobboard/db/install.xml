@@ -167,7 +167,7 @@
         <FIELD NAME="vacancyid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="documenttype" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="required" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-        <FIELD NAME="acceptedformats" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="pdf,jpg,png" SEQUENCE="false" COMMENT="Comma-separated list of accepted formats"/>
+        <FIELD NAME="acceptedformats" TYPE="char" LENGTH="255" NOTNULL="false" DEFAULT="pdf" SEQUENCE="false" COMMENT="Comma-separated list of accepted formats"/>
         <FIELD NAME="maxsize" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Max file size in bytes"/>
         <FIELD NAME="requiresissuedate" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="maxagedays" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false" COMMENT="Max days since issue date"/>

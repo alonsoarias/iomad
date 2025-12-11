@@ -34,7 +34,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str', 'core/templates'
         this.container = $(selector);
         this.config = $.extend({
             maxSize: 5242880, // 5MB
-            acceptedTypes: ['application/pdf', 'image/jpeg', 'image/png'],
+            acceptedTypes: ['application/pdf'],
             uploadUrl: ''
         }, config);
 

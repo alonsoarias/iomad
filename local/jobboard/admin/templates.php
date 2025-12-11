@@ -191,7 +191,7 @@ if ($action === 'edit' && $code) {
         foreach ($placeholders as $placeholder => $description) {
             echo html_writer::start_div('col-md-6 col-lg-4 mb-2');
             echo html_writer::tag('code', $placeholder, ['class' => 'text-primary']);
-            echo html_writer::tag('br');
+            echo html_writer::empty_tag('br');
             echo html_writer::tag('small', $description, ['class' => 'text-muted']);
             echo html_writer::end_div();
         }

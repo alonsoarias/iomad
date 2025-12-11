@@ -179,7 +179,7 @@ class vacancies extends base {
                 'type' => $req->documenttype,
                 'name' => $doctype ? $doctype->name : $req->documenttype,
                 'required' => (bool) $req->required,
-                'accepted_formats' => explode(',', $req->acceptedformats ?? 'pdf,jpg,png'),
+                'accepted_formats' => explode(',', $req->acceptedformats ?? 'pdf'),
                 'max_size_bytes' => $req->maxsize ?: local_jobboard_get_max_filesize(),
                 'requires_issue_date' => (bool) $req->requiresissuedate,
                 'max_age_days' => $req->maxagedays,
