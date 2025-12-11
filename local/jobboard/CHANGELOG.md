@@ -5,6 +5,26 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.6] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `views/vacancies.php` from 420 lines to ~130 lines
+- Vacancies page now uses renderer pattern with Mustache template
+- Updated `templates/pages/vacancies.mustache` with complete jb-* CSS classes
+- Added `prepare_vacancies_page_data()` method to renderer class
+
+### Added
+- Vacancy card component with urgency indicators
+- Welcome banner with search emphasis
+- Filter form with search, contract type, and status filters
+- Navigation footer with back and browse links
+- Additional vacancies language strings (EN/ES)
+
+### Technical Notes
+- AMD module initialization preserved for card actions
+- IOMAD department filter AJAX support maintained
+- Zero Bootstrap dependencies in template
+
 ## [3.1.5] - 2025-12-11
 
 ### Changed

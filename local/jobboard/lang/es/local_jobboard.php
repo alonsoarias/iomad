@@ -397,3 +397,14 @@ $string['convocatoriareopened'] = 'Convocatoria reabierta exitosamente. Todas la
 $string['error:cannotdeleteconvocatoria'] = 'No se puede eliminar esta convocatoria. Solo las convocatorias en borrador o archivadas pueden ser eliminadas.';
 $string['error:convocatoriahasnovacancies'] = 'No se puede abrir esta convocatoria. Por favor agrega al menos una vacante primero.';
 $string['error:cannotreopenconvocatoria'] = 'No se puede reabrir esta convocatoria. Solo las convocatorias cerradas pueden ser reabiertas.';
+
+// Página de vacantes - strings adicionales.
+$string['explorevacancias'] = 'Explorar Vacantes';
+$string['browse_vacancies_desc'] = 'Encuentra tu próxima oportunidad entre nuestras posiciones disponibles.';
+$string['closingsoon'] = 'Por Cerrar';
+$string['searchvacancies'] = 'Buscar vacantes';
+$string['allcontracttypes'] = 'Todos los tipos de contrato';
+$string['alldepartments'] = 'Todos los departamentos';
+$string['noresults'] = 'No se encontraron resultados';
+$string['applied'] = 'Postulado';
+$string['backtodashboard'] = 'Volver al Panel';

@@ -397,3 +397,14 @@ $string['convocatoriareopened'] = 'Call reopened successfully. All vacancies are
 $string['error:cannotdeleteconvocatoria'] = 'Cannot delete this call. Only draft or archived calls can be deleted.';
 $string['error:convocatoriahasnovacancies'] = 'Cannot open this call. Please add at least one vacancy first.';
 $string['error:cannotreopenconvocatoria'] = 'Cannot reopen this call. Only closed calls can be reopened.';
+
+// Vacancies page additional strings.
+$string['explorevacancias'] = 'Explore Vacancies';
+$string['browse_vacancies_desc'] = 'Find your next opportunity from our available positions.';
+$string['closingsoon'] = 'Closing Soon';
+$string['searchvacancies'] = 'Search vacancies';
+$string['allcontracttypes'] = 'All contract types';
+$string['alldepartments'] = 'All departments';
+$string['noresults'] = 'No results found';
+$string['applied'] = 'Applied';
+$string['backtodashboard'] = 'Back to Dashboard';

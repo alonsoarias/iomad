@@ -969,6 +969,209 @@ class renderer extends plugin_renderer_base {
     }
 
     /**
+     * Prepare vacancies page data for template.
+     *
+     * @param array $vacancies Array of vacancy objects.
+     * @param int $total Total count.
+     * @param int $urgentcount Number of urgent vacancies.
+     * @param array $filters Current filter values.
+     * @param int $page Current page.
+     * @param int $perpage Items per page.
+     * @param object|null $convocatoria Convocatoria if filtering by one.
+     * @param bool $canapply Whether user can apply.
+     * @param bool $canviewall Whether user can view all vacancies.
+     * @return array Complete template data.
+     */
+    public function prepare_vacancies_page_data(
+        array $vacancies,
+        int $total,
+        int $urgentcount,
+        array $filters,
+        int $page,
+        int $perpage,
+        ?object $convocatoria,
+        bool $canapply,
+        bool $canviewall
+    ): array {
+        global $DB, $USER, $OUTPUT;
+
+        // Contract types for labels.
+        $contractTypes = local_jobboard_get_contract_types();
+
+        // Prepare vacancy data.
+        $vacancydata = [];
+        foreach ($vacancies as $v) {
+            $daysRemaining = local_jobboard_days_between(time(), $v->closedate);
+            $isUrgent = ($daysRemaining <= 7 && $daysRemaining >= 0);
+            $isClosed = ($v->closedate < time() || $v->status === 'closed');
+
+            // Check if user has applied.
+            $hasApplied = $DB->record_exists('local_jobboard_application', [
+                'vacancyid' => $v->id,
+                'userid' => $USER->id,
+            ]);
+
+            // Get convocatoria code if exists.
+            $convocatoriacode = null;
+            if (!empty($v->convocatoriaid)) {
+                $convocatoriacode = $DB->get_field('local_jobboard_convocatoria', 'code', ['id' => $v->convocatoriaid]);
+            }
+
+            $vacancydata[] = [
+                'id' => $v->id,
+                'code' => format_string($v->code),
+                'title' => format_string($v->title),
+                'location' => !empty($v->location) ? format_string($v->location) : null,
+                'contracttype' => $v->contracttype ?? null,
+                'contracttypelabel' => !empty($v->contracttype) && isset($contractTypes[$v->contracttype])
+                    ? $contractTypes[$v->contracttype] : null,
+                'positions' => $v->positions,
+                'status' => $v->status,
+                'statuslabel' => get_string('status:' . $v->status, 'local_jobboard'),
+                'statuscolor' => $this->get_vacancy_status_class($v->status),
+                'convocatoriacode' => $convocatoriacode,
+                'daysremaining' => max(0, $daysRemaining),
+                'closedateformatted' => local_jobboard_format_date($v->closedate),
+                'urgent' => $isUrgent && !$isClosed,
+                'isclosed' => $isClosed,
+                'hasapplied' => $hasApplied,
+                'canapply' => $canapply && !$isClosed && !$hasApplied,
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $v->id]))->out(false),
+                'applyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $v->id]))->out(false),
+            ];
+        }
+
+        // Prepare filter form fields.
+        $filterfields = [];
+
+        // Search field.
+        $filterfields[] = [
+            'name' => 'search',
+            'label' => get_string('search', 'local_jobboard'),
+            'istext' => true,
+            'placeholder' => get_string('searchvacancies', 'local_jobboard') . '...',
+            'value' => $filters['search'] ?? '',
+            'col' => 'jb-col-md-4',
+        ];
+
+        // Contract type field.
+        $contractoptions = [['value' => '', 'label' => get_string('allcontracttypes', 'local_jobboard'), 'selected' => empty($filters['contracttype'])]];
+        foreach ($contractTypes as $key => $label) {
+            $contractoptions[] = [
+                'value' => $key,
+                'label' => $label,
+                'selected' => ($filters['contracttype'] ?? '') === $key,
+            ];
+        }
+        $filterfields[] = [
+            'name' => 'contracttype',
+            'label' => get_string('contracttype', 'local_jobboard'),
+            'isselect' => true,
+            'options' => $contractoptions,
+            'col' => 'jb-col-md-3',
+        ];
+
+        // Status filter (only for managers).
+        if ($canviewall) {
+            $vacancyStatuses = local_jobboard_get_vacancy_statuses();
+            $statusoptions = [['value' => '', 'label' => get_string('allstatuses', 'local_jobboard'), 'selected' => empty($filters['status'])]];
+            foreach ($vacancyStatuses as $key => $label) {
+                $statusoptions[] = [
+                    'value' => $key,
+                    'label' => $label,
+                    'selected' => ($filters['status'] ?? '') === $key,
+                ];
+            }
+            $filterfields[] = [
+                'name' => 'status',
+                'label' => get_string('status', 'local_jobboard'),
+                'isselect' => true,
+                'options' => $statusoptions,
+                'col' => 'jb-col-md-2',
+            ];
+        }
+
+        // Hidden fields.
+        $hiddenfields = [['name' => 'view', 'value' => 'vacancies']];
+        if (!empty($filters['convocatoriaid'])) {
+            $hiddenfields[] = ['name' => 'convocatoriaid', 'value' => $filters['convocatoriaid']];
+        }
+
+        $filterform = [
+            'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'hiddenfields' => $hiddenfields,
+            'fields' => $filterfields,
+        ];
+
+        // Showing info.
+        $showinginfo = '';
+        if ($total > 0) {
+            $from = ($page * $perpage) + 1;
+            $to = min(($page + 1) * $perpage, $total);
+            $showinginfo = get_string('showingxtoy', 'local_jobboard', (object)['from' => $from, 'to' => $to, 'total' => $total]);
+        }
+
+        // Pagination.
+        $pagination = '';
+        if ($total > $perpage) {
+            $paginationParams = [
+                'view' => 'vacancies',
+                'search' => $filters['search'] ?? '',
+                'status' => $filters['status'] ?? '',
+                'companyid' => $filters['companyid'] ?? 0,
+                'departmentid' => $filters['departmentid'] ?? 0,
+                'contracttype' => $filters['contracttype'] ?? '',
+                'perpage' => $perpage,
+            ];
+            if (!empty($filters['convocatoriaid'])) {
+                $paginationParams['convocatoriaid'] = $filters['convocatoriaid'];
+            }
+            $baseurl = new moodle_url('/local/jobboard/index.php', $paginationParams);
+            $pagination = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
+        }
+
+        // Stats cards.
+        $stats = [
+            [
+                'value' => (string)$total,
+                'label' => get_string('availablevacancies', 'local_jobboard'),
+                'icon' => 'briefcase',
+                'color' => 'success',
+            ],
+            [
+                'value' => (string)$urgentcount,
+                'label' => get_string('closingsoon', 'local_jobboard'),
+                'icon' => 'clock',
+                'color' => 'warning',
+            ],
+        ];
+
+        // Convocatoria data for breadcrumbs.
+        $convocatoriadata = null;
+        if ($convocatoria) {
+            $convocatoriadata = [
+                'id' => $convocatoria->id,
+                'name' => format_string($convocatoria->name),
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]))->out(false),
+            ];
+        }
+
+        return [
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'browseconvocatoriasurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']))->out(false),
+            'convocatoria' => $convocatoriadata,
+            'welcometitle' => get_string('explorevacancias', 'local_jobboard'),
+            'welcomedesc' => get_string('browse_vacancies_desc', 'local_jobboard'),
+            'stats' => $stats,
+            'filterform' => $filterform,
+            'showinginfo' => $showinginfo,
+            'hasvacancies' => !empty($vacancydata),
+            'vacancies' => $vacancydata,
+            'pagination' => $pagination,
+        ];
+    }
+
+    /**
      * Prepare convocatorias page data for template.
      *
      * @param array $convocatorias Array of convocatoria records.
