@@ -5,6 +5,32 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.13] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `views/public.php` from 902 lines to ~253 lines (72% reduction)
+- Public listing page now uses renderer pattern with Mustache template
+- Updated `templates/pages/public.mustache` with complete jb-* CSS classes
+- Dual-mode support preserved: convocatorias list + vacancies for specific convocatoria
+
+### Added
+- `prepare_public_convocatorias_data()` method in renderer for convocatorias list mode
+- `prepare_public_vacancies_data()` method in renderer for vacancies mode
+- Convocatorias grid with cards, stats (vacancy count, positions), urgent indicators
+- Vacancies grid with filter form (search, contract type, location)
+- Quick access buttons for logged-in users (dashboard, my reviews, my applications)
+- Statistics row: active convocatorias, open vacancies, total positions, closing soon
+- Social sharing links (Facebook, Twitter, LinkedIn, WhatsApp)
+- CTA section for non-logged-in users
+
+### Technical Notes
+- Template handles both modes via `showconvocatorias` and `showvacancies` flags
+- All filter logic and SQL queries preserved in view file
+- Vacancy application status checked per card for logged-in users
+- Internal/public vacancy visibility based on capabilities
+- Pagination support for vacancies mode
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+
 ## [3.1.12] - 2025-12-11
 
 ### Changed
