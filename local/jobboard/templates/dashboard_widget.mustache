@@ -8,7 +8,7 @@
     * value - Main value to display
     * subtitle - Optional subtitle
     * icon - Icon name
-    * color - Bootstrap color class (primary, success, warning, danger, info)
+    * color - Color class (primary, success, warning, danger, info)
     * url - Optional link URL
 
     Example context (json):
@@ -21,28 +21,28 @@
         "url": "/local/jobboard/index.php?view=vacancies"
     }
 }}
-<div class="card jobboard-widget border-{{color}} h-100">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-start">
+<div class="jb-card jobboard-widget jb-border-{{color}} jb-h-100 jb-card-shadow">
+    <div class="jb-card-body">
+        <div class="jb-d-flex jb-justify-content-between jb-align-items-start">
             <div>
-                <h6 class="card-subtitle mb-2 text-muted">{{title}}</h6>
-                <h2 class="card-title mb-0 text-{{color}}">
-                    {{#url}}<a href="{{url}}" class="text-{{color}}">{{/url}}
+                <h6 class="jb-card-subtitle jb-mb-2 jb-text-muted">{{title}}</h6>
+                <h2 class="jb-card-title jb-mb-0 jb-text-{{color}}">
+                    {{#url}}<a href="{{url}}" class="jb-text-{{color}} jb-text-decoration-none">{{/url}}
                     {{value}}
                     {{#url}}</a>{{/url}}
                 </h2>
                 {{#subtitle}}
-                    <small class="text-muted">{{subtitle}}</small>
+                    <small class="jb-text-muted">{{subtitle}}</small>
                 {{/subtitle}}
             </div>
-            <div class="widget-icon bg-{{color}} text-white rounded-circle p-3">
+            <div class="widget-icon jb-bg-{{color}} jb-text-white jb-rounded-circle jb-p-3">
                 {{#pix}}i/{{icon}}, core{{/pix}}
             </div>
         </div>
     </div>
     {{#url}}
-        <div class="card-footer bg-transparent border-{{color}}">
-            <a href="{{url}}" class="small text-{{color}}">
+        <div class="jb-card-footer jb-bg-transparent jb-border-{{color}}">
+            <a href="{{url}}" class="jb-small jb-text-{{color}}">
                 {{#str}}view, local_jobboard{{/str}} {{#pix}}i/next, core{{/pix}}
             </a>
         </div>

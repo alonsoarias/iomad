@@ -19,10 +19,10 @@
     }
 }}
 <div class="jobboard-vacancy-list" data-region="vacancy-list">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
         <h2>{{#str}}vacancies, local_jobboard{{/str}}</h2>
         {{#cancreatevacancy}}
-            <a href="{{createurl}}" class="btn btn-primary">
+            <a href="{{createurl}}" class="jb-btn jb-btn-primary">
                 {{#pix}}i/addblock, core{{/pix}}
                 {{#str}}newvacancy, local_jobboard{{/str}}
             </a>
@@ -30,17 +30,17 @@
     </div>
 
     {{#filterform}}
-        <div class="card mb-4">
-            <div class="card-body">
+        <div class="jb-card jb-mb-4 jb-card-shadow">
+            <div class="jb-card-body">
                 {{{filterform}}}
             </div>
         </div>
     {{/filterform}}
 
     {{#hasvacancies}}
-        <div class="row" data-region="vacancy-cards">
+        <div class="jb-row" data-region="vacancy-cards">
             {{#vacancies}}
-                <div class="col-lg-6 col-xl-4">
+                <div class="jb-col-lg-6 jb-col-xl-4">
                     {{> local_jobboard/vacancy_card}}
                 </div>
             {{/vacancies}}
@@ -54,7 +54,7 @@
     {{/hasvacancies}}
 
     {{^hasvacancies}}
-        <div class="alert alert-info">
+        <div class="jb-alert jb-alert-info">
             {{#pix}}i/info, core{{/pix}}
             {{#str}}noresults, local_jobboard{{/str}}
         </div>

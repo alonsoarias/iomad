@@ -61,55 +61,55 @@
         "canapply": true
     }
 }}
-<div class="card jobboard-vacancy-card mb-3" data-vacancy-id="{{id}}">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <span class="badge badge-secondary">{{code}}</span>
-        <span class="badge badge-{{statusclass}}">{{#str}}status:{{status}}, local_jobboard{{/str}}</span>
+<div class="jb-card jb-vacancy-card jb-mb-3 jb-card-shadow" data-vacancy-id="{{id}}">
+    <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+        <span class="jb-badge jb-badge-secondary">{{code}}</span>
+        <span class="jb-badge jb-badge-{{statusclass}}">{{#str}}status:{{status}}, local_jobboard{{/str}}</span>
     </div>
-    <div class="card-body">
-        <h5 class="card-title">
-            <a href="{{viewurl}}" class="text-dark">{{title}}</a>
+    <div class="jb-card-body">
+        <h5 class="jb-card-title">
+            <a href="{{viewurl}}" class="jb-text-dark jb-text-decoration-none">{{title}}</a>
         </h5>
-        <p class="card-text text-muted small">{{{description}}}</p>
-        <div class="row small text-muted">
-            <div class="col-md-6">
-                <p class="mb-1">
+        <p class="jb-card-text jb-text-muted jb-small">{{{description}}}</p>
+        <div class="jb-row jb-small jb-text-muted">
+            <div class="jb-col-md-6">
+                <p class="jb-mb-1">
                     {{#pix}}i/briefcase, core, {{#str}}contracttype, local_jobboard{{/str}}{{/pix}}
                     {{contracttype}}
                 </p>
-                <p class="mb-1">
+                <p class="jb-mb-1">
                     {{#pix}}i/location, core, {{#str}}location, local_jobboard{{/str}}{{/pix}}
                     {{location}}
                 </p>
             </div>
-            <div class="col-md-6">
-                <p class="mb-1">
+            <div class="jb-col-md-6">
+                <p class="jb-mb-1">
                     {{#pix}}i/siteevent, core, {{#str}}department, local_jobboard{{/str}}{{/pix}}
                     {{department}}
                 </p>
-                <p class="mb-1">
+                <p class="jb-mb-1">
                     {{#pix}}i/users, core, {{#str}}positions, local_jobboard{{/str}}{{/pix}}
                     {{positions}} {{#str}}positions, local_jobboard{{/str}}
                 </p>
             </div>
         </div>
     </div>
-    <div class="card-footer d-flex justify-content-between align-items-center">
-        <small class="text-muted">
+    <div class="jb-card-footer jb-d-flex jb-justify-content-between jb-align-items-center">
+        <small class="jb-text-muted">
             {{#pix}}i/calendar, core{{/pix}}
             {{#str}}closedate, local_jobboard{{/str}}: {{closedate}}
             {{#daysremaining}}
-                <span class="badge badge-{{#urgent}}danger{{/urgent}}{{^urgent}}info{{/urgent}} ml-2">
+                <span class="jb-badge jb-badge-{{#urgent}}danger{{/urgent}}{{^urgent}}info{{/urgent}} jb-ml-2">
                     {{daysremaining}} {{#str}}days, local_jobboard{{/str}}
                 </span>
             {{/daysremaining}}
         </small>
         <div>
-            <a href="{{viewurl}}" class="btn btn-sm btn-outline-primary">
+            <a href="{{viewurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
                 {{#str}}view, local_jobboard{{/str}}
             </a>
             {{#canapply}}
-                <a href="{{applyurl}}" class="btn btn-sm btn-primary">
+                <a href="{{applyurl}}" class="jb-btn jb-btn-sm jb-btn-primary">
                     {{#str}}apply, local_jobboard{{/str}}
                 </a>
             {{/canapply}}

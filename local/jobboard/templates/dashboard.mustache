@@ -18,59 +18,59 @@
     }
 }}
 <div class="jobboard-dashboard" data-region="dashboard">
-    <div class="row mb-4">
-        <div class="col-12">
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-12">
             <h2>{{#str}}dashboard, local_jobboard{{/str}}</h2>
         </div>
     </div>
 
     {{! Statistics Widgets }}
-    <div class="row mb-4">
+    <div class="jb-row jb-mb-4">
         {{#widgets}}
-            <div class="col-md-6 col-lg-3 mb-3">
+            <div class="jb-col-md-6 jb-col-lg-3 jb-mb-3">
                 {{> local_jobboard/dashboard_widget}}
             </div>
         {{/widgets}}
     </div>
 
-    <div class="row">
+    <div class="jb-row">
         {{! Recent Activity }}
-        <div class="col-lg-8 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="mb-0">{{#str}}recentactivity, local_jobboard{{/str}}</h5>
+        <div class="jb-col-lg-8 jb-mb-4">
+            <div class="jb-card jb-h-100 jb-card-shadow">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}recentactivity, local_jobboard{{/str}}</h5>
                 </div>
-                <div class="card-body">
+                <div class="jb-card-body">
                     {{#hasrecentactivity}}
-                        <ul class="list-group list-group-flush">
+                        <ul class="jb-list-group jb-list-group-flush">
                             {{#recentactivity}}
-                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <li class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-start">
                                     <div>
-                                        <span class="badge badge-{{typeclass}} mr-2">{{typelabel}}</span>
+                                        <span class="jb-badge jb-badge-{{typeclass}} jb-mr-2">{{typelabel}}</span>
                                         {{{message}}}
                                     </div>
-                                    <small class="text-muted">{{timeago}}</small>
+                                    <small class="jb-text-muted">{{timeago}}</small>
                                 </li>
                             {{/recentactivity}}
                         </ul>
                     {{/hasrecentactivity}}
                     {{^hasrecentactivity}}
-                        <p class="text-muted mb-0">{{#str}}noresults, local_jobboard{{/str}}</p>
+                        <p class="jb-text-muted jb-mb-0">{{#str}}noresults, local_jobboard{{/str}}</p>
                     {{/hasrecentactivity}}
                 </div>
             </div>
         </div>
 
         {{! Alerts and Quick Actions }}
-        <div class="col-lg-4 mb-4">
+        <div class="jb-col-lg-4 jb-mb-4">
             {{#hasalerts}}
-                <div class="card mb-3">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0">{{#str}}alerts, local_jobboard{{/str}}</h5>
+                <div class="jb-card jb-mb-3 jb-card-shadow">
+                    <div class="jb-card-header jb-bg-warning jb-text-dark">
+                        <h5 class="jb-mb-0">{{#str}}alerts, local_jobboard{{/str}}</h5>
                     </div>
-                    <ul class="list-group list-group-flush">
+                    <ul class="jb-list-group jb-list-group-flush">
                         {{#alerts}}
-                            <li class="list-group-item list-group-item-{{alertclass}}">
+                            <li class="jb-list-group-item jb-list-group-item-{{alertclass}}">
                                 {{#pix}}i/warning, core{{/pix}}
                                 {{{message}}}
                             </li>
@@ -80,21 +80,21 @@
             {{/hasalerts}}
 
             {{#canmanage}}
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">{{#str}}quickactions, local_jobboard{{/str}}</h5>
+                <div class="jb-card jb-card-shadow">
+                    <div class="jb-card-header">
+                        <h5 class="jb-mb-0">{{#str}}quickactions, local_jobboard{{/str}}</h5>
                     </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="{{createvacancyurl}}" class="btn btn-primary btn-block mb-2">
+                    <div class="jb-card-body">
+                        <div class="jb-d-grid jb-gap-2">
+                            <a href="{{createvacancyurl}}" class="jb-btn jb-btn-primary jb-btn-block jb-mb-2">
                                 {{#pix}}i/addblock, core{{/pix}}
                                 {{#str}}newvacancy, local_jobboard{{/str}}
                             </a>
-                            <a href="{{manageapplicationsurl}}" class="btn btn-outline-primary btn-block mb-2">
+                            <a href="{{manageapplicationsurl}}" class="jb-btn jb-btn-outline-primary jb-btn-block jb-mb-2">
                                 {{#pix}}i/grades, core{{/pix}}
                                 {{#str}}reviewapplications, local_jobboard{{/str}}
                             </a>
-                            <a href="{{reportsurl}}" class="btn btn-outline-secondary btn-block">
+                            <a href="{{reportsurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-block">
                                 {{#pix}}i/report, core{{/pix}}
                                 {{#str}}reports, local_jobboard{{/str}}
                             </a>
