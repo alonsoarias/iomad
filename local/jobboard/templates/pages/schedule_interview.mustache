@@ -1,0 +1,140 @@
+{{!
+    @template local_jobboard/pages/schedule_interview
+
+    Interview scheduling page template.
+    Uses jb-* CSS classes for consistent styling.
+
+    Context variables:
+    * pagetitle - Page title string
+    * applicant - Applicant data (fullname, email)
+    * vacancy - Vacancy data (code, title)
+    * application - Application data (id, status, statustext)
+    * interviews - Existing interviews list
+    * hasinterviews - Boolean if has interviews
+    * formhtml - Rendered moodle form HTML
+    * backurl - URL to go back
+
+    Example context (json):
+    {
+        "applicant": {"fullname": "John Doe", "email": "john@example.com"}
+    }
+}}
+<div class="jb-schedule-interview" data-region="jobboard-schedule-interview">
+    {{! Page Header }}
+    <header class="jb-page-header jb-mb-4">
+        <h1 class="jb-fs-3 jb-mb-0">
+            <i class="fa fa-calendar-plus jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h1>
+    </header>
+
+    {{! Applicant Info Card }}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="applicant-heading">
+        <div class="jb-card-header">
+            <h5 class="jb-mb-0" id="applicant-heading">
+                <i class="fa fa-user jb-text-info jb-mr-2" aria-hidden="true"></i>
+                {{#str}}applicantinfo, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-row">
+                <div class="jb-col-md-6">
+                    <dl>
+                        <dt>{{#str}}name{{/str}}</dt>
+                        <dd>{{applicant.fullname}}</dd>
+                        <dt>{{#str}}email{{/str}}</dt>
+                        <dd>{{applicant.email}}</dd>
+                    </dl>
+                </div>
+                <div class="jb-col-md-6">
+                    <dl>
+                        <dt>{{#str}}vacancy, local_jobboard{{/str}}</dt>
+                        <dd>{{vacancy.code}} - {{vacancy.title}}</dd>
+                        <dt>{{#str}}status{{/str}}</dt>
+                        <dd><span class="jb-badge jb-badge-primary">{{application.statustext}}</span></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! Existing Interviews }}
+    {{#hasinterviews}}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="interviews-heading">
+        <div class="jb-card-header">
+            <h5 class="jb-mb-0" id="interviews-heading">
+                <i class="fa fa-calendar-check jb-text-success jb-mr-2" aria-hidden="true"></i>
+                {{#str}}scheduledinterviews, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body jb-p-0">
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-striped jb-mb-0">
+                    <thead class="jb-thead-light">
+                        <tr>
+                            <th>{{#str}}dateandtime, local_jobboard{{/str}}</th>
+                            <th>{{#str}}type{{/str}}</th>
+                            <th>{{#str}}location{{/str}}</th>
+                            <th>{{#str}}status{{/str}}</th>
+                            <th>{{#str}}result, local_jobboard{{/str}}</th>
+                            <th>{{#str}}actions{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#interviews}}
+                        <tr>
+                            <td>
+                                {{datetime}}
+                                <br><small class="jb-text-muted">{{duration}} {{#str}}minutes{{/str}}</small>
+                            </td>
+                            <td>{{typename}}</td>
+                            <td>{{location}}</td>
+                            <td><span class="jb-badge jb-badge-{{statuscolor}}">{{statustext}}</span></td>
+                            <td>
+                                {{#hasresult}}
+                                <span class="jb-badge jb-badge-{{resultcolor}}">{{resulttext}}</span>
+                                <br><small>{{#str}}rating, local_jobboard{{/str}}: {{rating}}/5</small>
+                                {{/hasresult}}
+                                {{^hasresult}}-{{/hasresult}}
+                            </td>
+                            <td>
+                                {{#canact}}
+                                <div class="jb-btn-group jb-btn-group-sm" role="group">
+                                    <a href="{{completeurl}}" class="jb-btn jb-btn-success" title="{{#str}}complete{{/str}}">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </a>
+                                    <a href="{{noshowurl}}" class="jb-btn jb-btn-warning"
+                                       title="{{#str}}noshow, local_jobboard{{/str}}"
+                                       onclick="return confirm('{{#str}}confirmnoshow, local_jobboard{{/str}}')">
+                                        <i class="fa fa-user-times" aria-hidden="true"></i>
+                                    </a>
+                                    <a href="{{cancelurl}}" class="jb-btn jb-btn-danger"
+                                       title="{{#str}}cancel{{/str}}"
+                                       onclick="return confirm('{{#str}}confirmcancel, local_jobboard{{/str}}')">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                                {{/canact}}
+                            </td>
+                        </tr>
+                        {{/interviews}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    {{/hasinterviews}}
+
+    {{! New Interview Form }}
+    <section class="jb-card jb-card-shadow" aria-labelledby="newinterview-heading">
+        <div class="jb-card-header">
+            <h5 class="jb-mb-0" id="newinterview-heading">
+                <i class="fa fa-plus-circle jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                {{#str}}schedulenewinterview, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{{formhtml}}}
+        </div>
+    </section>
+</div>

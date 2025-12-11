@@ -5,6 +5,86 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.23] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `manage_exemptions.php` main list view from 690 lines to ~408 lines (41% reduction)
+- Exemption management list view now uses renderer pattern with Mustache template
+- Created `templates/pages/manage_exemptions.mustache` with complete jb-* CSS classes
+- All exemption management functionality preserved: list, filter, pagination
+- Add/edit/view/revoke sub-views updated to use jb-* CSS classes
+
+### Added
+- `render_manage_exemptions_page()` method in renderer for exemptions list view
+- `prepare_manage_exemptions_page_data()` method in renderer with full data preparation
+- Statistics cards: total, active, expired, revoked exemptions
+- Filter form with search, type, and status dropdowns
+- Exemption table with user, type, docs count, validity dates, status, and actions
+- Pagination support for large exemption lists
+
+### Technical Notes
+- Four exemption types: historico_iser, documentos_recientes, traslado_interno, recontratacion
+- Three status filters: active, expired, revoked
+- Sub-views (add/edit/view/revoke) use ui_helper for complex form interactions
+- Session key validation for revoke action preserved
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+- **COMPLETES Phase 3 (Workflows) per AGENTS.md**
+
+## [3.1.22] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `schedule_interview.php` main view from 413 lines to ~294 lines (29% reduction)
+- Interview scheduling page now uses renderer pattern with Mustache template
+- Created `templates/pages/schedule_interview.mustache` with complete jb-* CSS classes
+- All interview scheduling functionality preserved: schedule, complete, cancel, noshow
+
+### Added
+- `render_schedule_interview_page()` method in renderer for interview scheduling view
+- `prepare_schedule_interview_page_data()` method in renderer with full data preparation
+- Applicant information card with name, email, vacancy, and status
+- Existing interviews table with date/time, type, location, status, result, and actions
+- New interview form section with Moodle form integration
+- Interview action buttons: complete, noshow, cancel with confirmations
+
+### Technical Notes
+- Preserves Moodle formslib for complex interview scheduling form with:
+  - Date/time selector, duration, interview type, location
+  - Multi-select interviewers with capability check
+  - Form validation for past dates and scheduling conflicts
+- Complete interview form preserved for rating and recommendation capture
+- Five interview statuses: scheduled, confirmed, completed, cancelled, noshow
+- Three recommendations: hire, further_review, reject
+- Session key validation for all actions preserved
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+- Continues Phase 3 (Workflows) per AGENTS.md
+
+## [3.1.21] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `assign_reviewer.php` from 427 lines to ~86 lines (80% reduction)
+- Reviewer assignment page now uses renderer pattern with Mustache template
+- Created `templates/pages/assign_reviewer.mustache` with complete jb-* CSS classes
+- All reviewer assignment functionality preserved: assign, unassign, auto-assign
+
+### Added
+- `render_assign_reviewer_page()` method in renderer for reviewer assignment view
+- `prepare_assign_reviewer_page_data()` method in renderer with full data preparation
+- Statistics cards: unassigned applications, available reviewers, total assigned, avg workload
+- Vacancy filter dropdown
+- Reviewer workload summary with color-coded cards (green/yellow/red based on load)
+- Auto-assign section with max per reviewer input
+- Manual assignment table with checkboxes and select-all functionality
+- Reviewer selection dropdown with workload indicators
+
+### Technical Notes
+- Workload thresholds: green (<10), yellow (10-15), red (>15)
+- Auto-assign distributes evenly across available reviewers
+- Application status badges: submitted (info), under_review (warning)
+- Session key validation for all actions preserved
+- JavaScript for select-all checkbox functionality
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+- Continues Phase 3 (Workflows) per AGENTS.md
+
 ## [3.1.20] - 2025-12-11
 
 ### Changed

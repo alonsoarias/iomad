@@ -5758,4 +5758,421 @@ class renderer extends plugin_renderer_base {
 
         return array_merge($common, $specific);
     }
+
+    /**
+     * Render the assign reviewer page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_assign_reviewer_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/assign_reviewer', $data);
+    }
+
+    /**
+     * Prepare assign reviewer page data for template.
+     *
+     * @param int $vacancyid Vacancy filter ID (0 for all).
+     * @return array Template data.
+     */
+    public function prepare_assign_reviewer_page_data(int $vacancyid): array {
+        global $DB;
+
+        $pageurl = new moodle_url('/local/jobboard/assign_reviewer.php');
+
+        // Get vacancy list for filter.
+        $vacancies = $DB->get_records_select('local_jobboard_vacancy',
+            "status IN ('published', 'closed')", null, 'code ASC', 'id, code, title');
+
+        $vacanciesdata = [];
+        foreach ($vacancies as $v) {
+            $vacanciesdata[] = [
+                'id' => $v->id,
+                'label' => format_string($v->code . ' - ' . $v->title),
+                'selected' => ($v->id == $vacancyid),
+            ];
+        }
+
+        // Get reviewers with workload.
+        $reviewers = \local_jobboard\reviewer::get_all_with_workload();
+
+        // Get unassigned applications.
+        $filters = ['reviewerid_null' => true];
+        if ($vacancyid) {
+            $filters['vacancyid'] = $vacancyid;
+        }
+        $unassignedresult = \local_jobboard\application::get_list($filters, 'timecreated', 'ASC', 0, 100);
+        $unassigned = $unassignedresult['applications'];
+
+        // Calculate stats.
+        $totalUnassigned = count($unassigned);
+        $totalReviewers = count($reviewers);
+        $totalAssigned = 0;
+        foreach ($reviewers as $rev) {
+            $totalAssigned += $rev->workload;
+        }
+        $avgWorkload = $totalReviewers > 0 ? round($totalAssigned / $totalReviewers, 1) : 0;
+
+        // Prepare reviewers data.
+        $reviewersdata = [];
+        foreach ($reviewers as $rev) {
+            $workloadcolor = 'success';
+            if ($rev->workload > 15) {
+                $workloadcolor = 'danger';
+            } else if ($rev->workload > 10) {
+                $workloadcolor = 'warning';
+            }
+
+            $workloadindicator = '';
+            if ($rev->workload > 15) {
+                $workloadindicator = ' [HIGH]';
+            } else if ($rev->workload > 10) {
+                $workloadindicator = ' [MEDIUM]';
+            }
+
+            $reviewersdata[] = [
+                'id' => $rev->id,
+                'fullname' => fullname($rev),
+                'workload' => (int) $rev->workload,
+                'workloadcolor' => $workloadcolor,
+                'workloadindicator' => $workloadindicator,
+                'hasstats' => isset($rev->stats),
+                'stats' => isset($rev->stats) ? [
+                    'reviewed' => $rev->stats['reviewed'] ?? 0,
+                    'avgtime' => $rev->stats['avg_review_time'] ?? 0,
+                ] : null,
+            ];
+        }
+
+        // Prepare unassigned applications data.
+        $unassigneddata = [];
+        foreach ($unassigned as $app) {
+            $statuscolor = 'secondary';
+            if ($app->status === 'submitted') {
+                $statuscolor = 'info';
+            } else if ($app->status === 'under_review') {
+                $statuscolor = 'warning';
+            }
+
+            $unassigneddata[] = [
+                'id' => $app->id,
+                'applicantname' => format_string($app->userfirstname . ' ' . $app->userlastname),
+                'vacancycode' => format_string($app->vacancy_code ?? ''),
+                'status' => $app->status,
+                'statuscolor' => $statuscolor,
+                'statustext' => get_string('status_' . $app->status, 'local_jobboard'),
+                'dateapplied' => userdate($app->timecreated, '%Y-%m-%d %H:%M'),
+            ];
+        }
+
+        return [
+            'pagetitle' => get_string('assignreviewer', 'local_jobboard'),
+            'stats' => [
+                'unassigned' => $totalUnassigned,
+                'reviewers' => $totalReviewers,
+                'assigned' => $totalAssigned,
+                'avgworkload' => $avgWorkload,
+            ],
+            'vacancies' => $vacanciesdata,
+            'selectedvacancyid' => $vacancyid,
+            'reviewers' => $reviewersdata,
+            'hasreviewers' => !empty($reviewersdata),
+            'unassigned' => $unassigneddata,
+            'hasunassigned' => !empty($unassigneddata),
+            'filterformurl' => $pageurl->out(false),
+            'actionformurl' => $pageurl->out(false),
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'reviewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
+            'bulkvalidateurl' => (new moodle_url('/local/jobboard/bulk_validate.php'))->out(false),
+            'sesskey' => sesskey(),
+        ];
+    }
+
+    /**
+     * Render the schedule interview page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_schedule_interview_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/schedule_interview', $data);
+    }
+
+    /**
+     * Prepare schedule interview page data for template.
+     *
+     * @param int $applicationid Application ID.
+     * @param object $applicant Applicant user object.
+     * @param object $vacancy Vacancy record.
+     * @param object $application Application record.
+     * @param string $formhtml Rendered form HTML.
+     * @return array Template data.
+     */
+    public function prepare_schedule_interview_page_data(
+        int $applicationid,
+        object $applicant,
+        object $vacancy,
+        object $application,
+        string $formhtml
+    ): array {
+        // Get existing interviews.
+        $interviews = \local_jobboard\interview::get_for_application($applicationid);
+
+        $interviewsdata = [];
+        foreach ($interviews as $int) {
+            // Status color.
+            $statuscolor = 'secondary';
+            if ($int->status === 'confirmed') {
+                $statuscolor = 'success';
+            } else if ($int->status === 'completed') {
+                $statuscolor = 'info';
+            } else if (in_array($int->status, ['cancelled', 'noshow'])) {
+                $statuscolor = 'danger';
+            } else if ($int->status === 'rescheduled') {
+                $statuscolor = 'warning';
+            }
+
+            // Result.
+            $hasresult = ($int->status === 'completed' && !empty($int->recommendation));
+            $resultcolor = 'secondary';
+            $resulttext = '';
+            if ($hasresult) {
+                $resultcolor = $int->recommendation === 'hire' ? 'success' :
+                    ($int->recommendation === 'reject' ? 'danger' : 'warning');
+                $resulttext = get_string('recommend_' . $int->recommendation, 'local_jobboard');
+            }
+
+            // Can act (complete, noshow, cancel).
+            $canact = in_array($int->status, ['scheduled', 'confirmed']);
+
+            $baseurl = new moodle_url('/local/jobboard/schedule_interview.php', ['application' => $applicationid]);
+
+            $interviewsdata[] = [
+                'id' => $int->id,
+                'datetime' => userdate($int->scheduledtime, get_string('strftimedatetime', 'langconfig')),
+                'duration' => $int->duration,
+                'typename' => get_string('interviewtype_' . $int->interviewtype, 'local_jobboard'),
+                'location' => format_string($int->location),
+                'status' => $int->status,
+                'statuscolor' => $statuscolor,
+                'statustext' => get_string('interviewstatus_' . $int->status, 'local_jobboard'),
+                'hasresult' => $hasresult,
+                'resultcolor' => $resultcolor,
+                'resulttext' => $resulttext,
+                'rating' => $int->rating ?? 0,
+                'canact' => $canact,
+                'completeurl' => $canact ? (new moodle_url($baseurl, ['id' => $int->id, 'action' => 'complete']))->out(false) : null,
+                'noshowurl' => $canact ? (new moodle_url($baseurl, ['id' => $int->id, 'action' => 'noshow', 'sesskey' => sesskey()]))->out(false) : null,
+                'cancelurl' => $canact ? (new moodle_url($baseurl, ['id' => $int->id, 'action' => 'cancel', 'sesskey' => sesskey()]))->out(false) : null,
+            ];
+        }
+
+        return [
+            'pagetitle' => get_string('scheduleinterview', 'local_jobboard'),
+            'applicant' => [
+                'fullname' => fullname($applicant),
+                'email' => $applicant->email,
+            ],
+            'vacancy' => [
+                'code' => format_string($vacancy->code),
+                'title' => format_string($vacancy->title),
+            ],
+            'application' => [
+                'id' => $application->id,
+                'status' => $application->status,
+                'statustext' => get_string('status_' . $application->status, 'local_jobboard'),
+            ],
+            'interviews' => $interviewsdata,
+            'hasinterviews' => !empty($interviewsdata),
+            'formhtml' => $formhtml,
+            'backurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $applicationid]))->out(false),
+        ];
+    }
+
+    /**
+     * Render the manage exemptions page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_manage_exemptions_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/manage_exemptions', $data);
+    }
+
+    /**
+     * Prepare manage exemptions page data for template.
+     *
+     * @param string $search Search query.
+     * @param string $type Exemption type filter.
+     * @param string $status Status filter.
+     * @param int $page Current page.
+     * @param int $perpage Items per page.
+     * @param \context $context Page context.
+     * @return array Template data.
+     */
+    public function prepare_manage_exemptions_page_data(
+        string $search,
+        string $type,
+        string $status,
+        int $page,
+        int $perpage,
+        \context $context
+    ): array {
+        global $DB, $OUTPUT;
+
+        $pageurl = new moodle_url('/local/jobboard/manage_exemptions.php');
+        $now = time();
+
+        // Statistics.
+        $activecnt = $DB->count_records_sql("
+            SELECT COUNT(*) FROM {local_jobboard_exemption}
+             WHERE timerevoked IS NULL
+               AND validfrom <= :now1
+               AND (validuntil IS NULL OR validuntil > :now2)
+        ", ['now1' => $now, 'now2' => $now]);
+
+        $expiredcnt = $DB->count_records_sql("
+            SELECT COUNT(*) FROM {local_jobboard_exemption}
+             WHERE timerevoked IS NULL
+               AND validuntil IS NOT NULL AND validuntil < :now
+        ", ['now' => $now]);
+
+        $revokedcnt = $DB->count_records_select('local_jobboard_exemption', 'timerevoked IS NOT NULL');
+        $totalcnt = $activecnt + $expiredcnt + $revokedcnt;
+
+        // Type options.
+        $typesoptions = [['value' => '', 'label' => get_string('all', 'local_jobboard'), 'selected' => empty($type)]];
+        $types = ['historico_iser', 'documentos_recientes', 'traslado_interno', 'recontratacion'];
+        foreach ($types as $t) {
+            $typesoptions[] = [
+                'value' => $t,
+                'label' => get_string('exemptiontype_' . $t, 'local_jobboard'),
+                'selected' => ($type === $t),
+            ];
+        }
+
+        // Status options.
+        $statusoptions = [
+            ['value' => '', 'label' => get_string('all', 'local_jobboard'), 'selected' => empty($status)],
+            ['value' => 'active', 'label' => get_string('active', 'local_jobboard'), 'selected' => ($status === 'active')],
+            ['value' => 'expired', 'label' => get_string('expired', 'local_jobboard'), 'selected' => ($status === 'expired')],
+            ['value' => 'revoked', 'label' => get_string('revoked', 'local_jobboard'), 'selected' => ($status === 'revoked')],
+        ];
+
+        // Build query.
+        $params = [];
+        $whereclauses = ['1=1'];
+
+        if ($search) {
+            $whereclauses[] = $DB->sql_like("CONCAT(u.firstname, ' ', u.lastname)", ':search', false);
+            $params['search'] = '%' . $DB->sql_like_escape($search) . '%';
+        }
+
+        if ($type) {
+            $whereclauses[] = 'e.exemptiontype = :type';
+            $params['type'] = $type;
+        }
+
+        if ($status === 'active') {
+            $whereclauses[] = 'e.timerevoked IS NULL';
+            $whereclauses[] = '(e.validuntil IS NULL OR e.validuntil > :now1)';
+            $whereclauses[] = 'e.validfrom <= :now2';
+            $params['now1'] = $now;
+            $params['now2'] = $now;
+        } else if ($status === 'expired') {
+            $whereclauses[] = 'e.timerevoked IS NULL';
+            $whereclauses[] = 'e.validuntil IS NOT NULL AND e.validuntil < :now';
+            $params['now'] = $now;
+        } else if ($status === 'revoked') {
+            $whereclauses[] = 'e.timerevoked IS NOT NULL';
+        }
+
+        $whereclause = implode(' AND ', $whereclauses);
+
+        // Count total.
+        $countsql = "SELECT COUNT(*)
+                       FROM {local_jobboard_exemption} e
+                       JOIN {user} u ON u.id = e.userid
+                      WHERE $whereclause";
+        $totalcount = $DB->count_records_sql($countsql, $params);
+
+        // Get exemptions.
+        $sql = "SELECT e.*, u.firstname, u.lastname, u.email
+                  FROM {local_jobboard_exemption} e
+                  JOIN {user} u ON u.id = e.userid
+                 WHERE $whereclause
+                 ORDER BY e.timecreated DESC";
+        $exemptions = $DB->get_records_sql($sql, $params, $page * $perpage, $perpage);
+
+        // Prepare exemptions data.
+        $exemptionsdata = [];
+        foreach ($exemptions as $ex) {
+            $isvalid = !$ex->timerevoked &&
+                $ex->validfrom <= $now &&
+                (!$ex->validuntil || $ex->validuntil > $now);
+
+            $statuscolor = 'warning';
+            $statustext = get_string('expired', 'local_jobboard');
+            if ($ex->timerevoked) {
+                $statuscolor = 'danger';
+                $statustext = get_string('revoked', 'local_jobboard');
+            } else if ($isvalid) {
+                $statuscolor = 'success';
+                $statustext = get_string('active', 'local_jobboard');
+            }
+
+            $doctypes = explode(',', $ex->exempteddoctypes);
+
+            $exemptionsdata[] = [
+                'id' => $ex->id,
+                'fullname' => format_string($ex->firstname . ' ' . $ex->lastname),
+                'email' => $ex->email,
+                'typename' => get_string('exemptiontype_' . $ex->exemptiontype, 'local_jobboard'),
+                'doctypescount' => count($doctypes),
+                'validfrom' => userdate($ex->validfrom, '%Y-%m-%d'),
+                'validuntil' => $ex->validuntil ? userdate($ex->validuntil, '%Y-%m-%d') : null,
+                'statuscolor' => $statuscolor,
+                'statustext' => $statustext,
+                'isactive' => $isvalid,
+                'viewurl' => (new moodle_url($pageurl, ['action' => 'view', 'id' => $ex->id]))->out(false),
+                'editurl' => (new moodle_url($pageurl, ['action' => 'edit', 'id' => $ex->id]))->out(false),
+                'revokeurl' => (new moodle_url($pageurl, ['action' => 'revoke', 'id' => $ex->id]))->out(false),
+            ];
+        }
+
+        // Pagination.
+        $pagination = '';
+        if ($totalcount > $perpage) {
+            $baseurl = new moodle_url($pageurl, ['search' => $search, 'type' => $type, 'status' => $status]);
+            $pagination = $OUTPUT->paging_bar($totalcount, $page, $perpage, $baseurl);
+        }
+
+        return [
+            'pagetitle' => get_string('manageexemptions', 'local_jobboard'),
+            'stats' => [
+                'total' => $totalcnt,
+                'active' => $activecnt,
+                'expired' => $expiredcnt,
+                'revoked' => $revokedcnt,
+            ],
+            'filters' => [
+                'search' => $search,
+                'type' => $type,
+                'status' => $status,
+            ],
+            'typesoptions' => $typesoptions,
+            'statusoptions' => $statusoptions,
+            'exemptions' => $exemptionsdata,
+            'hasexemptions' => !empty($exemptionsdata),
+            'totalcount' => $totalcount,
+            'pagination' => $pagination,
+            'filterformurl' => $pageurl->out(false),
+            'addurl' => (new moodle_url($pageurl, ['action' => 'add']))->out(false),
+            'importurl' => (new moodle_url('/local/jobboard/import_exemptions.php'))->out(false),
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'doctypesurl' => (new moodle_url('/local/jobboard/admin/doctypes.php'))->out(false),
+            'reportsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'reports']))->out(false),
+            'canviewreports' => has_capability('local/jobboard:viewreports', $context),
+        ];
+    }
 }

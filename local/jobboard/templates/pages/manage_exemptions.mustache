@@ -1,0 +1,237 @@
+{{!
+    @template local_jobboard/pages/manage_exemptions
+
+    Exemption management page template (list view).
+    Uses jb-* CSS classes for consistent styling.
+
+    Context variables:
+    * pagetitle - Page title string
+    * stats - Statistics (total, active, expired, revoked)
+    * filters - Current filter values
+    * typesoptions - Exemption type options
+    * statusoptions - Status options
+    * exemptions - Exemptions list
+    * hasexemptions - Boolean if has exemptions
+    * totalcount - Total exemption count
+    * pagination - Pagination HTML
+    * filterformurl - URL for filter form
+    * addurl - URL to add exemption
+    * importurl - URL to import exemptions
+    * dashboardurl - URL to dashboard
+    * doctypesurl - URL to manage doc types
+    * reportsurl - URL to reports
+    * canviewreports - Boolean if can view reports
+
+    Example context (json):
+    {
+        "stats": {"total": 50, "active": 30, "expired": 15, "revoked": 5}
+    }
+}}
+<div class="jb-manage-exemptions" data-region="jobboard-manage-exemptions">
+    {{! Page Header }}
+    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <h1 class="jb-fs-3 jb-mb-0">
+            <i class="fa fa-shield-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h1>
+        <div class="jb-btn-group">
+            <a href="{{addurl}}" class="jb-btn jb-btn-primary">
+                <i class="fa fa-plus jb-mr-2" aria-hidden="true"></i>
+                {{#str}}addexemption, local_jobboard{{/str}}
+            </a>
+            <a href="{{importurl}}" class="jb-btn jb-btn-outline-secondary">
+                <i class="fa fa-upload jb-mr-2" aria-hidden="true"></i>
+                {{#str}}importexemptions, local_jobboard{{/str}}
+            </a>
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
+                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+        </div>
+    </header>
+
+    {{! Statistics Cards }}
+    <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-primary">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-shield-alt" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.total}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}totalexemptions, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.active}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}activeexemptions, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-warning">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-clock" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.expired}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}expiredexemptions, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-danger">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-ban" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.revoked}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}revokedexemptions, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! Filters }}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-label="{{#str}}filter{{/str}}">
+        <div class="jb-card-body">
+            <form method="get" action="{{filterformurl}}" class="jb-form-inline jb-flex-wrap">
+                <div class="jb-form-group jb-mr-3 jb-mb-2">
+                    <label class="jb-sr-only" for="search">{{#str}}search{{/str}}</label>
+                    <input type="text" name="search" id="search" class="jb-form-control"
+                           placeholder="{{#str}}searchuser, local_jobboard{{/str}}" value="{{filters.search}}">
+                </div>
+                <div class="jb-form-group jb-mr-3 jb-mb-2">
+                    <label class="jb-sr-only" for="type">{{#str}}type, local_jobboard{{/str}}</label>
+                    <select name="type" id="type" class="jb-form-control">
+                        {{#typesoptions}}
+                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                        {{/typesoptions}}
+                    </select>
+                </div>
+                <div class="jb-form-group jb-mr-3 jb-mb-2">
+                    <label class="jb-sr-only" for="status">{{#str}}status{{/str}}</label>
+                    <select name="status" id="status" class="jb-form-control">
+                        {{#statusoptions}}
+                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                        {{/statusoptions}}
+                    </select>
+                </div>
+                <button type="submit" class="jb-btn jb-btn-primary jb-mb-2">
+                    <i class="fa fa-filter jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}filter{{/str}}
+                </button>
+            </form>
+        </div>
+    </section>
+
+    {{! Exemptions Table }}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="exemptions-heading">
+        <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+            <h5 class="jb-mb-0" id="exemptions-heading">
+                <i class="fa fa-list jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                {{#str}}exemptionlist, local_jobboard{{/str}}
+            </h5>
+            <span class="jb-badge jb-badge-secondary">{{totalcount}} {{#str}}items, local_jobboard{{/str}}</span>
+        </div>
+        <div class="jb-card-body jb-p-0">
+            {{#hasexemptions}}
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-hover jb-mb-0">
+                    <thead class="jb-thead-light">
+                        <tr>
+                            <th>{{#str}}user{{/str}}</th>
+                            <th>{{#str}}exemptiontype, local_jobboard{{/str}}</th>
+                            <th>{{#str}}exempteddocs, local_jobboard{{/str}}</th>
+                            <th>{{#str}}validfrom, local_jobboard{{/str}}</th>
+                            <th>{{#str}}validuntil, local_jobboard{{/str}}</th>
+                            <th>{{#str}}status{{/str}}</th>
+                            <th>{{#str}}actions{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#exemptions}}
+                        <tr>
+                            <td>
+                                <strong>{{fullname}}</strong>
+                                <br><small class="jb-text-muted">{{email}}</small>
+                            </td>
+                            <td>{{typename}}</td>
+                            <td><span class="jb-badge jb-badge-secondary">{{doctypescount}} {{#str}}doctypes, local_jobboard{{/str}}</span></td>
+                            <td>{{validfrom}}</td>
+                            <td>
+                                {{#validuntil}}{{validuntil}}{{/validuntil}}
+                                {{^validuntil}}<em>{{#str}}noexpiry, local_jobboard{{/str}}</em>{{/validuntil}}
+                            </td>
+                            <td><span class="jb-badge jb-badge-{{statuscolor}}">{{statustext}}</span></td>
+                            <td>
+                                <div class="jb-btn-group jb-btn-group-sm" role="group">
+                                    <a href="{{viewurl}}" class="jb-btn jb-btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                    </a>
+                                    {{#isactive}}
+                                    <a href="{{editurl}}" class="jb-btn jb-btn-outline-secondary" title="{{#str}}edit, local_jobboard{{/str}}">
+                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                    </a>
+                                    <a href="{{revokeurl}}" class="jb-btn jb-btn-outline-danger" title="{{#str}}revoke, local_jobboard{{/str}}">
+                                        <i class="fa fa-ban" aria-hidden="true"></i>
+                                    </a>
+                                    {{/isactive}}
+                                </div>
+                            </td>
+                        </tr>
+                        {{/exemptions}}
+                    </tbody>
+                </table>
+            </div>
+            {{#pagination}}
+            <div class="jb-card-footer jb-bg-white">
+                {{{pagination}}}
+            </div>
+            {{/pagination}}
+            {{/hasexemptions}}
+            {{^hasexemptions}}
+            <div class="jb-p-4">
+                <div class="jb-empty-state jb-text-center jb-py-4">
+                    <i class="fa fa-shield-alt fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                    <p class="jb-text-muted">{{#str}}noexemptions, local_jobboard{{/str}}</p>
+                </div>
+            </div>
+            {{/hasexemptions}}
+        </div>
+    </section>
+
+    {{! Navigation Footer }}
+    <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
+        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
+                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+            <a href="{{doctypesurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
+                <i class="fa fa-folder jb-mr-2" aria-hidden="true"></i>
+                {{#str}}managedoctypes, local_jobboard{{/str}}
+            </a>
+            {{#canviewreports}}
+            <a href="{{reportsurl}}" class="jb-btn jb-btn-outline-info jb-m-1">
+                <i class="fa fa-chart-bar jb-mr-2" aria-hidden="true"></i>
+                {{#str}}reports, local_jobboard{{/str}}
+            </a>
+            {{/canviewreports}}
+        </div>
+    </footer>
+</div>

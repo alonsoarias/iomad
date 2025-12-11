@@ -17,6 +17,8 @@
 /**
  * Schedule interview page.
  *
+ * Migrated to renderer + template pattern in v3.1.22.
+ *
  * @package   local_jobboard
  * @copyright 2024 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,7 +28,6 @@ require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/formslib.php');
 
 use local_jobboard\interview;
-use local_jobboard\application;
 
 require_login();
 
@@ -63,7 +64,7 @@ if ($action === 'cancel' && $interviewid) {
 }
 
 if ($action === 'complete' && $interviewid) {
-    // Show completion form.
+    // Show completion form (uses Moodle form, rendered inline).
     $interviewdetails = interview::get_details($interviewid);
 
     class complete_interview_form extends moodleform {
@@ -121,7 +122,7 @@ if ($action === 'complete' && $interviewid) {
     echo $OUTPUT->header();
     echo $OUTPUT->heading(get_string('completeinterview', 'local_jobboard'));
 
-    echo '<div class="alert alert-info">';
+    echo '<div class="jb-alert jb-alert-info">';
     echo '<strong>' . get_string('applicant', 'local_jobboard') . ':</strong> ' .
         fullname($applicant) . '<br>';
     echo '<strong>' . get_string('vacancy', 'local_jobboard') . ':</strong> ' .
@@ -278,136 +279,15 @@ if ($mform->is_cancelled()) {
     }
 }
 
-// Display page.
-echo $OUTPUT->header();
-
-echo $OUTPUT->heading(get_string('scheduleinterview', 'local_jobboard'));
-
-// Applicant info card.
-echo '<div class="card mb-4">';
-echo '<div class="card-header">';
-echo '<h5 class="mb-0">' . get_string('applicantinfo', 'local_jobboard') . '</h5>';
-echo '</div>';
-echo '<div class="card-body">';
-echo '<div class="row">';
-echo '<div class="col-md-6">';
-echo '<dl>';
-echo '<dt>' . get_string('name') . '</dt>';
-echo '<dd>' . fullname($applicant) . '</dd>';
-echo '<dt>' . get_string('email') . '</dt>';
-echo '<dd>' . $applicant->email . '</dd>';
-echo '</dl>';
-echo '</div>';
-echo '<div class="col-md-6">';
-echo '<dl>';
-echo '<dt>' . get_string('vacancy', 'local_jobboard') . '</dt>';
-echo '<dd>' . format_string($vacancy->code . ' - ' . $vacancy->title) . '</dd>';
-echo '<dt>' . get_string('status') . '</dt>';
-echo '<dd><span class="badge badge-primary">' .
-    get_string('status_' . $application->status, 'local_jobboard') . '</span></dd>';
-echo '</dl>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
-echo '</div>';
-
-// Existing interviews.
-$interviews = interview::get_for_application($applicationid);
-if (!empty($interviews)) {
-    echo '<div class="card mb-4">';
-    echo '<div class="card-header">';
-    echo '<h5 class="mb-0">' . get_string('scheduledinterviews', 'local_jobboard') . '</h5>';
-    echo '</div>';
-    echo '<div class="card-body">';
-
-    $table = new html_table();
-    $table->head = [
-        get_string('dateandtime', 'local_jobboard'),
-        get_string('type'),
-        get_string('location'),
-        get_string('status'),
-        get_string('result', 'local_jobboard'),
-        get_string('actions'),
-    ];
-    $table->attributes['class'] = 'table table-striped';
-
-    foreach ($interviews as $int) {
-        // Status badge.
-        $statusclass = 'secondary';
-        if ($int->status === 'confirmed') {
-            $statusclass = 'success';
-        } else if ($int->status === 'completed') {
-            $statusclass = 'info';
-        } else if (in_array($int->status, ['cancelled', 'noshow'])) {
-            $statusclass = 'danger';
-        } else if ($int->status === 'rescheduled') {
-            $statusclass = 'warning';
-        }
-
-        // Result.
-        $result = '-';
-        if ($int->status === 'completed' && !empty($int->recommendation)) {
-            $recclass = $int->recommendation === 'hire' ? 'success' :
-                ($int->recommendation === 'reject' ? 'danger' : 'warning');
-            $result = '<span class="badge badge-' . $recclass . '">' .
-                get_string('recommend_' . $int->recommendation, 'local_jobboard') . '</span>';
-            $result .= '<br><small>Rating: ' . $int->rating . '/5</small>';
-        }
-
-        // Actions.
-        $actions = '';
-        if (in_array($int->status, ['scheduled', 'confirmed'])) {
-            $actions .= '<a href="' . new moodle_url('/local/jobboard/schedule_interview.php', [
-                'application' => $applicationid,
-                'id' => $int->id,
-                'action' => 'complete',
-            ]) . '" class="btn btn-sm btn-success mr-1" title="' .
-                get_string('complete') . '"><i class="fa fa-check"></i></a>';
-
-            $actions .= '<a href="' . new moodle_url('/local/jobboard/schedule_interview.php', [
-                'application' => $applicationid,
-                'id' => $int->id,
-                'action' => 'noshow',
-                'sesskey' => sesskey(),
-            ]) . '" class="btn btn-sm btn-warning mr-1" title="' .
-                get_string('noshow', 'local_jobboard') . '" onclick="return confirm(\'' .
-                get_string('confirmnoshow', 'local_jobboard') . '\')"><i class="fa fa-user-times"></i></a>';
-
-            $actions .= '<a href="' . new moodle_url('/local/jobboard/schedule_interview.php', [
-                'application' => $applicationid,
-                'id' => $int->id,
-                'action' => 'cancel',
-                'sesskey' => sesskey(),
-            ]) . '" class="btn btn-sm btn-danger" title="' .
-                get_string('cancel') . '" onclick="return confirm(\'' .
-                get_string('confirmcancel', 'local_jobboard') . '\')"><i class="fa fa-times"></i></a>';
-        }
-
-        $table->data[] = [
-            userdate($int->scheduledtime, get_string('strftimedatetime', 'langconfig')) .
-                '<br><small>' . $int->duration . ' ' . get_string('minutes') . '</small>',
-            get_string('interviewtype_' . $int->interviewtype, 'local_jobboard'),
-            format_string($int->location),
-            '<span class="badge badge-' . $statusclass . '">' .
-                get_string('interviewstatus_' . $int->status, 'local_jobboard') . '</span>',
-            $result,
-            $actions,
-        ];
-    }
-
-    echo html_writer::table($table);
-    echo '</div>';
-    echo '</div>';
-}
-
-// New interview form.
-echo '<div class="card">';
-echo '<div class="card-header">';
-echo '<h5 class="mb-0">' . get_string('schedulenewinterview', 'local_jobboard') . '</h5>';
-echo '</div>';
-echo '<div class="card-body">';
+// Capture form HTML.
+ob_start();
 $mform->display();
-echo '</div>';
-echo '</div>';
+$formhtml = ob_get_clean();
 
+// Render page using renderer + template pattern.
+$renderer = $PAGE->get_renderer('local_jobboard');
+$data = $renderer->prepare_schedule_interview_page_data($applicationid, $applicant, $vacancy, $application, $formhtml);
+
+echo $OUTPUT->header();
+echo $renderer->render_schedule_interview_page($data);
 echo $OUTPUT->footer();
