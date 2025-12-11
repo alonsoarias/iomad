@@ -3,12 +3,14 @@
 Plugin de Moodle para gestión de vacantes académicas y postulaciones docentes.
 Sistema de Bolsa de Empleo para reclutamiento de profesores de cátedra.
 
+---
+
 ## Información del Proyecto
 
 | Campo | Valor |
 |-------|-------|
 | **Componente** | `local_jobboard` |
-| **Versión actual** | 3.0.8 |
+| **Versión actual** | 3.1.x |
 | **Moodle requerido** | 4.1+ (2022112800) |
 | **Moodle soportado** | 4.1 - 4.5 |
 | **Madurez** | MATURITY_STABLE |
@@ -78,9 +80,9 @@ FACULTAD DE INGENIERÍAS E INFORMÁTICA (FII)
 
 ---
 
-## Estado Actual del Plugin (Análisis)
+## Estado Actual del Plugin
 
-### Estructura de Archivos Existente
+### Estructura de Archivos
 
 ```
 local/jobboard/
@@ -88,7 +90,10 @@ local/jobboard/
 ├── lib.php                        # Funciones principales
 ├── settings.php                   # Configuración admin
 ├── version.php                    # Versión del plugin
-├── styles.css                     # Estilos CSS
+├── styles.css                     # Estilos CSS (jb-*)
+├── bulk_validate.php              # Validación masiva
+├── assign_reviewer.php            # Asignación de revisores
+├── migrate.php                    # Exportación de datos
 │
 ├── views/                         # 17 vistas PHP
 │   ├── dashboard.php
@@ -109,10 +114,8 @@ local/jobboard/
 │   ├── public_convocatoria.php
 │   └── public_vacancy.php
 │
-├── templates/                     # ~39 plantillas Mustache
+├── templates/                     # ~39+ plantillas Mustache
 │   ├── dashboard.mustache
-│   ├── dashboard_widget.mustache
-│   ├── application_row.mustache
 │   ├── components/
 │   │   ├── page_header.mustache
 │   │   ├── stat_card.mustache
@@ -122,7 +125,8 @@ local/jobboard/
 │       ├── manage.mustache
 │       ├── apply.mustache
 │       ├── application_detail.mustache
-│       ├── vacancy_detail.mustache
+│       ├── bulk_validate.mustache
+│       ├── assign_reviewer.mustache
 │       └── review.mustache
 │
 ├── amd/                           # ~15 módulos JavaScript
@@ -143,46 +147,56 @@ local/jobboard/
 │
 ├── db/
 │   ├── install.xml                # Esquema de BD
-│   ├── install.php                # Instalación
+│   ├── install.php                # Instalación + doctypes predeterminados
 │   ├── upgrade.php                # Migraciones
-│   ├── access.php                 # ~30 capabilities
+│   ├── access.php                 # ~34 capabilities
 │   ├── services.php               # Web services
 │   └── tours/                     # 15 User Tours JSON
-│       ├── tour_dashboard.json
-│       ├── tour_public.json
-│       ├── tour_convocatorias.json
-│       ├── tour_convocatoria_manage.json
-│       ├── tour_vacancies.json
-│       ├── tour_vacancy.json
-│       ├── tour_manage.json
-│       ├── tour_apply.json
-│       ├── tour_application.json
-│       ├── tour_myapplications.json
-│       ├── tour_documents.json
-│       ├── tour_review.json
-│       ├── tour_myreviews.json
-│       ├── tour_validate_document.json
-│       └── tour_reports.json
 │
 ├── classes/
-│   ├── output/renderer.php
-│   ├── audit.php
-│   ├── document.php
-│   ├── reviewer.php
-│   └── external/api.php
+│   ├── output/renderer.php        # Renderer principal
+│   ├── audit.php                  # Sistema de auditoría
+│   ├── document.php               # Gestión de documentos
+│   ├── reviewer.php               # Asignación de revisores
+│   ├── application.php            # Gestión de postulaciones
+│   ├── bulk_validator.php         # Validación masiva
+│   ├── exemption.php              # Excepciones de documentos
+│   ├── email_template.php         # Plantillas de email
+│   ├── privacy/provider.php       # GDPR/Habeas Data
+│   ├── forms/
+│   │   └── exemption_form.php
+│   └── external/api.php           # Web services API
 │
 ├── cli/
 │   ├── cli.php                    # Importador de perfiles v2.2
-│   └── parse_profiles_v2.php
+│   ├── parse_profiles.php         # Parser de texto
+│   ├── parse_profiles_v2.php      # Parser mejorado
+│   └── import_vacancies.php       # Importador JSON
 │
 ├── admin/                         # Páginas administrativas
 │   ├── doctypes.php
 │   ├── email_templates.php
 │   └── exemptions.php
 │
-└── lang/
-    ├── en/local_jobboard.php      # ~1860 strings
-    └── es/local_jobboard.php      # ~1860 strings
+├── lang/                          # ⚠️ NO EXISTE - CREAR DESDE CERO
+│   ├── en/local_jobboard.php      # ~1860+ strings (PENDIENTE)
+│   └── es/local_jobboard.php      # ~1860+ strings (PENDIENTE)
+```
+
+### Estructura Propuesta: Renderers Fragmentados
+
+```
+classes/output/                    # REFACTORIZACIÓN PENDIENTE
+├── renderer.php                   # Renderer principal (delegador)
+├── renderer_dashboard.php         # Dashboard y widgets
+├── renderer_convocatoria.php      # Vistas de convocatorias
+├── renderer_vacancy.php           # Vistas de vacantes
+├── renderer_application.php       # Vistas de postulaciones
+├── renderer_review.php            # Vistas de revisión
+├── renderer_documents.php         # Validación de documentos
+├── renderer_reports.php           # Reportes y exportaciones
+├── renderer_admin.php             # Páginas administrativas
+└── renderer_public.php            # Vistas públicas
 ```
 
 ### Roles Existentes (3)
@@ -193,7 +207,7 @@ local/jobboard/
 | `jobboard_coordinator` | Coordinador de Selección | view, viewinternal, manage, createvacancy, editvacancy, publishvacancy, viewallvacancies, viewallapplications, changeapplicationstatus, assignreviewers, viewreports, viewevaluations, manageworkflow |
 | `jobboard_committee` | Miembro del Comité | view, viewinternal, evaluate, viewevaluations, downloadanydocument |
 
-### Capabilities Existentes (~30)
+### Capabilities Existentes (~34)
 
 | Grupo | Capabilities |
 |-------|--------------|
@@ -207,187 +221,567 @@ local/jobboard/
 | **Reportes** | `viewreports`, `exportreports`, `exportdata` |
 | **Administración** | `configure`, `managedoctypes`, `manageemailtemplates`, `manageexemptions` |
 
-### Tablas de Base de Datos Existentes
+### Tablas de Base de Datos (~24)
 
-| Tabla | Descripción |
-|-------|-------------|
-| `local_jobboard_convocatoria` | Convocatorias |
-| `local_jobboard_vacancy` | Vacantes |
-| `local_jobboard_application` | Postulaciones |
-| `local_jobboard_document` | Documentos subidos |
-| `local_jobboard_doc_validation` | Validaciones de documentos |
-| `local_jobboard_doctype` | Tipos de documento |
-| `local_jobboard_email_template` | Plantillas de email |
-| `local_jobboard_email_strings` | Strings de email por idioma |
-| `local_jobboard_exemption` | Excepciones por edad |
-| `local_jobboard_config` | Configuración |
-| `local_jobboard_audit` | Auditoría |
-| `local_jobboard_applicant_profile` | Perfiles de postulantes |
-| `local_jobboard_consent` | Consentimientos |
+| Tabla | Descripción | Estado |
+|-------|-------------|--------|
+| `local_jobboard_convocatoria` | Convocatorias | ✅ Implementada |
+| `local_jobboard_vacancy` | Vacantes | ✅ Implementada |
+| `local_jobboard_vacancy_field` | Campos custom de vacantes | ✅ Implementada |
+| `local_jobboard_application` | Postulaciones | ✅ Implementada |
+| `local_jobboard_document` | Documentos subidos | ✅ Implementada |
+| `local_jobboard_doc_validation` | Validaciones de documentos | ✅ Implementada |
+| `local_jobboard_doctype` | Tipos de documento | ✅ Implementada |
+| `local_jobboard_email_template` | Plantillas de email | ✅ Implementada |
+| `local_jobboard_email_strings` | Strings de email por idioma | ✅ Implementada |
+| `local_jobboard_exemption` | Excepciones de documentos | ✅ Implementada |
+| `local_jobboard_config` | Configuración | ✅ Implementada |
+| `local_jobboard_audit` | Auditoría | ✅ Implementada |
+| `local_jobboard_applicant_profile` | Perfiles de postulantes | ✅ Implementada |
+| `local_jobboard_consent` | Consentimientos | ✅ Implementada |
+| `local_jobboard_committee` | Comités de selección | ✅ Implementada |
+| `local_jobboard_committee_member` | Miembros del comité | ✅ Implementada |
+| `local_jobboard_faculty` | Facultades | ✅ Implementada |
+| `local_jobboard_program` | Programas académicos | ✅ Implementada |
+| `local_jobboard_program_reviewer` | Revisores por programa | ✅ Implementada |
+| `local_jobboard_faculty_reviewer` | Revisores por facultad | ✅ Implementada |
+| `local_jobboard_workflow_log` | Log de workflow | ✅ Implementada |
+| `local_jobboard_notification` | Notificaciones | ✅ Implementada |
+| `local_jobboard_interviewer` | Entrevistadores | ✅ Implementada |
+| `local_jobboard_evaluation` | Evaluaciones | ✅ Implementada |
 
 ---
 
-## ⚠️ PROBLEMAS IDENTIFICADOS Y REFACTORIZACIONES REQUERIDAS
+## ✅ FUNCIONALIDADES IMPLEMENTADAS
+
+### Core del Sistema
+- [x] Gestión completa de convocatorias (CRUD)
+- [x] Gestión de vacantes con campos personalizados
+- [x] Sistema de postulaciones
+- [x] Carga y gestión de documentos
+- [x] Validación manual de documentos con checklist
+- [x] Validación masiva (bulk_validate.php)
+- [x] Asignación de revisores (assign_reviewer.php)
+- [x] Asignación automática por carga de trabajo
+- [x] Sistema de estados de postulación
+- [x] Notificaciones por email
+- [x] Plantillas de email personalizables por company
+- [x] Dashboard adaptativo por rol
+- [x] Vista pública de convocatorias
+- [x] Sistema de auditoría
+
+### Estructura Organizacional
+- [x] Integración IOMAD multi-tenant
+- [x] Comités por facultad (companyid)
+- [x] Revisores por programa (categoryid)
+- [x] Tablas faculty y program
+- [x] Estructura de 4 niveles IOMAD
+
+### Documentos
+- [x] 20+ tipos de documento predefinidos
+- [x] Categorías: identification, academic, employment, legal, financial, health
+- [x] Checklist de verificación por tipo
+- [x] URLs externas para descarga
+- [x] Excepciones ISER (historico_iser, documentos_recientes, traslado_interno, recontratacion)
+- [x] Condiciones por género (libreta militar)
+- [x] Excepciones por profesión
+- [x] Fechas de vencimiento configurables
+
+### CLI
+- [x] Importador de perfiles desde texto (cli.php v2.2)
+- [x] Creación automática de estructura IOMAD
+- [x] Importación desde JSON y CSV
+- [x] Parser de perfiles DOCX/texto
+- [x] Exportación a JSON
+
+### Cumplimiento Normativo
+- [x] Privacy API (GDPR)
+- [x] Ley 1581/2012 Habeas Data (Colombia)
+- [x] Exportación de datos personales
+- [x] Eliminación de datos personales
+- [x] Anonimización de logs de auditoría
+
+---
+
+## ⚠️ PROBLEMAS IDENTIFICADOS Y PENDIENTES DE RESOLUCIÓN
 
 ### 1. MEZCLA DE CLASES CSS (Bootstrap + jb-*)
 
-**PROBLEMA:** Los templates Mustache actuales mezclan clases Bootstrap con clases propias `jb-*`.
+**ESTADO:** 🔴 Pendiente de auditoría completa
 
-**Ejemplo del estado actual en `dashboard.mustache`:**
-```html
-<!-- PROBLEMA: Mezcla de Bootstrap y jb-* -->
-<div class="card shadow-sm mb-4">           <!-- Bootstrap -->
-    <div class="card-header bg-light">      <!-- Bootstrap -->
-        <div class="jb-stat-card">          <!-- Propio -->
+**PROBLEMA:** Algunos templates Mustache aún mezclan clases Bootstrap con clases propias `jb-*`.
+
+**CLASES BOOTSTRAP A ELIMINAR:**
 ```
-
-**Clases Bootstrap usadas actualmente (ELIMINAR):**
-- Layout: `row`, `col-*`, `col-md-*`, `col-lg-*`, `mb-*`, `mt-*`, `p-*`
-- Cards: `card`, `card-header`, `card-body`, `card-footer`, `shadow-sm`
-- Botones: `btn`, `btn-primary`, `btn-secondary`, `btn-outline-*`, `btn-sm`, `btn-lg`, `btn-block`, `btn-group`
-- Tablas: `table`, `table-hover`, `table-responsive`, `thead-light`
-- Badges: `badge`, `badge-*`
-- Alertas: `alert`, `alert-*`, `alert-dismissible`
-- Formularios: `form-control`, `form-group`, `form-row`, `input-group`
-- Texto: `text-muted`, `text-primary`, `text-*`, `font-weight-*`
-- Utilidades: `d-flex`, `d-none`, `justify-content-*`, `align-items-*`
-- Otros: `list-group`, `list-group-item`, `progress`, `progress-bar`
+Layout: row, col-*, mb-*, mt-*, p-*
+Cards: card, card-header, card-body, shadow-sm
+Botones: btn, btn-primary, btn-secondary, btn-outline-*
+Tablas: table, table-hover, table-responsive, thead-light
+Badges: badge, badge-*
+Alertas: alert, alert-*
+Formularios: form-control, form-group
+Texto: text-muted, text-primary, font-weight-*
+Utilidades: d-flex, d-none, justify-content-*, align-items-*
+```
 
 **ACCIÓN REQUERIDA:**
 1. Auditar TODOS los templates Mustache
-2. Crear clases `jb-*` equivalentes para cada clase Bootstrap
-3. Reemplazar sistemáticamente en cada template
-4. Actualizar `styles.css` con el sistema CSS personalizado completo
+2. Listar clases Bootstrap usadas por archivo
+3. Crear equivalentes `jb-*` en styles.css
+4. Migrar sistemáticamente
+5. Probar en themes: Boost, Classic, Remui, Flavor
 
 ### 2. USER TOURS CON SELECTORES OBSOLETOS
 
-**PROBLEMA:** Los 15 tours existentes usan selectores que mezclan Bootstrap y clases propias.
+**ESTADO:** 🔴 Requiere recreación completa
 
-**Ejemplo de selectores problemáticos encontrados:**
-```json
-// tour_manage.json - Selectores actuales
-".table.table-hover"        // Bootstrap
-".thead-light"              // Bootstrap  
-".badge"                    // Bootstrap
-".btn-group.btn-group-sm"   // Bootstrap
-".card.shadow-sm"           // Bootstrap
+**PROBLEMA:** Los 15 tours existentes usan selectores que pueden no coincidir con la interfaz actual.
+
+**TOURS A RECREAR:**
+```
+tour_dashboard.json
+tour_public.json
+tour_convocatorias.json
+tour_convocatoria_manage.json
+tour_vacancies.json
+tour_vacancy.json
+tour_manage.json
+tour_apply.json
+tour_application.json
+tour_myapplications.json
+tour_documents.json
+tour_review.json
+tour_myreviews.json
+tour_validate_document.json
+tour_reports.json
 ```
 
 **ACCIÓN REQUERIDA:**
-1. RECREAR COMPLETAMENTE los 15 tours
-2. Usar SOLO selectores con clases `jb-*`
-3. Validar cada selector con DevTools antes de implementar
-4. Probar cada tour paso a paso en la interfaz
+1. Eliminar todos los tours existentes
+2. Validar selectores con DevTools
+3. Recrear tours con selectores `jb-*`
+4. Probar cada tour paso a paso
 
-### 3. ROLES SIN CONTEXTO DE FACULTAD/PROGRAMA
+### 3. MÓDULOS AMD CON DEPENDENCIAS PROBLEMÁTICAS
 
-**PROBLEMA:** Los roles actuales son globales (CONTEXT_SYSTEM) y no contemplan:
-- Asignación de revisores por PROGRAMA
-- Comités de selección por FACULTAD
-- Filtrado de postulaciones según contexto del usuario
-
-**ACCIÓN REQUERIDA:**
-1. RECREAR los 3 roles existentes con nueva lógica
-2. Crear tablas de asignación por facultad/programa
-3. Implementar filtrado de datos según contexto
-4. Actualizar capabilities en `db/access.php`
-
-### 4. TABLAS FALTANTES PARA NUEVA LÓGICA
-
-**PROBLEMA:** No existen tablas para soportar la estructura de facultades/programas.
-
-**TABLAS A CREAR:**
-```
-local_jobboard_faculty           # Facultades (FCAS, FII)
-local_jobboard_program           # Programas por facultad
-local_jobboard_committee         # Comités por facultad y convocatoria
-local_jobboard_committee_member  # Miembros del comité
-local_jobboard_reviewer_program  # Asignación de revisores por programa
-```
-
-### 5. MÓDULOS AMD CON DEPENDENCIAS PROBLEMÁTICAS
+**ESTADO:** 🟡 Requiere auditoría
 
 **PROBLEMA:** Algunos módulos AMD dependen de jQuery y Bootstrap JS.
 
-**Módulos a revisar:**
+**MÓDULOS A REVISAR:**
 - `tooltips.js` - Usa `$(selector).tooltip()` de Bootstrap
 - `public_filters.js` - Usa jQuery directamente
 - `review_ui.js` - Inicializa tooltips Bootstrap
 
 **ACCIÓN REQUERIDA:**
 1. Auditar cada módulo AMD
-2. Reemplazar `$(selector).tooltip()` por solución propia o core de Moodle
-3. Minimizar uso de jQuery donde sea posible
-4. Usar módulos core de Moodle: `core/ajax`, `core/notification`, `core/templates`
+2. Reemplazar `$(selector).tooltip()` por core/tooltip de Moodle
+3. Minimizar uso de jQuery
+4. Usar módulos core: `core/ajax`, `core/notification`, `core/templates`
+5. Compilar con `grunt amd --root=local/jobboard`
+
+### 5. RENDERER.PHP DEMASIADO GRANDE
+
+**ESTADO:** 🟡 Requiere refactorización
+
+**PROBLEMA:** El archivo `classes/output/renderer.php` está creciendo demasiado y se vuelve difícil de mantener. Contiene métodos para todas las vistas del plugin en un solo archivo.
+
+**ESTRATEGIA DE FRAGMENTACIÓN:**
+
+Dividir el renderer en múltiples clases especializadas por área funcional:
+
+```
+classes/output/
+├── renderer.php                    # Renderer principal (delegador)
+├── renderer_dashboard.php          # Dashboard y widgets
+├── renderer_convocatoria.php       # Vistas de convocatorias
+├── renderer_vacancy.php            # Vistas de vacantes
+├── renderer_application.php        # Vistas de postulaciones
+├── renderer_review.php             # Vistas de revisión
+├── renderer_documents.php          # Validación de documentos
+├── renderer_reports.php            # Reportes y exportaciones
+├── renderer_admin.php              # Páginas administrativas
+└── renderer_public.php             # Vistas públicas
+```
+
+**IMPLEMENTACIÓN PROPUESTA:**
+
+1. **Renderer Principal (delegador):**
+```php
+class renderer extends plugin_renderer_base {
+    
+    protected function get_dashboard_renderer(): renderer_dashboard {
+        return new renderer_dashboard($this->page, $this->target);
+    }
+    
+    protected function get_review_renderer(): renderer_review {
+        return new renderer_review($this->page, $this->target);
+    }
+    
+    // Métodos públicos delegan a renderers especializados
+    public function render_dashboard($data) {
+        return $this->get_dashboard_renderer()->render($data);
+    }
+    
+    public function render_review_page($data) {
+        return $this->get_review_renderer()->render($data);
+    }
+}
+```
+
+2. **Renderer Especializado (ejemplo):**
+```php
+class renderer_dashboard extends plugin_renderer_base {
+    
+    public function render($data): string {
+        return $this->render_from_template('local_jobboard/pages/dashboard', $data);
+    }
+    
+    public function prepare_dashboard_data(int $userid, \context $context): array {
+        // Toda la lógica de preparación de datos del dashboard
+    }
+    
+    protected function prepare_admin_stats(): array { ... }
+    protected function prepare_reviewer_stats(): array { ... }
+    protected function prepare_applicant_stats(): array { ... }
+}
+```
+
+**BENEFICIOS:**
+- Archivos más pequeños y manejables (<500 líneas cada uno)
+- Mejor organización por área funcional
+- Facilita trabajo en paralelo
+- Testing más sencillo por módulo
+- Reducción de conflictos en control de versiones
+
+**FASES DE MIGRACIÓN:**
+1. Crear estructura de archivos vacíos
+2. Extraer métodos de dashboard → renderer_dashboard.php
+3. Extraer métodos de review → renderer_review.php
+4. Continuar con cada área
+5. Actualizar renderer.php para delegar
+6. Probar cada vista afectada
+7. Eliminar código duplicado del renderer principal
+
+**ARCHIVOS AFECTADOS:**
+- `classes/output/renderer.php` (refactorizar)
+- Todas las vistas que usan `$PAGE->get_renderer('local_jobboard')`
 
 ### 6. VISTAS PHP CON HTML DIRECTO
 
-**PROBLEMA:** Algunas vistas PHP generan HTML directamente en lugar de usar templates.
+**ESTADO:** 🟡 Parcialmente resuelto
 
-**Ejemplo encontrado en `view_convocatoria.php`:**
-```php
-// HTML directo mezclado con lógica
-echo html_writer::start_div('card shadow-sm mb-4');
-echo html_writer::tag('div', $content, ['class' => 'card-header bg-light']);
-```
+**PROBLEMA:** Algunas vistas PHP generan HTML directamente con `html_writer`.
+
+**VISTAS A REVISAR:**
+- `view_convocatoria.php`
+- `vacancy.php`
+- `application.php`
 
 **ACCIÓN REQUERIDA:**
-1. Identificar secciones con HTML directo en cada vista
+1. Identificar secciones con HTML directo
 2. Crear templates Mustache correspondientes
-3. Usar renderer para pasar datos a templates
+3. Usar renderer para pasar datos
 4. Eliminar `html_writer` con clases Bootstrap
 
 ---
 
-## Reglas de Negocio Críticas
+## 🔧 DESARROLLO PENDIENTE
 
-### Organización por Facultad (NUEVA LÓGICA)
+### Prioridad Alta
 
-1. **Vacantes separadas por facultad** - Las vacantes se organizan y filtran por facultad
-2. **Comité de selección por FACULTAD** - NO por vacante. Cada facultad tiene su propio comité
-3. **Revisores asignados por PROGRAMA** - Los revisores de documentos se asignan a nivel de programa académico
+#### 1. Interfaz de Revisión de Documentos (estilo mod_assign)
 
-### Creación de Comité de Selección
+**DESCRIPCIÓN:** Crear interfaz de revisión similar a mod_assign para validar documentos.
 
-- Al crear el comité, debe permitir **buscar/filtrar usuarios por username**
-- El comité evalúa TODAS las vacantes de su facultad
-- Un usuario puede pertenecer a comités de diferentes facultades
+**CARACTERÍSTICAS:**
+- Panel lateral con lista de documentos
+- Vista previa del documento (PDF viewer)
+- Checklist de verificación interactivo
+- Aprobación/rechazo con un clic
+- Navegación entre documentos sin recargar
+- Contador de progreso
+- Atajos de teclado
 
-### Convocatorias
+**ARCHIVOS A CREAR:**
+```
+views/review_document.php
+templates/pages/review_document.mustache
+amd/src/review_document.js
+classes/review_interface.php
+```
 
-- **PDF adjunto obligatorio:** Al crear la convocatoria se debe cargar un PDF con el detalle completo
-- **Descripción breve:** Campo de texto para resumen de la convocatoria
-- **Botón de acceso al PDF:** Visible en la vista de la convocatoria
+#### 2. Excepciones Globales (no por usuario)
 
-### Formulario de Postulación PERSONALIZABLE
+**DESCRIPCIÓN:** Rediseñar el sistema de excepciones para que sean globales y se activen por convocatoria.
 
-El formulario de postulación debe ser completamente configurable desde la administración:
+**ESTADO ACTUAL:** Excepciones se asignan a usuarios individuales
+**ESTADO DESEADO:** Excepciones definidas globalmente, activadas por convocatoria
 
-| Atributo | Descripción |
-|----------|-------------|
-| **Tipo** | `archivo` (documento a cargar) o `texto` (campo a diligenciar) |
-| **Obligatoriedad** | `obligatorio` u `opcional` |
-| **Estado** | `activo` o `inactivo` |
-| **Orden** | Posición en el formulario |
+**CAMPOS A AGREGAR:**
+```sql
+-- En local_jobboard_exemption
+convocatoriaid INT(10) NULL -- NULL = todas las convocatorias
+is_global INT(1) DEFAULT 0 -- 1 = aplica a todos los usuarios elegibles
+criteria JSON -- criterios de elegibilidad (edad, etc.)
+```
 
-**Nota:** La Carta de Intención es un campo de TEXTO, NO es un archivo a cargar.
+**LÓGICA:**
+- Excepción edad 50+ años: Automática si fecha_nacimiento >= 50 años
+- Excepción libreta militar: Solo hombres < 50 años la requieren
+- Excepciones ISER: Por tipo (historico_iser, documentos_recientes, etc.)
 
-### Postulaciones
+#### 3. Plantillas de Email con Preview en Tiempo Real
 
-- **Límite:** Un postulante solo puede aplicar a UNA vacante por convocatoria
-- **Experiencia ocasional:** Docentes ocasionales requieren 2 años de experiencia laboral equivalente
+**DESCRIPCIÓN:** Editor de plantillas de email con vista previa.
 
-### Excepciones por Edad (50+ años)
+**CARACTERÍSTICAS:**
+- Editor WYSIWYG para body
+- Lista de variables disponibles con descripción
+- Preview con datos de ejemplo
+- Duplicar plantillas por company
+- Historial de cambios
 
-- Según legislación colombiana, personas ≥50 años están exentas de ciertos documentos
-- Excepción principal: Libreta Militar
-- Las excepciones son GLOBALES, definidas en admin y activadas por convocatoria
+**ARCHIVOS A CREAR:**
+```
+templates/pages/email_template_editor.mustache
+amd/src/email_template_editor.js
+classes/forms/email_template_form.php
+```
 
-### Validación de Documentos
+#### 4. Reportes Filtrados por Convocatoria
 
-- La verificación es **100% MANUAL** - NO existe verificación automática
-- Cada tipo de documento tiene su checklist de verificación
-- Documentos rechazados pueden recargarse con observaciones enviadas por email
+**DESCRIPCIÓN:** Todos los reportes deben filtrarse obligatoriamente por convocatoria.
+
+**REPORTES A ACTUALIZAR:**
+- Postulaciones por estado
+- Documentos pendientes
+- Carga de trabajo de revisores
+- Estadísticas de vacantes
+- Exportación de datos
+
+**LÓGICA:**
+- Selector de convocatoria obligatorio en cada reporte
+- No mostrar datos sin convocatoria seleccionada
+- Opción "Todas las convocatorias" solo para administradores
+
+### Prioridad Media
+
+#### 5. CLI para Procesar PDFs de PERFILESPROFESORES
+
+**DESCRIPCIÓN:** Mejorar CLI para procesar PDFs grandes dividiéndolos.
+
+**CARACTERÍSTICAS:**
+- Dividir PDFs > 2 páginas en segmentos de 2 páginas
+- Usar pdftotext o similar para extracción
+- Guardar archivos intermedios
+- Log detallado del proceso
+
+**UBICACIÓN:** `/cli/process_pdfs.php`
+
+#### 6. Búsqueda de Usuarios por Username en Comités
+
+**DESCRIPCIÓN:** Al crear comités, permitir buscar usuarios por username además de nombre.
+
+**IMPLEMENTACIÓN:**
+- Autocomplete con búsqueda en: username, firstname, lastname, email
+- Mostrar: "username - Nombre Completo (email)"
+- Filtrar solo usuarios con capability `local/jobboard:evaluate`
+
+#### 7. Widget de Dashboard para Revisores
+
+**DESCRIPCIÓN:** Crear widget específico para el dashboard de revisores.
+
+**CONTENIDO:**
+- Documentos pendientes de revisar
+- Tiempo promedio de revisión
+- Documentos revisados hoy/semana
+- Acceso rápido a mis revisiones
+
+#### 8. Cadenas de Idiomas (Language Strings)
+
+**ESTADO:** 🔴 NO EXISTEN - Crear desde cero
+
+**DESCRIPCIÓN:** Los archivos de idioma del plugin NO EXISTEN. Se deben crear completamente desde cero para todas las funcionalidades del plugin.
+
+**ARCHIVOS A CREAR:**
+```
+lang/en/local_jobboard.php    # Inglés (obligatorio)
+lang/es/local_jobboard.php    # Español (obligatorio para ISER)
+```
+
+**ESTRUCTURA BASE DEL ARCHIVO:**
+```php
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Language strings for local_jobboard.
+ *
+ * @package   local_jobboard
+ * @copyright 2025 ISER - Instituto Superior de Educación Rural
+ * @author    Alonso Arias <soporteplataformas@iser.edu.co>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+// Plugin name and general.
+$string['pluginname'] = 'Job Board';
+$string['pluginname_desc'] = 'Job board system for teacher recruitment';
+// ... continuar con TODAS las strings
+```
+
+**CATEGORÍAS DE STRINGS A CREAR (~1860+ strings):**
+
+| Categoría | Cantidad Estimada | Descripción |
+|-----------|-------------------|-------------|
+| General/Plugin | ~50 | pluginname, settings, navigation |
+| Capabilities | ~34 | Una por cada capability |
+| Roles | ~10 | Nombres y descripciones de roles |
+| Convocatorias | ~80 | CRUD, estados, filtros |
+| Vacantes | ~100 | CRUD, estados, campos |
+| Postulaciones | ~120 | Estados, acciones, mensajes |
+| Documentos | ~150 | Tipos, validación, checklist |
+| Revisión | ~80 | Interfaz, acciones, estados |
+| Comités | ~50 | Gestión, miembros |
+| Reportes | ~60 | Títulos, filtros, exportación |
+| Email Templates | ~100 | Plantillas, variables, preview |
+| Excepciones | ~40 | Tipos, gestión |
+| Auditoría | ~30 | Acciones, logs |
+| Errores | ~150 | Mensajes de error y validación |
+| Formularios | ~200 | Labels, placeholders, help |
+| Dashboard | ~80 | Widgets, estadísticas |
+| User Tours | ~200 | Títulos y contenido de tours |
+| Privacy API | ~50 | Metadata GDPR |
+| CLI | ~30 | Mensajes del importador |
+| Misceláneos | ~200 | Botones, confirmaciones, etc. |
+
+**STRINGS CRÍTICAS INICIALES (crear primero):**
+```php
+// Plugin identification
+$string['pluginname'] = 'Job Board';
+$string['jobboard:view'] = 'View job board';
+$string['jobboard:manage'] = 'Manage job board';
+$string['jobboard:apply'] = 'Apply to vacancies';
+// ... todas las capabilities
+
+// Navigation
+$string['dashboard'] = 'Dashboard';
+$string['convocatorias'] = 'Convocatorias';
+$string['vacancies'] = 'Vacancies';
+$string['applications'] = 'Applications';
+$string['myapplications'] = 'My applications';
+$string['review'] = 'Review';
+$string['reports'] = 'Reports';
+
+// Status strings
+$string['status_draft'] = 'Draft';
+$string['status_published'] = 'Published';
+$string['status_closed'] = 'Closed';
+$string['status_submitted'] = 'Submitted';
+$string['status_under_review'] = 'Under review';
+$string['status_docs_validated'] = 'Documents validated';
+$string['status_docs_rejected'] = 'Documents rejected';
+$string['status_selected'] = 'Selected';
+$string['status_rejected'] = 'Rejected';
+$string['status_waitlist'] = 'Waitlist';
+```
+
+**REGLA CRÍTICA:** 
+- NINGUNA string hardcodeada en PHP o templates
+- TODA funcionalidad requiere strings EN + ES
+- Mantener paridad absoluta entre archivos de idioma
+- Usar `get_string('key', 'local_jobboard')` SIEMPRE
+
+#### 9. Documentación del Plugin
+
+**ESTADO:** 🔴 Desactualizada
+
+**DESCRIPCIÓN:** La documentación interna del plugin necesita actualizarse con la información de contacto correcta y reflejar el estado actual del desarrollo.
+
+**ARCHIVOS A ACTUALIZAR:**
+```
+README.md
+CHANGELOG.md
+version.php (phpdoc header)
+Todos los archivos PHP (phpdoc @author, @copyright)
+```
+
+**INFORMACIÓN DE CONTACTO A USAR:**
+```
+Autor: Alonso Arias
+Email: soporteplataformas@iser.edu.co
+Institución: ISER (Instituto Superior de Educación Rural)
+Supervisión: Vicerrectoría Académica ISER
+Ubicación: Pamplona, Norte de Santander, Colombia
+```
+
+**FORMATO PHPDOC ESTÁNDAR:**
+```php
+/**
+ * [Descripción del archivo]
+ *
+ * @package   local_jobboard
+ * @copyright 2025 ISER - Instituto Superior de Educación Rural
+ * @author    Alonso Arias <soporteplataformas@iser.edu.co>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+```
+
+**ACCIÓN REQUERIDA:**
+1. Actualizar headers en TODOS los archivos PHP
+2. Crear/actualizar README.md con descripción completa
+3. Mantener CHANGELOG.md actualizado con cada cambio
+4. Documentar cada clase y método público
+
+### Prioridad Baja
+
+#### 10. Tests PHPUnit
+
+**ESTADO:** 🔴 No implementados
+
+**TESTS A CREAR:**
+```
+tests/application_test.php
+tests/document_test.php
+tests/vacancy_test.php
+tests/exemption_test.php
+tests/workflow_test.php
+tests/privacy_provider_test.php
+```
+
+#### 11. Web Services API Completa
+
+**ESTADO:** 🟡 Parcialmente implementada
+
+**ENDPOINTS PENDIENTES:**
+- `get_convocatorias`
+- `get_vacancies`
+- `get_application_status`
+- `submit_application`
+- `upload_document`
+- `get_my_applications`
+
+#### 12. Integración con Calendario Moodle
+
+**DESCRIPCIÓN:** Crear eventos de calendario para:
+- Fecha límite de postulación
+- Fecha de entrevista
+- Recordatorios de documentos pendientes
 
 ---
 
@@ -438,122 +832,204 @@ El formulario de postulación debe ser completamente configurable desde la admin
          │              │                          ▼              │
          │              │                  [Vuelve a under_review]
          │              │
-         │              │ [Pasa a comité de la facultad]
-         │              ▼                            │
-         │       ┌─────────────┐                     │
-         │       │ interview   │◄────────────────────┤
-         │       └──────┬──────┘                     │
-         │              │                            ▼
-         │              │                     ┌─────────────┐
-         │              │                     │ Comité      │
-         │              │                     │ evalúa      │
-         │              │                     └──────┬──────┘
-         │              │                            │
-         │              │              ┌─────────────┴─────────────┐
-         │              │              ▼                           ▼
-         │              │       ┌─────────────────┐        ┌─────────────────┐
-         │              │       │ selected        │        │ rejected        │
-         │              │       └─────────────────┘        └─────────────────┘
-         ▼              ▼
-   [Email de     [Email de
-   notificación] notificación]
+         │              ▼
+         │       ┌─────────────────┐
+         │       │ interview       │──────────────────────────────┤
+         │       │ (si aplica)     │                              │
+         │       └────────┬────────┘                              │
+         │                │                                       │
+         │                ▼                                       ▼
+         │       ┌─────────────────┐                    ┌──────────────┐
+         │       │ Comité evalúa   │◄───────────────────│ Comité de    │
+         │       │ candidatos      │                    │ Facultad     │
+         │       └────────┬────────┘                    └──────────────┘
+         │                │
+         │     ┌──────────┼──────────┐
+         │     ▼          ▼          ▼
+         │ ┌────────┐ ┌────────┐ ┌────────┐
+         │ │selected│ │waitlist│ │rejected│
+         │ └────────┘ └────────┘ └────────┘
 ```
 
-### Estados y Transiciones
+---
 
-| Estado Actual | Estados Siguientes | Quién Ejecuta |
-|---------------|-------------------|---------------|
-| `draft` | `submitted` | Postulante |
-| `submitted` | `under_review`, `withdrawn` | Sistema, Postulante |
-| `under_review` | `docs_validated`, `docs_rejected` | Revisor |
-| `docs_validated` | `interview`, `rejected` | Comité, Coordinador |
-| `docs_rejected` | `under_review`, `withdrawn` | Sistema, Postulante |
-| `interview` | `selected`, `rejected` | Comité |
-| `selected` | (estado final) | - |
-| `rejected` | (estado final) | - |
-| `withdrawn` | (estado final) | - |
+## Reglas de Negocio Críticas
+
+### Organización por Facultad
+
+1. **Vacantes separadas por facultad** - Las vacantes se organizan y filtran por facultad
+2. **Comité de selección por FACULTAD** - NO por vacante. Cada facultad tiene su propio comité
+3. **Revisores asignados por PROGRAMA** - Los revisores de documentos se asignan a nivel de programa académico
+
+### Convocatorias
+
+- **PDF adjunto obligatorio:** Al crear la convocatoria se debe cargar un PDF con el detalle completo
+- **Descripción breve:** Campo de texto para resumen de la convocatoria
+- **Términos y condiciones:** HTML con condiciones legales
+
+### Formulario de Postulación PERSONALIZABLE
+
+| Atributo | Descripción |
+|----------|-------------|
+| **Tipo** | `file` (documento) o `text` (campo de texto) |
+| **input_type** | file, text, textarea, select |
+| **Obligatoriedad** | Campo `required` en doctype |
+| **Estado** | `enabled` activo/inactivo |
+| **Orden** | `sortorder` posición en formulario |
+
+**Nota:** La Carta de Intención es un campo de TEXTO, NO es un archivo.
+
+### Postulaciones
+
+- **Límite:** Un postulante solo puede aplicar a UNA vacante por convocatoria
+- **Experiencia ocasional:** Docentes ocasionales requieren 2 años de experiencia laboral equivalente
+
+### Excepciones de Documentos
+
+- **Tipos:** historico_iser, documentos_recientes, traslado_interno, recontratacion
+- **Documentos eximibles:** Los marcados con `iserexempted = 1`
+- **Excepciones por edad:** Personas ≥50 años exentas de libreta militar
+- **Excepciones por género:** Libreta militar solo para hombres
+
+### Validación de Documentos
+
+- La verificación es **100% MANUAL** - NO existe verificación automática
+- Cada tipo de documento tiene su checklist de verificación
+- Documentos rechazados pueden recargarse con observaciones enviadas por email
+- Razones de rechazo: illegible, expired, incomplete, wrongtype, mismatch
 
 ---
 
-## Sistema CSS Personalizado (IMPLEMENTAR)
+## Plan de Implementación por Fases
 
-### Regla Fundamental
+### Fase 1: Auditoría CSS
+1. Crear script de auditoría de clases Bootstrap
+2. Listar TODAS las clases Bootstrap usadas por archivo
+3. Crear sistema CSS completo con clases `jb-*` en `styles.css`
+4. Migrar templates uno por uno
+5. Probar en themes: Boost, Classic, Remui, Flavor
 
-**ELIMINAR TODA DEPENDENCIA DE BOOTSTRAP.** El plugin debe usar SOLO clases con prefijo `jb-*`.
-
-### Categorías de Clases a Crear
-
-| Categoría | Prefijo | Clases Ejemplo |
-|-----------|---------|----------------|
-| Variables | `--jb-*` | `--jb-primary`, `--jb-spacing-md` |
-| Layout | `jb-container`, `jb-row`, `jb-col-*` | `jb-col-6`, `jb-col-lg-4` |
-| Cards | `jb-card`, `jb-card-*` | `jb-card-header`, `jb-card-body` |
-| Botones | `jb-btn`, `jb-btn-*` | `jb-btn-primary`, `jb-btn-sm` |
-| Tablas | `jb-table`, `jb-table-*` | `jb-table-hover`, `jb-table-striped` |
-| Badges | `jb-badge`, `jb-badge-*` | `jb-badge-success`, `jb-badge-warning` |
-| Alertas | `jb-alert`, `jb-alert-*` | `jb-alert-info`, `jb-alert-danger` |
-| Formularios | `jb-form-*` | `jb-form-control`, `jb-form-group` |
-| Modal | `jb-modal`, `jb-modal-*` | `jb-modal-header`, `jb-modal-body` |
-| Utilidades | `jb-d-*`, `jb-text-*`, `jb-mt-*` | `jb-d-flex`, `jb-text-muted` |
-
----
-
-## Prioridades de Refactorización
-
-### Fase 1: CSS y Templates
-1. Crear sistema CSS completo con clases `jb-*` en `styles.css`
-2. Auditar y listar TODAS las clases Bootstrap usadas en templates
-3. Migrar templates uno por uno, empezando por componentes reutilizables
-4. Probar en themes: Boost, Classic, Remui, Flavor
-
-### Fase 2: Roles y Permisos
-1. Crear tablas: `faculty`, `program`, `committee`, `committee_member`, `reviewer_program`
-2. Recrear roles con nueva estructura
-3. Implementar asignación por facultad/programa
-4. Actualizar `db/upgrade.php` para migración
-
-### Fase 3: Flujos de Trabajo
-1. Crear clase `workflow.php` con máquina de estados
-2. Implementar validadores para cada transición
-3. Integrar con sistema de auditoría
-4. Actualizar notificaciones por email
-
-### Fase 4: Módulos AMD
-1. Auditar dependencias de Bootstrap JS
-2. Reemplazar `$(selector).tooltip()` por solución propia
-3. Usar módulos core de Moodle
-4. Compilar con `grunt amd --root=local/jobboard`
-
-### Fase 5: User Tours
+### Fase 2: User Tours
 1. Eliminar todos los tours existentes
-2. Crear nuevos tours con selectores `jb-*`
-3. Validar selectores con DevTools
+2. Documentar selectores actuales con DevTools
+3. Crear nuevos tours con selectores `jb-*`
 4. Probar cada tour completo
 
+### Fase 3: Interfaz de Revisión
+1. Diseñar interfaz estilo mod_assign
+2. Crear templates y AMD
+3. Implementar navegación sin recarga
+4. Agregar atajos de teclado
+
+### Fase 4: Excepciones Globales
+1. Modificar esquema de BD
+2. Crear interfaz de gestión
+3. Implementar lógica de elegibilidad automática
+4. Migrar excepciones existentes
+
+### Fase 5: Plantillas Email con Preview
+1. Crear editor con variables
+2. Implementar preview en tiempo real
+3. Agregar historial de cambios
+
+### Fase 6: Reportes por Convocatoria
+1. Modificar todas las vistas de reportes
+2. Agregar filtro obligatorio
+3. Actualizar exportaciones
+
+### Fase 7: Cadenas de Idiomas (CREAR DESDE CERO)
+1. Crear archivo `lang/en/local_jobboard.php` con estructura base
+2. Crear archivo `lang/es/local_jobboard.php` con estructura base
+3. Documentar TODAS las strings existentes en el código
+4. Crear strings para capabilities (~34)
+5. Crear strings para roles (~10)
+6. Crear strings para estados y acciones (~200)
+7. Crear strings para formularios y validación (~300)
+8. Crear strings para mensajes de error (~150)
+9. Crear strings para User Tours (~200)
+10. Crear strings para Privacy API (~50)
+11. Crear strings para CLI (~30)
+12. Validar paridad absoluta EN/ES (~1860+ strings totales)
+13. Eliminar TODA string hardcodeada en PHP y templates
+
+### Fase 8: Refactorización del Renderer
+1. Analizar renderer.php actual y documentar todos los métodos
+2. Crear estructura de archivos para renderers especializados
+3. Extraer `renderer_dashboard.php` (dashboard y widgets)
+4. Extraer `renderer_convocatoria.php` (vistas de convocatorias)
+5. Extraer `renderer_vacancy.php` (vistas de vacantes)
+6. Extraer `renderer_application.php` (vistas de postulaciones)
+7. Extraer `renderer_review.php` (vistas de revisión)
+8. Extraer `renderer_documents.php` (validación de documentos)
+9. Extraer `renderer_reports.php` (reportes)
+10. Extraer `renderer_admin.php` (páginas administrativas)
+11. Extraer `renderer_public.php` (vistas públicas)
+12. Actualizar renderer.php como delegador
+13. Probar TODAS las vistas afectadas
+14. Actualizar documentación
+
+### Fase 9: Documentación del Plugin
+1. Actualizar headers PHPDoc en TODOS los archivos PHP
+2. Crear/actualizar README.md completo
+3. Mantener CHANGELOG.md al día
+4. Documentar clases y métodos públicos
+5. Actualizar información de contacto en version.php
+
 ---
 
-## Análisis del Repositorio (OBLIGATORIO)
+## Comandos Útiles
 
-Antes de implementar cualquier cambio, el agente DEBE analizar:
+| Comando | Propósito |
+|---------|-----------|
+| `php admin/cli/upgrade.php` | Ejecutar migraciones de BD |
+| `php admin/cli/purge_caches.php` | Limpiar caché de Moodle |
+| `grunt amd --root=local/jobboard` | Compilar JavaScript AMD |
+| `php local/jobboard/cli/cli.php --help` | Ver ayuda del importador |
+| `php local/jobboard/cli/cli.php --create-structure --publish --public` | Importación completa |
+| `vendor/bin/phpunit --testsuite local_jobboard_testsuite` | Ejecutar tests |
+| `php admin/tool/phpcs/cli/run.php --standard=moodle local/jobboard` | Validar código |
 
+### Comandos de Auditoría CSS
+
+```bash
+# Buscar clases Bootstrap en templates
+grep -r "class=\"[^\"]*\b\(card\|btn\|alert\|badge\|table\|form-\)" templates/
+
+# Buscar html_writer con clases Bootstrap
+grep -r "html_writer" views/ | grep -i "card\|btn\|alert"
+
+# Listar todos los selectores en tours
+jq '.steps[].targetvalue' db/tours/*.json
 ```
-ANÁLISIS REQUERIDO
-│
-├── MOODLE CORE
-│   ├── lib/amd/src/           → Patrones de módulos AMD
-│   ├── lib/templates/         → Patrones de plantillas Mustache
-│   ├── admin/tool/usertours/  → Estructura de User Tours
-│   └── theme/boost/           → Clases CSS de referencia
-│
-├── PLUGINS DEL REPOSITORIO
-│   ├── local/*/               → Plugins locales existentes
-│   ├── mod/*/                 → Módulos de actividad
-│   └── block/*/               → Bloques
-│
-└── IOMAD
-    ├── local/iomad/           → Integración multi-tenant
-    └── blocks/iomad_*/        → Bloques IOMAD
-```
+
+---
+
+## Notas Críticas para Agentes
+
+### Reglas Absolutas
+
+1. **ANALIZAR** el repositorio completo antes de implementar
+2. **SOLO CLASES jb-*** - No usar clases Bootstrap directamente
+3. **RECREAR USER TOURS** - Con selectores actualizados
+4. **RECREAR MÓDULOS AMD** - Sin dependencias de Bootstrap JS
+5. **VALIDAR SIEMPRE** en plataforma antes de commit
+6. **NO improvisar** cambios directamente en producción
+7. **Respetar** la arquitectura IOMAD de 4 niveles
+8. **CREAR STRINGS** desde cero - Los archivos de idioma NO EXISTEN
+9. **Paridad EN/ES** - Toda string debe existir en AMBOS idiomas
+10. **NO hardcodear** strings en PHP ni templates - usar get_string() SIEMPRE
+11. **Documentar** TODO en CHANGELOG
+12. **ACTUALIZAR DOCUMENTACIÓN** con información de contacto correcta
+13. **FRAGMENTAR RENDERER** - Dividir en renderers especializados por área
+14. **Comité de selección** es por FACULTAD, no por vacante
+15. **Revisores** se asignan por PROGRAMA
+16. **Formulario de postulación** es PERSONALIZABLE desde admin
+17. **Carta de intención** es campo de TEXTO, no archivo
+18. **Convocatoria** debe tener PDF adjunto con detalle completo
+19. **Auditoría ROBUSTA** - registrar TODAS las acciones
+20. Un postulante = UNA vacante por convocatoria
+21. La validación de documentos es 100% MANUAL
+22. **Búsqueda de usuarios** por username al crear comités
 
 ---
 
@@ -587,56 +1063,20 @@ ANÁLISIS REQUERIDO
 
 ---
 
-## Comandos Útiles
-
-| Comando | Propósito |
-|---------|-----------|
-| `php admin/cli/upgrade.php` | Ejecutar migraciones de BD |
-| `php admin/cli/purge_caches.php` | Limpiar caché de Moodle |
-| `grunt amd --root=local/jobboard` | Compilar JavaScript AMD |
-| `php admin/tool/phpunit/cli/init.php` | Inicializar PHPUnit |
-| `vendor/bin/phpunit --testsuite local_jobboard_testsuite` | Ejecutar tests |
-| `php admin/tool/phpcs/cli/run.php --standard=moodle local/jobboard` | Validar código |
-
----
-
-## Notas Críticas para Agentes
-
-### Reglas Absolutas
-
-1. **ANALIZAR** el repositorio completo antes de implementar
-2. **NO USAR BOOTSTRAP** - Solo clases con prefijo `jb-*`
-3. **RECREAR USER TOURS** - Con selectores actualizados
-4. **RECREAR MÓDULOS AMD** - Sin dependencias de Bootstrap JS
-5. **RECREAR ROLES** - Con contexto de facultad/programa
-6. **VALIDAR SIEMPRE** en plataforma antes de commit
-7. **NO improvisar** cambios directamente en producción
-8. **Respetar** la arquitectura IOMAD de 4 niveles
-9. **Mantener** paridad de strings EN/ES (~1860 strings)
-10. **Documentar** TODO en CHANGELOG
-11. **Comité de selección** es por FACULTAD, no por vacante
-12. **Revisores** se asignan por PROGRAMA
-13. **Formulario de postulación** es PERSONALIZABLE desde admin
-14. **Carta de intención** es campo de TEXTO, no archivo
-15. **Convocatoria** debe tener PDF adjunto con detalle completo
-16. **Auditoría ROBUSTA** - registrar TODAS las acciones
-17. Un postulante = UNA vacante por convocatoria
-18. La validación de documentos es 100% MANUAL
-19. **Búsqueda de usuarios** por username al crear comités
-
----
-
 ## Cumplimiento Normativo
 
 ### Protección de Datos
 
 - **Ley 1581/2012** - Habeas Data (Colombia)
 - **GDPR** - Privacy API de Moodle implementada
+- **Exportación:** Implementada en privacy/provider.php
+- **Eliminación:** Implementada con anonimización de auditoría
 
 ### Contratación
 
 - Cumple normativa colombiana de contratación docente
-- Excepciones de edad según legislación vigente
+- Excepciones de edad según legislación vigente (50+ años)
+- Requisitos de libreta militar según género
 
 ---
 
@@ -651,4 +1091,4 @@ ANÁLISIS REQUERIDO
 ---
 
 *Última actualización: Diciembre 2025*
-*Plugin local_jobboard v3.0.8 para Moodle 4.1-4.5 con IOMAD*
+*Plugin local_jobboard v3.1.x para Moodle 4.1-4.5 con IOMAD*
