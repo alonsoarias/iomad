@@ -27,16 +27,13 @@
 
     {{! Alerts }}
     {{#alerts.0}}
-    <div class="mb-4" role="region" aria-label="{{#str}}notifications, local_jobboard{{/str}}">
+    <div class="jb-mb-4" role="region" aria-label="{{#str}}notifications, local_jobboard{{/str}}">
         {{#alerts}}
-        <div class="alert alert-{{type}} alert-dismissible fade show" role="alert">
+        <div class="jb-alert jb-alert-{{type}}" role="alert">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-2" aria-hidden="true"></i>
+            <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
             {{/icon}}
             {{{message}}}
-            <button type="button" class="close" data-dismiss="alert" aria-label="{{#str}}closealert, local_jobboard{{/str}}">
-                <span aria-hidden="true">&times;</span>
-            </button>
         </div>
         {{/alerts}}
     </div>
@@ -44,17 +41,17 @@
 
     {{! Admin/Manager Section }}
     {{#isadmin}}
-    <section class="jb-admin-section mb-5" aria-labelledby="admin-section-heading">
-        <h2 class="h4 text-muted mb-3" id="admin-section-heading">
-            <i class="fa fa-cog mr-2" aria-hidden="true"></i>
+    <section class="jb-admin-section jb-mb-5" aria-labelledby="admin-section-heading">
+        <h2 class="jb-fs-5 jb-text-muted jb-mb-3" id="admin-section-heading">
+            <i class="fa fa-cog jb-mr-2" aria-hidden="true"></i>
             {{#str}}administracion, local_jobboard{{/str}}
         </h2>
 
         {{! Statistics Row }}
         {{#stats.0}}
-        <div class="row mb-4" role="region" aria-label="{{#str}}adminstatistics, local_jobboard{{/str}}">
+        <div class="jb-row jb-mb-4" role="region" aria-label="{{#str}}adminstatistics, local_jobboard{{/str}}">
             {{#stats}}
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
                 {{> local_jobboard/components/stat_card }}
             </div>
             {{/stats}}
@@ -62,35 +59,35 @@
         {{/stats.0}}
 
         {{! Admin Action Cards }}
-        <div class="row">
+        <div class="jb-row">
             {{#adminsections}}
-            <div class="col-lg-4 col-md-6 mb-4">
-                <article class="card h-100 shadow-sm jb-section-card" aria-labelledby="admin-section-{{id}}">
-                    <div class="card-header bg-{{color}} text-white">
-                        <h3 class="h5 mb-0" id="admin-section-{{id}}">
-                            <i class="fa fa-{{icon}} mr-2" aria-hidden="true"></i>
+            <div class="jb-col-lg-4 jb-col-md-6 jb-mb-4">
+                <article class="jb-card jb-card-h100 jb-card-shadow jb-section-card" aria-labelledby="admin-section-{{id}}">
+                    <div class="jb-card-header jb-card-header-{{color}}">
+                        <h3 class="jb-fs-6 jb-mb-0" id="admin-section-{{id}}">
+                            <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
                             {{title}}
                         </h3>
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted">{{description}}</p>
+                    <div class="jb-card-body">
+                        <p class="jb-text-muted">{{description}}</p>
                         {{#features.0}}
-                        <ul class="list-unstyled small text-muted mb-3" aria-label="{{#str}}features, local_jobboard{{/str}}">
+                        <ul class="jb-list-unstyled jb-small jb-text-muted jb-mb-3" aria-label="{{#str}}features, local_jobboard{{/str}}">
                             {{#features}}
-                            <li class="mb-1">
-                                <i class="fa fa-check text-{{../color}} mr-1" aria-hidden="true"></i>
+                            <li class="jb-mb-1">
+                                <i class="fa fa-check jb-text-{{../color}} jb-mr-1" aria-hidden="true"></i>
                                 {{.}}
                             </li>
                             {{/features}}
                         </ul>
                         {{/features.0}}
                     </div>
-                    <footer class="card-footer bg-white border-top-0">
-                        <a href="{{url}}" class="btn btn-{{color}} btn-block" aria-label="{{buttonlabel}}: {{title}}">
+                    <div class="jb-card-footer jb-bg-white jb-border-top-0">
+                        <a href="{{url}}" class="jb-btn jb-btn-{{color}} jb-btn-block" aria-label="{{buttonlabel}}: {{title}}">
                             {{buttonlabel}}
-                            <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                            <i class="fa fa-arrow-right jb-ml-1" aria-hidden="true"></i>
                         </a>
-                    </footer>
+                    </div>
                 </article>
             </div>
             {{/adminsections}}
@@ -100,51 +97,51 @@
 
     {{! Reviewer Section }}
     {{#isreviewer}}
-    <section class="jb-reviewer-section mb-5" aria-labelledby="reviewer-section-heading">
-        <h2 class="h4 text-muted mb-3" id="reviewer-section-heading">
-            <i class="fa fa-clipboard-check mr-2" aria-hidden="true"></i>
+    <section class="jb-reviewer-section jb-mb-5" aria-labelledby="reviewer-section-heading">
+        <h2 class="jb-fs-5 jb-text-muted jb-mb-3" id="reviewer-section-heading">
+            <i class="fa fa-clipboard-check jb-mr-2" aria-hidden="true"></i>
             {{#str}}reviewertasks, local_jobboard{{/str}}
         </h2>
 
-        <div class="row">
-            <div class="col-lg-8">
-                <article class="card shadow-sm h-100" aria-labelledby="reviews-card-heading">
-                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                        <h3 class="h5 mb-0" id="reviews-card-heading">
-                            <i class="fa fa-tasks mr-2" aria-hidden="true"></i>
+        <div class="jb-row">
+            <div class="jb-col-lg-8">
+                <article class="jb-card jb-card-shadow jb-card-h100" aria-labelledby="reviews-card-heading">
+                    <div class="jb-card-header jb-card-header-info jb-d-flex jb-justify-content-between jb-align-items-center">
+                        <h3 class="jb-fs-6 jb-mb-0" id="reviews-card-heading">
+                            <i class="fa fa-tasks jb-mr-2" aria-hidden="true"></i>
                             {{#str}}myreviews, local_jobboard{{/str}}
                         </h3>
                         {{#reviewersection.pendingcount}}
-                        <span class="badge badge-warning" aria-label="{{reviewersection.pendingcount}} {{#str}}pending, local_jobboard{{/str}}">
+                        <span class="jb-badge jb-badge-warning" aria-label="{{reviewersection.pendingcount}} {{#str}}pending, local_jobboard{{/str}}">
                             {{reviewersection.pendingcount}} {{#str}}pending, local_jobboard{{/str}}
                         </span>
                         {{/reviewersection.pendingcount}}
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted">{{#str}}myreviews_desc, local_jobboard{{/str}}</p>
+                    <div class="jb-card-body">
+                        <p class="jb-text-muted">{{#str}}myreviews_desc, local_jobboard{{/str}}</p>
                         {{#reviewersection.haspendingreview}}
-                        <div class="alert alert-warning" role="alert">
-                            <i class="fa fa-exclamation-triangle mr-1" aria-hidden="true"></i>
+                        <div class="jb-alert jb-alert-warning" role="alert">
+                            <i class="fa fa-exclamation-triangle jb-mr-1" aria-hidden="true"></i>
                             {{#str}}pending_reviews_alert, local_jobboard, {{reviewersection.pendingcount}}{{/str}}
                         </div>
                         {{/reviewersection.haspendingreview}}
                     </div>
-                    <footer class="card-footer bg-white">
-                        <a href="{{reviewersection.url}}" class="btn btn-info">
+                    <div class="jb-card-footer jb-bg-white">
+                        <a href="{{reviewersection.url}}" class="jb-btn jb-btn-info">
                             {{#str}}viewmyreviews, local_jobboard{{/str}}
-                            <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                            <i class="fa fa-arrow-right jb-ml-1" aria-hidden="true"></i>
                         </a>
-                    </footer>
+                    </div>
                 </article>
             </div>
-            <div class="col-lg-4">
-                <div class="card shadow-sm h-100 bg-light" role="status" aria-label="{{#str}}completedreviews, local_jobboard{{/str}}">
-                    <div class="card-body text-center">
-                        <i class="fa fa-chart-pie fa-3x text-info mb-3" aria-hidden="true"></i>
-                        <p class="h3 mb-1" aria-label="{{reviewersection.completedcount}} {{#str}}completedreviews, local_jobboard{{/str}}">
+            <div class="jb-col-lg-4">
+                <div class="jb-card jb-card-shadow jb-card-h100 jb-bg-light" role="status" aria-label="{{#str}}completedreviews, local_jobboard{{/str}}">
+                    <div class="jb-card-body jb-text-center">
+                        <i class="fa fa-chart-pie fa-3x jb-text-info jb-mb-3" aria-hidden="true"></i>
+                        <p class="jb-fs-3 jb-mb-1" aria-label="{{reviewersection.completedcount}} {{#str}}completedreviews, local_jobboard{{/str}}">
                             {{reviewersection.completedcount}}
                         </p>
-                        <p class="text-muted mb-0">{{#str}}completedreviews, local_jobboard{{/str}}</p>
+                        <p class="jb-text-muted jb-mb-0">{{#str}}completedreviews, local_jobboard{{/str}}</p>
                     </div>
                 </div>
             </div>
@@ -155,16 +152,16 @@
     {{! Applicant Section }}
     {{#isapplicant}}
     <section class="jb-applicant-section" aria-labelledby="applicant-section-heading">
-        <h2 class="h4 text-muted mb-3" id="applicant-section-heading">
-            <i class="fa fa-user mr-2" aria-hidden="true"></i>
+        <h2 class="jb-fs-5 jb-text-muted jb-mb-3" id="applicant-section-heading">
+            <i class="fa fa-user jb-mr-2" aria-hidden="true"></i>
             {{#str}}myapplications, local_jobboard{{/str}}
         </h2>
 
         {{! Applicant Statistics }}
         {{#applicantstats.0}}
-        <div class="row mb-4" role="region" aria-label="{{#str}}applicantstatistics, local_jobboard{{/str}}">
+        <div class="jb-row jb-mb-4" role="region" aria-label="{{#str}}applicantstatistics, local_jobboard{{/str}}">
             {{#applicantstats}}
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
                 {{> local_jobboard/components/stat_card }}
             </div>
             {{/applicantstats}}
@@ -172,31 +169,31 @@
         {{/applicantstats.0}}
 
         {{! Applicant Action Cards }}
-        <div class="row">
+        <div class="jb-row">
             {{#applicantsections}}
-            <div class="col-lg-6 mb-4">
-                <article class="card h-100 shadow-sm jb-section-card" aria-labelledby="applicant-section-{{id}}">
-                    <div class="card-header bg-{{color}} text-white">
-                        <h3 class="h5 mb-0" id="applicant-section-{{id}}">
-                            <i class="fa fa-{{icon}} mr-2" aria-hidden="true"></i>
+            <div class="jb-col-lg-6 jb-mb-4">
+                <article class="jb-card jb-card-h100 jb-card-shadow jb-section-card" aria-labelledby="applicant-section-{{id}}">
+                    <div class="jb-card-header jb-card-header-{{color}}">
+                        <h3 class="jb-fs-6 jb-mb-0" id="applicant-section-{{id}}">
+                            <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
                             {{title}}
                         </h3>
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted">{{description}}</p>
+                    <div class="jb-card-body">
+                        <p class="jb-text-muted">{{description}}</p>
                         {{#alert}}
-                        <div class="alert alert-{{alerttype}}" role="alert">
-                            <i class="fa fa-info-circle mr-1" aria-hidden="true"></i>
+                        <div class="jb-alert jb-alert-{{alerttype}}" role="alert">
+                            <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
                             {{alert}}
                         </div>
                         {{/alert}}
                     </div>
-                    <footer class="card-footer bg-white border-top-0">
-                        <a href="{{url}}" class="btn btn-{{color}}" aria-label="{{buttonlabel}}: {{title}}">
+                    <div class="jb-card-footer jb-bg-white jb-border-top-0">
+                        <a href="{{url}}" class="jb-btn jb-btn-{{color}}" aria-label="{{buttonlabel}}: {{title}}">
                             {{buttonlabel}}
-                            <i class="fa fa-arrow-right ml-1" aria-hidden="true"></i>
+                            <i class="fa fa-arrow-right jb-ml-1" aria-hidden="true"></i>
                         </a>
-                    </footer>
+                    </div>
                 </article>
             </div>
             {{/applicantsections}}
@@ -206,18 +203,7 @@
 </div>
 
 {{#js}}
-require(['jquery'], function($) {
-    // Section card hover effects - respects reduced motion preference
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        $('.jb-stat-card').each(function(index) {
-            $(this).css('opacity', 0).delay(index * 100).animate({opacity: 1}, 300);
-        });
-    }
-
-    // Section card hover effects
-    $('.jb-section-card').hover(
-        function() { $(this).addClass('shadow'); },
-        function() { $(this).removeClass('shadow'); }
-    );
+require(['local_jobboard/dashboard'], function(dashboard) {
+    dashboard.init();
 });
 {{/js}}

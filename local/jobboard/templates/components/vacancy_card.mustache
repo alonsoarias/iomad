@@ -12,7 +12,7 @@
     * contracttypelabel - Contract type label
     * positions - Number of positions
     * statuslabel - Status label
-    * statuscolor - Bootstrap color for status
+    * statuscolor - Color for status (primary, success, warning, etc.)
     * isurgent - Boolean if closing soon
     * daysremaining - Days until close
     * publicationtypelabel - Publication type label
@@ -34,94 +34,95 @@
         "canapply": true
     }
 }}
-<article class="card h-100 shadow-sm jb-vacancy-card{{#isurgent}} border-warning{{/isurgent}}" data-vacancy-id="{{id}}" aria-labelledby="vacancy-title-{{id}}">
+<article class="jb-vacancy-card{{#isurgent}} jb-border-left-warning{{/isurgent}}" data-vacancy-id="{{id}}" aria-labelledby="vacancy-title-{{id}}">
     {{! Card Header }}
-    <div class="card-header d-flex justify-content-between align-items-center bg-white">
-        <span class="badge badge-secondary" aria-label="{{#str}}vacancycode, local_jobboard{{/str}}: {{code}}">{{code}}</span>
+    <div class="jb-vacancy-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+        <span class="jb-badge jb-badge-secondary" aria-label="{{#str}}vacancycode, local_jobboard{{/str}}: {{code}}">{{code}}</span>
         <div>
             {{#showstatus}}
-            <span class="badge badge-{{statuscolor}} mr-1" role="status">{{statuslabel}}</span>
+            <span class="jb-badge jb-badge-{{statuscolor}} jb-mr-1" role="status">{{statuslabel}}</span>
             {{/showstatus}}
             {{#publicationtypelabel}}
-            <span class="badge badge-{{publicationtypecolor}}">{{publicationtypelabel}}</span>
+            <span class="jb-badge jb-badge-{{publicationtypecolor}}">{{publicationtypelabel}}</span>
             {{/publicationtypelabel}}
         </div>
     </div>
 
     {{! Card Body }}
-    <div class="card-body">
-        <h5 class="card-title" id="vacancy-title-{{id}}">{{title}}</h5>
+    <div class="jb-vacancy-card-body">
+        <h5 class="jb-vacancy-card-title" id="vacancy-title-{{id}}">{{title}}</h5>
 
         {{! Convocatoria Badge }}
         {{#convocatoriacode}}
-        <div class="mb-2">
-            <i class="fa fa-folder-open text-muted mr-1" aria-hidden="true"></i>
-            <span class="badge badge-light">{{convocatoriacode}}</span>
+        <div class="jb-mb-2">
+            <i class="fa fa-folder-open jb-text-muted jb-mr-1" aria-hidden="true"></i>
+            <span class="jb-badge jb-badge-light">{{convocatoriacode}}</span>
         </div>
         {{/convocatoriacode}}
 
-        {{! Location }}
-        {{#location}}
-        <p class="card-text text-muted small mb-1">
-            <i class="fa fa-map-marker-alt text-muted mr-2" aria-hidden="true"></i>
-            <span class="sr-only">{{#str}}location, local_jobboard{{/str}}:</span>
-            {{location}}
-        </p>
-        {{/location}}
+        <div class="jb-vacancy-card-meta">
+            {{! Location }}
+            {{#location}}
+            <span>
+                <i class="fa fa-map-marker-alt jb-mr-1" aria-hidden="true"></i>
+                <span class="jb-sr-only">{{#str}}location, local_jobboard{{/str}}:</span>
+                {{location}}
+            </span>
+            {{/location}}
 
-        {{! Contract Type }}
-        {{#contracttypelabel}}
-        <p class="card-text text-muted small mb-2">
-            <i class="fa fa-briefcase text-muted mr-2" aria-hidden="true"></i>
-            <span class="sr-only">{{#str}}contracttype, local_jobboard{{/str}}:</span>
-            {{contracttypelabel}}
-        </p>
-        {{/contracttypelabel}}
+            {{! Contract Type }}
+            {{#contracttypelabel}}
+            <span>
+                <i class="fa fa-briefcase jb-mr-1" aria-hidden="true"></i>
+                <span class="jb-sr-only">{{#str}}contracttype, local_jobboard{{/str}}:</span>
+                {{contracttypelabel}}
+            </span>
+            {{/contracttypelabel}}
+
+            {{! Positions }}
+            <span>
+                <i class="fa fa-users jb-mr-1" aria-hidden="true"></i>
+                {{#str}}positions, local_jobboard{{/str}}: <strong>{{positions}}</strong>
+            </span>
+        </div>
 
         {{! Description }}
         {{#description}}
-        <p class="card-text small text-muted">{{description}}</p>
+        <p class="jb-vacancy-card-desc">{{description}}</p>
         {{/description}}
-
-        {{! Positions }}
-        <p class="card-text small mb-0">
-            <i class="fa fa-users text-muted mr-2" aria-hidden="true"></i>
-            {{#str}}positions, local_jobboard{{/str}}: <strong>{{positions}}</strong>
-        </p>
     </div>
 
     {{! Card Footer }}
     {{#showactions}}
-    <footer class="card-footer bg-white">
+    <div class="jb-vacancy-card-footer">
         {{! Closing Date }}
-        <small class="{{#isurgent}}text-warning font-weight-bold{{/isurgent}}{{^isurgent}}text-muted{{/isurgent}} d-block mb-2">
-            <i class="fa fa-{{#isurgent}}exclamation-triangle{{/isurgent}}{{^isurgent}}calendar-alt{{/isurgent}} mr-1" aria-hidden="true"></i>
-            {{#isurgent}}<span class="sr-only">{{#str}}urgent, local_jobboard{{/str}}:</span>{{/isurgent}}
+        <small class="jb-d-block jb-mb-2 {{#isurgent}}jb-text-warning jb-fw-bold{{/isurgent}}{{^isurgent}}jb-text-muted{{/isurgent}}">
+            <i class="fa fa-{{#isurgent}}exclamation-triangle{{/isurgent}}{{^isurgent}}calendar-alt{{/isurgent}} jb-mr-1" aria-hidden="true"></i>
+            {{#isurgent}}<span class="jb-sr-only">{{#str}}urgent, local_jobboard{{/str}}:</span>{{/isurgent}}
             {{#str}}closesin, local_jobboard, {{daysremaining}}{{/str}}
         </small>
 
         {{! Action Buttons }}
-        <div class="d-flex justify-content-between jb-card-actions">
-            <a href="{{viewurl}}" class="btn btn-sm btn-outline-primary" aria-label="{{#str}}viewdetails, local_jobboard{{/str}}: {{title}}">
-                <i class="fa fa-eye mr-1" aria-hidden="true"></i>
+        <div class="jb-d-flex jb-justify-content-between jb-card-actions">
+            <a href="{{viewurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary" aria-label="{{#str}}viewdetails, local_jobboard{{/str}}: {{title}}">
+                <i class="fa fa-eye jb-mr-1" aria-hidden="true"></i>
                 {{#str}}view, local_jobboard{{/str}}
             </a>
 
             {{#canapply}}
-            <a href="{{applyurl}}" class="btn btn-sm btn-primary" aria-label="{{#str}}applyto, local_jobboard{{/str}}: {{title}}">
-                <i class="fa fa-paper-plane mr-1" aria-hidden="true"></i>
+            <a href="{{applyurl}}" class="jb-btn jb-btn-sm jb-btn-primary" aria-label="{{#str}}applyto, local_jobboard{{/str}}: {{title}}">
+                <i class="fa fa-paper-plane jb-mr-1" aria-hidden="true"></i>
                 {{#str}}apply, local_jobboard{{/str}}
             </a>
             {{/canapply}}
 
             {{#canedit}}
-            <a href="{{editurl}}" class="btn btn-sm btn-outline-secondary" aria-label="{{#str}}editvacancy, local_jobboard{{/str}}: {{title}}">
-                <i class="fa fa-edit mr-1" aria-hidden="true"></i>
+            <a href="{{editurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary" aria-label="{{#str}}editvacancy, local_jobboard{{/str}}: {{title}}">
+                <i class="fa fa-edit jb-mr-1" aria-hidden="true"></i>
                 {{#str}}edit{{/str}}
             </a>
             {{/canedit}}
         </div>
-    </footer>
+    </div>
     {{/showactions}}
 </article>
-{{! Styles moved to styles.css - Vacancy Card Component section }}

@@ -7,7 +7,7 @@
     * title - Card title
     * description - Description text
     * icon - FontAwesome icon
-    * color - Bootstrap color
+    * color - Color variant (primary, success, warning, danger, info, secondary)
     * primaryaction - Primary action {url, label, icon}
     * secondaryaction - Secondary action {url, label, icon}
     * alert - Optional alert message
@@ -24,40 +24,40 @@
         "alerttype": "warning"
     }
 }}
-<section class="card shadow-sm mb-4 jb-action-card border-{{color}}" aria-labelledby="action-card-title-{{uniqid}}">
-    <div class="card-header bg-{{color}} text-white">
-        <h5 class="mb-0" id="action-card-title-{{uniqid}}">
+<section class="jb-action-card jb-card jb-card-shadow jb-mb-4 jb-border-left-{{color}}" aria-labelledby="action-card-title-{{uniqid}}">
+    <div class="jb-card-header jb-card-header-{{color}}">
+        <h5 class="jb-mb-0" id="action-card-title-{{uniqid}}">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-2" aria-hidden="true"></i>
+            <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
             {{/icon}}
             {{title}}
         </h5>
     </div>
-    <div class="card-body text-center">
+    <div class="jb-card-body jb-text-center">
         {{#alert}}
-        <div class="alert alert-{{#alerttype}}{{alerttype}}{{/alerttype}}{{^alerttype}}info{{/alerttype}} mb-3" role="alert">
-            <i class="fa fa-exclamation-triangle mr-1" aria-hidden="true"></i>
+        <div class="jb-alert jb-alert-{{#alerttype}}{{alerttype}}{{/alerttype}}{{^alerttype}}info{{/alerttype}} jb-mb-3" role="alert">
+            <i class="fa fa-exclamation-triangle jb-mr-1" aria-hidden="true"></i>
             {{alert}}
         </div>
         {{/alert}}
 
         {{#description}}
-        <p class="text-muted mb-4">{{description}}</p>
+        <p class="jb-text-muted jb-mb-4">{{description}}</p>
         {{/description}}
 
         {{#primaryaction}}
-        <a href="{{url}}" class="btn btn-{{color}} btn-lg btn-block mb-2" role="button">
+        <a href="{{url}}" class="jb-btn jb-btn-{{color}} jb-btn-lg jb-btn-block jb-mb-2" role="button">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-2" aria-hidden="true"></i>
+            <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
             {{/icon}}
             {{label}}
         </a>
         {{/primaryaction}}
 
         {{#secondaryaction}}
-        <a href="{{url}}" class="btn btn-outline-{{color}} btn-block" role="button">
+        <a href="{{url}}" class="jb-btn jb-btn-outline-{{color}} jb-btn-block" role="button">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-2" aria-hidden="true"></i>
+            <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
             {{/icon}}
             {{label}}
         </a>

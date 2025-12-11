@@ -14,7 +14,7 @@
         - placeholder: optional placeholder
         - value: current value
         - options: for select [{value, label, selected}]
-        - col: Bootstrap column class (col-md-3)
+        - col: column class (jb-col-md-3)
     * showreset - Boolean to show reset button
     * reseturl - URL for reset
 
@@ -23,75 +23,73 @@
         "action": "/search",
         "hiddenfields": [{"name": "view", "value": "vacancies"}],
         "fields": [
-            {"type": "text", "name": "search", "placeholder": "Search...", "col": "col-md-4"},
-            {"type": "select", "name": "status", "options": [{"value": "", "label": "All"}], "col": "col-md-3"}
+            {"type": "text", "name": "search", "placeholder": "Search...", "col": "jb-col-md-4"},
+            {"type": "select", "name": "status", "options": [{"value": "", "label": "All"}], "col": "jb-col-md-3"}
         ],
         "showreset": true,
         "reseturl": "/vacancies"
     }
 }}
-<div class="card shadow-sm mb-4 jb-filter-form" role="search">
-    <div class="card-body py-3">
-        <form action="{{action}}" method="{{#method}}{{method}}{{/method}}{{^method}}get{{/method}}" class="mb-0" aria-label="{{#str}}filterform, local_jobboard{{/str}}">
-            {{#hiddenfields}}
-            <input type="hidden" name="{{name}}" value="{{value}}">
-            {{/hiddenfields}}
+<div class="jb-filter-form" role="search">
+    <form action="{{action}}" method="{{#method}}{{method}}{{/method}}{{^method}}get{{/method}}" class="jb-mb-0" aria-label="{{#str}}filterform, local_jobboard{{/str}}">
+        {{#hiddenfields}}
+        <input type="hidden" name="{{name}}" value="{{value}}">
+        {{/hiddenfields}}
 
-            <div class="row align-items-end">
-                {{#fields}}
-                <div class="{{#col}}{{col}}{{/col}}{{^col}}col-md-3{{/col}} mb-2 mb-md-0">
-                    {{#label}}
-                    <label for="filter_{{name}}" class="small text-muted mb-1">{{label}}</label>
-                    {{/label}}
-                    {{^label}}
-                    <label for="filter_{{name}}" class="sr-only">{{placeholder}}</label>
-                    {{/label}}
+        <div class="jb-filter-row">
+            {{#fields}}
+            <div class="jb-filter-group {{#col}}{{col}}{{/col}}{{^col}}jb-col-md-3{{/col}}">
+                {{#label}}
+                <label for="filter_{{name}}" class="jb-form-label jb-small jb-text-muted jb-mb-1">{{label}}</label>
+                {{/label}}
+                {{^label}}
+                <label for="filter_{{name}}" class="jb-sr-only">{{placeholder}}</label>
+                {{/label}}
 
-                    {{#isText}}
-                    <input type="text"
-                           id="filter_{{name}}"
-                           name="{{name}}"
-                           class="form-control form-control-sm"
-                           placeholder="{{placeholder}}"
-                           value="{{value}}"
-                           aria-label="{{#label}}{{label}}{{/label}}{{^label}}{{placeholder}}{{/label}}">
-                    {{/isText}}
+                {{#isText}}
+                <input type="text"
+                       id="filter_{{name}}"
+                       name="{{name}}"
+                       class="jb-form-control jb-form-control-sm"
+                       placeholder="{{placeholder}}"
+                       value="{{value}}"
+                       aria-label="{{#label}}{{label}}{{/label}}{{^label}}{{placeholder}}{{/label}}">
+                {{/isText}}
 
-                    {{#isSelect}}
-                    <select id="filter_{{name}}"
-                            name="{{name}}"
-                            class="form-control form-control-sm custom-select custom-select-sm"
-                            aria-label="{{#label}}{{label}}{{/label}}{{^label}}{{#str}}select, local_jobboard{{/str}}{{/label}}">
-                        {{#options}}
-                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                        {{/options}}
-                    </select>
-                    {{/isSelect}}
+                {{#isSelect}}
+                <select id="filter_{{name}}"
+                        name="{{name}}"
+                        class="jb-form-select jb-form-control-sm"
+                        aria-label="{{#label}}{{label}}{{/label}}{{^label}}{{#str}}select, local_jobboard{{/str}}{{/label}}">
+                    {{#options}}
+                    <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                    {{/options}}
+                </select>
+                {{/isSelect}}
 
-                    {{#isDate}}
-                    <input type="date"
-                           id="filter_{{name}}"
-                           name="{{name}}"
-                           class="form-control form-control-sm"
-                           value="{{value}}"
-                           aria-label="{{#label}}{{label}}{{/label}}{{^label}}{{#str}}date, local_jobboard{{/str}}{{/label}}">
-                    {{/isDate}}
-                </div>
-                {{/fields}}
-
-                <div class="col-md-auto mb-2 mb-md-0">
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <i class="fa fa-search mr-1" aria-hidden="true"></i>
-                        {{#str}}search{{/str}}
-                    </button>
-                    {{#showreset}}
-                    <a href="{{reseturl}}" class="btn btn-outline-secondary btn-sm ml-1" aria-label="{{#str}}resetfilters, local_jobboard{{/str}}">
-                        <i class="fa fa-times mr-1" aria-hidden="true"></i>
-                        {{#str}}reset{{/str}}
-                    </a>
-                    {{/showreset}}
-                </div>
+                {{#isDate}}
+                <input type="date"
+                       id="filter_{{name}}"
+                       name="{{name}}"
+                       class="jb-form-control jb-form-control-sm"
+                       value="{{value}}"
+                       aria-label="{{#label}}{{label}}{{/label}}{{^label}}{{#str}}date, local_jobboard{{/str}}{{/label}}">
+                {{/isDate}}
             </div>
-        </form>
-    </div>
+            {{/fields}}
+
+            <div class="jb-filter-actions">
+                <button type="submit" class="jb-btn jb-btn-primary jb-btn-sm">
+                    <i class="fa fa-search jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}search{{/str}}
+                </button>
+                {{#showreset}}
+                <a href="{{reseturl}}" class="jb-btn jb-btn-outline-secondary jb-btn-sm" aria-label="{{#str}}resetfilters, local_jobboard{{/str}}">
+                    <i class="fa fa-times jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}reset{{/str}}
+                </a>
+                {{/showreset}}
+            </div>
+        </div>
+    </form>
 </div>

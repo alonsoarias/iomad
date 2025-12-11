@@ -21,19 +21,19 @@
 }}
 {{! Only render if there are actions or back button }}
 {{#actions.0}}
-<div class="jb-page-header d-flex justify-content-end mb-4">
+<div class="jb-page-header jb-d-flex jb-justify-content-end jb-mb-4">
     {{#showback}}
-    <a href="{{backurl}}" class="btn btn-outline-secondary mr-2">
+    <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-mr-2">
         {{#pix}}i/return, core, {{#str}}back{{/str}}{{/pix}}
         {{#str}}back{{/str}}
     </a>
     {{/showback}}
 
-    <div class="btn-group flex-wrap">
+    <div class="jb-btn-group jb-flex-wrap">
         {{#actions}}
-        <a href="{{url}}" class="btn {{#primary}}btn-primary{{/primary}}{{^primary}}btn-outline-secondary{{/primary}} {{class}}">
+        <a href="{{url}}" class="jb-btn {{#primary}}jb-btn-primary{{/primary}}{{^primary}}jb-btn-outline-secondary{{/primary}} {{class}}">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-1"></i>
+            <i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>
             {{/icon}}
             {{label}}
         </a>
@@ -43,8 +43,8 @@
 {{/actions.0}}
 {{^actions.0}}
 {{#showback}}
-<div class="jb-page-header d-flex justify-content-start mb-4">
-    <a href="{{backurl}}" class="btn btn-outline-secondary">
+<div class="jb-page-header jb-d-flex jb-justify-content-start jb-mb-4">
+    <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
         {{#pix}}i/return, core, {{#str}}back{{/str}}{{/pix}}
         {{#str}}back{{/str}}
     </a>

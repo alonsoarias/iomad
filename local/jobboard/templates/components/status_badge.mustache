@@ -6,7 +6,7 @@
     Context variables:
     * status - Status code (used for aria-label context)
     * label - Display label
-    * color - Bootstrap color (primary, success, warning, danger, info, secondary)
+    * color - Color variant (primary, success, warning, danger, info, secondary)
     * icon - Optional FontAwesome icon
     * size - Optional size (sm, lg)
     * pill - Boolean for pill style
@@ -20,11 +20,11 @@
         "pill": true
     }
 }}
-<span class="badge badge-{{color}}{{#pill}} badge-pill{{/pill}}{{#size}} badge-{{size}}{{/size}}"
+<span class="jb-badge jb-badge-{{color}}{{#pill}} jb-badge-pill{{/pill}}"
       role="status"
       aria-label="{{#str}}status{{/str}}: {{label}}">
     {{#icon}}
-    <i class="fa fa-{{icon}} mr-1" aria-hidden="true"></i>
+    <i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>
     {{/icon}}
-    <span class="badge-text">{{label}}</span>
+    <span class="jb-badge-text">{{label}}</span>
 </span>

@@ -14,19 +14,19 @@
 
     Example context (json):
     {
-        "headers": [{"label": "Name"}, {"label": "Status", "class": "text-center"}],
-        "rows": [["John Doe", "<span class='badge badge-success'>Active</span>"]],
+        "headers": [{"label": "Name"}, {"label": "Status", "class": "jb-text-center"}],
+        "rows": [["John Doe", "<span class='jb-badge jb-badge-success'>Active</span>"]],
         "hasdata": true
     }
 }}
 {{#responsive}}
-<div class="table-responsive" tabindex="0" role="region" aria-label="{{#tablecaption}}{{tablecaption}}{{/tablecaption}}{{^tablecaption}}{{#str}}datatable, local_jobboard{{/str}}{{/tablecaption}}">
+<div class="jb-table-responsive" tabindex="0" role="region" aria-label="{{#tablecaption}}{{tablecaption}}{{/tablecaption}}{{^tablecaption}}{{#str}}datatable, local_jobboard{{/str}}{{/tablecaption}}">
 {{/responsive}}
-<table class="table jb-data-table{{#striped}} table-striped{{/striped}}{{#hover}} table-hover{{/hover}} mb-0">
+<table class="jb-table jb-data-table{{#striped}} jb-table-striped{{/striped}}{{#hover}} jb-table-hover{{/hover}} jb-mb-0">
     {{#tablecaption}}
-    <caption class="sr-only">{{tablecaption}}</caption>
+    <caption class="jb-sr-only">{{tablecaption}}</caption>
     {{/tablecaption}}
-    <thead class="thead-light">
+    <thead class="jb-thead-light">
         <tr>
             {{#headers}}
             <th scope="col"{{#class}} class="{{class}}"{{/class}}>{{label}}</th>
@@ -45,7 +45,7 @@
         {{/hasdata}}
         {{^hasdata}}
         <tr>
-            <td colspan="{{headercount}}" class="text-center text-muted py-4" role="status">
+            <td colspan="{{headercount}}" class="jb-text-center jb-text-muted jb-py-4" role="status">
                 {{#emptytext}}{{emptytext}}{{/emptytext}}
                 {{^emptytext}}{{#str}}nodata, local_jobboard{{/str}}{{/emptytext}}
             </td>

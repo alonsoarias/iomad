@@ -6,7 +6,7 @@
     Context variables:
     * title - Card header title
     * icon - FontAwesome icon for header
-    * headercolor - Bootstrap color for header (primary, secondary, success, etc.)
+    * headercolor - Color variant for header (primary, secondary, success, etc.)
     * body - HTML content for body (use {{{body}}} in parent)
     * items - Array of info items [{label, value, icon, valueclass}]
     * footer - Optional footer content
@@ -21,58 +21,58 @@
         "headercolor": "primary",
         "items": [
             {"label": "Code", "value": "VAC-001", "icon": "hashtag"},
-            {"label": "Status", "value": "Published", "valueclass": "text-success"}
+            {"label": "Status", "value": "Published", "valueclass": "jb-text-success"}
         ],
-        "footeractions": [{"url": "/edit", "label": "Edit", "icon": "edit", "class": "btn-primary"}]
+        "footeractions": [{"url": "/edit", "label": "Edit", "icon": "edit", "class": "jb-btn-primary"}]
     }
 }}
-<div class="card shadow-sm mb-4 jb-info-card{{#collapsible}} jb-collapsible{{/collapsible}}">
-    <div class="card-header {{#headercolor}}bg-{{headercolor}} text-white{{/headercolor}}{{^headercolor}}bg-light{{/headercolor}} d-flex justify-content-between align-items-center"
+<div class="jb-card jb-card-shadow jb-mb-4 jb-info-card{{#collapsible}} jb-collapsible{{/collapsible}}">
+    <div class="jb-card-header {{#headercolor}}jb-card-header-{{headercolor}}{{/headercolor}}{{^headercolor}}jb-card-header-light{{/headercolor}} jb-d-flex jb-justify-content-between jb-align-items-center"
          {{#collapsible}}data-toggle="collapse" data-target="#collapse-{{uniqid}}" role="button"{{/collapsible}}>
-        <h5 class="mb-0">
+        <h5 class="jb-mb-0">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-2"></i>
+            <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
             {{/icon}}
             {{title}}
         </h5>
         {{#collapsible}}
-        <i class="fa fa-chevron-down jb-collapse-icon"></i>
+        <i class="fa fa-chevron-down jb-collapse-icon" aria-hidden="true"></i>
         {{/collapsible}}
     </div>
 
-    <div {{#collapsible}}id="collapse-{{uniqid}}" class="collapse{{^collapsed}} show{{/collapsed}}"{{/collapsible}}>
-        <div class="card-body">
+    <div {{#collapsible}}id="collapse-{{uniqid}}" class="jb-collapse{{^collapsed}} jb-show{{/collapsed}}"{{/collapsible}}>
+        <div class="jb-card-body">
             {{#body}}
             {{{body}}}
             {{/body}}
 
             {{#items.0}}
-            <dl class="row mb-0">
+            <dl class="jb-row jb-mb-0">
                 {{#items}}
-                <dt class="col-sm-4 text-muted">
+                <dt class="jb-col-sm-4 jb-text-muted">
                     {{#icon}}
-                    <i class="fa fa-{{icon}} mr-1"></i>
+                    <i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>
                     {{/icon}}
                     {{label}}
                 </dt>
-                <dd class="col-sm-8 {{valueclass}}">{{{value}}}</dd>
+                <dd class="jb-col-sm-8 {{valueclass}}">{{{value}}}</dd>
                 {{/items}}
             </dl>
             {{/items.0}}
         </div>
 
         {{#footer}}
-        <div class="card-footer bg-white">
+        <div class="jb-card-footer jb-bg-white">
             {{{footer}}}
         </div>
         {{/footer}}
 
         {{#footeractions.0}}
-        <div class="card-footer bg-white d-flex justify-content-between">
+        <div class="jb-card-footer jb-bg-white jb-d-flex jb-justify-content-between">
             {{#footeractions}}
-            <a href="{{url}}" class="btn btn-sm {{#class}}{{class}}{{/class}}{{^class}}btn-outline-secondary{{/class}}">
+            <a href="{{url}}" class="jb-btn jb-btn-sm {{#class}}{{class}}{{/class}}{{^class}}jb-btn-outline-secondary{{/class}}">
                 {{#icon}}
-                <i class="fa fa-{{icon}} mr-1"></i>
+                <i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>
                 {{/icon}}
                 {{label}}
             </a>
