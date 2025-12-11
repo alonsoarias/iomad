@@ -4070,4 +4070,135 @@ class renderer extends plugin_renderer_base {
             'signupurl' => (new moodle_url('/local/jobboard/signup.php'))->out(false),
         ];
     }
+
+    /**
+     * Prepare data for convocatoria create/edit page template.
+     *
+     * @param ?object $convocatoria Convocatoria record (null for new).
+     * @param string $formhtml Rendered form HTML.
+     * @param int $vacancycount Total vacancy count.
+     * @param int $applicationcount Total application count.
+     * @param array $vacancies Array of vacancy records (max 5).
+     * @return array Template data.
+     */
+    public function prepare_convocatoria_edit_page_data(
+        ?object $convocatoria,
+        string $formhtml,
+        int $vacancycount = 0,
+        int $applicationcount = 0,
+        array $vacancies = []
+    ): array {
+        $isediting = !empty($convocatoria);
+
+        // Page title.
+        $pagetitle = $isediting
+            ? get_string('editconvocatoria', 'local_jobboard') . ': ' . format_string($convocatoria->name)
+            : get_string('addconvocatoria', 'local_jobboard');
+
+        // Breadcrumbs.
+        $breadcrumbs = [
+            ['label' => get_string('dashboard', 'local_jobboard'), 'url' => (new moodle_url('/local/jobboard/index.php'))->out(false)],
+            ['label' => get_string('manageconvocatorias', 'local_jobboard'), 'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']))->out(false)],
+            ['label' => $isediting ? format_string($convocatoria->name) : get_string('addconvocatoria', 'local_jobboard'), 'url' => null, 'active' => true],
+        ];
+
+        // URLs.
+        $backurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']))->out(false);
+        $dashboardurl = (new moodle_url('/local/jobboard/index.php'))->out(false);
+
+        // Base data.
+        $data = [
+            'pagetitle' => $pagetitle,
+            'breadcrumbs' => $breadcrumbs,
+            'isediting' => $isediting,
+            'formhtml' => $formhtml,
+            'backurl' => $backurl,
+            'dashboardurl' => $dashboardurl,
+            'hasstats' => false,
+            'stats' => [],
+            'convocatoria' => null,
+            'hasvacancies' => false,
+            'vacancies' => [],
+            'vacancycount' => 0,
+            'applicationcount' => 0,
+            'hasapplications' => false,
+            'canaddvacancy' => false,
+            'addvacancyurl' => null,
+            'viewallurl' => null,
+            'applicationsurl' => null,
+            'showviewall' => false,
+        ];
+
+        if (!$isediting) {
+            return $data;
+        }
+
+        // Status colors.
+        $statusColors = [
+            'draft' => 'secondary',
+            'open' => 'success',
+            'closed' => 'warning',
+            'archived' => 'dark',
+        ];
+        $statusColor = $statusColors[$convocatoria->status] ?? 'secondary';
+
+        // Stats cards.
+        $data['hasstats'] = true;
+        $data['stats'] = [
+            ['value' => (string) $vacancycount, 'label' => get_string('vacancies', 'local_jobboard'), 'color' => 'primary', 'icon' => 'briefcase'],
+            ['value' => (string) $applicationcount, 'label' => get_string('applications', 'local_jobboard'), 'color' => 'info', 'icon' => 'file-alt'],
+            ['value' => get_string('convocatoria_status_' . $convocatoria->status, 'local_jobboard'), 'label' => get_string('status', 'local_jobboard'), 'color' => $statusColor, 'icon' => 'flag'],
+        ];
+
+        // Convocatoria info.
+        $data['convocatoria'] = [
+            'id' => $convocatoria->id,
+            'name' => format_string($convocatoria->name),
+            'status' => $convocatoria->status,
+            'statuslabel' => get_string('convocatoria_status_' . $convocatoria->status, 'local_jobboard'),
+            'statuscolor' => $statusColor,
+            'startdateformatted' => userdate($convocatoria->startdate, get_string('strftimedate', 'langconfig')),
+            'enddateformatted' => userdate($convocatoria->enddate, get_string('strftimedate', 'langconfig')),
+        ];
+
+        // URLs.
+        $data['addvacancyurl'] = (new moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $convocatoria->id]))->out(false);
+        $data['viewallurl'] = (new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $convocatoria->id]))->out(false);
+        $data['applicationsurl'] = (new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $convocatoria->id]))->out(false);
+
+        // Can add vacancy?
+        $data['canaddvacancy'] = in_array($convocatoria->status, ['draft', 'open']);
+
+        // Vacancies and applications.
+        $data['vacancycount'] = $vacancycount;
+        $data['applicationcount'] = $applicationcount;
+        $data['hasvacancies'] = ($vacancycount > 0);
+        $data['hasapplications'] = ($applicationcount > 0);
+        $data['showviewall'] = ($vacancycount > 5);
+
+        // Vacancies list (max 5).
+        $vacsdata = [];
+        foreach ($vacancies as $v) {
+            $vStatusColor = 'secondary';
+            if ($v->status === 'published') {
+                $vStatusColor = 'success';
+            } else if ($v->status === 'closed') {
+                $vStatusColor = 'warning';
+            }
+
+            $vacsdata[] = [
+                'id' => $v->id,
+                'code' => format_string($v->code),
+                'title' => format_string($v->title),
+                'status' => $v->status,
+                'statuslabel' => get_string('status:' . $v->status, 'local_jobboard'),
+                'statuscolor' => $vStatusColor,
+                'applicationcount' => (int) ($v->app_count ?? 0),
+                'editurl' => (new moodle_url('/local/jobboard/edit.php', ['id' => $v->id]))->out(false),
+            ];
+        }
+        $data['vacancies'] = $vacsdata;
+
+        return $data;
+    }
 }

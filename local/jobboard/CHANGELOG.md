@@ -5,6 +5,30 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.14] - 2025-12-11
+
+### Changed
+- **MAJOR**: Refactored `views/convocatoria.php` from 468 lines to ~271 lines (42% reduction)
+- Convocatoria create/edit page now uses renderer pattern with Mustache template
+- Updated `templates/pages/convocatoria.mustache` with complete jb-* CSS classes
+- Form handling and business logic preserved in view file
+
+### Added
+- `prepare_convocatoria_edit_page_data()` method in renderer for convocatoria form page
+- Breadcrumb navigation with proper hierarchy
+- Statistics cards when editing (vacancies, applications, status)
+- Convocatoria info card with dates and action buttons
+- Vacancies list (first 5) with status badges and application counts
+- Navigation footer with back and dashboard links
+
+### Technical Notes
+- Moodle form HTML captured via output buffering and passed to template
+- Create/update logic with audit logging preserved
+- IOMAD company/department selection support preserved
+- Document exemptions handling preserved
+- AMD module initialization for IOMAD form preserved
+- Zero Bootstrap dependencies - uses jb-* CSS classes only
+
 ## [3.1.13] - 2025-12-11
 
 ### Changed
