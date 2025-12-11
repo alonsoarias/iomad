@@ -1695,6 +1695,595 @@ class renderer extends plugin_renderer_base {
     }
 
     /**
+     * Get vacancy status class.
+     *
+     * @param string $status Status code.
+     * @return string CSS class.
+     */
+    public function get_vacancy_status_class(string $status): string {
+        return $this->get_status_class($status);
+    }
+
+    /**
+     * Render browse convocatorias page.
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_browse_convocatorias_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/browse_convocatorias', $data);
+    }
+
+    /**
+     * Prepare browse convocatorias page data for template.
+     *
+     * @param array $convocatorias Array of convocatoria records.
+     * @param int $total Total count.
+     * @param array $statuscounts Status counts array.
+     * @param string $status Current status filter.
+     * @param int $page Current page.
+     * @param int $perpage Items per page.
+     * @return array Complete template data.
+     */
+    public function prepare_browse_convocatorias_page_data(
+        array $convocatorias,
+        int $total,
+        array $statuscounts,
+        string $status,
+        int $page,
+        int $perpage
+    ): array {
+        global $OUTPUT;
+
+        // Prepare convocatoria data.
+        $convocatoriadata = [];
+        foreach ($convocatorias as $conv) {
+            $now = time();
+            $daysRemaining = (int)ceil(($conv->enddate - $now) / 86400);
+            $isClosingSoon = ($daysRemaining <= 7 && $daysRemaining > 0 && $conv->status === 'open');
+            $isClosed = ($conv->status === 'closed' || $conv->enddate < $now);
+            $isOpen = ($conv->status === 'open' && !$isClosed);
+
+            $convocatoriadata[] = [
+                'id' => $conv->id,
+                'code' => format_string($conv->code),
+                'name' => format_string($conv->name),
+                'description' => !empty($conv->description) ? shorten_text(strip_tags($conv->description), 120) : null,
+                'status' => $conv->status,
+                'startdateformatted' => userdate($conv->startdate, get_string('strftimedate', 'langconfig')),
+                'enddateformatted' => userdate($conv->enddate, get_string('strftimedate', 'langconfig')),
+                'daysremaining' => max(0, $daysRemaining),
+                'isclosingsoon' => $isClosingSoon,
+                'isclosed' => $isClosed,
+                'isopen' => $isOpen,
+                'vacancycount' => $conv->vacancy_count ?? 0,
+                'hasvacancies' => ($conv->vacancy_count ?? 0) > 0,
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $conv->id]))->out(false),
+            ];
+        }
+
+        // Status tabs.
+        $tabs = [
+            [
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias', 'status' => 'open']))->out(false),
+                'label' => get_string('convocatoriaactive', 'local_jobboard'),
+                'count' => $statuscounts['open'] ?? 0,
+                'color' => 'success',
+                'active' => $status === 'open',
+            ],
+            [
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias', 'status' => 'closed']))->out(false),
+                'label' => get_string('convocatoriaclosed', 'local_jobboard'),
+                'count' => $statuscounts['closed'] ?? 0,
+                'color' => 'secondary',
+                'active' => $status === 'closed',
+            ],
+        ];
+
+        // Stats cards.
+        $stats = [
+            [
+                'value' => (string)($statuscounts['open'] ?? 0),
+                'label' => get_string('convocatoriaactive', 'local_jobboard'),
+                'icon' => 'calendar-check',
+                'color' => 'success',
+            ],
+            [
+                'value' => (string)($statuscounts['closed'] ?? 0),
+                'label' => get_string('convocatoriaclosed', 'local_jobboard'),
+                'icon' => 'calendar-times',
+                'color' => 'secondary',
+            ],
+        ];
+
+        // Showing info.
+        $showinginfo = '';
+        if ($total > 0) {
+            $from = ($page * $perpage) + 1;
+            $to = min(($page + 1) * $perpage, $total);
+            $showinginfo = get_string('showingxtoy', 'local_jobboard', (object)['from' => $from, 'to' => $to, 'total' => $total]);
+        }
+
+        // Pagination.
+        $pagination = '';
+        if ($total > $perpage) {
+            $baseurl = new moodle_url('/local/jobboard/index.php', [
+                'view' => 'browse_convocatorias',
+                'status' => $status,
+                'perpage' => $perpage,
+            ]);
+            $pagination = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
+        }
+
+        return [
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'vacanciesurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']))->out(false),
+            'stats' => $stats,
+            'tabs' => $tabs,
+            'showinginfo' => $showinginfo,
+            'hasconvocatorias' => !empty($convocatoriadata),
+            'convocatorias' => $convocatoriadata,
+            'pagination' => $pagination,
+        ];
+    }
+
+    /**
+     * Prepare my reviews page data for template.
+     *
+     * @param int $userid Current user ID.
+     * @param array $applications Array of application records.
+     * @param int $total Total count.
+     * @param array $stats Reviewer statistics.
+     * @param array $filtervalues Current filter values.
+     * @param array $vacancies Available vacancies for filter.
+     * @param int $page Current page.
+     * @param int $perpage Items per page.
+     * @return array Complete template data.
+     */
+    public function prepare_myreviews_page_data(
+        int $userid,
+        array $applications,
+        int $total,
+        array $stats,
+        array $filtervalues,
+        array $vacancies,
+        int $page,
+        int $perpage
+    ): array {
+        global $OUTPUT;
+
+        // Prepare assignments data.
+        $assignments = [];
+        foreach ($applications as $app) {
+            $totaldocs = (int)($app->total_docs ?? 0);
+            $validatedocs = (int)($app->validated_docs ?? 0);
+            $rejecteddocs = (int)($app->rejected_docs ?? 0);
+            $pendingdocs = (int)($app->pending_docs ?? 0);
+
+            $daysUntilClose = (int)ceil(($app->closedate - time()) / 86400);
+            $isUrgent = $daysUntilClose <= 3 && $daysUntilClose > 0;
+            $isClosed = $daysUntilClose <= 0;
+
+            // Status color.
+            $statusColor = 'secondary';
+            if (in_array($app->status, ['docs_validated', 'selected'])) {
+                $statusColor = 'success';
+            } else if (in_array($app->status, ['docs_rejected', 'rejected'])) {
+                $statusColor = 'danger';
+            } else if ($app->status === 'under_review') {
+                $statusColor = 'warning';
+            } else if ($app->status === 'submitted') {
+                $statusColor = 'info';
+            }
+
+            // Calculate percentages.
+            $approvedpercent = $totaldocs > 0 ? round(($validatedocs / $totaldocs) * 100) : 0;
+            $rejectedpercent = $totaldocs > 0 ? round(($rejecteddocs / $totaldocs) * 100) : 0;
+
+            $assignments[] = [
+                'id' => $app->id,
+                'applicantname' => format_string($app->firstname . ' ' . $app->lastname),
+                'email' => $app->email,
+                'vacancycode' => format_string($app->vacancy_code),
+                'vacancytitle' => format_string($app->vacancy_title),
+                'status' => $app->status,
+                'statuslabel' => get_string('status_' . $app->status, 'local_jobboard'),
+                'statuscolor' => $statusColor,
+                'totaldocs' => $totaldocs,
+                'approvedcount' => $validatedocs,
+                'rejectedcount' => $rejecteddocs,
+                'pendingcount' => $pendingdocs,
+                'approvedpercent' => $approvedpercent,
+                'rejectedpercent' => $rejectedpercent,
+                'closedate' => userdate($app->closedate, get_string('strftimedate', 'langconfig')),
+                'daysuntilclose' => max(0, $daysUntilClose),
+                'isurgent' => $isUrgent,
+                'isclosed' => $isClosed,
+                'reviewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'applicationid' => $app->id]))->out(false),
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]))->out(false),
+            ];
+        }
+
+        // Stats cards.
+        $statscards = [
+            [
+                'value' => (string)($stats['pending'] ?? 0),
+                'label' => get_string('pendingassignments', 'local_jobboard'),
+                'icon' => 'tasks',
+                'color' => 'primary',
+            ],
+            [
+                'value' => (string)($stats['validated'] ?? 0),
+                'label' => get_string('documentsvalidated', 'local_jobboard'),
+                'icon' => 'check-circle',
+                'color' => 'success',
+            ],
+            [
+                'value' => (string)($stats['rejected'] ?? 0),
+                'label' => get_string('documentsrejected', 'local_jobboard'),
+                'icon' => 'times-circle',
+                'color' => 'danger',
+            ],
+            [
+                'value' => round($stats['avg_time_hours'] ?? 0, 1) . 'h',
+                'label' => get_string('avgvalidationtime', 'local_jobboard'),
+                'icon' => 'clock',
+                'color' => 'info',
+            ],
+        ];
+
+        // Filter form.
+        $statusOptions = [['value' => '', 'label' => get_string('allstatuses', 'local_jobboard'), 'selected' => empty($filtervalues['status'])]];
+        foreach (['submitted', 'under_review', 'docs_validated', 'docs_rejected'] as $s) {
+            $statusOptions[] = [
+                'value' => $s,
+                'label' => get_string('status_' . $s, 'local_jobboard'),
+                'selected' => ($filtervalues['status'] ?? '') === $s,
+            ];
+        }
+
+        $vacancyOptions = [['value' => '0', 'label' => get_string('allvacancies', 'local_jobboard'), 'selected' => empty($filtervalues['vacancy'])]];
+        foreach ($vacancies as $v) {
+            $vacancyOptions[] = [
+                'value' => (string)$v->id,
+                'label' => format_string($v->code . ' - ' . $v->title),
+                'selected' => ($filtervalues['vacancy'] ?? 0) == $v->id,
+            ];
+        }
+
+        $priorityOptions = [
+            ['value' => '', 'label' => get_string('datesubmitted', 'local_jobboard'), 'selected' => empty($filtervalues['priority'])],
+            ['value' => 'closing', 'label' => get_string('closingdate', 'local_jobboard'), 'selected' => ($filtervalues['priority'] ?? '') === 'closing'],
+            ['value' => 'pending', 'label' => get_string('pendingdocuments', 'local_jobboard'), 'selected' => ($filtervalues['priority'] ?? '') === 'pending'],
+        ];
+
+        $filterform = [
+            'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'hiddenfields' => [['name' => 'view', 'value' => 'myreviews']],
+            'fields' => [
+                [
+                    'name' => 'status',
+                    'label' => get_string('status', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $statusOptions,
+                    'col' => 'jb-col-md-3',
+                ],
+                [
+                    'name' => 'vacancy',
+                    'label' => get_string('vacancy', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $vacancyOptions,
+                    'col' => 'jb-col-md-4',
+                ],
+                [
+                    'name' => 'priority',
+                    'label' => get_string('sortby', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $priorityOptions,
+                    'col' => 'jb-col-md-3',
+                ],
+            ],
+        ];
+
+        // Showing info.
+        $showinginfo = '';
+        if ($total > 0) {
+            $from = ($page * $perpage) + 1;
+            $to = min(($page + 1) * $perpage, $total);
+            $showinginfo = get_string('showingxtoy', 'local_jobboard', (object)['from' => $from, 'to' => $to, 'total' => $total]);
+        }
+
+        // Pagination.
+        $pagination = '';
+        if ($total > $perpage) {
+            $baseurl = new moodle_url('/local/jobboard/index.php', [
+                'view' => 'myreviews',
+                'status' => $filtervalues['status'] ?? '',
+                'vacancy' => $filtervalues['vacancy'] ?? 0,
+                'priority' => $filtervalues['priority'] ?? '',
+            ]);
+            $pagination = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
+        }
+
+        return [
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'reviewqueueurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
+            'stats' => $statscards,
+            'filterform' => $filterform,
+            'showinginfo' => $showinginfo,
+            'hasassignments' => !empty($assignments),
+            'assignments' => $assignments,
+            'pagination' => $pagination,
+        ];
+    }
+
+    /**
+     * Prepare manage vacancies page data for template.
+     *
+     * @param array $vacancies Array of vacancy objects.
+     * @param int $total Total count.
+     * @param array $statscounts Status counts.
+     * @param array $filtervalues Current filter values.
+     * @param object|null $convocatoriainfo Convocatoria if filtering by one.
+     * @param int $page Current page.
+     * @param int $perpage Items per page.
+     * @param string $sesskey Session key.
+     * @param array $caps User capabilities.
+     * @return array Complete template data.
+     */
+    public function prepare_manage_page_data(
+        array $vacancies,
+        int $total,
+        array $statscounts,
+        array $filtervalues,
+        ?object $convocatoriainfo,
+        int $page,
+        int $perpage,
+        string $sesskey,
+        array $caps
+    ): array {
+        global $OUTPUT;
+
+        $baseurl = new moodle_url('/local/jobboard/index.php', ['view' => 'manage']);
+
+        // Prepare vacancy data.
+        $vacancydata = [];
+        foreach ($vacancies as $v) {
+            $opendate = $v->opendate ?? ($v->convocatoria_startdate ?? null);
+            $closedate = $v->closedate ?? ($v->convocatoria_enddate ?? null);
+            $isClosing = $closedate && (($closedate - time()) <= 7 * 86400) && $closedate > time();
+
+            // Build actions.
+            $actions = [];
+
+            // Edit.
+            if (($caps['editvacancy'] ?? false) && ($v->status === 'draft' || $v->status === 'published')) {
+                $actions[] = [
+                    'url' => (new moodle_url('/local/jobboard/edit.php', ['id' => $v->id]))->out(false),
+                    'icon' => 't/edit',
+                    'title' => get_string('edit', 'local_jobboard'),
+                    'class' => 'jb-btn-outline-primary',
+                    'isconfirm' => false,
+                ];
+            }
+
+            // Publish.
+            if (($caps['publishvacancy'] ?? false) && $v->status === 'draft') {
+                $actions[] = [
+                    'url' => (new moodle_url($baseurl, ['action' => 'publish', 'id' => $v->id, 'sesskey' => $sesskey]))->out(false),
+                    'icon' => 't/show',
+                    'title' => get_string('publish', 'local_jobboard'),
+                    'class' => 'jb-btn-outline-success',
+                    'confirm' => get_string('confirmpublish', 'local_jobboard'),
+                    'isconfirm' => true,
+                ];
+            }
+
+            // Unpublish.
+            if (($caps['editvacancy'] ?? false) && $v->status === 'published') {
+                $actions[] = [
+                    'url' => (new moodle_url($baseurl, ['action' => 'unpublish', 'id' => $v->id, 'sesskey' => $sesskey]))->out(false),
+                    'icon' => 't/hide',
+                    'title' => get_string('unpublish', 'local_jobboard'),
+                    'class' => 'jb-btn-outline-secondary',
+                    'confirm' => get_string('confirmunpublish', 'local_jobboard'),
+                    'isconfirm' => true,
+                ];
+            }
+
+            // Close.
+            if (($caps['editvacancy'] ?? false) && $v->status === 'published') {
+                $actions[] = [
+                    'url' => (new moodle_url($baseurl, ['action' => 'close', 'id' => $v->id, 'sesskey' => $sesskey]))->out(false),
+                    'icon' => 't/block',
+                    'title' => get_string('close', 'local_jobboard'),
+                    'class' => 'jb-btn-outline-warning',
+                    'confirm' => get_string('confirmclose', 'local_jobboard'),
+                    'isconfirm' => true,
+                ];
+            }
+
+            // Reopen.
+            if (($caps['publishvacancy'] ?? false) && $v->status === 'closed') {
+                $actions[] = [
+                    'url' => (new moodle_url($baseurl, ['action' => 'reopen', 'id' => $v->id, 'sesskey' => $sesskey]))->out(false),
+                    'icon' => 't/restore',
+                    'title' => get_string('reopen', 'local_jobboard'),
+                    'class' => 'jb-btn-outline-success',
+                    'confirm' => get_string('confirmreopen', 'local_jobboard'),
+                    'isconfirm' => true,
+                ];
+            }
+
+            // View applications.
+            if ($caps['viewallapplications'] ?? false) {
+                $actions[] = [
+                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $v->id]))->out(false),
+                    'icon' => 'i/users',
+                    'title' => get_string('reviewapplications', 'local_jobboard'),
+                    'class' => 'jb-btn-outline-info',
+                    'isconfirm' => false,
+                ];
+            }
+
+            // Delete.
+            if (($caps['deletevacancy'] ?? false) && ($v->status === 'draft' || $v->application_count == 0)) {
+                $actions[] = [
+                    'url' => (new moodle_url($baseurl, ['action' => 'delete', 'id' => $v->id, 'sesskey' => $sesskey]))->out(false),
+                    'icon' => 't/delete',
+                    'title' => get_string('delete', 'local_jobboard'),
+                    'class' => 'jb-btn-outline-danger',
+                    'confirm' => get_string('confirmdeletevacancy', 'local_jobboard'),
+                    'isconfirm' => true,
+                ];
+            }
+
+            $vacancydata[] = [
+                'id' => $v->id,
+                'code' => format_string($v->code),
+                'title' => format_string($v->title),
+                'companyname' => !empty($v->companyname) ? format_string($v->companyname) : null,
+                'status' => $v->status,
+                'statuslabel' => get_string('status:' . $v->status, 'local_jobboard'),
+                'statuscolor' => $this->get_status_class($v->status),
+                'statusicon' => $this->get_status_icon($v->status),
+                'opendateformatted' => $opendate ? local_jobboard_format_date($opendate) : '-',
+                'closedateformatted' => $closedate ? local_jobboard_format_date($closedate) : '-',
+                'isclosing' => $isClosing,
+                'applicationcount' => $v->application_count ?? 0,
+                'hasapplications' => ($v->application_count ?? 0) > 0,
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $v->id]))->out(false),
+                'actions' => $actions,
+            ];
+        }
+
+        // Stats cards.
+        $stats = [
+            [
+                'value' => (string)$total,
+                'label' => get_string('totalvacancies', 'local_jobboard'),
+                'icon' => 'briefcase',
+                'color' => 'primary',
+            ],
+            [
+                'value' => (string)($statscounts['draft'] ?? 0),
+                'label' => get_string('status:draft', 'local_jobboard'),
+                'icon' => 'edit',
+                'color' => 'secondary',
+            ],
+            [
+                'value' => (string)($statscounts['published'] ?? 0),
+                'label' => get_string('status:published', 'local_jobboard'),
+                'icon' => 'check-circle',
+                'color' => 'success',
+            ],
+            [
+                'value' => (string)($statscounts['closed'] ?? 0),
+                'label' => get_string('status:closed', 'local_jobboard'),
+                'icon' => 'lock',
+                'color' => 'warning',
+            ],
+        ];
+
+        // Filter form.
+        $statusOptions = [['value' => '', 'label' => get_string('allstatuses', 'local_jobboard'), 'selected' => empty($filtervalues['status'])]];
+        $vacancyStatuses = local_jobboard_get_vacancy_statuses();
+        foreach ($vacancyStatuses as $key => $label) {
+            $statusOptions[] = [
+                'value' => $key,
+                'label' => $label,
+                'selected' => ($filtervalues['status'] ?? '') === $key,
+            ];
+        }
+
+        $filterform = [
+            'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'hiddenfields' => [['name' => 'view', 'value' => 'manage']],
+            'fields' => [
+                [
+                    'name' => 'search',
+                    'label' => get_string('search', 'local_jobboard'),
+                    'istext' => true,
+                    'placeholder' => get_string('search', 'local_jobboard') . '...',
+                    'value' => $filtervalues['search'] ?? '',
+                    'col' => 'jb-col-md-4',
+                ],
+                [
+                    'name' => 'status',
+                    'label' => get_string('status', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $statusOptions,
+                    'col' => 'jb-col-md-3',
+                ],
+            ],
+        ];
+
+        // Add convocatoriaid to hidden fields if filtering.
+        if (!empty($filtervalues['convocatoriaid'])) {
+            $filterform['hiddenfields'][] = ['name' => 'convocatoriaid', 'value' => $filtervalues['convocatoriaid']];
+        }
+
+        // Convocatoria info.
+        $convinfo = null;
+        if ($convocatoriainfo) {
+            $convinfo = [
+                'id' => $convocatoriainfo->id,
+                'name' => format_string($convocatoriainfo->name),
+                'startdate' => userdate($convocatoriainfo->startdate, get_string('strftimedate', 'langconfig')),
+                'enddate' => userdate($convocatoriainfo->enddate, get_string('strftimedate', 'langconfig')),
+                'status' => $convocatoriainfo->status,
+                'statuslabel' => get_string('convocatoria_status_' . $convocatoriainfo->status, 'local_jobboard'),
+                'statuscolor' => $this->get_convocatoria_status_class($convocatoriainfo->status),
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'id' => $convocatoriainfo->id]))->out(false),
+            ];
+        }
+
+        // Showing info.
+        $showinginfo = '';
+        if ($total > 0) {
+            $from = ($page * $perpage) + 1;
+            $to = min(($page + 1) * $perpage, $total);
+            $showinginfo = get_string('showingxtoy', 'local_jobboard', (object)['from' => $from, 'to' => $to, 'total' => $total]);
+        }
+
+        // Pagination.
+        $pagination = '';
+        if ($total > $perpage) {
+            $paginationParams = [
+                'view' => 'manage',
+                'search' => $filtervalues['search'] ?? '',
+                'status' => $filtervalues['status'] ?? '',
+                'companyid' => $filtervalues['companyid'] ?? 0,
+                'departmentid' => $filtervalues['departmentid'] ?? 0,
+            ];
+            if (!empty($filtervalues['convocatoriaid'])) {
+                $paginationParams['convocatoriaid'] = $filtervalues['convocatoriaid'];
+            }
+            $paginationurl = new moodle_url('/local/jobboard/index.php', $paginationParams);
+            $pagination = $OUTPUT->paging_bar($total, $page, $perpage, $paginationurl);
+        }
+
+        // New vacancy URL.
+        $newvacancyurl = new moodle_url('/local/jobboard/edit.php');
+        if (!empty($filtervalues['convocatoriaid'])) {
+            $newvacancyurl->param('convocatoriaid', $filtervalues['convocatoriaid']);
+        }
+
+        return [
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'convocatoriasurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']))->out(false),
+            'newvacancyurl' => $newvacancyurl->out(false),
+            'convocatoriainfo' => $convinfo,
+            'stats' => $stats,
+            'filterform' => $filterform,
+            'showinginfo' => $showinginfo,
+            'hasvacancies' => !empty($vacancydata),
+            'vacancies' => $vacancydata,
+            'pagination' => $pagination,
+        ];
+    }
+
+    /**
      * Prepare application data for templates.
      *
      * @param object $application Application record.
