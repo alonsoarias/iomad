@@ -3294,4 +3294,42 @@ $string['viewpdf'] = 'View call document';
 // ============================================================================
 // PDF-only Configuration (v2.3.0)
 // ============================================================================
-$string['allowedformats_desc'] = 'Comma-separated list of allowed file formats. Default is "pdf" for PDF files only. To allow images, add "jpg,jpeg,png".';
+$string['allowedformats_desc'] = 'Comma-separated list of allowed file formats. Default is "pdf" for PDF files only.';
+
+// ============================================================================
+// Faculty Reviewers (v2.4.0)
+// ============================================================================
+$string['facultyreviewers'] = 'Faculty Reviewers';
+$string['facultyreviewers_desc'] = 'Manage document reviewers assigned to each faculty';
+$string['role_lead_reviewer'] = 'Lead Reviewer';
+$string['role_faculty_reviewer'] = 'Reviewer';
+$string['totalreviewers'] = 'Total Reviewers';
+$string['activereviewers'] = 'Active Reviewers';
+$string['leadreviewers'] = 'Lead Reviewers';
+$string['facultieswithreviewers'] = 'Faculties with Reviewers';
+$string['allfaculties'] = 'All Faculties';
+$string['nofacultieswithvacancies'] = 'No faculties have been configured with vacancies yet.';
+$string['facultieswithoutreviewers'] = 'Faculties Without Reviewers';
+$string['addreviewers'] = 'Add reviewers';
+$string['backtolist'] = 'Back to list';
+$string['assignedreviewers'] = 'Assigned Reviewers';
+$string['noreviewersforfaculty'] = 'No reviewers have been assigned to this faculty yet.';
+$string['addreviewer'] = 'Add Reviewer';
+$string['removereviewer'] = 'Remove Reviewer';
+$string['confirmremovereviewer'] = 'Are you sure you want to remove this reviewer from the faculty?';
+$string['revieweradded'] = 'Reviewer added successfully';
+$string['revieweradderror'] = 'Could not add reviewer. They may already be assigned or lack the required capability.';
+$string['reviewerremoved'] = 'Reviewer removed successfully';
+$string['reviewerremoveerror'] = 'Could not remove reviewer. There must be at least one active lead reviewer.';
+$string['rolechanged'] = 'Role changed successfully';
+$string['rolechangeerror'] = 'Could not change role';
+$string['statuschanged'] = 'Status changed successfully';
+$string['statuschangeerror'] = 'Could not change status';
+$string['changerole'] = 'Change role';
+$string['deactivate'] = 'Deactivate';
+$string['activate'] = 'Activate';
+$string['inactive'] = 'Inactive';
+$string['pending'] = 'Pending';
+$string['completed'] = 'Completed';
+$string['selectuser'] = 'Select a user...';
+$string['facultyreviewerhelp'] = 'Faculty reviewers are responsible for validating documents submitted by applicants. Lead reviewers can also assign work to other reviewers. The jobboard_reviewer role will be automatically assigned when adding a user as a reviewer.';

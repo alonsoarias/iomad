@@ -3478,4 +3478,42 @@ $string['viewpdf'] = 'Ver documento de convocatoria';
 // ============================================================================
 // Configuración solo PDF (v2.3.0)
 // ============================================================================
-$string['allowedformats_desc'] = 'Lista de formatos permitidos separados por coma. Por defecto es "pdf" para solo archivos PDF. Para permitir imágenes, agregue "jpg,jpeg,png".';
+$string['allowedformats_desc'] = 'Lista de formatos permitidos separados por coma. Por defecto es "pdf" para solo archivos PDF.';
+
+// ============================================================================
+// Revisores por Facultad (v2.4.0)
+// ============================================================================
+$string['facultyreviewers'] = 'Revisores por Facultad';
+$string['facultyreviewers_desc'] = 'Gestionar revisores de documentos asignados a cada facultad';
+$string['role_lead_reviewer'] = 'Revisor Líder';
+$string['role_faculty_reviewer'] = 'Revisor';
+$string['totalreviewers'] = 'Total de Revisores';
+$string['activereviewers'] = 'Revisores Activos';
+$string['leadreviewers'] = 'Revisores Líderes';
+$string['facultieswithreviewers'] = 'Facultades con Revisores';
+$string['allfaculties'] = 'Todas las Facultades';
+$string['nofacultieswithvacancies'] = 'Aún no se han configurado facultades con vacantes.';
+$string['facultieswithoutreviewers'] = 'Facultades sin Revisores';
+$string['addreviewers'] = 'Agregar revisores';
+$string['backtolist'] = 'Volver a la lista';
+$string['assignedreviewers'] = 'Revisores Asignados';
+$string['noreviewersforfaculty'] = 'Aún no se han asignado revisores a esta facultad.';
+$string['addreviewer'] = 'Agregar Revisor';
+$string['removereviewer'] = 'Eliminar Revisor';
+$string['confirmremovereviewer'] = '¿Está seguro de que desea eliminar este revisor de la facultad?';
+$string['revieweradded'] = 'Revisor agregado exitosamente';
+$string['revieweradderror'] = 'No se pudo agregar el revisor. Puede que ya esté asignado o no tenga la capacidad requerida.';
+$string['reviewerremoved'] = 'Revisor eliminado exitosamente';
+$string['reviewerremoveerror'] = 'No se pudo eliminar el revisor. Debe haber al menos un revisor líder activo.';
+$string['rolechanged'] = 'Rol cambiado exitosamente';
+$string['rolechangeerror'] = 'No se pudo cambiar el rol';
+$string['statuschanged'] = 'Estado cambiado exitosamente';
+$string['statuschangeerror'] = 'No se pudo cambiar el estado';
+$string['changerole'] = 'Cambiar rol';
+$string['deactivate'] = 'Desactivar';
+$string['activate'] = 'Activar';
+$string['inactive'] = 'Inactivo';
+$string['pending'] = 'Pendiente';
+$string['completed'] = 'Completado';
+$string['selectuser'] = 'Seleccione un usuario...';
+$string['facultyreviewerhelp'] = 'Los revisores de facultad son responsables de validar los documentos enviados por los aspirantes. Los revisores líderes también pueden asignar trabajo a otros revisores. El rol jobboard_reviewer se asignará automáticamente al agregar un usuario como revisor.';

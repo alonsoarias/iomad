@@ -392,6 +392,26 @@ if ($canManageContent) {
             echo html_writer::end_div();
         }
 
+        // Faculty Reviewers (if manageworkflow).
+        if ($caps['manageworkflow']) {
+            echo html_writer::start_div('col-md-4 col-sm-6 mb-3');
+            echo html_writer::start_div('card border-0 bg-light h-100');
+            echo html_writer::start_div('card-body d-flex align-items-center');
+            echo html_writer::tag('i', '', ['class' => 'fa fa-user-check fa-2x text-success mr-3']);
+            echo html_writer::start_div();
+            echo html_writer::tag('h6', get_string('facultyreviewers', 'local_jobboard'), ['class' => 'mb-1']);
+            echo html_writer::tag('small', get_string('facultyreviewers_desc', 'local_jobboard'), ['class' => 'd-block text-muted mb-2']);
+            echo html_writer::link(
+                new moodle_url('/local/jobboard/manage_faculty_reviewers.php'),
+                '<i class="fa fa-user-check mr-1"></i>' . get_string('facultyreviewers', 'local_jobboard'),
+                ['class' => 'btn btn-sm btn-outline-success']
+            );
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+            echo html_writer::end_div();
+        }
+
         echo html_writer::end_div(); // row
     }
 
