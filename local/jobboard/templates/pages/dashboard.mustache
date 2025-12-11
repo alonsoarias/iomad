@@ -4,13 +4,20 @@
     Main dashboard page template.
 
     Context variables:
-    * pageheader - Page header data for page_header partial
     * isadmin - Boolean if user is admin/manager
-    * isreviewer - Boolean if user can review
-    * isapplicant - Boolean if user can apply
+    * isreviewer - Boolean if user can review (not manager)
+    * isapplicant - Boolean if user can apply (not manager/reviewer)
+    * isvieweronly - Boolean if user can only view
+    * welcome - Welcome section data {rolelabel, message}
+    * showpubliclink - Boolean to show public page link
+    * publicurl - URL to public page
+    * applicationsurl - URL to applications page
     * stats - Array of stat cards for admin section
     * applicantstats - Array of stat cards for applicant section
     * adminsections - Array of admin section cards
+    * workflowsections - Array of workflow cards for admin
+    * reportsections - Array of report cards for admin
+    * configsections - Array of config cards for admin
     * applicantsections - Array of applicant section cards
     * reviewersection - Reviewer section data
     * alerts - Array of alert messages
@@ -18,12 +25,40 @@
     Example context (json):
     {
         "isadmin": true,
+        "welcome": {"rolelabel": "Administrator", "message": "Welcome to the dashboard"},
         "stats": [{"value": "5", "label": "Active Calls", "icon": "folder-open", "color": "primary"}]
     }
 }}
 <div class="local-jobboard-dashboard" data-region="jobboard-dashboard">
-    {{! Page Header }}
-    {{> local_jobboard/components/page_header }}
+    {{! Welcome Header }}
+    <div class="jb-welcome-section jb-bg-gradient-primary jb-text-white jb-rounded-lg jb-p-4 jb-mb-4">
+        <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+            <div>
+                <h2 class="jb-mb-1 jb-fw-bold">{{#str}}dashboard, local_jobboard{{/str}}</h2>
+                {{#welcome.rolelabel}}
+                <span class="jb-badge jb-badge-light jb-mr-2">{{welcome.rolelabel}}</span>
+                {{/welcome.rolelabel}}
+                {{#welcome.message}}
+                <p class="jb-mb-0 jb-opacity-75 jb-mt-2">{{welcome.message}}</p>
+                {{/welcome.message}}
+            </div>
+            <i class="fa fa-briefcase fa-3x jb-opacity-25" aria-hidden="true"></i>
+        </div>
+        {{#showpubliclink}}
+        <div class="jb-mt-3 jb-pt-3 jb-border-top jb-border-light">
+            <a href="{{publicurl}}" class="jb-btn jb-btn-light jb-btn-sm jb-mr-2">
+                <i class="fa fa-globe jb-mr-2" aria-hidden="true"></i>
+                {{#str}}viewpublicpage, local_jobboard{{/str}}
+            </a>
+            {{#isapplicant}}
+            <a href="{{applicationsurl}}" class="jb-btn jb-btn-outline-light jb-btn-sm">
+                <i class="fa fa-folder-open jb-mr-2" aria-hidden="true"></i>
+                {{#str}}myapplications, local_jobboard{{/str}}
+            </a>
+            {{/isapplicant}}
+        </div>
+        {{/showpubliclink}}
+    </div>
 
     {{! Alerts }}
     {{#alerts.0}}
@@ -92,6 +127,87 @@
             </div>
             {{/adminsections}}
         </div>
+
+        {{! Workflow Management Section }}
+        {{#workflowsections.0}}
+        <h3 class="jb-fs-5 jb-text-muted jb-mb-3 jb-mt-4">
+            <i class="fa fa-sitemap jb-mr-2" aria-hidden="true"></i>
+            {{#str}}workflowmanagement, local_jobboard{{/str}}
+        </h3>
+        <div class="jb-row jb-mb-4">
+            {{#workflowsections}}
+            <div class="jb-col-md-4 jb-col-sm-6 jb-mb-3">
+                <div class="jb-card jb-border-0 jb-bg-light jb-card-h100">
+                    <div class="jb-card-body jb-d-flex jb-align-items-center">
+                        <i class="fa fa-{{icon}} fa-2x jb-text-{{color}} jb-mr-3" aria-hidden="true"></i>
+                        <div>
+                            <h4 class="jb-fs-6 jb-mb-1">{{title}}</h4>
+                            <small class="jb-d-block jb-text-muted jb-mb-2">{{description}}</small>
+                            <a href="{{url}}" class="jb-btn jb-btn-sm jb-btn-outline-{{color}}">
+                                <i class="fa fa-{{buttonicon}} jb-mr-1" aria-hidden="true"></i>
+                                {{buttonlabel}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/workflowsections}}
+        </div>
+        {{/workflowsections.0}}
+
+        {{! Reports & Data Section }}
+        {{#reportsections.0}}
+        <h3 class="jb-fs-5 jb-text-muted jb-mb-3">
+            <i class="fa fa-chart-bar jb-mr-2" aria-hidden="true"></i>
+            {{#str}}reportsanddata, local_jobboard{{/str}}
+        </h3>
+        <div class="jb-row jb-mb-4">
+            {{#reportsections}}
+            <div class="jb-col-md-4 jb-col-sm-6 jb-mb-3">
+                <div class="jb-card jb-border-0 jb-bg-light jb-card-h100">
+                    <div class="jb-card-body jb-d-flex jb-align-items-center">
+                        <i class="fa fa-{{icon}} fa-2x jb-text-{{color}} jb-mr-3" aria-hidden="true"></i>
+                        <div>
+                            <h4 class="jb-fs-6 jb-mb-1">{{title}}</h4>
+                            <small class="jb-d-block jb-text-muted jb-mb-2">{{description}}</small>
+                            <a href="{{url}}" class="jb-btn jb-btn-sm jb-btn-outline-{{color}}">
+                                <i class="fa fa-{{buttonicon}} jb-mr-1" aria-hidden="true"></i>
+                                {{buttonlabel}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/reportsections}}
+        </div>
+        {{/reportsections.0}}
+
+        {{! System Configuration Section (Admin only) }}
+        {{#configsections.0}}
+        <h3 class="jb-fs-5 jb-text-muted jb-mb-3">
+            <i class="fa fa-cogs jb-mr-2" aria-hidden="true"></i>
+            {{#str}}systemconfiguration, local_jobboard{{/str}}
+        </h3>
+        <div class="jb-row jb-mb-4">
+            {{#configsections}}
+            <div class="jb-col-md-3 jb-col-sm-6 jb-mb-3">
+                <div class="jb-card jb-border-0 jb-bg-light jb-card-h100">
+                    <div class="jb-card-body jb-d-flex jb-align-items-center">
+                        <i class="fa fa-{{icon}} fa-2x jb-text-{{color}} jb-mr-3" aria-hidden="true"></i>
+                        <div>
+                            <h4 class="jb-fs-6 jb-mb-1">{{title}}</h4>
+                            <small class="jb-d-block jb-text-muted jb-mb-2">{{description}}</small>
+                            <a href="{{url}}" class="jb-btn jb-btn-sm jb-btn-outline-{{color}}">
+                                <i class="fa fa-{{buttonicon}} jb-mr-1" aria-hidden="true"></i>
+                                {{buttonlabel}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/configsections}}
+        </div>
+        {{/configsections.0}}
     </section>
     {{/isadmin}}
 
@@ -200,6 +316,25 @@
         </div>
     </section>
     {{/isapplicant}}
+
+    {{! Viewer Only Section }}
+    {{#isvieweronly}}
+    <section class="jb-viewer-section">
+        <div class="jb-card jb-card-shadow">
+            <div class="jb-card-body jb-text-center jb-py-5">
+                <i class="fa fa-briefcase fa-4x jb-text-muted jb-mb-4" aria-hidden="true"></i>
+                <h3 class="jb-mb-3">{{#str}}welcometojobboard, local_jobboard{{/str}}</h3>
+                <p class="jb-text-muted jb-mb-4">{{#str}}vieweronly_desc, local_jobboard{{/str}}</p>
+                {{#showpubliclink}}
+                <a href="{{publicurl}}" class="jb-btn jb-btn-primary jb-btn-lg">
+                    <i class="fa fa-globe jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}viewpublicvacancies, local_jobboard{{/str}}
+                </a>
+                {{/showpubliclink}}
+            </div>
+        </div>
+    </section>
+    {{/isvieweronly}}
 </div>
 
 {{#js}}

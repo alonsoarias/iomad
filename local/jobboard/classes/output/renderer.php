@@ -512,6 +512,463 @@ class renderer extends plugin_renderer_base {
     }
 
     /**
+     * Prepare complete dashboard data for template.
+     *
+     * @param int $userid Current user ID.
+     * @param array $caps User capabilities array.
+     * @param array $stats Dashboard statistics.
+     * @return array Complete template data.
+     */
+    public function prepare_dashboard_data(int $userid, array $caps, array $stats): array {
+        // Determine user roles.
+        $isadmin = $caps['configure'] ?? false;
+        $ismanager = ($caps['createvacancy'] ?? false) || ($caps['manageconvocatorias'] ?? false);
+        $isreviewer = ($caps['reviewdocuments'] ?? false) || ($caps['validatedocuments'] ?? false);
+        $isapplicant = $caps['apply'] ?? false;
+        $canmanagecontent = $isadmin || $ismanager;
+
+        // Determine role label and welcome message.
+        $rolelabel = '';
+        $welcomemsg = '';
+        if ($isadmin) {
+            $rolelabel = get_string('role_administrator', 'local_jobboard');
+            $welcomemsg = get_string('dashboard_admin_welcome', 'local_jobboard');
+        } else if ($ismanager) {
+            $rolelabel = get_string('role_manager', 'local_jobboard');
+            $welcomemsg = get_string('dashboard_manager_welcome', 'local_jobboard');
+        } else if ($isreviewer) {
+            $rolelabel = get_string('role_reviewer', 'local_jobboard');
+            $welcomemsg = get_string('dashboard_reviewer_welcome', 'local_jobboard');
+        } else if ($isapplicant) {
+            $rolelabel = get_string('role_applicant', 'local_jobboard');
+            $welcomemsg = get_string('dashboard_applicant_welcome', 'local_jobboard');
+        }
+
+        // Check if public page is enabled.
+        $enablepublic = get_config('local_jobboard', 'enable_public_page');
+
+        $data = [
+            'isadmin' => $canmanagecontent,
+            'isreviewer' => $isreviewer && !$canmanagecontent,
+            'isapplicant' => $isapplicant && !$canmanagecontent && !$isreviewer,
+            'isvieweronly' => !$canmanagecontent && !$isreviewer && !$isapplicant && ($caps['view'] ?? false),
+            'welcome' => [
+                'rolelabel' => $rolelabel,
+                'message' => $welcomemsg,
+            ],
+            'showpubliclink' => !empty($enablepublic),
+            'publicurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false),
+            'applicationsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
+            'stats' => [],
+            'adminsections' => [],
+            'workflowsections' => [],
+            'reportsections' => [],
+            'configsections' => [],
+            'reviewersection' => null,
+            'applicantstats' => [],
+            'applicantsections' => [],
+            'alerts' => [],
+        ];
+
+        // Admin/Manager statistics.
+        if ($canmanagecontent) {
+            $data['stats'] = [
+                [
+                    'value' => (string)($stats['active_convocatorias'] ?? 0),
+                    'label' => get_string('activeconvocatorias', 'local_jobboard'),
+                    'icon' => 'calendar-alt',
+                    'color' => 'primary',
+                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']))->out(false),
+                ],
+                [
+                    'value' => (string)($stats['published_vacancies'] ?? 0),
+                    'label' => get_string('publishedvacancies', 'local_jobboard'),
+                    'icon' => 'briefcase',
+                    'color' => 'success',
+                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'status' => 'published']))->out(false),
+                ],
+                [
+                    'value' => (string)($stats['total_applications'] ?? 0),
+                    'label' => get_string('totalapplications', 'local_jobboard'),
+                    'icon' => 'users',
+                    'color' => 'info',
+                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
+                ],
+                [
+                    'value' => (string)($stats['pending_reviews'] ?? 0),
+                    'label' => get_string('pendingreviews', 'local_jobboard'),
+                    'icon' => 'clock',
+                    'color' => 'warning',
+                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'status' => 'submitted']))->out(false),
+                ],
+            ];
+
+            // Admin sections.
+            $data['adminsections'] = $this->prepare_admin_sections($caps, $stats);
+
+            // Workflow sections.
+            $data['workflowsections'] = $this->prepare_workflow_sections($caps);
+
+            // Reports sections.
+            $data['reportsections'] = $this->prepare_report_sections($caps);
+
+            // Config sections (admin only).
+            if ($isadmin) {
+                $data['configsections'] = $this->prepare_config_sections($caps);
+            }
+        }
+
+        // Reviewer section.
+        if ($isreviewer) {
+            $data['reviewersection'] = [
+                'pendingcount' => $stats['my_pending_reviews'] ?? 0,
+                'completedcount' => $stats['my_completed_reviews'] ?? 0,
+                'haspendingreview' => ($stats['my_pending_reviews'] ?? 0) > 0,
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'myreviews']))->out(false),
+            ];
+        }
+
+        // Applicant statistics and sections.
+        if ($isapplicant && !$canmanagecontent && !$isreviewer) {
+            $data['applicantstats'] = [
+                [
+                    'value' => (string)($stats['active_convocatorias'] ?? 0),
+                    'label' => get_string('activeconvocatorias', 'local_jobboard'),
+                    'icon' => 'calendar-alt',
+                    'color' => 'primary',
+                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']))->out(false),
+                ],
+                [
+                    'value' => (string)($stats['my_applications'] ?? 0),
+                    'label' => get_string('myapplicationcount', 'local_jobboard'),
+                    'icon' => 'folder-open',
+                    'color' => 'info',
+                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
+                ],
+                [
+                    'value' => (string)($stats['available_vacancies'] ?? 0),
+                    'label' => get_string('availablevacancies', 'local_jobboard'),
+                    'icon' => 'briefcase',
+                    'color' => 'success',
+                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']))->out(false),
+                ],
+                [
+                    'value' => (string)($stats['pending_docs'] ?? 0),
+                    'label' => get_string('pendingdocs', 'local_jobboard'),
+                    'icon' => 'file-upload',
+                    'color' => 'warning',
+                ],
+            ];
+
+            $data['applicantsections'] = $this->prepare_applicant_sections($stats);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Prepare workflow sections for dashboard.
+     *
+     * @param array $caps User capabilities.
+     * @return array Workflow sections data.
+     */
+    protected function prepare_workflow_sections(array $caps): array {
+        $sections = [];
+
+        // Assign Reviewers.
+        if ($caps['manageworkflow'] ?? $caps['assignreviewers'] ?? false) {
+            $sections[] = [
+                'id' => 'assignreviewers',
+                'title' => get_string('assignreviewers', 'local_jobboard'),
+                'description' => get_string('assignreviewers_desc', 'local_jobboard'),
+                'icon' => 'user-plus',
+                'color' => 'primary',
+                'url' => (new moodle_url('/local/jobboard/assign_reviewer.php'))->out(false),
+                'buttonlabel' => get_string('assignreviewers', 'local_jobboard'),
+                'buttonicon' => 'users-cog',
+            ];
+        }
+
+        // Bulk Validation.
+        if ($caps['reviewdocuments'] ?? $caps['validatedocuments'] ?? false) {
+            $sections[] = [
+                'id' => 'bulkvalidation',
+                'title' => get_string('bulkvalidation', 'local_jobboard'),
+                'description' => get_string('bulkvalidation_desc', 'local_jobboard'),
+                'icon' => 'tasks',
+                'color' => 'success',
+                'url' => (new moodle_url('/local/jobboard/bulk_validate.php'))->out(false),
+                'buttonlabel' => get_string('bulkvalidation', 'local_jobboard'),
+                'buttonicon' => 'check-double',
+            ];
+        }
+
+        // Selection Committees.
+        if ($caps['manageworkflow'] ?? false) {
+            $sections[] = [
+                'id' => 'committees',
+                'title' => get_string('committees', 'local_jobboard'),
+                'description' => get_string('committees_desc', 'local_jobboard'),
+                'icon' => 'users',
+                'color' => 'info',
+                'url' => (new moodle_url('/local/jobboard/manage_committee.php'))->out(false),
+                'buttonlabel' => get_string('managecommittees', 'local_jobboard'),
+                'buttonicon' => 'users-cog',
+            ];
+
+            // Program Reviewers.
+            $sections[] = [
+                'id' => 'programreviewers',
+                'title' => get_string('program_reviewers', 'local_jobboard'),
+                'description' => get_string('program_reviewers_desc', 'local_jobboard'),
+                'icon' => 'user-check',
+                'color' => 'success',
+                'url' => (new moodle_url('/local/jobboard/manage_program_reviewers.php'))->out(false),
+                'buttonlabel' => get_string('program_reviewers', 'local_jobboard'),
+                'buttonicon' => 'user-check',
+            ];
+        }
+
+        return $sections;
+    }
+
+    /**
+     * Prepare report sections for dashboard.
+     *
+     * @param array $caps User capabilities.
+     * @return array Report sections data.
+     */
+    protected function prepare_report_sections(array $caps): array {
+        $sections = [];
+
+        // Reports.
+        if ($caps['viewreports'] ?? false) {
+            $sections[] = [
+                'id' => 'reports',
+                'title' => get_string('reports', 'local_jobboard'),
+                'description' => get_string('reports_desc', 'local_jobboard'),
+                'icon' => 'chart-line',
+                'color' => 'info',
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'reports']))->out(false),
+                'buttonlabel' => get_string('viewreports', 'local_jobboard'),
+                'buttonicon' => 'chart-bar',
+            ];
+        }
+
+        // Import Vacancies.
+        if ($caps['createvacancy'] ?? false) {
+            $sections[] = [
+                'id' => 'import',
+                'title' => get_string('importvacancies', 'local_jobboard'),
+                'description' => get_string('importvacancies_desc', 'local_jobboard'),
+                'icon' => 'file-import',
+                'color' => 'primary',
+                'url' => (new moodle_url('/local/jobboard/import_vacancies.php'))->out(false),
+                'buttonlabel' => get_string('import', 'local_jobboard'),
+                'buttonicon' => 'upload',
+            ];
+        }
+
+        // Export Data.
+        if ($caps['exportdata'] ?? false) {
+            $sections[] = [
+                'id' => 'export',
+                'title' => get_string('exportdata', 'local_jobboard'),
+                'description' => get_string('exportdata_desc', 'local_jobboard'),
+                'icon' => 'file-export',
+                'color' => 'success',
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']))->out(false),
+                'buttonlabel' => get_string('export', 'local_jobboard'),
+                'buttonicon' => 'download',
+            ];
+        }
+
+        return $sections;
+    }
+
+    /**
+     * Prepare configuration sections for dashboard (admin only).
+     *
+     * @param array $caps User capabilities.
+     * @return array Config sections data.
+     */
+    protected function prepare_config_sections(array $caps): array {
+        $sections = [];
+
+        // Plugin Settings.
+        $sections[] = [
+            'id' => 'settings',
+            'title' => get_string('pluginsettings', 'local_jobboard'),
+            'description' => get_string('pluginsettings_desc', 'local_jobboard'),
+            'icon' => 'sliders-h',
+            'color' => 'secondary',
+            'url' => (new moodle_url('/admin/settings.php', ['section' => 'local_jobboard']))->out(false),
+            'buttonlabel' => get_string('configure', 'local_jobboard'),
+            'buttonicon' => 'cog',
+        ];
+
+        // Document Types.
+        if ($caps['managedoctypes'] ?? false) {
+            $sections[] = [
+                'id' => 'doctypes',
+                'title' => get_string('doctypes', 'local_jobboard'),
+                'description' => get_string('doctypes_desc', 'local_jobboard'),
+                'icon' => 'file-alt',
+                'color' => 'primary',
+                'url' => (new moodle_url('/local/jobboard/admin/doctypes.php'))->out(false),
+                'buttonlabel' => get_string('manage', 'local_jobboard'),
+                'buttonicon' => 'list',
+            ];
+        }
+
+        // Email Templates.
+        if ($caps['manageemailtemplates'] ?? false) {
+            $sections[] = [
+                'id' => 'emailtemplates',
+                'title' => get_string('emailtemplates', 'local_jobboard'),
+                'description' => get_string('emailtemplates_desc', 'local_jobboard'),
+                'icon' => 'envelope',
+                'color' => 'info',
+                'url' => (new moodle_url('/local/jobboard/admin/templates.php'))->out(false),
+                'buttonlabel' => get_string('manage', 'local_jobboard'),
+                'buttonicon' => 'edit',
+            ];
+        }
+
+        // User Exemptions.
+        if ($caps['manageexemptions'] ?? false) {
+            $sections[] = [
+                'id' => 'exemptions',
+                'title' => get_string('exemptions', 'local_jobboard'),
+                'description' => get_string('manageexemptions_desc', 'local_jobboard'),
+                'icon' => 'user-shield',
+                'color' => 'warning',
+                'url' => (new moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
+                'buttonlabel' => get_string('manage', 'local_jobboard'),
+                'buttonicon' => 'list',
+            ];
+        }
+
+        // Role Management.
+        $sections[] = [
+            'id' => 'roles',
+            'title' => get_string('manageroles', 'local_jobboard'),
+            'description' => get_string('manageroles_desc', 'local_jobboard'),
+            'icon' => 'user-tag',
+            'color' => 'success',
+            'url' => (new moodle_url('/local/jobboard/admin/roles.php'))->out(false),
+            'buttonlabel' => get_string('manage', 'local_jobboard'),
+            'buttonicon' => 'users-cog',
+        ];
+
+        return $sections;
+    }
+
+    /**
+     * Prepare admin sections for dashboard.
+     *
+     * @param array $caps User capabilities.
+     * @param array $stats Statistics.
+     * @return array Admin sections data.
+     */
+    protected function prepare_admin_sections(array $caps, array $stats): array {
+        $sections = [];
+
+        // Convocatorias section.
+        if ($caps['manageconvocatorias'] ?? $caps['configure'] ?? false) {
+            $sections[] = [
+                'id' => 'convocatorias',
+                'title' => get_string('convocatorias', 'local_jobboard'),
+                'description' => get_string('convocatorias_dashboard_desc', 'local_jobboard'),
+                'icon' => 'calendar-alt',
+                'color' => 'primary',
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']))->out(false),
+                'buttonlabel' => get_string('manage', 'local_jobboard'),
+                'features' => [
+                    get_string('feature_create_convocatorias', 'local_jobboard'),
+                    get_string('feature_manage_vacancies', 'local_jobboard'),
+                    get_string('feature_track_applications', 'local_jobboard'),
+                ],
+            ];
+        }
+
+        // Vacancies section.
+        if ($caps['createvacancy'] ?? false) {
+            $sections[] = [
+                'id' => 'vacancies',
+                'title' => get_string('vacancies', 'local_jobboard'),
+                'description' => get_string('vacancies_dashboard_desc', 'local_jobboard'),
+                'icon' => 'briefcase',
+                'color' => 'success',
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'manage']))->out(false),
+                'buttonlabel' => get_string('manage', 'local_jobboard'),
+                'features' => [
+                    get_string('feature_create_vacancies', 'local_jobboard'),
+                    get_string('feature_publish_vacancies', 'local_jobboard'),
+                    get_string('feature_import_export', 'local_jobboard'),
+                ],
+            ];
+        }
+
+        // Applications/Review section.
+        if (($caps['viewallapplications'] ?? false) || ($caps['reviewdocuments'] ?? false)) {
+            $sections[] = [
+                'id' => 'applications',
+                'title' => get_string('applications', 'local_jobboard'),
+                'description' => get_string('review_dashboard_desc', 'local_jobboard'),
+                'icon' => 'clipboard-check',
+                'color' => 'warning',
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
+                'buttonlabel' => get_string('reviewall', 'local_jobboard'),
+                'features' => [
+                    get_string('feature_review_documents', 'local_jobboard'),
+                    get_string('feature_validate_applications', 'local_jobboard'),
+                    get_string('feature_assign_reviewers', 'local_jobboard'),
+                ],
+            ];
+        }
+
+        return $sections;
+    }
+
+    /**
+     * Prepare applicant sections for dashboard.
+     *
+     * @param array $stats Statistics.
+     * @return array Applicant sections data.
+     */
+    protected function prepare_applicant_sections(array $stats): array {
+        $sections = [];
+
+        // Browse convocatorias.
+        $sections[] = [
+            'id' => 'browse',
+            'title' => get_string('browseconvocatorias', 'local_jobboard'),
+            'description' => get_string('browseconvocatorias_desc', 'local_jobboard'),
+            'icon' => 'search',
+            'color' => 'primary',
+            'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']))->out(false),
+            'buttonlabel' => get_string('explore', 'local_jobboard'),
+        ];
+
+        // My applications.
+        $pendingDocs = $stats['pending_docs'] ?? 0;
+        $sections[] = [
+            'id' => 'myapplications',
+            'title' => get_string('myapplications', 'local_jobboard'),
+            'description' => get_string('myapplications_desc', 'local_jobboard'),
+            'icon' => 'folder-open',
+            'color' => 'info',
+            'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
+            'buttonlabel' => get_string('viewmyapplications', 'local_jobboard'),
+            'alert' => $pendingDocs > 0 ? get_string('pending_docs_alert', 'local_jobboard', $pendingDocs) : null,
+            'alerttype' => 'warning',
+        ];
+
+        return $sections;
+    }
+
+    /**
      * Prepare vacancy data for templates.
      *
      * @param object $vacancy Vacancy record.

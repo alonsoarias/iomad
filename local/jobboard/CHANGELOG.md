@@ -5,6 +5,29 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.1] - 2025-12-11
+
+### Added
+- AMD JavaScript modules (`amd/src/dashboard.js`, `common.js`, `notifications.js`)
+- Dashboard AMD module with animations and stat card interactions
+- Common utilities module with CSS class constants and AJAX helpers
+- Notifications module for toast notifications (no Bootstrap dependencies)
+- Additional CSS utility classes (`jb-rounded-lg`, `jb-rounded-xl`)
+
+### Changed
+- **MAJOR**: Refactored `views/dashboard.php` from 910 lines to ~100 lines
+- Dashboard now uses renderer pattern with Mustache templates
+- Updated `pages/dashboard.mustache` template with complete dashboard structure
+- Added welcome header, workflow sections, reports sections, config sections
+- Renderer now includes `prepare_dashboard_data()`, `prepare_workflow_sections()`,
+  `prepare_report_sections()`, `prepare_config_sections()` methods
+
+### Technical Notes
+- Dashboard view now follows MVC pattern (Model-View-Controller separation)
+- All HTML output delegated to Mustache templates
+- Business logic moved to renderer class
+- Zero Bootstrap dependencies in AMD modules
+
 ## [3.1.0] - 2025-12-11
 
 ### Added

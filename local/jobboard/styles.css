@@ -1985,6 +1985,8 @@
 .jb-rounded-1 { border-radius: var(--jb-radius-sm) !important; }
 .jb-rounded-2 { border-radius: var(--jb-radius-md) !important; }
 .jb-rounded-3 { border-radius: var(--jb-radius-lg) !important; }
+.jb-rounded-lg { border-radius: var(--jb-radius-lg) !important; }
+.jb-rounded-xl { border-radius: var(--jb-radius-xl) !important; }
 .jb-rounded-circle { border-radius: var(--jb-radius-circle) !important; }
 .jb-rounded-pill { border-radius: var(--jb-radius-pill) !important; }
 
