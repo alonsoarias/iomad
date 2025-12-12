@@ -28,8 +28,6 @@ require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/formslib.php');
 require_once(__DIR__ . '/lib.php');
 
-use local_jobboard\output\ui_helper;
-
 require_login();
 
 $context = context_system::instance();
@@ -971,26 +969,11 @@ if ($action === 'import') {
             unlink($tempfile);
 
             if (!empty($data->dryrun)) {
-                // Show dry run results.
+                // Show dry run results using template.
                 echo $OUTPUT->header();
-                echo html_writer::start_div('local-jobboard-dashboard');
-                echo html_writer::tag('h3', get_string('dryrunresults', 'local_jobboard'));
-                echo html_writer::start_div('card shadow-sm');
-                echo html_writer::start_div('card-body');
-
-                foreach ($results['messages'] as $msg) {
-                    echo html_writer::tag('p', $msg);
-                }
-
-                echo html_writer::end_div();
-                echo html_writer::end_div();
-
-                echo html_writer::link(
-                    new moodle_url('/local/jobboard/migrate.php'),
-                    '<i class="fa fa-arrow-left mr-2"></i>' . get_string('back'),
-                    ['class' => 'btn btn-primary mt-3']
-                );
-                echo html_writer::end_div();
+                $renderer = $PAGE->get_renderer('local_jobboard');
+                $templatedata = $renderer->prepare_migrate_page_data([], '', '', $results);
+                echo $renderer->render_migrate_page($templatedata);
                 echo $OUTPUT->footer();
                 exit;
             }
@@ -1013,84 +996,30 @@ if ($action === 'import') {
     }
 }
 
-// Display page.
+// Display page using renderer + template pattern.
 echo $OUTPUT->header();
-echo ui_helper::get_inline_styles();
 
-echo html_writer::start_div('local-jobboard-dashboard');
+// Get renderer.
+$renderer = $PAGE->get_renderer('local_jobboard');
 
-// Page header.
-echo html_writer::start_div('jb-welcome-section bg-gradient-primary text-white rounded-lg p-4 mb-4');
-echo html_writer::start_div('d-flex justify-content-between align-items-center');
-echo html_writer::start_div();
-echo html_writer::tag('h2', get_string('migrateplugin', 'local_jobboard'), ['class' => 'mb-1 font-weight-bold']);
-echo html_writer::tag('p', get_string('migrateplugin_desc', 'local_jobboard'), ['class' => 'mb-0 opacity-75']);
-echo html_writer::end_div();
-echo html_writer::tag('i', '', ['class' => 'fa fa-exchange-alt fa-3x opacity-25']);
-echo html_writer::end_div();
-echo html_writer::end_div();
+// Get export counts.
+$exportcounts = local_jobboard_get_export_counts();
 
-// Info box.
-echo html_writer::start_div('alert alert-info mb-4');
-echo html_writer::tag('i', '', ['class' => 'fa fa-info-circle fa-lg mr-2']);
-echo html_writer::tag('strong', get_string('migrationinfo_title', 'local_jobboard'));
-echo html_writer::tag('p', get_string('migrationinfo_desc', 'local_jobboard'), ['class' => 'mb-0 mt-2']);
-echo html_writer::end_div();
-
-// Two column layout.
-echo html_writer::start_div('row');
-
-// Export Section.
-echo html_writer::start_div('col-lg-6 mb-4');
-echo html_writer::start_div('card shadow-sm h-100');
-echo html_writer::start_div('card-header bg-primary text-white');
-echo html_writer::tag('h5', '<i class="fa fa-download mr-2"></i>' . get_string('exportdata', 'local_jobboard'), ['class' => 'mb-0']);
-echo html_writer::end_div();
-echo html_writer::start_div('card-body');
-
-echo html_writer::tag('p', get_string('exportdata_desc', 'local_jobboard'), ['class' => 'text-muted mb-3']);
-
+// Render forms to HTML.
 $exportform = new migrate_export_form(new moodle_url('/local/jobboard/migrate.php', ['action' => 'export']));
+ob_start();
 $exportform->display();
-
-echo html_writer::end_div();
-echo html_writer::end_div();
-echo html_writer::end_div();
-
-// Import Section.
-echo html_writer::start_div('col-lg-6 mb-4');
-echo html_writer::start_div('card shadow-sm h-100');
-echo html_writer::start_div('card-header bg-success text-white');
-echo html_writer::tag('h5', '<i class="fa fa-upload mr-2"></i>' . get_string('importdata', 'local_jobboard'), ['class' => 'mb-0']);
-echo html_writer::end_div();
-echo html_writer::start_div('card-body');
-
-echo html_writer::tag('p', get_string('importdata_desc', 'local_jobboard'), ['class' => 'text-muted mb-3']);
-
-// Warning box.
-echo html_writer::start_div('alert alert-warning');
-echo html_writer::tag('i', '', ['class' => 'fa fa-exclamation-triangle mr-2']);
-echo get_string('importwarning', 'local_jobboard');
-echo html_writer::end_div();
+$exportformhtml = ob_get_clean();
 
 $importform = new migrate_import_form(new moodle_url('/local/jobboard/migrate.php', ['action' => 'import']));
+ob_start();
 $importform->display();
+$importformhtml = ob_get_clean();
 
-echo html_writer::end_div();
-echo html_writer::end_div();
-echo html_writer::end_div();
+// Prepare template data.
+$data = $renderer->prepare_migrate_page_data($exportcounts, $exportformhtml, $importformhtml);
 
-echo html_writer::end_div(); // row
-
-// Back to dashboard.
-echo html_writer::start_div('mt-3');
-echo html_writer::link(
-    new moodle_url('/local/jobboard/index.php'),
-    '<i class="fa fa-arrow-left mr-2"></i>' . get_string('backtodashboard', 'local_jobboard'),
-    ['class' => 'btn btn-outline-secondary']
-);
-echo html_writer::end_div();
-
-echo html_writer::end_div(); // local-jobboard-dashboard
+// Render page.
+echo $renderer->render_migrate_page($data);
 
 echo $OUTPUT->footer();

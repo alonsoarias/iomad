@@ -108,6 +108,7 @@ $string['submit'] = 'Enviar';
 $string['confirm'] = 'Confirmar';
 $string['close'] = 'Cerrar';
 $string['open'] = 'Abrir';
+$string['access'] = 'Acceder';
 $string['search'] = 'Buscar';
 $string['filter'] = 'Filtrar';
 $string['reset'] = 'Restablecer';

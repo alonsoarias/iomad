@@ -774,6 +774,20 @@ class renderer extends renderer_base {
             'buttonicon' => 'users-cog',
         ];
 
+        // Migration Tool.
+        if ($caps['configure'] ?? false) {
+            $sections[] = [
+                'id' => 'migrate',
+                'title' => get_string('migrateplugin', 'local_jobboard'),
+                'description' => get_string('migrateplugin_desc', 'local_jobboard'),
+                'icon' => 'exchange-alt',
+                'color' => 'dark',
+                'url' => (new moodle_url('/local/jobboard/migrate.php'))->out(false),
+                'buttonlabel' => get_string('access', 'local_jobboard'),
+                'buttonicon' => 'exchange-alt',
+            ];
+        }
+
         return $sections;
     }
 
@@ -6061,5 +6075,75 @@ class renderer extends renderer_base {
             'reportsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'reports']))->out(false),
             'canviewreports' => has_capability('local/jobboard:viewreports', $context),
         ];
+    }
+
+    /**
+     * Render the migration page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_migrate_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/migrate', $data);
+    }
+
+    /**
+     * Prepare migration page data for template.
+     *
+     * @param array $exportcounts Export counts from local_jobboard_get_export_counts().
+     * @param string $exportformhtml Rendered export form HTML.
+     * @param string $importformhtml Rendered import form HTML.
+     * @param array|null $dryrunresults Dry run results (if any).
+     * @return array Template data.
+     */
+    public function prepare_migrate_page_data(
+        array $exportcounts,
+        string $exportformhtml,
+        string $importformhtml,
+        ?array $dryrunresults = null
+    ): array {
+        $data = [
+            'pagetitle' => get_string('migrateplugin', 'local_jobboard'),
+            'pagedesc' => get_string('migrateplugin_desc', 'local_jobboard'),
+            'infotitle' => get_string('migrationinfo_title', 'local_jobboard'),
+            'infodesc' => get_string('migrationinfo_desc', 'local_jobboard'),
+            'exporttitle' => get_string('exportdata', 'local_jobboard'),
+            'exportdesc' => get_string('exportdata_desc', 'local_jobboard'),
+            'importtitle' => get_string('importdata', 'local_jobboard'),
+            'importdesc' => get_string('importdata_desc', 'local_jobboard'),
+            'importwarning' => get_string('importwarning', 'local_jobboard'),
+            'backurl' => (new \moodle_url('/local/jobboard/index.php'))->out(false),
+            'backtext' => get_string('backtodashboard', 'local_jobboard'),
+            'hasdryrunresults' => false,
+
+            // Export counts split into two columns.
+            'exportcounts_left' => [
+                ['label' => get_string('doctypes', 'local_jobboard'), 'count' => $exportcounts['doctypes']],
+                ['label' => get_string('emailtemplates', 'local_jobboard'), 'count' => $exportcounts['email_templates']],
+                ['label' => get_string('convocatorias', 'local_jobboard'), 'count' => $exportcounts['convocatorias']],
+                ['label' => get_string('vacancies', 'local_jobboard'), 'count' => $exportcounts['vacancies']],
+            ],
+            'exportcounts_right' => [
+                ['label' => get_string('applications', 'local_jobboard'), 'count' => $exportcounts['applications']],
+                ['label' => get_string('documents', 'local_jobboard'), 'count' => $exportcounts['documents']],
+                ['label' => get_string('exemptions', 'local_jobboard'), 'count' => $exportcounts['exemptions']],
+                ['label' => get_string('files', 'local_jobboard'), 'count' => $exportcounts['files']],
+            ],
+            'hasfiles' => $exportcounts['files'] > 0,
+            'filewarning' => get_string('exportwarning_files', 'local_jobboard'),
+            'exportformhtml' => $exportformhtml,
+            'importformhtml' => $importformhtml,
+        ];
+
+        // Handle dry run results.
+        if ($dryrunresults !== null) {
+            $data['hasdryrunresults'] = true;
+            $data['dryrunmessages'] = [];
+            foreach ($dryrunresults['messages'] as $msg) {
+                $data['dryrunmessages'][] = ['message' => $msg];
+            }
+        }
+
+        return $data;
     }
 }

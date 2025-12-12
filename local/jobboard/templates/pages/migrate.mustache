@@ -1,0 +1,176 @@
+{{!
+    @template local_jobboard/pages/migrate
+
+    Migration tool page template.
+    Uses jb-* CSS classes for consistent styling.
+
+    Context variables:
+    * pagetitle - Page title string
+    * pagedesc - Page description string
+    * infotitle - Info box title
+    * infodesc - Info box description
+    * exporttitle - Export section title
+    * exportdesc - Export section description
+    * importtitle - Import section title
+    * importdesc - Import section description
+    * importwarning - Import warning message
+    * backurl - URL to go back
+    * backtext - Back button text
+    * exportcounts - Array of export counts (doctypes, templates, etc.)
+    * hasfiles - Boolean if there are files to export
+    * filewarning - Warning about file export
+    * dryrunresults - Dry run results (if any)
+    * hasdryrunresults - Boolean if showing dry run results
+    * dryrunmessages - Array of dry run result messages
+
+    Example context (json):
+    {
+        "pagetitle": "Migration Tool",
+        "exportcounts": [{"label": "Document types", "count": 10}]
+    }
+}}
+<div class="jb-migrate-page" data-region="jobboard-migrate">
+    {{#hasdryrunresults}}
+    {{! Dry Run Results View }}
+    <div class="jb-card jb-card-shadow jb-mb-4">
+        <div class="jb-card-header jb-bg-info jb-text-white">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-flask jb-mr-2" aria-hidden="true"></i>
+                {{#str}}dryrunresults, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{#dryrunmessages}}
+            <p class="jb-mb-2">{{{message}}}</p>
+            {{/dryrunmessages}}
+        </div>
+    </div>
+    <a href="{{backurl}}" class="jb-btn jb-btn-primary">
+        <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+        {{#str}}back{{/str}}
+    </a>
+    {{/hasdryrunresults}}
+
+    {{^hasdryrunresults}}
+    {{! Main Page View }}
+
+    {{! Page Header }}
+    <header class="jb-welcome-section jb-bg-gradient-primary jb-text-white jb-rounded-lg jb-p-4 jb-mb-4">
+        <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+            <div>
+                <h2 class="jb-mb-1 jb-fw-bold">{{pagetitle}}</h2>
+                <p class="jb-mb-0 jb-opacity-75">{{pagedesc}}</p>
+            </div>
+            <i class="fa fa-exchange-alt fa-3x jb-opacity-25" aria-hidden="true"></i>
+        </div>
+    </header>
+
+    {{! Info Box }}
+    <div class="jb-alert jb-alert-info jb-mb-4" role="alert">
+        <i class="fa fa-info-circle jb-fa-lg jb-mr-2" aria-hidden="true"></i>
+        <strong>{{infotitle}}</strong>
+        <p class="jb-mb-0 jb-mt-2">{{infodesc}}</p>
+    </div>
+
+    {{! Two Column Layout }}
+    <div class="jb-row">
+        {{! Export Section }}
+        <div class="jb-col-lg-6 jb-mb-4">
+            <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="export-heading">
+                <div class="jb-card-header jb-bg-primary jb-text-white">
+                    <h5 class="jb-mb-0" id="export-heading">
+                        <i class="fa fa-download jb-mr-2" aria-hidden="true"></i>
+                        {{exporttitle}}
+                    </h5>
+                </div>
+                <div class="jb-card-body">
+                    <p class="jb-text-muted jb-mb-3">{{exportdesc}}</p>
+
+                    {{! Export Counts Info }}
+                    <div class="jb-alert jb-alert-info jb-mb-3">
+                        <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                        <strong>{{#str}}fullexport_info, local_jobboard{{/str}}</strong>
+                    </div>
+
+                    <div class="jb-card jb-mb-3">
+                        <div class="jb-card-body jb-py-2">
+                            <h6 class="jb-card-title jb-mb-2">
+                                <i class="fa fa-database jb-mr-2" aria-hidden="true"></i>
+                                {{#str}}datatorexport, local_jobboard{{/str}}
+                            </h6>
+                            <div class="jb-row jb-small">
+                                <div class="jb-col-md-6">
+                                    <ul class="jb-list-unstyled jb-mb-0">
+                                        {{#exportcounts_left}}
+                                        <li>
+                                            <i class="fa fa-check jb-text-success jb-mr-1" aria-hidden="true"></i>
+                                            {{label}}: <strong>{{count}}</strong>
+                                        </li>
+                                        {{/exportcounts_left}}
+                                    </ul>
+                                </div>
+                                <div class="jb-col-md-6">
+                                    <ul class="jb-list-unstyled jb-mb-0">
+                                        {{#exportcounts_right}}
+                                        <li>
+                                            <i class="fa fa-check jb-text-success jb-mr-1" aria-hidden="true"></i>
+                                            {{label}}: <strong>{{count}}</strong>
+                                        </li>
+                                        {{/exportcounts_right}}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{#hasfiles}}
+                    <div class="jb-alert jb-alert-warning">
+                        <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                        {{filewarning}}
+                    </div>
+                    {{/hasfiles}}
+
+                    {{! Export Form Placeholder - Will be rendered by PHP }}
+                    <div id="export-form-container">
+                        {{{exportformhtml}}}
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        {{! Import Section }}
+        <div class="jb-col-lg-6 jb-mb-4">
+            <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="import-heading">
+                <div class="jb-card-header jb-bg-success jb-text-white">
+                    <h5 class="jb-mb-0" id="import-heading">
+                        <i class="fa fa-upload jb-mr-2" aria-hidden="true"></i>
+                        {{importtitle}}
+                    </h5>
+                </div>
+                <div class="jb-card-body">
+                    <p class="jb-text-muted jb-mb-3">{{importdesc}}</p>
+
+                    {{! Warning Box }}
+                    <div class="jb-alert jb-alert-warning">
+                        <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                        {{importwarning}}
+                    </div>
+
+                    {{! Import Form Placeholder - Will be rendered by PHP }}
+                    <div id="import-form-container">
+                        {{{importformhtml}}}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    {{! Back to Dashboard }}
+    <footer class="jb-mt-3">
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{backtext}}
+        </a>
+    </footer>
+    {{/hasdryrunresults}}
+</div>
