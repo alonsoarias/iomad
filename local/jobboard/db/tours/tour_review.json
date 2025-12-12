@@ -1,0 +1,85 @@
+{
+  "name": "tour_review_name,local_jobboard",
+  "description": "tour_review_desc,local_jobboard",
+  "pathmatch": "/local/jobboard/index.php?view=review%",
+  "enabled": "1",
+  "sortorder": "11",
+  "endtourlabel": "tour_endlabel,local_jobboard",
+  "configdata": "{\"placement\":\"bottom\",\"orphan\":\"0\",\"backdrop\":\"1\",\"reflex\":\"0\",\"filtervalues\":{\"accessdate\":{\"filter_accessdate\":\"tool_usertours_accountcreation\",\"filter_accessdate_range\":0,\"filter_accessdate_enabled\":\"0\"},\"category\":[],\"course\":[],\"courseformat\":[],\"role\":[],\"theme\":[],\"cssselector\":[]}}",
+  "displaystepnumbers": true,
+  "version": "2025121200",
+  "steps": [
+    {
+      "title": "tour_review_header_title,local_jobboard",
+      "content": "tour_review_header_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-page-header",
+      "sortorder": "0",
+      "configdata": "{\"placement\":\"bottom\"}"
+    },
+    {
+      "title": "tour_review_stats_title,local_jobboard",
+      "content": "tour_review_stats_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-col-lg-3",
+      "sortorder": "1",
+      "configdata": "{\"placement\":\"bottom\"}"
+    },
+    {
+      "title": "tour_review_navigation_title,local_jobboard",
+      "content": "tour_review_navigation_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-review-navigation",
+      "sortorder": "2",
+      "configdata": "{\"placement\":\"bottom\"}"
+    },
+    {
+      "title": "tour_review_documents_title,local_jobboard",
+      "content": "tour_review_documents_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-list-group",
+      "sortorder": "3",
+      "configdata": "{\"placement\":\"right\"}"
+    },
+    {
+      "title": "tour_review_actions_title,local_jobboard",
+      "content": "tour_review_actions_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-btn-group-vertical",
+      "sortorder": "4",
+      "configdata": "{\"placement\":\"left\"}"
+    },
+    {
+      "title": "tour_review_applicant_title,local_jobboard",
+      "content": "tour_review_applicant_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-col-lg-4 .jb-card-shadow",
+      "sortorder": "5",
+      "configdata": "{\"placement\":\"left\"}"
+    },
+    {
+      "title": "tour_review_progress_title,local_jobboard",
+      "content": "tour_review_progress_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-progress",
+      "sortorder": "6",
+      "configdata": "{\"placement\":\"top\"}"
+    },
+    {
+      "title": "tour_review_submit_title,local_jobboard",
+      "content": "tour_review_submit_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-btn-lg",
+      "sortorder": "7",
+      "configdata": "{\"placement\":\"top\"}"
+    }
+  ]
+}

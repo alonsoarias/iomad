@@ -1,0 +1,58 @@
+{
+  "name": "tour_documents_name,local_jobboard",
+  "description": "tour_documents_desc,local_jobboard",
+  "pathmatch": "/local/jobboard/index.php?view=documents%",
+  "enabled": "1",
+  "sortorder": "10",
+  "endtourlabel": "tour_endlabel,local_jobboard",
+  "configdata": "{\"placement\":\"bottom\",\"orphan\":\"0\",\"backdrop\":\"1\",\"reflex\":\"0\",\"filtervalues\":{\"accessdate\":{\"filter_accessdate\":\"tool_usertours_accountcreation\",\"filter_accessdate_range\":0,\"filter_accessdate_enabled\":\"0\"},\"category\":[],\"course\":[],\"courseformat\":[],\"role\":[],\"theme\":[],\"cssselector\":[]}}",
+  "displaystepnumbers": true,
+  "version": "2025121200",
+  "steps": [
+    {
+      "title": "tour_documents_header_title,local_jobboard",
+      "content": "tour_documents_header_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-page-header",
+      "sortorder": "0",
+      "configdata": "{\"placement\":\"bottom\"}"
+    },
+    {
+      "title": "tour_documents_list_title,local_jobboard",
+      "content": "tour_documents_list_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-list-group",
+      "sortorder": "1",
+      "configdata": "{\"placement\":\"right\"}"
+    },
+    {
+      "title": "tour_documents_status_title,local_jobboard",
+      "content": "tour_documents_status_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-list-group-item .jb-badge",
+      "sortorder": "2",
+      "configdata": "{\"placement\":\"left\"}"
+    },
+    {
+      "title": "tour_documents_upload_title,local_jobboard",
+      "content": "tour_documents_upload_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-btn-primary, input[type='file']",
+      "sortorder": "3",
+      "configdata": "{\"placement\":\"top\"}"
+    },
+    {
+      "title": "tour_documents_preview_title,local_jobboard",
+      "content": "tour_documents_preview_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-btn-outline-primary",
+      "sortorder": "4",
+      "configdata": "{\"placement\":\"left\"}"
+    }
+  ]
+}

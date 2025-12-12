@@ -1,0 +1,58 @@
+{
+  "name": "tour_dashboard_name,local_jobboard",
+  "description": "tour_dashboard_desc,local_jobboard",
+  "pathmatch": "/local/jobboard/index.php",
+  "enabled": "1",
+  "sortorder": "0",
+  "endtourlabel": "tour_endlabel,local_jobboard",
+  "configdata": "{\"placement\":\"bottom\",\"orphan\":\"0\",\"backdrop\":\"1\",\"reflex\":\"0\",\"filtervalues\":{\"accessdate\":{\"filter_accessdate\":\"tool_usertours_accountcreation\",\"filter_accessdate_range\":0,\"filter_accessdate_enabled\":\"0\"},\"category\":[],\"course\":[],\"courseformat\":[],\"role\":[],\"theme\":[],\"cssselector\":[]}}",
+  "displaystepnumbers": true,
+  "version": "2025121200",
+  "steps": [
+    {
+      "title": "tour_dashboard_welcome_title,local_jobboard",
+      "content": "tour_dashboard_welcome_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-welcome-section",
+      "sortorder": "0",
+      "configdata": "{\"placement\":\"bottom\"}"
+    },
+    {
+      "title": "tour_dashboard_stats_title,local_jobboard",
+      "content": "tour_dashboard_stats_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-admin-section .jb-row",
+      "sortorder": "1",
+      "configdata": "{\"placement\":\"top\"}"
+    },
+    {
+      "title": "tour_dashboard_admin_title,local_jobboard",
+      "content": "tour_dashboard_admin_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-section-card",
+      "sortorder": "2",
+      "configdata": "{\"placement\":\"right\"}"
+    },
+    {
+      "title": "tour_dashboard_reviewer_title,local_jobboard",
+      "content": "tour_dashboard_reviewer_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-reviewer-section",
+      "sortorder": "3",
+      "configdata": "{\"placement\":\"top\"}"
+    },
+    {
+      "title": "tour_dashboard_applicant_title,local_jobboard",
+      "content": "tour_dashboard_applicant_content,local_jobboard",
+      "contentformat": "1",
+      "targettype": "0",
+      "targetvalue": ".jb-applicant-section",
+      "sortorder": "4",
+      "configdata": "{\"placement\":\"top\"}"
+    }
+  ]
+}

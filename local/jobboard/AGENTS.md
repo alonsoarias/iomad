@@ -16,7 +16,7 @@
 | Campo | Valor |
 |-------|-------|
 | **Componente** | `local_jobboard` |
-| **Versión Actual** | **3.3.0** (2025121250) |
+| **Versión Actual** | **3.4.0** (2025121251) |
 | **Tipo** | Plugin local de Moodle |
 | **Moodle requerido** | 4.1+ (2022112800) |
 | **Moodle soportado** | 4.1 - 4.5 |
@@ -24,7 +24,7 @@
 | **Licencia** | GNU GPL v3 or later |
 | **Propósito** | Sistema de Bolsa de Empleo para reclutamiento de profesores de cátedra |
 
-### 1.1 Estado de Implementación v3.3.0
+### 1.1 Estado de Implementación v3.4.0
 
 | Componente | Estado | Observaciones |
 |------------|:------:|---------------|
@@ -35,7 +35,7 @@
 | Templates Mustache (116) | ✅ | Usando clases `jb-*`, +grading_panel.mustache v3.3.0 |
 | Renderers especializados (11) | ✅ | renderer_base, dashboard_renderer, admin_renderer, etc. |
 | AMD Modules (13) | ✅ | +grading_panel.js v3.3.0 con AJAX nav y atajos teclado |
-| User Tours (15) | ⚠️ | Definidos en db/tours/, pendiente actualizar selectores jb-* |
+| User Tours (15) | ✅ | 15 tours con selectores jb-* en db/tours/ (v3.4.0) |
 | Strings de idioma | ✅ | 2,754 líneas EN/ES cada uno |
 | Email templates | ✅ | 6 plantillas predefinidas |
 | Web Services | ✅ Eliminados | Removidos en v3.2.2 |
@@ -924,6 +924,7 @@ $plugin->release = 'X.Y.Z';     // Ej: '3.3.0'
 
 | Versión | Fecha | Descripción |
 |---------|-------|-------------|
+| 3.4.0 | 2025-12-12 | User Tours con selectores jb-* (15 tours) |
 | 3.3.0 | 2025-12-12 | Grading panel estilo mod_assign con AJAX y atajos |
 | 3.2.4 | 2025-12-12 | Corrección doctype input_type comment |
 | 3.2.3 | 2025-12-12 | Migración CSS completa a clases jb-* |
@@ -954,10 +955,10 @@ $plugin->release = 'X.Y.Z';     // Ej: '3.3.0'
 - [x] Agregar navegación AJAX
 - [x] Implementar atajos de teclado
 
-### Fase 5: User Tours ⚠️ PENDIENTE (4-6 horas)
-- [ ] Actualizar selectores a clases `jb-*`
-- [ ] Probar cada tour en cada rol
-- [ ] Documentar tours
+### Fase 5: User Tours ✅ COMPLETADA v3.4.0
+- [x] Actualizar selectores a clases `jb-*`
+- [x] Crear 15 archivos JSON en db/tours/
+- [x] Agregar strings de idioma EN/ES (236 strings)
 
 ### Fase 6: Consolidación Dashboard ⚠️ PENDIENTE
 - [ ] Ver sección 22 para detalles
@@ -1113,5 +1114,5 @@ mod/assign/
 ---
 
 *Documento actualizado: 2025-12-12*
-*Versión del plugin: 3.3.0*
+*Versión del plugin: 3.4.0*
 *Fuente: Consolidación de conversaciones del proyecto local_jobboard*

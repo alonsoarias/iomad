@@ -2751,3 +2751,239 @@ $string['document_approved'] = 'Documento aprobado exitosamente';
 $string['document_rejected'] = 'Documento rechazado';
 $string['validatedby'] = 'Validado por';
 $string['validatedat'] = 'Validado el';
+
+// =============================================================================
+// USER TOURS - NOMBRES Y DESCRIPCIONES DE TOURS
+// =============================================================================
+
+$string['tour_endlabel'] = 'Finalizar tour';
+
+// Tour del Dashboard
+$string['tour_dashboard_name'] = 'Tour del Dashboard de Bolsa de Empleo';
+$string['tour_dashboard_desc'] = 'Aprenda a navegar el dashboard de la Bolsa de Empleo';
+$string['tour_dashboard_welcome_title'] = 'Bienvenido a Bolsa de Empleo';
+$string['tour_dashboard_welcome_content'] = 'Este es el dashboard principal del plugin de Bolsa de Empleo. Aquí puede acceder a todas las funcionalidades según su rol.';
+$string['tour_dashboard_stats_title'] = 'Resumen de Estadísticas';
+$string['tour_dashboard_stats_content'] = 'Estas tarjetas muestran estadísticas clave como convocatorias activas, vacantes y postulaciones.';
+$string['tour_dashboard_admin_title'] = 'Secciones de Administración';
+$string['tour_dashboard_admin_content'] = 'Cada tarjeta proporciona acceso a diferentes áreas de gestión. Haga clic en cualquier tarjeta para administrar esa sección.';
+$string['tour_dashboard_reviewer_title'] = 'Tareas de Revisor';
+$string['tour_dashboard_reviewer_content'] = 'Como revisor, puede ver documentos pendientes y sus revisiones completadas aquí.';
+$string['tour_dashboard_applicant_title'] = 'Sección del Postulante';
+$string['tour_dashboard_applicant_content'] = 'Vea sus postulaciones y navegue las vacantes disponibles desde esta sección.';
+
+// Tour de Página Pública
+$string['tour_public_name'] = 'Tour de Página Pública';
+$string['tour_public_desc'] = 'Descubra cómo navegar las oportunidades laborales públicas';
+$string['tour_public_welcome_title'] = 'Oportunidades Laborales';
+$string['tour_public_welcome_content'] = 'Bienvenido a la bolsa de empleo pública. Aquí puede navegar todas las oportunidades laborales disponibles.';
+$string['tour_public_stats_title'] = 'Estadísticas Rápidas';
+$string['tour_public_stats_content'] = 'Estas tarjetas muestran el número de convocatorias abiertas, vacantes y posiciones disponibles.';
+$string['tour_public_convocatorias_title'] = 'Tarjetas de Convocatoria';
+$string['tour_public_convocatorias_content'] = 'Cada tarjeta representa una convocatoria. Haga clic para ver detalles y vacantes disponibles.';
+$string['tour_public_vacancies_title'] = 'Tarjetas de Vacantes';
+$string['tour_public_vacancies_content'] = 'Navegue las posiciones disponibles. Cada tarjeta muestra información clave sobre la vacante.';
+$string['tour_public_filters_title'] = 'Opciones de Filtro';
+$string['tour_public_filters_content'] = 'Use estos filtros para refinar su búsqueda por ubicación, tipo de contrato o palabras clave.';
+$string['tour_public_apply_title'] = 'Botón de Postulación';
+$string['tour_public_apply_content'] = 'Haga clic en Postularse para iniciar su postulación. Deberá iniciar sesión o crear una cuenta primero.';
+
+// Tour de Convocatorias
+$string['tour_convocatorias_name'] = 'Tour de Gestión de Convocatorias';
+$string['tour_convocatorias_desc'] = 'Aprenda a gestionar convocatorias';
+$string['tour_convocatorias_header_title'] = 'Gestión de Convocatorias';
+$string['tour_convocatorias_header_content'] = 'Esta página le permite gestionar todas las convocatorias.';
+$string['tour_convocatorias_create_title'] = 'Crear Nueva';
+$string['tour_convocatorias_create_content'] = 'Haga clic aquí para crear una nueva convocatoria. Deberá proporcionar fechas, descripción y un documento PDF.';
+$string['tour_convocatorias_stats_title'] = 'Estadísticas';
+$string['tour_convocatorias_stats_content'] = 'Estas tarjetas muestran el estado actual de todas las convocatorias.';
+$string['tour_convocatorias_filter_title'] = 'Opciones de Filtro';
+$string['tour_convocatorias_filter_content'] = 'Filtre convocatorias por estado, rango de fechas u otros criterios.';
+$string['tour_convocatorias_card_title'] = 'Tarjeta de Convocatoria';
+$string['tour_convocatorias_card_content'] = 'Cada tarjeta muestra los detalles de la convocatoria, incluyendo fechas, cantidad de vacantes y estadísticas de postulaciones.';
+$string['tour_convocatorias_actions_title'] = 'Acciones Rápidas';
+$string['tour_convocatorias_actions_content'] = 'Use estos botones para editar, ver vacantes o gestionar la convocatoria.';
+
+// Tour de Formulario de Convocatoria
+$string['tour_convocatoria_manage_name'] = 'Tour de Formulario de Convocatoria';
+$string['tour_convocatoria_manage_desc'] = 'Aprenda a crear y editar convocatorias';
+$string['tour_convocatoria_manage_header_title'] = 'Formulario de Convocatoria';
+$string['tour_convocatoria_manage_header_content'] = 'Use este formulario para crear o editar una convocatoria.';
+$string['tour_convocatoria_manage_form_title'] = 'Campos del Formulario';
+$string['tour_convocatoria_manage_form_content'] = 'Complete todos los campos requeridos. El nombre, código y descripción son esenciales.';
+$string['tour_convocatoria_manage_dates_title'] = 'Configuración de Fechas';
+$string['tour_convocatoria_manage_dates_content'] = 'Establezca las fechas de inicio y fin de la convocatoria. Las vacantes heredan estas fechas.';
+$string['tour_convocatoria_manage_pdf_title'] = 'Documento PDF';
+$string['tour_convocatoria_manage_pdf_content'] = 'Cargue el documento PDF oficial con los detalles completos de la convocatoria. Este es obligatorio.';
+$string['tour_convocatoria_manage_submit_title'] = 'Guardar';
+$string['tour_convocatoria_manage_submit_content'] = 'Haga clic en Guardar para crear o actualizar la convocatoria.';
+
+// Tour de Vacantes
+$string['tour_vacancies_name'] = 'Tour de Lista de Vacantes';
+$string['tour_vacancies_desc'] = 'Aprenda a navegar y gestionar vacantes';
+$string['tour_vacancies_header_title'] = 'Vacantes';
+$string['tour_vacancies_header_content'] = 'Esta página muestra todas las vacantes de la convocatoria seleccionada.';
+$string['tour_vacancies_selector_title'] = 'Selector de Convocatoria';
+$string['tour_vacancies_selector_content'] = 'Seleccione una convocatoria para ver sus vacantes.';
+$string['tour_vacancies_card_title'] = 'Tarjeta de Vacante';
+$string['tour_vacancies_card_content'] = 'Cada tarjeta muestra los detalles de la vacante incluyendo título, ubicación y número de posiciones.';
+$string['tour_vacancies_status_title'] = 'Insignia de Estado';
+$string['tour_vacancies_status_content'] = 'La insignia indica el estado actual: borrador, publicada o cerrada.';
+$string['tour_vacancies_actions_title'] = 'Acciones';
+$string['tour_vacancies_actions_content'] = 'Use estos botones para ver detalles o postularse a la vacante.';
+
+// Tour de Detalle de Vacante
+$string['tour_vacancy_name'] = 'Tour de Detalle de Vacante';
+$string['tour_vacancy_desc'] = 'Conozca los detalles de la vacante';
+$string['tour_vacancy_header_title'] = 'Detalles de Vacante';
+$string['tour_vacancy_header_content'] = 'Esta página muestra información completa sobre la vacante.';
+$string['tour_vacancy_details_title'] = 'Descripción';
+$string['tour_vacancy_details_content'] = 'Lea la descripción completa, responsabilidades y requisitos del cargo.';
+$string['tour_vacancy_requirements_title'] = 'Requisitos';
+$string['tour_vacancy_requirements_content'] = 'Revise las calificaciones y documentos requeridos antes de postularse.';
+$string['tour_vacancy_apply_title'] = 'Postularse Ahora';
+$string['tour_vacancy_apply_content'] = 'Haga clic en Postularse para iniciar su proceso de postulación.';
+
+// Tour de Gestión
+$string['tour_manage_name'] = 'Tour de Gestión de Vacantes';
+$string['tour_manage_desc'] = 'Aprenda a gestionar vacantes';
+$string['tour_manage_header_title'] = 'Gestión de Vacantes';
+$string['tour_manage_header_content'] = 'Gestione todas las vacantes desde esta página.';
+$string['tour_manage_create_title'] = 'Crear Vacante';
+$string['tour_manage_create_content'] = 'Haga clic aquí para crear una nueva vacante dentro de una convocatoria.';
+$string['tour_manage_table_title'] = 'Tabla de Vacantes';
+$string['tour_manage_table_content'] = 'Esta tabla lista todas las vacantes con sus detalles y estado.';
+$string['tour_manage_bulk_title'] = 'Selección Masiva';
+$string['tour_manage_bulk_content'] = 'Seleccione múltiples vacantes para realizar acciones masivas.';
+$string['tour_manage_actions_title'] = 'Acciones de Fila';
+$string['tour_manage_actions_content'] = 'Use estos botones para editar, ver o eliminar vacantes individuales.';
+
+// Tour de Postulación
+$string['tour_apply_name'] = 'Tour del Proceso de Postulación';
+$string['tour_apply_desc'] = 'Aprenda cómo enviar una postulación';
+$string['tour_apply_header_title'] = 'Postularse a Vacante';
+$string['tour_apply_header_content'] = 'Complete este formulario para enviar su postulación.';
+$string['tour_apply_progress_title'] = 'Pasos de Progreso';
+$string['tour_apply_progress_content'] = 'Siga estos pasos para completar su postulación. Todos los pasos deben completarse.';
+$string['tour_apply_guidelines_title'] = 'Instrucciones';
+$string['tour_apply_guidelines_content'] = 'Lea estas instrucciones cuidadosamente antes de iniciar su postulación.';
+$string['tour_apply_form_title'] = 'Formulario de Postulación';
+$string['tour_apply_form_content'] = 'Complete todos los campos requeridos y cargue los documentos necesarios.';
+$string['tour_apply_sidebar_title'] = 'Resumen de Vacante';
+$string['tour_apply_sidebar_content'] = 'Esta barra lateral muestra los detalles de la vacante y la fecha límite.';
+$string['tour_apply_checklist_title'] = 'Lista de Documentos';
+$string['tour_apply_checklist_content'] = 'Asegúrese de tener todos los documentos requeridos listos antes de enviar.';
+$string['tour_apply_submit_title'] = 'Enviar Postulación';
+$string['tour_apply_submit_content'] = 'Haga clic en Enviar cuando haya completado todas las secciones y cargado todos los documentos.';
+
+// Tour de Detalle de Postulación
+$string['tour_application_name'] = 'Tour de Detalle de Postulación';
+$string['tour_application_desc'] = 'Conozca los detalles de su postulación';
+$string['tour_application_header_title'] = 'Detalles de Postulación';
+$string['tour_application_header_content'] = 'Vea todos los detalles de su postulación aquí.';
+$string['tour_application_status_title'] = 'Estado';
+$string['tour_application_status_content'] = 'Esta insignia muestra el estado actual de su postulación.';
+$string['tour_application_timeline_title'] = 'Línea de Tiempo';
+$string['tour_application_timeline_content'] = 'Siga el progreso de su postulación a través de cada etapa.';
+$string['tour_application_documents_title'] = 'Documentos';
+$string['tour_application_documents_content'] = 'Vea y gestione sus documentos cargados aquí.';
+$string['tour_application_actions_title'] = 'Acciones';
+$string['tour_application_actions_content'] = 'Use estos botones para retirar o modificar su postulación (si está permitido).';
+
+// Tour de Mis Postulaciones
+$string['tour_myapplications_name'] = 'Tour de Mis Postulaciones';
+$string['tour_myapplications_desc'] = 'Aprenda a seguir sus postulaciones';
+$string['tour_myapplications_header_title'] = 'Mis Postulaciones';
+$string['tour_myapplications_header_content'] = 'Vea todas sus postulaciones enviadas aquí.';
+$string['tour_myapplications_stats_title'] = 'Estadísticas de Postulaciones';
+$string['tour_myapplications_stats_content'] = 'Estos contadores muestran cuántas postulaciones tiene en cada estado.';
+$string['tour_myapplications_card_title'] = 'Tarjeta de Postulación';
+$string['tour_myapplications_card_content'] = 'Cada tarjeta representa una postulación con su estado actual y detalles.';
+$string['tour_myapplications_status_title'] = 'Insignia de Estado';
+$string['tour_myapplications_status_content'] = 'Los colores indican el estado: azul para enviada, amarillo para en revisión, verde para aprobada.';
+$string['tour_myapplications_browse_title'] = 'Explorar Vacantes';
+$string['tour_myapplications_browse_content'] = 'Haga clic aquí para explorar más vacantes y postularse a nuevas posiciones.';
+
+// Tour de Documentos
+$string['tour_documents_name'] = 'Tour de Gestión de Documentos';
+$string['tour_documents_desc'] = 'Aprenda a gestionar sus documentos';
+$string['tour_documents_header_title'] = 'Gestión de Documentos';
+$string['tour_documents_header_content'] = 'Gestione todos los documentos de su postulación desde aquí.';
+$string['tour_documents_list_title'] = 'Lista de Documentos';
+$string['tour_documents_list_content'] = 'Cada fila muestra un tipo de documento con su estado actual.';
+$string['tour_documents_status_title'] = 'Estado del Documento';
+$string['tour_documents_status_content'] = 'Verde significa aprobado, amarillo significa pendiente de revisión, rojo significa rechazado.';
+$string['tour_documents_upload_title'] = 'Cargar Documento';
+$string['tour_documents_upload_content'] = 'Haga clic para cargar un nuevo documento o reemplazar uno existente.';
+$string['tour_documents_preview_title'] = 'Vista Previa';
+$string['tour_documents_preview_content'] = 'Haga clic para previsualizar su documento cargado sin descargarlo.';
+
+// Tour de Revisión
+$string['tour_review_name'] = 'Tour de Revisión de Documentos';
+$string['tour_review_desc'] = 'Aprenda a revisar documentos de postulantes';
+$string['tour_review_header_title'] = 'Revisión de Documentos';
+$string['tour_review_header_content'] = 'Revise y valide documentos de postulantes desde esta página.';
+$string['tour_review_stats_title'] = 'Estadísticas de Revisión';
+$string['tour_review_stats_content'] = 'Estas tarjetas muestran conteos de documentos pendientes, aprobados y rechazados.';
+$string['tour_review_navigation_title'] = 'Navegación';
+$string['tour_review_navigation_content'] = 'Navegue entre postulaciones usando estos botones.';
+$string['tour_review_documents_title'] = 'Lista de Documentos';
+$string['tour_review_documents_content'] = 'Todos los documentos de esta postulación se listan aquí.';
+$string['tour_review_actions_title'] = 'Acciones Rápidas';
+$string['tour_review_actions_content'] = 'Use estos botones para aprobar, rechazar o previsualizar cada documento.';
+$string['tour_review_applicant_title'] = 'Info del Postulante';
+$string['tour_review_applicant_content'] = 'Vea los detalles del postulante e información de la vacante en la barra lateral.';
+$string['tour_review_progress_title'] = 'Progreso de Revisión';
+$string['tour_review_progress_content'] = 'Esta barra muestra cuántos documentos han sido revisados.';
+$string['tour_review_submit_title'] = 'Completar Revisión';
+$string['tour_review_submit_content'] = 'Haga clic aquí cuando haya revisado todos los documentos para enviar su revisión.';
+
+// Tour de Mis Revisiones
+$string['tour_myreviews_name'] = 'Tour de Mis Revisiones';
+$string['tour_myreviews_desc'] = 'Aprenda a seguir sus asignaciones de revisión';
+$string['tour_myreviews_header_title'] = 'Mis Revisiones';
+$string['tour_myreviews_header_content'] = 'Vea todas las postulaciones asignadas a usted para revisión.';
+$string['tour_myreviews_stats_title'] = 'Estadísticas de Revisión';
+$string['tour_myreviews_stats_content'] = 'Estas tarjetas muestran sus revisiones pendientes y completadas.';
+$string['tour_myreviews_filter_title'] = 'Filtros';
+$string['tour_myreviews_filter_content'] = 'Filtre postulaciones por estado, convocatoria o fecha.';
+$string['tour_myreviews_queue_title'] = 'Cola de Revisión';
+$string['tour_myreviews_queue_content'] = 'Las postulaciones esperando su revisión se listan aquí.';
+$string['tour_myreviews_pending_title'] = 'Conteo Pendiente';
+$string['tour_myreviews_pending_content'] = 'Esta insignia muestra cuántos documentos necesitan revisión en cada postulación.';
+$string['tour_myreviews_action_title'] = 'Iniciar Revisión';
+$string['tour_myreviews_action_content'] = 'Haga clic para abrir el panel de revisión de documentos para esta postulación.';
+
+// Tour de Validación de Documento
+$string['tour_validate_document_name'] = 'Tour de Validación de Documento';
+$string['tour_validate_document_desc'] = 'Aprenda a validar documentos individuales';
+$string['tour_validate_header_title'] = 'Validación de Documento';
+$string['tour_validate_header_content'] = 'Revise y valide este documento contra los requisitos.';
+$string['tour_validate_preview_title'] = 'Vista Previa del Documento';
+$string['tour_validate_preview_content'] = 'El documento se muestra aquí. Puede hacer zoom y desplazarse para revisarlo.';
+$string['tour_validate_checklist_title'] = 'Lista de Verificación';
+$string['tour_validate_checklist_content'] = 'Marque cada ítem para verificar que el documento cumple todos los requisitos.';
+$string['tour_validate_approve_title'] = 'Aprobar';
+$string['tour_validate_approve_content'] = 'Haga clic en Aprobar si el documento cumple todos los requisitos.';
+$string['tour_validate_reject_title'] = 'Rechazar';
+$string['tour_validate_reject_content'] = 'Haga clic en Rechazar si el documento tiene problemas y debe volver a enviarse.';
+$string['tour_validate_reason_title'] = 'Motivo de Rechazo';
+$string['tour_validate_reason_content'] = 'Si rechaza, proporcione un motivo claro para que el postulante pueda corregir el documento.';
+
+// Tour de Reportes
+$string['tour_reports_name'] = 'Tour de Reportes';
+$string['tour_reports_desc'] = 'Aprenda a usar las funciones de reportes';
+$string['tour_reports_header_title'] = 'Reportes';
+$string['tour_reports_header_content'] = 'Genere y exporte reportes desde esta página.';
+$string['tour_reports_export_title'] = 'Opciones de Exportación';
+$string['tour_reports_export_content'] = 'Exporte reportes en formato CSV, Excel o PDF.';
+$string['tour_reports_tabs_title'] = 'Tipos de Reporte';
+$string['tour_reports_tabs_content'] = 'Elija entre diferentes tipos de reporte: resumen, postulaciones, documentos o revisores.';
+$string['tour_reports_filter_title'] = 'Filtros';
+$string['tour_reports_filter_content'] = 'Filtre reportes por convocatoria, rango de fechas o estado.';
+$string['tour_reports_stats_title'] = 'Estadísticas Resumidas';
+$string['tour_reports_stats_content'] = 'Estas tarjetas muestran métricas clave para los filtros seleccionados.';
+$string['tour_reports_table_title'] = 'Tabla de Datos';
+$string['tour_reports_table_content'] = 'Los datos detallados se muestran en esta tabla. Haga clic en los encabezados para ordenar.';
+$string['tour_reports_progress_title'] = 'Barras de Progreso';
+$string['tour_reports_progress_content'] = 'Representación visual de porcentajes y progreso.';
