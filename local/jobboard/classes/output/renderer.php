@@ -106,16 +106,6 @@ class renderer extends renderer_base {
     }
 
     /**
-     * Render vacancy detail page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_vacancy_detail(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/vacancy_detail', $data);
-    }
-
-    /**
      * Render applications list page.
      *
      * @param array $data Page data.
@@ -123,16 +113,6 @@ class renderer extends renderer_base {
      */
     public function render_applications_page(array $data): string {
         return $this->render_from_template('local_jobboard/pages/applications', $data);
-    }
-
-    /**
-     * Render application detail page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_application_detail(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/application_detail', $data);
     }
 
     /**

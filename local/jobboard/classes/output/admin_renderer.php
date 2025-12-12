@@ -162,22 +162,6 @@ class admin_renderer extends renderer_base {
     }
 
     /**
-     * Get priority CSS class.
-     *
-     * @param string $priority Priority level.
-     * @return string CSS class.
-     */
-    protected function get_priority_class(string $priority): string {
-        $classes = [
-            'low' => 'success',
-            'normal' => 'info',
-            'high' => 'warning',
-            'urgent' => 'danger',
-        ];
-        return $classes[$priority] ?? 'info';
-    }
-
-    /**
      * Get admin quick links.
      *
      * @return array Quick links.

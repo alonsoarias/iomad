@@ -347,4 +347,20 @@ abstract class renderer_base extends plugin_renderer_base {
         ];
         return $icons[$status] ?? 'circle';
     }
+
+    /**
+     * Get CSS class for priority.
+     *
+     * @param string $priority Priority level.
+     * @return string CSS class.
+     */
+    public function get_priority_class(string $priority): string {
+        $classes = [
+            'low' => 'success',
+            'normal' => 'info',
+            'high' => 'warning',
+            'urgent' => 'danger',
+        ];
+        return $classes[$priority] ?? 'info';
+    }
 }

@@ -220,22 +220,6 @@ class dashboard_renderer extends renderer_base {
     }
 
     /**
-     * Get CSS class for priority.
-     *
-     * @param string $priority Priority level.
-     * @return string CSS class.
-     */
-    protected function get_priority_class(string $priority): string {
-        $classes = [
-            'low' => 'success',
-            'normal' => 'info',
-            'high' => 'warning',
-            'urgent' => 'danger',
-        ];
-        return $classes[$priority] ?? 'info';
-    }
-
-    /**
      * Format time as "time ago" string.
      *
      * @param int $timestamp Timestamp to format.

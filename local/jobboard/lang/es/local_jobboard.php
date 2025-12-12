@@ -1987,3 +1987,140 @@ $string['install_defaults'] = 'Instalar configuración predeterminada';
 
 $string['docstatus_'] = 'Estado del documento';
 $string['appstatus:'] = 'Estado de postulación';
+
+// =============================================================================
+// CATEGORÍAS DE DOCUMENTOS
+// =============================================================================
+
+$string['doccategory_identity'] = 'Documentos de identidad';
+$string['doccategory_academic'] = 'Documentos académicos';
+$string['doccategory_professional'] = 'Documentos profesionales';
+$string['doccategory_background'] = 'Documentos de antecedentes';
+$string['doccategory_financial'] = 'Documentos financieros';
+$string['doccategory_health'] = 'Documentos de salud';
+
+// =============================================================================
+// LISTA DE VERIFICACIÓN DE VALIDACIÓN DE DOCUMENTOS
+// =============================================================================
+
+$string['checklist_legible'] = 'El documento es legible';
+$string['checklist_complete'] = 'El documento está completo';
+$string['checklist_namematch'] = 'El nombre coincide con la postulación';
+$string['checklist_cedula_number'] = 'El número de cédula es visible';
+$string['checklist_cedula_photo'] = 'La foto es visible';
+$string['checklist_background_date'] = 'La fecha de expedición es reciente';
+$string['checklist_background_status'] = 'Estado de antecedentes limpio';
+$string['checklist_title_institution'] = 'La institución está reconocida';
+$string['checklist_title_date'] = 'La fecha de grado está verificada';
+$string['checklist_title_program'] = 'El nombre del programa coincide';
+$string['checklist_acta_number'] = 'El número de acta está presente';
+$string['checklist_acta_date'] = 'La fecha del acta está verificada';
+$string['checklist_tarjeta_number'] = 'El número de tarjeta profesional está presente';
+$string['checklist_tarjeta_profession'] = 'La profesión coincide con el cargo';
+$string['checklist_rut_nit'] = 'El NIT está verificado';
+$string['checklist_rut_updated'] = 'El documento tributario está actualizado';
+$string['checklist_eps_active'] = 'La EPS está activa';
+$string['checklist_eps_entity'] = 'La entidad de EPS está verificada';
+$string['checklist_pension_fund'] = 'El fondo de pensiones está identificado';
+$string['checklist_pension_active'] = 'Las cotizaciones de pensión están activas';
+$string['checklist_medical_date'] = 'La fecha del examen médico es reciente';
+$string['checklist_medical_aptitude'] = 'El estado de aptitud es favorable';
+$string['checklist_military_class'] = 'La clase militar está verificada';
+$string['checklist_military_number'] = 'El número de libreta militar está presente';
+
+// =============================================================================
+// REPORTES - MENSAJES DE ESTADO VACÍO
+// =============================================================================
+
+$string['noapplicationsreport'] = 'No se encontraron postulaciones para los criterios seleccionados';
+$string['novacanciesreport'] = 'No se encontraron vacantes para los criterios seleccionados';
+$string['nodocumentsreport'] = 'No se encontraron documentos para los criterios seleccionados';
+$string['noconvocatoriasreport'] = 'No se encontraron convocatorias para los criterios seleccionados';
+
+// =============================================================================
+// NAVEGACIÓN - ADICIONAL
+// =============================================================================
+
+$string['browsevacancies'] = 'Explorar vacantes';
+$string['createconvocatoria'] = 'Crear convocatoria';
+$string['backtomanage'] = 'Volver a gestión';
+$string['reviewdashboard'] = 'Panel de revisión';
+$string['featuredvacancies'] = 'Vacantes destacadas';
+$string['noconvocatoriasavailable'] = 'No hay convocatorias disponibles';
+$string['novacanciesavailable'] = 'No hay vacantes disponibles';
+$string['noapplicationsavailable'] = 'No hay postulaciones disponibles';
+
+// =============================================================================
+// ROLES DE USUARIO
+// =============================================================================
+
+$string['role_reviewer'] = 'Revisor';
+$string['role_coordinator'] = 'Coordinador';
+$string['role_administrator'] = 'Administrador';
+$string['role_manager'] = 'Gestor';
+$string['role_applicant'] = 'Postulante';
+$string['role_evaluator'] = 'Evaluador';
+$string['role_secretary'] = 'Secretario';
+$string['role_director'] = 'Director';
+
+// =============================================================================
+// RAZONES DE RECHAZO
+// =============================================================================
+
+$string['rejectreason_expired'] = 'El documento ha expirado';
+$string['rejectreason_illegible'] = 'El documento es ilegible';
+$string['rejectreason_mismatch'] = 'La información no coincide';
+$string['rejectreason_incomplete'] = 'El documento está incompleto';
+$string['rejectreason_invalid'] = 'El documento es inválido';
+$string['rejectreason_wrong_format'] = 'El documento está en formato incorrecto';
+$string['rejectreason_other'] = 'Otra razón';
+
+// =============================================================================
+// PASOS DEL FLUJO DE TRABAJO
+// =============================================================================
+
+$string['step_consent'] = 'Consentimiento';
+$string['step_documents'] = 'Documentos';
+$string['step_profile'] = 'Perfil';
+$string['step_coverletter'] = 'Carta de presentación';
+$string['step_submit'] = 'Enviar';
+$string['step_review'] = 'Revisión';
+$string['step_evaluation'] = 'Evaluación';
+$string['step_interview'] = 'Entrevista';
+$string['step_selection'] = 'Selección';
+
+// =============================================================================
+// TIPOS DE DOCUMENTOS - ESPECÍFICOS
+// =============================================================================
+
+$string['doctype_tarjeta_profesional'] = 'Tarjeta profesional';
+$string['doctype_sigep'] = 'Registro SIGEP';
+$string['doctype_antecedentes_policia'] = 'Antecedentes de policía';
+$string['doctype_antecedentes_fiscalia'] = 'Antecedentes de fiscalía';
+$string['doctype_antecedentes_contraloria'] = 'Antecedentes de contraloría';
+$string['doctype_antecedentes_procuraduria'] = 'Antecedentes de procuraduría';
+$string['doctype_libreta_militar'] = 'Libreta militar';
+$string['doctype_certificado_eps'] = 'Certificado de EPS';
+$string['doctype_certificado_pension'] = 'Certificado de pensión';
+$string['doctype_rut'] = 'RUT';
+$string['doctype_examen_medico'] = 'Examen médico ocupacional';
+$string['doctype_titulo'] = 'Título profesional';
+$string['doctype_acta_grado'] = 'Acta de grado';
+
+// =============================================================================
+// TIPOS DE PUBLICACIÓN
+// =============================================================================
+
+$string['publicationtype:public'] = 'Público';
+$string['publicationtype:internal'] = 'Interno';
+$string['publicationtype:both'] = 'Público e interno';
+
+// =============================================================================
+// MISCELÁNEOS - ADICIONAL
+// =============================================================================
+
+$string['user'] = 'Usuario';
+$string['useridentifier'] = 'Identificador de usuario';
+$string['workflowsettings'] = 'Configuración del flujo de trabajo';
+$string['column'] = 'Columna';
+$string['doctype_isrequired_help'] = 'Si está marcado, este tipo de documento será obligatorio para las postulaciones';
