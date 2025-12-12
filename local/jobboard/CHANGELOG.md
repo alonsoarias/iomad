@@ -5,6 +5,67 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.3] - 2025-12-12
+
+### Added
+- **Mustache Template**: `pages/migrate.mustache` for migration tool
+- **Renderer Methods**: `render_migrate_page()` and `prepare_migrate_page_data()`
+- **Dashboard Link**: Migration tool accessible from dashboard config section
+- **Language Strings**: Added `access` string in EN/ES
+
+### Changed
+- Migrated `migrate.php` to use renderer + template pattern
+- Removed inline HTML from migration page display section
+
+## [3.5.2] - 2025-12-12
+
+### Added
+- **Language Strings**:
+  - `features` / `Características` - for dashboard template
+  - `allcommittees` / `Todos los comités` - for committee management
+  - `createcompanies_help` - help text for import form
+  - `updateexisting_help` - help text for import form
+
+### Fixed
+- `str_repeat()` type error in `renderer.php:4820` - cast `$cat->depth` to int
+
+## [3.5.1] - 2025-12-12
+
+### Added
+- **Dynamic Status Strings** (EN/ES):
+  - Application statuses: `status_submitted`, `status_under_review`, `status_docs_validated`, `status_docs_rejected`, `status_interview`, `status_selected`, `status_rejected`, `status_withdrawn`, `status_waitlist`
+  - Vacancy statuses: `status_draft`, `status_published`, `status_closed`, `status_archived`, `status_assigned`
+  - Vacancy status labels: `vacancystatus:draft`, `vacancystatus:published`, `vacancystatus:closed`, `vacancystatus:archived`, `vacancystatus:assigned`
+  - Convocatoria status labels: `convocatoriastatus:draft`, `convocatoriastatus:open`, `convocatoriastatus:closed`, `convocatoriastatus:archived`
+
+### Fixed
+- **SQL LIMIT Parameter Error**: Changed from named parameter `LIMIT :limit` to Moodle's `get_records_sql()` limitfrom/limitnum parameters in `renderer.php`
+
+## [3.5.0] - 2025-12-12
+
+### Added
+- **Phase 6: Dashboard Consolidation** (AGENTS.md)
+  - Next convocatoria banner with countdown and urgency indicators
+  - Pending notifications panel for reviewers/coordinators
+  - Recent activity timeline with icons and relative timestamps
+- **Privacy API**: Completed implementation with `consent` and `applicant_profile` tables
+- **Reports Filter**: Mandatory convocatoria selection with blocking modal
+- **Language Strings**: ~127 new strings for dashboard, Privacy API, and reports (EN/ES)
+
+### Changed
+- Updated `views/reports.php` with convocatoria filter requirement
+- Enhanced `templates/pages/reports.mustache` with selection modal
+- Enhanced `templates/pages/dashboard.mustache` with consolidated features
+
+## [3.4.0] - 2025-12-12
+
+### Added
+- **User Tours**: Interactive onboarding tours with `jb-*` selectors
+  - Dashboard tour for new users
+  - Application process tour
+  - Review workflow tour
+  - Reports tour
+
 ## [3.2.0] - 2025-12-12
 
 ### Added
