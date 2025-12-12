@@ -5,6 +5,24 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.7] - 2025-12-12
+
+### Changed
+- **File Reorganization**: Moved 6 admin/management files from root to `admin/` folder:
+  - `assign_reviewer.php` → `admin/assign_reviewer.php`
+  - `bulk_validate.php` → `admin/bulk_validate.php`
+  - `edit.php` → `admin/edit.php`
+  - `manage_applications.php` → `admin/manage_applications.php`
+  - `schedule_interview.php` → `admin/schedule_interview.php`
+  - `validate_document.php` → `admin/validate_document.php`
+- Updated all internal URL references across renderer traits and views
+- Updated `require_once` paths in moved files
+
+### Technical Notes
+- Root directory now only contains essential entry points: `index.php`, `public.php`, `signup.php`, `updateprofile.php`, `reupload_document.php`
+- All admin/management functionality consolidated under `admin/` folder
+- Total files in `admin/`: 17 (was 11)
+
 ## [3.6.6] - 2025-12-12
 
 ### Fixed

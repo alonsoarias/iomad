@@ -366,7 +366,7 @@ trait vacancy_renderer {
             'convocatorianame' => $convocatorianame,
             'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancy->id]))->out(false),
             'applyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]))->out(false),
-            'editurl' => (new moodle_url('/local/jobboard/edit.php', ['id' => $vacancy->id]))->out(false),
+            'editurl' => (new moodle_url('/local/jobboard/admin/edit.php', ['id' => $vacancy->id]))->out(false),
             'canapply' => $canapply,
             'canedit' => $canedit,
             'showstatus' => true,
@@ -416,7 +416,7 @@ trait vacancy_renderer {
             // Edit.
             if (($caps['editvacancy'] ?? false) && ($v->status === 'draft' || $v->status === 'published')) {
                 $actions[] = [
-                    'url' => (new moodle_url('/local/jobboard/edit.php', ['id' => $v->id]))->out(false),
+                    'url' => (new moodle_url('/local/jobboard/admin/edit.php', ['id' => $v->id]))->out(false),
                     'icon' => 't/edit',
                     'title' => get_string('edit', 'local_jobboard'),
                     'class' => 'jb-btn-outline-primary',
@@ -621,7 +621,7 @@ trait vacancy_renderer {
         }
 
         // New vacancy URL.
-        $newvacancyurl = new moodle_url('/local/jobboard/edit.php');
+        $newvacancyurl = new moodle_url('/local/jobboard/admin/edit.php');
         if (!empty($filtervalues['convocatoriaid'])) {
             $newvacancyurl->param('convocatoriaid', $filtervalues['convocatoriaid']);
         }
@@ -800,7 +800,7 @@ trait vacancy_renderer {
             'isloggedin' => isloggedin() && !isguestuser(),
             'applicationstats' => !empty($applicationstats) ? $applicationstats : null,
             'applyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]))->out(false),
-            'editurl' => (new moodle_url('/local/jobboard/edit.php', ['id' => $vacancy->id]))->out(false),
+            'editurl' => (new moodle_url('/local/jobboard/admin/edit.php', ['id' => $vacancy->id]))->out(false),
             'myapplicationsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
             'loginurl' => (new moodle_url('/login/index.php'))->out(false),
             'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
@@ -890,7 +890,7 @@ trait vacancy_renderer {
             $header = ['label' => $info['label'], 'sortable' => $info['sortable']];
             if ($info['sortable']) {
                 $neworder = ($sort === $col && $order === 'ASC') ? 'DESC' : 'ASC';
-                $sorturl = new \moodle_url('/local/jobboard/manage_applications.php', [
+                $sorturl = new \moodle_url('/local/jobboard/admin/manage_applications.php', [
                     'vacancyid' => $vacancy->id,
                     'status' => $status,
                     'search' => $search,
@@ -973,7 +973,7 @@ trait vacancy_renderer {
             'vacancytitle' => format_string($vacancy->title),
             'vacancyid' => $vacancy->id,
             'backurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'manage']))->out(false),
-            'reseturl' => (new \moodle_url('/local/jobboard/manage_applications.php', ['vacancyid' => $vacancy->id]))->out(false),
+            'reseturl' => (new \moodle_url('/local/jobboard/admin/manage_applications.php', ['vacancyid' => $vacancy->id]))->out(false),
             'stats' => $statscards,
             'statuses' => $statusoptions,
             'currentstatus' => $status,
@@ -1033,7 +1033,7 @@ trait vacancy_renderer {
                 'daterange' => userdate($conv->startdate, get_string('strftimedate', 'langconfig')) . ' - ' .
                                userdate($conv->enddate, get_string('strftimedate', 'langconfig')),
                 'vacancycount' => $vacancycount,
-                'selecturl' => (new \moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $cid]))->out(false),
+                'selecturl' => (new \moodle_url('/local/jobboard/admin/edit.php', ['convocatoriaid' => $cid]))->out(false),
             ];
         }
 

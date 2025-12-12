@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/tablelib.php');
 
 use local_jobboard\vacancy;
@@ -48,7 +48,7 @@ if (!$vacancy) {
 }
 
 // Set up page.
-$baseurl = new moodle_url('/local/jobboard/manage_applications.php', [
+$baseurl = new moodle_url('/local/jobboard/admin/manage_applications.php', [
     'vacancyid' => $vacancyid,
     'status' => $status,
     'search' => $search,

@@ -24,7 +24,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/formslib.php');
 
 use local_jobboard\interview;
@@ -45,7 +45,7 @@ $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $application->vaca
 $applicant = $DB->get_record('user', ['id' => $application->userid], '*', MUST_EXIST);
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/schedule_interview.php', ['application' => $applicationid]));
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/schedule_interview.php', ['application' => $applicationid]));
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('scheduleinterview', 'local_jobboard'));
 $PAGE->set_heading(get_string('scheduleinterview', 'local_jobboard'));
@@ -57,7 +57,7 @@ if ($action === 'cancel' && $interviewid) {
     $reason = optional_param('reason', '', PARAM_TEXT);
 
     if (interview::cancel($interviewid, $reason)) {
-        redirect(new moodle_url('/local/jobboard/schedule_interview.php', ['application' => $applicationid]),
+        redirect(new moodle_url('/local/jobboard/admin/schedule_interview.php', ['application' => $applicationid]),
             get_string('interviewcancelled', 'local_jobboard'), null,
             \core\output\notification::NOTIFY_SUCCESS);
     }
@@ -116,7 +116,7 @@ if ($action === 'complete' && $interviewid) {
     ]);
 
     if ($mform->is_cancelled()) {
-        redirect(new moodle_url('/local/jobboard/schedule_interview.php', ['application' => $applicationid]));
+        redirect(new moodle_url('/local/jobboard/admin/schedule_interview.php', ['application' => $applicationid]));
     }
 
     // Capture form HTML.
@@ -140,7 +140,7 @@ if ($action === 'savecomplete' && $interviewid) {
     $feedback = optional_param('feedback', '', PARAM_TEXT);
 
     if (interview::complete($interviewid, $rating, $feedback, $recommendation)) {
-        redirect(new moodle_url('/local/jobboard/schedule_interview.php', ['application' => $applicationid]),
+        redirect(new moodle_url('/local/jobboard/admin/schedule_interview.php', ['application' => $applicationid]),
             get_string('interviewcompleted', 'local_jobboard'), null,
             \core\output\notification::NOTIFY_SUCCESS);
     }
@@ -151,7 +151,7 @@ if ($action === 'noshow' && $interviewid) {
     $notes = optional_param('notes', '', PARAM_TEXT);
 
     if (interview::mark_noshow($interviewid, $notes)) {
-        redirect(new moodle_url('/local/jobboard/schedule_interview.php', ['application' => $applicationid]),
+        redirect(new moodle_url('/local/jobboard/admin/schedule_interview.php', ['application' => $applicationid]),
             get_string('markedasnoshow', 'local_jobboard'), null,
             \core\output\notification::NOTIFY_WARNING);
     }
@@ -266,11 +266,11 @@ if ($mform->is_cancelled()) {
     );
 
     if ($interviewid) {
-        redirect(new moodle_url('/local/jobboard/schedule_interview.php', ['application' => $applicationid]),
+        redirect(new moodle_url('/local/jobboard/admin/schedule_interview.php', ['application' => $applicationid]),
             get_string('interviewscheduled', 'local_jobboard'), null,
             \core\output\notification::NOTIFY_SUCCESS);
     } else {
-        redirect(new moodle_url('/local/jobboard/schedule_interview.php', ['application' => $applicationid]),
+        redirect(new moodle_url('/local/jobboard/admin/schedule_interview.php', ['application' => $applicationid]),
             get_string('interviewscheduleerror', 'local_jobboard'), null,
             \core\output\notification::NOTIFY_ERROR);
     }

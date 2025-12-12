@@ -24,7 +24,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 
 use local_jobboard\document;
 use local_jobboard\application;
@@ -50,7 +50,7 @@ if (!$application) {
 }
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/validate_document.php', ['id' => $id]));
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/validate_document.php', ['id' => $id]));
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('validatedocument', 'local_jobboard'));
 $PAGE->set_heading(get_string('validatedocument', 'local_jobboard'));

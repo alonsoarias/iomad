@@ -24,7 +24,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 
 use local_jobboard\bulk_validator;
 
@@ -38,7 +38,7 @@ $context = context_system::instance();
 require_capability('local/jobboard:reviewdocuments', $context);
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/bulk_validate.php', [
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/bulk_validate.php', [
     'vacancyid' => $vacancyid,
     'documenttype' => $documenttype,
 ]));
@@ -64,7 +64,7 @@ if ($action === 'validate' || $action === 'reject') {
     $type = $results['failed'] > 0 ? \core\output\notification::NOTIFY_WARNING : \core\output\notification::NOTIFY_SUCCESS;
 
     redirect(
-        new moodle_url('/local/jobboard/bulk_validate.php', [
+        new moodle_url('/local/jobboard/admin/bulk_validate.php', [
             'vacancyid' => $vacancyid,
             'documenttype' => $documenttype,
         ]),

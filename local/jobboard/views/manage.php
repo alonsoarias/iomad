@@ -54,11 +54,11 @@ $PAGE->set_heading(get_string('managevacancies', 'local_jobboard'));
 
 // Handle actions that don't need sesskey (just redirects).
 if ($action === 'create') {
-    redirect(new moodle_url('/local/jobboard/edit.php'));
+    redirect(new moodle_url('/local/jobboard/admin/edit.php'));
 }
 
 if ($action === 'edit' && $vacancyid) {
-    redirect(new moodle_url('/local/jobboard/edit.php', ['id' => $vacancyid]));
+    redirect(new moodle_url('/local/jobboard/admin/edit.php', ['id' => $vacancyid]));
 }
 
 // Handle actions that modify data (require sesskey).

@@ -488,7 +488,7 @@ trait dashboard_renderer {
                 'description' => get_string('assignreviewers_desc', 'local_jobboard'),
                 'icon' => 'user-plus',
                 'color' => 'primary',
-                'url' => (new moodle_url('/local/jobboard/assign_reviewer.php'))->out(false),
+                'url' => (new moodle_url('/local/jobboard/admin/assign_reviewer.php'))->out(false),
                 'buttonlabel' => get_string('assignreviewers', 'local_jobboard'),
                 'buttonicon' => 'users-cog',
             ];
@@ -502,7 +502,7 @@ trait dashboard_renderer {
                 'description' => get_string('bulkvalidation_desc', 'local_jobboard'),
                 'icon' => 'tasks',
                 'color' => 'success',
-                'url' => (new moodle_url('/local/jobboard/bulk_validate.php'))->out(false),
+                'url' => (new moodle_url('/local/jobboard/admin/bulk_validate.php'))->out(false),
                 'buttonlabel' => get_string('bulkvalidation', 'local_jobboard'),
                 'buttonicon' => 'check-double',
             ];

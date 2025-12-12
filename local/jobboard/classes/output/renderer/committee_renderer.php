@@ -368,7 +368,7 @@ trait committee_renderer {
     public function prepare_assign_reviewer_page_data(int $vacancyid): array {
         global $DB;
 
-        $pageurl = new moodle_url('/local/jobboard/assign_reviewer.php');
+        $pageurl = new moodle_url('/local/jobboard/admin/assign_reviewer.php');
 
         // Get vacancy list for filter.
         $vacancies = $DB->get_records_select('local_jobboard_vacancy',
@@ -473,7 +473,7 @@ trait committee_renderer {
             'actionformurl' => $pageurl->out(false),
             'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'reviewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
-            'bulkvalidateurl' => (new moodle_url('/local/jobboard/bulk_validate.php'))->out(false),
+            'bulkvalidateurl' => (new moodle_url('/local/jobboard/admin/bulk_validate.php'))->out(false),
             'sesskey' => sesskey(),
         ];
     }
@@ -525,7 +525,7 @@ trait committee_renderer {
             // Can act (complete, noshow, cancel).
             $canact = in_array($int->status, ['scheduled', 'confirmed']);
 
-            $baseurl = new moodle_url('/local/jobboard/schedule_interview.php', ['application' => $applicationid]);
+            $baseurl = new moodle_url('/local/jobboard/admin/schedule_interview.php', ['application' => $applicationid]);
 
             $interviewsdata[] = [
                 'id' => $int->id,

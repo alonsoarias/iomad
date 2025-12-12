@@ -24,8 +24,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/lib.php');
+require_once(__DIR__ . '/../../../config.php');
+require_once(__DIR__ . '/../lib.php');
 
 use local_jobboard\output\ui_helper;
 
@@ -57,7 +57,7 @@ if ($id) {
 }
 
 $PAGE->set_context($context);
-$PAGE->set_url(new moodle_url('/local/jobboard/edit.php', ['id' => $id, 'convocatoriaid' => $convocatoriaid]));
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/edit.php', ['id' => $id, 'convocatoriaid' => $convocatoriaid]));
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);

@@ -385,7 +385,7 @@ trait review_renderer {
     public function prepare_bulk_validate_page_data(int $vacancyid, string $documenttype, \context $context): array {
         global $DB;
 
-        $pageurl = new moodle_url('/local/jobboard/bulk_validate.php');
+        $pageurl = new moodle_url('/local/jobboard/admin/bulk_validate.php');
 
         // Get vacancy list for filter.
         $vacancies = $DB->get_records_select('local_jobboard_vacancy',
@@ -463,7 +463,7 @@ trait review_renderer {
             'actionformurl' => $pageurl->out(false),
             'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'reviewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
-            'assignreviewerurl' => (new moodle_url('/local/jobboard/assign_reviewer.php'))->out(false),
+            'assignreviewerurl' => (new moodle_url('/local/jobboard/admin/assign_reviewer.php'))->out(false),
             'reportsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'reports']))->out(false),
             'canviewreports' => has_capability('local/jobboard:viewreports', $context),
             'sesskey' => sesskey(),
@@ -488,7 +488,7 @@ trait review_renderer {
                     'filename' => format_string($doc->filename),
                     'uploadeddate' => userdate($doc->timecreated, '%Y-%m-%d %H:%M'),
                     'downloadurl' => $downloadurl ? $downloadurl->out(false) : null,
-                    'validateurl' => (new moodle_url('/local/jobboard/validate_document.php', ['id' => $doc->id]))->out(false),
+                    'validateurl' => (new moodle_url('/local/jobboard/admin/validate_document.php', ['id' => $doc->id]))->out(false),
                 ];
             }
 
@@ -606,7 +606,7 @@ trait review_renderer {
         }
 
         // Build URLs.
-        $baseurl = new moodle_url('/local/jobboard/validate_document.php', ['id' => $document->id]);
+        $baseurl = new moodle_url('/local/jobboard/admin/validate_document.php', ['id' => $document->id]);
         $backurl = new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]);
 
         return [

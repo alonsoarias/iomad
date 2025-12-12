@@ -179,7 +179,7 @@ trait convocatoria_renderer {
                 'selectedcount' => $selectedcount,
                 'hasvacancies' => $vacancycount > 0,
                 'editurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'id' => $c->id]))->out(false),
-                'addvacancyurl' => (new moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $c->id]))->out(false),
+                'addvacancyurl' => (new moodle_url('/local/jobboard/admin/edit.php', ['convocatoriaid' => $c->id]))->out(false),
                 'vacanciesurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $c->id]))->out(false),
                 'statusactions' => $statusactions,
                 'hasstatusactions' => !empty($statusactions),
@@ -330,7 +330,7 @@ trait convocatoria_renderer {
             'selectedcount' => $selectedcount,
             'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'id' => $convocatoria->id]))->out(false),
             'editurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'id' => $convocatoria->id]))->out(false),
-            'addvacancyurl' => (new moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $convocatoria->id]))->out(false),
+            'addvacancyurl' => (new moodle_url('/local/jobboard/admin/edit.php', ['convocatoriaid' => $convocatoria->id]))->out(false),
         ];
     }
 
@@ -688,7 +688,7 @@ trait convocatoria_renderer {
         ];
 
         // URLs.
-        $data['addvacancyurl'] = (new moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $convocatoria->id]))->out(false);
+        $data['addvacancyurl'] = (new moodle_url('/local/jobboard/admin/edit.php', ['convocatoriaid' => $convocatoria->id]))->out(false);
         $data['viewallurl'] = (new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $convocatoria->id]))->out(false);
         $data['applicationsurl'] = (new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'convocatoriaid' => $convocatoria->id]))->out(false);
 
@@ -720,7 +720,7 @@ trait convocatoria_renderer {
                 'statuslabel' => get_string('status:' . $v->status, 'local_jobboard'),
                 'statuscolor' => $vStatusColor,
                 'applicationcount' => (int) ($v->app_count ?? 0),
-                'editurl' => (new moodle_url('/local/jobboard/edit.php', ['id' => $v->id]))->out(false),
+                'editurl' => (new moodle_url('/local/jobboard/admin/edit.php', ['id' => $v->id]))->out(false),
             ];
         }
         $data['vacancies'] = $vacsdata;

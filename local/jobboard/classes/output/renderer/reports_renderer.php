@@ -131,7 +131,7 @@ trait reports_renderer {
             'hasdata' => false,
             'dashboardurl' => (new \moodle_url('/local/jobboard/index.php'))->out(false),
             'manageurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'manage']))->out(false),
-            'bulkvalidateurl' => (new \moodle_url('/local/jobboard/bulk_validate.php'))->out(false),
+            'bulkvalidateurl' => (new \moodle_url('/local/jobboard/admin/bulk_validate.php'))->out(false),
             'caps' => [
                 'viewallapplications' => has_capability('local/jobboard:viewallapplications', $context),
                 'reviewdocuments' => has_capability('local/jobboard:reviewdocuments', $context),
