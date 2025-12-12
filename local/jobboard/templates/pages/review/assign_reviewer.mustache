@@ -1,12 +1,12 @@
 {{!
-    @template local_jobboard/pages/assign_reviewer
+    @template local_jobboard/pages/review/assign_reviewer
 
     Assign reviewer to applications page template.
     Uses jb-* CSS classes for consistent styling.
 
     Context variables:
     * pagetitle - Page title string
-    * stats - Statistics (unassigned, reviewers, assigned, avgworkload)
+    * stats - Statistics object (unassigned, reviewers, assigned, avgworkload)
     * vacancies - Vacancies for filter dropdown
     * selectedvacancyid - Currently selected vacancy ID
     * reviewers - Available reviewers with workload
@@ -22,6 +22,7 @@
 
     Example context (json):
     {
+        "pagetitle": "Assign Reviewer",
         "stats": {"unassigned": 10, "reviewers": 5, "assigned": 25, "avgworkload": 5.0}
     }
 }}
@@ -191,7 +192,7 @@
                     {{#str}}autoassignall, local_jobboard{{/str}}
                 </button>
             </form>
-            <small class="jb-text-white-50 jb-mt-2 jb-d-block">
+            <small class="jb-text-muted jb-mt-2 jb-d-block">
                 <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
                 {{#str}}autoassignhelp, local_jobboard{{/str}}
             </small>
@@ -218,7 +219,7 @@
                 <div class="jb-row jb-mb-4">
                     <div class="jb-col-md-6">
                         <div class="jb-form-group">
-                            <label for="reviewerid" class="jb-fw-bold">
+                            <label for="reviewerid" class="jb-form-label jb-fw-bold">
                                 <i class="fa fa-user-plus jb-mr-2" aria-hidden="true"></i>
                                 {{#str}}assignto, local_jobboard{{/str}}
                             </label>
@@ -273,20 +274,10 @@
                     </button>
                 </div>
             </form>
-
-            {{#js}}
-            document.getElementById('selectallapp').addEventListener('change', function() {
-                var checkboxes = document.querySelectorAll('.app-checkbox');
-                var self = this;
-                checkboxes.forEach(function(cb) {
-                    cb.checked = self.checked;
-                });
-            });
-            {{/js}}
             {{/hasunassigned}}
             {{^hasunassigned}}
             <div class="jb-empty-state jb-text-center jb-py-4">
-                <i class="fa fa-check-circle fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                <i class="fa fa-check-circle fa-3x jb-text-success jb-mb-3" aria-hidden="true"></i>
                 <p class="jb-text-muted">{{#str}}nounassignedapplications, local_jobboard{{/str}}</p>
             </div>
             {{/hasunassigned}}
@@ -311,3 +302,21 @@
         </div>
     </footer>
 </div>
+
+{{! JavaScript for select all - moved outside conditional blocks for consistency }}
+{{#hasunassigned}}
+{{#js}}
+(function() {
+    var selectAll = document.getElementById('selectallapp');
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            var checkboxes = document.querySelectorAll('.app-checkbox');
+            var checked = this.checked;
+            checkboxes.forEach(function(cb) {
+                cb.checked = checked;
+            });
+        });
+    }
+})();
+{{/js}}
+{{/hasunassigned}}
