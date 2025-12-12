@@ -1,41 +1,90 @@
 {{!
-    @template local_jobboard/pages/manage_exemptions
+    @template local_jobboard/pages/exemptions/list
 
     Exemption management page template (list view).
     Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables:
-    * pagetitle - Page title string
-    * stats - Statistics (total, active, expired, revoked)
-    * filters - Current filter values
-    * typesoptions - Exemption type options
-    * statusoptions - Status options
-    * exemptions - Exemptions list
-    * hasexemptions - Boolean if has exemptions
-    * totalcount - Total exemption count
-    * pagination - Pagination HTML
-    * filterformurl - URL for filter form
-    * addurl - URL to add exemption
-    * importurl - URL to import exemptions
-    * dashboardurl - URL to dashboard
-    * doctypesurl - URL to manage doc types
-    * reportsurl - URL to reports
-    * canviewreports - Boolean if can view reports
+    * pagetitle (string) - Page title
+    * stats (object) - Statistics {total, active, expired, revoked}
+    * filters (object) - Current filter values
+    * typesoptions (array) - Exemption type options
+    * statusoptions (array) - Status options
+    * exemptions (array) - Exemptions list
+    * hasexemptions (bool) - Has exemptions
+    * totalcount (number) - Total exemption count
+    * pagination (string) - Pagination HTML
+    * filterformurl (string) - URL for filter form
+    * addurl (string) - URL to add exemption
+    * importurl (string) - URL to import exemptions
+    * dashboardurl (string) - URL to dashboard
+    * doctypesurl (string) - URL to manage doc types
+    * reportsurl (string) - URL to reports
+    * canviewreports (bool) - Can view reports
+    * loading (bool) - Show skeleton loading state
 
     Example context (json):
     {
         "stats": {"total": 50, "active": 30, "expired": 15, "revoked": 5}
     }
 }}
-<div class="jb-manage-exemptions" data-region="jobboard-manage-exemptions">
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="local-jobboard-exemptions" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <div class="jb-skeleton-title" style="width: 40%;"></div>
+        <div class="jb-d-flex jb-gap-2">
+            <div class="jb-skeleton-text" style="width: 120px; height: 40px;"></div>
+            <div class="jb-skeleton-text" style="width: 120px; height: 40px;"></div>
+        </div>
+    </div>
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+    </div>
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-body">
+            <div class="jb-d-flex jb-gap-3">
+                <div class="jb-skeleton-text" style="width: 200px; height: 40px;"></div>
+                <div class="jb-skeleton-text" style="width: 150px; height: 40px;"></div>
+                <div class="jb-skeleton-text" style="width: 150px; height: 40px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="jb-card">
+        <div class="jb-card-body jb-p-0">
+            {{> local_jobboard/components/table }}
+        </div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="local-jobboard-exemptions" data-region="jobboard-manage-exemptions">
+    {{! Skip Link for Accessibility }}
+    <a href="#exemptions-main-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
     {{! Page Header }}
-    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-flex-wrap jb-gap-3 jb-mb-4 jb-fade-in">
         <h1 class="jb-fs-3 jb-mb-0">
             <i class="fa fa-shield-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
             {{pagetitle}}
         </h1>
-        <div class="jb-btn-group">
-            <a href="{{addurl}}" class="jb-btn jb-btn-primary">
+        <div class="jb-btn-group" role="group" aria-label="{{#str}}exemptionactions, local_jobboard{{/str}}">
+            <a href="{{addurl}}" class="jb-btn jb-btn-primary jb-hover-lift">
                 <i class="fa fa-plus jb-mr-2" aria-hidden="true"></i>
                 {{#str}}addexemption, local_jobboard{{/str}}
             </a>
@@ -43,20 +92,16 @@
                 <i class="fa fa-upload jb-mr-2" aria-hidden="true"></i>
                 {{#str}}importexemptions, local_jobboard{{/str}}
             </a>
-            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
-                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
-                {{#str}}dashboard, local_jobboard{{/str}}
-            </a>
         </div>
     </header>
 
     {{! Statistics Cards }}
-    <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
-        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-primary">
+    <section class="jb-row jb-mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3 jb-fade-in-up" style="animation-delay: 0.05s;">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-primary jb-hover-lift">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
-                    <div class="jb-stat-icon jb-mr-3">
-                        <i class="fa fa-shield-alt" aria-hidden="true"></i>
+                    <div class="jb-stat-icon jb-bg-primary jb-text-white jb-rounded jb-p-3 jb-mr-3">
+                        <i class="fa fa-shield-alt fa-lg" aria-hidden="true"></i>
                     </div>
                     <div>
                         <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.total}}</div>
@@ -65,11 +110,11 @@
                 </div>
             </div>
         </div>
-        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success">
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3 jb-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success jb-hover-lift">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
-                    <div class="jb-stat-icon jb-mr-3">
-                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    <div class="jb-stat-icon jb-bg-success jb-text-white jb-rounded jb-p-3 jb-mr-3">
+                        <i class="fa fa-check-circle fa-lg" aria-hidden="true"></i>
                     </div>
                     <div>
                         <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.active}}</div>
@@ -78,11 +123,11 @@
                 </div>
             </div>
         </div>
-        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-warning">
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3 jb-fade-in-up" style="animation-delay: 0.15s;">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-warning jb-hover-lift">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
-                    <div class="jb-stat-icon jb-mr-3">
-                        <i class="fa fa-clock" aria-hidden="true"></i>
+                    <div class="jb-stat-icon jb-bg-warning jb-text-white jb-rounded jb-p-3 jb-mr-3">
+                        <i class="fa fa-clock fa-lg" aria-hidden="true"></i>
                     </div>
                     <div>
                         <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.expired}}</div>
@@ -91,11 +136,11 @@
                 </div>
             </div>
         </div>
-        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-danger">
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3 jb-fade-in-up" style="animation-delay: 0.2s;">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-danger jb-hover-lift">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
-                    <div class="jb-stat-icon jb-mr-3">
-                        <i class="fa fa-ban" aria-hidden="true"></i>
+                    <div class="jb-stat-icon jb-bg-danger jb-text-white jb-rounded jb-p-3 jb-mr-3">
+                        <i class="fa fa-ban fa-lg" aria-hidden="true"></i>
                     </div>
                     <div>
                         <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.revoked}}</div>
@@ -107,131 +152,187 @@
     </section>
 
     {{! Filters }}
-    <section class="jb-card jb-card-shadow jb-mb-4" aria-label="{{#str}}filter{{/str}}">
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="filters-heading" style="animation-delay: 0.25s;">
         <div class="jb-card-body">
-            <form method="get" action="{{filterformurl}}" class="jb-form-inline jb-flex-wrap">
-                <div class="jb-form-group jb-mr-3 jb-mb-2">
-                    <label class="jb-sr-only" for="search">{{#str}}search{{/str}}</label>
-                    <input type="text" name="search" id="search" class="jb-form-control"
-                           placeholder="{{#str}}searchuser, local_jobboard{{/str}}" value="{{filters.search}}">
+            <form method="get" action="{{filterformurl}}" class="jb-filter-form" role="search" aria-label="{{#str}}filterexemptions, local_jobboard{{/str}}">
+                <div class="jb-row jb-align-items-end">
+                    <div class="jb-col-lg-4 jb-col-md-6 jb-mb-2">
+                        <label class="jb-form-label jb-small jb-text-muted jb-sr-only" for="search">{{#str}}search{{/str}}</label>
+                        <div class="jb-input-group">
+                            <span class="jb-input-group-text jb-bg-white">
+                                <i class="fa fa-search jb-text-muted" aria-hidden="true"></i>
+                            </span>
+                            <input type="text" name="search" id="search" class="jb-form-control"
+                                   placeholder="{{#str}}searchuser, local_jobboard{{/str}}" value="{{filters.search}}">
+                        </div>
+                    </div>
+                    <div class="jb-col-lg-3 jb-col-md-6 jb-mb-2">
+                        <label class="jb-form-label jb-small jb-text-muted" for="type">{{#str}}type, local_jobboard{{/str}}</label>
+                        <select name="type" id="type" class="jb-form-select">
+                            {{#typesoptions}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/typesoptions}}
+                        </select>
+                    </div>
+                    <div class="jb-col-lg-3 jb-col-md-6 jb-mb-2">
+                        <label class="jb-form-label jb-small jb-text-muted" for="status">{{#str}}status{{/str}}</label>
+                        <select name="status" id="status" class="jb-form-select">
+                            {{#statusoptions}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/statusoptions}}
+                        </select>
+                    </div>
+                    <div class="jb-col-lg-2 jb-col-md-6 jb-mb-2">
+                        <button type="submit" class="jb-btn jb-btn-primary jb-w-100">
+                            <i class="fa fa-filter jb-mr-1" aria-hidden="true"></i>
+                            {{#str}}filter{{/str}}
+                        </button>
+                    </div>
                 </div>
-                <div class="jb-form-group jb-mr-3 jb-mb-2">
-                    <label class="jb-sr-only" for="type">{{#str}}type, local_jobboard{{/str}}</label>
-                    <select name="type" id="type" class="jb-form-control">
-                        {{#typesoptions}}
-                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                        {{/typesoptions}}
-                    </select>
-                </div>
-                <div class="jb-form-group jb-mr-3 jb-mb-2">
-                    <label class="jb-sr-only" for="status">{{#str}}status{{/str}}</label>
-                    <select name="status" id="status" class="jb-form-control">
-                        {{#statusoptions}}
-                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                        {{/statusoptions}}
-                    </select>
-                </div>
-                <button type="submit" class="jb-btn jb-btn-primary jb-mb-2">
-                    <i class="fa fa-filter jb-mr-1" aria-hidden="true"></i>
-                    {{#str}}filter{{/str}}
-                </button>
             </form>
         </div>
     </section>
 
     {{! Exemptions Table }}
-    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="exemptions-heading">
-        <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
-            <h5 class="jb-mb-0" id="exemptions-heading">
-                <i class="fa fa-list jb-text-primary jb-mr-2" aria-hidden="true"></i>
-                {{#str}}exemptionlist, local_jobboard{{/str}}
-            </h5>
-            <span class="jb-badge jb-badge-secondary">{{totalcount}} {{#str}}items, local_jobboard{{/str}}</span>
-        </div>
-        <div class="jb-card-body jb-p-0">
-            {{#hasexemptions}}
-            <div class="jb-table-responsive">
-                <table class="jb-table jb-table-hover jb-mb-0">
-                    <thead class="jb-thead-light">
-                        <tr>
-                            <th>{{#str}}user{{/str}}</th>
-                            <th>{{#str}}exemptiontype, local_jobboard{{/str}}</th>
-                            <th>{{#str}}exempteddocs, local_jobboard{{/str}}</th>
-                            <th>{{#str}}validfrom, local_jobboard{{/str}}</th>
-                            <th>{{#str}}validuntil, local_jobboard{{/str}}</th>
-                            <th>{{#str}}status{{/str}}</th>
-                            <th>{{#str}}actions{{/str}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#exemptions}}
-                        <tr>
-                            <td>
-                                <strong>{{fullname}}</strong>
-                                <br><small class="jb-text-muted">{{email}}</small>
-                            </td>
-                            <td>{{typename}}</td>
-                            <td><span class="jb-badge jb-badge-secondary">{{doctypescount}} {{#str}}doctypes, local_jobboard{{/str}}</span></td>
-                            <td>{{validfrom}}</td>
-                            <td>
-                                {{#validuntil}}{{validuntil}}{{/validuntil}}
-                                {{^validuntil}}<em>{{#str}}noexpiry, local_jobboard{{/str}}</em>{{/validuntil}}
-                            </td>
-                            <td><span class="jb-badge jb-badge-{{statuscolor}}">{{statustext}}</span></td>
-                            <td>
-                                <div class="jb-btn-group jb-btn-group-sm" role="group">
-                                    <a href="{{viewurl}}" class="jb-btn jb-btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
-                                        <i class="fa fa-eye" aria-hidden="true"></i>
-                                    </a>
-                                    {{#isactive}}
-                                    <a href="{{editurl}}" class="jb-btn jb-btn-outline-secondary" title="{{#str}}edit, local_jobboard{{/str}}">
-                                        <i class="fa fa-edit" aria-hidden="true"></i>
-                                    </a>
-                                    <a href="{{revokeurl}}" class="jb-btn jb-btn-outline-danger" title="{{#str}}revoke, local_jobboard{{/str}}">
-                                        <i class="fa fa-ban" aria-hidden="true"></i>
-                                    </a>
-                                    {{/isactive}}
-                                </div>
-                            </td>
-                        </tr>
-                        {{/exemptions}}
-                    </tbody>
-                </table>
+    <main id="exemptions-main-content">
+        <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="exemptions-heading" style="animation-delay: 0.3s;">
+            <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+                <h2 class="jb-fs-5 jb-mb-0" id="exemptions-heading">
+                    <i class="fa fa-list jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}exemptionlist, local_jobboard{{/str}}
+                </h2>
+                <span class="jb-badge jb-badge-secondary jb-badge-pill">
+                    {{totalcount}} {{#str}}items, local_jobboard{{/str}}
+                </span>
             </div>
+            <div class="jb-card-body jb-p-0">
+                {{#hasexemptions}}
+                <div class="jb-table-responsive">
+                    <table class="jb-table jb-table-hover jb-mb-0" aria-label="{{#str}}exemptionlist, local_jobboard{{/str}}">
+                        <thead class="jb-thead-light">
+                            <tr>
+                                <th scope="col">{{#str}}user{{/str}}</th>
+                                <th scope="col">{{#str}}exemptiontype, local_jobboard{{/str}}</th>
+                                <th scope="col" class="jb-text-center">{{#str}}exempteddocs, local_jobboard{{/str}}</th>
+                                <th scope="col" class="jb-d-none jb-d-lg-table-cell">{{#str}}validfrom, local_jobboard{{/str}}</th>
+                                <th scope="col">{{#str}}validuntil, local_jobboard{{/str}}</th>
+                                <th scope="col" class="jb-text-center">{{#str}}status{{/str}}</th>
+                                <th scope="col" class="jb-text-right" style="min-width: 120px;">{{#str}}actions{{/str}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#exemptions}}
+                            <tr data-exemption-id="{{id}}" class="{{#isexpiringsoon}}jb-table-warning{{/isexpiringsoon}}">
+                                <td>
+                                    <div class="jb-d-flex jb-align-items-center">
+                                        <div class="jb-avatar jb-avatar-sm jb-bg-light jb-rounded-circle jb-mr-2 jb-d-flex jb-align-items-center jb-justify-content-center" style="width: 36px; height: 36px;">
+                                            <i class="fa fa-user jb-text-muted" aria-hidden="true"></i>
+                                        </div>
+                                        <div>
+                                            <strong class="jb-d-block">{{fullname}}</strong>
+                                            <small class="jb-text-muted">{{email}}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="jb-badge jb-badge-outline-primary">{{typename}}</span>
+                                </td>
+                                <td class="jb-text-center">
+                                    <span class="jb-badge jb-badge-secondary jb-badge-pill">
+                                        {{doctypescount}} {{#str}}doctypes, local_jobboard{{/str}}
+                                    </span>
+                                </td>
+                                <td class="jb-d-none jb-d-lg-table-cell">
+                                    <small class="jb-text-muted">{{validfrom}}</small>
+                                </td>
+                                <td>
+                                    {{#validuntil}}
+                                    <small class="{{#isexpiringsoon}}jb-text-warning jb-fw-bold{{/isexpiringsoon}}{{^isexpiringsoon}}jb-text-muted{{/isexpiringsoon}}">
+                                        {{#isexpiringsoon}}<i class="fa fa-exclamation-triangle jb-mr-1" aria-hidden="true"></i>{{/isexpiringsoon}}
+                                        {{validuntil}}
+                                    </small>
+                                    {{/validuntil}}
+                                    {{^validuntil}}
+                                    <span class="jb-badge jb-badge-success jb-badge-pill">
+                                        <i class="fa fa-infinity jb-mr-1" aria-hidden="true"></i>
+                                        {{#str}}noexpiry, local_jobboard{{/str}}
+                                    </span>
+                                    {{/validuntil}}
+                                </td>
+                                <td class="jb-text-center">
+                                    <span class="jb-badge jb-badge-{{statuscolor}} jb-badge-pill">
+                                        {{#statusicon}}<i class="fa fa-{{statusicon}} jb-mr-1" aria-hidden="true"></i>{{/statusicon}}
+                                        {{statustext}}
+                                    </span>
+                                </td>
+                                <td class="jb-text-right">
+                                    <div class="jb-btn-group jb-btn-group-sm" role="group" aria-label="{{#str}}exemptionactions, local_jobboard{{/str}}">
+                                        <a href="{{viewurl}}" class="jb-btn jb-btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                            <span class="jb-sr-only">{{#str}}view, local_jobboard{{/str}}</span>
+                                        </a>
+                                        {{#isactive}}
+                                        <a href="{{editurl}}" class="jb-btn jb-btn-outline-secondary" title="{{#str}}edit, local_jobboard{{/str}}">
+                                            <i class="fa fa-edit" aria-hidden="true"></i>
+                                            <span class="jb-sr-only">{{#str}}edit, local_jobboard{{/str}}</span>
+                                        </a>
+                                        <a href="{{revokeurl}}" class="jb-btn jb-btn-outline-danger" title="{{#str}}revoke, local_jobboard{{/str}}" onclick="return confirm('{{#str}}confirmrevoke, local_jobboard{{/str}}');">
+                                            <i class="fa fa-ban" aria-hidden="true"></i>
+                                            <span class="jb-sr-only">{{#str}}revoke, local_jobboard{{/str}}</span>
+                                        </a>
+                                        {{/isactive}}
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/exemptions}}
+                        </tbody>
+                    </table>
+                </div>
+                {{/hasexemptions}}
+
+                {{! Empty State }}
+                {{^hasexemptions}}
+                <div class="jb-empty-state jb-text-center jb-py-5" role="status">
+                    <div class="jb-empty-icon-wrapper jb-d-inline-flex jb-align-items-center jb-justify-content-center jb-rounded-circle jb-bg-light jb-mb-4" style="width: 100px; height: 100px;">
+                        <i class="fa fa-shield-alt fa-3x jb-text-muted" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="jb-fs-5 jb-text-muted jb-mb-2">{{#str}}noexemptions, local_jobboard{{/str}}</h3>
+                    <p class="jb-text-muted jb-mb-4">{{#str}}noexemptionsdesc, local_jobboard{{/str}}</p>
+                    <a href="{{addurl}}" class="jb-btn jb-btn-primary jb-hover-lift">
+                        <i class="fa fa-plus jb-mr-2" aria-hidden="true"></i>
+                        {{#str}}addexemption, local_jobboard{{/str}}
+                    </a>
+                </div>
+                {{/hasexemptions}}
+            </div>
+
+            {{! Pagination }}
             {{#pagination}}
             <div class="jb-card-footer jb-bg-white">
-                {{{pagination}}}
+                <nav aria-label="{{#str}}pagination, local_jobboard{{/str}}">
+                    {{{pagination}}}
+                </nav>
             </div>
             {{/pagination}}
-            {{/hasexemptions}}
-            {{^hasexemptions}}
-            <div class="jb-p-4">
-                <div class="jb-empty-state jb-text-center jb-py-4">
-                    <i class="fa fa-shield-alt fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
-                    <p class="jb-text-muted">{{#str}}noexemptions, local_jobboard{{/str}}</p>
-                </div>
-            </div>
-            {{/hasexemptions}}
-        </div>
-    </section>
+        </section>
+    </main>
 
     {{! Navigation Footer }}
-    <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
-        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
-            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
-                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
-                {{#str}}dashboard, local_jobboard{{/str}}
-            </a>
-            <a href="{{doctypesurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
-                <i class="fa fa-folder jb-mr-2" aria-hidden="true"></i>
-                {{#str}}managedoctypes, local_jobboard{{/str}}
-            </a>
-            {{#canviewreports}}
-            <a href="{{reportsurl}}" class="jb-btn jb-btn-outline-info jb-m-1">
-                <i class="fa fa-chart-bar jb-mr-2" aria-hidden="true"></i>
-                {{#str}}reports, local_jobboard{{/str}}
-            </a>
-            {{/canviewreports}}
-        </div>
-    </footer>
+    <nav class="jb-navigation-footer jb-d-flex jb-flex-wrap jb-justify-content-center jb-gap-2 jb-mt-4 jb-py-3 jb-border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+            {{#str}}dashboard, local_jobboard{{/str}}
+        </a>
+        <a href="{{doctypesurl}}" class="jb-btn jb-btn-outline-primary">
+            <i class="fa fa-folder jb-mr-2" aria-hidden="true"></i>
+            {{#str}}managedoctypes, local_jobboard{{/str}}
+        </a>
+        {{#canviewreports}}
+        <a href="{{reportsurl}}" class="jb-btn jb-btn-outline-info">
+            <i class="fa fa-chart-bar jb-mr-2" aria-hidden="true"></i>
+            {{#str}}reports, local_jobboard{{/str}}
+        </a>
+        {{/canviewreports}}
+    </nav>
 </div>
+{{/loading}}

@@ -1,93 +1,179 @@
 {{!
-    Signup page template for local_jobboard.
-    Follows the inteb/remui theme design patterns.
+    @template local_jobboard/pages/user/signup
 
-    @package   local_jobboard
-    @copyright 2024 ISER
-    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+    Signup page template for Job Board applicants.
+    Uses jb-* CSS classes for consistent styling.
+    Includes multi-step progress indicator and accessibility features.
+
+    Context variables:
+    * title (string) - Page title
+    * intro (string) - Introduction text
+    * vacancy (object) - Optional vacancy context {title, code, location}
+    * applyingfortext (string) - "Applying for" label
+    * codetext (string) - "Code" label
+    * alreadyaccounttext (string) - Already have account text
+    * loginurl (string) - Login URL
+    * logintext (string) - Login button text
+    * requiredfieldstext (string) - Required fields notice
+    * formhtml (string) - Rendered form HTML
+    * loading (bool) - Show skeleton loading state
+
+    Example context (json):
+    {
+        "title": "Create Account",
+        "vacancy": {"title": "Professor", "code": "VAC-001"}
+    }
 }}
-<div class="jb-container-fluid jb-px-3 jb-px-md-5">
-    {{! Header Section }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="local-jobboard-signup jb-container-fluid jb-px-3 jb-px-md-5" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
     <div class="jb-text-center jb-mb-4 jb-pb-3 jb-border-bottom">
-        <div class="jb-mb-3">
-            {{#pix}}i/user, core{{/pix}}
+        <div class="jb-skeleton-avatar jb-mx-auto jb-mb-3" style="width: 80px; height: 80px;"></div>
+        <div class="jb-skeleton-title jb-mx-auto jb-mb-2" style="width: 50%;"></div>
+        <div class="jb-skeleton-text jb-mx-auto" style="width: 70%;"></div>
+    </div>
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-body">
+            <div class="jb-skeleton-text jb-mb-2" style="width: 60%;"></div>
+            <div class="jb-skeleton-text" style="width: 40%;"></div>
+        </div>
+    </div>
+    <div class="jb-mb-4">
+        <div class="jb-d-flex jb-justify-content-between">
+            <div class="jb-skeleton-avatar" style="width: 40px; height: 40px;"></div>
+            <div class="jb-skeleton-avatar" style="width: 40px; height: 40px;"></div>
+            <div class="jb-skeleton-avatar" style="width: 40px; height: 40px;"></div>
+            <div class="jb-skeleton-avatar" style="width: 40px; height: 40px;"></div>
+            <div class="jb-skeleton-avatar" style="width: 40px; height: 40px;"></div>
+        </div>
+    </div>
+    <div class="jb-card">
+        <div class="jb-card-body">
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
+        </div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="local-jobboard-signup jb-container-fluid jb-px-3 jb-px-md-5" data-region="jobboard-signup">
+    {{! Skip Link for Accessibility }}
+    <a href="#signup-main-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Header Section }}
+    <header class="jb-text-center jb-mb-4 jb-pb-3 jb-border-bottom jb-fade-in">
+        <div class="jb-signup-icon jb-d-inline-flex jb-align-items-center jb-justify-content-center jb-rounded-circle jb-bg-primary jb-text-white jb-mb-3" style="width: 80px; height: 80px;">
+            <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>
         </div>
         <h1 class="jb-fs-3 jb-mb-2">{{title}}</h1>
-        <p class="jb-text-muted">{{intro}}</p>
-    </div>
+        {{#intro}}
+        <p class="jb-text-muted jb-mb-0">{{intro}}</p>
+        {{/intro}}
+    </header>
 
     {{! Vacancy Info Card (if applying to specific vacancy) }}
     {{#vacancy}}
-    <div class="jb-card jb-mb-4 jb-border-primary">
+    <div class="jb-card jb-mb-4 jb-border-primary jb-fade-in-up" style="animation-delay: 0.1s;">
         <div class="jb-card-header jb-bg-primary jb-text-white jb-py-2">
-            <h5 class="jb-mb-0 jb-d-flex jb-align-items-center">
-                {{#pix}}i/briefcase, core{{/pix}}
-                <span class="jb-ml-2">{{applyingfortext}}</span>
-            </h5>
+            <h2 class="jb-fs-6 jb-mb-0 jb-d-flex jb-align-items-center">
+                <i class="fa fa-briefcase jb-mr-2" aria-hidden="true"></i>
+                {{applyingfortext}}
+            </h2>
         </div>
         <div class="jb-card-body jb-py-3">
-            <h5 class="jb-card-title jb-mb-2 jb-fw-bold">{{vacancy.title}}</h5>
-            <p class="jb-card-text jb-mb-1">
-                <span class="jb-text-muted">{{codetext}}:</span>
-                <strong>{{vacancy.code}}</strong>
-            </p>
-            {{#vacancy.location}}
-            <p class="jb-card-text jb-mb-0 jb-text-muted jb-fs-sm">
-                {{#pix}}i/location, core{{/pix}}
-                {{vacancy.location}}
-            </p>
-            {{/vacancy.location}}
+            <h3 class="jb-card-title jb-fs-5 jb-mb-2 jb-fw-bold">{{vacancy.title}}</h3>
+            <div class="jb-d-flex jb-flex-wrap jb-gap-3 jb-small">
+                <span>
+                    <i class="fa fa-hashtag jb-text-muted jb-mr-1" aria-hidden="true"></i>
+                    <strong>{{vacancy.code}}</strong>
+                </span>
+                {{#vacancy.location}}
+                <span>
+                    <i class="fa fa-map-marker-alt jb-text-muted jb-mr-1" aria-hidden="true"></i>
+                    {{vacancy.location}}
+                </span>
+                {{/vacancy.location}}
+            </div>
         </div>
     </div>
     {{/vacancy}}
 
     {{! Already have account notice }}
-    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4">
-        <span class="jb-mr-3">{{#pix}}i/info, core{{/pix}}</span>
+    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.15s;">
+        <i class="fa fa-info-circle jb-mr-3 jb-fs-4" aria-hidden="true"></i>
         <div class="jb-flex-grow-1">
             <strong>{{alreadyaccounttext}}</strong>
-            <a href="{{loginurl}}" class="jb-btn jb-btn-sm jb-btn-primary jb-ml-2">
-                {{logintext}}
-            </a>
         </div>
+        <a href="{{loginurl}}" class="jb-btn jb-btn-sm jb-btn-primary jb-hover-lift">
+            <i class="fa fa-sign-in-alt jb-mr-1" aria-hidden="true"></i>
+            {{logintext}}
+        </a>
     </div>
 
     {{! Required fields notice }}
-    <p class="jb-text-muted jb-fs-sm jb-mb-4">
-        <span class="jb-text-danger">*</span> {{requiredfieldstext}}
+    <p class="jb-text-muted jb-small jb-mb-4 jb-fade-in" aria-live="polite">
+        <span class="jb-text-danger" aria-hidden="true">*</span>
+        {{requiredfieldstext}}
     </p>
 
     {{! Progress Steps Indicator }}
-    <div class="jb-progress-container jb-mb-4" id="jb-signup-progress">
-        <p class="jb-text-muted jb-fs-sm jb-mb-2 jb-text-center">{{#str}}signup_progress, local_jobboard{{/str}}</p>
-        <ul class="jb-progress-steps" role="progressbar" aria-label="{{#str}}signup_progress, local_jobboard{{/str}}">
-            <li class="jb-step active" data-step="0" data-section="accountheader">
-                <div class="jb-step-icon"><i class="fa fa-key" aria-hidden="true"></i></div>
+    <nav class="jb-progress-container jb-mb-4 jb-fade-in-up" id="jb-signup-progress" aria-label="{{#str}}signup_progress, local_jobboard{{/str}}" style="animation-delay: 0.2s;">
+        <p class="jb-text-muted jb-small jb-mb-2 jb-text-center">
+            {{#str}}signup_progress, local_jobboard{{/str}}
+        </p>
+        <ol class="jb-progress-steps" role="list">
+            <li class="jb-step jb-active" data-step="0" data-section="accountheader" role="listitem">
+                <div class="jb-step-icon" aria-hidden="true">
+                    <i class="fa fa-key"></i>
+                </div>
                 <span class="jb-step-label">{{#str}}signup_step_account, local_jobboard{{/str}}</span>
             </li>
-            <li class="jb-step" data-step="1" data-section="personalinfo">
-                <div class="jb-step-icon"><i class="fa fa-user" aria-hidden="true"></i></div>
+            <li class="jb-step" data-step="1" data-section="personalinfo" role="listitem">
+                <div class="jb-step-icon" aria-hidden="true">
+                    <i class="fa fa-user"></i>
+                </div>
                 <span class="jb-step-label">{{#str}}signup_step_personal, local_jobboard{{/str}}</span>
             </li>
-            <li class="jb-step" data-step="2" data-section="contactinfo">
-                <div class="jb-step-icon"><i class="fa fa-phone" aria-hidden="true"></i></div>
+            <li class="jb-step" data-step="2" data-section="contactinfo" role="listitem">
+                <div class="jb-step-icon" aria-hidden="true">
+                    <i class="fa fa-phone"></i>
+                </div>
                 <span class="jb-step-label">{{#str}}signup_step_contact, local_jobboard{{/str}}</span>
             </li>
-            <li class="jb-step" data-step="3" data-section="academicheader">
-                <div class="jb-step-icon"><i class="fa fa-graduation-cap" aria-hidden="true"></i></div>
+            <li class="jb-step" data-step="3" data-section="academicheader" role="listitem">
+                <div class="jb-step-icon" aria-hidden="true">
+                    <i class="fa fa-graduation-cap"></i>
+                </div>
                 <span class="jb-step-label">{{#str}}signup_step_academic, local_jobboard{{/str}}</span>
             </li>
-            <li class="jb-step" data-step="4" data-section="termsheader">
-                <div class="jb-step-icon"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+            <li class="jb-step" data-step="4" data-section="termsheader" role="listitem">
+                <div class="jb-step-icon" aria-hidden="true">
+                    <i class="fa fa-check-circle"></i>
+                </div>
                 <span class="jb-step-label">{{#str}}signup_step_confirm, local_jobboard{{/str}}</span>
             </li>
-        </ul>
-    </div>
+        </ol>
+    </nav>
 
     {{! The form content }}
-    <div class="jb-card">
-        <div class="jb-card-body">
-            {{{formhtml}}}
+    <main id="signup-main-content">
+        <div class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.25s;">
+            <div class="jb-card-body">
+                {{{formhtml}}}
+            </div>
         </div>
-    </div>
+    </main>
+
+    {{! Help Section }}
+    <aside class="jb-mt-4 jb-text-center jb-fade-in" style="animation-delay: 0.3s;">
+        <p class="jb-text-muted jb-small jb-mb-0">
+            <i class="fa fa-question-circle jb-mr-1" aria-hidden="true"></i>
+            {{#str}}signup_help, local_jobboard{{/str}}
+        </p>
+    </aside>
 </div>
+{{/loading}}
