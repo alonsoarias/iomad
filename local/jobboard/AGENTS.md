@@ -17,7 +17,7 @@ Sistema de Bolsa de Empleo para reclutamiento de profesores de cátedra.
 | Campo | Valor |
 |-------|-------|
 | **Componente** | `local_jobboard` |
-| **Version actual** | **3.2.3** (2025121243) |
+| **Version actual** | **3.3.0** (2025121250) |
 | **Tipo** | Plugin local de Moodle |
 | **Moodle requerido** | 4.1+ (2022112800) |
 | **Moodle soportado** | 4.1 - 4.5 |
@@ -25,23 +25,23 @@ Sistema de Bolsa de Empleo para reclutamiento de profesores de cátedra.
 | **Madurez** | MATURITY_STABLE |
 | **Licencia** | GNU GPL v3 or later |
 
-### 1.1 Estado de Implementacion v3.2.2
+### 1.1 Estado de Implementacion v3.3.0
 
 | Componente | Estado | Observaciones |
 |------------|:------:|---------------|
 | Base de datos (28 tablas) | ✅ | Completo con upgrade.php |
 | Capabilities (31) | ✅ | Definidas en access.php |
 | Roles (3 personalizados) | ✅ | jobboard_reviewer, jobboard_coordinator, jobboard_committee |
-| Sistema CSS `jb-*` | ✅ 100% | Migrados en v3.2.3 |
-| Templates Mustache (115) | ✅ | Usando clases `jb-*` mayormente |
+| Sistema CSS `jb-*` | ✅ 100% | Migrados en v3.2.3, Grading panel CSS v3.3.0 |
+| Templates Mustache (116) | ✅ | Usando clases `jb-*`, +grading_panel.mustache v3.3.0 |
 | Renderers especializados (11) | ✅ | renderer_base, dashboard_renderer, admin_renderer, etc. |
-| AMD Modules (12) | ✅ | apply_progress.js, progress_steps.js, etc. |
+| AMD Modules (13) | ✅ | +grading_panel.js v3.3.0 con AJAX nav y atajos teclado |
 | User Tours | ⚠️ | Definidos, pendiente actualizar selectores |
-| Strings de idioma | ✅ | 2,711 lineas EN/ES cada uno |
+| Strings de idioma | ✅ | 2,754 lineas EN/ES cada uno (+43 grading panel) |
 | Email templates | ✅ | 6 plantillas predefinidas |
 | Web Services | ✅ Eliminados | Removidos en v3.2.2 |
 | Privacy API | ⚠️ | Parcialmente implementada |
-| Interfaz revision mod_assign | ❌ | Pendiente |
+| Interfaz revision mod_assign | ✅ | Implementada v3.3.0: split-pane, PDF preview, AJAX, shortcuts |
 | Reportes filtrados por convocatoria | ⚠️ | Parcialmente implementado |
 
 ---
@@ -913,13 +913,13 @@ Antes de implementar CUALQUIER cambio, validar que no generara errores.
 
 ### 16.4 BAJA - Mejoras Funcionales
 
-| Tarea | Descripcion | Esfuerzo |
-|-------|-------------|----------|
-| Interfaz revision mod_assign | Panel lateral, preview PDF, checklist | Alto |
-| Preview email tiempo real | Editor con variables y preview | Medio |
-| User Tours | 15 tours con selectores jb-* | Medio |
-| Tests PHPUnit | Cobertura clases principales | Alto |
-| Integracion calendario | Eventos fechas limite | Bajo |
+| Tarea | Descripcion | Estado |
+|-------|-------------|--------|
+| Interfaz revision mod_assign | Panel lateral, preview PDF, checklist | ✅ v3.3.0 |
+| Preview email tiempo real | Editor con variables y preview | Pendiente |
+| User Tours | 15 tours con selectores jb-* | Pendiente |
+| Tests PHPUnit | Cobertura clases principales | Pendiente |
+| Integracion calendario | Eventos fechas limite | Pendiente |
 
 ---
 
@@ -943,11 +943,11 @@ Antes de implementar CUALQUIER cambio, validar que no generara errores.
 - [ ] Crear migraciones correspondientes
 - [ ] Actualizar codigo dependiente
 
-### Fase 4: Interfaz Revision (8-12 horas)
-- [ ] Disenar layout mod_assign style
-- [ ] Implementar visor PDF inline
-- [ ] Agregar navegacion AJAX
-- [ ] Implementar atajos de teclado
+### Fase 4: Interfaz Revision (8-12 horas) ✅ Completada v3.3.0
+- [x] Disenar layout mod_assign style (grading_panel.mustache)
+- [x] Implementar visor PDF inline (iframe + image preview)
+- [x] Agregar navegacion AJAX (grading_panel.js)
+- [x] Implementar atajos de teclado (N/P/A/R/D/F/S/↑↓/Shift+A/?/Esc)
 
 ### Fase 5: User Tours (4-6 horas)
 - [ ] Crear 15 tours con selectores jb-*
