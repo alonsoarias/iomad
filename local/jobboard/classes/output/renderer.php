@@ -65,880 +65,22 @@ require_once(__DIR__ . '/renderer/committee_renderer.php');
  */
 class renderer extends renderer_base {
 
-    // Note: Traits define render_* methods. Current inline methods override them
-    // for backward compatibility. Future versions will remove inline methods
-    // and use traits exclusively.
-    //
-    // Available traits (not yet active to avoid conflicts):
-    // use renderer\dashboard_renderer;
-    // use renderer\public_renderer;
-    // use renderer\vacancy_renderer;
-    // use renderer\convocatoria_renderer;
-    // use renderer\application_renderer;
-    // use renderer\review_renderer;
-    // use renderer\admin_renderer;
-    // use renderer\exemption_renderer;
-    // use renderer\committee_renderer;
-
-    /**
-     * Render public vacancies page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_public_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/public', $data);
-    }
-
-    /**
-     * Render public vacancy detail page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_public_detail(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/public_detail', $data);
-    }
-
-    /**
-     * Render vacancy management page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_manage_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/manage', $data);
-    }
-
-    /**
-     * Render application form page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_apply_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/apply', $data);
-    }
-
-    /**
-     * Render convocatoria edit page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_convocatoria_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/convocatoria', $data);
-    }
-
-    /**
-     * Render convocatorias list page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_convocatorias_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/convocatorias', $data);
-    }
-
-    /**
-     * Render vacancies page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_vacancies_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/vacancies', $data);
-    }
-
-    /**
-     * Render applications list page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_applications_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/applications', $data);
-    }
-
-    /**
-     * Render review page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_review_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/review', $data);
-    }
-
-    /**
-     * Render my reviews page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_myreviews_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/myreviews', $data);
-    }
-
-    /**
-     * Render reports page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_reports_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/reports', $data);
-    }
-
-    /**
-     * Render dashboard page using new template.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_dashboard_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/dashboard', $data);
-    }
-
-    /**
-     * Prepare complete dashboard data for template.
-     *
-     * @param int $userid Current user ID.
-     * @param array $caps User capabilities array.
-     * @param array $stats Dashboard statistics.
-     * @return array Complete template data.
-     */
-    public function prepare_dashboard_data(int $userid, array $caps, array $stats): array {
-        // Determine user roles.
-        $isadmin = $caps['configure'] ?? false;
-        $ismanager = ($caps['createvacancy'] ?? false) || ($caps['manageconvocatorias'] ?? false);
-        $isreviewer = ($caps['reviewdocuments'] ?? false) || ($caps['validatedocuments'] ?? false);
-        $isapplicant = $caps['apply'] ?? false;
-        $canmanagecontent = $isadmin || $ismanager;
-
-        // Determine role label and welcome message.
-        $rolelabel = '';
-        $welcomemsg = '';
-        if ($isadmin) {
-            $rolelabel = get_string('role_administrator', 'local_jobboard');
-            $welcomemsg = get_string('dashboard_admin_welcome', 'local_jobboard');
-        } else if ($ismanager) {
-            $rolelabel = get_string('role_manager', 'local_jobboard');
-            $welcomemsg = get_string('dashboard_manager_welcome', 'local_jobboard');
-        } else if ($isreviewer) {
-            $rolelabel = get_string('role_reviewer', 'local_jobboard');
-            $welcomemsg = get_string('dashboard_reviewer_welcome', 'local_jobboard');
-        } else if ($isapplicant) {
-            $rolelabel = get_string('role_applicant', 'local_jobboard');
-            $welcomemsg = get_string('dashboard_applicant_welcome', 'local_jobboard');
-        }
-
-        // Check if public page is enabled.
-        $enablepublic = get_config('local_jobboard', 'enable_public_page');
-
-        $data = [
-            'isadmin' => $canmanagecontent,
-            'isreviewer' => $isreviewer && !$canmanagecontent,
-            'isapplicant' => $isapplicant && !$canmanagecontent && !$isreviewer,
-            'isvieweronly' => !$canmanagecontent && !$isreviewer && !$isapplicant && ($caps['view'] ?? false),
-            'welcome' => [
-                'rolelabel' => $rolelabel,
-                'message' => $welcomemsg,
-            ],
-            'showpubliclink' => !empty($enablepublic),
-            'publicurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false),
-            'applicationsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
-            'stats' => [],
-            'adminsections' => [],
-            'workflowsections' => [],
-            'reportsections' => [],
-            'configsections' => [],
-            'reviewersection' => null,
-            'applicantstats' => [],
-            'applicantsections' => [],
-            'alerts' => [],
-        ];
-
-        // Admin/Manager statistics.
-        if ($canmanagecontent) {
-            $data['stats'] = [
-                [
-                    'value' => (string)($stats['active_convocatorias'] ?? 0),
-                    'label' => get_string('activeconvocatorias', 'local_jobboard'),
-                    'icon' => 'calendar-alt',
-                    'color' => 'primary',
-                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']))->out(false),
-                ],
-                [
-                    'value' => (string)($stats['published_vacancies'] ?? 0),
-                    'label' => get_string('publishedvacancies', 'local_jobboard'),
-                    'icon' => 'briefcase',
-                    'color' => 'success',
-                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'manage', 'status' => 'published']))->out(false),
-                ],
-                [
-                    'value' => (string)($stats['total_applications'] ?? 0),
-                    'label' => get_string('totalapplications', 'local_jobboard'),
-                    'icon' => 'users',
-                    'color' => 'info',
-                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
-                ],
-                [
-                    'value' => (string)($stats['pending_reviews'] ?? 0),
-                    'label' => get_string('pendingreviews', 'local_jobboard'),
-                    'icon' => 'clock',
-                    'color' => 'warning',
-                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'status' => 'submitted']))->out(false),
-                ],
-            ];
-
-            // Admin sections.
-            $data['adminsections'] = $this->prepare_admin_sections($caps, $stats);
-
-            // Workflow sections.
-            $data['workflowsections'] = $this->prepare_workflow_sections($caps);
-
-            // Reports sections.
-            $data['reportsections'] = $this->prepare_report_sections($caps);
-
-            // Config sections (admin only).
-            if ($isadmin) {
-                $data['configsections'] = $this->prepare_config_sections($caps);
-            }
-        }
-
-        // Reviewer section.
-        if ($isreviewer) {
-            $data['reviewersection'] = [
-                'pendingcount' => $stats['my_pending_reviews'] ?? 0,
-                'completedcount' => $stats['my_completed_reviews'] ?? 0,
-                'haspendingreview' => ($stats['my_pending_reviews'] ?? 0) > 0,
-                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'myreviews']))->out(false),
-            ];
-        }
-
-        // Applicant statistics and sections.
-        if ($isapplicant && !$canmanagecontent && !$isreviewer) {
-            $data['applicantstats'] = [
-                [
-                    'value' => (string)($stats['active_convocatorias'] ?? 0),
-                    'label' => get_string('activeconvocatorias', 'local_jobboard'),
-                    'icon' => 'calendar-alt',
-                    'color' => 'primary',
-                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']))->out(false),
-                ],
-                [
-                    'value' => (string)($stats['my_applications'] ?? 0),
-                    'label' => get_string('myapplicationcount', 'local_jobboard'),
-                    'icon' => 'folder-open',
-                    'color' => 'info',
-                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
-                ],
-                [
-                    'value' => (string)($stats['available_vacancies'] ?? 0),
-                    'label' => get_string('availablevacancies', 'local_jobboard'),
-                    'icon' => 'briefcase',
-                    'color' => 'success',
-                    'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']))->out(false),
-                ],
-                [
-                    'value' => (string)($stats['pending_docs'] ?? 0),
-                    'label' => get_string('pendingdocs', 'local_jobboard'),
-                    'icon' => 'file-upload',
-                    'color' => 'warning',
-                ],
-            ];
-
-            $data['applicantsections'] = $this->prepare_applicant_sections($stats);
-        }
-
-        // AGENTS.md Section 22.2: Add dashboard consolidated features.
-
-        // 1. Quick access to next convocatoria closing (for all users).
-        $data['nextconvocatoria'] = $this->prepare_next_convocatoria_data();
-        $data['hasnextconvocatoria'] = !empty($data['nextconvocatoria']);
-
-        // 2. Pending notifications (for current user).
-        $data['pendingnotifications'] = $this->prepare_pending_notifications($userid);
-        $data['haspendingnotifications'] = !empty($data['pendingnotifications']);
-        $data['pendingnotificationcount'] = count($data['pendingnotifications']);
-
-        // 3. Recent activity summary.
-        $data['recentactivity'] = $this->prepare_recent_activity($userid, $caps);
-        $data['hasrecentactivity'] = !empty($data['recentactivity']);
-
-        // 4. Quick actions based on role (already partially implemented in sections).
-
-        return $data;
-    }
-
-    /**
-     * Get the next convocatoria closing soon.
-     *
-     * AGENTS.md Section 22.2: Quick access to last/next convocatoria.
-     *
-     * @return array|null Convocatoria data or null if none.
-     */
-    protected function prepare_next_convocatoria_data(): ?array {
-        global $DB;
-
-        // Get convocatoria open and closing soonest.
-        $now = time();
-        $sql = "SELECT c.id, c.code, c.name, c.enddate, c.status,
-                       COUNT(DISTINCT v.id) as vacancycount,
-                       COUNT(DISTINCT a.id) as applicationcount
-                  FROM {local_jobboard_convocatoria} c
-                  LEFT JOIN {local_jobboard_vacancy} v ON v.convocatoriaid = c.id
-                  LEFT JOIN {local_jobboard_application} a ON a.vacancyid = v.id
-                 WHERE c.status = 'open'
-                   AND c.enddate > :now
-                 GROUP BY c.id, c.code, c.name, c.enddate, c.status
-                 ORDER BY c.enddate ASC
-                 LIMIT 1";
-
-        $conv = $DB->get_record_sql($sql, ['now' => $now]);
-
-        if (!$conv) {
-            return null;
-        }
-
-        $daysremaining = ceil(($conv->enddate - $now) / 86400);
-        $isurgent = $daysremaining <= 7;
-        $iscritical = $daysremaining <= 3;
-
-        return [
-            'id' => $conv->id,
-            'code' => $conv->code,
-            'name' => $conv->name,
-            'enddate' => userdate($conv->enddate, '%d %b %Y'),
-            'daysremaining' => $daysremaining,
-            'vacancycount' => (int)$conv->vacancycount,
-            'applicationcount' => (int)$conv->applicationcount,
-            'isurgent' => $isurgent,
-            'iscritical' => $iscritical,
-            'alertclass' => $iscritical ? 'danger' : ($isurgent ? 'warning' : 'info'),
-            'url' => (new moodle_url('/local/jobboard/index.php', [
-                'view' => 'view_convocatoria',
-                'id' => $conv->id,
-            ]))->out(false),
-            'browseurl' => (new moodle_url('/local/jobboard/index.php', [
-                'view' => 'browse_convocatorias',
-            ]))->out(false),
-        ];
-    }
-
-    /**
-     * Get pending notifications for user.
-     *
-     * AGENTS.md Section 22.2: Pending notifications.
-     *
-     * @param int $userid User ID.
-     * @return array Notification items.
-     */
-    protected function prepare_pending_notifications(int $userid): array {
-        global $DB;
-
-        $notifications = $DB->get_records_select(
-            'local_jobboard_notification',
-            'userid = :userid AND status = :status',
-            ['userid' => $userid, 'status' => 'pending'],
-            'timecreated DESC',
-            '*',
-            0,
-            5
-        );
-
-        $items = [];
-        foreach ($notifications as $notif) {
-            $items[] = [
-                'id' => $notif->id,
-                'template' => $notif->templatecode,
-                'label' => get_string('notification_' . $notif->templatecode, 'local_jobboard'),
-                'timecreated' => $this->format_time_ago((int)$notif->timecreated),
-                'icon' => $this->get_notification_icon($notif->templatecode),
-            ];
-        }
-
-        return $items;
-    }
-
-    /**
-     * Get notification icon based on template code.
-     *
-     * @param string $templatecode Template code.
-     * @return string Icon name.
-     */
-    protected function get_notification_icon(string $templatecode): string {
-        $icons = [
-            'application_received' => 'inbox',
-            'docs_validated' => 'check-circle',
-            'docs_rejected' => 'x-circle',
-            'interview_scheduled' => 'calendar',
-            'status_changed' => 'bell',
-            'application_selected' => 'award',
-            'application_rejected' => 'alert-circle',
-        ];
-        return $icons[$templatecode] ?? 'bell';
-    }
-
-    /**
-     * Format timestamp as "time ago" string.
-     *
-     * @param int $timestamp Timestamp.
-     * @return string Formatted time ago.
-     */
-    protected function format_time_ago(int $timestamp): string {
-        $diff = time() - $timestamp;
-
-        if ($diff < 60) {
-            return get_string('timeago_justnow', 'local_jobboard');
-        } elseif ($diff < 3600) {
-            $minutes = floor($diff / 60);
-            return get_string('timeago_minutes', 'local_jobboard', $minutes);
-        } elseif ($diff < 86400) {
-            $hours = floor($diff / 3600);
-            return get_string('timeago_hours', 'local_jobboard', $hours);
-        } elseif ($diff < 604800) {
-            $days = floor($diff / 86400);
-            return get_string('timeago_days', 'local_jobboard', $days);
-        } else {
-            return userdate($timestamp, '%d %b %Y');
-        }
-    }
-
-    /**
-     * Get recent activity for the dashboard.
-     *
-     * AGENTS.md Section 22.2: Recent activity summary.
-     *
-     * @param int $userid User ID.
-     * @param array $caps User capabilities.
-     * @return array Activity items.
-     */
-    protected function prepare_recent_activity(int $userid, array $caps): array {
-        global $DB;
-
-        $isadmin = $caps['configure'] ?? false;
-        $ismanager = ($caps['createvacancy'] ?? false) || ($caps['manageconvocatorias'] ?? false);
-
-        $activities = [];
-        $limit = 5;
-
-        if ($isadmin || $ismanager) {
-            // Admin/Manager: see recent system activity.
-            $sql = "SELECT id, action, entitytype, entityid, timecreated
-                      FROM {local_jobboard_audit}
-                     WHERE action IN ('application_submitted', 'document_uploaded', 'vacancy_published', 'convocatoria_opened')
-                     ORDER BY timecreated DESC";
-            $records = $DB->get_records_sql($sql, [], 0, $limit);
-
-            foreach ($records as $rec) {
-                $activities[] = [
-                    'type' => $rec->entitytype,
-                    'action' => $rec->action,
-                    'label' => get_string('activity_' . $rec->action, 'local_jobboard'),
-                    'icon' => $this->get_activity_icon($rec->action),
-                    'color' => $this->get_activity_color($rec->action),
-                    'timecreated' => $this->format_time_ago((int)$rec->timecreated),
-                    'url' => $this->get_activity_url($rec->entitytype, $rec->entityid),
-                ];
-            }
-        } else {
-            // Regular user: see their own recent activity.
-            $sql = "SELECT id, action, entitytype, entityid, timecreated
-                      FROM {local_jobboard_audit}
-                     WHERE userid = :userid
-                       AND action IN ('application_submitted', 'document_uploaded', 'status_viewed')
-                     ORDER BY timecreated DESC";
-            $records = $DB->get_records_sql($sql, ['userid' => $userid], 0, $limit);
-
-            foreach ($records as $rec) {
-                $activities[] = [
-                    'type' => $rec->entitytype,
-                    'action' => $rec->action,
-                    'label' => get_string('activity_' . $rec->action, 'local_jobboard'),
-                    'icon' => $this->get_activity_icon($rec->action),
-                    'color' => $this->get_activity_color($rec->action),
-                    'timecreated' => $this->format_time_ago((int)$rec->timecreated),
-                    'url' => $this->get_activity_url($rec->entitytype, $rec->entityid),
-                ];
-            }
-        }
-
-        return $activities;
-    }
-
-    /**
-     * Get icon for activity action.
-     *
-     * @param string $action Activity action.
-     * @return string Icon name.
-     */
-    protected function get_activity_icon(string $action): string {
-        $icons = [
-            'application_submitted' => 'send',
-            'document_uploaded' => 'upload',
-            'vacancy_published' => 'briefcase',
-            'convocatoria_opened' => 'calendar',
-            'status_viewed' => 'eye',
-        ];
-        return $icons[$action] ?? 'activity';
-    }
-
-    /**
-     * Get color for activity action.
-     *
-     * @param string $action Activity action.
-     * @return string Color name.
-     */
-    protected function get_activity_color(string $action): string {
-        $colors = [
-            'application_submitted' => 'success',
-            'document_uploaded' => 'info',
-            'vacancy_published' => 'primary',
-            'convocatoria_opened' => 'warning',
-            'status_viewed' => 'secondary',
-        ];
-        return $colors[$action] ?? 'secondary';
-    }
-
-    /**
-     * Get URL for activity entity.
-     *
-     * @param string $entitytype Entity type.
-     * @param int $entityid Entity ID.
-     * @return string URL.
-     */
-    protected function get_activity_url(string $entitytype, int $entityid): string {
-        $views = [
-            'application' => 'application',
-            'vacancy' => 'vacancy',
-            'convocatoria' => 'view_convocatoria',
-            'document' => 'application',
-        ];
-
-        $view = $views[$entitytype] ?? 'dashboard';
-        return (new moodle_url('/local/jobboard/index.php', [
-            'view' => $view,
-            'id' => $entityid,
-        ]))->out(false);
-    }
-
-    /**
-     * Prepare workflow sections for dashboard.
-     *
-     * @param array $caps User capabilities.
-     * @return array Workflow sections data.
-     */
-    protected function prepare_workflow_sections(array $caps): array {
-        $sections = [];
-
-        // Assign Reviewers.
-        if ($caps['manageworkflow'] ?? $caps['assignreviewers'] ?? false) {
-            $sections[] = [
-                'id' => 'assignreviewers',
-                'title' => get_string('assignreviewers', 'local_jobboard'),
-                'description' => get_string('assignreviewers_desc', 'local_jobboard'),
-                'icon' => 'user-plus',
-                'color' => 'primary',
-                'url' => (new moodle_url('/local/jobboard/assign_reviewer.php'))->out(false),
-                'buttonlabel' => get_string('assignreviewers', 'local_jobboard'),
-                'buttonicon' => 'users-cog',
-            ];
-        }
-
-        // Bulk Validation.
-        if ($caps['reviewdocuments'] ?? $caps['validatedocuments'] ?? false) {
-            $sections[] = [
-                'id' => 'bulkvalidation',
-                'title' => get_string('bulkvalidation', 'local_jobboard'),
-                'description' => get_string('bulkvalidation_desc', 'local_jobboard'),
-                'icon' => 'tasks',
-                'color' => 'success',
-                'url' => (new moodle_url('/local/jobboard/bulk_validate.php'))->out(false),
-                'buttonlabel' => get_string('bulkvalidation', 'local_jobboard'),
-                'buttonicon' => 'check-double',
-            ];
-        }
-
-        // Selection Committees.
-        if ($caps['manageworkflow'] ?? false) {
-            $sections[] = [
-                'id' => 'committees',
-                'title' => get_string('committees', 'local_jobboard'),
-                'description' => get_string('committees_desc', 'local_jobboard'),
-                'icon' => 'users',
-                'color' => 'info',
-                'url' => (new moodle_url('/local/jobboard/manage_committee.php'))->out(false),
-                'buttonlabel' => get_string('managecommittees', 'local_jobboard'),
-                'buttonicon' => 'users-cog',
-            ];
-
-            // Program Reviewers.
-            $sections[] = [
-                'id' => 'programreviewers',
-                'title' => get_string('program_reviewers', 'local_jobboard'),
-                'description' => get_string('program_reviewers_desc', 'local_jobboard'),
-                'icon' => 'user-check',
-                'color' => 'success',
-                'url' => (new moodle_url('/local/jobboard/manage_program_reviewers.php'))->out(false),
-                'buttonlabel' => get_string('program_reviewers', 'local_jobboard'),
-                'buttonicon' => 'user-check',
-            ];
-        }
-
-        return $sections;
-    }
-
-    /**
-     * Prepare report sections for dashboard.
-     *
-     * @param array $caps User capabilities.
-     * @return array Report sections data.
-     */
-    protected function prepare_report_sections(array $caps): array {
-        $sections = [];
-
-        // Reports.
-        if ($caps['viewreports'] ?? false) {
-            $sections[] = [
-                'id' => 'reports',
-                'title' => get_string('reports', 'local_jobboard'),
-                'description' => get_string('reports_desc', 'local_jobboard'),
-                'icon' => 'chart-line',
-                'color' => 'info',
-                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'reports']))->out(false),
-                'buttonlabel' => get_string('viewreports', 'local_jobboard'),
-                'buttonicon' => 'chart-bar',
-            ];
-        }
-
-        // Import Vacancies.
-        if ($caps['createvacancy'] ?? false) {
-            $sections[] = [
-                'id' => 'import',
-                'title' => get_string('importvacancies', 'local_jobboard'),
-                'description' => get_string('importvacancies_desc', 'local_jobboard'),
-                'icon' => 'file-import',
-                'color' => 'primary',
-                'url' => (new moodle_url('/local/jobboard/import_vacancies.php'))->out(false),
-                'buttonlabel' => get_string('import', 'local_jobboard'),
-                'buttonicon' => 'upload',
-            ];
-        }
-
-        // Export Data.
-        if ($caps['exportdata'] ?? false) {
-            $sections[] = [
-                'id' => 'export',
-                'title' => get_string('exportdata', 'local_jobboard'),
-                'description' => get_string('exportdata_desc', 'local_jobboard'),
-                'icon' => 'file-export',
-                'color' => 'success',
-                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']))->out(false),
-                'buttonlabel' => get_string('export', 'local_jobboard'),
-                'buttonicon' => 'download',
-            ];
-        }
-
-        return $sections;
-    }
-
-    /**
-     * Prepare configuration sections for dashboard (admin only).
-     *
-     * @param array $caps User capabilities.
-     * @return array Config sections data.
-     */
-    protected function prepare_config_sections(array $caps): array {
-        $sections = [];
-
-        // Plugin Settings.
-        $sections[] = [
-            'id' => 'settings',
-            'title' => get_string('pluginsettings', 'local_jobboard'),
-            'description' => get_string('pluginsettings_desc', 'local_jobboard'),
-            'icon' => 'sliders-h',
-            'color' => 'secondary',
-            'url' => (new moodle_url('/admin/settings.php', ['section' => 'local_jobboard']))->out(false),
-            'buttonlabel' => get_string('configure', 'local_jobboard'),
-            'buttonicon' => 'cog',
-        ];
-
-        // Document Types.
-        if ($caps['managedoctypes'] ?? false) {
-            $sections[] = [
-                'id' => 'doctypes',
-                'title' => get_string('doctypes', 'local_jobboard'),
-                'description' => get_string('doctypes_desc', 'local_jobboard'),
-                'icon' => 'file-alt',
-                'color' => 'primary',
-                'url' => (new moodle_url('/local/jobboard/admin/doctypes.php'))->out(false),
-                'buttonlabel' => get_string('manage', 'local_jobboard'),
-                'buttonicon' => 'list',
-            ];
-        }
-
-        // Email Templates.
-        if ($caps['manageemailtemplates'] ?? false) {
-            $sections[] = [
-                'id' => 'emailtemplates',
-                'title' => get_string('emailtemplates', 'local_jobboard'),
-                'description' => get_string('emailtemplates_desc', 'local_jobboard'),
-                'icon' => 'envelope',
-                'color' => 'info',
-                'url' => (new moodle_url('/local/jobboard/admin/templates.php'))->out(false),
-                'buttonlabel' => get_string('manage', 'local_jobboard'),
-                'buttonicon' => 'edit',
-            ];
-        }
-
-        // User Exemptions.
-        if ($caps['manageexemptions'] ?? false) {
-            $sections[] = [
-                'id' => 'exemptions',
-                'title' => get_string('exemptions', 'local_jobboard'),
-                'description' => get_string('manageexemptions_desc', 'local_jobboard'),
-                'icon' => 'user-shield',
-                'color' => 'warning',
-                'url' => (new moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
-                'buttonlabel' => get_string('manage', 'local_jobboard'),
-                'buttonicon' => 'list',
-            ];
-        }
-
-        // Role Management.
-        $sections[] = [
-            'id' => 'roles',
-            'title' => get_string('manageroles', 'local_jobboard'),
-            'description' => get_string('manageroles_desc', 'local_jobboard'),
-            'icon' => 'user-tag',
-            'color' => 'success',
-            'url' => (new moodle_url('/local/jobboard/admin/roles.php'))->out(false),
-            'buttonlabel' => get_string('manage', 'local_jobboard'),
-            'buttonicon' => 'users-cog',
-        ];
-
-        // Migration Tool.
-        if ($caps['configure'] ?? false) {
-            $sections[] = [
-                'id' => 'migrate',
-                'title' => get_string('migrateplugin', 'local_jobboard'),
-                'description' => get_string('migrateplugin_desc', 'local_jobboard'),
-                'icon' => 'exchange-alt',
-                'color' => 'dark',
-                'url' => (new moodle_url('/local/jobboard/migrate.php'))->out(false),
-                'buttonlabel' => get_string('access', 'local_jobboard'),
-                'buttonicon' => 'exchange-alt',
-            ];
-        }
-
-        return $sections;
-    }
-
-    /**
-     * Prepare admin sections for dashboard.
-     *
-     * @param array $caps User capabilities.
-     * @param array $stats Statistics.
-     * @return array Admin sections data.
-     */
-    protected function prepare_admin_sections(array $caps, array $stats): array {
-        $sections = [];
-
-        // Convocatorias section.
-        if ($caps['manageconvocatorias'] ?? $caps['configure'] ?? false) {
-            $sections[] = [
-                'id' => 'convocatorias',
-                'title' => get_string('convocatorias', 'local_jobboard'),
-                'description' => get_string('convocatorias_dashboard_desc', 'local_jobboard'),
-                'icon' => 'calendar-alt',
-                'color' => 'primary',
-                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']))->out(false),
-                'buttonlabel' => get_string('manage', 'local_jobboard'),
-                'features' => [
-                    get_string('feature_create_convocatorias', 'local_jobboard'),
-                    get_string('feature_manage_vacancies', 'local_jobboard'),
-                    get_string('feature_track_applications', 'local_jobboard'),
-                ],
-            ];
-        }
-
-        // Vacancies section.
-        if ($caps['createvacancy'] ?? false) {
-            $sections[] = [
-                'id' => 'vacancies',
-                'title' => get_string('vacancies', 'local_jobboard'),
-                'description' => get_string('vacancies_dashboard_desc', 'local_jobboard'),
-                'icon' => 'briefcase',
-                'color' => 'success',
-                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'manage']))->out(false),
-                'buttonlabel' => get_string('manage', 'local_jobboard'),
-                'features' => [
-                    get_string('feature_create_vacancies', 'local_jobboard'),
-                    get_string('feature_publish_vacancies', 'local_jobboard'),
-                    get_string('feature_import_export', 'local_jobboard'),
-                ],
-            ];
-        }
-
-        // Applications/Review section.
-        if (($caps['viewallapplications'] ?? false) || ($caps['reviewdocuments'] ?? false)) {
-            $sections[] = [
-                'id' => 'applications',
-                'title' => get_string('applications', 'local_jobboard'),
-                'description' => get_string('review_dashboard_desc', 'local_jobboard'),
-                'icon' => 'clipboard-check',
-                'color' => 'warning',
-                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
-                'buttonlabel' => get_string('reviewall', 'local_jobboard'),
-                'features' => [
-                    get_string('feature_review_documents', 'local_jobboard'),
-                    get_string('feature_validate_applications', 'local_jobboard'),
-                    get_string('feature_assign_reviewers', 'local_jobboard'),
-                ],
-            ];
-        }
-
-        return $sections;
-    }
-
-    /**
-     * Prepare applicant sections for dashboard.
-     *
-     * @param array $stats Statistics.
-     * @return array Applicant sections data.
-     */
-    protected function prepare_applicant_sections(array $stats): array {
-        $sections = [];
-
-        // Browse convocatorias.
-        $sections[] = [
-            'id' => 'browse',
-            'title' => get_string('browseconvocatorias', 'local_jobboard'),
-            'description' => get_string('browseconvocatorias_desc', 'local_jobboard'),
-            'icon' => 'search',
-            'color' => 'primary',
-            'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']))->out(false),
-            'buttonlabel' => get_string('explore', 'local_jobboard'),
-        ];
-
-        // My applications.
-        $pendingDocs = $stats['pending_docs'] ?? 0;
-        $sections[] = [
-            'id' => 'myapplications',
-            'title' => get_string('myapplications', 'local_jobboard'),
-            'description' => get_string('myapplications_desc', 'local_jobboard'),
-            'icon' => 'folder-open',
-            'color' => 'info',
-            'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
-            'buttonlabel' => get_string('viewmyapplications', 'local_jobboard'),
-            'alert' => $pendingDocs > 0 ? get_string('pending_docs_alert', 'local_jobboard', $pendingDocs) : null,
-            'alerttype' => 'warning',
-        ];
-
-        return $sections;
-    }
+    // Traits define render_*_page methods for template rendering.
+    // The prepare_* methods remain in this file.
+    use renderer\dashboard_renderer;
+    use renderer\public_renderer;
+    use renderer\vacancy_renderer;
+    use renderer\convocatoria_renderer;
+    use renderer\application_renderer;
+    use renderer\review_renderer;
+    use renderer\admin_renderer;
+    use renderer\exemption_renderer;
+    use renderer\committee_renderer;
+
+    // =========================================================================
+    // PREPARE METHODS - Vacancies, Convocatorias, Applications, etc.
+    // Dashboard prepare methods are now in dashboard_renderer trait.
+    // =========================================================================
 
     /**
      * Prepare vacancies page data for template.
@@ -1337,7 +479,7 @@ class renderer extends renderer_base {
         return [
             'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'createurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'action' => 'add']))->out(false),
-            'importurl' => (new moodle_url('/local/jobboard/import_vacancies.php'))->out(false),
+            'importurl' => (new moodle_url('/local/jobboard/admin/import_vacancies.php'))->out(false),
             'cancreate' => true,
             'helptext' => get_string('convocatoriahelp', 'local_jobboard'),
             'stats' => $stats,
@@ -1664,16 +806,6 @@ class renderer extends renderer_base {
             'editurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'id' => $convocatoria->id]))->out(false),
             'addvacancyurl' => (new moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $convocatoria->id]))->out(false),
         ];
-    }
-
-    /**
-     * Render browse convocatorias page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_browse_convocatorias_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/browse_convocatorias', $data);
     }
 
     /**
@@ -2301,16 +1433,6 @@ class renderer extends renderer_base {
     }
 
     /**
-     * Render vacancy detail page.
-     *
-     * @param array $data Template data prepared by prepare_vacancy_detail_page_data().
-     * @return string HTML output.
-     */
-    public function render_vacancy_detail_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/vacancy_detail', $data);
-    }
-
-    /**
      * Prepare vacancy detail page data.
      *
      * @param \local_jobboard\vacancy $vacancy The vacancy object.
@@ -2482,15 +1604,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render application detail page.
-     *
-     * @param array $data Template data prepared by prepare_application_detail_page_data().
-     * @return string HTML output.
-     */
-    public function render_application_detail_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/application_detail', $data);
-    }
 
     /**
      * Prepare application detail page data.
@@ -2717,15 +1830,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render view convocatoria page.
-     *
-     * @param array $data Template data prepared by prepare_view_convocatoria_page_data().
-     * @return string HTML output.
-     */
-    public function render_view_convocatoria_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/view_convocatoria', $data);
-    }
 
     /**
      * Prepare view convocatoria page data.
@@ -2877,15 +1981,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render public convocatoria page.
-     *
-     * @param array $data Template data.
-     * @return string HTML output.
-     */
-    public function render_public_convocatoria_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/public_convocatoria', $data);
-    }
 
     /**
      * Prepare public convocatoria page data.
@@ -2983,15 +2078,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render public vacancy page.
-     *
-     * @param array $data Template data.
-     * @return string HTML output.
-     */
-    public function render_public_vacancy_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/public_vacancy', $data);
-    }
 
     /**
      * Prepare public vacancy page data.
@@ -3149,15 +2235,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render signup success page.
-     *
-     * @param array $data Page data.
-     * @return string HTML output.
-     */
-    public function render_signup_success_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/signup_success', $data);
-    }
 
     /**
      * Prepare data for signup success page.
@@ -4648,15 +3725,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the admin roles page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_admin_roles_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_roles', $data);
-    }
 
     /**
      * Prepare admin roles page data for template.
@@ -4746,7 +3814,7 @@ class renderer extends renderer_base {
             'selectedrole' => null,
             'backurl' => (new moodle_url('/local/jobboard/admin/roles.php'))->out(false),
             'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
-            'committeeurl' => (new moodle_url('/local/jobboard/manage_committee.php'))->out(false),
+            'committeeurl' => (new moodle_url('/local/jobboard/admin/manage_committee.php'))->out(false),
             'settingsurl' => (new moodle_url('/admin/settings.php', ['section' => 'local_jobboard']))->out(false),
             'assignformurl' => (new moodle_url('/local/jobboard/admin/roles.php'))->out(false),
             'sesskey' => sesskey(),
@@ -4837,15 +3905,6 @@ class renderer extends renderer_base {
         return $data;
     }
 
-    /**
-     * Render the program reviewers page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_program_reviewers_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/program_reviewers', $data);
-    }
 
     /**
      * Prepare program reviewers page data for template.
@@ -4856,7 +3915,7 @@ class renderer extends renderer_base {
     public function prepare_program_reviewers_page_data(int $categoryid): array {
         global $DB;
 
-        $pageurl = new moodle_url('/local/jobboard/manage_program_reviewers.php');
+        $pageurl = new moodle_url('/local/jobboard/admin/manage_program_reviewers.php');
 
         // Base data.
         $data = [
@@ -5015,15 +4074,6 @@ class renderer extends renderer_base {
         return $data;
     }
 
-    /**
-     * Render the committee management page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_committee_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/committee', $data);
-    }
 
     /**
      * Prepare committee page data for template.
@@ -5036,7 +4086,7 @@ class renderer extends renderer_base {
     public function prepare_committee_page_data(int $companyid, int $vacancyid, string $usersearch = ''): array {
         global $DB;
 
-        $pageurl = new moodle_url('/local/jobboard/manage_committee.php');
+        $pageurl = new moodle_url('/local/jobboard/admin/manage_committee.php');
 
         // Role definitions.
         $memberroles = [
@@ -5380,15 +4430,6 @@ class renderer extends renderer_base {
         return $data;
     }
 
-    /**
-     * Render the bulk validation page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_bulk_validate_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/bulk_validate', $data);
-    }
 
     /**
      * Prepare bulk validation page data for template.
@@ -5517,15 +4558,6 @@ class renderer extends renderer_base {
         return $data;
     }
 
-    /**
-     * Render the document validation page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_validate_document_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/validate_document', $data);
-    }
 
     /**
      * Prepare document validation page data for template.
@@ -5740,15 +4772,6 @@ class renderer extends renderer_base {
         return array_merge($common, $specific);
     }
 
-    /**
-     * Render the assign reviewer page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_assign_reviewer_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/assign_reviewer', $data);
-    }
 
     /**
      * Prepare assign reviewer page data for template.
@@ -5869,15 +4892,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the schedule interview page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_schedule_interview_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/schedule_interview', $data);
-    }
 
     /**
      * Prepare schedule interview page data for template.
@@ -5970,15 +4984,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the interview completion form page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_interview_complete_form_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/interview_complete_form', $data);
-    }
 
     /**
      * Prepare interview completion form page data.
@@ -6009,15 +5014,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the reupload document page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_reupload_document_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/reupload_document', $data);
-    }
 
     /**
      * Prepare reupload document page data.
@@ -6033,15 +5029,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the manage exemptions page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_manage_exemptions_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/manage_exemptions', $data);
-    }
 
     /**
      * Prepare manage exemptions page data for template.
@@ -6064,7 +5051,7 @@ class renderer extends renderer_base {
     ): array {
         global $DB, $OUTPUT;
 
-        $pageurl = new moodle_url('/local/jobboard/manage_exemptions.php');
+        $pageurl = new moodle_url('/local/jobboard/admin/manage_exemptions.php');
         $now = time();
 
         // Statistics.
@@ -6212,7 +5199,7 @@ class renderer extends renderer_base {
             'pagination' => $pagination,
             'filterformurl' => $pageurl->out(false),
             'addurl' => (new moodle_url($pageurl, ['action' => 'add']))->out(false),
-            'importurl' => (new moodle_url('/local/jobboard/import_exemptions.php'))->out(false),
+            'importurl' => (new moodle_url('/local/jobboard/admin/import_exemptions.php'))->out(false),
             'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'doctypesurl' => (new moodle_url('/local/jobboard/admin/doctypes.php'))->out(false),
             'reportsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'reports']))->out(false),
@@ -6220,15 +5207,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the migration page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_migrate_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/migrate', $data);
-    }
 
     /**
      * Prepare migration page data for template.
@@ -6290,15 +5268,6 @@ class renderer extends renderer_base {
         return $data;
     }
 
-    /**
-     * Render the admin doctypes page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_admin_doctypes_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_doctypes', $data);
-    }
 
     /**
      * Prepare admin doctypes page data for template.
@@ -6439,15 +5408,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the admin templates (email) page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_admin_templates_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_templates', $data);
-    }
 
     /**
      * Prepare admin templates page data for template.
@@ -6586,15 +5546,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the import vacancies form page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_import_vacancies_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/import_vacancies', $data);
-    }
 
     /**
      * Prepare import vacancies page data for template.
@@ -6646,15 +5597,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the import vacancies results page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_import_vacancies_results_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/import_vacancies_results', $data);
-    }
 
     /**
      * Prepare import vacancies results data for template.
@@ -6725,7 +5667,7 @@ class renderer extends renderer_base {
             ],
             'convocatoriaid' => $convocatoriaid,
             'backurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']))->out(false),
-            'uploadurl' => (new \moodle_url('/local/jobboard/import_vacancies.php', ['convocatoriaid' => $convocatoriaid]))->out(false),
+            'uploadurl' => (new \moodle_url('/local/jobboard/admin/import_vacancies.php', ['convocatoriaid' => $convocatoriaid]))->out(false),
             'haserrors' => !empty($errors),
             'errors' => $errors,
             'hasmoreerrors' => count($results['errors'] ?? []) > 20,
@@ -6733,15 +5675,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the manage applications page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_manage_applications_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/manage_applications', $data);
-    }
 
     /**
      * Prepare manage applications page data for template.
@@ -6927,15 +5860,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the edit vacancy convocatoria selection page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_edit_select_convocatoria_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/edit_select_convocatoria', $data);
-    }
 
     /**
      * Prepare edit vacancy convocatoria selection page data.
@@ -7000,15 +5924,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the edit vacancy form page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_edit_vacancy_form_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/edit_vacancy_form', $data);
-    }
 
     /**
      * Prepare edit vacancy form page data.
@@ -7052,15 +5967,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the import exemptions page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_import_exemptions_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/import_exemptions', $data);
-    }
 
     /**
      * Prepare import exemptions page data.
@@ -7094,15 +6000,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the import exemptions results page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_import_exemptions_results_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/import_exemptions_results', $data);
-    }
 
     /**
      * Prepare import exemptions results page data.
@@ -7128,7 +6025,7 @@ class renderer extends renderer_base {
             'errors' => $errors,
             'hasmoreerrors' => $morecount > 0,
             'moreerrors' => $morecount,
-            'continueurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
+            'continueurl' => (new \moodle_url('/local/jobboard/admin/manage_exemptions.php'))->out(false),
             'str' => [
                 'preview_notice' => get_string('previewmodenotice', 'local_jobboard'),
                 'row' => get_string('row', 'local_jobboard'),
@@ -7148,15 +6045,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render the exemption form page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_exemption_form_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/exemption_form', $data);
-    }
 
     /**
      * Prepare exemption form page data.
@@ -7174,22 +6062,13 @@ class renderer extends renderer_base {
 
         return [
             'pagetitle' => $isedit ? get_string('editexemption', 'local_jobboard') : get_string('addexemption', 'local_jobboard'),
-            'backurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
+            'backurl' => (new \moodle_url('/local/jobboard/admin/manage_exemptions.php'))->out(false),
             'isedit' => $isedit,
             'formhtml' => $formhtml,
             'str' => $strdata,
         ];
     }
 
-    /**
-     * Render the exemption revoke page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_exemption_revoke_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/exemption_revoke', $data);
-    }
 
     /**
      * Prepare exemption revoke page data.
@@ -7212,20 +6091,11 @@ class renderer extends renderer_base {
             'id' => $id,
             'userfullname' => fullname($user),
             'sesskey' => sesskey(),
-            'cancelurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
+            'cancelurl' => (new \moodle_url('/local/jobboard/admin/manage_exemptions.php'))->out(false),
             'str' => $strdata,
         ];
     }
 
-    /**
-     * Render the exemption view page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_exemption_view_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/exemption_view', $data);
-    }
 
     /**
      * Prepare exemption view page data.
@@ -7307,7 +6177,7 @@ class renderer extends renderer_base {
 
         return [
             'id' => $exemption->id,
-            'backurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
+            'backurl' => (new \moodle_url('/local/jobboard/admin/manage_exemptions.php'))->out(false),
             'userfullname' => fullname($user),
             'useremail' => $user->email,
             'exemptiontype' => get_string('exemptiontype_' . $exemption->exemptiontype, 'local_jobboard'),
@@ -7324,23 +6194,14 @@ class renderer extends renderer_base {
             'revokedbyinfo' => $revokedbyinfo,
             'revokereason' => $revokereason,
             'canmodify' => !$exemption->timerevoked && $isvalid,
-            'editurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php', ['action' => 'edit', 'id' => $exemption->id]))->out(false),
-            'revokeurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php', ['action' => 'revoke', 'id' => $exemption->id]))->out(false),
+            'editurl' => (new \moodle_url('/local/jobboard/admin/manage_exemptions.php', ['action' => 'edit', 'id' => $exemption->id]))->out(false),
+            'revokeurl' => (new \moodle_url('/local/jobboard/admin/manage_exemptions.php', ['action' => 'revoke', 'id' => $exemption->id]))->out(false),
             'usagehistory' => $usagehistory,
             'hasusagehistory' => !empty($usagehistory),
             'str' => $strdata,
         ];
     }
 
-    /**
-     * Render the update profile page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_updateprofile_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/updateprofile', $data);
-    }
 
     /**
      * Prepare update profile page data.
@@ -7373,15 +6234,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render admin template edit page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_admin_template_edit_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_template_edit', $data);
-    }
 
     /**
      * Prepare admin template edit page data.
@@ -7431,15 +6283,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render admin doctype form page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_admin_doctype_form_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_doctype_form', $data);
-    }
 
     /**
      * Prepare admin doctype form page data.
@@ -7465,15 +6308,6 @@ class renderer extends renderer_base {
         ];
     }
 
-    /**
-     * Render admin doctype confirm delete page.
-     *
-     * @param array $data Template data.
-     * @return string Rendered HTML.
-     */
-    public function render_admin_doctype_confirm_delete_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_doctype_confirm_delete', $data);
-    }
 
     /**
      * Prepare admin doctype confirm delete page data.

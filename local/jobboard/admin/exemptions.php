@@ -30,4 +30,4 @@ require_once($CFG->libdir . '/adminlib.php');
 admin_externalpage_setup('local_jobboard_exemptions');
 
 // Redirect to main exemptions management page.
-redirect(new moodle_url('/local/jobboard/manage_exemptions.php'));
+redirect(new moodle_url('/local/jobboard/admin/manage_exemptions.php'));

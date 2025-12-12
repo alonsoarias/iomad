@@ -5,6 +5,46 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.0] - 2025-12-12
+
+### Changed
+- **Major Plugin Reorganization**:
+  - Moved 7 admin files from root to `admin/` folder:
+    - `migrate.php` → `admin/migrate.php`
+    - `import_vacancies.php` → `admin/import_vacancies.php`
+    - `import_exemptions.php` → `admin/import_exemptions.php`
+    - `export_documents.php` → `admin/export_documents.php`
+    - `manage_exemptions.php` → `admin/manage_exemptions.php`
+    - `manage_committee.php` → `admin/manage_committee.php`
+    - `manage_program_reviewers.php` → `admin/manage_program_reviewers.php`
+  - Updated all internal URL references to new locations
+  - Updated all `require_once` paths in moved files
+
+- **Renderer Traits Activation**:
+  - Activated all 9 renderer traits in `renderer.php` (previously commented out)
+  - Removed 46 duplicate `render_*_page` methods from `renderer.php` (~430 lines)
+  - Removed duplicate dashboard methods from `renderer.php` (~740 lines)
+  - Added missing methods to traits:
+    - `render_signup_success_page()` to `public_renderer`
+    - `render_interview_complete_form_page()` to `committee_renderer`
+    - `render_reupload_document_page()` to `review_renderer`
+    - `render_import_exemptions_page()` and `render_import_exemptions_results_page()` to `exemption_renderer`
+    - `render_admin_template_edit_page()`, `render_admin_doctype_form_page()`, `render_admin_doctype_confirm_delete_page()` to `admin_renderer`
+
+### Removed
+- **Unused Templates** (5 files):
+  - `templates/convocatoria_stats.mustache`
+  - `templates/review_comments.mustache`
+  - `templates/reviewer_selector.mustache`
+  - `templates/document_upload.mustache`
+  - `templates/report_export_buttons.mustache`
+
+### Technical Notes
+- `renderer.php` reduced from 7,520 lines to 6,354 lines (~1,166 lines removed)
+- All render methods now provided by traits in `classes/output/renderer/`
+- Root templates serve as components/partials, `pages/` templates are full page layouts
+- Improved code organization following Moodle plugin best practices
+
 ## [3.5.9] - 2025-12-12
 
 ### Added

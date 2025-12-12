@@ -24,7 +24,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 use local_jobboard\program_reviewer;
@@ -37,7 +37,7 @@ $categoryid = optional_param('categoryid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
 $userid = optional_param('userid', 0, PARAM_INT);
 
-$pageurl = new moodle_url('/local/jobboard/manage_program_reviewers.php');
+$pageurl = new moodle_url('/local/jobboard/admin/manage_program_reviewers.php');
 $PAGE->set_context($context);
 $PAGE->set_url($pageurl);
 $PAGE->set_pagelayout('admin');

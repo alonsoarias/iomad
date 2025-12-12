@@ -25,7 +25,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 
 use local_jobboard\exemption;
 use local_jobboard\output\ui_helper;
@@ -47,7 +47,7 @@ $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 20, PARAM_INT);
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/manage_exemptions.php'));
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/manage_exemptions.php'));
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('manageexemptions', 'local_jobboard'));
 $PAGE->set_heading(get_string('manageexemptions', 'local_jobboard'));
@@ -66,7 +66,7 @@ if ($action === 'add' || ($action === 'edit' && $id)) {
     $mform = new \local_jobboard\forms\exemption_form(null, ['exemption' => $exemption]);
 
     if ($mform->is_cancelled()) {
-        redirect(new moodle_url('/local/jobboard/manage_exemptions.php'));
+        redirect(new moodle_url('/local/jobboard/admin/manage_exemptions.php'));
     } else if ($data = $mform->get_data()) {
         if ($id) {
             // Update existing.
@@ -92,7 +92,7 @@ if ($action === 'add' || ($action === 'edit' && $id)) {
                 'relateduserid' => $data->userid,
             ])->trigger();
 
-            redirect(new moodle_url('/local/jobboard/manage_exemptions.php'),
+            redirect(new moodle_url('/local/jobboard/admin/manage_exemptions.php'),
                 get_string('exemptionupdated', 'local_jobboard'), null,
                 \core\output\notification::NOTIFY_SUCCESS);
         } else {
@@ -109,11 +109,11 @@ if ($action === 'add' || ($action === 'edit' && $id)) {
             );
 
             if ($result) {
-                redirect(new moodle_url('/local/jobboard/manage_exemptions.php'),
+                redirect(new moodle_url('/local/jobboard/admin/manage_exemptions.php'),
                     get_string('exemptioncreated', 'local_jobboard'), null,
                     \core\output\notification::NOTIFY_SUCCESS);
             } else {
-                redirect(new moodle_url('/local/jobboard/manage_exemptions.php'),
+                redirect(new moodle_url('/local/jobboard/admin/manage_exemptions.php'),
                     get_string('exemptionerror', 'local_jobboard'), null,
                     \core\output\notification::NOTIFY_ERROR);
             }
@@ -146,11 +146,11 @@ if ($action === 'revoke' && $id) {
         $result = exemption::revoke($id, $reason);
 
         if ($result) {
-            redirect(new moodle_url('/local/jobboard/manage_exemptions.php'),
+            redirect(new moodle_url('/local/jobboard/admin/manage_exemptions.php'),
                 get_string('exemptionrevoked', 'local_jobboard'), null,
                 \core\output\notification::NOTIFY_SUCCESS);
         } else {
-            redirect(new moodle_url('/local/jobboard/manage_exemptions.php'),
+            redirect(new moodle_url('/local/jobboard/admin/manage_exemptions.php'),
                 get_string('exemptionrevokeerror', 'local_jobboard'), null,
                 \core\output\notification::NOTIFY_ERROR);
         }

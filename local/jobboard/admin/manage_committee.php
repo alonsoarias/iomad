@@ -27,7 +27,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 
 use local_jobboard\committee;
 
@@ -56,7 +56,7 @@ if ($companyid) {
 if ($vacancyid) {
     $urlparams['vacancyid'] = $vacancyid;
 }
-$PAGE->set_url(new moodle_url('/local/jobboard/manage_committee.php', $urlparams));
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/manage_committee.php', $urlparams));
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('committees', 'local_jobboard'));
 $PAGE->set_heading(get_string('committees', 'local_jobboard'));
@@ -107,7 +107,7 @@ if ($action === 'create' && confirm_sesskey()) {
     } else {
         \core\notification::error(get_string('committeecreateerror', 'local_jobboard'));
     }
-    redirect(new moodle_url('/local/jobboard/manage_committee.php', ['companyid' => $createcompanyid]));
+    redirect(new moodle_url('/local/jobboard/admin/manage_committee.php', ['companyid' => $createcompanyid]));
 }
 
 if ($action === 'addmember' && confirm_sesskey()) {
@@ -141,7 +141,7 @@ if ($action === 'addmember' && confirm_sesskey()) {
         // Get company ID from committee.
         $comm = $DB->get_record('local_jobboard_committee', ['id' => $cid]);
         $redirectparams = !empty($comm->companyid) ? ['companyid' => $comm->companyid] : ['vacancyid' => $comm->vacancyid];
-        redirect(new moodle_url('/local/jobboard/manage_committee.php', $redirectparams));
+        redirect(new moodle_url('/local/jobboard/admin/manage_committee.php', $redirectparams));
     }
 }
 
@@ -159,7 +159,7 @@ if ($action === 'removemember' && confirm_sesskey()) {
 
         $comm = $DB->get_record('local_jobboard_committee', ['id' => $cid]);
         $redirectparams = !empty($comm->companyid) ? ['companyid' => $comm->companyid] : ['vacancyid' => $comm->vacancyid];
-        redirect(new moodle_url('/local/jobboard/manage_committee.php', $redirectparams));
+        redirect(new moodle_url('/local/jobboard/admin/manage_committee.php', $redirectparams));
     }
 }
 
@@ -178,7 +178,7 @@ if ($action === 'changerole' && confirm_sesskey()) {
 
         $comm = $DB->get_record('local_jobboard_committee', ['id' => $cid]);
         $redirectparams = !empty($comm->companyid) ? ['companyid' => $comm->companyid] : ['vacancyid' => $comm->vacancyid];
-        redirect(new moodle_url('/local/jobboard/manage_committee.php', $redirectparams));
+        redirect(new moodle_url('/local/jobboard/admin/manage_committee.php', $redirectparams));
     }
 }
 
@@ -186,7 +186,7 @@ if ($action === 'changerole' && confirm_sesskey()) {
 if ($vacancyid && !$companyid) {
     $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid]);
     if ($vacancy && !empty($vacancy->companyid)) {
-        redirect(new moodle_url('/local/jobboard/manage_committee.php', ['companyid' => $vacancy->companyid]));
+        redirect(new moodle_url('/local/jobboard/admin/manage_committee.php', ['companyid' => $vacancy->companyid]));
     }
 }
 

@@ -104,4 +104,34 @@ trait admin_renderer {
     public function render_reports_page(array $data): string {
         return $this->render_from_template('local_jobboard/pages/reports', $data);
     }
+
+    /**
+     * Render admin template edit page.
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_admin_template_edit_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/admin_template_edit', $data);
+    }
+
+    /**
+     * Render admin doctype form page.
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_admin_doctype_form_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/admin_doctype_form', $data);
+    }
+
+    /**
+     * Render admin doctype confirm delete page.
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_admin_doctype_confirm_delete_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/admin_doctype_confirm_delete', $data);
+    }
 }

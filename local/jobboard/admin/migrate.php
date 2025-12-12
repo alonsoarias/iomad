@@ -24,9 +24,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/formslib.php');
-require_once(__DIR__ . '/lib.php');
+require_once(__DIR__ . '/../lib.php');
 
 require_login();
 
@@ -35,7 +35,7 @@ require_capability('local/jobboard:configure', $context);
 
 $action = optional_param('action', '', PARAM_ALPHA);
 
-$PAGE->set_url(new moodle_url('/local/jobboard/migrate.php'));
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/migrate.php'));
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('migrateplugin', 'local_jobboard'));
 $PAGE->set_heading(get_string('migrateplugin', 'local_jobboard'));
@@ -948,7 +948,7 @@ if ($action === 'export') {
             exit;
         } catch (Exception $e) {
             redirect(
-                new moodle_url('/local/jobboard/migrate.php'),
+                new moodle_url('/local/jobboard/admin/migrate.php'),
                 get_string('exporterror', 'local_jobboard') . ': ' . $e->getMessage(),
                 null,
                 \core\output\notification::NOTIFY_ERROR
@@ -980,14 +980,14 @@ if ($action === 'import') {
 
             $type = $results['success'] ? \core\output\notification::NOTIFY_SUCCESS : \core\output\notification::NOTIFY_ERROR;
             redirect(
-                new moodle_url('/local/jobboard/migrate.php'),
+                new moodle_url('/local/jobboard/admin/migrate.php'),
                 implode('<br>', $results['messages']),
                 null,
                 $type
             );
         } else {
             redirect(
-                new moodle_url('/local/jobboard/migrate.php'),
+                new moodle_url('/local/jobboard/admin/migrate.php'),
                 get_string('invalidmigrationfile', 'local_jobboard'),
                 null,
                 \core\output\notification::NOTIFY_ERROR
@@ -1006,12 +1006,12 @@ $renderer = $PAGE->get_renderer('local_jobboard');
 $exportcounts = local_jobboard_get_export_counts();
 
 // Render forms to HTML.
-$exportform = new migrate_export_form(new moodle_url('/local/jobboard/migrate.php', ['action' => 'export']));
+$exportform = new migrate_export_form(new moodle_url('/local/jobboard/admin/migrate.php', ['action' => 'export']));
 ob_start();
 $exportform->display();
 $exportformhtml = ob_get_clean();
 
-$importform = new migrate_import_form(new moodle_url('/local/jobboard/migrate.php', ['action' => 'import']));
+$importform = new migrate_import_form(new moodle_url('/local/jobboard/admin/migrate.php', ['action' => 'import']));
 ob_start();
 $importform->display();
 $importformhtml = ob_get_clean();

@@ -74,4 +74,24 @@ trait exemption_renderer {
     public function render_exemption_view_page(array $data): string {
         return $this->render_from_template('local_jobboard/pages/exemption_view', $data);
     }
+
+    /**
+     * Render import exemptions page.
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_import_exemptions_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/import_exemptions', $data);
+    }
+
+    /**
+     * Render import exemptions results page.
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_import_exemptions_results_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/import_exemptions_results', $data);
+    }
 }

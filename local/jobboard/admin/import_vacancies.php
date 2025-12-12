@@ -24,10 +24,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 require_once($CFG->libdir . '/formslib.php');
-require_once(__DIR__ . '/lib.php');
+require_once(__DIR__ . '/../lib.php');
 
 use local_jobboard\output\ui_helper;
 
@@ -91,7 +91,7 @@ if ($downloadtemplate) {
 }
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/import_vacancies.php', ['convocatoriaid' => $convocatoriaid]));
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/import_vacancies.php', ['convocatoriaid' => $convocatoriaid]));
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('importvacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('importvacancies', 'local_jobboard'));
@@ -126,7 +126,7 @@ class import_vacancies_form extends moodleform {
                 html_writer::tag('strong', get_string('importvacancies_help', 'local_jobboard')) .
                 html_writer::tag('br', '') .
                 html_writer::link(
-                    new moodle_url('/local/jobboard/import_vacancies.php', ['downloadtemplate' => 1]),
+                    new moodle_url('/local/jobboard/admin/import_vacancies.php', ['downloadtemplate' => 1]),
                     html_writer::tag('i', '', ['class' => 'fa fa-download mr-1']) .
                     get_string('downloadcsvtemplate', 'local_jobboard'),
                     ['class' => 'btn btn-outline-secondary btn-sm mt-2']

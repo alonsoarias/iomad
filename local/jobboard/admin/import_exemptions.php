@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/csvlib.class.php');
 require_once($CFG->libdir . '/formslib.php');
 
@@ -34,7 +34,7 @@ $context = context_system::instance();
 require_capability('local/jobboard:manageexemptions', $context);
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/import_exemptions.php'));
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/import_exemptions.php'));
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('importexemptions', 'local_jobboard'));
 $PAGE->set_heading(get_string('importexemptions', 'local_jobboard'));
@@ -97,7 +97,7 @@ class import_exemptions_form extends moodleform {
 $mform = new import_exemptions_form();
 
 if ($mform->is_cancelled()) {
-    redirect(new moodle_url('/local/jobboard/manage_exemptions.php'));
+    redirect(new moodle_url('/local/jobboard/admin/manage_exemptions.php'));
 } else if ($data = $mform->get_data()) {
     // Process import.
     $content = $mform->get_file_content('csvfile');

@@ -516,7 +516,7 @@ trait dashboard_renderer {
                 'description' => get_string('committees_desc', 'local_jobboard'),
                 'icon' => 'users',
                 'color' => 'info',
-                'url' => (new moodle_url('/local/jobboard/manage_committee.php'))->out(false),
+                'url' => (new moodle_url('/local/jobboard/admin/manage_committee.php'))->out(false),
                 'buttonlabel' => get_string('managecommittees', 'local_jobboard'),
                 'buttonicon' => 'users-cog',
             ];
@@ -528,7 +528,7 @@ trait dashboard_renderer {
                 'description' => get_string('program_reviewers_desc', 'local_jobboard'),
                 'icon' => 'user-check',
                 'color' => 'success',
-                'url' => (new moodle_url('/local/jobboard/manage_program_reviewers.php'))->out(false),
+                'url' => (new moodle_url('/local/jobboard/admin/manage_program_reviewers.php'))->out(false),
                 'buttonlabel' => get_string('program_reviewers', 'local_jobboard'),
                 'buttonicon' => 'user-check',
             ];
@@ -568,7 +568,7 @@ trait dashboard_renderer {
                 'description' => get_string('importvacancies_desc', 'local_jobboard'),
                 'icon' => 'file-import',
                 'color' => 'primary',
-                'url' => (new moodle_url('/local/jobboard/import_vacancies.php'))->out(false),
+                'url' => (new moodle_url('/local/jobboard/admin/import_vacancies.php'))->out(false),
                 'buttonlabel' => get_string('import', 'local_jobboard'),
                 'buttonicon' => 'upload',
             ];
@@ -648,7 +648,7 @@ trait dashboard_renderer {
                 'description' => get_string('manageexemptions_desc', 'local_jobboard'),
                 'icon' => 'user-shield',
                 'color' => 'warning',
-                'url' => (new moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
+                'url' => (new moodle_url('/local/jobboard/admin/manage_exemptions.php'))->out(false),
                 'buttonlabel' => get_string('manage', 'local_jobboard'),
                 'buttonicon' => 'list',
             ];
@@ -674,7 +674,7 @@ trait dashboard_renderer {
                 'description' => get_string('migrateplugin_desc', 'local_jobboard'),
                 'icon' => 'exchange-alt',
                 'color' => 'dark',
-                'url' => (new moodle_url('/local/jobboard/migrate.php'))->out(false),
+                'url' => (new moodle_url('/local/jobboard/admin/migrate.php'))->out(false),
                 'buttonlabel' => get_string('access', 'local_jobboard'),
                 'buttonicon' => 'exchange-alt',
             ];

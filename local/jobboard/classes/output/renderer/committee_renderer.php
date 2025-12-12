@@ -74,4 +74,14 @@ trait committee_renderer {
     public function render_schedule_interview_page(array $data): string {
         return $this->render_from_template('local_jobboard/pages/schedule_interview', $data);
     }
+
+    /**
+     * Render interview complete form page.
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_interview_complete_form_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/interview_complete_form', $data);
+    }
 }

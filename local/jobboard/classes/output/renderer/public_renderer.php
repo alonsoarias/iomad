@@ -94,4 +94,14 @@ trait public_renderer {
     public function render_updateprofile_page(array $data): string {
         return $this->render_from_template('local_jobboard/pages/updateprofile', $data);
     }
+
+    /**
+     * Render signup success page.
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_signup_success_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/signup_success', $data);
+    }
 }

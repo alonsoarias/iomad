@@ -74,4 +74,14 @@ trait review_renderer {
     public function render_validate_document_page(array $data): string {
         return $this->render_from_template('local_jobboard/pages/validate_document', $data);
     }
+
+    /**
+     * Render reupload document page.
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_reupload_document_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/reupload_document', $data);
+    }
 }
