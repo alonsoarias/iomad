@@ -1987,3 +1987,140 @@ $string['install_defaults'] = 'Install default settings';
 
 $string['docstatus_'] = 'Document status';
 $string['appstatus:'] = 'Application status';
+
+// =============================================================================
+// DOCUMENT CATEGORIES
+// =============================================================================
+
+$string['doccategory_identity'] = 'Identity documents';
+$string['doccategory_academic'] = 'Academic documents';
+$string['doccategory_professional'] = 'Professional documents';
+$string['doccategory_background'] = 'Background check documents';
+$string['doccategory_financial'] = 'Financial documents';
+$string['doccategory_health'] = 'Health documents';
+
+// =============================================================================
+// DOCUMENT VALIDATION CHECKLIST
+// =============================================================================
+
+$string['checklist_legible'] = 'Document is legible';
+$string['checklist_complete'] = 'Document is complete';
+$string['checklist_namematch'] = 'Name matches application';
+$string['checklist_cedula_number'] = 'ID number is visible';
+$string['checklist_cedula_photo'] = 'Photo is visible';
+$string['checklist_background_date'] = 'Issue date is recent';
+$string['checklist_background_status'] = 'Clean background status';
+$string['checklist_title_institution'] = 'Institution is recognized';
+$string['checklist_title_date'] = 'Graduation date is verified';
+$string['checklist_title_program'] = 'Program name matches';
+$string['checklist_acta_number'] = 'Diploma number is present';
+$string['checklist_acta_date'] = 'Diploma date is verified';
+$string['checklist_tarjeta_number'] = 'Professional card number is present';
+$string['checklist_tarjeta_profession'] = 'Profession matches position';
+$string['checklist_rut_nit'] = 'Tax ID (NIT) is verified';
+$string['checklist_rut_updated'] = 'Tax document is up to date';
+$string['checklist_eps_active'] = 'Health insurance is active';
+$string['checklist_eps_entity'] = 'Health insurance entity is verified';
+$string['checklist_pension_fund'] = 'Pension fund is identified';
+$string['checklist_pension_active'] = 'Pension contributions are active';
+$string['checklist_medical_date'] = 'Medical exam date is recent';
+$string['checklist_medical_aptitude'] = 'Aptitude status is favorable';
+$string['checklist_military_class'] = 'Military class is verified';
+$string['checklist_military_number'] = 'Military ID number is present';
+
+// =============================================================================
+// REPORTS - EMPTY STATE MESSAGES
+// =============================================================================
+
+$string['noapplicationsreport'] = 'No applications found for the selected criteria';
+$string['novacanciesreport'] = 'No vacancies found for the selected criteria';
+$string['nodocumentsreport'] = 'No documents found for the selected criteria';
+$string['noconvocatoriasreport'] = 'No convocatorias found for the selected criteria';
+
+// =============================================================================
+// NAVIGATION - ADDITIONAL
+// =============================================================================
+
+$string['browsevacancies'] = 'Browse vacancies';
+$string['createconvocatoria'] = 'Create convocatoria';
+$string['backtomanage'] = 'Back to management';
+$string['reviewdashboard'] = 'Review dashboard';
+$string['featuredvacancies'] = 'Featured vacancies';
+$string['noconvocatoriasavailable'] = 'No convocatorias available';
+$string['novacanciesavailable'] = 'No vacancies available';
+$string['noapplicationsavailable'] = 'No applications available';
+
+// =============================================================================
+// USER ROLES
+// =============================================================================
+
+$string['role_reviewer'] = 'Reviewer';
+$string['role_coordinator'] = 'Coordinator';
+$string['role_administrator'] = 'Administrator';
+$string['role_manager'] = 'Manager';
+$string['role_applicant'] = 'Applicant';
+$string['role_evaluator'] = 'Evaluator';
+$string['role_secretary'] = 'Secretary';
+$string['role_director'] = 'Director';
+
+// =============================================================================
+// REJECTION REASONS
+// =============================================================================
+
+$string['rejectreason_expired'] = 'Document has expired';
+$string['rejectreason_illegible'] = 'Document is illegible';
+$string['rejectreason_mismatch'] = 'Information does not match';
+$string['rejectreason_incomplete'] = 'Document is incomplete';
+$string['rejectreason_invalid'] = 'Document is invalid';
+$string['rejectreason_wrong_format'] = 'Document is in wrong format';
+$string['rejectreason_other'] = 'Other reason';
+
+// =============================================================================
+// WORKFLOW STEPS
+// =============================================================================
+
+$string['step_consent'] = 'Consent';
+$string['step_documents'] = 'Documents';
+$string['step_profile'] = 'Profile';
+$string['step_coverletter'] = 'Cover letter';
+$string['step_submit'] = 'Submit';
+$string['step_review'] = 'Review';
+$string['step_evaluation'] = 'Evaluation';
+$string['step_interview'] = 'Interview';
+$string['step_selection'] = 'Selection';
+
+// =============================================================================
+// DOCUMENT TYPES - SPECIFIC
+// =============================================================================
+
+$string['doctype_tarjeta_profesional'] = 'Professional card';
+$string['doctype_sigep'] = 'SIGEP registration';
+$string['doctype_antecedentes_policia'] = 'Police background check';
+$string['doctype_antecedentes_fiscalia'] = 'Attorney general background check';
+$string['doctype_antecedentes_contraloria'] = 'Comptroller background check';
+$string['doctype_antecedentes_procuraduria'] = 'Inspector general background check';
+$string['doctype_libreta_militar'] = 'Military service card';
+$string['doctype_certificado_eps'] = 'Health insurance certificate';
+$string['doctype_certificado_pension'] = 'Pension certificate';
+$string['doctype_rut'] = 'Tax registration (RUT)';
+$string['doctype_examen_medico'] = 'Medical examination';
+$string['doctype_titulo'] = 'Degree certificate';
+$string['doctype_acta_grado'] = 'Graduation diploma';
+
+// =============================================================================
+// PUBLICATION TYPES
+// =============================================================================
+
+$string['publicationtype:public'] = 'Public';
+$string['publicationtype:internal'] = 'Internal';
+$string['publicationtype:both'] = 'Public and internal';
+
+// =============================================================================
+// MISCELLANEOUS - ADDITIONAL
+// =============================================================================
+
+$string['user'] = 'User';
+$string['useridentifier'] = 'User identifier';
+$string['workflowsettings'] = 'Workflow settings';
+$string['column'] = 'Column';
+$string['doctype_isrequired_help'] = 'If checked, this document type will be mandatory for applications';

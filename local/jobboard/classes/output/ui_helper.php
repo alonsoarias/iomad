@@ -127,27 +127,34 @@ class ui_helper {
      * @return string HTML output.
      */
     public static function status_badge(string $status, string $type = 'vacancy'): string {
+        // Color mappings aligned with renderer_base.php for consistency.
         $colors = [
             'vacancy' => [
                 'draft' => 'secondary',
                 'published' => 'success',
-                'closed' => 'warning',
-                'assigned' => 'info',
+                'closed' => 'danger',
+                'archived' => 'dark',
+                'pending' => 'warning',
+                'assigned' => 'primary',
             ],
             'application' => [
+                'draft' => 'secondary',
                 'submitted' => 'info',
+                'reviewing' => 'primary',
                 'under_review' => 'warning',
+                'approved' => 'success',
                 'docs_validated' => 'success',
+                'rejected' => 'danger',
                 'docs_rejected' => 'danger',
-                'interview' => 'purple',
-                'selected' => 'success',
-                'rejected' => 'secondary',
                 'withdrawn' => 'dark',
+                'interview' => 'warning',
+                'hired' => 'success',
+                'selected' => 'success',
             ],
             'convocatoria' => [
                 'draft' => 'secondary',
                 'open' => 'success',
-                'closed' => 'warning',
+                'closed' => 'danger',
                 'archived' => 'dark',
             ],
         ];
