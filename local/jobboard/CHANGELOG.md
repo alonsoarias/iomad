@@ -5,6 +5,18 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.10] - 2025-12-12
+
+### Fixed
+- **Template Path Mismatches**: Fixed PHP renderer paths that didn't match actual template file locations
+  - `exemption_renderer.php`: Fixed 6 paths (exemptions/* instead of admin/*)
+  - `admin_renderer.php`: Fixed 1 path (doctype_delete vs doctype_confirm_delete)
+  - `vacancy_renderer.php`: Fixed 2 paths (select_convocatoria, edit vs edit_form)
+
+### Technical Notes
+- All 46 PHP template paths now correctly resolve to existing mustache files
+- This fixes "filenotfound" errors when accessing exemptions, vacancy edit, and doctype delete pages
+
 ## [3.6.9] - 2025-12-12
 
 ### Changed

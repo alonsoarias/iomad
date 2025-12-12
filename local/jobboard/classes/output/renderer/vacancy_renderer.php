@@ -84,7 +84,7 @@ trait vacancy_renderer {
      * @return string HTML output.
      */
     public function render_edit_select_convocatoria_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/vacancies/edit_select_convocatoria', $data);
+        return $this->render_from_template('local_jobboard/pages/vacancies/select_convocatoria', $data);
     }
 
     /**
@@ -94,7 +94,7 @@ trait vacancy_renderer {
      * @return string HTML output.
      */
     public function render_edit_vacancy_form_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/vacancies/edit_form', $data);
+        return $this->render_from_template('local_jobboard/pages/vacancies/edit', $data);
     }
 
     /**
