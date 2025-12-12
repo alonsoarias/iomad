@@ -1107,6 +1107,154 @@ $string['privacy:metadata:local_jobboard_audit:userid'] = 'El ID del usuario que
 $string['privacy:metadata:local_jobboard_audit:action'] = 'La acción realizada';
 $string['privacy:metadata:local_jobboard_audit:timecreated'] = 'La hora en que se realizó la acción';
 
+// Privacy metadata para todas las tablas del plugin (cumplimiento AGENTS.md)
+$string['privacy:metadata:application'] = 'Registros de postulaciones enviadas por usuarios';
+$string['privacy:metadata:application:userid'] = 'ID del usuario postulante';
+$string['privacy:metadata:application:vacancyid'] = 'ID de la vacante a la que postuló';
+$string['privacy:metadata:application:status'] = 'Estado de la postulación';
+$string['privacy:metadata:application:digitalsignature'] = 'Firma digital proporcionada por el postulante';
+$string['privacy:metadata:application:coverletter'] = 'Texto de carta de presentación';
+$string['privacy:metadata:application:applicationdata'] = 'Datos adicionales del formulario de postulación (JSON)';
+$string['privacy:metadata:application:consentgiven'] = 'Si se otorgó consentimiento';
+$string['privacy:metadata:application:consenttimestamp'] = 'Hora en que se otorgó el consentimiento';
+$string['privacy:metadata:application:consentip'] = 'Dirección IP al momento del consentimiento';
+$string['privacy:metadata:application:consentuseragent'] = 'Agente de navegador al momento del consentimiento';
+$string['privacy:metadata:application:timecreated'] = 'Hora en que se envió la postulación';
+
+$string['privacy:metadata:document'] = 'Documentos subidos por postulantes';
+$string['privacy:metadata:document:applicationid'] = 'ID de la postulación a la que pertenece el documento';
+$string['privacy:metadata:document:documenttype'] = 'Tipo de documento';
+$string['privacy:metadata:document:filename'] = 'Nombre original del archivo';
+$string['privacy:metadata:document:uploadedby'] = 'Usuario que subió el documento';
+$string['privacy:metadata:document:issuedate'] = 'Fecha de expedición del documento';
+$string['privacy:metadata:document:timecreated'] = 'Marca de tiempo de carga';
+
+$string['privacy:metadata:exemption'] = 'Registros de exención del ISER para personal histórico';
+$string['privacy:metadata:exemption:userid'] = 'ID del usuario con exención';
+$string['privacy:metadata:exemption:exemptiontype'] = 'Tipo de exención';
+$string['privacy:metadata:exemption:exempteddocs'] = 'Documentos exentos';
+$string['privacy:metadata:exemption:validfrom'] = 'Fecha de inicio de la exención';
+$string['privacy:metadata:exemption:validuntil'] = 'Fecha de fin de la exención';
+$string['privacy:metadata:exemption:notes'] = 'Notas administrativas sobre la exención';
+$string['privacy:metadata:exemption:timecreated'] = 'Hora en que se creó la exención';
+
+$string['privacy:metadata:workflowlog'] = 'Historial de cambios de estado de postulación';
+$string['privacy:metadata:workflowlog:applicationid'] = 'ID de la postulación';
+$string['privacy:metadata:workflowlog:previousstatus'] = 'Estado anterior de la postulación';
+$string['privacy:metadata:workflowlog:newstatus'] = 'Nuevo estado de la postulación';
+$string['privacy:metadata:workflowlog:changedby'] = 'Usuario que cambió el estado';
+$string['privacy:metadata:workflowlog:comments'] = 'Comentarios sobre el cambio de estado';
+$string['privacy:metadata:workflowlog:timecreated'] = 'Hora del cambio de estado';
+
+$string['privacy:metadata:audit'] = 'Entradas del registro de auditoría';
+$string['privacy:metadata:audit:userid'] = 'Usuario que realizó la acción';
+$string['privacy:metadata:audit:action'] = 'Acción realizada';
+$string['privacy:metadata:audit:entitytype'] = 'Tipo de entidad afectada';
+$string['privacy:metadata:audit:entityid'] = 'ID de la entidad afectada';
+$string['privacy:metadata:audit:ipaddress'] = 'Dirección IP del usuario';
+$string['privacy:metadata:audit:useragent'] = 'Agente de navegador del usuario';
+$string['privacy:metadata:audit:extradata'] = 'Datos adicionales de la acción';
+$string['privacy:metadata:audit:timecreated'] = 'Hora de la acción';
+
+$string['privacy:metadata:notification'] = 'Registros de notificaciones por correo';
+$string['privacy:metadata:notification:userid'] = 'ID del usuario destinatario';
+$string['privacy:metadata:notification:templatecode'] = 'Plantilla de correo utilizada';
+$string['privacy:metadata:notification:data'] = 'Datos de marcadores de posición de la notificación';
+$string['privacy:metadata:notification:status'] = 'Estado de la notificación';
+$string['privacy:metadata:notification:timecreated'] = 'Hora en que se encoló la notificación';
+
+$string['privacy:metadata:interviewer'] = 'Asignaciones de miembros del panel de entrevistas';
+$string['privacy:metadata:interviewer:userid'] = 'Usuario asignado como entrevistador';
+$string['privacy:metadata:interviewer:interviewid'] = 'ID de la entrevista';
+$string['privacy:metadata:interviewer:timecreated'] = 'Hora de la asignación';
+
+$string['privacy:metadata:committeemember'] = 'Membresías del comité de selección';
+$string['privacy:metadata:committeemember:userid'] = 'ID del usuario miembro del comité';
+$string['privacy:metadata:committeemember:committeeid'] = 'ID del comité';
+$string['privacy:metadata:committeemember:role'] = 'Rol en el comité';
+$string['privacy:metadata:committeemember:addedby'] = 'Usuario que agregó al miembro';
+$string['privacy:metadata:committeemember:timecreated'] = 'Hora en que se agregó el miembro';
+
+$string['privacy:metadata:evaluation'] = 'Evaluaciones de postulaciones por miembros del comité';
+$string['privacy:metadata:evaluation:userid'] = 'Usuario que envió la evaluación';
+$string['privacy:metadata:evaluation:applicationid'] = 'Postulación siendo evaluada';
+$string['privacy:metadata:evaluation:score'] = 'Puntaje de la evaluación';
+$string['privacy:metadata:evaluation:vote'] = 'Voto del evaluador';
+$string['privacy:metadata:evaluation:comments'] = 'Comentarios de la evaluación';
+$string['privacy:metadata:evaluation:timecreated'] = 'Hora en que se envió la evaluación';
+
+$string['privacy:metadata:consent'] = 'Registros de consentimiento del usuario para procesamiento de datos';
+$string['privacy:metadata:consent:userid'] = 'Usuario que dio el consentimiento';
+$string['privacy:metadata:consent:consenttype'] = 'Tipo de consentimiento (tratamiento de datos, términos, privacidad)';
+$string['privacy:metadata:consent:consentgiven'] = 'Si se dio el consentimiento';
+$string['privacy:metadata:consent:consentversion'] = 'Versión de la política consentida';
+$string['privacy:metadata:consent:ipaddress'] = 'Dirección IP al momento del consentimiento';
+$string['privacy:metadata:consent:useragent'] = 'Agente de navegador al momento del consentimiento';
+$string['privacy:metadata:consent:timecreated'] = 'Hora en que se registró el consentimiento';
+
+$string['privacy:metadata:applicantprofile'] = 'Datos extendidos del perfil de postulantes de empleo';
+$string['privacy:metadata:applicantprofile:userid'] = 'ID del usuario postulante';
+$string['privacy:metadata:applicantprofile:doctype'] = 'Tipo de documento (CC, CE, etc.)';
+$string['privacy:metadata:applicantprofile:birthdate'] = 'Fecha de nacimiento';
+$string['privacy:metadata:applicantprofile:gender'] = 'Género';
+$string['privacy:metadata:applicantprofile:education_level'] = 'Nivel educativo más alto';
+$string['privacy:metadata:applicantprofile:degree_title'] = 'Título o grado obtenido';
+$string['privacy:metadata:applicantprofile:expertise_area'] = 'Área de experticia';
+$string['privacy:metadata:applicantprofile:experience_years'] = 'Años de experiencia';
+$string['privacy:metadata:applicantprofile:timecreated'] = 'Hora de creación del perfil';
+
+$string['privacy:metadata:files'] = 'Archivos subidos por usuarios (documentos de postulación)';
+
+// Cadenas adicionales para exportación de privacidad
+$string['consent'] = 'Consentimiento';
+$string['applicantprofile'] = 'Perfil del Postulante';
+
+// =============================================================================
+// FUNCIONALIDADES CONSOLIDADAS DEL DASHBOARD (AGENTS.md 22.2)
+// =============================================================================
+
+// Cadenas de tiempo relativo
+$string['timeago_justnow'] = 'Ahora mismo';
+$string['timeago_minutes'] = 'Hace {$a} minutos';
+$string['timeago_hours'] = 'Hace {$a} horas';
+$string['timeago_days'] = 'Hace {$a} días';
+
+// Banner de próxima convocatoria
+$string['critical'] = 'CRÍTICO';
+$string['closingsoon'] = 'Cierra Pronto';
+$string['closingon'] = 'Cierra el';
+$string['daysremaining'] = 'días restantes';
+$string['viewdetails'] = 'Ver Detalles';
+
+// Notificaciones pendientes
+$string['pendingnotifications'] = 'Notificaciones Pendientes';
+$string['notification_application_received'] = 'Postulación recibida';
+$string['notification_docs_validated'] = 'Documentos validados';
+$string['notification_docs_rejected'] = 'Documentos requieren atención';
+$string['notification_interview_scheduled'] = 'Entrevista programada';
+$string['notification_status_changed'] = 'Estado de postulación cambiado';
+$string['notification_application_selected'] = '¡Felicitaciones! Ha sido seleccionado';
+$string['notification_application_rejected'] = 'Postulación no seleccionada';
+
+// Actividad reciente
+$string['recentactivity'] = 'Actividad Reciente';
+$string['activity_application_submitted'] = 'Nueva postulación enviada';
+$string['activity_document_uploaded'] = 'Documento subido';
+$string['activity_vacancy_published'] = 'Vacante publicada';
+$string['activity_convocatoria_opened'] = 'Convocatoria abierta';
+$string['activity_status_viewed'] = 'Estado de postulación consultado';
+
+// =============================================================================
+// FILTRO DE CONVOCATORIA EN REPORTES (AGENTS.md 16.1)
+// =============================================================================
+
+$string['selectconvocatoria_required'] = 'Selección de Convocatoria Requerida';
+$string['selectconvocatoria_required_desc'] = 'Por favor seleccione una convocatoria para ver los reportes. Todos los reportes deben estar filtrados por convocatoria según la política institucional.';
+$string['currentconvocatoria'] = 'Convocatoria Actual';
+$string['changeconvocatoria'] = 'Cambiar Convocatoria';
+$string['noconvocatorias_forreports'] = 'No hay convocatorias disponibles. Debe crear al menos una convocatoria antes de ver reportes.';
+$string['continue'] = 'Continuar';
+
 // =============================================================================
 // CLI E IMPORTACIÓN
 // =============================================================================
