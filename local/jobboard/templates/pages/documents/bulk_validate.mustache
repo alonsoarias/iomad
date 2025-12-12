@@ -1,44 +1,84 @@
 {{!
-    @template local_jobboard/pages/bulk_validate
+    @template local_jobboard/pages/documents/bulk_validate
 
     Bulk document validation page template.
     Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables:
-    * pagetitle - Page title string
-    * stats - Statistics (totalpending, typecount)
-    * vacancies - Vacancies for filter dropdown
-    * selectedvacancyid - Currently selected vacancy ID
-    * documenttypes - Document types for filter dropdown
-    * selecteddocumenttype - Currently selected document type
-    * pendingbytype - Pending documents grouped by type
-    * haspendingbytype - Boolean if has pending by type
-    * documents - Documents to display (when type selected)
-    * hasdocuments - Boolean if has documents
-    * typename - Selected document type name
-    * documentcount - Count of documents
-    * rejectreasons - Rejection reason options
-    * filterformurl - URL for filter form
-    * actionformurl - URL for bulk action form
-    * dashboardurl - URL to dashboard
-    * reviewurl - URL to review applications
-    * assignreviewerurl - URL to assign reviewer
-    * reportsurl - URL to reports
-    * canviewreports - Boolean if can view reports
+    * pagetitle (string) - Page title
+    * stats (object) - Statistics {totalpending, typecount}
+    * vacancies (array) - Vacancies for filter
+    * selectedvacancyid (number) - Selected vacancy ID
+    * documenttypes (array) - Document types for filter
+    * selecteddocumenttype (string) - Selected document type
+    * pendingbytype (array) - Pending documents by type
+    * haspendingbytype (bool) - Has pending by type
+    * hastypeselected (bool) - Has type selected
+    * documents (array) - Documents to display
+    * hasdocuments (bool) - Has documents
+    * typename (string) - Selected type name
+    * documentcount (number) - Document count
+    * rejectreasons (array) - Rejection reasons
+    * filterformurl (string) - Filter form URL
+    * actionformurl (string) - Action form URL
+    * dashboardurl (string) - Dashboard URL
+    * reviewurl (string) - Review URL
+    * loading (bool) - Show skeleton loading state
 
     Example context (json):
     {
         "stats": {"totalpending": 25, "typecount": 5}
     }
 }}
-<div class="jb-bulk-validate" data-region="jobboard-bulk-validate">
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="local-jobboard-bulk-validate" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <div class="jb-skeleton-title" style="width: 40%;"></div>
+        <div class="jb-d-flex jb-gap-2">
+            <div class="jb-skeleton-text" style="width: 120px; height: 40px;"></div>
+            <div class="jb-skeleton-text" style="width: 120px; height: 40px;"></div>
+        </div>
+    </div>
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-lg-6 jb-col-md-6 jb-mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        <div class="jb-col-lg-6 jb-col-md-6 jb-mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+    </div>
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-body">
+            <div class="jb-d-flex jb-gap-3">
+                <div class="jb-skeleton-text" style="width: 200px; height: 40px;"></div>
+                <div class="jb-skeleton-text" style="width: 200px; height: 40px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="jb-card">
+        <div class="jb-card-body jb-p-0">
+            {{> local_jobboard/components/table }}
+        </div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="local-jobboard-bulk-validate" data-region="jobboard-bulk-validate">
+    {{! Skip Link for Accessibility }}
+    <a href="#bulk-validate-main-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
     {{! Page Header }}
-    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-flex-wrap jb-gap-3 jb-mb-4 jb-fade-in">
         <h1 class="jb-fs-3 jb-mb-0">
             <i class="fa fa-tasks jb-text-primary jb-mr-2" aria-hidden="true"></i>
             {{pagetitle}}
         </h1>
-        <div class="jb-btn-group">
+        <div class="jb-btn-group" role="group" aria-label="{{#str}}actions{{/str}}">
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
                 <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
@@ -51,12 +91,12 @@
     </header>
 
     {{! Statistics Cards }}
-    <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
-        <div class="jb-col-lg-6 jb-col-md-6 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-warning">
+    <section class="jb-row jb-mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        <div class="jb-col-lg-6 jb-col-md-6 jb-mb-3 jb-fade-in-up" style="animation-delay: 0.05s;">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-warning jb-hover-lift">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
-                    <div class="jb-stat-icon jb-mr-3">
-                        <i class="fa fa-clock" aria-hidden="true"></i>
+                    <div class="jb-stat-icon jb-bg-warning jb-text-white jb-rounded jb-p-3 jb-mr-3">
+                        <i class="fa fa-clock fa-lg" aria-hidden="true"></i>
                     </div>
                     <div>
                         <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.totalpending}}</div>
@@ -65,11 +105,11 @@
                 </div>
             </div>
         </div>
-        <div class="jb-col-lg-6 jb-col-md-6 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-primary">
+        <div class="jb-col-lg-6 jb-col-md-6 jb-mb-3 jb-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-primary jb-hover-lift">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
-                    <div class="jb-stat-icon jb-mr-3">
-                        <i class="fa fa-folder" aria-hidden="true"></i>
+                    <div class="jb-stat-icon jb-bg-primary jb-text-white jb-rounded jb-p-3 jb-mr-3">
+                        <i class="fa fa-folder fa-lg" aria-hidden="true"></i>
                     </div>
                     <div>
                         <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.typecount}}</div>
@@ -81,227 +121,290 @@
     </section>
 
     {{! Filter Form }}
-    <section class="jb-card jb-card-shadow jb-mb-4" aria-label="{{#str}}filter{{/str}}">
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-label="{{#str}}filter{{/str}}" style="animation-delay: 0.15s;">
         <div class="jb-card-body">
-            <form method="get" action="{{filterformurl}}" class="jb-form-inline jb-flex-wrap">
-                <div class="jb-form-group jb-mr-3 jb-mb-2">
-                    <label class="jb-sr-only" for="vacancyid">{{#str}}vacancy, local_jobboard{{/str}}</label>
-                    <select name="vacancyid" id="vacancyid" class="jb-form-control">
-                        <option value="0">{{#str}}allvacancies, local_jobboard{{/str}}</option>
-                        {{#vacancies}}
-                        <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                        {{/vacancies}}
-                    </select>
-                </div>
-                <div class="jb-form-group jb-mr-3 jb-mb-2">
-                    <label class="jb-sr-only" for="documenttype">{{#str}}documenttype, local_jobboard{{/str}}</label>
-                    <select name="documenttype" id="documenttype" class="jb-form-control">
-                        <option value="">{{#str}}selecttype, local_jobboard{{/str}}</option>
-                        {{#documenttypes}}
-                        <option value="{{code}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                        {{/documenttypes}}
-                    </select>
-                </div>
-                <button type="submit" class="jb-btn jb-btn-primary jb-mb-2">
-                    <i class="fa fa-filter jb-mr-1" aria-hidden="true"></i>
-                    {{#str}}filter{{/str}}
-                </button>
-            </form>
-        </div>
-    </section>
-
-    {{! Pending By Type Summary }}
-    {{#haspendingbytype}}
-    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="pending-heading">
-        <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
-            <h5 class="jb-mb-0" id="pending-heading">
-                <i class="fa fa-folder-open jb-text-warning jb-mr-2" aria-hidden="true"></i>
-                {{#str}}pendingbytype, local_jobboard{{/str}}
-            </h5>
-        </div>
-        <div class="jb-card-body">
-            <div class="jb-row">
-                {{#pendingbytype}}
-                <div class="jb-col-lg-3 jb-col-md-4 jb-col-sm-6 jb-mb-3">
-                    <a href="{{selecturl}}" class="jb-text-decoration-none">
-                        <div class="jb-card jb-h-100 {{#isselected}}jb-border-primary jb-bg-light{{/isselected}}">
-                            <div class="jb-card-body jb-text-center">
-                                <h3 class="jb-mb-1 {{#isselected}}jb-text-primary{{/isselected}}{{^isselected}}jb-text-warning{{/isselected}}">{{count}}</h3>
-                                <p class="jb-mb-0 jb-small jb-text-muted">{{typename}}</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                {{/pendingbytype}}
-            </div>
-        </div>
-    </section>
-    {{/haspendingbytype}}
-
-    {{! Document List (when type selected) }}
-    {{#hastypeselected}}
-    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="documents-heading">
-        <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
-            <h5 class="jb-mb-0" id="documents-heading">
-                <i class="fa fa-file-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
-                {{typename}}
-            </h5>
-            <span class="jb-badge jb-badge-warning">{{documentcount}} {{#str}}documents, local_jobboard{{/str}}</span>
-        </div>
-        <div class="jb-card-body">
-            {{#hasdocuments}}
-            <form method="post" action="{{actionformurl}}" id="bulk-validate-form">
-                <input type="hidden" name="sesskey" value="{{sesskey}}">
-                <input type="hidden" name="vacancyid" value="{{selectedvacancyid}}">
-                <input type="hidden" name="documenttype" value="{{selecteddocumenttype}}">
-
-                {{! Select All Checkbox }}
-                <div class="jb-custom-control jb-custom-checkbox jb-mb-3">
-                    <input type="checkbox" class="jb-custom-control-input" id="selectall">
-                    <label class="jb-custom-control-label jb-fw-bold" for="selectall">{{#str}}selectall{{/str}}</label>
-                </div>
-
-                {{! Documents Table }}
-                <div class="jb-table-responsive">
-                    <table class="jb-table jb-table-hover">
-                        <thead class="jb-thead-light">
-                            <tr>
-                                <th style="width: 40px;"></th>
-                                <th>{{#str}}applicant, local_jobboard{{/str}}</th>
-                                <th>{{#str}}vacancy, local_jobboard{{/str}}</th>
-                                <th>{{#str}}filename, local_jobboard{{/str}}</th>
-                                <th>{{#str}}uploaded, local_jobboard{{/str}}</th>
-                                <th class="jb-text-center">{{#str}}actions{{/str}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#documents}}
-                            <tr>
-                                <td>
-                                    <input type="checkbox" name="documents[]" value="{{id}}" class="doc-checkbox">
-                                </td>
-                                <td>
-                                    <strong>{{applicantname}}</strong>
-                                    <br><small class="jb-text-muted">{{applicantemail}}</small>
-                                </td>
-                                <td>{{vacancycode}}</td>
-                                <td><code>{{filename}}</code></td>
-                                <td>{{uploadeddate}}</td>
-                                <td class="jb-text-center">
-                                    {{#downloadurl}}
-                                    <a href="{{downloadurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary jb-mr-1"
-                                       target="_blank" title="{{#str}}view{{/str}}">
-                                        <i class="fa fa-eye" aria-hidden="true"></i>
-                                    </a>
-                                    {{/downloadurl}}
-                                    <a href="{{validateurl}}" class="jb-btn jb-btn-sm jb-btn-outline-success"
-                                       title="{{#str}}validate, local_jobboard{{/str}}">
-                                        <i class="fa fa-check" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            {{/documents}}
-                        </tbody>
-                    </table>
-                </div>
-
-                {{! Bulk Action Panel }}
-                <div class="jb-card jb-mt-4 jb-bg-light">
-                    <div class="jb-card-header">
-                        <h6 class="jb-mb-0">
-                            <i class="fa fa-tasks jb-mr-2" aria-hidden="true"></i>
-                            {{#str}}bulkactions, local_jobboard{{/str}}
-                        </h6>
+            <form method="get" action="{{filterformurl}}" class="jb-filter-form" role="search" aria-label="{{#str}}filterdocuments, local_jobboard{{/str}}">
+                <div class="jb-row jb-align-items-end">
+                    <div class="jb-col-lg-4 jb-col-md-6 jb-mb-2">
+                        <label class="jb-form-label jb-small jb-text-muted" for="vacancyid">{{#str}}vacancy, local_jobboard{{/str}}</label>
+                        <select name="vacancyid" id="vacancyid" class="jb-form-select">
+                            <option value="0">{{#str}}allvacancies, local_jobboard{{/str}}</option>
+                            {{#vacancies}}
+                            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/vacancies}}
+                        </select>
                     </div>
-                    <div class="jb-card-body">
-                        <div class="jb-row">
-                            {{! Approve Selected }}
-                            <div class="jb-col-md-6 jb-mb-3 jb-mb-md-0">
-                                <div class="jb-card jb-border-success jb-h-100">
-                                    <div class="jb-card-body">
-                                        <h6 class="jb-card-title">
-                                            <i class="fa fa-check jb-text-success jb-mr-2" aria-hidden="true"></i>
-                                            {{#str}}approveselected, local_jobboard{{/str}}
-                                        </h6>
-                                        <div class="jb-form-group jb-mb-3">
-                                            <textarea name="notes" class="jb-form-control" rows="2"
-                                                      placeholder="{{#str}}optionalnotes, local_jobboard{{/str}}"></textarea>
-                                        </div>
-                                        <button type="submit" name="action" value="validate" class="jb-btn jb-btn-success">
-                                            <i class="fa fa-check jb-mr-2" aria-hidden="true"></i>
-                                            {{#str}}approveselected, local_jobboard{{/str}}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{! Reject Selected }}
-                            <div class="jb-col-md-6">
-                                <div class="jb-card jb-border-danger jb-h-100">
-                                    <div class="jb-card-body">
-                                        <h6 class="jb-card-title">
-                                            <i class="fa fa-times jb-text-danger jb-mr-2" aria-hidden="true"></i>
-                                            {{#str}}rejectselected, local_jobboard{{/str}}
-                                        </h6>
-                                        <div class="jb-form-group jb-mb-3">
-                                            <select name="rejectreason" class="jb-form-control">
-                                                <option value="">{{#str}}selectreason, local_jobboard{{/str}}</option>
-                                                {{#rejectreasons}}
-                                                <option value="{{code}}">{{label}}</option>
-                                                {{/rejectreasons}}
-                                            </select>
-                                        </div>
-                                        <button type="submit" name="action" value="reject" class="jb-btn jb-btn-danger">
-                                            <i class="fa fa-times jb-mr-2" aria-hidden="true"></i>
-                                            {{#str}}rejectselected, local_jobboard{{/str}}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="jb-col-lg-4 jb-col-md-6 jb-mb-2">
+                        <label class="jb-form-label jb-small jb-text-muted" for="documenttype">{{#str}}documenttype, local_jobboard{{/str}}</label>
+                        <select name="documenttype" id="documenttype" class="jb-form-select">
+                            <option value="">{{#str}}selecttype, local_jobboard{{/str}}</option>
+                            {{#documenttypes}}
+                            <option value="{{code}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/documenttypes}}
+                        </select>
+                    </div>
+                    <div class="jb-col-lg-4 jb-col-md-12 jb-mb-2">
+                        <button type="submit" class="jb-btn jb-btn-primary jb-w-100">
+                            <i class="fa fa-filter jb-mr-1" aria-hidden="true"></i>
+                            {{#str}}filter{{/str}}
+                        </button>
                     </div>
                 </div>
             </form>
-
-            {{! JavaScript for select all }}
-            {{#js}}
-            document.getElementById('selectall').addEventListener('change', function() {
-                var checkboxes = document.querySelectorAll('.doc-checkbox');
-                var self = this;
-                checkboxes.forEach(function(cb) {
-                    cb.checked = self.checked;
-                });
-            });
-            {{/js}}
-
-            {{/hasdocuments}}
-            {{^hasdocuments}}
-            <div class="jb-empty-state jb-text-center jb-py-4">
-                <i class="fa fa-check-circle fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
-                <p class="jb-text-muted">{{#str}}nodocumentspending, local_jobboard{{/str}}</p>
-            </div>
-            {{/hasdocuments}}
         </div>
     </section>
-    {{/hastypeselected}}
+
+    {{! Main Content }}
+    <main id="bulk-validate-main-content">
+        {{! Pending By Type Summary }}
+        {{#haspendingbytype}}
+        <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="pending-heading" style="animation-delay: 0.2s;">
+            <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+                <h2 class="jb-fs-5 jb-mb-0" id="pending-heading">
+                    <i class="fa fa-folder-open jb-text-warning jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}pendingbytype, local_jobboard{{/str}}
+                </h2>
+            </div>
+            <div class="jb-card-body">
+                <div class="jb-row">
+                    {{#pendingbytype}}
+                    <div class="jb-col-lg-3 jb-col-md-4 jb-col-sm-6 jb-mb-3">
+                        <a href="{{selecturl}}" class="jb-text-decoration-none jb-d-block">
+                            <div class="jb-card jb-h-100 jb-hover-lift {{#isselected}}jb-border-primary jb-bg-primary-light{{/isselected}} {{^isselected}}jb-border-warning-subtle{{/isselected}}">
+                                <div class="jb-card-body jb-text-center jb-py-3">
+                                    <h3 class="jb-fs-2 jb-mb-1 {{#isselected}}jb-text-primary{{/isselected}}{{^isselected}}jb-text-warning{{/isselected}}">
+                                        {{count}}
+                                    </h3>
+                                    <p class="jb-mb-0 jb-small jb-text-muted jb-fw-medium">{{typename}}</p>
+                                    {{#isselected}}
+                                    <span class="jb-badge jb-badge-primary jb-mt-2">
+                                        <i class="fa fa-check jb-mr-1" aria-hidden="true"></i>
+                                        {{#str}}selected{{/str}}
+                                    </span>
+                                    {{/isselected}}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {{/pendingbytype}}
+                </div>
+            </div>
+        </section>
+        {{/haspendingbytype}}
+
+        {{! Document List (when type selected) }}
+        {{#hastypeselected}}
+        <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="documents-heading" style="animation-delay: 0.25s;">
+            <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+                <h2 class="jb-fs-5 jb-mb-0" id="documents-heading">
+                    <i class="fa fa-file-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                    {{typename}}
+                </h2>
+                <span class="jb-badge jb-badge-warning jb-badge-pill">
+                    {{documentcount}} {{#str}}documents, local_jobboard{{/str}}
+                </span>
+            </div>
+            <div class="jb-card-body">
+                {{#hasdocuments}}
+                <form method="post" action="{{actionformurl}}" id="bulk-validate-form">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="vacancyid" value="{{selectedvacancyid}}">
+                    <input type="hidden" name="documenttype" value="{{selecteddocumenttype}}">
+
+                    {{! Select All Checkbox }}
+                    <div class="jb-d-flex jb-align-items-center jb-mb-3 jb-p-2 jb-bg-light jb-rounded">
+                        <div class="jb-form-check">
+                            <input type="checkbox" class="jb-form-check-input" id="selectall" aria-label="{{#str}}selectall{{/str}}">
+                            <label class="jb-form-check-label jb-fw-bold" for="selectall">
+                                {{#str}}selectall{{/str}}
+                            </label>
+                        </div>
+                        <span class="jb-ml-auto jb-small jb-text-muted" id="selection-count">
+                            0 {{#str}}selected{{/str}}
+                        </span>
+                    </div>
+
+                    {{! Documents Table }}
+                    <div class="jb-table-responsive">
+                        <table class="jb-table jb-table-hover" aria-label="{{#str}}documentstovalidate, local_jobboard{{/str}}">
+                            <thead class="jb-thead-light">
+                                <tr>
+                                    <th scope="col" style="width: 40px;"></th>
+                                    <th scope="col">{{#str}}applicant, local_jobboard{{/str}}</th>
+                                    <th scope="col" class="jb-d-none jb-d-md-table-cell">{{#str}}vacancy, local_jobboard{{/str}}</th>
+                                    <th scope="col">{{#str}}filename, local_jobboard{{/str}}</th>
+                                    <th scope="col" class="jb-d-none jb-d-lg-table-cell">{{#str}}uploaded, local_jobboard{{/str}}</th>
+                                    <th scope="col" class="jb-text-center">{{#str}}actions{{/str}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#documents}}
+                                <tr data-document-id="{{id}}">
+                                    <td>
+                                        <div class="jb-form-check">
+                                            <input type="checkbox" name="documents[]" value="{{id}}" class="jb-form-check-input doc-checkbox" aria-label="{{#str}}selectdocument, local_jobboard{{/str}} {{filename}}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="jb-d-flex jb-align-items-center">
+                                            <div class="jb-avatar jb-avatar-sm jb-bg-light jb-rounded-circle jb-mr-2 jb-d-flex jb-align-items-center jb-justify-content-center jb-d-none jb-d-sm-flex" style="width: 36px; height: 36px;">
+                                                <i class="fa fa-user jb-text-muted" aria-hidden="true"></i>
+                                            </div>
+                                            <div>
+                                                <strong class="jb-d-block">{{applicantname}}</strong>
+                                                <small class="jb-text-muted">{{applicantemail}}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="jb-d-none jb-d-md-table-cell">
+                                        <code class="jb-text-primary">{{vacancycode}}</code>
+                                    </td>
+                                    <td>
+                                        <code class="jb-small">{{filename}}</code>
+                                    </td>
+                                    <td class="jb-d-none jb-d-lg-table-cell">
+                                        <small class="jb-text-muted">{{uploadeddate}}</small>
+                                    </td>
+                                    <td class="jb-text-center">
+                                        <div class="jb-btn-group jb-btn-group-sm" role="group">
+                                            {{#downloadurl}}
+                                            <a href="{{downloadurl}}" class="jb-btn jb-btn-outline-primary" target="_blank" title="{{#str}}view{{/str}}">
+                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                <span class="jb-sr-only">{{#str}}view{{/str}}</span>
+                                            </a>
+                                            {{/downloadurl}}
+                                            <a href="{{validateurl}}" class="jb-btn jb-btn-outline-success" title="{{#str}}validate, local_jobboard{{/str}}">
+                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                                <span class="jb-sr-only">{{#str}}validate, local_jobboard{{/str}}</span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {{/documents}}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {{! Bulk Action Panel }}
+                    <div class="jb-card jb-mt-4 jb-bg-light">
+                        <div class="jb-card-header jb-bg-transparent">
+                            <h3 class="jb-fs-6 jb-mb-0">
+                                <i class="fa fa-tasks jb-mr-2" aria-hidden="true"></i>
+                                {{#str}}bulkactions, local_jobboard{{/str}}
+                            </h3>
+                        </div>
+                        <div class="jb-card-body">
+                            <div class="jb-row">
+                                {{! Approve Selected }}
+                                <div class="jb-col-md-6 jb-mb-3 jb-mb-md-0">
+                                    <div class="jb-card jb-border-success jb-h-100">
+                                        <div class="jb-card-body">
+                                            <h4 class="jb-card-title jb-fs-6 jb-text-success">
+                                                <i class="fa fa-check jb-mr-2" aria-hidden="true"></i>
+                                                {{#str}}approveselected, local_jobboard{{/str}}
+                                            </h4>
+                                            <div class="jb-form-group jb-mb-3">
+                                                <label for="notes_approve" class="jb-form-label jb-small jb-text-muted">
+                                                    {{#str}}notes, local_jobboard{{/str}}
+                                                </label>
+                                                <textarea name="notes" id="notes_approve" class="jb-form-control" rows="2" placeholder="{{#str}}optionalnotes, local_jobboard{{/str}}"></textarea>
+                                            </div>
+                                            <button type="submit" name="action" value="validate" class="jb-btn jb-btn-success jb-w-100">
+                                                <i class="fa fa-check jb-mr-2" aria-hidden="true"></i>
+                                                {{#str}}approveselected, local_jobboard{{/str}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{! Reject Selected }}
+                                <div class="jb-col-md-6">
+                                    <div class="jb-card jb-border-danger jb-h-100">
+                                        <div class="jb-card-body">
+                                            <h4 class="jb-card-title jb-fs-6 jb-text-danger">
+                                                <i class="fa fa-times jb-mr-2" aria-hidden="true"></i>
+                                                {{#str}}rejectselected, local_jobboard{{/str}}
+                                            </h4>
+                                            <div class="jb-form-group jb-mb-3">
+                                                <label for="rejectreason" class="jb-form-label jb-small jb-text-muted">
+                                                    {{#str}}rejectreason, local_jobboard{{/str}}
+                                                </label>
+                                                <select name="rejectreason" id="rejectreason" class="jb-form-select">
+                                                    <option value="">{{#str}}selectreason, local_jobboard{{/str}}</option>
+                                                    {{#rejectreasons}}
+                                                    <option value="{{code}}">{{label}}</option>
+                                                    {{/rejectreasons}}
+                                                </select>
+                                            </div>
+                                            <button type="submit" name="action" value="reject" class="jb-btn jb-btn-danger jb-w-100">
+                                                <i class="fa fa-times jb-mr-2" aria-hidden="true"></i>
+                                                {{#str}}rejectselected, local_jobboard{{/str}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                {{! JavaScript for select all }}
+                {{#js}}
+                (function() {
+                    var selectAll = document.getElementById('selectall');
+                    var checkboxes = document.querySelectorAll('.doc-checkbox');
+                    var countDisplay = document.getElementById('selection-count');
+
+                    function updateCount() {
+                        var count = document.querySelectorAll('.doc-checkbox:checked').length;
+                        countDisplay.textContent = count + ' {{#str}}selected{{/str}}';
+                    }
+
+                    selectAll.addEventListener('change', function() {
+                        var self = this;
+                        checkboxes.forEach(function(cb) {
+                            cb.checked = self.checked;
+                        });
+                        updateCount();
+                    });
+
+                    checkboxes.forEach(function(cb) {
+                        cb.addEventListener('change', updateCount);
+                    });
+                })();
+                {{/js}}
+
+                {{/hasdocuments}}
+                {{^hasdocuments}}
+                <div class="jb-empty-state jb-text-center jb-py-4" role="status">
+                    <div class="jb-empty-icon-wrapper jb-d-inline-flex jb-align-items-center jb-justify-content-center jb-rounded-circle jb-bg-light jb-mb-3" style="width: 80px; height: 80px;">
+                        <i class="fa fa-check-circle fa-2x jb-text-success" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="jb-fs-5 jb-text-muted jb-mb-2">{{#str}}nodocumentspending, local_jobboard{{/str}}</h3>
+                    <p class="jb-text-muted jb-mb-0">{{#str}}alldocumentsvalidated, local_jobboard{{/str}}</p>
+                </div>
+                {{/hasdocuments}}
+            </div>
+        </section>
+        {{/hastypeselected}}
+    </main>
 
     {{! Navigation Footer }}
-    <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
-        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
-            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
-                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
-                {{#str}}dashboard, local_jobboard{{/str}}
-            </a>
-            <a href="{{assignreviewerurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
-                <i class="fa fa-user-plus jb-mr-2" aria-hidden="true"></i>
-                {{#str}}assignreviewer, local_jobboard{{/str}}
-            </a>
-            {{#canviewreports}}
-            <a href="{{reportsurl}}" class="jb-btn jb-btn-outline-info jb-m-1">
-                <i class="fa fa-chart-bar jb-mr-2" aria-hidden="true"></i>
-                {{#str}}reports, local_jobboard{{/str}}
-            </a>
-            {{/canviewreports}}
-        </div>
-    </footer>
+    <nav class="jb-navigation-footer jb-d-flex jb-flex-wrap jb-justify-content-center jb-gap-2 jb-mt-4 jb-py-3 jb-border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+            {{#str}}dashboard, local_jobboard{{/str}}
+        </a>
+        <a href="{{assignreviewerurl}}" class="jb-btn jb-btn-outline-primary">
+            <i class="fa fa-user-plus jb-mr-2" aria-hidden="true"></i>
+            {{#str}}assignreviewer, local_jobboard{{/str}}
+        </a>
+        {{#canviewreports}}
+        <a href="{{reportsurl}}" class="jb-btn jb-btn-outline-info">
+            <i class="fa fa-chart-bar jb-mr-2" aria-hidden="true"></i>
+            {{#str}}reports, local_jobboard{{/str}}
+        </a>
+        {{/canviewreports}}
+    </nav>
 </div>
+{{/loading}}

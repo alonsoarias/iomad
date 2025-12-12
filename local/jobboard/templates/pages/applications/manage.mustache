@@ -1,24 +1,26 @@
 {{!
-    @template local_jobboard/pages/manage_applications
+    @template local_jobboard/pages/applications/manage
 
-    Manage applications for a vacancy page.
+    Manage applications for a vacancy page template.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
-    Context variables required for this template:
-    * vacancytitle - string - Vacancy title
-    * vacancyid - int - Vacancy ID
-    * backurl - string - Back to manage URL
-    * reseturl - string - Reset filters URL
-    * stats - array - Status statistics cards
-    * statuses - array - Available statuses for filter
-    * currentstatus - string - Currently selected status filter
-    * currentsearch - string - Current search term
-    * hasapplications - boolean - Whether there are applications
-    * applications - array - List of applications
-    * tableheaders - array - Table column headers
-    * pagination - object - Pagination data
-    * exportcsvurl - string - CSV export URL
-    * exportexcelurl - string - Excel export URL
-    * str - object - Language strings
+    Context variables:
+    * vacancytitle (string) - Vacancy title
+    * vacancyid (number) - Vacancy ID
+    * backurl (string) - Back to manage URL
+    * reseturl (string) - Reset filters URL
+    * stats (array) - Status statistics cards {color, count, label}
+    * statuses (array) - Available statuses for filter
+    * currentstatus (string) - Current status filter
+    * currentsearch (string) - Current search term
+    * hasapplications (bool) - Has applications
+    * applications (array) - List of applications
+    * tableheaders (array) - Table column headers
+    * paginationhtml (string) - Pagination HTML
+    * exportcsvurl (string) - CSV export URL
+    * exportexcelurl (string) - Excel export URL
+    * loading (bool) - Show skeleton loading state
 
     Example context (json):
     {
@@ -27,126 +29,260 @@
         "hasapplications": true
     }
 }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="local-jobboard-manage-applications" aria-busy="true" aria-label="{{#str}}loading, local_jobboard{{/str}}">
+    <div class="jb-skeleton-title jb-mb-3" style="width: 50%;"></div>
+    <div class="jb-skeleton-text jb-mb-4" style="width: 120px;"></div>
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-2">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-2">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-2">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-2">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+    </div>
+    <div class="jb-card">
+        <div class="jb-card-body jb-p-0">
+            {{> local_jobboard/components/table }}
+        </div>
+    </div>
+</div>
+{{/loading}}
 
-<div class="jb-manage-applications" data-region="jobboard-manage-applications">
-    {{! Page Title }}
-    <h2 class="jb-mb-3">
-        {{str.manageapplications}}: {{vacancytitle}}
-    </h2>
+{{^loading}}
+<div class="local-jobboard-manage-applications" data-region="jobboard-manage-applications" data-vacancy-id="{{vacancyid}}">
+    {{! Skip Link for Accessibility }}
+    <a href="#applications-main-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
 
-    {{! Back Link }}
-    <p>
-        <a href="{{backurl}}">
-            <i class="fa fa-arrow-left jb-mr-1"></i>
-            {{str.backtomanage}}
-        </a>
-    </p>
+    {{! Page Header }}
+    <header class="jb-page-header jb-mb-4 jb-fade-in">
+        <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="jb-mb-2">
+            <ol class="jb-breadcrumb jb-small">
+                <li class="jb-breadcrumb-item">
+                    <a href="{{backurl}}">{{#str}}managevacancies, local_jobboard{{/str}}</a>
+                </li>
+                <li class="jb-breadcrumb-item jb-active" aria-current="page">
+                    {{#str}}applications, local_jobboard{{/str}}
+                </li>
+            </ol>
+        </nav>
+        <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-flex-wrap jb-gap-2">
+            <h1 class="jb-fs-3 jb-mb-0">
+                <i class="fa fa-users jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                {{#str}}manageapplications, local_jobboard{{/str}}
+            </h1>
+            <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-sm">
+                <i class="fa fa-arrow-left jb-mr-1" aria-hidden="true"></i>
+                {{#str}}backtomanage, local_jobboard{{/str}}
+            </a>
+        </div>
+        <p class="jb-text-muted jb-mt-2 jb-mb-0">
+            <i class="fa fa-briefcase jb-mr-1" aria-hidden="true"></i>
+            <strong>{{vacancytitle}}</strong>
+        </p>
+    </header>
 
     {{! Stats Cards }}
-    <div class="jb-row jb-mb-4">
+    {{#stats.0}}
+    <section class="jb-row jb-mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         {{#stats}}
-        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-2">
-            <div class="jb-card jb-bg-{{color}} jb-text-white">
-                <div class="jb-card-body jb-text-center">
-                    <h3>{{count}}</h3>
-                    <p class="jb-mb-0">{{label}}</p>
+        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-2 jb-fade-in-up" style="animation-delay: {{animdelay}}s;">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-bg-{{color}} jb-text-white jb-hover-lift">
+                <div class="jb-card-body jb-text-center jb-py-3">
+                    <h2 class="jb-fs-2 jb-mb-1">{{count}}</h2>
+                    <p class="jb-mb-0 jb-small jb-opacity-75">{{label}}</p>
                 </div>
             </div>
         </div>
         {{/stats}}
-    </div>
+    </section>
+    {{/stats.0}}
 
     {{! Filter Form }}
-    <form class="jb-form-inline jb-mb-3" method="get">
-        <input type="hidden" name="vacancyid" value="{{vacancyid}}">
-
-        <div class="jb-form-group jb-mr-2">
-            <label class="jb-sr-only">{{str.search}}</label>
-            <input type="text" name="search" class="jb-form-control"
-                   placeholder="{{str.searchapplicant}}" value="{{currentsearch}}">
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.15s;">
+        <div class="jb-card-body">
+            <form class="jb-filter-form" method="get" role="search" aria-label="{{#str}}filterapplications, local_jobboard{{/str}}">
+                <input type="hidden" name="vacancyid" value="{{vacancyid}}">
+                <div class="jb-row jb-align-items-end">
+                    <div class="jb-col-lg-5 jb-col-md-6 jb-mb-2">
+                        <label class="jb-form-label jb-small jb-text-muted jb-sr-only" for="search">{{#str}}search{{/str}}</label>
+                        <div class="jb-input-group">
+                            <span class="jb-input-group-text jb-bg-white">
+                                <i class="fa fa-search jb-text-muted" aria-hidden="true"></i>
+                            </span>
+                            <input type="text" name="search" id="search" class="jb-form-control"
+                                   placeholder="{{#str}}searchapplicant, local_jobboard{{/str}}" value="{{currentsearch}}">
+                        </div>
+                    </div>
+                    <div class="jb-col-lg-4 jb-col-md-4 jb-mb-2">
+                        <label class="jb-form-label jb-small jb-text-muted" for="status">{{#str}}status, local_jobboard{{/str}}</label>
+                        <select name="status" id="status" class="jb-form-select">
+                            <option value="">{{#str}}allstatuses, local_jobboard{{/str}}</option>
+                            {{#statuses}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/statuses}}
+                        </select>
+                    </div>
+                    <div class="jb-col-lg-3 jb-col-md-2 jb-mb-2">
+                        <div class="jb-btn-group jb-w-100" role="group">
+                            <button type="submit" class="jb-btn jb-btn-primary">
+                                <i class="fa fa-filter jb-mr-1" aria-hidden="true"></i>
+                                {{#str}}filter{{/str}}
+                            </button>
+                            <a href="{{reseturl}}" class="jb-btn jb-btn-outline-secondary">
+                                <i class="fa fa-undo" aria-hidden="true"></i>
+                                <span class="jb-sr-only">{{#str}}reset{{/str}}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
+    </section>
 
-        <div class="jb-form-group jb-mr-2">
-            <select name="status" class="jb-form-control">
-                <option value="">{{str.allstatuses}}</option>
-                {{#statuses}}
-                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                {{/statuses}}
-            </select>
+    {{! Main Content }}
+    <main id="applications-main-content">
+        {{#hasapplications}}
+        {{! Applications Table }}
+        <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="applications-heading" style="animation-delay: 0.2s;">
+            <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+                <h2 class="jb-fs-5 jb-mb-0" id="applications-heading">
+                    <i class="fa fa-list jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}applicationslist, local_jobboard{{/str}}
+                </h2>
+            </div>
+            <div class="jb-card-body jb-p-0">
+                <div class="jb-table-responsive">
+                    <table class="jb-table jb-table-hover jb-mb-0" aria-label="{{#str}}applicationslist, local_jobboard{{/str}}">
+                        <thead class="jb-thead-light">
+                            <tr>
+                                {{#tableheaders}}
+                                <th scope="col">
+                                    {{#sortable}}
+                                    <a href="{{sorturl}}" class="jb-text-dark jb-text-decoration-none">
+                                        {{label}}
+                                        {{{sorticon}}}
+                                    </a>
+                                    {{/sortable}}
+                                    {{^sortable}}
+                                    {{label}}
+                                    {{/sortable}}
+                                </th>
+                                {{/tableheaders}}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#applications}}
+                            <tr data-application-id="{{id}}">
+                                <td>
+                                    <div class="jb-d-flex jb-align-items-center">
+                                        <div class="jb-avatar jb-avatar-sm jb-bg-light jb-rounded-circle jb-mr-2 jb-d-flex jb-align-items-center jb-justify-content-center jb-d-none jb-d-sm-flex" style="width: 36px; height: 36px;">
+                                            <i class="fa fa-user jb-text-muted" aria-hidden="true"></i>
+                                        </div>
+                                        <div>
+                                            <strong class="jb-d-block">{{fullname}}</strong>
+                                            <small class="jb-text-muted">{{email}}</small>
+                                            {{#isexemption}}
+                                            <span class="jb-badge jb-badge-info jb-ml-1">
+                                                <i class="fa fa-shield-alt jb-mr-1" aria-hidden="true"></i>
+                                                {{#str}}exemption, local_jobboard{{/str}}
+                                            </span>
+                                            {{/isexemption}}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <small class="jb-text-muted">{{dateapplied}}</small>
+                                </td>
+                                <td>
+                                    <span class="jb-badge {{statusbadgeclass}} jb-badge-pill">
+                                        {{#statusicon}}<i class="fa fa-{{statusicon}} jb-mr-1" aria-hidden="true"></i>{{/statusicon}}
+                                        {{statuslabel}}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{{docstatushtml}}}
+                                </td>
+                                <td>
+                                    <a href="{{viewurl}}" class="jb-btn jb-btn-sm jb-btn-primary jb-hover-lift">
+                                        <i class="fa fa-eye jb-mr-1" aria-hidden="true"></i>
+                                        {{#str}}view, local_jobboard{{/str}}
+                                    </a>
+                                </td>
+                            </tr>
+                            {{/applications}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {{#paginationhtml}}
+            <div class="jb-card-footer jb-bg-white">
+                <nav aria-label="{{#str}}pagination, local_jobboard{{/str}}">
+                    {{{paginationhtml}}}
+                </nav>
+            </div>
+            {{/paginationhtml}}
+        </section>
+        {{/hasapplications}}
+
+        {{! Empty State }}
+        {{^hasapplications}}
+        <div class="jb-empty-state jb-text-center jb-py-5 jb-fade-in-up" role="status">
+            <div class="jb-empty-icon-wrapper jb-d-inline-flex jb-align-items-center jb-justify-content-center jb-rounded-circle jb-bg-light jb-mb-4" style="width: 100px; height: 100px;">
+                <i class="fa fa-users fa-3x jb-text-muted" aria-hidden="true"></i>
+            </div>
+            <h2 class="jb-fs-4 jb-text-muted jb-mb-2">{{#str}}noapplicationsfound, local_jobboard{{/str}}</h2>
+            <p class="jb-text-muted jb-mb-3">{{#str}}noapplicationsfound_desc, local_jobboard{{/str}}</p>
+            {{#currentsearch}}
+            <a href="{{reseturl}}" class="jb-btn jb-btn-outline-primary">
+                <i class="fa fa-undo jb-mr-2" aria-hidden="true"></i>
+                {{#str}}clearfilters, local_jobboard{{/str}}
+            </a>
+            {{/currentsearch}}
         </div>
+        {{/hasapplications}}
 
-        <button type="submit" class="jb-btn jb-btn-primary jb-mr-2">{{str.filter}}</button>
-        <a href="{{reseturl}}" class="jb-btn jb-btn-secondary">{{str.reset}}</a>
-    </form>
+        {{! Export Section }}
+        {{#hasapplications}}
+        <section class="jb-card jb-card-shadow jb-fade-in-up" aria-labelledby="export-heading" style="animation-delay: 0.25s;">
+            <div class="jb-card-header jb-bg-white">
+                <h2 class="jb-fs-5 jb-mb-0" id="export-heading">
+                    <i class="fa fa-download jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}export, local_jobboard{{/str}}
+                </h2>
+            </div>
+            <div class="jb-card-body">
+                <p class="jb-text-muted jb-small jb-mb-3">{{#str}}exportdesc, local_jobboard{{/str}}</p>
+                <div class="jb-btn-group" role="group" aria-label="{{#str}}exportformats, local_jobboard{{/str}}">
+                    <a href="{{exportcsvurl}}" class="jb-btn jb-btn-outline-success jb-hover-lift">
+                        <i class="fa fa-file-csv jb-mr-2" aria-hidden="true"></i>
+                        {{#str}}exportcsv, local_jobboard{{/str}}
+                    </a>
+                    <a href="{{exportexcelurl}}" class="jb-btn jb-btn-outline-primary jb-hover-lift">
+                        <i class="fa fa-file-excel jb-mr-2" aria-hidden="true"></i>
+                        {{#str}}exportexcel, local_jobboard{{/str}}
+                    </a>
+                </div>
+            </div>
+        </section>
+        {{/hasapplications}}
+    </main>
 
-    {{^hasapplications}}
-    {{! No Applications Message }}
-    <div class="jb-alert jb-alert-info">
-        <i class="fa fa-info-circle jb-mr-2"></i>
-        {{str.noapplicationsfound}}
-    </div>
-    {{/hasapplications}}
-
-    {{#hasapplications}}
-    {{! Applications Table }}
-    <div class="jb-table-responsive">
-        <table class="jb-table jb-table-hover jb-generaltable">
-            <thead class="jb-thead-light">
-                <tr>
-                    {{#tableheaders}}
-                    <th>
-                        {{#sortable}}
-                        <a href="{{sorturl}}">{{label}}</a>{{sorticon}}
-                        {{/sortable}}
-                        {{^sortable}}
-                        {{label}}
-                        {{/sortable}}
-                    </th>
-                    {{/tableheaders}}
-                </tr>
-            </thead>
-            <tbody>
-                {{#applications}}
-                <tr>
-                    <td>
-                        <strong>{{fullname}}</strong>
-                        <br><small class="jb-text-muted">{{email}}</small>
-                        {{#isexemption}}
-                        <br><span class="jb-badge jb-badge-info">{{str.exemption}}</span>
-                        {{/isexemption}}
-                    </td>
-                    <td>{{dateapplied}}</td>
-                    <td>
-                        <span class="jb-badge {{statusbadgeclass}}">{{statuslabel}}</span>
-                    </td>
-                    <td>
-                        {{{docstatushtml}}}
-                    </td>
-                    <td>
-                        <a href="{{viewurl}}" class="jb-btn jb-btn-sm jb-btn-primary">
-                            {{str.view}}
-                        </a>
-                    </td>
-                </tr>
-                {{/applications}}
-            </tbody>
-        </table>
-    </div>
-
-    {{! Pagination }}
-    {{{paginationhtml}}}
-    {{/hasapplications}}
-
-    {{! Export Section }}
-    <div class="jb-mt-4">
-        <h5>{{str.export}}</h5>
-        <a href="{{exportcsvurl}}" class="jb-btn jb-btn-outline-primary jb-mr-2">
-            <i class="fa fa-file-csv jb-mr-1"></i>
-            {{str.exportcsv}}
+    {{! Navigation Footer }}
+    <nav class="jb-navigation-footer jb-d-flex jb-justify-content-between jb-align-items-center jb-mt-4 jb-py-3 jb-border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{#str}}backtomanage, local_jobboard{{/str}}
         </a>
-        <a href="{{exportexcelurl}}" class="jb-btn jb-btn-outline-primary">
-            <i class="fa fa-file-excel jb-mr-1"></i>
-            {{str.exportexcel}}
-        </a>
-    </div>
+    </nav>
 </div>
+{{/loading}}
