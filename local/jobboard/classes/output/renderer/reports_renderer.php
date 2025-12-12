@@ -46,6 +46,145 @@ trait reports_renderer {
     }
 
     /**
+     * Prepare reports page data for template.
+     *
+     * @param string $reporttype Current report type.
+     * @param int $vacancyid Vacancy filter ID.
+     * @param int $datefrom Start date timestamp.
+     * @param int $dateto End date timestamp.
+     * @param array $vacancies Array of vacancy options for filter.
+     * @param \context $context Current context.
+     * @return array Template data.
+     */
+    public function prepare_reports_page_data(
+        string $reporttype,
+        int $vacancyid,
+        int $datefrom,
+        int $dateto,
+        array $vacancies,
+        \context $context
+    ): array {
+        // Base URLs.
+        $baseurl = new \moodle_url('/local/jobboard/index.php', [
+            'view' => 'reports',
+            'report' => $reporttype,
+            'vacancyid' => $vacancyid,
+            'datefrom' => $datefrom,
+            'dateto' => $dateto,
+        ]);
+
+        // Report type tabs.
+        $reporttypes = [
+            'overview' => ['label' => get_string('reportoverview', 'local_jobboard'), 'icon' => 'chart-pie'],
+            'applications' => ['label' => get_string('reportapplications', 'local_jobboard'), 'icon' => 'file-alt'],
+            'documents' => ['label' => get_string('reportdocuments', 'local_jobboard'), 'icon' => 'folder-open'],
+            'reviewers' => ['label' => get_string('reportreviewers', 'local_jobboard'), 'icon' => 'user-check'],
+            'timeline' => ['label' => get_string('reporttimeline', 'local_jobboard'), 'icon' => 'calendar-alt'],
+        ];
+
+        $tabs = [];
+        foreach ($reporttypes as $type => $info) {
+            $tabs[] = [
+                'type' => $type,
+                'label' => $info['label'],
+                'icon' => $info['icon'],
+                'url' => (new \moodle_url('/local/jobboard/index.php', [
+                    'view' => 'reports',
+                    'report' => $type,
+                    'vacancyid' => $vacancyid,
+                    'datefrom' => $datefrom,
+                    'dateto' => $dateto,
+                ]))->out(false),
+                'isactive' => ($reporttype === $type),
+            ];
+        }
+
+        // Export links.
+        $exportlinks = [
+            ['url' => (new \moodle_url($baseurl, ['format' => 'csv']))->out(false), 'label' => 'CSV', 'icon' => 'file-csv', 'color' => 'secondary'],
+            ['url' => (new \moodle_url($baseurl, ['format' => 'excel']))->out(false), 'label' => 'Excel', 'icon' => 'file-excel', 'color' => 'success'],
+            ['url' => (new \moodle_url($baseurl, ['format' => 'pdf']))->out(false), 'label' => 'PDF', 'icon' => 'file-pdf', 'color' => 'danger'],
+        ];
+
+        // Vacancy filter options.
+        $vacancyoptions = [];
+        foreach ($vacancies as $v) {
+            $vacancyoptions[] = [
+                'id' => $v->id,
+                'label' => format_string($v->code . ' - ' . $v->title),
+                'selected' => ($v->id == $vacancyid),
+            ];
+        }
+
+        // Base data.
+        $data = [
+            'pagetitle' => get_string('reports', 'local_jobboard'),
+            'reporttypes' => $tabs,
+            'currentreport' => $reporttype,
+            'filteraction' => (new \moodle_url('/local/jobboard/index.php'))->out(false),
+            'vacancies' => $vacancyoptions,
+            'datefrom' => date('Y-m-d', $datefrom),
+            'dateto' => date('Y-m-d', $dateto),
+            'exportlinks' => $exportlinks,
+            'hasdata' => false,
+            'dashboardurl' => (new \moodle_url('/local/jobboard/index.php'))->out(false),
+            'manageurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'manage']))->out(false),
+            'bulkvalidateurl' => (new \moodle_url('/local/jobboard/bulk_validate.php'))->out(false),
+            'caps' => [
+                'viewallapplications' => has_capability('local/jobboard:viewallapplications', $context),
+                'reviewdocuments' => has_capability('local/jobboard:reviewdocuments', $context),
+            ],
+            // Report type flags.
+            'isoverview' => false,
+            'isapplications' => false,
+            'isdocuments' => false,
+            'isreviewers' => false,
+            'istimeline' => false,
+            // Report data.
+            'overview' => [],
+            'applications' => [],
+            'documents' => [],
+            'reviewers' => [],
+            'timeline' => [],
+        ];
+
+        // Prepare specific report data.
+        switch ($reporttype) {
+            case 'overview':
+                $data['isoverview'] = true;
+                $data['overview'] = $this->prepare_overview_report_data($vacancyid, $datefrom, $dateto);
+                $data['hasdata'] = true;
+                break;
+
+            case 'applications':
+                $data['isapplications'] = true;
+                $data['applications'] = $this->prepare_applications_report_data($vacancyid, $datefrom, $dateto);
+                $data['hasdata'] = !empty($data['applications']['rows']);
+                break;
+
+            case 'documents':
+                $data['isdocuments'] = true;
+                $data['documents'] = $this->prepare_documents_report_data($vacancyid, $datefrom, $dateto);
+                $data['hasdata'] = true;
+                break;
+
+            case 'reviewers':
+                $data['isreviewers'] = true;
+                $data['reviewers'] = $this->prepare_reviewers_report_data($vacancyid, $datefrom, $dateto);
+                $data['hasdata'] = true;
+                break;
+
+            case 'timeline':
+                $data['istimeline'] = true;
+                $data['timeline'] = $this->prepare_timeline_report_data($vacancyid, $datefrom, $dateto);
+                $data['hasdata'] = !empty($data['timeline']['rows']);
+                break;
+        }
+
+        return $data;
+    }
+
+    /**
      * Prepare overview report data.
      *
      * @param int $vacancyid Vacancy filter ID.
