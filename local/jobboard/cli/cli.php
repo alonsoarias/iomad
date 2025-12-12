@@ -518,10 +518,15 @@ if ($createsample) {
     $modalidades = ['PRESENCIAL', 'DISTANCIA', 'VIRTUAL', 'HIBRIDA'];
     $contracttypes = ['CATEDRA', 'OCASIONAL TIEMPO COMPLETO'];
     $sedecount = 0;
+    $sedekeys = array_keys($ISER_SEDES);
+    $totalsedes = count($sedekeys);
 
     foreach ($ISER_SEDES as $sedekey => $sedeinfo) {
         $sedecount++;
         $vacnum = 0;
+
+        // Distribute sedes between 2 convocatorias: first half → closed, second half → open.
+        $convocatoriaindex = ($sedecount <= ceil($totalsedes / 2)) ? 0 : 1;
 
         // Generate 4 vacancies per sede (1 per modalidad, rotating programs).
         $allprograms = [];
@@ -552,6 +557,7 @@ if ($createsample) {
                 'location' => $sedekey,
                 'modality' => $modality,
                 'contracttype' => $contracttype,
+                'convocatoria_index' => $convocatoriaindex,
             ];
 
             $parsestats['profiles']++;
@@ -562,7 +568,8 @@ if ($createsample) {
         }
 
         if ($verbose) {
-            echo "  {$sedeinfo['name']}: 4 vacancies generated\n";
+            $convlabel = $convocatoriaindex === 0 ? 'Conv. Cerrada' : 'Conv. Abierta';
+            echo "  {$sedeinfo['name']}: 4 vacancies ({$convlabel})\n";
         }
     }
 
@@ -571,6 +578,9 @@ if ($createsample) {
     echo "  Total vacancies: {$parsestats['profiles']}\n";
     echo "    - FCAS: {$parsestats['fcas']}\n";
     echo "    - FII: {$parsestats['fii']}\n";
+    echo "  Distribution:\n";
+    echo "    - Convocatoria Cerrada: " . (ceil($totalsedes / 2) * 4) . " vacancies\n";
+    echo "    - Convocatoria Abierta: " . (floor($totalsedes / 2) * 4) . " vacancies\n";
     echo "\n  By location:\n";
     foreach ($locationstats as $loc => $cnt) {
         echo "    - $loc: $cnt\n";
@@ -868,18 +878,85 @@ if ($options['create-structure']) {
 }
 
 // ============================================================
-// PHASE 4: CREATE CONVOCATORIA
+// PHASE 4: CREATE CONVOCATORIA(S)
 // ============================================================
 
 $convocatoriaid = !empty($options['convocatoria']) ? (int) $options['convocatoria'] : null;
+$convocatoriaids = []; // Array for multiple convocatorias when using --create-sample.
 
 if ($shouldpublish && empty($convocatoriaid)) {
-    cli_heading('Phase 4: Creating Convocatoria');
+    cli_heading('Phase 4: Creating Convocatoria(s)');
 
     $year = date('Y');
     $semester = ceil(date('n') / 6);
-    $convcode = $options['convocatoria-code'] ?: "CONV-ISER-{$year}-{$semester}";
-    $convname = $options['convocatoria-name'] ?: "Convocatoria Docentes Ocasionales y Cátedra ISER {$year}-{$semester}";
+
+    // When --create-sample, create 2 convocatorias: one closed, one open.
+    if ($createsample) {
+        $adminuser = get_admin();
+
+        // Convocatoria 1: CERRADA (dates in the past).
+        $closedcode = "CONV-ISER-{$year}-" . ($semester - 1 > 0 ? $semester - 1 : 1) . "-CLOSED";
+        $closedname = "Convocatoria Docentes ISER {$year}-" . ($semester - 1 > 0 ? $semester - 1 : 1) . " (Cerrada)";
+
+        $existingclosed = $DB->get_record('local_jobboard_convocatoria', ['code' => $closedcode]);
+        if ($existingclosed) {
+            echo "Using existing CLOSED convocatoria: $closedcode (ID: {$existingclosed->id})\n";
+            $convocatoriaids[0] = $existingclosed->id;
+        } else if (!$dryrun) {
+            $closedstart = strtotime('-60 days');
+            $closedend = strtotime('-10 days');
+
+            $closedconv = new stdClass();
+            $closedconv->code = $closedcode;
+            $closedconv->name = $closedname;
+            $closedconv->description = "<div class='alert alert-warning'><strong>Esta convocatoria ha finalizado.</strong></div><p>Convocatoria para docentes ocasionales y de cátedra del semestre anterior.</p>";
+            $closedconv->startdate = $closedstart;
+            $closedconv->enddate = $closedend;
+            $closedconv->status = 'closed';
+            $closedconv->publicationtype = $options['public'] ? 'public' : 'internal';
+            $closedconv->createdby = $adminuser->id;
+            $closedconv->timecreated = $now;
+
+            $convocatoriaids[0] = $DB->insert_record('local_jobboard_convocatoria', $closedconv);
+            echo "Created CLOSED convocatoria: $closedname\n";
+            echo "  Code: $closedcode | ID: {$convocatoriaids[0]}\n";
+            echo "  Period: " . date('Y-m-d', $closedstart) . " to " . date('Y-m-d', $closedend) . " (PAST)\n";
+        }
+
+        // Convocatoria 2: ABIERTA (current dates).
+        $opencode = "CONV-ISER-{$year}-{$semester}-OPEN";
+        $openname = "Convocatoria Docentes ISER {$year}-{$semester} (Abierta)";
+
+        $existingopen = $DB->get_record('local_jobboard_convocatoria', ['code' => $opencode]);
+        if ($existingopen) {
+            echo "Using existing OPEN convocatoria: $opencode (ID: {$existingopen->id})\n";
+            $convocatoriaids[1] = $existingopen->id;
+        } else if (!$dryrun) {
+            $openstart = $now;
+            $openend = strtotime('+60 days');
+
+            $openconv = new stdClass();
+            $openconv->code = $opencode;
+            $openconv->name = $openname;
+            $openconv->description = "<div class='alert alert-success'><strong>¡Convocatoria abierta!</strong> Postúlate ahora.</div><p>Convocatoria para docentes ocasionales y de cátedra del semestre actual.</p>";
+            $openconv->startdate = $openstart;
+            $openconv->enddate = $openend;
+            $openconv->status = 'open';
+            $openconv->publicationtype = $options['public'] ? 'public' : 'internal';
+            $openconv->createdby = $adminuser->id;
+            $openconv->timecreated = $now;
+
+            $convocatoriaids[1] = $DB->insert_record('local_jobboard_convocatoria', $openconv);
+            echo "Created OPEN convocatoria: $openname\n";
+            echo "  Code: $opencode | ID: {$convocatoriaids[1]}\n";
+            echo "  Period: " . date('Y-m-d', $openstart) . " to " . date('Y-m-d', $openend) . " (CURRENT)\n";
+        }
+
+        echo "\nConvocatorias ready: " . count($convocatoriaids) . "\n";
+    } else {
+        // Normal mode: create single convocatoria.
+        $convcode = $options['convocatoria-code'] ?: "CONV-ISER-{$year}-{$semester}";
+        $convname = $options['convocatoria-name'] ?: "Convocatoria Docentes Ocasionales y Cátedra ISER {$year}-{$semester}";
 
     // Check if exists.
     $existingconv = $DB->get_record('local_jobboard_convocatoria', ['code' => $convcode]);
@@ -1124,6 +1201,7 @@ HTML;
         echo "DRY RUN: Would create convocatoria '$convname'\n";
         $convocatoriaid = 0;
     }
+    } // End of normal mode (else branch of $createsample).
 } else if (!empty($convocatoriaid)) {
     $existingconv = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
     if (!$existingconv) {
@@ -1363,7 +1441,13 @@ foreach ($allprofiles as $code => $profile) {
     }
 
     // Convocatoria (dates are inherited from convocatoria).
-    $record->convocatoriaid = $convocatoriaid;
+    // When --create-sample, use convocatoria_index to assign to correct convocatoria.
+    if ($createsample && !empty($convocatoriaids) && isset($profile['convocatoria_index'])) {
+        $cidx = $profile['convocatoria_index'];
+        $record->convocatoriaid = $convocatoriaids[$cidx] ?? $convocatoriaids[1] ?? null;
+    } else {
+        $record->convocatoriaid = $convocatoriaid;
+    }
 
     // Number of positions - always 1 per vacancy (each profile = 1 position).
     // Multiple profiles don't mean multiple positions per vacancy.
