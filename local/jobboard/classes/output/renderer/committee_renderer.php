@@ -595,4 +595,255 @@ trait committee_renderer {
             ],
         ];
     }
+
+    /**
+     * Prepare committee list view data.
+     *
+     * @param moodle_url $pageurl Base page URL.
+     * @param array $companies Available companies.
+     * @return array Template data.
+     */
+    protected function prepare_committee_list_data(moodle_url $pageurl, array $companies): array {
+        global $DB;
+
+        // Get all committees.
+        $sql = "SELECT c.*, comp.name as company_name, comp.shortname as company_shortname,
+                       v.code as vacancy_code, v.title as vacancy_title,
+                       (SELECT COUNT(*) FROM {local_jobboard_committee_member} WHERE committeeid = c.id) as membercount
+                  FROM {local_jobboard_committee} c
+             LEFT JOIN {company} comp ON comp.id = c.companyid
+             LEFT JOIN {local_jobboard_vacancy} v ON v.id = c.vacancyid
+                 ORDER BY comp.name, c.timecreated DESC";
+        $committees = $DB->get_records_sql($sql);
+
+        $committeesdata = [];
+        foreach ($committees as $comm) {
+            if (!empty($comm->companyid)) {
+                $linkparams = ['companyid' => $comm->companyid];
+                $entityname = format_string($comm->company_name ?: $comm->company_shortname);
+            } else {
+                $linkparams = ['vacancyid' => $comm->vacancyid];
+                $entityname = format_string($comm->vacancy_code . ' - ' . $comm->vacancy_title);
+            }
+
+            $committeesdata[] = [
+                'id' => $comm->id,
+                'name' => format_string($comm->name),
+                'entityname' => $entityname,
+                'membercount' => (int) $comm->membercount,
+                'status' => $comm->status,
+                'isactive' => ($comm->status === 'active'),
+                'manageurl' => (new moodle_url($pageurl, $linkparams))->out(false),
+            ];
+        }
+
+        // Companies without committees.
+        $companieswithout = [];
+        foreach ($companies as $c) {
+            if (!$DB->record_exists('local_jobboard_committee', ['companyid' => $c->id])) {
+                $companieswithout[] = [
+                    'id' => $c->id,
+                    'name' => format_string($c->name),
+                    'createurl' => (new moodle_url($pageurl, ['companyid' => $c->id]))->out(false),
+                ];
+            }
+        }
+
+        return [
+            'committees' => $committeesdata,
+            'hascommittees' => !empty($committeesdata),
+            'companieswithoutcommittee' => $companieswithout,
+            'hascompanieswithoutcommittee' => !empty($companieswithout),
+        ];
+    }
+
+    /**
+     * Prepare committee company view data.
+     *
+     * @param int $companyid Company ID.
+     * @param moodle_url $pageurl Base page URL.
+     * @param array $memberroles Role definitions.
+     * @param string $usersearch User search string.
+     * @return array Template data.
+     */
+    protected function prepare_committee_company_data(
+        int $companyid,
+        moodle_url $pageurl,
+        array $memberroles,
+        string $usersearch
+    ): array {
+        global $DB;
+
+        $company = $DB->get_record('company', ['id' => $companyid], '*', MUST_EXIST);
+        $vacancycount = $DB->count_records('local_jobboard_vacancy', ['companyid' => $companyid]);
+        $existingcommittee = \local_jobboard\committee::get_for_company($companyid);
+
+        $data = [
+            'company' => [
+                'id' => $company->id,
+                'name' => format_string($company->name),
+                'vacancycount' => $vacancycount,
+            ],
+            'hasexistingcommittee' => !empty($existingcommittee),
+            'createformurl' => $pageurl->out(false),
+            'addmemberformurl' => $pageurl->out(false),
+            'defaultcommitteename' => get_string('facultycommitteedefaultname', 'local_jobboard', format_string($company->name)),
+        ];
+
+        // Get existing member IDs.
+        $existingmemberids = [0];
+        if ($existingcommittee && !empty($existingcommittee->members)) {
+            $existingmemberids = array_column((array) $existingcommittee->members, 'userid');
+            if (empty($existingmemberids)) {
+                $existingmemberids = [0];
+            }
+        }
+
+        // Get available users.
+        $searchsql = '';
+        $searchparams = [];
+        if (!empty($usersearch)) {
+            $searchsql = " AND (u.firstname LIKE :search1 OR u.lastname LIKE :search2
+                           OR u.email LIKE :search3 OR u.username LIKE :search4)";
+            $searchparams = [
+                'search1' => '%' . $usersearch . '%',
+                'search2' => '%' . $usersearch . '%',
+                'search3' => '%' . $usersearch . '%',
+                'search4' => '%' . $usersearch . '%',
+            ];
+        }
+
+        $sql = "SELECT u.id, u.firstname, u.lastname, u.email, u.username
+                  FROM {user} u
+                 WHERE u.deleted = 0
+                   AND u.suspended = 0
+                   AND u.id NOT IN (" . implode(',', $existingmemberids) . ")
+                   AND u.id > 1
+                   $searchsql
+                 ORDER BY u.lastname, u.firstname
+                 LIMIT 200";
+        $availableusers = $DB->get_records_sql($sql, $searchparams);
+
+        $usersdata = [];
+        foreach ($availableusers as $user) {
+            $usersdata[] = [
+                'id' => $user->id,
+                'fullname' => fullname($user),
+                'username' => $user->username,
+                'email' => $user->email,
+            ];
+        }
+        $data['availableusers'] = $usersdata;
+        $data['hasavailableusers'] = !empty($usersdata);
+
+        if ($existingcommittee) {
+            // Prepare committee data.
+            $membersdata = [];
+            foreach ($existingcommittee->members as $member) {
+                $roledef = $memberroles[$member->role] ?? $memberroles[\local_jobboard\committee::ROLE_EVALUATOR];
+
+                // Available roles for change (exclude current).
+                $availableroles = [];
+                foreach ($memberroles as $rolecode => $roleinfo) {
+                    if ($rolecode !== $member->role) {
+                        $availableroles[] = [
+                            'code' => $rolecode,
+                            'name' => $roleinfo['name'],
+                            'changeurl' => (new moodle_url($pageurl, [
+                                'action' => 'changerole',
+                                'id' => $existingcommittee->id,
+                                'userid' => $member->userid,
+                                'newrole' => $rolecode,
+                                'sesskey' => sesskey(),
+                            ]))->out(false),
+                        ];
+                    }
+                }
+
+                $membersdata[] = [
+                    'userid' => $member->userid,
+                    'fullname' => fullname($member),
+                    'username' => $member->username,
+                    'email' => $member->email,
+                    'role' => $member->role,
+                    'rolename' => $roledef['name'],
+                    'roleicon' => $roledef['icon'],
+                    'rolecolor' => $roledef['color'],
+                    'availableroles' => $availableroles,
+                    'removeurl' => (new moodle_url($pageurl, [
+                        'action' => 'removemember',
+                        'id' => $existingcommittee->id,
+                        'userid' => $member->userid,
+                        'sesskey' => sesskey(),
+                    ]))->out(false),
+                ];
+            }
+
+            $data['existingcommittee'] = [
+                'id' => $existingcommittee->id,
+                'name' => format_string($existingcommittee->name),
+                'membercount' => count($existingcommittee->members),
+                'members' => $membersdata,
+                'hasmembers' => !empty($membersdata),
+            ];
+
+            // Faculty vacancies.
+            $facultyvacancies = $DB->get_records('local_jobboard_vacancy',
+                ['companyid' => $companyid, 'status' => 'published'],
+                'code ASC', 'id, code, title, status');
+
+            $vacanciesdata = [];
+            foreach ($facultyvacancies as $v) {
+                $vacanciesdata[] = [
+                    'id' => $v->id,
+                    'code' => $v->code,
+                    'title' => format_string($v->title),
+                    'status' => $v->status,
+                    'statuslabel' => get_string('status:' . $v->status, 'local_jobboard'),
+                    'statuscolor' => $this->get_status_class($v->status),
+                ];
+            }
+            $data['facultyvacancies'] = $vacanciesdata;
+            $data['hasfacultyvacancies'] = !empty($vacanciesdata);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Prepare committee vacancy view data (legacy).
+     *
+     * @param int $vacancyid Vacancy ID.
+     * @param moodle_url $pageurl Base page URL.
+     * @return array Template data.
+     */
+    protected function prepare_committee_vacancy_data(int $vacancyid, moodle_url $pageurl): array {
+        global $DB;
+
+        $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid], '*', MUST_EXIST);
+        $existingcommittee = \local_jobboard\committee::get_for_vacancy($vacancyid);
+
+        $data = [
+            'vacancy' => [
+                'id' => $vacancy->id,
+                'code' => $vacancy->code,
+                'title' => format_string($vacancy->title),
+                'status' => $vacancy->status,
+                'statuslabel' => get_string('status:' . $vacancy->status, 'local_jobboard'),
+                'statuscolor' => $this->get_status_class($vacancy->status),
+                'companyid' => $vacancy->companyid,
+            ],
+            'hasexistingcommittee' => !empty($existingcommittee),
+        ];
+
+        if ($existingcommittee) {
+            $data['existingcommittee'] = [
+                'id' => $existingcommittee->id,
+                'name' => format_string($existingcommittee->name),
+                'membercount' => count($existingcommittee->members),
+            ];
+        }
+
+        return $data;
+    }
 }

@@ -5,6 +5,43 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.2] - 2025-12-12
+
+### Added
+- **New Reports Renderer Trait** (`reports_renderer.php`):
+  - Created dedicated trait for reporting functionality
+  - Contains 6 methods: `prepare_overview_report_data`, `prepare_applications_report_data`,
+    `prepare_documents_report_data`, `prepare_reviewers_report_data`, `prepare_timeline_report_data`,
+    `get_application_status_color`
+  - Added `render_reports_page` method
+
+### Changed
+- **Final Renderer Modularization**:
+  - `renderer.php` reduced from 1,123 lines to **86 lines** (now only trait includes)
+  - Moved 3 review methods to `review_renderer.php`:
+    - `prepare_review_list_data`
+    - `prepare_review_single_application_data`
+    - `get_validation_checklist`
+  - Moved 3 committee methods to `committee_renderer.php`:
+    - `prepare_committee_list_data`
+    - `prepare_committee_company_data`
+    - `prepare_committee_vacancy_data`
+
+### Technical Notes
+- Total 10 renderer traits now fully contain all rendering logic
+- `renderer.php` is now a clean shell that only imports and uses traits
+- Trait file sizes (approximate):
+  - `review_renderer.php`: ~1,070 lines
+  - `committee_renderer.php`: ~850 lines
+  - `vacancy_renderer.php`: ~1,100 lines
+  - `admin_renderer.php`: ~1,035 lines
+  - `dashboard_renderer.php`: ~789 lines
+  - `convocatoria_renderer.php`: ~728 lines
+  - `public_renderer.php`: ~702 lines
+  - `application_renderer.php`: ~671 lines
+  - `exemption_renderer.php`: ~504 lines
+  - `reports_renderer.php`: ~315 lines
+
 ## [3.6.1] - 2025-12-12
 
 ### Changed

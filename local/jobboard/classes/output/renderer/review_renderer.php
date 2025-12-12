@@ -636,4 +636,435 @@ trait review_renderer {
             'formhtml' => $formhtml,
         ];
     }
+
+    /**
+     * Prepare review list page data.
+     *
+     * @param array $data Base template data.
+     * @param array $params View parameters.
+     * @param int $total Total applications count.
+     * @param array $applications Applications array.
+     * @param array $queuestats Queue statistics.
+     * @param \context $context Current context.
+     * @return array Template data.
+     */
+    protected function prepare_review_list_data(
+        array $data,
+        array $params,
+        int $total,
+        array $applications,
+        array $queuestats,
+        \context $context
+    ): array {
+        global $DB, $OUTPUT;
+
+        $vacancyid = $params['vacancyid'] ?? 0;
+        $page = $params['page'] ?? 0;
+        $perpage = $params['perpage'] ?? 20;
+
+        // Stats cards.
+        $data['stats'] = [
+            [
+                'value' => (string) ($queuestats['total'] ?? 0),
+                'label' => get_string('pendingreview', 'local_jobboard'),
+                'color' => 'primary',
+                'icon' => 'file-alt',
+            ],
+            [
+                'value' => (string) ($queuestats['pending'] ?? 0),
+                'label' => get_string('pendingdocuments', 'local_jobboard'),
+                'color' => 'warning',
+                'icon' => 'clock',
+            ],
+            [
+                'value' => (string) ($queuestats['urgent'] ?? 0),
+                'label' => get_string('urgent', 'local_jobboard'),
+                'color' => 'danger',
+                'icon' => 'exclamation-triangle',
+            ],
+        ];
+
+        // Filter form.
+        $vacancies = $DB->get_records('local_jobboard_vacancy', ['status' => 'published'], 'code ASC', 'id, code, title');
+        $vacancyoptions = [['value' => 0, 'label' => get_string('allvacancies', 'local_jobboard'), 'selected' => ($vacancyid == 0)]];
+        foreach ($vacancies as $v) {
+            $vacancyoptions[] = [
+                'value' => $v->id,
+                'label' => format_string($v->code) . ' - ' . format_string($v->title),
+                'selected' => ($vacancyid == $v->id),
+            ];
+        }
+
+        $data['filterform'] = [
+            'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'hiddenfields' => [
+                ['name' => 'view', 'value' => 'review'],
+            ],
+            'fields' => [
+                [
+                    'name' => 'vacancyid',
+                    'options' => $vacancyoptions,
+                ],
+            ],
+        ];
+
+        // Applications list.
+        $appsdata = [];
+        foreach ($applications as $app) {
+            $isurgent = !empty($app->closedate) && ($app->closedate - time()) <= 7 * 86400;
+            $haspendingdocs = (int) ($app->pendingcount ?? 0) > 0;
+
+            $appsdata[] = [
+                'id' => $app->id,
+                'applicantname' => fullname($app),
+                'email' => $app->email,
+                'vacancycode' => format_string($app->vacancy_code ?? ''),
+                'vacancytitle' => format_string($app->vacancy_title ?? ''),
+                'statuslabel' => get_string('status_' . $app->status, 'local_jobboard'),
+                'doccount' => (int) ($app->doccount ?? 0),
+                'pendingcount' => (int) ($app->pendingcount ?? 0),
+                'datesubmitted' => userdate($app->timecreated, get_string('strftimedate', 'langconfig')),
+                'isurgent' => $isurgent,
+                'haspendingdocs' => $haspendingdocs,
+                'reviewurl' => (new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'review',
+                    'applicationid' => $app->id,
+                ]))->out(false),
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'application',
+                    'id' => $app->id,
+                ]))->out(false),
+            ];
+        }
+
+        $data['hasapplications'] = !empty($appsdata);
+        $data['applications'] = $appsdata;
+
+        // Pagination.
+        if ($total > $perpage) {
+            $baseurl = new moodle_url('/local/jobboard/index.php', [
+                'view' => 'review',
+                'vacancyid' => $vacancyid,
+            ]);
+            $data['pagination'] = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Prepare single application review data.
+     *
+     * @param array $data Base template data.
+     * @param array $params View parameters.
+     * @param object $application Application object.
+     * @param object $vacancy Vacancy object.
+     * @param object $applicant User object.
+     * @param array $documents Documents array.
+     * @param array $navdata Navigation data.
+     * @return array Template data.
+     */
+    protected function prepare_review_single_application_data(
+        array $data,
+        array $params,
+        object $application,
+        object $vacancy,
+        object $applicant,
+        array $documents,
+        array $navdata
+    ): array {
+        global $DB;
+
+        $vacancyid = $params['vacancyid'] ?? 0;
+        $applicationid = $application->id;
+
+        // Update page title.
+        $data['pagetitle'] = get_string('reviewapplication', 'local_jobboard');
+
+        // Update breadcrumbs.
+        $data['breadcrumbs'][] = [
+            'label' => fullname($applicant),
+            'url' => null,
+            'active' => true,
+        ];
+
+        // Header actions for single view.
+        $data['headeractions'] = [
+            [
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancyid]))->out(false),
+                'label' => get_string('back'),
+                'icon' => 'arrow-left',
+                'class' => 'outline-secondary',
+            ],
+        ];
+
+        // Count document statuses.
+        $docstats = ['pending' => 0, 'approved' => 0, 'rejected' => 0];
+        foreach ($documents as $doc) {
+            $status = $doc->status ?? 'pending';
+            if (isset($docstats[$status])) {
+                $docstats[$status]++;
+            }
+        }
+        $totaldocs = count($documents);
+
+        // Navigation.
+        $previd = $navdata['previd'] ?? null;
+        $nextid = $navdata['nextid'] ?? null;
+        $navposition = $navdata['navposition'] ?? 0;
+        $navtotal = $navdata['navtotal'] ?? 0;
+
+        $shownav = $navtotal > 1;
+        $prevurl = $previd ? (new moodle_url('/local/jobboard/index.php', [
+            'view' => 'review',
+            'applicationid' => $previd,
+            'vacancyid' => $vacancyid,
+        ]))->out(false) : null;
+
+        $nexturl = $nextid ? (new moodle_url('/local/jobboard/index.php', [
+            'view' => 'review',
+            'applicationid' => $nextid,
+            'vacancyid' => $vacancyid,
+        ]))->out(false) : null;
+
+        // Prepare documents.
+        $docsdata = [];
+        foreach ($documents as $doc) {
+            $status = $doc->status ?? 'pending';
+            $statusconfig = [
+                'pending' => ['icon' => 'clock', 'color' => 'warning'],
+                'approved' => ['icon' => 'check-circle', 'color' => 'success'],
+                'rejected' => ['icon' => 'times-circle', 'color' => 'danger'],
+            ];
+            $config = $statusconfig[$status] ?? $statusconfig['pending'];
+
+            $downloadurl = null;
+            if (method_exists($doc, 'get_download_url')) {
+                $downloadurl = $doc->get_download_url();
+            }
+
+            $typename = method_exists($doc, 'get_doctype_name') ? $doc->get_doctype_name() : ($doc->typename ?? 'Document');
+
+            $reviewedby = null;
+            $reviewedat = null;
+            if (!empty($doc->reviewerid) && $status !== 'pending') {
+                $reviewer = $DB->get_record('user', ['id' => $doc->reviewerid]);
+                if ($reviewer) {
+                    $reviewedby = fullname($reviewer);
+                    $reviewedat = !empty($doc->reviewedat) ? userdate($doc->reviewedat, get_string('strftimedatetime', 'langconfig')) : '';
+                }
+            }
+
+            $docsdata[] = [
+                'id' => $doc->id,
+                'typename' => format_string($typename),
+                'filename' => format_string($doc->filename ?? ''),
+                'status' => $status,
+                'statuslabel' => get_string('docstatus:' . $status, 'local_jobboard'),
+                'statusicon' => $config['icon'],
+                'statuscolor' => $config['color'],
+                'ispending' => ($status === 'pending'),
+                'downloadurl' => $downloadurl,
+                'validateurl' => (new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'review',
+                    'applicationid' => $applicationid,
+                    'documentid' => $doc->id,
+                    'action' => 'validate',
+                    'sesskey' => sesskey(),
+                ]))->out(false),
+                'rejecturl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+                'rejectreason' => $doc->rejectreason ?? null,
+                'reviewedby' => $reviewedby,
+                'reviewedat' => $reviewedat,
+                'sesskey' => sesskey(),
+            ];
+        }
+
+        // Application status class.
+        $appstatusclass = 'secondary';
+        $appstatus = $application->status ?? 'draft';
+        if (in_array($appstatus, ['docs_validated', 'selected'])) {
+            $appstatusclass = 'success';
+        } else if (in_array($appstatus, ['docs_rejected', 'rejected'])) {
+            $appstatusclass = 'danger';
+        } else if ($appstatus === 'under_review') {
+            $appstatusclass = 'warning';
+        } else if ($appstatus === 'submitted') {
+            $appstatusclass = 'info';
+        }
+
+        // Progress percentages.
+        $approvedpercent = $totaldocs > 0 ? round(($docstats['approved'] / $totaldocs) * 100) : 0;
+        $rejectedpercent = $totaldocs > 0 ? round(($docstats['rejected'] / $totaldocs) * 100) : 0;
+
+        // All reviewed?
+        $allreviewed = ($docstats['pending'] === 0 && $totaldocs > 0);
+        $haspending = ($docstats['pending'] > 0);
+
+        // Complete button color.
+        $completebtncolor = ($docstats['rejected'] > 0) ? 'warning' : 'success';
+
+        // Stats for single application.
+        $data['stats'] = [
+            [
+                'value' => (string) $totaldocs,
+                'label' => get_string('documents', 'local_jobboard'),
+                'color' => 'primary',
+                'icon' => 'file-alt',
+            ],
+            [
+                'value' => (string) $docstats['approved'],
+                'label' => get_string('docstatus:approved', 'local_jobboard'),
+                'color' => 'success',
+                'icon' => 'check-circle',
+            ],
+            [
+                'value' => (string) $docstats['rejected'],
+                'label' => get_string('docstatus:rejected', 'local_jobboard'),
+                'color' => 'danger',
+                'icon' => 'times-circle',
+            ],
+            [
+                'value' => (string) $docstats['pending'],
+                'label' => get_string('docstatus:pending', 'local_jobboard'),
+                'color' => 'warning',
+                'icon' => 'clock',
+            ],
+        ];
+
+        $data['selectedapplication'] = [
+            'id' => $applicationid,
+            'applicantname' => fullname($applicant),
+            'email' => $applicant->email,
+            'dateapplied' => userdate($application->timecreated, get_string('strftimedate', 'langconfig')),
+            'vacancycode' => format_string($vacancy->code ?? ''),
+            'vacancytitle' => format_string($vacancy->title ?? ''),
+            'status' => $appstatus,
+            'statuslabel' => get_string('status_' . $appstatus, 'local_jobboard'),
+            'statuscolor' => $appstatusclass,
+        ];
+
+        $data['hasdocuments'] = !empty($docsdata);
+        $data['documents'] = $docsdata;
+
+        $data['shownav'] = $shownav;
+        $data['prevurl'] = $prevurl;
+        $data['nexturl'] = $nexturl;
+        $data['navposition'] = $navposition;
+        $data['navtotal'] = $navtotal;
+
+        $data['approvedcount'] = $docstats['approved'];
+        $data['rejectedcount'] = $docstats['rejected'];
+        $data['pendingcount'] = $docstats['pending'];
+        $data['approvedpercent'] = $approvedpercent;
+        $data['rejectedpercent'] = $rejectedpercent;
+
+        $data['allreviewed'] = $allreviewed;
+        $data['haspending'] = $haspending;
+        $data['completebtncolor'] = $completebtncolor;
+
+        $data['canvalidateall'] = ($docstats['pending'] > 0);
+        $data['validateallurl'] = (new moodle_url('/local/jobboard/index.php', [
+            'view' => 'review',
+            'applicationid' => $applicationid,
+            'action' => 'validateall',
+            'sesskey' => sesskey(),
+        ]))->out(false);
+
+        $data['submitreviewurl'] = (new moodle_url('/local/jobboard/index.php'))->out(false);
+        $data['sesskey'] = sesskey();
+
+        $data['backurl'] = (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancyid]))->out(false);
+
+        return $data;
+    }
+
+    /**
+     * Get validation checklist items for a document type.
+     *
+     * @param string $doctype Document type code.
+     * @return array Checklist items.
+     */
+    protected function get_validation_checklist(string $doctype): array {
+        $common = [
+            get_string('checklist_legible', 'local_jobboard'),
+            get_string('checklist_complete', 'local_jobboard'),
+            get_string('checklist_namematch', 'local_jobboard'),
+        ];
+
+        $specific = [];
+        switch ($doctype) {
+            case 'cedula':
+                $specific = [
+                    get_string('checklist_cedula_number', 'local_jobboard'),
+                    get_string('checklist_cedula_photo', 'local_jobboard'),
+                ];
+                break;
+            case 'antecedentes_procuraduria':
+            case 'antecedentes_contraloria':
+            case 'antecedentes_policia':
+            case 'rnmc':
+            case 'sijin':
+                $specific = [
+                    get_string('checklist_background_date', 'local_jobboard'),
+                    get_string('checklist_background_status', 'local_jobboard'),
+                ];
+                break;
+            case 'titulo_pregrado':
+            case 'titulo_postgrado':
+            case 'titulo_especializacion':
+            case 'titulo_maestria':
+            case 'titulo_doctorado':
+                $specific = [
+                    get_string('checklist_title_institution', 'local_jobboard'),
+                    get_string('checklist_title_date', 'local_jobboard'),
+                    get_string('checklist_title_program', 'local_jobboard'),
+                ];
+                break;
+            case 'acta_grado':
+                $specific = [
+                    get_string('checklist_acta_number', 'local_jobboard'),
+                    get_string('checklist_acta_date', 'local_jobboard'),
+                ];
+                break;
+            case 'tarjeta_profesional':
+                $specific = [
+                    get_string('checklist_tarjeta_number', 'local_jobboard'),
+                    get_string('checklist_tarjeta_profession', 'local_jobboard'),
+                ];
+                break;
+            case 'rut':
+                $specific = [
+                    get_string('checklist_rut_nit', 'local_jobboard'),
+                    get_string('checklist_rut_updated', 'local_jobboard'),
+                ];
+                break;
+            case 'eps':
+                $specific = [
+                    get_string('checklist_eps_active', 'local_jobboard'),
+                    get_string('checklist_eps_entity', 'local_jobboard'),
+                ];
+                break;
+            case 'pension':
+                $specific = [
+                    get_string('checklist_pension_fund', 'local_jobboard'),
+                    get_string('checklist_pension_active', 'local_jobboard'),
+                ];
+                break;
+            case 'certificado_medico':
+                $specific = [
+                    get_string('checklist_medical_date', 'local_jobboard'),
+                    get_string('checklist_medical_aptitude', 'local_jobboard'),
+                ];
+                break;
+            case 'libreta_militar':
+                $specific = [
+                    get_string('checklist_military_class', 'local_jobboard'),
+                    get_string('checklist_military_number', 'local_jobboard'),
+                ];
+                break;
+        }
+
+        return array_merge($common, $specific);
+    }
 }
