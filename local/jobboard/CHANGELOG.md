@@ -5,6 +5,31 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.11] - 2025-12-12
+
+### Fixed
+- **Missing CSS Classes**: Added ~300 lines of missing CSS class definitions to styles.css
+  - Background color variants (jb-bg-primary, jb-bg-success, etc.)
+  - Text color variants (jb-text-primary, jb-text-muted, etc.)
+  - Border color variants (jb-border-primary, jb-border-left, etc.)
+  - Button variants (jb-btn-primary through jb-btn-dark)
+  - Button outline variants (jb-btn-outline-primary through jb-btn-outline-dark)
+  - Button group styles (jb-btn-group, jb-btn-group-vertical)
+  - Badge variants (jb-badge-primary through jb-badge-dark)
+  - Alert variants (jb-alert-primary through jb-alert-dark, jb-alert-dismissible)
+  - Stat card variants (jb-stat-card-primary through jb-stat-card-info)
+  - Bootstrap 5 margin utilities (jb-me-*, jb-ms-*)
+  - Shadow utilities (jb-shadow-sm, jb-shadow, jb-hover-shadow)
+  - Form validation classes (jb-is-valid, jb-is-invalid, jb-has-error)
+  - Nav tabs (jb-nav, jb-nav-tabs, jb-nav-link)
+  - Table variants (jb-table-sm, jb-table-bordered)
+  - Additional utilities (jb-avatar-circle, jb-timeline-*, jb-code-block, etc.)
+
+### Technical Notes
+- Styles.css now contains ~3000 lines of jb-* CSS classes
+- All templates should now render correctly with proper styling
+- Requires Moodle cache purge to see CSS changes
+
 ## [3.6.10] - 2025-12-12
 
 ### Fixed
