@@ -276,7 +276,7 @@ trait public_renderer {
         // Company name.
         $companyname = null;
         if (!empty($vacancy->companyid)) {
-            $companyname = \local_jobboard_get_company_name($vacancy->companyid);
+            $companyname = \local_jobboard_get_company_name((int) $vacancy->companyid);
         }
 
         // Convocatoria data.
@@ -603,7 +603,7 @@ trait public_renderer {
             // Location.
             $location = '';
             if (!empty($vacancy->companyid)) {
-                $location = \local_jobboard_get_company_name($vacancy->companyid);
+                $location = \local_jobboard_get_company_name((int) $vacancy->companyid);
             }
             if (empty($location) && !empty($vacancy->location)) {
                 $location = $vacancy->location;
