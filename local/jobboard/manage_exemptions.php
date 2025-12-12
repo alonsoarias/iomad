@@ -122,33 +122,14 @@ if ($action === 'add' || ($action === 'edit' && $id)) {
 
     echo $OUTPUT->header();
 
-    echo html_writer::start_div('jb-exemptions');
-
-    echo ui_helper::page_header(
-        $id ? get_string('editexemption', 'local_jobboard') : get_string('addexemption', 'local_jobboard'),
-        [],
-        [
-            [
-                'url' => new moodle_url('/local/jobboard/manage_exemptions.php'),
-                'label' => get_string('back'),
-                'icon' => 'arrow-left',
-                'class' => 'jb-btn jb-btn-outline-secondary',
-            ],
-        ]
-    );
-
-    echo html_writer::start_div('jb-card jb-card-shadow');
-    echo html_writer::start_div('jb-card-header jb-bg-white');
-    echo html_writer::tag('h5', '<i class="fa fa-' . ($id ? 'edit' : 'plus') . ' jb-text-primary jb-mr-2"></i>' .
-        ($id ? get_string('editexemption', 'local_jobboard') : get_string('addexemption', 'local_jobboard')),
-        ['class' => 'jb-mb-0']);
-    echo html_writer::end_div();
-    echo html_writer::start_div('jb-card-body');
+    // Use renderer + template pattern.
+    ob_start();
     $mform->display();
-    echo html_writer::end_div();
-    echo html_writer::end_div();
+    $formhtml = ob_get_clean();
 
-    echo html_writer::end_div();
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    $data = $renderer->prepare_exemption_form_data((bool)$id, $formhtml);
+    echo $renderer->render_exemption_form_page($data);
 
     echo $OUTPUT->footer();
     exit;
@@ -175,192 +156,27 @@ if ($action === 'revoke' && $id) {
         }
     }
 
-    // Show confirmation form.
-    echo $OUTPUT->header();
-
-    echo html_writer::start_div('jb-exemptions');
-
+    // Show confirmation form using renderer + template pattern.
     $user = $DB->get_record('user', ['id' => $exemption->userid]);
 
-    echo html_writer::start_div('jb-card jb-card-shadow jb-border-danger');
-    echo html_writer::start_div('jb-card-header jb-bg-danger jb-text-white');
-    echo html_writer::tag('h5', '<i class="fa fa-ban jb-mr-2"></i>' .
-        get_string('revokeexemption', 'local_jobboard'), ['class' => 'jb-mb-0']);
-    echo html_writer::end_div();
-    echo html_writer::start_div('jb-card-body');
+    echo $OUTPUT->header();
 
-    echo html_writer::div(
-        '<i class="fa fa-exclamation-triangle jb-mr-2"></i>' .
-        get_string('confirmrevokeexemption', 'local_jobboard', fullname($user)),
-        'jb-alert jb-alert-warning'
-    );
-
-    echo html_writer::start_tag('form', ['method' => 'post', 'action' => '']);
-    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'action', 'value' => 'revoke']);
-    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'id', 'value' => $id]);
-    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'confirm', 'value' => '1']);
-    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
-
-    echo html_writer::start_div('jb-form-group');
-    echo html_writer::tag('label', get_string('revokereason', 'local_jobboard'), ['for' => 'reason']);
-    echo html_writer::tag('textarea', '', [
-        'name' => 'reason',
-        'id' => 'reason',
-        'class' => 'jb-form-control',
-        'rows' => '3',
-        'required' => 'required',
-    ]);
-    echo html_writer::end_div();
-
-    echo html_writer::start_div('jb-mt-4');
-    echo html_writer::tag('button',
-        '<i class="fa fa-ban jb-mr-2"></i>' . get_string('confirm', 'local_jobboard'),
-        ['type' => 'submit', 'class' => 'jb-btn jb-btn-danger jb-mr-2']
-    );
-    echo html_writer::link(
-        new moodle_url('/local/jobboard/manage_exemptions.php'),
-        '<i class="fa fa-times jb-mr-2"></i>' . get_string('cancel', 'local_jobboard'),
-        ['class' => 'jb-btn jb-btn-secondary']
-    );
-    echo html_writer::end_div();
-
-    echo html_writer::end_tag('form');
-
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-
-    echo html_writer::end_div();
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    $data = $renderer->prepare_exemption_revoke_data($id, $user);
+    echo $renderer->render_exemption_revoke_page($data);
 
     echo $OUTPUT->footer();
     exit;
 }
 
 if ($action === 'view' && $id) {
-    // View exemption details.
+    // View exemption details using renderer + template pattern.
     $exemption = $DB->get_record('local_jobboard_exemption', ['id' => $id], '*', MUST_EXIST);
     $user = $DB->get_record('user', ['id' => $exemption->userid]);
     $createdby = $DB->get_record('user', ['id' => $exemption->createdby]);
-
-    echo $OUTPUT->header();
-
-    echo html_writer::start_div('jb-exemptions');
-
-    echo ui_helper::page_header(
-        get_string('exemptiondetails', 'local_jobboard'),
-        [],
-        [
-            [
-                'url' => new moodle_url('/local/jobboard/manage_exemptions.php'),
-                'label' => get_string('back'),
-                'icon' => 'arrow-left',
-                'class' => 'jb-btn jb-btn-outline-secondary',
-            ],
-        ]
-    );
-
     $isvalid = exemption::is_valid($exemption);
 
-    echo html_writer::start_div('jb-card jb-card-shadow jb-mb-4');
-    echo html_writer::start_div('jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center');
-    echo html_writer::tag('h5', '<i class="fa fa-user jb-text-primary jb-mr-2"></i>' . fullname($user), ['class' => 'jb-mb-0']);
-
-    // Status badge.
-    if ($exemption->timerevoked) {
-        echo html_writer::tag('span', get_string('revoked', 'local_jobboard'), ['class' => 'jb-badge jb-badge-danger']);
-    } else if ($isvalid) {
-        echo html_writer::tag('span', get_string('active', 'local_jobboard'), ['class' => 'jb-badge jb-badge-success']);
-    } else {
-        echo html_writer::tag('span', get_string('expired', 'local_jobboard'), ['class' => 'jb-badge jb-badge-warning']);
-    }
-
-    echo html_writer::end_div();
-    echo html_writer::start_div('jb-card-body');
-
-    echo html_writer::start_tag('dl', ['class' => 'jb-row']);
-
-    echo html_writer::tag('dt', get_string('user'), ['class' => 'jb-col-sm-3']);
-    echo html_writer::tag('dd', fullname($user) . ' (' . $user->email . ')', ['class' => 'jb-col-sm-9']);
-
-    echo html_writer::tag('dt', get_string('exemptiontype', 'local_jobboard'), ['class' => 'jb-col-sm-3']);
-    echo html_writer::tag('dd', get_string('exemptiontype_' . $exemption->exemptiontype, 'local_jobboard'), ['class' => 'jb-col-sm-9']);
-
-    echo html_writer::tag('dt', get_string('documentref', 'local_jobboard'), ['class' => 'jb-col-sm-3']);
-    echo html_writer::tag('dd', ($exemption->documentref ?: '-'), ['class' => 'jb-col-sm-9']);
-
-    echo html_writer::tag('dt', get_string('exempteddocs', 'local_jobboard'), ['class' => 'jb-col-sm-3']);
-    $doctypesbadges = '';
-    $doctypes = explode(',', $exemption->exempteddoctypes);
-    foreach ($doctypes as $dt) {
-        $dt = trim($dt);
-        if ($dt) {
-            $doctypesbadges .= html_writer::tag('span',
-                get_string('doctype_' . $dt, 'local_jobboard'),
-                ['class' => 'jb-badge jb-badge-info jb-mr-1 jb-mb-1']
-            );
-        }
-    }
-    echo html_writer::tag('dd', $doctypesbadges, ['class' => 'jb-col-sm-9']);
-
-    echo html_writer::tag('dt', get_string('validfrom', 'local_jobboard'), ['class' => 'jb-col-sm-3']);
-    echo html_writer::tag('dd', userdate($exemption->validfrom, '%Y-%m-%d'), ['class' => 'jb-col-sm-9']);
-
-    echo html_writer::tag('dt', get_string('validuntil', 'local_jobboard'), ['class' => 'jb-col-sm-3']);
-    echo html_writer::tag('dd',
-        ($exemption->validuntil ? userdate($exemption->validuntil, '%Y-%m-%d') : get_string('noexpiry', 'local_jobboard')),
-        ['class' => 'jb-col-sm-9']
-    );
-
-    echo html_writer::tag('dt', get_string('notes', 'local_jobboard'), ['class' => 'jb-col-sm-3']);
-    echo html_writer::tag('dd', ($exemption->notes ?: '-'), ['class' => 'jb-col-sm-9']);
-
-    echo html_writer::tag('dt', get_string('createdby', 'local_jobboard'), ['class' => 'jb-col-sm-3']);
-    echo html_writer::tag('dd',
-        fullname($createdby) . ' - ' . userdate($exemption->timecreated, '%Y-%m-%d %H:%M'),
-        ['class' => 'jb-col-sm-9']
-    );
-
-    if ($exemption->timerevoked) {
-        $revokedby = $DB->get_record('user', ['id' => $exemption->revokedby]);
-        echo html_writer::tag('dt', get_string('revokedby', 'local_jobboard'), ['class' => 'jb-col-sm-3']);
-        echo html_writer::tag('dd',
-            fullname($revokedby) . ' - ' . userdate($exemption->timerevoked, '%Y-%m-%d %H:%M'),
-            ['class' => 'jb-col-sm-9']
-        );
-
-        echo html_writer::tag('dt', get_string('revokereason', 'local_jobboard'), ['class' => 'jb-col-sm-3']);
-        echo html_writer::tag('dd', format_text($exemption->revokereason), ['class' => 'jb-col-sm-9']);
-    }
-
-    echo html_writer::end_tag('dl');
-
-    echo html_writer::end_div();
-
-    // Actions footer.
-    if (!$exemption->timerevoked && $isvalid) {
-        echo html_writer::start_div('jb-card-footer jb-bg-light');
-        echo html_writer::link(
-            new moodle_url('/local/jobboard/manage_exemptions.php', ['action' => 'edit', 'id' => $id]),
-            '<i class="fa fa-edit jb-mr-2"></i>' . get_string('edit', 'local_jobboard'),
-            ['class' => 'jb-btn jb-btn-primary jb-mr-2']
-        );
-        echo html_writer::link(
-            new moodle_url('/local/jobboard/manage_exemptions.php', ['action' => 'revoke', 'id' => $id]),
-            '<i class="fa fa-ban jb-mr-2"></i>' . get_string('revoke', 'local_jobboard'),
-            ['class' => 'jb-btn jb-btn-danger']
-        );
-        echo html_writer::end_div();
-    }
-
-    echo html_writer::end_div();
-
-    // Show exemption usage history.
-    echo html_writer::start_div('jb-card jb-card-shadow');
-    echo html_writer::start_div('jb-card-header jb-bg-white');
-    echo html_writer::tag('h5', '<i class="fa fa-history jb-text-info jb-mr-2"></i>' .
-        get_string('exemptionusagehistory', 'local_jobboard'), ['class' => 'jb-mb-0']);
-    echo html_writer::end_div();
-    echo html_writer::start_div('jb-card-body');
-
+    // Get usage history.
     $usages = $DB->get_records_sql("
         SELECT a.id, a.timecreated, v.code, v.title
           FROM {local_jobboard_application} a
@@ -376,24 +192,11 @@ if ($action === 'view' && $id) {
         'hasexpiry' => $exemption->validuntil ? 1 : 0,
     ]);
 
-    if ($usages) {
-        $headers = [get_string('vacancy', 'local_jobboard'), get_string('date')];
-        $rows = [];
-        foreach ($usages as $usage) {
-            $rows[] = [
-                format_string($usage->code . ' - ' . $usage->title),
-                userdate($usage->timecreated, '%Y-%m-%d %H:%M'),
-            ];
-        }
-        echo ui_helper::data_table($headers, $rows);
-    } else {
-        echo ui_helper::empty_state(get_string('noexemptionusage', 'local_jobboard'), 'history');
-    }
+    echo $OUTPUT->header();
 
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-
-    echo html_writer::end_div();
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    $data = $renderer->prepare_exemption_view_data($exemption, $user, $createdby, $isvalid, $usages);
+    echo $renderer->render_exemption_view_page($data);
 
     echo $OUTPUT->footer();
     exit;

@@ -1,0 +1,51 @@
+{{!
+    @template local_jobboard/pages/updateprofile
+
+    Update profile page for Job Board applicants.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * intro - string - Introduction text
+    * hasvacancy - bool - Whether applying for a specific vacancy
+    * vacancy - object - Vacancy info {title, code}
+    * formhtml - string - Rendered form HTML
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "pagetitle": "Update Profile",
+        "intro": "Please update your profile...",
+        "hasvacancy": true,
+        "vacancy": {"title": "Professor", "code": "VAC-001"}
+    }
+}}
+
+<div class="jb-updateprofile" data-region="jobboard-updateprofile">
+    {{! Page Header }}
+    <div class="jb-mb-4">
+        <h1 class="jb-h2">{{pagetitle}}</h1>
+        <p class="jb-lead jb-text-muted">{{intro}}</p>
+    </div>
+
+    {{! Vacancy Info Card (if applying for a specific vacancy) }}
+    {{#hasvacancy}}
+    <div class="jb-card jb-mb-4 jb-border-primary">
+        <div class="jb-card-header jb-bg-primary jb-text-white">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-briefcase jb-mr-2"></i>
+                {{str.signup_applying_for}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <h5 class="jb-card-title jb-mb-2">{{vacancy.title}}</h5>
+            <p class="jb-card-text jb-mb-1">
+                <span class="jb-text-muted">{{str.code}}: </span>
+                <strong>{{vacancy.code}}</strong>
+            </p>
+        </div>
+    </div>
+    {{/hasvacancy}}
+
+    {{! Profile Form }}
+    {{{formhtml}}}
+</div>

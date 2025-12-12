@@ -1,0 +1,158 @@
+{{!
+    @template local_jobboard/pages/exemption_view
+
+    Exemption view details page.
+
+    Context variables required for this template:
+    * id - int - Exemption ID
+    * backurl - string - Back URL
+    * userfullname - string - User full name
+    * useremail - string - User email
+    * exemptiontype - string - Exemption type label
+    * documentref - string - Document reference
+    * doctypesbadges - array - Document type badges [{label, class}]
+    * validfrom - string - Valid from date
+    * validuntil - string - Valid until date or "No expiry"
+    * notes - string - Notes
+    * createdbyinfo - string - Created by info
+    * statusbadge - object - Status badge {label, class}
+    * isrevoked - bool - Whether exemption is revoked
+    * revokedbyinfo - string - Revoked by info (if revoked)
+    * revokereason - string - Revoke reason (if revoked)
+    * canmodify - bool - Can edit/revoke
+    * editurl - string - Edit URL
+    * revokeurl - string - Revoke URL
+    * usagehistory - array - Usage history items [{vacancy, date}]
+    * hasusagehistory - bool - Has usage history
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "id": 123,
+        "userfullname": "John Doe",
+        "isrevoked": false,
+        "canmodify": true
+    }
+}}
+
+<div class="jb-exemptions" data-region="jobboard-exemption-view">
+    {{! Page Header }}
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <h3 class="jb-mb-0">{{str.exemptiondetails}}</h3>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-2"></i>
+            {{str.back}}
+        </a>
+    </div>
+
+    {{! Exemption Details Card }}
+    <div class="jb-card jb-card-shadow jb-mb-4">
+        <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-user jb-text-primary jb-mr-2"></i>
+                {{userfullname}}
+            </h5>
+            <span class="jb-badge {{statusbadge.class}}">{{statusbadge.label}}</span>
+        </div>
+        <div class="jb-card-body">
+            <dl class="jb-row">
+                {{! User }}
+                <dt class="jb-col-sm-3">{{str.user}}</dt>
+                <dd class="jb-col-sm-9">{{userfullname}} ({{useremail}})</dd>
+
+                {{! Exemption Type }}
+                <dt class="jb-col-sm-3">{{str.exemptiontype}}</dt>
+                <dd class="jb-col-sm-9">{{exemptiontype}}</dd>
+
+                {{! Document Reference }}
+                <dt class="jb-col-sm-3">{{str.documentref}}</dt>
+                <dd class="jb-col-sm-9">{{#documentref}}{{documentref}}{{/documentref}}{{^documentref}}-{{/documentref}}</dd>
+
+                {{! Exempted Documents }}
+                <dt class="jb-col-sm-3">{{str.exempteddocs}}</dt>
+                <dd class="jb-col-sm-9">
+                    {{#doctypesbadges}}
+                    <span class="jb-badge jb-badge-info jb-mr-1 jb-mb-1">{{label}}</span>
+                    {{/doctypesbadges}}
+                </dd>
+
+                {{! Valid From }}
+                <dt class="jb-col-sm-3">{{str.validfrom}}</dt>
+                <dd class="jb-col-sm-9">{{validfrom}}</dd>
+
+                {{! Valid Until }}
+                <dt class="jb-col-sm-3">{{str.validuntil}}</dt>
+                <dd class="jb-col-sm-9">{{validuntil}}</dd>
+
+                {{! Notes }}
+                <dt class="jb-col-sm-3">{{str.notes}}</dt>
+                <dd class="jb-col-sm-9">{{#notes}}{{notes}}{{/notes}}{{^notes}}-{{/notes}}</dd>
+
+                {{! Created By }}
+                <dt class="jb-col-sm-3">{{str.createdby}}</dt>
+                <dd class="jb-col-sm-9">{{createdbyinfo}}</dd>
+
+                {{! Revoked Info (if applicable) }}
+                {{#isrevoked}}
+                <dt class="jb-col-sm-3">{{str.revokedby}}</dt>
+                <dd class="jb-col-sm-9">{{revokedbyinfo}}</dd>
+
+                <dt class="jb-col-sm-3">{{str.revokereason}}</dt>
+                <dd class="jb-col-sm-9">{{{revokereason}}}</dd>
+                {{/isrevoked}}
+            </dl>
+        </div>
+
+        {{! Actions Footer }}
+        {{#canmodify}}
+        <div class="jb-card-footer jb-bg-light">
+            <a href="{{editurl}}" class="jb-btn jb-btn-primary jb-mr-2">
+                <i class="fa fa-edit jb-mr-2"></i>
+                {{str.edit}}
+            </a>
+            <a href="{{revokeurl}}" class="jb-btn jb-btn-danger">
+                <i class="fa fa-ban jb-mr-2"></i>
+                {{str.revoke}}
+            </a>
+        </div>
+        {{/canmodify}}
+    </div>
+
+    {{! Usage History Card }}
+    <div class="jb-card jb-card-shadow">
+        <div class="jb-card-header jb-bg-white">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-history jb-text-info jb-mr-2"></i>
+                {{str.exemptionusagehistory}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{#hasusagehistory}}
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-hover">
+                    <thead>
+                        <tr>
+                            <th>{{str.vacancy}}</th>
+                            <th>{{str.date}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#usagehistory}}
+                        <tr>
+                            <td>{{vacancy}}</td>
+                            <td>{{date}}</td>
+                        </tr>
+                        {{/usagehistory}}
+                    </tbody>
+                </table>
+            </div>
+            {{/hasusagehistory}}
+            {{^hasusagehistory}}
+            <div class="jb-empty-state jb-text-center jb-py-4">
+                <i class="fa fa-history fa-3x jb-text-muted jb-mb-3"></i>
+                <p class="jb-text-muted">{{str.noexemptionusage}}</p>
+            </div>
+            {{/hasusagehistory}}
+        </div>
+    </div>
+</div>

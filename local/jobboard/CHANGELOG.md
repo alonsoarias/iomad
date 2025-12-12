@@ -5,6 +5,25 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.6] - 2025-12-12
+
+### Added
+- **Mustache Templates**:
+  - `pages/exemption_form.mustache` for exemption add/edit
+  - `pages/exemption_revoke.mustache` for exemption revoke confirmation
+  - `pages/exemption_view.mustache` for exemption details view
+  - `pages/updateprofile.mustache` for profile update page
+- **Renderer Methods**:
+  - `render_exemption_form_page()` and `prepare_exemption_form_data()`
+  - `render_exemption_revoke_page()` and `prepare_exemption_revoke_data()`
+  - `render_exemption_view_page()` and `prepare_exemption_view_data()`
+  - `render_updateprofile_page()` and `prepare_updateprofile_data()`
+
+### Changed
+- Migrated `manage_exemptions.php` sub-views (add/edit/view/revoke) to use renderer + template pattern
+- Migrated `updateprofile.php` to use renderer + template pattern
+- Removed ~250 lines of inline HTML from PHP files
+
 ## [3.5.5] - 2025-12-12
 
 ### Added

@@ -1,0 +1,62 @@
+{{!
+    @template local_jobboard/pages/exemption_revoke
+
+    Exemption revoke confirmation page.
+
+    Context variables required for this template:
+    * id - int - Exemption ID
+    * userfullname - string - User full name
+    * sesskey - string - Session key
+    * cancelurl - string - Cancel URL
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "id": 123,
+        "userfullname": "John Doe",
+        "sesskey": "abc123"
+    }
+}}
+
+<div class="jb-exemptions" data-region="jobboard-exemption-revoke">
+    {{! Revoke Confirmation Card }}
+    <div class="jb-card jb-card-shadow jb-border-danger">
+        <div class="jb-card-header jb-bg-danger jb-text-white">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-ban jb-mr-2"></i>
+                {{str.revokeexemption}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{! Warning Alert }}
+            <div class="jb-alert jb-alert-warning">
+                <i class="fa fa-exclamation-triangle jb-mr-2"></i>
+                {{str.confirmrevokeexemption_prefix}} <strong>{{userfullname}}</strong>{{str.confirmrevokeexemption_suffix}}
+            </div>
+
+            {{! Revoke Form }}
+            <form method="post" action="">
+                <input type="hidden" name="action" value="revoke">
+                <input type="hidden" name="id" value="{{id}}">
+                <input type="hidden" name="confirm" value="1">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+
+                <div class="jb-form-group">
+                    <label for="reason">{{str.revokereason}}</label>
+                    <textarea name="reason" id="reason" class="jb-form-control" rows="3" required></textarea>
+                </div>
+
+                <div class="jb-mt-4">
+                    <button type="submit" class="jb-btn jb-btn-danger jb-mr-2">
+                        <i class="fa fa-ban jb-mr-2"></i>
+                        {{str.confirm}}
+                    </button>
+                    <a href="{{cancelurl}}" class="jb-btn jb-btn-secondary">
+                        <i class="fa fa-times jb-mr-2"></i>
+                        {{str.cancel}}
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

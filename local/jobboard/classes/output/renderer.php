@@ -6908,4 +6908,229 @@ class renderer extends renderer_base {
             'str' => $strdata,
         ];
     }
+
+    /**
+     * Render the exemption form page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_exemption_form_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/exemption_form', $data);
+    }
+
+    /**
+     * Prepare exemption form page data.
+     *
+     * @param bool $isedit Whether editing an existing exemption.
+     * @param string $formhtml Rendered form HTML.
+     * @return array Template data.
+     */
+    public function prepare_exemption_form_data(bool $isedit, string $formhtml): array {
+        $strdata = [
+            'back' => get_string('back'),
+            'editexemption' => get_string('editexemption', 'local_jobboard'),
+            'addexemption' => get_string('addexemption', 'local_jobboard'),
+        ];
+
+        return [
+            'pagetitle' => $isedit ? get_string('editexemption', 'local_jobboard') : get_string('addexemption', 'local_jobboard'),
+            'backurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
+            'isedit' => $isedit,
+            'formhtml' => $formhtml,
+            'str' => $strdata,
+        ];
+    }
+
+    /**
+     * Render the exemption revoke page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_exemption_revoke_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/exemption_revoke', $data);
+    }
+
+    /**
+     * Prepare exemption revoke page data.
+     *
+     * @param int $id Exemption ID.
+     * @param object $user User record.
+     * @return array Template data.
+     */
+    public function prepare_exemption_revoke_data(int $id, object $user): array {
+        $strdata = [
+            'revokeexemption' => get_string('revokeexemption', 'local_jobboard'),
+            'confirmrevokeexemption_prefix' => get_string('confirmrevokeexemption', 'local_jobboard', ''),
+            'confirmrevokeexemption_suffix' => '',
+            'revokereason' => get_string('revokereason', 'local_jobboard'),
+            'confirm' => get_string('confirm', 'local_jobboard'),
+            'cancel' => get_string('cancel', 'local_jobboard'),
+        ];
+
+        return [
+            'id' => $id,
+            'userfullname' => fullname($user),
+            'sesskey' => sesskey(),
+            'cancelurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
+            'str' => $strdata,
+        ];
+    }
+
+    /**
+     * Render the exemption view page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_exemption_view_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/exemption_view', $data);
+    }
+
+    /**
+     * Prepare exemption view page data.
+     *
+     * @param object $exemption Exemption record.
+     * @param object $user User record.
+     * @param object $createdby Created by user record.
+     * @param bool $isvalid Whether exemption is valid.
+     * @param array $usages Usage history.
+     * @return array Template data.
+     */
+    public function prepare_exemption_view_data(
+        object $exemption,
+        object $user,
+        object $createdby,
+        bool $isvalid,
+        array $usages
+    ): array {
+        global $DB;
+
+        // Determine status badge.
+        if ($exemption->timerevoked) {
+            $statusbadge = ['label' => get_string('revoked', 'local_jobboard'), 'class' => 'jb-badge-danger'];
+        } else if ($isvalid) {
+            $statusbadge = ['label' => get_string('active', 'local_jobboard'), 'class' => 'jb-badge-success'];
+        } else {
+            $statusbadge = ['label' => get_string('expired', 'local_jobboard'), 'class' => 'jb-badge-warning'];
+        }
+
+        // Build doctype badges.
+        $doctypesbadges = [];
+        $doctypes = explode(',', $exemption->exempteddoctypes);
+        foreach ($doctypes as $dt) {
+            $dt = trim($dt);
+            if ($dt) {
+                $doctypesbadges[] = ['label' => get_string('doctype_' . $dt, 'local_jobboard')];
+            }
+        }
+
+        // Revoked info.
+        $revokedbyinfo = '';
+        $revokereason = '';
+        if ($exemption->timerevoked) {
+            $revokedby = $DB->get_record('user', ['id' => $exemption->revokedby]);
+            $revokedbyinfo = fullname($revokedby) . ' - ' . userdate($exemption->timerevoked, '%Y-%m-%d %H:%M');
+            $revokereason = format_text($exemption->revokereason);
+        }
+
+        // Usage history.
+        $usagehistory = [];
+        foreach ($usages as $usage) {
+            $usagehistory[] = [
+                'vacancy' => format_string($usage->code . ' - ' . $usage->title),
+                'date' => userdate($usage->timecreated, '%Y-%m-%d %H:%M'),
+            ];
+        }
+
+        // String data.
+        $strdata = [
+            'exemptiondetails' => get_string('exemptiondetails', 'local_jobboard'),
+            'back' => get_string('back'),
+            'user' => get_string('user'),
+            'exemptiontype' => get_string('exemptiontype', 'local_jobboard'),
+            'documentref' => get_string('documentref', 'local_jobboard'),
+            'exempteddocs' => get_string('exempteddocs', 'local_jobboard'),
+            'validfrom' => get_string('validfrom', 'local_jobboard'),
+            'validuntil' => get_string('validuntil', 'local_jobboard'),
+            'notes' => get_string('notes', 'local_jobboard'),
+            'createdby' => get_string('createdby', 'local_jobboard'),
+            'revokedby' => get_string('revokedby', 'local_jobboard'),
+            'revokereason' => get_string('revokereason', 'local_jobboard'),
+            'edit' => get_string('edit', 'local_jobboard'),
+            'revoke' => get_string('revoke', 'local_jobboard'),
+            'exemptionusagehistory' => get_string('exemptionusagehistory', 'local_jobboard'),
+            'vacancy' => get_string('vacancy', 'local_jobboard'),
+            'date' => get_string('date'),
+            'noexemptionusage' => get_string('noexemptionusage', 'local_jobboard'),
+        ];
+
+        return [
+            'id' => $exemption->id,
+            'backurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
+            'userfullname' => fullname($user),
+            'useremail' => $user->email,
+            'exemptiontype' => get_string('exemptiontype_' . $exemption->exemptiontype, 'local_jobboard'),
+            'documentref' => $exemption->documentref ?: '',
+            'doctypesbadges' => $doctypesbadges,
+            'validfrom' => userdate($exemption->validfrom, '%Y-%m-%d'),
+            'validuntil' => $exemption->validuntil
+                ? userdate($exemption->validuntil, '%Y-%m-%d')
+                : get_string('noexpiry', 'local_jobboard'),
+            'notes' => $exemption->notes ?: '',
+            'createdbyinfo' => fullname($createdby) . ' - ' . userdate($exemption->timecreated, '%Y-%m-%d %H:%M'),
+            'statusbadge' => $statusbadge,
+            'isrevoked' => (bool)$exemption->timerevoked,
+            'revokedbyinfo' => $revokedbyinfo,
+            'revokereason' => $revokereason,
+            'canmodify' => !$exemption->timerevoked && $isvalid,
+            'editurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php', ['action' => 'edit', 'id' => $exemption->id]))->out(false),
+            'revokeurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php', ['action' => 'revoke', 'id' => $exemption->id]))->out(false),
+            'usagehistory' => $usagehistory,
+            'hasusagehistory' => !empty($usagehistory),
+            'str' => $strdata,
+        ];
+    }
+
+    /**
+     * Render the update profile page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_updateprofile_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/updateprofile', $data);
+    }
+
+    /**
+     * Prepare update profile page data.
+     *
+     * @param object|null $vacancy Vacancy record or null.
+     * @param string $formhtml Rendered form HTML.
+     * @return array Template data.
+     */
+    public function prepare_updateprofile_data(?object $vacancy, string $formhtml): array {
+        $strdata = [
+            'signup_applying_for' => get_string('signup_applying_for', 'local_jobboard'),
+            'code' => get_string('code', 'local_jobboard'),
+        ];
+
+        $vacancydata = null;
+        if ($vacancy) {
+            $vacancydata = [
+                'title' => format_string($vacancy->title),
+                'code' => format_string($vacancy->code),
+            ];
+        }
+
+        return [
+            'pagetitle' => get_string('updateprofile_title', 'local_jobboard'),
+            'intro' => get_string('updateprofile_intro', 'local_jobboard'),
+            'hasvacancy' => ($vacancy !== null),
+            'vacancy' => $vacancydata,
+            'formhtml' => $formhtml,
+            'str' => $strdata,
+        ];
+    }
 }

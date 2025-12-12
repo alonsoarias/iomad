@@ -224,35 +224,18 @@ if ($data = $mform->get_data()) {
     }
 }
 
-// Display the form.
+// Display the form using renderer + template pattern.
 echo $OUTPUT->header();
 
-// Page header.
-echo html_writer::start_div('updateprofile-header mb-4');
-echo html_writer::tag('h1', get_string('updateprofile_title', 'local_jobboard'), ['class' => 'h2']);
-echo html_writer::tag('p', get_string('updateprofile_intro', 'local_jobboard'), ['class' => 'lead text-muted']);
-echo html_writer::end_div();
-
-// Show vacancy info if available.
-if ($vacancy) {
-    echo html_writer::start_div('card mb-4 border-primary');
-    echo html_writer::start_div('card-header bg-primary text-white');
-    echo html_writer::tag('h5', html_writer::tag('i', '', ['class' => 'fa fa-briefcase me-2']) .
-        get_string('signup_applying_for', 'local_jobboard'), ['class' => 'mb-0']);
-    echo html_writer::end_div();
-    echo html_writer::start_div('card-body');
-    echo html_writer::tag('h5', s($vacancy->title), ['class' => 'card-title mb-2']);
-    echo html_writer::tag('p',
-        html_writer::tag('span', get_string('code', 'local_jobboard') . ': ', ['class' => 'text-muted']) .
-        html_writer::tag('strong', s($vacancy->code)),
-        ['class' => 'card-text mb-1']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-}
-
-// Display the form.
+// Capture form HTML.
+ob_start();
 $mform->display();
+$formhtml = ob_get_clean();
+
+// Use renderer.
+$renderer = $PAGE->get_renderer('local_jobboard');
+$data = $renderer->prepare_updateprofile_data($vacancy, $formhtml);
+echo $renderer->render_updateprofile_page($data);
 
 echo $OUTPUT->footer();
 
