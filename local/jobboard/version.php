@@ -17,19 +17,21 @@
 /**
  * Version information for local_jobboard.
  *
- * Plugin for managing job vacancies and applications for adjunct professors.
- * Compatible with Moodle 4.1+ and Iomad multi-tenant.
+ * Job Board plugin for managing academic vacancies and teacher applications.
+ * Designed for adjunct professor recruitment in higher education institutions.
+ * Compatible with Moodle 4.1+ and IOMAD multi-tenant architecture.
  *
  * @package   local_jobboard
- * @copyright 2024 ISER
+ * @copyright 2024-2025 ISER - Instituto Superior de Educación Rural
+ * @author    Alonso Arias <soporteplataformas@iser.edu.co>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_jobboard';
-$plugin->version = 2025121138;
+$plugin->version = 2025121239;
 $plugin->requires = 2022112800; // Moodle 4.1 LTS minimum.
 $plugin->supported = [401, 405]; // Moodle 4.1 to 4.5.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = '3.1.23';
+$plugin->release = '3.1.24';
