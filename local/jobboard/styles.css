@@ -1719,6 +1719,198 @@
 }
 
 /* ==========================================================================
+   LIST GROUPS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-list-group,
+.local-jobboard-dashboard .jb-list-group,
+.local-jobboard-public .jb-list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+[data-region^="jobboard"] .jb-list-group-flush,
+.local-jobboard-dashboard .jb-list-group-flush,
+.local-jobboard-public .jb-list-group-flush {
+    border-radius: 0;
+}
+
+[data-region^="jobboard"] .jb-list-group-item,
+.local-jobboard-dashboard .jb-list-group-item,
+.local-jobboard-public .jb-list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--jb-white);
+    border: 1px solid var(--jb-border);
+}
+
+[data-region^="jobboard"] .jb-list-group-flush .jb-list-group-item,
+.local-jobboard-dashboard .jb-list-group-flush .jb-list-group-item,
+.local-jobboard-public .jb-list-group-flush .jb-list-group-item {
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+}
+
+[data-region^="jobboard"] .jb-list-group-flush .jb-list-group-item:first-child,
+.local-jobboard-dashboard .jb-list-group-flush .jb-list-group-item:first-child,
+.local-jobboard-public .jb-list-group-flush .jb-list-group-item:first-child {
+    border-top: 0;
+}
+
+[data-region^="jobboard"] .jb-list-group-flush .jb-list-group-item:last-child,
+.local-jobboard-dashboard .jb-list-group-flush .jb-list-group-item:last-child,
+.local-jobboard-public .jb-list-group-flush .jb-list-group-item:last-child {
+    border-bottom: 0;
+}
+
+[data-region^="jobboard"] .jb-list-unstyled,
+.local-jobboard-dashboard .jb-list-unstyled,
+.local-jobboard-public .jb-list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+
+/* ==========================================================================
+   CARD EXTENSIONS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-card-h100,
+.local-jobboard-dashboard .jb-card-h100,
+.local-jobboard-public .jb-card-h100 {
+    height: 100%;
+}
+
+[data-region^="jobboard"] .jb-card-footer,
+.local-jobboard-dashboard .jb-card-footer,
+.local-jobboard-public .jb-card-footer {
+    padding: 0.75rem 1rem;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-top: 1px solid var(--jb-border);
+}
+
+[data-region^="jobboard"] .jb-card-footer:last-child,
+.local-jobboard-dashboard .jb-card-footer:last-child,
+.local-jobboard-public .jb-card-footer:last-child {
+    border-radius: 0 0 calc(var(--jb-border-radius) - 1px) calc(var(--jb-border-radius) - 1px);
+}
+
+/* Card header colors */
+[data-region^="jobboard"] .jb-card-header-primary,
+.local-jobboard-dashboard .jb-card-header-primary,
+.local-jobboard-public .jb-card-header-primary {
+    background-color: var(--jb-primary);
+    color: var(--jb-white);
+    border-color: var(--jb-primary);
+}
+
+[data-region^="jobboard"] .jb-card-header-success,
+.local-jobboard-dashboard .jb-card-header-success,
+.local-jobboard-public .jb-card-header-success {
+    background-color: var(--jb-success);
+    color: var(--jb-white);
+    border-color: var(--jb-success);
+}
+
+[data-region^="jobboard"] .jb-card-header-info,
+.local-jobboard-dashboard .jb-card-header-info,
+.local-jobboard-public .jb-card-header-info {
+    background-color: var(--jb-info);
+    color: #212529;
+    border-color: var(--jb-info);
+}
+
+[data-region^="jobboard"] .jb-card-header-warning,
+.local-jobboard-dashboard .jb-card-header-warning,
+.local-jobboard-public .jb-card-header-warning {
+    background-color: var(--jb-warning);
+    color: #212529;
+    border-color: var(--jb-warning);
+}
+
+[data-region^="jobboard"] .jb-card-header-danger,
+.local-jobboard-dashboard .jb-card-header-danger,
+.local-jobboard-public .jb-card-header-danger {
+    background-color: var(--jb-danger);
+    color: var(--jb-white);
+    border-color: var(--jb-danger);
+}
+
+[data-region^="jobboard"] .jb-card-header-secondary,
+.local-jobboard-dashboard .jb-card-header-secondary,
+.local-jobboard-public .jb-card-header-secondary {
+    background-color: var(--jb-secondary);
+    color: var(--jb-white);
+    border-color: var(--jb-secondary);
+}
+
+/* ==========================================================================
+   ADDITIONAL SPACING UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-p-2,
+.local-jobboard-dashboard .jb-p-2,
+.local-jobboard-public .jb-p-2 { padding: 0.5rem; }
+
+[data-region^="jobboard"] .jb-py-5,
+.local-jobboard-dashboard .jb-py-5,
+.local-jobboard-public .jb-py-5 { padding-top: 3rem; padding-bottom: 3rem; }
+
+/* ==========================================================================
+   ADDITIONAL BORDER UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-border-top-0,
+.local-jobboard-dashboard .jb-border-top-0,
+.local-jobboard-public .jb-border-top-0 { border-top: 0; }
+
+[data-region^="jobboard"] .jb-border-0,
+.local-jobboard-dashboard .jb-border-0,
+.local-jobboard-public .jb-border-0 { border: 0; }
+
+[data-region^="jobboard"] .jb-rounded-circle,
+.local-jobboard-dashboard .jb-rounded-circle,
+.local-jobboard-public .jb-rounded-circle { border-radius: 50%; }
+
+/* ==========================================================================
+   ADDITIONAL TEXT UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-fw-medium,
+.local-jobboard-dashboard .jb-fw-medium,
+.local-jobboard-public .jb-fw-medium { font-weight: 500; }
+
+[data-region^="jobboard"] .jb-fs-6,
+.local-jobboard-dashboard .jb-fs-6,
+.local-jobboard-public .jb-fs-6 { font-size: 1rem; }
+
+/* ==========================================================================
+   BUTTON BLOCK
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-btn-block,
+.local-jobboard-dashboard .jb-btn-block,
+.local-jobboard-public .jb-btn-block {
+    display: block;
+    width: 100%;
+}
+
+/* ==========================================================================
+   BUTTON SIZES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-btn-lg,
+.local-jobboard-dashboard .jb-btn-lg,
+.local-jobboard-public .jb-btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    border-radius: var(--jb-border-radius-lg);
+}
+
+/* ==========================================================================
    RESPONSIVE
    ========================================================================== */
 
