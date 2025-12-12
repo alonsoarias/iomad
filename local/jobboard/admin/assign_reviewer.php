@@ -37,13 +37,17 @@ $context = context_system::instance();
 require_capability('local/jobboard:manageworkflow', $context);
 
 // Set up page.
-$PAGE->set_url(new moodle_url('/local/jobboard/admin/assign_reviewer.php', ['vacancyid' => $vacancyid]));
+$urlparams = [];
+if ($vacancyid) {
+    $urlparams['vacancyid'] = $vacancyid;
+}
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/assign_reviewer.php', $urlparams));
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('assignreviewer', 'local_jobboard'));
 $PAGE->set_heading(get_string('assignreviewer', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
 
-// Handle actions.
+// Handle actions (before output).
 if ($action === 'assign') {
     require_sesskey();
 
@@ -77,9 +81,11 @@ if ($action === 'unassign') {
 }
 
 // Render page using renderer + template pattern.
+// Output header first, then get renderer (Moodle standard pattern).
+echo $OUTPUT->header();
+
 $renderer = $PAGE->get_renderer('local_jobboard');
 $data = $renderer->prepare_assign_reviewer_page_data($vacancyid);
-
-echo $OUTPUT->header();
 echo $renderer->render_assign_reviewer_page($data);
+
 echo $OUTPUT->footer();
