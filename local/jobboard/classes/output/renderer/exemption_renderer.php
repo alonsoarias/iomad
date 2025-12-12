@@ -30,6 +30,8 @@ namespace local_jobboard\output\renderer;
 
 defined('MOODLE_INTERNAL') || die();
 
+use moodle_url;
+
 /**
  * Trait for exemption rendering functionality.
  */
