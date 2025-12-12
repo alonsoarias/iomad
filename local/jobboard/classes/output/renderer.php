@@ -63,7 +63,8 @@ require_once(__DIR__ . '/renderer/committee_renderer.php');
  *
  * @todo In future versions, move prepare_* methods to corresponding traits.
  */
-class renderer extends renderer_base {
+class renderer extends renderer_base
+{
 
     // Traits define render_*_page methods for template rendering.
     // The prepare_* methods remain in this file.
@@ -437,7 +438,8 @@ class renderer extends renderer_base {
      * @param int $dateto End date timestamp.
      * @return array Report data.
      */
-    protected function prepare_overview_report_data(int $vacancyid, int $datefrom, int $dateto): array {
+    protected function prepare_overview_report_data(int $vacancyid, int $datefrom, int $dateto): array
+    {
         global $DB;
 
         $params = ['from' => $datefrom, 'to' => $dateto];
@@ -516,7 +518,8 @@ class renderer extends renderer_base {
      * @param string $status Application status.
      * @return string Color class.
      */
-    protected function get_application_status_color(string $status): string {
+    protected function get_application_status_color(string $status): string
+    {
         $colors = [
             'submitted' => 'info',
             'under_review' => 'warning',
@@ -538,7 +541,8 @@ class renderer extends renderer_base {
      * @param int $dateto End date timestamp.
      * @return array Report data.
      */
-    protected function prepare_applications_report_data(int $vacancyid, int $datefrom, int $dateto): array {
+    protected function prepare_applications_report_data(int $vacancyid, int $datefrom, int $dateto): array
+    {
         global $DB;
 
         $params = ['from' => $datefrom, 'to' => $dateto];
@@ -590,7 +594,8 @@ class renderer extends renderer_base {
      * @param int $dateto End date timestamp.
      * @return array Report data.
      */
-    protected function prepare_documents_report_data(int $vacancyid, int $datefrom, int $dateto): array {
+    protected function prepare_documents_report_data(int $vacancyid, int $datefrom, int $dateto): array
+    {
         // Get stats from bulk_validator class.
         $docstats = \local_jobboard\bulk_validator::get_validation_stats($vacancyid ?: null, $datefrom);
         $rejectionreasons = \local_jobboard\bulk_validator::get_rejection_reasons_stats($vacancyid ?: null, $datefrom);
@@ -672,7 +677,8 @@ class renderer extends renderer_base {
      * @param int $dateto End date timestamp.
      * @return array Report data.
      */
-    protected function prepare_reviewers_report_data(int $vacancyid, int $datefrom, int $dateto): array {
+    protected function prepare_reviewers_report_data(int $vacancyid, int $datefrom, int $dateto): array
+    {
         $reviewers = \local_jobboard\reviewer::get_all_with_workload();
 
         $rows = [];
@@ -710,7 +716,8 @@ class renderer extends renderer_base {
      * @param int $dateto End date timestamp.
      * @return array Report data.
      */
-    protected function prepare_timeline_report_data(int $vacancyid, int $datefrom, int $dateto): array {
+    protected function prepare_timeline_report_data(int $vacancyid, int $datefrom, int $dateto): array
+    {
         global $DB;
 
         $params = ['from' => $datefrom, 'to' => $dateto];
@@ -763,7 +770,8 @@ class renderer extends renderer_base {
      * @param array $companies Available companies.
      * @return array Template data.
      */
-    protected function prepare_committee_list_data(moodle_url $pageurl, array $companies): array {
+    protected function prepare_committee_list_data(moodle_url $pageurl, array $companies): array
+    {
         global $DB;
 
         // Get all committees.
@@ -948,9 +956,12 @@ class renderer extends renderer_base {
             ];
 
             // Faculty vacancies.
-            $facultyvacancies = $DB->get_records('local_jobboard_vacancy',
+            $facultyvacancies = $DB->get_records(
+                'local_jobboard_vacancy',
                 ['companyid' => $companyid, 'status' => 'published'],
-                'code ASC', 'id, code, title, status');
+                'code ASC',
+                'id, code, title, status'
+            );
 
             $vacanciesdata = [];
             foreach ($facultyvacancies as $v) {
@@ -977,7 +988,8 @@ class renderer extends renderer_base {
      * @param moodle_url $pageurl Base page URL.
      * @return array Template data.
      */
-    protected function prepare_committee_vacancy_data(int $vacancyid, moodle_url $pageurl): array {
+    protected function prepare_committee_vacancy_data(int $vacancyid, moodle_url $pageurl): array
+    {
         global $DB;
 
         $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $vacancyid], '*', MUST_EXIST);
@@ -1015,7 +1027,8 @@ class renderer extends renderer_base {
      * @param string $doctype Document type code.
      * @return array Checklist items.
      */
-    protected function get_validation_checklist(string $doctype): array {
+    protected function get_validation_checklist(string $doctype): array
+    {
         $common = [
             get_string('checklist_legible', 'local_jobboard'),
             get_string('checklist_complete', 'local_jobboard'),
@@ -1097,27 +1110,4 @@ class renderer extends renderer_base {
 
         return array_merge($common, $specific);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
