@@ -17,7 +17,7 @@ Sistema de Bolsa de Empleo para reclutamiento de profesores de cátedra.
 | Campo | Valor |
 |-------|-------|
 | **Componente** | `local_jobboard` |
-| **Version actual** | **3.2.2** (2025121242) |
+| **Version actual** | **3.2.3** (2025121243) |
 | **Tipo** | Plugin local de Moodle |
 | **Moodle requerido** | 4.1+ (2022112800) |
 | **Moodle soportado** | 4.1 - 4.5 |
@@ -32,7 +32,7 @@ Sistema de Bolsa de Empleo para reclutamiento de profesores de cátedra.
 | Base de datos (28 tablas) | ✅ | Completo con upgrade.php |
 | Capabilities (31) | ✅ | Definidas en access.php |
 | Roles (3 personalizados) | ✅ | jobboard_reviewer, jobboard_coordinator, jobboard_committee |
-| Sistema CSS `jb-*` | ⚠️ 95.8% | 14 templates pendientes migrar |
+| Sistema CSS `jb-*` | ✅ 100% | Migrados en v3.2.3 |
 | Templates Mustache (115) | ✅ | Usando clases `jb-*` mayormente |
 | Renderers especializados (11) | ✅ | renderer_base, dashboard_renderer, admin_renderer, etc. |
 | AMD Modules (12) | ✅ | apply_progress.js, progress_steps.js, etc. |
@@ -931,11 +931,11 @@ Antes de implementar CUALQUIER cambio, validar que no generara errores.
 - [x] Incrementar version a 3.2.2
 - [ ] Probar que no hay errores (pendiente validacion en plataforma)
 
-### Fase 2: Migracion CSS (4-6 horas)
-- [ ] Migrar templates de reports/
-- [ ] Migrar templates de componentes
-- [ ] Migrar templates de paginas
-- [ ] Verificar en themes: Boost, Remui, Flavor
+### Fase 2: Migracion CSS - COMPLETADO (v3.2.3)
+- [x] Migrar templates de reports/ (5 archivos)
+- [x] Migrar templates de componentes (list_group, timeline, filter_form)
+- [x] Migrar templates de paginas (public_detail, application_row, document_upload, signup_page)
+- [ ] Verificar en themes: Boost, Remui, Flavor (pendiente validacion)
 
 ### Fase 3: Limpieza BD (2-3 horas)
 - [ ] Evaluar remocion de opendate/closedate de vacancy
@@ -1092,6 +1092,7 @@ $plugin->release = 'X.Y.Z';     // Ej: '3.2.2'
 ---
 
 *Ultima actualizacion: Diciembre 2025*
-*Plugin local_jobboard v3.2.2 para Moodle 4.1-4.5 con IOMAD*
+*Plugin local_jobboard v3.2.3 para Moodle 4.1-4.5 con IOMAD*
 *Documento consolidado de requerimientos del proyecto*
 *Web Services eliminados en v3.2.2*
+*CSS Bootstrap migrado a jb-* en v3.2.3*

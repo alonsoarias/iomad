@@ -14,68 +14,68 @@
 }}
 <div class="jb-report-overview">
     {{! Summary Statistics Row }}
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card text-center shadow-sm h-100">
-                <div class="card-body">
-                    <h2 class="mb-1 text-primary">{{stats.total}}</h2>
-                    <p class="text-muted mb-0">{{#str}}totalapplications, local_jobboard{{/str}}</p>
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-md-3">
+            <div class="jb-card jb-text-center jb-shadow-sm jb-h-100">
+                <div class="jb-card-body">
+                    <h2 class="jb-mb-1 jb-text-primary">{{stats.total}}</h2>
+                    <p class="jb-text-muted jb-mb-0">{{#str}}totalapplications, local_jobboard{{/str}}</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-center shadow-sm h-100 bg-success text-white">
-                <div class="card-body">
-                    <h2 class="mb-1">{{stats.selected}}</h2>
-                    <p class="mb-0">{{#str}}selected, local_jobboard{{/str}}</p>
+        <div class="jb-col-md-3">
+            <div class="jb-card jb-text-center jb-shadow-sm jb-h-100 jb-bg-success jb-text-white">
+                <div class="jb-card-body">
+                    <h2 class="jb-mb-1">{{stats.selected}}</h2>
+                    <p class="jb-mb-0">{{#str}}selected, local_jobboard{{/str}}</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-center shadow-sm h-100 bg-danger text-white">
-                <div class="card-body">
-                    <h2 class="mb-1">{{stats.rejected}}</h2>
-                    <p class="mb-0">{{#str}}rejected, local_jobboard{{/str}}</p>
+        <div class="jb-col-md-3">
+            <div class="jb-card jb-text-center jb-shadow-sm jb-h-100 jb-bg-danger jb-text-white">
+                <div class="jb-card-body">
+                    <h2 class="jb-mb-1">{{stats.rejected}}</h2>
+                    <p class="jb-mb-0">{{#str}}rejected, local_jobboard{{/str}}</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card text-center shadow-sm h-100">
-                <div class="card-body">
-                    <h2 class="mb-1 text-info">{{stats.selectionrate}}%</h2>
-                    <p class="text-muted mb-0">{{#str}}selectionrate, local_jobboard{{/str}}</p>
+        <div class="jb-col-md-3">
+            <div class="jb-card jb-text-center jb-shadow-sm jb-h-100">
+                <div class="jb-card-body">
+                    <h2 class="jb-mb-1 jb-text-info">{{stats.selectionrate}}%</h2>
+                    <p class="jb-text-muted jb-mb-0">{{#str}}selectionrate, local_jobboard{{/str}}</p>
                 </div>
             </div>
         </div>
     </div>
 
     {{! Applications by Status }}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white">
-            <h5 class="mb-0">
-                <i class="fa fa-chart-pie mr-2"></i>
+    <div class="jb-card jb-shadow-sm jb-mb-4">
+        <div class="jb-card-header jb-bg-white">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-chart-pie jb-mr-2"></i>
                 {{#str}}applicationsbystatus, local_jobboard{{/str}}
             </h5>
         </div>
-        <div class="card-body">
-            <table class="table table-hover mb-0">
-                <thead class="thead-light">
+        <div class="jb-card-body">
+            <table class="jb-table jb-table-hover jb-mb-0">
+                <thead class="jb-thead-light">
                     <tr>
                         <th>{{#str}}status, local_jobboard{{/str}}</th>
                         <th>{{#str}}count, local_jobboard{{/str}}</th>
-                        <th class="w-50">{{#str}}percentage, local_jobboard{{/str}}</th>
+                        <th class="jb-w-50">{{#str}}percentage, local_jobboard{{/str}}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#statusdata}}
                     <tr>
                         <td>
-                            <span class="badge badge-{{color}}">{{label}}</span>
+                            <span class="jb-badge jb-badge-{{color}}">{{label}}</span>
                         </td>
                         <td>{{count}}</td>
                         <td>
-                            <div class="progress" style="height: 20px;">
-                                <div class="progress-bar bg-{{color}}" style="width: {{percentage}}%">
+                            <div class="jb-progress" style="height: 20px;">
+                                <div class="jb-progress-bar jb-bg-{{color}}" style="width: {{percentage}}%">
                                     {{percentage}}%
                                 </div>
                             </div>

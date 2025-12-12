@@ -13,23 +13,23 @@
     }
 }}
 <div class="jb-report-timeline">
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white">
-            <h5 class="mb-0">
-                <i class="fa fa-calendar-alt mr-2"></i>
+    <div class="jb-card jb-shadow-sm jb-mb-4">
+        <div class="jb-card-header jb-bg-white">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-calendar-alt jb-mr-2"></i>
                 {{#str}}dailyapplications, local_jobboard{{/str}}
             </h5>
         </div>
-        <div class="card-body">
+        <div class="jb-card-body">
             {{#hasdaily}}
             {{! Simple chart visualization using bars }}
-            <div class="jb-timeline-chart mb-4">
+            <div class="jb-timeline-chart jb-mb-4">
                 {{#daily}}
-                <div class="d-flex align-items-center mb-2">
-                    <div class="text-muted small" style="width: 100px;">{{day}}</div>
-                    <div class="flex-grow-1 mx-2">
-                        <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-primary" style="width: {{percentage}}%; min-width: 30px;">
+                <div class="jb-d-flex jb-align-items-center jb-mb-2">
+                    <div class="jb-text-muted jb-fs-sm" style="width: 100px;">{{day}}</div>
+                    <div class="jb-flex-grow-1 jb-mx-2">
+                        <div class="jb-progress" style="height: 20px;">
+                            <div class="jb-progress-bar jb-bg-primary" style="width: {{percentage}}%; min-width: 30px;">
                                 {{count}}
                             </div>
                         </div>
@@ -39,12 +39,12 @@
             </div>
 
             {{! Data Table }}
-            <div class="table-responsive">
-                <table class="table table-striped table-sm">
-                    <thead class="thead-light">
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-striped jb-table-sm">
+                    <thead class="jb-thead-light">
                         <tr>
                             <th>{{#str}}date{{/str}}</th>
-                            <th class="text-center">{{#str}}applications, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}applications, local_jobboard{{/str}}</th>
                             <th>{{#str}}trend, local_jobboard{{/str}}</th>
                         </tr>
                     </thead>
@@ -52,20 +52,20 @@
                         {{#daily}}
                         <tr>
                             <td>{{day}}</td>
-                            <td class="text-center font-weight-bold">{{count}}</td>
+                            <td class="jb-text-center jb-fw-bold">{{count}}</td>
                             <td>
                                 {{#isup}}
-                                <span class="text-success">
+                                <span class="jb-text-success">
                                     <i class="fa fa-arrow-up"></i> +{{change}}
                                 </span>
                                 {{/isup}}
                                 {{#isdown}}
-                                <span class="text-danger">
+                                <span class="jb-text-danger">
                                     <i class="fa fa-arrow-down"></i> {{change}}
                                 </span>
                                 {{/isdown}}
                                 {{#issame}}
-                                <span class="text-muted">
+                                <span class="jb-text-muted">
                                     <i class="fa fa-minus"></i> 0
                                 </span>
                                 {{/issame}}
@@ -78,8 +78,8 @@
             {{/hasdaily}}
 
             {{^hasdaily}}
-            <p class="text-muted text-center mb-0">
-                <i class="fa fa-calendar-times fa-2x mb-2 d-block"></i>
+            <p class="jb-text-muted jb-text-center jb-mb-0">
+                <i class="fa fa-calendar-times fa-2x jb-mb-2 jb-d-block"></i>
                 {{#str}}nodata, local_jobboard{{/str}}
             </p>
             {{/hasdaily}}

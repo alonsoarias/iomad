@@ -38,57 +38,57 @@
         ]
     }
 }}
-<div class="card shadow-sm mb-4 jb-list-group">
+<div class="jb-card jb-shadow-sm jb-mb-4 jb-list-group">
     {{#title}}
-    <div class="card-header {{#headercolor}}bg-{{headercolor}} text-white{{/headercolor}} d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">
+    <div class="jb-card-header {{#headercolor}}jb-bg-{{headercolor}} jb-text-white{{/headercolor}} jb-d-flex jb-justify-content-between jb-align-items-center">
+        <h5 class="jb-mb-0">
             {{#icon}}
-            <i class="fa fa-{{icon}} mr-2"></i>
+            <i class="fa fa-{{icon}} jb-mr-2"></i>
             {{/icon}}
             {{title}}
         </h5>
         {{#count}}
-        <span class="badge badge-light">{{count}}</span>
+        <span class="jb-badge jb-badge-light">{{count}}</span>
         {{/count}}
     </div>
     {{/title}}
 
     {{#items.0}}
-    <ul class="list-group list-group-flush">
+    <ul class="jb-list-group-items jb-list-group-flush">
         {{#items}}
-        <li class="list-group-item{{#active}} active{{/active}}{{#disabled}} disabled{{/disabled}} d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center flex-grow-1">
+        <li class="jb-list-group-item{{#active}} jb-active{{/active}}{{#disabled}} jb-disabled{{/disabled}} jb-d-flex jb-justify-content-between jb-align-items-center">
+            <div class="jb-d-flex jb-align-items-center jb-flex-grow-1">
                 {{#icon}}
-                <div class="mr-3">
-                    <i class="fa fa-{{icon}} fa-lg text-{{#iconcolor}}{{iconcolor}}{{/iconcolor}}{{^iconcolor}}muted{{/iconcolor}}"></i>
+                <div class="jb-mr-3">
+                    <i class="fa fa-{{icon}} fa-lg jb-text-{{#iconcolor}}{{iconcolor}}{{/iconcolor}}{{^iconcolor}}muted{{/iconcolor}}"></i>
                 </div>
                 {{/icon}}
-                <div class="flex-grow-1">
+                <div class="jb-flex-grow-1">
                     {{#url}}
-                    <a href="{{url}}" class="text-dark font-weight-bold text-decoration-none">{{title}}</a>
+                    <a href="{{url}}" class="jb-text-dark jb-fw-bold jb-text-decoration-none">{{title}}</a>
                     {{/url}}
                     {{^url}}
-                    <span class="font-weight-bold">{{title}}</span>
+                    <span class="jb-fw-bold">{{title}}</span>
                     {{/url}}
                     {{#subtitle}}
-                    <div class="text-muted small">{{subtitle}}</div>
+                    <div class="jb-text-muted jb-fs-sm">{{subtitle}}</div>
                     {{/subtitle}}
                 </div>
             </div>
 
-            <div class="d-flex align-items-center">
+            <div class="jb-d-flex jb-align-items-center">
                 {{#badge}}
-                <span class="badge badge-{{color}} mr-2">{{label}}</span>
+                <span class="jb-badge jb-badge-{{color}} jb-mr-2">{{label}}</span>
                 {{/badge}}
 
                 {{#meta}}
-                <small class="text-muted mr-2">{{meta}}</small>
+                <small class="jb-text-muted jb-mr-2">{{meta}}</small>
                 {{/meta}}
 
                 {{#actions.0}}
-                <div class="btn-group btn-group-sm">
+                <div class="jb-btn-group jb-btn-group-sm">
                     {{#actions}}
-                    <a href="{{url}}" class="btn {{#class}}{{class}}{{/class}}{{^class}}btn-outline-secondary{{/class}}" title="{{title}}">
+                    <a href="{{url}}" class="jb-btn {{#class}}{{class}}{{/class}}{{^class}}jb-btn-outline-secondary{{/class}}" title="{{title}}">
                         {{#icon}}
                         <i class="fa fa-{{icon}}"></i>
                         {{/icon}}
@@ -104,9 +104,9 @@
     {{/items.0}}
 
     {{^items.0}}
-    <div class="card-body text-center text-muted py-4">
-        <i class="fa fa-inbox fa-2x mb-2"></i>
-        <p class="mb-0">{{#empty}}{{empty}}{{/empty}}{{^empty}}{{#str}}noresults{{/str}}{{/empty}}</p>
+    <div class="jb-card-body jb-text-center jb-text-muted jb-py-4">
+        <i class="fa fa-inbox fa-2x jb-mb-2"></i>
+        <p class="jb-mb-0">{{#empty}}{{empty}}{{/empty}}{{^empty}}{{#str}}noresults{{/str}}{{/empty}}</p>
     </div>
     {{/items.0}}
 </div>

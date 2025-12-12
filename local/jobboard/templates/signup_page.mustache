@@ -6,33 +6,33 @@
     @copyright 2024 ISER
     @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 }}
-<div class="container-fluid px-3 px-md-5">
+<div class="jb-container-fluid jb-px-3 jb-px-md-5">
     {{! Header Section }}
-    <div class="text-center mb-4 pb-3 border-bottom">
-        <div class="mb-3">
+    <div class="jb-text-center jb-mb-4 jb-pb-3 jb-border-bottom">
+        <div class="jb-mb-3">
             {{#pix}}i/user, core{{/pix}}
         </div>
-        <h1 class="h3 mb-2">{{title}}</h1>
-        <p class="text-muted">{{intro}}</p>
+        <h1 class="jb-fs-3 jb-mb-2">{{title}}</h1>
+        <p class="jb-text-muted">{{intro}}</p>
     </div>
 
     {{! Vacancy Info Card (if applying to specific vacancy) }}
     {{#vacancy}}
-    <div class="card mb-4 border-primary">
-        <div class="card-header bg-primary text-white py-2">
-            <h5 class="mb-0 d-flex align-items-center">
+    <div class="jb-card jb-mb-4 jb-border-primary">
+        <div class="jb-card-header jb-bg-primary jb-text-white jb-py-2">
+            <h5 class="jb-mb-0 jb-d-flex jb-align-items-center">
                 {{#pix}}i/briefcase, core{{/pix}}
-                <span class="ml-2">{{applyingfortext}}</span>
+                <span class="jb-ml-2">{{applyingfortext}}</span>
             </h5>
         </div>
-        <div class="card-body py-3">
-            <h5 class="card-title mb-2 font-weight-bold">{{vacancy.title}}</h5>
-            <p class="card-text mb-1">
-                <span class="text-muted">{{codetext}}:</span>
+        <div class="jb-card-body jb-py-3">
+            <h5 class="jb-card-title jb-mb-2 jb-fw-bold">{{vacancy.title}}</h5>
+            <p class="jb-card-text jb-mb-1">
+                <span class="jb-text-muted">{{codetext}}:</span>
                 <strong>{{vacancy.code}}</strong>
             </p>
             {{#vacancy.location}}
-            <p class="card-text mb-0 text-muted small">
+            <p class="jb-card-text jb-mb-0 jb-text-muted jb-fs-sm">
                 {{#pix}}i/location, core{{/pix}}
                 {{vacancy.location}}
             </p>
@@ -42,24 +42,24 @@
     {{/vacancy}}
 
     {{! Already have account notice }}
-    <div class="alert alert-info d-flex align-items-center mb-4">
-        <span class="mr-3">{{#pix}}i/info, core{{/pix}}</span>
-        <div class="flex-grow-1">
+    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4">
+        <span class="jb-mr-3">{{#pix}}i/info, core{{/pix}}</span>
+        <div class="jb-flex-grow-1">
             <strong>{{alreadyaccounttext}}</strong>
-            <a href="{{loginurl}}" class="btn btn-sm btn-primary ml-2">
+            <a href="{{loginurl}}" class="jb-btn jb-btn-sm jb-btn-primary jb-ml-2">
                 {{logintext}}
             </a>
         </div>
     </div>
 
     {{! Required fields notice }}
-    <p class="text-muted small mb-4">
-        <span class="text-danger">*</span> {{requiredfieldstext}}
+    <p class="jb-text-muted jb-fs-sm jb-mb-4">
+        <span class="jb-text-danger">*</span> {{requiredfieldstext}}
     </p>
 
     {{! Progress Steps Indicator }}
-    <div class="jb-progress-container mb-4" id="jb-signup-progress">
-        <p class="text-muted small mb-2 text-center">{{#str}}signup_progress, local_jobboard{{/str}}</p>
+    <div class="jb-progress-container jb-mb-4" id="jb-signup-progress">
+        <p class="jb-text-muted jb-fs-sm jb-mb-2 jb-text-center">{{#str}}signup_progress, local_jobboard{{/str}}</p>
         <ul class="jb-progress-steps" role="progressbar" aria-label="{{#str}}signup_progress, local_jobboard{{/str}}">
             <li class="jb-step active" data-step="0" data-section="accountheader">
                 <div class="jb-step-icon"><i class="fa fa-key" aria-hidden="true"></i></div>
@@ -85,8 +85,8 @@
     </div>
 
     {{! The form content }}
-    <div class="card">
-        <div class="card-body">
+    <div class="jb-card">
+        <div class="jb-card-body">
             {{{formhtml}}}
         </div>
     </div>

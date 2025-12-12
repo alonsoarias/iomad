@@ -32,21 +32,21 @@
         "canreview": false
     }
 }}
-<tr data-application-id="{{id}}" class="application-row">
+<tr data-application-id="{{id}}" class="jb-application-row">
     <td>
-        <a href="{{viewurl}}" class="font-weight-bold">{{vacancycode}}</a>
+        <a href="{{viewurl}}" class="jb-fw-bold">{{vacancycode}}</a>
         <br>
-        <small class="text-muted">{{vacancytitle}}</small>
+        <small class="jb-text-muted">{{vacancytitle}}</small>
     </td>
     {{#applicantname}}
         <td>{{applicantname}}</td>
     {{/applicantname}}
     <td>
-        <span class="badge badge-{{statusclass}}">{{statuslabel}}</span>
+        <span class="jb-badge jb-badge-{{statusclass}}">{{statuslabel}}</span>
     </td>
     <td>
-        <div class="progress jb-document-progress">
-            <div class="progress-bar bg-success" role="progressbar"
+        <div class="jb-progress jb-document-progress">
+            <div class="jb-progress-bar jb-bg-success" role="progressbar"
                  style="width: {{documentpercent}}%;"
                  aria-valuenow="{{documentsvalidated}}"
                  aria-valuemin="0"
@@ -56,12 +56,12 @@
         </div>
     </td>
     <td>{{timecreated}}</td>
-    <td class="text-right">
-        <a href="{{viewurl}}" class="btn btn-sm btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
+    <td class="jb-text-right">
+        <a href="{{viewurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
             {{#pix}}i/preview, core{{/pix}}
         </a>
         {{#canreview}}
-            <a href="{{reviewurl}}" class="btn btn-sm btn-outline-success" title="{{#str}}validate, local_jobboard{{/str}}">
+            <a href="{{reviewurl}}" class="jb-btn jb-btn-sm jb-btn-outline-success" title="{{#str}}validate, local_jobboard{{/str}}">
                 {{#pix}}i/checked, core{{/pix}}
             </a>
         {{/canreview}}

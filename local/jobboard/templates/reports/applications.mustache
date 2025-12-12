@@ -12,42 +12,42 @@
     }
 }}
 <div class="jb-report-applications">
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white">
-            <h5 class="mb-0">
-                <i class="fa fa-briefcase mr-2"></i>
+    <div class="jb-card jb-shadow-sm jb-mb-4">
+        <div class="jb-card-header jb-bg-white">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-briefcase jb-mr-2"></i>
                 {{#str}}applicationsbyvacancy, local_jobboard{{/str}}
             </h5>
         </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
-                    <thead class="thead-light">
+        <div class="jb-card-body jb-p-0">
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-striped jb-table-hover jb-mb-0">
+                    <thead class="jb-thead-light">
                         <tr>
                             <th>{{#str}}vacancy, local_jobboard{{/str}}</th>
-                            <th class="text-center">{{#str}}total{{/str}}</th>
-                            <th class="text-center text-success">{{#str}}selected, local_jobboard{{/str}}</th>
-                            <th class="text-center text-danger">{{#str}}rejected, local_jobboard{{/str}}</th>
-                            <th class="text-center text-warning">{{#str}}pending, local_jobboard{{/str}}</th>
-                            <th class="w-25">{{#str}}progress, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}total{{/str}}</th>
+                            <th class="jb-text-center jb-text-success">{{#str}}selected, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center jb-text-danger">{{#str}}rejected, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center jb-text-warning">{{#str}}pending, local_jobboard{{/str}}</th>
+                            <th class="jb-w-25">{{#str}}progress, local_jobboard{{/str}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{#byvacancy}}
                         <tr>
                             <td>
-                                <span class="badge badge-secondary mr-2">{{code}}</span>
+                                <span class="jb-badge jb-badge-secondary jb-mr-2">{{code}}</span>
                                 {{title}}
                             </td>
-                            <td class="text-center font-weight-bold">{{total}}</td>
-                            <td class="text-center text-success">{{selected}}</td>
-                            <td class="text-center text-danger">{{rejected}}</td>
-                            <td class="text-center text-warning">{{pending}}</td>
+                            <td class="jb-text-center jb-fw-bold">{{total}}</td>
+                            <td class="jb-text-center jb-text-success">{{selected}}</td>
+                            <td class="jb-text-center jb-text-danger">{{rejected}}</td>
+                            <td class="jb-text-center jb-text-warning">{{pending}}</td>
                             <td>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar bg-success" style="width: {{selectedpct}}%" title="{{#str}}selected, local_jobboard{{/str}}"></div>
-                                    <div class="progress-bar bg-danger" style="width: {{rejectedpct}}%" title="{{#str}}rejected, local_jobboard{{/str}}"></div>
-                                    <div class="progress-bar bg-warning" style="width: {{pendingpct}}%" title="{{#str}}pending, local_jobboard{{/str}}"></div>
+                                <div class="jb-progress" style="height: 8px;">
+                                    <div class="jb-progress-bar jb-bg-success" style="width: {{selectedpct}}%" title="{{#str}}selected, local_jobboard{{/str}}"></div>
+                                    <div class="jb-progress-bar jb-bg-danger" style="width: {{rejectedpct}}%" title="{{#str}}rejected, local_jobboard{{/str}}"></div>
+                                    <div class="jb-progress-bar jb-bg-warning" style="width: {{pendingpct}}%" title="{{#str}}pending, local_jobboard{{/str}}"></div>
                                 </div>
                             </td>
                         </tr>

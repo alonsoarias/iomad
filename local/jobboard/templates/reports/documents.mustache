@@ -14,37 +14,37 @@
     }
 }}
 <div class="jb-report-documents">
-    <div class="row mb-4">
+    <div class="jb-row jb-mb-4">
         {{! Validation Summary }}
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">
-                        <i class="fa fa-chart-bar mr-2"></i>
+        <div class="jb-col-md-6">
+            <div class="jb-card jb-shadow-sm jb-h-100">
+                <div class="jb-card-header jb-bg-white">
+                    <h5 class="jb-mb-0">
+                        <i class="fa fa-chart-bar jb-mr-2"></i>
                         {{#str}}validationsummary, local_jobboard{{/str}}
                     </h5>
                 </div>
-                <div class="card-body">
-                    <table class="table mb-0">
+                <div class="jb-card-body">
+                    <table class="jb-table jb-mb-0">
                         <tr>
                             <td>{{#str}}totaldocuments, local_jobboard{{/str}}</td>
-                            <td class="text-right"><strong>{{stats.total}}</strong></td>
+                            <td class="jb-text-right"><strong>{{stats.total}}</strong></td>
                         </tr>
-                        <tr class="text-success">
+                        <tr class="jb-text-success">
                             <td>{{#str}}validated, local_jobboard{{/str}}</td>
-                            <td class="text-right">{{stats.validated}} ({{stats.validationrate}}%)</td>
+                            <td class="jb-text-right">{{stats.validated}} ({{stats.validationrate}}%)</td>
                         </tr>
-                        <tr class="text-danger">
+                        <tr class="jb-text-danger">
                             <td>{{#str}}rejected, local_jobboard{{/str}}</td>
-                            <td class="text-right">{{stats.rejected}} ({{stats.rejectionrate}}%)</td>
+                            <td class="jb-text-right">{{stats.rejected}} ({{stats.rejectionrate}}%)</td>
                         </tr>
-                        <tr class="text-warning">
+                        <tr class="jb-text-warning">
                             <td>{{#str}}pending, local_jobboard{{/str}}</td>
-                            <td class="text-right">{{stats.pending}}</td>
+                            <td class="jb-text-right">{{stats.pending}}</td>
                         </tr>
                         <tr>
                             <td>{{#str}}avgvalidationtime, local_jobboard{{/str}}</td>
-                            <td class="text-right">{{stats.avgtime}} {{#str}}hours{{/str}}</td>
+                            <td class="jb-text-right">{{stats.avgtime}} {{#str}}hours{{/str}}</td>
                         </tr>
                     </table>
                 </div>
@@ -52,28 +52,28 @@
         </div>
 
         {{! Rejection Reasons }}
-        <div class="col-md-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">
-                        <i class="fa fa-times-circle mr-2"></i>
+        <div class="jb-col-md-6">
+            <div class="jb-card jb-shadow-sm jb-h-100">
+                <div class="jb-card-header jb-bg-white">
+                    <h5 class="jb-mb-0">
+                        <i class="fa fa-times-circle jb-mr-2"></i>
                         {{#str}}rejectionreasons, local_jobboard{{/str}}
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="jb-card-body">
                     {{#hasrejections}}
-                    <table class="table mb-0">
+                    <table class="jb-table jb-mb-0">
                         {{#rejectionreasons}}
                         <tr>
                             <td>{{reason}}</td>
-                            <td class="text-right text-danger">{{count}}</td>
+                            <td class="jb-text-right jb-text-danger">{{count}}</td>
                         </tr>
                         {{/rejectionreasons}}
                     </table>
                     {{/hasrejections}}
                     {{^hasrejections}}
-                    <p class="text-muted text-center mb-0">
-                        <i class="fa fa-check-circle text-success mr-2"></i>
+                    <p class="jb-text-muted jb-text-center jb-mb-0">
+                        <i class="fa fa-check-circle jb-text-success jb-mr-2"></i>
                         {{#str}}norejections, local_jobboard{{/str}}
                     </p>
                     {{/hasrejections}}
@@ -83,33 +83,33 @@
     </div>
 
     {{! By Document Type }}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white">
-            <h5 class="mb-0">
-                <i class="fa fa-file-alt mr-2"></i>
+    <div class="jb-card jb-shadow-sm jb-mb-4">
+        <div class="jb-card-header jb-bg-white">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-file-alt jb-mr-2"></i>
                 {{#str}}bydocumenttype, local_jobboard{{/str}}
             </h5>
         </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-striped mb-0">
-                    <thead class="thead-light">
+        <div class="jb-card-body jb-p-0">
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-striped jb-mb-0">
+                    <thead class="jb-thead-light">
                         <tr>
                             <th>{{#str}}documenttype, local_jobboard{{/str}}</th>
-                            <th class="text-center">{{#str}}total{{/str}}</th>
-                            <th class="text-center text-success">{{#str}}validated, local_jobboard{{/str}}</th>
-                            <th class="text-center text-danger">{{#str}}rejected, local_jobboard{{/str}}</th>
-                            <th class="text-center text-warning">{{#str}}pending, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center">{{#str}}total{{/str}}</th>
+                            <th class="jb-text-center jb-text-success">{{#str}}validated, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center jb-text-danger">{{#str}}rejected, local_jobboard{{/str}}</th>
+                            <th class="jb-text-center jb-text-warning">{{#str}}pending, local_jobboard{{/str}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{#bytype}}
                         <tr>
                             <td>{{typename}}</td>
-                            <td class="text-center">{{total}}</td>
-                            <td class="text-center text-success">{{validated}}</td>
-                            <td class="text-center text-danger">{{rejected}}</td>
-                            <td class="text-center text-warning">{{pending}}</td>
+                            <td class="jb-text-center">{{total}}</td>
+                            <td class="jb-text-center jb-text-success">{{validated}}</td>
+                            <td class="jb-text-center jb-text-danger">{{rejected}}</td>
+                            <td class="jb-text-center jb-text-warning">{{pending}}</td>
                         </tr>
                         {{/bytype}}
                     </tbody>

@@ -26,44 +26,44 @@
         "uploadurl": "/local/jobboard/upload.php"
     }
 }}
-<div class="card document-upload-card mb-3 jb-document-card"
+<div class="jb-card jb-document-upload-card jb-mb-3 jb-document-card"
      data-document-type="{{documenttype}}"
      data-application-id="{{applicationid}}"
      role="region"
      aria-labelledby="doc-header-{{documenttype}}">
-    <div class="card-header d-flex justify-content-between align-items-center" id="doc-header-{{documenttype}}">
+    <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center" id="doc-header-{{documenttype}}">
         <span>
             {{documenttypename}}
             {{#required}}
-                <span class="badge badge-danger ml-1" aria-label="{{#str}}requireddocument, local_jobboard{{/str}}">{{#str}}required, local_jobboard{{/str}}</span>
+                <span class="jb-badge jb-badge-danger jb-ml-1" aria-label="{{#str}}requireddocument, local_jobboard{{/str}}">{{#str}}required, local_jobboard{{/str}}</span>
             {{/required}}
             {{^required}}
-                <span class="badge badge-secondary ml-1">{{#str}}optional, local_jobboard{{/str}}</span>
+                <span class="jb-badge jb-badge-secondary jb-ml-1">{{#str}}optional, local_jobboard{{/str}}</span>
             {{/required}}
         </span>
         {{#currentfile}}
-            <span class="badge badge-{{statusclass}}" role="status" aria-live="polite">
+            <span class="jb-badge jb-badge-{{statusclass}}" role="status" aria-live="polite">
                 {{#pix}}i/{{statusicon}}, core{{/pix}}
                 {{statuslabel}}
             </span>
         {{/currentfile}}
     </div>
-    <div class="card-body">
+    <div class="jb-card-body">
         {{#currentfile}}
-            <div class="current-file mb-3 p-2 bg-light rounded">
-                <div class="d-flex justify-content-between align-items-center">
+            <div class="jb-current-file jb-mb-3 jb-p-2 jb-bg-light jb-rounded">
+                <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
                     <div>
                         {{#pix}}f/pdf, core{{/pix}}
                         <strong>{{currentfile.filename}}</strong>
-                        <small class="text-muted">({{currentfile.filesizedisplay}})</small>
+                        <small class="jb-text-muted">({{currentfile.filesizedisplay}})</small>
                     </div>
                     <div>
-                        <a href="{{currentfile.downloadurl}}" class="btn btn-sm btn-outline-primary">
+                        <a href="{{currentfile.downloadurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
                             {{#pix}}i/export, core{{/pix}}
                             {{#str}}download, local_jobboard{{/str}}
                         </a>
                         {{#canreupload}}
-                            <button type="button" class="btn btn-sm btn-outline-secondary btn-reupload">
+                            <button type="button" class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-btn-reupload">
                                 {{#pix}}i/reload, core{{/pix}}
                                 {{#str}}resubmit, local_jobboard{{/str}}
                             </button>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 {{#currentfile.rejectreason}}
-                    <div class="alert alert-danger mt-2 mb-0 small">
+                    <div class="jb-alert jb-alert-danger jb-mt-2 jb-mb-0 jb-fs-sm">
                         <strong>{{#str}}rejectreason, local_jobboard{{/str}}:</strong>
                         {{currentfile.rejectreason}}
                     </div>
@@ -80,7 +80,7 @@
         {{/currentfile}}
 
         {{^currentfile}}
-            <form class="document-upload-form jb-upload-form"
+            <form class="jb-document-upload-form jb-upload-form"
                   action="{{uploadurl}}"
                   method="post"
                   enctype="multipart/form-data"
@@ -89,53 +89,53 @@
                 <input type="hidden" name="documenttype" value="{{documenttype}}">
                 <input type="hidden" name="sesskey" value="{{sesskey}}">
 
-                <div class="form-group">
+                <div class="jb-form-group">
                     <label for="file_{{documenttype}}" id="file_label_{{documenttype}}">
                         {{#str}}uploadfile, local_jobboard{{/str}}
-                        {{#required}}<span class="text-danger" aria-hidden="true">*</span>{{/required}}
+                        {{#required}}<span class="jb-text-danger" aria-hidden="true">*</span>{{/required}}
                     </label>
-                    <div class="custom-file">
+                    <div class="jb-custom-file">
                         <input type="file"
-                               class="custom-file-input"
+                               class="jb-custom-file-input"
                                id="file_{{documenttype}}"
                                name="documentfile"
                                accept="{{acceptedmimes}}"
                                {{#required}}required aria-required="true"{{/required}}
                                aria-describedby="file_help_{{documenttype}}">
-                        <label class="custom-file-label" for="file_{{documenttype}}">
+                        <label class="jb-custom-file-label" for="file_{{documenttype}}">
                             {{#str}}choosefiles, local_jobboard{{/str}}
                         </label>
                     </div>
-                    <small class="form-text text-muted" id="file_help_{{documenttype}}">
+                    <small class="jb-form-text jb-text-muted" id="file_help_{{documenttype}}">
                         {{#str}}allowedformats, local_jobboard{{/str}}: {{acceptedformats}}.
                         {{#str}}maxfilesize, local_jobboard{{/str}}: {{maxsizedisplay}}
                     </small>
                 </div>
 
                 {{#issuedate}}
-                    <div class="form-group">
+                    <div class="jb-form-group">
                         <label for="issuedate_{{documenttype}}">
                             {{#str}}issuedate, local_jobboard{{/str}}
                         </label>
                         <input type="date"
-                               class="form-control"
+                               class="jb-form-control"
                                id="issuedate_{{documenttype}}"
                                name="issuedate"
                                max="{{today}}"
                                aria-describedby="issuedate_help_{{documenttype}}">
-                        <small class="form-text text-muted sr-only" id="issuedate_help_{{documenttype}}">
+                        <small class="jb-form-text jb-text-muted jb-sr-only" id="issuedate_help_{{documenttype}}">
                             {{#str}}issuedatehelp, local_jobboard{{/str}}
                         </small>
                     </div>
                 {{/issuedate}}
 
-                <button type="submit" class="btn btn-primary btn-upload jb-btn-loading">
-                    <span class="btn-text">
+                <button type="submit" class="jb-btn jb-btn-primary jb-btn-upload jb-btn-loading">
+                    <span class="jb-btn-text">
                         {{#pix}}i/upload, core{{/pix}}
                         {{#str}}upload, local_jobboard{{/str}}
                     </span>
-                    <span class="btn-loading-indicator d-none" aria-hidden="true">
-                        <i class="fa fa-spinner fa-spin mr-1"></i>
+                    <span class="jb-btn-loading-indicator jb-d-none" aria-hidden="true">
+                        <i class="fa fa-spinner fa-spin jb-mr-1"></i>
                         {{#str}}uploading, local_jobboard{{/str}}
                     </span>
                 </button>
@@ -143,7 +143,7 @@
         {{/currentfile}}
 
         {{#showreupload}}
-            <form class="document-upload-form mt-3 d-none jb-reupload-form"
+            <form class="jb-document-upload-form jb-mt-3 jb-d-none jb-reupload-form"
                   action="{{uploadurl}}"
                   method="post"
                   enctype="multipart/form-data">
@@ -153,23 +153,23 @@
                 <input type="hidden" name="sesskey" value="{{sesskey}}">
                 <input type="hidden" name="supersede" value="1">
 
-                <div class="form-group">
-                    <div class="custom-file">
-                        <input type="file" 
-                               class="custom-file-input" 
+                <div class="jb-form-group">
+                    <div class="jb-custom-file">
+                        <input type="file"
+                               class="jb-custom-file-input"
                                name="documentfile"
                                accept="{{acceptedmimes}}"
                                required>
-                        <label class="custom-file-label">
+                        <label class="jb-custom-file-label">
                             {{#str}}choosefiles, local_jobboard{{/str}}
                         </label>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-sm">
+                <button type="submit" class="jb-btn jb-btn-primary jb-btn-sm">
                     {{#str}}upload, local_jobboard{{/str}}
                 </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-cancel-reupload">
+                <button type="button" class="jb-btn jb-btn-secondary jb-btn-sm jb-btn-cancel-reupload">
                     {{#str}}cancel, local_jobboard{{/str}}
                 </button>
             </form>
