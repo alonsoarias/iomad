@@ -610,6 +610,7 @@ $string['removemember'] = 'Remove member';
 $string['memberadded'] = 'Member added successfully';
 $string['memberremoved'] = 'Member removed successfully';
 $string['nocommittees'] = 'No committees found';
+$string['allcommittees'] = 'All committees';
 $string['selectcommittee'] = 'Select committee';
 $string['facultycommittee'] = 'Faculty committee';
 $string['committeerole'] = 'Role in committee';
@@ -1831,6 +1832,7 @@ $string['dryrunmode'] = 'Dry run mode';
 $string['dryrunresults'] = 'Dry run results';
 $string['overwriteexisting'] = 'Overwrite existing';
 $string['updateexisting'] = 'Update existing records';
+$string['updateexisting_help'] = 'If enabled, existing vacancies with the same code will be updated with the imported data. If disabled, existing vacancies will be skipped.';
 $string['vacancies_created'] = 'Vacancies created';
 $string['vacancies_skipped'] = 'Vacancies skipped';
 $string['vacancies_updated'] = 'Vacancies updated';
@@ -1916,6 +1918,7 @@ $string['selectcompany'] = 'Select company';
 $string['selectdepartment'] = 'Select department';
 $string['selectconvocatoriafirst'] = 'Please select a convocatoria first';
 $string['createcompanies'] = 'Create companies';
+$string['createcompanies_help'] = 'If enabled, companies referenced in the import file that do not exist in IOMAD will be automatically created. If disabled, vacancies referencing non-existent companies will be skipped.';
 
 // =============================================================================
 // ADDITIONAL STRINGS - ROLES & CAPABILITIES
@@ -1939,6 +1942,7 @@ $string['cap_viewreports'] = 'View reports';
 // ADDITIONAL STRINGS - FEATURES & DESCRIPTIONS
 // =============================================================================
 
+$string['features'] = 'Features';
 $string['feature_assign_reviewers'] = 'Assign reviewers to applications';
 $string['feature_create_convocatorias'] = 'Create and manage convocatorias';
 $string['feature_create_vacancies'] = 'Create new vacancy postings';

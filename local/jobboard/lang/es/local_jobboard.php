@@ -610,6 +610,7 @@ $string['removemember'] = 'Remover miembro';
 $string['memberadded'] = 'Miembro agregado exitosamente';
 $string['memberremoved'] = 'Miembro removido exitosamente';
 $string['nocommittees'] = 'No se encontraron comités';
+$string['allcommittees'] = 'Todos los comités';
 $string['selectcommittee'] = 'Seleccione comité';
 $string['facultycommittee'] = 'Comité de facultad';
 $string['committeerole'] = 'Rol en el comité';
@@ -1842,6 +1843,7 @@ $string['dryrunmode'] = 'Modo de prueba';
 $string['dryrunresults'] = 'Resultados de prueba';
 $string['overwriteexisting'] = 'Sobrescribir existentes';
 $string['updateexisting'] = 'Actualizar registros existentes';
+$string['updateexisting_help'] = 'Si está habilitado, las vacantes existentes con el mismo código serán actualizadas con los datos importados. Si está deshabilitado, las vacantes existentes serán omitidas.';
 $string['vacancies_created'] = 'Vacantes creadas';
 $string['vacancies_skipped'] = 'Vacantes omitidas';
 $string['vacancies_updated'] = 'Vacantes actualizadas';
@@ -1927,6 +1929,7 @@ $string['selectcompany'] = 'Seleccionar empresa';
 $string['selectdepartment'] = 'Seleccionar departamento';
 $string['selectconvocatoriafirst'] = 'Por favor seleccione una convocatoria primero';
 $string['createcompanies'] = 'Crear empresas';
+$string['createcompanies_help'] = 'Si está habilitado, las empresas referenciadas en el archivo de importación que no existan en IOMAD serán creadas automáticamente. Si está deshabilitado, las vacantes que referencien empresas inexistentes serán omitidas.';
 
 // =============================================================================
 // CADENAS ADICIONALES - ROLES Y CAPACIDADES
@@ -1950,6 +1953,7 @@ $string['cap_viewreports'] = 'Ver reportes';
 // CADENAS ADICIONALES - CARACTERÍSTICAS Y DESCRIPCIONES
 // =============================================================================
 
+$string['features'] = 'Características';
 $string['feature_assign_reviewers'] = 'Asignar revisores a postulaciones';
 $string['feature_create_convocatorias'] = 'Crear y gestionar convocatorias';
 $string['feature_create_vacancies'] = 'Crear nuevas publicaciones de vacantes';

@@ -4817,7 +4817,7 @@ class renderer extends renderer_base {
             }
 
             foreach ($allcategories as $cat) {
-                $indent = str_repeat('&nbsp;&nbsp;&nbsp;', $cat->depth);
+                $indent = str_repeat('&nbsp;&nbsp;&nbsp;', (int)$cat->depth);
                 $icon = $cat->depth == 1 ? 'building' : 'graduation-cap';
                 $hasReviewers = isset($reviewerLookup[$cat->id]);
 
