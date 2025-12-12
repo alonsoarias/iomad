@@ -6,12 +6,12 @@
  * @author    Alonso Arias <soporteplataformas@iser.edu.co>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * Scoped CSS System - All styles are encapsulated to prevent theme conflicts.
- * Uses [data-region^="jobboard"] scope for isolation.
+ * FULLY ISOLATED CSS - Independent from any Moodle theme.
+ * All styles are scoped and include element resets.
  */
 
 /* ==========================================================================
-   CSS VARIABLES - Prefixed to avoid conflicts
+   CSS VARIABLES
    ========================================================================== */
 
 :root {
@@ -38,6 +38,13 @@
     --jb-white: #ffffff;
     --jb-muted: #6c757d;
     --jb-border: #dee2e6;
+    --jb-body-bg: #ffffff;
+    --jb-body-color: #212529;
+    --jb-link-color: #0d6efd;
+    --jb-link-hover-color: #0a58ca;
+    --jb-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --jb-font-size-base: 1rem;
+    --jb-line-height-base: 1.5;
     --jb-border-radius: 0.375rem;
     --jb-border-radius-sm: 0.25rem;
     --jb-border-radius-lg: 0.5rem;
@@ -47,19 +54,458 @@
 }
 
 /* ==========================================================================
-   SCOPED STYLES - All styles within jobboard regions
+   SCOPED CONTAINER BASE RESET
+   Reset all HTML elements within plugin containers
    ========================================================================== */
 
 [data-region^="jobboard"],
 .local-jobboard-dashboard,
 .local-jobboard-public {
-    /* Base typography */
-    font-family: inherit;
-    line-height: 1.5;
+    /* Base container styles */
+    box-sizing: border-box;
+    font-family: var(--jb-font-family);
+    font-size: var(--jb-font-size-base);
+    line-height: var(--jb-line-height-base);
+    color: var(--jb-body-color);
+    background-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Box-sizing reset for all elements */
+[data-region^="jobboard"] *,
+[data-region^="jobboard"] *::before,
+[data-region^="jobboard"] *::after,
+.local-jobboard-dashboard *,
+.local-jobboard-dashboard *::before,
+.local-jobboard-dashboard *::after,
+.local-jobboard-public *,
+.local-jobboard-public *::before,
+.local-jobboard-public *::after {
+    box-sizing: border-box;
 }
 
 /* ==========================================================================
-   LAYOUT - Grid System (Scoped)
+   TYPOGRAPHY RESET - Headings
+   ========================================================================== */
+
+[data-region^="jobboard"] h1,
+[data-region^="jobboard"] h2,
+[data-region^="jobboard"] h3,
+[data-region^="jobboard"] h4,
+[data-region^="jobboard"] h5,
+[data-region^="jobboard"] h6,
+.local-jobboard-dashboard h1,
+.local-jobboard-dashboard h2,
+.local-jobboard-dashboard h3,
+.local-jobboard-dashboard h4,
+.local-jobboard-dashboard h5,
+.local-jobboard-dashboard h6,
+.local-jobboard-public h1,
+.local-jobboard-public h2,
+.local-jobboard-public h3,
+.local-jobboard-public h4,
+.local-jobboard-public h5,
+.local-jobboard-public h6 {
+    margin: 0 0 0.5rem 0;
+    padding: 0;
+    font-family: var(--jb-font-family);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--jb-dark);
+}
+
+[data-region^="jobboard"] h1,
+.local-jobboard-dashboard h1,
+.local-jobboard-public h1 { font-size: 2.5rem; }
+
+[data-region^="jobboard"] h2,
+.local-jobboard-dashboard h2,
+.local-jobboard-public h2 { font-size: 2rem; }
+
+[data-region^="jobboard"] h3,
+.local-jobboard-dashboard h3,
+.local-jobboard-public h3 { font-size: 1.75rem; }
+
+[data-region^="jobboard"] h4,
+.local-jobboard-dashboard h4,
+.local-jobboard-public h4 { font-size: 1.5rem; }
+
+[data-region^="jobboard"] h5,
+.local-jobboard-dashboard h5,
+.local-jobboard-public h5 { font-size: 1.25rem; }
+
+[data-region^="jobboard"] h6,
+.local-jobboard-dashboard h6,
+.local-jobboard-public h6 { font-size: 1rem; }
+
+/* ==========================================================================
+   TYPOGRAPHY RESET - Paragraphs and Text
+   ========================================================================== */
+
+[data-region^="jobboard"] p,
+.local-jobboard-dashboard p,
+.local-jobboard-public p {
+    margin: 0 0 1rem 0;
+    padding: 0;
+    font-family: var(--jb-font-family);
+    font-size: var(--jb-font-size-base);
+    line-height: var(--jb-line-height-base);
+    color: var(--jb-body-color);
+}
+
+[data-region^="jobboard"] span,
+.local-jobboard-dashboard span,
+.local-jobboard-public span {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+}
+
+[data-region^="jobboard"] strong,
+[data-region^="jobboard"] b,
+.local-jobboard-dashboard strong,
+.local-jobboard-dashboard b,
+.local-jobboard-public strong,
+.local-jobboard-public b {
+    font-weight: 700;
+}
+
+[data-region^="jobboard"] em,
+[data-region^="jobboard"] i:not(.fa):not(.fas):not(.far):not(.fab),
+.local-jobboard-dashboard em,
+.local-jobboard-dashboard i:not(.fa):not(.fas):not(.far):not(.fab),
+.local-jobboard-public em,
+.local-jobboard-public i:not(.fa):not(.fas):not(.far):not(.fab) {
+    font-style: italic;
+}
+
+[data-region^="jobboard"] small,
+.local-jobboard-dashboard small,
+.local-jobboard-public small {
+    font-size: 0.875em;
+}
+
+[data-region^="jobboard"] code,
+.local-jobboard-dashboard code,
+.local-jobboard-public code {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875em;
+    color: #d63384;
+    background-color: #f8f9fa;
+    padding: 0.125rem 0.25rem;
+    border-radius: var(--jb-border-radius-sm);
+}
+
+/* ==========================================================================
+   LINKS RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] a,
+.local-jobboard-dashboard a,
+.local-jobboard-public a {
+    color: var(--jb-link-color);
+    text-decoration: none;
+    background-color: transparent;
+    transition: color 0.15s ease-in-out;
+}
+
+[data-region^="jobboard"] a:hover,
+.local-jobboard-dashboard a:hover,
+.local-jobboard-public a:hover {
+    color: var(--jb-link-hover-color);
+    text-decoration: underline;
+}
+
+[data-region^="jobboard"] a:focus,
+.local-jobboard-dashboard a:focus,
+.local-jobboard-public a:focus {
+    outline: 2px solid var(--jb-primary);
+    outline-offset: 2px;
+}
+
+/* ==========================================================================
+   LISTS RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] ul,
+[data-region^="jobboard"] ol,
+.local-jobboard-dashboard ul,
+.local-jobboard-dashboard ol,
+.local-jobboard-public ul,
+.local-jobboard-public ol {
+    margin: 0 0 1rem 0;
+    padding: 0 0 0 2rem;
+    font-family: var(--jb-font-family);
+}
+
+[data-region^="jobboard"] li,
+.local-jobboard-dashboard li,
+.local-jobboard-public li {
+    margin: 0 0 0.25rem 0;
+    padding: 0;
+    line-height: var(--jb-line-height-base);
+}
+
+/* ==========================================================================
+   IMAGES RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] img,
+.local-jobboard-dashboard img,
+.local-jobboard-public img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    border: 0;
+}
+
+/* ==========================================================================
+   TABLES RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] table,
+.local-jobboard-dashboard table,
+.local-jobboard-public table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 1rem;
+    background-color: transparent;
+}
+
+[data-region^="jobboard"] th,
+[data-region^="jobboard"] td,
+.local-jobboard-dashboard th,
+.local-jobboard-dashboard td,
+.local-jobboard-public th,
+.local-jobboard-public td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border: 1px solid var(--jb-border);
+    font-family: var(--jb-font-family);
+    font-size: var(--jb-font-size-base);
+    line-height: var(--jb-line-height-base);
+    color: var(--jb-body-color);
+    text-align: left;
+}
+
+[data-region^="jobboard"] th,
+.local-jobboard-dashboard th,
+.local-jobboard-public th {
+    font-weight: 600;
+    background-color: var(--jb-light);
+}
+
+[data-region^="jobboard"] thead,
+.local-jobboard-dashboard thead,
+.local-jobboard-public thead {
+    background-color: var(--jb-light);
+}
+
+[data-region^="jobboard"] tbody tr:hover,
+.local-jobboard-dashboard tbody tr:hover,
+.local-jobboard-public tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.035);
+}
+
+/* ==========================================================================
+   FORMS RESET - All form elements
+   ========================================================================== */
+
+[data-region^="jobboard"] input,
+[data-region^="jobboard"] select,
+[data-region^="jobboard"] textarea,
+[data-region^="jobboard"] button,
+.local-jobboard-dashboard input,
+.local-jobboard-dashboard select,
+.local-jobboard-dashboard textarea,
+.local-jobboard-dashboard button,
+.local-jobboard-public input,
+.local-jobboard-public select,
+.local-jobboard-public textarea,
+.local-jobboard-public button {
+    margin: 0;
+    font-family: var(--jb-font-family);
+    font-size: var(--jb-font-size-base);
+    line-height: var(--jb-line-height-base);
+}
+
+[data-region^="jobboard"] input:not([type="checkbox"]):not([type="radio"]),
+[data-region^="jobboard"] select,
+[data-region^="jobboard"] textarea,
+.local-jobboard-dashboard input:not([type="checkbox"]):not([type="radio"]),
+.local-jobboard-dashboard select,
+.local-jobboard-dashboard textarea,
+.local-jobboard-public input:not([type="checkbox"]):not([type="radio"]),
+.local-jobboard-public select,
+.local-jobboard-public textarea {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--jb-body-color);
+    background-color: var(--jb-white);
+    background-clip: padding-box;
+    border: 1px solid var(--jb-border);
+    border-radius: var(--jb-border-radius);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+[data-region^="jobboard"] input:focus,
+[data-region^="jobboard"] select:focus,
+[data-region^="jobboard"] textarea:focus,
+.local-jobboard-dashboard input:focus,
+.local-jobboard-dashboard select:focus,
+.local-jobboard-dashboard textarea:focus,
+.local-jobboard-public input:focus,
+.local-jobboard-public select:focus,
+.local-jobboard-public textarea:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+[data-region^="jobboard"] input[type="checkbox"],
+[data-region^="jobboard"] input[type="radio"],
+.local-jobboard-dashboard input[type="checkbox"],
+.local-jobboard-dashboard input[type="radio"],
+.local-jobboard-public input[type="checkbox"],
+.local-jobboard-public input[type="radio"] {
+    width: auto;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+[data-region^="jobboard"] select,
+.local-jobboard-dashboard select,
+.local-jobboard-public select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    padding-right: 2.25rem;
+}
+
+[data-region^="jobboard"] textarea,
+.local-jobboard-dashboard textarea,
+.local-jobboard-public textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+[data-region^="jobboard"] label,
+.local-jobboard-dashboard label,
+.local-jobboard-public label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    font-family: var(--jb-font-family);
+    font-weight: 500;
+    color: var(--jb-body-color);
+}
+
+[data-region^="jobboard"] fieldset,
+.local-jobboard-dashboard fieldset,
+.local-jobboard-public fieldset {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+[data-region^="jobboard"] legend,
+.local-jobboard-dashboard legend,
+.local-jobboard-public legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: inherit;
+    color: var(--jb-dark);
+}
+
+/* ==========================================================================
+   BUTTONS RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] button,
+.local-jobboard-dashboard button,
+.local-jobboard-public button {
+    border-radius: 0;
+    cursor: pointer;
+}
+
+[data-region^="jobboard"] button:focus:not(:focus-visible),
+.local-jobboard-dashboard button:focus:not(:focus-visible),
+.local-jobboard-public button:focus:not(:focus-visible) {
+    outline: 0;
+}
+
+/* ==========================================================================
+   DIVIDERS RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] hr,
+.local-jobboard-dashboard hr,
+.local-jobboard-public hr {
+    margin: 1rem 0;
+    color: inherit;
+    border: 0;
+    border-top: 1px solid var(--jb-border);
+    opacity: 1;
+}
+
+/* ==========================================================================
+   SECTIONS RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] section,
+[data-region^="jobboard"] article,
+[data-region^="jobboard"] header,
+[data-region^="jobboard"] footer,
+[data-region^="jobboard"] nav,
+[data-region^="jobboard"] aside,
+[data-region^="jobboard"] main,
+.local-jobboard-dashboard section,
+.local-jobboard-dashboard article,
+.local-jobboard-dashboard header,
+.local-jobboard-dashboard footer,
+.local-jobboard-dashboard nav,
+.local-jobboard-dashboard aside,
+.local-jobboard-dashboard main,
+.local-jobboard-public section,
+.local-jobboard-public article,
+.local-jobboard-public header,
+.local-jobboard-public footer,
+.local-jobboard-public nav,
+.local-jobboard-public aside,
+.local-jobboard-public main {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+/* ==========================================================================
+   DIV RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] div,
+.local-jobboard-dashboard div,
+.local-jobboard-public div {
+    margin: 0;
+    padding: 0;
+}
+
+/* ==========================================================================
+   GRID SYSTEM
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-row,
@@ -79,10 +525,8 @@
     max-width: 100%;
     padding-right: 0.75rem;
     padding-left: 0.75rem;
-    box-sizing: border-box;
 }
 
-/* Column classes */
 [data-region^="jobboard"] .jb-col,
 .local-jobboard-dashboard .jb-col,
 .local-jobboard-public .jb-col { flex: 1 0 0%; }
@@ -103,7 +547,6 @@
 .local-jobboard-dashboard .jb-col-3,
 .local-jobboard-public .jb-col-3 { flex: 0 0 auto; width: 25%; }
 
-/* Medium screens */
 @media (min-width: 768px) {
     [data-region^="jobboard"] .jb-col-md-6,
     .local-jobboard-dashboard .jb-col-md-6,
@@ -118,8 +561,11 @@
     .local-jobboard-public .jb-col-md-3 { flex: 0 0 auto; width: 25%; }
 }
 
-/* Large screens */
 @media (min-width: 992px) {
+    [data-region^="jobboard"] .jb-col-lg-8,
+    .local-jobboard-dashboard .jb-col-lg-8,
+    .local-jobboard-public .jb-col-lg-8 { flex: 0 0 auto; width: 66.666667%; }
+
     [data-region^="jobboard"] .jb-col-lg-6,
     .local-jobboard-dashboard .jb-col-lg-6,
     .local-jobboard-public .jb-col-lg-6 { flex: 0 0 auto; width: 50%; }
@@ -131,15 +577,19 @@
     [data-region^="jobboard"] .jb-col-lg-3,
     .local-jobboard-dashboard .jb-col-lg-3,
     .local-jobboard-public .jb-col-lg-3 { flex: 0 0 auto; width: 25%; }
-
-    [data-region^="jobboard"] .jb-col-lg-8,
-    .local-jobboard-dashboard .jb-col-lg-8,
-    .local-jobboard-public .jb-col-lg-8 { flex: 0 0 auto; width: 66.666667%; }
 }
 
 /* ==========================================================================
-   SPACING UTILITIES (Scoped)
+   SPACING UTILITIES
    ========================================================================== */
+
+[data-region^="jobboard"] .jb-m-0,
+.local-jobboard-dashboard .jb-m-0,
+.local-jobboard-public .jb-m-0 { margin: 0; }
+
+[data-region^="jobboard"] .jb-m-1,
+.local-jobboard-dashboard .jb-m-1,
+.local-jobboard-public .jb-m-1 { margin: 0.25rem; }
 
 [data-region^="jobboard"] .jb-mb-0,
 .local-jobboard-dashboard .jb-mb-0,
@@ -201,9 +651,9 @@
 .local-jobboard-dashboard .jb-mx-2,
 .local-jobboard-public .jb-mx-2 { margin-left: 0.5rem; margin-right: 0.5rem; }
 
-[data-region^="jobboard"] .jb-m-1,
-.local-jobboard-dashboard .jb-m-1,
-.local-jobboard-public .jb-m-1 { margin: 0.25rem; }
+[data-region^="jobboard"] .jb-p-0,
+.local-jobboard-dashboard .jb-p-0,
+.local-jobboard-public .jb-p-0 { padding: 0; }
 
 [data-region^="jobboard"] .jb-p-3,
 .local-jobboard-dashboard .jb-p-3,
@@ -226,20 +676,32 @@
 .local-jobboard-public .jb-pt-3 { padding-top: 1rem; }
 
 /* ==========================================================================
-   FLEXBOX UTILITIES (Scoped)
+   DISPLAY UTILITIES
    ========================================================================== */
 
-[data-region^="jobboard"] .jb-d-flex,
-.local-jobboard-dashboard .jb-d-flex,
-.local-jobboard-public .jb-d-flex { display: flex; }
+[data-region^="jobboard"] .jb-d-none,
+.local-jobboard-dashboard .jb-d-none,
+.local-jobboard-public .jb-d-none { display: none; }
 
 [data-region^="jobboard"] .jb-d-block,
 .local-jobboard-dashboard .jb-d-block,
 .local-jobboard-public .jb-d-block { display: block; }
 
-[data-region^="jobboard"] .jb-d-none,
-.local-jobboard-dashboard .jb-d-none,
-.local-jobboard-public .jb-d-none { display: none; }
+[data-region^="jobboard"] .jb-d-flex,
+.local-jobboard-dashboard .jb-d-flex,
+.local-jobboard-public .jb-d-flex { display: flex; }
+
+[data-region^="jobboard"] .jb-d-inline-block,
+.local-jobboard-dashboard .jb-d-inline-block,
+.local-jobboard-public .jb-d-inline-block { display: inline-block; }
+
+[data-region^="jobboard"] .jb-d-inline-flex,
+.local-jobboard-dashboard .jb-d-inline-flex,
+.local-jobboard-public .jb-d-inline-flex { display: inline-flex; }
+
+/* ==========================================================================
+   FLEXBOX UTILITIES
+   ========================================================================== */
 
 [data-region^="jobboard"] .jb-flex-wrap,
 .local-jobboard-dashboard .jb-flex-wrap,
@@ -257,6 +719,10 @@
 .local-jobboard-dashboard .jb-align-items-center,
 .local-jobboard-public .jb-align-items-center { align-items: center; }
 
+[data-region^="jobboard"] .jb-align-items-start,
+.local-jobboard-dashboard .jb-align-items-start,
+.local-jobboard-public .jb-align-items-start { align-items: flex-start; }
+
 [data-region^="jobboard"] .jb-justify-content-between,
 .local-jobboard-dashboard .jb-justify-content-between,
 .local-jobboard-public .jb-justify-content-between { justify-content: space-between; }
@@ -266,12 +732,16 @@
 .local-jobboard-public .jb-justify-content-center { justify-content: center; }
 
 /* ==========================================================================
-   TEXT UTILITIES (Scoped)
+   TEXT UTILITIES
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-text-center,
 .local-jobboard-dashboard .jb-text-center,
 .local-jobboard-public .jb-text-center { text-align: center; }
+
+[data-region^="jobboard"] .jb-text-right,
+.local-jobboard-dashboard .jb-text-right,
+.local-jobboard-public .jb-text-right { text-align: right; }
 
 [data-region^="jobboard"] .jb-text-muted,
 .local-jobboard-dashboard .jb-text-muted,
@@ -291,15 +761,27 @@
 
 [data-region^="jobboard"] .jb-text-warning,
 .local-jobboard-dashboard .jb-text-warning,
-.local-jobboard-public .jb-text-warning { color: var(--jb-warning); }
+.local-jobboard-public .jb-text-warning { color: #856404; }
+
+[data-region^="jobboard"] .jb-text-info,
+.local-jobboard-dashboard .jb-text-info,
+.local-jobboard-public .jb-text-info { color: #0c5460; }
 
 [data-region^="jobboard"] .jb-text-white,
 .local-jobboard-dashboard .jb-text-white,
 .local-jobboard-public .jb-text-white { color: var(--jb-white); }
 
+[data-region^="jobboard"] .jb-text-dark,
+.local-jobboard-dashboard .jb-text-dark,
+.local-jobboard-public .jb-text-dark { color: var(--jb-dark); }
+
 [data-region^="jobboard"] .jb-fw-bold,
 .local-jobboard-dashboard .jb-fw-bold,
 .local-jobboard-public .jb-fw-bold { font-weight: 700; }
+
+[data-region^="jobboard"] .jb-fw-normal,
+.local-jobboard-dashboard .jb-fw-normal,
+.local-jobboard-public .jb-fw-normal { font-weight: 400; }
 
 [data-region^="jobboard"] .jb-fs-3,
 .local-jobboard-dashboard .jb-fs-3,
@@ -330,7 +812,7 @@
 .local-jobboard-public .jb-opacity-75 { opacity: 0.75; }
 
 /* ==========================================================================
-   BACKGROUND UTILITIES (Scoped)
+   BACKGROUND UTILITIES
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-bg-white,
@@ -353,6 +835,14 @@
 .local-jobboard-dashboard .jb-bg-info,
 .local-jobboard-public .jb-bg-info { background-color: var(--jb-info); }
 
+[data-region^="jobboard"] .jb-bg-warning,
+.local-jobboard-dashboard .jb-bg-warning,
+.local-jobboard-public .jb-bg-warning { background-color: var(--jb-warning); }
+
+[data-region^="jobboard"] .jb-bg-danger,
+.local-jobboard-dashboard .jb-bg-danger,
+.local-jobboard-public .jb-bg-danger { background-color: var(--jb-danger); }
+
 [data-region^="jobboard"] .jb-bg-gradient-primary,
 .local-jobboard-dashboard .jb-bg-gradient-primary,
 .local-jobboard-public .jb-bg-gradient-primary {
@@ -360,7 +850,7 @@
 }
 
 /* ==========================================================================
-   BORDER UTILITIES (Scoped)
+   BORDER UTILITIES
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-border,
@@ -370,6 +860,10 @@
 [data-region^="jobboard"] .jb-border-top,
 .local-jobboard-dashboard .jb-border-top,
 .local-jobboard-public .jb-border-top { border-top: 1px solid var(--jb-border); }
+
+[data-region^="jobboard"] .jb-border-bottom,
+.local-jobboard-dashboard .jb-border-bottom,
+.local-jobboard-public .jb-border-bottom { border-bottom: 1px solid var(--jb-border); }
 
 [data-region^="jobboard"] .jb-border-left,
 .local-jobboard-dashboard .jb-border-left,
@@ -408,7 +902,19 @@
 .local-jobboard-public .jb-rounded-lg { border-radius: var(--jb-border-radius-lg); }
 
 /* ==========================================================================
-   CARDS (Scoped)
+   SIZE UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-h-100,
+.local-jobboard-dashboard .jb-h-100,
+.local-jobboard-public .jb-h-100 { height: 100%; }
+
+[data-region^="jobboard"] .jb-w-100,
+.local-jobboard-dashboard .jb-w-100,
+.local-jobboard-public .jb-w-100 { width: 100%; }
+
+/* ==========================================================================
+   CARDS
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-card,
@@ -445,11 +951,6 @@
     margin-bottom: 0;
     background-color: rgba(0, 0, 0, 0.03);
     border-bottom: 1px solid var(--jb-border);
-}
-
-[data-region^="jobboard"] .jb-card-header:first-child,
-.local-jobboard-dashboard .jb-card-header:first-child,
-.local-jobboard-public .jb-card-header:first-child {
     border-radius: calc(var(--jb-border-radius) - 1px) calc(var(--jb-border-radius) - 1px) 0 0;
 }
 
@@ -457,14 +958,11 @@
 .local-jobboard-dashboard .jb-card-title,
 .local-jobboard-public .jb-card-title {
     margin-bottom: 0.5rem;
+    font-weight: 500;
 }
 
-[data-region^="jobboard"] .jb-h-100,
-.local-jobboard-dashboard .jb-h-100,
-.local-jobboard-public .jb-h-100 { height: 100%; }
-
 /* ==========================================================================
-   STAT CARDS (Scoped)
+   STAT CARDS
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-stat-card,
@@ -580,13 +1078,14 @@
 }
 
 /* ==========================================================================
-   BUTTONS (Scoped)
+   BUTTONS
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-btn,
 .local-jobboard-dashboard .jb-btn,
 .local-jobboard-public .jb-btn {
     display: inline-block;
+    font-family: var(--jb-font-family);
     font-weight: 400;
     line-height: 1.5;
     text-align: center;
@@ -599,12 +1098,20 @@
     border-radius: var(--jb-border-radius);
     border: 1px solid transparent;
     transition: var(--jb-transition);
+    background-color: transparent;
 }
 
 [data-region^="jobboard"] .jb-btn:hover,
 .local-jobboard-dashboard .jb-btn:hover,
 .local-jobboard-public .jb-btn:hover {
     text-decoration: none;
+}
+
+[data-region^="jobboard"] .jb-btn:focus,
+.local-jobboard-dashboard .jb-btn:focus,
+.local-jobboard-public .jb-btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
 [data-region^="jobboard"] .jb-btn-primary,
@@ -644,6 +1151,14 @@
     color: var(--jb-white);
     background-color: var(--jb-danger);
     border-color: var(--jb-danger);
+}
+
+[data-region^="jobboard"] .jb-btn-warning,
+.local-jobboard-dashboard .jb-btn-warning,
+.local-jobboard-public .jb-btn-warning {
+    color: #212529;
+    background-color: var(--jb-warning);
+    border-color: var(--jb-warning);
 }
 
 [data-region^="jobboard"] .jb-btn-light,
@@ -764,7 +1279,7 @@
 }
 
 /* ==========================================================================
-   BADGES (Scoped)
+   BADGES
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-badge,
@@ -772,6 +1287,7 @@
 .local-jobboard-public .jb-badge {
     display: inline-block;
     padding: 0.35em 0.65em;
+    font-family: var(--jb-font-family);
     font-size: 0.75em;
     font-weight: 700;
     line-height: 1;
@@ -831,7 +1347,7 @@
 }
 
 /* ==========================================================================
-   FORMS (Scoped)
+   FORM UTILITIES
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-form-control,
@@ -839,24 +1355,6 @@
 .local-jobboard-public .jb-form-control {
     display: block;
     width: 100%;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    background-color: var(--jb-white);
-    background-clip: padding-box;
-    border: 1px solid var(--jb-border);
-    border-radius: var(--jb-border-radius);
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-[data-region^="jobboard"] .jb-form-control:focus,
-.local-jobboard-dashboard .jb-form-control:focus,
-.local-jobboard-public .jb-form-control:focus {
-    border-color: #86b7fe;
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
 [data-region^="jobboard"] .jb-form-group,
@@ -929,7 +1427,7 @@
 }
 
 /* ==========================================================================
-   TABLES (Scoped)
+   TABLE UTILITIES
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-table,
@@ -937,23 +1435,11 @@
 .local-jobboard-public .jb-table {
     width: 100%;
     margin-bottom: 1rem;
-    color: #212529;
-    vertical-align: top;
-    border-color: var(--jb-border);
 }
 
-[data-region^="jobboard"] .jb-table > :not(caption) > * > *,
-.local-jobboard-dashboard .jb-table > :not(caption) > * > *,
-.local-jobboard-public .jb-table > :not(caption) > * > * {
-    padding: 0.5rem;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: var(--jb-border);
-}
-
-[data-region^="jobboard"] .jb-table-hover > tbody > tr:hover,
-.local-jobboard-dashboard .jb-table-hover > tbody > tr:hover,
-.local-jobboard-public .jb-table-hover > tbody > tr:hover {
+[data-region^="jobboard"] .jb-table-hover tbody tr:hover,
+.local-jobboard-dashboard .jb-table-hover tbody tr:hover,
+.local-jobboard-public .jb-table-hover tbody tr:hover {
     background-color: rgba(0, 0, 0, 0.035);
 }
 
@@ -961,7 +1447,6 @@
 .local-jobboard-dashboard .jb-thead-light th,
 .local-jobboard-public .jb-thead-light th {
     background-color: var(--jb-light);
-    font-weight: 600;
 }
 
 [data-region^="jobboard"] .jb-table-responsive,
@@ -972,7 +1457,7 @@
 }
 
 /* ==========================================================================
-   ALERTS (Scoped)
+   ALERTS
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-alert,
@@ -983,6 +1468,7 @@
     margin-bottom: 1rem;
     border: 1px solid transparent;
     border-radius: var(--jb-border-radius);
+    font-family: var(--jb-font-family);
 }
 
 [data-region^="jobboard"] .jb-alert-warning,
@@ -1018,7 +1504,7 @@
 }
 
 /* ==========================================================================
-   PAGE HEADER (Scoped)
+   PAGE HEADER
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-page-header,
@@ -1030,15 +1516,17 @@
 }
 
 /* ==========================================================================
-   WELCOME SECTION (Dashboard specific)
+   WELCOME SECTION
    ========================================================================== */
 
-.local-jobboard-dashboard .jb-welcome-section {
+[data-region^="jobboard"] .jb-welcome-section,
+.local-jobboard-dashboard .jb-welcome-section,
+.local-jobboard-public .jb-welcome-section {
     border-radius: var(--jb-border-radius-lg);
 }
 
 /* ==========================================================================
-   EMPTY STATE (Scoped)
+   EMPTY STATE
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-empty-state,
@@ -1049,10 +1537,12 @@
 }
 
 /* ==========================================================================
-   SECTION CARD (Dashboard specific)
+   SECTION CARDS (Dashboard)
    ========================================================================== */
 
-.local-jobboard-dashboard .jb-section-card {
+[data-region^="jobboard"] .jb-section-card,
+.local-jobboard-dashboard .jb-section-card,
+.local-jobboard-public .jb-section-card {
     display: block;
     padding: 1.25rem;
     background: var(--jb-white);
@@ -1063,13 +1553,17 @@
     transition: var(--jb-transition);
 }
 
-.local-jobboard-dashboard .jb-section-card:hover {
+[data-region^="jobboard"] .jb-section-card:hover,
+.local-jobboard-dashboard .jb-section-card:hover,
+.local-jobboard-public .jb-section-card:hover {
     border-color: var(--jb-primary);
     box-shadow: var(--jb-shadow-sm);
     text-decoration: none;
 }
 
-.local-jobboard-dashboard .jb-section-card .jb-card-icon {
+[data-region^="jobboard"] .jb-section-card .jb-card-icon,
+.local-jobboard-dashboard .jb-section-card .jb-card-icon,
+.local-jobboard-public .jb-section-card .jb-card-icon {
     width: 48px;
     height: 48px;
     display: flex;
@@ -1080,28 +1574,49 @@
     margin-bottom: 1rem;
 }
 
-.local-jobboard-dashboard .jb-section-card-title {
+[data-region^="jobboard"] .jb-section-card-title,
+.local-jobboard-dashboard .jb-section-card-title,
+.local-jobboard-public .jb-section-card-title {
     font-weight: 600;
     margin-bottom: 0.25rem;
     color: var(--jb-dark);
 }
 
-.local-jobboard-dashboard .jb-section-card-desc {
+[data-region^="jobboard"] .jb-section-card-desc,
+.local-jobboard-dashboard .jb-section-card-desc,
+.local-jobboard-public .jb-section-card-desc {
     font-size: 0.875rem;
     color: var(--jb-muted);
     margin: 0;
 }
 
-/* Icon colors for section cards */
-.local-jobboard-dashboard .jb-icon-primary { background-color: var(--jb-primary-light); color: var(--jb-primary); }
-.local-jobboard-dashboard .jb-icon-success { background-color: var(--jb-success-light); color: var(--jb-success); }
-.local-jobboard-dashboard .jb-icon-warning { background-color: var(--jb-warning-light); color: #856404; }
-.local-jobboard-dashboard .jb-icon-danger { background-color: var(--jb-danger-light); color: var(--jb-danger); }
-.local-jobboard-dashboard .jb-icon-info { background-color: var(--jb-info-light); color: #0c5460; }
-.local-jobboard-dashboard .jb-icon-secondary { background-color: var(--jb-secondary-light); color: var(--jb-secondary); }
+/* Icon colors */
+[data-region^="jobboard"] .jb-icon-primary,
+.local-jobboard-dashboard .jb-icon-primary,
+.local-jobboard-public .jb-icon-primary { background-color: var(--jb-primary-light); color: var(--jb-primary); }
+
+[data-region^="jobboard"] .jb-icon-success,
+.local-jobboard-dashboard .jb-icon-success,
+.local-jobboard-public .jb-icon-success { background-color: var(--jb-success-light); color: var(--jb-success); }
+
+[data-region^="jobboard"] .jb-icon-warning,
+.local-jobboard-dashboard .jb-icon-warning,
+.local-jobboard-public .jb-icon-warning { background-color: var(--jb-warning-light); color: #856404; }
+
+[data-region^="jobboard"] .jb-icon-danger,
+.local-jobboard-dashboard .jb-icon-danger,
+.local-jobboard-public .jb-icon-danger { background-color: var(--jb-danger-light); color: var(--jb-danger); }
+
+[data-region^="jobboard"] .jb-icon-info,
+.local-jobboard-dashboard .jb-icon-info,
+.local-jobboard-public .jb-icon-info { background-color: var(--jb-info-light); color: #0c5460; }
+
+[data-region^="jobboard"] .jb-icon-secondary,
+.local-jobboard-dashboard .jb-icon-secondary,
+.local-jobboard-public .jb-icon-secondary { background-color: var(--jb-secondary-light); color: var(--jb-secondary); }
 
 /* ==========================================================================
-   CLICKABLE CARDS (Scoped)
+   CLICKABLE ELEMENTS
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-clickable,
@@ -1119,7 +1634,7 @@
 }
 
 /* ==========================================================================
-   ICON CIRCLES (Scoped)
+   ICON CIRCLES
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-icon-circle,
@@ -1134,30 +1649,11 @@
 }
 
 /* ==========================================================================
-   RESPONSIVE UTILITIES
+   PUBLIC PAGE - DETAIL ITEMS
    ========================================================================== */
 
-@media (max-width: 767.98px) {
-    [data-region^="jobboard"] .jb-d-md-none,
-    .local-jobboard-dashboard .jb-d-md-none,
-    .local-jobboard-public .jb-d-md-none {
-        display: none;
-    }
-}
-
-/* ==========================================================================
-   PUBLIC PAGE SPECIFIC STYLES
-   ========================================================================== */
-
-.local-jobboard-public .jb-vacancy-card {
-    height: 100%;
-    transition: var(--jb-transition);
-}
-
-.local-jobboard-public .jb-vacancy-card:hover {
-    box-shadow: var(--jb-shadow);
-}
-
+[data-region^="jobboard"] .jb-detail-item,
+.local-jobboard-dashboard .jb-detail-item,
 .local-jobboard-public .jb-detail-item {
     display: flex;
     align-items: flex-start;
@@ -1165,10 +1661,14 @@
     border-bottom: 1px solid var(--jb-border);
 }
 
+[data-region^="jobboard"] .jb-detail-item:last-child,
+.local-jobboard-dashboard .jb-detail-item:last-child,
 .local-jobboard-public .jb-detail-item:last-child {
     border-bottom: none;
 }
 
+[data-region^="jobboard"] .jb-detail-icon,
+.local-jobboard-dashboard .jb-detail-icon,
 .local-jobboard-public .jb-detail-icon {
     width: 24px;
     margin-right: 0.75rem;
@@ -1176,12 +1676,16 @@
     flex-shrink: 0;
 }
 
+[data-region^="jobboard"] .jb-detail-label,
+.local-jobboard-dashboard .jb-detail-label,
 .local-jobboard-public .jb-detail-label {
     font-weight: 500;
     min-width: 120px;
     color: var(--jb-muted);
 }
 
+[data-region^="jobboard"] .jb-detail-value,
+.local-jobboard-dashboard .jb-detail-value,
 .local-jobboard-public .jb-detail-value {
     color: var(--jb-dark);
     margin-left: auto;
@@ -1189,7 +1693,7 @@
 }
 
 /* ==========================================================================
-   GRADING/REVIEW PANEL STYLES
+   GRADING/REVIEW PANELS
    ========================================================================== */
 
 [data-region^="jobboard"] .jb-grading-panel,
@@ -1212,6 +1716,18 @@
     border: 1px solid var(--jb-border);
     border-radius: var(--jb-border-radius);
     min-height: 400px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+    [data-region^="jobboard"] .jb-d-md-none,
+    .local-jobboard-dashboard .jb-d-md-none,
+    .local-jobboard-public .jb-d-md-none {
+        display: none;
+    }
 }
 
 /* ==========================================================================
