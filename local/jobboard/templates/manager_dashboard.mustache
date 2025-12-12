@@ -1,0 +1,211 @@
+{{!
+    @template local_jobboard/manager_dashboard
+
+    Manager dashboard template.
+
+    Context variables:
+    * stats - Dashboard statistics
+    * pendingapplications - Pending applications array
+    * haspendingapplications - Boolean
+    * pendingapplicationcount - Pending count
+    * pendingdocuments - Pending documents array
+    * haspendingdocuments - Boolean
+    * pendingdocumentcount - Pending count
+    * upcominginterviews - Upcoming interviews array
+    * hasupcominginterviews - Boolean
+    * reviewurl - URL to review dashboard
+    * bulkvalidationurl - URL to bulk validation
+    * interviewsurl - URL to interviews
+}}
+<div class="jb-manager-dashboard">
+    <div class="jb-mb-4">
+        <h3>{{#str}}managerdashboard, local_jobboard{{/str}}</h3>
+    </div>
+
+    {{#stats}}
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-primary">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-primary">{{openvacancies}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}openvacancies, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-primary">
+                            <i class="fa fa-briefcase fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-info">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-info">{{pendingapplications}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}pendingapplications, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-info">
+                            <i class="fa fa-file-text fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-warning">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-warning">{{pendingdocuments}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}pendingdocuments, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-warning">
+                            <i class="fa fa-file-o fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-success">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-success">{{pendinginterviews}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}pendinginterviews, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-success">
+                            <i class="fa fa-calendar fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/stats}}
+
+    <div class="jb-row">
+        <div class="jb-col-lg-8">
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <h5 class="jb-mb-0">{{#str}}pendingapplications, local_jobboard{{/str}}</h5>
+                    <a href="{{reviewurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
+                        {{#str}}viewall, local_jobboard{{/str}}
+                    </a>
+                </div>
+                <div class="jb-card-body jb-p-0">
+                    {{#haspendingapplications}}
+                    <div class="jb-table-responsive">
+                        <table class="jb-table jb-table-hover jb-mb-0">
+                            <thead class="jb-thead-light">
+                                <tr>
+                                    <th>{{#str}}applicant, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}vacancy, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}status, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}submitted, local_jobboard{{/str}}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#pendingapplications}}
+                                <tr>
+                                    <td>{{applicantname}}</td>
+                                    <td><small>{{vacancy.code}}</small></td>
+                                    <td><span class="jb-badge jb-badge-{{statusclass}}">{{#str}}appstatus:{{status}}, local_jobboard{{/str}}</span></td>
+                                    <td><small>{{timecreated}}</small></td>
+                                    <td>
+                                        <a href="{{reviewurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
+                                            {{#str}}review, local_jobboard{{/str}}
+                                        </a>
+                                    </td>
+                                </tr>
+                                {{/pendingapplications}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/haspendingapplications}}
+                    {{^haspendingapplications}}
+                    <p class="jb-text-muted jb-text-center jb-py-4">{{#str}}nopendingapplications, local_jobboard{{/str}}</p>
+                    {{/haspendingapplications}}
+                </div>
+            </div>
+
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <h5 class="jb-mb-0">{{#str}}pendingdocuments, local_jobboard{{/str}}</h5>
+                    <a href="{{bulkvalidationurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
+                        {{#str}}bulkvalidation, local_jobboard{{/str}}
+                    </a>
+                </div>
+                <div class="jb-card-body jb-p-0">
+                    {{#haspendingdocuments}}
+                    <div class="jb-table-responsive">
+                        <table class="jb-table jb-table-hover jb-mb-0">
+                            <thead class="jb-thead-light">
+                                <tr>
+                                    <th>{{#str}}document, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}applicant, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}uploaded, local_jobboard{{/str}}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#pendingdocuments}}
+                                <tr>
+                                    <td>{{doctypename}}</td>
+                                    <td>{{applicantname}}</td>
+                                    <td><small>{{timecreated}}</small></td>
+                                    <td>
+                                        <a href="{{validateurl}}" class="jb-btn jb-btn-sm jb-btn-outline-success">
+                                            {{#str}}validate, local_jobboard{{/str}}
+                                        </a>
+                                    </td>
+                                </tr>
+                                {{/pendingdocuments}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/haspendingdocuments}}
+                    {{^haspendingdocuments}}
+                    <p class="jb-text-muted jb-text-center jb-py-4">{{#str}}nopendingdocuments, local_jobboard{{/str}}</p>
+                    {{/haspendingdocuments}}
+                </div>
+            </div>
+        </div>
+
+        <div class="jb-col-lg-4">
+            <div class="jb-card">
+                <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <h5 class="jb-mb-0">{{#str}}upcominginterviews, local_jobboard{{/str}}</h5>
+                    <a href="{{interviewsurl}}" class="jb-btn jb-btn-sm jb-btn-link">{{#str}}viewall, local_jobboard{{/str}}</a>
+                </div>
+                <div class="jb-card-body">
+                    {{#hasupcominginterviews}}
+                    <div class="jb-list-group jb-list-group-flush">
+                        {{#upcominginterviews}}
+                        <a href="{{viewurl}}" class="jb-list-group-item jb-list-group-item-action">
+                            <div class="jb-d-flex jb-justify-content-between">
+                                <strong>{{applicantname}}</strong>
+                                <span class="jb-badge jb-badge-{{statusclass}}">{{status}}</span>
+                            </div>
+                            <small class="jb-text-muted">
+                                <i class="fa fa-calendar jb-mr-1" aria-hidden="true"></i>{{scheduleddate}}
+                            </small>
+                            {{#isvirtual}}
+                            <br><small class="jb-text-info"><i class="fa fa-video-camera jb-mr-1" aria-hidden="true"></i>{{#str}}virtualinterview, local_jobboard{{/str}}</small>
+                            {{/isvirtual}}
+                        </a>
+                        {{/upcominginterviews}}
+                    </div>
+                    {{/hasupcominginterviews}}
+                    {{^hasupcominginterviews}}
+                    <p class="jb-text-muted jb-text-center jb-py-3">{{#str}}noupcominginterviews, local_jobboard{{/str}}</p>
+                    {{/hasupcominginterviews}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

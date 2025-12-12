@@ -1,0 +1,127 @@
+{{!
+    @template local_jobboard/landing_page
+
+    Public landing page template.
+
+    Context variables:
+    * featuredvacancies - Featured vacancies array
+    * hasfeatured - Boolean
+    * recentvacancies - Recent vacancies array
+    * hasrecent - Boolean
+    * stats - Public statistics
+    * categories - Vacancy categories array
+    * hascategories - Boolean
+    * searchurl - Search URL
+    * browsevacanciesurl - URL to browse all vacancies
+    * convocatoriasurl - URL to view convocatorias
+}}
+<div class="jb-landing-page">
+    <div class="jb-hero jb-text-center jb-py-5 jb-mb-4 jb-bg-primary jb-text-white jb-rounded">
+        <h1 class="jb-display-4 jb-mb-3">{{#str}}findyournextjob, local_jobboard{{/str}}</h1>
+        <p class="jb-lead jb-mb-4">{{#str}}landingdescription, local_jobboard{{/str}}</p>
+        <form action="{{searchurl}}" method="get" class="jb-hero-search jb-mx-auto" style="max-width: 600px;">
+            <div class="jb-input-group jb-input-group-lg">
+                <input type="text" name="search" class="jb-form-control" placeholder="{{#str}}searchplaceholder, local_jobboard{{/str}}" aria-label="{{#str}}searchjobs, local_jobboard{{/str}}">
+                <div class="jb-input-group-append">
+                    <button type="submit" class="jb-btn jb-btn-light">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        {{#str}}search, local_jobboard{{/str}}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {{#stats}}
+    <div class="jb-row jb-text-center jb-mb-5">
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-p-3">
+                <h2 class="jb-text-primary jb-mb-1">{{openvacancies}}</h2>
+                <p class="jb-text-muted jb-mb-0">{{#str}}openvacancies, local_jobboard{{/str}}</p>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-p-3">
+                <h2 class="jb-text-primary jb-mb-1">{{totalpositions}}</h2>
+                <p class="jb-text-muted jb-mb-0">{{#str}}availablepositions, local_jobboard{{/str}}</p>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-p-3">
+                <h2 class="jb-text-primary jb-mb-1">{{activeconvocatorias}}</h2>
+                <p class="jb-text-muted jb-mb-0">{{#str}}activeconvocatorias, local_jobboard{{/str}}</p>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-p-3">
+                <h2 class="jb-text-primary jb-mb-1">{{departments}}</h2>
+                <p class="jb-text-muted jb-mb-0">{{#str}}departments, local_jobboard{{/str}}</p>
+            </div>
+        </div>
+    </div>
+    {{/stats}}
+
+    {{#hasfeatured}}
+    <div class="jb-section jb-mb-5">
+        <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-3">
+            <h3>{{#str}}featuredvacancies, local_jobboard{{/str}}</h3>
+            <a href="{{browsevacanciesurl}}" class="jb-btn jb-btn-outline-primary">
+                {{#str}}viewall, local_jobboard{{/str}}
+            </a>
+        </div>
+        <div class="jb-row">
+            {{#featuredvacancies}}
+            <div class="jb-col-lg-4 jb-col-md-6 jb-mb-3">
+                {{> local_jobboard/vacancy_card }}
+            </div>
+            {{/featuredvacancies}}
+        </div>
+    </div>
+    {{/hasfeatured}}
+
+    {{#hascategories}}
+    <div class="jb-section jb-mb-5">
+        <h3 class="jb-mb-3">{{#str}}browsebycategory, local_jobboard{{/str}}</h3>
+        <div class="jb-row">
+            {{#categories}}
+            <div class="jb-col-lg-3 jb-col-md-4 jb-col-6 jb-mb-3">
+                <a href="{{url}}" class="jb-card jb-text-decoration-none jb-h-100">
+                    <div class="jb-card-body jb-text-center">
+                        <i class="fa fa-{{icon}} fa-2x jb-text-primary jb-mb-2" aria-hidden="true"></i>
+                        <h6 class="jb-card-title jb-mb-1">{{name}}</h6>
+                        <small class="jb-text-muted">{{count}} {{#str}}vacancies, local_jobboard{{/str}}</small>
+                    </div>
+                </a>
+            </div>
+            {{/categories}}
+        </div>
+    </div>
+    {{/hascategories}}
+
+    {{#hasrecent}}
+    <div class="jb-section jb-mb-5">
+        <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-3">
+            <h3>{{#str}}recentvacancies, local_jobboard{{/str}}</h3>
+            <a href="{{browsevacanciesurl}}" class="jb-btn jb-btn-outline-primary">
+                {{#str}}viewall, local_jobboard{{/str}}
+            </a>
+        </div>
+        <div class="jb-row">
+            {{#recentvacancies}}
+            <div class="jb-col-lg-4 jb-col-md-6 jb-mb-3">
+                {{> local_jobboard/vacancy_card }}
+            </div>
+            {{/recentvacancies}}
+        </div>
+    </div>
+    {{/hasrecent}}
+
+    <div class="jb-cta jb-text-center jb-py-5 jb-bg-light jb-rounded">
+        <h4 class="jb-mb-3">{{#str}}readytoapply, local_jobboard{{/str}}</h4>
+        <p class="jb-text-muted jb-mb-4">{{#str}}browsealljobs, local_jobboard{{/str}}</p>
+        <a href="{{browsevacanciesurl}}" class="jb-btn jb-btn-lg jb-btn-primary">
+            <i class="fa fa-search jb-mr-2" aria-hidden="true"></i>
+            {{#str}}browsevacancies, local_jobboard{{/str}}
+        </a>
+    </div>
+</div>

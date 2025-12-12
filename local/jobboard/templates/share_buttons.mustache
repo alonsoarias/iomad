@@ -1,0 +1,45 @@
+{{!
+    @template local_jobboard/share_buttons
+
+    Social share buttons component.
+
+    Context variables:
+    * shareurl - URL to share
+    * title - Title to share
+    * facebookurl - Facebook share URL
+    * twitterurl - Twitter share URL
+    * linkedinurl - LinkedIn share URL
+    * whatsappurl - WhatsApp share URL
+    * emailurl - Email share URL
+}}
+<div class="jb-share-buttons jb-mt-3">
+    <div class="jb-card">
+        <div class="jb-card-header">
+            <h6 class="jb-mb-0">{{#str}}sharethisvacancy, local_jobboard{{/str}}</h6>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-d-flex jb-justify-content-center jb-flex-wrap">
+                <a href="{{facebookurl}}" target="_blank" rel="noopener noreferrer" class="jb-btn jb-btn-sm jb-btn-facebook jb-m-1" title="{{#str}}shareonfacebook, local_jobboard{{/str}}">
+                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                    <span class="jb-sr-only">Facebook</span>
+                </a>
+                <a href="{{twitterurl}}" target="_blank" rel="noopener noreferrer" class="jb-btn jb-btn-sm jb-btn-twitter jb-m-1" title="{{#str}}shareontwitter, local_jobboard{{/str}}">
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                    <span class="jb-sr-only">Twitter</span>
+                </a>
+                <a href="{{linkedinurl}}" target="_blank" rel="noopener noreferrer" class="jb-btn jb-btn-sm jb-btn-linkedin jb-m-1" title="{{#str}}shareonlinkedin, local_jobboard{{/str}}">
+                    <i class="fa fa-linkedin" aria-hidden="true"></i>
+                    <span class="jb-sr-only">LinkedIn</span>
+                </a>
+                <a href="{{whatsappurl}}" target="_blank" rel="noopener noreferrer" class="jb-btn jb-btn-sm jb-btn-whatsapp jb-m-1" title="{{#str}}shareonwhatsapp, local_jobboard{{/str}}">
+                    <i class="fa fa-whatsapp" aria-hidden="true"></i>
+                    <span class="jb-sr-only">WhatsApp</span>
+                </a>
+                <a href="{{emailurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-m-1" title="{{#str}}sharebyemail, local_jobboard{{/str}}">
+                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                    <span class="jb-sr-only">Email</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

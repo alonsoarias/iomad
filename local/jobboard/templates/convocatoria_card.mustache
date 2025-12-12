@@ -1,0 +1,79 @@
+{{!
+    @template local_jobboard/convocatoria_card
+
+    Convocatoria card template for displaying convocatoria summary.
+
+    Context variables:
+    * id - Convocatoria ID
+    * code - Convocatoria code
+    * name - Convocatoria name
+    * description - Short description
+    * startdate - Start date formatted
+    * enddate - End date formatted
+    * daysremaining - Days remaining until close
+    * status - Status (draft, open, closed, archived)
+    * statusclass - CSS class for status badge
+    * vacancycount - Number of vacancies
+    * applicationcount - Number of applications
+    * viewurl - URL to view convocatoria
+    * canmanage - Boolean if user can manage
+}}
+<div class="jb-card jb-convocatoria-card jb-mb-3" data-convocatoria-id="{{id}}">
+    <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+        <span class="jb-badge jb-badge-primary">{{code}}</span>
+        <span class="jb-badge jb-badge-{{statusclass}}">{{#str}}convocatoriastatus:{{status}}, local_jobboard{{/str}}</span>
+    </div>
+    <div class="jb-card-body">
+        <h5 class="jb-card-title">
+            <a href="{{viewurl}}" class="jb-text-dark jb-text-decoration-none">{{name}}</a>
+        </h5>
+        {{#description}}
+        <p class="jb-card-text jb-text-muted jb-small">{{{description}}}</p>
+        {{/description}}
+
+        <div class="jb-row jb-small jb-text-muted jb-mt-3">
+            <div class="jb-col-6">
+                <p class="jb-mb-1">
+                    <i class="fa fa-calendar-check-o jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}starts, local_jobboard{{/str}}: {{startdate}}
+                </p>
+                <p class="jb-mb-1">
+                    <i class="fa fa-calendar-times-o jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}ends, local_jobboard{{/str}}: {{enddate}}
+                </p>
+            </div>
+            <div class="jb-col-6">
+                <p class="jb-mb-1">
+                    <i class="fa fa-briefcase jb-mr-1" aria-hidden="true"></i>
+                    {{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}
+                </p>
+                <p class="jb-mb-1">
+                    <i class="fa fa-file-text jb-mr-1" aria-hidden="true"></i>
+                    {{applicationcount}} {{#str}}applications, local_jobboard{{/str}}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="jb-card-footer jb-d-flex jb-justify-content-between jb-align-items-center">
+        {{#daysremaining}}
+        <small class="jb-text-muted">
+            <span class="jb-badge jb-badge-{{#urgent}}danger{{/urgent}}{{^urgent}}info{{/urgent}}">
+                {{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
+            </span>
+        </small>
+        {{/daysremaining}}
+        {{^daysremaining}}
+        <span></span>
+        {{/daysremaining}}
+        <div>
+            <a href="{{viewurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
+                {{#str}}viewdetails, local_jobboard{{/str}}
+            </a>
+            {{#canmanage}}
+            <a href="{{manageurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary">
+                {{#str}}manage, local_jobboard{{/str}}
+            </a>
+            {{/canmanage}}
+        </div>
+    </div>
+</div>

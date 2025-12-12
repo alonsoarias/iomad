@@ -1,0 +1,46 @@
+{{!
+    @template local_jobboard/convocatoria_form
+
+    Convocatoria create/edit form wrapper template.
+
+    Context variables:
+    * formhtml - Rendered moodleform HTML
+    * isedit - Boolean if editing
+    * convocatoria - Convocatoria object if editing
+    * backurl - URL to go back
+}}
+<div class="jb-convocatoria-form">
+    {{> local_jobboard/components/breadcrumbs }}
+
+    <div class="jb-card">
+        <div class="jb-card-header">
+            <h4 class="jb-mb-0">
+                {{#isedit}}
+                <i class="fa fa-edit jb-mr-2" aria-hidden="true"></i>
+                {{#str}}editconvocatoria, local_jobboard{{/str}}
+                {{/isedit}}
+                {{^isedit}}
+                <i class="fa fa-plus jb-mr-2" aria-hidden="true"></i>
+                {{#str}}createconvocatoria, local_jobboard{{/str}}
+                {{/isedit}}
+            </h4>
+        </div>
+        <div class="jb-card-body">
+            {{#isedit}}
+            <div class="jb-alert jb-alert-info jb-mb-3">
+                <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                {{#str}}editingconvocatoria, local_jobboard{{/str}}: <strong>{{convocatoria.code}} - {{convocatoria.name}}</strong>
+            </div>
+            {{/isedit}}
+
+            {{{formhtml}}}
+        </div>
+    </div>
+
+    <div class="jb-mt-3">
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-1" aria-hidden="true"></i>
+            {{#str}}cancel, local_jobboard{{/str}}
+        </a>
+    </div>
+</div>

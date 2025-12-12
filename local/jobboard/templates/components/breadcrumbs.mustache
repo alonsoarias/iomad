@@ -1,0 +1,33 @@
+{{!
+    @template local_jobboard/components/breadcrumbs
+
+    Breadcrumb navigation component.
+
+    Context variables:
+    * items - Array of breadcrumb items {label, url, isactive}
+
+    Example context (json):
+    {
+        "items": [
+            {"label": "Home", "url": "/", "isactive": false},
+            {"label": "Vacancies", "url": "/vacancies", "isactive": false},
+            {"label": "Developer", "isactive": true}
+        ]
+    }
+}}
+{{#hasitems}}
+<nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}">
+    <ol class="jb-breadcrumb">
+        {{#items}}
+        <li class="jb-breadcrumb-item{{#isactive}} jb-active{{/isactive}}"{{#isactive}} aria-current="page"{{/isactive}}>
+            {{#hasurl}}
+            <a href="{{url}}">{{label}}</a>
+            {{/hasurl}}
+            {{^hasurl}}
+            {{label}}
+            {{/hasurl}}
+        </li>
+        {{/items}}
+    </ol>
+</nav>
+{{/hasitems}}

@@ -1,0 +1,30 @@
+{{!
+    @template local_jobboard/components/alert
+
+    Alert message component.
+
+    Context variables:
+    * message - Alert message text
+    * type - Alert type (success, danger, warning, info, primary, secondary)
+    * dismissible - Boolean whether alert can be dismissed
+    * icon - Optional icon name
+
+    Example context (json):
+    {
+        "message": "Your changes have been saved",
+        "type": "success",
+        "dismissible": true,
+        "icon": "check-circle"
+    }
+}}
+<div class="jb-alert jb-alert-{{type}}{{#dismissible}} jb-alert-dismissible{{/dismissible}}" role="alert">
+    {{#icon}}
+    <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
+    {{/icon}}
+    <span class="jb-alert-message">{{{message}}}</span>
+    {{#dismissible}}
+    <button type="button" class="jb-close" data-dismiss="alert" aria-label="{{#str}}close, local_jobboard{{/str}}">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{/dismissible}}
+</div>

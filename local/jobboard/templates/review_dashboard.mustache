@@ -1,0 +1,122 @@
+{{!
+    @template local_jobboard/review_dashboard
+
+    Review dashboard template for reviewers.
+
+    Context variables:
+    * stats - Review statistics
+    * pendingdocuments - Pending documents array
+    * haspendingdocuments - Boolean
+    * pendingapplications - Pending applications array
+    * haspendingapplications - Boolean
+    * recentactivity - Recent review activity
+    * hasactivity - Boolean
+    * bulkvalidationurl - URL for bulk validation
+    * canmanage - Can user manage reviews
+}}
+<div class="jb-review-dashboard">
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <h3>{{#str}}reviewdashboard, local_jobboard{{/str}}</h3>
+        <a href="{{bulkvalidationurl}}" class="jb-btn jb-btn-primary">
+            <i class="fa fa-check-square-o jb-mr-1" aria-hidden="true"></i>
+            {{#str}}bulkvalidation, local_jobboard{{/str}}
+        </a>
+    </div>
+
+    {{#stats}}
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        {{#cards}}
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        {{/cards}}
+    </div>
+    {{/stats}}
+
+    <div class="jb-row">
+        <div class="jb-col-lg-8">
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <h5 class="jb-mb-0">{{#str}}pendingdocuments, local_jobboard{{/str}}</h5>
+                    {{#pendingcount}}
+                    <span class="jb-badge jb-badge-warning">{{pendingcount}}</span>
+                    {{/pendingcount}}
+                </div>
+                <div class="jb-card-body">
+                    {{#haspendingdocuments}}
+                    <div class="jb-table-responsive">
+                        <table class="jb-table jb-table-sm jb-table-hover">
+                            <thead>
+                                <tr>
+                                    <th>{{#str}}document, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}applicant, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}status, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}uploaded, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}actions, local_jobboard{{/str}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#pendingdocuments}}
+                                {{> local_jobboard/document_row }}
+                                {{/pendingdocuments}}
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="{{viewalldocumentsurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary jb-mt-2">
+                        {{#str}}viewall, local_jobboard{{/str}}
+                    </a>
+                    {{/haspendingdocuments}}
+                    {{^haspendingdocuments}}
+                    <p class="jb-text-muted jb-text-center jb-py-3">{{#str}}nopendingdocuments, local_jobboard{{/str}}</p>
+                    {{/haspendingdocuments}}
+                </div>
+            </div>
+
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}applicationstopreview, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body">
+                    {{#haspendingapplications}}
+                    <div class="jb-list-group">
+                        {{#pendingapplications}}
+                        <a href="{{reviewurl}}" class="jb-list-group-item jb-list-group-item-action jb-d-flex jb-justify-content-between jb-align-items-center">
+                            <div>
+                                <strong>{{applicantname}}</strong>
+                                <br><small class="jb-text-muted">{{vacancy.title}} ({{vacancy.code}})</small>
+                            </div>
+                            <div class="jb-text-right">
+                                <span class="jb-badge jb-badge-{{statusclass}}">{{#str}}appstatus:{{status}}, local_jobboard{{/str}}</span>
+                                <br><small class="jb-text-muted">{{timecreated}}</small>
+                            </div>
+                        </a>
+                        {{/pendingapplications}}
+                    </div>
+                    {{/haspendingapplications}}
+                    {{^haspendingapplications}}
+                    <p class="jb-text-muted jb-text-center jb-py-3">{{#str}}nopendingapplications, local_jobboard{{/str}}</p>
+                    {{/haspendingapplications}}
+                </div>
+            </div>
+        </div>
+
+        <div class="jb-col-lg-4">
+            <div class="jb-card">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}recentactivity, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body">
+                    {{#hasactivity}}
+                    {{> local_jobboard/components/activity_timeline }}
+                    {{/hasactivity}}
+                    {{^hasactivity}}
+                    <p class="jb-text-muted jb-text-center jb-py-3">{{#str}}noactivity, local_jobboard{{/str}}</p>
+                    {{/hasactivity}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

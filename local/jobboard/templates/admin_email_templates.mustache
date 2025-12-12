@@ -1,0 +1,54 @@
+{{!
+    @template local_jobboard/admin_email_templates
+
+    Admin email templates management page.
+
+    Context variables:
+    * templates - Email templates array
+    * hastemplates - Boolean
+    * count - Total count
+}}
+<div class="jb-admin-email-templates">
+    {{> local_jobboard/admin_tabs }}
+
+    <h4 class="jb-mb-4">{{#str}}emailtemplates, local_jobboard{{/str}}</h4>
+
+    {{#hastemplates}}
+    <div class="jb-row">
+        {{#templates}}
+        <div class="jb-col-lg-6 jb-mb-3">
+            <div class="jb-card jb-h-100">
+                <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <h6 class="jb-mb-0">{{name}}</h6>
+                    {{#enabled}}
+                    <span class="jb-badge jb-badge-success">{{#str}}enabled, local_jobboard{{/str}}</span>
+                    {{/enabled}}
+                    {{^enabled}}
+                    <span class="jb-badge jb-badge-secondary">{{#str}}disabled, local_jobboard{{/str}}</span>
+                    {{/enabled}}
+                </div>
+                <div class="jb-card-body">
+                    <p class="jb-text-muted jb-small jb-mb-3">{{description}}</p>
+                    <p class="jb-small jb-mb-0">
+                        <strong>{{#str}}subject, local_jobboard{{/str}}:</strong> {{subject}}
+                    </p>
+                </div>
+                <div class="jb-card-footer">
+                    <a href="{{editurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
+                        <i class="fa fa-edit jb-mr-1" aria-hidden="true"></i>
+                        {{#str}}edit, local_jobboard{{/str}}
+                    </a>
+                    <a href="{{previewurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary" target="_blank">
+                        <i class="fa fa-eye jb-mr-1" aria-hidden="true"></i>
+                        {{#str}}preview, local_jobboard{{/str}}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{/templates}}
+    </div>
+    {{/hastemplates}}
+    {{^hastemplates}}
+    <p class="jb-text-muted jb-text-center jb-py-4">{{#str}}notemplates, local_jobboard{{/str}}</p>
+    {{/hastemplates}}
+</div>

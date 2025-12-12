@@ -1,0 +1,30 @@
+{{!
+    @template local_jobboard/components/stats_grid
+
+    Grid of statistics cards.
+
+    Context variables:
+    * cards - Array of stat card objects
+    * columns - Number of columns (2, 3, 4) - default 4
+
+    Example context (json):
+    {
+        "cards": [
+            {"value": "42", "label": "Active Vacancies", "icon": "briefcase", "type": "primary"},
+            {"value": "128", "label": "Applications", "icon": "file-text", "type": "info"}
+        ],
+        "columns": 4
+    }
+}}
+<div class="jb-stats-grid jb-row">
+    {{#cards}}
+    <div class="jb-col-md-6 jb-col-lg-{{#columns}}{{columns}}{{/columns}}{{^columns}}3{{/columns}} jb-mb-3">
+        {{> local_jobboard/components/stat_card }}
+    </div>
+    {{/cards}}
+    {{^cards}}
+    <div class="jb-col-12">
+        <p class="jb-text-muted jb-text-center">{{#str}}nostatsavailable, local_jobboard{{/str}}</p>
+    </div>
+    {{/cards}}
+</div>

@@ -1,0 +1,25 @@
+{{!
+    @template local_jobboard/report_export_buttons
+
+    Report export buttons component.
+
+    Context variables:
+    * exporturls - Export URLs {csv, excel, pdf}
+}}
+<div class="jb-export-buttons jb-mb-3">
+    <span class="jb-mr-2">{{#str}}exportas, local_jobboard{{/str}}:</span>
+    <div class="jb-btn-group">
+        <a href="{{exporturls.csv}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary">
+            <i class="fa fa-file-text-o jb-mr-1" aria-hidden="true"></i>
+            CSV
+        </a>
+        <a href="{{exporturls.excel}}" class="jb-btn jb-btn-sm jb-btn-outline-success">
+            <i class="fa fa-file-excel-o jb-mr-1" aria-hidden="true"></i>
+            Excel
+        </a>
+        <a href="{{exporturls.pdf}}" class="jb-btn jb-btn-sm jb-btn-outline-danger">
+            <i class="fa fa-file-pdf-o jb-mr-1" aria-hidden="true"></i>
+            PDF
+        </a>
+    </div>
+</div>

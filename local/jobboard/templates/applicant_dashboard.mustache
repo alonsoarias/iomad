@@ -1,0 +1,125 @@
+{{!
+    @template local_jobboard/applicant_dashboard
+
+    Applicant dashboard template.
+
+    Context variables:
+    * username - User's full name
+    * applications - Recent applications array
+    * hasapplications - Boolean
+    * applicationcount - Total application count
+    * viewallapplicationsurl - URL to view all applications
+    * suggestedvacancies - Suggested vacancies array
+    * hassuggestedvacancies - Boolean
+    * viewallvacanciesurl - URL to browse all vacancies
+    * statuscounts - Application status counts
+}}
+<div class="jb-applicant-dashboard">
+    <div class="jb-mb-4">
+        <h3>{{#str}}welcome, local_jobboard{{/str}}, {{username}}</h3>
+        <p class="jb-text-muted">{{#str}}applicantdashboarddesc, local_jobboard{{/str}}</p>
+    </div>
+
+    {{#statuscounts}}
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-md-2 jb-col-4 jb-mb-2">
+            <div class="jb-text-center jb-p-3 jb-bg-light jb-rounded">
+                <h3 class="jb-mb-0 jb-text-primary">{{total}}</h3>
+                <small>{{#str}}totalapplications, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+        {{#hasdraft}}
+        <div class="jb-col-md-2 jb-col-4 jb-mb-2">
+            <div class="jb-text-center jb-p-3 jb-bg-light jb-rounded">
+                <h3 class="jb-mb-0 jb-text-secondary">{{draft}}</h3>
+                <small>{{#str}}draft, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+        {{/hasdraft}}
+        {{#hassubmitted}}
+        <div class="jb-col-md-2 jb-col-4 jb-mb-2">
+            <div class="jb-text-center jb-p-3 jb-bg-light jb-rounded">
+                <h3 class="jb-mb-0 jb-text-info">{{submitted}}</h3>
+                <small>{{#str}}submitted, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+        {{/hassubmitted}}
+        {{#hasreviewing}}
+        <div class="jb-col-md-2 jb-col-4 jb-mb-2">
+            <div class="jb-text-center jb-p-3 jb-bg-light jb-rounded">
+                <h3 class="jb-mb-0 jb-text-warning">{{reviewing}}</h3>
+                <small>{{#str}}reviewing, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+        {{/hasreviewing}}
+    </div>
+    {{/statuscounts}}
+
+    <div class="jb-row">
+        <div class="jb-col-lg-8">
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <h5 class="jb-mb-0">{{#str}}myrecentapplications, local_jobboard{{/str}}</h5>
+                    <a href="{{viewallapplicationsurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
+                        {{#str}}viewall, local_jobboard{{/str}} ({{applicationcount}})
+                    </a>
+                </div>
+                <div class="jb-card-body">
+                    {{#hasapplications}}
+                    <div class="jb-list-group jb-list-group-flush">
+                        {{#applications}}
+                        <a href="{{viewurl}}" class="jb-list-group-item jb-list-group-item-action">
+                            <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+                                <div>
+                                    <h6 class="jb-mb-1">{{vacancy.title}}</h6>
+                                    <small class="jb-text-muted">{{vacancy.code}} | {{vacancy.department}}</small>
+                                </div>
+                                <span class="jb-badge jb-badge-{{statusclass}}">{{#str}}appstatus:{{status}}, local_jobboard{{/str}}</span>
+                            </div>
+                        </a>
+                        {{/applications}}
+                    </div>
+                    {{/hasapplications}}
+                    {{^hasapplications}}
+                    <div class="jb-text-center jb-py-4">
+                        <p class="jb-text-muted jb-mb-3">{{#str}}noapplicationsyet, local_jobboard{{/str}}</p>
+                        <a href="{{viewallvacanciesurl}}" class="jb-btn jb-btn-primary">
+                            <i class="fa fa-search jb-mr-1" aria-hidden="true"></i>
+                            {{#str}}browsevacancies, local_jobboard{{/str}}
+                        </a>
+                    </div>
+                    {{/hasapplications}}
+                </div>
+            </div>
+        </div>
+
+        <div class="jb-col-lg-4">
+            <div class="jb-card">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}suggestedvacancies, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body">
+                    {{#hassuggestedvacancies}}
+                    <div class="jb-list-group jb-list-group-flush">
+                        {{#suggestedvacancies}}
+                        <a href="{{viewurl}}" class="jb-list-group-item jb-list-group-item-action">
+                            <h6 class="jb-mb-1">{{title}}</h6>
+                            <small class="jb-text-muted">{{department}} | {{location}}</small>
+                            {{#daysremaining}}
+                            <br><small class="jb-text-danger">{{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}</small>
+                            {{/daysremaining}}
+                        </a>
+                        {{/suggestedvacancies}}
+                    </div>
+                    <a href="{{viewallvacanciesurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary jb-btn-block jb-mt-3">
+                        {{#str}}viewallvacancies, local_jobboard{{/str}}
+                    </a>
+                    {{/hassuggestedvacancies}}
+                    {{^hassuggestedvacancies}}
+                    <p class="jb-text-muted jb-text-center jb-py-3">{{#str}}nosuggestedvacancies, local_jobboard{{/str}}</p>
+                    {{/hassuggestedvacancies}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

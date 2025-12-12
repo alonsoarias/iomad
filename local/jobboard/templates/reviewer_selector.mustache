@@ -1,0 +1,29 @@
+{{!
+    @template local_jobboard/reviewer_selector
+
+    Reviewer selector component.
+
+    Context variables:
+    * reviewers - Array of available reviewers {id, fullname, email, selected}
+    * name - Field name
+    * id - Field ID
+    * multiple - Allow multiple selection
+    * required - Is required
+}}
+<div class="jb-reviewer-selector">
+    <label for="{{id}}" class="jb-form-label">
+        {{#str}}selectreviewer, local_jobboard{{/str}}
+        {{#required}}<span class="jb-text-danger">*</span>{{/required}}
+    </label>
+    <select name="{{name}}{{#multiple}}[]{{/multiple}}" id="{{id}}" class="jb-form-control jb-custom-select"{{#multiple}} multiple{{/multiple}}{{#required}} required{{/required}}>
+        {{^multiple}}
+        <option value="">{{#str}}selectreviewer, local_jobboard{{/str}}</option>
+        {{/multiple}}
+        {{#reviewers}}
+        <option value="{{id}}"{{#selected}} selected{{/selected}}>{{fullname}} ({{email}})</option>
+        {{/reviewers}}
+    </select>
+    {{^hasreviewers}}
+    <small class="jb-form-text jb-text-muted">{{#str}}noreviewersavailable, local_jobboard{{/str}}</small>
+    {{/hasreviewers}}
+</div>

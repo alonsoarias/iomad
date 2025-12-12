@@ -1,0 +1,92 @@
+{{!
+    @template local_jobboard/filter_sidebar
+
+    Filter sidebar component.
+
+    Context variables:
+    * actionurl - Form action URL
+    * contracttypes - Contract type options array
+    * hascontracttypes - Boolean
+    * locations - Location options array
+    * haslocations - Boolean
+    * departments - Department options array
+    * hasdepartments - Boolean
+    * convocatorias - Convocatoria options array
+    * hasconvocatorias - Boolean
+    * sortoptions - Sort options array
+    * sortorderasc - Boolean if sort order is ascending
+}}
+<form action="{{actionurl}}" method="get" class="jb-filter-form">
+    {{#hascontracttypes}}
+    <div class="jb-form-group">
+        <label for="filter-contracttype" class="jb-form-label">{{#str}}contracttype, local_jobboard{{/str}}</label>
+        <select name="contracttype" id="filter-contracttype" class="jb-form-control jb-custom-select">
+            <option value="">{{#str}}all, local_jobboard{{/str}}</option>
+            {{#contracttypes}}
+            <option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>
+            {{/contracttypes}}
+        </select>
+    </div>
+    {{/hascontracttypes}}
+
+    {{#haslocations}}
+    <div class="jb-form-group">
+        <label for="filter-location" class="jb-form-label">{{#str}}location, local_jobboard{{/str}}</label>
+        <select name="location" id="filter-location" class="jb-form-control jb-custom-select">
+            <option value="">{{#str}}allllocations, local_jobboard{{/str}}</option>
+            {{#locations}}
+            <option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>
+            {{/locations}}
+        </select>
+    </div>
+    {{/haslocations}}
+
+    {{#hasdepartments}}
+    <div class="jb-form-group">
+        <label for="filter-department" class="jb-form-label">{{#str}}department, local_jobboard{{/str}}</label>
+        <select name="department" id="filter-department" class="jb-form-control jb-custom-select">
+            <option value="">{{#str}}alldepartments, local_jobboard{{/str}}</option>
+            {{#departments}}
+            <option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>
+            {{/departments}}
+        </select>
+    </div>
+    {{/hasdepartments}}
+
+    {{#hasconvocatorias}}
+    <div class="jb-form-group">
+        <label for="filter-convocatoria" class="jb-form-label">{{#str}}convocatoria, local_jobboard{{/str}}</label>
+        <select name="convocatoriaid" id="filter-convocatoria" class="jb-form-control jb-custom-select">
+            <option value="">{{#str}}allconvocatorias, local_jobboard{{/str}}</option>
+            {{#convocatorias}}
+            <option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>
+            {{/convocatorias}}
+        </select>
+    </div>
+    {{/hasconvocatorias}}
+
+    <div class="jb-form-group">
+        <label for="filter-sortby" class="jb-form-label">{{#str}}sortby, local_jobboard{{/str}}</label>
+        <select name="sortby" id="filter-sortby" class="jb-form-control jb-custom-select">
+            {{#sortoptions}}
+            <option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>
+            {{/sortoptions}}
+        </select>
+    </div>
+
+    <div class="jb-form-group">
+        <div class="jb-form-check">
+            <input type="radio" name="sortorder" value="asc" id="sortorder-asc" class="jb-form-check-input"{{#sortorderasc}} checked{{/sortorderasc}}>
+            <label for="sortorder-asc" class="jb-form-check-label">{{#str}}ascending, local_jobboard{{/str}}</label>
+        </div>
+        <div class="jb-form-check">
+            <input type="radio" name="sortorder" value="desc" id="sortorder-desc" class="jb-form-check-input"{{^sortorderasc}} checked{{/sortorderasc}}>
+            <label for="sortorder-desc" class="jb-form-check-label">{{#str}}descending, local_jobboard{{/str}}</label>
+        </div>
+    </div>
+
+    <button type="submit" class="jb-btn jb-btn-primary jb-btn-block">
+        <i class="fa fa-filter jb-mr-1" aria-hidden="true"></i>
+        {{#str}}applyfilters, local_jobboard{{/str}}
+    </button>
+</form>

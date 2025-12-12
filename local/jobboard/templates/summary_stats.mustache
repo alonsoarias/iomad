@@ -1,0 +1,37 @@
+{{!
+    @template local_jobboard/summary_stats
+
+    Report summary statistics row.
+
+    Context variables:
+    * items - Array of stat items {label, value, icon, type, change, haschange, changepositive}
+    * hasitems - Boolean
+}}
+{{#hasitems}}
+<div class="jb-summary-stats jb-row jb-mb-4">
+    {{#items}}
+    <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+        <div class="jb-stat-item jb-d-flex jb-align-items-center jb-p-3 jb-bg-light jb-rounded">
+            <div class="jb-stat-icon jb-text-{{type}} jb-mr-3">
+                <i class="fa fa-{{icon}} fa-2x" aria-hidden="true"></i>
+            </div>
+            <div>
+                <h4 class="jb-mb-0">{{value}}</h4>
+                <small class="jb-text-muted">{{label}}</small>
+                {{#haschange}}
+                <div class="jb-stat-change jb-small {{#changepositive}}jb-text-success{{/changepositive}}{{^changepositive}}jb-text-danger{{/changepositive}}">
+                    {{#changepositive}}
+                    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                    {{/changepositive}}
+                    {{^changepositive}}
+                    <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                    {{/changepositive}}
+                    {{change}}
+                </div>
+                {{/haschange}}
+            </div>
+        </div>
+    </div>
+    {{/items}}
+</div>
+{{/hasitems}}

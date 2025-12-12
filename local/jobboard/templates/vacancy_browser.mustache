@@ -1,0 +1,63 @@
+{{!
+    @template local_jobboard/vacancy_browser
+
+    Vacancy browser page template.
+
+    Context variables:
+    * vacancies - Vacancies array
+    * hasvacancies - Boolean
+    * count - Displayed count
+    * totalcount - Total count
+    * filters - Current filter values
+    * hasactivefilters - Boolean
+    * clearfiltersurl - URL to clear filters
+    * pagination - Pagination HTML
+    * searchformhtml - Search form HTML
+    * filterformhtml - Filter sidebar HTML
+}}
+<div class="jb-vacancy-browser">
+    <div class="jb-row">
+        <div class="jb-col-lg-3">
+            <div class="jb-card jb-mb-4 jb-card-sticky">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}filters, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body">
+                    {{{filterformhtml}}}
+                    {{#hasactivefilters}}
+                    <a href="{{clearfiltersurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-btn-block jb-mt-3">
+                        <i class="fa fa-times jb-mr-1" aria-hidden="true"></i>
+                        {{#str}}clearfilters, local_jobboard{{/str}}
+                    </a>
+                    {{/hasactivefilters}}
+                </div>
+            </div>
+        </div>
+
+        <div class="jb-col-lg-9">
+            <div class="jb-mb-4">
+                {{{searchformhtml}}}
+            </div>
+
+            <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-3">
+                <p class="jb-mb-0 jb-text-muted">
+                    {{#str}}showingresults, local_jobboard{{/str}}: <strong>{{count}}</strong> {{#str}}of, local_jobboard{{/str}} <strong>{{totalcount}}</strong>
+                </p>
+            </div>
+
+            {{#hasvacancies}}
+            <div class="jb-vacancy-results">
+                {{#vacancies}}
+                {{> local_jobboard/vacancy_card }}
+                {{/vacancies}}
+            </div>
+            {{{pagination}}}
+            {{/hasvacancies}}
+            {{^hasvacancies}}
+            <div class="jb-text-center jb-py-5">
+                {{> local_jobboard/components/empty_state }}
+            </div>
+            {{/hasvacancies}}
+        </div>
+    </div>
+</div>

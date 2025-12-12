@@ -1,0 +1,30 @@
+{{!
+    @template local_jobboard/components/badge
+
+    Badge/label component.
+
+    Context variables:
+    * text - Badge text
+    * type - Badge type (primary, secondary, success, danger, warning, info, light, dark)
+    * icon - Optional icon name
+    * pill - Boolean for pill-shaped badge
+    * url - Optional link URL
+
+    Example context (json):
+    {
+        "text": "Published",
+        "type": "success",
+        "icon": "check",
+        "pill": true
+    }
+}}
+{{#url}}
+<a href="{{url}}" class="jb-badge jb-badge-{{type}}{{#pill}} jb-badge-pill{{/pill}} jb-text-decoration-none">
+    {{#icon}}<i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>{{/icon}}{{text}}
+</a>
+{{/url}}
+{{^url}}
+<span class="jb-badge jb-badge-{{type}}{{#pill}} jb-badge-pill{{/pill}}">
+    {{#icon}}<i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>{{/icon}}{{text}}
+</span>
+{{/url}}

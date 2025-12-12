@@ -1,0 +1,34 @@
+{{!
+    @template local_jobboard/convocatoria_selector
+
+    Convocatoria dropdown selector component.
+
+    Context variables:
+    * options - Array of options {value, label, selected}
+    * name - Field name
+    * id - Field ID
+    * required - Boolean if required
+    * disabled - Boolean if disabled
+    * placeholder - Placeholder text
+}}
+<div class="jb-convocatoria-selector">
+    <label for="{{id}}" class="jb-form-label">
+        {{#str}}selectconvocatoria, local_jobboard{{/str}}
+        {{#required}}<span class="jb-text-danger">*</span>{{/required}}
+    </label>
+    <select name="{{name}}" id="{{id}}" class="jb-form-control jb-custom-select"{{#required}} required{{/required}}{{#disabled}} disabled{{/disabled}}>
+        {{#placeholder}}
+        <option value="">{{placeholder}}</option>
+        {{/placeholder}}
+        {{^placeholder}}
+        <option value="">{{#str}}selectconvocatoria, local_jobboard{{/str}}</option>
+        {{/placeholder}}
+        {{#options}}
+        <option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>
+        {{/options}}
+    </select>
+    {{#hasoptions}}
+    {{^hasoptions}}
+    <small class="jb-form-text jb-text-muted">{{#str}}noconvocatoriasavailable, local_jobboard{{/str}}</small>
+    {{/hasoptions}}
+</div>

@@ -1,0 +1,61 @@
+{{!
+    @template local_jobboard/admin_iomad_settings
+
+    Admin IOMAD integration settings template.
+
+    Context variables:
+    * formhtml - Settings form HTML
+    * companies - Companies array
+    * hascompanies - Boolean
+}}
+<div class="jb-admin-iomad">
+    {{> local_jobboard/admin_tabs }}
+
+    <h4 class="jb-mb-4">{{#str}}iomadsettings, local_jobboard{{/str}}</h4>
+
+    <div class="jb-row">
+        <div class="jb-col-lg-8">
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}iomadintegration, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body">
+                    {{{formhtml}}}
+                </div>
+            </div>
+        </div>
+
+        <div class="jb-col-lg-4">
+            {{#hascompanies}}
+            <div class="jb-card">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}companies, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body jb-p-0">
+                    <div class="jb-list-group jb-list-group-flush">
+                        {{#companies}}
+                        <div class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-center">
+                            <div>
+                                <strong>{{name}}</strong>
+                                <br><small class="jb-text-muted">{{shortname}} | {{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}</small>
+                            </div>
+                            <div>
+                                {{#enabled}}
+                                <span class="jb-badge jb-badge-success jb-mr-2">{{#str}}enabled, local_jobboard{{/str}}</span>
+                                {{/enabled}}
+                                {{^enabled}}
+                                <span class="jb-badge jb-badge-secondary jb-mr-2">{{#str}}disabled, local_jobboard{{/str}}</span>
+                                {{/enabled}}
+                                <a href="{{settingsurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary">
+                                    <i class="fa fa-cog" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                        {{/companies}}
+                    </div>
+                </div>
+            </div>
+            {{/hascompanies}}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+{{!
+    @template local_jobboard/reports_index
+
+    Reports index/dashboard template.
+
+    Context variables:
+    * reports - Array of available report types
+    * hasreports - Boolean
+    * recentsnapshots - Recent report snapshots array
+    * hassnapshots - Boolean
+}}
+<div class="jb-reports-index">
+    <h3 class="jb-mb-4">{{#str}}reports, local_jobboard{{/str}}</h3>
+
+    {{#hasreports}}
+    <div class="jb-row jb-mb-4">
+        {{#reports}}
+        <div class="jb-col-lg-4 jb-col-md-6 jb-mb-3">
+            <a href="{{url}}" class="jb-card jb-h-100 jb-text-decoration-none jb-report-card">
+                <div class="jb-card-body jb-d-flex jb-align-items-start">
+                    <div class="jb-report-icon jb-mr-3 jb-text-primary">
+                        <i class="fa fa-{{icon}} fa-2x" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h5 class="jb-card-title jb-mb-1">{{name}}</h5>
+                        <p class="jb-card-text jb-text-muted jb-small">{{description}}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {{/reports}}
+    </div>
+    {{/hasreports}}
+
+    {{#hassnapshots}}
+    <div class="jb-card">
+        <div class="jb-card-header">
+            <h5 class="jb-mb-0">{{#str}}recentsnapshots, local_jobboard{{/str}}</h5>
+        </div>
+        <div class="jb-card-body jb-p-0">
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-hover jb-mb-0">
+                    <thead class="jb-thead-light">
+                        <tr>
+                            <th>{{#str}}report, local_jobboard{{/str}}</th>
+                            <th>{{#str}}generated, local_jobboard{{/str}}</th>
+                            <th>{{#str}}generatedby, local_jobboard{{/str}}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#recentsnapshots}}
+                        <tr>
+                            <td>{{reportname}}</td>
+                            <td>{{timecreated}}</td>
+                            <td>{{createdby}}</td>
+                            <td>
+                                <a href="{{downloadurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
+                                    <i class="fa fa-download jb-mr-1" aria-hidden="true"></i>
+                                    {{#str}}download, local_jobboard{{/str}}
+                                </a>
+                            </td>
+                        </tr>
+                        {{/recentsnapshots}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{/hassnapshots}}
+</div>

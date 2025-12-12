@@ -1,0 +1,55 @@
+{{!
+    @template local_jobboard/admin_workflow_settings
+
+    Admin workflow settings template.
+
+    Context variables:
+    * formhtml - Settings form HTML
+    * stages - Workflow stages array
+    * hasstages - Boolean
+}}
+<div class="jb-admin-workflow">
+    {{> local_jobboard/admin_tabs }}
+
+    <h4 class="jb-mb-4">{{#str}}workflowsettings, local_jobboard{{/str}}</h4>
+
+    <div class="jb-row">
+        <div class="jb-col-lg-8">
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}workflowconfiguration, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body">
+                    {{{formhtml}}}
+                </div>
+            </div>
+        </div>
+
+        <div class="jb-col-lg-4">
+            {{#hasstages}}
+            <div class="jb-card">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}currentworkflow, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body">
+                    <div class="jb-workflow-diagram">
+                        {{#stages}}
+                        <div class="jb-workflow-stage jb-mb-3 jb-p-2 jb-border jb-rounded{{#isfinal}} jb-border-success{{/isfinal}}">
+                            <strong>{{label}}</strong>
+                            <small class="jb-d-block jb-text-muted">
+                                {{#hasnext}}
+                                {{#str}}nextpossible, local_jobboard{{/str}}: {{nextstages}}
+                                {{/hasnext}}
+                                {{#isfinal}}
+                                <span class="jb-badge jb-badge-success">{{#str}}finalstage, local_jobboard{{/str}}</span>
+                                {{/isfinal}}
+                            </small>
+                        </div>
+                        {{/stages}}
+                    </div>
+                </div>
+            </div>
+            {{/hasstages}}
+        </div>
+    </div>
+</div>

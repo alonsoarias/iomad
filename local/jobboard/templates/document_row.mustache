@@ -1,0 +1,56 @@
+{{!
+    @template local_jobboard/document_row
+
+    Document row template for document lists.
+
+    Context variables:
+    * id - Document ID
+    * doctypename - Document type name
+    * applicantname - Applicant name
+    * validationstatus - Validation status
+    * statusclass - Status CSS class
+    * timecreated - Upload date formatted
+    * filename - Original filename
+    * viewurl - URL to view document
+    * validateurl - URL to validate (if can validate)
+    * canvalidate - Boolean
+}}
+<tr data-document-id="{{id}}" class="jb-document-row">
+    <td>
+        <div class="jb-d-flex jb-align-items-center">
+            <i class="fa fa-file-{{fileicon}} jb-mr-2 jb-text-muted" aria-hidden="true"></i>
+            <div>
+                <strong>{{doctypename}}</strong>
+                {{#filename}}
+                <br><small class="jb-text-muted">{{filename}}</small>
+                {{/filename}}
+            </div>
+        </div>
+    </td>
+    {{#showapplicant}}
+    <td>
+        <a href="{{applicanturl}}">{{applicantname}}</a>
+    </td>
+    {{/showapplicant}}
+    <td>
+        <span class="jb-badge jb-badge-{{statusclass}}">
+            {{#str}}docstatus:{{validationstatus}}, local_jobboard{{/str}}
+        </span>
+    </td>
+    <td>{{timecreated}}</td>
+    <td>
+        <div class="jb-btn-group jb-btn-group-sm">
+            <a href="{{viewurl}}" class="jb-btn jb-btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
+                <i class="fa fa-eye" aria-hidden="true"></i>
+            </a>
+            <a href="{{downloadurl}}" class="jb-btn jb-btn-outline-secondary" title="{{#str}}download, local_jobboard{{/str}}">
+                <i class="fa fa-download" aria-hidden="true"></i>
+            </a>
+            {{#canvalidate}}
+            <a href="{{validateurl}}" class="jb-btn jb-btn-outline-success" title="{{#str}}validate, local_jobboard{{/str}}">
+                <i class="fa fa-check" aria-hidden="true"></i>
+            </a>
+            {{/canvalidate}}
+        </div>
+    </td>
+</tr>

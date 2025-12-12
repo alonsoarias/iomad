@@ -1,0 +1,114 @@
+{{!
+    @template local_jobboard/convocatoria_detail
+
+    Convocatoria detail page template.
+
+    Context variables:
+    * id - Convocatoria ID
+    * code - Convocatoria code
+    * name - Convocatoria name
+    * description - Full description
+    * startdate - Start date formatted
+    * enddate - End date formatted
+    * status - Status
+    * statusclass - Status CSS class
+    * vacancies - Array of vacancies
+    * hasvacancies - Boolean
+    * vacancycount - Number of vacancies
+    * applicationcount - Number of applications
+    * stats - Statistics object
+    * canmanage - Can user manage
+    * editurl - Edit URL
+    * backurl - Back URL
+}}
+<div class="jb-convocatoria-detail" data-convocatoria-id="{{id}}">
+    {{> local_jobboard/components/breadcrumbs }}
+
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-start">
+            <div>
+                <span class="jb-badge jb-badge-primary jb-mr-2">{{code}}</span>
+                <span class="jb-badge jb-badge-{{statusclass}}">{{#str}}convocatoriastatus:{{status}}, local_jobboard{{/str}}</span>
+            </div>
+            {{#canmanage}}
+            <div class="jb-btn-group">
+                <a href="{{editurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary">
+                    <i class="fa fa-edit jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}edit, local_jobboard{{/str}}
+                </a>
+            </div>
+            {{/canmanage}}
+        </div>
+        <div class="jb-card-body">
+            <h2 class="jb-card-title jb-mb-3">{{name}}</h2>
+
+            <div class="jb-row jb-mb-4">
+                <div class="jb-col-md-3 jb-col-6 jb-mb-2">
+                    <small class="jb-text-muted jb-d-block">{{#str}}startdate, local_jobboard{{/str}}</small>
+                    <strong>{{startdate}}</strong>
+                </div>
+                <div class="jb-col-md-3 jb-col-6 jb-mb-2">
+                    <small class="jb-text-muted jb-d-block">{{#str}}enddate, local_jobboard{{/str}}</small>
+                    <strong>{{enddate}}</strong>
+                </div>
+                <div class="jb-col-md-3 jb-col-6 jb-mb-2">
+                    <small class="jb-text-muted jb-d-block">{{#str}}vacancies, local_jobboard{{/str}}</small>
+                    <strong>{{vacancycount}}</strong>
+                </div>
+                <div class="jb-col-md-3 jb-col-6 jb-mb-2">
+                    <small class="jb-text-muted jb-d-block">{{#str}}applications, local_jobboard{{/str}}</small>
+                    <strong>{{applicationcount}}</strong>
+                </div>
+            </div>
+
+            {{#description}}
+            <div class="jb-mb-4">
+                <h5>{{#str}}description, local_jobboard{{/str}}</h5>
+                <div class="jb-convocatoria-description">
+                    {{{description}}}
+                </div>
+            </div>
+            {{/description}}
+        </div>
+    </div>
+
+    {{#stats}}
+    <div class="jb-mb-4">
+        <h5 class="jb-mb-3">{{#str}}statistics, local_jobboard{{/str}}</h5>
+        {{> local_jobboard/components/stats_grid }}
+    </div>
+    {{/stats}}
+
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+            <h5 class="jb-mb-0">{{#str}}vacancies, local_jobboard{{/str}} ({{vacancycount}})</h5>
+            {{#canmanage}}
+            <a href="{{createvacancyurl}}" class="jb-btn jb-btn-sm jb-btn-primary">
+                <i class="fa fa-plus jb-mr-1" aria-hidden="true"></i>
+                {{#str}}addvacancy, local_jobboard{{/str}}
+            </a>
+            {{/canmanage}}
+        </div>
+        <div class="jb-card-body">
+            {{#hasvacancies}}
+            <div class="jb-row">
+                {{#vacancies}}
+                <div class="jb-col-lg-6">
+                    {{> local_jobboard/vacancy_card }}
+                </div>
+                {{/vacancies}}
+            </div>
+            {{/hasvacancies}}
+            {{^hasvacancies}}
+            <p class="jb-text-muted jb-text-center jb-py-4">{{#str}}novacancies, local_jobboard{{/str}}</p>
+            {{/hasvacancies}}
+        </div>
+    </div>
+
+    <div class="jb-mt-4">
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-1" aria-hidden="true"></i>
+            {{#str}}back, local_jobboard{{/str}}
+        </a>
+    </div>
+</div>

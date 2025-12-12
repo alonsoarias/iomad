@@ -1,0 +1,156 @@
+{{!
+    @template local_jobboard/admin_dashboard
+
+    Admin dashboard template.
+
+    Context variables:
+    * stats - Admin statistics
+    * pendingactions - Pending admin actions array
+    * haspendingactions - Boolean
+    * systemhealth - System health checks array
+    * hassystemhealth - Boolean
+    * quicklinks - Quick links array
+}}
+<div class="jb-admin-dashboard">
+    <h3 class="jb-mb-4">{{#str}}admindashboard, local_jobboard{{/str}}</h3>
+
+    {{#stats}}
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-primary">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-primary">{{totalusers}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}totalusers, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-primary">
+                            <i class="fa fa-users fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-info">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-info">{{totalvacancies}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}totalvacancies, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-info">
+                            <i class="fa fa-briefcase fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-success">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-success">{{totalapplications}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}totalapplications, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-success">
+                            <i class="fa fa-file-text fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-warning">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-warning">{{pendingdocuments}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}pendingdocuments, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-warning">
+                            <i class="fa fa-file-o fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/stats}}
+
+    <div class="jb-row">
+        <div class="jb-col-lg-8">
+            {{#haspendingactions}}
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}pendingactions, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body jb-p-0">
+                    <div class="jb-list-group jb-list-group-flush">
+                        {{#pendingactions}}
+                        <div class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-center">
+                            <div>
+                                <span class="jb-badge jb-badge-{{priorityclass}} jb-mr-2">{{priority}}</span>
+                                <strong>{{title}}</strong>
+                                {{#description}}
+                                <br><small class="jb-text-muted">{{description}}</small>
+                                {{/description}}
+                            </div>
+                            <div class="jb-d-flex jb-align-items-center">
+                                {{#count}}<span class="jb-badge jb-badge-secondary jb-mr-2">{{count}}</span>{{/count}}
+                                <a href="{{actionurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">{{actionlabel}}</a>
+                            </div>
+                        </div>
+                        {{/pendingactions}}
+                    </div>
+                </div>
+            </div>
+            {{/haspendingactions}}
+
+            {{#hassystemhealth}}
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}systemhealth, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body jb-p-0">
+                    <div class="jb-list-group jb-list-group-flush">
+                        {{#systemhealth}}
+                        <div class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-center">
+                            <div class="jb-d-flex jb-align-items-center">
+                                <span class="jb-text-{{statusclass}} jb-mr-3">
+                                    <i class="fa fa-{{statusicon}} fa-lg" aria-hidden="true"></i>
+                                </span>
+                                <div>
+                                    <strong>{{name}}</strong>
+                                    <br><small class="jb-text-muted">{{message}}</small>
+                                </div>
+                            </div>
+                            <span class="jb-badge jb-badge-{{statusclass}}">{{status}}</span>
+                        </div>
+                        {{/systemhealth}}
+                    </div>
+                </div>
+            </div>
+            {{/hassystemhealth}}
+        </div>
+
+        <div class="jb-col-lg-4">
+            <div class="jb-card">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}quicklinks, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body jb-p-0">
+                    <div class="jb-list-group jb-list-group-flush">
+                        {{#quicklinks}}
+                        <a href="{{url}}" class="jb-list-group-item jb-list-group-item-action jb-d-flex jb-align-items-center">
+                            <i class="fa fa-{{icon}} jb-mr-3 jb-text-primary" aria-hidden="true"></i>
+                            {{label}}
+                        </a>
+                        {{/quicklinks}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

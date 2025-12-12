@@ -1,0 +1,108 @@
+{{!
+    @template local_jobboard/convocatoria_stats
+
+    Convocatoria statistics panel.
+
+    Context variables:
+    * totalvacancies - Total vacancies count
+    * openvacancies - Open vacancies count
+    * totalapplications - Total applications
+    * pendingapplications - Pending applications
+    * approvedapplications - Approved applications
+    * pendingdocuments - Pending document validations
+    * daysremaining - Days remaining
+}}
+<div class="jb-convocatoria-stats">
+    <div class="jb-row">
+        <div class="jb-col-md-4 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-primary">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-primary">{{totalvacancies}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}totalvacancies, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-primary">
+                            <i class="fa fa-briefcase fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-4 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-success">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-success">{{openvacancies}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}openvacancies, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-success">
+                            <i class="fa fa-check-circle fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-4 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-info">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-info">{{totalapplications}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}totalapplications, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-info">
+                            <i class="fa fa-file-text fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-4 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-warning">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-warning">{{pendingapplications}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}pendingapplications, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-warning">
+                            <i class="fa fa-clock-o fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-4 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-success">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-success">{{approvedapplications}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}approvedapplications, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-success">
+                            <i class="fa fa-thumbs-up fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-4 jb-col-6 jb-mb-3">
+            <div class="jb-stat-card jb-stat-card-secondary">
+                <div class="jb-stat-card-body jb-py-3">
+                    <div class="jb-stat-card-content">
+                        <div>
+                            <h3 class="jb-stat-card-value jb-text-secondary">{{pendingdocuments}}</h3>
+                            <p class="jb-stat-card-label">{{#str}}pendingdocuments, local_jobboard{{/str}}</p>
+                        </div>
+                        <div class="jb-stat-card-icon jb-text-secondary">
+                            <i class="fa fa-file-o fa-2x" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

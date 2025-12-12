@@ -1,0 +1,119 @@
+{{!
+    @template local_jobboard/my_applications
+
+    My applications page template for applicants.
+
+    Context variables:
+    * applications - Array of application objects
+    * hasapplications - Boolean
+    * count - Total count
+    * statuscounts - Status counts object
+    * pagination - Pagination HTML
+    * browsevacanciesurl - URL to browse vacancies
+}}
+<div class="jb-my-applications">
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <h3>{{#str}}myapplications, local_jobboard{{/str}}</h3>
+        <a href="{{browsevacanciesurl}}" class="jb-btn jb-btn-primary">
+            <i class="fa fa-search jb-mr-1" aria-hidden="true"></i>
+            {{#str}}browsevacancies, local_jobboard{{/str}}
+        </a>
+    </div>
+
+    {{#statuscounts}}
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-md-2 jb-col-4 jb-mb-2">
+            <div class="jb-text-center jb-p-2 jb-bg-light jb-rounded">
+                <h4 class="jb-mb-0 jb-text-primary">{{total}}</h4>
+                <small>{{#str}}total, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+        <div class="jb-col-md-2 jb-col-4 jb-mb-2">
+            <div class="jb-text-center jb-p-2 jb-bg-light jb-rounded">
+                <h4 class="jb-mb-0 jb-text-secondary">{{draft}}</h4>
+                <small>{{#str}}draft, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+        <div class="jb-col-md-2 jb-col-4 jb-mb-2">
+            <div class="jb-text-center jb-p-2 jb-bg-light jb-rounded">
+                <h4 class="jb-mb-0 jb-text-info">{{submitted}}</h4>
+                <small>{{#str}}submitted, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+        <div class="jb-col-md-2 jb-col-4 jb-mb-2">
+            <div class="jb-text-center jb-p-2 jb-bg-light jb-rounded">
+                <h4 class="jb-mb-0 jb-text-warning">{{reviewing}}</h4>
+                <small>{{#str}}reviewing, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+        <div class="jb-col-md-2 jb-col-4 jb-mb-2">
+            <div class="jb-text-center jb-p-2 jb-bg-light jb-rounded">
+                <h4 class="jb-mb-0 jb-text-success">{{approved}}</h4>
+                <small>{{#str}}approved, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+        <div class="jb-col-md-2 jb-col-4 jb-mb-2">
+            <div class="jb-text-center jb-p-2 jb-bg-light jb-rounded">
+                <h4 class="jb-mb-0 jb-text-danger">{{rejected}}</h4>
+                <small>{{#str}}rejected, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+    </div>
+    {{/statuscounts}}
+
+    {{#hasapplications}}
+    <div class="jb-row">
+        {{#applications}}
+        <div class="jb-col-lg-6 jb-mb-3">
+            <div class="jb-card jb-application-card" data-application-id="{{id}}">
+                <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <span class="jb-badge jb-badge-{{statusclass}}">{{#str}}appstatus:{{status}}, local_jobboard{{/str}}</span>
+                    <small class="jb-text-muted">{{timecreated}}</small>
+                </div>
+                <div class="jb-card-body">
+                    <h5 class="jb-card-title">
+                        <a href="{{viewurl}}">{{vacancy.title}}</a>
+                    </h5>
+                    <p class="jb-text-muted jb-small jb-mb-2">
+                        <span class="jb-badge jb-badge-secondary">{{vacancy.code}}</span>
+                        {{vacancy.department}}
+                    </p>
+                    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-small">
+                        <span>
+                            <i class="fa fa-file jb-mr-1" aria-hidden="true"></i>
+                            {{documentcount}} {{#str}}documents, local_jobboard{{/str}}
+                        </span>
+                        <span class="jb-text-muted">
+                            {{#vacancy.closedate}}
+                            {{#str}}closes, local_jobboard{{/str}}: {{vacancy.closedate}}
+                            {{/vacancy.closedate}}
+                        </span>
+                    </div>
+                </div>
+                <div class="jb-card-footer">
+                    <a href="{{viewurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
+                        {{#str}}viewdetails, local_jobboard{{/str}}
+                    </a>
+                    {{#canwithdraw}}
+                    <a href="{{withdrawurl}}" class="jb-btn jb-btn-sm jb-btn-outline-danger" data-confirm="{{#str}}confirmwithdraw, local_jobboard{{/str}}">
+                        {{#str}}withdraw, local_jobboard{{/str}}
+                    </a>
+                    {{/canwithdraw}}
+                    {{#cancontinue}}
+                    <a href="{{continueurl}}" class="jb-btn jb-btn-sm jb-btn-primary">
+                        {{#str}}continue, local_jobboard{{/str}}
+                    </a>
+                    {{/cancontinue}}
+                </div>
+            </div>
+        </div>
+        {{/applications}}
+    </div>
+    {{{pagination}}}
+    {{/hasapplications}}
+    {{^hasapplications}}
+    <div class="jb-text-center jb-py-5">
+        {{> local_jobboard/components/empty_state }}
+    </div>
+    {{/hasapplications}}
+</div>
