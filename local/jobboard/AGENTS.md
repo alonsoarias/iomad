@@ -36,7 +36,7 @@
 | Renderers especializados (11) | ✅ | renderer_base, dashboard_renderer, admin_renderer, etc. |
 | AMD Modules (13) | ✅ | +grading_panel.js v3.3.0 con AJAX nav y atajos teclado |
 | User Tours (15) | ✅ | 15 tours con selectores jb-* en db/tours/ (v3.4.0) |
-| Strings de idioma | ✅ | 2,754 líneas EN/ES cada uno |
+| Strings de idioma | ✅ | ~2,990 líneas EN/ES cada uno |
 | Email templates | ✅ | 6 plantillas predefinidas |
 | Web Services | ✅ Eliminados | Removidos en v3.2.2 |
 | Sistema de migración | ✅ | migrate.php (importación/exportación) |
@@ -182,7 +182,7 @@ El administrador gestiona un **catálogo maestro** de tipos de documento desde `
 | **code** | Código único identificador | `hoja_vida_sigep` |
 | **name** | Nombre del documento | `Formato Único Hoja de Vida SIGEP II` |
 | **type** | Tipo de campo | `file` (archivo) o `text` (texto) |
-| **input_type** | Subtipo de entrada | file, text, textarea, select |
+| **input_type** | Subtipo de entrada | file, text, textarea, select, url |
 | **description** | Descripción general | Texto explicativo |
 | **externalurl** | URL donde obtener el documento | `https://www.sigep.gov.co` |
 | **acceptedformats** | Formatos aceptados | `pdf` (único formato admitido) |
@@ -503,7 +503,7 @@ local/jobboard:manageapitokens   // Gestionar tokens API
 | `local_jobboard_interview` | Entrevistas programadas |
 | `local_jobboard_faculty` | Facultades académicas |
 | `local_jobboard_program` | Programas por facultad |
-| `local_jobboard_program_reviewer` | Revisores asignados por programa |
+| `local_jobboard_notification` | Notificaciones del sistema |
 
 ### 6.2 Convenciones de Tablas
 
@@ -530,7 +530,6 @@ El archivo `styles.css` ya existe con un sistema completo de clases `jb-*`:
 - Utilidades de espaciado (`jb-m-*`, `jb-p-*`)
 - Utilidades de flexbox (`jb-d-flex`, `jb-justify-content-*`)
 - Tipografía (`jb-fs-*`, `jb-fw-*`, `jb-text-*`)
-- **Grading Panel** (Sección 37) - Añadido en v3.3.0
 
 ### 7.2 Variables CSS Definidas
 
@@ -550,26 +549,27 @@ El archivo `styles.css` ya existe con un sistema completo de clases `jb-*`:
 
 ### 7.3 Templates Actualizados
 
-Los templates Mustache principales usan clases `jb-*`:
+Los templates Mustache principales ya usan clases `jb-*`:
 - `pages/public.mustache` ✅
 - `pages/public_vacancy.mustache` ✅
 - `pages/manage.mustache` ✅
 - `pages/admin_roles.mustache` ✅
 - `pages/reports.mustache` ✅
 - `pages/schedule_interview.mustache` ✅
+- `pages/review.mustache` ✅
+- `pages/apply.mustache` ✅
+- `pages/convocatorias.mustache` ✅
 - `components/timeline.mustache` ✅
-- `admin_email_templates.mustache` ✅
 - `grading_panel.mustache` ✅ (v3.3.0)
+- `admin_email_templates.mustache` ✅
 
 ---
 
 ## 8. USER TOURS
 
-### 8.1 Estado de Implementación: ⚠️ PENDIENTE ACTUALIZAR SELECTORES
+### 8.1 Estado de Implementación: ✅ IMPLEMENTADO v3.4.0
 
-Los User Tours están definidos en `db/tours/` e instalados mediante `local_jobboard_install_tours()` en `install.php`.
-
-**IMPORTANTE:** Los selectores CSS deben actualizarse para usar clases `jb-*` en lugar de clases Bootstrap.
+Los User Tours están definidos en `db/tours/` con selectores `jb-*` para independencia de theme.
 
 ### 8.2 Tours Implementados (15)
 
@@ -577,7 +577,7 @@ Los User Tours están definidos en `db/tours/` e instalados mediante `local_jobb
 |---------|-------------|-----------|
 | `tour_dashboard.json` | Dashboard principal | Todos |
 | `tour_public.json` | Vista pública | Visitantes |
-| `tour_convocatorias.json` | Lista de convocatorias | Usuarios |
+| `tour_convocatorias.json` | Lista de convocatorias | Coordinadores |
 | `tour_convocatoria_manage.json` | Gestión de convocatoria | Coordinadores |
 | `tour_vacancies.json` | Lista de vacantes | Usuarios |
 | `tour_vacancy.json` | Detalle de vacante | Usuarios |
@@ -591,31 +591,37 @@ Los User Tours están definidos en `db/tours/` e instalados mediante `local_jobb
 | `tour_validate_document.json` | Validación de documento | Revisores |
 | `tour_reports.json` | Reportes | Coordinadores |
 
-### 8.3 Mantenimiento de Tours
+### 8.3 Selectores Utilizados
 
-**IMPORTANTE:** Si se modifican las interfaces, los tours pueden requerir actualización de selectores CSS. Los tours usan selectores con clases `jb-*` para estabilidad.
+Todos los tours usan selectores `jb-*` para estabilidad entre themes:
+- `.jb-page-header`, `.jb-welcome-section`
+- `.jb-card`, `.jb-card-shadow`, `.jb-card-body`
+- `.jb-convocatoria-card`, `.jb-vacancy-card`, `.jb-application-card`
+- `.jb-filter-form`, `.jb-progress-steps`
+- `.jb-btn-primary`, `.jb-btn-group`
+- `.jb-table`, `.jb-list-group`
 
 ---
 
 ## 9. MÓDULOS AMD (JavaScript)
 
-### 9.1 Módulos Existentes (13)
+### 9.1 Módulos Implementados (13)
 
 | Módulo | Descripción |
 |--------|-------------|
+| `tooltips.js` | Sistema de tooltips (sin Bootstrap) |
+| `public_filters.js` | Filtros de vista pública |
+| `review_ui.js` | Interfaz de revisión |
+| `document_viewer.js` | Visor de documentos |
+| `application_form.js` | Formulario de postulación |
+| `navigation.js` | Navegación del plugin |
 | `apply_progress.js` | Progreso de postulación |
 | `progress_steps.js` | Pasos de progreso |
-| `public_filters.js` | Filtros de vista pública |
-| `bulk_actions.js` | Acciones masivas |
-| `document_preview.js` | Vista previa de documentos |
-| `loading_states.js` | Estados de carga |
-| `convocatoria_form.js` | Formulario de convocatoria |
-| `card_actions.js` | Acciones en tarjetas |
-| `signup_form.js` | Formulario de registro |
-| `vacancy_form.js` | Formulario de vacante |
-| `exemption_form.js` | Formulario de excepciones |
-| `application_confirm.js` | Confirmación de postulación |
+| `bulk_actions.js` | Acciones masivas con checkboxes |
 | `grading_panel.js` | **Panel de calificación mod_assign style** (v3.3.0) |
+| `vacancy_manage.js` | Gestión de vacantes |
+| `convocatoria_manage.js` | Gestión de convocatorias |
+| `doctype_manage.js` | Gestión de tipos de documento |
 
 ### 9.2 Reglas de Desarrollo AMD
 
@@ -629,9 +635,9 @@ Los User Tours están definidos en `db/tours/` e instalados mediante `local_jobb
 
 ## 10. CADENAS DE IDIOMAS
 
-### 10.1 Estado Actual: ✅ COMPLETO
+### 10.1 Estado Actual: ✅ IMPLEMENTADO
 
-Las cadenas de idiomas están completas (~2,754 strings en cada idioma):
+Las cadenas de idiomas están implementadas con ~2,990 líneas en cada idioma:
 - `lang/en/local_jobboard.php`
 - `lang/es/local_jobboard.php`
 
@@ -648,16 +654,15 @@ Las cadenas de idiomas están completas (~2,754 strings en cada idioma):
 9. Comité de Selección
 10. Notificaciones Email
 11. Reportes
-12. API y Tokens
-13. User Tours
-14. Roles Personalizados
-15. Capabilities
-16. Errores
-17. Formularios
-18. Estados de Workflow
-19. Auditoría
-20. Configuración
-21. **Grading Panel** (v3.3.0)
+12. Roles Personalizados
+13. Capabilities
+14. Errores
+15. Formularios
+16. Estados de Workflow
+17. Auditoría
+18. Configuración
+19. Grading Panel (v3.3.0)
+20. User Tours (v3.4.0) - 236 strings
 
 ### 10.3 Reglas
 
@@ -701,19 +706,16 @@ Las cadenas de idiomas están completas (~2,754 strings en cada idioma):
 
 ## 12. PLANTILLAS DE EMAIL
 
-### 12.1 Plantillas Requeridas
+### 12.1 Plantillas Implementadas (6)
 
 | Template Key | Descripción |
 |--------------|-------------|
 | `application_received` | Confirmación de postulación |
 | `application_status_changed` | Cambio de estado |
 | `review_complete` | Revisión completada (email consolidado) |
-| `document_approved` | Documento aprobado |
 | `document_rejected` | Documento rechazado |
 | `interview_scheduled` | Citación a entrevista |
 | `selected` | Notificación de selección |
-| `rejected` | Notificación de no selección |
-| `vacancy_closing_soon` | Vacante próxima a cerrar |
 
 ### 12.2 Variables/Placeholders
 
@@ -734,12 +736,6 @@ Las cadenas de idiomas están completas (~2,754 strings en cada idioma):
 {SITE_URL}
 ```
 
-### 12.3 Funcionalidades
-
-- **Editor con variables:** Autocompletado de placeholders
-- **Preview en tiempo real:** Ver cómo quedará el email
-- **Historial de cambios:** Versiones anteriores de plantillas
-
 ---
 
 ## 13. INTERFAZ DE REVISIÓN DE DOCUMENTOS
@@ -748,64 +744,62 @@ Las cadenas de idiomas están completas (~2,754 strings en cada idioma):
 
 La interfaz de revisión estilo mod_assign fue implementada en v3.3.0:
 
-**Archivos creados:**
-- `templates/grading_panel.mustache` - Layout split-pane
-- `amd/src/grading_panel.js` - Navegación AJAX y atajos de teclado
-- `styles.css` (Sección 37) - Estilos del grading panel
+**Características implementadas:**
+- **Layout split-pane:** Panel izquierdo (lista documentos), Panel derecho (preview)
+- **Visor PDF inline:** Sin necesidad de descargar
+- **Navegación AJAX:** Cambiar entre documentos sin recarga de página
+- **Atajos de teclado:**
+  - `J/K` - Navegar entre documentos
+  - `A` - Aprobar documento actual
+  - `R` - Enfocar campo de rechazo
+  - `D` - Descargar documento
+  - `F` - Pantalla completa
+  - `S` - Toggle sidebar
+  - `?` - Mostrar ayuda
 
-### 13.2 Características Implementadas
+### 13.2 Archivos Relacionados
 
-| Característica | Estado | Descripción |
-|----------------|:------:|-------------|
-| Layout dividido | ✅ | Sidebar (aplicaciones), Panel documentos, Preview |
-| Visor inline | ✅ | PDF e imágenes sin descargar |
-| Navegación AJAX | ✅ | Cambiar entre documentos/postulantes sin recarga |
-| Checklist verificación | ✅ | Configurable por tipo de documento |
-| Atajos de teclado | ✅ | Ver tabla abajo |
-| Fullscreen | ✅ | Preview a pantalla completa |
-| Barra de progreso | ✅ | Documentos aprobados/rechazados/pendientes |
+- `templates/grading_panel.mustache`
+- `amd/src/grading_panel.js`
+- `classes/output/grading_panel.php`
 
-### 13.3 Atajos de Teclado Implementados
+### 13.3 IMPORTANTE: Análisis de mod_assign
 
-| Tecla | Acción |
-|-------|--------|
-| `N` | Siguiente documento |
-| `P` | Documento anterior |
-| `A` | Aprobar documento actual |
-| `R` | Enfocar motivo de rechazo |
-| `D` | Descargar documento |
-| `F` | Pantalla completa |
-| `S` | Mostrar/ocultar sidebar |
-| `↑` / `↓` | Navegar documentos |
-| `Shift+A` | Aprobar todos los pendientes |
-| `?` | Mostrar ayuda de atajos |
-| `Esc` | Salir del panel |
+**Para futuras mejoras de la interfaz de revisión, se debe ANALIZAR el plugin mod_assign de Moodle core en lugar de crear funcionalidades desde cero.**
 
-### 13.4 ⚠️ MEJORA PENDIENTE: Análisis de mod_assign
+#### Archivos a estudiar en mod_assign:
 
-> **IMPORTANTE:** Para futuras mejoras de esta interfaz, se debe **ANALIZAR el plugin mod_assign** de Moodle core para replicar funcionalidades avanzadas en lugar de crear todo desde cero.
->
-> **Archivos a estudiar de mod_assign:**
-> - `mod/assign/grading_panel.php`
-> - `mod/assign/templates/grading_panel.mustache`
-> - `mod/assign/amd/src/grading_panel.js`
-> - `mod/assign/classes/output/grading_app.php`
->
-> **Funcionalidades a considerar:**
-> - Navegación entre submissions con AJAX puro
-> - Panel de calificación rápida
-> - Integración con PDF annotator
-> - Guardado automático
-> - Estados de carga optimizados
+```
+mod/assign/
+├── grading_panel.php           # Controlador del panel de calificación
+├── grading_form.php            # Formulario de calificación
+├── classes/
+│   └── output/
+│       └── grading_app.php     # Renderable del panel
+├── templates/
+│   └── grading_panel.mustache  # Template del panel
+└── amd/src/
+    └── grading_panel.js        # Módulo AMD del panel
+```
 
-### 13.5 Flujo de Revisión
+#### Funcionalidades a replicar de mod_assign:
 
-1. Revisor abre panel de revisión
-2. Sistema muestra postulantes asignados a SUS programas
-3. Selecciona postulante → ve lista de documentos
-4. Revisa cada documento con checklist
-5. Aprueba o rechaza (con observación obligatoria si rechaza)
-6. Al finalizar TODOS los documentos → envía email consolidado
+| Funcionalidad | Ubicación en mod_assign |
+|---------------|------------------------|
+| Navegación entre envíos | `grading_panel.js` → `handleNavigation()` |
+| Actualización sin recarga | `grading_panel.js` → `refreshGradingPanel()` |
+| Atajos de teclado | `grading_panel.js` → `registerEventListeners()` |
+| Preview de archivos | `classes/output/grading_app.php` |
+| Filtros de estudiantes | `grading_form.php` → método de filtrado |
+| Guardado rápido | `grading_panel.js` → `saveGrade()` |
+
+#### Beneficios de analizar mod_assign:
+
+1. **Consistencia UX:** Los usuarios ya conocen la interfaz de calificación de Moodle
+2. **Código probado:** mod_assign es estable y bien mantenido
+3. **Accesibilidad:** Cumple estándares de accesibilidad de Moodle
+4. **Compatibilidad:** Funciona en todos los themes soportados
+5. **Mantenibilidad:** Patrones de código reconocidos
 
 ---
 
@@ -871,32 +865,31 @@ La página `index.php?view=apply&vacancyid=xxx` debe tener **tabs/pestañas**:
 
 1. **ANALIZAR** el repositorio completo antes de implementar
 2. **SOLO CLASES jb-*** - No usar clases Bootstrap directamente
-3. **RECREAR USER TOURS** - Con selectores actualizados
-4. **RECREAR MÓDULOS AMD** - Sin dependencias de Bootstrap JS
-5. **VALIDAR SIEMPRE** en plataforma antes de commit
-6. **NO improvisar** cambios directamente en producción
-7. **Respetar** la arquitectura IOMAD de 4 niveles
-8. **CREAR STRINGS** desde cero - Considerar que no existen
-9. **Paridad EN/ES** - Toda string debe existir en AMBOS idiomas
-10. **NO hardcodear** strings en PHP ni templates - usar `get_string()` SIEMPRE
-11. **Documentar** TODO en CHANGELOG.md
-12. **ACTUALIZAR DOCUMENTACIÓN** con información de contacto correcta
-13. **Comité de selección** es por FACULTAD, no por vacante
-14. **Revisores** se asignan por PROGRAMA
-15. **Formulario de postulación** configurable **POR CONVOCATORIA** (no global)
-16. **Carta de intención** es campo de TEXTO, no archivo
-17. **Convocatoria** debe tener PDF adjunto con detalle completo
-18. **Auditoría ROBUSTA** - registrar TODAS las acciones
-19. Un postulante = UNA vacante por convocatoria
-20. La validación de documentos es 100% MANUAL
-21. **Búsqueda de usuarios** por username al crear comités
-22. **Cada cambio** = incremento de versión + CHANGELOG
-23. **Compilar AMD** después de modificaciones: `grunt amd --root=local/jobboard`
-24. **Reportes** filtrados por convocatoria obligatoriamente
-25. **Documentos:** Catálogo global + configuración específica por convocatoria
-26. **Formato único de archivos:** Solo PDF admitido (no jpg, png, etc.)
-27. **Tarjeta profesional:** OPCIONAL por defecto (cada convocatoria decide)
-28. **Analizar mod_assign** para funcionalidades de revisión avanzadas (no reinventar la rueda)
+3. **VALIDAR SIEMPRE** en plataforma antes de commit
+4. **NO improvisar** cambios directamente en producción
+5. **Respetar** la arquitectura IOMAD de 4 niveles
+6. **Paridad EN/ES** - Toda string debe existir en AMBOS idiomas
+7. **NO hardcodear** strings en PHP ni templates - usar `get_string()` SIEMPRE
+8. **Documentar** TODO en CHANGELOG.md
+9. **ACTUALIZAR DOCUMENTACIÓN** con información de contacto correcta
+10. **Comité de selección** es por FACULTAD, no por vacante
+11. **Revisores** se asignan por PROGRAMA
+12. **Formulario de postulación** configurable **POR CONVOCATORIA** (no global)
+13. **Carta de intención** es campo de TEXTO, no archivo
+14. **Convocatoria** debe tener PDF adjunto con detalle completo
+15. **Auditoría ROBUSTA** - registrar TODAS las acciones
+16. Un postulante = UNA vacante por convocatoria
+17. La validación de documentos es 100% MANUAL
+18. **Búsqueda de usuarios** por username al crear comités
+19. **Cada cambio** = incremento de versión + CHANGELOG
+20. **Compilar AMD** después de modificaciones: `grunt amd --root=local/jobboard`
+21. **Reportes** filtrados por convocatoria obligatoriamente
+22. **Documentos:** Catálogo global + configuración específica por convocatoria
+23. **Formato único de archivos:** Solo PDF admitido (no jpg, png, etc.)
+24. **Tarjeta profesional:** OPCIONAL por defecto (cada convocatoria decide)
+25. **Web Services:** NO se usan - fueron eliminados en v3.2.2
+26. **User Tours:** Usar selectores `jb-*` para independencia de theme
+27. **Analizar mod_assign** para funcionalidades de revisión (no reinventar la rueda)
 
 ---
 
@@ -905,8 +898,8 @@ La página `index.php?view=apply&vacancyid=xxx` debe tener **tabs/pestañas**:
 ### 18.1 Formato
 
 ```php
-$plugin->version = YYYYMMDDXX;  // Ej: 2025121250
-$plugin->release = 'X.Y.Z';     // Ej: '3.3.0'
+$plugin->version = YYYYMMDDXX;  // Ej: 2025121251
+$plugin->release = 'X.Y.Z';     // Ej: '3.4.0'
 ```
 
 ### 18.2 Incrementos
@@ -939,15 +932,14 @@ $plugin->release = 'X.Y.Z';     // Ej: '3.3.0'
 - [x] Crear archivos de idioma completos (EN/ES)
 - [x] Crear README.md y CHANGELOG.md
 
-### Fase 2: Migración CSS ✅ COMPLETADA v3.2.3
+### Fase 2: Migración CSS ✅ COMPLETADA
 - [x] Auditar templates Mustache
 - [x] Reemplazar clases Bootstrap por `jb-*`
-- [x] Probar en themes compatibles
+- [x] Probar en themes: Boost, Classic
 
-### Fase 3: Limpieza BD ✅ COMPLETADA v3.2.4
-- [x] Evaluar campos opendate/closedate de vacancy (mantener con COALESCE)
-- [x] Actualizar input_type valores en doctype
-- [x] Verificar migraciones
+### Fase 3: Refactorización Renderer ✅ COMPLETADA
+- [x] Dividir renderer.php en renderers especializados
+- [x] 11 renderers implementados
 
 ### Fase 4: Interfaz Revisión ✅ COMPLETADA v3.3.0
 - [x] Diseñar layout mod_assign style
@@ -1009,107 +1001,102 @@ $plugin->release = 'X.Y.Z';     // Ej: '3.3.0'
 
 ## 22. CONSOLIDACIÓN DEL DASHBOARD
 
-### 22.1 Estado: ⚠️ PENDIENTE ANÁLISIS Y REFACTORIZACIÓN
+### 22.1 Estado: ⚠️ PENDIENTE
 
-> **IMPORTANTE:** El dashboard actual requiere una revisión completa para consolidar vistas y funcionalidades. Algunas funcionalidades presentes no deberían estar ahí, y otras necesarias faltan.
+Se requiere una auditoría y reorganización del dashboard para asegurar que:
+1. Las funcionalidades mostradas sean relevantes para cada rol
+2. No haya vistas redundantes o innecesarias
+3. Las funcionalidades faltantes se agreguen
 
 ### 22.2 Análisis Requerido
 
-Antes de modificar el dashboard, se debe:
+#### Vistas Actuales a Auditar
 
-1. **Auditar funcionalidades actuales:**
-   - Listar todas las vistas/enlaces disponibles en el dashboard actual
-   - Identificar qué funcionalidades están duplicadas
-   - Identificar funcionalidades que deberían estar en otras ubicaciones
+| Vista | Rol | ¿Necesaria? | Observaciones |
+|-------|-----|:-----------:|---------------|
+| Estadísticas generales | Admin | ✅ | Mantener |
+| Convocatorias activas | Admin/Coord | ✅ | Mantener |
+| Vacantes recientes | Admin/Coord | ? | Evaluar utilidad |
+| Mis postulaciones | Postulante | ✅ | Mantener |
+| Documentos pendientes | Revisor | ✅ | Mantener |
+| Cola de revisión | Revisor | ✅ | Mantener |
+| [Auditar otras...] | - | ? | - |
 
-2. **Definir funcionalidades necesarias por rol:**
+#### Funcionalidades Faltantes Potenciales
 
-| Rol | Funcionalidades Necesarias en Dashboard |
-|-----|----------------------------------------|
-| **Postulante** | Mis postulaciones, Estado de documentos, Convocatorias abiertas |
-| **Revisor** | Documentos por revisar, Mis revisiones completadas, Estadísticas |
-| **Coordinador** | Resumen convocatorias, Vacantes, Postulaciones pendientes, Reportes |
-| **Comité** | Candidatos a evaluar, Evaluaciones pendientes, Decisiones |
-| **Admin** | Todo lo anterior + Configuración, Auditoría |
-
-3. **Identificar qué SOBRA en el dashboard actual:**
-   - Enlaces a configuraciones que deberían estar en admin
-   - Funcionalidades de desarrollo/debug
-   - Opciones redundantes
-
-4. **Identificar qué FALTA en el dashboard actual:**
-   - Widgets de resumen rápido
-   - Accesos directos a tareas pendientes
-   - Notificaciones/alertas contextuales
+| Funcionalidad | Rol | Prioridad |
+|---------------|-----|-----------|
+| Acceso rápido a última convocatoria | Todos | Alta |
+| Notificaciones pendientes | Todos | Alta |
+| Resumen de actividad reciente | Admin | Media |
+| Accesos directos por rol | Todos | Alta |
+| [Identificar otras...] | - | - |
 
 ### 22.3 Principios de Diseño del Dashboard
 
-1. **Un dashboard por rol** - El contenido varía según el rol del usuario
-2. **Acciones primarias prominentes** - Lo más usado debe ser lo más visible
-3. **Información contextual** - Mostrar datos relevantes (pendientes, alertas)
-4. **Sin duplicación** - Una funcionalidad, un lugar
-5. **Consistencia** - Misma estructura visual para todos los roles
+1. **Por Rol:** Cada rol ve solo lo relevante para sus tareas
+2. **Accionable:** Cada elemento debe llevar a una acción concreta
+3. **Priorizado:** Lo más urgente/importante primero
+4. **Sin Redundancia:** No duplicar información entre secciones
+5. **Consistente:** Mismos patrones de interacción en todo el dashboard
 
-### 22.4 Tareas Pendientes
+### 22.4 Pasos para Consolidación
 
-- [ ] Hacer inventario completo del dashboard actual
-- [ ] Entrevistar a usuarios de cada rol para entender necesidades
-- [ ] Diseñar wireframes del nuevo dashboard por rol
-- [ ] Implementar cambios gradualmente
-- [ ] Probar con usuarios reales
+1. **Auditar** todas las vistas actuales del dashboard
+2. **Documentar** qué muestra cada sección y para qué rol
+3. **Identificar** redundancias y elementos innecesarios
+4. **Listar** funcionalidades faltantes por rol
+5. **Diseñar** nueva estructura del dashboard
+6. **Implementar** cambios graduales
+7. **Probar** con usuarios de cada rol
 
 ---
 
-## 23. ANÁLISIS DE MOD_ASSIGN PARA MEJORAS FUTURAS
+## 23. GUÍA DE ANÁLISIS DE MOD_ASSIGN
 
 ### 23.1 Propósito
 
-> **IMPORTANTE:** Para implementar mejoras en la interfaz de revisión y otras funcionalidades similares, se debe **ANALIZAR el plugin mod_assign** de Moodle core en lugar de crear todo desde cero.
+Antes de implementar o mejorar funcionalidades de revisión/calificación, **SIEMPRE** analizar cómo lo hace mod_assign de Moodle core.
 
-### 23.2 Archivos Clave de mod_assign a Estudiar
+### 23.2 Estructura de mod_assign Relevante
 
 ```
 mod/assign/
 ├── grading_panel.php           # Controlador del panel de calificación
 ├── grading_form.php            # Formulario de calificación
-├── submission/                 # Plugins de submission
-├── feedback/                   # Plugins de feedback
-├── classes/
-│   ├── output/
-│   │   ├── grading_app.php     # Renderable del panel
-│   │   └── renderer.php        # Renderer principal
-│   ├── grading_table.php       # Tabla de calificaciones
-│   └── submission_table.php    # Tabla de submissions
-├── templates/
-│   ├── grading_panel.mustache  # Template del panel
-│   ├── grading_actions.mustache
-│   └── grading_navigation.mustache
-└── amd/src/
-    ├── grading_panel.js        # Módulo AMD del panel
-    ├── grading_form_change_checker.js
-    └── grading_events.js
+├── classes/output/grading_app.php     # Renderable del panel
+├── templates/grading_panel.mustache   # Template del panel
+└── amd/src/grading_panel.js           # Módulo AMD del panel
 ```
 
-### 23.3 Funcionalidades de mod_assign a Replicar
+### 23.3 Patrones a Replicar
 
-| Funcionalidad | Descripción | Prioridad |
-|---------------|-------------|-----------|
-| Navegación AJAX | Cambiar entre submissions sin recargar | Alta |
-| Guardado automático | Guardar calificación en borrador | Media |
-| PDF annotator | Anotar PDFs inline | Baja |
-| Calificación rápida | Calificar desde tabla | Media |
-| Filtros avanzados | Filtrar por estado, grupo, etc. | Alta |
-| Bulk operations | Acciones masivas en submissions | Media |
-| Workflow states | Estados de workflow personalizables | Alta |
-| Extensions | Manejo de extensiones de fecha | Baja |
+| Patrón | Descripción | Beneficio |
+|--------|-------------|-----------|
+| Split-pane layout | Lista izquierda, contenido derecha | UX familiar |
+| Navegación con flechas | Anterior/Siguiente estudiante | Eficiencia |
+| Guardar sin recargar | AJAX para persistir cambios | Fluidez |
+| Atajos de teclado | Acciones rápidas | Productividad |
+| Filtros de estado | Mostrar solo pendientes, etc. | Organización |
+| Preview inline | Ver archivos sin descargar | Comodidad |
 
-### 23.4 Patrón de Implementación Recomendado
+### 23.4 Cómo Analizar
 
-1. **Estudiar** la funcionalidad en mod_assign
-2. **Identificar** componentes reutilizables
-3. **Adaptar** (no copiar) al contexto de jobboard
-4. **Mantener** consistencia con UX de Moodle
-5. **Documentar** diferencias y decisiones
+1. **Leer código fuente** de los archivos listados
+2. **Probar la interfaz** en una instalación de Moodle
+3. **Inspeccionar DOM** para entender estructura HTML
+4. **Ver Network tab** para entender llamadas AJAX
+5. **Documentar** hallazgos antes de implementar
+
+### 23.5 Adaptaciones para Job Board
+
+| mod_assign | local_jobboard |
+|------------|----------------|
+| Estudiantes | Postulantes |
+| Envíos | Documentos |
+| Calificación | Validación (Aprobar/Rechazar) |
+| Retroalimentación | Observaciones de rechazo |
+| Grade | Status (approved/rejected/pending) |
 
 ---
 
