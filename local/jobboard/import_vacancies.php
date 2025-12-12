@@ -452,99 +452,8 @@ if ($mform->is_cancelled()) {
     $csvreader->close();
     $csvreader->cleanup();
 
-    // Show results.
-    echo $OUTPUT->header();
-    echo ui_helper::get_inline_styles();
-    echo $OUTPUT->heading(get_string('importresults', 'local_jobboard'));
-
-    if ($data->previewonly) {
-        // Preview results.
-        echo html_writer::div(
-            html_writer::tag('i', '', ['class' => 'fa fa-info-circle mr-2']) .
-            get_string('previewmode', 'local_jobboard'),
-            'alert alert-warning'
-        );
-
-        if (!empty($results['preview'])) {
-            $table = new html_table();
-            $table->head = [
-                get_string('row', 'local_jobboard'),
-                get_string('code', 'local_jobboard'),
-                get_string('title', 'local_jobboard'),
-                get_string('location'),
-                get_string('modality', 'local_jobboard'),
-                get_string('contracttype', 'local_jobboard'),
-                get_string('courses', 'local_jobboard'),
-                get_string('action'),
-            ];
-            $table->attributes['class'] = 'table table-striped';
-
-            foreach ($results['preview'] as $row) {
-                $table->data[] = [
-                    $row['row'],
-                    $row['code'],
-                    html_writer::tag('span', $row['title'], ['class' => 'text-truncate d-inline-block jb-truncate-cell']),
-                    $row['location'],
-                    $row['modality'],
-                    $row['contracttype'],
-                    $row['courses'],
-                    html_writer::tag('span', $row['action'], ['class' => $row['action'] === get_string('update') ? 'badge badge-warning' : 'badge badge-success']),
-                ];
-            }
-
-            echo html_writer::table($table);
-
-            // Form to confirm import.
-            echo html_writer::start_tag('form', ['method' => 'post', 'class' => 'mt-3']);
-            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
-            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'convocatoriaid', 'value' => $data->convocatoriaid]);
-            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'previewonly', 'value' => 0]);
-            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'status', 'value' => $data->status]);
-            echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'updateexisting', 'value' => $data->updateexisting]);
-
-            echo html_writer::tag('p', get_string('previewconfirm', 'local_jobboard', count($results['preview'])));
-
-            echo html_writer::link(
-                new moodle_url('/local/jobboard/import_vacancies.php', ['convocatoriaid' => $data->convocatoriaid]),
-                get_string('uploadnewfile', 'local_jobboard'),
-                ['class' => 'btn btn-primary']
-            );
-            echo html_writer::end_tag('form');
-        }
-    } else {
-        // Actual import results.
-        echo html_writer::start_div('row');
-
-        echo html_writer::div(
-            html_writer::div(
-                html_writer::tag('h3', $results['created'], ['class' => 'text-success']) .
-                html_writer::tag('p', get_string('vacancies_created', 'local_jobboard'), ['class' => 'mb-0']),
-                'card-body text-center'
-            ),
-            'col-md-4'
-        );
-
-        echo html_writer::div(
-            html_writer::div(
-                html_writer::tag('h3', $results['updated'], ['class' => 'text-warning']) .
-                html_writer::tag('p', get_string('vacancies_updated', 'local_jobboard'), ['class' => 'mb-0']),
-                'card-body text-center'
-            ),
-            'col-md-4'
-        );
-
-        echo html_writer::div(
-            html_writer::div(
-                html_writer::tag('h3', $results['skipped'], ['class' => 'text-secondary']) .
-                html_writer::tag('p', get_string('vacancies_skipped', 'local_jobboard'), ['class' => 'mb-0']),
-                'card-body text-center'
-            ),
-            'col-md-4'
-        );
-
-        echo html_writer::end_div();
-
-        // Audit log.
+    // Audit log for actual imports.
+    if (!$data->previewonly) {
         \local_jobboard\audit::log('vacancies_imported', 'convocatoria', $data->convocatoriaid, [
             'created' => $results['created'],
             'updated' => $results['updated'],
@@ -552,126 +461,32 @@ if ($mform->is_cancelled()) {
         ]);
     }
 
-    // Show errors.
-    if (!empty($results['errors'])) {
-        echo html_writer::tag('h4', get_string('errors'), ['class' => 'mt-4']);
-        echo html_writer::start_tag('ul', ['class' => 'list-group']);
-        foreach (array_slice($results['errors'], 0, 20) as $error) {
-            echo html_writer::tag('li', $error, ['class' => 'list-group-item list-group-item-danger']);
-        }
-        if (count($results['errors']) > 20) {
-            echo html_writer::tag('li',
-                get_string('andmore', 'local_jobboard', count($results['errors']) - 20),
-                ['class' => 'list-group-item list-group-item-warning']
-            );
-        }
-        echo html_writer::end_tag('ul');
-    }
+    // Show results using renderer + template pattern.
+    echo $OUTPUT->header();
 
-    // Back link.
-    echo html_writer::div(
-        html_writer::link(
-            new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
-            html_writer::tag('i', '', ['class' => 'fa fa-arrow-left mr-2']) .
-            get_string('backtoconvocatorias', 'local_jobboard'),
-            ['class' => 'btn btn-secondary mt-4']
-        )
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    $resultsdata = $renderer->prepare_import_vacancies_results_data(
+        $results,
+        (bool) $data->previewonly,
+        (int) $data->convocatoriaid
     );
+    echo $renderer->render_import_vacancies_results_page($resultsdata);
 
     echo $OUTPUT->footer();
     exit;
 }
 
-// Show form.
+// Show form using renderer + template pattern.
 echo $OUTPUT->header();
-echo ui_helper::get_inline_styles();
 
-// Breadcrumbs.
-$breadcrumbs = [
-    get_string('dashboard', 'local_jobboard') => new moodle_url('/local/jobboard/index.php'),
-    get_string('manageconvocatorias', 'local_jobboard') => new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
-    get_string('importvacancies', 'local_jobboard') => null,
-];
-echo ui_helper::page_header(get_string('importvacancies', 'local_jobboard'), $breadcrumbs);
-
-// Back button.
-echo html_writer::start_div('mb-4');
-echo html_writer::link(
-    new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
-    html_writer::tag('i', '', ['class' => 'fa fa-arrow-left mr-2']) . get_string('backtoconvocatorias', 'local_jobboard'),
-    ['class' => 'btn btn-outline-secondary']
-);
-echo html_writer::end_div();
-
-// CSV format help.
-echo html_writer::start_div('card mb-4');
-echo html_writer::start_div('card-header');
-echo html_writer::tag('h5', html_writer::tag('i', '', ['class' => 'fa fa-file-csv mr-2']) . get_string('csvformat', 'local_jobboard'), ['class' => 'mb-0']);
-echo html_writer::end_div();
-echo html_writer::start_div('card-body');
-
-echo html_writer::tag('p', get_string('csvformat_desc', 'local_jobboard'));
-
-echo html_writer::start_tag('table', ['class' => 'table table-sm table-bordered']);
-echo html_writer::start_tag('thead', ['class' => 'thead-light']);
-echo html_writer::start_tag('tr');
-echo html_writer::tag('th', get_string('column', 'local_jobboard'));
-echo html_writer::tag('th', get_string('description'));
-echo html_writer::tag('th', get_string('required', 'local_jobboard'));
-echo html_writer::tag('th', get_string('example', 'local_jobboard'));
-echo html_writer::end_tag('tr');
-echo html_writer::end_tag('thead');
-echo html_writer::start_tag('tbody');
-
-$csvcolumns = [
-    ['code', get_string('csvcolumn_code', 'local_jobboard'), get_string('yes'), 'FCAS-001'],
-    ['contracttype', get_string('csvcolumn_contracttype', 'local_jobboard'), get_string('no'), 'OCASIONAL TIEMPO COMPLETO'],
-    ['program', get_string('csvcolumn_program', 'local_jobboard'), get_string('no'), 'TECNOLOGÍA EN GESTIÓN COMUNITARIA'],
-    ['profile', get_string('csvcolumn_profile', 'local_jobboard'), get_string('no'), 'PROFESIONAL EN TRABAJO SOCIAL'],
-    ['courses', get_string('csvcolumn_courses', 'local_jobboard'), get_string('no'), 'CURSO1|CURSO2|CURSO3'],
-    ['location', get_string('csvcolumn_location', 'local_jobboard'), get_string('no'), 'PAMPLONA'],
-    ['modality', get_string('csvcolumn_modality', 'local_jobboard'), get_string('no'), 'PRESENCIAL'],
-    ['faculty', get_string('csvcolumn_faculty', 'local_jobboard'), get_string('no'), 'FCAS'],
-];
-
-foreach ($csvcolumns as $col) {
-    echo html_writer::start_tag('tr');
-    echo html_writer::tag('td', html_writer::tag('code', $col[0]));
-    echo html_writer::tag('td', $col[1]);
-    echo html_writer::tag('td', $col[2]);
-    echo html_writer::tag('td', html_writer::tag('code', $col[3]));
-    echo html_writer::end_tag('tr');
-}
-
-echo html_writer::end_tag('tbody');
-echo html_writer::end_tag('table');
-
-// Inline CSV example.
-echo html_writer::tag('h6', html_writer::tag('i', '', ['class' => 'fa fa-code mr-2']) . get_string('csvexample', 'local_jobboard'), ['class' => 'mt-4 mb-2']);
-echo html_writer::tag('p', get_string('csvexample_desc', 'local_jobboard'), ['class' => 'text-muted small']);
-
-$csvexample = <<<'CSV'
-code,contracttype,program,profile,courses,location,modality,faculty
-FCAS-001,OCASIONAL TIEMPO COMPLETO,TECNOLOGÍA EN GESTIÓN COMUNITARIA,PROFESIONAL EN TRABAJO SOCIAL,SISTEMATIZACIÓN DE EXPERIENCIAS|SUJETO Y FAMILIA|DIRECCIÓN DE TRABAJO DE GRADO,PAMPLONA,PRESENCIAL,FCAS
-FCAS-002,CATEDRA,TECNOLOGÍA EN GESTIÓN EMPRESARIAL,ADMINISTRADOR DE EMPRESAS CON POSGRADO EN ÁREAS AFINES,EMPRENDIMIENTO|ADMINISTRACIÓN GENERAL,CUCUTA,A DISTANCIA,FCAS
-FCAS-003,CATEDRA,TECNOLOGÍA EN GESTIÓN DE MERCADEO,LICENCIADO EN IDIOMAS O LENGUAS EXTRANJERAS,INGLES I|INGLES III|INGLES IV,TIBU,A DISTANCIA,FCAS
-FII-001,OCASIONAL TIEMPO COMPLETO,TECNOLOGÍA EN GESTIÓN INDUSTRIAL,INGENIERO INDUSTRIAL,ERGONOMÍA|GESTIÓN DE LA SEGURIDAD Y SALUD EN EL TRABAJO|GESTIÓN DEL TALENTO HUMANO,PAMPLONA,PRESENCIAL,FII
-FII-002,CATEDRA,TODOS LOS PROGRAMAS,LICENCIADO EN MATEMÁTICAS O ESTADÍSTICO,ALGEBRA Y TRIGONOMETRÍA|MATEMÁTICAS|ESTADÍSTICA,PAMPLONA,PRESENCIAL,FII
-CSV;
-
-echo html_writer::start_tag('pre', ['class' => 'bg-light p-3 rounded border small jb-code-block']);
-echo html_writer::tag('code', htmlspecialchars($csvexample));
-echo html_writer::end_tag('pre');
-
-echo html_writer::tag('div',
-    html_writer::tag('i', '', ['class' => 'fa fa-lightbulb mr-2']) .
-    get_string('csvexample_tip', 'local_jobboard'),
-    ['class' => 'alert alert-light small mb-0']
-);
-
-echo html_writer::end_div();
-echo html_writer::end_div();
-
+// Capture form HTML.
+ob_start();
 $mform->display();
+$formhtml = ob_get_clean();
+
+// Use renderer.
+$renderer = $PAGE->get_renderer('local_jobboard');
+$pagedata = $renderer->prepare_import_vacancies_page_data($convocatoriaid, $formhtml);
+echo $renderer->render_import_vacancies_page($pagedata);
 
 echo $OUTPUT->footer();

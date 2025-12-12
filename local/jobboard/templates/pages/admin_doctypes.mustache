@@ -1,0 +1,210 @@
+{{!
+    @template local_jobboard/pages/admin_doctypes
+
+    Document types management page template.
+    Uses jb-* CSS classes for consistent styling.
+
+    Context variables:
+    * pagetitle - Page title string
+    * stats - Statistics object (total, enabled, required, conditional)
+    * doctypes - Array of document types with all fields
+    * hasdoctypes - Boolean if has doctypes
+    * totalcount - Total count of doctypes
+    * addurl - URL to add new doctype
+    * dashboardurl - URL to dashboard
+    * templatesurl - URL to email templates
+    * pageurl - Current page URL
+    * abouttitle - About section title
+    * aboutdesc - About section description
+
+    Example context (json):
+    {
+        "pagetitle": "Manage Document Types",
+        "stats": {"total": 10, "enabled": 8, "required": 5, "conditional": 3}
+    }
+}}
+<div class="jb-admin-doctypes" data-region="jobboard-admin-doctypes">
+    {{! Page Header }}
+    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <h1 class="jb-fs-3 jb-mb-0">
+            <i class="fa fa-file-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h1>
+        <div class="jb-btn-group">
+            <a href="{{addurl}}" class="jb-btn jb-btn-primary">
+                <i class="fa fa-plus jb-mr-2" aria-hidden="true"></i>
+                {{#str}}adddoctype, local_jobboard{{/str}}
+            </a>
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
+                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+        </div>
+    </header>
+
+    {{! Statistics Cards }}
+    <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-primary">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-folder" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.total}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}totaldoctypes, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.enabled}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}enableddoctypes, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-info">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-star" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.required}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}requireddoctypes, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-warning">
+                <div class="jb-card-body jb-d-flex jb-align-items-center">
+                    <div class="jb-stat-icon jb-mr-3">
+                        <i class="fa fa-filter" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.conditional}}</div>
+                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}conditionaldoctypes, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! Help Info }}
+    <div class="jb-alert jb-alert-info jb-mb-4" role="alert">
+        <i class="fa fa-info-circle jb-fa-lg jb-mr-2" aria-hidden="true"></i>
+        <strong>{{abouttitle}}</strong>
+        <p class="jb-mb-0 jb-mt-2">{{aboutdesc}}</p>
+    </div>
+
+    {{! Document Types List }}
+    {{#hasdoctypes}}
+    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="doctypes-heading">
+        <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+            <h5 class="jb-mb-0" id="doctypes-heading">
+                <i class="fa fa-list jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                {{#str}}doctypelist, local_jobboard{{/str}}
+            </h5>
+            <span class="jb-badge jb-badge-secondary">{{totalcount}} {{#str}}items, local_jobboard{{/str}}</span>
+        </div>
+        <div class="jb-card-body jb-p-0">
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-hover jb-mb-0">
+                    <thead class="jb-thead-light">
+                        <tr>
+                            <th><span class="jb-text-muted">#</span></th>
+                            <th>{{#str}}code, local_jobboard{{/str}}</th>
+                            <th>{{#str}}name{{/str}}</th>
+                            <th>{{#str}}category, local_jobboard{{/str}}</th>
+                            <th>{{#str}}required, local_jobboard{{/str}}</th>
+                            <th>{{#str}}conditions, local_jobboard{{/str}}</th>
+                            <th>{{#str}}status{{/str}}</th>
+                            <th>{{#str}}actions{{/str}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#doctypes}}
+                        <tr>
+                            <td><span class="jb-text-muted jb-fw-light">{{sortorder}}</span></td>
+                            <td><code>{{code}}</code></td>
+                            <td><strong>{{displayname}}</strong></td>
+                            <td>{{categoryname}}</td>
+                            <td>{{{requiredbadge}}}</td>
+                            <td>{{{conditionshtml}}}</td>
+                            <td>{{{statusbadge}}}</td>
+                            <td>
+                                <div class="jb-btn-group jb-btn-group-sm" role="group">
+                                    {{#canmoveup}}
+                                    <a href="{{moveupurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary" title="{{#str}}moveup{{/str}}">
+                                        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                    </a>
+                                    {{/canmoveup}}
+                                    {{^canmoveup}}
+                                    <span class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-disabled">
+                                        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                    </span>
+                                    {{/canmoveup}}
+                                    {{#canmovedown}}
+                                    <a href="{{movedownurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary" title="{{#str}}movedown{{/str}}">
+                                        <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                                    </a>
+                                    {{/canmovedown}}
+                                    {{^canmovedown}}
+                                    <span class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-disabled">
+                                        <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                                    </span>
+                                    {{/canmovedown}}
+                                    <a href="{{editurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary" title="{{#str}}edit{{/str}}">
+                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                    </a>
+                                    <a href="{{toggleurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary" title="{{toggletitle}}">
+                                        <i class="fa {{toggleicon}}" aria-hidden="true"></i>
+                                    </a>
+                                    <a href="{{deleteurl}}" class="jb-btn jb-btn-sm jb-btn-outline-danger" title="{{#str}}delete{{/str}}">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/doctypes}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    {{/hasdoctypes}}
+
+    {{^hasdoctypes}}
+    {{! Empty State }}
+    <div class="jb-empty-state jb-text-center jb-py-5">
+        <i class="fa fa-folder-open fa-4x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+        <h4 class="jb-text-muted">{{#str}}nodoctypes, local_jobboard{{/str}}</h4>
+        <a href="{{addurl}}" class="jb-btn jb-btn-primary jb-mt-3">
+            <i class="fa fa-plus jb-mr-2" aria-hidden="true"></i>
+            {{#str}}adddoctype, local_jobboard{{/str}}
+        </a>
+    </div>
+    {{/hasdoctypes}}
+
+    {{! Navigation Footer }}
+    <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
+        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
+                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+            <a href="{{templatesurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
+                <i class="fa fa-envelope jb-mr-2" aria-hidden="true"></i>
+                {{#str}}emailtemplates, local_jobboard{{/str}}
+            </a>
+        </div>
+    </footer>
+</div>

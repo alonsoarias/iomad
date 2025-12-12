@@ -1,0 +1,254 @@
+{{!
+    @template local_jobboard/pages/admin_templates
+
+    Email Templates administration page.
+
+    Context variables required for this template:
+    * pageurl - string - Base page URL
+    * stats - object - Statistics (total, enabled, disabled, categories)
+    * categories - array - Available categories for tabs
+    * currentcategory - string - Currently selected category
+    * hastemplates - boolean - Whether there are templates
+    * templates - array - List of templates
+    * installurl - string - URL to install defaults
+    * dashboardurl - string - Dashboard URL
+    * doctypesurl - string - Doctypes admin URL
+    * rolesurl - string - Roles admin URL
+    * settingsurl - string - Plugin settings URL
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "pageurl": "/local/jobboard/admin/templates.php",
+        "stats": {
+            "total": 10,
+            "enabled": 8,
+            "disabled": 2,
+            "categories": 5
+        },
+        "hastemplates": true
+    }
+}}
+
+<div class="jb-admin-templates" data-region="jobboard-admin-templates">
+    {{! Page Header }}
+    <div class="jb-page-header jb-d-flex jb-justify-between jb-align-center jb-mb-4 jb-flex-wrap">
+        <h2 class="jb-page-title jb-mb-0">
+            <i class="fa fa-envelope jb-text-primary jb-mr-2"></i>
+            {{str.emailtemplates}}
+        </h2>
+        <div class="jb-header-actions">
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-mr-2">
+                <i class="fa fa-tachometer-alt jb-mr-1"></i>
+                {{str.dashboard}}
+            </a>
+            <a href="{{installurl}}" class="jb-btn jb-btn-outline-success">
+                <i class="fa fa-download jb-mr-1"></i>
+                {{str.installdefaults}}
+            </a>
+        </div>
+    </div>
+
+    {{! Statistics Cards }}
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-3">
+            <div class="jb-card jb-stat-card jb-bg-primary jb-text-white jb-h-100">
+                <div class="jb-card-body jb-text-center">
+                    <div class="jb-stat-number">{{stats.total}}</div>
+                    <div class="jb-stat-label">{{str.totaltemplates}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-3">
+            <div class="jb-card jb-stat-card jb-bg-success jb-text-white jb-h-100">
+                <div class="jb-card-body jb-text-center">
+                    <div class="jb-stat-number">{{stats.enabled}}</div>
+                    <div class="jb-stat-label">{{str.templatesenabled}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-3">
+            <div class="jb-card jb-stat-card jb-bg-warning jb-text-dark jb-h-100">
+                <div class="jb-card-body jb-text-center">
+                    <div class="jb-stat-number">{{stats.disabled}}</div>
+                    <div class="jb-stat-label">{{str.templatesdisabled}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-3">
+            <div class="jb-card jb-stat-card jb-bg-info jb-text-white jb-h-100">
+                <div class="jb-card-body jb-text-center">
+                    <div class="jb-stat-number">{{stats.categories}}</div>
+                    <div class="jb-stat-label">{{str.templatecategories}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{! Category Filter Tabs and Templates Table }}
+    <div class="jb-card jb-shadow-sm jb-mb-4">
+        <div class="jb-card-header jb-bg-white">
+            <ul class="jb-nav jb-nav-tabs jb-card-header-tabs">
+                <li class="jb-nav-item">
+                    <a href="{{pageurl}}" class="jb-nav-link {{^currentcategory}}jb-active{{/currentcategory}}">
+                        {{str.all}} ({{stats.total}})
+                    </a>
+                </li>
+                {{#categories}}
+                <li class="jb-nav-item">
+                    <a href="{{url}}" class="jb-nav-link {{#isactive}}jb-active{{/isactive}}">
+                        {{name}} ({{count}})
+                    </a>
+                </li>
+                {{/categories}}
+            </ul>
+        </div>
+
+        <div class="jb-card-body">
+            {{^hastemplates}}
+            {{! Empty State }}
+            <div class="jb-text-center jb-py-5">
+                <i class="fa fa-envelope fa-4x jb-text-muted jb-mb-3"></i>
+                <p class="jb-text-muted">{{str.notemplates}}</p>
+                <a href="{{installurl}}" class="jb-btn jb-btn-primary">
+                    <i class="fa fa-download jb-mr-2"></i>
+                    {{str.installdefaults}}
+                </a>
+            </div>
+            {{/hastemplates}}
+
+            {{#hastemplates}}
+            {{! Templates Table }}
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-hover">
+                    <thead class="jb-thead-light">
+                        <tr>
+                            <th>{{str.templatename}}</th>
+                            <th>{{str.templatecode}}</th>
+                            <th>{{str.templatecategory}}</th>
+                            <th>{{str.subject}}</th>
+                            <th class="jb-text-center">{{str.status}}</th>
+                            <th class="jb-text-center">{{str.actions}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#templates}}
+                        <tr class="{{#isdisabled}}jb-table-secondary{{/isdisabled}}">
+                            <td>
+                                <strong>{{name}}</strong>
+                                {{#isdefault}}
+                                <span class="jb-badge jb-badge-secondary">{{str.default}}</span>
+                                {{/isdefault}}
+                            </td>
+                            <td>
+                                <code class="jb-text-muted">{{code}}</code>
+                            </td>
+                            <td>
+                                <span class="jb-badge {{categorybadgeclass}}">{{categoryname}}</span>
+                            </td>
+                            <td>
+                                <span class="jb-text-truncate jb-d-inline-block jb-truncate-cell" title="{{subjectfull}}">
+                                    {{subjectpreview}}
+                                </span>
+                            </td>
+                            <td class="jb-text-center">
+                                {{#enabled}}
+                                <span class="jb-badge jb-badge-success">
+                                    <i class="fa fa-check-circle jb-mr-1"></i>
+                                    {{str.enabled}}
+                                </span>
+                                {{/enabled}}
+                                {{^enabled}}
+                                <span class="jb-badge jb-badge-secondary">
+                                    <i class="fa fa-times-circle jb-mr-1"></i>
+                                    {{str.disabled}}
+                                </span>
+                                {{/enabled}}
+                            </td>
+                            <td class="jb-text-center jb-action-buttons">
+                                <a href="{{editurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary jb-mr-1" title="{{str.edit}}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                {{#hassavedid}}
+                                <a href="{{toggleurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-mr-1" title="{{str.togglestatus}}">
+                                    <i class="fa {{toggleicon}}"></i>
+                                </a>
+                                {{/hassavedid}}
+                                {{#canreset}}
+                                <a href="{{reseturl}}" class="jb-btn jb-btn-sm jb-btn-outline-warning" title="{{str.resettodefault}}" onclick="return confirm('{{str.confirmreset}}');">
+                                    <i class="fa fa-undo"></i>
+                                </a>
+                                {{/canreset}}
+                            </td>
+                        </tr>
+                        {{/templates}}
+                    </tbody>
+                </table>
+            </div>
+            {{/hastemplates}}
+        </div>
+    </div>
+
+    {{! Help Section }}
+    <div class="jb-card jb-shadow-sm jb-mb-4">
+        <div class="jb-card-header jb-bg-secondary jb-text-white">
+            <h6 class="jb-mb-0">
+                <i class="fa fa-question-circle jb-mr-2"></i>
+                {{str.templatehelptitle}}
+            </h6>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-row">
+                <div class="jb-col-md-4 jb-mb-3">
+                    <div class="jb-d-flex jb-align-start">
+                        <i class="fa fa-code jb-text-primary fa-lg jb-mr-3 jb-mt-1"></i>
+                        <div>
+                            <h6 class="jb-mb-1">{{str.placeholders}}</h6>
+                            <small class="jb-text-muted">{{str.templatehelpplaceholders}}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="jb-col-md-4 jb-mb-3">
+                    <div class="jb-d-flex jb-align-start">
+                        <i class="fa fa-html5 jb-text-warning fa-lg jb-mr-3 jb-mt-1"></i>
+                        <div>
+                            <h6 class="jb-mb-1">{{str.htmlsupport}}</h6>
+                            <small class="jb-text-muted">{{str.templatehelphtml}}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="jb-col-md-4 jb-mb-3">
+                    <div class="jb-d-flex jb-align-start">
+                        <i class="fa fa-building jb-text-info fa-lg jb-mr-3 jb-mt-1"></i>
+                        <div>
+                            <h6 class="jb-mb-1">{{str.multitenant}}</h6>
+                            <small class="jb-text-muted">{{str.templatehelptenant}}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{! Navigation Footer }}
+    <div class="jb-card jb-mt-4 jb-bg-light">
+        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-center jb-justify-center">
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
+                <i class="fa fa-tachometer-alt jb-mr-2"></i>
+                {{str.dashboard}}
+            </a>
+            <a href="{{doctypesurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
+                <i class="fa fa-file-alt jb-mr-2"></i>
+                {{str.doctypes}}
+            </a>
+            <a href="{{rolesurl}}" class="jb-btn jb-btn-outline-info jb-m-1">
+                <i class="fa fa-user-tag jb-mr-2"></i>
+                {{str.manageroles}}
+            </a>
+            <a href="{{settingsurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
+                <i class="fa fa-cog jb-mr-2"></i>
+                {{str.pluginsettings}}
+            </a>
+        </div>
+    </div>
+</div>

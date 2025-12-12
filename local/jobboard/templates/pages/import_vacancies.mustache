@@ -1,0 +1,85 @@
+{{!
+    @template local_jobboard/pages/import_vacancies
+
+    Import vacancies form page.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * breadcrumbs - array - Breadcrumb items
+    * backurl - string - Back URL
+    * backtext - string - Back button text
+    * csvcolumns - array - CSV column documentation
+    * csvexample - string - CSV example content
+    * formhtml - string - Rendered form HTML
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "pagetitle": "Import Vacancies",
+        "backurl": "/local/jobboard/index.php?view=convocatorias"
+    }
+}}
+
+<div class="jb-import-vacancies" data-region="jobboard-import-vacancies">
+    {{! Back Button }}
+    <div class="jb-mb-4">
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-2"></i>
+            {{str.backtoconvocatorias}}
+        </a>
+    </div>
+
+    {{! CSV Format Help Card }}
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-header">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-file-csv jb-mr-2"></i>
+                {{str.csvformat}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <p>{{str.csvformatdesc}}</p>
+
+            {{! Column Documentation Table }}
+            <div class="jb-table-responsive">
+                <table class="jb-table jb-table-sm jb-table-bordered">
+                    <thead class="jb-thead-light">
+                        <tr>
+                            <th>{{str.column}}</th>
+                            <th>{{str.description}}</th>
+                            <th>{{str.required}}</th>
+                            <th>{{str.example}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#csvcolumns}}
+                        <tr>
+                            <td><code>{{name}}</code></td>
+                            <td>{{description}}</td>
+                            <td>{{isrequired}}</td>
+                            <td><code>{{example}}</code></td>
+                        </tr>
+                        {{/csvcolumns}}
+                    </tbody>
+                </table>
+            </div>
+
+            {{! CSV Example }}
+            <h6 class="jb-mt-4 jb-mb-2">
+                <i class="fa fa-code jb-mr-2"></i>
+                {{str.csvexample}}
+            </h6>
+            <p class="jb-text-muted jb-small">{{str.csvexampledesc}}</p>
+
+            <pre class="jb-bg-light jb-p-3 jb-rounded jb-border jb-small jb-code-block"><code>{{csvexample}}</code></pre>
+
+            <div class="jb-alert jb-alert-light jb-small jb-mb-0">
+                <i class="fa fa-lightbulb jb-mr-2"></i>
+                {{str.csvexampletip}}
+            </div>
+        </div>
+    </div>
+
+    {{! Form }}
+    {{{formhtml}}}
+</div>

@@ -5,6 +5,26 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.4] - 2025-12-12
+
+### Added
+- **Mustache Templates**:
+  - `pages/admin_doctypes.mustache` for document types admin
+  - `pages/admin_templates.mustache` for email templates admin
+  - `pages/import_vacancies.mustache` for vacancy import form
+  - `pages/import_vacancies_results.mustache` for import results
+- **Renderer Methods**:
+  - `render_admin_doctypes_page()` and `prepare_admin_doctypes_page_data()`
+  - `render_admin_templates_page()` and `prepare_admin_templates_page_data()`
+  - `render_import_vacancies_page()` and `prepare_import_vacancies_page_data()`
+  - `render_import_vacancies_results_page()` and `prepare_import_vacancies_results_data()`
+
+### Changed
+- Migrated `admin/doctypes.php` listing view to use renderer + template pattern
+- Migrated `admin/templates.php` listing view to use renderer + template pattern
+- Migrated `import_vacancies.php` form and results to use renderer + template pattern
+- Removed ~400 lines of inline HTML from admin pages
+
 ## [3.5.3] - 2025-12-12
 
 ### Added

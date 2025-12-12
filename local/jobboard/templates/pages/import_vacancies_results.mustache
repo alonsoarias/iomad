@@ -1,0 +1,139 @@
+{{!
+    @template local_jobboard/pages/import_vacancies_results
+
+    Import vacancies results page.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * ispreview - boolean - Whether this is preview mode
+    * results - object - Import results
+    * previewrows - array - Preview data rows
+    * convocatoriaid - int - Convocatoria ID
+    * backurl - string - Back URL
+    * uploadurl - string - URL to upload new file
+    * haserrors - boolean - Whether there are errors
+    * errors - array - List of error messages
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "pagetitle": "Import Results",
+        "ispreview": true,
+        "results": {
+            "created": 5,
+            "updated": 2,
+            "skipped": 1
+        }
+    }
+}}
+
+<div class="jb-import-results" data-region="jobboard-import-results">
+    <h2 class="jb-mb-4">{{str.importresults}}</h2>
+
+    {{#ispreview}}
+    {{! Preview Mode Banner }}
+    <div class="jb-alert jb-alert-warning">
+        <i class="fa fa-info-circle jb-mr-2"></i>
+        {{str.previewmode}}
+    </div>
+
+    {{#haspreviewrows}}
+    {{! Preview Table }}
+    <div class="jb-table-responsive">
+        <table class="jb-table jb-table-striped">
+            <thead class="jb-thead-light">
+                <tr>
+                    <th>{{str.row}}</th>
+                    <th>{{str.code}}</th>
+                    <th>{{str.title}}</th>
+                    <th>{{str.location}}</th>
+                    <th>{{str.modality}}</th>
+                    <th>{{str.contracttype}}</th>
+                    <th>{{str.courses}}</th>
+                    <th>{{str.action}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#previewrows}}
+                <tr>
+                    <td>{{row}}</td>
+                    <td>{{code}}</td>
+                    <td>
+                        <span class="jb-text-truncate jb-d-inline-block jb-truncate-cell">{{title}}</span>
+                    </td>
+                    <td>{{location}}</td>
+                    <td>{{modality}}</td>
+                    <td>{{contracttype}}</td>
+                    <td>{{coursecount}}</td>
+                    <td>
+                        <span class="jb-badge {{actionbadgeclass}}">{{action}}</span>
+                    </td>
+                </tr>
+                {{/previewrows}}
+            </tbody>
+        </table>
+    </div>
+
+    {{! Confirm Import }}
+    <div class="jb-mt-3">
+        <p>{{str.previewconfirm}}</p>
+        <a href="{{uploadurl}}" class="jb-btn jb-btn-primary">
+            {{str.uploadnewfile}}
+        </a>
+    </div>
+    {{/haspreviewrows}}
+    {{/ispreview}}
+
+    {{^ispreview}}
+    {{! Actual Import Results }}
+    <div class="jb-row">
+        <div class="jb-col-md-4">
+            <div class="jb-card jb-text-center">
+                <div class="jb-card-body">
+                    <h3 class="jb-text-success">{{results.created}}</h3>
+                    <p class="jb-mb-0">{{str.vacanciescreated}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-4">
+            <div class="jb-card jb-text-center">
+                <div class="jb-card-body">
+                    <h3 class="jb-text-warning">{{results.updated}}</h3>
+                    <p class="jb-mb-0">{{str.vacanciesupdated}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-md-4">
+            <div class="jb-card jb-text-center">
+                <div class="jb-card-body">
+                    <h3 class="jb-text-secondary">{{results.skipped}}</h3>
+                    <p class="jb-mb-0">{{str.vacanciesskipped}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/ispreview}}
+
+    {{#haserrors}}
+    {{! Errors List }}
+    <h4 class="jb-mt-4">{{str.errors}}</h4>
+    <ul class="jb-list-group">
+        {{#errors}}
+        <li class="jb-list-group-item jb-list-group-item-danger">{{message}}</li>
+        {{/errors}}
+        {{#hasmoreerrors}}
+        <li class="jb-list-group-item jb-list-group-item-warning">
+            {{str.andmore}}
+        </li>
+        {{/hasmoreerrors}}
+    </ul>
+    {{/haserrors}}
+
+    {{! Back Link }}
+    <div class="jb-mt-4">
+        <a href="{{backurl}}" class="jb-btn jb-btn-secondary">
+            <i class="fa fa-arrow-left jb-mr-2"></i>
+            {{str.backtoconvocatorias}}
+        </a>
+    </div>
+</div>
