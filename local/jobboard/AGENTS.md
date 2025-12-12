@@ -10,7 +10,7 @@ Sistema de Bolsa de Empleo para reclutamiento de profesores de cátedra.
 | Campo | Valor |
 |-------|-------|
 | **Componente** | `local_jobboard` |
-| **Versión actual** | 3.2.1 (2025121241) |
+| **Versión actual** | 3.2.2 (2025121242) |
 | **Moodle requerido** | 4.1+ (2022112800) |
 | **Moodle soportado** | 4.1 - 4.5 |
 | **PHP requerido** | 7.4+ (recomendado 8.1+) |
@@ -145,7 +145,7 @@ El plugin opera en un entorno IOMAD multi-tenant con estructura de 4 niveles:
 
 ## Estado Actual del Plugin
 
-### Métricas v3.2.1
+### Métricas v3.2.2
 
 | Métrica | Valor | Estado |
 |---------|-------|--------|
@@ -170,7 +170,7 @@ El plugin opera en un entorno IOMAD multi-tenant con estructura de 4 niveles:
 | index.php | Router centralizado |
 | lib.php | Funciones principales, navegación |
 | settings.php | Configuración admin |
-| version.php | Versión 3.2.1 |
+| version.php | Versión 3.2.2 |
 | styles.css | Sistema CSS con prefijo jb-* |
 | bulk_validate.php | Validación masiva |
 | assign_reviewer.php | Asignación de revisores |
@@ -456,31 +456,58 @@ El plugin opera en un entorno IOMAD multi-tenant con estructura de 4 niveles:
 | sortorder | Posición en formulario |
 | instructions | Texto de ayuda |
 
-### Documentos Requeridos
+### Documentos Requeridos (18 documentos - Lista Oficial ISER)
 
-1. Hoja de Vida (Formato ISER)
-2. Declaración de Bienes y Rentas
-3. Cédula de Ciudadanía
-4. Títulos Académicos
-5. Tarjeta Profesional (OPCIONAL con justificación)
-6. Libreta Militar (solo hombres, exento si ≥50 años)
-7. Certificados Formación Complementaria
-8. Certificaciones Laborales
-9. RUT
-10. Certificado EPS (máx. 30 días)
-11. Certificado Pensión (máx. 30 días)
-12. Certificado Cuenta Bancaria
-13. Antecedentes Disciplinarios (Procuraduría)
-14. Antecedentes Fiscales (Contraloría)
-15. Antecedentes Judiciales (Policía)
-16. Registro Nacional Medidas Correctivas
-17. Consulta Inhabilidades (Ley 1918/2018)
-18. REDAM
+| # | Código | Documento | Requisitos | Exempto ISER |
+|---|--------|-----------|------------|--------------|
+| 1 | sigep | Formato Único Hoja de Vida SIGEP II | Todos campos diligenciados, experiencia conforme certificaciones, firmado | No |
+| 2 | bienes_rentas | Declaración de Bienes y Rentas | Información vigencia anterior, firmado | No |
+| 3 | cedula | Cédula de Ciudadanía | Copia en una sola página, legible | **Sí** |
+| 4 | titulo_academico | Títulos Académicos | Legibles, con folio/registro/fecha. Extranjeros: diploma + acta + convalidación MEN | **Sí** |
+| 5 | tarjeta_profesional | Tarjeta Profesional | Legible, vigente. No aplica licenciados | **Sí** |
+| 6 | libreta_militar | Libreta Militar | Solo hombres. No aptos/exentos: certificado provisional | **Sí** |
+| 7 | formacion_complementaria | Certificados Formación Complementaria | Legibles, completos | No |
+| 8 | certificacion_laboral | Certificaciones Laborales | SOLO certificados (NO contratos, actas, nombramientos) | **Sí** |
+| 9 | rut | RUT | Verificar fecha actualización (inferior derecha) | No |
+| 10 | eps | Certificado EPS | Expedición ≤30 días, estado activo | No |
+| 11 | pension | Certificado Pensión | Expedición ≤30 días. Pensionados: resolución. Magisterio: RUAF | No |
+| 12 | cuenta_bancaria | Certificado Cuenta Bancaria | Número, tipo, entidad, a nombre del postulante | No |
+| 13 | antecedentes_disciplinarios | Antecedentes Disciplinarios | Procuraduría General. Expedición reciente | No |
+| 14 | antecedentes_fiscales | Antecedentes Fiscales | Contraloría General. Expedición reciente | No |
+| 15 | antecedentes_judiciales | Antecedentes Judiciales | Policía Nacional. URL: antecedentes.policia.gov.co | No |
+| 16 | medidas_correctivas | Registro Nacional Medidas Correctivas | URL: srvcnpc.policia.gov.co | No |
+| 17 | inhabilidades | Consulta Inhabilidades (Ley 1918/2018) | Delitos sexuales menores. URL: inhabilidades.policia.gov.co | No |
+| 18 | redam | REDAM | Deudores Alimentarios. URL: carpetaciudadana.and.gov.co | No |
 
-### Documentos ELIMINADOS
+### Excepciones para Personal ISER Histórico
 
-- Tarjeta de identidad - Remover
-- Campos de salario/remuneración - Eliminar
+Profesores previamente vinculados con ISER **NO deben presentar** documentos que ya reposan en su Historia Laboral:
+
+| Documento | Código | Razón |
+|-----------|--------|-------|
+| Cédula de Ciudadanía | cedula | Ya registrada en ISER |
+| Títulos Académicos | titulo_academico | Ya registrados en ISER |
+| Tarjeta Profesional | tarjeta_profesional | Ya registrada en ISER |
+| Libreta Militar | libreta_militar | Ya registrada en ISER |
+| Certificaciones Laborales ISER | certificacion_laboral | Ya en Historia Laboral |
+
+**Campo en doctype:** `iserexempted = 1`
+
+### Condiciones Especiales por Documento
+
+| Documento | Condición | Campo |
+|-----------|-----------|-------|
+| Libreta Militar | Solo hombres | `gender_condition = 'M'` |
+| Tarjeta Profesional | No aplica a licenciados | `profession_exempt = ['licenciatura']` |
+| EPS, Pensión, Antecedentes | Máximo 30 días antigüedad | `defaultmaxagedays = 30` |
+
+### Estado de Configuración: ✅ IMPLEMENTADO
+
+Los 18 documentos están correctamente configurados en `db/install.php` con:
+- Checklist de verificación para cada tipo
+- URLs externas para descarga
+- Condiciones de género y profesión
+- Excepciones para personal ISER
 
 ---
 
@@ -676,7 +703,7 @@ Antes de implementar CUALQUIER cambio, validar que no generará errores.
 | Base de Datos | ⚠️ 3 issues | Vacancy tiene fechas que no debería tener |
 | CSS/Templates | 95.8% OK | 14 templates con Bootstrap raw |
 | Capabilities | ✅ Completo | 31 capabilities, todas requeridas presentes |
-| Web Services | ❌ Pendiente | 2 archivos a eliminar |
+| Web Services | ✅ Eliminados | Removidos en v3.2.2 |
 | Language Strings | ✅ Completo | 2,711 líneas EN/ES |
 
 ---
@@ -718,23 +745,23 @@ Antes de implementar CUALQUIER cambio, validar que no generará errores.
 
 ---
 
-### ALTA - Remoción de Web Services
+### ~~ALTA - Remoción de Web Services~~ ✅ COMPLETADO
 
-**Archivos a eliminar:**
+**Archivos eliminados en v3.2.2:**
 
-| Archivo | Líneas | Descripción |
-|---------|--------|-------------|
-| db/services.php | 133 | Definición de 7 servicios web |
-| classes/external/api.php | 1,079 | Implementación de API externa |
+| Archivo | Líneas | Estado |
+|---------|--------|--------|
+| db/services.php | 133 | ✅ Eliminado |
+| classes/external/api.php | 1,079 | ✅ Eliminado |
 
-**Pasos de remoción:**
-1. Eliminar `db/services.php`
-2. Eliminar directorio `classes/external/` completo
-3. NO se requieren cambios en lib.php (verificado)
-4. API tokens ya eliminados en v2.3.1
-5. Incrementar versión en version.php
+**Pasos completados:**
+1. ✅ Eliminar `db/services.php`
+2. ✅ Eliminar directorio `classes/external/` completo
+3. ✅ NO se requirieron cambios en lib.php
+4. ✅ API tokens eliminados en v2.3.1
+5. ✅ Versión incrementada a 3.2.2
 
-**MANTENER (NO son web services):**
+**Se mantienen (NO son web services):**
 - `ajax/get_departments.php` - Endpoint AJAX estándar
 - `ajax/get_companies.php` - Endpoint AJAX estándar
 - `ajax/get_convocatorias.php` - Endpoint AJAX estándar
@@ -819,31 +846,31 @@ Antes de implementar CUALQUIER cambio, validar que no generará errores.
 
 ---
 
-## Web Services - Análisis Detallado
+## ~~Web Services - Análisis Detallado~~ ✅ ELIMINADOS EN v3.2.2
 
-### Servicios Definidos (a eliminar)
+### Servicios Eliminados
 
-| Función | Descripción |
-|---------|-------------|
-| local_jobboard_get_vacancies | Listar vacantes |
-| local_jobboard_get_vacancy | Obtener vacante |
-| local_jobboard_filter_vacancies | Filtrar vacantes |
-| local_jobboard_get_applications | Listar postulaciones |
-| local_jobboard_get_application | Obtener postulación |
-| local_jobboard_check_application_limit | Verificar límite |
-| local_jobboard_get_departments | Obtener departamentos |
+| Función | Descripción | Estado |
+|---------|-------------|--------|
+| local_jobboard_get_vacancies | Listar vacantes | ✅ Eliminado |
+| local_jobboard_get_vacancy | Obtener vacante | ✅ Eliminado |
+| local_jobboard_filter_vacancies | Filtrar vacantes | ✅ Eliminado |
+| local_jobboard_get_applications | Listar postulaciones | ✅ Eliminado |
+| local_jobboard_get_application | Obtener postulación | ✅ Eliminado |
+| local_jobboard_check_application_limit | Verificar límite | ✅ Eliminado |
+| local_jobboard_get_departments | Obtener departamentos | ✅ Eliminado |
 
-**Impacto de remoción:** BAJO - No hay dependencias externas identificadas
+**Impacto de remoción:** Sin impacto - No había dependencias externas
 
 ---
 
 ## Fases de Refactorización
 
-### Fase 1: Remoción Web Services (1-2 horas)
-- [ ] Eliminar db/services.php
-- [ ] Eliminar classes/external/
-- [ ] Incrementar versión a 3.2.2
-- [ ] Probar que no hay errores
+### Fase 1: Remoción Web Services ✅ COMPLETADO (v3.2.2)
+- [x] Eliminar db/services.php
+- [x] Eliminar classes/external/
+- [x] Incrementar versión a 3.2.2
+- [ ] Probar que no hay errores (pendiente validación en plataforma)
 
 ### Fase 2: Migración CSS (4-6 horas)
 - [ ] Migrar templates de reports/
@@ -1074,5 +1101,6 @@ $plugin->release = 'X.Y.Z';     // Ej: '3.2.1'
 ---
 
 *Última actualización: Diciembre 2025*
-*Plugin local_jobboard v3.2.1 para Moodle 4.1-4.5 con IOMAD*
+*Plugin local_jobboard v3.2.2 para Moodle 4.1-4.5 con IOMAD*
 *Documento consolidado de requerimientos del proyecto*
+*Web Services eliminados en v3.2.2*
