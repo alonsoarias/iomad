@@ -2124,3 +2124,587 @@ $string['useridentifier'] = 'User identifier';
 $string['workflowsettings'] = 'Workflow settings';
 $string['column'] = 'Column';
 $string['doctype_isrequired_help'] = 'If checked, this document type will be mandatory for applications';
+
+// =============================================================================
+// SIGNUP FORM STRINGS
+// =============================================================================
+
+$string['signup_title'] = 'Create your account';
+$string['signup_intro'] = 'Fill out the form below to create your account and start applying for positions.';
+$string['signup_account_header'] = 'Account information';
+$string['signup_personalinfo'] = 'Personal information';
+$string['signup_contactinfo'] = 'Contact information';
+$string['signup_academic_header'] = 'Academic information';
+$string['signup_professional_profile'] = 'Professional profile';
+$string['signup_termsheader'] = 'Terms and conditions';
+$string['signup_companyinfo'] = 'Company information';
+$string['signup_company_help'] = 'Select the company you belong to';
+$string['signup_progress'] = 'Registration progress';
+$string['signup_required_fields'] = 'Fields marked with * are required';
+$string['signup_username_is_idnumber'] = 'Your username will be your ID number';
+$string['signup_doctype'] = 'ID document type';
+$string['signup_doctype_cc'] = 'Citizenship card (CC)';
+$string['signup_doctype_ce'] = 'Foreign ID card (CE)';
+$string['signup_doctype_passport'] = 'Passport';
+$string['signup_doctype_pep'] = 'Special permit (PEP)';
+$string['signup_doctype_ppt'] = 'Temporary protection permit (PPT)';
+$string['signup_idnumber'] = 'ID number';
+$string['signup_idnumber_exists'] = 'This ID number is already registered';
+$string['signup_idnumber_exists_as_user'] = 'This ID number is already registered as a user';
+$string['signup_idnumber_tooshort'] = 'ID number is too short';
+$string['signup_birthdate'] = 'Date of birth';
+$string['signup_birthdate_minage'] = 'You must be at least 18 years old';
+$string['signup_gender'] = 'Gender';
+$string['signup_gender_male'] = 'Male';
+$string['signup_gender_female'] = 'Female';
+$string['signup_gender_other'] = 'Other';
+$string['signup_gender_prefer_not'] = 'Prefer not to say';
+$string['signup_phone_mobile'] = 'Mobile phone';
+$string['signup_phone_home'] = 'Home phone';
+$string['signup_department_region'] = 'Department/Region';
+$string['signup_education_level'] = 'Education level';
+$string['signup_edu_highschool'] = 'High school';
+$string['signup_edu_technical'] = 'Technical';
+$string['signup_edu_tecnico'] = 'Technical degree';
+$string['signup_edu_technological'] = 'Technological';
+$string['signup_edu_tecnologo'] = 'Technologist degree';
+$string['signup_edu_undergraduate'] = 'Undergraduate';
+$string['signup_edu_profesional'] = 'Professional degree';
+$string['signup_edu_specialization'] = 'Specialization';
+$string['signup_edu_especialista'] = 'Specialist degree';
+$string['signup_edu_masters'] = 'Master\'s degree';
+$string['signup_edu_magister'] = 'Master\'s degree';
+$string['signup_edu_doctorate'] = 'Doctorate';
+$string['signup_edu_doctor'] = 'Doctoral degree';
+$string['signup_edu_postdoctorate'] = 'Post-doctorate';
+$string['signup_degree_title'] = 'Degree title';
+$string['signup_expertise_area'] = 'Area of expertise';
+$string['signup_experience_years'] = 'Years of experience';
+$string['signup_exp_none'] = 'No experience';
+$string['signup_exp_less_1'] = 'Less than 1 year';
+$string['signup_exp_1_3'] = '1-3 years';
+$string['signup_exp_3_5'] = '3-5 years';
+$string['signup_exp_5_10'] = '5-10 years';
+$string['signup_exp_more_10'] = 'More than 10 years';
+$string['signup_terms_accept'] = 'I accept the terms and conditions';
+$string['signup_terms_required'] = 'You must accept the terms and conditions';
+$string['signup_datatreatment_accept'] = 'I accept the data treatment policy';
+$string['signup_datatreatment_required'] = 'You must accept the data treatment policy';
+$string['signup_dataaccuracy_accept'] = 'I certify that the information provided is accurate';
+$string['signup_dataaccuracy_required'] = 'You must certify the accuracy of the information';
+$string['signup_privacy_text'] = 'Your personal data will be processed according to our privacy policy';
+$string['signup_createaccount'] = 'Create account';
+$string['signup_already_account'] = 'Already have an account?';
+$string['signup_applying_for'] = 'Applying for';
+$string['signup_success_title'] = 'Registration successful';
+$string['signup_success_message'] = 'Your account has been created successfully. Please check your email to confirm.';
+$string['signup_error_creating'] = 'Error creating account';
+$string['signup_check_spam'] = 'Check your spam folder if you don\'t receive the email';
+$string['signup_email_instructions_title'] = 'Email verification';
+$string['signup_email_instruction_1'] = 'Check your email inbox';
+$string['signup_email_instruction_2'] = 'Click the verification link';
+$string['signup_email_instruction_3'] = 'Complete your profile';
+$string['signup_step_account'] = 'Account';
+$string['signup_step_personal'] = 'Personal';
+$string['signup_step_contact'] = 'Contact';
+$string['signup_step_academic'] = 'Academic';
+$string['signup_step_confirm'] = 'Confirm';
+
+// =============================================================================
+// DASHBOARD STRINGS
+// =============================================================================
+
+$string['admindashboard'] = 'Admin dashboard';
+$string['managerdashboard'] = 'Manager dashboard';
+$string['companydashboard'] = 'Company dashboard';
+$string['applicantdashboarddesc'] = 'View your applications and track their progress';
+$string['adminstatistics'] = 'Admin statistics';
+$string['applicantstatistics'] = 'Applicant statistics';
+$string['convocatoriastatistics'] = 'Convocatoria statistics';
+$string['vacancystatistics'] = 'Vacancy statistics';
+$string['reviewerperformance'] = 'Reviewer performance';
+$string['applicationstats'] = 'Application statistics';
+$string['documentstats'] = 'Document statistics';
+$string['systemhealth'] = 'System health';
+$string['systemconfiguration'] = 'System configuration';
+$string['quicklinks'] = 'Quick links';
+$string['quicktips'] = 'Quick tips';
+$string['recentsnapshots'] = 'Recent snapshots';
+$string['recentvacancies'] = 'Recent vacancies';
+$string['activecommittees'] = 'Active committees';
+$string['activeassignments'] = 'Active assignments';
+$string['activeexemptions'] = 'Active exemptions';
+$string['activereviewers'] = 'Active reviewers';
+$string['totalcommittees'] = 'Total committees';
+$string['totalcommmembers'] = 'Total committee members';
+$string['totalexemptions'] = 'Total exemptions';
+$string['totalusers'] = 'Total users';
+$string['totalassigned'] = 'Total assigned';
+$string['totalassignedusers'] = 'Total assigned users';
+$string['avgtime'] = 'Average time';
+$string['avgworkload'] = 'Average workload';
+$string['currentworkload'] = 'Current workload';
+$string['trend'] = 'Trend';
+$string['trending_up'] = 'Trending up';
+$string['trending_down'] = 'Trending down';
+
+// =============================================================================
+// EMAIL TEMPLATE PLACEHOLDERS
+// =============================================================================
+
+$string['availableplaceholders'] = 'Available placeholders';
+$string['placeholder'] = 'Placeholder';
+$string['ph_user_fullname'] = 'User full name';
+$string['ph_user_firstname'] = 'User first name';
+$string['ph_user_lastname'] = 'User last name';
+$string['ph_user_email'] = 'User email';
+$string['ph_applicant_name'] = 'Applicant name';
+$string['ph_vacancy_code'] = 'Vacancy code';
+$string['ph_vacancy_title'] = 'Vacancy title';
+$string['ph_vacancy_description'] = 'Vacancy description';
+$string['ph_vacancy_url'] = 'Vacancy URL';
+$string['ph_application_id'] = 'Application ID';
+$string['ph_application_url'] = 'Application URL';
+$string['ph_submit_date'] = 'Submission date';
+$string['ph_current_date'] = 'Current date';
+$string['ph_deadline'] = 'Deadline';
+$string['ph_days_remaining'] = 'Days remaining';
+$string['ph_hours_until'] = 'Hours until';
+$string['ph_close_date'] = 'Close date';
+$string['ph_open_date'] = 'Open date';
+$string['ph_company_name'] = 'Company name';
+$string['ph_faculty_name'] = 'Faculty name';
+$string['ph_contact_info'] = 'Contact info';
+$string['ph_site_name'] = 'Site name';
+$string['ph_site_url'] = 'Site URL';
+$string['ph_interview_date'] = 'Interview date';
+$string['ph_interview_time'] = 'Interview time';
+$string['ph_interview_location'] = 'Interview location';
+$string['ph_interview_type'] = 'Interview type';
+$string['ph_interview_duration'] = 'Interview duration';
+$string['ph_interview_notes'] = 'Interview notes';
+$string['ph_interview_feedback'] = 'Interview feedback';
+$string['ph_interviewer_name'] = 'Interviewer name';
+$string['ph_reviewer_name'] = 'Reviewer name';
+$string['ph_feedback'] = 'Feedback';
+$string['ph_observations'] = 'Observations';
+$string['ph_next_steps'] = 'Next steps';
+$string['ph_action_required'] = 'Action required';
+$string['ph_rejection_reason'] = 'Rejection reason';
+$string['ph_rejected_docs'] = 'Rejected documents';
+$string['ph_rejected_count'] = 'Rejected count';
+$string['ph_approved_count'] = 'Approved count';
+$string['ph_documents_count'] = 'Documents count';
+$string['ph_review_summary'] = 'Review summary';
+$string['ph_selection_notes'] = 'Selection notes';
+$string['ph_notification_note'] = 'Notification note';
+$string['ph_resubmit_deadline'] = 'Resubmit deadline';
+$string['ph_waitlist_position'] = 'Waitlist position';
+
+// =============================================================================
+// UI AND NAVIGATION STRINGS
+// =============================================================================
+
+$string['navigation'] = 'Navigation';
+$string['breadcrumb'] = 'Breadcrumb';
+$string['pagination'] = 'Pagination';
+$string['filterform'] = 'Filter form';
+$string['filters'] = 'Filters';
+$string['applyfilters'] = 'Apply filters';
+$string['clearfilters'] = 'Clear filters';
+$string['resetfilters'] = 'Reset filters';
+$string['searchplaceholder'] = 'Search...';
+$string['searchjobs'] = 'Search jobs';
+$string['searchuser'] = 'Search user';
+$string['searchusers'] = 'Search users';
+$string['searchusersplaceholder'] = 'Search by name or email...';
+$string['searchapplicant'] = 'Search applicant';
+$string['searchbyusername'] = 'Search by username';
+$string['searchagain'] = 'Search again';
+$string['searchresultsfor'] = 'Search results for';
+$string['showingresults'] = 'Showing results';
+$string['noresultsforsearch'] = 'No results found for your search';
+$string['trydifferentsearch'] = 'Try a different search term';
+$string['trydifferentfilters'] = 'Try different filters';
+$string['sortby:newest'] = 'Newest first';
+$string['sortby:closedate'] = 'Close date';
+$string['sortby:title'] = 'Title';
+$string['sortby:positions'] = 'Positions';
+$string['ascending'] = 'Ascending';
+$string['descending'] = 'Descending';
+$string['allcategories'] = 'All categories';
+$string['alllocations'] = 'All locations';
+$string['selectaction'] = 'Select action';
+$string['selectuser'] = 'Select user';
+$string['selectusers'] = 'Select users';
+$string['selecttype'] = 'Select type';
+$string['selectreason'] = 'Select reason';
+$string['selectfaculty'] = 'Select faculty';
+$string['selectroletoassign'] = 'Select role to assign';
+$string['selectmultiplehelp'] = 'Hold Ctrl/Cmd to select multiple';
+
+// =============================================================================
+// APPLICATION WORKFLOW STRINGS
+// =============================================================================
+
+$string['applicationid'] = 'Application ID';
+$string['applicationguidelines'] = 'Application guidelines';
+$string['applicationsubmitteddesc'] = 'Your application has been submitted successfully';
+$string['applicationsqueue'] = 'Applications queue';
+$string['applicationsbystatus'] = 'Applications by status';
+$string['applicationsbyvacancy'] = 'Applications by vacancy';
+$string['applicationstopreview'] = 'Applications to preview';
+$string['applied'] = 'Applied';
+$string['applyfor'] = 'Apply for';
+$string['applyto'] = 'Apply to';
+$string['applynow_desc'] = 'Submit your application now';
+$string['applynowdesc'] = 'Submit your application now';
+$string['applyhelp_text'] = 'Follow the steps to complete your application';
+$string['readytoapply'] = 'Ready to apply';
+$string['wanttoapply'] = 'I want to apply';
+$string['createaccounttoapply'] = 'Create an account to apply';
+$string['logintoapply'] = 'Login to apply';
+$string['loginandapply'] = 'Login and apply';
+$string['submitted'] = 'Submitted';
+$string['reviewing'] = 'Reviewing';
+$string['assigned'] = 'Assigned';
+$string['currentstatus'] = 'Current status';
+$string['statushistory'] = 'Status history';
+$string['updatestatus'] = 'Update status';
+$string['changestatus'] = 'Change status';
+$string['submitreview'] = 'Submit review';
+$string['nextsteps'] = 'Next steps';
+$string['nextapplication'] = 'Next application';
+$string['previousapplication'] = 'Previous application';
+$string['viewmyapplication'] = 'View my application';
+$string['withdraw'] = 'Withdraw';
+$string['resubmit'] = 'Resubmit';
+
+// =============================================================================
+// DOCUMENT VALIDATION STRINGS
+// =============================================================================
+
+$string['documentchecklist'] = 'Document checklist';
+$string['documentinfo'] = 'Document information';
+$string['documentpreview'] = 'Document preview';
+$string['previewdocument'] = 'Preview document';
+$string['documentactions'] = 'Document actions';
+$string['documentstoreview'] = 'Documents to review';
+$string['documentsremaining'] = 'Documents remaining';
+$string['documenttypes'] = 'Document types';
+$string['requireddocument'] = 'Required document';
+$string['uploadfile'] = 'Upload file';
+$string['uploadform'] = 'Upload form';
+$string['uploaded'] = 'Uploaded';
+$string['uploaddocsreminder'] = 'Remember to upload all required documents';
+$string['downloadtoview'] = 'Download to view';
+$string['validate'] = 'Validate';
+$string['validateall'] = 'Validate all';
+$string['validateindividual'] = 'Validate individual';
+$string['validateddate'] = 'Validated date';
+$string['validation'] = 'Validation';
+$string['validationdecision'] = 'Validation decision';
+$string['validationsummary'] = 'Validation summary';
+$string['nochecklist'] = 'No checklist available';
+$string['nodocumentspending'] = 'No documents pending';
+$string['nodocumentstoreview'] = 'No documents to review';
+$string['alldocsreviewed'] = 'All documents reviewed';
+$string['allvalidated'] = 'All validated';
+$string['approveselected'] = 'Approve selected';
+$string['rejectselected'] = 'Reject selected';
+$string['rejectreason'] = 'Rejection reason';
+$string['rejectreason_placeholder'] = 'Enter reason for rejection...';
+$string['rejectreason_wrongtype'] = 'Wrong document type';
+$string['unknowndoctype'] = 'Unknown document type';
+
+// =============================================================================
+// REVIEW AND COMMITTEE STRINGS
+// =============================================================================
+
+$string['reviewcomments'] = 'Review comments';
+$string['reviewdecision'] = 'Review decision';
+$string['reviewdocuments_desc'] = 'Review and validate applicant documents';
+$string['reviewed'] = 'Reviewed';
+$string['reviewedby'] = 'Reviewed by';
+$string['reviewertasks'] = 'Reviewer tasks';
+$string['reviewobservations'] = 'Review observations';
+$string['reviewobservations_placeholder'] = 'Enter your observations...';
+$string['reviewprogress'] = 'Review progress';
+$string['reviewstatistics'] = 'Review statistics';
+$string['myreviews_desc'] = 'View your assigned reviews';
+$string['addreviewer'] = 'Add reviewer';
+$string['addreviewerstoprogram'] = 'Add reviewers to program';
+$string['currentreviewers'] = 'Current reviewers';
+$string['assignedusers'] = 'Assigned users';
+$string['assignnewusers'] = 'Assign new users';
+$string['assignselected'] = 'Assign selected';
+$string['assignto'] = 'Assign to';
+$string['autoassignall'] = 'Auto-assign all';
+$string['autoassignhelp'] = 'Automatically distribute applications among reviewers';
+$string['manualassign'] = 'Manual assign';
+$string['maxperreviewer'] = 'Max per reviewer';
+$string['noreviewers'] = 'No reviewers';
+$string['noreviewersavailable'] = 'No reviewers available';
+$string['noreviewersforprogram'] = 'No reviewers for this program';
+$string['programreviewerhelp'] = 'Assign reviewers to specific programs';
+$string['programswithreviewers'] = 'Programs with reviewers';
+$string['noprogramswithreviewers'] = 'No programs with reviewers';
+$string['leadreviewers'] = 'Lead reviewers';
+$string['committeename'] = 'Committee name';
+$string['committeeautoroleassign'] = 'Auto-assign committee roles';
+$string['members'] = 'Members';
+$string['membercount'] = 'Member count';
+$string['managemembers'] = 'Manage members';
+$string['nomembers'] = 'No members';
+$string['nocommitteeforthisvacancy'] = 'No committee for this vacancy';
+$string['existingvacancycommittee'] = 'Existing vacancy committee';
+$string['legacyvacancycommittee'] = 'Legacy vacancy committee';
+$string['chairhelp'] = 'The chair leads the committee';
+$string['evaluatorshelp'] = 'Evaluators assess candidates';
+$string['confirmremovemember'] = 'Remove this member from the committee?';
+$string['confirmremovereviewer'] = 'Remove this reviewer?';
+$string['confirmunassign'] = 'Unassign this user?';
+
+// =============================================================================
+// INTERVIEW STRINGS
+// =============================================================================
+
+$string['scheduledinterviews'] = 'Scheduled interviews';
+$string['schedulenewinterview'] = 'Schedule new interview';
+$string['pendinginterviews'] = 'Pending interviews';
+$string['noupcominginterviews'] = 'No upcoming interviews';
+$string['virtualinterview'] = 'Virtual interview';
+$string['confirmnoshow'] = 'Confirm no-show';
+$string['noshow'] = 'No show';
+
+// =============================================================================
+// ROLE STRINGS
+// =============================================================================
+
+$string['role_chair'] = 'Chair';
+$string['role_committee'] = 'Committee member';
+$string['role_committee_desc'] = 'Member of evaluation committee';
+$string['role_coordinator_desc'] = 'Coordinates the recruitment process';
+$string['role_reviewer_desc'] = 'Reviews applications and documents';
+$string['role_lead_reviewer'] = 'Lead reviewer';
+$string['role_observer'] = 'Observer';
+$string['changerole'] = 'Change role';
+$string['rolenotcreated'] = 'Role not created';
+$string['backtorolelist'] = 'Back to role list';
+
+// =============================================================================
+// EXEMPTION STRINGS
+// =============================================================================
+
+$string['exemptiontype_desc'] = 'Type of exemption';
+$string['exemptionactive'] = 'Exemption active';
+$string['exemptionlist'] = 'Exemption list';
+$string['expiredexemptions'] = 'Expired exemptions';
+$string['revokedexemptions'] = 'Revoked exemptions';
+$string['grantedby'] = 'Granted by';
+$string['expiry'] = 'Expiry';
+
+// =============================================================================
+// REPORT STRINGS
+// =============================================================================
+
+$string['report:applications'] = 'Applications report';
+$string['report:vacancies'] = 'Vacancies report';
+$string['report:documents'] = 'Documents report';
+$string['report:convocatorias'] = 'Convocatorias report';
+$string['reporttypes'] = 'Report types';
+$string['reportsanddata'] = 'Reports and data';
+$string['filterreport'] = 'Filter report';
+$string['exportas'] = 'Export as';
+$string['exportoptions'] = 'Export options';
+$string['generatedby'] = 'Generated by';
+$string['generated'] = 'Generated';
+
+// =============================================================================
+// VACANCY DISPLAY STRINGS
+// =============================================================================
+
+$string['vacanciesavailable'] = 'Vacancies available';
+$string['vacanciesforconvocatoria'] = 'Vacancies for convocatoria';
+$string['vacancysummary'] = 'Vacancy summary';
+$string['convocatoriavacancycount'] = 'Vacancies in convocatoria';
+$string['availablepositions'] = 'Available positions';
+$string['daysleft'] = 'Days left';
+$string['deadlineprogress'] = 'Deadline progress';
+$string['deadlinewarning_title'] = 'Deadline warning';
+$string['closes'] = 'Closes';
+$string['starts'] = 'Starts';
+$string['ends'] = 'Ends';
+$string['viewallvacancies'] = 'View all vacancies';
+$string['viewvacancies'] = 'View vacancies';
+$string['viewvacancydetails'] = 'View vacancy details';
+$string['backtovacancy'] = 'Back to vacancy';
+$string['novacanciesfound'] = 'No vacancies found';
+$string['novacanciesyet'] = 'No vacancies yet';
+$string['createfirstvacancy'] = 'Create your first vacancy';
+$string['suggestedvacancies'] = 'Suggested vacancies';
+$string['nosuggestedvacancies'] = 'No suggested vacancies';
+$string['featuredvacancies'] = 'Featured vacancies';
+$string['nofeaturedvacancies'] = 'No featured vacancies';
+$string['companyvacancies'] = 'Company vacancies';
+$string['nocompanvacancies'] = 'No company vacancies';
+$string['facultyvacancies'] = 'Faculty vacancies';
+$string['facultieswithoutcommittee'] = 'Faculties without committee';
+
+// =============================================================================
+// CONVOCATORIA STRINGS
+// =============================================================================
+
+$string['noactiveconvocatorias'] = 'No active convocatorias';
+$string['noconvocatorias_desc'] = 'No convocatorias found';
+$string['noconvocatoriasdesc'] = 'No convocatorias found';
+
+// =============================================================================
+// PROGRESS AND STATS STRINGS
+// =============================================================================
+
+$string['progress'] = 'Progress';
+$string['progressindicator'] = 'Progress indicator';
+$string['complete'] = 'Complete';
+$string['result'] = 'Result';
+$string['results'] = 'Results';
+$string['found'] = 'Found';
+$string['rating'] = 'Rating';
+$string['performance'] = 'Performance';
+$string['performedby'] = 'Performed by';
+$string['nostatsavailable'] = 'No statistics available';
+$string['dailyapplications'] = 'Daily applications';
+$string['pendingvalidation'] = 'Pending validation';
+$string['pendingassignment'] = 'Pending assignment';
+$string['pendingbytype'] = 'Pending by type';
+$string['bydocumenttype'] = 'By document type';
+$string['unassignedapplications'] = 'Unassigned applications';
+$string['nounassignedapplications'] = 'No unassigned applications';
+
+// =============================================================================
+// USER MANAGEMENT STRINGS
+// =============================================================================
+
+$string['manageall'] = 'Manage all';
+$string['manageusers'] = 'Manage users';
+$string['usersassigned'] = 'Users assigned';
+$string['usersassignedcount'] = 'Users assigned count';
+$string['nousersassigned'] = 'No users assigned';
+$string['nousersavailable'] = 'No users available';
+$string['userunassigned'] = 'User unassigned';
+$string['usernotfound'] = 'User not found';
+$string['username_differs_idnumber'] = 'Username differs from ID number';
+$string['username_updated'] = 'Username updated';
+
+// =============================================================================
+// TABLE AND LIST STRINGS
+// =============================================================================
+
+$string['datatable'] = 'Data table';
+$string['thcode'] = 'Code';
+$string['thtitle'] = 'Title';
+$string['thstatus'] = 'Status';
+$string['thactions'] = 'Actions';
+$string['statustabs'] = 'Status tabs';
+$string['sortby'] = 'Sort by';
+
+// =============================================================================
+// TIMELINE AND HISTORY STRINGS
+// =============================================================================
+
+$string['timeline'] = 'Timeline';
+$string['notimeline'] = 'No timeline available';
+$string['nohistory'] = 'No history';
+$string['noactivity'] = 'No activity';
+$string['nocomments'] = 'No comments';
+$string['addcomment'] = 'Add comment';
+$string['additionalnotes'] = 'Additional notes';
+$string['optionalcomment'] = 'Optional comment';
+$string['optionalnotes'] = 'Optional notes';
+$string['lastmodified'] = 'Last modified';
+$string['timeago:justnow'] = 'just now';
+$string['timeago:minutes'] = '{$a} minutes ago';
+$string['timeago:hours'] = '{$a} hours ago';
+$string['timeago:days'] = '{$a} days ago';
+
+// =============================================================================
+// SHARE STRINGS
+// =============================================================================
+
+$string['share'] = 'Share';
+$string['sharepage'] = 'Share this page';
+$string['sharebyemail'] = 'Share by email';
+$string['shareonfacebook'] = 'Share on Facebook';
+$string['shareontwitter'] = 'Share on Twitter';
+$string['shareonlinkedin'] = 'Share on LinkedIn';
+$string['shareonwhatsapp'] = 'Share on WhatsApp';
+
+// =============================================================================
+// JOB ALERTS STRINGS
+// =============================================================================
+
+$string['jobalerts'] = 'Job alerts';
+$string['jobalertsdesc'] = 'Subscribe to receive alerts for new vacancies';
+$string['subscribe'] = 'Subscribe';
+
+// =============================================================================
+// MISC UI STRINGS
+// =============================================================================
+
+$string['draft'] = 'Draft';
+$string['private'] = 'Private';
+$string['markprivate'] = 'Mark as private';
+$string['entity'] = 'Entity';
+$string['companies'] = 'Companies';
+$string['departments'] = 'Departments';
+$string['filename'] = 'File name';
+$string['issuedate'] = 'Issue date';
+$string['issuedatehelp'] = 'Date the document was issued';
+$string['choosefiles'] = 'Choose files';
+$string['clickfordetails'] = 'Click for details';
+$string['opennewtab'] = 'Open in new tab';
+$string['opensnewwindow'] = 'Opens in new window';
+$string['togglepreview'] = 'Toggle preview';
+$string['vieweronly_desc'] = 'View only, no editing allowed';
+$string['viewpublicpage'] = 'View public page';
+$string['viewpublicvacancies'] = 'View public vacancies';
+$string['viewmyreviews'] = 'View my reviews';
+$string['gotodashboard'] = 'Go to dashboard';
+$string['needhelp'] = 'Need help?';
+$string['interestedinposition'] = 'Interested in this position?';
+$string['welcome'] = 'Welcome';
+$string['welcometojobboard'] = 'Welcome to Job Board';
+$string['landingdescription'] = 'Find your next opportunity';
+$string['findyournextjob'] = 'Find your next job';
+$string['browsealljobs'] = 'Browse all jobs';
+$string['browsebycategory'] = 'Browse by category';
+$string['administracion'] = 'Administration';
+$string['iomadintegration'] = 'IOMAD integration';
+$string['workflowconfiguration'] = 'Workflow configuration';
+$string['workflowmanagement'] = 'Workflow management';
+$string['workflowactions'] = 'Workflow actions';
+$string['capabilities'] = 'Capabilities';
+$string['bulkactions'] = 'Bulk actions';
+$string['bulkoperations'] = 'Bulk operations';
+$string['bulkcomment'] = 'Bulk comment';
+$string['confirmcancel'] = 'Confirm cancel';
+$string['confirmdelete'] = 'Confirm delete';
+$string['conversionwait'] = 'Please wait while the document is being converted';
+$string['nextpossible'] = 'Next possible';
+$string['finalstage'] = 'Final stage';
+$string['needsattention'] = 'Needs attention';
+$string['norejections'] = 'No rejections';
+$string['noassignments'] = 'No assignments';
+$string['noassignments_desc'] = 'No assignments found';
+$string['noauditlogs'] = 'No audit logs';
+$string['nopendingapplications'] = 'No pending applications';
+$string['nopendingdocuments'] = 'No pending documents';
+$string['noapplicationsdesc'] = 'No applications found';
+$string['noapplicationsyet'] = 'No applications yet';
+$string['nosecretaryoptional'] = 'Secretary is optional';
+$string['myrecentapplications'] = 'My recent applications';
+$string['contract:prestacion_servicios'] = 'Service contract';
+$string['contract:termino_fijo'] = 'Fixed-term contract';
+$string['doctype_rnmc'] = 'National teacher registry (RNMC)';
+$string['doctype_titulo_postgrado'] = 'Postgraduate degree';
+$string['status:assigned'] = 'Assigned';

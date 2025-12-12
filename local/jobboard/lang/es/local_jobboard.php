@@ -2124,3 +2124,587 @@ $string['useridentifier'] = 'Identificador de usuario';
 $string['workflowsettings'] = 'Configuración del flujo de trabajo';
 $string['column'] = 'Columna';
 $string['doctype_isrequired_help'] = 'Si está marcado, este tipo de documento será obligatorio para las postulaciones';
+
+// =============================================================================
+// CADENAS DEL FORMULARIO DE REGISTRO
+// =============================================================================
+
+$string['signup_title'] = 'Crear su cuenta';
+$string['signup_intro'] = 'Complete el formulario a continuación para crear su cuenta y comenzar a postularse.';
+$string['signup_account_header'] = 'Información de la cuenta';
+$string['signup_personalinfo'] = 'Información personal';
+$string['signup_contactinfo'] = 'Información de contacto';
+$string['signup_academic_header'] = 'Información académica';
+$string['signup_professional_profile'] = 'Perfil profesional';
+$string['signup_termsheader'] = 'Términos y condiciones';
+$string['signup_companyinfo'] = 'Información de la empresa';
+$string['signup_company_help'] = 'Seleccione la empresa a la que pertenece';
+$string['signup_progress'] = 'Progreso del registro';
+$string['signup_required_fields'] = 'Los campos marcados con * son obligatorios';
+$string['signup_username_is_idnumber'] = 'Su nombre de usuario será su número de identificación';
+$string['signup_doctype'] = 'Tipo de documento de identidad';
+$string['signup_doctype_cc'] = 'Cédula de ciudadanía (CC)';
+$string['signup_doctype_ce'] = 'Cédula de extranjería (CE)';
+$string['signup_doctype_passport'] = 'Pasaporte';
+$string['signup_doctype_pep'] = 'Permiso especial de permanencia (PEP)';
+$string['signup_doctype_ppt'] = 'Permiso de protección temporal (PPT)';
+$string['signup_idnumber'] = 'Número de identificación';
+$string['signup_idnumber_exists'] = 'Este número de identificación ya está registrado';
+$string['signup_idnumber_exists_as_user'] = 'Este número de identificación ya está registrado como usuario';
+$string['signup_idnumber_tooshort'] = 'El número de identificación es muy corto';
+$string['signup_birthdate'] = 'Fecha de nacimiento';
+$string['signup_birthdate_minage'] = 'Debe tener al menos 18 años';
+$string['signup_gender'] = 'Género';
+$string['signup_gender_male'] = 'Masculino';
+$string['signup_gender_female'] = 'Femenino';
+$string['signup_gender_other'] = 'Otro';
+$string['signup_gender_prefer_not'] = 'Prefiero no decir';
+$string['signup_phone_mobile'] = 'Teléfono móvil';
+$string['signup_phone_home'] = 'Teléfono fijo';
+$string['signup_department_region'] = 'Departamento/Región';
+$string['signup_education_level'] = 'Nivel de educación';
+$string['signup_edu_highschool'] = 'Bachillerato';
+$string['signup_edu_technical'] = 'Técnico';
+$string['signup_edu_tecnico'] = 'Título técnico';
+$string['signup_edu_technological'] = 'Tecnológico';
+$string['signup_edu_tecnologo'] = 'Título tecnológico';
+$string['signup_edu_undergraduate'] = 'Pregrado';
+$string['signup_edu_profesional'] = 'Título profesional';
+$string['signup_edu_specialization'] = 'Especialización';
+$string['signup_edu_especialista'] = 'Título de especialista';
+$string['signup_edu_masters'] = 'Maestría';
+$string['signup_edu_magister'] = 'Título de magíster';
+$string['signup_edu_doctorate'] = 'Doctorado';
+$string['signup_edu_doctor'] = 'Título de doctor';
+$string['signup_edu_postdoctorate'] = 'Posdoctorado';
+$string['signup_degree_title'] = 'Título obtenido';
+$string['signup_expertise_area'] = 'Área de especialización';
+$string['signup_experience_years'] = 'Años de experiencia';
+$string['signup_exp_none'] = 'Sin experiencia';
+$string['signup_exp_less_1'] = 'Menos de 1 año';
+$string['signup_exp_1_3'] = '1-3 años';
+$string['signup_exp_3_5'] = '3-5 años';
+$string['signup_exp_5_10'] = '5-10 años';
+$string['signup_exp_more_10'] = 'Más de 10 años';
+$string['signup_terms_accept'] = 'Acepto los términos y condiciones';
+$string['signup_terms_required'] = 'Debe aceptar los términos y condiciones';
+$string['signup_datatreatment_accept'] = 'Acepto la política de tratamiento de datos';
+$string['signup_datatreatment_required'] = 'Debe aceptar la política de tratamiento de datos';
+$string['signup_dataaccuracy_accept'] = 'Certifico que la información proporcionada es veraz';
+$string['signup_dataaccuracy_required'] = 'Debe certificar la veracidad de la información';
+$string['signup_privacy_text'] = 'Sus datos personales serán tratados según nuestra política de privacidad';
+$string['signup_createaccount'] = 'Crear cuenta';
+$string['signup_already_account'] = '¿Ya tiene una cuenta?';
+$string['signup_applying_for'] = 'Postulándose a';
+$string['signup_success_title'] = 'Registro exitoso';
+$string['signup_success_message'] = 'Su cuenta ha sido creada exitosamente. Por favor revise su correo electrónico para confirmar.';
+$string['signup_error_creating'] = 'Error al crear la cuenta';
+$string['signup_check_spam'] = 'Revise su carpeta de spam si no recibe el correo';
+$string['signup_email_instructions_title'] = 'Verificación de correo electrónico';
+$string['signup_email_instruction_1'] = 'Revise su bandeja de entrada';
+$string['signup_email_instruction_2'] = 'Haga clic en el enlace de verificación';
+$string['signup_email_instruction_3'] = 'Complete su perfil';
+$string['signup_step_account'] = 'Cuenta';
+$string['signup_step_personal'] = 'Personal';
+$string['signup_step_contact'] = 'Contacto';
+$string['signup_step_academic'] = 'Académico';
+$string['signup_step_confirm'] = 'Confirmar';
+
+// =============================================================================
+// CADENAS DEL PANEL DE CONTROL
+// =============================================================================
+
+$string['admindashboard'] = 'Panel de administrador';
+$string['managerdashboard'] = 'Panel de gestor';
+$string['companydashboard'] = 'Panel de empresa';
+$string['applicantdashboarddesc'] = 'Ver sus postulaciones y seguir su progreso';
+$string['adminstatistics'] = 'Estadísticas de administrador';
+$string['applicantstatistics'] = 'Estadísticas de postulante';
+$string['convocatoriastatistics'] = 'Estadísticas de convocatorias';
+$string['vacancystatistics'] = 'Estadísticas de vacantes';
+$string['reviewerperformance'] = 'Desempeño de revisores';
+$string['applicationstats'] = 'Estadísticas de postulaciones';
+$string['documentstats'] = 'Estadísticas de documentos';
+$string['systemhealth'] = 'Estado del sistema';
+$string['systemconfiguration'] = 'Configuración del sistema';
+$string['quicklinks'] = 'Enlaces rápidos';
+$string['quicktips'] = 'Consejos rápidos';
+$string['recentsnapshots'] = 'Capturas recientes';
+$string['recentvacancies'] = 'Vacantes recientes';
+$string['activecommittees'] = 'Comités activos';
+$string['activeassignments'] = 'Asignaciones activas';
+$string['activeexemptions'] = 'Exenciones activas';
+$string['activereviewers'] = 'Revisores activos';
+$string['totalcommittees'] = 'Total de comités';
+$string['totalcommmembers'] = 'Total de miembros de comité';
+$string['totalexemptions'] = 'Total de exenciones';
+$string['totalusers'] = 'Total de usuarios';
+$string['totalassigned'] = 'Total asignados';
+$string['totalassignedusers'] = 'Total de usuarios asignados';
+$string['avgtime'] = 'Tiempo promedio';
+$string['avgworkload'] = 'Carga de trabajo promedio';
+$string['currentworkload'] = 'Carga de trabajo actual';
+$string['trend'] = 'Tendencia';
+$string['trending_up'] = 'Tendencia al alza';
+$string['trending_down'] = 'Tendencia a la baja';
+
+// =============================================================================
+// MARCADORES DE POSICIÓN DE PLANTILLAS DE CORREO
+// =============================================================================
+
+$string['availableplaceholders'] = 'Marcadores de posición disponibles';
+$string['placeholder'] = 'Marcador de posición';
+$string['ph_user_fullname'] = 'Nombre completo del usuario';
+$string['ph_user_firstname'] = 'Nombre del usuario';
+$string['ph_user_lastname'] = 'Apellido del usuario';
+$string['ph_user_email'] = 'Correo del usuario';
+$string['ph_applicant_name'] = 'Nombre del postulante';
+$string['ph_vacancy_code'] = 'Código de vacante';
+$string['ph_vacancy_title'] = 'Título de vacante';
+$string['ph_vacancy_description'] = 'Descripción de vacante';
+$string['ph_vacancy_url'] = 'URL de vacante';
+$string['ph_application_id'] = 'ID de postulación';
+$string['ph_application_url'] = 'URL de postulación';
+$string['ph_submit_date'] = 'Fecha de envío';
+$string['ph_current_date'] = 'Fecha actual';
+$string['ph_deadline'] = 'Fecha límite';
+$string['ph_days_remaining'] = 'Días restantes';
+$string['ph_hours_until'] = 'Horas hasta';
+$string['ph_close_date'] = 'Fecha de cierre';
+$string['ph_open_date'] = 'Fecha de apertura';
+$string['ph_company_name'] = 'Nombre de empresa';
+$string['ph_faculty_name'] = 'Nombre de facultad';
+$string['ph_contact_info'] = 'Información de contacto';
+$string['ph_site_name'] = 'Nombre del sitio';
+$string['ph_site_url'] = 'URL del sitio';
+$string['ph_interview_date'] = 'Fecha de entrevista';
+$string['ph_interview_time'] = 'Hora de entrevista';
+$string['ph_interview_location'] = 'Lugar de entrevista';
+$string['ph_interview_type'] = 'Tipo de entrevista';
+$string['ph_interview_duration'] = 'Duración de entrevista';
+$string['ph_interview_notes'] = 'Notas de entrevista';
+$string['ph_interview_feedback'] = 'Retroalimentación de entrevista';
+$string['ph_interviewer_name'] = 'Nombre del entrevistador';
+$string['ph_reviewer_name'] = 'Nombre del revisor';
+$string['ph_feedback'] = 'Retroalimentación';
+$string['ph_observations'] = 'Observaciones';
+$string['ph_next_steps'] = 'Próximos pasos';
+$string['ph_action_required'] = 'Acción requerida';
+$string['ph_rejection_reason'] = 'Razón de rechazo';
+$string['ph_rejected_docs'] = 'Documentos rechazados';
+$string['ph_rejected_count'] = 'Cantidad de rechazados';
+$string['ph_approved_count'] = 'Cantidad de aprobados';
+$string['ph_documents_count'] = 'Cantidad de documentos';
+$string['ph_review_summary'] = 'Resumen de revisión';
+$string['ph_selection_notes'] = 'Notas de selección';
+$string['ph_notification_note'] = 'Nota de notificación';
+$string['ph_resubmit_deadline'] = 'Fecha límite de reenvío';
+$string['ph_waitlist_position'] = 'Posición en lista de espera';
+
+// =============================================================================
+// CADENAS DE UI Y NAVEGACIÓN
+// =============================================================================
+
+$string['navigation'] = 'Navegación';
+$string['breadcrumb'] = 'Ruta de navegación';
+$string['pagination'] = 'Paginación';
+$string['filterform'] = 'Formulario de filtros';
+$string['filters'] = 'Filtros';
+$string['applyfilters'] = 'Aplicar filtros';
+$string['clearfilters'] = 'Limpiar filtros';
+$string['resetfilters'] = 'Restablecer filtros';
+$string['searchplaceholder'] = 'Buscar...';
+$string['searchjobs'] = 'Buscar empleos';
+$string['searchuser'] = 'Buscar usuario';
+$string['searchusers'] = 'Buscar usuarios';
+$string['searchusersplaceholder'] = 'Buscar por nombre o correo...';
+$string['searchapplicant'] = 'Buscar postulante';
+$string['searchbyusername'] = 'Buscar por nombre de usuario';
+$string['searchagain'] = 'Buscar de nuevo';
+$string['searchresultsfor'] = 'Resultados de búsqueda para';
+$string['showingresults'] = 'Mostrando resultados';
+$string['noresultsforsearch'] = 'No se encontraron resultados para su búsqueda';
+$string['trydifferentsearch'] = 'Intente con un término de búsqueda diferente';
+$string['trydifferentfilters'] = 'Intente con filtros diferentes';
+$string['sortby:newest'] = 'Más recientes primero';
+$string['sortby:closedate'] = 'Fecha de cierre';
+$string['sortby:title'] = 'Título';
+$string['sortby:positions'] = 'Posiciones';
+$string['ascending'] = 'Ascendente';
+$string['descending'] = 'Descendente';
+$string['allcategories'] = 'Todas las categorías';
+$string['alllocations'] = 'Todas las ubicaciones';
+$string['selectaction'] = 'Seleccionar acción';
+$string['selectuser'] = 'Seleccionar usuario';
+$string['selectusers'] = 'Seleccionar usuarios';
+$string['selecttype'] = 'Seleccionar tipo';
+$string['selectreason'] = 'Seleccionar razón';
+$string['selectfaculty'] = 'Seleccionar facultad';
+$string['selectroletoassign'] = 'Seleccionar rol a asignar';
+$string['selectmultiplehelp'] = 'Mantenga presionado Ctrl/Cmd para seleccionar varios';
+
+// =============================================================================
+// CADENAS DEL FLUJO DE POSTULACIÓN
+// =============================================================================
+
+$string['applicationid'] = 'ID de postulación';
+$string['applicationguidelines'] = 'Guía de postulación';
+$string['applicationsubmitteddesc'] = 'Su postulación ha sido enviada exitosamente';
+$string['applicationsqueue'] = 'Cola de postulaciones';
+$string['applicationsbystatus'] = 'Postulaciones por estado';
+$string['applicationsbyvacancy'] = 'Postulaciones por vacante';
+$string['applicationstopreview'] = 'Postulaciones para revisar';
+$string['applied'] = 'Postulado';
+$string['applyfor'] = 'Postularse a';
+$string['applyto'] = 'Postularse a';
+$string['applynow_desc'] = 'Envíe su postulación ahora';
+$string['applynowdesc'] = 'Envíe su postulación ahora';
+$string['applyhelp_text'] = 'Siga los pasos para completar su postulación';
+$string['readytoapply'] = 'Listo para postularse';
+$string['wanttoapply'] = 'Quiero postularme';
+$string['createaccounttoapply'] = 'Cree una cuenta para postularse';
+$string['logintoapply'] = 'Inicie sesión para postularse';
+$string['loginandapply'] = 'Iniciar sesión y postularse';
+$string['submitted'] = 'Enviada';
+$string['reviewing'] = 'En revisión';
+$string['assigned'] = 'Asignado';
+$string['currentstatus'] = 'Estado actual';
+$string['statushistory'] = 'Historial de estados';
+$string['updatestatus'] = 'Actualizar estado';
+$string['changestatus'] = 'Cambiar estado';
+$string['submitreview'] = 'Enviar revisión';
+$string['nextsteps'] = 'Próximos pasos';
+$string['nextapplication'] = 'Siguiente postulación';
+$string['previousapplication'] = 'Postulación anterior';
+$string['viewmyapplication'] = 'Ver mi postulación';
+$string['withdraw'] = 'Retirar';
+$string['resubmit'] = 'Reenviar';
+
+// =============================================================================
+// CADENAS DE VALIDACIÓN DE DOCUMENTOS
+// =============================================================================
+
+$string['documentchecklist'] = 'Lista de verificación de documentos';
+$string['documentinfo'] = 'Información del documento';
+$string['documentpreview'] = 'Vista previa del documento';
+$string['previewdocument'] = 'Ver vista previa del documento';
+$string['documentactions'] = 'Acciones del documento';
+$string['documentstoreview'] = 'Documentos por revisar';
+$string['documentsremaining'] = 'Documentos restantes';
+$string['documenttypes'] = 'Tipos de documentos';
+$string['requireddocument'] = 'Documento requerido';
+$string['uploadfile'] = 'Cargar archivo';
+$string['uploadform'] = 'Formulario de carga';
+$string['uploaded'] = 'Cargado';
+$string['uploaddocsreminder'] = 'Recuerde cargar todos los documentos requeridos';
+$string['downloadtoview'] = 'Descargar para ver';
+$string['validate'] = 'Validar';
+$string['validateall'] = 'Validar todos';
+$string['validateindividual'] = 'Validar individual';
+$string['validateddate'] = 'Fecha de validación';
+$string['validation'] = 'Validación';
+$string['validationdecision'] = 'Decisión de validación';
+$string['validationsummary'] = 'Resumen de validación';
+$string['nochecklist'] = 'No hay lista de verificación disponible';
+$string['nodocumentspending'] = 'No hay documentos pendientes';
+$string['nodocumentstoreview'] = 'No hay documentos por revisar';
+$string['alldocsreviewed'] = 'Todos los documentos revisados';
+$string['allvalidated'] = 'Todos validados';
+$string['approveselected'] = 'Aprobar seleccionados';
+$string['rejectselected'] = 'Rechazar seleccionados';
+$string['rejectreason'] = 'Razón de rechazo';
+$string['rejectreason_placeholder'] = 'Ingrese la razón del rechazo...';
+$string['rejectreason_wrongtype'] = 'Tipo de documento incorrecto';
+$string['unknowndoctype'] = 'Tipo de documento desconocido';
+
+// =============================================================================
+// CADENAS DE REVISIÓN Y COMITÉS
+// =============================================================================
+
+$string['reviewcomments'] = 'Comentarios de revisión';
+$string['reviewdecision'] = 'Decisión de revisión';
+$string['reviewdocuments_desc'] = 'Revisar y validar documentos de postulantes';
+$string['reviewed'] = 'Revisado';
+$string['reviewedby'] = 'Revisado por';
+$string['reviewertasks'] = 'Tareas del revisor';
+$string['reviewobservations'] = 'Observaciones de revisión';
+$string['reviewobservations_placeholder'] = 'Ingrese sus observaciones...';
+$string['reviewprogress'] = 'Progreso de revisión';
+$string['reviewstatistics'] = 'Estadísticas de revisión';
+$string['myreviews_desc'] = 'Ver sus revisiones asignadas';
+$string['addreviewer'] = 'Agregar revisor';
+$string['addreviewerstoprogram'] = 'Agregar revisores al programa';
+$string['currentreviewers'] = 'Revisores actuales';
+$string['assignedusers'] = 'Usuarios asignados';
+$string['assignnewusers'] = 'Asignar nuevos usuarios';
+$string['assignselected'] = 'Asignar seleccionados';
+$string['assignto'] = 'Asignar a';
+$string['autoassignall'] = 'Auto-asignar todos';
+$string['autoassignhelp'] = 'Distribuir postulaciones automáticamente entre revisores';
+$string['manualassign'] = 'Asignación manual';
+$string['maxperreviewer'] = 'Máximo por revisor';
+$string['noreviewers'] = 'Sin revisores';
+$string['noreviewersavailable'] = 'No hay revisores disponibles';
+$string['noreviewersforprogram'] = 'No hay revisores para este programa';
+$string['programreviewerhelp'] = 'Asignar revisores a programas específicos';
+$string['programswithreviewers'] = 'Programas con revisores';
+$string['noprogramswithreviewers'] = 'No hay programas con revisores';
+$string['leadreviewers'] = 'Revisores líderes';
+$string['committeename'] = 'Nombre del comité';
+$string['committeeautoroleassign'] = 'Auto-asignar roles del comité';
+$string['members'] = 'Miembros';
+$string['membercount'] = 'Cantidad de miembros';
+$string['managemembers'] = 'Gestionar miembros';
+$string['nomembers'] = 'Sin miembros';
+$string['nocommitteeforthisvacancy'] = 'No hay comité para esta vacante';
+$string['existingvacancycommittee'] = 'Comité existente de vacante';
+$string['legacyvacancycommittee'] = 'Comité heredado de vacante';
+$string['chairhelp'] = 'El presidente lidera el comité';
+$string['evaluatorshelp'] = 'Los evaluadores evalúan a los candidatos';
+$string['confirmremovemember'] = '¿Eliminar este miembro del comité?';
+$string['confirmremovereviewer'] = '¿Eliminar este revisor?';
+$string['confirmunassign'] = '¿Desasignar este usuario?';
+
+// =============================================================================
+// CADENAS DE ENTREVISTAS
+// =============================================================================
+
+$string['scheduledinterviews'] = 'Entrevistas programadas';
+$string['schedulenewinterview'] = 'Programar nueva entrevista';
+$string['pendinginterviews'] = 'Entrevistas pendientes';
+$string['noupcominginterviews'] = 'No hay próximas entrevistas';
+$string['virtualinterview'] = 'Entrevista virtual';
+$string['confirmnoshow'] = 'Confirmar no presentado';
+$string['noshow'] = 'No presentado';
+
+// =============================================================================
+// CADENAS DE ROLES
+// =============================================================================
+
+$string['role_chair'] = 'Presidente';
+$string['role_committee'] = 'Miembro del comité';
+$string['role_committee_desc'] = 'Miembro del comité de evaluación';
+$string['role_coordinator_desc'] = 'Coordina el proceso de reclutamiento';
+$string['role_reviewer_desc'] = 'Revisa postulaciones y documentos';
+$string['role_lead_reviewer'] = 'Revisor líder';
+$string['role_observer'] = 'Observador';
+$string['changerole'] = 'Cambiar rol';
+$string['rolenotcreated'] = 'Rol no creado';
+$string['backtorolelist'] = 'Volver a la lista de roles';
+
+// =============================================================================
+// CADENAS DE EXENCIONES
+// =============================================================================
+
+$string['exemptiontype_desc'] = 'Tipo de exención';
+$string['exemptionactive'] = 'Exención activa';
+$string['exemptionlist'] = 'Lista de exenciones';
+$string['expiredexemptions'] = 'Exenciones vencidas';
+$string['revokedexemptions'] = 'Exenciones revocadas';
+$string['grantedby'] = 'Otorgada por';
+$string['expiry'] = 'Vencimiento';
+
+// =============================================================================
+// CADENAS DE REPORTES
+// =============================================================================
+
+$string['report:applications'] = 'Reporte de postulaciones';
+$string['report:vacancies'] = 'Reporte de vacantes';
+$string['report:documents'] = 'Reporte de documentos';
+$string['report:convocatorias'] = 'Reporte de convocatorias';
+$string['reporttypes'] = 'Tipos de reportes';
+$string['reportsanddata'] = 'Reportes y datos';
+$string['filterreport'] = 'Filtrar reporte';
+$string['exportas'] = 'Exportar como';
+$string['exportoptions'] = 'Opciones de exportación';
+$string['generatedby'] = 'Generado por';
+$string['generated'] = 'Generado';
+
+// =============================================================================
+// CADENAS DE VISUALIZACIÓN DE VACANTES
+// =============================================================================
+
+$string['vacanciesavailable'] = 'Vacantes disponibles';
+$string['vacanciesforconvocatoria'] = 'Vacantes para la convocatoria';
+$string['vacancysummary'] = 'Resumen de vacante';
+$string['convocatoriavacancycount'] = 'Vacantes en la convocatoria';
+$string['availablepositions'] = 'Posiciones disponibles';
+$string['daysleft'] = 'Días restantes';
+$string['deadlineprogress'] = 'Progreso de fecha límite';
+$string['deadlinewarning_title'] = 'Advertencia de fecha límite';
+$string['closes'] = 'Cierra';
+$string['starts'] = 'Inicia';
+$string['ends'] = 'Termina';
+$string['viewallvacancies'] = 'Ver todas las vacantes';
+$string['viewvacancies'] = 'Ver vacantes';
+$string['viewvacancydetails'] = 'Ver detalles de vacante';
+$string['backtovacancy'] = 'Volver a la vacante';
+$string['novacanciesfound'] = 'No se encontraron vacantes';
+$string['novacanciesyet'] = 'Aún no hay vacantes';
+$string['createfirstvacancy'] = 'Cree su primera vacante';
+$string['suggestedvacancies'] = 'Vacantes sugeridas';
+$string['nosuggestedvacancies'] = 'No hay vacantes sugeridas';
+$string['featuredvacancies'] = 'Vacantes destacadas';
+$string['nofeaturedvacancies'] = 'No hay vacantes destacadas';
+$string['companyvacancies'] = 'Vacantes de la empresa';
+$string['nocompanvacancies'] = 'No hay vacantes de empresa';
+$string['facultyvacancies'] = 'Vacantes de facultad';
+$string['facultieswithoutcommittee'] = 'Facultades sin comité';
+
+// =============================================================================
+// CADENAS DE CONVOCATORIAS
+// =============================================================================
+
+$string['noactiveconvocatorias'] = 'No hay convocatorias activas';
+$string['noconvocatorias_desc'] = 'No se encontraron convocatorias';
+$string['noconvocatoriasdesc'] = 'No se encontraron convocatorias';
+
+// =============================================================================
+// CADENAS DE PROGRESO Y ESTADÍSTICAS
+// =============================================================================
+
+$string['progress'] = 'Progreso';
+$string['progressindicator'] = 'Indicador de progreso';
+$string['complete'] = 'Completado';
+$string['result'] = 'Resultado';
+$string['results'] = 'Resultados';
+$string['found'] = 'Encontrados';
+$string['rating'] = 'Calificación';
+$string['performance'] = 'Desempeño';
+$string['performedby'] = 'Realizado por';
+$string['nostatsavailable'] = 'No hay estadísticas disponibles';
+$string['dailyapplications'] = 'Postulaciones diarias';
+$string['pendingvalidation'] = 'Validación pendiente';
+$string['pendingassignment'] = 'Asignación pendiente';
+$string['pendingbytype'] = 'Pendientes por tipo';
+$string['bydocumenttype'] = 'Por tipo de documento';
+$string['unassignedapplications'] = 'Postulaciones sin asignar';
+$string['nounassignedapplications'] = 'No hay postulaciones sin asignar';
+
+// =============================================================================
+// CADENAS DE GESTIÓN DE USUARIOS
+// =============================================================================
+
+$string['manageall'] = 'Gestionar todos';
+$string['manageusers'] = 'Gestionar usuarios';
+$string['usersassigned'] = 'Usuarios asignados';
+$string['usersassignedcount'] = 'Cantidad de usuarios asignados';
+$string['nousersassigned'] = 'No hay usuarios asignados';
+$string['nousersavailable'] = 'No hay usuarios disponibles';
+$string['userunassigned'] = 'Usuario desasignado';
+$string['usernotfound'] = 'Usuario no encontrado';
+$string['username_differs_idnumber'] = 'El nombre de usuario difiere del número de identificación';
+$string['username_updated'] = 'Nombre de usuario actualizado';
+
+// =============================================================================
+// CADENAS DE TABLAS Y LISTAS
+// =============================================================================
+
+$string['datatable'] = 'Tabla de datos';
+$string['thcode'] = 'Código';
+$string['thtitle'] = 'Título';
+$string['thstatus'] = 'Estado';
+$string['thactions'] = 'Acciones';
+$string['statustabs'] = 'Pestañas de estado';
+$string['sortby'] = 'Ordenar por';
+
+// =============================================================================
+// CADENAS DE LÍNEA DE TIEMPO E HISTORIAL
+// =============================================================================
+
+$string['timeline'] = 'Línea de tiempo';
+$string['notimeline'] = 'No hay línea de tiempo disponible';
+$string['nohistory'] = 'Sin historial';
+$string['noactivity'] = 'Sin actividad';
+$string['nocomments'] = 'Sin comentarios';
+$string['addcomment'] = 'Agregar comentario';
+$string['additionalnotes'] = 'Notas adicionales';
+$string['optionalcomment'] = 'Comentario opcional';
+$string['optionalnotes'] = 'Notas opcionales';
+$string['lastmodified'] = 'Última modificación';
+$string['timeago:justnow'] = 'hace un momento';
+$string['timeago:minutes'] = 'hace {$a} minutos';
+$string['timeago:hours'] = 'hace {$a} horas';
+$string['timeago:days'] = 'hace {$a} días';
+
+// =============================================================================
+// CADENAS PARA COMPARTIR
+// =============================================================================
+
+$string['share'] = 'Compartir';
+$string['sharepage'] = 'Compartir esta página';
+$string['sharebyemail'] = 'Compartir por correo';
+$string['shareonfacebook'] = 'Compartir en Facebook';
+$string['shareontwitter'] = 'Compartir en Twitter';
+$string['shareonlinkedin'] = 'Compartir en LinkedIn';
+$string['shareonwhatsapp'] = 'Compartir en WhatsApp';
+
+// =============================================================================
+// CADENAS DE ALERTAS DE EMPLEO
+// =============================================================================
+
+$string['jobalerts'] = 'Alertas de empleo';
+$string['jobalertsdesc'] = 'Suscríbase para recibir alertas de nuevas vacantes';
+$string['subscribe'] = 'Suscribirse';
+
+// =============================================================================
+// CADENAS MISCELÁNEAS DE UI
+// =============================================================================
+
+$string['draft'] = 'Borrador';
+$string['private'] = 'Privado';
+$string['markprivate'] = 'Marcar como privado';
+$string['entity'] = 'Entidad';
+$string['companies'] = 'Empresas';
+$string['departments'] = 'Departamentos';
+$string['filename'] = 'Nombre de archivo';
+$string['issuedate'] = 'Fecha de expedición';
+$string['issuedatehelp'] = 'Fecha en que se expidió el documento';
+$string['choosefiles'] = 'Elegir archivos';
+$string['clickfordetails'] = 'Clic para ver detalles';
+$string['opennewtab'] = 'Abrir en nueva pestaña';
+$string['opensnewwindow'] = 'Abre en nueva ventana';
+$string['togglepreview'] = 'Alternar vista previa';
+$string['vieweronly_desc'] = 'Solo vista, no se permite editar';
+$string['viewpublicpage'] = 'Ver página pública';
+$string['viewpublicvacancies'] = 'Ver vacantes públicas';
+$string['viewmyreviews'] = 'Ver mis revisiones';
+$string['gotodashboard'] = 'Ir al panel';
+$string['needhelp'] = '¿Necesita ayuda?';
+$string['interestedinposition'] = '¿Interesado en esta posición?';
+$string['welcome'] = 'Bienvenido';
+$string['welcometojobboard'] = 'Bienvenido a Bolsa de Empleo';
+$string['landingdescription'] = 'Encuentre su próxima oportunidad';
+$string['findyournextjob'] = 'Encuentre su próximo empleo';
+$string['browsealljobs'] = 'Explorar todos los empleos';
+$string['browsebycategory'] = 'Explorar por categoría';
+$string['administracion'] = 'Administración';
+$string['iomadintegration'] = 'Integración IOMAD';
+$string['workflowconfiguration'] = 'Configuración del flujo de trabajo';
+$string['workflowmanagement'] = 'Gestión del flujo de trabajo';
+$string['workflowactions'] = 'Acciones del flujo de trabajo';
+$string['capabilities'] = 'Capacidades';
+$string['bulkactions'] = 'Acciones masivas';
+$string['bulkoperations'] = 'Operaciones masivas';
+$string['bulkcomment'] = 'Comentario masivo';
+$string['confirmcancel'] = 'Confirmar cancelación';
+$string['confirmdelete'] = 'Confirmar eliminación';
+$string['conversionwait'] = 'Por favor espere mientras se convierte el documento';
+$string['nextpossible'] = 'Próximo posible';
+$string['finalstage'] = 'Etapa final';
+$string['needsattention'] = 'Requiere atención';
+$string['norejections'] = 'Sin rechazos';
+$string['noassignments'] = 'Sin asignaciones';
+$string['noassignments_desc'] = 'No se encontraron asignaciones';
+$string['noauditlogs'] = 'Sin registros de auditoría';
+$string['nopendingapplications'] = 'No hay postulaciones pendientes';
+$string['nopendingdocuments'] = 'No hay documentos pendientes';
+$string['noapplicationsdesc'] = 'No se encontraron postulaciones';
+$string['noapplicationsyet'] = 'Aún no hay postulaciones';
+$string['nosecretaryoptional'] = 'El secretario es opcional';
+$string['myrecentapplications'] = 'Mis postulaciones recientes';
+$string['contract:prestacion_servicios'] = 'Contrato de prestación de servicios';
+$string['contract:termino_fijo'] = 'Contrato a término fijo';
+$string['doctype_rnmc'] = 'Registro Nacional Docente (RNMC)';
+$string['doctype_titulo_postgrado'] = 'Título de posgrado';
+$string['status:assigned'] = 'Asignado';
