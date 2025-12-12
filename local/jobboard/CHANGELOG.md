@@ -5,6 +5,59 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.6] - 2025-12-12
+
+### Fixed
+- **Namespace Import Error**: Added missing `use moodle_url;` statement to 9 renderer traits
+  - Fixed "Class not found" error when traits used `moodle_url` within their namespace
+  - Affected files: `admin_renderer.php`, `application_renderer.php`, `committee_renderer.php`,
+    `convocatoria_renderer.php`, `exemption_renderer.php`, `public_renderer.php`,
+    `reports_renderer.php`, `review_renderer.php`, `vacancy_renderer.php`
+  - `dashboard_renderer.php` already had the correct import
+
+## [3.6.5] - 2025-12-12
+
+### Removed
+- **81 Unused Legacy Templates** (~6,431 lines removed):
+  - 62 ROOT templates: `admin_*.mustache` (13), `application_*.mustache` (8),
+    `convocatoria_*.mustache` (6), `dashboard*.mustache` (5), `vacancy_*.mustache` (6),
+    `report_*.mustache` (5), and 19 other legacy templates
+  - 14 unused components: `action_card`, `activity_timeline`, `badge`, `breadcrumbs`,
+    `data_table`, `filter_form`, `info_card`, `list_group`, `page_header`, `progress_bar`,
+    `stats_grid`, `status_badge`, `timeline`, `vacancy_card`
+  - 5 reports/ templates: Entire `reports/` subfolder removed (handled inline by `pages/reports.mustache`)
+
+### Technical Notes
+- Template count reduced from ~130 to 49 (62% reduction)
+- Kept templates: `signup_page.mustache`, `components/{alert,empty_state,stat_card}.mustache`,
+  and all 45 `pages/*.mustache` files
+
+## [3.6.4] - 2025-12-12
+
+### Removed
+- **8 Redundant Standalone Renderer Classes** (~3,593 lines removed):
+  - `classes/output/admin_renderer.php` (~750 lines)
+  - `classes/output/application_renderer.php` (~400 lines)
+  - `classes/output/convocatoria_renderer.php` (~375 lines)
+  - `classes/output/dashboard_renderer.php` (~570 lines)
+  - `classes/output/public_renderer.php` (~560 lines)
+  - `classes/output/reports_renderer.php` (~680 lines)
+  - `classes/output/review_renderer.php` (~375 lines)
+  - `classes/output/vacancy_renderer.php` (~325 lines)
+
+### Technical Notes
+- These standalone classes duplicated functionality already in `classes/output/renderer/*.php` traits
+- Kept in `classes/output/`: `renderer.php` (main), `renderer_base.php` (base class), `ui_helper.php` (utility)
+
+## [3.6.3] - 2025-12-12
+
+### Fixed
+- **Duplicate Method Collision**: Removed duplicate `render_reports_page` from `admin_renderer.php` trait
+  - Method existed in both `admin_renderer.php` and `reports_renderer.php` traits
+  - Would cause PHP fatal error when both traits are used in the same class
+- **Method Relocation**: Moved `prepare_reports_page_data` from `admin_renderer.php` to `reports_renderer.php`
+  - Keeps all reports-related methods together in the appropriate trait
+
 ## [3.6.2] - 2025-12-12
 
 ### Added
