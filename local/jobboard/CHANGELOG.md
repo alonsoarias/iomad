@@ -5,6 +5,27 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.1] - 2025-12-12
+
+### Changed
+- **Complete Renderer Modularization**:
+  - Moved 48 `prepare_*` methods from `renderer.php` to their corresponding traits
+  - Distribution across traits:
+    - `vacancy_renderer`: 7 methods (~920 lines)
+    - `admin_renderer`: 10 methods (~783 lines)
+    - `convocatoria_renderer`: 5 methods (~604 lines)
+    - `application_renderer`: 4 methods (~553 lines)
+    - `public_renderer`: 6 methods (~530 lines)
+    - `review_renderer`: 5 methods (~496 lines)
+    - `committee_renderer`: 5 methods (~467 lines)
+    - `exemption_renderer`: 6 methods (~353 lines)
+
+### Technical Notes
+- `renderer.php` reduced from 6,354 lines to **1,123 lines** (~82% reduction)
+- Total trait distribution now ~6,767 lines across 9 specialized files
+- Each trait is self-contained with both `render_*` and `prepare_*` methods
+- Traits now follow Moodle coding standards for modular renderer organization
+
 ## [3.6.0] - 2025-12-12
 
 ### Changed
