@@ -268,6 +268,37 @@ $string['docstatus:approved'] = 'Aprobado';
 $string['docstatus:rejected'] = 'Rechazado';
 $string['docstatus:resubmitted'] = 'Reenviado';
 
+// Cadenas dinámicas de estado (usadas con get_string('status_' . $status))
+// Estados de postulación
+$string['status_submitted'] = 'Enviada';
+$string['status_under_review'] = 'En revisión';
+$string['status_docs_validated'] = 'Documentos validados';
+$string['status_docs_rejected'] = 'Documentos rechazados';
+$string['status_interview'] = 'Entrevista';
+$string['status_selected'] = 'Seleccionado';
+$string['status_rejected'] = 'Rechazado';
+$string['status_withdrawn'] = 'Retirada';
+$string['status_waitlist'] = 'Lista de espera';
+// Estados de vacante
+$string['status_draft'] = 'Borrador';
+$string['status_published'] = 'Publicada';
+$string['status_closed'] = 'Cerrada';
+$string['status_archived'] = 'Archivada';
+$string['status_assigned'] = 'Asignada';
+
+// Etiquetas de estado de vacante (usadas con get_string('vacancystatus:' . $status))
+$string['vacancystatus:draft'] = 'Borrador';
+$string['vacancystatus:published'] = 'Publicada';
+$string['vacancystatus:closed'] = 'Cerrada';
+$string['vacancystatus:archived'] = 'Archivada';
+$string['vacancystatus:assigned'] = 'Asignada';
+
+// Etiquetas de estado de convocatoria (usadas con get_string('convocatoriastatus:' . $status))
+$string['convocatoriastatus:draft'] = 'Borrador';
+$string['convocatoriastatus:open'] = 'Abierta';
+$string['convocatoriastatus:closed'] = 'Cerrada';
+$string['convocatoriastatus:archived'] = 'Archivada';
+
 // =============================================================================
 // CONVOCATORIAS
 // =============================================================================

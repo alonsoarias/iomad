@@ -268,6 +268,37 @@ $string['docstatus:approved'] = 'Approved';
 $string['docstatus:rejected'] = 'Rejected';
 $string['docstatus:resubmitted'] = 'Resubmitted';
 
+// Dynamic status strings (used with get_string('status_' . $status))
+// Application statuses
+$string['status_submitted'] = 'Submitted';
+$string['status_under_review'] = 'Under review';
+$string['status_docs_validated'] = 'Documents validated';
+$string['status_docs_rejected'] = 'Documents rejected';
+$string['status_interview'] = 'Interview';
+$string['status_selected'] = 'Selected';
+$string['status_rejected'] = 'Rejected';
+$string['status_withdrawn'] = 'Withdrawn';
+$string['status_waitlist'] = 'Waitlist';
+// Vacancy statuses
+$string['status_draft'] = 'Draft';
+$string['status_published'] = 'Published';
+$string['status_closed'] = 'Closed';
+$string['status_archived'] = 'Archived';
+$string['status_assigned'] = 'Assigned';
+
+// Vacancy status labels (used with get_string('vacancystatus:' . $status))
+$string['vacancystatus:draft'] = 'Draft';
+$string['vacancystatus:published'] = 'Published';
+$string['vacancystatus:closed'] = 'Closed';
+$string['vacancystatus:archived'] = 'Archived';
+$string['vacancystatus:assigned'] = 'Assigned';
+
+// Convocatoria status labels (used with get_string('convocatoriastatus:' . $status))
+$string['convocatoriastatus:draft'] = 'Draft';
+$string['convocatoriastatus:open'] = 'Open';
+$string['convocatoriastatus:closed'] = 'Closed';
+$string['convocatoriastatus:archived'] = 'Archived';
+
 // =============================================================================
 // CONVOCATORIAS
 // =============================================================================

@@ -484,9 +484,8 @@ class renderer extends renderer_base {
             $sql = "SELECT id, action, entitytype, entityid, timecreated
                       FROM {local_jobboard_audit}
                      WHERE action IN ('application_submitted', 'document_uploaded', 'vacancy_published', 'convocatoria_opened')
-                     ORDER BY timecreated DESC
-                     LIMIT :limit";
-            $records = $DB->get_records_sql($sql, ['limit' => $limit]);
+                     ORDER BY timecreated DESC";
+            $records = $DB->get_records_sql($sql, [], 0, $limit);
 
             foreach ($records as $rec) {
                 $activities[] = [
@@ -505,9 +504,8 @@ class renderer extends renderer_base {
                       FROM {local_jobboard_audit}
                      WHERE userid = :userid
                        AND action IN ('application_submitted', 'document_uploaded', 'status_viewed')
-                     ORDER BY timecreated DESC
-                     LIMIT :limit";
-            $records = $DB->get_records_sql($sql, ['userid' => $userid, 'limit' => $limit]);
+                     ORDER BY timecreated DESC";
+            $records = $DB->get_records_sql($sql, ['userid' => $userid], 0, $limit);
 
             foreach ($records as $rec) {
                 $activities[] = [
