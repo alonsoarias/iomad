@@ -2,43 +2,104 @@
     @template local_jobboard/components/card
 
     Card component with header, body and optional footer.
+    Enhanced with loading states, animations, and better accessibility.
 
     Context variables:
     * title (string) - Card header title
+    * titleid (string) - ID for header (for aria-labelledby)
     * icon (string) - Optional header icon
-    * headercolor (string) - Header background color class
+    * headercolor (string) - Header background color: primary, secondary, success, danger, warning, info, light, dark, white
     * badge (object) - Optional badge {value, color}
     * body (string) - Card body content (HTML)
     * footer (string) - Optional footer content (HTML)
-    * shadow (bool) - Whether to add shadow
+    * shadow (bool) - Whether to add shadow (default: true)
+    * loading (bool) - Show skeleton loading state
+    * animate (bool) - Enable entrance animation
+    * collapsible (bool) - Make card collapsible
+    * collapsed (bool) - Start collapsed (requires collapsible)
+    * noPadding (bool) - Remove body padding
+    * actions (array) - Header action buttons [{url, icon, label, color}]
+    * bordercolor (string) - Optional border accent color
+    * hoverable (bool) - Add hover effect
 
     Example context (json):
     {
         "title": "Card Title",
+        "titleid": "card-1",
         "icon": "cog",
         "headercolor": "primary",
         "body": "<p>Content here</p>",
-        "shadow": true
+        "shadow": true,
+        "animate": true,
+        "actions": [{"url": "#", "icon": "ellipsis-v", "label": "Options"}]
     }
 }}
-<div class="jb-card{{#shadow}} jb-card-shadow{{/shadow}}">
+{{#loading}}
+{{! Skeleton loading state }}
+<div class="jb-card jb-card-shadow" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-card-header jb-bg-light">
+        <div class="jb-skeleton-text" style="width: 50%; height: 1.2em;"></div>
+    </div>
+    <div class="jb-card-body">
+        <div class="jb-skeleton-text" style="width: 100%;"></div>
+        <div class="jb-skeleton-text" style="width: 85%;"></div>
+        <div class="jb-skeleton-text" style="width: 70%;"></div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-card{{#shadow}} jb-card-shadow{{/shadow}}{{^shadow}}{{^noshadow}} jb-card-shadow{{/noshadow}}{{/shadow}}{{#animate}} jb-fade-in-up{{/animate}}{{#bordercolor}} jb-border-{{bordercolor}}{{/bordercolor}}{{#hoverable}} jb-hover-lift{{/hoverable}}"
+     {{#titleid}}aria-labelledby="{{titleid}}"{{/titleid}}>
+
     {{#title}}
-    <div class="jb-card-header{{#headercolor}} jb-card-header-{{headercolor}}{{/headercolor}}">
-        <h3 class="jb-fs-6 jb-mb-0">
+    <div class="jb-card-header{{#headercolor}} jb-bg-{{headercolor}}{{#headerwhitetext}} jb-text-white{{/headerwhitetext}}{{/headercolor}} jb-d-flex jb-justify-content-between jb-align-items-center{{#collapsible}} jb-collapse-header{{/collapsible}}"
+         {{#collapsible}}
+         data-toggle="collapse"
+         data-target="#collapse-{{titleid}}"
+         aria-expanded="{{^collapsed}}true{{/collapsed}}{{#collapsed}}false{{/collapsed}}"
+         aria-controls="collapse-{{titleid}}"
+         role="button"
+         tabindex="0"
+         {{/collapsible}}>
+        <h3 class="jb-fs-6 jb-mb-0 jb-d-flex jb-align-items-center" {{#titleid}}id="{{titleid}}"{{/titleid}}>
             {{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}
-            {{title}}
+            <span>{{title}}</span>
         </h3>
-        {{#badge}}
-        <span class="jb-badge jb-badge-{{color}}">{{value}}</span>
-        {{/badge}}
+        <div class="jb-d-flex jb-align-items-center jb-gap-2">
+            {{#badge}}
+            <span class="jb-badge jb-badge-{{color}}">{{value}}</span>
+            {{/badge}}
+            {{#actions}}
+            <a href="{{url}}" class="jb-btn jb-btn-sm jb-btn-{{#color}}{{color}}{{/color}}{{^color}}outline-secondary{{/color}}"
+               {{#label}}title="{{label}}" aria-label="{{label}}"{{/label}}>
+                <i class="fa fa-{{icon}}" aria-hidden="true"></i>
+                {{#text}}<span class="jb-ml-1 jb-d-none jb-d-md-inline">{{text}}</span>{{/text}}
+            </a>
+            {{/actions}}
+            {{#collapsible}}
+            <i class="fa fa-chevron-down jb-collapse-icon jb-ml-2" aria-hidden="true"></i>
+            {{/collapsible}}
+        </div>
     </div>
     {{/title}}
-    <div class="jb-card-body">
+
+    {{#collapsible}}
+    <div class="collapse{{^collapsed}} show{{/collapsed}}" id="collapse-{{titleid}}">
+    {{/collapsible}}
+
+    <div class="jb-card-body{{#noPadding}} jb-p-0{{/noPadding}}">
         {{{body}}}
     </div>
+
+    {{#collapsible}}
+    </div>
+    {{/collapsible}}
+
     {{#footer}}
-    <div class="jb-card-footer">
+    <div class="jb-card-footer jb-bg-light">
         {{{footer}}}
     </div>
     {{/footer}}
 </div>
+{{/loading}}

@@ -1,28 +1,85 @@
 {{!
     @template local_jobboard/components/alert
 
-    Alert component for displaying messages.
+    Alert component for displaying messages with enhanced UX.
 
     Context variables:
     * type (string) - Alert type: success, danger, warning, info, primary
-    * message (string) - Alert message content
-    * icon (string) - Optional FontAwesome icon name
+    * message (string) - Alert message content (can be HTML)
+    * title (string) - Optional alert title/heading
+    * icon (string) - Optional FontAwesome icon name (auto-detected if not provided)
     * dismissible (bool) - Whether alert can be dismissed
+    * animate (bool) - Enable entrance animation
+    * compact (bool) - Use compact padding
+    * actions (array) - Optional action buttons [{url, label, color}]
+    * list (array) - Optional list of items to display
 
     Example context (json):
     {
         "type": "success",
+        "title": "Success!",
         "message": "Operation completed successfully",
         "icon": "check-circle",
-        "dismissible": true
+        "dismissible": true,
+        "animate": true,
+        "actions": [{"url": "/view", "label": "View Details", "color": "success"}]
     }
 }}
-<div class="jb-alert jb-alert-{{type}}{{#dismissible}} jb-alert-dismissible{{/dismissible}}" role="alert">
-    {{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}
-    {{{message}}}
-    {{#dismissible}}
-    <button type="button" class="jb-close" data-dismiss="alert" aria-label="{{#str}}close{{/str}}">
-        <span aria-hidden="true">&times;</span>
-    </button>
-    {{/dismissible}}
+<div class="jb-alert jb-alert-{{type}}{{#dismissible}} jb-alert-dismissible{{/dismissible}}{{#animate}} jb-fade-in-down{{/animate}}{{#compact}} jb-py-2 jb-px-3{{/compact}}"
+     role="alert"
+     aria-live="{{#isdanger}}assertive{{/isdanger}}{{^isdanger}}polite{{/isdanger}}">
+
+    <div class="jb-d-flex jb-align-items-start">
+        {{! Icon - auto-detect based on type if not provided }}
+        <div class="jb-alert-icon jb-mr-3 jb-mt-1" aria-hidden="true">
+            {{#icon}}
+            <i class="fa fa-{{icon}} fa-lg"></i>
+            {{/icon}}
+            {{^icon}}
+            {{#issuccess}}<i class="fa fa-check-circle fa-lg"></i>{{/issuccess}}
+            {{#isdanger}}<i class="fa fa-exclamation-circle fa-lg"></i>{{/isdanger}}
+            {{#iswarning}}<i class="fa fa-exclamation-triangle fa-lg"></i>{{/iswarning}}
+            {{#isinfo}}<i class="fa fa-info-circle fa-lg"></i>{{/isinfo}}
+            {{#isprimary}}<i class="fa fa-bell fa-lg"></i>{{/isprimary}}
+            {{/icon}}
+        </div>
+
+        <div class="jb-flex-grow-1">
+            {{#title}}
+            <h4 class="jb-alert-heading jb-fw-bold jb-mb-1">{{title}}</h4>
+            {{/title}}
+
+            <div class="jb-alert-content">
+                {{{message}}}
+            </div>
+
+            {{#list}}
+            <ul class="jb-mb-0 jb-mt-2 jb-pl-3">
+                {{#items}}
+                <li>{{.}}</li>
+                {{/items}}
+            </ul>
+            {{/list}}
+
+            {{#actions}}
+            <div class="jb-alert-actions jb-mt-3 jb-d-flex jb-gap-2 jb-flex-wrap">
+                {{#.}}
+                <a href="{{url}}" class="jb-btn jb-btn-sm jb-btn-{{#color}}{{color}}{{/color}}{{^color}}outline-{{type}}{{/color}}">
+                    {{#icon}}<i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>{{/icon}}
+                    {{label}}
+                </a>
+                {{/.}}
+            </div>
+            {{/actions}}
+        </div>
+
+        {{#dismissible}}
+        <button type="button"
+                class="jb-btn-close jb-ml-2"
+                data-dismiss="alert"
+                aria-label="{{#str}}dismiss, local_jobboard{{/str}}">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+        {{/dismissible}}
+    </div>
 </div>

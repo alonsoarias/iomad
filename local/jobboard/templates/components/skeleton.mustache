@@ -1,0 +1,184 @@
+{{!
+    @template local_jobboard/components/skeleton
+
+    Skeleton loading placeholder component for content loading states.
+    Provides visual feedback while content is being loaded.
+
+    Context variables:
+    * type (string) - Skeleton type: text, title, card, avatar, stat, table, list
+    * lines (number) - Number of text lines (for text type, default: 3)
+    * width (string) - Custom width (e.g., "50%", "200px")
+    * height (string) - Custom height
+    * rows (number) - Number of rows (for table/list type, default: 5)
+    * columns (number) - Number of columns (for table type, default: 4)
+    * count (number) - Number of skeleton items to render
+    * animate (bool) - Enable animation (default: true)
+
+    Example context (json):
+    {
+        "type": "card",
+        "count": 3
+    }
+}}
+{{! Single skeleton or multiple based on count }}
+{{#count}}
+<div class="jb-d-flex jb-flex-wrap jb-gap-3" role="status" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+{{/count}}
+{{^count}}
+<div role="status" aria-busy="true" aria-label="{{#str}}loading{{/str}}" class="jb-skeleton-wrapper">
+{{/count}}
+
+{{! Repeat for count or single }}
+{{#type}}
+
+{{! TEXT SKELETON }}
+{{#istext}}
+<div class="jb-skeleton-text-block"{{#width}} style="width: {{width}}"{{/width}}>
+    <div class="jb-skeleton-text" style="width: 100%;"></div>
+    <div class="jb-skeleton-text" style="width: 90%;"></div>
+    <div class="jb-skeleton-text" style="width: 75%;"></div>
+    {{#extralines}}
+    <div class="jb-skeleton-text" style="width: 85%;"></div>
+    <div class="jb-skeleton-text" style="width: 60%;"></div>
+    {{/extralines}}
+</div>
+{{/istext}}
+
+{{! TITLE SKELETON }}
+{{#istitle}}
+<div class="jb-skeleton-title"{{#width}} style="width: {{width}}"{{/width}}{{^width}} style="width: 60%"{{/width}}></div>
+{{/istitle}}
+
+{{! AVATAR SKELETON }}
+{{#isavatar}}
+<div class="jb-skeleton-circle"{{#width}} style="width: {{width}}; height: {{width}}"{{/width}}></div>
+{{/isavatar}}
+
+{{! CARD SKELETON }}
+{{#iscard}}
+<div class="jb-card jb-card-shadow">
+    <div class="jb-card-header jb-bg-light">
+        <div class="jb-skeleton-text" style="width: 50%; height: 1.2em;"></div>
+    </div>
+    <div class="jb-card-body">
+        <div class="jb-skeleton-text" style="width: 100%;"></div>
+        <div class="jb-skeleton-text" style="width: 85%;"></div>
+        <div class="jb-skeleton-text" style="width: 70%;"></div>
+    </div>
+</div>
+{{/iscard}}
+
+{{! STAT CARD SKELETON }}
+{{#isstat}}
+<div class="jb-card jb-card-shadow jb-stat-card">
+    <div class="jb-card-body jb-d-flex jb-align-items-center">
+        <div class="jb-skeleton-circle jb-mr-3" style="width: 48px; height: 48px;"></div>
+        <div class="jb-flex-grow-1">
+            <div class="jb-skeleton-title" style="width: 40%;"></div>
+            <div class="jb-skeleton-text" style="width: 60%;"></div>
+        </div>
+    </div>
+</div>
+{{/isstat}}
+
+{{! TABLE SKELETON }}
+{{#istable}}
+<div class="jb-table-responsive">
+    <table class="jb-table">
+        <thead>
+            <tr>
+                <th><div class="jb-skeleton-text" style="width: 60%;"></div></th>
+                <th><div class="jb-skeleton-text" style="width: 70%;"></div></th>
+                <th><div class="jb-skeleton-text" style="width: 50%;"></div></th>
+                <th><div class="jb-skeleton-text" style="width: 40%;"></div></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+            </tr>
+            <tr>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+            </tr>
+            <tr>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+            </tr>
+            <tr>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+            </tr>
+            <tr>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+                <td><div class="jb-skeleton-text"></div></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{{/istable}}
+
+{{! LIST SKELETON }}
+{{#islist}}
+<ul class="jb-list-group">
+    <li class="jb-list-group-item jb-d-flex jb-align-items-center">
+        <div class="jb-skeleton-circle jb-mr-3" style="width: 40px; height: 40px;"></div>
+        <div class="jb-flex-grow-1">
+            <div class="jb-skeleton-text" style="width: 70%;"></div>
+            <div class="jb-skeleton-text" style="width: 40%;"></div>
+        </div>
+    </li>
+    <li class="jb-list-group-item jb-d-flex jb-align-items-center">
+        <div class="jb-skeleton-circle jb-mr-3" style="width: 40px; height: 40px;"></div>
+        <div class="jb-flex-grow-1">
+            <div class="jb-skeleton-text" style="width: 60%;"></div>
+            <div class="jb-skeleton-text" style="width: 50%;"></div>
+        </div>
+    </li>
+    <li class="jb-list-group-item jb-d-flex jb-align-items-center">
+        <div class="jb-skeleton-circle jb-mr-3" style="width: 40px; height: 40px;"></div>
+        <div class="jb-flex-grow-1">
+            <div class="jb-skeleton-text" style="width: 80%;"></div>
+            <div class="jb-skeleton-text" style="width: 35%;"></div>
+        </div>
+    </li>
+    <li class="jb-list-group-item jb-d-flex jb-align-items-center">
+        <div class="jb-skeleton-circle jb-mr-3" style="width: 40px; height: 40px;"></div>
+        <div class="jb-flex-grow-1">
+            <div class="jb-skeleton-text" style="width: 55%;"></div>
+            <div class="jb-skeleton-text" style="width: 45%;"></div>
+        </div>
+    </li>
+</ul>
+{{/islist}}
+
+{{! INLINE SKELETON (generic) }}
+{{#isinline}}
+<span class="jb-skeleton jb-d-inline-block" style="width: {{#width}}{{width}}{{/width}}{{^width}}100px{{/width}}; height: {{#height}}{{height}}{{/height}}{{^height}}1em{{/height}};"></span>
+{{/isinline}}
+
+{{/type}}
+
+{{! Default: text block }}
+{{^type}}
+<div class="jb-skeleton-text-block">
+    <div class="jb-skeleton-text" style="width: 100%;"></div>
+    <div class="jb-skeleton-text" style="width: 90%;"></div>
+    <div class="jb-skeleton-text" style="width: 75%;"></div>
+</div>
+{{/type}}
+
+</div>
+
+<span class="jb-sr-only">{{#str}}loading{{/str}}</span>
