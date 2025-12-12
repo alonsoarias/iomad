@@ -5,6 +5,30 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2025-12-12
+
+### Added
+- **Phase 2: AMD JavaScript Modules** - 12 modules in `amd/src/`
+  - `signup_form.js`: IOMAD company/department AJAX loading
+  - `progress_steps.js`: Multi-step form navigation indicator
+  - `loading_states.js`: Form submission feedback and spinners
+  - `document_preview.js`: Document preview with modal viewer
+  - `card_actions.js`: Vacancy/convocatoria card interactions
+  - `public_filters.js`: Dynamic filter form with AJAX results
+  - `apply_progress.js`: Tab-based application form navigation
+  - `application_confirm.js`: Submission confirmation modal
+  - `vacancy_form.js`: Dynamic company/dept/convocatoria selects
+  - `convocatoria_form.js`: Dynamic selectors with date validation
+  - `bulk_actions.js`: Checkbox selection and batch operations
+  - `exemption_form.js`: Quick select document type groups
+
+- **Language strings**: Added ~1,300 additional strings
+  - Complete coverage of all plugin features
+  - Both English and Spanish (Colombian) translations
+
+### Removed
+- Dark mode CSS support (prefers-color-scheme media query)
+
 ## [3.1.24] - 2025-12-12
 
 ### Added
@@ -19,7 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Table, form, alert, and list-group components
   - Progress bars, timeline, stat cards
   - Theme compatibility (Boost, Classic, Remui, Flavor)
-  - Dark mode support via CSS media query
 
 - **lang/en/local_jobboard.php**: English language strings (~1,000 strings)
   - Plugin identification and all 31 capabilities
@@ -123,10 +146,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Roadmap
 
-### Phase 2: AMD Modules (Planned)
-- Create `amd/src/` folder structure
-- Implement 15 JavaScript modules
-- Use Moodle core AMD modules (no jQuery/Bootstrap JS)
+### Phase 2: AMD Modules ✅ COMPLETED (v3.2.0)
+- Created `amd/src/` folder structure
+- Implemented 12 JavaScript modules
+- Uses Moodle core AMD modules (no jQuery/Bootstrap JS)
 
 ### Phase 3: Renderer Refactoring (Planned)
 - Split `renderer.php` (6,162 lines) into specialized renderers
