@@ -27,10 +27,10 @@
 }}
 
 <div class="jb-local-jobboard-import-exemptions" data-region="jobboard-import-exemptions">
-    {{! Page Heading }}}
+    {{! Page Heading }}
     <h2 class="jb-mb-4">{{pagetitle}}</h2>
 
-    {{! Instructions Card }}}
+    {{! Instructions Card }}
     <div class="jb-card jb-mb-4">
         <div class="jb-card-header">
             <h5 class="jb-mb-0">{{str.instructions_title}}</h5>
@@ -38,7 +38,7 @@
         <div class="jb-card-body">
             <p>{{str.instructions_text}}</p>
 
-            {{! Required Columns }}}
+            {{! Required Columns }}
             <h6>{{str.required_columns}}</h6>
             <ul>
                 <li>
@@ -47,7 +47,7 @@
                 </li>
             </ul>
 
-            {{! Optional Columns }}}
+            {{! Optional Columns }}
             <h6>{{str.optional_columns}}</h6>
             <ul>
                 <li><code>exemptiontype</code> - {{str.exemptiontype_desc}}</li>
@@ -56,12 +56,12 @@
                 <li><code>notes</code> - {{str.notes_desc}}</li>
             </ul>
 
-            {{! Sample CSV }}}
+            {{! Sample CSV }}
             <h6>{{str.sample_csv}}</h6>
             <pre class="jb-bg-light jb-p-2">{{{sample}}}</pre>
         </div>
     </div>
 
-    {{! Form }}}
+    {{! Form }}
     {{{formhtml}}}
 </div>

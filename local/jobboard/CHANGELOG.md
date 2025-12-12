@@ -5,6 +5,26 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.8] - 2025-12-12
+
+### Fixed
+- **Mustache Template Syntax Errors**: Fixed comment block syntax in 8 templates
+  - Changed `{{! comment }}}` to `{{! comment }}` (triple to double closing braces)
+  - Affected files:
+    - `pages/admin_roles.mustache`
+    - `pages/import_exemptions.mustache`
+    - `pages/import_exemptions_results.mustache`
+    - `pages/interview_complete_form.mustache`
+    - `pages/program_reviewers.mustache`
+    - `pages/reports.mustache`
+    - `pages/reupload_document.mustache`
+    - `pages/signup_success.mustache`
+  - Triple braces `{{{var}}}` for unescaped HTML output remain intact
+
+### Technical Notes
+- Mustache comments should end with `}}` not `}}}`
+- Triple braces `{{{...}}}` are only valid for variable output (unescaped HTML), not for comments
+
 ## [3.6.7] - 2025-12-12
 
 ### Changed

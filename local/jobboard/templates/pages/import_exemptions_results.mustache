@@ -28,18 +28,18 @@
 }}
 
 <div class="jb-local-jobboard-import-results" data-region="jobboard-import-exemptions-results">
-    {{! Page Heading }}}
+    {{! Page Heading }}
     <h2 class="jb-mb-4">{{pagetitle}}</h2>
 
     {{#ispreview}}
-    {{! Preview Mode Notice }}}
+    {{! Preview Mode Notice }}
     <div class="jb-alert jb-alert-info">
         <i class="fa fa-info-circle jb-mr-2"></i>
         {{str.preview_notice}}
     </div>
 
     {{#haspreview}}
-    {{! Preview Table }}}
+    {{! Preview Table }}
     <div class="jb-table-responsive jb-mb-3">
         <table class="jb-table jb-table-striped">
             <thead>
@@ -69,13 +69,13 @@
         {{str.preview_total}}
     </p>
 
-    {{! Confirm Import Form }}}
+    {{! Confirm Import Form }}
     <p>{{str.preview_confirm}}</p>
     {{/haspreview}}
     {{/ispreview}}
 
     {{^ispreview}}
-    {{! Actual Import Results }}}
+    {{! Actual Import Results }}
     <div class="jb-alert jb-alert-success">
         <strong>{{str.import_complete}}</strong><br>
         {{str.imported_success}}<br>
@@ -85,7 +85,7 @@
     </div>
     {{/ispreview}}
 
-    {{! Errors Section }}}
+    {{! Errors Section }}
     {{#haserrors}}
     <div class="jb-alert jb-alert-warning">
         <strong>{{str.import_errors}}</strong><br>
@@ -100,7 +100,7 @@
     </div>
     {{/haserrors}}
 
-    {{! Continue Button }}}
+    {{! Continue Button }}
     <a href="{{continueurl}}" class="jb-btn jb-btn-primary">
         {{str.continue}}
     </a>

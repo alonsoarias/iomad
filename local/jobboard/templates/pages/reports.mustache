@@ -32,7 +32,7 @@
     }
 }}
 <div class="jb-reports-container" data-region="jobboard-reports">
-    {{! Page Header }}}
+    {{! Page Header }}
     <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
         <h1 class="jb-fs-3 jb-mb-0">
             <i class="fa fa-chart-bar jb-text-primary jb-mr-2" aria-hidden="true"></i>
@@ -48,7 +48,7 @@
         </div>
     </header>
 
-    {{! Report Type Tabs }}}
+    {{! Report Type Tabs }}
     <nav class="jb-mb-4" aria-label="{{#str}}reporttypes, local_jobboard{{/str}}">
         <ul class="jb-nav jb-nav-pills jb-flex-wrap" role="tablist">
             {{#reporttypes}}
@@ -63,7 +63,7 @@
         </ul>
     </nav>
 
-    {{! Convocatoria Selection Card - AGENTS.md 16.1: REQUIRED before viewing reports }}}
+    {{! Convocatoria Selection Card - AGENTS.md 16.1: REQUIRED before viewing reports }}
     {{#noconvocatoriaselected}}
     <section class="jb-card jb-card-shadow jb-mb-4 jb-border-warning" aria-labelledby="convocatoria-select-heading">
         <div class="jb-card-header jb-bg-warning jb-text-dark">
@@ -98,7 +98,7 @@
     {{/noconvocatoriaselected}}
 
     {{^noconvocatoriaselected}}
-    {{! Current Convocatoria Banner }}}
+    {{! Current Convocatoria Banner }}
     {{#selectedconvocatoriaid}}
     <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4" role="alert">
         <i class="fa fa-calendar-alt jb-mr-3 jb-fs-4" aria-hidden="true"></i>
@@ -112,7 +112,7 @@
     </div>
     {{/selectedconvocatoriaid}}
 
-    {{! Filter Card }}}
+    {{! Filter Card }}
     <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="filters-heading">
         <div class="jb-card-body">
             <form class="jb-form-inline jb-d-flex jb-flex-wrap jb-align-items-end" method="get" action="{{filteraction}}">
@@ -120,7 +120,7 @@
                 <input type="hidden" name="report" value="{{currentreport}}">
                 <input type="hidden" name="convocatoriaid" value="{{selectedconvocatoriaid}}">
 
-                {{! Vacancy Filter (within selected convocatoria) }}}
+                {{! Vacancy Filter (within selected convocatoria) }}
                 <div class="jb-form-group jb-mr-3 jb-mb-2">
                     <label class="jb-d-block jb-small jb-text-muted jb-mb-1" for="filter-vacancy">
                         {{#str}}vacancy, local_jobboard{{/str}}
@@ -133,7 +133,7 @@
                     </select>
                 </div>
 
-                {{! Date From }}}
+                {{! Date From }}
                 <div class="jb-form-group jb-mr-3 jb-mb-2">
                     <label class="jb-d-block jb-small jb-text-muted jb-mb-1" for="filter-datefrom">
                         {{#str}}datefrom, local_jobboard{{/str}}
@@ -142,7 +142,7 @@
                            class="jb-form-control jb-form-control-sm" value="{{datefrom}}">
                 </div>
 
-                {{! Date To }}}
+                {{! Date To }}
                 <div class="jb-form-group jb-mr-3 jb-mb-2">
                     <label class="jb-d-block jb-small jb-text-muted jb-mb-1" for="filter-dateto">
                         {{#str}}dateto, local_jobboard{{/str}}
@@ -160,15 +160,15 @@
     </section>
     {{/noconvocatoriaselected}}
 
-    {{! Report Content }}}
+    {{! Report Content }}
     {{#hasdata}}
     <div class="jb-report-content" data-report="{{currentreport}}">
 
-        {{! ================================================================== }}}
-        {{! OVERVIEW REPORT }}}
-        {{! ================================================================== }}}
+        {{! ================================================================== }}
+        {{! OVERVIEW REPORT }}
+        {{! ================================================================== }}
         {{#isoverview}}
-        {{! Stats Row }}}
+        {{! Stats Row }}
         <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
             {{#overview.stats}}
             <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
@@ -187,7 +187,7 @@
             {{/overview.stats}}
         </section>
 
-        {{! Status Breakdown Card }}}
+        {{! Status Breakdown Card }}
         <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="status-breakdown-heading">
             <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
                 <h2 class="jb-fs-5 jb-mb-0" id="status-breakdown-heading">
@@ -240,9 +240,9 @@
         </section>
         {{/isoverview}}
 
-        {{! ================================================================== }}}
-        {{! APPLICATIONS REPORT }}}
-        {{! ================================================================== }}}
+        {{! ================================================================== }}
+        {{! APPLICATIONS REPORT }}
+        {{! ================================================================== }}
         {{#isapplications}}
         <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="applications-heading">
             <div class="jb-card-header jb-bg-white">
@@ -299,11 +299,11 @@
         </section>
         {{/isapplications}}
 
-        {{! ================================================================== }}}
-        {{! DOCUMENTS REPORT }}}
-        {{! ================================================================== }}}
+        {{! ================================================================== }}
+        {{! DOCUMENTS REPORT }}
+        {{! ================================================================== }}
         {{#isdocuments}}
-        {{! Stats Row }}}
+        {{! Stats Row }}
         <section class="jb-row jb-mb-4" aria-label="{{#str}}documentstats, local_jobboard{{/str}}">
             {{#documents.stats}}
             <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
@@ -323,7 +323,7 @@
         </section>
 
         <div class="jb-row">
-            {{! Rejection Reasons Card }}}
+            {{! Rejection Reasons Card }}
             <div class="jb-col-lg-6 jb-mb-4">
                 <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="rejection-reasons-heading">
                     <div class="jb-card-header jb-bg-white">
@@ -350,7 +350,7 @@
                 </section>
             </div>
 
-            {{! Pending by Type Card }}}
+            {{! Pending by Type Card }}
             <div class="jb-col-lg-6 jb-mb-4">
                 <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="pending-type-heading">
                     <div class="jb-card-header jb-bg-white">
@@ -378,7 +378,7 @@
             </div>
         </div>
 
-        {{! By Document Type Table }}}
+        {{! By Document Type Table }}
         <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="bytype-heading">
             <div class="jb-card-header jb-bg-white">
                 <h2 class="jb-fs-5 jb-mb-0" id="bytype-heading">
@@ -425,9 +425,9 @@
         </section>
         {{/isdocuments}}
 
-        {{! ================================================================== }}}
-        {{! REVIEWERS REPORT }}}
-        {{! ================================================================== }}}
+        {{! ================================================================== }}
+        {{! REVIEWERS REPORT }}
+        {{! ================================================================== }}
         {{#isreviewers}}
         <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="reviewers-heading">
             <div class="jb-card-header jb-bg-white">
@@ -481,9 +481,9 @@
         </section>
         {{/isreviewers}}
 
-        {{! ================================================================== }}}
-        {{! TIMELINE REPORT }}}
-        {{! ================================================================== }}}
+        {{! ================================================================== }}
+        {{! TIMELINE REPORT }}
+        {{! ================================================================== }}
         {{#istimeline}}
         <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="timeline-heading">
             <div class="jb-card-header jb-bg-white">
@@ -543,7 +543,7 @@
     </div>
     {{/hasdata}}
 
-    {{! Navigation Footer }}}
+    {{! Navigation Footer }}
     <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
         <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">

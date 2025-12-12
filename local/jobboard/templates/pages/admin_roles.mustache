@@ -22,7 +22,7 @@
     }
 }}
 <div class="jb-admin-roles" data-region="jobboard-admin-roles">
-    {{! Page Header }}}
+    {{! Page Header }}
     <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
         <h1 class="jb-fs-3 jb-mb-0">
             <i class="fa fa-user-tag jb-text-primary jb-mr-2" aria-hidden="true"></i>
@@ -34,7 +34,7 @@
         </a>
     </header>
 
-    {{! Statistics Cards }}}
+    {{! Statistics Cards }}
     <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
             <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-info">
@@ -69,7 +69,7 @@
     </section>
 
     {{^selectedrole}}
-    {{! Role Selection View }}}
+    {{! Role Selection View }}
     <section aria-labelledby="roles-heading">
         <h4 class="jb-mb-3" id="roles-heading">
             <i class="fa fa-user-tag jb-mr-2" aria-hidden="true"></i>
@@ -81,7 +81,7 @@
             <div class="jb-col-lg-4 jb-col-md-6 jb-mb-4">
                 <div class="jb-card jb-card-shadow jb-h-100">
                     <div class="jb-card-body">
-                        {{! Role Header }}}
+                        {{! Role Header }}
                         <div class="jb-d-flex jb-align-items-center jb-mb-3">
                             <div class="jb-icon-circle jb-bg-{{color}}-light jb-mr-3">
                                 <i class="fa fa-{{icon}} jb-fs-4 jb-text-{{color}}" aria-hidden="true"></i>
@@ -92,10 +92,10 @@
                             </div>
                         </div>
 
-                        {{! Description }}}
+                        {{! Description }}
                         <p class="jb-text-muted jb-small jb-mb-3">{{description}}</p>
 
-                        {{! Capabilities Preview }}}
+                        {{! Capabilities Preview }}
                         {{#hascaps}}
                         <div class="jb-mb-3">
                             <small class="jb-d-block jb-text-muted jb-mb-1">{{#str}}capabilities, local_jobboard{{/str}}:</small>
@@ -105,7 +105,7 @@
                         </div>
                         {{/hascaps}}
 
-                        {{! Actions }}}
+                        {{! Actions }}
                         <div class="jb-d-flex">
                             {{#roleexists}}
                             <a href="{{manageurl}}" class="jb-btn jb-btn-{{color}} jb-btn-sm">
@@ -129,13 +129,13 @@
     {{/selectedrole}}
 
     {{#selectedrole}}
-    {{! Single Role Management View }}}
+    {{! Single Role Management View }}
     <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-sm jb-mb-3">
         <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
         {{#str}}backtorolelist, local_jobboard{{/str}}
     </a>
 
-    {{! Role Header Card }}}
+    {{! Role Header Card }}
     <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="selected-role-heading">
         <div class="jb-card-header jb-bg-{{selectedrole.color}} jb-text-white">
             <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
@@ -152,7 +152,7 @@
     </section>
 
     <div class="jb-row">
-        {{! Left Column: Assigned Users }}}
+        {{! Left Column: Assigned Users }}
         <div class="jb-col-lg-7 jb-mb-4">
             <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="assigned-users-heading">
                 <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
@@ -206,7 +206,7 @@
             </section>
         </div>
 
-        {{! Right Column: Assign New Users }}}
+        {{! Right Column: Assign New Users }}
         <div class="jb-col-lg-5 jb-mb-4">
             <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="assign-users-heading">
                 <div class="jb-card-header jb-bg-success jb-text-white">
@@ -221,14 +221,14 @@
                         <input type="hidden" name="action" value="assign">
                         <input type="hidden" name="role" value="{{selectedrole.shortname}}">
 
-                        {{! Search Input }}}
+                        {{! Search Input }}
                         <div class="jb-form-group jb-mb-3">
                             <label class="jb-form-label" for="usersearch">{{#str}}searchusers, local_jobboard{{/str}}</label>
                             <input type="text" class="jb-form-control" id="usersearch"
                                    placeholder="{{#str}}searchusersplaceholder, local_jobboard{{/str}}" autocomplete="off">
                         </div>
 
-                        {{! User Selection }}}
+                        {{! User Selection }}
                         <div class="jb-form-group jb-mb-3">
                             <label class="jb-form-label">{{#str}}selectusers, local_jobboard{{/str}}</label>
                             <select name="userids[]" id="userselect" class="jb-form-control" multiple size="10">
@@ -250,7 +250,7 @@
     </div>
     {{/selectedrole}}
 
-    {{! Navigation Footer }}}
+    {{! Navigation Footer }}
     <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
         <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
@@ -270,7 +270,7 @@
 </div>
 
 {{#selectedrole}}
-{{! JavaScript for user search filtering }}}
+{{! JavaScript for user search filtering }}
 {{#js}}
 document.getElementById('usersearch').addEventListener('keyup', function() {
     var filter = this.value.toLowerCase();
