@@ -100,6 +100,7 @@ list($options, $unrecognized) = cli_get_params([
     'reset-convocatorias' => false,
     'verbose' => false,
     'export-json' => null,
+    'create-sample' => false,
 ], [
     'h' => 'help',
     'i' => 'input',
@@ -118,6 +119,7 @@ list($options, $unrecognized) = cli_get_params([
     'x' => 'csv',
     'J' => 'json',
     'T' => 'export-csv-template',
+    'S' => 'create-sample',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -176,6 +178,8 @@ CSV IMPORT:
 MOODLE-ONLY OPTIONS:
   -C, --create-structure  AUTO-CREATE IOMAD companies (sedes) and departments
                           (modalidades) based on profile data
+  -S, --create-sample     CREATE SAMPLE VACANCIES (4 per sede) without input file
+                          Automatically includes --create-structure behavior
   -p, --publish           AUTO-CREATE convocatoria and PUBLISH vacancies
   -P, --public            Make vacancies PUBLIC (visible without login)
   -r, --reset             DELETE all existing vacancies before import
@@ -193,7 +197,10 @@ MOODLE-ONLY OPTIONS:
   -s, --status=STATUS     Initial status: draft|published (default: draft)
 
 EXAMPLES:
-  # RECOMMENDED: Full import from text files with structure creation
+  # CREATE SAMPLE DATA: 4 vacancies per sede (no input file needed)
+  php cli.php --create-sample --publish --public
+
+  # Full import from text files with structure creation
   php cli.php --create-structure --publish --public
 
   # Import from CSV file
@@ -390,8 +397,12 @@ $inputdir = $options['input'] ?? $plugindir . '/PERFILESPROFESORES_TEXT';
 $csvfile = $options['csv'] ?? null;
 $jsonfile = $options['json'] ?? null;
 
-// Validate input source.
-if ($jsonfile) {
+// Validate input source (skip if --create-sample).
+$createsample = $options['create-sample'];
+if ($createsample) {
+    // --create-sample implies --create-structure.
+    $options['create-structure'] = true;
+} else if ($jsonfile) {
     // Check relative to plugin dir if not absolute.
     if (!file_exists($jsonfile) && file_exists($plugindir . '/' . $jsonfile)) {
         $jsonfile = $plugindir . '/' . $jsonfile;
@@ -440,7 +451,9 @@ if ($shouldpublish) {
 // ============================================================
 
 cli_heading('ISER Job Board - Profile Import v2.2');
-if ($jsonfile) {
+if ($createsample) {
+    echo "Mode: CREATE SAMPLE DATA (4 vacancies per sede)\n";
+} else if ($jsonfile) {
     echo "Input JSON: $jsonfile\n";
 } else if ($csvfile) {
     echo "Input CSV: $csvfile\n";
@@ -450,6 +463,7 @@ if ($jsonfile) {
 echo "Open date: " . date('Y-m-d', $opendate) . "\n";
 echo "Close date: " . date('Y-m-d', $closedate) . "\n";
 echo "Create structure: " . ($options['create-structure'] ? 'YES (companies + departments)' : 'NO') . "\n";
+echo "Create sample: " . ($createsample ? 'YES (4 vacancies per sede)' : 'NO') . "\n";
 echo "Auto-publish: " . ($shouldpublish ? 'YES' : 'NO') . "\n";
 echo "Publication type: " . ($options['public'] ? 'PUBLIC' : 'INTERNAL') . "\n";
 echo "Status: {$options['status']}\n";
@@ -467,7 +481,102 @@ $allprofiles = [];
 $parsestats = ['files' => 0, 'profiles' => 0, 'fcas' => 0, 'fii' => 0];
 $locationstats = [];
 
-if ($jsonfile) {
+// Sample programs for generating sample data.
+$SAMPLE_PROGRAMS = [
+    'FCAS' => [
+        'name' => 'Facultad de Ciencias Administrativas y Sociales',
+        'programs' => [
+            'TGC' => [
+                'name' => 'Tecnología en Gestión Comunitaria',
+                'courses' => ['Sistematización de Experiencias', 'Sujeto y Familia', 'Dirección de Trabajo de Grado', 'Desarrollo Comunitario'],
+            ],
+            'TGE' => [
+                'name' => 'Tecnología en Gestión Empresarial',
+                'courses' => ['Emprendimiento', 'Administración General', 'Contabilidad Básica', 'Mercadeo'],
+            ],
+        ],
+    ],
+    'FII' => [
+        'name' => 'Facultad de Ingenierías e Innovación',
+        'programs' => [
+            'TGI' => [
+                'name' => 'Tecnología en Gestión Industrial',
+                'courses' => ['Ergonomía', 'Gestión de Seguridad y Salud en el Trabajo', 'Gestión del Talento Humano', 'Control de Calidad'],
+            ],
+            'TGINF' => [
+                'name' => 'Tecnología en Gestión Informática',
+                'courses' => ['Programación I', 'Bases de Datos', 'Redes de Computadores', 'Desarrollo Web'],
+            ],
+        ],
+    ],
+];
+
+if ($createsample) {
+    // Generate sample vacancies: 4 per sede.
+    cli_heading('Phase 1: Generating Sample Vacancy Data');
+
+    $modalidades = ['PRESENCIAL', 'DISTANCIA', 'VIRTUAL', 'HIBRIDA'];
+    $contracttypes = ['CATEDRA', 'OCASIONAL TIEMPO COMPLETO'];
+    $sedecount = 0;
+
+    foreach ($ISER_SEDES as $sedekey => $sedeinfo) {
+        $sedecount++;
+        $vacnum = 0;
+
+        // Generate 4 vacancies per sede (1 per modalidad, rotating programs).
+        $allprograms = [];
+        foreach ($SAMPLE_PROGRAMS as $faculty => $facultydata) {
+            foreach ($facultydata['programs'] as $progkey => $progdata) {
+                $allprograms[] = [
+                    'faculty' => $faculty,
+                    'progkey' => $progkey,
+                    'progdata' => $progdata,
+                    'facultyname' => $facultydata['name'],
+                ];
+            }
+        }
+
+        foreach ($modalidades as $modidx => $modality) {
+            $vacnum++;
+            $prog = $allprograms[$modidx % count($allprograms)];
+            $contracttype = $contracttypes[$vacnum % 2];
+
+            $code = "SAMPLE-{$sedekey}-{$prog['faculty']}-{$prog['progkey']}-" . str_pad($vacnum, 2, '0', STR_PAD_LEFT);
+
+            $allprofiles[$code] = [
+                'code' => $code,
+                'program' => $prog['progdata']['name'],
+                'profile' => "Docente para el programa de {$prog['progdata']['name']}",
+                'courses' => $prog['progdata']['courses'],
+                'faculty' => $prog['faculty'],
+                'location' => $sedekey,
+                'modality' => $modality,
+                'contracttype' => $contracttype,
+            ];
+
+            $parsestats['profiles']++;
+            if ($prog['faculty'] === 'FCAS') $parsestats['fcas']++;
+            else $parsestats['fii']++;
+
+            $locationstats[$sedekey] = ($locationstats[$sedekey] ?? 0) + 1;
+        }
+
+        if ($verbose) {
+            echo "  {$sedeinfo['name']}: 4 vacancies generated\n";
+        }
+    }
+
+    echo "\nSample data generation complete:\n";
+    echo "  Sedes processed: $sedecount\n";
+    echo "  Total vacancies: {$parsestats['profiles']}\n";
+    echo "    - FCAS: {$parsestats['fcas']}\n";
+    echo "    - FII: {$parsestats['fii']}\n";
+    echo "\n  By location:\n";
+    foreach ($locationstats as $loc => $cnt) {
+        echo "    - $loc: $cnt\n";
+    }
+
+} else if ($jsonfile) {
     // Import from JSON file.
     cli_heading('Phase 1: Importing from JSON File');
 
