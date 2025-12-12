@@ -441,8 +441,8 @@ trait exemption_renderer {
         $revokedbyinfo = '';
         $revokereason = '';
         if ($exemption->timerevoked) {
-            $revokedby = $DB->get_record('user', ['id' => $exemption->revokedby]);
-            $revokedbyinfo = fullname($revokedby) . ' - ' . userdate($exemption->timerevoked, '%Y-%m-%d %H:%M');
+            $revokedby = $DB->get_record('user', ['id' => $exemption->revokedby]) ?: null;
+            $revokedbyinfo = ($revokedby ? fullname($revokedby) : get_string('unknownuser', 'local_jobboard')) . ' - ' . userdate($exemption->timerevoked, '%Y-%m-%d %H:%M');
             $revokereason = format_text($exemption->revokereason);
         }
 

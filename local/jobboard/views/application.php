@@ -112,6 +112,9 @@ $documents = document::get_for_application($application->id);
 
 // Get applicant info.
 $applicant = $DB->get_record('user', ['id' => $application->userid]);
+if (!$applicant) {
+    throw new moodle_exception('error:usernotfound', 'local_jobboard');
+}
 
 // Check for exemption.
 $exemption = exemption::get_active_for_user($application->userid);

@@ -17,7 +17,7 @@
 }}
 <div class="local-jobboard-manage" data-region="jobboard-manage">
     {{! Breadcrumb }}
-    {{> local_jobboard/components/breadcrumb items=breadcrumbs }}
+    {{> local_jobboard/components/breadcrumb }}
 
     {{! Page Header }}
     <div class="jb-page-header jb-mb-4">
@@ -176,7 +176,7 @@
 
     {{! Pagination }}
     {{#pagination}}
-    <nav class="jb-mt-4" aria-label="{{#str}}pagination{{/str}}">
+    <nav class="jb-mt-4" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
         {{{pagination}}}
     </nav>
     {{/pagination}}

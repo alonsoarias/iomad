@@ -904,7 +904,7 @@ if ($shouldpublish && empty($convocatoriaid)) {
             $convocatoriaids[0] = $existingclosed->id;
         } else if (!$dryrun) {
             $closedstart = strtotime('-60 days');
-            $closedend = strtotime('-10 days');
+            $closedend = strtotime('-30 days');
 
             $closedconv = new stdClass();
             $closedconv->code = $closedcode;
@@ -933,7 +933,7 @@ if ($shouldpublish && empty($convocatoriaid)) {
             $convocatoriaids[1] = $existingopen->id;
         } else if (!$dryrun) {
             $openstart = $now;
-            $openend = strtotime('+60 days');
+            $openend = strtotime('+30 days');
 
             $openconv = new stdClass();
             $openconv->code = $opencode;

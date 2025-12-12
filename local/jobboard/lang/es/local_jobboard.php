@@ -3171,3 +3171,7 @@ $string['tour_reports_table_title'] = 'Tabla de Datos';
 $string['tour_reports_table_content'] = 'Los datos detallados se muestran en esta tabla. Haga clic en los encabezados para ordenar.';
 $string['tour_reports_progress_title'] = 'Barras de Progreso';
 $string['tour_reports_progress_content'] = 'Representación visual de porcentajes y progreso.';
+
+// Mensajes de error
+$string['error:usernotfound'] = 'Usuario no encontrado';
+$string['unknownuser'] = 'Usuario desconocido';

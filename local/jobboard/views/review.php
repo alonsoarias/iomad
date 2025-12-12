@@ -210,6 +210,9 @@ if (!$applicationid) {
 
     $vacancyobj = new vacancy($application->vacancyid);
     $applicant = $DB->get_record('user', ['id' => $application->userid]);
+    if (!$applicant) {
+        throw new moodle_exception('error:usernotfound', 'local_jobboard');
+    }
     $documents = document::get_by_application($applicationid);
 
     // Build navigation data.

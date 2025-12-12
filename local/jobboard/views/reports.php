@@ -105,7 +105,6 @@ foreach ($convocatorias as $conv) {
 // Prepare template data.
 $data = $renderer->prepare_reports_page_data(
     $reporttype,
-    $convocatoriaid,
     $vacancyid,
     $datefrom,
     $dateto,

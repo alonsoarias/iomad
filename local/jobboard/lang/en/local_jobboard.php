@@ -3168,3 +3168,7 @@ $string['currentconvocatoria'] = 'Current Convocatoria';
 $string['changeconvocatoria'] = 'Change Convocatoria';
 $string['noconvocatorias_forreports'] = 'No convocatorias available. You must create at least one convocatoria before viewing reports.';
 $string['continue'] = 'Continue';
+
+// Error messages
+$string['error:usernotfound'] = 'User not found';
+$string['unknownuser'] = 'Unknown user';

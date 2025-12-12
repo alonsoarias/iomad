@@ -516,6 +516,9 @@ trait review_renderer {
 
         // Get applicant user.
         $applicant = $DB->get_record('user', ['id' => $application->userid]);
+        if (!$applicant) {
+            throw new \moodle_exception('error:usernotfound', 'local_jobboard');
+        }
 
         // Get document type name.
         $typename = get_string('doctype_' . $document->documenttype, 'local_jobboard');

@@ -74,7 +74,7 @@ if ($isloggedin) {
     $userapplication = $DB->get_record('local_jobboard_application', [
         'vacancyid' => $vacancy->id,
         'userid' => $USER->id,
-    ]);
+    ]) ?: null;
     $hasapplied = !empty($userapplication);
 }
 
