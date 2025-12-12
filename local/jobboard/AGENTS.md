@@ -16,7 +16,7 @@
 | Campo | Valor |
 |-------|-------|
 | **Componente** | `local_jobboard` |
-| **Versión Actual** | **3.4.0** (2025121251) |
+| **Versión Actual** | **3.5.0** (2025121252) |
 | **Tipo** | Plugin local de Moodle |
 | **Moodle requerido** | 4.1+ (2022112800) |
 | **Moodle soportado** | 4.1 - 4.5 |
@@ -40,10 +40,10 @@
 | Email templates | ✅ | 6 plantillas predefinidas |
 | Web Services | ✅ Eliminados | Removidos en v3.2.2 |
 | Sistema de migración | ✅ | migrate.php (importación/exportación) |
-| Privacy API | ⚠️ | Parcialmente implementada |
+| Privacy API | ✅ | Completa v3.5.0: todas las tablas con consent y applicant_profile |
 | Interfaz revisión mod_assign | ✅ | Implementada v3.3.0: split-pane, PDF preview, AJAX, shortcuts |
-| Reportes filtrados por convocatoria | ⚠️ | Parcialmente implementado |
-| Consolidación Dashboard | ⚠️ | Pendiente - Ver sección 22 |
+| Reportes filtrados por convocatoria | ✅ | Implementado v3.5.0: filtro obligatorio por convocatoria |
+| Consolidación Dashboard | ✅ | Implementado v3.5.0: banner convocatoria, notificaciones, actividad |
 
 ---
 
@@ -952,8 +952,13 @@ $plugin->release = 'X.Y.Z';     // Ej: '3.4.0'
 - [x] Crear 15 archivos JSON en db/tours/
 - [x] Agregar strings de idioma EN/ES (236 strings)
 
-### Fase 6: Consolidación Dashboard ⚠️ PENDIENTE
-- [ ] Ver sección 22 para detalles
+### Fase 6: Consolidación Dashboard ✅ COMPLETADA v3.5.0
+- [x] Banner de próxima convocatoria a cerrar (con indicadores de urgencia)
+- [x] Panel de notificaciones pendientes
+- [x] Timeline de actividad reciente (por rol)
+- [x] Filtro obligatorio por convocatoria en reportes
+- [x] Privacy API completa (consent, applicant_profile)
+- [x] Strings de idioma agregados (time ago, notifications, activities)
 
 ---
 

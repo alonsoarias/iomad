@@ -31,10 +31,30 @@ require_capability('local/jobboard:viewreports', $context);
 
 // Parameters.
 $reporttype = optional_param('report', 'overview', PARAM_ALPHA);
+$convocatoriaid = optional_param('convocatoriaid', 0, PARAM_INT);
 $vacancyid = optional_param('vacancyid', 0, PARAM_INT);
 $datefrom = optional_param('datefrom', 0, PARAM_INT);
 $dateto = optional_param('dateto', 0, PARAM_INT);
 $format = optional_param('format', '', PARAM_ALPHA);
+
+// AGENTS.md Section 16.1: ALL reports MUST be filtered by convocatoria.
+// User must select a convocatoria before viewing any report.
+$convocatorias = $DB->get_records('local_jobboard_convocatoria', null, 'startdate DESC', 'id, code, name, status');
+$requiresconvocatoria = true;
+
+// If no convocatoria selected, show convocatoria selector first.
+if (!$convocatoriaid && $requiresconvocatoria) {
+    // Check if there's at least one convocatoria.
+    if (empty($convocatorias)) {
+        // No convocatorias exist - show message.
+        $PAGE->set_title(get_string('reports', 'local_jobboard'));
+        $PAGE->set_heading(get_string('reports', 'local_jobboard'));
+        echo $OUTPUT->header();
+        echo $OUTPUT->notification(get_string('noconvocatorias_forreports', 'local_jobboard'), 'warning');
+        echo $OUTPUT->footer();
+        exit;
+    }
+}
 
 // Default date range: last 30 days.
 if (!$datefrom) {
@@ -44,6 +64,12 @@ if (!$dateto) {
     $dateto = time();
 }
 
+// Get selected convocatoria info.
+$selectedconvocatoria = null;
+if ($convocatoriaid) {
+    $selectedconvocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid]);
+}
+
 // Set up page.
 $PAGE->set_title(get_string('reports', 'local_jobboard'));
 $PAGE->set_heading(get_string('reports', 'local_jobboard'));
@@ -51,25 +77,49 @@ $PAGE->set_pagelayout('report');
 
 // Handle export.
 if ($format === 'csv' || $format === 'excel' || $format === 'pdf') {
-    local_jobboard_export_report($reporttype, $vacancyid, $datefrom, $dateto, $format);
+    local_jobboard_export_report($reporttype, $convocatoriaid, $vacancyid, $datefrom, $dateto, $format);
     exit;
 }
 
-// Get vacancy list for filter.
-$vacancies = $DB->get_records_select('local_jobboard_vacancy', '1=1', null, 'code ASC', 'id, code, title');
+// Get vacancy list for filter - filtered by convocatoria if selected.
+if ($convocatoriaid) {
+    $vacancies = $DB->get_records('local_jobboard_vacancy', ['convocatoriaid' => $convocatoriaid], 'code ASC', 'id, code, title');
+} else {
+    $vacancies = $DB->get_records_select('local_jobboard_vacancy', '1=1', null, 'code ASC', 'id, code, title');
+}
 
 // Get the renderer.
 $renderer = $PAGE->get_renderer('local_jobboard');
 
+// Prepare convocatoria options for selector.
+$convocatoriaoptions = [];
+foreach ($convocatorias as $conv) {
+    $convocatoriaoptions[] = [
+        'id' => $conv->id,
+        'label' => $conv->code . ' - ' . $conv->name,
+        'selected' => ($convocatoriaid == $conv->id),
+        'status' => $conv->status,
+    ];
+}
+
 // Prepare template data.
 $data = $renderer->prepare_reports_page_data(
     $reporttype,
+    $convocatoriaid,
     $vacancyid,
     $datefrom,
     $dateto,
     $vacancies,
     $context
 );
+
+// Add convocatoria filter data.
+$data['convocatorias'] = $convocatoriaoptions;
+$data['hasconvocatorias'] = !empty($convocatoriaoptions);
+$data['selectedconvocatoriaid'] = $convocatoriaid;
+$data['selectedconvocatoria'] = $selectedconvocatoria ? ($selectedconvocatoria->code . ' - ' . $selectedconvocatoria->name) : '';
+$data['requiresconvocatoria'] = $requiresconvocatoria;
+$data['noconvocatoriaselected'] = !$convocatoriaid && $requiresconvocatoria;
 
 // Output page.
 echo $OUTPUT->header();
@@ -80,20 +130,32 @@ echo $OUTPUT->footer();
  * Export report data.
  *
  * @param string $reporttype Report type.
+ * @param int $convocatoriaid Convocatoria ID filter (REQUIRED per AGENTS.md 16.1).
  * @param int $vacancyid Vacancy ID filter.
  * @param int $datefrom Start date timestamp.
  * @param int $dateto End date timestamp.
  * @param string $format Export format.
  */
-function local_jobboard_export_report(string $reporttype, int $vacancyid, int $datefrom, int $dateto, string $format): void {
+function local_jobboard_export_report(string $reporttype, int $convocatoriaid, int $vacancyid, int $datefrom, int $dateto, string $format): void {
     global $DB;
 
     $params = ['from' => $datefrom, 'to' => $dateto];
-    $vacancywhere = '';
+    $extrawhere = '';
+
+    // AGENTS.md 16.1: Filter by convocatoria is mandatory.
+    if ($convocatoriaid) {
+        $extrawhere .= ' AND v.convocatoriaid = :convocatoriaid';
+        $params['convocatoriaid'] = $convocatoriaid;
+    }
+
+    // Additional vacancy filter (within the convocatoria).
     if ($vacancyid) {
-        $vacancywhere = ' AND a.vacancyid = :vacancyid';
+        $extrawhere .= ' AND a.vacancyid = :vacancyid';
         $params['vacancyid'] = $vacancyid;
     }
+
+    // Legacy variable name kept for backwards compatibility.
+    $vacancywhere = $extrawhere;
 
     // Get data based on report type.
     $data = [];
@@ -101,19 +163,22 @@ function local_jobboard_export_report(string $reporttype, int $vacancyid, int $d
 
     switch ($reporttype) {
         case 'applications':
-            $headers = ['Vacancy', 'Applicant', 'Email', 'Status', 'Date Applied'];
+            $headers = ['Convocatoria', 'Vacancy', 'Applicant', 'Email', 'Status', 'Date Applied'];
             $records = $DB->get_records_sql(
-                "SELECT a.id, v.code, v.title, u.firstname, u.lastname, u.email, a.status, a.timecreated
+                "SELECT a.id, v.code, v.title, c.code as convcode, c.name as convname,
+                        u.firstname, u.lastname, u.email, a.status, a.timecreated
                    FROM {local_jobboard_application} a
                    JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                   LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
                    JOIN {user} u ON u.id = a.userid
-                  WHERE a.timecreated BETWEEN :from AND :to {$vacancywhere}
+                  WHERE a.timecreated BETWEEN :from AND :to {$extrawhere}
                   ORDER BY a.timecreated DESC",
                 $params
             );
 
             foreach ($records as $r) {
                 $data[] = [
+                    $r->convcode . ' - ' . $r->convname,
                     $r->code . ' - ' . $r->title,
                     $r->firstname . ' ' . $r->lastname,
                     $r->email,
@@ -124,14 +189,17 @@ function local_jobboard_export_report(string $reporttype, int $vacancyid, int $d
             break;
 
         case 'documents':
-            $headers = ['Application ID', 'Document Type', 'Status', 'Uploaded', 'Validated By'];
+            $headers = ['Application ID', 'Convocatoria', 'Document Type', 'Status', 'Uploaded', 'Validated By'];
             $records = $DB->get_records_sql(
                 "SELECT d.id, d.applicationid, d.documenttype, d.timecreated,
-                        COALESCE(dv.status, 'pending') as docstatus, dv.validatedby
+                        COALESCE(dv.status, 'pending') as docstatus, dv.validatedby,
+                        c.code as convcode, c.name as convname
                    FROM {local_jobboard_document} d
                    LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
                    JOIN {local_jobboard_application} a ON a.id = d.applicationid
-                  WHERE a.timecreated BETWEEN :from AND :to {$vacancywhere}
+                   JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                   LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
+                  WHERE a.timecreated BETWEEN :from AND :to {$extrawhere}
                   ORDER BY d.timecreated DESC",
                 $params
             );
@@ -144,6 +212,7 @@ function local_jobboard_export_report(string $reporttype, int $vacancyid, int $d
                 }
                 $data[] = [
                     $r->applicationid,
+                    $r->convcode . ' - ' . $r->convname,
                     get_string('doctype_' . $r->documenttype, 'local_jobboard'),
                     get_string('docstatus_' . $r->docstatus, 'local_jobboard'),
                     userdate($r->timecreated, '%Y-%m-%d %H:%M'),
@@ -154,7 +223,8 @@ function local_jobboard_export_report(string $reporttype, int $vacancyid, int $d
 
         case 'reviewers':
             $headers = ['Reviewer', 'Workload', 'Reviewed', 'Validated', 'Rejected'];
-            $reviewers = \local_jobboard\reviewer::get_all_with_workload();
+            // Get reviewers with workload, optionally filtered by convocatoria.
+            $reviewers = \local_jobboard\reviewer::get_all_with_workload($convocatoriaid);
 
             foreach ($reviewers as $rev) {
                 $data[] = [
@@ -171,7 +241,8 @@ function local_jobboard_export_report(string $reporttype, int $vacancyid, int $d
             $headers = ['Date', 'Applications'];
             $sql = "SELECT DATE(FROM_UNIXTIME(a.timecreated)) as day, COUNT(*) as count
                       FROM {local_jobboard_application} a
-                     WHERE a.timecreated BETWEEN :from AND :to {$vacancywhere}
+                      JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                     WHERE a.timecreated BETWEEN :from AND :to {$extrawhere}
                      GROUP BY DATE(FROM_UNIXTIME(a.timecreated))
                      ORDER BY day ASC";
             $daily = $DB->get_records_sql($sql, $params);
@@ -185,17 +256,20 @@ function local_jobboard_export_report(string $reporttype, int $vacancyid, int $d
             $headers = ['Metric', 'Value'];
             $totalapps = $DB->count_records_sql(
                 "SELECT COUNT(*) FROM {local_jobboard_application} a
-                  WHERE a.timecreated BETWEEN :from AND :to {$vacancywhere}",
+                   JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                  WHERE a.timecreated BETWEEN :from AND :to {$extrawhere}",
                 $params
             );
             $selectedapps = $DB->count_records_sql(
                 "SELECT COUNT(*) FROM {local_jobboard_application} a
-                  WHERE a.timecreated BETWEEN :from AND :to AND a.status = 'selected' {$vacancywhere}",
+                   JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                  WHERE a.timecreated BETWEEN :from AND :to AND a.status = 'selected' {$extrawhere}",
                 $params
             );
             $rejectedapps = $DB->count_records_sql(
                 "SELECT COUNT(*) FROM {local_jobboard_application} a
-                  WHERE a.timecreated BETWEEN :from AND :to AND a.status = 'rejected' {$vacancywhere}",
+                   JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+                  WHERE a.timecreated BETWEEN :from AND :to AND a.status = 'rejected' {$extrawhere}",
                 $params
             );
 

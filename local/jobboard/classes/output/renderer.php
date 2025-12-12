@@ -307,7 +307,278 @@ class renderer extends renderer_base {
             $data['applicantsections'] = $this->prepare_applicant_sections($stats);
         }
 
+        // AGENTS.md Section 22.2: Add dashboard consolidated features.
+
+        // 1. Quick access to next convocatoria closing (for all users).
+        $data['nextconvocatoria'] = $this->prepare_next_convocatoria_data();
+        $data['hasnextconvocatoria'] = !empty($data['nextconvocatoria']);
+
+        // 2. Pending notifications (for current user).
+        $data['pendingnotifications'] = $this->prepare_pending_notifications($userid);
+        $data['haspendingnotifications'] = !empty($data['pendingnotifications']);
+        $data['pendingnotificationcount'] = count($data['pendingnotifications']);
+
+        // 3. Recent activity summary.
+        $data['recentactivity'] = $this->prepare_recent_activity($userid, $caps);
+        $data['hasrecentactivity'] = !empty($data['recentactivity']);
+
+        // 4. Quick actions based on role (already partially implemented in sections).
+
         return $data;
+    }
+
+    /**
+     * Get the next convocatoria closing soon.
+     *
+     * AGENTS.md Section 22.2: Quick access to last/next convocatoria.
+     *
+     * @return array|null Convocatoria data or null if none.
+     */
+    protected function prepare_next_convocatoria_data(): ?array {
+        global $DB;
+
+        // Get convocatoria open and closing soonest.
+        $now = time();
+        $sql = "SELECT c.id, c.code, c.name, c.enddate, c.status,
+                       COUNT(DISTINCT v.id) as vacancycount,
+                       COUNT(DISTINCT a.id) as applicationcount
+                  FROM {local_jobboard_convocatoria} c
+                  LEFT JOIN {local_jobboard_vacancy} v ON v.convocatoriaid = c.id
+                  LEFT JOIN {local_jobboard_application} a ON a.vacancyid = v.id
+                 WHERE c.status = 'open'
+                   AND c.enddate > :now
+                 GROUP BY c.id, c.code, c.name, c.enddate, c.status
+                 ORDER BY c.enddate ASC
+                 LIMIT 1";
+
+        $conv = $DB->get_record_sql($sql, ['now' => $now]);
+
+        if (!$conv) {
+            return null;
+        }
+
+        $daysremaining = ceil(($conv->enddate - $now) / 86400);
+        $isurgent = $daysremaining <= 7;
+        $iscritical = $daysremaining <= 3;
+
+        return [
+            'id' => $conv->id,
+            'code' => $conv->code,
+            'name' => $conv->name,
+            'enddate' => userdate($conv->enddate, '%d %b %Y'),
+            'daysremaining' => $daysremaining,
+            'vacancycount' => (int)$conv->vacancycount,
+            'applicationcount' => (int)$conv->applicationcount,
+            'isurgent' => $isurgent,
+            'iscritical' => $iscritical,
+            'alertclass' => $iscritical ? 'danger' : ($isurgent ? 'warning' : 'info'),
+            'url' => (new moodle_url('/local/jobboard/index.php', [
+                'view' => 'view_convocatoria',
+                'id' => $conv->id,
+            ]))->out(false),
+            'browseurl' => (new moodle_url('/local/jobboard/index.php', [
+                'view' => 'browse_convocatorias',
+            ]))->out(false),
+        ];
+    }
+
+    /**
+     * Get pending notifications for user.
+     *
+     * AGENTS.md Section 22.2: Pending notifications.
+     *
+     * @param int $userid User ID.
+     * @return array Notification items.
+     */
+    protected function prepare_pending_notifications(int $userid): array {
+        global $DB;
+
+        $notifications = $DB->get_records_select(
+            'local_jobboard_notification',
+            'userid = :userid AND status = :status',
+            ['userid' => $userid, 'status' => 'pending'],
+            'timecreated DESC',
+            '*',
+            0,
+            5
+        );
+
+        $items = [];
+        foreach ($notifications as $notif) {
+            $items[] = [
+                'id' => $notif->id,
+                'template' => $notif->templatecode,
+                'label' => get_string('notification_' . $notif->templatecode, 'local_jobboard'),
+                'timecreated' => $this->format_time_ago((int)$notif->timecreated),
+                'icon' => $this->get_notification_icon($notif->templatecode),
+            ];
+        }
+
+        return $items;
+    }
+
+    /**
+     * Get notification icon based on template code.
+     *
+     * @param string $templatecode Template code.
+     * @return string Icon name.
+     */
+    protected function get_notification_icon(string $templatecode): string {
+        $icons = [
+            'application_received' => 'inbox',
+            'docs_validated' => 'check-circle',
+            'docs_rejected' => 'x-circle',
+            'interview_scheduled' => 'calendar',
+            'status_changed' => 'bell',
+            'application_selected' => 'award',
+            'application_rejected' => 'alert-circle',
+        ];
+        return $icons[$templatecode] ?? 'bell';
+    }
+
+    /**
+     * Format timestamp as "time ago" string.
+     *
+     * @param int $timestamp Timestamp.
+     * @return string Formatted time ago.
+     */
+    protected function format_time_ago(int $timestamp): string {
+        $diff = time() - $timestamp;
+
+        if ($diff < 60) {
+            return get_string('timeago_justnow', 'local_jobboard');
+        } elseif ($diff < 3600) {
+            $minutes = floor($diff / 60);
+            return get_string('timeago_minutes', 'local_jobboard', $minutes);
+        } elseif ($diff < 86400) {
+            $hours = floor($diff / 3600);
+            return get_string('timeago_hours', 'local_jobboard', $hours);
+        } elseif ($diff < 604800) {
+            $days = floor($diff / 86400);
+            return get_string('timeago_days', 'local_jobboard', $days);
+        } else {
+            return userdate($timestamp, '%d %b %Y');
+        }
+    }
+
+    /**
+     * Get recent activity for the dashboard.
+     *
+     * AGENTS.md Section 22.2: Recent activity summary.
+     *
+     * @param int $userid User ID.
+     * @param array $caps User capabilities.
+     * @return array Activity items.
+     */
+    protected function prepare_recent_activity(int $userid, array $caps): array {
+        global $DB;
+
+        $isadmin = $caps['configure'] ?? false;
+        $ismanager = ($caps['createvacancy'] ?? false) || ($caps['manageconvocatorias'] ?? false);
+
+        $activities = [];
+        $limit = 5;
+
+        if ($isadmin || $ismanager) {
+            // Admin/Manager: see recent system activity.
+            $sql = "SELECT id, action, entitytype, entityid, timecreated
+                      FROM {local_jobboard_audit}
+                     WHERE action IN ('application_submitted', 'document_uploaded', 'vacancy_published', 'convocatoria_opened')
+                     ORDER BY timecreated DESC
+                     LIMIT :limit";
+            $records = $DB->get_records_sql($sql, ['limit' => $limit]);
+
+            foreach ($records as $rec) {
+                $activities[] = [
+                    'type' => $rec->entitytype,
+                    'action' => $rec->action,
+                    'label' => get_string('activity_' . $rec->action, 'local_jobboard'),
+                    'icon' => $this->get_activity_icon($rec->action),
+                    'color' => $this->get_activity_color($rec->action),
+                    'timecreated' => $this->format_time_ago((int)$rec->timecreated),
+                    'url' => $this->get_activity_url($rec->entitytype, $rec->entityid),
+                ];
+            }
+        } else {
+            // Regular user: see their own recent activity.
+            $sql = "SELECT id, action, entitytype, entityid, timecreated
+                      FROM {local_jobboard_audit}
+                     WHERE userid = :userid
+                       AND action IN ('application_submitted', 'document_uploaded', 'status_viewed')
+                     ORDER BY timecreated DESC
+                     LIMIT :limit";
+            $records = $DB->get_records_sql($sql, ['userid' => $userid, 'limit' => $limit]);
+
+            foreach ($records as $rec) {
+                $activities[] = [
+                    'type' => $rec->entitytype,
+                    'action' => $rec->action,
+                    'label' => get_string('activity_' . $rec->action, 'local_jobboard'),
+                    'icon' => $this->get_activity_icon($rec->action),
+                    'color' => $this->get_activity_color($rec->action),
+                    'timecreated' => $this->format_time_ago((int)$rec->timecreated),
+                    'url' => $this->get_activity_url($rec->entitytype, $rec->entityid),
+                ];
+            }
+        }
+
+        return $activities;
+    }
+
+    /**
+     * Get icon for activity action.
+     *
+     * @param string $action Activity action.
+     * @return string Icon name.
+     */
+    protected function get_activity_icon(string $action): string {
+        $icons = [
+            'application_submitted' => 'send',
+            'document_uploaded' => 'upload',
+            'vacancy_published' => 'briefcase',
+            'convocatoria_opened' => 'calendar',
+            'status_viewed' => 'eye',
+        ];
+        return $icons[$action] ?? 'activity';
+    }
+
+    /**
+     * Get color for activity action.
+     *
+     * @param string $action Activity action.
+     * @return string Color name.
+     */
+    protected function get_activity_color(string $action): string {
+        $colors = [
+            'application_submitted' => 'success',
+            'document_uploaded' => 'info',
+            'vacancy_published' => 'primary',
+            'convocatoria_opened' => 'warning',
+            'status_viewed' => 'secondary',
+        ];
+        return $colors[$action] ?? 'secondary';
+    }
+
+    /**
+     * Get URL for activity entity.
+     *
+     * @param string $entitytype Entity type.
+     * @param int $entityid Entity ID.
+     * @return string URL.
+     */
+    protected function get_activity_url(string $entitytype, int $entityid): string {
+        $views = [
+            'application' => 'application',
+            'vacancy' => 'vacancy',
+            'convocatoria' => 'view_convocatoria',
+            'document' => 'application',
+        ];
+
+        $view = $views[$entitytype] ?? 'dashboard';
+        return (new moodle_url('/local/jobboard/index.php', [
+            'view' => $view,
+            'id' => $entityid,
+        ]))->out(false);
     }
 
     /**

@@ -63,14 +63,64 @@
         </ul>
     </nav>
 
+    {{! Convocatoria Selection Card - AGENTS.md 16.1: REQUIRED before viewing reports }}}
+    {{#noconvocatoriaselected}}
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-border-warning" aria-labelledby="convocatoria-select-heading">
+        <div class="jb-card-header jb-bg-warning jb-text-dark">
+            <h2 class="jb-fs-5 jb-mb-0" id="convocatoria-select-heading">
+                <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                {{#str}}selectconvocatoria_required, local_jobboard{{/str}}
+            </h2>
+        </div>
+        <div class="jb-card-body">
+            <p class="jb-text-muted jb-mb-3">{{#str}}selectconvocatoria_required_desc, local_jobboard{{/str}}</p>
+            <form method="get" action="{{filteraction}}">
+                <input type="hidden" name="view" value="reports">
+                <input type="hidden" name="report" value="{{currentreport}}">
+                <div class="jb-form-group">
+                    <label class="jb-d-block jb-fw-bold jb-mb-2" for="filter-convocatoria-main">
+                        {{#str}}convocatoria, local_jobboard{{/str}} <span class="jb-text-danger">*</span>
+                    </label>
+                    <select name="convocatoriaid" id="filter-convocatoria-main" class="jb-form-control jb-mb-3" required>
+                        <option value="">-- {{#str}}selectconvocatoria, local_jobboard{{/str}} --</option>
+                        {{#convocatorias}}
+                        <option value="{{id}}">{{label}}</option>
+                        {{/convocatorias}}
+                    </select>
+                </div>
+                <button type="submit" class="jb-btn jb-btn-warning">
+                    <i class="fa fa-check jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}continue, local_jobboard{{/str}}
+                </button>
+            </form>
+        </div>
+    </section>
+    {{/noconvocatoriaselected}}
+
+    {{^noconvocatoriaselected}}
+    {{! Current Convocatoria Banner }}}
+    {{#selectedconvocatoriaid}}
+    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4" role="alert">
+        <i class="fa fa-calendar-alt jb-mr-3 jb-fs-4" aria-hidden="true"></i>
+        <div class="jb-flex-grow-1">
+            <strong>{{#str}}currentconvocatoria, local_jobboard{{/str}}:</strong> {{selectedconvocatoria}}
+        </div>
+        <a href="{{filteraction}}?view=reports" class="jb-btn jb-btn-sm jb-btn-outline-info">
+            <i class="fa fa-exchange-alt jb-mr-1" aria-hidden="true"></i>
+            {{#str}}changeconvocatoria, local_jobboard{{/str}}
+        </a>
+    </div>
+    {{/selectedconvocatoriaid}}
+
     {{! Filter Card }}}
     <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="filters-heading">
         <div class="jb-card-body">
             <form class="jb-form-inline jb-d-flex jb-flex-wrap jb-align-items-end" method="get" action="{{filteraction}}">
                 <input type="hidden" name="view" value="reports">
                 <input type="hidden" name="report" value="{{currentreport}}">
+                <input type="hidden" name="convocatoriaid" value="{{selectedconvocatoriaid}}">
 
-                {{! Vacancy Filter }}}
+                {{! Vacancy Filter (within selected convocatoria) }}}
                 <div class="jb-form-group jb-mr-3 jb-mb-2">
                     <label class="jb-d-block jb-small jb-text-muted jb-mb-1" for="filter-vacancy">
                         {{#str}}vacancy, local_jobboard{{/str}}
@@ -108,6 +158,7 @@
             </form>
         </div>
     </section>
+    {{/noconvocatoriaselected}}
 
     {{! Report Content }}}
     {{#hasdata}}

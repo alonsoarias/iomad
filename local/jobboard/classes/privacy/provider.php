@@ -183,6 +183,38 @@ class provider implements
             'privacy:metadata:evaluation'
         );
 
+        // Consent table (user consent records).
+        $collection->add_database_table(
+            'local_jobboard_consent',
+            [
+                'userid' => 'privacy:metadata:consent:userid',
+                'consenttype' => 'privacy:metadata:consent:consenttype',
+                'consentgiven' => 'privacy:metadata:consent:consentgiven',
+                'consentversion' => 'privacy:metadata:consent:consentversion',
+                'ipaddress' => 'privacy:metadata:consent:ipaddress',
+                'useragent' => 'privacy:metadata:consent:useragent',
+                'timecreated' => 'privacy:metadata:consent:timecreated',
+            ],
+            'privacy:metadata:consent'
+        );
+
+        // Applicant profile table (extended user profile data).
+        $collection->add_database_table(
+            'local_jobboard_applicant_profile',
+            [
+                'userid' => 'privacy:metadata:applicantprofile:userid',
+                'doctype' => 'privacy:metadata:applicantprofile:doctype',
+                'birthdate' => 'privacy:metadata:applicantprofile:birthdate',
+                'gender' => 'privacy:metadata:applicantprofile:gender',
+                'education_level' => 'privacy:metadata:applicantprofile:education_level',
+                'degree_title' => 'privacy:metadata:applicantprofile:degree_title',
+                'expertise_area' => 'privacy:metadata:applicantprofile:expertise_area',
+                'experience_years' => 'privacy:metadata:applicantprofile:experience_years',
+                'timecreated' => 'privacy:metadata:applicantprofile:timecreated',
+            ],
+            'privacy:metadata:applicantprofile'
+        );
+
         // File storage.
         $collection->add_subsystem_link(
             'core_files',
@@ -220,6 +252,10 @@ class provider implements
                       SELECT 1 FROM {local_jobboard_committee_member} cm WHERE cm.userid = :userid6
                       UNION
                       SELECT 1 FROM {local_jobboard_evaluation} ev WHERE ev.userid = :userid7
+                      UNION
+                      SELECT 1 FROM {local_jobboard_consent} co WHERE co.userid = :userid8
+                      UNION
+                      SELECT 1 FROM {local_jobboard_applicant_profile} ap WHERE ap.userid = :userid9
                   )";
 
         $contextlist->add_from_sql($sql, [
@@ -231,6 +267,8 @@ class provider implements
             'userid5' => $userid,
             'userid6' => $userid,
             'userid7' => $userid,
+            'userid8' => $userid,
+            'userid9' => $userid,
         ]);
 
         return $contextlist;
@@ -275,6 +313,14 @@ class provider implements
         // Get users from evaluations.
         $sql = "SELECT DISTINCT userid FROM {local_jobboard_evaluation}";
         $userlist->add_from_sql('userid', $sql, []);
+
+        // Get users from consent records.
+        $sql = "SELECT DISTINCT userid FROM {local_jobboard_consent}";
+        $userlist->add_from_sql('userid', $sql, []);
+
+        // Get users from applicant profiles.
+        $sql = "SELECT DISTINCT userid FROM {local_jobboard_applicant_profile}";
+        $userlist->add_from_sql('userid', $sql, []);
     }
 
     /**
@@ -312,6 +358,12 @@ class provider implements
 
         // Export evaluations.
         self::export_evaluation_data($user->id, $context);
+
+        // Export consent records.
+        self::export_consent_data($user->id, $context);
+
+        // Export applicant profile.
+        self::export_applicant_profile($user->id, $context);
     }
 
     /**
@@ -600,6 +652,69 @@ class provider implements
     }
 
     /**
+     * Export user consent records.
+     *
+     * @param int $userid User ID.
+     * @param \context $context The context.
+     */
+    private static function export_consent_data(int $userid, \context $context): void {
+        global $DB;
+
+        $consents = $DB->get_records('local_jobboard_consent', ['userid' => $userid], 'timecreated DESC');
+
+        $data = [];
+        foreach ($consents as $consent) {
+            $data[] = [
+                'consent_type' => $consent->consenttype,
+                'consent_given' => $consent->consentgiven ? 'Yes' : 'No',
+                'consent_version' => $consent->consentversion,
+                'ip_address' => $consent->ipaddress,
+                'user_agent' => $consent->useragent,
+                'timestamp' => userdate($consent->timecreated),
+            ];
+        }
+
+        if (!empty($data)) {
+            writer::with_context($context)->export_data(
+                [get_string('consent', 'local_jobboard')],
+                (object) ['consent_records' => $data]
+            );
+        }
+    }
+
+    /**
+     * Export user applicant profile.
+     *
+     * @param int $userid User ID.
+     * @param \context $context The context.
+     */
+    private static function export_applicant_profile(int $userid, \context $context): void {
+        global $DB;
+
+        $profile = $DB->get_record('local_jobboard_applicant_profile', ['userid' => $userid]);
+
+        if ($profile) {
+            $data = [
+                'document_type' => $profile->doctype,
+                'birthdate' => $profile->birthdate ? userdate($profile->birthdate, '%Y-%m-%d') : null,
+                'gender' => $profile->gender,
+                'education_level' => $profile->education_level,
+                'degree_title' => $profile->degree_title,
+                'expertise_area' => $profile->expertise_area,
+                'experience_years' => $profile->experience_years,
+                'profile_complete' => $profile->profile_complete ? 'Yes' : 'No',
+                'created' => userdate($profile->timecreated),
+                'modified' => $profile->timemodified ? userdate($profile->timemodified) : null,
+            ];
+
+            writer::with_context($context)->export_data(
+                [get_string('applicantprofile', 'local_jobboard')],
+                (object) $data
+            );
+        }
+    }
+
+    /**
      * Delete all user data for the specified approved contexts.
      *
      * @param approved_contextlist $contextlist The approved contexts for deletion.
@@ -700,6 +815,12 @@ class provider implements
 
         // Delete evaluations.
         $DB->delete_records('local_jobboard_evaluation', ['userid' => $userid]);
+
+        // Delete consent records.
+        $DB->delete_records('local_jobboard_consent', ['userid' => $userid]);
+
+        // Delete applicant profile.
+        $DB->delete_records('local_jobboard_applicant_profile', ['userid' => $userid]);
 
         // Anonymize audit logs (keep for compliance but remove PII).
         $DB->set_field('local_jobboard_audit', 'userid', 0, ['userid' => $userid]);

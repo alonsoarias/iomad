@@ -74,6 +74,64 @@
     </div>
     {{/alerts.0}}
 
+    {{! AGENTS.md 22.2: Dashboard Consolidated Features - Next Convocatoria Banner }}
+    {{#hasnextconvocatoria}}
+    <div class="jb-alert jb-alert-{{nextconvocatoria.alertclass}} jb-d-flex jb-align-items-center jb-mb-4 jb-convocatoria-banner" role="alert" data-jb-tour="next-convocatoria">
+        <div class="jb-flex-shrink-0 jb-mr-3">
+            <i class="fa fa-calendar-times fa-2x" aria-hidden="true"></i>
+        </div>
+        <div class="jb-flex-grow-1">
+            <div class="jb-fw-bold jb-mb-1">
+                {{#nextconvocatoria.iscritical}}
+                <span class="jb-badge jb-badge-danger jb-mr-2">{{#str}}critical, local_jobboard{{/str}}</span>
+                {{/nextconvocatoria.iscritical}}
+                {{^nextconvocatoria.iscritical}}
+                {{#nextconvocatoria.isurgent}}
+                <span class="jb-badge jb-badge-warning jb-mr-2">{{#str}}closingsoon, local_jobboard{{/str}}</span>
+                {{/nextconvocatoria.isurgent}}
+                {{/nextconvocatoria.iscritical}}
+                {{nextconvocatoria.code}} - {{nextconvocatoria.name}}
+            </div>
+            <small class="jb-text-muted">
+                {{#str}}closingon, local_jobboard{{/str}} <strong>{{nextconvocatoria.enddate}}</strong>
+                &bull; {{nextconvocatoria.daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
+                &bull; {{nextconvocatoria.vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}
+                &bull; {{nextconvocatoria.applicationcount}} {{#str}}applications, local_jobboard{{/str}}
+            </small>
+        </div>
+        <div class="jb-flex-shrink-0 jb-ml-3">
+            <a href="{{nextconvocatoria.url}}" class="jb-btn jb-btn-{{nextconvocatoria.alertclass}} jb-btn-sm">
+                <i class="fa fa-eye jb-mr-1" aria-hidden="true"></i>
+                {{#str}}viewdetails, local_jobboard{{/str}}
+            </a>
+        </div>
+    </div>
+    {{/hasnextconvocatoria}}
+
+    {{! AGENTS.md 22.2: Pending Notifications Panel }}
+    {{#haspendingnotifications}}
+    <div class="jb-card jb-card-shadow jb-mb-4 jb-notifications-panel" data-jb-tour="notifications">
+        <div class="jb-card-header jb-card-header-primary jb-d-flex jb-justify-content-between jb-align-items-center">
+            <h3 class="jb-fs-6 jb-mb-0">
+                <i class="fa fa-bell jb-mr-2" aria-hidden="true"></i>
+                {{#str}}pendingnotifications, local_jobboard{{/str}}
+            </h3>
+            <span class="jb-badge jb-badge-light">{{pendingnotificationcount}}</span>
+        </div>
+        <ul class="jb-list-group jb-list-group-flush">
+            {{#pendingnotifications}}
+            <li class="jb-list-group-item jb-d-flex jb-align-items-center">
+                <i class="fa fa-{{icon}} jb-text-primary jb-mr-3" aria-hidden="true"></i>
+                <div class="jb-flex-grow-1">
+                    <span class="jb-d-block">{{label}}</span>
+                    <small class="jb-text-muted">{{timecreated}}</small>
+                </div>
+            </li>
+            {{/pendingnotifications}}
+        </ul>
+    </div>
+    {{/haspendingnotifications}}
+
     {{! Admin/Manager Section }}
     {{#isadmin}}
     <section class="jb-admin-section jb-mb-5" aria-labelledby="admin-section-heading">
@@ -335,6 +393,38 @@
         </div>
     </section>
     {{/isvieweronly}}
+
+    {{! AGENTS.md 22.2: Recent Activity Timeline }}
+    {{#hasrecentactivity}}
+    <section class="jb-activity-section jb-mt-5" aria-labelledby="activity-section-heading" data-jb-tour="recent-activity">
+        <h2 class="jb-fs-5 jb-text-muted jb-mb-3" id="activity-section-heading">
+            <i class="fa fa-history jb-mr-2" aria-hidden="true"></i>
+            {{#str}}recentactivity, local_jobboard{{/str}}
+        </h2>
+        <div class="jb-card jb-card-shadow">
+            <div class="jb-card-body jb-p-0">
+                <ul class="jb-list-group jb-list-group-flush jb-activity-timeline">
+                    {{#recentactivity}}
+                    <li class="jb-list-group-item jb-d-flex jb-align-items-start jb-py-3">
+                        <span class="jb-activity-icon jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-2 jb-mr-3 jb-flex-shrink-0">
+                            <i class="fa fa-{{icon}}" aria-hidden="true"></i>
+                        </span>
+                        <div class="jb-flex-grow-1">
+                            <a href="{{url}}" class="jb-text-dark jb-text-decoration-none jb-fw-medium">
+                                {{label}}
+                            </a>
+                            <small class="jb-d-block jb-text-muted jb-mt-1">
+                                <i class="fa fa-clock jb-mr-1" aria-hidden="true"></i>
+                                {{timecreated}}
+                            </small>
+                        </div>
+                    </li>
+                    {{/recentactivity}}
+                </ul>
+            </div>
+        </div>
+    </section>
+    {{/hasrecentactivity}}
 </div>
 
 {{#js}}
