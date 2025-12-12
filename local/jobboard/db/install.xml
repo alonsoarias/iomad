@@ -24,6 +24,8 @@
         <FIELD NAME="desirable" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Desirable requirements"/>
         <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="draft" SEQUENCE="false" COMMENT="Status: draft, published, closed, assigned"/>
         <FIELD NAME="publicationtype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="internal" SEQUENCE="false" COMMENT="Publication type: public (visible without auth) or internal (requires auth)"/>
+        <FIELD NAME="opendate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Vacancy open date (applications start)"/>
+        <FIELD NAME="closedate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Vacancy close date (application deadline)"/>
         <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User who created the vacancy"/>
         <FIELD NAME="modifiedby" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="User who last modified"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

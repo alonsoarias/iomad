@@ -10,7 +10,7 @@ Sistema de Bolsa de Empleo para reclutamiento de profesores de cátedra.
 | Campo | Valor |
 |-------|-------|
 | **Componente** | `local_jobboard` |
-| **Versión actual** | 3.2.0 (2025121240) |
+| **Versión actual** | 3.2.1 (2025121241) |
 | **Moodle requerido** | 4.1+ (2022112800) |
 | **Moodle soportado** | 4.1 - 4.5 |
 | **Madurez** | MATURITY_STABLE |
@@ -637,15 +637,101 @@ Los archivos y funcionalidades relacionados con web services y API externa será
 
 ---
 
+## Validación Pre-Implementación (CRÍTICO)
+
+Antes de implementar CUALQUIER cambio, se debe validar que no generará errores de base de datos o runtime. Esta sección es OBLIGATORIA para cualquier agente que trabaje en este plugin.
+
+### Errores Comunes a Evitar
+
+| Error | Causa | Prevención |
+|-------|-------|------------|
+| Unknown column 'X' in 'field list' | Columna referenciada en SQL no existe en BD | Verificar install.xml y upgrade.php antes de usar campos en queries |
+| Table 'X' doesn't exist | Tabla referenciada no creada | Verificar que tabla exista en install.xml |
+| Duplicate entry for key | Registro duplicado en índice único | Verificar condiciones antes de INSERT |
+| Call to undefined method | Método no existe en clase | Verificar que método exista antes de llamar |
+
+### Protocolo de Validación Obligatorio
+
+**PASO 1: Verificar Esquema de BD**
+
+Antes de escribir queries SQL con campos específicos:
+
+1. Verificar que el campo existe en `db/install.xml`
+2. Si el campo es nuevo, verificar que existe en `db/upgrade.php`
+3. Verificar que la versión en `version.php` coincide con la migración
+
+**PASO 2: Verificar Dependencias**
+
+Antes de usar métodos o clases:
+
+1. Verificar que la clase/método existe
+2. Verificar parámetros esperados
+3. Verificar valores de retorno
+
+**PASO 3: Validar en Plataforma**
+
+Después de cada cambio:
+
+1. Ejecutar `php admin/cli/upgrade.php` si hay cambios de BD
+2. Purgar caché: `php admin/cli/purge_caches.php`
+3. Navegar a las vistas afectadas en el navegador
+4. Verificar que no aparezcan errores en pantalla
+
+### Patrón de Queries Seguras
+
+Para queries que usan campos que podrían no existir (compatibilidad hacia atrás):
+
+- Usar `COALESCE(campo_nuevo, campo_alternativo)` para valores con fallback
+- Usar `LEFT JOIN` en lugar de `JOIN` si la relación puede no existir
+- Verificar existencia de campo antes de usarlo en PHP
+
+### Comandos de Verificación
+
+| Tarea | Comando |
+|-------|---------|
+| Ejecutar migraciones | `php admin/cli/upgrade.php` |
+| Purgar caché | `php admin/cli/purge_caches.php` |
+| Verificar sintaxis PHP | `php -l archivo.php` |
+| Validar estándares | `php admin/tool/phpcs/cli/run.php --standard=moodle local/jobboard` |
+
+---
+
+## Desarrollo Pendiente
+
+### Prioridad Alta - Errores Conocidos
+
+Ningún error conocido pendiente en la versión actual (3.2.1).
+
+### Prioridad Media - Mejoras Funcionales
+
+| Tarea | Descripción | Archivos Afectados |
+|-------|-------------|-------------------|
+| Interfaz de revisión estilo mod_assign | Panel lateral, preview PDF, checklist interactivo | Nuevo: views/review_document.php, templates/pages/review_document.mustache |
+| Excepciones globales por convocatoria | Excepciones no por usuario sino globales activadas por convocatoria | classes/convocatoria_exemption.php, forms/exemption_form.php |
+| Preview de email en tiempo real | Editor con variables y preview instantáneo | amd/src/email_template_editor.js |
+| User Tours | 15 tours guiados para nuevos usuarios | db/tours/*.json |
+
+### Prioridad Baja - Optimizaciones
+
+| Tarea | Descripción |
+|-------|-------------|
+| Tests PHPUnit | Cobertura de tests para clases principales |
+| Integración calendario | Eventos de calendario para fechas límite |
+| CLI para PDFs | Procesar PDFs grandes dividiéndolos |
+
+---
+
 ## Instrucciones para Desarrollo
 
 ### Antes de Cualquier Cambio
 
 1. LEER completamente el archivo o clase a modificar
-2. VERIFICAR que no exista funcionalidad similar ya implementada
-3. RESPETAR las convenciones de nomenclatura existentes
-4. USAR get_string() para TODA cadena de texto
-5. MANTENER paridad entre archivos de idioma EN y ES
+2. VERIFICAR esquema de BD en install.xml para cualquier query
+3. VERIFICAR que no exista funcionalidad similar ya implementada
+4. RESPETAR las convenciones de nomenclatura existentes
+5. USAR get_string() para TODA cadena de texto
+6. MANTENER paridad entre archivos de idioma EN y ES
+7. PROBAR cambios en plataforma antes de commit
 
 ### Al Crear Nuevos Archivos
 
@@ -778,4 +864,4 @@ Los archivos y funcionalidades relacionados con web services y API externa será
 ---
 
 *Última actualización: Diciembre 2025*
-*Plugin local_jobboard v3.2.0 para Moodle 4.1-4.5 con IOMAD*
+*Plugin local_jobboard v3.2.1 para Moodle 4.1-4.5 con IOMAD*

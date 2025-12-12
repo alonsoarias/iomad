@@ -67,7 +67,7 @@ $whereclause = implode(' AND ', $whereclauses);
 // Priority ordering.
 $orderby = 'a.timecreated ASC';
 if ($priority === 'closing') {
-    $orderby = 'v.closedate ASC, a.timecreated ASC';
+    $orderby = 'COALESCE(v.closedate, c.enddate) ASC, a.timecreated ASC';
 } else if ($priority === 'pending') {
     $orderby = "(SELECT COUNT(*) FROM {local_jobboard_document} d
                   LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
@@ -80,11 +80,13 @@ if ($priority === 'closing') {
 $countsql = "SELECT COUNT(*)
                FROM {local_jobboard_application} a
                JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+               LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
               WHERE $whereclause";
 $totalcount = $DB->count_records_sql($countsql, $params);
 
 // Get assigned applications.
-$sql = "SELECT a.*, v.code as vacancy_code, v.title as vacancy_title, v.closedate,
+$sql = "SELECT a.*, v.code as vacancy_code, v.title as vacancy_title,
+               COALESCE(v.closedate, c.enddate) as closedate,
                u.firstname, u.lastname, u.email,
                (SELECT COUNT(*) FROM {local_jobboard_document} d
                  WHERE d.applicationid = a.id AND d.issuperseded = 0) as total_docs,
@@ -100,6 +102,7 @@ $sql = "SELECT a.*, v.code as vacancy_code, v.title as vacancy_title, v.closedat
                  AND (dv.id IS NULL OR dv.status = 'pending')) as pending_docs
           FROM {local_jobboard_application} a
           JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+          LEFT JOIN {local_jobboard_convocatoria} c ON c.id = v.convocatoriaid
           JOIN {user} u ON u.id = a.userid
          WHERE $whereclause
          ORDER BY $orderby";

@@ -569,6 +569,56 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121117, 'local', 'jobboard');
     }
 
+    // Version 3.2.1 - Add opendate and closedate to vacancy table.
+    // These fields allow individual vacancy deadlines that can override convocatoria dates.
+    if ($oldversion < 2025121241) {
+        $dbman = $DB->get_manager();
+        $table = new xmldb_table('local_jobboard_vacancy');
+
+        // Add opendate field.
+        $field = new xmldb_field('opendate', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'publicationtype');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Add closedate field.
+        $field = new xmldb_field('closedate', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'opendate');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Populate closedate from convocatoria.enddate for existing vacancies.
+        $sql = "UPDATE {local_jobboard_vacancy} v
+                   SET closedate = (
+                       SELECT c.enddate
+                         FROM {local_jobboard_convocatoria} c
+                        WHERE c.id = v.convocatoriaid
+                   ),
+                   opendate = (
+                       SELECT c.startdate
+                         FROM {local_jobboard_convocatoria} c
+                        WHERE c.id = v.convocatoriaid
+                   )
+                 WHERE v.convocatoriaid IS NOT NULL
+                   AND v.closedate IS NULL";
+        $DB->execute($sql);
+
+        // Add index for closedate.
+        $index = new xmldb_index('closedate_idx', XMLDB_INDEX_NOTUNIQUE, ['closedate']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Add index for opendate.
+        $index = new xmldb_index('opendate_idx', XMLDB_INDEX_NOTUNIQUE, ['opendate']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121241, 'local', 'jobboard');
+    }
+
     return true;
 }
 
