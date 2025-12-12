@@ -667,73 +667,206 @@ Antes de implementar CUALQUIER cambio, validar que no generará errores.
 
 ---
 
-## Desarrollo Pendiente
+## Auditoría del Plugin (Diciembre 2025)
 
-### Prioridad Alta - Errores Conocidos
+### Resumen de Análisis
 
-Ningún error conocido en v3.2.1.
-
-### Prioridad Media - Mejoras Funcionales
-
-| Tarea | Descripción |
-|-------|-------------|
-| Interfaz revisión mod_assign | Panel lateral, preview PDF, checklist interactivo |
-| Excepciones globales | Activadas por convocatoria, no por usuario |
-| Preview email tiempo real | Editor con variables y preview instantáneo |
-| User Tours | 15 tours con selectores jb-* |
-
-### Prioridad Baja - Optimizaciones
-
-| Tarea | Descripción |
-|-------|-------------|
-| Tests PHPUnit | Cobertura clases principales |
-| Integración calendario | Eventos fechas límite |
-| CLI para PDFs | Procesar PDFs grandes |
+| Área | Estado | Detalle |
+|------|--------|---------|
+| Base de Datos | ⚠️ 3 issues | Vacancy tiene fechas que no debería tener |
+| CSS/Templates | 95.8% OK | 14 templates con Bootstrap raw |
+| Capabilities | ✅ Completo | 31 capabilities, todas requeridas presentes |
+| Web Services | ❌ Pendiente | 2 archivos a eliminar |
+| Language Strings | ✅ Completo | 2,711 líneas EN/ES |
 
 ---
 
-## PENDIENTE DE REMOCIÓN: Web Services
+## Refactorización Requerida
 
-Los archivos de web services y API externa serán removidos:
+### CRÍTICO - Esquema de Base de Datos
 
-| Archivo | Acción |
-|---------|--------|
-| db/services.php | Eliminar |
-| classes/external/*.php | Eliminar directorio |
+#### Issue 1: Vacancy tiene fechas que NO debe tener
 
-### Instrucciones Remoción
+**Problema:** La tabla `local_jobboard_vacancy` tiene campos `opendate` y `closedate` pero según requerimientos las vacantes NO deben tener fechas propias - heredan de convocatoria.
 
-1. Eliminar db/services.php
-2. Eliminar classes/external/ completo
-3. Remover referencias en lib.php
-4. Actualizar version.php
-5. Ejecutar upgrade.php
+**Ubicación:** `db/install.xml` líneas 27-28
+
+**Acción requerida:**
+1. Crear migración en `db/upgrade.php` para eliminar campos
+2. Actualizar install.xml removiendo los campos
+3. Actualizar código que usa `v.closedate` para usar `c.enddate`
+4. Ya implementado COALESCE en myreviews.php como solución temporal
+
+**NOTA:** Se agregaron estos campos en v3.2.1 para compatibilidad, pero según requerimientos estrictos deben removerse.
+
+#### Issue 2: doctype input_type valores incorrectos
+
+**Problema:** Campo `input_type` tiene valores `file, text, url, number` pero requerimientos piden `file, text, textarea, select`.
+
+**Ubicación:** `db/install.xml` línea 333
+
+**Acción requerida:**
+1. Actualizar DEFAULT y COMMENT del campo
+2. Crear migración para convertir valores existentes
+3. Actualizar formularios que usan estos valores
+
+#### Issue 3: Tabla reviewer faltante
+
+**Problema:** Tabla `local_jobboard_reviewer` no existe pero está en requerimientos.
+
+**Evaluación:** `local_jobboard_program_reviewer` cubre la funcionalidad. Evaluar si es necesaria tabla adicional.
 
 ---
 
-## Fases de Implementación Pendiente
+### ALTA - Remoción de Web Services
 
-### Fase 1: User Tours
-- Eliminar tours existentes
-- Crear 15 tours con selectores jb-*
-- Probar cada tour
+**Archivos a eliminar:**
 
-### Fase 2: Interfaz Revisión
-- Diseño estilo mod_assign
-- Navegación sin recarga
-- Atajos de teclado
+| Archivo | Líneas | Descripción |
+|---------|--------|-------------|
+| db/services.php | 133 | Definición de 7 servicios web |
+| classes/external/api.php | 1,079 | Implementación de API externa |
 
-### Fase 3: Excepciones Globales
-- Sistema de excepciones globales
-- Activación por convocatoria
+**Pasos de remoción:**
+1. Eliminar `db/services.php`
+2. Eliminar directorio `classes/external/` completo
+3. NO se requieren cambios en lib.php (verificado)
+4. API tokens ya eliminados en v2.3.1
+5. Incrementar versión en version.php
 
-### Fase 4: Preview Email
-- Editor con variables
-- Preview tiempo real
+**MANTENER (NO son web services):**
+- `ajax/get_departments.php` - Endpoint AJAX estándar
+- `ajax/get_companies.php` - Endpoint AJAX estándar
+- `ajax/get_convocatorias.php` - Endpoint AJAX estándar
 
-### Fase 5: Tests PHPUnit
-- Cobertura clases principales
-- CI/CD integration
+---
+
+### MEDIA - Migración CSS Bootstrap a jb-*
+
+**Estado actual:** 95.8% compliant (3,922 clases jb-*)
+
+**Pendiente:** 169 ocurrencias de Bootstrap raw en 14 templates
+
+**Templates a migrar:**
+
+| Prioridad | Template | Clases Bootstrap |
+|-----------|----------|------------------|
+| 1 | reports/applications.mustache | card, table, badge, progress |
+| 1 | reports/documents.mustache | table, row, col- |
+| 1 | reports/overview.mustache | table, row, col- |
+| 1 | reports/reviewers.mustache | d-flex |
+| 1 | reports/timeline.mustache | d-flex |
+| 2 | application_row.mustache | btn, badge, progress |
+| 2 | document_upload.mustache | btn, d-flex |
+| 2 | signup_page.mustache | btn, d-flex |
+| 3 | pages/public_detail.mustache | btn, row, col-, d-flex |
+| 3 | components/list_group.mustache | btn-group, d-flex |
+| 3 | components/timeline.mustache | d-flex |
+| 3 | components/filter_form.mustache | row |
+| 3 | document_row.mustache | row |
+
+**Esfuerzo estimado:** 3.5-7 horas
+
+**Clases a reemplazar:**
+
+| Bootstrap | Reemplazo jb-* |
+|-----------|----------------|
+| btn | jb-btn |
+| btn-primary | jb-btn-primary |
+| table | jb-table |
+| table-striped | jb-table-striped |
+| badge | jb-badge |
+| d-flex | jb-d-flex |
+| row | jb-row |
+| col-* | jb-col-* |
+| progress | jb-progress |
+| card | jb-card |
+
+---
+
+### BAJA - Mejoras Funcionales
+
+| Tarea | Descripción | Esfuerzo |
+|-------|-------------|----------|
+| Interfaz revisión mod_assign | Panel lateral, preview PDF, checklist | Alto |
+| Preview email tiempo real | Editor con variables y preview | Medio |
+| User Tours | 15 tours con selectores jb-* | Medio |
+| Tests PHPUnit | Cobertura clases principales | Alto |
+| Integración calendario | Eventos fechas límite | Bajo |
+
+---
+
+## Capabilities Verificadas
+
+### Estado: ✅ COMPLETO
+
+**Total definidas:** 31 capabilities
+**Requeridas:** 28+
+**Estado:** Todas las requeridas están presentes
+
+**Distribución por tipo:**
+- Read: 12 capabilities
+- Write: 19 capabilities
+
+**Distribución por archetype:**
+- Manager: 28 permisos
+- Editing Teacher: 22 permisos
+- Teacher: 8 permisos
+- Student/User: 6 permisos
+- Guest: 2 permisos
+
+**Nota:** Capability `viewinternalvacancies` puede ser duplicado de `viewinternal`.
+
+---
+
+## Web Services - Análisis Detallado
+
+### Servicios Definidos (a eliminar)
+
+| Función | Descripción |
+|---------|-------------|
+| local_jobboard_get_vacancies | Listar vacantes |
+| local_jobboard_get_vacancy | Obtener vacante |
+| local_jobboard_filter_vacancies | Filtrar vacantes |
+| local_jobboard_get_applications | Listar postulaciones |
+| local_jobboard_get_application | Obtener postulación |
+| local_jobboard_check_application_limit | Verificar límite |
+| local_jobboard_get_departments | Obtener departamentos |
+
+**Impacto de remoción:** BAJO - No hay dependencias externas identificadas
+
+---
+
+## Fases de Refactorización
+
+### Fase 1: Remoción Web Services (1-2 horas)
+- [ ] Eliminar db/services.php
+- [ ] Eliminar classes/external/
+- [ ] Incrementar versión a 3.2.2
+- [ ] Probar que no hay errores
+
+### Fase 2: Migración CSS (4-6 horas)
+- [ ] Migrar templates de reports/
+- [ ] Migrar templates de componentes
+- [ ] Migrar templates de páginas
+- [ ] Verificar en themes: Boost, Remui, Flavor
+
+### Fase 3: Limpieza BD (2-3 horas)
+- [ ] Evaluar remoción de opendate/closedate de vacancy
+- [ ] Actualizar input_type valores en doctype
+- [ ] Crear migraciones correspondientes
+- [ ] Actualizar código dependiente
+
+### Fase 4: Interfaz Revisión (8-12 horas)
+- [ ] Diseñar layout mod_assign style
+- [ ] Implementar visor PDF inline
+- [ ] Agregar navegación AJAX
+- [ ] Implementar atajos de teclado
+
+### Fase 5: User Tours (4-6 horas)
+- [ ] Crear 15 tours con selectores jb-*
+- [ ] Probar en cada rol
+- [ ] Documentar tours
 
 ---
 
