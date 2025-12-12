@@ -2350,25 +2350,3 @@
     border: 1px solid var(--jb-border);
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --jb-white: #212529;
-        --jb-black: #ffffff;
-        --jb-light: #343a40;
-        --jb-dark: #f8f9fa;
-        --jb-border: #495057;
-        --jb-muted: #adb5bd;
-    }
-
-    .jb-card {
-        background-color: #2d3238;
-        border-color: #495057;
-    }
-
-    .jb-form-control {
-        background-color: #2d3238;
-        border-color: #495057;
-        color: #f8f9fa;
-    }
-}
