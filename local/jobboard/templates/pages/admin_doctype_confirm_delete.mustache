@@ -1,0 +1,65 @@
+{{!
+    @template local_jobboard/pages/admin_doctype_confirm_delete
+
+    Document type delete confirmation page.
+
+    Context variables required for this template:
+    * doctypename - string - Document type name
+    * doctypecode - string - Document type code
+    * inuse - bool - Whether doctype is in use
+    * usagecount - int - Number of documents using this type
+    * deleteurl - string - Delete action URL
+    * cancelurl - string - Cancel URL
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "doctypename": "Cédula de Ciudadanía",
+        "doctypecode": "cedula",
+        "inuse": false
+    }
+}}
+
+<div class="jb-local-jobboard-doctypes" data-region="jobboard-doctype-delete">
+    {{! Confirmation Card }}
+    <div class="jb-card jb-shadow-sm">
+        <div class="jb-card-header jb-bg-warning">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-exclamation-triangle jb-mr-2"></i>
+                {{str.confirmdeletedoctype}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{#inuse}}
+            {{! Cannot delete - in use }}
+            <div class="jb-alert jb-alert-danger">
+                <i class="fa fa-times-circle jb-mr-2"></i>
+                {{str.error_doctypeinuse}}
+            </div>
+            <a href="{{cancelurl}}" class="jb-btn jb-btn-secondary">
+                <i class="fa fa-arrow-left jb-mr-2"></i>
+                {{str.back}}
+            </a>
+            {{/inuse}}
+            {{^inuse}}
+            {{! Can delete }}
+            <p>{{str.confirmdeletedoctype_msg}}</p>
+            <p class="jb-text-muted">
+                <strong>{{str.code}}:</strong>
+                <code>{{doctypecode}}</code>
+            </p>
+
+            <div class="jb-mt-4">
+                <a href="{{deleteurl}}" class="jb-btn jb-btn-danger jb-mr-2">
+                    <i class="fa fa-trash jb-mr-2"></i>
+                    {{str.delete}}
+                </a>
+                <a href="{{cancelurl}}" class="jb-btn jb-btn-secondary">
+                    <i class="fa fa-times jb-mr-2"></i>
+                    {{str.cancel}}
+                </a>
+            </div>
+            {{/inuse}}
+        </div>
+    </div>
+</div>

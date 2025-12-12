@@ -28,7 +28,6 @@ require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
 use local_jobboard\forms\doctype_form;
-use local_jobboard\output\ui_helper;
 
 admin_externalpage_setup('local_jobboard_doctypes');
 
@@ -204,91 +203,39 @@ if ($action === 'add' || ($action === 'edit' && $id)) {
         }
     }
 
-    // Display the form.
+    // Display the form using renderer + template pattern.
     $title = $doctype ? get_string('editdoctype', 'local_jobboard') : get_string('adddoctype', 'local_jobboard');
     $PAGE->set_title($title);
 
     echo $OUTPUT->header();
 
-    echo html_writer::start_div('local-jobboard-doctypes');
-
-    // Back button and title.
-    echo ui_helper::page_header($title, [], [
-        [
-            'url' => $pageurl,
-            'label' => get_string('back'),
-            'icon' => 'arrow-left',
-            'class' => 'btn btn-outline-secondary',
-        ],
-    ]);
-
-    // Form card.
-    echo html_writer::start_div('card shadow-sm');
-    echo html_writer::start_div('card-header bg-white');
-    echo html_writer::tag('h5',
-        '<i class="fa fa-' . ($doctype ? 'edit' : 'plus') . ' text-primary mr-2"></i>' . $title,
-        ['class' => 'mb-0']);
-    echo html_writer::end_div();
-    echo html_writer::start_div('card-body');
+    // Capture form HTML.
+    ob_start();
     $mform->display();
-    echo html_writer::end_div();
-    echo html_writer::end_div();
+    $formhtml = ob_get_clean();
 
-    echo html_writer::end_div();
+    // Use renderer.
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    $data = $renderer->prepare_admin_doctype_form_data((bool) $doctype, $formhtml, $pageurl);
+    echo $renderer->render_admin_doctype_form_page($data);
 
     echo $OUTPUT->footer();
     exit;
 }
 
-// Handle confirm delete action.
+// Handle confirm delete action using renderer + template pattern.
 if ($action === 'confirmdelete' && $id) {
     $doctype = $DB->get_record('local_jobboard_doctype', ['id' => $id], '*', MUST_EXIST);
-
-    echo $OUTPUT->header();
-
-    echo html_writer::start_div('local-jobboard-doctypes');
 
     // Check usage.
     $inuse = $DB->count_records('local_jobboard_document', ['documenttype' => $doctype->code]);
 
-    echo html_writer::start_div('card shadow-sm');
-    echo html_writer::start_div('card-header bg-warning');
-    echo html_writer::tag('h5',
-        '<i class="fa fa-exclamation-triangle mr-2"></i>' . get_string('confirmdeletedoctype', 'local_jobboard'),
-        ['class' => 'mb-0']);
-    echo html_writer::end_div();
-    echo html_writer::start_div('card-body');
+    echo $OUTPUT->header();
 
-    if ($inuse > 0) {
-        echo html_writer::div(
-            '<i class="fa fa-times-circle mr-2"></i>' . get_string('error:doctypeinuse', 'local_jobboard', $inuse),
-            'alert alert-danger'
-        );
-        echo html_writer::link($pageurl, '<i class="fa fa-arrow-left mr-2"></i>' . get_string('back'),
-            ['class' => 'btn btn-secondary']);
-    } else {
-        $name = get_string_manager()->string_exists('doctype_' . $doctype->code, 'local_jobboard')
-            ? get_string('doctype_' . $doctype->code, 'local_jobboard')
-            : $doctype->name;
-
-        echo html_writer::tag('p', get_string('confirmdeletedoctype_msg', 'local_jobboard', $name));
-        echo html_writer::tag('p',
-            '<strong>' . get_string('code', 'local_jobboard') . ':</strong> <code>' . s($doctype->code) . '</code>',
-            ['class' => 'text-muted']);
-
-        $deleteurl = new moodle_url($pageurl, ['action' => 'delete', 'id' => $id, 'sesskey' => sesskey()]);
-        echo html_writer::start_div('mt-4');
-        echo html_writer::link($deleteurl, '<i class="fa fa-trash mr-2"></i>' . get_string('delete'),
-            ['class' => 'btn btn-danger mr-2']);
-        echo html_writer::link($pageurl, '<i class="fa fa-times mr-2"></i>' . get_string('cancel'),
-            ['class' => 'btn btn-secondary']);
-        echo html_writer::end_div();
-    }
-
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-
-    echo html_writer::end_div();
+    // Use renderer.
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    $data = $renderer->prepare_admin_doctype_confirm_delete_data($doctype, (int) $inuse, $pageurl);
+    echo $renderer->render_admin_doctype_confirm_delete_page($data);
 
     echo $OUTPUT->footer();
     exit;

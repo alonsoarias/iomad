@@ -132,52 +132,16 @@ if ($data = $mform->get_data()) {
                 debugging('Failed to send confirmation email to user ' . $user->id, DEBUG_NORMAL);
             }
 
-            // Show success message.
+            // Show success message using renderer + template pattern.
             $PAGE->set_title(get_string('signup_success_title', 'local_jobboard'));
             $PAGE->set_heading(get_string('signup_success_title', 'local_jobboard'));
 
             echo $OUTPUT->header();
 
-            echo html_writer::start_div('signup-success text-center my-5');
-            echo html_writer::tag('div', html_writer::tag('i', '', ['class' => 'fa fa-check-circle fa-5x']),
-                ['class' => 'text-success mb-4']);
-            echo html_writer::tag('h2', get_string('signup_success_title', 'local_jobboard'), ['class' => 'mb-3']);
-            echo html_writer::tag('p', get_string('signup_success_message', 'local_jobboard', $user->email),
-                ['class' => 'lead text-muted']);
-
-            // Detailed instructions.
-            echo html_writer::start_div('alert alert-info text-start mt-4 mx-auto jb-narrow-container');
-            echo html_writer::tag('h5', html_writer::tag('i', '', ['class' => 'fa fa-envelope me-2']) .
-                get_string('signup_email_instructions_title', 'local_jobboard'));
-            echo html_writer::start_tag('ol', ['class' => 'mb-0']);
-            echo html_writer::tag('li', get_string('signup_email_instruction_1', 'local_jobboard'));
-            echo html_writer::tag('li', get_string('signup_email_instruction_2', 'local_jobboard'));
-            echo html_writer::tag('li', get_string('signup_email_instruction_3', 'local_jobboard'));
-            echo html_writer::end_tag('ol');
-            echo html_writer::end_div();
-
-            // Spam notice.
-            echo html_writer::tag('p', html_writer::tag('small',
-                html_writer::tag('i', '', ['class' => 'fa fa-exclamation-triangle me-1']) .
-                get_string('signup_check_spam', 'local_jobboard')),
-                ['class' => 'text-muted mt-3']);
-
-            // Buttons.
-            echo html_writer::start_div('mt-4');
-            echo html_writer::link(
-                new moodle_url('/local/jobboard/public.php'),
-                html_writer::tag('i', '', ['class' => 'fa fa-arrow-left me-2']) .
-                get_string('backtovacancies', 'local_jobboard'),
-                ['class' => 'btn btn-primary me-2']
-            );
-            echo html_writer::link(
-                new moodle_url('/login/index.php'),
-                html_writer::tag('i', '', ['class' => 'fa fa-sign-in me-2']) .
-                get_string('login'),
-                ['class' => 'btn btn-outline-secondary']
-            );
-            echo html_writer::end_div();
-            echo html_writer::end_div();
+            // Use renderer.
+            $renderer = $PAGE->get_renderer('local_jobboard');
+            $data = $renderer->prepare_signup_success_data($user->email);
+            echo $renderer->render_signup_success_page($data);
 
             echo $OUTPUT->footer();
             exit;

@@ -115,58 +115,22 @@ if ($action === 'edit' && $code) {
         }
     }
 
-    // Display edit form.
+    // Display edit form using renderer + template pattern.
     $templatename = email_template::get_template_name($code);
     $PAGE->set_title(get_string('edit_template', 'local_jobboard') . ': ' . $templatename);
 
     echo $OUTPUT->header();
-    echo html_writer::start_div('local-jobboard-templates');
 
-    // Page header.
-    echo ui_helper::page_header(
-        get_string('email_templates', 'local_jobboard'),
-        [],
-        [
-            [
-                'url' => $pageurl,
-                'label' => get_string('back_to_templates', 'local_jobboard'),
-                'icon' => 'arrow-left',
-                'class' => 'btn btn-outline-secondary',
-            ],
-        ]
-    );
-
-    // Template edit card.
-    echo html_writer::start_div('card shadow-sm mb-4');
-    echo html_writer::start_div('card-header bg-primary text-white d-flex justify-content-between align-items-center');
-    echo html_writer::tag('h5',
-        '<i class="fa fa-edit mr-2"></i>' . get_string('edit_template', 'local_jobboard') . ': ' . s($templatename),
-        ['class' => 'mb-0']
-    );
-    echo html_writer::tag('span', s($code), ['class' => 'badge badge-light']);
-    echo html_writer::end_div();
-
-    echo html_writer::start_div('card-body');
-
-    // Template description.
-    $desckey = 'template_' . $code . '_desc';
-    if (get_string_manager()->string_exists($desckey, 'local_jobboard')) {
-        echo html_writer::start_div('alert alert-info d-flex align-items-start mb-4');
-        echo html_writer::tag('i', '', ['class' => 'fa fa-info-circle fa-lg mr-3 mt-1']);
-        echo html_writer::tag('div', get_string($desckey, 'local_jobboard'));
-        echo html_writer::end_div();
-    }
-
-    // Display form.
+    // Capture form HTML.
+    ob_start();
     $mform->display();
+    $formhtml = ob_get_clean();
 
-    echo html_writer::end_div(); // card-body
-    echo html_writer::end_div(); // card
+    // Use renderer.
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    $data = $renderer->prepare_admin_template_edit_data($code, $templatename, $formhtml, $pageurl);
+    echo $renderer->render_admin_template_edit_page($data);
 
-    // Navigation footer.
-    echo render_navigation_footer($pageurl);
-
-    echo html_writer::end_div(); // local-jobboard-templates
     echo $OUTPUT->footer();
     exit;
 }
@@ -204,64 +168,3 @@ $data = $renderer->prepare_admin_templates_page_data(
 echo $renderer->render_admin_templates_page($data);
 
 echo $OUTPUT->footer();
-
-// =============================================================================
-// HELPER FUNCTIONS
-// =============================================================================
-
-/**
- * Get Bootstrap badge class for category.
- *
- * @param string $category Category code.
- * @return string Badge class.
- */
-function get_category_badge_class(string $category): string {
-    $classes = [
-        'application' => 'badge-primary',
-        'documents' => 'badge-info',
-        'interview' => 'badge-warning',
-        'selection' => 'badge-success',
-        'system' => 'badge-secondary',
-    ];
-    return $classes[$category] ?? 'badge-light';
-}
-
-/**
- * Render navigation footer.
- *
- * @param moodle_url $pageurl Current page URL.
- * @return string HTML.
- */
-function render_navigation_footer(moodle_url $pageurl): string {
-    $html = html_writer::start_div('card mt-4 bg-light');
-    $html .= html_writer::start_div('card-body d-flex flex-wrap align-items-center justify-content-center');
-
-    $html .= html_writer::link(
-        new moodle_url('/local/jobboard/index.php'),
-        '<i class="fa fa-tachometer-alt mr-2"></i>' . get_string('dashboard', 'local_jobboard'),
-        ['class' => 'btn btn-outline-secondary m-1']
-    );
-
-    $html .= html_writer::link(
-        new moodle_url('/local/jobboard/admin/doctypes.php'),
-        '<i class="fa fa-file-alt mr-2"></i>' . get_string('doctypes', 'local_jobboard'),
-        ['class' => 'btn btn-outline-primary m-1']
-    );
-
-    $html .= html_writer::link(
-        new moodle_url('/local/jobboard/admin/roles.php'),
-        '<i class="fa fa-user-tag mr-2"></i>' . get_string('manageroles', 'local_jobboard'),
-        ['class' => 'btn btn-outline-info m-1']
-    );
-
-    $html .= html_writer::link(
-        new moodle_url('/admin/settings.php', ['section' => 'local_jobboard']),
-        '<i class="fa fa-cog mr-2"></i>' . get_string('pluginsettings', 'local_jobboard'),
-        ['class' => 'btn btn-outline-secondary m-1']
-    );
-
-    $html .= html_writer::end_div();
-    $html .= html_writer::end_div();
-
-    return $html;
-}

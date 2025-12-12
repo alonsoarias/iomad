@@ -3150,6 +3150,41 @@ class renderer extends renderer_base {
     }
 
     /**
+     * Render signup success page.
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_signup_success_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/signup_success', $data);
+    }
+
+    /**
+     * Prepare data for signup success page.
+     *
+     * @param string $useremail User email address.
+     * @return array Template data.
+     */
+    public function prepare_signup_success_data(string $useremail): array {
+        return [
+            'useremail' => $useremail,
+            'backurl' => (new \moodle_url('/local/jobboard/public.php'))->out(false),
+            'loginurl' => (new \moodle_url('/login/index.php'))->out(false),
+            'str' => [
+                'title' => get_string('signup_success_title', 'local_jobboard'),
+                'message' => get_string('signup_success_message', 'local_jobboard', $useremail),
+                'instructions_title' => get_string('signup_email_instructions_title', 'local_jobboard'),
+                'instruction_1' => get_string('signup_email_instruction_1', 'local_jobboard'),
+                'instruction_2' => get_string('signup_email_instruction_2', 'local_jobboard'),
+                'instruction_3' => get_string('signup_email_instruction_3', 'local_jobboard'),
+                'check_spam' => get_string('signup_check_spam', 'local_jobboard'),
+                'back_to_vacancies' => get_string('backtovacancies', 'local_jobboard'),
+                'login' => get_string('login'),
+            ],
+        ];
+    }
+
+    /**
      * Prepare data for review page template.
      *
      * Handles both list mode (all applications pending review) and single application review mode.
@@ -6955,6 +6990,102 @@ class renderer extends renderer_base {
     }
 
     /**
+     * Render the import exemptions page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_import_exemptions_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/import_exemptions', $data);
+    }
+
+    /**
+     * Prepare import exemptions page data.
+     *
+     * @param string $formhtml Rendered form HTML.
+     * @return array Template data.
+     */
+    public function prepare_import_exemptions_data(string $formhtml): array {
+        $sample = "email,exemptiontype,exempteddocs\n" .
+                  "juan.perez@example.com,historico_iser,cedula|rut|eps\n" .
+                  "maria.garcia@example.com,historico_iser,\n" .
+                  "pedro.lopez@example.com,documentos_recientes,antecedentes_procuraduria|antecedentes_contraloria";
+
+        return [
+            'pagetitle' => get_string('importexemptions', 'local_jobboard'),
+            'formhtml' => $formhtml,
+            'sample' => $sample,
+            'str' => [
+                'instructions_title' => get_string('importinstructions', 'local_jobboard'),
+                'instructions_text' => get_string('importinstructionstext', 'local_jobboard'),
+                'required_columns' => get_string('requiredcolumns', 'local_jobboard'),
+                'optional_columns' => get_string('optionalcolumns', 'local_jobboard'),
+                'sample_csv' => get_string('samplecsv', 'local_jobboard'),
+                'or' => get_string('or'),
+                'user_identifier' => get_string('useridentifier', 'local_jobboard'),
+                'exemptiontype_desc' => get_string('exemptiontype_desc', 'local_jobboard'),
+                'exempteddocs_desc' => get_string('exempteddocs_desc', 'local_jobboard'),
+                'documentref_desc' => get_string('documentref_desc', 'local_jobboard'),
+                'notes_desc' => get_string('notes_desc', 'local_jobboard'),
+            ],
+        ];
+    }
+
+    /**
+     * Render the import exemptions results page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_import_exemptions_results_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/import_exemptions_results', $data);
+    }
+
+    /**
+     * Prepare import exemptions results page data.
+     *
+     * @param array $results Import results.
+     * @param bool $ispreview Whether in preview mode.
+     * @return array Template data.
+     */
+    public function prepare_import_exemptions_results_data(array $results, bool $ispreview): array {
+        $errors = array_slice($results['errors'] ?? [], 0, 20);
+        $morecount = max(0, count($results['errors'] ?? []) - 20);
+
+        return [
+            'pagetitle' => get_string('importresults', 'local_jobboard'),
+            'ispreview' => $ispreview,
+            'haspreview' => !empty($results['preview']),
+            'previewitems' => $results['preview'] ?? [],
+            'previewtotal' => count($results['preview'] ?? []),
+            'successcount' => $results['success'] ?? 0,
+            'skippedcount' => $results['skipped'] ?? 0,
+            'hasskipped' => ($results['skipped'] ?? 0) > 0,
+            'haserrors' => !empty($results['errors']),
+            'errors' => $errors,
+            'hasmoreerrors' => $morecount > 0,
+            'moreerrors' => $morecount,
+            'continueurl' => (new \moodle_url('/local/jobboard/manage_exemptions.php'))->out(false),
+            'str' => [
+                'preview_notice' => get_string('previewmodenotice', 'local_jobboard'),
+                'row' => get_string('row', 'local_jobboard'),
+                'user' => get_string('user'),
+                'email' => get_string('email'),
+                'exemptiontype' => get_string('exemptiontype', 'local_jobboard'),
+                'numdocs' => get_string('numdocs', 'local_jobboard'),
+                'preview_total' => get_string('previewtotal', 'local_jobboard', count($results['preview'] ?? [])),
+                'preview_confirm' => get_string('previewconfirm', 'local_jobboard'),
+                'import_complete' => get_string('importcomplete', 'local_jobboard'),
+                'imported_success' => get_string('importedsuccess', 'local_jobboard', $results['success'] ?? 0),
+                'imported_skipped' => get_string('importedskipped', 'local_jobboard', $results['skipped'] ?? 0),
+                'import_errors' => get_string('importerrors', 'local_jobboard'),
+                'and_more' => get_string('andmore', 'local_jobboard', $morecount),
+                'continue' => get_string('continue'),
+            ],
+        ];
+    }
+
+    /**
      * Render the exemption form page.
      *
      * @param array $data Template data.
@@ -7175,6 +7306,151 @@ class renderer extends renderer_base {
             'hasvacancy' => ($vacancy !== null),
             'vacancy' => $vacancydata,
             'formhtml' => $formhtml,
+            'str' => $strdata,
+        ];
+    }
+
+    /**
+     * Render admin template edit page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_admin_template_edit_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/admin_template_edit', $data);
+    }
+
+    /**
+     * Prepare admin template edit page data.
+     *
+     * @param string $code Template code.
+     * @param string $templatename Template display name.
+     * @param string $formhtml Rendered form HTML.
+     * @param \moodle_url $pageurl Page URL.
+     * @return array Template data.
+     */
+    public function prepare_admin_template_edit_data(
+        string $code,
+        string $templatename,
+        string $formhtml,
+        \moodle_url $pageurl
+    ): array {
+        // Check if description exists.
+        $desckey = 'template_' . $code . '_desc';
+        $hasdesc = get_string_manager()->string_exists($desckey, 'local_jobboard');
+        $description = $hasdesc ? get_string($desckey, 'local_jobboard') : '';
+
+        $strdata = [
+            'email_templates' => get_string('email_templates', 'local_jobboard'),
+            'back_to_templates' => get_string('back_to_templates', 'local_jobboard'),
+            'edit_template' => get_string('edit_template', 'local_jobboard'),
+            'dashboard' => get_string('dashboard', 'local_jobboard'),
+            'doctypes' => get_string('doctypes', 'local_jobboard'),
+            'manageroles' => get_string('manageroles', 'local_jobboard'),
+            'pluginsettings' => get_string('pluginsettings', 'local_jobboard'),
+        ];
+
+        return [
+            'pagetitle' => get_string('edit_template', 'local_jobboard') . ': ' . $templatename,
+            'backurl' => $pageurl->out(false),
+            'templatename' => $templatename,
+            'templatecode' => $code,
+            'hasdescription' => $hasdesc,
+            'description' => $description,
+            'formhtml' => $formhtml,
+            'navfooter' => [
+                'dashboardurl' => (new \moodle_url('/local/jobboard/index.php'))->out(false),
+                'doctypesurl' => (new \moodle_url('/local/jobboard/admin/doctypes.php'))->out(false),
+                'rolesurl' => (new \moodle_url('/local/jobboard/admin/roles.php'))->out(false),
+                'settingsurl' => (new \moodle_url('/admin/settings.php', ['section' => 'local_jobboard']))->out(false),
+            ],
+            'str' => $strdata,
+        ];
+    }
+
+    /**
+     * Render admin doctype form page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_admin_doctype_form_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/admin_doctype_form', $data);
+    }
+
+    /**
+     * Prepare admin doctype form page data.
+     *
+     * @param bool $isedit Whether editing existing doctype.
+     * @param string $formhtml Rendered form HTML.
+     * @param \moodle_url $pageurl Page URL.
+     * @return array Template data.
+     */
+    public function prepare_admin_doctype_form_data(bool $isedit, string $formhtml, \moodle_url $pageurl): array {
+        $strdata = [
+            'back' => get_string('back'),
+        ];
+
+        return [
+            'pagetitle' => $isedit
+                ? get_string('editdoctype', 'local_jobboard')
+                : get_string('adddoctype', 'local_jobboard'),
+            'backurl' => $pageurl->out(false),
+            'isedit' => $isedit,
+            'formhtml' => $formhtml,
+            'str' => $strdata,
+        ];
+    }
+
+    /**
+     * Render admin doctype confirm delete page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_admin_doctype_confirm_delete_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/admin_doctype_confirm_delete', $data);
+    }
+
+    /**
+     * Prepare admin doctype confirm delete page data.
+     *
+     * @param object $doctype Doctype record.
+     * @param int $usagecount Number of documents using this type.
+     * @param \moodle_url $pageurl Page URL.
+     * @return array Template data.
+     */
+    public function prepare_admin_doctype_confirm_delete_data(
+        object $doctype,
+        int $usagecount,
+        \moodle_url $pageurl
+    ): array {
+        // Get display name.
+        $name = get_string_manager()->string_exists('doctype_' . $doctype->code, 'local_jobboard')
+            ? get_string('doctype_' . $doctype->code, 'local_jobboard')
+            : $doctype->name;
+
+        $strdata = [
+            'confirmdeletedoctype' => get_string('confirmdeletedoctype', 'local_jobboard'),
+            'error_doctypeinuse' => get_string('error:doctypeinuse', 'local_jobboard', $usagecount),
+            'confirmdeletedoctype_msg' => get_string('confirmdeletedoctype_msg', 'local_jobboard', $name),
+            'code' => get_string('code', 'local_jobboard'),
+            'back' => get_string('back'),
+            'delete' => get_string('delete'),
+            'cancel' => get_string('cancel'),
+        ];
+
+        return [
+            'doctypename' => $name,
+            'doctypecode' => $doctype->code,
+            'inuse' => $usagecount > 0,
+            'usagecount' => $usagecount,
+            'deleteurl' => (new \moodle_url($pageurl, [
+                'action' => 'delete',
+                'id' => $doctype->id,
+                'sesskey' => sesskey(),
+            ]))->out(false),
+            'cancelurl' => $pageurl->out(false),
             'str' => $strdata,
         ];
     }

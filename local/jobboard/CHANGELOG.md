@@ -5,6 +5,32 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.8] - 2025-12-12
+
+### Added
+- **Mustache Templates**:
+  - `pages/admin_template_edit.mustache` for email template edit form
+  - `pages/admin_doctype_form.mustache` for document type add/edit form
+  - `pages/admin_doctype_confirm_delete.mustache` for doctype delete confirmation
+  - `pages/signup_success.mustache` for registration success page
+  - `pages/import_exemptions.mustache` for exemption import form
+  - `pages/import_exemptions_results.mustache` for import results
+- **Renderer Methods**:
+  - `render_admin_template_edit_page()` and `prepare_admin_template_edit_data()`
+  - `render_admin_doctype_form_page()` and `prepare_admin_doctype_form_data()`
+  - `render_admin_doctype_confirm_delete_page()` and `prepare_admin_doctype_confirm_delete_data()`
+  - `render_signup_success_page()` and `prepare_signup_success_data()`
+  - `render_import_exemptions_page()` and `prepare_import_exemptions_data()`
+  - `render_import_exemptions_results_page()` and `prepare_import_exemptions_results_data()`
+
+### Changed
+- Migrated `admin/templates.php` edit view to use renderer + template pattern
+- Migrated `admin/doctypes.php` add/edit and confirm delete views to use renderer + template pattern
+- Migrated `signup.php` success view to use renderer + template pattern
+- Migrated `import_exemptions.php` form and results views to use renderer + template pattern
+- Removed helper functions from admin pages (now in templates)
+- Removed ~200 lines of inline HTML from PHP files
+
 ## [3.5.7] - 2025-12-12
 
 ### Added

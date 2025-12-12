@@ -1,0 +1,107 @@
+{{!
+    @template local_jobboard/pages/import_exemptions_results
+
+    CSV import results page for ISER exemptions.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * ispreview - bool - Whether showing preview results
+    * haspreview - bool - Whether there are preview items
+    * previewitems - array - Preview items (row, user, email, type, docs)
+    * previewtotal - int - Total preview count
+    * successcount - int - Number of successful imports
+    * skippedcount - int - Number of skipped items
+    * hasskipped - bool - Whether there are skipped items
+    * haserrors - bool - Whether there are errors
+    * errors - array - Error messages (limited to 20)
+    * moreerrors - int - Count of additional errors beyond 20
+    * continueurl - string - URL to continue
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "pagetitle": "Import Results",
+        "ispreview": true,
+        "haspreview": true,
+        "previewtotal": 5
+    }
+}}
+
+<div class="jb-local-jobboard-import-results" data-region="jobboard-import-exemptions-results">
+    {{! Page Heading }}}
+    <h2 class="jb-mb-4">{{pagetitle}}</h2>
+
+    {{#ispreview}}
+    {{! Preview Mode Notice }}}
+    <div class="jb-alert jb-alert-info">
+        <i class="fa fa-info-circle jb-mr-2"></i>
+        {{str.preview_notice}}
+    </div>
+
+    {{#haspreview}}
+    {{! Preview Table }}}
+    <div class="jb-table-responsive jb-mb-3">
+        <table class="jb-table jb-table-striped">
+            <thead>
+                <tr>
+                    <th>{{str.row}}</th>
+                    <th>{{str.user}}</th>
+                    <th>{{str.email}}</th>
+                    <th>{{str.exemptiontype}}</th>
+                    <th>{{str.numdocs}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#previewitems}}
+                <tr>
+                    <td>{{row}}</td>
+                    <td>{{user}}</td>
+                    <td>{{email}}</td>
+                    <td>{{type}}</td>
+                    <td>{{docs}}</td>
+                </tr>
+                {{/previewitems}}
+            </tbody>
+        </table>
+    </div>
+
+    <p class="jb-text-success jb-font-weight-bold">
+        {{str.preview_total}}
+    </p>
+
+    {{! Confirm Import Form }}}
+    <p>{{str.preview_confirm}}</p>
+    {{/haspreview}}
+    {{/ispreview}}
+
+    {{^ispreview}}
+    {{! Actual Import Results }}}
+    <div class="jb-alert jb-alert-success">
+        <strong>{{str.import_complete}}</strong><br>
+        {{str.imported_success}}<br>
+        {{#hasskipped}}
+        {{str.imported_skipped}}
+        {{/hasskipped}}
+    </div>
+    {{/ispreview}}
+
+    {{! Errors Section }}}
+    {{#haserrors}}
+    <div class="jb-alert jb-alert-warning">
+        <strong>{{str.import_errors}}</strong><br>
+        <ul class="jb-mb-0">
+            {{#errors}}
+            <li>{{.}}</li>
+            {{/errors}}
+            {{#hasmoreerrors}}
+            <li>... {{str.and_more}}</li>
+            {{/hasmoreerrors}}
+        </ul>
+    </div>
+    {{/haserrors}}
+
+    {{! Continue Button }}}
+    <a href="{{continueurl}}" class="jb-btn jb-btn-primary">
+        {{str.continue}}
+    </a>
+</div>

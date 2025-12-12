@@ -237,111 +237,28 @@ if ($mform->is_cancelled()) {
     $csvreader->close();
     $csvreader->cleanup();
 
-    // Show results.
+    // Show results using renderer + template pattern.
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('importresults', 'local_jobboard'));
 
-    if ($data->previewonly) {
-        echo $OUTPUT->notification(get_string('previewmodenotice', 'local_jobboard'), 'info');
-
-        if (!empty($results['preview'])) {
-            $table = new html_table();
-            $table->head = [
-                get_string('row', 'local_jobboard'),
-                get_string('user'),
-                get_string('email'),
-                get_string('exemptiontype', 'local_jobboard'),
-                get_string('numdocs', 'local_jobboard'),
-            ];
-            $table->attributes['class'] = 'table table-striped';
-
-            foreach ($results['preview'] as $preview) {
-                $table->data[] = [
-                    $preview['row'],
-                    $preview['user'],
-                    $preview['email'],
-                    $preview['type'],
-                    $preview['docs'],
-                ];
-            }
-
-            echo html_writer::table($table);
-            echo '<p class="text-success font-weight-bold">' .
-                get_string('previewtotal', 'local_jobboard', count($results['preview'])) . '</p>';
-        }
-
-        // Button to import for real.
-        echo '<form method="post" action="">';
-        echo '<input type="hidden" name="sesskey" value="' . sesskey() . '">';
-        echo '<p>' . get_string('previewconfirm', 'local_jobboard') . '</p>';
-        echo '</form>';
-
-    } else {
-        // Show actual results.
-        echo '<div class="alert alert-success">';
-        echo '<strong>' . get_string('importcomplete', 'local_jobboard') . '</strong><br>';
-        echo get_string('importedsuccess', 'local_jobboard', $results['success']) . '<br>';
-        if ($results['skipped'] > 0) {
-            echo get_string('importedskipped', 'local_jobboard', $results['skipped']);
-        }
-        echo '</div>';
-    }
-
-    // Show errors.
-    if (!empty($results['errors'])) {
-        echo '<div class="alert alert-warning">';
-        echo '<strong>' . get_string('importerrors', 'local_jobboard') . '</strong><br>';
-        echo '<ul>';
-        foreach (array_slice($results['errors'], 0, 20) as $error) {
-            echo '<li>' . $error . '</li>';
-        }
-        if (count($results['errors']) > 20) {
-            echo '<li>... ' . get_string('andmore', 'local_jobboard',
-                count($results['errors']) - 20) . '</li>';
-        }
-        echo '</ul>';
-        echo '</div>';
-    }
-
-    echo '<a href="' . new moodle_url('/local/jobboard/manage_exemptions.php') .
-        '" class="btn btn-primary">' . get_string('continue') . '</a>';
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    $templatedata = $renderer->prepare_import_exemptions_results_data($results, (bool) $data->previewonly);
+    echo $renderer->render_import_exemptions_results_page($templatedata);
 
     echo $OUTPUT->footer();
     exit;
 }
 
-// Show form.
+// Show form using renderer + template pattern.
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(get_string('importexemptions', 'local_jobboard'));
-
-// Instructions.
-echo '<div class="card mb-4">';
-echo '<div class="card-header">';
-echo '<h5>' . get_string('importinstructions', 'local_jobboard') . '</h5>';
-echo '</div>';
-echo '<div class="card-body">';
-echo '<p>' . get_string('importinstructionstext', 'local_jobboard') . '</p>';
-echo '<h6>' . get_string('requiredcolumns', 'local_jobboard') . '</h6>';
-echo '<ul>';
-echo '<li><code>email</code> ' . get_string('or') . ' <code>username</code> ' .
-    get_string('or') . ' <code>idnumber</code> - ' . get_string('useridentifier', 'local_jobboard') . '</li>';
-echo '</ul>';
-echo '<h6>' . get_string('optionalcolumns', 'local_jobboard') . '</h6>';
-echo '<ul>';
-echo '<li><code>exemptiontype</code> - ' . get_string('exemptiontype_desc', 'local_jobboard') . '</li>';
-echo '<li><code>exempteddocs</code> - ' . get_string('exempteddocs_desc', 'local_jobboard') . '</li>';
-echo '<li><code>documentref</code> - ' . get_string('documentref_desc', 'local_jobboard') . '</li>';
-echo '<li><code>notes</code> - ' . get_string('notes_desc', 'local_jobboard') . '</li>';
-echo '</ul>';
-echo '<h6>' . get_string('samplecsv', 'local_jobboard') . '</h6>';
-echo '<pre class="bg-light p-2">email,exemptiontype,exempteddocs
-juan.perez@example.com,historico_iser,cedula|rut|eps
-maria.garcia@example.com,historico_iser,
-pedro.lopez@example.com,documentos_recientes,antecedentes_procuraduria|antecedentes_contraloria</pre>';
-echo '</div>';
-echo '</div>';
-
+// Capture form HTML.
+ob_start();
 $mform->display();
+$formhtml = ob_get_clean();
 
-echo $OUTPUT->footer();
+// Use renderer.
+$renderer = $PAGE->get_renderer('local_jobboard');
+$templatedata = $renderer->prepare_import_exemptions_data($formhtml);
+echo $renderer->render_import_exemptions_page($templatedata);
+
+echo $OUTPUT->footer()

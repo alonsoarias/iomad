@@ -1,0 +1,67 @@
+{{!
+    @template local_jobboard/pages/import_exemptions
+
+    CSV import page for ISER exemptions.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * formhtml - string - Rendered form HTML
+    * str - object - Language strings
+      * instructions_title - string - Instructions title
+      * instructions_text - string - Instructions text
+      * required_columns - string - Required columns header
+      * optional_columns - string - Optional columns header
+      * sample_csv - string - Sample CSV header
+      * or - string - "or" text
+      * user_identifier - string - User identifier description
+      * exemptiontype_desc - string - Exemption type description
+      * exempteddocs_desc - string - Exempted docs description
+      * documentref_desc - string - Document ref description
+      * notes_desc - string - Notes description
+    * sample - string - Sample CSV content
+
+    Example context (json):
+    {
+        "pagetitle": "Import Exemptions"
+    }
+}}
+
+<div class="jb-local-jobboard-import-exemptions" data-region="jobboard-import-exemptions">
+    {{! Page Heading }}}
+    <h2 class="jb-mb-4">{{pagetitle}}</h2>
+
+    {{! Instructions Card }}}
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-header">
+            <h5 class="jb-mb-0">{{str.instructions_title}}</h5>
+        </div>
+        <div class="jb-card-body">
+            <p>{{str.instructions_text}}</p>
+
+            {{! Required Columns }}}
+            <h6>{{str.required_columns}}</h6>
+            <ul>
+                <li>
+                    <code>email</code> {{str.or}} <code>username</code> {{str.or}} <code>idnumber</code>
+                    - {{str.user_identifier}}
+                </li>
+            </ul>
+
+            {{! Optional Columns }}}
+            <h6>{{str.optional_columns}}</h6>
+            <ul>
+                <li><code>exemptiontype</code> - {{str.exemptiontype_desc}}</li>
+                <li><code>exempteddocs</code> - {{str.exempteddocs_desc}}</li>
+                <li><code>documentref</code> - {{str.documentref_desc}}</li>
+                <li><code>notes</code> - {{str.notes_desc}}</li>
+            </ul>
+
+            {{! Sample CSV }}}
+            <h6>{{str.sample_csv}}</h6>
+            <pre class="jb-bg-light jb-p-2">{{{sample}}}</pre>
+        </div>
+    </div>
+
+    {{! Form }}}
+    {{{formhtml}}}
+</div>

@@ -1,0 +1,79 @@
+{{!
+    @template local_jobboard/pages/admin_template_edit
+
+    Email template edit form page.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * backurl - string - Back URL
+    * templatename - string - Template display name
+    * templatecode - string - Template code
+    * hasdescription - bool - Has description
+    * description - string - Template description
+    * formhtml - string - Rendered form HTML
+    * navfooter - object - Navigation footer data
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "pagetitle": "Edit Template",
+        "templatename": "Application Received",
+        "templatecode": "application_received"
+    }
+}}
+
+<div class="jb-local-jobboard-templates" data-region="jobboard-template-edit">
+    {{! Page Header }}
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <h3 class="jb-mb-0">{{str.email_templates}}</h3>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-2"></i>
+            {{str.back_to_templates}}
+        </a>
+    </div>
+
+    {{! Template Edit Card }}
+    <div class="jb-card jb-shadow-sm jb-mb-4">
+        <div class="jb-card-header jb-bg-primary jb-text-white jb-d-flex jb-justify-content-between jb-align-items-center">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-edit jb-mr-2"></i>
+                {{str.edit_template}}: {{templatename}}
+            </h5>
+            <span class="jb-badge jb-badge-light">{{templatecode}}</span>
+        </div>
+        <div class="jb-card-body">
+            {{! Template Description }}
+            {{#hasdescription}}
+            <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-start jb-mb-4">
+                <i class="fa fa-info-circle fa-lg jb-mr-3 jb-mt-1"></i>
+                <div>{{description}}</div>
+            </div>
+            {{/hasdescription}}
+
+            {{! Form }}
+            {{{formhtml}}}
+        </div>
+    </div>
+
+    {{! Navigation Footer }}
+    <div class="jb-card jb-mt-4 jb-bg-light">
+        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
+            <a href="{{navfooter.dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
+                <i class="fa fa-tachometer-alt jb-mr-2"></i>
+                {{str.dashboard}}
+            </a>
+            <a href="{{navfooter.doctypesurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
+                <i class="fa fa-file-alt jb-mr-2"></i>
+                {{str.doctypes}}
+            </a>
+            <a href="{{navfooter.rolesurl}}" class="jb-btn jb-btn-outline-info jb-m-1">
+                <i class="fa fa-user-tag jb-mr-2"></i>
+                {{str.manageroles}}
+            </a>
+            <a href="{{navfooter.settingsurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
+                <i class="fa fa-cog jb-mr-2"></i>
+                {{str.pluginsettings}}
+            </a>
+        </div>
+    </div>
+</div>

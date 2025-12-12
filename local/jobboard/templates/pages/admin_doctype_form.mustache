@@ -1,0 +1,48 @@
+{{!
+    @template local_jobboard/pages/admin_doctype_form
+
+    Document type add/edit form page.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * backurl - string - Back URL
+    * isedit - bool - Whether editing existing doctype
+    * formhtml - string - Rendered form HTML
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "pagetitle": "Add Document Type",
+        "backurl": "/local/jobboard/admin/doctypes.php",
+        "isedit": false
+    }
+}}
+
+<div class="jb-local-jobboard-doctypes" data-region="jobboard-doctype-form">
+    {{! Page Header }}
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+        <h3 class="jb-mb-0">{{pagetitle}}</h3>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-2"></i>
+            {{str.back}}
+        </a>
+    </div>
+
+    {{! Form Card }}
+    <div class="jb-card jb-shadow-sm">
+        <div class="jb-card-header jb-bg-white">
+            <h5 class="jb-mb-0">
+                {{#isedit}}
+                <i class="fa fa-edit jb-text-primary jb-mr-2"></i>
+                {{/isedit}}
+                {{^isedit}}
+                <i class="fa fa-plus jb-text-primary jb-mr-2"></i>
+                {{/isedit}}
+                {{pagetitle}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            {{{formhtml}}}
+        </div>
+    </div>
+</div>

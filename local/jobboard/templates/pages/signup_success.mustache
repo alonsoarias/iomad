@@ -1,0 +1,73 @@
+{{!
+    @template local_jobboard/pages/signup_success
+
+    Signup success confirmation page.
+
+    Context variables required for this template:
+    * useremail - string - The user's email address
+    * backurl - string - URL to return to vacancies
+    * loginurl - string - URL to login page
+    * str - object - Language strings
+      * title - string - Success title
+      * message - string - Success message with email
+      * instructions_title - string - Email instructions title
+      * instruction_1 - string - First instruction
+      * instruction_2 - string - Second instruction
+      * instruction_3 - string - Third instruction
+      * check_spam - string - Check spam notice
+      * back_to_vacancies - string - Back button text
+      * login - string - Login button text
+
+    Example context (json):
+    {
+        "useremail": "user@example.com",
+        "backurl": "/local/jobboard/public.php",
+        "loginurl": "/login/index.php"
+    }
+}}
+
+<div class="jb-signup-success jb-text-center jb-my-5" data-region="jobboard-signup-success">
+    {{! Success Icon }}}
+    <div class="jb-text-success jb-mb-4">
+        <i class="fa fa-check-circle fa-5x"></i>
+    </div>
+
+    {{! Title }}}
+    <h2 class="jb-mb-3">{{str.title}}</h2>
+
+    {{! Message }}}
+    <p class="jb-lead jb-text-muted">{{str.message}}</p>
+
+    {{! Instructions Card }}}
+    <div class="jb-alert jb-alert-info jb-text-start jb-mt-4 jb-mx-auto jb-narrow-container">
+        <h5>
+            <i class="fa fa-envelope jb-me-2"></i>
+            {{str.instructions_title}}
+        </h5>
+        <ol class="jb-mb-0">
+            <li>{{str.instruction_1}}</li>
+            <li>{{str.instruction_2}}</li>
+            <li>{{str.instruction_3}}</li>
+        </ol>
+    </div>
+
+    {{! Spam Notice }}}
+    <p class="jb-text-muted jb-mt-3">
+        <small>
+            <i class="fa fa-exclamation-triangle jb-me-1"></i>
+            {{str.check_spam}}
+        </small>
+    </p>
+
+    {{! Action Buttons }}}
+    <div class="jb-mt-4">
+        <a href="{{backurl}}" class="jb-btn jb-btn-primary jb-me-2">
+            <i class="fa fa-arrow-left jb-me-2"></i>
+            {{str.back_to_vacancies}}
+        </a>
+        <a href="{{loginurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-sign-in jb-me-2"></i>
+            {{str.login}}
+        </a>
+    </div>
+</div>
