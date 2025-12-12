@@ -1,27 +1,81 @@
 {{!
     @template local_jobboard/components/progress
 
-    Progress bar component.
+    Enhanced progress bar component with multiple variants.
+    Supports stacked progress, labels, and animations.
 
     Context variables:
     * value (number) - Current value (0-100)
     * color (string) - Color: primary, success, warning, danger, info
-    * label (string) - Optional label to show
+    * label (string) - Optional label to show inside bar
     * showpercent (bool) - Show percentage text
     * height (string) - Height in pixels (default: 20)
     * striped (bool) - Striped style
     * animated (bool) - Animated stripes
+    * segments (array) - For stacked: {value, color, label}
+    * arialabel (string) - ARIA label
+    * size (string) - Size: sm, md, lg
 
     Example context (json):
     {
         "value": 75,
         "color": "success",
-        "showpercent": true
+        "showpercent": true,
+        "striped": true
     }
 }}
-<div class="jb-progress"{{#height}} style="height: {{height}}px;"{{/height}}>
-    <div class="jb-progress-bar jb-bg-{{color}}{{#striped}} jb-progress-bar-striped{{/striped}}{{#animated}} jb-progress-bar-animated{{/animated}}" role="progressbar" style="width: {{value}}%;" aria-valuenow="{{value}}" aria-valuemin="0" aria-valuemax="100">
-        {{#showpercent}}{{value}}%{{/showpercent}}
-        {{#label}}{{label}}{{/label}}
+{{#segments}}
+{{! Stacked Progress Bar }}
+<div class="jb-progress jb-progress-stacked {{#size}}jb-progress-{{size}}{{/size}}"
+     {{#height}}style="height: {{height}}px;"{{/height}}
+     role="progressbar"
+     aria-label="{{#arialabel}}{{arialabel}}{{/arialabel}}{{^arialabel}}{{#str}}progress, local_jobboard{{/str}}{{/arialabel}}">
+    {{#segments}}
+    <div class="jb-progress-bar jb-bg-{{color}}{{#striped}} jb-progress-bar-striped{{/striped}}{{#animated}} jb-progress-bar-animated{{/animated}}"
+         style="width: {{value}}%;"
+         role="presentation"
+         title="{{label}}: {{value}}%">
+        {{#showlabel}}{{label}}{{/showlabel}}
+        {{#showvalue}}{{value}}%{{/showvalue}}
     </div>
+    {{/segments}}
 </div>
+{{#legend}}
+<div class="jb-d-flex jb-flex-wrap jb-gap-3 jb-mt-2 jb-small">
+    {{#segments}}
+    <span class="jb-d-flex jb-align-items-center">
+        <span class="jb-badge jb-badge-{{color}} jb-mr-1" style="width: 12px; height: 12px; padding: 0;"></span>
+        {{label}}: <strong class="jb-ml-1">{{value}}%</strong>
+    </span>
+    {{/segments}}
+</div>
+{{/legend}}
+{{/segments}}
+
+{{^segments}}
+{{! Single Progress Bar }}
+<div class="jb-progress-wrapper">
+    {{#toplabel}}
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-1">
+        <span class="jb-small jb-text-muted">{{toplabel}}</span>
+        {{#showpercent}}<span class="jb-small jb-fw-medium">{{value}}%</span>{{/showpercent}}
+    </div>
+    {{/toplabel}}
+    <div class="jb-progress {{#size}}jb-progress-{{size}}{{/size}}"
+         {{#height}}style="height: {{height}}px;"{{/height}}
+         role="progressbar"
+         aria-valuenow="{{value}}"
+         aria-valuemin="0"
+         aria-valuemax="100"
+         aria-label="{{#arialabel}}{{arialabel}}{{/arialabel}}{{^arialabel}}{{#str}}progress, local_jobboard{{/str}}{{/arialabel}}">
+        <div class="jb-progress-bar jb-bg-{{color}}{{#striped}} jb-progress-bar-striped{{/striped}}{{#animated}} jb-progress-bar-animated{{/animated}} {{#pulse}}jb-pulse{{/pulse}}"
+             style="width: {{value}}%;">
+            {{^toplabel}}{{#showpercent}}{{value}}%{{/showpercent}}{{/toplabel}}
+            {{#label}}{{label}}{{/label}}
+        </div>
+    </div>
+    {{#bottomlabel}}
+    <div class="jb-small jb-text-muted jb-mt-1">{{bottomlabel}}</div>
+    {{/bottomlabel}}
+</div>
+{{/segments}}

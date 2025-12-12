@@ -1,10 +1,15 @@
 {{!
     @template local_jobboard/components/timeline
 
-    Timeline component for history/activity display.
+    Enhanced timeline component for history/activity display.
+    Supports loading states, animations, and rich content.
 
     Context variables:
-    * items (array) - Timeline items {title, subtitle, time, icon, color, content}
+    * items (array) - Timeline items {title, subtitle, time, icon, color, content, badge}
+    * loading (bool) - Show loading skeleton
+    * animate (bool) - Enable entrance animations
+    * compact (bool) - Use compact variant
+    * arialabel (string) - ARIA label for accessibility
 
     Example context (json):
     {
@@ -14,33 +19,93 @@
                 "subtitle": "By Admin",
                 "time": "2 hours ago",
                 "icon": "check",
-                "color": "success"
+                "color": "success",
+                "badge": {"label": "New", "color": "primary"}
             }
-        ]
+        ],
+        "animate": true
     }
 }}
-<div class="jb-timeline">
-    {{#items}}
-    <div class="jb-timeline-item jb-d-flex jb-mb-3 jb-pb-3{{^islast}} jb-border-bottom{{/islast}}">
+{{#loading}}
+<div class="jb-timeline jb-timeline-loading" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-timeline-item jb-d-flex jb-mb-3 jb-pb-3 jb-border-bottom">
         <div class="jb-timeline-marker jb-flex-shrink-0 jb-mr-3">
-            <span class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-2 jb-d-inline-flex jb-align-items-center jb-justify-content-center" style="width: 36px; height: 36px;">
+            <span class="jb-skeleton-avatar jb-rounded-circle" style="width: 36px; height: 36px;"></span>
+        </div>
+        <div class="jb-timeline-content jb-flex-grow-1">
+            <div class="jb-skeleton-text" style="width: 60%;"></div>
+            <div class="jb-skeleton-text jb-mt-2" style="width: 40%;"></div>
+        </div>
+    </div>
+    <div class="jb-timeline-item jb-d-flex jb-mb-3 jb-pb-3 jb-border-bottom">
+        <div class="jb-timeline-marker jb-flex-shrink-0 jb-mr-3">
+            <span class="jb-skeleton-avatar jb-rounded-circle" style="width: 36px; height: 36px;"></span>
+        </div>
+        <div class="jb-timeline-content jb-flex-grow-1">
+            <div class="jb-skeleton-text" style="width: 70%;"></div>
+            <div class="jb-skeleton-text jb-mt-2" style="width: 50%;"></div>
+        </div>
+    </div>
+    <div class="jb-timeline-item jb-d-flex">
+        <div class="jb-timeline-marker jb-flex-shrink-0 jb-mr-3">
+            <span class="jb-skeleton-avatar jb-rounded-circle" style="width: 36px; height: 36px;"></span>
+        </div>
+        <div class="jb-timeline-content jb-flex-grow-1">
+            <div class="jb-skeleton-text" style="width: 55%;"></div>
+            <div class="jb-skeleton-text jb-mt-2" style="width: 35%;"></div>
+        </div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-timeline {{#compact}}jb-timeline-compact{{/compact}}" role="list" aria-label="{{#arialabel}}{{arialabel}}{{/arialabel}}{{^arialabel}}{{#str}}timeline, local_jobboard{{/str}}{{/arialabel}}">
+    {{#items}}
+    <div class="jb-timeline-item jb-d-flex jb-mb-3 jb-pb-3{{^islast}} jb-border-bottom{{/islast}} {{#animate}}jb-fade-in-up{{/animate}}"
+         role="listitem"
+         {{#animate}}style="animation-delay: {{animdelay}}s;"{{/animate}}>
+        <div class="jb-timeline-marker jb-flex-shrink-0 jb-mr-3">
+            <span class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-2 jb-d-inline-flex jb-align-items-center jb-justify-content-center jb-shadow-sm" style="width: 36px; height: 36px;">
                 <i class="fa fa-{{icon}}" aria-hidden="true"></i>
             </span>
         </div>
         <div class="jb-timeline-content jb-flex-grow-1">
-            <div class="jb-d-flex jb-justify-content-between jb-align-items-start">
-                <div>
-                    <strong class="jb-d-block">{{title}}</strong>
-                    {{#subtitle}}<small class="jb-text-muted">{{subtitle}}</small>{{/subtitle}}
+            <div class="jb-d-flex jb-justify-content-between jb-align-items-start jb-flex-wrap jb-gap-1">
+                <div class="jb-flex-grow-1">
+                    <div class="jb-d-flex jb-align-items-center jb-gap-2 jb-flex-wrap">
+                        <strong class="jb-d-block">{{title}}</strong>
+                        {{#badge}}
+                        <span class="jb-badge jb-badge-{{badge.color}} jb-badge-pill">{{badge.label}}</span>
+                        {{/badge}}
+                    </div>
+                    {{#subtitle}}<small class="jb-text-muted jb-d-block">{{subtitle}}</small>{{/subtitle}}
                 </div>
-                <small class="jb-text-muted jb-flex-shrink-0 jb-ml-2">
+                <small class="jb-text-muted jb-flex-shrink-0 jb-text-nowrap">
                     <i class="fa fa-clock jb-mr-1" aria-hidden="true"></i>{{time}}
                 </small>
             </div>
             {{#content}}
-            <div class="jb-mt-2 jb-text-muted jb-small">{{{content}}}</div>
+            <div class="jb-mt-2 jb-text-muted jb-small jb-bg-light jb-rounded jb-p-2">{{{content}}}</div>
             {{/content}}
+            {{#actions}}
+            <div class="jb-mt-2 jb-d-flex jb-gap-2">
+                {{#actions}}
+                <a href="{{url}}" class="jb-btn jb-btn-sm jb-btn-{{class}}">
+                    {{#icon}}<i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>{{/icon}}
+                    {{label}}
+                </a>
+                {{/actions}}
+            </div>
+            {{/actions}}
         </div>
     </div>
     {{/items}}
+
+    {{^items}}
+    <div class="jb-text-center jb-py-4 jb-text-muted" role="status">
+        <i class="fa fa-history fa-2x jb-mb-2" aria-hidden="true"></i>
+        <p class="jb-mb-0">{{#str}}nohistory, local_jobboard{{/str}}</p>
+    </div>
+    {{/items}}
 </div>
+{{/loading}}

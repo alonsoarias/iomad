@@ -1,32 +1,95 @@
 {{!
     @template local_jobboard/components/table
 
-    Table component with headers and rows.
+    Enhanced table component with loading states and accessibility.
+    Supports sorting, selection, and responsive behavior.
 
     Context variables:
-    * headers (array) - Column headers {label, sortable, sorturl, sorticon, class}
+    * headers (array) - Column headers {label, sortable, sorturl, sorticon, class, width}
     * rows (array) - Table rows, each with cells array {value, class, html}
     * hover (bool) - Enable hover effect
     * striped (bool) - Enable striped rows
     * responsive (bool) - Wrap in responsive container
     * emptytext (string) - Text when no rows
+    * emptyicon (string) - Icon for empty state
+    * loading (bool) - Show loading skeleton
+    * selectable (bool) - Enable row selection
+    * compact (bool) - Use compact variant
+    * caption (string) - Table caption for accessibility
+    * arialabel (string) - ARIA label
 
     Example context (json):
     {
         "headers": [{"label": "Name"}, {"label": "Status"}],
         "rows": [{"cells": [{"value": "Item 1"}, {"value": "Active"}]}],
-        "hover": true
+        "hover": true,
+        "responsive": true
     }
 }}
+{{#loading}}
+{{! Loading Skeleton State }}
 {{#responsive}}<div class="jb-table-responsive">{{/responsive}}
-<table class="jb-table{{#hover}} jb-table-hover{{/hover}}{{#striped}} jb-table-striped{{/striped}} jb-mb-0">
+<table class="jb-table jb-table-loading jb-mb-0" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
     <thead class="jb-thead-light">
         <tr>
             {{#headers}}
-            <th scope="col"{{#class}} class="{{class}}"{{/class}}>
+            <th scope="col"{{#class}} class="{{class}}"{{/class}}{{#width}} style="width: {{width}};"{{/width}}>
+                <div class="jb-skeleton-text" style="width: 70%;"></div>
+            </th>
+            {{/headers}}
+            {{^headers}}
+            <th scope="col"><div class="jb-skeleton-text" style="width: 60%;"></div></th>
+            <th scope="col"><div class="jb-skeleton-text" style="width: 70%;"></div></th>
+            <th scope="col"><div class="jb-skeleton-text" style="width: 50%;"></div></th>
+            <th scope="col"><div class="jb-skeleton-text" style="width: 40%;"></div></th>
+            {{/headers}}
+        </tr>
+    </thead>
+    <tbody>
+        {{#loadingrows}}
+        <tr>
+            {{#headers}}
+            <td><div class="jb-skeleton-text" style="width: {{#.}}80{{/.}}{{^.}}75{{/.}}%;"></div></td>
+            {{/headers}}
+            {{^headers}}
+            <td><div class="jb-skeleton-text" style="width: 85%;"></div></td>
+            <td><div class="jb-skeleton-text" style="width: 70%;"></div></td>
+            <td><div class="jb-skeleton-text" style="width: 60%;"></div></td>
+            <td><div class="jb-skeleton-text" style="width: 50%;"></div></td>
+            {{/headers}}
+        </tr>
+        {{/loadingrows}}
+        {{^loadingrows}}
+        <tr><td><div class="jb-skeleton-text"></div></td><td><div class="jb-skeleton-text"></div></td><td><div class="jb-skeleton-text"></div></td><td><div class="jb-skeleton-text"></div></td></tr>
+        <tr><td><div class="jb-skeleton-text"></div></td><td><div class="jb-skeleton-text"></div></td><td><div class="jb-skeleton-text"></div></td><td><div class="jb-skeleton-text"></div></td></tr>
+        <tr><td><div class="jb-skeleton-text"></div></td><td><div class="jb-skeleton-text"></div></td><td><div class="jb-skeleton-text"></div></td><td><div class="jb-skeleton-text"></div></td></tr>
+        {{/loadingrows}}
+    </tbody>
+</table>
+{{#responsive}}</div>{{/responsive}}
+{{/loading}}
+
+{{^loading}}
+{{#responsive}}<div class="jb-table-responsive">{{/responsive}}
+<table class="jb-table{{#hover}} jb-table-hover{{/hover}}{{#striped}} jb-table-striped{{/striped}}{{#compact}} jb-table-sm{{/compact}}{{#selectable}} jb-table-selectable{{/selectable}} jb-mb-0"
+       {{#arialabel}}aria-label="{{arialabel}}"{{/arialabel}}>
+    {{#caption}}
+    <caption class="jb-sr-only">{{caption}}</caption>
+    {{/caption}}
+    <thead class="jb-thead-light">
+        <tr>
+            {{#selectable}}
+            <th scope="col" class="jb-text-center" style="width: 40px;">
+                <input type="checkbox" class="jb-form-check-input jb-select-all" aria-label="{{#str}}selectall{{/str}}">
+            </th>
+            {{/selectable}}
+            {{#headers}}
+            <th scope="col"{{#class}} class="{{class}}"{{/class}}{{#width}} style="width: {{width}};"{{/width}}>
                 {{#sortable}}
-                <a href="{{sorturl}}" class="jb-text-decoration-none jb-text-dark">
-                    {{label}}{{#sorticon}}{{{sorticon}}}{{/sorticon}}
+                <a href="{{sorturl}}" class="jb-text-decoration-none jb-text-dark jb-d-inline-flex jb-align-items-center jb-sort-link">
+                    {{label}}
+                    {{#sorticon}}<span class="jb-ml-1">{{{sorticon}}}</span>{{/sorticon}}
+                    {{^sorticon}}<i class="fa fa-sort jb-ml-1 jb-text-muted" aria-hidden="true"></i>{{/sorticon}}
                 </a>
                 {{/sortable}}
                 {{^sortable}}{{label}}{{/sortable}}
@@ -36,9 +99,14 @@
     </thead>
     <tbody>
         {{#rows}}
-        <tr{{#class}} class="{{class}}"{{/class}}{{#dataid}} data-id="{{dataid}}"{{/dataid}}>
+        <tr{{#class}} class="{{class}}"{{/class}}{{#dataid}} data-id="{{dataid}}"{{/dataid}}{{#clickable}} role="button" tabindex="0"{{/clickable}}>
+            {{#selectable}}
+            <td class="jb-text-center">
+                <input type="checkbox" class="jb-form-check-input jb-row-select" value="{{dataid}}" aria-label="{{#str}}selectrow{{/str}}">
+            </td>
+            {{/selectable}}
             {{#cells}}
-            <td{{#class}} class="{{class}}"{{/class}}>
+            <td{{#class}} class="{{class}}"{{/class}}{{#colspan}} colspan="{{colspan}}"{{/colspan}}>
                 {{#html}}{{{html}}}{{/html}}
                 {{^html}}{{value}}{{/html}}
             </td>
@@ -47,12 +115,35 @@
         {{/rows}}
         {{^rows}}
         <tr>
-            <td colspan="{{headercount}}" class="jb-text-center jb-text-muted jb-py-4">
-                {{#emptytext}}{{emptytext}}{{/emptytext}}
-                {{^emptytext}}{{#str}}nodata, local_jobboard{{/str}}{{/emptytext}}
+            <td colspan="{{headercount}}" class="jb-text-center jb-py-5">
+                <div class="jb-empty-table" role="status">
+                    {{#emptyicon}}
+                    <i class="fa fa-{{emptyicon}} fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                    {{/emptyicon}}
+                    {{^emptyicon}}
+                    <i class="fa fa-inbox fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                    {{/emptyicon}}
+                    <p class="jb-text-muted jb-mb-0">
+                        {{#emptytext}}{{emptytext}}{{/emptytext}}
+                        {{^emptytext}}{{#str}}nodata, local_jobboard{{/str}}{{/emptytext}}
+                    </p>
+                </div>
             </td>
         </tr>
         {{/rows}}
     </tbody>
+    {{#footer}}
+    <tfoot class="jb-thead-light">
+        <tr>
+            {{#footercells}}
+            <td{{#class}} class="{{class}}"{{/class}}{{#colspan}} colspan="{{colspan}}"{{/colspan}}>
+                {{#html}}{{{html}}}{{/html}}
+                {{^html}}{{value}}{{/html}}
+            </td>
+            {{/footercells}}
+        </tr>
+    </tfoot>
+    {{/footer}}
 </table>
 {{#responsive}}</div>{{/responsive}}
+{{/loading}}
