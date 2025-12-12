@@ -554,7 +554,7 @@ class reports_renderer extends renderer_base {
             ];
         }
 
-        return $this->render_from_template('local_jobboard/data_table', [
+        return $this->render_from_template('local_jobboard/components/data_table', [
             'columns' => $columndata,
             'rows' => $rows,
             'hasrows' => !empty($rows),

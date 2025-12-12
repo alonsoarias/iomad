@@ -1,0 +1,35 @@
+{{!
+    @template local_jobboard/admin_doctype_form
+
+    Document type create/edit form template.
+
+    Context variables:
+    * formhtml - Rendered moodleform HTML
+    * isedit - Boolean if editing
+    * title - Page title
+    * doctypecode - Doctype code if editing
+    * doctypename - Doctype name if editing
+    * backurl - URL to go back
+}}
+<div class="jb-admin-doctype-form">
+    <div class="jb-card">
+        <div class="jb-card-header">
+            <h4 class="jb-mb-0">{{title}}</h4>
+        </div>
+        <div class="jb-card-body">
+            {{#isedit}}
+            <div class="jb-alert jb-alert-info jb-mb-3">
+                <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                {{#str}}editingdoctype, local_jobboard{{/str}}: <strong>{{doctypecode}} - {{doctypename}}</strong>
+            </div>
+            {{/isedit}}
+            {{{formhtml}}}
+        </div>
+    </div>
+    <div class="jb-mt-3">
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-1" aria-hidden="true"></i>
+            {{#str}}cancel, local_jobboard{{/str}}
+        </a>
+    </div>
+</div>

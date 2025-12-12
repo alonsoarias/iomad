@@ -1,0 +1,20 @@
+{{!
+    @template local_jobboard/header_search
+
+    Header search widget template.
+
+    Context variables:
+    * query - Current search query
+    * actionurl - Form action URL
+    * placeholder - Placeholder text
+}}
+<form action="{{actionurl}}" method="get" class="jb-header-search">
+    <div class="jb-input-group jb-input-group-sm">
+        <input type="text" name="search" value="{{query}}" class="jb-form-control" placeholder="{{placeholder}}" aria-label="{{#str}}searchjobs, local_jobboard{{/str}}">
+        <div class="jb-input-group-append">
+            <button type="submit" class="jb-btn jb-btn-primary">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</form>

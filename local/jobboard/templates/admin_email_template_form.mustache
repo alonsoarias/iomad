@@ -1,0 +1,61 @@
+{{!
+    @template local_jobboard/admin_email_template_form
+
+    Email template edit form.
+
+    Context variables:
+    * formhtml - Rendered form HTML
+    * templatename - Template display name
+    * placeholders - Array of placeholder info
+    * hasplaceholders - Boolean
+    * backurl - URL to go back
+}}
+<div class="jb-admin-email-template-form">
+    <div class="jb-row">
+        <div class="jb-col-lg-8">
+            <div class="jb-card">
+                <div class="jb-card-header">
+                    <h4 class="jb-mb-0">{{templatename}}</h4>
+                </div>
+                <div class="jb-card-body">
+                    {{{formhtml}}}
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-4">
+            {{#hasplaceholders}}
+            <div class="jb-card">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}availableplaceholders, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body">
+                    <div class="jb-table-responsive">
+                        <table class="jb-table jb-table-sm">
+                            <thead>
+                                <tr>
+                                    <th>{{#str}}placeholder, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}description, local_jobboard{{/str}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#placeholders}}
+                                <tr>
+                                    <td><code>{{placeholder}}</code></td>
+                                    <td><small>{{description}}</small></td>
+                                </tr>
+                                {{/placeholders}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {{/hasplaceholders}}
+        </div>
+    </div>
+    <div class="jb-mt-3">
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-1" aria-hidden="true"></i>
+            {{#str}}back, local_jobboard{{/str}}
+        </a>
+    </div>
+</div>

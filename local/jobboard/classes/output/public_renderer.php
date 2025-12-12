@@ -525,7 +525,7 @@ class public_renderer extends renderer_base {
             ];
         }
 
-        return $this->render_from_template('local_jobboard/breadcrumbs', [
+        return $this->render_from_template('local_jobboard/components/breadcrumbs', [
             'items' => $breadcrumbs,
             'hasitems' => !empty($breadcrumbs),
         ]);

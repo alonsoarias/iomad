@@ -1,0 +1,66 @@
+{{!
+    @template local_jobboard/convocatoria_management_table
+
+    Convocatoria management table template.
+
+    Context variables:
+    * convocatorias - Array of convocatoria objects
+    * hasconvocatorias - Boolean
+    * createurl - URL to create
+    * pagination - Pagination HTML
+}}
+<div class="jb-convocatoria-management">
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-3">
+        <h4 class="jb-mb-0">{{#str}}manageconvocatorias, local_jobboard{{/str}}</h4>
+        <a href="{{createurl}}" class="jb-btn jb-btn-primary">
+            <i class="fa fa-plus jb-mr-1" aria-hidden="true"></i>
+            {{#str}}createconvocatoria, local_jobboard{{/str}}
+        </a>
+    </div>
+
+    {{#hasconvocatorias}}
+    <div class="jb-table-responsive">
+        <table class="jb-table jb-table-hover">
+            <thead class="jb-thead-light">
+                <tr>
+                    <th>{{#str}}code, local_jobboard{{/str}}</th>
+                    <th>{{#str}}name, local_jobboard{{/str}}</th>
+                    <th>{{#str}}status, local_jobboard{{/str}}</th>
+                    <th>{{#str}}dates, local_jobboard{{/str}}</th>
+                    <th>{{#str}}vacancies, local_jobboard{{/str}}</th>
+                    <th>{{#str}}applications, local_jobboard{{/str}}</th>
+                    <th>{{#str}}actions, local_jobboard{{/str}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#convocatorias}}
+                <tr data-convocatoria-id="{{id}}">
+                    <td><span class="jb-badge jb-badge-primary">{{code}}</span></td>
+                    <td>{{name}}</td>
+                    <td><span class="jb-badge jb-badge-{{statusclass}}">{{statuslabel}}</span></td>
+                    <td><small>{{startdate}} - {{enddate}}</small></td>
+                    <td>{{vacancycount}}</td>
+                    <td>{{applicationcount}}</td>
+                    <td>
+                        <div class="jb-btn-group jb-btn-group-sm">
+                            <a href="{{viewurl}}" class="jb-btn jb-btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </a>
+                            {{#canedit}}
+                            <a href="{{editurl}}" class="jb-btn jb-btn-outline-secondary" title="{{#str}}edit, local_jobboard{{/str}}">
+                                <i class="fa fa-edit" aria-hidden="true"></i>
+                            </a>
+                            {{/canedit}}
+                        </div>
+                    </td>
+                </tr>
+                {{/convocatorias}}
+            </tbody>
+        </table>
+    </div>
+    {{{pagination}}}
+    {{/hasconvocatorias}}
+    {{^hasconvocatorias}}
+    {{> local_jobboard/components/empty_state }}
+    {{/hasconvocatorias}}
+</div>

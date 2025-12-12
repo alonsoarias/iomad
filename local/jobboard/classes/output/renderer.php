@@ -28,13 +28,12 @@ namespace local_jobboard\output;
 
 defined('MOODLE_INTERNAL') || die();
 
-use plugin_renderer_base;
 use moodle_url;
 
 /**
  * Renderer class for the Job Board plugin.
  */
-class renderer extends plugin_renderer_base {
+class renderer extends renderer_base {
 
     /**
      * Render a vacancy card.
@@ -187,74 +186,6 @@ class renderer extends plugin_renderer_base {
         }
 
         return $this->render_from_template('local_jobboard/application_row', $data);
-    }
-
-    /**
-     * Get CSS class for vacancy status.
-     *
-     * @param string $status Status code.
-     * @return string CSS class.
-     */
-    protected function get_status_class(string $status): string {
-        $classes = [
-            'draft' => 'secondary',
-            'published' => 'success',
-            'closed' => 'danger',
-            'assigned' => 'primary',
-        ];
-        return $classes[$status] ?? 'secondary';
-    }
-
-    /**
-     * Get CSS class for application status.
-     *
-     * @param string $status Status code.
-     * @return string CSS class.
-     */
-    protected function get_application_status_class(string $status): string {
-        $classes = [
-            'submitted' => 'info',
-            'under_review' => 'warning',
-            'docs_validated' => 'success',
-            'docs_rejected' => 'danger',
-            'interview' => 'purple',
-            'selected' => 'success',
-            'rejected' => 'secondary',
-            'withdrawn' => 'secondary',
-        ];
-        return $classes[$status] ?? 'secondary';
-    }
-
-    /**
-     * Get CSS class for convocatoria status.
-     *
-     * @param string $status Status code.
-     * @return string CSS class.
-     */
-    public function get_convocatoria_status_class(string $status): string {
-        $classes = [
-            'draft' => 'secondary',
-            'open' => 'success',
-            'closed' => 'warning',
-            'archived' => 'dark',
-        ];
-        return $classes[$status] ?? 'secondary';
-    }
-
-    /**
-     * Get status icon for vacancy.
-     *
-     * @param string $status Status code.
-     * @return string Icon name.
-     */
-    public function get_status_icon(string $status): string {
-        $icons = [
-            'draft' => 'edit',
-            'published' => 'check-circle',
-            'closed' => 'lock',
-            'assigned' => 'user-check',
-        ];
-        return $icons[$status] ?? 'circle';
     }
 
     /**
@@ -1692,16 +1623,6 @@ class renderer extends plugin_renderer_base {
             'editurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'id' => $convocatoria->id]))->out(false),
             'addvacancyurl' => (new moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $convocatoria->id]))->out(false),
         ];
-    }
-
-    /**
-     * Get vacancy status class.
-     *
-     * @param string $status Status code.
-     * @return string CSS class.
-     */
-    public function get_vacancy_status_class(string $status): string {
-        return $this->get_status_class($status);
     }
 
     /**

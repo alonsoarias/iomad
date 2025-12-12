@@ -1,0 +1,114 @@
+{{!
+    @template local_jobboard/application_review
+
+    Application review page template.
+
+    Context variables:
+    * application - Application object
+    * applicant - Applicant user info
+    * vacancy - Vacancy info
+    * documents - Array of documents
+    * hasdocuments - Boolean
+    * formhtml - Review form HTML
+    * timeline - Timeline entries
+    * hastimeline - Boolean
+    * backurl - URL to go back
+}}
+<div class="jb-application-review" data-application-id="{{application.id}}">
+    {{> local_jobboard/components/breadcrumbs }}
+
+    <div class="jb-row">
+        <div class="jb-col-lg-8">
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <h5 class="jb-mb-0">{{#str}}reviewapplication, local_jobboard{{/str}}</h5>
+                    <span class="jb-badge jb-badge-{{application.statusclass}}">{{application.statuslabel}}</span>
+                </div>
+                <div class="jb-card-body">
+                    <div class="jb-row jb-mb-4">
+                        <div class="jb-col-md-6">
+                            <h6>{{#str}}applicant, local_jobboard{{/str}}</h6>
+                            <div class="jb-d-flex jb-align-items-center">
+                                <img src="{{applicant.profileimageurl}}" alt="" class="jb-rounded-circle jb-mr-2" width="40" height="40">
+                                <div>
+                                    <strong>{{applicant.fullname}}</strong>
+                                    <br><small class="jb-text-muted">{{applicant.email}}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="jb-col-md-6">
+                            <h6>{{#str}}vacancy, local_jobboard{{/str}}</h6>
+                            <p class="jb-mb-0">
+                                <strong>{{vacancy.title}}</strong>
+                                <span class="jb-badge jb-badge-secondary jb-ml-1">{{vacancy.code}}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <h6>{{#str}}documents, local_jobboard{{/str}}</h6>
+                    {{#hasdocuments}}
+                    <div class="jb-table-responsive">
+                        <table class="jb-table jb-table-sm">
+                            <thead>
+                                <tr>
+                                    <th>{{#str}}type, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}status, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}actions, local_jobboard{{/str}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#documents}}
+                                <tr>
+                                    <td>{{doctypename}}</td>
+                                    <td><span class="jb-badge jb-badge-{{statusclass}}">{{statuslabel}}</span></td>
+                                    <td>
+                                        <a href="{{viewurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {{/documents}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/hasdocuments}}
+                    {{^hasdocuments}}
+                    <p class="jb-text-muted">{{#str}}nodocuments, local_jobboard{{/str}}</p>
+                    {{/hasdocuments}}
+                </div>
+            </div>
+
+            <div class="jb-card">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}reviewdecision, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body">
+                    {{{formhtml}}}
+                </div>
+            </div>
+        </div>
+
+        <div class="jb-col-lg-4">
+            <div class="jb-card">
+                <div class="jb-card-header">
+                    <h5 class="jb-mb-0">{{#str}}timeline, local_jobboard{{/str}}</h5>
+                </div>
+                <div class="jb-card-body">
+                    {{#hastimeline}}
+                    {{> local_jobboard/application_timeline }}
+                    {{/hastimeline}}
+                    {{^hastimeline}}
+                    <p class="jb-text-muted jb-text-center">{{#str}}notimeline, local_jobboard{{/str}}</p>
+                    {{/hastimeline}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="jb-mt-4">
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+            <i class="fa fa-arrow-left jb-mr-1" aria-hidden="true"></i>
+            {{#str}}back, local_jobboard{{/str}}
+        </a>
+    </div>
+</div>

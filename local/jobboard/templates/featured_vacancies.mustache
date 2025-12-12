@@ -1,0 +1,31 @@
+{{!
+    @template local_jobboard/featured_vacancies
+
+    Featured vacancies section template.
+
+    Context variables:
+    * title - Section title
+    * vacancies - Array of vacancy card data
+    * hasvacancies - Boolean
+    * viewallurl - URL to view all
+}}
+<div class="jb-featured-vacancies jb-mb-4">
+    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-3">
+        <h4 class="jb-mb-0">{{title}}</h4>
+        <a href="{{viewallurl}}" class="jb-btn jb-btn-outline-primary jb-btn-sm">
+            {{#str}}viewall, local_jobboard{{/str}}
+        </a>
+    </div>
+    {{#hasvacancies}}
+    <div class="jb-row">
+        {{#vacancies}}
+        <div class="jb-col-lg-4 jb-col-md-6 jb-mb-3">
+            {{> local_jobboard/vacancy_card }}
+        </div>
+        {{/vacancies}}
+    </div>
+    {{/hasvacancies}}
+    {{^hasvacancies}}
+    <p class="jb-text-muted jb-text-center jb-py-3">{{#str}}nofeaturedvacancies, local_jobboard{{/str}}</p>
+    {{/hasvacancies}}
+</div>

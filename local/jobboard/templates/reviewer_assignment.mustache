@@ -1,0 +1,57 @@
+{{!
+    @template local_jobboard/reviewer_assignment
+
+    Reviewer assignment page template.
+
+    Context variables:
+    * application - Application object
+    * currentreviewers - Currently assigned reviewers
+    * hascurrentreviewers - Boolean
+    * availablereviewers - Available reviewers
+    * hasavailablereviewers - Boolean
+    * formhtml - Assignment form HTML
+    * backurl - URL to go back
+}}
+<div class="jb-reviewer-assignment">
+    {{> local_jobboard/components/breadcrumbs }}
+
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-header">
+            <h4 class="jb-mb-0">{{#str}}assignreviewers, local_jobboard{{/str}}</h4>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-alert jb-alert-info jb-mb-4">
+                <strong>{{#str}}application, local_jobboard{{/str}} #{{application.id}}</strong>
+                <br>{{application.applicantname}} - {{application.vacancytitle}}
+            </div>
+
+            {{#hascurrentreviewers}}
+            <h5 class="jb-mb-3">{{#str}}currentreviewers, local_jobboard{{/str}}</h5>
+            <div class="jb-list-group jb-mb-4">
+                {{#currentreviewers}}
+                <div class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-center">
+                    <div class="jb-d-flex jb-align-items-center">
+                        <img src="{{profileimageurl}}" alt="" class="jb-rounded-circle jb-mr-2" width="32" height="32">
+                        <div>
+                            <strong>{{fullname}}</strong>
+                            <br><small class="jb-text-muted">{{email}}</small>
+                        </div>
+                    </div>
+                    <a href="{{removeurl}}" class="jb-btn jb-btn-sm jb-btn-outline-danger" data-confirm="{{#str}}confirmremovereviewer, local_jobboard{{/str}}">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
+                </div>
+                {{/currentreviewers}}
+            </div>
+            {{/hascurrentreviewers}}
+
+            <h5 class="jb-mb-3">{{#str}}addreviewer, local_jobboard{{/str}}</h5>
+            {{{formhtml}}}
+        </div>
+    </div>
+
+    <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+        <i class="fa fa-arrow-left jb-mr-1" aria-hidden="true"></i>
+        {{#str}}back, local_jobboard{{/str}}
+    </a>
+</div>

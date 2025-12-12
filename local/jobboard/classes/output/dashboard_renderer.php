@@ -279,7 +279,7 @@ class dashboard_renderer extends renderer_base {
         string $url = '',
         string $subtitle = ''
     ): string {
-        return $this->render_from_template('local_jobboard/stat_card', [
+        return $this->render_from_template('local_jobboard/components/stat_card', [
             'title' => $title,
             'value' => $value,
             'icon' => $icon,
@@ -298,7 +298,7 @@ class dashboard_renderer extends renderer_base {
      * @return string HTML output.
      */
     public function render_stats_grid(array $cards): string {
-        return $this->render_from_template('local_jobboard/stats_grid', [
+        return $this->render_from_template('local_jobboard/components/stats_grid', [
             'cards' => $cards,
             'hascards' => !empty($cards),
         ]);
@@ -462,7 +462,7 @@ class dashboard_renderer extends renderer_base {
     public function render_activity_timeline(array $activities, string $title = ''): string {
         $items = $this->prepare_activity_items($activities);
 
-        return $this->render_from_template('local_jobboard/activity_timeline', [
+        return $this->render_from_template('local_jobboard/components/activity_timeline', [
             'title' => $title ?: get_string('recentactivity', 'local_jobboard'),
             'items' => $items,
             'hasitems' => !empty($items),

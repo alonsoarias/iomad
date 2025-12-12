@@ -51,6 +51,7 @@ abstract class renderer_base extends plugin_renderer_base {
         'closed' => 'danger',
         'archived' => 'dark',
         'pending' => 'warning',
+        'assigned' => 'primary',
     ];
 
     /**
@@ -60,11 +61,15 @@ abstract class renderer_base extends plugin_renderer_base {
         'draft' => 'secondary',
         'submitted' => 'info',
         'reviewing' => 'primary',
+        'under_review' => 'warning',
         'approved' => 'success',
+        'docs_validated' => 'success',
         'rejected' => 'danger',
+        'docs_rejected' => 'danger',
         'withdrawn' => 'dark',
         'interview' => 'warning',
         'hired' => 'success',
+        'selected' => 'success',
     ];
 
     /**
@@ -241,7 +246,7 @@ abstract class renderer_base extends plugin_renderer_base {
      * @return string HTML output.
      */
     public function render_alert(string $message, string $type = 'info', bool $dismissible = true): string {
-        return $this->render_from_template('local_jobboard/alert', [
+        return $this->render_from_template('local_jobboard/components/alert', [
             'message' => $message,
             'type' => $type,
             'dismissible' => $dismissible,
@@ -263,12 +268,11 @@ abstract class renderer_base extends plugin_renderer_base {
         string $actionurl = '',
         string $actionlabel = ''
     ): string {
-        return $this->render_from_template('local_jobboard/empty_state', [
+        return $this->render_from_template('local_jobboard/components/empty_state', [
             'message' => $message,
             'icon' => $icon,
             'hasaction' => !empty($actionurl) && !empty($actionlabel),
-            'actionurl' => $actionurl,
-            'actionlabel' => $actionlabel,
+            'action' => !empty($actionurl) ? ['url' => $actionurl, 'label' => $actionlabel] : null,
         ]);
     }
 
@@ -282,9 +286,10 @@ abstract class renderer_base extends plugin_renderer_base {
         if (empty($message)) {
             $message = get_string('loading', 'local_jobboard');
         }
-        return $this->render_from_template('local_jobboard/loading', [
-            'message' => $message,
-        ]);
+        return '<div class="jb-loading jb-text-center jb-py-4">' .
+               '<i class="fa fa-spinner fa-spin fa-2x jb-mb-2" aria-hidden="true"></i>' .
+               '<p class="jb-text-muted">' . s($message) . '</p>' .
+               '</div>';
     }
 
     /**
@@ -313,5 +318,33 @@ abstract class renderer_base extends plugin_renderer_base {
         $class = $this->$method($status);
         $label = get_string($type . 'status:' . $status, 'local_jobboard');
         return $this->render_badge($label, $class);
+    }
+
+    /**
+     * Get vacancy status class (alias for get_status_class).
+     *
+     * @param string $status Status code.
+     * @return string CSS class.
+     */
+    public function get_vacancy_status_class(string $status): string {
+        return $this->get_status_class($status);
+    }
+
+    /**
+     * Get status icon for vacancy.
+     *
+     * @param string $status Status code.
+     * @return string Icon name.
+     */
+    public function get_status_icon(string $status): string {
+        $icons = [
+            'draft' => 'edit',
+            'published' => 'check-circle',
+            'closed' => 'lock',
+            'assigned' => 'user-check',
+            'archived' => 'archive',
+            'pending' => 'clock-o',
+        ];
+        return $icons[$status] ?? 'circle';
     }
 }

@@ -1,0 +1,29 @@
+{{!
+    @template local_jobboard/validation_checklist
+
+    Document validation checklist template.
+
+    Context variables:
+    * items - Array of checklist items
+    * hasitems - Boolean
+}}
+<div class="jb-validation-checklist">
+    {{#hasitems}}
+    <ul class="jb-list-group">
+        {{#items}}
+        <li class="jb-list-group-item jb-d-flex jb-align-items-center">
+            {{#checked}}
+            <i class="fa fa-check-circle jb-text-success jb-mr-2" aria-hidden="true"></i>
+            {{/checked}}
+            {{^checked}}
+            <i class="fa fa-circle-o jb-text-muted jb-mr-2" aria-hidden="true"></i>
+            {{/checked}}
+            <span{{#checked}} class="jb-text-muted"{{/checked}}>{{label}}</span>
+        </li>
+        {{/items}}
+    </ul>
+    {{/hasitems}}
+    {{^hasitems}}
+    <p class="jb-text-muted jb-text-center">{{#str}}nochecklist, local_jobboard{{/str}}</p>
+    {{/hasitems}}
+</div>
