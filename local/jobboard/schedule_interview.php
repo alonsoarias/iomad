@@ -119,19 +119,16 @@ if ($action === 'complete' && $interviewid) {
         redirect(new moodle_url('/local/jobboard/schedule_interview.php', ['application' => $applicationid]));
     }
 
-    echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('completeinterview', 'local_jobboard'));
-
-    echo '<div class="jb-alert jb-alert-info">';
-    echo '<strong>' . get_string('applicant', 'local_jobboard') . ':</strong> ' .
-        fullname($applicant) . '<br>';
-    echo '<strong>' . get_string('vacancy', 'local_jobboard') . ':</strong> ' .
-        format_string($vacancy->title) . '<br>';
-    echo '<strong>' . get_string('interviewdate', 'local_jobboard') . ':</strong> ' .
-        userdate($interviewdetails->scheduledtime, get_string('strftimedatetime', 'langconfig'));
-    echo '</div>';
-
+    // Capture form HTML.
+    ob_start();
     $mform->display();
+    $formhtml = ob_get_clean();
+
+    // Use renderer + template pattern.
+    echo $OUTPUT->header();
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    $data = $renderer->prepare_interview_complete_form_data($applicant, $vacancy, $interviewdetails, $formhtml);
+    echo $renderer->render_interview_complete_form_page($data);
     echo $OUTPUT->footer();
     exit;
 }

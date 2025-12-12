@@ -5,6 +5,26 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.9] - 2025-12-12
+
+### Added
+- **Mustache Templates**:
+  - `pages/interview_complete_form.mustache` for interview completion form
+  - `pages/reupload_document.mustache` for document reupload page
+- **Renderer Methods**:
+  - `render_interview_complete_form_page()` and `prepare_interview_complete_form_data()`
+  - `render_reupload_document_page()` and `prepare_reupload_document_data()`
+
+### Changed
+- Migrated `schedule_interview.php` complete interview view to renderer + template pattern
+- Migrated `reupload_document.php` to renderer + template pattern
+- Completed mustache migration - all significant inline HTML now uses templates
+
+### Technical Notes
+- `import_vacancies.php` HTML within moodleform `addElement()` is standard Moodle pattern (not migrated)
+- `migrate.php` single html_writer usage for message building is acceptable
+- All page-level rendering now uses renderer + template pattern
+
 ## [3.5.8] - 2025-12-12
 
 ### Added

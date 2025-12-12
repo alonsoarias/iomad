@@ -1,0 +1,29 @@
+{{!
+    @template local_jobboard/pages/reupload_document
+
+    Document reupload page.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * helptext - string - Help text message
+    * formhtml - string - Rendered form HTML
+
+    Example context (json):
+    {
+        "pagetitle": "Reupload Document",
+        "helptext": "Please upload a new version of the rejected document."
+    }
+}}
+
+<div class="jb-local-jobboard-reupload" data-region="jobboard-reupload-document">
+    {{! Page Heading }}}
+    <h2 class="jb-mb-4">{{pagetitle}}</h2>
+
+    {{! Help Text Alert }}}
+    <div class="jb-alert jb-alert-info">
+        {{helptext}}
+    </div>
+
+    {{! Form }}}
+    {{{formhtml}}}
+</div>

@@ -5971,6 +5971,69 @@ class renderer extends renderer_base {
     }
 
     /**
+     * Render the interview completion form page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_interview_complete_form_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/interview_complete_form', $data);
+    }
+
+    /**
+     * Prepare interview completion form page data.
+     *
+     * @param object $applicant Applicant user object.
+     * @param object $vacancy Vacancy record.
+     * @param object $interviewdetails Interview details.
+     * @param string $formhtml Rendered form HTML.
+     * @return array Template data.
+     */
+    public function prepare_interview_complete_form_data(
+        object $applicant,
+        object $vacancy,
+        object $interviewdetails,
+        string $formhtml
+    ): array {
+        return [
+            'pagetitle' => get_string('completeinterview', 'local_jobboard'),
+            'applicantname' => fullname($applicant),
+            'vacancytitle' => format_string($vacancy->title),
+            'interviewdate' => userdate($interviewdetails->scheduledtime, get_string('strftimedatetime', 'langconfig')),
+            'formhtml' => $formhtml,
+            'str' => [
+                'applicant' => get_string('applicant', 'local_jobboard'),
+                'vacancy' => get_string('vacancy', 'local_jobboard'),
+                'interviewdate' => get_string('interviewdate', 'local_jobboard'),
+            ],
+        ];
+    }
+
+    /**
+     * Render the reupload document page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_reupload_document_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/reupload_document', $data);
+    }
+
+    /**
+     * Prepare reupload document page data.
+     *
+     * @param string $formhtml Rendered form HTML.
+     * @return array Template data.
+     */
+    public function prepare_reupload_document_data(string $formhtml): array {
+        return [
+            'pagetitle' => get_string('reuploaddocument', 'local_jobboard'),
+            'helptext' => get_string('reuploadhelp', 'local_jobboard'),
+            'formhtml' => $formhtml,
+        ];
+    }
+
+    /**
      * Render the manage exemptions page.
      *
      * @param array $data Template data.

@@ -203,16 +203,14 @@ if ($data = $mform->get_data()) {
     }
 }
 
-// Output page.
-echo $OUTPUT->header();
-
-echo $OUTPUT->heading(get_string('reuploaddocument', 'local_jobboard'));
-
-// Show help text.
-echo '<div class="alert alert-info">';
-echo get_string('reuploadhelp', 'local_jobboard');
-echo '</div>';
-
+// Capture form HTML.
+ob_start();
 $mform->display();
+$formhtml = ob_get_clean();
 
+// Use renderer + template pattern.
+echo $OUTPUT->header();
+$renderer = $PAGE->get_renderer('local_jobboard');
+$data = $renderer->prepare_reupload_document_data($formhtml);
+echo $renderer->render_reupload_document_page($data);
 echo $OUTPUT->footer();

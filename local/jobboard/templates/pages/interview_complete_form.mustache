@@ -1,0 +1,36 @@
+{{!
+    @template local_jobboard/pages/interview_complete_form
+
+    Interview completion form page.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * applicantname - string - Applicant full name
+    * vacancytitle - string - Vacancy title
+    * interviewdate - string - Formatted interview date
+    * formhtml - string - Rendered form HTML
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "pagetitle": "Complete Interview",
+        "applicantname": "John Doe",
+        "vacancytitle": "Professor of Mathematics",
+        "interviewdate": "December 15, 2025 at 10:00 AM"
+    }
+}}
+
+<div class="jb-local-jobboard-interview-complete" data-region="jobboard-interview-complete">
+    {{! Page Heading }}}
+    <h2 class="jb-mb-4">{{pagetitle}}</h2>
+
+    {{! Interview Info Alert }}}
+    <div class="jb-alert jb-alert-info">
+        <strong>{{str.applicant}}:</strong> {{applicantname}}<br>
+        <strong>{{str.vacancy}}:</strong> {{vacancytitle}}<br>
+        <strong>{{str.interviewdate}}:</strong> {{interviewdate}}
+    </div>
+
+    {{! Form }}}
+    {{{formhtml}}}
+</div>
