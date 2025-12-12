@@ -78,189 +78,23 @@ $total = $result['total'];
 // Get application stats.
 $stats = application::get_stats_for_vacancy($vacancyid);
 
+// Use renderer + template pattern.
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(get_string('manageapplications', 'local_jobboard') . ': ' . format_string($vacancy->title));
-
-// Back link.
-echo '<p><a href="' . new moodle_url('/local/jobboard/index.php', ['view' => 'manage']) . '">' .
-    get_string('backtomanage', 'local_jobboard') . '</a></p>';
-
-// Stats cards.
-echo '<div class="row mb-4">';
-$statuscards = [
-    'submitted' => 'info',
-    'under_review' => 'primary',
-    'docs_validated' => 'success',
-    'docs_rejected' => 'danger',
-    'interview' => 'warning',
-    'selected' => 'success',
-    'rejected' => 'danger',
-    'withdrawn' => 'secondary',
-];
-
-foreach ($statuscards as $s => $color) {
-    $count = $stats[$s] ?? 0;
-    echo '<div class="col-md-3 col-sm-6 mb-2">';
-    echo '<div class="card bg-' . $color . ' text-white">';
-    echo '<div class="card-body text-center">';
-    echo '<h3>' . $count . '</h3>';
-    echo '<p class="mb-0">' . get_string('status_' . $s, 'local_jobboard') . '</p>';
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
-}
-echo '</div>';
-
-// Filters.
-echo '<form class="form-inline mb-3" method="get">';
-echo '<input type="hidden" name="vacancyid" value="' . $vacancyid . '">';
-
-echo '<div class="form-group mr-2">';
-echo '<label class="sr-only">' . get_string('search') . '</label>';
-echo '<input type="text" name="search" class="form-control" placeholder="' .
-    get_string('searchapplicant', 'local_jobboard') . '" value="' . s($search) . '">';
-echo '</div>';
-
-echo '<div class="form-group mr-2">';
-echo '<select name="status" class="form-control">';
-echo '<option value="">' . get_string('allstatuses', 'local_jobboard') . '</option>';
-foreach (application::STATUSES as $s) {
-    $selected = ($status === $s) ? 'selected' : '';
-    echo '<option value="' . $s . '" ' . $selected . '>' .
-        get_string('status_' . $s, 'local_jobboard') . '</option>';
-}
-echo '</select>';
-echo '</div>';
-
-echo '<button type="submit" class="btn btn-primary mr-2">' . get_string('filter') . '</button>';
-echo '<a href="' . new moodle_url('/local/jobboard/manage_applications.php', ['vacancyid' => $vacancyid]) .
-    '" class="btn btn-secondary">' . get_string('reset') . '</a>';
-echo '</form>';
-
-if (empty($applications)) {
-    echo $OUTPUT->notification(get_string('noapplicationsfound', 'local_jobboard'), 'info');
-} else {
-    // Build sortable table.
-    $table = new html_table();
-    $table->head = [];
-    $table->attributes['class'] = 'generaltable applications-table';
-
-    // Sortable headers.
-    $columns = [
-        'applicant' => get_string('applicant', 'local_jobboard'),
-        'timecreated' => get_string('dateapplied', 'local_jobboard'),
-        'status' => get_string('status', 'local_jobboard'),
-        'documents' => get_string('documents', 'local_jobboard'),
-        'actions' => get_string('actions'),
-    ];
-
-    foreach ($columns as $col => $label) {
-        if (in_array($col, ['timecreated', 'status'])) {
-            // Sortable column.
-            $neworder = ($sort === $col && $order === 'ASC') ? 'DESC' : 'ASC';
-            $sorturl = new moodle_url('/local/jobboard/manage_applications.php', [
-                'vacancyid' => $vacancyid,
-                'status' => $status,
-                'search' => $search,
-                'sort' => $col,
-                'order' => $neworder,
-            ]);
-            $icon = '';
-            if ($sort === $col) {
-                $icon = ($order === 'ASC') ? ' ▲' : ' ▼';
-            }
-            $table->head[] = html_writer::link($sorturl, $label) . $icon;
-        } else {
-            $table->head[] = $label;
-        }
-    }
-
-    foreach ($applications as $app) {
-        $row = [];
-
-        // Applicant info.
-        $applicanthtml = '<strong>' . format_string($app->userfirstname . ' ' . $app->userlastname) . '</strong>';
-        $applicanthtml .= '<br><small>' . format_string($app->useremail) . '</small>';
-        if ($app->isexemption) {
-            $applicanthtml .= '<br><span class="badge badge-info">' .
-                get_string('exemption', 'local_jobboard') . '</span>';
-        }
-        $row[] = $applicanthtml;
-
-        // Date applied.
-        $row[] = userdate($app->timecreated, get_string('strftimedatetime', 'langconfig'));
-
-        // Status.
-        $statusclass = 'badge-secondary';
-        switch ($app->status) {
-            case 'submitted':
-                $statusclass = 'badge-info';
-                break;
-            case 'under_review':
-                $statusclass = 'badge-primary';
-                break;
-            case 'docs_validated':
-            case 'selected':
-                $statusclass = 'badge-success';
-                break;
-            case 'docs_rejected':
-            case 'rejected':
-                $statusclass = 'badge-danger';
-                break;
-            case 'interview':
-                $statusclass = 'badge-warning';
-                break;
-            case 'withdrawn':
-                $statusclass = 'badge-secondary';
-                break;
-        }
-        $row[] = '<span class="badge ' . $statusclass . '">' .
-            get_string('status_' . $app->status, 'local_jobboard') . '</span>';
-
-        // Documents.
-        $docstatus = '';
-        $pendingdocs = $app->pending_validations ?? 0;
-        $totaldocs = $app->document_count ?? 0;
-        if ($totaldocs > 0) {
-            $validated = $totaldocs - $pendingdocs;
-            $docstatus = "{$validated}/{$totaldocs} " . get_string('validated', 'local_jobboard');
-            if ($pendingdocs > 0) {
-                $docstatus .= '<br><span class="badge badge-warning">' . $pendingdocs . ' ' .
-                    get_string('pending', 'local_jobboard') . '</span>';
-            }
-        } else {
-            $docstatus = get_string('nodocuments', 'local_jobboard');
-        }
-        $row[] = $docstatus;
-
-        // Actions.
-        $actions = [];
-        $viewurl = new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]);
-        $actions[] = html_writer::link($viewurl, get_string('view'), ['class' => 'btn btn-sm btn-primary']);
-
-        $row[] = implode(' ', $actions);
-
-        $table->data[] = $row;
-    }
-
-    echo html_writer::table($table);
-
-    // Pagination.
-    echo $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
-}
-
-// Export buttons.
-echo '<div class="mt-4">';
-echo '<h5>' . get_string('export', 'local_jobboard') . '</h5>';
-$exporturl = new moodle_url('/local/jobboard/export_applications.php', [
-    'vacancyid' => $vacancyid,
-    'status' => $status,
-]);
-echo '<a href="' . $exporturl . '&format=csv" class="btn btn-outline-primary mr-2">' .
-    get_string('exportcsv', 'local_jobboard') . '</a>';
-echo '<a href="' . $exporturl . '&format=excel" class="btn btn-outline-primary">' .
-    get_string('exportexcel', 'local_jobboard') . '</a>';
-echo '</div>';
+$renderer = $PAGE->get_renderer('local_jobboard');
+$data = $renderer->prepare_manage_applications_page_data(
+    $vacancy,
+    $applications,
+    $stats,
+    $total,
+    $page,
+    $perpage,
+    $status,
+    $search,
+    $sort,
+    $order,
+    $baseurl
+);
+echo $renderer->render_manage_applications_page($data);
 
 echo $OUTPUT->footer();

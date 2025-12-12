@@ -70,123 +70,15 @@ if ($convocatoriaid) {
 
 // If creating new vacancy and no convocatoria selected, show selection page.
 if (!$id && !$convocatoriaid) {
-    echo $OUTPUT->header();
-    echo ui_helper::get_inline_styles();
-
-    // Breadcrumbs.
-    $breadcrumbs = [
-        get_string('dashboard', 'local_jobboard') => new moodle_url('/local/jobboard/index.php'),
-        get_string('manageconvocatorias', 'local_jobboard') => new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
-        get_string('newvacancy', 'local_jobboard') => null,
-    ];
-
-    echo ui_helper::page_header(
-        get_string('newvacancy', 'local_jobboard'),
-        $breadcrumbs
-    );
-
-    // Info message about requirement.
-    echo html_writer::start_div('alert alert-info border-left-info d-flex align-items-center mb-4');
-    echo html_writer::tag('i', '', ['class' => 'fa fa-info-circle fa-2x mr-3 text-info']);
-    echo html_writer::start_div();
-    echo html_writer::tag('h5', get_string('selectconvocatoriafirst', 'local_jobboard'), ['class' => 'mb-1']);
-    echo html_writer::tag('p', get_string('createvacancyinconvocatoriadesc', 'local_jobboard'), ['class' => 'mb-0']);
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-
     // Get available convocatorias.
     $convocatorias = local_jobboard_get_convocatorias(0, '', true); // Only draft and open convocatorias.
 
-    if (empty($convocatorias)) {
-        // No convocatorias available.
-        echo ui_helper::empty_state(
-            get_string('noconvocatoriasavailable', 'local_jobboard'),
-            'calendar-alt',
-            [
-                'url' => new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'action' => 'add']),
-                'label' => get_string('gotocreateconvocatoria', 'local_jobboard'),
-                'class' => 'btn btn-primary',
-            ]
-        );
-    } else {
-        // Show convocatoria cards.
-        echo html_writer::tag('h4', get_string('selectconvocatoria', 'local_jobboard'), ['class' => 'mb-3']);
-        echo html_writer::start_div('row');
+    echo $OUTPUT->header();
 
-        foreach ($convocatorias as $cid => $cname) {
-            $conv = $DB->get_record('local_jobboard_convocatoria', ['id' => $cid]);
-            if (!$conv) {
-                continue;
-            }
-
-            echo html_writer::start_div('col-md-6 col-lg-4 mb-4');
-            echo html_writer::start_div('card h-100 shadow-sm hover-shadow');
-            echo html_writer::start_div('card-body');
-
-            // Status badge.
-            $statusColors = ['draft' => 'secondary', 'open' => 'success', 'closed' => 'warning'];
-            $statusColor = $statusColors[$conv->status] ?? 'secondary';
-            echo html_writer::div(
-                html_writer::tag('span',
-                    get_string('convocatoria_status_' . $conv->status, 'local_jobboard'),
-                    ['class' => 'badge badge-' . $statusColor]
-                ),
-                'mb-2'
-            );
-
-            // Name.
-            echo html_writer::tag('h5', s($conv->name), ['class' => 'card-title']);
-
-            // Code.
-            echo html_writer::tag('p',
-                html_writer::tag('code', s($conv->code)),
-                ['class' => 'small text-muted mb-2']
-            );
-
-            // Dates.
-            echo html_writer::div(
-                '<i class="fa fa-calendar-alt text-muted mr-1"></i>' .
-                userdate($conv->startdate, get_string('strftimedate', 'langconfig')) . ' - ' .
-                userdate($conv->enddate, get_string('strftimedate', 'langconfig')),
-                'small mb-3'
-            );
-
-            // Vacancy count.
-            $vacancyCount = $DB->count_records('local_jobboard_vacancy', ['convocatoriaid' => $cid]);
-            echo html_writer::div(
-                '<i class="fa fa-briefcase text-muted mr-1"></i>' .
-                get_string('vacancies', 'local_jobboard') . ': ' .
-                html_writer::tag('strong', $vacancyCount),
-                'small mb-3'
-            );
-
-            echo html_writer::end_div(); // card-body
-
-            echo html_writer::start_div('card-footer bg-white');
-            echo html_writer::link(
-                new moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $cid]),
-                '<i class="fa fa-plus mr-1"></i>' . get_string('addvacancy', 'local_jobboard'),
-                ['class' => 'btn btn-primary btn-block']
-            );
-            echo html_writer::end_div(); // card-footer
-
-            echo html_writer::end_div(); // card
-            echo html_writer::end_div(); // col
-        }
-
-        echo html_writer::end_div(); // row
-
-        // Option to create new convocatoria.
-        echo html_writer::div('', 'border-top my-4');
-        echo html_writer::start_div('text-center');
-        echo html_writer::tag('p', get_string('or', 'moodle'), ['class' => 'text-muted']);
-        echo html_writer::link(
-            new moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'action' => 'add']),
-            '<i class="fa fa-calendar-plus mr-1"></i>' . get_string('addconvocatoria', 'local_jobboard'),
-            ['class' => 'btn btn-outline-primary']
-        );
-        echo html_writer::end_div();
-    }
+    // Use renderer + template pattern.
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    $data = $renderer->prepare_edit_select_convocatoria_data($convocatorias);
+    echo $renderer->render_edit_select_convocatoria_page($data);
 
     echo $OUTPUT->footer();
     exit;
@@ -245,55 +137,17 @@ if ($vacancy) {
     $form->set_data_from_vacancy($vacancy);
 }
 
-// Output.
+// Output using renderer + template pattern.
 echo $OUTPUT->header();
-echo ui_helper::get_inline_styles();
 
-// Breadcrumbs and header.
-$breadcrumbs = [
-    get_string('dashboard', 'local_jobboard') => new moodle_url('/local/jobboard/index.php'),
-    get_string('manageconvocatorias', 'local_jobboard') => new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']),
-];
-if ($convocatoriarecord) {
-    $breadcrumbs[s($convocatoriarecord->name)] = new moodle_url('/local/jobboard/index.php',
-        ['view' => 'manage', 'convocatoriaid' => $convocatoriaid]);
-}
-$breadcrumbs[$pagetitle] = null;
-
-echo ui_helper::page_header($pagetitle, $breadcrumbs);
-
-// Convocatoria info banner.
-if ($convocatoriarecord) {
-    $statusColors = ['draft' => 'secondary', 'open' => 'success', 'closed' => 'warning', 'archived' => 'dark'];
-    $convColor = $statusColors[$convocatoriarecord->status] ?? 'secondary';
-
-    echo html_writer::start_div('alert alert-info border-left-info d-flex justify-content-between align-items-center mb-4');
-    echo html_writer::start_div('d-flex align-items-center');
-    echo html_writer::tag('i', '', ['class' => 'fa fa-calendar-alt mr-3 fa-lg']);
-    echo html_writer::start_div();
-    echo html_writer::tag('strong',
-        get_string('convocatoria', 'local_jobboard') . ': ' . s($convocatoriarecord->name),
-        ['class' => 'd-block']
-    );
-    echo html_writer::tag('small',
-        userdate($convocatoriarecord->startdate, get_string('strftimedate', 'langconfig')) . ' - ' .
-        userdate($convocatoriarecord->enddate, get_string('strftimedate', 'langconfig')),
-        ['class' => 'text-muted']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-    echo html_writer::tag('span',
-        get_string('convocatoria_status_' . $convocatoriarecord->status, 'local_jobboard'),
-        ['class' => 'badge badge-' . $convColor]
-    );
-    echo html_writer::end_div();
-}
-
-// Display form in a card.
-echo html_writer::start_div('card shadow-sm');
-echo html_writer::start_div('card-body');
+// Capture form HTML.
+ob_start();
 $form->display();
-echo html_writer::end_div();
-echo html_writer::end_div();
+$formhtml = ob_get_clean();
+
+// Use renderer.
+$renderer = $PAGE->get_renderer('local_jobboard');
+$data = $renderer->prepare_edit_vacancy_form_data($convocatoriarecord, $formhtml);
+echo $renderer->render_edit_vacancy_form_page($data);
 
 echo $OUTPUT->footer();

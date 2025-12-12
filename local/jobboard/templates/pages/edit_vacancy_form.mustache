@@ -1,0 +1,45 @@
+{{!
+    @template local_jobboard/pages/edit_vacancy_form
+
+    Vacancy edit/create form page.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * hasconvocatoria - boolean - Whether a convocatoria is associated
+    * convocatoria - object - Convocatoria info
+    * formhtml - string - Rendered form HTML
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "pagetitle": "Edit Vacancy",
+        "hasconvocatoria": true
+    }
+}}
+
+<div class="jb-edit-vacancy-form" data-region="jobboard-edit-form">
+    {{#hasconvocatoria}}
+    {{! Convocatoria Info Banner }}
+    <div class="jb-alert jb-alert-info jb-border-left-info jb-d-flex jb-justify-between jb-align-center jb-mb-4">
+        <div class="jb-d-flex jb-align-center">
+            <i class="fa fa-calendar-alt jb-mr-3 fa-lg"></i>
+            <div>
+                <strong class="jb-d-block">
+                    {{str.convocatoria}}: {{convocatoria.name}}
+                </strong>
+                <small class="jb-text-muted">{{convocatoria.daterange}}</small>
+            </div>
+        </div>
+        <span class="jb-badge jb-badge-{{convocatoria.statuscolor}}">
+            {{convocatoria.statuslabel}}
+        </span>
+    </div>
+    {{/hasconvocatoria}}
+
+    {{! Form Card }}
+    <div class="jb-card jb-shadow-sm">
+        <div class="jb-card-body">
+            {{{formhtml}}}
+        </div>
+    </div>
+</div>

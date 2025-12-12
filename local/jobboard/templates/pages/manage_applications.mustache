@@ -1,0 +1,152 @@
+{{!
+    @template local_jobboard/pages/manage_applications
+
+    Manage applications for a vacancy page.
+
+    Context variables required for this template:
+    * vacancytitle - string - Vacancy title
+    * vacancyid - int - Vacancy ID
+    * backurl - string - Back to manage URL
+    * reseturl - string - Reset filters URL
+    * stats - array - Status statistics cards
+    * statuses - array - Available statuses for filter
+    * currentstatus - string - Currently selected status filter
+    * currentsearch - string - Current search term
+    * hasapplications - boolean - Whether there are applications
+    * applications - array - List of applications
+    * tableheaders - array - Table column headers
+    * pagination - object - Pagination data
+    * exportcsvurl - string - CSV export URL
+    * exportexcelurl - string - Excel export URL
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "vacancytitle": "Docente de Matemáticas",
+        "vacancyid": 123,
+        "hasapplications": true
+    }
+}}
+
+<div class="jb-manage-applications" data-region="jobboard-manage-applications">
+    {{! Page Title }}
+    <h2 class="jb-mb-3">
+        {{str.manageapplications}}: {{vacancytitle}}
+    </h2>
+
+    {{! Back Link }}
+    <p>
+        <a href="{{backurl}}">
+            <i class="fa fa-arrow-left jb-mr-1"></i>
+            {{str.backtomanage}}
+        </a>
+    </p>
+
+    {{! Stats Cards }}
+    <div class="jb-row jb-mb-4">
+        {{#stats}}
+        <div class="jb-col-md-3 jb-col-sm-6 jb-mb-2">
+            <div class="jb-card jb-bg-{{color}} jb-text-white">
+                <div class="jb-card-body jb-text-center">
+                    <h3>{{count}}</h3>
+                    <p class="jb-mb-0">{{label}}</p>
+                </div>
+            </div>
+        </div>
+        {{/stats}}
+    </div>
+
+    {{! Filter Form }}
+    <form class="jb-form-inline jb-mb-3" method="get">
+        <input type="hidden" name="vacancyid" value="{{vacancyid}}">
+
+        <div class="jb-form-group jb-mr-2">
+            <label class="jb-sr-only">{{str.search}}</label>
+            <input type="text" name="search" class="jb-form-control"
+                   placeholder="{{str.searchapplicant}}" value="{{currentsearch}}">
+        </div>
+
+        <div class="jb-form-group jb-mr-2">
+            <select name="status" class="jb-form-control">
+                <option value="">{{str.allstatuses}}</option>
+                {{#statuses}}
+                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                {{/statuses}}
+            </select>
+        </div>
+
+        <button type="submit" class="jb-btn jb-btn-primary jb-mr-2">{{str.filter}}</button>
+        <a href="{{reseturl}}" class="jb-btn jb-btn-secondary">{{str.reset}}</a>
+    </form>
+
+    {{^hasapplications}}
+    {{! No Applications Message }}
+    <div class="jb-alert jb-alert-info">
+        <i class="fa fa-info-circle jb-mr-2"></i>
+        {{str.noapplicationsfound}}
+    </div>
+    {{/hasapplications}}
+
+    {{#hasapplications}}
+    {{! Applications Table }}
+    <div class="jb-table-responsive">
+        <table class="jb-table jb-table-hover jb-generaltable">
+            <thead class="jb-thead-light">
+                <tr>
+                    {{#tableheaders}}
+                    <th>
+                        {{#sortable}}
+                        <a href="{{sorturl}}">{{label}}</a>{{sorticon}}
+                        {{/sortable}}
+                        {{^sortable}}
+                        {{label}}
+                        {{/sortable}}
+                    </th>
+                    {{/tableheaders}}
+                </tr>
+            </thead>
+            <tbody>
+                {{#applications}}
+                <tr>
+                    <td>
+                        <strong>{{fullname}}</strong>
+                        <br><small class="jb-text-muted">{{email}}</small>
+                        {{#isexemption}}
+                        <br><span class="jb-badge jb-badge-info">{{str.exemption}}</span>
+                        {{/isexemption}}
+                    </td>
+                    <td>{{dateapplied}}</td>
+                    <td>
+                        <span class="jb-badge {{statusbadgeclass}}">{{statuslabel}}</span>
+                    </td>
+                    <td>
+                        {{{docstatushtml}}}
+                    </td>
+                    <td>
+                        <a href="{{viewurl}}" class="jb-btn jb-btn-sm jb-btn-primary">
+                            {{str.view}}
+                        </a>
+                    </td>
+                </tr>
+                {{/applications}}
+            </tbody>
+        </table>
+    </div>
+
+    {{! Pagination }}
+    {{{paginationhtml}}}
+    {{/hasapplications}}
+
+    {{! Export Section }}
+    <div class="jb-mt-4">
+        <h5>{{str.export}}</h5>
+        <a href="{{exportcsvurl}}" class="jb-btn jb-btn-outline-primary jb-mr-2">
+            <i class="fa fa-file-csv jb-mr-1"></i>
+            {{str.exportcsv}}
+        </a>
+        <a href="{{exportexcelurl}}" class="jb-btn jb-btn-outline-primary">
+            <i class="fa fa-file-excel jb-mr-1"></i>
+            {{str.exportexcel}}
+        </a>
+    </div>
+</div>

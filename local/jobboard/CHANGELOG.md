@@ -5,6 +5,23 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.5] - 2025-12-12
+
+### Added
+- **Mustache Templates**:
+  - `pages/manage_applications.mustache` for application management
+  - `pages/edit_select_convocatoria.mustache` for vacancy creation flow
+  - `pages/edit_vacancy_form.mustache` for vacancy edit/create form
+- **Renderer Methods**:
+  - `render_manage_applications_page()` and `prepare_manage_applications_page_data()`
+  - `render_edit_select_convocatoria_page()` and `prepare_edit_select_convocatoria_data()`
+  - `render_edit_vacancy_form_page()` and `prepare_edit_vacancy_form_data()`
+
+### Changed
+- Migrated `manage_applications.php` to use renderer + template pattern
+- Migrated `edit.php` (both selection and form views) to use renderer + template pattern
+- Removed ~300 lines of inline HTML from PHP files
+
 ## [3.5.4] - 2025-12-12
 
 ### Added

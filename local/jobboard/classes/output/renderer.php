@@ -6589,4 +6589,323 @@ class renderer extends renderer_base {
             'str' => $strdata,
         ];
     }
+
+    /**
+     * Render the manage applications page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_manage_applications_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/manage_applications', $data);
+    }
+
+    /**
+     * Prepare manage applications page data for template.
+     *
+     * @param object $vacancy Vacancy object.
+     * @param array $applications List of applications.
+     * @param array $stats Status statistics.
+     * @param int $total Total count for pagination.
+     * @param int $page Current page.
+     * @param int $perpage Items per page.
+     * @param string $status Current status filter.
+     * @param string $search Current search term.
+     * @param string $sort Current sort column.
+     * @param string $order Current sort order.
+     * @param \moodle_url $baseurl Base page URL.
+     * @return array Template data.
+     */
+    public function prepare_manage_applications_page_data(
+        object $vacancy,
+        array $applications,
+        array $stats,
+        int $total,
+        int $page,
+        int $perpage,
+        string $status,
+        string $search,
+        string $sort,
+        string $order,
+        \moodle_url $baseurl
+    ): array {
+        global $OUTPUT;
+
+        // Status card colors.
+        $statuscolors = [
+            'submitted' => 'info',
+            'under_review' => 'primary',
+            'docs_validated' => 'success',
+            'docs_rejected' => 'danger',
+            'interview' => 'warning',
+            'selected' => 'success',
+            'rejected' => 'danger',
+            'withdrawn' => 'secondary',
+        ];
+
+        // Prepare stats cards.
+        $statscards = [];
+        foreach ($statuscolors as $s => $color) {
+            $statscards[] = [
+                'status' => $s,
+                'color' => $color,
+                'count' => $stats[$s] ?? 0,
+                'label' => get_string('status_' . $s, 'local_jobboard'),
+            ];
+        }
+
+        // Prepare statuses for filter dropdown.
+        $statusoptions = [];
+        foreach (\local_jobboard\application::STATUSES as $s) {
+            $statusoptions[] = [
+                'value' => $s,
+                'label' => get_string('status_' . $s, 'local_jobboard'),
+                'selected' => ($status === $s),
+            ];
+        }
+
+        // Prepare table headers.
+        $columns = [
+            'applicant' => ['label' => get_string('applicant', 'local_jobboard'), 'sortable' => false],
+            'timecreated' => ['label' => get_string('dateapplied', 'local_jobboard'), 'sortable' => true],
+            'status' => ['label' => get_string('status', 'local_jobboard'), 'sortable' => true],
+            'documents' => ['label' => get_string('documents', 'local_jobboard'), 'sortable' => false],
+            'actions' => ['label' => get_string('actions'), 'sortable' => false],
+        ];
+
+        $tableheaders = [];
+        foreach ($columns as $col => $info) {
+            $header = ['label' => $info['label'], 'sortable' => $info['sortable']];
+            if ($info['sortable']) {
+                $neworder = ($sort === $col && $order === 'ASC') ? 'DESC' : 'ASC';
+                $sorturl = new \moodle_url('/local/jobboard/manage_applications.php', [
+                    'vacancyid' => $vacancy->id,
+                    'status' => $status,
+                    'search' => $search,
+                    'sort' => $col,
+                    'order' => $neworder,
+                ]);
+                $header['sorturl'] = $sorturl->out(false);
+                if ($sort === $col) {
+                    $header['sorticon'] = ($order === 'ASC') ? ' ▲' : ' ▼';
+                }
+            }
+            $tableheaders[] = $header;
+        }
+
+        // Status badge class mapping.
+        $statusbadges = [
+            'submitted' => 'jb-badge-info',
+            'under_review' => 'jb-badge-primary',
+            'docs_validated' => 'jb-badge-success',
+            'docs_rejected' => 'jb-badge-danger',
+            'interview' => 'jb-badge-warning',
+            'selected' => 'jb-badge-success',
+            'rejected' => 'jb-badge-danger',
+            'withdrawn' => 'jb-badge-secondary',
+        ];
+
+        // Prepare applications data.
+        $appsdata = [];
+        foreach ($applications as $app) {
+            // Document status HTML.
+            $docstatushtml = '';
+            $pendingdocs = $app->pending_validations ?? 0;
+            $totaldocs = $app->document_count ?? 0;
+            if ($totaldocs > 0) {
+                $validated = $totaldocs - $pendingdocs;
+                $docstatushtml = "{$validated}/{$totaldocs} " . get_string('validated', 'local_jobboard');
+                if ($pendingdocs > 0) {
+                    $docstatushtml .= '<br><span class="jb-badge jb-badge-warning">' . $pendingdocs . ' ' .
+                        get_string('pending', 'local_jobboard') . '</span>';
+                }
+            } else {
+                $docstatushtml = get_string('nodocuments', 'local_jobboard');
+            }
+
+            $appsdata[] = [
+                'id' => $app->id,
+                'fullname' => format_string($app->userfirstname . ' ' . $app->userlastname),
+                'email' => format_string($app->useremail),
+                'isexemption' => !empty($app->isexemption),
+                'dateapplied' => userdate($app->timecreated, get_string('strftimedatetime', 'langconfig')),
+                'status' => $app->status,
+                'statuslabel' => get_string('status_' . $app->status, 'local_jobboard'),
+                'statusbadgeclass' => $statusbadges[$app->status] ?? 'jb-badge-secondary',
+                'docstatushtml' => $docstatushtml,
+                'viewurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]))->out(false),
+            ];
+        }
+
+        // Generate pagination HTML using Moodle's paging_bar.
+        $paginationhtml = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
+
+        // Build string data.
+        $strdata = [
+            'manageapplications' => get_string('manageapplications', 'local_jobboard'),
+            'backtomanage' => get_string('backtomanage', 'local_jobboard'),
+            'search' => get_string('search'),
+            'searchapplicant' => get_string('searchapplicant', 'local_jobboard'),
+            'allstatuses' => get_string('allstatuses', 'local_jobboard'),
+            'filter' => get_string('filter'),
+            'reset' => get_string('reset'),
+            'noapplicationsfound' => get_string('noapplicationsfound', 'local_jobboard'),
+            'exemption' => get_string('exemption', 'local_jobboard'),
+            'view' => get_string('view'),
+            'export' => get_string('export', 'local_jobboard'),
+            'exportcsv' => get_string('exportcsv', 'local_jobboard'),
+            'exportexcel' => get_string('exportexcel', 'local_jobboard'),
+        ];
+
+        return [
+            'vacancytitle' => format_string($vacancy->title),
+            'vacancyid' => $vacancy->id,
+            'backurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'manage']))->out(false),
+            'reseturl' => (new \moodle_url('/local/jobboard/manage_applications.php', ['vacancyid' => $vacancy->id]))->out(false),
+            'stats' => $statscards,
+            'statuses' => $statusoptions,
+            'currentstatus' => $status,
+            'currentsearch' => s($search),
+            'hasapplications' => !empty($applications),
+            'applications' => $appsdata,
+            'tableheaders' => $tableheaders,
+            'paginationhtml' => $paginationhtml,
+            'exportcsvurl' => (new \moodle_url('/local/jobboard/export_applications.php', [
+                'vacancyid' => $vacancy->id,
+                'status' => $status,
+                'format' => 'csv',
+            ]))->out(false),
+            'exportexcelurl' => (new \moodle_url('/local/jobboard/export_applications.php', [
+                'vacancyid' => $vacancy->id,
+                'status' => $status,
+                'format' => 'excel',
+            ]))->out(false),
+            'str' => $strdata,
+        ];
+    }
+
+    /**
+     * Render the edit vacancy convocatoria selection page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_edit_select_convocatoria_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/edit_select_convocatoria', $data);
+    }
+
+    /**
+     * Prepare edit vacancy convocatoria selection page data.
+     *
+     * @param array $convocatorias Array of convocatoria ID => name pairs.
+     * @return array Template data.
+     */
+    public function prepare_edit_select_convocatoria_data(array $convocatorias): array {
+        global $DB;
+
+        // Status colors mapping.
+        $statuscolors = [
+            'draft' => 'secondary',
+            'open' => 'success',
+            'closed' => 'warning',
+            'archived' => 'dark',
+        ];
+
+        // Prepare convocatoria cards data.
+        $convdata = [];
+        foreach ($convocatorias as $cid => $cname) {
+            $conv = $DB->get_record('local_jobboard_convocatoria', ['id' => $cid]);
+            if (!$conv) {
+                continue;
+            }
+
+            $vacancycount = $DB->count_records('local_jobboard_vacancy', ['convocatoriaid' => $cid]);
+
+            $convdata[] = [
+                'id' => $cid,
+                'name' => format_string($conv->name),
+                'code' => format_string($conv->code),
+                'status' => $conv->status,
+                'statuscolor' => $statuscolors[$conv->status] ?? 'secondary',
+                'statuslabel' => get_string('convocatoria_status_' . $conv->status, 'local_jobboard'),
+                'daterange' => userdate($conv->startdate, get_string('strftimedate', 'langconfig')) . ' - ' .
+                               userdate($conv->enddate, get_string('strftimedate', 'langconfig')),
+                'vacancycount' => $vacancycount,
+                'selecturl' => (new \moodle_url('/local/jobboard/edit.php', ['convocatoriaid' => $cid]))->out(false),
+            ];
+        }
+
+        // Build string data.
+        $strdata = [
+            'selectconvocatoriafirst' => get_string('selectconvocatoriafirst', 'local_jobboard'),
+            'createvacancyinconvocatoriadesc' => get_string('createvacancyinconvocatoriadesc', 'local_jobboard'),
+            'noconvocatoriasavailable' => get_string('noconvocatoriasavailable', 'local_jobboard'),
+            'gotocreateconvocatoria' => get_string('gotocreateconvocatoria', 'local_jobboard'),
+            'selectconvocatoria' => get_string('selectconvocatoria', 'local_jobboard'),
+            'vacancies' => get_string('vacancies', 'local_jobboard'),
+            'addvacancy' => get_string('addvacancy', 'local_jobboard'),
+            'or' => get_string('or', 'moodle'),
+            'addconvocatoria' => get_string('addconvocatoria', 'local_jobboard'),
+        ];
+
+        return [
+            'pagetitle' => get_string('newvacancy', 'local_jobboard'),
+            'hasconvocatorias' => !empty($convdata),
+            'convocatorias' => $convdata,
+            'createconvocatoriaurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'convocatoria', 'action' => 'add']))->out(false),
+            'str' => $strdata,
+        ];
+    }
+
+    /**
+     * Render the edit vacancy form page.
+     *
+     * @param array $data Template data.
+     * @return string Rendered HTML.
+     */
+    public function render_edit_vacancy_form_page(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/edit_vacancy_form', $data);
+    }
+
+    /**
+     * Prepare edit vacancy form page data.
+     *
+     * @param object|null $convocatoriarecord Convocatoria record or null.
+     * @param string $formhtml Rendered form HTML.
+     * @return array Template data.
+     */
+    public function prepare_edit_vacancy_form_data(?object $convocatoriarecord, string $formhtml): array {
+        // Status colors mapping.
+        $statuscolors = [
+            'draft' => 'secondary',
+            'open' => 'success',
+            'closed' => 'warning',
+            'archived' => 'dark',
+        ];
+
+        $convdata = null;
+        if ($convocatoriarecord) {
+            $convdata = [
+                'id' => $convocatoriarecord->id,
+                'name' => format_string($convocatoriarecord->name),
+                'daterange' => userdate($convocatoriarecord->startdate, get_string('strftimedate', 'langconfig')) . ' - ' .
+                               userdate($convocatoriarecord->enddate, get_string('strftimedate', 'langconfig')),
+                'status' => $convocatoriarecord->status,
+                'statuscolor' => $statuscolors[$convocatoriarecord->status] ?? 'secondary',
+                'statuslabel' => get_string('convocatoria_status_' . $convocatoriarecord->status, 'local_jobboard'),
+            ];
+        }
+
+        // Build string data.
+        $strdata = [
+            'convocatoria' => get_string('convocatoria', 'local_jobboard'),
+        ];
+
+        return [
+            'hasconvocatoria' => ($convocatoriarecord !== null),
+            'convocatoria' => $convdata,
+            'formhtml' => $formhtml,
+            'str' => $strdata,
+        ];
+    }
 }

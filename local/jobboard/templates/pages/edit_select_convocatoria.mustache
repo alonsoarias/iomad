@@ -1,0 +1,97 @@
+{{!
+    @template local_jobboard/pages/edit_select_convocatoria
+
+    Convocatoria selection page for creating new vacancy.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * hasconvocatorias - boolean - Whether there are convocatorias
+    * convocatorias - array - Available convocatorias
+    * createconvocatoriaurl - string - URL to create convocatoria
+    * str - object - Language strings
+
+    Example context (json):
+    {
+        "pagetitle": "New Vacancy",
+        "hasconvocatorias": true
+    }
+}}
+
+<div class="jb-edit-select-convocatoria" data-region="jobboard-edit-select">
+    {{! Info Message }}
+    <div class="jb-alert jb-alert-info jb-border-left-info jb-d-flex jb-align-center jb-mb-4">
+        <i class="fa fa-info-circle fa-2x jb-mr-3 jb-text-info"></i>
+        <div>
+            <h5 class="jb-mb-1">{{str.selectconvocatoriafirst}}</h5>
+            <p class="jb-mb-0">{{str.createvacancyinconvocatoriadesc}}</p>
+        </div>
+    </div>
+
+    {{^hasconvocatorias}}
+    {{! Empty State }}
+    <div class="jb-empty-state jb-text-center jb-py-5">
+        <i class="fa fa-calendar-alt fa-4x jb-text-muted jb-mb-3"></i>
+        <h4>{{str.noconvocatoriasavailable}}</h4>
+        <a href="{{createconvocatoriaurl}}" class="jb-btn jb-btn-primary">
+            <i class="fa fa-plus jb-mr-1"></i>
+            {{str.gotocreateconvocatoria}}
+        </a>
+    </div>
+    {{/hasconvocatorias}}
+
+    {{#hasconvocatorias}}
+    {{! Convocatoria Cards }}
+    <h4 class="jb-mb-3">{{str.selectconvocatoria}}</h4>
+    <div class="jb-row">
+        {{#convocatorias}}
+        <div class="jb-col-md-6 jb-col-lg-4 jb-mb-4">
+            <div class="jb-card jb-h-100 jb-shadow-sm jb-hover-shadow">
+                <div class="jb-card-body">
+                    {{! Status Badge }}
+                    <div class="jb-mb-2">
+                        <span class="jb-badge jb-badge-{{statuscolor}}">{{statuslabel}}</span>
+                    </div>
+
+                    {{! Name }}
+                    <h5 class="jb-card-title">{{name}}</h5>
+
+                    {{! Code }}
+                    <p class="jb-small jb-text-muted jb-mb-2">
+                        <code>{{code}}</code>
+                    </p>
+
+                    {{! Dates }}
+                    <div class="jb-small jb-mb-3">
+                        <i class="fa fa-calendar-alt jb-text-muted jb-mr-1"></i>
+                        {{daterange}}
+                    </div>
+
+                    {{! Vacancy Count }}
+                    <div class="jb-small jb-mb-3">
+                        <i class="fa fa-briefcase jb-text-muted jb-mr-1"></i>
+                        {{str.vacancies}}: <strong>{{vacancycount}}</strong>
+                    </div>
+                </div>
+
+                <div class="jb-card-footer jb-bg-white">
+                    <a href="{{selecturl}}" class="jb-btn jb-btn-primary jb-btn-block">
+                        <i class="fa fa-plus jb-mr-1"></i>
+                        {{str.addvacancy}}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{/convocatorias}}
+    </div>
+
+    {{! Option to Create New Convocatoria }}
+    <div class="jb-border-top jb-my-4"></div>
+    <div class="jb-text-center">
+        <p class="jb-text-muted">{{str.or}}</p>
+        <a href="{{createconvocatoriaurl}}" class="jb-btn jb-btn-outline-primary">
+            <i class="fa fa-calendar-plus jb-mr-1"></i>
+            {{str.addconvocatoria}}
+        </a>
+    </div>
+    {{/hasconvocatorias}}
+</div>
