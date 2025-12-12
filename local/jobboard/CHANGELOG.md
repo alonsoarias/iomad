@@ -5,6 +5,32 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.7] - 2025-12-12
+
+### Added
+- **Renderer Traits Architecture** (`classes/output/renderer/`):
+  - `dashboard_renderer.php` - Dashboard page and widgets (~750 lines)
+  - `public_renderer.php` - Public-facing pages (browse, vacancy, convocatoria)
+  - `vacancy_renderer.php` - Vacancy management pages
+  - `convocatoria_renderer.php` - Convocatoria management pages
+  - `application_renderer.php` - Application pages
+  - `review_renderer.php` - Review and validation pages
+  - `admin_renderer.php` - Admin settings and tools pages
+  - `exemption_renderer.php` - Exemption management pages
+  - `committee_renderer.php` - Committee and reviewer assignment pages
+
+### Changed
+- Refactored `renderer.php` to use modular trait-based architecture
+- Created `classes/output/renderer/` directory with 9 trait files
+- Added documentation and structure for future `prepare_*` method migration
+- Updated renderer.php header with trait loading and usage documentation
+
+### Technical Notes
+- Traits contain `render_*` methods grouped by functional area
+- Main renderer.php still contains `prepare_*` methods for backward compatibility
+- Future versions will move `prepare_*` methods to corresponding traits
+- This reduces the 7,136-line renderer.php into manageable modules
+
 ## [3.5.6] - 2025-12-12
 
 ### Added

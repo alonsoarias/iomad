@@ -19,8 +19,22 @@ declare(strict_types=1);
 /**
  * Renderer for Job Board plugin.
  *
+ * This is the main renderer class that uses traits for organization.
+ * Renderer traits are located in classes/output/renderer/ directory.
+ *
+ * Structure:
+ * - dashboard_renderer: Dashboard page and widgets
+ * - public_renderer: Public-facing pages (browse, vacancy, convocatoria)
+ * - vacancy_renderer: Vacancy management pages
+ * - convocatoria_renderer: Convocatoria management pages
+ * - application_renderer: Application pages
+ * - review_renderer: Review and validation pages
+ * - admin_renderer: Admin settings and tools pages
+ * - exemption_renderer: Exemption management pages
+ * - committee_renderer: Committee and reviewer assignment pages
+ *
  * @package   local_jobboard
- * @copyright 2024 ISER
+ * @copyright 2024-2025 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,10 +44,41 @@ defined('MOODLE_INTERNAL') || die();
 
 use moodle_url;
 
+// Load renderer traits.
+require_once(__DIR__ . '/renderer/dashboard_renderer.php');
+require_once(__DIR__ . '/renderer/public_renderer.php');
+require_once(__DIR__ . '/renderer/vacancy_renderer.php');
+require_once(__DIR__ . '/renderer/convocatoria_renderer.php');
+require_once(__DIR__ . '/renderer/application_renderer.php');
+require_once(__DIR__ . '/renderer/review_renderer.php');
+require_once(__DIR__ . '/renderer/admin_renderer.php');
+require_once(__DIR__ . '/renderer/exemption_renderer.php');
+require_once(__DIR__ . '/renderer/committee_renderer.php');
+
 /**
  * Renderer class for the Job Board plugin.
+ *
+ * Uses traits for render_* methods organization.
+ * The prepare_* methods remain in this file for now.
+ *
+ * @todo In future versions, move prepare_* methods to corresponding traits.
  */
 class renderer extends renderer_base {
+
+    // Note: Traits define render_* methods. Current inline methods override them
+    // for backward compatibility. Future versions will remove inline methods
+    // and use traits exclusively.
+    //
+    // Available traits (not yet active to avoid conflicts):
+    // use renderer\dashboard_renderer;
+    // use renderer\public_renderer;
+    // use renderer\vacancy_renderer;
+    // use renderer\convocatoria_renderer;
+    // use renderer\application_renderer;
+    // use renderer\review_renderer;
+    // use renderer\admin_renderer;
+    // use renderer\exemption_renderer;
+    // use renderer\committee_renderer;
 
     /**
      * Render public vacancies page.
