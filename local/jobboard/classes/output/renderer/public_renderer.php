@@ -44,7 +44,7 @@ trait public_renderer {
      * @return string HTML output.
      */
     public function render_public_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/public', $data);
+        return $this->render_from_template('local_jobboard/pages/public/index', $data);
     }
 
     /**
@@ -54,7 +54,7 @@ trait public_renderer {
      * @return string HTML output.
      */
     public function render_public_detail(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/public_detail', $data);
+        return $this->render_from_template('local_jobboard/pages/public/detail', $data);
     }
 
     /**
@@ -64,7 +64,7 @@ trait public_renderer {
      * @return string HTML output.
      */
     public function render_public_convocatoria_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/public_convocatoria', $data);
+        return $this->render_from_template('local_jobboard/pages/public/convocatoria', $data);
     }
 
     /**
@@ -74,7 +74,7 @@ trait public_renderer {
      * @return string HTML output.
      */
     public function render_public_vacancy_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/public_vacancy', $data);
+        return $this->render_from_template('local_jobboard/pages/public/vacancy', $data);
     }
 
     /**
@@ -84,7 +84,7 @@ trait public_renderer {
      * @return string HTML output.
      */
     public function render_browse_convocatorias_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/browse_convocatorias', $data);
+        return $this->render_from_template('local_jobboard/pages/convocatorias/browse', $data);
     }
 
     /**
@@ -94,7 +94,7 @@ trait public_renderer {
      * @return string HTML output.
      */
     public function render_updateprofile_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/updateprofile', $data);
+        return $this->render_from_template('local_jobboard/pages/user/profile', $data);
     }
 
     /**
@@ -104,7 +104,7 @@ trait public_renderer {
      * @return string HTML output.
      */
     public function render_signup_success_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/signup_success', $data);
+        return $this->render_from_template('local_jobboard/pages/user/signup_success', $data);
     }
 
     /**

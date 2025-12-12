@@ -1,0 +1,27 @@
+{{!
+    @template local_jobboard/components/progress
+
+    Progress bar component.
+
+    Context variables:
+    * value (number) - Current value (0-100)
+    * color (string) - Color: primary, success, warning, danger, info
+    * label (string) - Optional label to show
+    * showpercent (bool) - Show percentage text
+    * height (string) - Height in pixels (default: 20)
+    * striped (bool) - Striped style
+    * animated (bool) - Animated stripes
+
+    Example context (json):
+    {
+        "value": 75,
+        "color": "success",
+        "showpercent": true
+    }
+}}
+<div class="jb-progress"{{#height}} style="height: {{height}}px;"{{/height}}>
+    <div class="jb-progress-bar jb-bg-{{color}}{{#striped}} jb-progress-bar-striped{{/striped}}{{#animated}} jb-progress-bar-animated{{/animated}}" role="progressbar" style="width: {{value}}%;" aria-valuenow="{{value}}" aria-valuemin="0" aria-valuemax="100">
+        {{#showpercent}}{{value}}%{{/showpercent}}
+        {{#label}}{{label}}{{/label}}
+    </div>
+</div>

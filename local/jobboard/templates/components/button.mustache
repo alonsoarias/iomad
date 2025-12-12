@@ -1,0 +1,30 @@
+{{!
+    @template local_jobboard/components/button
+
+    Button component with various styles.
+
+    Context variables:
+    * label (string) - Button text
+    * url (string) - Link URL (renders as <a>)
+    * color (string) - Color: primary, secondary, success, danger, warning, info
+    * outline (bool) - Whether to use outline style
+    * size (string) - Size: sm, lg (default is normal)
+    * icon (string) - Optional icon
+    * iconright (bool) - Place icon on right side
+    * block (bool) - Full width button
+    * disabled (bool) - Disabled state
+    * confirm (string) - Confirmation message for onclick
+
+    Example context (json):
+    {
+        "label": "Save",
+        "url": "/save",
+        "color": "primary",
+        "icon": "save"
+    }
+}}
+<a href="{{url}}" class="jb-btn jb-btn-{{#outline}}outline-{{/outline}}{{color}}{{#size}} jb-btn-{{size}}{{/size}}{{#block}} jb-btn-block{{/block}}"{{#disabled}} disabled aria-disabled="true"{{/disabled}}{{#confirm}} onclick="return confirm('{{confirm}}');"{{/confirm}}>
+    {{^iconright}}{{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+    {{label}}
+    {{#iconright}}{{#icon}}<i class="fa fa-{{icon}} jb-ml-2" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+</a>

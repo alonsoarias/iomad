@@ -44,7 +44,7 @@ trait vacancy_renderer {
      * @return string HTML output.
      */
     public function render_vacancies_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/vacancies', $data);
+        return $this->render_from_template('local_jobboard/pages/vacancies/list', $data);
     }
 
     /**
@@ -54,7 +54,7 @@ trait vacancy_renderer {
      * @return string HTML output.
      */
     public function render_manage_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/manage', $data);
+        return $this->render_from_template('local_jobboard/pages/vacancies/manage', $data);
     }
 
     /**
@@ -64,7 +64,7 @@ trait vacancy_renderer {
      * @return string HTML output.
      */
     public function render_vacancy_detail_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/vacancy_detail', $data);
+        return $this->render_from_template('local_jobboard/pages/vacancies/detail', $data);
     }
 
     /**
@@ -74,7 +74,7 @@ trait vacancy_renderer {
      * @return string HTML output.
      */
     public function render_manage_applications_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/manage_applications', $data);
+        return $this->render_from_template('local_jobboard/pages/applications/manage', $data);
     }
 
     /**
@@ -84,7 +84,7 @@ trait vacancy_renderer {
      * @return string HTML output.
      */
     public function render_edit_select_convocatoria_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/edit_select_convocatoria', $data);
+        return $this->render_from_template('local_jobboard/pages/vacancies/edit_select_convocatoria', $data);
     }
 
     /**
@@ -94,7 +94,7 @@ trait vacancy_renderer {
      * @return string HTML output.
      */
     public function render_edit_vacancy_form_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/edit_vacancy_form', $data);
+        return $this->render_from_template('local_jobboard/pages/vacancies/edit_form', $data);
     }
 
     /**

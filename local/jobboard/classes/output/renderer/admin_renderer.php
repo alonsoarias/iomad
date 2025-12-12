@@ -44,7 +44,7 @@ trait admin_renderer {
      * @return string HTML output.
      */
     public function render_admin_roles_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_roles', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/roles', $data);
     }
 
     /**
@@ -54,7 +54,7 @@ trait admin_renderer {
      * @return string HTML output.
      */
     public function render_migrate_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/migrate', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/migrate', $data);
     }
 
     /**
@@ -64,7 +64,7 @@ trait admin_renderer {
      * @return string HTML output.
      */
     public function render_admin_doctypes_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_doctypes', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/doctypes', $data);
     }
 
     /**
@@ -74,7 +74,7 @@ trait admin_renderer {
      * @return string HTML output.
      */
     public function render_admin_templates_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_templates', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/templates', $data);
     }
 
     /**
@@ -84,7 +84,7 @@ trait admin_renderer {
      * @return string HTML output.
      */
     public function render_import_vacancies_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/import_vacancies', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/import_vacancies', $data);
     }
 
     /**
@@ -94,7 +94,7 @@ trait admin_renderer {
      * @return string HTML output.
      */
     public function render_import_vacancies_results_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/import_vacancies_results', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/import_vacancies_results', $data);
     }
 
     /**
@@ -104,7 +104,7 @@ trait admin_renderer {
      * @return string HTML output.
      */
     public function render_admin_template_edit_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_template_edit', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/template_edit', $data);
     }
 
     /**
@@ -114,7 +114,7 @@ trait admin_renderer {
      * @return string HTML output.
      */
     public function render_admin_doctype_form_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_doctype_form', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/doctype_form', $data);
     }
 
     /**
@@ -124,7 +124,7 @@ trait admin_renderer {
      * @return string HTML output.
      */
     public function render_admin_doctype_confirm_delete_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/admin_doctype_confirm_delete', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/doctype_confirm_delete', $data);
     }
 
     /**

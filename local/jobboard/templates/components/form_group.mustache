@@ -1,0 +1,60 @@
+{{!
+    @template local_jobboard/components/form_group
+
+    Form group component for form fields.
+
+    Context variables:
+    * type (string) - Input type: text, email, password, select, textarea, date, file
+    * name (string) - Field name
+    * id (string) - Field ID
+    * label (string) - Field label
+    * value (string) - Current value
+    * placeholder (string) - Placeholder text
+    * required (bool) - Required field
+    * disabled (bool) - Disabled state
+    * help (string) - Help text
+    * error (string) - Error message
+    * options (array) - Options for select {value, label, selected}
+    * rows (number) - Rows for textarea
+    * size (string) - Size: sm, lg
+
+    Example context (json):
+    {
+        "type": "text",
+        "name": "title",
+        "label": "Title",
+        "required": true
+    }
+}}
+<div class="jb-form-group jb-mb-3{{#error}} jb-has-error{{/error}}">
+    {{#label}}
+    <label class="jb-form-label" for="{{id}}">
+        {{label}}
+        {{#required}}<span class="jb-text-danger">*</span>{{/required}}
+    </label>
+    {{/label}}
+
+    {{#istext}}
+    <input type="{{type}}" name="{{name}}" id="{{id}}" class="jb-form-control{{#size}} jb-form-control-{{size}}{{/size}}{{#error}} jb-is-invalid{{/error}}" value="{{value}}"{{#placeholder}} placeholder="{{placeholder}}"{{/placeholder}}{{#required}} required{{/required}}{{#disabled}} disabled{{/disabled}}>
+    {{/istext}}
+
+    {{#isselect}}
+    <select name="{{name}}" id="{{id}}" class="jb-form-select{{#size}} jb-form-select-{{size}}{{/size}}{{#error}} jb-is-invalid{{/error}}"{{#required}} required{{/required}}{{#disabled}} disabled{{/disabled}}>
+        {{#options}}
+        <option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>
+        {{/options}}
+    </select>
+    {{/isselect}}
+
+    {{#istextarea}}
+    <textarea name="{{name}}" id="{{id}}" class="jb-form-control{{#error}} jb-is-invalid{{/error}}" rows="{{rows}}"{{#placeholder}} placeholder="{{placeholder}}"{{/placeholder}}{{#required}} required{{/required}}{{#disabled}} disabled{{/disabled}}>{{value}}</textarea>
+    {{/istextarea}}
+
+    {{#help}}
+    <small class="jb-form-text jb-text-muted">{{help}}</small>
+    {{/help}}
+
+    {{#error}}
+    <div class="jb-invalid-feedback">{{error}}</div>
+    {{/error}}
+</div>

@@ -1,0 +1,27 @@
+{{!
+    @template local_jobboard/components/action_buttons
+
+    Action buttons group component.
+
+    Context variables:
+    * buttons (array) - Array of button configs {url, label, icon, color, outline, confirm, size}
+    * size (string) - Group size: sm, lg
+    * vertical (bool) - Vertical layout
+
+    Example context (json):
+    {
+        "buttons": [
+            {"url": "/edit", "icon": "edit", "label": "Edit", "color": "primary"},
+            {"url": "/delete", "icon": "trash", "color": "danger", "confirm": "Are you sure?"}
+        ],
+        "size": "sm"
+    }
+}}
+<div class="jb-btn-group{{#vertical}} jb-btn-group-vertical{{/vertical}}{{#size}} jb-btn-group-{{size}}{{/size}}" role="group">
+    {{#buttons}}
+    <a href="{{url}}" class="jb-btn jb-btn-{{#outline}}outline-{{/outline}}{{color}}" title="{{label}}"{{#confirm}} onclick="return confirm('{{confirm}}');"{{/confirm}}>
+        {{#icon}}<i class="fa fa-{{icon}}{{#label}} jb-mr-1{{/label}}" aria-hidden="true"></i>{{/icon}}
+        {{#showlabel}}{{label}}{{/showlabel}}
+    </a>
+    {{/buttons}}
+</div>

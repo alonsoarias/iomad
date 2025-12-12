@@ -1,0 +1,22 @@
+{{!
+    @template local_jobboard/components/badge
+
+    Badge component for status indicators.
+
+    Context variables:
+    * label (string) - Badge text
+    * color (string) - Color: primary, secondary, success, danger, warning, info
+    * icon (string) - Optional icon
+    * pill (bool) - Whether to use pill style
+
+    Example context (json):
+    {
+        "label": "Published",
+        "color": "success",
+        "icon": "check"
+    }
+}}
+<span class="jb-badge jb-badge-{{color}}{{#pill}} jb-badge-pill{{/pill}}">
+    {{#icon}}<i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>{{/icon}}
+    {{label}}
+</span>

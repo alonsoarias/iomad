@@ -1,53 +1,41 @@
 {{!
     @template local_jobboard/components/stat_card
 
-    Statistics card component.
+    Statistics card component for displaying numeric values.
 
     Context variables:
-    * value - The main value to display
-    * label - Description label
-    * icon - FontAwesome icon name (without fa- prefix)
-    * color - Color variant (primary, success, warning, danger, info, secondary)
-    * url - Optional link URL
-    * trend - Optional trend indicator (up, down, stable)
-    * trendvalue - Optional trend value text
+    * value (string|number) - The statistic value
+    * label (string) - Label describing the statistic
+    * icon (string) - FontAwesome icon name
+    * color (string) - Color theme: primary, success, warning, danger, info
+    * url (string) - Optional link URL
+    * trend (object) - Optional trend data {value, direction: up|down}
 
     Example context (json):
     {
         "value": "42",
-        "label": "Active Vacancies",
-        "icon": "briefcase",
+        "label": "Applications",
+        "icon": "file-alt",
         "color": "primary",
-        "url": "/vacancies",
-        "trend": "up",
-        "trendvalue": "+5 this week"
+        "url": "/applications"
     }
 }}
-<div class="jb-stat-card jb-stat-card-{{color}}" role="region" aria-label="{{label}}: {{value}}">
-    {{#url}}
-    <a href="{{url}}" class="jb-text-decoration-none" aria-label="{{label}}: {{value}}. {{#str}}clickfordetails, local_jobboard{{/str}}">
-    {{/url}}
-        <div class="jb-stat-card-body jb-py-3">
-            <div class="jb-stat-card-content">
-                <div>
-                    <h3 class="jb-stat-card-value jb-text-{{color}}" aria-hidden="true">{{value}}</h3>
-                    <p class="jb-stat-card-label">{{label}}</p>
-                    {{#trendvalue}}
-                    <small class="jb-stat-card-trend jb-text-{{#trend}}{{trend}}{{/trend}}{{^trend}}muted{{/trend}}">
-                        {{#trend}}
-                        {{#isUp}}<i class="fa fa-arrow-up" aria-hidden="true"></i><span class="jb-sr-only">{{#str}}trending_up, local_jobboard{{/str}}</span>{{/isUp}}
-                        {{#isDown}}<i class="fa fa-arrow-down" aria-hidden="true"></i><span class="jb-sr-only">{{#str}}trending_down, local_jobboard{{/str}}</span>{{/isDown}}
-                        {{/trend}}
-                        <span class="jb-trend-text">{{trendvalue}}</span>
-                    </small>
-                    {{/trendvalue}}
-                </div>
-                <div class="jb-stat-card-icon jb-text-{{color}}" aria-hidden="true">
-                    <i class="fa fa-{{icon}} fa-2x"></i>
-                </div>
-            </div>
+<div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-{{color}}">
+    {{#url}}<a href="{{url}}" class="jb-text-decoration-none jb-text-inherit">{{/url}}
+    <div class="jb-card-body jb-d-flex jb-align-items-center">
+        <div class="jb-stat-icon jb-mr-3">
+            <i class="fa fa-{{icon}}" aria-hidden="true"></i>
         </div>
-    {{#url}}
-    </a>
-    {{/url}}
+        <div class="jb-flex-grow-1">
+            <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{value}}</div>
+            <div class="jb-stat-label jb-small jb-text-muted">{{label}}</div>
+        </div>
+        {{#trend}}
+        <div class="jb-stat-trend jb-text-{{#isup}}success{{/isup}}{{^isup}}danger{{/isup}}">
+            <i class="fa fa-arrow-{{direction}}" aria-hidden="true"></i>
+            <small>{{value}}</small>
+        </div>
+        {{/trend}}
+    </div>
+    {{#url}}</a>{{/url}}
 </div>

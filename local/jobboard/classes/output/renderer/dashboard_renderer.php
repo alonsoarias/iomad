@@ -44,7 +44,7 @@ trait dashboard_renderer {
      * @return string HTML output.
      */
     public function render_dashboard_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/dashboard', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/dashboard', $data);
     }
 
     /**

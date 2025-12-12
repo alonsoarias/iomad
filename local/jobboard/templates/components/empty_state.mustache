@@ -1,35 +1,31 @@
 {{!
     @template local_jobboard/components/empty_state
 
-    Empty state component for when no results found.
+    Empty state component for when no data is available.
 
     Context variables:
-    * message - Main message to display
-    * icon - FontAwesome icon name (without fa- prefix)
-    * description - Optional additional description
-    * action - Optional action button {url, label, icon, class}
+    * icon (string) - FontAwesome icon name
+    * title (string) - Main message
+    * description (string) - Optional secondary message
+    * action (object) - Optional action button {url, label, color}
 
     Example context (json):
     {
-        "message": "No vacancies found",
-        "icon": "briefcase",
+        "icon": "folder-open",
+        "title": "No items found",
         "description": "Try adjusting your filters",
-        "action": {"url": "/create", "label": "Create Vacancy", "icon": "plus", "class": "jb-btn-primary"}
+        "action": {"url": "/create", "label": "Create New", "color": "primary"}
     }
 }}
-<div class="jb-empty-state" role="status" aria-live="polite">
-    <div class="jb-empty-state-icon" aria-hidden="true">
-        <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}inbox{{/icon}} fa-4x"></i>
-    </div>
-    <h4 class="jb-empty-state-title">{{message}}</h4>
+<div class="jb-empty-state jb-text-center jb-py-5" role="status">
+    <i class="fa fa-{{icon}} fa-4x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+    <h3 class="jb-fs-5 jb-text-muted jb-mb-2">{{title}}</h3>
     {{#description}}
-    <p class="jb-empty-state-desc">{{description}}</p>
+    <p class="jb-text-muted jb-mb-4">{{description}}</p>
     {{/description}}
     {{#action}}
-    <a href="{{url}}" class="jb-btn {{#class}}{{class}}{{/class}}{{^class}}jb-btn-primary{{/class}}">
-        {{#icon}}
-        <i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>
-        {{/icon}}
+    <a href="{{url}}" class="jb-btn jb-btn-{{color}}">
+        {{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}
         {{label}}
     </a>
     {{/action}}

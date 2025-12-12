@@ -1,0 +1,58 @@
+{{!
+    @template local_jobboard/components/table
+
+    Table component with headers and rows.
+
+    Context variables:
+    * headers (array) - Column headers {label, sortable, sorturl, sorticon, class}
+    * rows (array) - Table rows, each with cells array {value, class, html}
+    * hover (bool) - Enable hover effect
+    * striped (bool) - Enable striped rows
+    * responsive (bool) - Wrap in responsive container
+    * emptytext (string) - Text when no rows
+
+    Example context (json):
+    {
+        "headers": [{"label": "Name"}, {"label": "Status"}],
+        "rows": [{"cells": [{"value": "Item 1"}, {"value": "Active"}]}],
+        "hover": true
+    }
+}}
+{{#responsive}}<div class="jb-table-responsive">{{/responsive}}
+<table class="jb-table{{#hover}} jb-table-hover{{/hover}}{{#striped}} jb-table-striped{{/striped}} jb-mb-0">
+    <thead class="jb-thead-light">
+        <tr>
+            {{#headers}}
+            <th scope="col"{{#class}} class="{{class}}"{{/class}}>
+                {{#sortable}}
+                <a href="{{sorturl}}" class="jb-text-decoration-none jb-text-dark">
+                    {{label}}{{#sorticon}}{{{sorticon}}}{{/sorticon}}
+                </a>
+                {{/sortable}}
+                {{^sortable}}{{label}}{{/sortable}}
+            </th>
+            {{/headers}}
+        </tr>
+    </thead>
+    <tbody>
+        {{#rows}}
+        <tr{{#class}} class="{{class}}"{{/class}}{{#dataid}} data-id="{{dataid}}"{{/dataid}}>
+            {{#cells}}
+            <td{{#class}} class="{{class}}"{{/class}}>
+                {{#html}}{{{html}}}{{/html}}
+                {{^html}}{{value}}{{/html}}
+            </td>
+            {{/cells}}
+        </tr>
+        {{/rows}}
+        {{^rows}}
+        <tr>
+            <td colspan="{{headercount}}" class="jb-text-center jb-text-muted jb-py-4">
+                {{#emptytext}}{{emptytext}}{{/emptytext}}
+                {{^emptytext}}{{#str}}nodata, local_jobboard{{/str}}{{/emptytext}}
+            </td>
+        </tr>
+        {{/rows}}
+    </tbody>
+</table>
+{{#responsive}}</div>{{/responsive}}

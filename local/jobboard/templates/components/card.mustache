@@ -1,0 +1,44 @@
+{{!
+    @template local_jobboard/components/card
+
+    Card component with header, body and optional footer.
+
+    Context variables:
+    * title (string) - Card header title
+    * icon (string) - Optional header icon
+    * headercolor (string) - Header background color class
+    * badge (object) - Optional badge {value, color}
+    * body (string) - Card body content (HTML)
+    * footer (string) - Optional footer content (HTML)
+    * shadow (bool) - Whether to add shadow
+
+    Example context (json):
+    {
+        "title": "Card Title",
+        "icon": "cog",
+        "headercolor": "primary",
+        "body": "<p>Content here</p>",
+        "shadow": true
+    }
+}}
+<div class="jb-card{{#shadow}} jb-card-shadow{{/shadow}}">
+    {{#title}}
+    <div class="jb-card-header{{#headercolor}} jb-card-header-{{headercolor}}{{/headercolor}}">
+        <h3 class="jb-fs-6 jb-mb-0">
+            {{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}
+            {{title}}
+        </h3>
+        {{#badge}}
+        <span class="jb-badge jb-badge-{{color}}">{{value}}</span>
+        {{/badge}}
+    </div>
+    {{/title}}
+    <div class="jb-card-body">
+        {{{body}}}
+    </div>
+    {{#footer}}
+    <div class="jb-card-footer">
+        {{{footer}}}
+    </div>
+    {{/footer}}
+</div>

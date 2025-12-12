@@ -1,0 +1,46 @@
+{{!
+    @template local_jobboard/components/timeline
+
+    Timeline component for history/activity display.
+
+    Context variables:
+    * items (array) - Timeline items {title, subtitle, time, icon, color, content}
+
+    Example context (json):
+    {
+        "items": [
+            {
+                "title": "Status Changed",
+                "subtitle": "By Admin",
+                "time": "2 hours ago",
+                "icon": "check",
+                "color": "success"
+            }
+        ]
+    }
+}}
+<div class="jb-timeline">
+    {{#items}}
+    <div class="jb-timeline-item jb-d-flex jb-mb-3 jb-pb-3{{^islast}} jb-border-bottom{{/islast}}">
+        <div class="jb-timeline-marker jb-flex-shrink-0 jb-mr-3">
+            <span class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-2 jb-d-inline-flex jb-align-items-center jb-justify-content-center" style="width: 36px; height: 36px;">
+                <i class="fa fa-{{icon}}" aria-hidden="true"></i>
+            </span>
+        </div>
+        <div class="jb-timeline-content jb-flex-grow-1">
+            <div class="jb-d-flex jb-justify-content-between jb-align-items-start">
+                <div>
+                    <strong class="jb-d-block">{{title}}</strong>
+                    {{#subtitle}}<small class="jb-text-muted">{{subtitle}}</small>{{/subtitle}}
+                </div>
+                <small class="jb-text-muted jb-flex-shrink-0 jb-ml-2">
+                    <i class="fa fa-clock jb-mr-1" aria-hidden="true"></i>{{time}}
+                </small>
+            </div>
+            {{#content}}
+            <div class="jb-mt-2 jb-text-muted jb-small">{{{content}}}</div>
+            {{/content}}
+        </div>
+    </div>
+    {{/items}}
+</div>

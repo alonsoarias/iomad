@@ -44,7 +44,7 @@ trait exemption_renderer {
      * @return string HTML output.
      */
     public function render_manage_exemptions_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/manage_exemptions', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/exemptions', $data);
     }
 
     /**
@@ -54,7 +54,7 @@ trait exemption_renderer {
      * @return string HTML output.
      */
     public function render_exemption_form_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/exemption_form', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/exemption_form', $data);
     }
 
     /**
@@ -64,7 +64,7 @@ trait exemption_renderer {
      * @return string HTML output.
      */
     public function render_exemption_revoke_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/exemption_revoke', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/exemption_revoke', $data);
     }
 
     /**
@@ -74,7 +74,7 @@ trait exemption_renderer {
      * @return string HTML output.
      */
     public function render_exemption_view_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/exemption_view', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/exemption_view', $data);
     }
 
     /**
@@ -84,7 +84,7 @@ trait exemption_renderer {
      * @return string HTML output.
      */
     public function render_import_exemptions_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/import_exemptions', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/import_exemptions', $data);
     }
 
     /**
@@ -94,7 +94,7 @@ trait exemption_renderer {
      * @return string HTML output.
      */
     public function render_import_exemptions_results_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/import_exemptions_results', $data);
+        return $this->render_from_template('local_jobboard/pages/admin/import_exemptions_results', $data);
     }
 
     /**

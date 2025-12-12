@@ -44,7 +44,7 @@ trait review_renderer {
      * @return string HTML output.
      */
     public function render_review_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/review', $data);
+        return $this->render_from_template('local_jobboard/pages/review/index', $data);
     }
 
     /**
@@ -54,7 +54,7 @@ trait review_renderer {
      * @return string HTML output.
      */
     public function render_myreviews_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/myreviews', $data);
+        return $this->render_from_template('local_jobboard/pages/review/my_reviews', $data);
     }
 
     /**
@@ -64,7 +64,7 @@ trait review_renderer {
      * @return string HTML output.
      */
     public function render_bulk_validate_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/bulk_validate', $data);
+        return $this->render_from_template('local_jobboard/pages/documents/bulk_validate', $data);
     }
 
     /**
@@ -74,7 +74,7 @@ trait review_renderer {
      * @return string HTML output.
      */
     public function render_validate_document_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/validate_document', $data);
+        return $this->render_from_template('local_jobboard/pages/documents/validate', $data);
     }
 
     /**
@@ -84,7 +84,7 @@ trait review_renderer {
      * @return string HTML output.
      */
     public function render_reupload_document_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/reupload_document', $data);
+        return $this->render_from_template('local_jobboard/pages/documents/reupload', $data);
     }
 
     /**

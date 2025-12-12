@@ -1,0 +1,42 @@
+{{!
+    @template local_jobboard/components/list_group
+
+    List group component.
+
+    Context variables:
+    * items (array) - List items {label, value, icon, url, badge, active}
+    * flush (bool) - Remove borders and rounded corners
+
+    Example context (json):
+    {
+        "items": [
+            {"label": "Item 1", "value": "Value", "icon": "file"},
+            {"label": "Item 2", "badge": {"value": "5", "color": "primary"}}
+        ],
+        "flush": true
+    }
+}}
+<ul class="jb-list-group{{#flush}} jb-list-group-flush{{/flush}}">
+    {{#items}}
+    {{#url}}
+    <a href="{{url}}" class="jb-list-group-item jb-list-group-item-action{{#active}} jb-active{{/active}}">
+    {{/url}}
+    {{^url}}
+    <li class="jb-list-group-item{{#active}} jb-active{{/active}}">
+    {{/url}}
+        <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+            <span>
+                {{#icon}}<i class="fa fa-{{icon}} jb-mr-2 jb-text-muted" aria-hidden="true"></i>{{/icon}}
+                {{label}}
+            </span>
+            {{#value}}<span class="jb-text-muted">{{value}}</span>{{/value}}
+            {{#badge}}<span class="jb-badge jb-badge-{{badge.color}}{{#badge.pill}} jb-badge-pill{{/badge.pill}}">{{badge.value}}</span>{{/badge}}
+        </div>
+    {{#url}}
+    </a>
+    {{/url}}
+    {{^url}}
+    </li>
+    {{/url}}
+    {{/items}}
+</ul>

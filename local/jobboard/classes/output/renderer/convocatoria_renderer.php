@@ -44,7 +44,7 @@ trait convocatoria_renderer {
      * @return string HTML output.
      */
     public function render_convocatoria_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/convocatoria', $data);
+        return $this->render_from_template('local_jobboard/pages/convocatorias/form', $data);
     }
 
     /**
@@ -54,7 +54,7 @@ trait convocatoria_renderer {
      * @return string HTML output.
      */
     public function render_convocatorias_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/convocatorias', $data);
+        return $this->render_from_template('local_jobboard/pages/convocatorias/list', $data);
     }
 
     /**
@@ -64,7 +64,7 @@ trait convocatoria_renderer {
      * @return string HTML output.
      */
     public function render_view_convocatoria_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/view_convocatoria', $data);
+        return $this->render_from_template('local_jobboard/pages/convocatorias/detail', $data);
     }
 
     /**

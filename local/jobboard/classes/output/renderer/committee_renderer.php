@@ -44,7 +44,7 @@ trait committee_renderer {
      * @return string HTML output.
      */
     public function render_program_reviewers_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/program_reviewers', $data);
+        return $this->render_from_template('local_jobboard/pages/review/program_reviewers', $data);
     }
 
     /**
@@ -54,7 +54,7 @@ trait committee_renderer {
      * @return string HTML output.
      */
     public function render_committee_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/committee', $data);
+        return $this->render_from_template('local_jobboard/pages/review/committee', $data);
     }
 
     /**
@@ -64,7 +64,7 @@ trait committee_renderer {
      * @return string HTML output.
      */
     public function render_assign_reviewer_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/assign_reviewer', $data);
+        return $this->render_from_template('local_jobboard/pages/review/assign_reviewer', $data);
     }
 
     /**
@@ -74,7 +74,7 @@ trait committee_renderer {
      * @return string HTML output.
      */
     public function render_schedule_interview_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/schedule_interview', $data);
+        return $this->render_from_template('local_jobboard/pages/review/schedule_interview', $data);
     }
 
     /**
@@ -84,7 +84,7 @@ trait committee_renderer {
      * @return string HTML output.
      */
     public function render_interview_complete_form_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/interview_complete_form', $data);
+        return $this->render_from_template('local_jobboard/pages/review/interview_complete', $data);
     }
 
     /**

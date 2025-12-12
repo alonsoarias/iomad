@@ -44,7 +44,7 @@ trait application_renderer {
      * @return string HTML output.
      */
     public function render_applications_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/applications', $data);
+        return $this->render_from_template('local_jobboard/pages/applications/list', $data);
     }
 
     /**
@@ -54,7 +54,7 @@ trait application_renderer {
      * @return string HTML output.
      */
     public function render_apply_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/apply', $data);
+        return $this->render_from_template('local_jobboard/pages/applications/apply', $data);
     }
 
     /**
@@ -64,7 +64,7 @@ trait application_renderer {
      * @return string HTML output.
      */
     public function render_application_detail_page(array $data): string {
-        return $this->render_from_template('local_jobboard/pages/application_detail', $data);
+        return $this->render_from_template('local_jobboard/pages/applications/detail', $data);
     }
 
     /**

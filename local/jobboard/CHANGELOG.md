@@ -5,6 +5,82 @@ All notable changes to the local_jobboard plugin will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.9] - 2025-12-12
+
+### Changed
+- **Complete Mustache Templates Reorganization**: Entirely recreated and reorganized the templates folder
+  - New hierarchical folder structure for better maintainability
+  - **62 total templates** organized into logical directories
+
+### New Directory Structure
+```
+templates/
+├── components/          (14 reusable UI components)
+│   ├── alert.mustache
+│   ├── breadcrumb.mustache
+│   ├── card.mustache
+│   ├── document_item.mustache
+│   ├── empty_state.mustache
+│   ├── filter_form.mustache
+│   ├── modal.mustache
+│   ├── pagination.mustache
+│   ├── progress_bar.mustache
+│   ├── stat_card.mustache
+│   ├── status_badge.mustache
+│   ├── table.mustache
+│   ├── timeline_item.mustache
+│   └── vacancy_card.mustache
+├── layouts/             (1 layout template)
+│   └── base.mustache
+├── pages/               (47 page templates in 10 subfolders)
+│   ├── admin/           (14 admin pages)
+│   ├── applications/    (4 application pages)
+│   ├── convocatorias/   (4 convocatoria pages)
+│   ├── documents/       (3 document pages)
+│   ├── exemptions/      (0 - uses admin/exemptions*)
+│   ├── public/          (4 public pages)
+│   ├── reports/         (1 reports page)
+│   ├── review/          (6 review pages)
+│   ├── user/            (4 user pages)
+│   └── vacancies/       (7 vacancy pages)
+└── partials/            (0 - reserved for future use)
+```
+
+### PHP Renderer Updates
+- Updated all 10 renderer trait files with new template paths:
+  - `admin_renderer.php`: 9 template path updates
+  - `application_renderer.php`: 3 template path updates
+  - `committee_renderer.php`: 5 template path updates
+  - `convocatoria_renderer.php`: 3 template path updates
+  - `dashboard_renderer.php`: 1 template path update
+  - `exemption_renderer.php`: 6 template path updates
+  - `public_renderer.php`: 7 template path updates
+  - `reports_renderer.php`: 1 template path update
+  - `review_renderer.php`: 5 template path updates
+  - `vacancy_renderer.php`: 6 template path updates
+
+### Template Path Mapping (Old → New)
+- `pages/dashboard` → `pages/admin/dashboard`
+- `pages/vacancies` → `pages/vacancies/list`
+- `pages/manage` → `pages/vacancies/manage`
+- `pages/vacancy_detail` → `pages/vacancies/detail`
+- `pages/manage_applications` → `pages/applications/manage`
+- `pages/applications` → `pages/applications/list`
+- `pages/apply` → `pages/applications/apply`
+- `pages/application_detail` → `pages/applications/detail`
+- `pages/convocatoria` → `pages/convocatorias/form`
+- `pages/convocatorias` → `pages/convocatorias/list`
+- `pages/view_convocatoria` → `pages/convocatorias/detail`
+- `pages/admin_*` → `pages/admin/*`
+- `pages/manage_exemptions` → `pages/admin/exemptions`
+- And many more...
+
+### Technical Notes
+- All templates use consistent `jb-*` CSS class prefix
+- Components are designed for reuse across multiple pages
+- Page templates are organized by feature/module
+- Clean separation between UI components, layouts, and page content
+
 ## [3.6.8] - 2025-12-12
 
 ### Fixed
