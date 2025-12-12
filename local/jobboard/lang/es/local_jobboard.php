@@ -2708,3 +2708,46 @@ $string['contract:termino_fijo'] = 'Contrato a término fijo';
 $string['doctype_rnmc'] = 'Registro Nacional Docente (RNMC)';
 $string['doctype_titulo_postgrado'] = 'Título de posgrado';
 $string['status:assigned'] = 'Asignado';
+
+// =============================================================================
+// GRADING PANEL STRINGS (mod_assign style interface)
+// =============================================================================
+
+$string['gradingpanel'] = 'Panel de revisión';
+$string['applicationlist'] = 'Lista de postulaciones';
+$string['applicationnavigation'] = 'Navegación de postulaciones';
+$string['selectapplication'] = 'Seleccionar una postulación';
+$string['selectdocument'] = 'Seleccionar un documento';
+$string['selectdocumenttopreview'] = 'Seleccione un documento para previsualizar';
+$string['selectdocumenthelp'] = 'Haga clic en un documento de la lista de la izquierda para previsualizarlo';
+$string['filterbyname'] = 'Filtrar por nombre...';
+$string['togglesidebar'] = 'Mostrar/ocultar panel lateral';
+$string['pendingdocs'] = 'Documentos pendientes';
+$string['exitgrading'] = 'Salir del panel de revisión';
+$string['exit'] = 'Salir';
+$string['fullscreen'] = 'Pantalla completa';
+$string['approveall'] = 'Aprobar todos';
+$string['confirmapproveall'] = '¿Está seguro de que desea aprobar todos los documentos pendientes de esta postulación?';
+$string['previewunavailable'] = 'Vista previa no disponible para este tipo de archivo';
+$string['downloadtoview'] = 'Descargar para ver';
+$string['selectrejectreason'] = 'Seleccione motivo de rechazo...';
+
+// Keyboard shortcuts
+$string['keyboardshortcuts'] = 'Atajos de teclado';
+$string['shortcut_next'] = 'Siguiente documento';
+$string['shortcut_prev'] = 'Documento anterior';
+$string['shortcut_approve'] = 'Aprobar documento actual';
+$string['shortcut_reject'] = 'Enfocar motivo de rechazo';
+$string['shortcut_download'] = 'Descargar documento';
+$string['shortcut_fullscreen'] = 'Alternar pantalla completa';
+$string['shortcut_sidebar'] = 'Mostrar/ocultar panel lateral';
+$string['shortcut_navigate_docs'] = 'Navegar documentos';
+$string['shortcut_approve_all'] = 'Aprobar todos los pendientes';
+$string['shortcut_show_help'] = 'Mostrar esta ayuda';
+$string['shortcut_exit'] = 'Salir del panel de revisión';
+
+// Validation feedback
+$string['document_approved'] = 'Documento aprobado exitosamente';
+$string['document_rejected'] = 'Documento rechazado';
+$string['validatedby'] = 'Validado por';
+$string['validatedat'] = 'Validado el';

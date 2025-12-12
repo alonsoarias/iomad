@@ -1,0 +1,401 @@
+{{!
+    @template local_jobboard/grading_panel
+
+    Grading panel template following mod_assign style.
+    Split-pane layout with collapsible sidebar, PDF preview, and validation controls.
+
+    Context variables:
+    * applicationid - Current application ID
+    * applications - Array of applications for sidebar navigation
+    * currentindex - Current position (1-based)
+    * totalcount - Total number of applications
+    * applicant - Current applicant info
+    * vacancy - Current vacancy info
+    * documents - Array of documents for current application
+    * selecteddocument - Currently selected document for preview
+    * canvalidate - Boolean if user can validate
+    * keyboard_shortcuts - Array of shortcut definitions
+    * sesskey - Session key
+
+    @package   local_jobboard
+    @copyright 2024-2025 ISER - Instituto Superior de Educación Rural
+    @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+<div class="jb-grading-panel"
+     data-region="grading-panel"
+     data-application-id="{{applicationid}}"
+     data-sesskey="{{sesskey}}">
+
+    {{! Main Container with Split Layout }}
+    <div class="jb-grading-container jb-d-flex">
+
+        {{! Left Sidebar - Application List }}
+        <aside class="jb-grading-sidebar" id="jb-grading-sidebar" role="navigation" aria-label="{{#str}}applicationlist, local_jobboard{{/str}}">
+            <div class="jb-sidebar-header jb-d-flex jb-justify-content-between jb-align-items-center jb-p-2 jb-border-bottom">
+                <h2 class="jb-fs-6 jb-mb-0">
+                    {{#str}}applications, local_jobboard{{/str}}
+                    <span class="jb-badge jb-badge-secondary jb-ml-1">{{totalcount}}</span>
+                </h2>
+                <button type="button" class="jb-btn jb-btn-sm jb-btn-link jb-sidebar-toggle"
+                        data-action="toggle-sidebar" aria-expanded="true" aria-controls="jb-grading-sidebar">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    <span class="jb-sr-only">{{#str}}togglesidebar, local_jobboard{{/str}}</span>
+                </button>
+            </div>
+
+            {{! Filter }}
+            <div class="jb-sidebar-filter jb-p-2 jb-border-bottom">
+                <input type="text" class="jb-form-control jb-form-control-sm"
+                       id="jb-application-filter"
+                       placeholder="{{#str}}filterbyname, local_jobboard{{/str}}"
+                       aria-label="{{#str}}filterbyname, local_jobboard{{/str}}">
+            </div>
+
+            {{! Application List }}
+            <ul class="jb-application-list jb-list-unstyled jb-mb-0" role="listbox" aria-label="{{#str}}selectapplication, local_jobboard{{/str}}">
+                {{#applications}}
+                <li class="jb-application-item {{#iscurrent}}jb-active{{/iscurrent}} {{#haspending}}jb-has-pending{{/haspending}}"
+                    data-application-id="{{id}}"
+                    data-applicant-name="{{applicantname}}"
+                    role="option"
+                    aria-selected="{{#iscurrent}}true{{/iscurrent}}{{^iscurrent}}false{{/iscurrent}}"
+                    tabindex="{{#iscurrent}}0{{/iscurrent}}{{^iscurrent}}-1{{/iscurrent}}">
+                    <a href="{{reviewurl}}" class="jb-application-link jb-d-block jb-p-2" data-action="load-application">
+                        <div class="jb-d-flex jb-justify-content-between jb-align-items-start">
+                            <div class="jb-flex-grow-1 jb-overflow-hidden">
+                                <div class="jb-fw-bold jb-text-truncate">{{applicantname}}</div>
+                                <small class="jb-text-muted jb-text-truncate jb-d-block">{{vacancycode}}</small>
+                            </div>
+                            <div class="jb-ml-2 jb-text-right">
+                                {{#pendingcount}}
+                                <span class="jb-badge jb-badge-warning jb-badge-pill" title="{{#str}}pendingdocs, local_jobboard{{/str}}">
+                                    {{pendingcount}}
+                                </span>
+                                {{/pendingcount}}
+                                {{^pendingcount}}
+                                <span class="jb-badge jb-badge-success jb-badge-pill" title="{{#str}}allvalidated, local_jobboard{{/str}}">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </span>
+                                {{/pendingcount}}
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                {{/applications}}
+            </ul>
+        </aside>
+
+        {{! Main Content Area }}
+        <main class="jb-grading-main jb-flex-grow-1 jb-d-flex jb-flex-column">
+
+            {{! Navigation Bar }}
+            <nav class="jb-grading-nav jb-d-flex jb-justify-content-between jb-align-items-center jb-p-2 jb-border-bottom jb-bg-light" aria-label="{{#str}}applicationnavigation, local_jobboard{{/str}}">
+                <div class="jb-nav-controls">
+                    <button type="button" class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-mr-1"
+                            data-action="sidebar-toggle" title="{{#str}}togglesidebar, local_jobboard{{/str}} (S)">
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="jb-btn jb-btn-sm jb-btn-outline-primary jb-mr-1"
+                            data-action="previous" {{^hasprev}}disabled{{/hasprev}}
+                            title="{{#str}}previous, local_jobboard{{/str}} (P)">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                        <span class="jb-d-none jb-d-md-inline jb-ml-1">{{#str}}previous, local_jobboard{{/str}}</span>
+                    </button>
+                    <span class="jb-nav-position jb-mx-2" aria-live="polite">
+                        <strong>{{currentindex}}</strong> / {{totalcount}}
+                    </span>
+                    <button type="button" class="jb-btn jb-btn-sm jb-btn-outline-primary"
+                            data-action="next" {{^hasnext}}disabled{{/hasnext}}
+                            title="{{#str}}next, local_jobboard{{/str}} (N)">
+                        <span class="jb-d-none jb-d-md-inline jb-mr-1">{{#str}}next, local_jobboard{{/str}}</span>
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="jb-applicant-info jb-text-center jb-flex-grow-1 jb-px-3">
+                    <strong class="jb-fs-6">{{applicant.fullname}}</strong>
+                    <span class="jb-badge jb-badge-secondary jb-ml-2">{{vacancy.code}}</span>
+                </div>
+
+                <div class="jb-nav-actions">
+                    <button type="button" class="jb-btn jb-btn-sm jb-btn-outline-info jb-mr-1"
+                            data-action="show-shortcuts" title="{{#str}}keyboardshortcuts, local_jobboard{{/str}} (?)">
+                        <i class="fa fa-keyboard" aria-hidden="true"></i>
+                    </button>
+                    <a href="{{backurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary" title="{{#str}}exitgrading, local_jobboard{{/str}} (Esc)">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                        <span class="jb-d-none jb-d-md-inline jb-ml-1">{{#str}}exit, local_jobboard{{/str}}</span>
+                    </a>
+                </div>
+            </nav>
+
+            {{! Content Area - Split between documents and preview }}
+            <div class="jb-grading-content jb-flex-grow-1 jb-d-flex">
+
+                {{! Document List Panel }}
+                <div class="jb-document-panel jb-border-right" id="jb-document-panel">
+                    <div class="jb-panel-header jb-p-2 jb-border-bottom jb-bg-white">
+                        <h3 class="jb-fs-6 jb-mb-0">
+                            <i class="fa fa-folder-open jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                            {{#str}}documents, local_jobboard{{/str}}
+                            <span class="jb-badge jb-badge-secondary jb-ml-1">{{documentcount}}</span>
+                        </h3>
+                    </div>
+
+                    {{! Progress Summary }}
+                    <div class="jb-progress-summary jb-p-2 jb-border-bottom jb-bg-light">
+                        <div class="jb-progress jb-mb-2" style="height: 8px;" role="progressbar"
+                             aria-valuenow="{{approvedpercent}}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="jb-progress-bar jb-bg-success" style="width: {{approvedpercent}}%;"></div>
+                            <div class="jb-progress-bar jb-bg-danger" style="width: {{rejectedpercent}}%;"></div>
+                        </div>
+                        <div class="jb-small jb-d-flex jb-justify-content-between">
+                            <span class="jb-text-success">
+                                <i class="fa fa-check jb-mr-1" aria-hidden="true"></i>{{approvedcount}}
+                            </span>
+                            <span class="jb-text-danger">
+                                <i class="fa fa-times jb-mr-1" aria-hidden="true"></i>{{rejectedcount}}
+                            </span>
+                            <span class="jb-text-warning">
+                                <i class="fa fa-clock jb-mr-1" aria-hidden="true"></i>{{pendingcount}}
+                            </span>
+                        </div>
+                    </div>
+
+                    {{! Document List }}
+                    <ul class="jb-document-list jb-list-unstyled jb-mb-0" role="listbox" aria-label="{{#str}}selectdocument, local_jobboard{{/str}}">
+                        {{#documents}}
+                        <li class="jb-document-item jb-doc-{{status}} {{#isselected}}jb-active{{/isselected}}"
+                            data-document-id="{{id}}"
+                            data-status="{{status}}"
+                            role="option"
+                            aria-selected="{{#isselected}}true{{/isselected}}{{^isselected}}false{{/isselected}}"
+                            tabindex="{{#isselected}}0{{/isselected}}{{^isselected}}-1{{/isselected}}">
+                            <a href="{{previewurl}}" class="jb-document-link jb-d-block jb-p-2" data-action="load-document">
+                                <div class="jb-d-flex jb-align-items-start">
+                                    <div class="jb-doc-status-icon jb-mr-2">
+                                        <i class="fa fa-{{statusicon}} jb-text-{{statuscolor}}" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="jb-flex-grow-1 jb-overflow-hidden">
+                                        <div class="jb-fw-bold jb-text-truncate">{{typename}}</div>
+                                        <small class="jb-text-muted jb-text-truncate jb-d-block">{{filename}}</small>
+                                    </div>
+                                    {{#ispending}}
+                                    <div class="jb-doc-actions jb-ml-2">
+                                        <span class="jb-badge jb-badge-warning jb-badge-pill">{{#str}}pending, local_jobboard{{/str}}</span>
+                                    </div>
+                                    {{/ispending}}
+                                </div>
+                            </a>
+                        </li>
+                        {{/documents}}
+                    </ul>
+
+                    {{! Bulk Actions }}
+                    {{#canvalidate}}
+                    <div class="jb-panel-footer jb-p-2 jb-border-top jb-bg-white jb-mt-auto">
+                        {{#haspendingdocs}}
+                        <button type="button" class="jb-btn jb-btn-success jb-btn-sm jb-btn-block jb-mb-1"
+                                data-action="approve-all" title="{{#str}}approveall, local_jobboard{{/str}} (Shift+A)">
+                            <i class="fa fa-check-double jb-mr-1" aria-hidden="true"></i>
+                            {{#str}}approveall, local_jobboard{{/str}}
+                        </button>
+                        {{/haspendingdocs}}
+                        {{^haspendingdocs}}
+                        <div class="jb-text-center jb-text-success jb-py-2">
+                            <i class="fa fa-check-circle fa-lg jb-mr-1" aria-hidden="true"></i>
+                            {{#str}}alldocsreviewed, local_jobboard{{/str}}
+                        </div>
+                        {{/haspendingdocs}}
+                    </div>
+                    {{/canvalidate}}
+                </div>
+
+                {{! Preview Panel }}
+                <div class="jb-preview-panel jb-flex-grow-1 jb-d-flex jb-flex-column" id="jb-preview-panel">
+                    {{#selecteddocument}}
+                    {{! Document Preview Header }}
+                    <div class="jb-panel-header jb-p-2 jb-border-bottom jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+                        <div>
+                            <h3 class="jb-fs-6 jb-mb-0">{{selecteddocument.typename}}</h3>
+                            <small class="jb-text-muted">{{selecteddocument.filename}}</small>
+                        </div>
+                        <div class="jb-btn-group">
+                            <a href="{{selecteddocument.downloadurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary"
+                               target="_blank" title="{{#str}}download, local_jobboard{{/str}} (D)">
+                                <i class="fa fa-download" aria-hidden="true"></i>
+                            </a>
+                            <button type="button" class="jb-btn jb-btn-sm jb-btn-outline-secondary"
+                                    data-action="fullscreen" title="{{#str}}fullscreen, local_jobboard{{/str}} (F)">
+                                <i class="fa fa-expand" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{! Preview Content }}
+                    <div class="jb-preview-content jb-flex-grow-1 jb-position-relative" id="jb-preview-content">
+                        {{#selecteddocument.ispdf}}
+                        <iframe src="{{selecteddocument.previewurl}}#toolbar=0&navpanes=0&scrollbar=1"
+                                class="jb-preview-iframe jb-w-100 jb-h-100 jb-border-0"
+                                title="{{#str}}documentpreview, local_jobboard{{/str}}: {{selecteddocument.filename}}">
+                        </iframe>
+                        {{/selecteddocument.ispdf}}
+                        {{#selecteddocument.isimage}}
+                        <div class="jb-preview-image-container jb-d-flex jb-justify-content-center jb-align-items-center jb-h-100 jb-p-3">
+                            <img src="{{selecteddocument.downloadurl}}"
+                                 class="jb-preview-image jb-mw-100 jb-mh-100"
+                                 alt="{{selecteddocument.filename}}">
+                        </div>
+                        {{/selecteddocument.isimage}}
+                        {{^selecteddocument.ispdf}}{{^selecteddocument.isimage}}
+                        <div class="jb-preview-unsupported jb-d-flex jb-flex-column jb-justify-content-center jb-align-items-center jb-h-100 jb-text-center jb-p-4">
+                            <i class="fa fa-file fa-4x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                            <p class="jb-text-muted jb-mb-3">{{#str}}previewunavailable, local_jobboard{{/str}}</p>
+                            <a href="{{selecteddocument.downloadurl}}" class="jb-btn jb-btn-primary" target="_blank">
+                                <i class="fa fa-download jb-mr-2" aria-hidden="true"></i>
+                                {{#str}}downloadtoview, local_jobboard{{/str}}
+                            </a>
+                        </div>
+                        {{/selecteddocument.isimage}}{{/selecteddocument.ispdf}}
+                    </div>
+
+                    {{! Validation Controls }}
+                    {{#canvalidate}}
+                    {{#selecteddocument.ispending}}
+                    <div class="jb-validation-controls jb-p-3 jb-border-top jb-bg-white" role="form" aria-label="{{#str}}validationdecision, local_jobboard{{/str}}">
+                        {{! Checklist (if available) }}
+                        {{#selecteddocument.haschecklist}}
+                        <div class="jb-checklist jb-mb-3">
+                            <h4 class="jb-fs-6 jb-mb-2">{{#str}}validationchecklist, local_jobboard{{/str}}</h4>
+                            <div class="jb-checklist-items jb-small">
+                                {{#selecteddocument.checklist}}
+                                <div class="jb-form-check jb-mb-1">
+                                    <input type="checkbox" class="jb-form-check-input" id="check-{{id}}" data-checklist-item="{{id}}">
+                                    <label class="jb-form-check-label" for="check-{{id}}">{{text}}</label>
+                                </div>
+                                {{/selecteddocument.checklist}}
+                            </div>
+                        </div>
+                        {{/selecteddocument.haschecklist}}
+
+                        {{! Action Buttons }}
+                        <div class="jb-action-buttons jb-d-flex jb-justify-content-between jb-align-items-start">
+                            <div class="jb-approve-section">
+                                <button type="button" class="jb-btn jb-btn-success jb-btn-lg"
+                                        data-action="approve-document"
+                                        data-document-id="{{selecteddocument.id}}"
+                                        title="{{#str}}approvedocument, local_jobboard{{/str}} (A)">
+                                    <i class="fa fa-check jb-mr-2" aria-hidden="true"></i>
+                                    {{#str}}approve, local_jobboard{{/str}}
+                                </button>
+                            </div>
+
+                            <div class="jb-reject-section jb-flex-grow-1 jb-ml-3">
+                                <div class="jb-input-group">
+                                    <select class="jb-form-control" id="jb-reject-reason" aria-label="{{#str}}rejectreason, local_jobboard{{/str}}">
+                                        <option value="">{{#str}}selectrejectreason, local_jobboard{{/str}}</option>
+                                        {{#rejectreasons}}
+                                        <option value="{{code}}">{{label}}</option>
+                                        {{/rejectreasons}}
+                                    </select>
+                                    <div class="jb-input-group-append">
+                                        <button type="button" class="jb-btn jb-btn-danger"
+                                                data-action="reject-document"
+                                                data-document-id="{{selecteddocument.id}}"
+                                                title="{{#str}}rejectdocument, local_jobboard{{/str}} (R)">
+                                            <i class="fa fa-times jb-mr-1" aria-hidden="true"></i>
+                                            {{#str}}reject, local_jobboard{{/str}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/selecteddocument.ispending}}
+
+                    {{! Already validated status }}
+                    {{^selecteddocument.ispending}}
+                    <div class="jb-validation-status jb-p-3 jb-border-top jb-bg-{{selecteddocument.statusbgclass}}">
+                        <div class="jb-d-flex jb-align-items-center">
+                            <i class="fa fa-{{selecteddocument.statusicon}} fa-lg jb-text-{{selecteddocument.statuscolor}} jb-mr-3" aria-hidden="true"></i>
+                            <div>
+                                <strong class="jb-text-{{selecteddocument.statuscolor}}">{{selecteddocument.statuslabel}}</strong>
+                                {{#selecteddocument.validatedby}}
+                                <br><small class="jb-text-muted">
+                                    {{#str}}validatedby, local_jobboard{{/str}}: {{selecteddocument.validatedby}} - {{selecteddocument.validatedat}}
+                                </small>
+                                {{/selecteddocument.validatedby}}
+                                {{#selecteddocument.rejectreason}}
+                                <br><small class="jb-text-danger">{{selecteddocument.rejectreason}}</small>
+                                {{/selecteddocument.rejectreason}}
+                            </div>
+                        </div>
+                    </div>
+                    {{/selecteddocument.ispending}}
+                    {{/canvalidate}}
+                    {{/selecteddocument}}
+
+                    {{! No document selected state }}
+                    {{^selecteddocument}}
+                    <div class="jb-no-document jb-d-flex jb-flex-column jb-justify-content-center jb-align-items-center jb-h-100 jb-text-center jb-p-4">
+                        <i class="fa fa-hand-pointer fa-4x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                        <h3 class="jb-fs-5 jb-text-muted">{{#str}}selectdocumenttopreview, local_jobboard{{/str}}</h3>
+                        <p class="jb-text-muted">{{#str}}selectdocumenthelp, local_jobboard{{/str}}</p>
+                    </div>
+                    {{/selecteddocument}}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    {{! Keyboard Shortcuts Modal }}
+    <div class="jb-modal jb-fade" id="jb-shortcuts-modal" tabindex="-1" role="dialog" aria-labelledby="jb-shortcuts-modal-title" aria-hidden="true">
+        <div class="jb-modal-dialog jb-modal-dialog-centered" role="document">
+            <div class="jb-modal-content">
+                <div class="jb-modal-header">
+                    <h4 class="jb-modal-title" id="jb-shortcuts-modal-title">
+                        <i class="fa fa-keyboard jb-mr-2" aria-hidden="true"></i>
+                        {{#str}}keyboardshortcuts, local_jobboard{{/str}}
+                    </h4>
+                    <button type="button" class="jb-close" data-dismiss="modal" aria-label="{{#str}}close, local_jobboard{{/str}}">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="jb-modal-body">
+                    <table class="jb-table jb-table-sm jb-mb-0">
+                        <tbody>
+                            <tr><td><kbd>N</kbd></td><td>{{#str}}shortcut_next, local_jobboard{{/str}}</td></tr>
+                            <tr><td><kbd>P</kbd></td><td>{{#str}}shortcut_prev, local_jobboard{{/str}}</td></tr>
+                            <tr><td><kbd>A</kbd></td><td>{{#str}}shortcut_approve, local_jobboard{{/str}}</td></tr>
+                            <tr><td><kbd>R</kbd></td><td>{{#str}}shortcut_reject, local_jobboard{{/str}}</td></tr>
+                            <tr><td><kbd>D</kbd></td><td>{{#str}}shortcut_download, local_jobboard{{/str}}</td></tr>
+                            <tr><td><kbd>F</kbd></td><td>{{#str}}shortcut_fullscreen, local_jobboard{{/str}}</td></tr>
+                            <tr><td><kbd>S</kbd></td><td>{{#str}}shortcut_sidebar, local_jobboard{{/str}}</td></tr>
+                            <tr><td><kbd>&uarr;</kbd> / <kbd>&darr;</kbd></td><td>{{#str}}shortcut_navigate_docs, local_jobboard{{/str}}</td></tr>
+                            <tr><td><kbd>Shift+A</kbd></td><td>{{#str}}shortcut_approve_all, local_jobboard{{/str}}</td></tr>
+                            <tr><td><kbd>?</kbd></td><td>{{#str}}shortcut_show_help, local_jobboard{{/str}}</td></tr>
+                            <tr><td><kbd>Esc</kbd></td><td>{{#str}}shortcut_exit, local_jobboard{{/str}}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{! Loading Overlay }}
+    <div class="jb-loading-overlay jb-d-none" id="jb-loading-overlay" aria-hidden="true">
+        <div class="jb-spinner-border jb-text-primary" role="status">
+            <span class="jb-sr-only">{{#str}}loading, local_jobboard{{/str}}</span>
+        </div>
+    </div>
+</div>
+
+{{#js}}
+require(['local_jobboard/grading_panel'], function(GradingPanel) {
+    GradingPanel.init({
+        applicationId: {{applicationid}},
+        sesskey: '{{sesskey}}',
+        canValidate: {{#canvalidate}}true{{/canvalidate}}{{^canvalidate}}false{{/canvalidate}}
+    });
+});
+{{/js}}

@@ -2708,3 +2708,46 @@ $string['contract:termino_fijo'] = 'Fixed-term contract';
 $string['doctype_rnmc'] = 'National teacher registry (RNMC)';
 $string['doctype_titulo_postgrado'] = 'Postgraduate degree';
 $string['status:assigned'] = 'Assigned';
+
+// =============================================================================
+// GRADING PANEL STRINGS (mod_assign style interface)
+// =============================================================================
+
+$string['gradingpanel'] = 'Review panel';
+$string['applicationlist'] = 'Application list';
+$string['applicationnavigation'] = 'Application navigation';
+$string['selectapplication'] = 'Select an application';
+$string['selectdocument'] = 'Select a document';
+$string['selectdocumenttopreview'] = 'Select a document to preview';
+$string['selectdocumenthelp'] = 'Click on a document from the list on the left to preview it';
+$string['filterbyname'] = 'Filter by name...';
+$string['togglesidebar'] = 'Toggle sidebar';
+$string['pendingdocs'] = 'Pending documents';
+$string['exitgrading'] = 'Exit review panel';
+$string['exit'] = 'Exit';
+$string['fullscreen'] = 'Fullscreen';
+$string['approveall'] = 'Approve all';
+$string['confirmapproveall'] = 'Are you sure you want to approve all pending documents for this application?';
+$string['previewunavailable'] = 'Preview not available for this file type';
+$string['downloadtoview'] = 'Download to view';
+$string['selectrejectreason'] = 'Select rejection reason...';
+
+// Keyboard shortcuts
+$string['keyboardshortcuts'] = 'Keyboard shortcuts';
+$string['shortcut_next'] = 'Next document';
+$string['shortcut_prev'] = 'Previous document';
+$string['shortcut_approve'] = 'Approve current document';
+$string['shortcut_reject'] = 'Focus rejection reason';
+$string['shortcut_download'] = 'Download document';
+$string['shortcut_fullscreen'] = 'Toggle fullscreen';
+$string['shortcut_sidebar'] = 'Toggle sidebar';
+$string['shortcut_navigate_docs'] = 'Navigate documents';
+$string['shortcut_approve_all'] = 'Approve all pending';
+$string['shortcut_show_help'] = 'Show this help';
+$string['shortcut_exit'] = 'Exit review panel';
+
+// Validation feedback
+$string['document_approved'] = 'Document approved successfully';
+$string['document_rejected'] = 'Document rejected';
+$string['validatedby'] = 'Validated by';
+$string['validatedat'] = 'Validated at';
