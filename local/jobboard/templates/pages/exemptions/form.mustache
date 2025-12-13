@@ -2,12 +2,16 @@
     @template local_jobboard/pages/exemption_form
 
     Exemption add/edit form page.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * pagetitle - string - Page title
     * backurl - string - Back URL
     * isedit - bool - True if editing, false if adding
     * formhtml - string - Rendered form HTML
+    * exemption - object - Exemption data if editing {userfullname, type, validfrom}
+    * loading - bool - Show skeleton loading state
     * str - object - Language strings
 
     Example context (json):
@@ -17,33 +21,134 @@
         "isedit": false
     }
 }}
-
-<div class="jb-exemptions" data-region="jobboard-exemption-form">
-    {{! Page Header }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-exemptions" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
     <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
-        <h3 class="jb-mb-0">{{pagetitle}}</h3>
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-arrow-left jb-mr-2"></i>
-            {{str.back}}
-        </a>
+        <div class="jb-skeleton-title" style="width: 180px;"></div>
+        <div class="jb-skeleton-text" style="width: 100px; height: 38px;"></div>
     </div>
-
-    {{! Form Card }}
-    <div class="jb-card jb-card-shadow">
-        <div class="jb-card-header jb-bg-white">
-            <h5 class="jb-mb-0">
-                {{#isedit}}
-                <i class="fa fa-edit jb-text-primary jb-mr-2"></i>
-                {{str.editexemption}}
-                {{/isedit}}
-                {{^isedit}}
-                <i class="fa fa-plus jb-text-primary jb-mr-2"></i>
-                {{str.addexemption}}
-                {{/isedit}}
-            </h5>
+    <div class="jb-card">
+        <div class="jb-card-header">
+            <div class="jb-skeleton-text" style="width: 150px;"></div>
         </div>
         <div class="jb-card-body">
-            {{{formhtml}}}
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 100px;"></div>
+            <div class="jb-skeleton-text" style="width: 150px; height: 45px;"></div>
         </div>
     </div>
 </div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-exemptions" data-region="jobboard-exemption-form">
+    {{! Skip Link for Accessibility }}
+    <a href="#exemption-form-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
+        <h3 class="jb-mb-0">
+            {{#isedit}}
+            <i class="fa fa-edit jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{/isedit}}
+            {{^isedit}}
+            <i class="fa fa-plus-circle jb-text-success jb-mr-2" aria-hidden="true"></i>
+            {{/isedit}}
+            {{pagetitle}}
+        </h3>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{str.back}}
+        </a>
+    </header>
+
+    {{! Edit Mode Info Banner }}
+    {{#isedit}}
+    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.05s;">
+        <i class="fa fa-info-circle jb-mr-3" aria-hidden="true"></i>
+        <div>
+            <strong class="jb-d-block">{{#str}}editingexemption, local_jobboard{{/str}}</strong>
+            {{#exemption.userfullname}}
+            <small class="jb-text-muted">
+                {{#str}}user{{/str}}: <strong>{{exemption.userfullname}}</strong>
+            </small>
+            {{/exemption.userfullname}}
+        </div>
+    </div>
+    {{/isedit}}
+
+    {{! Form Card }}
+    <main id="exemption-form-content">
+        <div class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="jb-card-header jb-bg-white jb-d-flex jb-align-items-center">
+                <div class="jb-icon-circle jb-bg-{{#isedit}}primary{{/isedit}}{{^isedit}}success{{/isedit}} jb-text-white jb-mr-3">
+                    {{#isedit}}
+                    <i class="fa fa-edit" aria-hidden="true"></i>
+                    {{/isedit}}
+                    {{^isedit}}
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    {{/isedit}}
+                </div>
+                <h5 class="jb-mb-0">
+                    {{#isedit}}
+                    {{str.editexemption}}
+                    {{/isedit}}
+                    {{^isedit}}
+                    {{str.addexemption}}
+                    {{/isedit}}
+                </h5>
+            </div>
+            <div class="jb-card-body">
+                {{{formhtml}}}
+            </div>
+        </div>
+    </main>
+
+    {{! Help Section }}
+    <aside class="jb-mt-4 jb-fade-in" style="animation-delay: 0.15s;">
+        <div class="jb-alert jb-alert-light jb-d-flex jb-align-items-start">
+            <i class="fa fa-lightbulb jb-text-warning jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+            <div>
+                <strong class="jb-d-block jb-mb-1">{{#str}}exemptionhelptitle, local_jobboard{{/str}}</strong>
+                <p class="jb-mb-0 jb-small jb-text-muted">{{#str}}exemptionhelpdesc, local_jobboard{{/str}}</p>
+            </div>
+        </div>
+    </aside>
+
+    {{! Exemption Types Info }}
+    <div class="jb-card jb-card-shadow jb-mt-4 jb-fade-in" style="animation-delay: 0.2s;">
+        <div class="jb-card-header jb-bg-secondary jb-text-white">
+            <h6 class="jb-mb-0">
+                <i class="fa fa-list jb-mr-2" aria-hidden="true"></i>
+                {{#str}}exemptiontypes, local_jobboard{{/str}}
+            </h6>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-row">
+                <div class="jb-col-md-4 jb-mb-3 jb-mb-md-0">
+                    <div class="jb-d-flex jb-align-items-start">
+                        <span class="jb-badge jb-badge-info jb-mr-2">{{#str}}permanent, local_jobboard{{/str}}</span>
+                        <small class="jb-text-muted">{{#str}}permanentdesc, local_jobboard{{/str}}</small>
+                    </div>
+                </div>
+                <div class="jb-col-md-4 jb-mb-3 jb-mb-md-0">
+                    <div class="jb-d-flex jb-align-items-start">
+                        <span class="jb-badge jb-badge-warning jb-mr-2">{{#str}}temporary, local_jobboard{{/str}}</span>
+                        <small class="jb-text-muted">{{#str}}temporarydesc, local_jobboard{{/str}}</small>
+                    </div>
+                </div>
+                <div class="jb-col-md-4">
+                    <div class="jb-d-flex jb-align-items-start">
+                        <span class="jb-badge jb-badge-success jb-mr-2">{{#str}}conditional, local_jobboard{{/str}}</span>
+                        <small class="jb-text-muted">{{#str}}conditionaldesc, local_jobboard{{/str}}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/loading}}

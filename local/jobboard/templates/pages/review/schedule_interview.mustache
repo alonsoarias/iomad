@@ -3,6 +3,7 @@
 
     Interview scheduling page template.
     Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables:
     * pagetitle - Page title string
@@ -13,46 +14,86 @@
     * hasinterviews - Boolean if has interviews
     * formhtml - Rendered moodle form HTML
     * backurl - URL to go back
+    * loading - bool - Show skeleton loading state
 
     Example context (json):
     {
         "applicant": {"fullname": "John Doe", "email": "john@example.com"}
     }
 }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-schedule-interview" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton-title jb-mb-4" style="width: 250px;"></div>
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-header"><div class="jb-skeleton-text" style="width: 150px;"></div></div>
+        <div class="jb-card-body">
+            <div class="jb-row">
+                <div class="jb-col-md-6"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
+                <div class="jb-col-md-6"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="jb-card">
+        <div class="jb-card-header"><div class="jb-skeleton-text" style="width: 200px;"></div></div>
+        <div class="jb-card-body"><div class="jb-skeleton-text" style="height: 200px;"></div></div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
 <div class="jb-schedule-interview" data-region="jobboard-schedule-interview">
+    {{! Skip Link for Accessibility }}
+    <a href="#interview-form-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
     {{! Page Header }}
-    <header class="jb-page-header jb-mb-4">
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
         <h1 class="jb-fs-3 jb-mb-0">
             <i class="fa fa-calendar-plus jb-text-primary jb-mr-2" aria-hidden="true"></i>
             {{pagetitle}}
         </h1>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{#str}}back, local_jobboard{{/str}}
+        </a>
     </header>
 
     {{! Applicant Info Card }}
-    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="applicant-heading">
-        <div class="jb-card-header">
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.05s;" aria-labelledby="applicant-heading">
+        <div class="jb-card-header jb-bg-info jb-text-white">
             <h5 class="jb-mb-0" id="applicant-heading">
-                <i class="fa fa-user jb-text-info jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-user jb-mr-2" aria-hidden="true"></i>
                 {{#str}}applicantinfo, local_jobboard{{/str}}
             </h5>
         </div>
         <div class="jb-card-body">
             <div class="jb-row">
-                <div class="jb-col-md-6">
-                    <dl>
-                        <dt>{{#str}}name{{/str}}</dt>
-                        <dd>{{applicant.fullname}}</dd>
-                        <dt>{{#str}}email{{/str}}</dt>
-                        <dd>{{applicant.email}}</dd>
-                    </dl>
+                <div class="jb-col-md-6 jb-mb-3 jb-mb-md-0">
+                    <div class="jb-d-flex jb-align-items-start">
+                        <div class="jb-icon-circle jb-bg-info jb-text-white jb-mr-3 jb-flex-shrink-0">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h6 class="jb-mb-1">{{applicant.fullname}}</h6>
+                            <a href="mailto:{{applicant.email}}" class="jb-text-muted jb-small">
+                                <i class="fa fa-envelope jb-mr-1" aria-hidden="true"></i>
+                                {{applicant.email}}
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="jb-col-md-6">
-                    <dl>
-                        <dt>{{#str}}vacancy, local_jobboard{{/str}}</dt>
-                        <dd>{{vacancy.code}} - {{vacancy.title}}</dd>
-                        <dt>{{#str}}status{{/str}}</dt>
-                        <dd><span class="jb-badge jb-badge-primary">{{application.statustext}}</span></dd>
-                    </dl>
+                    <div class="jb-d-flex jb-align-items-start">
+                        <div class="jb-icon-circle jb-bg-primary jb-text-white jb-mr-3 jb-flex-shrink-0">
+                            <i class="fa fa-briefcase" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <h6 class="jb-mb-1">{{vacancy.code}} - {{vacancy.title}}</h6>
+                            <span class="jb-badge jb-badge-primary">{{application.statustext}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -60,46 +101,67 @@
 
     {{! Existing Interviews }}
     {{#hasinterviews}}
-    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="interviews-heading">
-        <div class="jb-card-header">
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="interviews-heading">
+        <div class="jb-card-header jb-bg-success jb-text-white jb-d-flex jb-justify-content-between jb-align-items-center">
             <h5 class="jb-mb-0" id="interviews-heading">
-                <i class="fa fa-calendar-check jb-text-success jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-calendar-check jb-mr-2" aria-hidden="true"></i>
                 {{#str}}scheduledinterviews, local_jobboard{{/str}}
             </h5>
+            <span class="jb-badge jb-badge-light">{{interviewcount}}</span>
         </div>
         <div class="jb-card-body jb-p-0">
             <div class="jb-table-responsive">
-                <table class="jb-table jb-table-striped jb-mb-0">
+                <table class="jb-table jb-table-striped jb-table-hover jb-mb-0" aria-describedby="interviews-heading">
                     <thead class="jb-thead-light">
                         <tr>
-                            <th>{{#str}}dateandtime, local_jobboard{{/str}}</th>
-                            <th>{{#str}}type{{/str}}</th>
-                            <th>{{#str}}location{{/str}}</th>
-                            <th>{{#str}}status{{/str}}</th>
-                            <th>{{#str}}result, local_jobboard{{/str}}</th>
-                            <th>{{#str}}actions{{/str}}</th>
+                            <th scope="col">
+                                <i class="fa fa-clock jb-mr-1" aria-hidden="true"></i>
+                                {{#str}}dateandtime, local_jobboard{{/str}}
+                            </th>
+                            <th scope="col">{{#str}}type{{/str}}</th>
+                            <th scope="col">{{#str}}location{{/str}}</th>
+                            <th scope="col" class="jb-text-center">{{#str}}status{{/str}}</th>
+                            <th scope="col" class="jb-text-center">{{#str}}result, local_jobboard{{/str}}</th>
+                            <th scope="col" class="jb-text-center">{{#str}}actions{{/str}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{#interviews}}
-                        <tr>
+                        <tr class="jb-fade-in" style="animation-delay: calc(0.15s + {{@index}} * 0.05s);">
                             <td>
-                                {{datetime}}
-                                <br><small class="jb-text-muted">{{duration}} {{#str}}minutes{{/str}}</small>
+                                <strong>{{datetime}}</strong>
+                                <br>
+                                <small class="jb-text-muted">
+                                    <i class="fa fa-hourglass-half jb-mr-1" aria-hidden="true"></i>
+                                    {{duration}} {{#str}}minutes{{/str}}
+                                </small>
                             </td>
-                            <td>{{typename}}</td>
-                            <td>{{location}}</td>
-                            <td><span class="jb-badge jb-badge-{{statuscolor}}">{{statustext}}</span></td>
                             <td>
+                                <span class="jb-badge jb-badge-secondary">{{typename}}</span>
+                            </td>
+                            <td>
+                                <i class="fa fa-map-marker-alt jb-text-muted jb-mr-1" aria-hidden="true"></i>
+                                {{location}}
+                            </td>
+                            <td class="jb-text-center">
+                                <span class="jb-badge jb-badge-{{statuscolor}}">{{statustext}}</span>
+                            </td>
+                            <td class="jb-text-center">
                                 {{#hasresult}}
                                 <span class="jb-badge jb-badge-{{resultcolor}}">{{resulttext}}</span>
-                                <br><small>{{#str}}rating, local_jobboard{{/str}}: {{rating}}/5</small>
+                                <br>
+                                <small class="jb-text-muted">
+                                    <i class="fa fa-star jb-text-warning jb-mr-1" aria-hidden="true"></i>
+                                    {{rating}}/5
+                                </small>
                                 {{/hasresult}}
-                                {{^hasresult}}-{{/hasresult}}
+                                {{^hasresult}}
+                                <span class="jb-text-muted">-</span>
+                                {{/hasresult}}
                             </td>
-                            <td>
+                            <td class="jb-text-center">
                                 {{#canact}}
-                                <div class="jb-btn-group jb-btn-group-sm" role="group">
+                                <div class="jb-btn-group jb-btn-group-sm" role="group" aria-label="{{#str}}actions{{/str}}">
                                     <a href="{{completeurl}}" class="jb-btn jb-btn-success" title="{{#str}}complete{{/str}}">
                                         <i class="fa fa-check" aria-hidden="true"></i>
                                     </a>
@@ -115,6 +177,9 @@
                                     </a>
                                 </div>
                                 {{/canact}}
+                                {{^canact}}
+                                <span class="jb-text-muted">-</span>
+                                {{/canact}}
                             </td>
                         </tr>
                         {{/interviews}}
@@ -126,15 +191,29 @@
     {{/hasinterviews}}
 
     {{! New Interview Form }}
-    <section class="jb-card jb-card-shadow" aria-labelledby="newinterview-heading">
-        <div class="jb-card-header">
-            <h5 class="jb-mb-0" id="newinterview-heading">
-                <i class="fa fa-plus-circle jb-text-primary jb-mr-2" aria-hidden="true"></i>
-                {{#str}}schedulenewinterview, local_jobboard{{/str}}
-            </h5>
+    <main id="interview-form-content">
+        <section class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.15s;" aria-labelledby="newinterview-heading">
+            <div class="jb-card-header jb-bg-primary jb-text-white">
+                <h5 class="jb-mb-0" id="newinterview-heading">
+                    <i class="fa fa-plus-circle jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}schedulenewinterview, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="jb-card-body">
+                {{{formhtml}}}
+            </div>
+        </section>
+    </main>
+
+    {{! Help Tips }}
+    <aside class="jb-mt-4 jb-fade-in" style="animation-delay: 0.2s;">
+        <div class="jb-alert jb-alert-light jb-d-flex jb-align-items-start">
+            <i class="fa fa-lightbulb jb-text-warning jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+            <div>
+                <strong class="jb-d-block jb-mb-1">{{#str}}interviewtips, local_jobboard{{/str}}</strong>
+                <p class="jb-mb-0 jb-small jb-text-muted">{{#str}}interviewtipsdesc, local_jobboard{{/str}}</p>
+            </div>
         </div>
-        <div class="jb-card-body">
-            {{{formhtml}}}
-        </div>
-    </section>
+    </aside>
 </div>
+{{/loading}}

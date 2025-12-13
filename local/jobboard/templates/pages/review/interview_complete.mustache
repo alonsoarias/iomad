@@ -2,13 +2,20 @@
     @template local_jobboard/pages/interview_complete_form
 
     Interview completion form page.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * pagetitle - string - Page title
     * applicantname - string - Applicant full name
     * vacancytitle - string - Vacancy title
+    * vacancycode - string - Vacancy code
     * interviewdate - string - Formatted interview date
+    * interviewtype - string - Interview type
+    * interviewlocation - string - Interview location
     * formhtml - string - Rendered form HTML
+    * backurl - string - Back URL
+    * loading - bool - Show skeleton loading state
     * str - object - Language strings
 
     Example context (json):
@@ -19,18 +26,143 @@
         "interviewdate": "December 15, 2025 at 10:00 AM"
     }
 }}
-
-<div class="jb-local-jobboard-interview-complete" data-region="jobboard-interview-complete">
-    {{! Page Heading }}
-    <h2 class="jb-mb-4">{{pagetitle}}</h2>
-
-    {{! Interview Info Alert }}
-    <div class="jb-alert jb-alert-info">
-        <strong>{{str.applicant}}:</strong> {{applicantname}}<br>
-        <strong>{{str.vacancy}}:</strong> {{vacancytitle}}<br>
-        <strong>{{str.interviewdate}}:</strong> {{interviewdate}}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-local-jobboard-interview-complete" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton-title jb-mb-4" style="width: 200px;"></div>
+    <div class="jb-skeleton-text jb-mb-4" style="width: 100%; height: 100px;"></div>
+    <div class="jb-card">
+        <div class="jb-card-body">
+            <div class="jb-skeleton-text" style="height: 300px;"></div>
+        </div>
     </div>
-
-    {{! Form }}
-    {{{formhtml}}}
 </div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-local-jobboard-interview-complete" data-region="jobboard-interview-complete">
+    {{! Skip Link for Accessibility }}
+    <a href="#interview-complete-form" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
+        <h2 class="jb-mb-0">
+            <i class="fa fa-clipboard-check jb-text-success jb-mr-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h2>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{#str}}back, local_jobboard{{/str}}
+        </a>
+    </header>
+
+    {{! Interview Info Card }}
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.05s;" aria-labelledby="interview-info-heading">
+        <div class="jb-card-header jb-bg-info jb-text-white">
+            <h5 class="jb-mb-0" id="interview-info-heading">
+                <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                {{#str}}interviewdetails, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-row">
+                <div class="jb-col-md-6 jb-mb-3">
+                    <div class="jb-d-flex jb-align-items-center jb-mb-3">
+                        <div class="jb-icon-circle jb-bg-primary jb-text-white jb-mr-3">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <small class="jb-text-muted jb-d-block">{{str.applicant}}</small>
+                            <strong>{{applicantname}}</strong>
+                        </div>
+                    </div>
+                    <div class="jb-d-flex jb-align-items-center">
+                        <div class="jb-icon-circle jb-bg-secondary jb-text-white jb-mr-3">
+                            <i class="fa fa-briefcase" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <small class="jb-text-muted jb-d-block">{{str.vacancy}}</small>
+                            <strong>{{vacancycode}} - {{vacancytitle}}</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="jb-col-md-6">
+                    <div class="jb-d-flex jb-align-items-center jb-mb-3">
+                        <div class="jb-icon-circle jb-bg-success jb-text-white jb-mr-3">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <small class="jb-text-muted jb-d-block">{{str.interviewdate}}</small>
+                            <strong>{{interviewdate}}</strong>
+                        </div>
+                    </div>
+                    {{#interviewlocation}}
+                    <div class="jb-d-flex jb-align-items-center">
+                        <div class="jb-icon-circle jb-bg-warning jb-text-dark jb-mr-3">
+                            <i class="fa fa-map-marker-alt" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <small class="jb-text-muted jb-d-block">{{#str}}location{{/str}}</small>
+                            <strong>{{interviewlocation}}</strong>
+                        </div>
+                    </div>
+                    {{/interviewlocation}}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! Completion Form }}
+    <main id="interview-complete-form">
+        <section class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="complete-form-heading">
+            <div class="jb-card-header jb-bg-success jb-text-white">
+                <h5 class="jb-mb-0" id="complete-form-heading">
+                    <i class="fa fa-check-circle jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}completeinterview, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="jb-card-body">
+                {{{formhtml}}}
+            </div>
+        </section>
+    </main>
+
+    {{! Rating Guide }}
+    <aside class="jb-mt-4 jb-fade-in" style="animation-delay: 0.15s;">
+        <div class="jb-card jb-card-shadow jb-bg-light">
+            <div class="jb-card-header jb-bg-secondary jb-text-white">
+                <h6 class="jb-mb-0">
+                    <i class="fa fa-star jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}ratingguide, local_jobboard{{/str}}
+                </h6>
+            </div>
+            <div class="jb-card-body">
+                <div class="jb-row jb-text-center">
+                    <div class="jb-col">
+                        <span class="jb-badge jb-badge-danger jb-badge-lg">1</span>
+                        <small class="jb-d-block jb-mt-1">{{#str}}rating1, local_jobboard{{/str}}</small>
+                    </div>
+                    <div class="jb-col">
+                        <span class="jb-badge jb-badge-warning jb-badge-lg">2</span>
+                        <small class="jb-d-block jb-mt-1">{{#str}}rating2, local_jobboard{{/str}}</small>
+                    </div>
+                    <div class="jb-col">
+                        <span class="jb-badge jb-badge-info jb-badge-lg">3</span>
+                        <small class="jb-d-block jb-mt-1">{{#str}}rating3, local_jobboard{{/str}}</small>
+                    </div>
+                    <div class="jb-col">
+                        <span class="jb-badge jb-badge-primary jb-badge-lg">4</span>
+                        <small class="jb-d-block jb-mt-1">{{#str}}rating4, local_jobboard{{/str}}</small>
+                    </div>
+                    <div class="jb-col">
+                        <span class="jb-badge jb-badge-success jb-badge-lg">5</span>
+                        <small class="jb-d-block jb-mt-1">{{#str}}rating5, local_jobboard{{/str}}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+{{/loading}}

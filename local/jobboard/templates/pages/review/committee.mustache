@@ -3,6 +3,7 @@
 
     Selection committee management page template.
     Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables:
     * pagetitle - Page title string
@@ -39,8 +40,13 @@
     }
 }}
 <div class="jb-committee-management" data-region="jobboard-committee">
+    {{! Skip Link for Accessibility }}
+    <a href="#committee-main-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
     {{! Page Header }}
-    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
         <h1 class="jb-fs-3 jb-mb-0">
             <i class="fa fa-users jb-text-primary jb-mr-2" aria-hidden="true"></i>
             {{pagetitle}}
@@ -60,7 +66,7 @@
     {{! Statistics Cards }}
     <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         <div class="jb-col-lg-4 jb-col-md-4 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-primary">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-primary jb-fade-in-up" style="animation-delay: 0.05s;">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
                     <div class="jb-stat-icon jb-mr-3">
                         <i class="fa fa-users" aria-hidden="true"></i>
@@ -73,7 +79,7 @@
             </div>
         </div>
         <div class="jb-col-lg-4 jb-col-md-4 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success jb-fade-in-up" style="animation-delay: 0.1s;">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
                     <div class="jb-stat-icon jb-mr-3">
                         <i class="fa fa-users-cog" aria-hidden="true"></i>
@@ -86,7 +92,7 @@
             </div>
         </div>
         <div class="jb-col-lg-4 jb-col-md-4 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-info">
+            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-info jb-fade-in-up" style="animation-delay: 0.15s;">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
                     <div class="jb-stat-icon jb-mr-3">
                         <i class="fa fa-user-friends" aria-hidden="true"></i>
@@ -117,6 +123,7 @@
         </div>
     </section>
 
+    <main id="committee-main-content">
     {{#islistview}}
     {{! ================================================================== }}
     {{! LIST VIEW - All Committees }}
@@ -541,19 +548,20 @@
     {{/hasexistingcommittee}}
 
     {{/isvacancyview}}
+    </main>
 
     {{! Navigation Footer }}
-    <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
-        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
-            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
+    <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light jb-fade-in" style="animation-delay: 0.2s;">
+        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center jb-gap-2">
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
                 <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-            <a href="{{rolesurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
+            <a href="{{rolesurl}}" class="jb-btn jb-btn-outline-primary jb-hover-lift">
                 <i class="fa fa-user-tag jb-mr-2" aria-hidden="true"></i>
                 {{#str}}manageroles, local_jobboard{{/str}}
             </a>
-            <a href="{{reviewurl}}" class="jb-btn jb-btn-outline-info jb-m-1">
+            <a href="{{reviewurl}}" class="jb-btn jb-btn-outline-info jb-hover-lift">
                 <i class="fa fa-clipboard-check jb-mr-2" aria-hidden="true"></i>
                 {{#str}}reviewapplications, local_jobboard{{/str}}
             </a>

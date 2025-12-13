@@ -2,12 +2,19 @@
     @template local_jobboard/pages/exemption_revoke
 
     Exemption revoke confirmation page.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * id - int - Exemption ID
     * userfullname - string - User full name
+    * useremail - string - User email
+    * exemptiontype - string - Exemption type label
+    * validfrom - string - Valid from date
+    * validuntil - string - Valid until date
     * sesskey - string - Session key
     * cancelurl - string - Cancel URL
+    * loading - bool - Show skeleton loading state
     * str - object - Language strings
 
     Example context (json):
@@ -17,46 +24,153 @@
         "sesskey": "abc123"
     }
 }}
-
-<div class="jb-exemptions" data-region="jobboard-exemption-revoke">
-    {{! Revoke Confirmation Card }}
-    <div class="jb-card jb-card-shadow jb-border-danger">
-        <div class="jb-card-header jb-bg-danger jb-text-white">
-            <h5 class="jb-mb-0">
-                <i class="fa fa-ban jb-mr-2"></i>
-                {{str.revokeexemption}}
-            </h5>
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-exemptions" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-card">
+        <div class="jb-card-header jb-bg-danger">
+            <div class="jb-skeleton-text" style="width: 200px; height: 24px;"></div>
         </div>
         <div class="jb-card-body">
-            {{! Warning Alert }}
-            <div class="jb-alert jb-alert-warning">
-                <i class="fa fa-exclamation-triangle jb-mr-2"></i>
-                {{str.confirmrevokeexemption_prefix}} <strong>{{userfullname}}</strong>{{str.confirmrevokeexemption_suffix}}
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 80px;"></div>
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 100px;"></div>
+            <div class="jb-d-flex jb-gap-2">
+                <div class="jb-skeleton-text" style="width: 120px; height: 40px;"></div>
+                <div class="jb-skeleton-text" style="width: 100px; height: 40px;"></div>
             </div>
-
-            {{! Revoke Form }}
-            <form method="post" action="">
-                <input type="hidden" name="action" value="revoke">
-                <input type="hidden" name="id" value="{{id}}">
-                <input type="hidden" name="confirm" value="1">
-                <input type="hidden" name="sesskey" value="{{sesskey}}">
-
-                <div class="jb-form-group">
-                    <label for="reason">{{str.revokereason}}</label>
-                    <textarea name="reason" id="reason" class="jb-form-control" rows="3" required></textarea>
-                </div>
-
-                <div class="jb-mt-4">
-                    <button type="submit" class="jb-btn jb-btn-danger jb-mr-2">
-                        <i class="fa fa-ban jb-mr-2"></i>
-                        {{str.confirm}}
-                    </button>
-                    <a href="{{cancelurl}}" class="jb-btn jb-btn-secondary">
-                        <i class="fa fa-times jb-mr-2"></i>
-                        {{str.cancel}}
-                    </a>
-                </div>
-            </form>
         </div>
     </div>
 </div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-exemptions" data-region="jobboard-exemption-revoke">
+    {{! Skip Link for Accessibility }}
+    <a href="#revoke-form-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
+        <h3 class="jb-mb-0">
+            <i class="fa fa-ban jb-text-danger jb-mr-2" aria-hidden="true"></i>
+            {{str.revokeexemption}}
+        </h3>
+        <a href="{{cancelurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{str.cancel}}
+        </a>
+    </header>
+
+    {{! Warning Alert }}
+    <div class="jb-alert jb-alert-danger jb-d-flex jb-align-items-start jb-mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
+        <div class="jb-icon-circle jb-bg-danger jb-text-white jb-mr-3 jb-flex-shrink-0">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        </div>
+        <div>
+            <strong class="jb-d-block jb-mb-1">{{#str}}warningirreversible, local_jobboard{{/str}}</strong>
+            <p class="jb-mb-0">
+                {{str.confirmrevokeexemption_prefix}} <strong>{{userfullname}}</strong>{{str.confirmrevokeexemption_suffix}}
+            </p>
+        </div>
+    </div>
+
+    {{! Exemption Details Card }}
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="exemption-details-heading">
+        <div class="jb-card-header jb-bg-light">
+            <h5 class="jb-mb-0" id="exemption-details-heading">
+                <i class="fa fa-certificate jb-text-info jb-mr-2" aria-hidden="true"></i>
+                {{#str}}exemptiondetails, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <dl class="jb-row jb-mb-0">
+                <dt class="jb-col-sm-4 jb-text-muted">
+                    <i class="fa fa-user jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}user{{/str}}
+                </dt>
+                <dd class="jb-col-sm-8">
+                    <strong>{{userfullname}}</strong>
+                    {{#useremail}}
+                    <br><small class="jb-text-muted">{{useremail}}</small>
+                    {{/useremail}}
+                </dd>
+
+                <dt class="jb-col-sm-4 jb-text-muted">
+                    <i class="fa fa-tag jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}type{{/str}}
+                </dt>
+                <dd class="jb-col-sm-8">
+                    <span class="jb-badge jb-badge-secondary">{{exemptiontype}}</span>
+                </dd>
+
+                {{#validfrom}}
+                <dt class="jb-col-sm-4 jb-text-muted">
+                    <i class="fa fa-calendar-check jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}validfrom, local_jobboard{{/str}}
+                </dt>
+                <dd class="jb-col-sm-8">{{validfrom}}</dd>
+                {{/validfrom}}
+
+                {{#validuntil}}
+                <dt class="jb-col-sm-4 jb-text-muted">
+                    <i class="fa fa-calendar-times jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}validuntil, local_jobboard{{/str}}
+                </dt>
+                <dd class="jb-col-sm-8">{{validuntil}}</dd>
+                {{/validuntil}}
+            </dl>
+        </div>
+    </section>
+
+    {{! Revoke Form Card }}
+    <main id="revoke-form-content">
+        <section class="jb-card jb-card-shadow jb-border-danger jb-fade-in-up" style="animation-delay: 0.15s;">
+            <div class="jb-card-header jb-bg-danger jb-text-white">
+                <h5 class="jb-mb-0">
+                    <i class="fa fa-ban jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}confirmrevocation, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="jb-card-body">
+                <form method="post" action="">
+                    <input type="hidden" name="action" value="revoke">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <input type="hidden" name="confirm" value="1">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+
+                    <div class="jb-form-group jb-mb-4">
+                        <label for="reason" class="jb-form-label jb-fw-bold">
+                            <i class="fa fa-comment-alt jb-mr-1" aria-hidden="true"></i>
+                            {{str.revokereason}}
+                            <span class="jb-text-danger">*</span>
+                        </label>
+                        <textarea name="reason" id="reason" class="jb-form-control" rows="4" required
+                                  placeholder="{{#str}}revokereason_placeholder, local_jobboard{{/str}}"></textarea>
+                        <small class="jb-form-text jb-text-muted">
+                            {{#str}}revokereason_help, local_jobboard{{/str}}
+                        </small>
+                    </div>
+
+                    <div class="jb-alert jb-alert-warning jb-d-flex jb-align-items-center jb-mb-4" role="alert">
+                        <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                        <small>{{#str}}revocationwarning, local_jobboard{{/str}}</small>
+                    </div>
+
+                    <div class="jb-d-flex jb-gap-2 jb-flex-wrap">
+                        <button type="submit" class="jb-btn jb-btn-danger jb-hover-lift"
+                                onclick="return confirm('{{#str}}finalconfirmrevoke, local_jobboard{{/str}}');">
+                            <i class="fa fa-ban jb-mr-2" aria-hidden="true"></i>
+                            {{str.confirm}}
+                        </button>
+                        <a href="{{cancelurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+                            <i class="fa fa-times jb-mr-2" aria-hidden="true"></i>
+                            {{str.cancel}}
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+{{/loading}}
