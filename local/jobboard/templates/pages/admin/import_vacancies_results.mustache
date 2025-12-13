@@ -2,6 +2,8 @@
     @template local_jobboard/pages/import_vacancies_results
 
     Import vacancies results page.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * pagetitle - string - Page title
@@ -11,8 +13,10 @@
     * convocatoriaid - int - Convocatoria ID
     * backurl - string - Back URL
     * uploadurl - string - URL to upload new file
+    * confirmurl - string - URL to confirm import
     * haserrors - boolean - Whether there are errors
     * errors - array - List of error messages
+    * loading - bool - Show skeleton loading state
     * str - object - Language strings
 
     Example context (json):
@@ -26,114 +30,266 @@
         }
     }
 }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-import-results" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton-title jb-mb-4" style="width: 200px;"></div>
+    <div class="jb-skeleton-text jb-mb-4" style="width: 100%; height: 60px;"></div>
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-md-4"><div class="jb-skeleton-text" style="height: 100px;"></div></div>
+        <div class="jb-col-md-4"><div class="jb-skeleton-text" style="height: 100px;"></div></div>
+        <div class="jb-col-md-4"><div class="jb-skeleton-text" style="height: 100px;"></div></div>
+    </div>
+    <div class="jb-skeleton-text" style="width: 100%; height: 200px;"></div>
+</div>
+{{/loading}}
 
+{{^loading}}
 <div class="jb-import-results" data-region="jobboard-import-results">
-    <h2 class="jb-mb-4">{{str.importresults}}</h2>
+    {{! Skip Link for Accessibility }}
+    <a href="#import-results-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
 
-    {{#ispreview}}
-    {{! Preview Mode Banner }}
-    <div class="jb-alert jb-alert-warning">
-        <i class="fa fa-info-circle jb-mr-2"></i>
-        {{str.previewmode}}
-    </div>
-
-    {{#haspreviewrows}}
-    {{! Preview Table }}
-    <div class="jb-table-responsive">
-        <table class="jb-table jb-table-striped">
-            <thead class="jb-thead-light">
-                <tr>
-                    <th>{{str.row}}</th>
-                    <th>{{str.code}}</th>
-                    <th>{{str.title}}</th>
-                    <th>{{str.location}}</th>
-                    <th>{{str.modality}}</th>
-                    <th>{{str.contracttype}}</th>
-                    <th>{{str.courses}}</th>
-                    <th>{{str.action}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#previewrows}}
-                <tr>
-                    <td>{{row}}</td>
-                    <td>{{code}}</td>
-                    <td>
-                        <span class="jb-text-truncate jb-d-inline-block jb-truncate-cell">{{title}}</span>
-                    </td>
-                    <td>{{location}}</td>
-                    <td>{{modality}}</td>
-                    <td>{{contracttype}}</td>
-                    <td>{{coursecount}}</td>
-                    <td>
-                        <span class="jb-badge {{actionbadgeclass}}">{{action}}</span>
-                    </td>
-                </tr>
-                {{/previewrows}}
-            </tbody>
-        </table>
-    </div>
-
-    {{! Confirm Import }}
-    <div class="jb-mt-3">
-        <p>{{str.previewconfirm}}</p>
-        <a href="{{uploadurl}}" class="jb-btn jb-btn-primary">
-            {{str.uploadnewfile}}
-        </a>
-    </div>
-    {{/haspreviewrows}}
-    {{/ispreview}}
-
-    {{^ispreview}}
-    {{! Actual Import Results }}
-    <div class="jb-row">
-        <div class="jb-col-md-4">
-            <div class="jb-card jb-text-center">
-                <div class="jb-card-body">
-                    <h3 class="jb-text-success">{{results.created}}</h3>
-                    <p class="jb-mb-0">{{str.vacanciescreated}}</p>
-                </div>
-            </div>
-        </div>
-        <div class="jb-col-md-4">
-            <div class="jb-card jb-text-center">
-                <div class="jb-card-body">
-                    <h3 class="jb-text-warning">{{results.updated}}</h3>
-                    <p class="jb-mb-0">{{str.vacanciesupdated}}</p>
-                </div>
-            </div>
-        </div>
-        <div class="jb-col-md-4">
-            <div class="jb-card jb-text-center">
-                <div class="jb-card-body">
-                    <h3 class="jb-text-secondary">{{results.skipped}}</h3>
-                    <p class="jb-mb-0">{{str.vacanciesskipped}}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{/ispreview}}
-
-    {{#haserrors}}
-    {{! Errors List }}
-    <h4 class="jb-mt-4">{{str.errors}}</h4>
-    <ul class="jb-list-group">
-        {{#errors}}
-        <li class="jb-list-group-item jb-list-group-item-danger">{{message}}</li>
-        {{/errors}}
-        {{#hasmoreerrors}}
-        <li class="jb-list-group-item jb-list-group-item-warning">
-            {{str.andmore}}
-        </li>
-        {{/hasmoreerrors}}
-    </ul>
-    {{/haserrors}}
-
-    {{! Back Link }}
-    <div class="jb-mt-4">
-        <a href="{{backurl}}" class="jb-btn jb-btn-secondary">
-            <i class="fa fa-arrow-left jb-mr-2"></i>
+    {{! Page Header }}
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
+        <h2 class="jb-mb-0">
+            <i class="fa fa-file-import jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{str.importresults}}
+        </h2>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
             {{str.backtoconvocatorias}}
         </a>
-    </div>
+    </header>
+
+    <main id="import-results-content">
+        {{#ispreview}}
+        {{! Preview Mode }}
+        <div class="jb-alert jb-alert-warning jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up" role="status">
+            <i class="fa fa-eye fa-lg jb-mr-3" aria-hidden="true"></i>
+            <div>
+                <strong class="jb-d-block">{{#str}}previewmodeheader, local_jobboard{{/str}}</strong>
+                <small>{{str.previewmode}}</small>
+            </div>
+        </div>
+
+        {{#haspreviewrows}}
+        {{! Preview Summary Stats }}
+        <section class="jb-row jb-mb-4" aria-label="{{#str}}previewsummary, local_jobboard{{/str}}">
+            <div class="jb-col-md-4 jb-mb-3">
+                <div class="jb-card jb-card-shadow jb-stat-card jb-fade-in-up" style="animation-delay: 0.05s;">
+                    <div class="jb-card-body jb-text-center">
+                        <div class="jb-icon-circle jb-bg-success jb-text-white jb-mx-auto jb-mb-2">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="jb-text-success jb-mb-1">{{results.tocreate}}</h3>
+                        <p class="jb-text-muted jb-small jb-mb-0">{{str.tobecreated}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="jb-col-md-4 jb-mb-3">
+                <div class="jb-card jb-card-shadow jb-stat-card jb-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="jb-card-body jb-text-center">
+                        <div class="jb-icon-circle jb-bg-warning jb-text-dark jb-mx-auto jb-mb-2">
+                            <i class="fa fa-sync" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="jb-text-warning jb-mb-1">{{results.toupdate}}</h3>
+                        <p class="jb-text-muted jb-small jb-mb-0">{{str.tobeupdated}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="jb-col-md-4 jb-mb-3">
+                <div class="jb-card jb-card-shadow jb-stat-card jb-fade-in-up" style="animation-delay: 0.15s;">
+                    <div class="jb-card-body jb-text-center">
+                        <div class="jb-icon-circle jb-bg-secondary jb-text-white jb-mx-auto jb-mb-2">
+                            <i class="fa fa-forward" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="jb-text-secondary jb-mb-1">{{results.toskip}}</h3>
+                        <p class="jb-text-muted jb-small jb-mb-0">{{str.tobeskipped}}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {{! Preview Table }}
+        <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.2s;" aria-labelledby="preview-table-heading">
+            <div class="jb-card-header jb-bg-white">
+                <h5 class="jb-mb-0" id="preview-table-heading">
+                    <i class="fa fa-table jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}previewdata, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="jb-card-body jb-p-0">
+                <div class="jb-table-responsive">
+                    <table class="jb-table jb-table-striped jb-table-hover jb-mb-0" aria-describedby="preview-table-heading">
+                        <thead class="jb-thead-light">
+                            <tr>
+                                <th scope="col">{{str.row}}</th>
+                                <th scope="col">{{str.code}}</th>
+                                <th scope="col">{{str.title}}</th>
+                                <th scope="col">{{str.location}}</th>
+                                <th scope="col">{{str.modality}}</th>
+                                <th scope="col">{{str.contracttype}}</th>
+                                <th scope="col">{{str.courses}}</th>
+                                <th scope="col" class="jb-text-center">{{str.action}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#previewrows}}
+                            <tr class="jb-fade-in" style="animation-delay: calc(0.25s + {{@index}} * 0.03s);">
+                                <td><span class="jb-badge jb-badge-light">{{row}}</span></td>
+                                <td><code class="jb-text-primary">{{code}}</code></td>
+                                <td>
+                                    <span class="jb-text-truncate jb-d-inline-block" style="max-width: 200px;" title="{{title}}">
+                                        {{title}}
+                                    </span>
+                                </td>
+                                <td>{{location}}</td>
+                                <td>{{modality}}</td>
+                                <td>{{contracttype}}</td>
+                                <td class="jb-text-center">
+                                    <span class="jb-badge jb-badge-info">{{coursecount}}</span>
+                                </td>
+                                <td class="jb-text-center">
+                                    <span class="jb-badge {{actionbadgeclass}}">
+                                        {{#iscreate}}<i class="fa fa-plus jb-mr-1" aria-hidden="true"></i>{{/iscreate}}
+                                        {{#isupdate}}<i class="fa fa-sync jb-mr-1" aria-hidden="true"></i>{{/isupdate}}
+                                        {{#isskip}}<i class="fa fa-forward jb-mr-1" aria-hidden="true"></i>{{/isskip}}
+                                        {{action}}
+                                    </span>
+                                </td>
+                            </tr>
+                            {{/previewrows}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        {{! Confirm Actions }}
+        <div class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.3s;">
+            <div class="jb-card-body jb-d-flex jb-flex-wrap jb-justify-content-between jb-align-items-center">
+                <p class="jb-mb-2 jb-mb-md-0">
+                    <i class="fa fa-question-circle jb-text-info jb-mr-2" aria-hidden="true"></i>
+                    {{str.previewconfirm}}
+                </p>
+                <div class="jb-d-flex jb-gap-2">
+                    <a href="{{confirmurl}}" class="jb-btn jb-btn-success jb-hover-lift">
+                        <i class="fa fa-check jb-mr-2" aria-hidden="true"></i>
+                        {{#str}}confirmimport, local_jobboard{{/str}}
+                    </a>
+                    <a href="{{uploadurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+                        <i class="fa fa-upload jb-mr-2" aria-hidden="true"></i>
+                        {{str.uploadnewfile}}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{/haspreviewrows}}
+
+        {{^haspreviewrows}}
+        <div class="jb-empty-state jb-text-center jb-py-5">
+            <i class="fa fa-file-excel fa-4x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+            <h5 class="jb-text-muted">{{#str}}nopreviewdata, local_jobboard{{/str}}</h5>
+            <a href="{{uploadurl}}" class="jb-btn jb-btn-primary jb-mt-3">
+                <i class="fa fa-upload jb-mr-2" aria-hidden="true"></i>
+                {{str.uploadnewfile}}
+            </a>
+        </div>
+        {{/haspreviewrows}}
+        {{/ispreview}}
+
+        {{^ispreview}}
+        {{! Actual Import Results }}
+        <div class="jb-alert jb-alert-success jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in" role="status">
+            <i class="fa fa-check-circle fa-lg jb-mr-3" aria-hidden="true"></i>
+            <div>
+                <strong class="jb-d-block">{{#str}}importcomplete, local_jobboard{{/str}}</strong>
+                <small>{{#str}}importcompletedesc, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+
+        {{! Results Stats }}
+        <section class="jb-row jb-mb-4" aria-label="{{#str}}importresults, local_jobboard{{/str}}">
+            <div class="jb-col-md-4 jb-mb-3">
+                <div class="jb-card jb-card-shadow jb-text-center jb-fade-in-up" style="animation-delay: 0.05s;">
+                    <div class="jb-card-body">
+                        <div class="jb-icon-circle jb-bg-success jb-text-white jb-mx-auto jb-mb-3">
+                            <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="jb-text-success jb-mb-1">{{results.created}}</h3>
+                        <p class="jb-mb-0 jb-text-muted">{{str.vacanciescreated}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="jb-col-md-4 jb-mb-3">
+                <div class="jb-card jb-card-shadow jb-text-center jb-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="jb-card-body">
+                        <div class="jb-icon-circle jb-bg-warning jb-text-dark jb-mx-auto jb-mb-3">
+                            <i class="fa fa-sync fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="jb-text-warning jb-mb-1">{{results.updated}}</h3>
+                        <p class="jb-mb-0 jb-text-muted">{{str.vacanciesupdated}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="jb-col-md-4 jb-mb-3">
+                <div class="jb-card jb-card-shadow jb-text-center jb-fade-in-up" style="animation-delay: 0.15s;">
+                    <div class="jb-card-body">
+                        <div class="jb-icon-circle jb-bg-secondary jb-text-white jb-mx-auto jb-mb-3">
+                            <i class="fa fa-forward fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="jb-text-secondary jb-mb-1">{{results.skipped}}</h3>
+                        <p class="jb-mb-0 jb-text-muted">{{str.vacanciesskipped}}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {{/ispreview}}
+
+        {{! Errors List }}
+        {{#haserrors}}
+        <section class="jb-card jb-card-shadow jb-border-danger jb-mb-4 jb-fade-in-up" style="animation-delay: 0.2s;" aria-labelledby="errors-heading">
+            <div class="jb-card-header jb-bg-danger jb-text-white">
+                <h5 class="jb-mb-0" id="errors-heading">
+                    <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                    {{str.errors}} ({{errorcount}})
+                </h5>
+            </div>
+            <div class="jb-card-body jb-p-0">
+                <ul class="jb-list-group jb-list-group-flush">
+                    {{#errors}}
+                    <li class="jb-list-group-item jb-list-group-item-danger jb-d-flex jb-align-items-start">
+                        <i class="fa fa-times-circle jb-mr-2 jb-mt-1" aria-hidden="true"></i>
+                        <div>
+                            {{#row}}<strong>{{#str}}row, local_jobboard{{/str}} {{row}}:</strong> {{/row}}
+                            {{message}}
+                        </div>
+                    </li>
+                    {{/errors}}
+                    {{#hasmoreerrors}}
+                    <li class="jb-list-group-item jb-list-group-item-warning jb-text-center">
+                        <i class="fa fa-ellipsis-h jb-mr-2" aria-hidden="true"></i>
+                        {{str.andmore}}
+                    </li>
+                    {{/hasmoreerrors}}
+                </ul>
+            </div>
+        </section>
+        {{/haserrors}}
+
+        {{! Action Buttons }}
+        <div class="jb-d-flex jb-flex-wrap jb-gap-2 jb-mt-4 jb-fade-in" style="animation-delay: 0.25s;">
+            <a href="{{backurl}}" class="jb-btn jb-btn-primary jb-hover-lift">
+                <i class="fa fa-list jb-mr-2" aria-hidden="true"></i>
+                {{str.backtoconvocatorias}}
+            </a>
+            <a href="{{uploadurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+                <i class="fa fa-upload jb-mr-2" aria-hidden="true"></i>
+                {{#str}}importmore, local_jobboard{{/str}}
+            </a>
+        </div>
+    </main>
 </div>
+{{/loading}}

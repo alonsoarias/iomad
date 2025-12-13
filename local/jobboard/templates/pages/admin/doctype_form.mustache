@@ -2,12 +2,16 @@
     @template local_jobboard/pages/admin_doctype_form
 
     Document type add/edit form page.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * pagetitle - string - Page title
     * backurl - string - Back URL
     * isedit - bool - Whether editing existing doctype
     * formhtml - string - Rendered form HTML
+    * loading - bool - Show skeleton loading state
+    * doctype - object - Document type data if editing {name, code, description}
     * str - object - Language strings
 
     Example context (json):
@@ -17,32 +21,102 @@
         "isedit": false
     }
 }}
-
-<div class="jb-local-jobboard-doctypes" data-region="jobboard-doctype-form">
-    {{! Page Header }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-local-jobboard-doctypes" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
     <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
-        <h3 class="jb-mb-0">{{pagetitle}}</h3>
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-arrow-left jb-mr-2"></i>
-            {{str.back}}
-        </a>
+        <div class="jb-skeleton-title" style="width: 200px;"></div>
+        <div class="jb-skeleton-text" style="width: 100px; height: 38px;"></div>
     </div>
-
-    {{! Form Card }}
-    <div class="jb-card jb-shadow-sm">
-        <div class="jb-card-header jb-bg-white">
-            <h5 class="jb-mb-0">
-                {{#isedit}}
-                <i class="fa fa-edit jb-text-primary jb-mr-2"></i>
-                {{/isedit}}
-                {{^isedit}}
-                <i class="fa fa-plus jb-text-primary jb-mr-2"></i>
-                {{/isedit}}
-                {{pagetitle}}
-            </h5>
+    <div class="jb-card">
+        <div class="jb-card-header">
+            <div class="jb-skeleton-text" style="width: 180px;"></div>
         </div>
         <div class="jb-card-body">
-            {{{formhtml}}}
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 100px;"></div>
+            <div class="jb-skeleton-text" style="width: 150px; height: 45px;"></div>
         </div>
     </div>
 </div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-local-jobboard-doctypes" data-region="jobboard-doctype-form">
+    {{! Skip Link for Accessibility }}
+    <a href="#doctype-form-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
+        <h3 class="jb-mb-0">
+            {{#isedit}}
+            <i class="fa fa-edit jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{/isedit}}
+            {{^isedit}}
+            <i class="fa fa-plus-circle jb-text-success jb-mr-2" aria-hidden="true"></i>
+            {{/isedit}}
+            {{pagetitle}}
+        </h3>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{str.back}}
+        </a>
+    </header>
+
+    {{! Edit Mode Info Banner }}
+    {{#isedit}}
+    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.05s;">
+        <i class="fa fa-info-circle jb-mr-3" aria-hidden="true"></i>
+        <div>
+            <strong class="jb-d-block">{{#str}}editingdoctype, local_jobboard{{/str}}</strong>
+            {{#doctype.code}}
+            <small class="jb-text-muted">
+                {{#str}}code, local_jobboard{{/str}}: <code>{{doctype.code}}</code>
+            </small>
+            {{/doctype.code}}
+        </div>
+    </div>
+    {{/isedit}}
+
+    {{! Form Card }}
+    <main id="doctype-form-content">
+        <div class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="jb-card-header jb-bg-white jb-d-flex jb-align-items-center">
+                <div class="jb-icon-circle jb-bg-primary jb-text-white jb-mr-3">
+                    {{#isedit}}
+                    <i class="fa fa-edit" aria-hidden="true"></i>
+                    {{/isedit}}
+                    {{^isedit}}
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                    {{/isedit}}
+                </div>
+                <h5 class="jb-mb-0">
+                    {{#isedit}}
+                    {{#str}}editdoctypeform, local_jobboard{{/str}}
+                    {{/isedit}}
+                    {{^isedit}}
+                    {{#str}}adddoctypeform, local_jobboard{{/str}}
+                    {{/isedit}}
+                </h5>
+            </div>
+            <div class="jb-card-body">
+                {{{formhtml}}}
+            </div>
+        </div>
+    </main>
+
+    {{! Help Section }}
+    <aside class="jb-mt-4 jb-fade-in" style="animation-delay: 0.15s;">
+        <div class="jb-alert jb-alert-light jb-d-flex jb-align-items-start">
+            <i class="fa fa-lightbulb jb-text-warning jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+            <div>
+                <strong class="jb-d-block jb-mb-1">{{#str}}doctypehelptitle, local_jobboard{{/str}}</strong>
+                <p class="jb-mb-0 jb-small jb-text-muted">{{#str}}doctypehelpdesc, local_jobboard{{/str}}</p>
+            </div>
+        </div>
+    </aside>
+</div>
+{{/loading}}

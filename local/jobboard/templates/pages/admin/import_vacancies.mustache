@@ -2,6 +2,8 @@
     @template local_jobboard/pages/import_vacancies
 
     Import vacancies form page.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * pagetitle - string - Page title
@@ -11,6 +13,7 @@
     * csvcolumns - array - CSV column documentation
     * csvexample - string - CSV example content
     * formhtml - string - Rendered form HTML
+    * loading - bool - Show skeleton loading state
     * str - object - Language strings
 
     Example context (json):
@@ -19,45 +22,96 @@
         "backurl": "/local/jobboard/index.php?view=convocatorias"
     }
 }}
-
-<div class="jb-import-vacancies" data-region="jobboard-import-vacancies">
-    {{! Back Button }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-import-vacancies" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
     <div class="jb-mb-4">
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-arrow-left jb-mr-2"></i>
-            {{str.backtoconvocatorias}}
-        </a>
+        <div class="jb-skeleton-text" style="width: 180px; height: 38px;"></div>
     </div>
-
-    {{! CSV Format Help Card }}
     <div class="jb-card jb-mb-4">
         <div class="jb-card-header">
-            <h5 class="jb-mb-0">
-                <i class="fa fa-file-csv jb-mr-2"></i>
+            <div class="jb-skeleton-text" style="width: 150px;"></div>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 200px;"></div>
+            <div class="jb-skeleton-text" style="width: 100%; height: 80px;"></div>
+        </div>
+    </div>
+    <div class="jb-card">
+        <div class="jb-card-body">
+            <div class="jb-skeleton-text" style="width: 100%; height: 150px;"></div>
+        </div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-import-vacancies" data-region="jobboard-import-vacancies">
+    {{! Skip Link for Accessibility }}
+    <a href="#import-form-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
+        <h3 class="jb-mb-0">
+            <i class="fa fa-file-import jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{str.importvacancies}}
+        </h3>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{str.backtoconvocatorias}}
+        </a>
+    </header>
+
+    {{! CSV Format Help Card }}
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.05s;" aria-labelledby="csv-format-heading">
+        <div class="jb-card-header jb-bg-info jb-text-white">
+            <h5 class="jb-mb-0" id="csv-format-heading">
+                <i class="fa fa-file-csv jb-mr-2" aria-hidden="true"></i>
                 {{str.csvformat}}
             </h5>
         </div>
         <div class="jb-card-body">
-            <p>{{str.csvformatdesc}}</p>
+            <p class="jb-text-muted jb-mb-4">{{str.csvformatdesc}}</p>
 
             {{! Column Documentation Table }}
-            <div class="jb-table-responsive">
-                <table class="jb-table jb-table-sm jb-table-bordered">
-                    <thead class="jb-thead-light">
+            <div class="jb-table-responsive jb-mb-4">
+                <table class="jb-table jb-table-sm jb-table-bordered jb-table-striped" aria-describedby="csv-format-heading">
+                    <thead class="jb-thead-dark">
                         <tr>
-                            <th>{{str.column}}</th>
-                            <th>{{str.description}}</th>
-                            <th>{{str.required}}</th>
-                            <th>{{str.example}}</th>
+                            <th scope="col">
+                                <i class="fa fa-columns jb-mr-1" aria-hidden="true"></i>
+                                {{str.column}}
+                            </th>
+                            <th scope="col">
+                                <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
+                                {{str.description}}
+                            </th>
+                            <th scope="col" class="jb-text-center">
+                                <i class="fa fa-asterisk jb-mr-1" aria-hidden="true"></i>
+                                {{str.required}}
+                            </th>
+                            <th scope="col">
+                                <i class="fa fa-code jb-mr-1" aria-hidden="true"></i>
+                                {{str.example}}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {{#csvcolumns}}
-                        <tr>
-                            <td><code>{{name}}</code></td>
+                        <tr class="jb-fade-in" style="animation-delay: calc(0.1s + {{@index}} * 0.02s);">
+                            <td><code class="jb-text-primary">{{name}}</code></td>
                             <td>{{description}}</td>
-                            <td>{{isrequired}}</td>
-                            <td><code>{{example}}</code></td>
+                            <td class="jb-text-center">
+                                {{#isrequired}}
+                                <span class="jb-badge jb-badge-danger">{{#str}}yes{{/str}}</span>
+                                {{/isrequired}}
+                                {{^isrequired}}
+                                <span class="jb-badge jb-badge-secondary">{{#str}}no{{/str}}</span>
+                                {{/isrequired}}
+                            </td>
+                            <td><code class="jb-text-muted">{{example}}</code></td>
                         </tr>
                         {{/csvcolumns}}
                     </tbody>
@@ -65,21 +119,53 @@
             </div>
 
             {{! CSV Example }}
-            <h6 class="jb-mt-4 jb-mb-2">
-                <i class="fa fa-code jb-mr-2"></i>
-                {{str.csvexample}}
-            </h6>
-            <p class="jb-text-muted jb-small">{{str.csvexampledesc}}</p>
-
-            <pre class="jb-bg-light jb-p-3 jb-rounded jb-border jb-small jb-code-block"><code>{{csvexample}}</code></pre>
-
-            <div class="jb-alert jb-alert-light jb-small jb-mb-0">
-                <i class="fa fa-lightbulb jb-mr-2"></i>
-                {{str.csvexampletip}}
+            <div class="jb-card jb-bg-light jb-mb-0">
+                <div class="jb-card-header jb-bg-secondary jb-text-white">
+                    <h6 class="jb-mb-0">
+                        <i class="fa fa-code jb-mr-2" aria-hidden="true"></i>
+                        {{str.csvexample}}
+                    </h6>
+                </div>
+                <div class="jb-card-body">
+                    <p class="jb-text-muted jb-small jb-mb-3">{{str.csvexampledesc}}</p>
+                    <pre class="jb-bg-dark jb-text-light jb-p-3 jb-rounded jb-small jb-code-block jb-mb-3"><code>{{csvexample}}</code></pre>
+                    <div class="jb-alert jb-alert-warning jb-d-flex jb-align-items-center jb-mb-0" role="note">
+                        <i class="fa fa-lightbulb jb-mr-2" aria-hidden="true"></i>
+                        <small>{{str.csvexampletip}}</small>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    {{! Form }}
-    {{{formhtml}}}
+    {{! Import Form Card }}
+    <main id="import-form-content">
+        <section class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="import-form-heading">
+            <div class="jb-card-header jb-bg-primary jb-text-white">
+                <h5 class="jb-mb-0" id="import-form-heading">
+                    <i class="fa fa-upload jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}uploadcsv, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="jb-card-body">
+                {{{formhtml}}}
+            </div>
+        </section>
+    </main>
+
+    {{! Help Tips }}
+    <aside class="jb-mt-4 jb-fade-in" style="animation-delay: 0.15s;">
+        <div class="jb-alert jb-alert-light jb-d-flex jb-align-items-start">
+            <i class="fa fa-info-circle jb-text-info jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+            <div>
+                <strong class="jb-d-block jb-mb-1">{{#str}}importtips, local_jobboard{{/str}}</strong>
+                <ul class="jb-mb-0 jb-small jb-text-muted jb-pl-3">
+                    <li>{{#str}}importtip1, local_jobboard{{/str}}</li>
+                    <li>{{#str}}importtip2, local_jobboard{{/str}}</li>
+                    <li>{{#str}}importtip3, local_jobboard{{/str}}</li>
+                </ul>
+            </div>
+        </div>
+    </aside>
 </div>
+{{/loading}}

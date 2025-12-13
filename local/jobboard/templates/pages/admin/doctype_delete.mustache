@@ -2,6 +2,8 @@
     @template local_jobboard/pages/admin_doctype_confirm_delete
 
     Document type delete confirmation page.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * doctypename - string - Document type name
@@ -10,56 +12,134 @@
     * usagecount - int - Number of documents using this type
     * deleteurl - string - Delete action URL
     * cancelurl - string - Cancel URL
+    * loading - bool - Show skeleton loading state
     * str - object - Language strings
 
     Example context (json):
     {
-        "doctypename": "Cédula de Ciudadanía",
+        "doctypename": "Cedula de Ciudadania",
         "doctypecode": "cedula",
         "inuse": false
     }
 }}
-
-<div class="jb-local-jobboard-doctypes" data-region="jobboard-doctype-delete">
-    {{! Confirmation Card }}
-    <div class="jb-card jb-shadow-sm">
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-local-jobboard-doctypes" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-card">
         <div class="jb-card-header jb-bg-warning">
-            <h5 class="jb-mb-0">
-                <i class="fa fa-exclamation-triangle jb-mr-2"></i>
-                {{str.confirmdeletedoctype}}
-            </h5>
+            <div class="jb-skeleton-text" style="width: 200px; height: 24px;"></div>
         </div>
         <div class="jb-card-body">
-            {{#inuse}}
-            {{! Cannot delete - in use }}
-            <div class="jb-alert jb-alert-danger">
-                <i class="fa fa-times-circle jb-mr-2"></i>
-                {{str.error_doctypeinuse}}
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 60px;"></div>
+            <div class="jb-skeleton-text jb-mb-3" style="width: 60%;"></div>
+            <div class="jb-d-flex jb-gap-2">
+                <div class="jb-skeleton-text" style="width: 120px; height: 40px;"></div>
+                <div class="jb-skeleton-text" style="width: 100px; height: 40px;"></div>
             </div>
-            <a href="{{cancelurl}}" class="jb-btn jb-btn-secondary">
-                <i class="fa fa-arrow-left jb-mr-2"></i>
-                {{str.back}}
-            </a>
-            {{/inuse}}
-            {{^inuse}}
-            {{! Can delete }}
-            <p>{{str.confirmdeletedoctype_msg}}</p>
-            <p class="jb-text-muted">
-                <strong>{{str.code}}:</strong>
-                <code>{{doctypecode}}</code>
-            </p>
-
-            <div class="jb-mt-4">
-                <a href="{{deleteurl}}" class="jb-btn jb-btn-danger jb-mr-2">
-                    <i class="fa fa-trash jb-mr-2"></i>
-                    {{str.delete}}
-                </a>
-                <a href="{{cancelurl}}" class="jb-btn jb-btn-secondary">
-                    <i class="fa fa-times jb-mr-2"></i>
-                    {{str.cancel}}
-                </a>
-            </div>
-            {{/inuse}}
         </div>
     </div>
 </div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-local-jobboard-doctypes" data-region="jobboard-doctype-delete">
+    {{! Skip Link for Accessibility }}
+    <a href="#delete-confirmation-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Confirmation Card }}
+    <main id="delete-confirmation-content" class="jb-fade-in-up">
+        <div class="jb-card jb-card-shadow">
+            <div class="jb-card-header jb-bg-warning jb-text-dark jb-d-flex jb-align-items-center">
+                <i class="fa fa-exclamation-triangle fa-lg jb-mr-3" aria-hidden="true"></i>
+                <h5 class="jb-mb-0">{{str.confirmdeletedoctype}}</h5>
+            </div>
+            <div class="jb-card-body">
+                {{#inuse}}
+                {{! Cannot delete - in use }}
+                <div class="jb-alert jb-alert-danger jb-d-flex jb-align-items-start jb-mb-4" role="alert">
+                    <div class="jb-icon-circle jb-bg-danger jb-text-white jb-mr-3 jb-flex-shrink-0">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <strong class="jb-d-block jb-mb-1">{{str.error_doctypeinuse}}</strong>
+                        <p class="jb-mb-0 jb-small">
+                            {{#str}}doctypeinusecount, local_jobboard, {{usagecount}}{{/str}}
+                        </p>
+                    </div>
+                </div>
+
+                {{! Document Type Info }}
+                <div class="jb-card jb-bg-light jb-mb-4">
+                    <div class="jb-card-body">
+                        <dl class="jb-row jb-mb-0">
+                            <dt class="jb-col-sm-4">{{#str}}name{{/str}}</dt>
+                            <dd class="jb-col-sm-8"><strong>{{doctypename}}</strong></dd>
+                            <dt class="jb-col-sm-4">{{str.code}}</dt>
+                            <dd class="jb-col-sm-8"><code class="jb-text-primary">{{doctypecode}}</code></dd>
+                            <dt class="jb-col-sm-4">{{#str}}documentscount, local_jobboard{{/str}}</dt>
+                            <dd class="jb-col-sm-8">
+                                <span class="jb-badge jb-badge-danger">{{usagecount}}</span>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <a href="{{cancelurl}}" class="jb-btn jb-btn-secondary jb-hover-lift">
+                    <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+                    {{str.back}}
+                </a>
+                {{/inuse}}
+
+                {{^inuse}}
+                {{! Can delete }}
+                <div class="jb-alert jb-alert-warning jb-d-flex jb-align-items-start jb-mb-4" role="alert">
+                    <i class="fa fa-exclamation-circle fa-lg jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+                    <div>
+                        <strong class="jb-d-block jb-mb-1">{{#str}}warningirreversible, local_jobboard{{/str}}</strong>
+                        <p class="jb-mb-0">{{str.confirmdeletedoctype_msg}}</p>
+                    </div>
+                </div>
+
+                {{! Document Type Info }}
+                <div class="jb-card jb-bg-light jb-mb-4">
+                    <div class="jb-card-body">
+                        <dl class="jb-row jb-mb-0">
+                            <dt class="jb-col-sm-4">{{#str}}name{{/str}}</dt>
+                            <dd class="jb-col-sm-8"><strong>{{doctypename}}</strong></dd>
+                            <dt class="jb-col-sm-4">{{str.code}}</dt>
+                            <dd class="jb-col-sm-8"><code class="jb-text-primary">{{doctypecode}}</code></dd>
+                        </dl>
+                    </div>
+                </div>
+
+                {{! Action Buttons }}
+                <div class="jb-d-flex jb-gap-2 jb-flex-wrap">
+                    <a href="{{deleteurl}}" class="jb-btn jb-btn-danger jb-hover-lift"
+                       onclick="return confirm('{{#str}}finalconfirmdelete, local_jobboard{{/str}}');">
+                        <i class="fa fa-trash jb-mr-2" aria-hidden="true"></i>
+                        {{str.delete}}
+                    </a>
+                    <a href="{{cancelurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+                        <i class="fa fa-times jb-mr-2" aria-hidden="true"></i>
+                        {{str.cancel}}
+                    </a>
+                </div>
+                {{/inuse}}
+            </div>
+        </div>
+    </main>
+
+    {{! Additional Warning }}
+    <aside class="jb-mt-4 jb-fade-in" style="animation-delay: 0.1s;">
+        <div class="jb-alert jb-alert-light jb-d-flex jb-align-items-start">
+            <i class="fa fa-info-circle jb-text-info jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+            <div>
+                <strong class="jb-d-block jb-mb-1">{{#str}}aboutdoctypes, local_jobboard{{/str}}</strong>
+                <p class="jb-mb-0 jb-small jb-text-muted">{{#str}}doctypedeletioninfo, local_jobboard{{/str}}</p>
+            </div>
+        </div>
+    </aside>
+</div>
+{{/loading}}
