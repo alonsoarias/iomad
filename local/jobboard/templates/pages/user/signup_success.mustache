@@ -2,11 +2,14 @@
     @template local_jobboard/pages/signup_success
 
     Signup success confirmation page.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and visual feedback.
 
     Context variables required for this template:
     * useremail - string - The user's email address
     * backurl - string - URL to return to vacancies
     * loginurl - string - URL to login page
+    * loading - bool - Show skeleton loading state
     * str - object - Language strings
       * title - string - Success title
       * message - string - Success message with email
@@ -25,49 +28,98 @@
         "loginurl": "/login/index.php"
     }
 }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-signup-success jb-text-center jb-my-5" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton-avatar jb-mx-auto jb-mb-4" style="width: 80px; height: 80px; border-radius: 50%;"></div>
+    <div class="jb-skeleton-title jb-mx-auto jb-mb-3" style="width: 60%;"></div>
+    <div class="jb-skeleton-text jb-mx-auto jb-mb-4" style="width: 80%;"></div>
+    <div class="jb-skeleton-text jb-mx-auto jb-mb-3" style="width: 70%; height: 120px;"></div>
+    <div class="jb-d-flex jb-justify-content-center jb-gap-3">
+        <div class="jb-skeleton-text" style="width: 150px; height: 45px;"></div>
+        <div class="jb-skeleton-text" style="width: 120px; height: 45px;"></div>
+    </div>
+</div>
+{{/loading}}
 
+{{^loading}}
 <div class="jb-signup-success jb-text-center jb-my-5" data-region="jobboard-signup-success">
-    {{! Success Icon }}
-    <div class="jb-text-success jb-mb-4">
-        <i class="fa fa-check-circle fa-5x"></i>
+    {{! Success Animation Icon }}
+    <div class="jb-text-success jb-mb-4 jb-fade-in jb-scale-in">
+        <div class="jb-success-checkmark">
+            <i class="fa fa-check-circle fa-5x" aria-hidden="true"></i>
+        </div>
     </div>
 
-    {{! Title }}
-    <h2 class="jb-mb-3">{{str.title}}</h2>
+    {{! Title with animation }}
+    <h2 class="jb-mb-3 jb-fade-in-up" style="animation-delay: 0.1s;">
+        {{str.title}}
+    </h2>
 
-    {{! Message }}
-    <p class="jb-lead jb-text-muted">{{str.message}}</p>
+    {{! Message with email highlight }}
+    <p class="jb-lead jb-text-muted jb-fade-in-up" style="animation-delay: 0.15s;">
+        {{str.message}}
+    </p>
+
+    {{! Email Badge }}
+    <div class="jb-fade-in-up" style="animation-delay: 0.2s;">
+        <span class="jb-badge jb-badge-primary jb-badge-lg jb-px-3 jb-py-2">
+            <i class="fa fa-envelope jb-mr-2" aria-hidden="true"></i>
+            {{useremail}}
+        </span>
+    </div>
 
     {{! Instructions Card }}
-    <div class="jb-alert jb-alert-info jb-text-start jb-mt-4 jb-mx-auto jb-narrow-container">
-        <h5>
-            <i class="fa fa-envelope jb-me-2"></i>
-            {{str.instructions_title}}
-        </h5>
-        <ol class="jb-mb-0">
-            <li>{{str.instruction_1}}</li>
-            <li>{{str.instruction_2}}</li>
-            <li>{{str.instruction_3}}</li>
-        </ol>
+    <div class="jb-card jb-card-shadow jb-text-start jb-mt-4 jb-mx-auto jb-fade-in-up" style="max-width: 500px; animation-delay: 0.25s;">
+        <div class="jb-card-header jb-bg-info jb-text-white">
+            <h5 class="jb-mb-0">
+                <i class="fa fa-envelope-open-text jb-mr-2" aria-hidden="true"></i>
+                {{str.instructions_title}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <ol class="jb-mb-0 jb-instruction-list">
+                <li class="jb-mb-2 jb-fade-in" style="animation-delay: 0.3s;">
+                    <i class="fa fa-inbox jb-text-info jb-mr-2" aria-hidden="true"></i>
+                    {{str.instruction_1}}
+                </li>
+                <li class="jb-mb-2 jb-fade-in" style="animation-delay: 0.35s;">
+                    <i class="fa fa-mouse-pointer jb-text-info jb-mr-2" aria-hidden="true"></i>
+                    {{str.instruction_2}}
+                </li>
+                <li class="jb-fade-in" style="animation-delay: 0.4s;">
+                    <i class="fa fa-key jb-text-info jb-mr-2" aria-hidden="true"></i>
+                    {{str.instruction_3}}
+                </li>
+            </ol>
+        </div>
     </div>
 
     {{! Spam Notice }}
-    <p class="jb-text-muted jb-mt-3">
-        <small>
-            <i class="fa fa-exclamation-triangle jb-me-1"></i>
-            {{str.check_spam}}
-        </small>
-    </p>
+    <div class="jb-alert jb-alert-warning jb-d-inline-flex jb-align-items-center jb-mt-4 jb-fade-in-up" role="alert" style="animation-delay: 0.45s;">
+        <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+        <small>{{str.check_spam}}</small>
+    </div>
 
     {{! Action Buttons }}
-    <div class="jb-mt-4">
-        <a href="{{backurl}}" class="jb-btn jb-btn-primary jb-me-2">
-            <i class="fa fa-arrow-left jb-me-2"></i>
+    <div class="jb-mt-4 jb-fade-in-up" style="animation-delay: 0.5s;">
+        <a href="{{backurl}}" class="jb-btn jb-btn-primary jb-btn-lg jb-mr-2 jb-hover-lift">
+            <i class="fa fa-briefcase jb-mr-2" aria-hidden="true"></i>
             {{str.back_to_vacancies}}
         </a>
-        <a href="{{loginurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-sign-in jb-me-2"></i>
+        <a href="{{loginurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-lg jb-hover-lift">
+            <i class="fa fa-sign-in-alt jb-mr-2" aria-hidden="true"></i>
             {{str.login}}
         </a>
     </div>
+
+    {{! Additional Help }}
+    <div class="jb-mt-5 jb-pt-4 jb-border-top jb-fade-in" style="animation-delay: 0.55s;">
+        <p class="jb-text-muted jb-small jb-mb-0">
+            <i class="fa fa-question-circle jb-mr-1" aria-hidden="true"></i>
+            {{#str}}emailnotreceived, local_jobboard{{/str}}
+            <a href="{{backurl}}" class="jb-text-primary">{{#str}}contactsupport, local_jobboard{{/str}}</a>
+        </p>
+    </div>
 </div>
+{{/loading}}

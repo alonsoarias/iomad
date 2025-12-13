@@ -2,6 +2,8 @@
     @template local_jobboard/pages/exemption_view
 
     Exemption view details page.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * id - int - Exemption ID
@@ -24,6 +26,7 @@
     * revokeurl - string - Revoke URL
     * usagehistory - array - Usage history items [{vacancy, date}]
     * hasusagehistory - bool - Has usage history
+    * loading - bool - Show skeleton loading state
     * str - object - Language strings
 
     Example context (json):
@@ -34,113 +37,271 @@
         "canmodify": true
     }
 }}
-
-<div class="jb-exemptions" data-region="jobboard-exemption-view">
-    {{! Page Header }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-exemptions" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
     <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
-        <h3 class="jb-mb-0">{{str.exemptiondetails}}</h3>
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-arrow-left jb-mr-2"></i>
-            {{str.back}}
-        </a>
+        <div class="jb-skeleton-title" style="width: 200px;"></div>
+        <div class="jb-skeleton-text" style="width: 100px; height: 38px;"></div>
     </div>
-
-    {{! Exemption Details Card }}
-    <div class="jb-card jb-card-shadow jb-mb-4">
-        <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
-            <h5 class="jb-mb-0">
-                <i class="fa fa-user jb-text-primary jb-mr-2"></i>
-                {{userfullname}}
-            </h5>
-            <span class="jb-badge {{statusbadge.class}}">{{statusbadge.label}}</span>
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-header jb-d-flex jb-justify-content-between">
+            <div class="jb-skeleton-text" style="width: 150px;"></div>
+            <div class="jb-skeleton-text" style="width: 80px;"></div>
         </div>
         <div class="jb-card-body">
-            <dl class="jb-row">
-                {{! User }}
-                <dt class="jb-col-sm-3">{{str.user}}</dt>
-                <dd class="jb-col-sm-9">{{userfullname}} ({{useremail}})</dd>
-
-                {{! Exemption Type }}
-                <dt class="jb-col-sm-3">{{str.exemptiontype}}</dt>
-                <dd class="jb-col-sm-9">{{exemptiontype}}</dd>
-
-                {{! Document Reference }}
-                <dt class="jb-col-sm-3">{{str.documentref}}</dt>
-                <dd class="jb-col-sm-9">{{#documentref}}{{documentref}}{{/documentref}}{{^documentref}}-{{/documentref}}</dd>
-
-                {{! Exempted Documents }}
-                <dt class="jb-col-sm-3">{{str.exempteddocs}}</dt>
-                <dd class="jb-col-sm-9">
-                    {{#doctypesbadges}}
-                    <span class="jb-badge jb-badge-info jb-mr-1 jb-mb-1">{{label}}</span>
-                    {{/doctypesbadges}}
-                </dd>
-
-                {{! Valid From }}
-                <dt class="jb-col-sm-3">{{str.validfrom}}</dt>
-                <dd class="jb-col-sm-9">{{validfrom}}</dd>
-
-                {{! Valid Until }}
-                <dt class="jb-col-sm-3">{{str.validuntil}}</dt>
-                <dd class="jb-col-sm-9">{{validuntil}}</dd>
-
-                {{! Notes }}
-                <dt class="jb-col-sm-3">{{str.notes}}</dt>
-                <dd class="jb-col-sm-9">{{#notes}}{{notes}}{{/notes}}{{^notes}}-{{/notes}}</dd>
-
-                {{! Created By }}
-                <dt class="jb-col-sm-3">{{str.createdby}}</dt>
-                <dd class="jb-col-sm-9">{{createdbyinfo}}</dd>
-
-                {{! Revoked Info (if applicable) }}
-                {{#isrevoked}}
-                <dt class="jb-col-sm-3">{{str.revokedby}}</dt>
-                <dd class="jb-col-sm-9">{{revokedbyinfo}}</dd>
-
-                <dt class="jb-col-sm-3">{{str.revokereason}}</dt>
-                <dd class="jb-col-sm-9">{{{revokereason}}}</dd>
-                {{/isrevoked}}
-            </dl>
+            {{#items}}
+            <div class="jb-row jb-mb-3">
+                <div class="jb-col-sm-3"><div class="jb-skeleton-text" style="width: 80%;"></div></div>
+                <div class="jb-col-sm-9"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
+            </div>
+            {{/items}}
+            {{^items}}
+            <div class="jb-row jb-mb-3">
+                <div class="jb-col-sm-3"><div class="jb-skeleton-text" style="width: 80%;"></div></div>
+                <div class="jb-col-sm-9"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
+            </div>
+            <div class="jb-row jb-mb-3">
+                <div class="jb-col-sm-3"><div class="jb-skeleton-text" style="width: 80%;"></div></div>
+                <div class="jb-col-sm-9"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
+            </div>
+            <div class="jb-row jb-mb-3">
+                <div class="jb-col-sm-3"><div class="jb-skeleton-text" style="width: 80%;"></div></div>
+                <div class="jb-col-sm-9"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
+            </div>
+            <div class="jb-row jb-mb-3">
+                <div class="jb-col-sm-3"><div class="jb-skeleton-text" style="width: 80%;"></div></div>
+                <div class="jb-col-sm-9"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
+            </div>
+            {{/items}}
         </div>
-
-        {{! Actions Footer }}
-        {{#canmodify}}
-        <div class="jb-card-footer jb-bg-light">
-            <a href="{{editurl}}" class="jb-btn jb-btn-primary jb-mr-2">
-                <i class="fa fa-edit jb-mr-2"></i>
-                {{str.edit}}
-            </a>
-            <a href="{{revokeurl}}" class="jb-btn jb-btn-danger">
-                <i class="fa fa-ban jb-mr-2"></i>
-                {{str.revoke}}
-            </a>
-        </div>
-        {{/canmodify}}
     </div>
+    <div class="jb-card">
+        <div class="jb-card-header">
+            <div class="jb-skeleton-text" style="width: 150px;"></div>
+        </div>
+        <div class="jb-card-body">
+            <div class="jb-skeleton-text" style="width: 100%; height: 100px;"></div>
+        </div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-exemptions" data-region="jobboard-exemption-view">
+    {{! Skip Link for Accessibility }}
+    <a href="#exemption-details-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
+        <h3 class="jb-mb-0">
+            <i class="fa fa-certificate jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{str.exemptiondetails}}
+        </h3>
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{str.back}}
+        </a>
+    </header>
+
+    {{! Revoked Alert Banner }}
+    {{#isrevoked}}
+    <div class="jb-alert jb-alert-danger jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
+        <i class="fa fa-ban fa-2x jb-mr-3" aria-hidden="true"></i>
+        <div>
+            <strong class="jb-d-block">{{#str}}exemptionrevoked, local_jobboard{{/str}}</strong>
+            <small>{{revokedbyinfo}}</small>
+        </div>
+    </div>
+    {{/isrevoked}}
+
+    {{! Exemption Details Card }}
+    <main id="exemption-details-content">
+        <div class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
+                <h5 class="jb-mb-0">
+                    <i class="fa fa-user jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                    {{userfullname}}
+                </h5>
+                <span class="jb-badge {{statusbadge.class}} jb-badge-lg">
+                    {{statusbadge.label}}
+                </span>
+            </div>
+            <div class="jb-card-body">
+                <dl class="jb-row jb-detail-list">
+                    {{! User Info }}
+                    <dt class="jb-col-sm-3 jb-text-muted">
+                        <i class="fa fa-user jb-mr-1" aria-hidden="true"></i>
+                        {{str.user}}
+                    </dt>
+                    <dd class="jb-col-sm-9">
+                        <strong>{{userfullname}}</strong>
+                        <br>
+                        <a href="mailto:{{useremail}}" class="jb-text-muted jb-small">
+                            <i class="fa fa-envelope jb-mr-1" aria-hidden="true"></i>
+                            {{useremail}}
+                        </a>
+                    </dd>
+
+                    {{! Exemption Type }}
+                    <dt class="jb-col-sm-3 jb-text-muted">
+                        <i class="fa fa-tag jb-mr-1" aria-hidden="true"></i>
+                        {{str.exemptiontype}}
+                    </dt>
+                    <dd class="jb-col-sm-9">
+                        <span class="jb-badge jb-badge-secondary">{{exemptiontype}}</span>
+                    </dd>
+
+                    {{! Document Reference }}
+                    <dt class="jb-col-sm-3 jb-text-muted">
+                        <i class="fa fa-hashtag jb-mr-1" aria-hidden="true"></i>
+                        {{str.documentref}}
+                    </dt>
+                    <dd class="jb-col-sm-9">
+                        {{#documentref}}
+                        <code class="jb-text-primary">{{documentref}}</code>
+                        {{/documentref}}
+                        {{^documentref}}
+                        <span class="jb-text-muted">-</span>
+                        {{/documentref}}
+                    </dd>
+
+                    {{! Exempted Documents }}
+                    <dt class="jb-col-sm-3 jb-text-muted">
+                        <i class="fa fa-file-alt jb-mr-1" aria-hidden="true"></i>
+                        {{str.exempteddocs}}
+                    </dt>
+                    <dd class="jb-col-sm-9">
+                        {{#doctypesbadges}}
+                        <span class="jb-badge jb-badge-info jb-mr-1 jb-mb-1">
+                            <i class="fa fa-file jb-mr-1" aria-hidden="true"></i>
+                            {{label}}
+                        </span>
+                        {{/doctypesbadges}}
+                        {{^doctypesbadges}}
+                        <span class="jb-text-muted">-</span>
+                        {{/doctypesbadges}}
+                    </dd>
+
+                    {{! Validity Period }}
+                    <dt class="jb-col-sm-3 jb-text-muted">
+                        <i class="fa fa-calendar-check jb-mr-1" aria-hidden="true"></i>
+                        {{str.validfrom}}
+                    </dt>
+                    <dd class="jb-col-sm-9">
+                        <i class="fa fa-play jb-text-success jb-mr-1" aria-hidden="true"></i>
+                        {{validfrom}}
+                    </dd>
+
+                    <dt class="jb-col-sm-3 jb-text-muted">
+                        <i class="fa fa-calendar-times jb-mr-1" aria-hidden="true"></i>
+                        {{str.validuntil}}
+                    </dt>
+                    <dd class="jb-col-sm-9">
+                        <i class="fa fa-stop jb-text-danger jb-mr-1" aria-hidden="true"></i>
+                        {{validuntil}}
+                    </dd>
+
+                    {{! Notes }}
+                    <dt class="jb-col-sm-3 jb-text-muted">
+                        <i class="fa fa-sticky-note jb-mr-1" aria-hidden="true"></i>
+                        {{str.notes}}
+                    </dt>
+                    <dd class="jb-col-sm-9">
+                        {{#notes}}
+                        <div class="jb-bg-light jb-p-2 jb-rounded">{{notes}}</div>
+                        {{/notes}}
+                        {{^notes}}
+                        <span class="jb-text-muted">-</span>
+                        {{/notes}}
+                    </dd>
+
+                    {{! Created By }}
+                    <dt class="jb-col-sm-3 jb-text-muted">
+                        <i class="fa fa-user-plus jb-mr-1" aria-hidden="true"></i>
+                        {{str.createdby}}
+                    </dt>
+                    <dd class="jb-col-sm-9">
+                        <small class="jb-text-muted">{{createdbyinfo}}</small>
+                    </dd>
+
+                    {{! Revoked Info (if applicable) }}
+                    {{#isrevoked}}
+                    <dt class="jb-col-sm-3 jb-text-danger">
+                        <i class="fa fa-user-slash jb-mr-1" aria-hidden="true"></i>
+                        {{str.revokedby}}
+                    </dt>
+                    <dd class="jb-col-sm-9 jb-text-danger">
+                        {{revokedbyinfo}}
+                    </dd>
+
+                    <dt class="jb-col-sm-3 jb-text-danger">
+                        <i class="fa fa-comment-slash jb-mr-1" aria-hidden="true"></i>
+                        {{str.revokereason}}
+                    </dt>
+                    <dd class="jb-col-sm-9">
+                        <div class="jb-alert jb-alert-danger jb-py-2 jb-mb-0">
+                            {{{revokereason}}}
+                        </div>
+                    </dd>
+                    {{/isrevoked}}
+                </dl>
+            </div>
+
+            {{! Actions Footer }}
+            {{#canmodify}}
+            {{^isrevoked}}
+            <div class="jb-card-footer jb-bg-light jb-d-flex jb-gap-2">
+                <a href="{{editurl}}" class="jb-btn jb-btn-primary jb-hover-lift">
+                    <i class="fa fa-edit jb-mr-2" aria-hidden="true"></i>
+                    {{str.edit}}
+                </a>
+                <a href="{{revokeurl}}" class="jb-btn jb-btn-outline-danger jb-hover-lift">
+                    <i class="fa fa-ban jb-mr-2" aria-hidden="true"></i>
+                    {{str.revoke}}
+                </a>
+            </div>
+            {{/isrevoked}}
+            {{/canmodify}}
+        </div>
+    </main>
 
     {{! Usage History Card }}
-    <div class="jb-card jb-card-shadow">
+    <section class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.15s;" aria-labelledby="usage-history-heading">
         <div class="jb-card-header jb-bg-white">
-            <h5 class="jb-mb-0">
-                <i class="fa fa-history jb-text-info jb-mr-2"></i>
+            <h5 class="jb-mb-0" id="usage-history-heading">
+                <i class="fa fa-history jb-text-info jb-mr-2" aria-hidden="true"></i>
                 {{str.exemptionusagehistory}}
             </h5>
         </div>
         <div class="jb-card-body">
             {{#hasusagehistory}}
             <div class="jb-table-responsive">
-                <table class="jb-table jb-table-hover">
-                    <thead>
+                <table class="jb-table jb-table-hover jb-table-striped" aria-describedby="usage-history-heading">
+                    <thead class="jb-thead-light">
                         <tr>
-                            <th>{{str.vacancy}}</th>
-                            <th>{{str.date}}</th>
+                            <th scope="col">
+                                <i class="fa fa-briefcase jb-mr-1" aria-hidden="true"></i>
+                                {{str.vacancy}}
+                            </th>
+                            <th scope="col">
+                                <i class="fa fa-clock jb-mr-1" aria-hidden="true"></i>
+                                {{str.date}}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {{#usagehistory}}
-                        <tr>
-                            <td>{{vacancy}}</td>
-                            <td>{{date}}</td>
+                        <tr class="jb-fade-in" style="animation-delay: calc(0.2s + {{@index}} * 0.05s);">
+                            <td>
+                                <i class="fa fa-briefcase jb-text-muted jb-mr-2" aria-hidden="true"></i>
+                                {{vacancy}}
+                            </td>
+                            <td>
+                                <span class="jb-text-muted">{{date}}</span>
+                            </td>
                         </tr>
                         {{/usagehistory}}
                     </tbody>
@@ -148,11 +309,17 @@
             </div>
             {{/hasusagehistory}}
             {{^hasusagehistory}}
-            <div class="jb-empty-state jb-text-center jb-py-4">
-                <i class="fa fa-history fa-3x jb-text-muted jb-mb-3"></i>
-                <p class="jb-text-muted">{{str.noexemptionusage}}</p>
+            <div class="jb-empty-state jb-text-center jb-py-5">
+                <div class="jb-empty-state-icon jb-mb-3">
+                    <i class="fa fa-history fa-3x jb-text-muted" aria-hidden="true"></i>
+                </div>
+                <h6 class="jb-text-muted jb-mb-2">{{str.noexemptionusage}}</h6>
+                <p class="jb-text-muted jb-small jb-mb-0">
+                    {{#str}}exemptionnotused, local_jobboard{{/str}}
+                </p>
             </div>
             {{/hasusagehistory}}
         </div>
-    </div>
+    </section>
 </div>
+{{/loading}}

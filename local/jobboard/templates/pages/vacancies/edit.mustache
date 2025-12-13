@@ -1,45 +1,108 @@
 {{!
-    @template local_jobboard/pages/edit_vacancy_form
+    @template local_jobboard/pages/vacancies/edit
 
-    Vacancy edit/create form page.
+    Vacancy edit/create form page template.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
-    Context variables required for this template:
-    * pagetitle - string - Page title
-    * hasconvocatoria - boolean - Whether a convocatoria is associated
-    * convocatoria - object - Convocatoria info
-    * formhtml - string - Rendered form HTML
-    * str - object - Language strings
+    Context variables:
+    * pagetitle (string) - Page title
+    * isedit (bool) - Is editing (vs creating)
+    * hasconvocatoria (bool) - Has associated convocatoria
+    * convocatoria (object) - Convocatoria info {name, daterange, statuscolor, statuslabel}
+    * formhtml (string) - Rendered form HTML
+    * backurl (string) - Back URL
+    * loading (bool) - Show skeleton loading state
 
     Example context (json):
     {
         "pagetitle": "Edit Vacancy",
+        "isedit": true,
         "hasconvocatoria": true
     }
 }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="local-jobboard-edit-vacancy" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton-title jb-mb-4" style="width: 40%;"></div>
+    <div class="jb-skeleton-text jb-mb-4" style="width: 100%; height: 80px;"></div>
+    <div class="jb-card">
+        <div class="jb-card-body">
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
+            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 150px;"></div>
+            <div class="jb-skeleton-text" style="width: 150px; height: 45px;"></div>
+        </div>
+    </div>
+</div>
+{{/loading}}
 
-<div class="jb-edit-vacancy-form" data-region="jobboard-edit-form">
-    {{#hasconvocatoria}}
+{{^loading}}
+<div class="local-jobboard-edit-vacancy" data-region="jobboard-edit-form">
+    {{! Skip Link for Accessibility }}
+    <a href="#vacancy-form-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="jb-page-header jb-mb-4 jb-fade-in">
+        <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-flex-wrap jb-gap-2">
+            <h1 class="jb-fs-3 jb-mb-0">
+                {{#isedit}}
+                <i class="fa fa-edit jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                {{/isedit}}
+                {{^isedit}}
+                <i class="fa fa-plus-circle jb-text-success jb-mr-2" aria-hidden="true"></i>
+                {{/isedit}}
+                {{pagetitle}}
+            </h1>
+            {{#backurl}}
+            <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+                <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+                {{#str}}back, local_jobboard{{/str}}
+            </a>
+            {{/backurl}}
+        </div>
+    </header>
+
     {{! Convocatoria Info Banner }}
-    <div class="jb-alert jb-alert-info jb-border-left-info jb-d-flex jb-justify-between jb-align-center jb-mb-4">
-        <div class="jb-d-flex jb-align-center">
-            <i class="fa fa-calendar-alt jb-mr-3 fa-lg"></i>
+    {{#hasconvocatoria}}
+    <div class="jb-alert jb-alert-info jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.05s;">
+        <div class="jb-d-flex jb-align-items-center">
+            <div class="jb-icon-circle jb-bg-info jb-text-white jb-mr-3">
+                <i class="fa fa-calendar-alt" aria-hidden="true"></i>
+            </div>
             <div>
                 <strong class="jb-d-block">
-                    {{str.convocatoria}}: {{convocatoria.name}}
+                    {{#str}}convocatoria, local_jobboard{{/str}}: {{convocatoria.name}}
                 </strong>
                 <small class="jb-text-muted">{{convocatoria.daterange}}</small>
             </div>
         </div>
-        <span class="jb-badge jb-badge-{{convocatoria.statuscolor}}">
+        <span class="jb-badge jb-badge-{{convocatoria.statuscolor}} jb-badge-pill">
             {{convocatoria.statuslabel}}
         </span>
     </div>
     {{/hasconvocatoria}}
 
     {{! Form Card }}
-    <div class="jb-card jb-shadow-sm">
-        <div class="jb-card-body">
-            {{{formhtml}}}
+    <main id="vacancy-form-content">
+        <div class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="jb-card-body">
+                {{{formhtml}}}
+            </div>
         </div>
-    </div>
+    </main>
+
+    {{! Help Section }}
+    <aside class="jb-mt-4 jb-fade-in" style="animation-delay: 0.15s;">
+        <div class="jb-alert jb-alert-light jb-d-flex jb-align-items-start">
+            <i class="fa fa-lightbulb jb-text-warning jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+            <div>
+                <strong class="jb-d-block jb-mb-1">{{#str}}formhelptitle, local_jobboard{{/str}}</strong>
+                <p class="jb-mb-0 jb-small jb-text-muted">{{#str}}formhelpdesc, local_jobboard{{/str}}</p>
+            </div>
+        </div>
+    </aside>
 </div>
+{{/loading}}

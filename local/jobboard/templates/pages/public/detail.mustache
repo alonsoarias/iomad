@@ -1,19 +1,22 @@
 {{!
-    @template local_jobboard/pages/public_detail
+    @template local_jobboard/pages/public/detail
 
     Public vacancy detail page template.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables:
-    * vacancy - Vacancy data object
-    * backurl - URL to go back to listings
-    * convocatoria - Convocatoria info if exists
-    * isloggedin - Boolean if user is logged in
-    * canapply - Boolean if user can apply
-    * hasapplied - Boolean if already applied
-    * applyurl - Apply URL
-    * applicationsurl - My applications URL
-    * loginapplyurl - Login and apply URL
-    * sharelinks - Social sharing links
+    * vacancy (object) - Vacancy data
+    * backurl (string) - Back URL
+    * convocatoria (object) - Convocatoria info if exists
+    * isloggedin (bool) - User is logged in
+    * canapply (bool) - Can apply
+    * hasapplied (bool) - Already applied
+    * applyurl (string) - Apply URL
+    * applicationsurl (string) - My applications URL
+    * loginapplyurl (string) - Login and apply URL
+    * sharelinks (object) - Social sharing links
+    * loading (bool) - Show skeleton loading state
 
     Example context (json):
     {
@@ -22,10 +25,40 @@
         "canapply": true
     }
 }}
-<div class="jb-public-detail" data-region="jobboard-public-detail">
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="local-jobboard-public-detail" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton-text jb-mb-4" style="width: 120px; height: 40px;"></div>
+    <div class="jb-row">
+        <div class="jb-col-lg-8">
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-body">
+                    <div class="jb-skeleton-title jb-mb-3" style="width: 80%;"></div>
+                    <div class="jb-skeleton-text jb-mb-4" style="width: 100%; height: 200px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="jb-col-lg-4">
+            <div class="jb-card jb-mb-4">
+                <div class="jb-card-body">
+                    <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 120px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="local-jobboard-public-detail" data-region="jobboard-public-detail" data-vacancy-id="{{vacancy.id}}">
+    {{! Skip Link for Accessibility }}
+    <a href="#vacancy-detail-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
     {{! Back Button }}
-    <nav class="jb-mb-4" aria-label="{{#str}}navigation, local_jobboard{{/str}}">
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+    <nav class="jb-mb-4 jb-fade-in" aria-label="{{#str}}navigation, local_jobboard{{/str}}">
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
             <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
             {{#str}}backtovacancies, local_jobboard{{/str}}
         </a>
@@ -34,11 +67,14 @@
     {{! Two Column Layout }}
     <div class="jb-row">
         {{! Left Column - Main Content }}
-        <main class="jb-col-lg-8">
+        <main class="jb-col-lg-8" id="vacancy-detail-content">
             {{! Vacancy Header Card }}
-            <article class="jb-card jb-shadow-sm jb-mb-4" aria-labelledby="vacancy-detail-title">
+            <article class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="vacancy-detail-title" style="animation-delay: 0.05s;">
                 <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center jb-bg-primary jb-text-white">
-                    <span class="jb-badge jb-badge-light" aria-label="{{#str}}vacancycode, local_jobboard{{/str}}: {{vacancy.code}}">{{vacancy.code}}</span>
+                    <span class="jb-badge jb-badge-light jb-fw-bold" aria-label="{{#str}}vacancycode, local_jobboard{{/str}}: {{vacancy.code}}">
+                        <i class="fa fa-hashtag jb-mr-1" aria-hidden="true"></i>
+                        {{vacancy.code}}
+                    </span>
                     <span class="jb-badge jb-badge-{{vacancy.publicationtypecolor}}">
                         {{vacancy.publicationtypelabel}}
                     </span>
@@ -49,43 +85,45 @@
 
                     {{! Convocatoria Info }}
                     {{#convocatoria}}
-                    <div class="jb-mb-3">
-                        <i class="fa fa-folder-open jb-text-muted jb-mr-2" aria-hidden="true"></i>
+                    <div class="jb-mb-3 jb-p-2 jb-bg-light jb-rounded">
+                        <i class="fa fa-folder-open jb-text-primary jb-mr-2" aria-hidden="true"></i>
                         {{#str}}convocatoria, local_jobboard{{/str}}:
                         <strong>{{name}}</strong>
                     </div>
                     {{/convocatoria}}
 
-                    {{! Quick Details }}
-                    <div class="jb-mb-3 jb-vacancy-badges" role="list" aria-label="{{#str}}vacancydetails, local_jobboard{{/str}}">
+                    {{! Quick Details Badges }}
+                    <div class="jb-mb-3 jb-vacancy-badges jb-d-flex jb-flex-wrap jb-gap-2" role="list" aria-label="{{#str}}vacancydetails, local_jobboard{{/str}}">
                         {{#vacancy.location}}
-                        <span class="jb-badge jb-badge-light jb-mr-2 jb-mb-1" role="listitem">
-                            <i class="fa fa-map-marker-alt jb-mr-1" aria-hidden="true"></i>
+                        <span class="jb-badge jb-badge-light jb-py-2 jb-px-3" role="listitem">
+                            <i class="fa fa-map-marker-alt jb-text-danger jb-mr-1" aria-hidden="true"></i>
                             <span class="jb-sr-only">{{#str}}location, local_jobboard{{/str}}:</span>
                             {{vacancy.location}}
                         </span>
                         {{/vacancy.location}}
 
                         {{#vacancy.contracttypelabel}}
-                        <span class="jb-badge jb-badge-light jb-mr-2 jb-mb-1" role="listitem">
-                            <i class="fa fa-briefcase jb-mr-1" aria-hidden="true"></i>
+                        <span class="jb-badge jb-badge-light jb-py-2 jb-px-3" role="listitem">
+                            <i class="fa fa-file-contract jb-text-info jb-mr-1" aria-hidden="true"></i>
                             <span class="jb-sr-only">{{#str}}contracttype, local_jobboard{{/str}}:</span>
                             {{vacancy.contracttypelabel}}
                         </span>
                         {{/vacancy.contracttypelabel}}
 
-                        <span class="jb-badge jb-badge-light jb-mb-1" role="listitem">
-                            <i class="fa fa-users jb-mr-1" aria-hidden="true"></i>
-                            {{#str}}positions, local_jobboard{{/str}}: {{vacancy.positions}}
+                        <span class="jb-badge jb-badge-light jb-py-2 jb-px-3" role="listitem">
+                            <i class="fa fa-users jb-text-success jb-mr-1" aria-hidden="true"></i>
+                            {{#str}}positions, local_jobboard{{/str}}: <strong>{{vacancy.positions}}</strong>
                         </span>
                     </div>
 
                     {{! Urgent Warning }}
                     {{#vacancy.isurgent}}
-                    <div class="jb-alert jb-alert-warning" role="alert">
-                        <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
-                        <strong>{{#str}}urgent, local_jobboard{{/str}}:</strong>
-                        {{#str}}closesin, local_jobboard, {{vacancy.daysremaining}}{{/str}}
+                    <div class="jb-alert jb-alert-warning jb-d-flex jb-align-items-center jb-pulse" role="alert">
+                        <i class="fa fa-exclamation-triangle fa-lg jb-mr-3" aria-hidden="true"></i>
+                        <div>
+                            <strong>{{#str}}urgent, local_jobboard{{/str}}:</strong>
+                            {{#str}}closesin, local_jobboard, {{vacancy.daysremaining}}{{/str}}
+                        </div>
                     </div>
                     {{/vacancy.isurgent}}
                 </div>
@@ -93,14 +131,14 @@
 
             {{! Description Card }}
             {{#vacancy.description}}
-            <section class="jb-card jb-shadow-sm jb-mb-4" aria-labelledby="description-heading">
-                <div class="jb-card-header jb-bg-white jb-fw-bold">
-                    <h2 class="jb-fs-5 jb-mb-0" id="description-heading">
-                        <i class="fa fa-file-alt jb-mr-2" aria-hidden="true"></i>
+            <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="description-heading" style="animation-delay: 0.1s;">
+                <div class="jb-card-header jb-bg-white">
+                    <h2 class="jb-fs-5 jb-mb-0 jb-fw-bold" id="description-heading">
+                        <i class="fa fa-file-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
                         {{#str}}vacancydescription, local_jobboard{{/str}}
                     </h2>
                 </div>
-                <div class="jb-card-body jb-content-area">
+                <div class="jb-card-body jb-prose">
                     {{{vacancy.description}}}
                 </div>
             </section>
@@ -108,14 +146,14 @@
 
             {{! Requirements Card }}
             {{#vacancy.requirements}}
-            <section class="jb-card jb-shadow-sm jb-mb-4" aria-labelledby="requirements-heading">
-                <div class="jb-card-header jb-bg-white jb-fw-bold">
-                    <h2 class="jb-fs-5 jb-mb-0" id="requirements-heading">
-                        <i class="fa fa-check-circle jb-mr-2" aria-hidden="true"></i>
+            <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="requirements-heading" style="animation-delay: 0.15s;">
+                <div class="jb-card-header jb-bg-white">
+                    <h2 class="jb-fs-5 jb-mb-0 jb-fw-bold" id="requirements-heading">
+                        <i class="fa fa-check-circle jb-text-success jb-mr-2" aria-hidden="true"></i>
                         {{#str}}requirements, local_jobboard{{/str}}
                     </h2>
                 </div>
-                <div class="jb-card-body jb-content-area">
+                <div class="jb-card-body jb-prose">
                     {{{vacancy.requirements}}}
                 </div>
             </section>
@@ -123,14 +161,14 @@
 
             {{! Desirable Card }}
             {{#vacancy.desirable}}
-            <section class="jb-card jb-shadow-sm jb-mb-4" aria-labelledby="desirable-heading">
-                <div class="jb-card-header jb-bg-white jb-fw-bold">
-                    <h2 class="jb-fs-5 jb-mb-0" id="desirable-heading">
-                        <i class="fa fa-star jb-mr-2" aria-hidden="true"></i>
+            <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="desirable-heading" style="animation-delay: 0.2s;">
+                <div class="jb-card-header jb-bg-white">
+                    <h2 class="jb-fs-5 jb-mb-0 jb-fw-bold" id="desirable-heading">
+                        <i class="fa fa-star jb-text-warning jb-mr-2" aria-hidden="true"></i>
                         {{#str}}desirable, local_jobboard{{/str}}
                     </h2>
                 </div>
-                <div class="jb-card-body jb-content-area">
+                <div class="jb-card-body jb-prose">
                     {{{vacancy.desirable}}}
                 </div>
             </section>
@@ -140,21 +178,24 @@
         {{! Right Column - Sidebar }}
         <aside class="jb-col-lg-4">
             {{! Apply CTA Card }}
-            <section class="jb-card jb-shadow-sm jb-mb-4 jb-border-primary" aria-labelledby="apply-cta-heading">
-                <div class="jb-card-header jb-bg-primary jb-text-white jb-fw-bold">
-                    <h2 class="jb-fs-5 jb-mb-0" id="apply-cta-heading">
+            <section class="jb-card jb-card-shadow jb-mb-4 jb-border-primary jb-fade-in-up" aria-labelledby="apply-cta-heading" style="animation-delay: 0.1s;">
+                <div class="jb-card-header jb-bg-primary jb-text-white">
+                    <h2 class="jb-fs-5 jb-mb-0 jb-fw-bold" id="apply-cta-heading">
                         <i class="fa fa-paper-plane jb-mr-2" aria-hidden="true"></i>
                         {{#str}}readytoapply, local_jobboard{{/str}}
                     </h2>
                 </div>
-                <div class="jb-card-body jb-text-center">
+                <div class="jb-card-body jb-text-center jb-py-4">
                     {{#isloggedin}}
                         {{#hasapplied}}
                         <div class="jb-text-success" role="status">
-                            <i class="fa fa-check-circle fa-2x jb-mb-2" aria-hidden="true"></i>
-                            <p class="jb-mb-3">{{#str}}alreadyapplied, local_jobboard{{/str}}</p>
+                            <div class="jb-icon-circle-lg jb-bg-success jb-text-white jb-mx-auto jb-mb-3">
+                                <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                            </div>
+                            <p class="jb-fw-bold jb-mb-3">{{#str}}alreadyapplied, local_jobboard{{/str}}</p>
                         </div>
-                        <a href="{{applicationsurl}}" class="jb-btn jb-btn-outline-primary jb-btn-block">
+                        <a href="{{applicationsurl}}" class="jb-btn jb-btn-outline-primary jb-w-100 jb-hover-lift">
+                            <i class="fa fa-list jb-mr-2" aria-hidden="true"></i>
                             {{#str}}viewmyapplications, local_jobboard{{/str}}
                         </a>
                         {{/hasapplied}}
@@ -162,83 +203,111 @@
                         {{^hasapplied}}
                             {{#canapply}}
                             <p class="jb-text-muted jb-mb-3">{{#str}}applynowdesc, local_jobboard{{/str}}</p>
-                            <a href="{{applyurl}}" class="jb-btn jb-btn-primary jb-btn-lg jb-btn-block" aria-label="{{#str}}applyto, local_jobboard{{/str}}: {{vacancy.title}}">
+                            <a href="{{applyurl}}" class="jb-btn jb-btn-primary jb-btn-lg jb-w-100 jb-hover-lift" aria-label="{{#str}}applyto, local_jobboard{{/str}}: {{vacancy.title}}">
                                 <i class="fa fa-paper-plane jb-mr-2" aria-hidden="true"></i>
                                 {{#str}}apply, local_jobboard{{/str}}
                             </a>
                             {{/canapply}}
 
                             {{^canapply}}
-                            <p class="jb-text-muted">{{#str}}cannotapply, local_jobboard{{/str}}</p>
+                            <div class="jb-text-muted">
+                                <i class="fa fa-lock fa-2x jb-mb-2" aria-hidden="true"></i>
+                                <p class="jb-mb-0">{{#str}}cannotapply, local_jobboard{{/str}}</p>
+                            </div>
                             {{/canapply}}
                         {{/hasapplied}}
                     {{/isloggedin}}
 
                     {{^isloggedin}}
+                    <div class="jb-icon-circle-lg jb-bg-light jb-text-muted jb-mx-auto jb-mb-3">
+                        <i class="fa fa-user fa-2x" aria-hidden="true"></i>
+                    </div>
                     <p class="jb-text-muted jb-mb-3">{{#str}}logintoapply, local_jobboard{{/str}}</p>
-                    <a href="{{loginapplyurl}}" class="jb-btn jb-btn-primary jb-btn-lg jb-btn-block" target="_blank" rel="noopener noreferrer">
+                    <a href="{{loginapplyurl}}" class="jb-btn jb-btn-primary jb-btn-lg jb-w-100 jb-hover-lift">
                         <i class="fa fa-sign-in-alt jb-mr-2" aria-hidden="true"></i>
                         {{#str}}loginandapply, local_jobboard{{/str}}
-                        <span class="jb-sr-only">{{#str}}opensnewwindow, local_jobboard{{/str}}</span>
                     </a>
                     {{/isloggedin}}
                 </div>
             </section>
 
             {{! Details Card }}
-            <section class="jb-card jb-shadow-sm jb-mb-4" aria-labelledby="details-heading">
-                <div class="jb-card-header jb-bg-white jb-fw-bold">
-                    <h2 class="jb-fs-5 jb-mb-0" id="details-heading">
-                        <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+            <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="details-heading" style="animation-delay: 0.15s;">
+                <div class="jb-card-header jb-bg-white">
+                    <h2 class="jb-fs-5 jb-mb-0 jb-fw-bold" id="details-heading">
+                        <i class="fa fa-info-circle jb-text-info jb-mr-2" aria-hidden="true"></i>
                         {{#str}}details, local_jobboard{{/str}}
                     </h2>
                 </div>
                 <div class="jb-card-body">
-                    <dl class="jb-mb-0 jb-definition-list">
+                    <dl class="jb-mb-0">
                         {{#vacancy.duration}}
-                        <dt class="jb-text-muted jb-fs-sm">{{#str}}duration, local_jobboard{{/str}}</dt>
-                        <dd class="jb-mb-2">{{vacancy.duration}}</dd>
+                        <div class="jb-d-flex jb-justify-content-between jb-py-2 jb-border-bottom">
+                            <dt class="jb-text-muted jb-fw-normal">
+                                <i class="fa fa-clock jb-mr-2" aria-hidden="true"></i>
+                                {{#str}}duration, local_jobboard{{/str}}
+                            </dt>
+                            <dd class="jb-mb-0 jb-fw-bold">{{vacancy.duration}}</dd>
+                        </div>
                         {{/vacancy.duration}}
 
-                        {{! Salary field removed in Phase 10 }}
-
                         {{#vacancy.department}}
-                        <dt class="jb-text-muted jb-fs-sm">{{#str}}department, local_jobboard{{/str}}</dt>
-                        <dd class="jb-mb-2">{{vacancy.department}}</dd>
+                        <div class="jb-d-flex jb-justify-content-between jb-py-2 jb-border-bottom">
+                            <dt class="jb-text-muted jb-fw-normal">
+                                <i class="fa fa-building jb-mr-2" aria-hidden="true"></i>
+                                {{#str}}department, local_jobboard{{/str}}
+                            </dt>
+                            <dd class="jb-mb-0 jb-fw-bold">{{vacancy.department}}</dd>
+                        </div>
                         {{/vacancy.department}}
 
-                        <dt class="jb-text-muted jb-fs-sm">{{#str}}opendate, local_jobboard{{/str}}</dt>
-                        <dd class="jb-mb-2">{{vacancy.opendateformatted}}</dd>
+                        <div class="jb-d-flex jb-justify-content-between jb-py-2 jb-border-bottom">
+                            <dt class="jb-text-muted jb-fw-normal">
+                                <i class="fa fa-calendar-check jb-mr-2" aria-hidden="true"></i>
+                                {{#str}}opendate, local_jobboard{{/str}}
+                            </dt>
+                            <dd class="jb-mb-0">{{vacancy.opendateformatted}}</dd>
+                        </div>
 
-                        <dt class="jb-text-muted jb-fs-sm">{{#str}}closedate, local_jobboard{{/str}}</dt>
-                        <dd class="jb-mb-0 {{#vacancy.isurgent}}jb-text-warning jb-fw-bold{{/vacancy.isurgent}}">
-                            {{vacancy.closedateformatted}}
-                        </dd>
+                        <div class="jb-d-flex jb-justify-content-between jb-py-2">
+                            <dt class="jb-text-muted jb-fw-normal">
+                                <i class="fa fa-calendar-times jb-mr-2" aria-hidden="true"></i>
+                                {{#str}}closedate, local_jobboard{{/str}}
+                            </dt>
+                            <dd class="jb-mb-0 {{#vacancy.isurgent}}jb-text-warning jb-fw-bold{{/vacancy.isurgent}}">
+                                {{#vacancy.isurgent}}<i class="fa fa-exclamation-triangle jb-mr-1" aria-hidden="true"></i>{{/vacancy.isurgent}}
+                                {{vacancy.closedateformatted}}
+                            </dd>
+                        </div>
                     </dl>
                 </div>
             </section>
 
             {{! Share Card }}
-            <section class="jb-card jb-shadow-sm jb-mb-4" aria-labelledby="share-heading">
-                <div class="jb-card-header jb-bg-white jb-fw-bold">
-                    <h2 class="jb-fs-5 jb-mb-0" id="share-heading">
-                        <i class="fa fa-share-alt jb-mr-2" aria-hidden="true"></i>
+            <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="share-heading" style="animation-delay: 0.2s;">
+                <div class="jb-card-header jb-bg-white">
+                    <h2 class="jb-fs-5 jb-mb-0 jb-fw-bold" id="share-heading">
+                        <i class="fa fa-share-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
                         {{#str}}share, local_jobboard{{/str}}
                     </h2>
                 </div>
                 <div class="jb-card-body">
-                    <div class="jb-d-flex jb-justify-content-center jb-share-buttons" role="group" aria-label="{{#str}}sharethisvacancy, local_jobboard{{/str}}">
-                        <a href="{{sharelinks.linkedin}}" class="jb-btn jb-btn-outline-primary jb-btn-lg jb-mx-1" target="_blank" rel="noopener noreferrer" aria-label="{{#str}}shareonlinkedin, local_jobboard{{/str}}">
-                            <i class="fa fa-linkedin" aria-hidden="true"></i>
+                    <div class="jb-d-flex jb-justify-content-center jb-gap-2" role="group" aria-label="{{#str}}sharethisvacancy, local_jobboard{{/str}}">
+                        <a href="{{sharelinks.linkedin}}" class="jb-btn jb-btn-outline-primary jb-btn-lg jb-hover-lift" target="_blank" rel="noopener noreferrer" aria-label="{{#str}}shareonlinkedin, local_jobboard{{/str}}">
+                            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
                             <span class="jb-sr-only">LinkedIn</span>
                         </a>
-                        <a href="{{sharelinks.facebook}}" class="jb-btn jb-btn-outline-primary jb-btn-lg jb-mx-1" target="_blank" rel="noopener noreferrer" aria-label="{{#str}}shareonfacebook, local_jobboard{{/str}}">
-                            <i class="fa fa-facebook" aria-hidden="true"></i>
+                        <a href="{{sharelinks.facebook}}" class="jb-btn jb-btn-outline-primary jb-btn-lg jb-hover-lift" target="_blank" rel="noopener noreferrer" aria-label="{{#str}}shareonfacebook, local_jobboard{{/str}}">
+                            <i class="fab fa-facebook-f" aria-hidden="true"></i>
                             <span class="jb-sr-only">Facebook</span>
                         </a>
-                        <a href="{{sharelinks.twitter}}" class="jb-btn jb-btn-outline-primary jb-btn-lg jb-mx-1" target="_blank" rel="noopener noreferrer" aria-label="{{#str}}shareontwitter, local_jobboard{{/str}}">
-                            <i class="fa fa-twitter" aria-hidden="true"></i>
+                        <a href="{{sharelinks.twitter}}" class="jb-btn jb-btn-outline-info jb-btn-lg jb-hover-lift" target="_blank" rel="noopener noreferrer" aria-label="{{#str}}shareontwitter, local_jobboard{{/str}}">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
                             <span class="jb-sr-only">Twitter</span>
+                        </a>
+                        <a href="{{sharelinks.whatsapp}}" class="jb-btn jb-btn-outline-success jb-btn-lg jb-hover-lift" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                            <span class="jb-sr-only">WhatsApp</span>
                         </a>
                     </div>
                 </div>
@@ -246,3 +315,4 @@
         </aside>
     </div>
 </div>
+{{/loading}}
