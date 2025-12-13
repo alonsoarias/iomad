@@ -283,6 +283,46 @@
                 {{/configsections}}
             </div>
             {{/configsections.0}}
+
+            {{! Advanced Tools Section (Migration & Plugin Settings) }}
+            {{#hasadvancedtools}}
+            <div class="jb-divider jb-my-4">
+                <i class="fa fa-tools jb-mr-2" aria-hidden="true"></i>
+                {{#str}}advancedtools, local_jobboard{{/str}}
+            </div>
+            <div class="jb-row jb-mb-4">
+                {{#migrateurl}}
+                <div class="jb-col-md-4 jb-col-sm-6 jb-mb-3">
+                    <a href="{{migrateurl}}" class="jb-card jb-border-0 jb-bg-light jb-card-h100 jb-hover-lift jb-text-decoration-none">
+                        <div class="jb-card-body jb-d-flex jb-align-items-start">
+                            <div class="jb-rounded-circle jb-bg-warning jb-text-dark jb-p-3 jb-mr-3 jb-flex-shrink-0 jb-d-flex jb-align-items-center jb-justify-content-center">
+                                <i class="fa fa-exchange-alt fa-lg" aria-hidden="true"></i>
+                            </div>
+                            <div class="jb-flex-grow-1 jb-min-w-0">
+                                <h4 class="jb-fs-6 jb-mb-1 jb-text-dark">{{#str}}migration, local_jobboard{{/str}}</h4>
+                                <p class="jb-small jb-text-muted jb-mb-0">{{#str}}migration_desc, local_jobboard{{/str}}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {{/migrateurl}}
+                {{#pluginsettingsurl}}
+                <div class="jb-col-md-4 jb-col-sm-6 jb-mb-3">
+                    <a href="{{pluginsettingsurl}}" class="jb-card jb-border-0 jb-bg-light jb-card-h100 jb-hover-lift jb-text-decoration-none">
+                        <div class="jb-card-body jb-d-flex jb-align-items-start">
+                            <div class="jb-rounded-circle jb-bg-secondary jb-text-white jb-p-3 jb-mr-3 jb-flex-shrink-0 jb-d-flex jb-align-items-center jb-justify-content-center">
+                                <i class="fa fa-sliders-h fa-lg" aria-hidden="true"></i>
+                            </div>
+                            <div class="jb-flex-grow-1 jb-min-w-0">
+                                <h4 class="jb-fs-6 jb-mb-1 jb-text-dark">{{#str}}pluginsettings, local_jobboard{{/str}}</h4>
+                                <p class="jb-small jb-text-muted jb-mb-0">{{#str}}pluginsettings_desc, local_jobboard{{/str}}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {{/pluginsettingsurl}}
+            </div>
+            {{/hasadvancedtools}}
         </section>
         {{/isadmin}}
 

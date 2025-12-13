@@ -1859,6 +1859,9 @@ $string['migrationfile'] = 'Archivo de migración';
 $string['migrationinfo_desc'] = 'Información de migración';
 $string['migrationinfo_title'] = 'Migración';
 $string['invalidmigrationfile'] = 'Archivo de migración inválido';
+$string['advancedtools'] = 'Herramientas Avanzadas';
+$string['migration'] = 'Migración';
+$string['migration_desc'] = 'Importar y exportar datos de sistemas externos';
 
 // =============================================================================
 // CADENAS ADICIONALES - CONFIGURACIÓN

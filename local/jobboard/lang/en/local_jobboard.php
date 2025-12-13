@@ -1848,6 +1848,9 @@ $string['migrationfile'] = 'Migration file';
 $string['migrationinfo_desc'] = 'Migration information';
 $string['migrationinfo_title'] = 'Migration';
 $string['invalidmigrationfile'] = 'Invalid migration file';
+$string['advancedtools'] = 'Advanced Tools';
+$string['migration'] = 'Migration';
+$string['migration_desc'] = 'Import and export data from external systems';
 
 // =============================================================================
 // ADDITIONAL STRINGS - SETTINGS & CONFIGURATION
