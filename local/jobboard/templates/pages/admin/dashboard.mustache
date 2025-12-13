@@ -199,7 +199,10 @@
 
             {{! Workflow Management Section }}
             {{#workflowsections.0}}
-            <div class="jb-divider jb-my-4">{{#str}}workflowmanagement, local_jobboard{{/str}}</div>
+            <div class="jb-divider jb-my-4">
+                <i class="fa fa-project-diagram jb-mr-2" aria-hidden="true"></i>
+                {{#str}}workflowmanagement, local_jobboard{{/str}}
+            </div>
             <div class="jb-row jb-mb-4">
                 {{#workflowsections}}
                 <div class="jb-col-md-4 jb-col-sm-6 jb-mb-3">
@@ -225,7 +228,10 @@
 
             {{! Reports Section }}
             {{#reportsections.0}}
-            <div class="jb-divider jb-my-4">{{#str}}reportsanddata, local_jobboard{{/str}}</div>
+            <div class="jb-divider jb-my-4">
+                <i class="fa fa-chart-bar jb-mr-2" aria-hidden="true"></i>
+                {{#str}}reportsanddata, local_jobboard{{/str}}
+            </div>
             <div class="jb-row jb-mb-4">
                 {{#reportsections}}
                 <div class="jb-col-md-4 jb-col-sm-6 jb-mb-3">
@@ -251,7 +257,10 @@
 
             {{! Configuration Section }}
             {{#configsections.0}}
-            <div class="jb-divider jb-my-4">{{#str}}systemconfiguration, local_jobboard{{/str}}</div>
+            <div class="jb-divider jb-my-4">
+                <i class="fa fa-cogs jb-mr-2" aria-hidden="true"></i>
+                {{#str}}systemconfiguration, local_jobboard{{/str}}
+            </div>
             <div class="jb-row jb-mb-4">
                 {{#configsections}}
                 <div class="jb-col-md-3 jb-col-sm-6 jb-mb-3">
@@ -317,6 +326,7 @@
                         </div>
                         <div class="jb-card-footer jb-bg-white">
                             <a href="{{reviewersection.url}}" class="jb-btn jb-btn-info jb-hover-lift">
+                                <i class="fa fa-clipboard-list jb-mr-2" aria-hidden="true"></i>
                                 {{#str}}viewmyreviews, local_jobboard{{/str}}
                                 <i class="fa fa-arrow-right jb-ml-2" aria-hidden="true"></i>
                             </a>
@@ -410,7 +420,8 @@
                     {{#str}}recentactivity, local_jobboard{{/str}}
                 </h2>
                 {{#viewallactivityurl}}
-                <a href="{{viewallactivityurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary">
+                <a href="{{viewallactivityurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-hover-lift">
+                    <i class="fa fa-list jb-mr-1" aria-hidden="true"></i>
                     {{#str}}viewall, local_jobboard{{/str}}
                 </a>
                 {{/viewallactivityurl}}
