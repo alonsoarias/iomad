@@ -3,6 +3,7 @@
 
     Migration tool page template.
     Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables:
     * pagetitle - Page title string
@@ -22,6 +23,7 @@
     * dryrunresults - Dry run results (if any)
     * hasdryrunresults - Boolean if showing dry run results
     * dryrunmessages - Array of dry run result messages
+    * loading - bool - Show skeleton loading state
 
     Example context (json):
     {
@@ -29,33 +31,53 @@
         "exportcounts": [{"label": "Document types", "count": 10}]
     }
 }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-migrate-page" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton-text jb-mb-4" style="width: 100%; height: 100px;"></div>
+    <div class="jb-skeleton-text jb-mb-4" style="width: 100%; height: 60px;"></div>
+    <div class="jb-row">
+        <div class="jb-col-lg-6 jb-mb-4"><div class="jb-skeleton-text" style="height: 300px;"></div></div>
+        <div class="jb-col-lg-6 jb-mb-4"><div class="jb-skeleton-text" style="height: 300px;"></div></div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
 <div class="jb-migrate-page" data-region="jobboard-migrate">
+    {{! Skip Link for Accessibility }}
+    <a href="#migrate-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
     {{#hasdryrunresults}}
     {{! Dry Run Results View }}
-    <div class="jb-card jb-card-shadow jb-mb-4">
-        <div class="jb-card-header jb-bg-info jb-text-white">
-            <h5 class="jb-mb-0">
-                <i class="fa fa-flask jb-mr-2" aria-hidden="true"></i>
-                {{#str}}dryrunresults, local_jobboard{{/str}}
-            </h5>
+    <main id="migrate-content">
+        <div class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up">
+            <div class="jb-card-header jb-bg-info jb-text-white">
+                <h5 class="jb-mb-0">
+                    <i class="fa fa-flask jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}dryrunresults, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="jb-card-body">
+                {{#dryrunmessages}}
+                <p class="jb-mb-2 jb-fade-in" style="animation-delay: calc(0.1s + {{@index}} * 0.05s);">{{{message}}}</p>
+                {{/dryrunmessages}}
+            </div>
         </div>
-        <div class="jb-card-body">
-            {{#dryrunmessages}}
-            <p class="jb-mb-2">{{{message}}}</p>
-            {{/dryrunmessages}}
-        </div>
-    </div>
-    <a href="{{backurl}}" class="jb-btn jb-btn-primary">
-        <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
-        {{#str}}back{{/str}}
-    </a>
+        <a href="{{backurl}}" class="jb-btn jb-btn-primary jb-hover-lift jb-fade-in" style="animation-delay: 0.2s;">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{#str}}back{{/str}}
+        </a>
+    </main>
     {{/hasdryrunresults}}
 
     {{^hasdryrunresults}}
     {{! Main Page View }}
 
     {{! Page Header }}
-    <header class="jb-welcome-section jb-bg-gradient-primary jb-text-white jb-rounded-lg jb-p-4 jb-mb-4">
+    <header class="jb-welcome-section jb-bg-gradient-primary jb-text-white jb-rounded-lg jb-p-4 jb-mb-4 jb-fade-in-up">
         <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
             <div>
                 <h2 class="jb-mb-1 jb-fw-bold">{{pagetitle}}</h2>
@@ -66,17 +88,21 @@
     </header>
 
     {{! Info Box }}
-    <div class="jb-alert jb-alert-info jb-mb-4" role="alert">
-        <i class="fa fa-info-circle jb-fa-lg jb-mr-2" aria-hidden="true"></i>
-        <strong>{{infotitle}}</strong>
-        <p class="jb-mb-0 jb-mt-2">{{infodesc}}</p>
+    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-start jb-mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
+        <div class="jb-icon-circle jb-bg-info jb-text-white jb-mr-3 jb-flex-shrink-0">
+            <i class="fa fa-info" aria-hidden="true"></i>
+        </div>
+        <div>
+            <strong class="jb-d-block jb-mb-1">{{infotitle}}</strong>
+            <p class="jb-mb-0">{{infodesc}}</p>
+        </div>
     </div>
 
     {{! Two Column Layout }}
-    <div class="jb-row">
+    <main id="migrate-content" class="jb-row">
         {{! Export Section }}
         <div class="jb-col-lg-6 jb-mb-4">
-            <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="export-heading">
+            <section class="jb-card jb-card-shadow jb-h-100 jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="export-heading">
                 <div class="jb-card-header jb-bg-primary jb-text-white">
                     <h5 class="jb-mb-0" id="export-heading">
                         <i class="fa fa-download jb-mr-2" aria-hidden="true"></i>
@@ -102,7 +128,7 @@
                                 <div class="jb-col-md-6">
                                     <ul class="jb-list-unstyled jb-mb-0">
                                         {{#exportcounts_left}}
-                                        <li>
+                                        <li class="jb-fade-in" style="animation-delay: calc(0.15s + {{@index}} * 0.03s);">
                                             <i class="fa fa-check jb-text-success jb-mr-1" aria-hidden="true"></i>
                                             {{label}}: <strong>{{count}}</strong>
                                         </li>
@@ -112,7 +138,7 @@
                                 <div class="jb-col-md-6">
                                     <ul class="jb-list-unstyled jb-mb-0">
                                         {{#exportcounts_right}}
-                                        <li>
+                                        <li class="jb-fade-in" style="animation-delay: calc(0.15s + {{@index}} * 0.03s);">
                                             <i class="fa fa-check jb-text-success jb-mr-1" aria-hidden="true"></i>
                                             {{label}}: <strong>{{count}}</strong>
                                         </li>
@@ -140,7 +166,7 @@
 
         {{! Import Section }}
         <div class="jb-col-lg-6 jb-mb-4">
-            <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="import-heading">
+            <section class="jb-card jb-card-shadow jb-h-100 jb-fade-in-up" style="animation-delay: 0.15s;" aria-labelledby="import-heading">
                 <div class="jb-card-header jb-bg-success jb-text-white">
                     <h5 class="jb-mb-0" id="import-heading">
                         <i class="fa fa-upload jb-mr-2" aria-hidden="true"></i>
@@ -151,9 +177,14 @@
                     <p class="jb-text-muted jb-mb-3">{{importdesc}}</p>
 
                     {{! Warning Box }}
-                    <div class="jb-alert jb-alert-warning">
-                        <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
-                        {{importwarning}}
+                    <div class="jb-alert jb-alert-warning jb-d-flex jb-align-items-start">
+                        <div class="jb-icon-circle jb-bg-warning jb-text-dark jb-mr-3 jb-flex-shrink-0">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <strong class="jb-d-block jb-mb-1">{{#str}}importwarningtitle, local_jobboard{{/str}}</strong>
+                            {{importwarning}}
+                        </div>
                     </div>
 
                     {{! Import Form Placeholder - Will be rendered by PHP }}
@@ -163,14 +194,15 @@
                 </div>
             </section>
         </div>
-    </div>
+    </main>
 
     {{! Back to Dashboard }}
-    <footer class="jb-mt-3">
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
+    <footer class="jb-mt-3 jb-fade-in" style="animation-delay: 0.2s;">
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
             <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
             {{backtext}}
         </a>
     </footer>
     {{/hasdryrunresults}}
 </div>
+{{/loading}}
