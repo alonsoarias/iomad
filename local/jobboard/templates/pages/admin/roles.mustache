@@ -29,7 +29,7 @@
             {{#str}}manageroles, local_jobboard{{/str}}
         </h1>
         <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+            <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
             {{#str}}dashboard, local_jobboard{{/str}}
         </a>
     </header>
@@ -109,13 +109,13 @@
                         <div class="jb-d-flex">
                             {{#roleexists}}
                             <a href="{{manageurl}}" class="jb-btn jb-btn-{{color}} jb-btn-sm">
-                                <i class="fa fa-users-cog jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-users-gear jb-mr-1" aria-hidden="true"></i>
                                 {{#str}}manageusers, local_jobboard{{/str}}
                             </a>
                             {{/roleexists}}
                             {{^roleexists}}
                             <span class="jb-text-danger jb-small">
-                                <i class="fa fa-exclamation-triangle jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-triangle-exclamation jb-mr-1" aria-hidden="true"></i>
                                 {{#str}}rolenotcreated, local_jobboard{{/str}}
                             </span>
                             {{/roleexists}}
@@ -254,7 +254,7 @@
     <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
         <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
-                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
             <a href="{{committeeurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
@@ -262,7 +262,7 @@
                 {{#str}}committees, local_jobboard{{/str}}
             </a>
             <a href="{{settingsurl}}" class="jb-btn jb-btn-outline-info jb-m-1">
-                <i class="fa fa-cog jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-gear jb-mr-2" aria-hidden="true"></i>
                 {{#str}}pluginsettings, local_jobboard{{/str}}
             </a>
         </div>

@@ -75,7 +75,7 @@
                         </span>
                         {{#isurgent}}
                         <span class="jb-badge jb-badge-danger jb-pulse">
-                            <i class="fa fa-exclamation-triangle jb-mr-1" aria-hidden="true"></i>
+                            <i class="fa fa-triangle-exclamation jb-mr-1" aria-hidden="true"></i>
                             {{urgenttext}}
                         </span>
                         {{/isurgent}}
@@ -90,7 +90,7 @@
                             <span>{{#str}}startdate, local_jobboard{{/str}}: <strong>{{startdateformatted}}</strong></span>
                         </span>
                         <span class="jb-small jb-d-flex jb-align-items-center {{#isurgent}}jb-text-danger jb-fw-bold{{/isurgent}}">
-                            <i class="fa fa-calendar-times {{#isurgent}}jb-text-danger{{/isurgent}}{{^isurgent}}jb-text-warning{{/isurgent}} jb-mr-2" aria-hidden="true"></i>
+                            <i class="fa fa-calendar-xmark {{#isurgent}}jb-text-danger{{/isurgent}}{{^isurgent}}jb-text-warning{{/isurgent}} jb-mr-2" aria-hidden="true"></i>
                             <span>{{#str}}enddate, local_jobboard{{/str}}: <strong>{{enddateformatted}}</strong></span>
                         </span>
                         {{#daysremaining}}
@@ -101,7 +101,7 @@
                         {{/daysremaining}}
                     </div>
                     <a href="{{detailsurl}}" class="jb-btn jb-btn-sm jb-btn-outline-info jb-hover-lift">
-                        <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
+                        <i class="fa fa-circle-info jb-mr-1" aria-hidden="true"></i>
                         {{#str}}viewdetails, local_jobboard{{/str}}
                     </a>
                 </div>
@@ -135,7 +135,7 @@
                                        value="{{searchvalue}}"
                                        placeholder="{{#str}}searchvacancies, local_jobboard{{/str}}"
                                        aria-describedby="search-hint">
-                                <i class="fa fa-search jb-position-absolute jb-text-muted" style="left: 10px; top: 50%; transform: translateY(-50%);" aria-hidden="true"></i>
+                                <i class="fa fa-magnifying-glass jb-position-absolute jb-text-muted" style="left: 10px; top: 50%; transform: translateY(-50%);" aria-hidden="true"></i>
                             </div>
                         </div>
                         {{! Contract Type }}
@@ -165,7 +165,7 @@
                         {{! Submit }}
                         <div class="jb-col-lg-2 jb-col-md-6 jb-mb-2 jb-mb-lg-0 jb-d-flex jb-align-items-end">
                             <button type="submit" class="jb-btn jb-btn-primary jb-btn-sm jb-btn-block jb-hover-lift">
-                                <i class="fa fa-search jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-magnifying-glass jb-mr-1" aria-hidden="true"></i>
                                 {{#str}}filter, local_jobboard{{/str}}
                             </button>
                         </div>
@@ -174,7 +174,7 @@
                     <div class="jb-mt-3 jb-pt-2 jb-border-top">
                         <span class="jb-small jb-text-muted jb-mr-2">{{#str}}activefilters, local_jobboard{{/str}}:</span>
                         <a href="{{clearfiltersurl}}" class="jb-btn jb-btn-sm jb-btn-outline-danger">
-                            <i class="fa fa-times jb-mr-1" aria-hidden="true"></i>
+                            <i class="fa fa-xmark jb-mr-1" aria-hidden="true"></i>
                             {{#str}}clearfilters, local_jobboard{{/str}}
                         </a>
                     </div>
@@ -225,7 +225,7 @@
                         <div class="jb-small jb-d-flex jb-flex-column jb-gap-1">
                             {{#location}}
                             <div class="jb-d-flex jb-align-items-center">
-                                <i class="fa fa-map-marker-alt jb-text-primary jb-mr-2" style="width: 16px;" aria-hidden="true"></i>
+                                <i class="fa fa-location-dot jb-text-primary jb-mr-2" style="width: 16px;" aria-hidden="true"></i>
                                 <span>{{location}}</span>
                             </div>
                             {{/location}}
@@ -245,7 +245,7 @@
                     <footer class="jb-card-footer jb-bg-white">
                         <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-2">
                             <small class="jb-d-flex jb-align-items-center {{#isurgent}}jb-text-warning jb-fw-bold{{/isurgent}}{{^isurgent}}jb-text-muted{{/isurgent}}">
-                                <i class="fa fa-calendar-times jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-calendar-xmark jb-mr-1" aria-hidden="true"></i>
                                 <time datetime="{{closedateiso}}">{{closedateformatted}}</time>
                             </small>
                         </div>
@@ -269,7 +269,7 @@
                             {{/canapply}}
                             {{^isloggedin}}
                             <a href="{{loginapplyurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-flex-fill">
-                                <i class="fa fa-sign-in-alt jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-right-to-bracket jb-mr-1" aria-hidden="true"></i>
                                 {{#str}}login{{/str}}
                             </a>
                             {{/isloggedin}}
@@ -310,7 +310,7 @@
                         {{#str}}createaccount{{/str}}
                     </a>
                     <a href="{{loginurl}}" class="jb-btn jb-btn-outline-light jb-btn-lg jb-hover-lift">
-                        <i class="fa fa-sign-in-alt jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-right-to-bracket jb-mr-2" aria-hidden="true"></i>
                         {{#str}}login{{/str}}
                     </a>
                 </div>
@@ -392,13 +392,13 @@
                             <code class="jb-badge jb-badge-light">{{code}}</code>
                             {{#isurgent}}
                             <span class="jb-badge jb-badge-danger jb-small jb-pulse">
-                                <i class="fa fa-exclamation-triangle jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-triangle-exclamation jb-mr-1" aria-hidden="true"></i>
                                 {{urgenttext}}
                             </span>
                             {{/isurgent}}
                             {{^isurgent}}
                             <span class="jb-badge jb-badge-light jb-small">
-                                <i class="fa fa-check-circle jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-circle-check jb-mr-1" aria-hidden="true"></i>
                                 {{#str}}convocatoria_status_open, local_jobboard{{/str}}
                             </span>
                             {{/isurgent}}
@@ -432,7 +432,7 @@
                                 <span>{{#str}}startdate, local_jobboard{{/str}}: <strong>{{startdateformatted}}</strong></span>
                             </div>
                             <div class="jb-d-flex jb-align-items-center {{#isurgent}}jb-text-danger jb-fw-bold{{/isurgent}}">
-                                <i class="fa fa-calendar-times {{#isurgent}}jb-text-danger{{/isurgent}}{{^isurgent}}jb-text-warning{{/isurgent}} jb-mr-2" style="width: 16px;" aria-hidden="true"></i>
+                                <i class="fa fa-calendar-xmark {{#isurgent}}jb-text-danger{{/isurgent}}{{^isurgent}}jb-text-warning{{/isurgent}} jb-mr-2" style="width: 16px;" aria-hidden="true"></i>
                                 <span>{{#str}}enddate, local_jobboard{{/str}}: <strong>{{enddateformatted}}</strong></span>
                             </div>
                         </div>
@@ -441,7 +441,7 @@
                     <footer class="jb-card-footer jb-bg-white jb-border-top">
                         <div class="jb-d-flex jb-justify-content-between jb-gap-2">
                             <a href="{{detailsurl}}" class="jb-btn jb-btn-sm jb-btn-outline-info jb-flex-fill">
-                                <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-circle-info jb-mr-1" aria-hidden="true"></i>
                                 {{#str}}details{{/str}}
                             </a>
                             <a href="{{vacanciesurl}}" class="jb-btn jb-btn-sm jb-btn-primary jb-flex-fill jb-hover-lift">
@@ -468,7 +468,7 @@
             <div class="jb-card-body">
                 <div class="jb-d-flex jb-flex-column jb-flex-md-row jb-justify-content-between jb-align-items-center">
                     <h3 class="jb-fs-6 jb-mb-3 jb-mb-md-0" id="share-heading">
-                        <i class="fa fa-share-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-share-nodes jb-text-primary jb-mr-2" aria-hidden="true"></i>
                         {{#str}}sharepage, local_jobboard{{/str}}
                     </h3>
                     <div class="jb-d-flex jb-gap-2">
@@ -511,7 +511,7 @@
                         {{#str}}createaccount{{/str}}
                     </a>
                     <a href="{{loginurl}}" class="jb-btn jb-btn-outline-light jb-btn-lg jb-hover-lift">
-                        <i class="fa fa-sign-in-alt jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-right-to-bracket jb-mr-2" aria-hidden="true"></i>
                         {{#str}}login{{/str}}
                     </a>
                 </div>

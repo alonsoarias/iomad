@@ -106,7 +106,7 @@
                 <h2 class="jb-mb-1 jb-fw-bold jb-fs-5">{{welcometitle}}</h2>
                 <p class="jb-mb-0 jb-opacity-75">{{welcomedesc}}</p>
             </div>
-            <i class="fa fa-search fa-3x jb-opacity-25 jb-d-none jb-d-md-block" aria-hidden="true"></i>
+            <i class="fa fa-magnifying-glass fa-3x jb-opacity-25 jb-d-none jb-d-md-block" aria-hidden="true"></i>
         </div>
     </div>
 
@@ -136,7 +136,7 @@
                         <label for="filter-{{name}}" class="jb-form-label jb-small jb-text-muted jb-sr-only">{{label}}</label>
                         <div class="jb-input-group">
                             <span class="jb-input-group-text jb-bg-white">
-                                <i class="fa fa-search jb-text-muted" aria-hidden="true"></i>
+                                <i class="fa fa-magnifying-glass jb-text-muted" aria-hidden="true"></i>
                             </span>
                             <input type="text" name="{{name}}" id="filter-{{name}}" class="jb-form-control" placeholder="{{placeholder}}" value="{{value}}">
                         </div>
@@ -166,7 +166,7 @@
     {{! Results Info }}
     {{#showinginfo}}
     <p class="jb-text-muted jb-small jb-mb-3 jb-fade-in" role="status" aria-live="polite">
-        <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
+        <i class="fa fa-circle-info jb-mr-1" aria-hidden="true"></i>
         {{showinginfo}}
     </p>
     {{/showinginfo}}
@@ -215,7 +215,7 @@
                         <div class="jb-small jb-text-muted">
                             {{#location}}
                             <p class="jb-mb-1 jb-d-flex jb-align-items-center">
-                                <i class="fa fa-map-marker-alt jb-mr-2 jb-text-primary" aria-hidden="true"></i>
+                                <i class="fa fa-location-dot jb-mr-2 jb-text-primary" aria-hidden="true"></i>
                                 {{location}}
                             </p>
                             {{/location}}
@@ -237,7 +237,7 @@
                     {{! Card Footer }}
                     <footer class="jb-card-footer jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
                         <small class="{{#urgent}}jb-text-warning jb-fw-bold{{/urgent}} {{^urgent}}jb-text-muted{{/urgent}}">
-                            <i class="fa fa-calendar-times jb-mr-1" aria-hidden="true"></i>
+                            <i class="fa fa-calendar-xmark jb-mr-1" aria-hidden="true"></i>
                             {{closedateformatted}}
                         </small>
                         <div class="jb-d-flex jb-align-items-center jb-gap-2">

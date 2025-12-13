@@ -117,7 +117,7 @@
                         <label class="jb-form-label jb-small jb-text-muted jb-sr-only" for="search">{{#str}}search{{/str}}</label>
                         <div class="jb-input-group">
                             <span class="jb-input-group-text jb-bg-white">
-                                <i class="fa fa-search jb-text-muted" aria-hidden="true"></i>
+                                <i class="fa fa-magnifying-glass jb-text-muted" aria-hidden="true"></i>
                             </span>
                             <input type="text" name="search" id="search" class="jb-form-control"
                                    placeholder="{{#str}}searchapplicant, local_jobboard{{/str}}" value="{{currentsearch}}">
@@ -139,7 +139,7 @@
                                 {{#str}}filter{{/str}}
                             </button>
                             <a href="{{reseturl}}" class="jb-btn jb-btn-outline-secondary">
-                                <i class="fa fa-undo" aria-hidden="true"></i>
+                                <i class="fa fa-rotate-left" aria-hidden="true"></i>
                                 <span class="jb-sr-only">{{#str}}reset{{/str}}</span>
                             </a>
                         </div>
@@ -193,7 +193,7 @@
                                             <small class="jb-text-muted">{{email}}</small>
                                             {{#isexemption}}
                                             <span class="jb-badge jb-badge-info jb-ml-1">
-                                                <i class="fa fa-shield-alt jb-mr-1" aria-hidden="true"></i>
+                                                <i class="fa fa-shield jb-mr-1" aria-hidden="true"></i>
                                                 {{#str}}exemption, local_jobboard{{/str}}
                                             </span>
                                             {{/isexemption}}
@@ -244,7 +244,7 @@
             <p class="jb-text-muted jb-mb-3">{{#str}}noapplicationsfound_desc, local_jobboard{{/str}}</p>
             {{#currentsearch}}
             <a href="{{reseturl}}" class="jb-btn jb-btn-outline-primary">
-                <i class="fa fa-undo jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-rotate-left jb-mr-2" aria-hidden="true"></i>
                 {{#str}}clearfilters, local_jobboard{{/str}}
             </a>
             {{/currentsearch}}

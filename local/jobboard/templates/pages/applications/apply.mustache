@@ -103,7 +103,7 @@
                 <div class="jb-alert jb-alert-danger jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-down" role="alert" aria-live="assertive">
                     <div class="jb-flex-shrink-0 jb-mr-3">
                         <span class="jb-pulse">
-                            <i class="fa fa-exclamation-triangle fa-2x" aria-hidden="true"></i>
+                            <i class="fa fa-triangle-exclamation fa-2x" aria-hidden="true"></i>
                         </span>
                     </div>
                     <div>
@@ -121,7 +121,7 @@
                     </div>
                     <div class="jb-flex-grow-1">
                         <strong class="jb-d-block jb-mb-1">
-                            <i class="fa fa-check-circle jb-text-success jb-mr-1" aria-hidden="true"></i>
+                            <i class="fa fa-circle-check jb-text-success jb-mr-1" aria-hidden="true"></i>
                             {{#str}}exemptionapplied, local_jobboard{{/str}}
                         </strong>
                         {{#exemptioninfo}}
@@ -154,7 +154,7 @@
                          aria-expanded="true" aria-controls="guidelines-collapse"
                          role="button" tabindex="0">
                         <span id="guidelines-heading" class="jb-d-flex jb-align-items-center">
-                            <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                            <i class="fa fa-circle-info jb-mr-2" aria-hidden="true"></i>
                             {{#str}}applicationguidelines, local_jobboard{{/str}}
                         </span>
                         <i class="fa fa-chevron-down jb-collapse-icon" aria-hidden="true"></i>
@@ -211,7 +211,7 @@
                         {{! Location }}
                         {{#vacancy.location}}
                         <div class="jb-mb-3 jb-d-flex jb-align-items-start">
-                            <i class="fa fa-map-marker-alt jb-text-primary jb-mr-2 jb-mt-1" style="width: 16px;" aria-hidden="true"></i>
+                            <i class="fa fa-location-dot jb-text-primary jb-mr-2 jb-mt-1" style="width: 16px;" aria-hidden="true"></i>
                             <div>
                                 <label class="jb-small jb-text-muted jb-text-uppercase jb-fw-medium jb-d-block">{{#str}}location, local_jobboard{{/str}}</label>
                                 <span>{{vacancy.location}}</span>
@@ -222,7 +222,7 @@
                         {{! Modality }}
                         {{#vacancy.modality}}
                         <div class="jb-mb-3 jb-d-flex jb-align-items-start">
-                            <i class="fa fa-laptop-house jb-text-info jb-mr-2 jb-mt-1" style="width: 16px;" aria-hidden="true"></i>
+                            <i class="fa fa-house-laptop jb-text-info jb-mr-2 jb-mt-1" style="width: 16px;" aria-hidden="true"></i>
                             <div>
                                 <label class="jb-small jb-text-muted jb-text-uppercase jb-fw-medium jb-d-block">{{#str}}modality, local_jobboard{{/str}}</label>
                                 <span>{{vacancy.modality}}</span>
@@ -234,7 +234,7 @@
 
                         {{! Close Date }}
                         <div class="jb-mb-3 jb-d-flex jb-align-items-start">
-                            <i class="fa fa-calendar-times jb-text-danger jb-mr-2 jb-mt-1" style="width: 16px;" aria-hidden="true"></i>
+                            <i class="fa fa-calendar-xmark jb-text-danger jb-mr-2 jb-mt-1" style="width: 16px;" aria-hidden="true"></i>
                             <div class="jb-flex-grow-1">
                                 <label class="jb-small jb-text-muted jb-text-uppercase jb-fw-medium jb-d-block">{{#str}}closedate, local_jobboard{{/str}}</label>
                                 <time datetime="{{vacancy.closedateiso}}" class="jb-fw-medium">{{vacancy.closedateformatted}}</time>
@@ -255,7 +255,7 @@
                     {{! View Vacancy Details Button }}
                     <div class="jb-card-footer jb-bg-light">
                         <a href="{{viewvacancyurl}}" class="jb-btn jb-btn-outline-primary jb-btn-sm jb-btn-block jb-hover-lift">
-                            <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
+                            <i class="fa fa-circle-info jb-mr-1" aria-hidden="true"></i>
                             {{#str}}viewvacancydetails, local_jobboard{{/str}}
                         </a>
                     </div>
@@ -282,7 +282,7 @@
                                 {{/isrequired}}
                             </span>
                             {{#isuploaded}}
-                            <i class="fa fa-check-circle jb-text-success" aria-label="{{#str}}uploaded, local_jobboard{{/str}}"></i>
+                            <i class="fa fa-circle-check jb-text-success" aria-label="{{#str}}uploaded, local_jobboard{{/str}}"></i>
                             {{/isuploaded}}
                             {{^isuploaded}}
                             <i class="fa fa-circle jb-text-muted jb-small-dot" aria-hidden="true"></i>
@@ -291,7 +291,7 @@
                         {{/requireddocs}}
                     </ul>
                     <div class="jb-card-footer jb-bg-light jb-small jb-text-muted">
-                        <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
+                        <i class="fa fa-circle-info jb-mr-1" aria-hidden="true"></i>
                         <span class="jb-text-danger">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
                     </div>
                 </section>
@@ -301,7 +301,7 @@
                 <section class="jb-card jb-sidebar-card jb-card-shadow jb-fade-in-up" aria-labelledby="help-heading">
                     <div class="jb-card-header jb-bg-secondary jb-text-white">
                         <h2 class="jb-fs-6 jb-mb-0 jb-d-flex jb-align-items-center" id="help-heading">
-                            <i class="fa fa-question-circle jb-mr-2" aria-hidden="true"></i>
+                            <i class="fa fa-circle-question jb-mr-2" aria-hidden="true"></i>
                             {{#str}}needhelp, local_jobboard{{/str}}
                         </h2>
                     </div>

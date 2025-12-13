@@ -57,7 +57,7 @@
             <ol class="jb-breadcrumb">
                 <li class="jb-breadcrumb-item">
                     <a href="{{dashboardurl}}">
-                        <i class="fa fa-home jb-mr-1" aria-hidden="true"></i>
+                        <i class="fa fa-house jb-mr-1" aria-hidden="true"></i>
                         {{#str}}dashboard, local_jobboard{{/str}}
                     </a>
                 </li>
@@ -67,7 +67,7 @@
             </ol>
         </nav>
         <h1 class="jb-fs-4 jb-mb-0">
-            <i class="fa fa-calendar-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            <i class="fa fa-calendar-days jb-text-primary jb-mr-2" aria-hidden="true"></i>
             {{#str}}convocatorias, local_jobboard{{/str}}
         </h1>
     </header>
@@ -79,7 +79,7 @@
                 <h2 class="jb-mb-1 jb-fw-bold">{{#str}}browseconvocatorias, local_jobboard{{/str}}</h2>
                 <p class="jb-mb-0 jb-opacity-75">{{#str}}convocatoriahelp, local_jobboard{{/str}}</p>
             </div>
-            <i class="fa fa-calendar-alt fa-3x jb-opacity-25" aria-hidden="true"></i>
+            <i class="fa fa-calendar-days fa-3x jb-opacity-25" aria-hidden="true"></i>
         </div>
     </div>
 
@@ -116,7 +116,7 @@
     {{! Results Info }}
     {{#showinginfo}}
     <p class="jb-text-muted jb-small jb-mb-3 jb-fade-in" style="animation-delay: 0.2s;">
-        <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
+        <i class="fa fa-circle-info jb-mr-1" aria-hidden="true"></i>
         {{showinginfo}}
     </p>
     {{/showinginfo}}
@@ -169,7 +169,7 @@
 
                         {{! Dates }}
                         <div class="jb-small jb-mb-2">
-                            <i class="fa fa-calendar-alt jb-text-muted jb-mr-2" aria-hidden="true"></i>
+                            <i class="fa fa-calendar-days jb-text-muted jb-mr-2" aria-hidden="true"></i>
                             {{startdateformatted}}
                             <span class="jb-mx-1">→</span>
                             {{enddateformatted}}
@@ -210,7 +210,7 @@
                         {{/hasvacancies}}
                         {{^hasvacancies}}
                         <span class="jb-btn jb-btn-outline-secondary jb-btn-block jb-disabled" aria-disabled="true">
-                            <i class="fa fa-minus-circle jb-mr-2" aria-hidden="true"></i>
+                            <i class="fa fa-circle-minus jb-mr-2" aria-hidden="true"></i>
                             {{#str}}novacancies, local_jobboard{{/str}}
                         </span>
                         {{/hasvacancies}}
@@ -225,12 +225,12 @@
         {{^hasconvocatorias}}
         <div class="jb-empty-state jb-text-center jb-py-5 jb-fade-in" role="status">
             <div class="jb-empty-state-icon jb-mb-3">
-                <i class="fa fa-calendar-times fa-4x jb-text-muted" aria-hidden="true"></i>
+                <i class="fa fa-calendar-xmark fa-4x jb-text-muted" aria-hidden="true"></i>
             </div>
             <h2 class="jb-fs-4 jb-text-muted jb-mb-2">{{#str}}noconvocatorias, local_jobboard{{/str}}</h2>
             <p class="jb-text-muted jb-mb-4">{{#str}}noconvocatorias_desc, local_jobboard{{/str}}</p>
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-primary jb-hover-lift">
-                <i class="fa fa-home jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-house jb-mr-2" aria-hidden="true"></i>
                 {{#str}}backtodashboard, local_jobboard{{/str}}
             </a>
         </div>

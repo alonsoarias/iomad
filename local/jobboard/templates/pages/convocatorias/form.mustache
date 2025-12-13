@@ -91,14 +91,14 @@
                 <div class="jb-col-md-6">
                     <small class="jb-d-block jb-text-muted">{{#str}}convocatoriastartdate, local_jobboard{{/str}}</small>
                     <strong>
-                        <i class="fa fa-calendar-alt jb-text-success jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-calendar-days jb-text-success jb-mr-2" aria-hidden="true"></i>
                         {{convocatoria.startdateformatted}}
                     </strong>
                 </div>
                 <div class="jb-col-md-6">
                     <small class="jb-d-block jb-text-muted">{{#str}}convocatoriaenddate, local_jobboard{{/str}}</small>
                     <strong>
-                        <i class="fa fa-calendar-times jb-text-danger jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-calendar-xmark jb-text-danger jb-mr-2" aria-hidden="true"></i>
                         {{convocatoria.enddateformatted}}
                     </strong>
                 </div>
@@ -122,7 +122,7 @@
 
                 {{#hasapplications}}
                 <a href="{{applicationsurl}}" class="jb-btn jb-btn-outline-info jb-mr-2 jb-mb-2">
-                    <i class="fa fa-file-alt jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-file-lines jb-mr-2" aria-hidden="true"></i>
                     {{#str}}applications, local_jobboard{{/str}} ({{applicationcount}})
                 </a>
                 {{/hasapplications}}
@@ -149,10 +149,10 @@
                     </div>
                     <div class="jb-d-flex jb-align-items-center">
                         <span class="jb-badge jb-badge-info jb-mr-2" title="{{#str}}applications, local_jobboard{{/str}}">
-                            <i class="fa fa-file-alt jb-mr-1" aria-hidden="true"></i>{{applicationcount}}
+                            <i class="fa fa-file-lines jb-mr-1" aria-hidden="true"></i>{{applicationcount}}
                         </span>
                         <a href="{{editurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary" aria-label="{{#str}}edit{{/str}} {{title}}">
-                            <i class="fa fa-edit" aria-hidden="true"></i>
+                            <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                         </a>
                     </div>
                 </li>
@@ -174,7 +174,7 @@
     {{! Form Card }}
     <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="form-heading">
         <div class="jb-card-header jb-bg-primary jb-text-white jb-fw-bold">
-            <i class="fa fa-edit jb-mr-2" aria-hidden="true"></i>
+            <i class="fa fa-pen-to-square jb-mr-2" aria-hidden="true"></i>
             <span id="form-heading">
                 {{#isediting}}
                 {{#str}}editconvocatoria, local_jobboard{{/str}}

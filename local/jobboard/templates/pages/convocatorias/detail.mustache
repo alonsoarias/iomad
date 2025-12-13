@@ -110,12 +110,12 @@
     <header class="jb-page-header jb-mb-4 jb-fade-in">
         <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-flex-wrap jb-gap-2">
             <h1 class="jb-fs-4 jb-mb-0">
-                <i class="fa fa-calendar-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-calendar-days jb-text-primary jb-mr-2" aria-hidden="true"></i>
                 {{convocatoria.name}}
             </h1>
             {{#canmanage}}
             <a href="{{editurl}}" class="jb-btn jb-btn-outline-primary jb-hover-lift">
-                <i class="fa fa-edit jb-mr-1" aria-hidden="true"></i>
+                <i class="fa fa-pen-to-square jb-mr-1" aria-hidden="true"></i>
                 {{#str}}edit, local_jobboard{{/str}}
             </a>
             {{/canmanage}}
@@ -125,7 +125,7 @@
     {{! Urgent Banner (Closing Soon) }}
     {{#isclosingsoon}}
     <div class="jb-alert jb-alert-warning jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up jb-pulse" role="alert" style="animation-delay: 0.05s;">
-        <i class="fa fa-exclamation-triangle fa-lg jb-mr-3" aria-hidden="true"></i>
+        <i class="fa fa-triangle-exclamation fa-lg jb-mr-3" aria-hidden="true"></i>
         <div>
             <strong>{{#str}}closingsoon, local_jobboard{{/str}}</strong>
             <span class="jb-ml-2">
@@ -179,7 +179,7 @@
                     <div class="jb-col-md-6">
                         <div class="jb-d-flex jb-align-items-center">
                             <div class="jb-date-icon jb-bg-danger jb-text-white jb-rounded jb-p-2 jb-mr-3">
-                                <i class="fa fa-calendar-times" aria-hidden="true"></i>
+                                <i class="fa fa-calendar-xmark" aria-hidden="true"></i>
                             </div>
                             <div>
                                 <small class="jb-d-block jb-text-muted">{{#str}}convocatoriaenddate, local_jobboard{{/str}}</small>
@@ -195,7 +195,7 @@
                 {{#convocatoria.terms}}
                 <div class="jb-alert jb-alert-info jb-mb-0">
                     <h3 class="jb-fs-6 jb-alert-heading jb-d-flex jb-align-items-center">
-                        <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-circle-info jb-mr-2" aria-hidden="true"></i>
                         {{#str}}convocatoriaterms, local_jobboard{{/str}}
                     </h3>
                     <div class="jb-terms-content">
@@ -267,7 +267,7 @@
                             <div class="jb-card-text jb-small">
                                 {{#location}}
                                 <div class="jb-mb-1">
-                                    <i class="fa fa-map-marker-alt jb-text-muted jb-mr-2" aria-hidden="true"></i>
+                                    <i class="fa fa-location-dot jb-text-muted jb-mr-2" aria-hidden="true"></i>
                                     {{location}}
                                 </div>
                                 {{/location}}
@@ -290,7 +290,7 @@
                         <footer class="jb-card-footer jb-bg-white jb-border-top-0">
                             <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
                                 <small class="{{#isurgent}}jb-text-warning jb-fw-bold{{/isurgent}} {{^isurgent}}jb-text-muted{{/isurgent}}">
-                                    <i class="fa fa-calendar-times jb-mr-1" aria-hidden="true"></i>
+                                    <i class="fa fa-calendar-xmark jb-mr-1" aria-hidden="true"></i>
                                     {{closedateformatted}}
                                 </small>
 

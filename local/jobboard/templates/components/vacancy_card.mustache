@@ -117,7 +117,7 @@
         <div class="jb-d-flex jb-flex-wrap jb-gap-2 jb-mb-3">
             {{#location}}
             <span class="jb-badge jb-badge-light" title="{{#str}}location, local_jobboard{{/str}}">
-                <i class="fa fa-map-marker-alt jb-text-primary jb-mr-1" aria-hidden="true"></i>
+                <i class="fa fa-location-dot jb-text-primary jb-mr-1" aria-hidden="true"></i>
                 {{location}}
             </span>
             {{/location}}
@@ -145,7 +145,7 @@
         {{! Application Stats (Admin view) }}
         {{#applicationcount}}
         <div class="jb-small jb-text-muted jb-mb-2">
-            <i class="fa fa-file-alt jb-mr-1" aria-hidden="true"></i>
+            <i class="fa fa-file-lines jb-mr-1" aria-hidden="true"></i>
             {{applicationcount}} {{#str}}applicationsreceived, local_jobboard{{/str}}
         </div>
         {{/applicationcount}}
@@ -163,7 +163,7 @@
             {{/isclosed}}
             {{^isclosed}}
             <span class="{{#isurgent}}jb-text-warning jb-fw-bold{{/isurgent}}{{^isurgent}}jb-text-muted{{/isurgent}}">
-                <i class="fa fa-calendar-times jb-mr-1" aria-hidden="true"></i>
+                <i class="fa fa-calendar-xmark jb-mr-1" aria-hidden="true"></i>
                 {{closedate}}
             </span>
             {{/isclosed}}
@@ -173,7 +173,7 @@
         <div class="jb-btn-group jb-btn-group-sm">
             {{#canedit}}
             <a href="{{editurl}}" class="jb-btn jb-btn-outline-secondary" title="{{#str}}edit{{/str}}">
-                <i class="fa fa-edit" aria-hidden="true"></i>
+                <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                 <span class="jb-sr-only">{{#str}}edit{{/str}}</span>
             </a>
             {{/canedit}}

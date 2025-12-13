@@ -102,7 +102,7 @@
     {{#isurgent}}
     {{^isclosed}}
     <div class="jb-alert jb-alert-warning jb-d-flex jb-align-items-center jb-justify-content-center jb-mb-4 jb-fade-in-up" role="alert" aria-live="polite">
-        <i class="fa fa-exclamation-triangle fa-lg jb-mr-3" aria-hidden="true"></i>
+        <i class="fa fa-triangle-exclamation fa-lg jb-mr-3" aria-hidden="true"></i>
         <div>
             <strong>{{#str}}closingsoon, local_jobboard{{/str}}</strong>
             <span class="jb-ml-2">{{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}</span>
@@ -129,7 +129,7 @@
             {{#vacancy.description}}
             <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="desc-heading">
                 <div class="jb-card-header jb-bg-white jb-d-flex jb-align-items-center">
-                    <i class="fa fa-file-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-file-lines jb-text-primary jb-mr-2" aria-hidden="true"></i>
                     <h2 class="jb-fs-5 jb-mb-0" id="desc-heading">
                         {{#str}}vacancydescription, local_jobboard{{/str}}
                     </h2>
@@ -192,7 +192,7 @@
                 {{! Key Details Card }}
                 <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.15s;" aria-labelledby="details-heading">
                     <div class="jb-card-header jb-bg-primary jb-text-white jb-d-flex jb-align-items-center">
-                        <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-circle-info jb-mr-2" aria-hidden="true"></i>
                         <h2 class="jb-fs-5 jb-mb-0" id="details-heading">
                             {{#str}}details, local_jobboard{{/str}}
                         </h2>
@@ -222,7 +222,7 @@
                             {{#vacancy.location}}
                             <li class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-center">
                                 <span class="jb-d-flex jb-align-items-center">
-                                    <i class="fa fa-map-marker-alt jb-text-muted jb-mr-2" aria-hidden="true"></i>
+                                    <i class="fa fa-location-dot jb-text-muted jb-mr-2" aria-hidden="true"></i>
                                     {{#str}}location, local_jobboard{{/str}}
                                 </span>
                                 <strong>{{vacancy.location}}</strong>
@@ -232,7 +232,7 @@
                             {{#vacancy.modality}}
                             <li class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-center">
                                 <span class="jb-d-flex jb-align-items-center">
-                                    <i class="fa fa-laptop-house jb-text-muted jb-mr-2" aria-hidden="true"></i>
+                                    <i class="fa fa-house-laptop jb-text-muted jb-mr-2" aria-hidden="true"></i>
                                     {{#str}}modality, local_jobboard{{/str}}
                                 </span>
                                 <strong>{{vacancy.modality}}</strong>
@@ -283,7 +283,7 @@
                 {{! Dates Card }}
                 <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.25s;" aria-labelledby="dates-heading">
                     <div class="jb-card-header jb-bg-white jb-d-flex jb-align-items-center">
-                        <i class="fa fa-calendar-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-calendar-days jb-text-primary jb-mr-2" aria-hidden="true"></i>
                         <h2 class="jb-fs-5 jb-mb-0" id="dates-heading">
                             {{#str}}dates, local_jobboard{{/str}}
                         </h2>
@@ -323,7 +323,7 @@
                 {{#sharelinks}}
                 <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.35s;" aria-labelledby="share-heading">
                     <div class="jb-card-header jb-bg-white jb-d-flex jb-align-items-center">
-                        <i class="fa fa-share-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-share-nodes jb-text-primary jb-mr-2" aria-hidden="true"></i>
                         <h2 class="jb-fs-5 jb-mb-0" id="share-heading">
                             {{#str}}share, local_jobboard{{/str}}
                         </h2>
@@ -377,11 +377,11 @@
                 {{! Login/Register CTA for non-authenticated users }}
                 <section class="jb-card jb-card-shadow jb-mb-4 jb-border-primary jb-fade-in-up" style="animation-delay: 0.45s;" aria-labelledby="login-heading">
                     <div class="jb-card-body jb-text-center jb-py-4">
-                        <i class="fa fa-user-circle fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                        <i class="fa fa-circle-user fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
                         <h2 class="jb-card-title jb-fs-5" id="login-heading">{{#str}}wanttoapply, local_jobboard{{/str}}</h2>
                         <p class="jb-card-text jb-text-muted jb-small jb-mb-3">{{#str}}loginrequiredtoapply, local_jobboard{{/str}}</p>
                         <a href="{{loginurl}}" class="jb-btn jb-btn-primary jb-btn-lg jb-btn-block jb-mb-2 jb-hover-lift">
-                            <i class="fa fa-sign-in-alt jb-mr-2" aria-hidden="true"></i>
+                            <i class="fa fa-right-to-bracket jb-mr-2" aria-hidden="true"></i>
                             {{#str}}login{{/str}}
                         </a>
                         <a href="{{signupurl}}" class="jb-btn jb-btn-outline-primary jb-btn-block">
@@ -400,7 +400,7 @@
                 <section class="jb-card jb-card-shadow jb-mb-4 jb-border-info jb-fade-in-up" style="animation-delay: 0.45s;" aria-labelledby="applied-heading">
                     <div class="jb-card-body jb-text-center jb-py-4">
                         <div class="jb-mb-3">
-                            <i class="fa fa-check-circle fa-3x jb-text-info" aria-hidden="true"></i>
+                            <i class="fa fa-circle-check fa-3x jb-text-info" aria-hidden="true"></i>
                         </div>
                         <h2 class="jb-card-title jb-fs-5" id="applied-heading">
                             {{#str}}applied, local_jobboard{{/str}}

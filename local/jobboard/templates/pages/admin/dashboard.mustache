@@ -69,7 +69,7 @@
                     {{/isapplicant}}
                     {{#isadmin}}
                     <a href="{{manageurl}}" class="jb-btn jb-btn-outline-light jb-btn-sm jb-hover-lift">
-                        <i class="fa fa-cogs jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-gears jb-mr-2" aria-hidden="true"></i>
                         {{#str}}managevacancies, local_jobboard{{/str}}
                     </a>
                     {{/isadmin}}
@@ -104,11 +104,11 @@
                 <div class="jb-flex-shrink-0 jb-mr-3">
                     {{#nextconvocatoria.iscritical}}
                     <span class="jb-pulse">
-                        <i class="fa fa-exclamation-triangle fa-2x" aria-hidden="true"></i>
+                        <i class="fa fa-triangle-exclamation fa-2x" aria-hidden="true"></i>
                     </span>
                     {{/nextconvocatoria.iscritical}}
                     {{^nextconvocatoria.iscritical}}
-                    <i class="fa fa-calendar-times fa-2x" aria-hidden="true"></i>
+                    <i class="fa fa-calendar-xmark fa-2x" aria-hidden="true"></i>
                     {{/nextconvocatoria.iscritical}}
                 </div>
                 <div>
@@ -144,7 +144,7 @@
         <section class="jb-admin-section jb-mb-5" aria-labelledby="admin-heading">
             <header class="jb-section-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
                 <h2 class="jb-fs-5 jb-text-muted jb-mb-0" id="admin-heading">
-                    <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
                     {{#str}}administracion, local_jobboard{{/str}}
                 </h2>
             </header>
@@ -179,7 +179,7 @@
                             <ul class="jb-list-unstyled jb-small jb-text-muted jb-mb-0 jb-mt-auto">
                                 {{#features}}
                                 <li class="jb-mb-1 jb-d-flex jb-align-items-start">
-                                    <i class="fa fa-check-circle jb-text-{{../color}} jb-mr-2 jb-mt-1" aria-hidden="true"></i>
+                                    <i class="fa fa-circle-check jb-text-{{../color}} jb-mr-2 jb-mt-1" aria-hidden="true"></i>
                                     <span>{{.}}</span>
                                 </li>
                                 {{/features}}
@@ -201,7 +201,7 @@
             {{! Workflow Management Section }}
             {{#workflowsections.0}}
             <div class="jb-divider jb-my-4">
-                <i class="fa fa-project-diagram jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-diagram-project jb-mr-2" aria-hidden="true"></i>
                 {{#str}}workflowmanagement, local_jobboard{{/str}}
             </div>
             <div class="jb-row jb-mb-4">
@@ -211,7 +211,7 @@
                         <div class="jb-card-body jb-d-flex jb-align-items-start">
                             <div class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-3 jb-mr-3 jb-flex-shrink-0 jb-d-flex jb-align-items-center jb-justify-content-center">
                                 {{#icon}}<i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>{{/icon}}
-                                {{^icon}}<i class="fa fa-tasks fa-lg" aria-hidden="true"></i>{{/icon}}
+                                {{^icon}}<i class="fa fa-list-check fa-lg" aria-hidden="true"></i>{{/icon}}
                             </div>
                             <div class="jb-flex-grow-1 jb-min-w-0">
                                 <h4 class="jb-fs-6 jb-mb-1">{{title}}</h4>
@@ -263,7 +263,7 @@
             {{! Configuration Section }}
             {{#configsections.0}}
             <div class="jb-divider jb-my-4">
-                <i class="fa fa-cogs jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-gears jb-mr-2" aria-hidden="true"></i>
                 {{#str}}systemconfiguration, local_jobboard{{/str}}
             </div>
             <div class="jb-row jb-mb-4">
@@ -273,7 +273,7 @@
                         <div class="jb-card-body jb-text-center jb-py-4">
                             <div class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-3 jb-mx-auto jb-mb-3 jb-d-flex jb-align-items-center jb-justify-content-center" style="width: 60px; height: 60px;">
                                 {{#icon}}<i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>{{/icon}}
-                                {{^icon}}<i class="fa fa-cog fa-lg" aria-hidden="true"></i>{{/icon}}
+                                {{^icon}}<i class="fa fa-gear fa-lg" aria-hidden="true"></i>{{/icon}}
                             </div>
                             <h4 class="jb-fs-6 jb-mb-1 jb-text-dark">{{title}}</h4>
                             <p class="jb-small jb-text-muted jb-mb-0">{{description}}</p>
@@ -287,7 +287,7 @@
             {{! Advanced Tools Section (Migration & Plugin Settings) }}
             {{#hasadvancedtools}}
             <div class="jb-divider jb-my-4">
-                <i class="fa fa-tools jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-screwdriver-wrench jb-mr-2" aria-hidden="true"></i>
                 {{#str}}advancedtools, local_jobboard{{/str}}
             </div>
             <div class="jb-row jb-mb-4">
@@ -296,7 +296,7 @@
                     <a href="{{migrateurl}}" class="jb-card jb-border-0 jb-bg-light jb-card-h100 jb-hover-lift jb-text-decoration-none">
                         <div class="jb-card-body jb-d-flex jb-align-items-start">
                             <div class="jb-rounded-circle jb-bg-warning jb-text-dark jb-p-3 jb-mr-3 jb-flex-shrink-0 jb-d-flex jb-align-items-center jb-justify-content-center">
-                                <i class="fa fa-exchange-alt fa-lg" aria-hidden="true"></i>
+                                <i class="fa fa-right-left fa-lg" aria-hidden="true"></i>
                             </div>
                             <div class="jb-flex-grow-1 jb-min-w-0">
                                 <h4 class="jb-fs-6 jb-mb-1 jb-text-dark">{{#str}}migration, local_jobboard{{/str}}</h4>
@@ -311,7 +311,7 @@
                     <a href="{{pluginsettingsurl}}" class="jb-card jb-border-0 jb-bg-light jb-card-h100 jb-hover-lift jb-text-decoration-none">
                         <div class="jb-card-body jb-d-flex jb-align-items-start">
                             <div class="jb-rounded-circle jb-bg-secondary jb-text-white jb-p-3 jb-mr-3 jb-flex-shrink-0 jb-d-flex jb-align-items-center jb-justify-content-center">
-                                <i class="fa fa-sliders-h fa-lg" aria-hidden="true"></i>
+                                <i class="fa fa-sliders fa-lg" aria-hidden="true"></i>
                             </div>
                             <div class="jb-flex-grow-1 jb-min-w-0">
                                 <h4 class="jb-fs-6 jb-mb-1 jb-text-dark">{{#str}}pluginsettings, local_jobboard{{/str}}</h4>
@@ -341,7 +341,7 @@
                     <article class="jb-card jb-card-shadow jb-card-h100 jb-fade-in-up">
                         <div class="jb-card-header jb-bg-info jb-text-white jb-d-flex jb-justify-content-between jb-align-items-center">
                             <h3 class="jb-fs-6 jb-mb-0">
-                                <i class="fa fa-tasks jb-mr-2" aria-hidden="true"></i>
+                                <i class="fa fa-list-check jb-mr-2" aria-hidden="true"></i>
                                 {{#str}}myreviews, local_jobboard{{/str}}
                             </h3>
                             {{#reviewersection.pendingcount}}
@@ -355,7 +355,7 @@
 
                             {{#reviewersection.haspendingreview}}
                             <div class="jb-alert jb-alert-warning jb-d-flex jb-align-items-center" role="alert">
-                                <i class="fa fa-exclamation-triangle fa-lg jb-mr-3" aria-hidden="true"></i>
+                                <i class="fa fa-triangle-exclamation fa-lg jb-mr-3" aria-hidden="true"></i>
                                 <div>
                                     <strong>{{#str}}attentionrequired, local_jobboard{{/str}}</strong>
                                     <p class="jb-mb-0 jb-small">{{#str}}pending_reviews_alert, local_jobboard, {{reviewersection.pendingcount}}{{/str}}</p>
@@ -365,7 +365,7 @@
 
                             {{^reviewersection.haspendingreview}}
                             <div class="jb-alert jb-alert-success jb-d-flex jb-align-items-center" role="status">
-                                <i class="fa fa-check-circle fa-lg jb-mr-3" aria-hidden="true"></i>
+                                <i class="fa fa-circle-check fa-lg jb-mr-3" aria-hidden="true"></i>
                                 <span>{{#str}}nopendingreview, local_jobboard{{/str}}</span>
                             </div>
                             {{/reviewersection.haspendingreview}}
@@ -424,7 +424,7 @@
                         <div class="jb-card-header jb-bg-{{color}} jb-text-white">
                             <h3 class="jb-fs-6 jb-mb-0">
                                 {{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}
-                                {{^icon}}<i class="fa fa-file-alt jb-mr-2" aria-hidden="true"></i>{{/icon}}
+                                {{^icon}}<i class="fa fa-file-lines jb-mr-2" aria-hidden="true"></i>{{/icon}}
                                 {{title}}
                             </h3>
                         </div>
@@ -432,7 +432,7 @@
                             <p class="jb-text-muted jb-mb-3">{{description}}</p>
                             {{#alert}}
                             <div class="jb-alert jb-alert-{{alerttype}} jb-d-flex jb-align-items-center jb-mb-0" role="alert">
-                                <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                                <i class="fa fa-circle-info jb-mr-2" aria-hidden="true"></i>
                                 <span class="jb-small">{{alert}}</span>
                             </div>
                             {{/alert}}
@@ -463,7 +463,7 @@
         <section class="jb-activity-section jb-mt-5" aria-labelledby="activity-heading">
             <header class="jb-section-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
                 <h2 class="jb-fs-5 jb-text-muted jb-mb-0" id="activity-heading">
-                    <i class="fa fa-history jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-clock-rotate-left jb-mr-2" aria-hidden="true"></i>
                     {{#str}}recentactivity, local_jobboard{{/str}}
                 </h2>
                 {{#viewallactivityurl}}

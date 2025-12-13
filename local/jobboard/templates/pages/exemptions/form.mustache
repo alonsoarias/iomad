@@ -53,10 +53,10 @@
     <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
         <h3 class="jb-mb-0">
             {{#isedit}}
-            <i class="fa fa-edit jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            <i class="fa fa-pen-to-square jb-text-primary jb-mr-2" aria-hidden="true"></i>
             {{/isedit}}
             {{^isedit}}
-            <i class="fa fa-plus-circle jb-text-success jb-mr-2" aria-hidden="true"></i>
+            <i class="fa fa-circle-plus jb-text-success jb-mr-2" aria-hidden="true"></i>
             {{/isedit}}
             {{pagetitle}}
         </h3>
@@ -69,7 +69,7 @@
     {{! Edit Mode Info Banner }}
     {{#isedit}}
     <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.05s;">
-        <i class="fa fa-info-circle jb-mr-3" aria-hidden="true"></i>
+        <i class="fa fa-circle-info jb-mr-3" aria-hidden="true"></i>
         <div>
             <strong class="jb-d-block">{{#str}}editingexemption, local_jobboard{{/str}}</strong>
             {{#exemption.userfullname}}
@@ -87,7 +87,7 @@
             <div class="jb-card-header jb-bg-white jb-d-flex jb-align-items-center">
                 <div class="jb-icon-circle jb-bg-{{#isedit}}primary{{/isedit}}{{^isedit}}success{{/isedit}} jb-text-white jb-mr-3">
                     {{#isedit}}
-                    <i class="fa fa-edit" aria-hidden="true"></i>
+                    <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                     {{/isedit}}
                     {{^isedit}}
                     <i class="fa fa-plus" aria-hidden="true"></i>

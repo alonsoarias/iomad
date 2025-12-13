@@ -66,7 +66,7 @@
     {{! Page Header }}
     <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-flex-wrap jb-gap-3 jb-mb-4 jb-fade-in">
         <h1 class="jb-fs-3 jb-mb-0">
-            <i class="fa fa-file-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            <i class="fa fa-file-lines jb-text-primary jb-mr-2" aria-hidden="true"></i>
             {{pagetitle}}
         </h1>
         <div class="jb-btn-group" role="group" aria-label="{{#str}}actions{{/str}}">
@@ -75,7 +75,7 @@
                 {{#str}}adddoctype, local_jobboard{{/str}}
             </a>
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
-                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
         </div>
@@ -100,7 +100,7 @@
             <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success jb-hover-lift">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
                     <div class="jb-stat-icon jb-bg-success jb-text-white jb-rounded jb-p-3 jb-mr-3">
-                        <i class="fa fa-check-circle fa-lg" aria-hidden="true"></i>
+                        <i class="fa fa-circle-check fa-lg" aria-hidden="true"></i>
                     </div>
                     <div>
                         <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.enabled}}</div>
@@ -139,7 +139,7 @@
 
     {{! Help Info }}
     <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-start jb-mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.25s;">
-        <i class="fa fa-info-circle fa-lg jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+        <i class="fa fa-circle-info fa-lg jb-mr-3 jb-mt-1" aria-hidden="true"></i>
         <div>
             <strong class="jb-d-block jb-mb-1">{{abouttitle}}</strong>
             <p class="jb-mb-0 jb-small">{{aboutdesc}}</p>
@@ -225,7 +225,7 @@
                                         </span>
                                         {{/canmovedown}}
                                         <a href="{{editurl}}" class="jb-btn jb-btn-outline-primary" title="{{#str}}edit{{/str}}">
-                                            <i class="fa fa-edit" aria-hidden="true"></i>
+                                            <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                                             <span class="jb-sr-only">{{#str}}edit{{/str}}</span>
                                         </a>
                                         <a href="{{toggleurl}}" class="jb-btn jb-btn-outline-{{#enabled}}warning{{/enabled}}{{^enabled}}success{{/enabled}}" title="{{toggletitle}}">
@@ -233,7 +233,7 @@
                                             <span class="jb-sr-only">{{toggletitle}}</span>
                                         </a>
                                         <a href="{{deleteurl}}" class="jb-btn jb-btn-outline-danger" title="{{#str}}delete{{/str}}" onclick="return confirm('{{#str}}confirmdeletedoctype, local_jobboard{{/str}}');">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                            <i class="fa fa-trash-can" aria-hidden="true"></i>
                                             <span class="jb-sr-only">{{#str}}delete{{/str}}</span>
                                         </a>
                                     </div>
@@ -266,7 +266,7 @@
     {{! Navigation Footer }}
     <nav class="jb-navigation-footer jb-d-flex jb-flex-wrap jb-justify-content-center jb-gap-2 jb-mt-4 jb-py-3 jb-border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
         <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+            <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
             {{#str}}dashboard, local_jobboard{{/str}}
         </a>
         <a href="{{templatesurl}}" class="jb-btn jb-btn-outline-primary">

@@ -62,7 +62,7 @@
         </h1>
         <div class="jb-btn-group">
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
             <a href="{{reviewurl}}" class="jb-btn jb-btn-outline-primary jb-hover-lift">
@@ -79,7 +79,7 @@
                 <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-warning jb-fade-in-up" style="animation-delay: 0.05s;">
                     <div class="jb-card-body jb-d-flex jb-align-items-center">
                         <div class="jb-stat-icon jb-mr-3">
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            <i class="fa fa-triangle-exclamation" aria-hidden="true"></i>
                         </div>
                         <div>
                             <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.unassigned}}</div>
@@ -105,7 +105,7 @@
                 <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success jb-fade-in-up" style="animation-delay: 0.15s;">
                     <div class="jb-card-body jb-d-flex jb-align-items-center">
                         <div class="jb-stat-icon jb-mr-3">
-                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                            <i class="fa fa-circle-check" aria-hidden="true"></i>
                         </div>
                         <div>
                             <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.assigned}}</div>
@@ -203,7 +203,7 @@
         <section class="jb-card jb-card-shadow jb-mb-4 jb-border-info jb-fade-in-up" style="animation-delay: 0.35s;" aria-labelledby="autoassign-heading">
             <div class="jb-card-header jb-bg-info jb-text-white">
                 <h5 class="jb-mb-0" id="autoassign-heading">
-                    <i class="fa fa-magic jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-wand-magic-sparkles jb-mr-2" aria-hidden="true"></i>
                     {{#str}}autoassign, local_jobboard{{/str}}
                 </h5>
             </div>
@@ -218,12 +218,12 @@
                                min="1" max="100" class="jb-form-control jb-narrow-input">
                     </div>
                     <button type="submit" class="jb-btn jb-btn-light jb-mb-2 jb-hover-lift">
-                        <i class="fa fa-magic jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-wand-magic-sparkles jb-mr-2" aria-hidden="true"></i>
                         {{#str}}autoassignall, local_jobboard{{/str}}
                     </button>
                 </form>
                 <small class="jb-text-muted jb-mt-2 jb-d-block">
-                    <i class="fa fa-info-circle jb-mr-1" aria-hidden="true"></i>
+                    <i class="fa fa-circle-info jb-mr-1" aria-hidden="true"></i>
                     {{#str}}autoassignhelp, local_jobboard{{/str}}
                 </small>
             </div>
@@ -308,7 +308,7 @@
                 {{^hasunassigned}}
                 <div class="jb-empty-state jb-text-center jb-py-5">
                     <div class="jb-icon-circle jb-bg-success jb-text-white jb-mx-auto jb-mb-3" style="width: 80px; height: 80px;">
-                        <i class="fa fa-check-circle fa-2x" aria-hidden="true"></i>
+                        <i class="fa fa-circle-check fa-2x" aria-hidden="true"></i>
                     </div>
                     <h5 class="jb-text-success jb-mb-2">{{#str}}alldone, local_jobboard{{/str}}</h5>
                     <p class="jb-text-muted jb-mb-0">{{#str}}nounassignedapplications, local_jobboard{{/str}}</p>
@@ -322,7 +322,7 @@
     <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light jb-fade-in" style="animation-delay: 0.5s;">
         <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center jb-gap-2">
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
             <a href="{{reviewurl}}" class="jb-btn jb-btn-outline-primary jb-hover-lift">

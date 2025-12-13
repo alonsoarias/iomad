@@ -129,7 +129,7 @@
     <section class="jb-card jb-card-shadow jb-mb-4 jb-border-warning jb-fade-in-up" aria-labelledby="convocatoria-select-heading" style="animation-delay: 0.1s;">
         <div class="jb-card-header jb-bg-warning jb-text-dark">
             <h2 class="jb-fs-5 jb-mb-0" id="convocatoria-select-heading">
-                <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-triangle-exclamation jb-mr-2" aria-hidden="true"></i>
                 {{#str}}selectconvocatoria_required, local_jobboard{{/str}}
             </h2>
         </div>
@@ -162,13 +162,13 @@
     {{! Current Convocatoria Banner }}
     {{#selectedconvocatoriaid}}
     <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.1s;">
-        <i class="fa fa-calendar-alt jb-mr-3 jb-fs-4" aria-hidden="true"></i>
+        <i class="fa fa-calendar-days jb-mr-3 jb-fs-4" aria-hidden="true"></i>
         <div class="jb-flex-grow-1">
             <strong>{{#str}}currentconvocatoria, local_jobboard{{/str}}:</strong>
             <span class="jb-ml-1">{{selectedconvocatoria}}</span>
         </div>
         <a href="{{filteraction}}?view=reports" class="jb-btn jb-btn-sm jb-btn-outline-info jb-hover-lift">
-            <i class="fa fa-exchange-alt jb-mr-1" aria-hidden="true"></i>
+            <i class="fa fa-right-left jb-mr-1" aria-hidden="true"></i>
             {{#str}}changeconvocatoria, local_jobboard{{/str}}
         </a>
     </div>
@@ -393,7 +393,7 @@
                     <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="rejection-reasons-heading">
                         <div class="jb-card-header jb-bg-white">
                             <h2 class="jb-fs-5 jb-mb-0" id="rejection-reasons-heading">
-                                <i class="fa fa-exclamation-triangle jb-text-warning jb-mr-2" aria-hidden="true"></i>
+                                <i class="fa fa-triangle-exclamation jb-text-warning jb-mr-2" aria-hidden="true"></i>
                                 {{#str}}rejectionreasons, local_jobboard{{/str}}
                             </h2>
                         </div>
@@ -410,7 +410,7 @@
                             {{/documents.hasrejections}}
                             {{^documents.hasrejections}}
                             <p class="jb-text-muted jb-mb-0 jb-text-center jb-py-3">
-                                <i class="fa fa-check-circle jb-text-success jb-mr-2" aria-hidden="true"></i>
+                                <i class="fa fa-circle-check jb-text-success jb-mr-2" aria-hidden="true"></i>
                                 {{#str}}norejections, local_jobboard{{/str}}
                             </p>
                             {{/documents.hasrejections}}
@@ -440,7 +440,7 @@
                             {{/documents.haspending}}
                             {{^documents.haspending}}
                             <p class="jb-text-muted jb-mb-0 jb-text-center jb-py-3">
-                                <i class="fa fa-check-circle jb-text-success jb-mr-2" aria-hidden="true"></i>
+                                <i class="fa fa-circle-check jb-text-success jb-mr-2" aria-hidden="true"></i>
                                 {{#str}}nodata, local_jobboard{{/str}}
                             </p>
                             {{/documents.haspending}}
@@ -453,7 +453,7 @@
             <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="bytype-heading" style="animation-delay: 0.35s;">
                 <div class="jb-card-header jb-bg-white">
                     <h2 class="jb-fs-5 jb-mb-0" id="bytype-heading">
-                        <i class="fa fa-file-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-file-lines jb-text-primary jb-mr-2" aria-hidden="true"></i>
                         {{#str}}bydocumenttype, local_jobboard{{/str}}
                     </h2>
                 </div>
@@ -568,7 +568,7 @@
             <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="timeline-heading" style="animation-delay: 0.2s;">
                 <div class="jb-card-header jb-bg-white">
                     <h2 class="jb-fs-5 jb-mb-0" id="timeline-heading">
-                        <i class="fa fa-calendar-alt jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-calendar-days jb-text-primary jb-mr-2" aria-hidden="true"></i>
                         {{#str}}dailyapplications, local_jobboard{{/str}}
                     </h2>
                 </div>
@@ -601,7 +601,7 @@
                     {{/timeline.hasdata}}
                     {{^timeline.hasdata}}
                     <div class="jb-empty-state jb-text-center jb-py-4" role="status">
-                        <i class="fa fa-calendar-times fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                        <i class="fa fa-calendar-xmark fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
                         <p class="jb-text-muted jb-mb-0">{{#str}}nodata, local_jobboard{{/str}}</p>
                     </div>
                     {{/timeline.hasdata}}
@@ -627,7 +627,7 @@
     {{! Navigation Footer }}
     <nav class="jb-navigation-footer jb-d-flex jb-flex-wrap jb-justify-content-center jb-gap-2 jb-mt-4 jb-py-3 jb-border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
         <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+            <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
             {{#str}}dashboard, local_jobboard{{/str}}
         </a>
         {{#caps.viewallapplications}}

@@ -89,7 +89,7 @@
                 <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success jb-fade-in-up" style="animation-delay: 0.1s;">
                     <div class="jb-card-body jb-d-flex jb-align-items-center">
                         <div class="jb-stat-icon jb-mr-3">
-                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                            <i class="fa fa-circle-check" aria-hidden="true"></i>
                         </div>
                         <div>
                             <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.active}}</div>
@@ -186,7 +186,7 @@
         <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.3s;" aria-labelledby="addreviewers-heading">
             <div class="jb-card-header jb-bg-secondary jb-text-white">
                 <h5 class="jb-mb-0" id="addreviewers-heading">
-                    <i class="fa fa-plus-circle jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-circle-plus jb-mr-2" aria-hidden="true"></i>
                     {{#str}}addreviewerstoprogram, local_jobboard{{/str}}
                 </h5>
             </div>
@@ -259,7 +259,7 @@
                 {{/hasavailableusers}}
                 {{^hasavailableusers}}
                 <div class="jb-alert jb-alert-info jb-mb-0">
-                    <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-circle-info jb-mr-2" aria-hidden="true"></i>
                     {{#str}}nousersavailable, local_jobboard{{/str}}
                 </div>
                 {{/hasavailableusers}}
@@ -317,7 +317,7 @@
                                     <div class="jb-btn-group">
                                         <a href="{{changeroleurl}}" class="jb-btn jb-btn-sm jb-btn-outline-info"
                                            title="{{#str}}changerole, local_jobboard{{/str}}">
-                                            <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                                            <i class="fa fa-right-left" aria-hidden="true"></i>
                                         </a>
                                         <a href="{{togglestatusurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary"
                                            title="{{togglestatustitle}}">
@@ -326,7 +326,7 @@
                                         <a href="{{removeurl}}" class="jb-btn jb-btn-sm jb-btn-outline-danger"
                                            title="{{#str}}remove{{/str}}"
                                            onclick="return confirm('{{#str}}confirmremovereviewer, local_jobboard{{/str}}');">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                            <i class="fa fa-trash-can" aria-hidden="true"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -353,7 +353,7 @@
     <aside class="jb-card jb-card-shadow jb-bg-light jb-mb-4 jb-fade-in" style="animation-delay: 0.35s;" aria-labelledby="help-heading">
         <div class="jb-card-body">
             <h6 class="jb-mb-3" id="help-heading">
-                <i class="fa fa-info-circle jb-text-info jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-circle-info jb-text-info jb-mr-2" aria-hidden="true"></i>
                 {{#str}}help{{/str}}
             </h6>
             <p class="jb-text-muted jb-mb-0">{{#str}}programreviewerhelp, local_jobboard{{/str}}</p>

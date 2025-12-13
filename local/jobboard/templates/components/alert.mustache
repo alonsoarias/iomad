@@ -36,10 +36,10 @@
             <i class="fa fa-{{icon}} fa-lg"></i>
             {{/icon}}
             {{^icon}}
-            {{#issuccess}}<i class="fa fa-check-circle fa-lg"></i>{{/issuccess}}
-            {{#isdanger}}<i class="fa fa-exclamation-circle fa-lg"></i>{{/isdanger}}
-            {{#iswarning}}<i class="fa fa-exclamation-triangle fa-lg"></i>{{/iswarning}}
-            {{#isinfo}}<i class="fa fa-info-circle fa-lg"></i>{{/isinfo}}
+            {{#issuccess}}<i class="fa fa-circle-check fa-lg"></i>{{/issuccess}}
+            {{#isdanger}}<i class="fa fa-circle-exclamation fa-lg"></i>{{/isdanger}}
+            {{#iswarning}}<i class="fa fa-triangle-exclamation fa-lg"></i>{{/iswarning}}
+            {{#isinfo}}<i class="fa fa-circle-info fa-lg"></i>{{/isinfo}}
             {{#isprimary}}<i class="fa fa-bell fa-lg"></i>{{/isprimary}}
             {{/icon}}
         </div>
@@ -78,7 +78,7 @@
                 class="jb-btn-close jb-ml-2"
                 data-dismiss="alert"
                 aria-label="{{#str}}dismiss, local_jobboard{{/str}}">
-            <i class="fa fa-times" aria-hidden="true"></i>
+            <i class="fa fa-xmark" aria-hidden="true"></i>
         </button>
         {{/dismissible}}
     </div>

@@ -203,7 +203,7 @@
                                         </div>
                                         {{#rejectreason}}
                                         <div class="jb-alert jb-alert-danger jb-mt-2 jb-mb-0 jb-py-2 jb-small" role="alert">
-                                            <i class="fa fa-exclamation-circle jb-mr-1" aria-hidden="true"></i>
+                                            <i class="fa fa-circle-exclamation jb-mr-1" aria-hidden="true"></i>
                                             {{rejectreason}}
                                         </div>
                                         {{/rejectreason}}
@@ -225,7 +225,7 @@
                                         <span class="jb-sr-only">{{#str}}approve, local_jobboard{{/str}} {{typename}}</span>
                                     </a>
                                     <button type="button" class="jb-btn jb-btn-sm jb-btn-danger" data-toggle="modal" data-target="#rejectModal{{id}}" title="{{#str}}reject, local_jobboard{{/str}}">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                        <i class="fa fa-xmark" aria-hidden="true"></i>
                                         <span class="jb-sr-only">{{#str}}reject, local_jobboard{{/str}} {{typename}}</span>
                                     </button>
                                     {{/ispending}}
@@ -242,7 +242,7 @@
                                         <input type="hidden" name="sesskey" value="{{sesskey}}">
                                         <div class="modal-header jb-bg-danger jb-text-white">
                                             <h4 class="modal-title jb-fs-5 jb-d-flex jb-align-items-center" id="rejectModalLabel{{id}}">
-                                                <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                                                <i class="fa fa-triangle-exclamation jb-mr-2" aria-hidden="true"></i>
                                                 {{#str}}rejectdocument, local_jobboard{{/str}}
                                             </h4>
                                             <button type="button" class="close jb-text-white" data-dismiss="modal" aria-label="{{#str}}close, local_jobboard{{/str}}">
@@ -268,7 +268,7 @@
                                                 {{#str}}cancel{{/str}}
                                             </button>
                                             <button type="submit" class="jb-btn jb-btn-danger">
-                                                <i class="fa fa-times jb-mr-1" aria-hidden="true"></i>
+                                                <i class="fa fa-xmark jb-mr-1" aria-hidden="true"></i>
                                                 {{#str}}reject, local_jobboard{{/str}}
                                             </button>
                                         </div>
@@ -308,7 +308,7 @@
                                 <a href="mailto:{{selectedapplication.email}}" class="jb-text-break">{{selectedapplication.email}}</a>
                             </p>
                             <small class="jb-text-muted">
-                                <i class="fa fa-calendar-alt jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-calendar-days jb-mr-1" aria-hidden="true"></i>
                                 {{#str}}dateapplied, local_jobboard{{/str}}: {{selectedapplication.dateapplied}}
                             </small>
                         </div>
@@ -332,7 +332,7 @@
                     {{! Review Progress }}
                     <section class="jb-card jb-card-shadow jb-mb-4 jb-border-primary jb-fade-in-up" style="animation-delay: 0.25s;" aria-labelledby="progress-heading">
                         <div class="jb-card-header jb-bg-primary jb-text-white jb-d-flex jb-align-items-center">
-                            <i class="fa fa-tasks jb-mr-2" aria-hidden="true"></i>
+                            <i class="fa fa-list-check jb-mr-2" aria-hidden="true"></i>
                             <h2 class="jb-fs-5 jb-mb-0" id="progress-heading">
                                 {{#str}}reviewprogress, local_jobboard{{/str}}
                             </h2>
@@ -372,7 +372,7 @@
                         {{#allreviewed}}
                         <footer class="jb-card-footer jb-bg-success-light jb-text-center">
                             <div class="jb-text-success jb-mb-3" role="status">
-                                <i class="fa fa-check-circle fa-2x jb-mb-2" aria-hidden="true"></i>
+                                <i class="fa fa-circle-check fa-2x jb-mb-2" aria-hidden="true"></i>
                                 <div class="jb-fw-bold">{{#str}}alldocsreviewed, local_jobboard{{/str}}</div>
                             </div>
                             <form method="post" action="{{submitreviewurl}}">
@@ -472,7 +472,7 @@
                         </div>
                         {{#isurgent}}
                         <span class="jb-badge jb-badge-danger" role="status">
-                            <i class="fa fa-exclamation-triangle jb-mr-1" aria-hidden="true"></i>
+                            <i class="fa fa-triangle-exclamation jb-mr-1" aria-hidden="true"></i>
                             {{#str}}urgent, local_jobboard{{/str}}
                         </span>
                         {{/isurgent}}
@@ -494,7 +494,7 @@
                         {{! Document Stats }}
                         <div class="jb-d-flex jb-align-items-center jb-flex-wrap jb-gap-2 jb-mb-2">
                             <span class="jb-small jb-text-muted">
-                                <i class="fa fa-file-alt jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-file-lines jb-mr-1" aria-hidden="true"></i>
                                 {{#str}}documents, local_jobboard{{/str}}:
                             </span>
                             <span class="jb-badge jb-badge-secondary">{{doccount}}</span>
@@ -512,14 +512,14 @@
                         </div>
 
                         <div class="jb-small jb-text-muted">
-                            <i class="fa fa-calendar-alt jb-mr-2" aria-hidden="true"></i>
+                            <i class="fa fa-calendar-days jb-mr-2" aria-hidden="true"></i>
                             {{#str}}datesubmitted, local_jobboard{{/str}}: {{datesubmitted}}
                         </div>
                     </div>
                     <footer class="jb-card-footer jb-bg-white">
                         <div class="jb-d-flex jb-justify-content-between jb-gap-2">
                             <a href="{{reviewurl}}" class="jb-btn jb-btn-primary jb-btn-sm jb-flex-grow-1">
-                                <i class="fa fa-search jb-mr-1" aria-hidden="true"></i>
+                                <i class="fa fa-magnifying-glass jb-mr-1" aria-hidden="true"></i>
                                 {{#str}}reviewdocuments, local_jobboard{{/str}}
                             </a>
                             <a href="{{viewurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-sm" title="{{#str}}viewapplication, local_jobboard{{/str}}">
@@ -538,7 +538,7 @@
         {{^hasapplications}}
         <div class="jb-empty-state jb-text-center jb-py-5 jb-fade-in-up" role="status" aria-live="polite">
             <div class="jb-empty-icon-wrapper jb-d-inline-flex jb-align-items-center jb-justify-content-center jb-rounded-circle jb-bg-success-light jb-mb-4" style="width: 100px; height: 100px;">
-                <i class="fa fa-check-circle fa-3x jb-text-success" aria-hidden="true"></i>
+                <i class="fa fa-circle-check fa-3x jb-text-success" aria-hidden="true"></i>
             </div>
             <h2 class="jb-fs-4 jb-text-muted jb-mb-2">{{#str}}nodocumentstoreview, local_jobboard{{/str}}</h2>
             <p class="jb-text-muted">{{#str}}allcaughtup, local_jobboard{{/str}}</p>

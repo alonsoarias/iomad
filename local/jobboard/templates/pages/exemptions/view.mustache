@@ -170,7 +170,7 @@
 
                     {{! Exempted Documents }}
                     <dt class="jb-col-sm-3 jb-text-muted">
-                        <i class="fa fa-file-alt jb-mr-1" aria-hidden="true"></i>
+                        <i class="fa fa-file-lines jb-mr-1" aria-hidden="true"></i>
                         {{str.exempteddocs}}
                     </dt>
                     <dd class="jb-col-sm-9">
@@ -196,7 +196,7 @@
                     </dd>
 
                     <dt class="jb-col-sm-3 jb-text-muted">
-                        <i class="fa fa-calendar-times jb-mr-1" aria-hidden="true"></i>
+                        <i class="fa fa-calendar-xmark jb-mr-1" aria-hidden="true"></i>
                         {{str.validuntil}}
                     </dt>
                     <dd class="jb-col-sm-9">
@@ -206,7 +206,7 @@
 
                     {{! Notes }}
                     <dt class="jb-col-sm-3 jb-text-muted">
-                        <i class="fa fa-sticky-note jb-mr-1" aria-hidden="true"></i>
+                        <i class="fa fa-note-sticky jb-mr-1" aria-hidden="true"></i>
                         {{str.notes}}
                     </dt>
                     <dd class="jb-col-sm-9">
@@ -255,7 +255,7 @@
             {{^isrevoked}}
             <div class="jb-card-footer jb-bg-light jb-d-flex jb-gap-2">
                 <a href="{{editurl}}" class="jb-btn jb-btn-primary jb-hover-lift">
-                    <i class="fa fa-edit jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-pen-to-square jb-mr-2" aria-hidden="true"></i>
                     {{str.edit}}
                 </a>
                 <a href="{{revokeurl}}" class="jb-btn jb-btn-outline-danger jb-hover-lift">
@@ -272,7 +272,7 @@
     <section class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.15s;" aria-labelledby="usage-history-heading">
         <div class="jb-card-header jb-bg-white">
             <h5 class="jb-mb-0" id="usage-history-heading">
-                <i class="fa fa-history jb-text-info jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-clock-rotate-left jb-text-info jb-mr-2" aria-hidden="true"></i>
                 {{str.exemptionusagehistory}}
             </h5>
         </div>
@@ -311,7 +311,7 @@
             {{^hasusagehistory}}
             <div class="jb-empty-state jb-text-center jb-py-5">
                 <div class="jb-empty-state-icon jb-mb-3">
-                    <i class="fa fa-history fa-3x jb-text-muted" aria-hidden="true"></i>
+                    <i class="fa fa-clock-rotate-left fa-3x jb-text-muted" aria-hidden="true"></i>
                 </div>
                 <h6 class="jb-text-muted jb-mb-2">{{str.noexemptionusage}}</h6>
                 <p class="jb-text-muted jb-small jb-mb-0">

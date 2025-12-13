@@ -92,7 +92,7 @@
                 <div class="jb-card jb-card-shadow jb-stat-card jb-fade-in-up" style="animation-delay: 0.1s;">
                     <div class="jb-card-body jb-text-center">
                         <div class="jb-icon-circle jb-bg-warning jb-text-dark jb-mx-auto jb-mb-2">
-                            <i class="fa fa-sync" aria-hidden="true"></i>
+                            <i class="fa fa-arrows-rotate" aria-hidden="true"></i>
                         </div>
                         <h3 class="jb-text-warning jb-mb-1">{{results.toupdate}}</h3>
                         <p class="jb-text-muted jb-small jb-mb-0">{{str.tobeupdated}}</p>
@@ -154,7 +154,7 @@
                                 <td class="jb-text-center">
                                     <span class="jb-badge {{actionbadgeclass}}">
                                         {{#iscreate}}<i class="fa fa-plus jb-mr-1" aria-hidden="true"></i>{{/iscreate}}
-                                        {{#isupdate}}<i class="fa fa-sync jb-mr-1" aria-hidden="true"></i>{{/isupdate}}
+                                        {{#isupdate}}<i class="fa fa-arrows-rotate jb-mr-1" aria-hidden="true"></i>{{/isupdate}}
                                         {{#isskip}}<i class="fa fa-forward jb-mr-1" aria-hidden="true"></i>{{/isskip}}
                                         {{action}}
                                     </span>
@@ -171,7 +171,7 @@
         <div class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.3s;">
             <div class="jb-card-body jb-d-flex jb-flex-wrap jb-justify-content-between jb-align-items-center">
                 <p class="jb-mb-2 jb-mb-md-0">
-                    <i class="fa fa-question-circle jb-text-info jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-circle-question jb-text-info jb-mr-2" aria-hidden="true"></i>
                     {{str.previewconfirm}}
                 </p>
                 <div class="jb-d-flex jb-gap-2">
@@ -203,7 +203,7 @@
         {{^ispreview}}
         {{! Actual Import Results }}
         <div class="jb-alert jb-alert-success jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in" role="status">
-            <i class="fa fa-check-circle fa-lg jb-mr-3" aria-hidden="true"></i>
+            <i class="fa fa-circle-check fa-lg jb-mr-3" aria-hidden="true"></i>
             <div>
                 <strong class="jb-d-block">{{#str}}importcomplete, local_jobboard{{/str}}</strong>
                 <small>{{#str}}importcompletedesc, local_jobboard{{/str}}</small>
@@ -227,7 +227,7 @@
                 <div class="jb-card jb-card-shadow jb-text-center jb-fade-in-up" style="animation-delay: 0.1s;">
                     <div class="jb-card-body">
                         <div class="jb-icon-circle jb-bg-warning jb-text-dark jb-mx-auto jb-mb-3">
-                            <i class="fa fa-sync fa-lg" aria-hidden="true"></i>
+                            <i class="fa fa-arrows-rotate fa-lg" aria-hidden="true"></i>
                         </div>
                         <h3 class="jb-text-warning jb-mb-1">{{results.updated}}</h3>
                         <p class="jb-mb-0 jb-text-muted">{{str.vacanciesupdated}}</p>
@@ -253,7 +253,7 @@
         <section class="jb-card jb-card-shadow jb-border-danger jb-mb-4 jb-fade-in-up" style="animation-delay: 0.2s;" aria-labelledby="errors-heading">
             <div class="jb-card-header jb-bg-danger jb-text-white">
                 <h5 class="jb-mb-0" id="errors-heading">
-                    <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-triangle-exclamation jb-mr-2" aria-hidden="true"></i>
                     {{str.errors}} ({{errorcount}})
                 </h5>
             </div>
@@ -261,7 +261,7 @@
                 <ul class="jb-list-group jb-list-group-flush">
                     {{#errors}}
                     <li class="jb-list-group-item jb-list-group-item-danger jb-d-flex jb-align-items-start">
-                        <i class="fa fa-times-circle jb-mr-2 jb-mt-1" aria-hidden="true"></i>
+                        <i class="fa fa-circle-xmark jb-mr-2 jb-mt-1" aria-hidden="true"></i>
                         <div>
                             {{#row}}<strong>{{#str}}row, local_jobboard{{/str}} {{row}}:</strong> {{/row}}
                             {{message}}
@@ -270,7 +270,7 @@
                     {{/errors}}
                     {{#hasmoreerrors}}
                     <li class="jb-list-group-item jb-list-group-item-warning jb-text-center">
-                        <i class="fa fa-ellipsis-h jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-ellipsis jb-mr-2" aria-hidden="true"></i>
                         {{str.andmore}}
                     </li>
                     {{/hasmoreerrors}}

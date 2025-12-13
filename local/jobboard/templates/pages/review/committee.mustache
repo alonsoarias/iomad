@@ -57,7 +57,7 @@
                 {{#str}}manageroles, local_jobboard{{/str}}
             </a>
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
-                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
         </div>
@@ -82,7 +82,7 @@
             <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-success jb-fade-in-up" style="animation-delay: 0.1s;">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
                     <div class="jb-stat-icon jb-mr-3">
-                        <i class="fa fa-users-cog" aria-hidden="true"></i>
+                        <i class="fa fa-users-gear" aria-hidden="true"></i>
                     </div>
                     <div>
                         <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.activecommittees}}</div>
@@ -95,7 +95,7 @@
             <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-info jb-fade-in-up" style="animation-delay: 0.15s;">
                 <div class="jb-card-body jb-d-flex jb-align-items-center">
                     <div class="jb-stat-icon jb-mr-3">
-                        <i class="fa fa-user-friends" aria-hidden="true"></i>
+                        <i class="fa fa-user-group" aria-hidden="true"></i>
                     </div>
                     <div>
                         <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{stats.totalmembers}}</div>
@@ -174,7 +174,7 @@
                             <td class="jb-text-center">
                                 <a href="{{manageurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary"
                                    title="{{#str}}manage, local_jobboard{{/str}}">
-                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                    <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                                 </a>
                             </td>
                         </tr>
@@ -197,7 +197,7 @@
     <section class="jb-card jb-card-shadow jb-mb-4 jb-border-warning" aria-labelledby="nocommittee-heading">
         <div class="jb-card-header jb-bg-warning jb-text-dark">
             <h6 class="jb-mb-0" id="nocommittee-heading">
-                <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-triangle-exclamation jb-mr-2" aria-hidden="true"></i>
                 {{#str}}facultieswithoutcommittee, local_jobboard{{/str}}
             </h6>
         </div>
@@ -286,7 +286,7 @@
                                     <button class="jb-btn jb-btn-sm jb-btn-outline-secondary jb-dropdown-toggle"
                                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                             title="{{#str}}changerole, local_jobboard{{/str}}">
-                                        <i class="fa fa-exchange-alt" aria-hidden="true"></i>
+                                        <i class="fa fa-right-left" aria-hidden="true"></i>
                                     </button>
                                     <div class="jb-dropdown-menu">
                                         {{#availableroles}}
@@ -335,7 +335,7 @@
                            value="{{usersearch}}">
                     <div class="jb-input-group-append">
                         <button type="submit" class="jb-btn jb-btn-outline-secondary">
-                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <i class="fa fa-magnifying-glass" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
@@ -420,7 +420,7 @@
                            value="{{usersearch}}">
                     <div class="jb-input-group-append">
                         <button type="submit" class="jb-btn jb-btn-outline-secondary">
-                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <i class="fa fa-magnifying-glass" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
@@ -458,7 +458,7 @@
                 {{! Secretary (Optional) }}
                 <div class="jb-form-group jb-mb-3">
                     <label class="jb-form-label" for="secretary">
-                        <i class="fa fa-user-edit jb-text-primary jb-mr-1" aria-hidden="true"></i>
+                        <i class="fa fa-user-pen jb-text-primary jb-mr-1" aria-hidden="true"></i>
                         {{#str}}role_secretary, local_jobboard{{/str}}
                     </label>
                     <select name="secretary" id="secretary" class="jb-form-control">
@@ -486,7 +486,7 @@
 
                 {{! Info Alert }}
                 <div class="jb-alert jb-alert-info jb-mb-3">
-                    <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                    <i class="fa fa-circle-info jb-mr-2" aria-hidden="true"></i>
                     {{#str}}committeeautoroleassign, local_jobboard{{/str}}
                 </div>
 
@@ -514,7 +514,7 @@
 
     {{! Legacy Warning }}
     <div class="jb-alert jb-alert-warning jb-mb-3">
-        <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+        <i class="fa fa-triangle-exclamation jb-mr-2" aria-hidden="true"></i>
         {{#str}}legacyvacancycommittee, local_jobboard{{/str}}
     </div>
 
@@ -554,7 +554,7 @@
     <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light jb-fade-in" style="animation-delay: 0.2s;">
         <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center jb-gap-2">
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
             <a href="{{rolesurl}}" class="jb-btn jb-btn-outline-primary jb-hover-lift">

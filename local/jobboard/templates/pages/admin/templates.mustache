@@ -70,7 +70,7 @@
         </h2>
         <nav class="jb-header-actions" aria-label="{{#str}}actions{{/str}}">
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-mr-2 jb-hover-lift">
-                <i class="fa fa-tachometer-alt jb-mr-1" aria-hidden="true"></i>
+                <i class="fa fa-gauge jb-mr-1" aria-hidden="true"></i>
                 {{str.dashboard}}
             </a>
             <a href="{{installurl}}" class="jb-btn jb-btn-success jb-hover-lift">
@@ -94,7 +94,7 @@
         <div class="jb-col-md-3 jb-col-sm-6 jb-mb-3">
             <div class="jb-card jb-card-shadow jb-stat-card jb-bg-success jb-text-white jb-h-100 jb-fade-in-up" style="animation-delay: 0.1s;">
                 <div class="jb-card-body jb-text-center jb-d-flex jb-flex-column jb-justify-content-center">
-                    <i class="fa fa-check-circle fa-2x jb-mb-2 jb-opacity-75" aria-hidden="true"></i>
+                    <i class="fa fa-circle-check fa-2x jb-mb-2 jb-opacity-75" aria-hidden="true"></i>
                     <div class="jb-stat-number jb-fs-2 jb-fw-bold">{{stats.enabled}}</div>
                     <div class="jb-stat-label jb-small">{{str.templatesenabled}}</div>
                 </div>
@@ -103,7 +103,7 @@
         <div class="jb-col-md-3 jb-col-sm-6 jb-mb-3">
             <div class="jb-card jb-card-shadow jb-stat-card jb-bg-warning jb-text-dark jb-h-100 jb-fade-in-up" style="animation-delay: 0.15s;">
                 <div class="jb-card-body jb-text-center jb-d-flex jb-flex-column jb-justify-content-center">
-                    <i class="fa fa-pause-circle fa-2x jb-mb-2 jb-opacity-75" aria-hidden="true"></i>
+                    <i class="fa fa-circle-pause fa-2x jb-mb-2 jb-opacity-75" aria-hidden="true"></i>
                     <div class="jb-stat-number jb-fs-2 jb-fw-bold">{{stats.disabled}}</div>
                     <div class="jb-stat-label jb-small">{{str.templatesdisabled}}</div>
                 </div>
@@ -218,13 +218,13 @@
                                 <td class="jb-text-center">
                                     {{#enabled}}
                                     <span class="jb-badge jb-badge-success">
-                                        <i class="fa fa-check-circle jb-mr-1" aria-hidden="true"></i>
+                                        <i class="fa fa-circle-check jb-mr-1" aria-hidden="true"></i>
                                         {{str.enabled}}
                                     </span>
                                     {{/enabled}}
                                     {{^enabled}}
                                     <span class="jb-badge jb-badge-secondary">
-                                        <i class="fa fa-times-circle jb-mr-1" aria-hidden="true"></i>
+                                        <i class="fa fa-circle-xmark jb-mr-1" aria-hidden="true"></i>
                                         {{str.disabled}}
                                     </span>
                                     {{/enabled}}
@@ -232,7 +232,7 @@
                                 <td class="jb-text-center jb-action-buttons">
                                     <div class="jb-btn-group" role="group" aria-label="{{#str}}actions{{/str}}">
                                         <a href="{{editurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary" title="{{str.edit}}" aria-label="{{str.edit}} {{name}}">
-                                            <i class="fa fa-edit" aria-hidden="true"></i>
+                                            <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                                         </a>
                                         {{#hassavedid}}
                                         <a href="{{toggleurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary" title="{{str.togglestatus}}" aria-label="{{str.togglestatus}} {{name}}">
@@ -242,7 +242,7 @@
                                         {{#canreset}}
                                         <a href="{{reseturl}}" class="jb-btn jb-btn-sm jb-btn-outline-warning" title="{{str.resettodefault}}" aria-label="{{str.resettodefault}} {{name}}"
                                            onclick="return confirm('{{str.confirmreset}}');">
-                                            <i class="fa fa-undo" aria-hidden="true"></i>
+                                            <i class="fa fa-rotate-left" aria-hidden="true"></i>
                                         </a>
                                         {{/canreset}}
                                     </div>
@@ -261,7 +261,7 @@
     <aside class="jb-card jb-card-shadow jb-mb-4 jb-fade-in" style="animation-delay: 0.35s;">
         <div class="jb-card-header jb-bg-secondary jb-text-white">
             <h6 class="jb-mb-0">
-                <i class="fa fa-question-circle jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-circle-question jb-mr-2" aria-hidden="true"></i>
                 {{str.templatehelptitle}}
             </h6>
         </div>
@@ -308,11 +308,11 @@
     <footer class="jb-card jb-card-shadow jb-bg-light jb-fade-in" style="animation-delay: 0.4s;">
         <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center jb-gap-2">
             <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-tachometer-alt jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
                 {{str.dashboard}}
             </a>
             <a href="{{doctypesurl}}" class="jb-btn jb-btn-outline-primary jb-hover-lift">
-                <i class="fa fa-file-alt jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-file-lines jb-mr-2" aria-hidden="true"></i>
                 {{str.doctypes}}
             </a>
             <a href="{{rolesurl}}" class="jb-btn jb-btn-outline-info jb-hover-lift">
@@ -320,7 +320,7 @@
                 {{str.manageroles}}
             </a>
             <a href="{{settingsurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-cog jb-mr-2" aria-hidden="true"></i>
+                <i class="fa fa-gear jb-mr-2" aria-hidden="true"></i>
                 {{str.pluginsettings}}
             </a>
         </div>

@@ -93,7 +93,7 @@
                 </span>
                 {{#vacancy.location}}
                 <span>
-                    <i class="fa fa-map-marker-alt jb-text-muted jb-mr-1" aria-hidden="true"></i>
+                    <i class="fa fa-location-dot jb-text-muted jb-mr-1" aria-hidden="true"></i>
                     {{vacancy.location}}
                 </span>
                 {{/vacancy.location}}
@@ -104,12 +104,12 @@
 
     {{! Already have account notice }}
     <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.15s;">
-        <i class="fa fa-info-circle jb-mr-3 jb-fs-4" aria-hidden="true"></i>
+        <i class="fa fa-circle-info jb-mr-3 jb-fs-4" aria-hidden="true"></i>
         <div class="jb-flex-grow-1">
             <strong>{{alreadyaccounttext}}</strong>
         </div>
         <a href="{{loginurl}}" class="jb-btn jb-btn-sm jb-btn-primary jb-hover-lift">
-            <i class="fa fa-sign-in-alt jb-mr-1" aria-hidden="true"></i>
+            <i class="fa fa-right-to-bracket jb-mr-1" aria-hidden="true"></i>
             {{logintext}}
         </a>
     </div>
@@ -152,7 +152,7 @@
             </li>
             <li class="jb-step" data-step="4" data-section="termsheader" role="listitem">
                 <div class="jb-step-icon" aria-hidden="true">
-                    <i class="fa fa-check-circle"></i>
+                    <i class="fa fa-circle-check"></i>
                 </div>
                 <span class="jb-step-label">{{#str}}signup_step_confirm, local_jobboard{{/str}}</span>
             </li>
@@ -171,7 +171,7 @@
     {{! Help Section }}
     <aside class="jb-mt-4 jb-text-center jb-fade-in" style="animation-delay: 0.3s;">
         <p class="jb-text-muted jb-small jb-mb-0">
-            <i class="fa fa-question-circle jb-mr-1" aria-hidden="true"></i>
+            <i class="fa fa-circle-question jb-mr-1" aria-hidden="true"></i>
             {{#str}}signup_help, local_jobboard{{/str}}
         </p>
     </aside>

@@ -139,7 +139,7 @@
                         {{#preview.isfailed}}
                         <div class="jb-preview-content jb-text-center jb-py-5" id="preview-container">
                             <div class="jb-alert jb-alert-warning jb-d-inline-block jb-mb-3">
-                                <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                                <i class="fa fa-triangle-exclamation jb-mr-2" aria-hidden="true"></i>
                                 {{#str}}conversionfailed, local_jobboard{{/str}}
                             </div>
                             <p class="jb-mb-0">
@@ -175,7 +175,7 @@
                 <section class="jb-card jb-card-shadow jb-mt-4 jb-fade-in-up" aria-labelledby="checklist-heading" style="animation-delay: 0.15s;">
                     <div class="jb-card-header jb-bg-white">
                         <h2 class="jb-fs-5 jb-mb-0" id="checklist-heading">
-                            <i class="fa fa-tasks jb-text-warning jb-mr-2" aria-hidden="true"></i>
+                            <i class="fa fa-list-check jb-text-warning jb-mr-2" aria-hidden="true"></i>
                             {{#str}}validationchecklist, local_jobboard{{/str}}
                         </h2>
                     </div>
@@ -204,7 +204,7 @@
                 <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" aria-labelledby="docinfo-heading" style="animation-delay: 0.1s;">
                     <div class="jb-card-header jb-bg-info jb-text-white">
                         <h2 class="jb-fs-6 jb-mb-0" id="docinfo-heading">
-                            <i class="fa fa-file-alt jb-mr-2" aria-hidden="true"></i>
+                            <i class="fa fa-file-lines jb-mr-2" aria-hidden="true"></i>
                             {{#str}}documentinfo, local_jobboard{{/str}}
                         </h2>
                     </div>
@@ -266,7 +266,7 @@
                         {{! Approve Form }}
                         <div class="jb-mb-4">
                             <h3 class="jb-fs-6 jb-text-success jb-mb-3">
-                                <i class="fa fa-check-circle jb-mr-2" aria-hidden="true"></i>
+                                <i class="fa fa-circle-check jb-mr-2" aria-hidden="true"></i>
                                 {{#str}}approvedocument, local_jobboard{{/str}}
                             </h3>
                             <form method="post" action="{{approveformurl}}">
@@ -289,7 +289,7 @@
                         {{! Reject Form }}
                         <div>
                             <h3 class="jb-fs-6 jb-text-danger jb-mb-3">
-                                <i class="fa fa-times-circle jb-mr-2" aria-hidden="true"></i>
+                                <i class="fa fa-circle-xmark jb-mr-2" aria-hidden="true"></i>
                                 {{#str}}rejectdocument, local_jobboard{{/str}}
                             </h3>
                             <form method="post" action="{{rejectformurl}}">
@@ -313,7 +313,7 @@
                                     <textarea name="notes" id="notes_reject" class="jb-form-control jb-form-control-sm" rows="2"></textarea>
                                 </div>
                                 <button type="submit" class="jb-btn jb-btn-danger jb-w-100 jb-hover-lift">
-                                    <i class="fa fa-times jb-mr-2" aria-hidden="true"></i>
+                                    <i class="fa fa-xmark jb-mr-2" aria-hidden="true"></i>
                                     {{#str}}rejectdocument, local_jobboard{{/str}}
                                 </button>
                             </form>
