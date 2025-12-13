@@ -2,6 +2,8 @@
     @template local_jobboard/pages/import_exemptions_results
 
     CSV import results page for ISER exemptions.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * pagetitle - string - Page title
@@ -16,6 +18,9 @@
     * errors - array - Error messages (limited to 20)
     * moreerrors - int - Count of additional errors beyond 20
     * continueurl - string - URL to continue
+    * confirmurl - string - URL to confirm import
+    * backurl - string - Back URL
+    * loading - bool - Show skeleton loading state
     * str - object - Language strings
 
     Example context (json):
@@ -26,82 +31,215 @@
         "previewtotal": 5
     }
 }}
-
-<div class="jb-local-jobboard-import-results" data-region="jobboard-import-exemptions-results">
-    {{! Page Heading }}
-    <h2 class="jb-mb-4">{{pagetitle}}</h2>
-
-    {{#ispreview}}
-    {{! Preview Mode Notice }}
-    <div class="jb-alert jb-alert-info">
-        <i class="fa fa-info-circle jb-mr-2"></i>
-        {{str.preview_notice}}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-local-jobboard-import-results" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton-title jb-mb-4" style="width: 200px;"></div>
+    <div class="jb-skeleton-text jb-mb-4" style="width: 100%; height: 60px;"></div>
+    <div class="jb-row jb-mb-4">
+        <div class="jb-col-md-4"><div class="jb-skeleton-text" style="height: 100px;"></div></div>
+        <div class="jb-col-md-4"><div class="jb-skeleton-text" style="height: 100px;"></div></div>
+        <div class="jb-col-md-4"><div class="jb-skeleton-text" style="height: 100px;"></div></div>
     </div>
-
-    {{#haspreview}}
-    {{! Preview Table }}
-    <div class="jb-table-responsive jb-mb-3">
-        <table class="jb-table jb-table-striped">
-            <thead>
-                <tr>
-                    <th>{{str.row}}</th>
-                    <th>{{str.user}}</th>
-                    <th>{{str.email}}</th>
-                    <th>{{str.exemptiontype}}</th>
-                    <th>{{str.numdocs}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#previewitems}}
-                <tr>
-                    <td>{{row}}</td>
-                    <td>{{user}}</td>
-                    <td>{{email}}</td>
-                    <td>{{type}}</td>
-                    <td>{{docs}}</td>
-                </tr>
-                {{/previewitems}}
-            </tbody>
-        </table>
-    </div>
-
-    <p class="jb-text-success jb-font-weight-bold">
-        {{str.preview_total}}
-    </p>
-
-    {{! Confirm Import Form }}
-    <p>{{str.preview_confirm}}</p>
-    {{/haspreview}}
-    {{/ispreview}}
-
-    {{^ispreview}}
-    {{! Actual Import Results }}
-    <div class="jb-alert jb-alert-success">
-        <strong>{{str.import_complete}}</strong><br>
-        {{str.imported_success}}<br>
-        {{#hasskipped}}
-        {{str.imported_skipped}}
-        {{/hasskipped}}
-    </div>
-    {{/ispreview}}
-
-    {{! Errors Section }}
-    {{#haserrors}}
-    <div class="jb-alert jb-alert-warning">
-        <strong>{{str.import_errors}}</strong><br>
-        <ul class="jb-mb-0">
-            {{#errors}}
-            <li>{{.}}</li>
-            {{/errors}}
-            {{#hasmoreerrors}}
-            <li>... {{str.and_more}}</li>
-            {{/hasmoreerrors}}
-        </ul>
-    </div>
-    {{/haserrors}}
-
-    {{! Continue Button }}
-    <a href="{{continueurl}}" class="jb-btn jb-btn-primary">
-        {{str.continue}}
-    </a>
+    <div class="jb-skeleton-text" style="height: 200px;"></div>
 </div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-local-jobboard-import-results" data-region="jobboard-import-exemptions-results">
+    {{! Skip Link for Accessibility }}
+    <a href="#import-results-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
+        <h2 class="jb-mb-0">
+            <i class="fa fa-file-import jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h2>
+        {{#backurl}}
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{#str}}back, local_jobboard{{/str}}
+        </a>
+        {{/backurl}}
+    </header>
+
+    <main id="import-results-content">
+        {{#ispreview}}
+        {{! Preview Mode }}
+        <div class="jb-alert jb-alert-warning jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.05s;">
+            <i class="fa fa-eye fa-lg jb-mr-3" aria-hidden="true"></i>
+            <div>
+                <strong class="jb-d-block">{{#str}}previewmode, local_jobboard{{/str}}</strong>
+                <small>{{str.preview_notice}}</small>
+            </div>
+        </div>
+
+        {{#haspreview}}
+        {{! Preview Stats }}
+        <section class="jb-row jb-mb-4" aria-label="{{#str}}previewsummary, local_jobboard{{/str}}">
+            <div class="jb-col-md-4 jb-mb-3">
+                <div class="jb-card jb-card-shadow jb-text-center jb-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="jb-card-body">
+                        <div class="jb-icon-circle jb-bg-success jb-text-white jb-mx-auto jb-mb-2">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="jb-text-success jb-mb-1">{{previewtotal}}</h3>
+                        <p class="jb-text-muted jb-small jb-mb-0">{{#str}}recordstoprocess, local_jobboard{{/str}}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {{! Preview Table }}
+        <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.15s;" aria-labelledby="preview-table-heading">
+            <div class="jb-card-header jb-bg-white">
+                <h5 class="jb-mb-0" id="preview-table-heading">
+                    <i class="fa fa-table jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}previewdata, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="jb-card-body jb-p-0">
+                <div class="jb-table-responsive">
+                    <table class="jb-table jb-table-striped jb-table-hover jb-mb-0" aria-describedby="preview-table-heading">
+                        <thead class="jb-thead-light">
+                            <tr>
+                                <th scope="col">{{str.row}}</th>
+                                <th scope="col">{{str.user}}</th>
+                                <th scope="col">{{str.email}}</th>
+                                <th scope="col">{{str.exemptiontype}}</th>
+                                <th scope="col" class="jb-text-center">{{str.numdocs}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#previewitems}}
+                            <tr class="jb-fade-in" style="animation-delay: calc(0.2s + {{@index}} * 0.03s);">
+                                <td><span class="jb-badge jb-badge-light">{{row}}</span></td>
+                                <td><strong>{{user}}</strong></td>
+                                <td><a href="mailto:{{email}}" class="jb-text-muted">{{email}}</a></td>
+                                <td><span class="jb-badge jb-badge-secondary">{{type}}</span></td>
+                                <td class="jb-text-center"><span class="jb-badge jb-badge-info">{{docs}}</span></td>
+                            </tr>
+                            {{/previewitems}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        {{! Confirm Actions }}
+        <div class="jb-card jb-card-shadow jb-border-success jb-fade-in-up" style="animation-delay: 0.25s;">
+            <div class="jb-card-body jb-d-flex jb-flex-wrap jb-justify-content-between jb-align-items-center">
+                <div>
+                    <p class="jb-text-success jb-fw-bold jb-mb-1">
+                        <i class="fa fa-check-circle jb-mr-2" aria-hidden="true"></i>
+                        {{str.preview_total}}
+                    </p>
+                    <p class="jb-mb-0 jb-text-muted jb-small">{{str.preview_confirm}}</p>
+                </div>
+                <div class="jb-d-flex jb-gap-2 jb-mt-3 jb-mt-md-0">
+                    <a href="{{confirmurl}}" class="jb-btn jb-btn-success jb-hover-lift">
+                        <i class="fa fa-check jb-mr-2" aria-hidden="true"></i>
+                        {{#str}}confirmimport, local_jobboard{{/str}}
+                    </a>
+                    <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+                        <i class="fa fa-times jb-mr-2" aria-hidden="true"></i>
+                        {{#str}}cancel{{/str}}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{/haspreview}}
+
+        {{^haspreview}}
+        <div class="jb-empty-state jb-text-center jb-py-5">
+            <i class="fa fa-file-excel fa-4x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+            <h5 class="jb-text-muted">{{#str}}nopreviewdata, local_jobboard{{/str}}</h5>
+        </div>
+        {{/haspreview}}
+        {{/ispreview}}
+
+        {{^ispreview}}
+        {{! Actual Import Results }}
+        <div class="jb-alert jb-alert-success jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in" role="status">
+            <div class="jb-icon-circle jb-bg-success jb-text-white jb-mr-3">
+                <i class="fa fa-check" aria-hidden="true"></i>
+            </div>
+            <div>
+                <strong class="jb-d-block">{{str.import_complete}}</strong>
+                <span>{{str.imported_success}}</span>
+                {{#hasskipped}}
+                <br><span class="jb-text-warning">{{str.imported_skipped}}</span>
+                {{/hasskipped}}
+            </div>
+        </div>
+
+        {{! Results Stats }}
+        <section class="jb-row jb-mb-4" aria-label="{{#str}}importresults, local_jobboard{{/str}}">
+            <div class="jb-col-md-6 jb-mb-3">
+                <div class="jb-card jb-card-shadow jb-text-center jb-fade-in-up" style="animation-delay: 0.05s;">
+                    <div class="jb-card-body">
+                        <div class="jb-icon-circle jb-bg-success jb-text-white jb-mx-auto jb-mb-3">
+                            <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="jb-text-success jb-mb-1">{{successcount}}</h3>
+                        <p class="jb-mb-0 jb-text-muted">{{#str}}exemptionsimported, local_jobboard{{/str}}</p>
+                    </div>
+                </div>
+            </div>
+            {{#hasskipped}}
+            <div class="jb-col-md-6 jb-mb-3">
+                <div class="jb-card jb-card-shadow jb-text-center jb-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="jb-card-body">
+                        <div class="jb-icon-circle jb-bg-warning jb-text-dark jb-mx-auto jb-mb-3">
+                            <i class="fa fa-forward fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="jb-text-warning jb-mb-1">{{skippedcount}}</h3>
+                        <p class="jb-mb-0 jb-text-muted">{{#str}}exemptionsskipped, local_jobboard{{/str}}</p>
+                    </div>
+                </div>
+            </div>
+            {{/hasskipped}}
+        </section>
+        {{/ispreview}}
+
+        {{! Errors Section }}
+        {{#haserrors}}
+        <section class="jb-card jb-card-shadow jb-border-danger jb-mb-4 jb-fade-in-up" style="animation-delay: 0.15s;" aria-labelledby="errors-heading">
+            <div class="jb-card-header jb-bg-danger jb-text-white">
+                <h5 class="jb-mb-0" id="errors-heading">
+                    <i class="fa fa-exclamation-triangle jb-mr-2" aria-hidden="true"></i>
+                    {{str.import_errors}}
+                </h5>
+            </div>
+            <div class="jb-card-body jb-p-0">
+                <ul class="jb-list-group jb-list-group-flush">
+                    {{#errors}}
+                    <li class="jb-list-group-item jb-list-group-item-danger jb-d-flex jb-align-items-start">
+                        <i class="fa fa-times-circle jb-mr-2 jb-mt-1" aria-hidden="true"></i>
+                        {{.}}
+                    </li>
+                    {{/errors}}
+                    {{#hasmoreerrors}}
+                    <li class="jb-list-group-item jb-list-group-item-warning jb-text-center">
+                        <i class="fa fa-ellipsis-h jb-mr-2" aria-hidden="true"></i>
+                        {{str.and_more}}
+                    </li>
+                    {{/hasmoreerrors}}
+                </ul>
+            </div>
+        </section>
+        {{/haserrors}}
+
+        {{! Continue Button }}
+        <div class="jb-d-flex jb-gap-2 jb-mt-4 jb-fade-in" style="animation-delay: 0.2s;">
+            <a href="{{continueurl}}" class="jb-btn jb-btn-primary jb-hover-lift">
+                <i class="fa fa-arrow-right jb-mr-2" aria-hidden="true"></i>
+                {{str.continue}}
+            </a>
+        </div>
+    </main>
+</div>
+{{/loading}}

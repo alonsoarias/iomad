@@ -2,10 +2,14 @@
     @template local_jobboard/pages/import_exemptions
 
     CSV import page for ISER exemptions.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * pagetitle - string - Page title
     * formhtml - string - Rendered form HTML
+    * backurl - string - Back URL
+    * loading - bool - Show skeleton loading state
     * str - object - Language strings
       * instructions_title - string - Instructions title
       * instructions_text - string - Instructions text
@@ -25,43 +29,141 @@
         "pagetitle": "Import Exemptions"
     }
 }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-local-jobboard-import-exemptions" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton-title jb-mb-4" style="width: 200px;"></div>
+    <div class="jb-card jb-mb-4">
+        <div class="jb-card-header"><div class="jb-skeleton-text" style="width: 150px;"></div></div>
+        <div class="jb-card-body"><div class="jb-skeleton-text" style="height: 250px;"></div></div>
+    </div>
+    <div class="jb-card">
+        <div class="jb-card-body"><div class="jb-skeleton-text" style="height: 150px;"></div></div>
+    </div>
+</div>
+{{/loading}}
 
+{{^loading}}
 <div class="jb-local-jobboard-import-exemptions" data-region="jobboard-import-exemptions">
-    {{! Page Heading }}
-    <h2 class="jb-mb-4">{{pagetitle}}</h2>
+    {{! Skip Link for Accessibility }}
+    <a href="#import-form-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
+        <h2 class="jb-mb-0">
+            <i class="fa fa-file-import jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h2>
+        {{#backurl}}
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{#str}}back, local_jobboard{{/str}}
+        </a>
+        {{/backurl}}
+    </header>
 
     {{! Instructions Card }}
-    <div class="jb-card jb-mb-4">
-        <div class="jb-card-header">
-            <h5 class="jb-mb-0">{{str.instructions_title}}</h5>
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.05s;" aria-labelledby="instructions-heading">
+        <div class="jb-card-header jb-bg-info jb-text-white">
+            <h5 class="jb-mb-0" id="instructions-heading">
+                <i class="fa fa-info-circle jb-mr-2" aria-hidden="true"></i>
+                {{str.instructions_title}}
+            </h5>
         </div>
         <div class="jb-card-body">
-            <p>{{str.instructions_text}}</p>
+            <p class="jb-text-muted jb-mb-4">{{str.instructions_text}}</p>
 
-            {{! Required Columns }}
-            <h6>{{str.required_columns}}</h6>
-            <ul>
-                <li>
-                    <code>email</code> {{str.or}} <code>username</code> {{str.or}} <code>idnumber</code>
-                    - {{str.user_identifier}}
-                </li>
-            </ul>
+            <div class="jb-row">
+                {{! Required Columns }}
+                <div class="jb-col-md-6 jb-mb-4">
+                    <div class="jb-card jb-bg-light jb-h-100">
+                        <div class="jb-card-header jb-bg-danger jb-text-white">
+                            <h6 class="jb-mb-0">
+                                <i class="fa fa-asterisk jb-mr-2" aria-hidden="true"></i>
+                                {{str.required_columns}}
+                            </h6>
+                        </div>
+                        <div class="jb-card-body">
+                            <ul class="jb-list-unstyled jb-mb-0">
+                                <li class="jb-d-flex jb-align-items-start jb-mb-2">
+                                    <i class="fa fa-check-circle jb-text-success jb-mr-2 jb-mt-1" aria-hidden="true"></i>
+                                    <div>
+                                        <code class="jb-text-primary">email</code>
+                                        <span class="jb-mx-1">{{str.or}}</span>
+                                        <code class="jb-text-primary">username</code>
+                                        <span class="jb-mx-1">{{str.or}}</span>
+                                        <code class="jb-text-primary">idnumber</code>
+                                        <br><small class="jb-text-muted">{{str.user_identifier}}</small>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-            {{! Optional Columns }}
-            <h6>{{str.optional_columns}}</h6>
-            <ul>
-                <li><code>exemptiontype</code> - {{str.exemptiontype_desc}}</li>
-                <li><code>exempteddocs</code> - {{str.exempteddocs_desc}}</li>
-                <li><code>documentref</code> - {{str.documentref_desc}}</li>
-                <li><code>notes</code> - {{str.notes_desc}}</li>
-            </ul>
+                {{! Optional Columns }}
+                <div class="jb-col-md-6 jb-mb-4">
+                    <div class="jb-card jb-bg-light jb-h-100">
+                        <div class="jb-card-header jb-bg-secondary jb-text-white">
+                            <h6 class="jb-mb-0">
+                                <i class="fa fa-plus-circle jb-mr-2" aria-hidden="true"></i>
+                                {{str.optional_columns}}
+                            </h6>
+                        </div>
+                        <div class="jb-card-body">
+                            <ul class="jb-list-unstyled jb-mb-0 jb-small">
+                                <li class="jb-mb-2">
+                                    <code class="jb-text-info">exemptiontype</code>
+                                    <span class="jb-text-muted">- {{str.exemptiontype_desc}}</span>
+                                </li>
+                                <li class="jb-mb-2">
+                                    <code class="jb-text-info">exempteddocs</code>
+                                    <span class="jb-text-muted">- {{str.exempteddocs_desc}}</span>
+                                </li>
+                                <li class="jb-mb-2">
+                                    <code class="jb-text-info">documentref</code>
+                                    <span class="jb-text-muted">- {{str.documentref_desc}}</span>
+                                </li>
+                                <li>
+                                    <code class="jb-text-info">notes</code>
+                                    <span class="jb-text-muted">- {{str.notes_desc}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {{! Sample CSV }}
-            <h6>{{str.sample_csv}}</h6>
-            <pre class="jb-bg-light jb-p-2">{{{sample}}}</pre>
+            <div class="jb-card jb-bg-dark jb-text-light">
+                <div class="jb-card-header">
+                    <h6 class="jb-mb-0 jb-text-white">
+                        <i class="fa fa-code jb-mr-2" aria-hidden="true"></i>
+                        {{str.sample_csv}}
+                    </h6>
+                </div>
+                <div class="jb-card-body">
+                    <pre class="jb-mb-0 jb-text-light jb-small"><code>{{{sample}}}</code></pre>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
-    {{! Form }}
-    {{{formhtml}}}
+    {{! Form Card }}
+    <main id="import-form-content">
+        <section class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="import-form-heading">
+            <div class="jb-card-header jb-bg-primary jb-text-white">
+                <h5 class="jb-mb-0" id="import-form-heading">
+                    <i class="fa fa-upload jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}uploadcsv, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="jb-card-body">
+                {{{formhtml}}}
+            </div>
+        </section>
+    </main>
 </div>
+{{/loading}}

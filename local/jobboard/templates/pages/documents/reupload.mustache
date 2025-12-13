@@ -2,11 +2,19 @@
     @template local_jobboard/pages/reupload_document
 
     Document reupload page.
+    Uses jb-* CSS classes for consistent styling.
+    Includes accessibility features, animations, and loading states.
 
     Context variables required for this template:
     * pagetitle - string - Page title
     * helptext - string - Help text message
     * formhtml - string - Rendered form HTML
+    * documentname - string - Original document name
+    * documenttype - string - Document type label
+    * rejectreason - string - Reason for rejection
+    * backurl - string - Back URL
+    * loading - bool - Show skeleton loading state
+    * str - object - Language strings
 
     Example context (json):
     {
@@ -14,16 +22,125 @@
         "helptext": "Please upload a new version of the rejected document."
     }
 }}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-local-jobboard-reupload" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton-title jb-mb-4" style="width: 200px;"></div>
+    <div class="jb-skeleton-text jb-mb-4" style="width: 100%; height: 80px;"></div>
+    <div class="jb-card">
+        <div class="jb-card-body">
+            <div class="jb-skeleton-text" style="height: 200px;"></div>
+        </div>
+    </div>
+</div>
+{{/loading}}
 
+{{^loading}}
 <div class="jb-local-jobboard-reupload" data-region="jobboard-reupload-document">
-    {{! Page Heading }}
-    <h2 class="jb-mb-4">{{pagetitle}}</h2>
+    {{! Skip Link for Accessibility }}
+    <a href="#reupload-form-content" class="jb-skip-link">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
+        <h2 class="jb-mb-0">
+            <i class="fa fa-upload jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h2>
+        {{#backurl}}
+        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+            {{#str}}back, local_jobboard{{/str}}
+        </a>
+        {{/backurl}}
+    </header>
+
+    {{! Rejection Info Alert }}
+    {{#rejectreason}}
+    <div class="jb-alert jb-alert-danger jb-d-flex jb-align-items-start jb-mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
+        <div class="jb-icon-circle jb-bg-danger jb-text-white jb-mr-3 jb-flex-shrink-0">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+        </div>
+        <div>
+            <strong class="jb-d-block jb-mb-1">{{#str}}documentrejected, local_jobboard{{/str}}</strong>
+            <p class="jb-mb-0">{{{rejectreason}}}</p>
+        </div>
+    </div>
+    {{/rejectreason}}
+
+    {{! Document Info Card }}
+    {{#documentname}}
+    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="document-info-heading">
+        <div class="jb-card-header jb-bg-light">
+            <h5 class="jb-mb-0" id="document-info-heading">
+                <i class="fa fa-file-alt jb-text-info jb-mr-2" aria-hidden="true"></i>
+                {{#str}}documentinfo, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="jb-card-body">
+            <dl class="jb-row jb-mb-0">
+                <dt class="jb-col-sm-4 jb-text-muted">
+                    <i class="fa fa-file jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}documentname, local_jobboard{{/str}}
+                </dt>
+                <dd class="jb-col-sm-8"><strong>{{documentname}}</strong></dd>
+
+                {{#documenttype}}
+                <dt class="jb-col-sm-4 jb-text-muted">
+                    <i class="fa fa-tag jb-mr-1" aria-hidden="true"></i>
+                    {{#str}}documenttype, local_jobboard{{/str}}
+                </dt>
+                <dd class="jb-col-sm-8">
+                    <span class="jb-badge jb-badge-secondary">{{documenttype}}</span>
+                </dd>
+                {{/documenttype}}
+            </dl>
+        </div>
+    </section>
+    {{/documentname}}
 
     {{! Help Text Alert }}
-    <div class="jb-alert jb-alert-info">
-        {{helptext}}
+    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-start jb-mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.15s;">
+        <i class="fa fa-info-circle jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+        <div>
+            <strong class="jb-d-block jb-mb-1">{{#str}}reuploadinstructions, local_jobboard{{/str}}</strong>
+            <p class="jb-mb-0">{{helptext}}</p>
+        </div>
     </div>
 
-    {{! Form }}
-    {{{formhtml}}}
+    {{! Upload Form Card }}
+    <main id="reupload-form-content">
+        <section class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.2s;" aria-labelledby="upload-form-heading">
+            <div class="jb-card-header jb-bg-primary jb-text-white">
+                <h5 class="jb-mb-0" id="upload-form-heading">
+                    <i class="fa fa-cloud-upload-alt jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}uploadnewversion, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="jb-card-body">
+                {{{formhtml}}}
+            </div>
+        </section>
+    </main>
+
+    {{! Tips Section }}
+    <aside class="jb-mt-4 jb-fade-in" style="animation-delay: 0.25s;">
+        <div class="jb-card jb-card-shadow jb-bg-light">
+            <div class="jb-card-header jb-bg-secondary jb-text-white">
+                <h6 class="jb-mb-0">
+                    <i class="fa fa-lightbulb jb-mr-2" aria-hidden="true"></i>
+                    {{#str}}uploadtips, local_jobboard{{/str}}
+                </h6>
+            </div>
+            <div class="jb-card-body">
+                <ul class="jb-mb-0 jb-small">
+                    <li>{{#str}}uploadtip1, local_jobboard{{/str}}</li>
+                    <li>{{#str}}uploadtip2, local_jobboard{{/str}}</li>
+                    <li>{{#str}}uploadtip3, local_jobboard{{/str}}</li>
+                </ul>
+            </div>
+        </div>
+    </aside>
 </div>
+{{/loading}}
