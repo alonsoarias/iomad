@@ -3172,6 +3172,166 @@ $string['tour_reports_table_content'] = 'Los datos detallados se muestran en est
 $string['tour_reports_progress_title'] = 'Barras de Progreso';
 $string['tour_reports_progress_content'] = 'Representación visual de porcentajes y progreso.';
 
+// =============================================================================
+// CADENAS DE ACCESIBILIDAD
+// =============================================================================
+
+$string['skiptocontent'] = 'Saltar al contenido';
+$string['skiptomain'] = 'Saltar al contenido principal';
+$string['skiptonavigation'] = 'Saltar a la navegación';
+
+// =============================================================================
+// MARCADORES DE PLANTILLA
+// =============================================================================
+
+$string['placeholder_username'] = 'Nombre completo del usuario';
+$string['placeholder_vacancytitle'] = 'Título de la vacante';
+$string['placeholder_sitename'] = 'Nombre del sitio';
+$string['placeholder_applicationid'] = 'ID de la postulación';
+$string['placeholder_convocatorianame'] = 'Nombre de la convocatoria';
+$string['placeholder_deadline'] = 'Fecha límite de postulación';
+
+// =============================================================================
+// CADENAS DE CARGA Y DOCUMENTOS
+// =============================================================================
+
+$string['uploadtips'] = 'Consejos de Carga';
+$string['uploadtip1'] = 'Asegúrese de que el documento sea claro y legible';
+$string['uploadtip2'] = 'El tamaño del archivo no debe exceder el máximo permitido';
+$string['uploadtip3'] = 'Formatos soportados: PDF, JPG, PNG';
+$string['reuploadinstructions'] = 'Instrucciones de Recarga';
+$string['uploadnewversion'] = 'Cargar Nueva Versión';
+$string['documentrejected'] = 'Documento Rechazado';
+$string['documentinfo'] = 'Información del Documento';
+$string['documentname'] = 'Nombre del Documento';
+$string['documenttype'] = 'Tipo de Documento';
+
+// =============================================================================
+// CADENAS DE IMPORTACIÓN/EXPORTACIÓN
+// =============================================================================
+
+$string['importwarningtitle'] = 'Advertencia Importante';
+$string['previewdata'] = 'Vista Previa de Datos';
+$string['nopreviewdata'] = 'No hay datos disponibles para vista previa';
+$string['previewsummary'] = 'Resumen de Vista Previa';
+$string['recordstoprocess'] = 'Registros a procesar';
+$string['confirmimport'] = 'Confirmar Importación';
+$string['exemptionsimported'] = 'Exenciones importadas';
+$string['exemptionsskipped'] = 'Exenciones omitidas';
+$string['datatorexport'] = 'Datos a exportar';
+$string['fullexport_info'] = 'Se incluirán todos los datos de configuración';
+
+// =============================================================================
+// CADENAS DE ASIGNACIÓN DE REVISORES
+// =============================================================================
+
+$string['unassignedapplications'] = 'Postulaciones sin asignar';
+$string['availablereviewers'] = 'Revisores disponibles';
+$string['totalassigned'] = 'Total asignados';
+$string['avgworkload'] = 'Carga promedio';
+$string['reviewerworkload'] = 'Carga de Trabajo del Revisor';
+$string['activeassignments'] = 'asignaciones activas';
+$string['reviewed'] = 'Revisados';
+$string['avgtime'] = 'Tiempo prom.';
+$string['autoassign'] = 'Asignación Automática';
+$string['autoassignall'] = 'Asignar Todo Automáticamente';
+$string['autoassignhelp'] = 'Distribuye automáticamente las postulaciones sin asignar de manera equitativa entre los revisores disponibles';
+$string['maxperreviewer'] = 'Máximo por revisor';
+$string['manualassign'] = 'Asignación Manual';
+$string['pendingassignment'] = 'pendiente de asignación';
+$string['assignto'] = 'Asignar a';
+$string['selectreviewer'] = 'Seleccione un revisor';
+$string['assignselected'] = 'Asignar Seleccionados';
+$string['alldone'] = '¡Todo Listo!';
+$string['nounassignedapplications'] = 'No hay postulaciones sin asignar en este momento';
+$string['noreviewers'] = 'No hay revisores disponibles';
+$string['allvacancies'] = 'Todas las vacantes';
+$string['bulkvalidation'] = 'Validación Masiva';
+$string['reviewapplications'] = 'Revisar Postulaciones';
+
+// =============================================================================
+// CADENAS DE REVISORES POR PROGRAMA
+// =============================================================================
+
+$string['totalreviewers'] = 'Total de Revisores';
+$string['activereviewers'] = 'Revisores Activos';
+$string['leadreviewers'] = 'Revisores Líderes';
+$string['programswithreviewers'] = 'Programas con Revisores';
+$string['noprogramswithreviewers'] = 'Ningún programa tiene revisores asignados aún';
+$string['addreviewerstoprogram'] = 'Agregar Revisores a Programa';
+$string['addreviewer'] = 'Agregar Revisor';
+$string['assignedreviewers'] = 'Revisores Asignados';
+$string['noreviewersforprogram'] = 'No hay revisores asignados a este programa';
+$string['selectuser'] = 'Seleccionar usuario';
+$string['role_reviewer'] = 'Revisor';
+$string['role_lead_reviewer'] = 'Revisor Líder';
+$string['nousersavailable'] = 'No hay usuarios disponibles para asignar';
+$string['changerole'] = 'Cambiar rol';
+$string['confirmremovereviewer'] = '¿Está seguro de que desea eliminar a este revisor?';
+$string['programreviewerhelp'] = 'Los revisores asignados a un programa pueden revisar postulaciones para todas las vacantes dentro de esa categoría de programa.';
+
+// =============================================================================
+// CADENAS DE SELECCIÓN DE VACANTE
+// =============================================================================
+
+$string['selectconvocatoriafirst'] = 'Seleccione una Convocatoria Primero';
+$string['createvacancyinconvocatoriadesc'] = 'Para crear una nueva vacante, primero debe seleccionar a qué convocatoria pertenece.';
+$string['noconvocatoriasavailable'] = 'No hay convocatorias disponibles';
+$string['gotocreateconvocatoria'] = 'Crear una Convocatoria';
+$string['selectconvocatoria'] = 'Seleccionar Convocatoria';
+$string['addvacancy'] = 'Agregar Vacante';
+$string['addconvocatoria'] = 'Crear Nueva Convocatoria';
+$string['or'] = 'o';
+
+// =============================================================================
+// CADENAS DE MIGRACIÓN
+// =============================================================================
+
+$string['dryrunresults'] = 'Resultados de Prueba';
+
+// =============================================================================
+// CADENAS DE ESTADO
+// =============================================================================
+
+$string['inactive'] = 'Inactivo';
+$string['active'] = 'Activo';
+$string['assigned'] = 'Asignado';
+
+// =============================================================================
+// CADENAS DE INTERFAZ MISCELÁNEAS
+// =============================================================================
+
+$string['pagination'] = 'Paginación';
+$string['browservacancies'] = 'Explorar Vacantes';
+$string['novacancies'] = 'Sin vacantes';
+$string['viewvacancies'] = 'Ver Vacantes';
+$string['viewconvocatoria'] = 'Ver Convocatoria';
+$string['noconvocatorias'] = 'No se encontraron convocatorias';
+$string['noconvocatorias_desc'] = 'No hay convocatorias disponibles en este momento. Por favor, vuelva a consultar más tarde.';
+$string['convocatoria_status_open'] = 'Abierta';
+$string['convocatoria_status_closed'] = 'Cerrada';
+$string['daysremaining'] = 'días restantes';
+
+// =============================================================================
+// CADENAS DEL PANEL DE CONTROL
+// =============================================================================
+
+$string['myreviews_desc'] = 'Revise las postulaciones asignadas a usted';
+$string['pending_reviews_alert'] = 'Tiene {$a} postulaciones pendientes de revisión';
+$string['attentionrequired'] = 'Atención Requerida';
+$string['nopendingreview'] = 'Sin revisiones pendientes. ¡Buen trabajo!';
+$string['viewmyreviews'] = 'Ver Mis Revisiones';
+$string['completedreviews'] = 'Revisiones Completadas';
+$string['critical'] = 'Crítico';
+$string['closingon'] = 'Cierra el';
+$string['viewpublicpage'] = 'Ver Página Pública';
+$string['managevacancies'] = 'Gestionar Vacantes';
+$string['notifications'] = 'Notificaciones';
+$string['mystats'] = 'Mis Estadísticas';
+$string['reviewertasks'] = 'Tareas del Revisor';
+$string['recentactivity'] = 'Actividad Reciente';
+$string['statistics'] = 'Estadísticas';
+
 // Mensajes de error
 $string['error:usernotfound'] = 'Usuario no encontrado';
 $string['unknownuser'] = 'Usuario desconocido';

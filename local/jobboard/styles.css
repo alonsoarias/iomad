@@ -3216,3 +3216,355 @@
 .local-jobboard-public .jb-text-inherit:hover {
     color: inherit;
 }
+
+/* ==========================================================================
+   BORDER LEFT COLOR VARIANTS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-border-left-primary,
+.local-jobboard-dashboard .jb-border-left-primary,
+.local-jobboard-public .jb-border-left-primary {
+    border-left: 4px solid var(--jb-primary) !important;
+}
+
+[data-region^="jobboard"] .jb-border-left-success,
+.local-jobboard-dashboard .jb-border-left-success,
+.local-jobboard-public .jb-border-left-success {
+    border-left: 4px solid var(--jb-success) !important;
+}
+
+[data-region^="jobboard"] .jb-border-left-warning,
+.local-jobboard-dashboard .jb-border-left-warning,
+.local-jobboard-public .jb-border-left-warning {
+    border-left: 4px solid var(--jb-warning) !important;
+}
+
+[data-region^="jobboard"] .jb-border-left-danger,
+.local-jobboard-dashboard .jb-border-left-danger,
+.local-jobboard-public .jb-border-left-danger {
+    border-left: 4px solid var(--jb-danger) !important;
+}
+
+[data-region^="jobboard"] .jb-border-left-info,
+.local-jobboard-dashboard .jb-border-left-info,
+.local-jobboard-public .jb-border-left-info {
+    border-left: 4px solid var(--jb-info) !important;
+}
+
+[data-region^="jobboard"] .jb-border-left-secondary,
+.local-jobboard-dashboard .jb-border-left-secondary,
+.local-jobboard-public .jb-border-left-secondary {
+    border-left: 4px solid var(--jb-secondary) !important;
+}
+
+/* ==========================================================================
+   ADDITIONAL GRADIENT BACKGROUNDS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-bg-gradient-info,
+.local-jobboard-dashboard .jb-bg-gradient-info,
+.local-jobboard-public .jb-bg-gradient-info {
+    background: linear-gradient(135deg, var(--jb-info) 0%, #0aa2c0 100%);
+}
+
+[data-region^="jobboard"] .jb-bg-gradient-success,
+.local-jobboard-dashboard .jb-bg-gradient-success,
+.local-jobboard-public .jb-bg-gradient-success {
+    background: linear-gradient(135deg, var(--jb-success) 0%, #146c43 100%);
+}
+
+[data-region^="jobboard"] .jb-bg-gradient-warning,
+.local-jobboard-dashboard .jb-bg-gradient-warning,
+.local-jobboard-public .jb-bg-gradient-warning {
+    background: linear-gradient(135deg, var(--jb-warning) 0%, #cc9a06 100%);
+}
+
+[data-region^="jobboard"] .jb-bg-gradient-danger,
+.local-jobboard-dashboard .jb-bg-gradient-danger,
+.local-jobboard-public .jb-bg-gradient-danger {
+    background: linear-gradient(135deg, var(--jb-danger) 0%, #b02a37 100%);
+}
+
+[data-region^="jobboard"] .jb-bg-gradient-secondary,
+.local-jobboard-dashboard .jb-bg-gradient-secondary,
+.local-jobboard-public .jb-bg-gradient-secondary {
+    background: linear-gradient(135deg, var(--jb-secondary) 0%, #565e64 100%);
+}
+
+/* ==========================================================================
+   STRETCHED LINK
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-stretched-link::after,
+.local-jobboard-dashboard .jb-stretched-link::after,
+.local-jobboard-public .jb-stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    content: "";
+}
+
+/* ==========================================================================
+   ADDITIONAL BORDER COLORS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-border-secondary,
+.local-jobboard-dashboard .jb-border-secondary,
+.local-jobboard-public .jb-border-secondary {
+    border-color: var(--jb-secondary) !important;
+}
+
+[data-region^="jobboard"] .jb-border-primary,
+.local-jobboard-dashboard .jb-border-primary,
+.local-jobboard-public .jb-border-primary {
+    border-color: var(--jb-primary) !important;
+}
+
+[data-region^="jobboard"] .jb-border-info,
+.local-jobboard-dashboard .jb-border-info,
+.local-jobboard-public .jb-border-info {
+    border-color: var(--jb-info) !important;
+}
+
+[data-region^="jobboard"] .jb-border-danger,
+.local-jobboard-dashboard .jb-border-danger,
+.local-jobboard-public .jb-border-danger {
+    border-color: var(--jb-danger) !important;
+}
+
+/* ==========================================================================
+   HOVER SHADOW EFFECT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-hover-shadow,
+.local-jobboard-dashboard .jb-hover-shadow,
+.local-jobboard-public .jb-hover-shadow {
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+[data-region^="jobboard"] .jb-hover-shadow:hover,
+.local-jobboard-dashboard .jb-hover-shadow:hover,
+.local-jobboard-public .jb-hover-shadow:hover {
+    box-shadow: var(--jb-shadow);
+}
+
+/* ==========================================================================
+   HOVER BACKGROUND LIGHT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-hover-bg-light,
+.local-jobboard-dashboard .jb-hover-bg-light,
+.local-jobboard-public .jb-hover-bg-light {
+    transition: background-color 0.15s ease-in-out;
+}
+
+[data-region^="jobboard"] .jb-hover-bg-light:hover,
+.local-jobboard-dashboard .jb-hover-bg-light:hover,
+.local-jobboard-public .jb-hover-bg-light:hover {
+    background-color: var(--jb-light);
+}
+
+/* ==========================================================================
+   GAP UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-gap-1,
+.local-jobboard-dashboard .jb-gap-1,
+.local-jobboard-public .jb-gap-1 { gap: 0.25rem; }
+
+[data-region^="jobboard"] .jb-gap-2,
+.local-jobboard-dashboard .jb-gap-2,
+.local-jobboard-public .jb-gap-2 { gap: 0.5rem; }
+
+[data-region^="jobboard"] .jb-gap-3,
+.local-jobboard-dashboard .jb-gap-3,
+.local-jobboard-public .jb-gap-3 { gap: 1rem; }
+
+/* ==========================================================================
+   MIN WIDTH UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-min-w-0,
+.local-jobboard-dashboard .jb-min-w-0,
+.local-jobboard-public .jb-min-w-0 {
+    min-width: 0;
+}
+
+/* ==========================================================================
+   TEXT TRUNCATE MULTILINE
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-text-truncate-2,
+.local-jobboard-dashboard .jb-text-truncate-2,
+.local-jobboard-public .jb-text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+[data-region^="jobboard"] .jb-text-truncate-3,
+.local-jobboard-dashboard .jb-text-truncate-3,
+.local-jobboard-public .jb-text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   OPACITY UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-opacity-25,
+.local-jobboard-dashboard .jb-opacity-25,
+.local-jobboard-public .jb-opacity-25 { opacity: 0.25; }
+
+[data-region^="jobboard"] .jb-opacity-50,
+.local-jobboard-dashboard .jb-opacity-50,
+.local-jobboard-public .jb-opacity-50 { opacity: 0.5; }
+
+[data-region^="jobboard"] .jb-opacity-75,
+.local-jobboard-dashboard .jb-opacity-75,
+.local-jobboard-public .jb-opacity-75 { opacity: 0.75; }
+
+[data-region^="jobboard"] .jb-opacity-85,
+.local-jobboard-dashboard .jb-opacity-85,
+.local-jobboard-public .jb-opacity-85 { opacity: 0.85; }
+
+/* ==========================================================================
+   LEAD TEXT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-lead,
+.local-jobboard-dashboard .jb-lead,
+.local-jobboard-public .jb-lead {
+    font-size: 1.125rem;
+    font-weight: 300;
+}
+
+/* ==========================================================================
+   BORDER TOP UTILITY
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-border-top,
+.local-jobboard-dashboard .jb-border-top,
+.local-jobboard-public .jb-border-top {
+    border-top: 1px solid var(--jb-border);
+}
+
+[data-region^="jobboard"] .jb-border-light,
+.local-jobboard-dashboard .jb-border-light,
+.local-jobboard-public .jb-border-light {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* ==========================================================================
+   CUSTOM CONTROLS (CHECKBOXES)
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-custom-control,
+.local-jobboard-dashboard .jb-custom-control,
+.local-jobboard-public .jb-custom-control {
+    position: relative;
+    display: block;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+[data-region^="jobboard"] .jb-custom-control-input,
+.local-jobboard-dashboard .jb-custom-control-input,
+.local-jobboard-public .jb-custom-control-input {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    width: 1rem;
+    height: 1.25rem;
+    opacity: 0;
+}
+
+[data-region^="jobboard"] .jb-custom-control-label,
+.local-jobboard-dashboard .jb-custom-control-label,
+.local-jobboard-public .jb-custom-control-label {
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+[data-region^="jobboard"] .jb-custom-control-label::before,
+.local-jobboard-dashboard .jb-custom-control-label::before,
+.local-jobboard-public .jb-custom-control-label::before {
+    position: absolute;
+    top: 0.25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: var(--jb-white);
+    border: 1px solid var(--jb-border);
+    border-radius: var(--jb-border-radius-sm);
+}
+
+[data-region^="jobboard"] .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::before,
+.local-jobboard-dashboard .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::before,
+.local-jobboard-public .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::before {
+    background-color: var(--jb-primary);
+    border-color: var(--jb-primary);
+}
+
+[data-region^="jobboard"] .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::after,
+.local-jobboard-dashboard .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::after,
+.local-jobboard-public .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::after {
+    position: absolute;
+    top: 0.25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    content: "";
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e") center/50% 50% no-repeat;
+}
+
+/* ==========================================================================
+   SCREEN READER ONLY
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-sr-only,
+.local-jobboard-dashboard .jb-sr-only,
+.local-jobboard-public .jb-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ==========================================================================
+   FORM INLINE
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-form-inline,
+.local-jobboard-dashboard .jb-form-inline,
+.local-jobboard-public .jb-form-inline {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+
+[data-region^="jobboard"] .jb-form-label,
+.local-jobboard-dashboard .jb-form-label,
+.local-jobboard-public .jb-form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}

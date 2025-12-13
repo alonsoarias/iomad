@@ -3169,6 +3169,166 @@ $string['changeconvocatoria'] = 'Change Convocatoria';
 $string['noconvocatorias_forreports'] = 'No convocatorias available. You must create at least one convocatoria before viewing reports.';
 $string['continue'] = 'Continue';
 
+// =============================================================================
+// ACCESSIBILITY STRINGS
+// =============================================================================
+
+$string['skiptocontent'] = 'Skip to content';
+$string['skiptomain'] = 'Skip to main content';
+$string['skiptonavigation'] = 'Skip to navigation';
+
+// =============================================================================
+// TEMPLATE PLACEHOLDERS
+// =============================================================================
+
+$string['placeholder_username'] = 'User\'s full name';
+$string['placeholder_vacancytitle'] = 'Vacancy title';
+$string['placeholder_sitename'] = 'Site name';
+$string['placeholder_applicationid'] = 'Application ID';
+$string['placeholder_convocatorianame'] = 'Convocatoria name';
+$string['placeholder_deadline'] = 'Application deadline';
+
+// =============================================================================
+// UPLOAD & DOCUMENT STRINGS
+// =============================================================================
+
+$string['uploadtips'] = 'Upload Tips';
+$string['uploadtip1'] = 'Ensure the document is clear and readable';
+$string['uploadtip2'] = 'File size must not exceed the maximum allowed';
+$string['uploadtip3'] = 'Supported formats: PDF, JPG, PNG';
+$string['reuploadinstructions'] = 'Reupload Instructions';
+$string['uploadnewversion'] = 'Upload New Version';
+$string['documentrejected'] = 'Document Rejected';
+$string['documentinfo'] = 'Document Information';
+$string['documentname'] = 'Document Name';
+$string['documenttype'] = 'Document Type';
+
+// =============================================================================
+// IMPORT/EXPORT STRINGS
+// =============================================================================
+
+$string['importwarningtitle'] = 'Important Warning';
+$string['previewdata'] = 'Preview Data';
+$string['nopreviewdata'] = 'No data available for preview';
+$string['previewsummary'] = 'Preview Summary';
+$string['recordstoprocess'] = 'Records to process';
+$string['confirmimport'] = 'Confirm Import';
+$string['exemptionsimported'] = 'Exemptions imported';
+$string['exemptionsskipped'] = 'Exemptions skipped';
+$string['datatorexport'] = 'Data to export';
+$string['fullexport_info'] = 'All configuration data will be included';
+
+// =============================================================================
+// REVIEWER ASSIGNMENT STRINGS
+// =============================================================================
+
+$string['unassignedapplications'] = 'Unassigned applications';
+$string['availablereviewers'] = 'Available reviewers';
+$string['totalassigned'] = 'Total assigned';
+$string['avgworkload'] = 'Avg. workload';
+$string['reviewerworkload'] = 'Reviewer Workload';
+$string['activeassignments'] = 'active assignments';
+$string['reviewed'] = 'Reviewed';
+$string['avgtime'] = 'Avg. time';
+$string['autoassign'] = 'Auto-Assign';
+$string['autoassignall'] = 'Auto-assign All';
+$string['autoassignhelp'] = 'Automatically distributes unassigned applications evenly among available reviewers';
+$string['maxperreviewer'] = 'Max per reviewer';
+$string['manualassign'] = 'Manual Assignment';
+$string['pendingassignment'] = 'pending assignment';
+$string['assignto'] = 'Assign to';
+$string['selectreviewer'] = 'Select a reviewer';
+$string['assignselected'] = 'Assign Selected';
+$string['alldone'] = 'All Done!';
+$string['nounassignedapplications'] = 'There are no unassigned applications at this time';
+$string['noreviewers'] = 'No reviewers available';
+$string['allvacancies'] = 'All vacancies';
+$string['bulkvalidation'] = 'Bulk Validation';
+$string['reviewapplications'] = 'Review Applications';
+
+// =============================================================================
+// PROGRAM REVIEWERS STRINGS
+// =============================================================================
+
+$string['totalreviewers'] = 'Total Reviewers';
+$string['activereviewers'] = 'Active Reviewers';
+$string['leadreviewers'] = 'Lead Reviewers';
+$string['programswithreviewers'] = 'Programs with Reviewers';
+$string['noprogramswithreviewers'] = 'No programs have reviewers assigned yet';
+$string['addreviewerstoprogram'] = 'Add Reviewers to Program';
+$string['addreviewer'] = 'Add Reviewer';
+$string['assignedreviewers'] = 'Assigned Reviewers';
+$string['noreviewersforprogram'] = 'No reviewers assigned to this program';
+$string['selectuser'] = 'Select user';
+$string['role_reviewer'] = 'Reviewer';
+$string['role_lead_reviewer'] = 'Lead Reviewer';
+$string['nousersavailable'] = 'No users available for assignment';
+$string['changerole'] = 'Change role';
+$string['confirmremovereviewer'] = 'Are you sure you want to remove this reviewer?';
+$string['programreviewerhelp'] = 'Reviewers assigned to a program can review applications for all vacancies within that program category.';
+
+// =============================================================================
+// VACANCY SELECTION STRINGS
+// =============================================================================
+
+$string['selectconvocatoriafirst'] = 'Select a Convocatoria First';
+$string['createvacancyinconvocatoriadesc'] = 'To create a new vacancy, you must first select which convocatoria it belongs to.';
+$string['noconvocatoriasavailable'] = 'No convocatorias available';
+$string['gotocreateconvocatoria'] = 'Create a Convocatoria';
+$string['selectconvocatoria'] = 'Select Convocatoria';
+$string['addvacancy'] = 'Add Vacancy';
+$string['addconvocatoria'] = 'Create New Convocatoria';
+$string['or'] = 'or';
+
+// =============================================================================
+// MIGRATION STRINGS
+// =============================================================================
+
+$string['dryrunresults'] = 'Dry Run Results';
+
+// =============================================================================
+// STATUS STRINGS
+// =============================================================================
+
+$string['inactive'] = 'Inactive';
+$string['active'] = 'Active';
+$string['assigned'] = 'Assigned';
+
+// =============================================================================
+// MISC UI STRINGS
+// =============================================================================
+
+$string['pagination'] = 'Pagination';
+$string['browservacancies'] = 'Browse Vacancies';
+$string['novacancies'] = 'No vacancies';
+$string['viewvacancies'] = 'View Vacancies';
+$string['viewconvocatoria'] = 'View Convocatoria';
+$string['noconvocatorias'] = 'No convocatorias found';
+$string['noconvocatorias_desc'] = 'There are no convocatorias available at this time. Please check back later.';
+$string['convocatoria_status_open'] = 'Open';
+$string['convocatoria_status_closed'] = 'Closed';
+$string['daysremaining'] = 'days remaining';
+
+// =============================================================================
+// DASHBOARD STRINGS
+// =============================================================================
+
+$string['myreviews_desc'] = 'Review applications assigned to you';
+$string['pending_reviews_alert'] = 'You have {$a} applications pending review';
+$string['attentionrequired'] = 'Attention Required';
+$string['nopendingreview'] = 'No pending reviews. Great job!';
+$string['viewmyreviews'] = 'View My Reviews';
+$string['completedreviews'] = 'Completed Reviews';
+$string['critical'] = 'Critical';
+$string['closingon'] = 'Closing on';
+$string['viewpublicpage'] = 'View Public Page';
+$string['managevacancies'] = 'Manage Vacancies';
+$string['notifications'] = 'Notifications';
+$string['mystats'] = 'My Statistics';
+$string['reviewertasks'] = 'Reviewer Tasks';
+$string['recentactivity'] = 'Recent Activity';
+$string['statistics'] = 'Statistics';
+
 // Error messages
 $string['error:usernotfound'] = 'User not found';
 $string['unknownuser'] = 'Unknown user';
