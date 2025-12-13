@@ -168,7 +168,8 @@
                     <article class="jb-card jb-card-h100 jb-card-shadow jb-hover-lift jb-fade-in-up">
                         <div class="jb-card-header jb-bg-{{color}} jb-text-white">
                             <h3 class="jb-fs-6 jb-mb-0 jb-d-flex jb-align-items-center">
-                                <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
+                                {{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}
+                                {{^icon}}<i class="fa fa-folder jb-mr-2" aria-hidden="true"></i>{{/icon}}
                                 {{title}}
                             </h3>
                         </div>
@@ -208,14 +209,16 @@
                 <div class="jb-col-md-4 jb-col-sm-6 jb-mb-3">
                     <div class="jb-card jb-border-0 jb-bg-light jb-card-h100 jb-hover-shadow">
                         <div class="jb-card-body jb-d-flex jb-align-items-start">
-                            <div class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-3 jb-mr-3 jb-flex-shrink-0">
-                                <i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>
+                            <div class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-3 jb-mr-3 jb-flex-shrink-0 jb-d-flex jb-align-items-center jb-justify-content-center">
+                                {{#icon}}<i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>{{/icon}}
+                                {{^icon}}<i class="fa fa-tasks fa-lg" aria-hidden="true"></i>{{/icon}}
                             </div>
                             <div class="jb-flex-grow-1 jb-min-w-0">
                                 <h4 class="jb-fs-6 jb-mb-1">{{title}}</h4>
                                 <p class="jb-small jb-text-muted jb-mb-2 jb-text-truncate-2">{{description}}</p>
                                 <a href="{{url}}" class="jb-btn jb-btn-sm jb-btn-outline-{{color}}">
-                                    <i class="fa fa-{{buttonicon}} jb-mr-1" aria-hidden="true"></i>
+                                    {{#buttonicon}}<i class="fa fa-{{buttonicon}} jb-mr-1" aria-hidden="true"></i>{{/buttonicon}}
+                                    {{^buttonicon}}<i class="fa fa-arrow-right jb-mr-1" aria-hidden="true"></i>{{/buttonicon}}
                                     {{buttonlabel}}
                                 </a>
                             </div>
@@ -237,14 +240,16 @@
                 <div class="jb-col-md-4 jb-col-sm-6 jb-mb-3">
                     <div class="jb-card jb-border-0 jb-bg-light jb-card-h100 jb-hover-shadow">
                         <div class="jb-card-body jb-d-flex jb-align-items-start">
-                            <div class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-3 jb-mr-3 jb-flex-shrink-0">
-                                <i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>
+                            <div class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-3 jb-mr-3 jb-flex-shrink-0 jb-d-flex jb-align-items-center jb-justify-content-center">
+                                {{#icon}}<i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>{{/icon}}
+                                {{^icon}}<i class="fa fa-chart-pie fa-lg" aria-hidden="true"></i>{{/icon}}
                             </div>
                             <div class="jb-flex-grow-1 jb-min-w-0">
                                 <h4 class="jb-fs-6 jb-mb-1">{{title}}</h4>
                                 <p class="jb-small jb-text-muted jb-mb-2 jb-text-truncate-2">{{description}}</p>
                                 <a href="{{url}}" class="jb-btn jb-btn-sm jb-btn-outline-{{color}}">
-                                    <i class="fa fa-{{buttonicon}} jb-mr-1" aria-hidden="true"></i>
+                                    {{#buttonicon}}<i class="fa fa-{{buttonicon}} jb-mr-1" aria-hidden="true"></i>{{/buttonicon}}
+                                    {{^buttonicon}}<i class="fa fa-chart-line jb-mr-1" aria-hidden="true"></i>{{/buttonicon}}
                                     {{buttonlabel}}
                                 </a>
                             </div>
@@ -266,8 +271,9 @@
                 <div class="jb-col-md-3 jb-col-sm-6 jb-mb-3">
                     <a href="{{url}}" class="jb-card jb-border-0 jb-bg-light jb-card-h100 jb-hover-lift jb-text-decoration-none">
                         <div class="jb-card-body jb-text-center jb-py-4">
-                            <div class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-3 jb-mx-auto jb-mb-3" style="width: 60px; height: 60px;">
-                                <i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>
+                            <div class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-3 jb-mx-auto jb-mb-3 jb-d-flex jb-align-items-center jb-justify-content-center" style="width: 60px; height: 60px;">
+                                {{#icon}}<i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>{{/icon}}
+                                {{^icon}}<i class="fa fa-cog fa-lg" aria-hidden="true"></i>{{/icon}}
                             </div>
                             <h4 class="jb-fs-6 jb-mb-1 jb-text-dark">{{title}}</h4>
                             <p class="jb-small jb-text-muted jb-mb-0">{{description}}</p>
@@ -377,7 +383,8 @@
                     <article class="jb-card jb-card-h100 jb-card-shadow jb-hover-lift jb-fade-in-up">
                         <div class="jb-card-header jb-bg-{{color}} jb-text-white">
                             <h3 class="jb-fs-6 jb-mb-0">
-                                <i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>
+                                {{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}
+                                {{^icon}}<i class="fa fa-file-alt jb-mr-2" aria-hidden="true"></i>{{/icon}}
                                 {{title}}
                             </h3>
                         </div>
