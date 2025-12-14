@@ -21,802 +21,235 @@
 
 ## 2. OBJETIVO DE ESTA RECONSTRUCCIÓN
 
-Reconstruir desde cero el sistema visual completo del plugin, recreando:
+Realizar una **reconstrucción TOTAL desde cero** del sistema visual y de idiomas del plugin, garantizando que el resultado final cumpla con TODAS las funcionalidades, vistas, configuraciones y elementos que el plugin tiene planteados en su arquitectura.
 
-1. Archivo `styles.css` (por fases, junto con cada template)
+**Elementos a reconstruir:**
+1. Archivo `styles.css` completo (por fases, no de una vez)
 2. Todos los templates Mustache en `templates/`
 3. Todas las cadenas de idiomas en `lang/en/` y `lang/es/`
 4. Todos los módulos AMD en `amd/src/`
 5. Todos los User Tours en `db/tours/`
 
----
-
-## 3. PASO CERO OBLIGATORIO: ELIMINACIÓN DE ARCHIVOS
-
-### 3.1 ANTES DE INICIAR CUALQUIER FASE
-
-**ELIMINAR COMPLETAMENTE los siguientes archivos y carpetas:**
-
-```bash
-# EJECUTAR ESTOS COMANDOS ANTES DE EMPEZAR
-
-# 1. Eliminar carpeta de templates
-rm -rf local/jobboard/templates/
-
-# 2. Eliminar carpeta de idiomas
-rm -rf local/jobboard/lang/
-
-# 3. Eliminar archivo de estilos
-rm -f local/jobboard/styles.css
-
-# 4. Eliminar builds de AMD (se recompilarán)
-rm -rf local/jobboard/amd/build/
-```
-
-### 3.2 Crear Estructura Vacía
-
-Después de eliminar, crear las carpetas vacías:
-
-```bash
-# Crear estructura de carpetas vacía
-mkdir -p local/jobboard/templates/components
-mkdir -p local/jobboard/templates/layouts
-mkdir -p local/jobboard/templates/pages/admin
-mkdir -p local/jobboard/templates/pages/applications
-mkdir -p local/jobboard/templates/pages/convocatorias
-mkdir -p local/jobboard/templates/pages/documents
-mkdir -p local/jobboard/templates/pages/public
-mkdir -p local/jobboard/templates/pages/reports
-mkdir -p local/jobboard/templates/pages/review
-mkdir -p local/jobboard/templates/pages/user
-mkdir -p local/jobboard/templates/pages/vacancies
-
-mkdir -p local/jobboard/lang/en
-mkdir -p local/jobboard/lang/es
-
-# Crear archivo styles.css vacío
-touch local/jobboard/styles.css
-
-# Crear archivos de idioma vacíos con cabecera PHP
-```
-
-### 3.3 Inicializar Archivos Base
-
-**styles.css** - Crear con cabecera y variables CSS únicamente:
-
-```css
-/**
- * Styles for local_jobboard plugin.
- *
- * @package   local_jobboard
- * @copyright 2024-2025 ISER - Instituto Superior de Educación Rural
- * @author    Alonso Arias <soporteplataformas@iser.edu.co>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/* ==========================================================================
-   VARIABLES CSS - BASE DEL SISTEMA
-   ========================================================================== */
-:root {
-    /* Colores principales */
-    --jb-primary: #0d6efd;
-    --jb-primary-hover: #0b5ed7;
-    --jb-primary-light: #e7f1ff;
-    --jb-secondary: #6c757d;
-    --jb-secondary-hover: #5c636a;
-    --jb-success: #198754;
-    --jb-success-hover: #157347;
-    --jb-danger: #dc3545;
-    --jb-danger-hover: #bb2d3b;
-    --jb-warning: #ffc107;
-    --jb-warning-hover: #ffca2c;
-    --jb-info: #0dcaf0;
-    --jb-info-hover: #31d2f2;
-    --jb-light: #f8f9fa;
-    --jb-dark: #212529;
-    --jb-white: #ffffff;
-    --jb-muted: #6c757d;
-    --jb-body-bg: #f8f9fa;
-    --jb-body-color: #212529;
-    
-    /* Espaciado */
-    --jb-spacer-1: 0.25rem;
-    --jb-spacer-2: 0.5rem;
-    --jb-spacer-3: 1rem;
-    --jb-spacer-4: 1.5rem;
-    --jb-spacer-5: 3rem;
-    
-    /* Tipografía */
-    --jb-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --jb-font-size-base: 1rem;
-    --jb-font-size-sm: 0.875rem;
-    --jb-font-size-lg: 1.25rem;
-    --jb-font-size-xs: 0.75rem;
-    --jb-line-height: 1.5;
-    --jb-font-weight-normal: 400;
-    --jb-font-weight-medium: 500;
-    --jb-font-weight-bold: 700;
-    
-    /* Bordes */
-    --jb-border-radius: 0.375rem;
-    --jb-border-radius-sm: 0.25rem;
-    --jb-border-radius-lg: 0.5rem;
-    --jb-border-radius-pill: 50rem;
-    --jb-border-color: #dee2e6;
-    --jb-border-width: 1px;
-    
-    /* Sombras */
-    --jb-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    --jb-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    --jb-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
-    
-    /* Transiciones */
-    --jb-transition-base: all 0.2s ease-in-out;
-    --jb-transition-fast: all 0.15s ease-in-out;
-    --jb-transition-slow: all 0.3s ease-in-out;
-}
-
-/* Los estilos se agregan por fases, junto con cada template creado */
-```
-
-**lang/en/local_jobboard.php** - Crear con cabecera:
-
-```php
-<?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
- * English language strings for local_jobboard.
- *
- * @package   local_jobboard
- * @copyright 2024-2025 ISER - Instituto Superior de Educación Rural
- * @author    Alonso Arias <soporteplataformas@iser.edu.co>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-// Plugin identification.
-$string['pluginname'] = 'Job Board';
-
-// Las cadenas se agregan por fases, junto con cada template creado.
-```
-
-**lang/es/local_jobboard.php** - Crear con cabecera:
-
-```php
-<?php
-// This file is part of Moodle - http://moodle.org/
-// ... (misma cabecera)
-
-/**
- * Spanish language strings for local_jobboard.
- *
- * @package   local_jobboard
- * @copyright 2024-2025 ISER - Instituto Superior de Educación Rural
- * @author    Alonso Arias <soporteplataformas@iser.edu.co>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-// Identificación del plugin.
-$string['pluginname'] = 'Bolsa de Empleo';
-
-// Las cadenas se agregan por fases, junto con cada template creado.
-```
+**Garantía de completitud:**
+- La reconstrucción debe cubrir el 100% de las vistas del plugin
+- Todas las capabilities deben tener strings
+- Todas las configuraciones de settings.php deben tener strings
+- Todos los mensajes de error, validación y confirmación deben existir
+- Todos los elementos del backend (eventos, tareas, CLI) deben tener strings
+- El resultado debe ser funcionalmente equivalente o superior al estado actual
 
 ---
 
-## 4. REGLA FUNDAMENTAL: ANÁLISIS → CREACIÓN SINCRONIZADA
+## 3. ACCIÓN INICIAL OBLIGATORIA: ELIMINACIÓN
+
+### 3.1 Antes de Cualquier Creación
+
+**OBLIGATORIO: Eliminar los siguientes elementos antes de iniciar la reconstrucción:**
+
+| Elemento a Eliminar | Ruta | Motivo |
+|---------------------|------|--------|
+| Carpeta de idiomas | `lang/` | Recrear desde cero con estructura correcta |
+| Carpeta de templates | `templates/` | Recrear con nueva arquitectura |
+| Archivo de estilos | `styles.css` | Recrear por fases con cada template |
+
+### 3.2 Backup Previo
+
+Antes de eliminar, crear respaldo completo con fecha:
+- Copiar `lang/` a carpeta de backup
+- Copiar `templates/` a carpeta de backup
+- Copiar `styles.css` a carpeta de backup
+- Copiar `amd/src/` a carpeta de backup
+
+### 3.3 Verificación Post-Eliminación
+
+Confirmar que las carpetas `lang/` y `templates/` están vacías y que `styles.css` no existe antes de proceder con la Fase 1.
+
+---
+
+## 4. REGLA FUNDAMENTAL: ANÁLISIS ANTES DE CREAR
 
 ### 4.1 Principio Inviolable
 
-**POR CADA TEMPLATE:**
+**NUNCA crear un template, estilo o string de frontend sin antes haber analizado completamente el renderer y la vista PHP correspondiente.**
+
+El análisis previo determina:
+- Qué variables están disponibles en el template
+- Qué condiciones lógicas existen (permisos, estados, datos)
+- Qué acciones y navegación debe soportar la vista
+- Qué tooltips son necesarios
+- Qué estados de carga y vacío se requieren
+- Qué clases CSS serán necesarias
+
+### 4.2 Flujo Obligatorio por Cada Vista
 
 ```
-VISTA ANALIZADA → MUSTACHE CREADO → ESTILOS CREADOS → CADENAS CREADAS
+VISTA ANALIZADA
+     ↓
+Estudiar renderer (classes/output/renderer/*_renderer.php)
+Estudiar vista PHP (views/*.php o admin/*.php)
+Documentar TODAS las variables del método prepare_*_data()
+Identificar condiciones, permisos, navegación
+Listar tooltips necesarios
+     ↓
+MUSTACHE CREADO
+     ↓
+Crear template usando SOLO clases jb-*
+Incluir tooltips en elementos interactivos
+Incluir skeleton para estados de carga
+Incluir empty state para cuando no hay datos
+     ↓
+ESTILOS CREADOS (solo los de este template)
+     ↓
+Agregar a styles.css SOLO las clases jb-* usadas en este template
+Incluir estados: normal, hover, focus, active, disabled
+Incluir variantes responsive si aplica
+     ↓
+CADENAS CREADAS (solo las de este template)
+     ↓
+Agregar a lang/en/ SOLO las strings de este template
+Agregar a lang/es/ SOLO las traducciones de este template
+Incluir strings de tooltips
+Incluir strings de estados vacíos y errores
+     ↓
+VALIDADO Y VERSIONADO
+     ↓
+Verificar renderizado correcto
+Verificar estilos aplicados
+Verificar strings en ambos idiomas
+Incrementar versión en version.php
+Documentar en CHANGELOG.md
 ```
 
-**NUNCA:**
-- Crear un template sin antes analizar el renderer y la vista
-- Crear un template sin agregar sus estilos a styles.css
-- Crear un template sin agregar sus strings a lang/en/ y lang/es/
-- Avanzar al siguiente template sin completar el anterior
+### 4.3 Regla de Sincronización Incremental
 
-### 4.2 Flujo Obligatorio por Cada Template
+**El CSS y las strings NO se crean de una vez. Se construyen incrementalmente:**
 
-```
-╔═══════════════════════════════════════════════════════════════════════════════╗
-║                                                                               ║
-║   PASO 1: ANALIZAR RENDERER Y VISTA                                           ║
-║   ─────────────────────────────────                                           ║
-║   • Abrir classes/output/renderer/[nombre]_renderer.php                       ║
-║   • Abrir views/[nombre].php                                                  ║
-║   • Identificar método render_*()                                             ║
-║   • Identificar método prepare_*_data()                                       ║
-║   • Documentar TODAS las variables del contexto                               ║
-║   • Documentar TODAS las condiciones lógicas                                  ║
-║   • Documentar TODAS las URLs y acciones                                      ║
-║   • Listar TODOS los tooltips necesarios                                      ║
-║                                                                               ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                    ↓                                          ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                                                               ║
-║   PASO 2: CREAR TEMPLATE MUSTACHE                                             ║
-║   ───────────────────────────────                                             ║
-║   • Crear archivo en templates/pages/[categoria]/[nombre].mustache            ║
-║   • Usar SOLO clases con prefijo jb-*                                         ║
-║   • Incluir bloque de documentación con variables                             ║
-║   • Implementar todas las condiciones del análisis                            ║
-║   • Incluir tooltips en elementos interactivos                                ║
-║   • Incluir estado de loading (skeleton)                                      ║
-║   • Incluir estado vacío (empty state)                                        ║
-║                                                                               ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                    ↓                                          ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                                                               ║
-║   PASO 3: AGREGAR ESTILOS A styles.css                                        ║
-║   ────────────────────────────────────                                        ║
-║   • Agregar AL FINAL de styles.css los estilos del template                   ║
-║   • Crear TODAS las clases jb-* usadas en el template                         ║
-║   • Incluir estados: normal, hover, focus, active, disabled                   ║
-║   • Incluir variantes responsive si aplica                                    ║
-║   • Comentar la sección con el nombre del template                            ║
-║                                                                               ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                    ↓                                          ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                                                               ║
-║   PASO 4: AGREGAR STRINGS A ARCHIVOS DE IDIOMA                                ║
-║   ────────────────────────────────────────────                                ║
-║   • Agregar TODAS las strings {{#str}} a lang/en/local_jobboard.php           ║
-║   • Agregar TODAS las traducciones a lang/es/local_jobboard.php               ║
-║   • Incluir strings de tooltips                                               ║
-║   • Incluir strings de estados vacíos                                         ║
-║   • Incluir strings de errores/validación                                     ║
-║   • Comentar la sección con el nombre del template                            ║
-║                                                                               ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                    ↓                                          ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                                                               ║
-║   PASO 5: VALIDAR                                                             ║
-║   ──────────────                                                              ║
-║   • Template renderiza sin errores                                            ║
-║   • Estilos se aplican correctamente                                          ║
-║   • Strings aparecen en ambos idiomas                                         ║
-║   • Tooltips funcionan                                                        ║
-║                                                                               ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                    ↓                                          ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                                                               ║
-║   PASO 6: VERSIONAR                                                           ║
-║   ─────────────────                                                           ║
-║   • Incrementar $plugin->version en version.php                               ║
-║   • Agregar entrada en CHANGELOG.md                                           ║
-║                                                                               ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                    ↓                                          ║
-║   ══════════════════════════════════════════════════════════════════════      ║
-║                                                                               ║
-║   → SIGUIENTE TEMPLATE (repetir desde Paso 1)                                 ║
-║                                                                               ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
-```
-
-### 4.3 Ejemplo Completo: Crear Lista de Convocatorias
+- Por cada template Mustache creado, se agregan ÚNICAMENTE los estilos CSS que ese template necesita
+- Por cada template Mustache creado, se agregan ÚNICAMENTE las strings que ese template usa
+- El archivo `styles.css` crece con cada template
+- Los archivos de idioma crecen con cada template
 
 ---
 
-**PASO 1: ANALIZAR**
+## 5. ORDEN DE CREACIÓN DE CADENAS DE IDIOMAS
 
-**Archivos a estudiar:**
-- `classes/output/renderer/convocatoria_renderer.php`
-- `views/convocatorias.php`
+### 5.1 Principio: Backend Primero, Frontend Después
 
-**Métodos identificados:**
-- `render_convocatorias_list_page($data)`
-- `prepare_convocatorias_list_data($page, $perpage, $filters)`
+Las cadenas de idiomas NO son solo las de las vistas. El plugin tiene strings en múltiples componentes del backend que deben crearse ANTES de las strings de templates.
 
-**Variables extraídas del método prepare:**
-```
-convocatorias       array    Lista de convocatorias
-totalcount          int      Total de registros
-page                int      Página actual
-perpage             int      Registros por página
-canmanage           bool     Puede gestionar
-cancreate           bool     Puede crear
-filters             object   Filtros aplicados
-hasconvocatorias    bool     Hay datos para mostrar
-createurl           string   URL crear nueva
-statuses            array    Estados para filtro
-```
+### 5.2 Orden Obligatorio
 
-**Condiciones lógicas:**
-- `{{#canmanage}}` → Mostrar acciones de gestión
-- `{{#cancreate}}` → Mostrar botón crear
-- `{{#hasconvocatorias}}` → Mostrar tabla
-- `{{^hasconvocatorias}}` → Mostrar empty state
+**FASE A: Strings del Backend (crear primero)**
 
-**Tooltips necesarios:**
-- Botón crear
-- Botón ver detalle
-- Botón editar
-- Botón publicar
-- Botón cerrar
-- Filtro de estado
-- Filtro de búsqueda
+| Prioridad | Componente | Archivo Fuente a Analizar |
+|-----------|------------|---------------------------|
+| 1 | Identificación del plugin | `version.php` |
+| 2 | Capabilities | `db/access.php` |
+| 3 | Configuración | `settings.php` |
+| 4 | Roles personalizados | `db/install.php` |
+| 5 | Tareas programadas | `db/tasks.php` |
+| 6 | Eventos | `classes/event/*.php` |
+| 7 | CLI | `cli/*.php` |
+| 8 | Notificaciones | `db/messages.php` |
+| 9 | Privacy API | `classes/privacy/*.php` |
+| 10 | Excepciones | `classes/exception/*.php` |
+| 11 | Servicios externos | `db/services.php` (si aplica) |
 
----
+**FASE B: Strings de Navegación y Comunes**
 
-**PASO 2: CREAR TEMPLATE**
+| Prioridad | Tipo de Strings |
+|-----------|-----------------|
+| 12 | Navegación principal (menús, breadcrumbs, tabs) |
+| 13 | Acciones comunes (save, cancel, delete, edit, view, create, etc.) |
+| 14 | Estados comunes (active, inactive, pending, approved, rejected, etc.) |
+| 15 | Mensajes comunes (success, error, warning, info, confirm, loading) |
+| 16 | Validaciones comunes (required, invalid, too_long, etc.) |
+| 17 | Paginación (page, of, next, previous, first, last, etc.) |
+| 18 | Filtros comunes (filter, search, clear, apply, all, none, select) |
 
-Archivo: `templates/pages/convocatorias/list.mustache`
+**FASE C: Strings de Frontend (por cada template)**
 
-Clases jb-* a usar:
-- `jb-page-header`
-- `jb-btn`, `jb-btn-primary`, `jb-btn-outline-secondary`
-- `jb-filter-form`, `jb-filter-group`
-- `jb-form-control`, `jb-form-select`
-- `jb-table`, `jb-table-hover`, `jb-thead-light`
-- `jb-badge`, `jb-badge-success`, `jb-badge-secondary`
-- `jb-empty-state`, `jb-empty-state-icon`, `jb-empty-state-text`
-- `jb-skeleton`, `jb-skeleton-text`
-- `jb-tooltip`
-- `jb-d-flex`, `jb-justify-content-between`, `jb-align-items-center`
-- `jb-mb-3`, `jb-mb-4`, `jb-mt-2`
+| Prioridad | Tipo de Strings |
+|-----------|-----------------|
+| 19+ | Strings específicas de cada componente UI reutilizable |
+| 20+ | Strings específicas de cada página/template |
+| 21+ | Strings de tooltips |
+| 22+ | Strings de empty states |
+| 23+ | Strings de User Tours |
 
----
+### 5.3 Verificación de Completitud de Idiomas
 
-**PASO 3: AGREGAR A styles.css**
+Antes de considerar completa la reconstrucción, verificar que existan strings para:
 
-```css
-/* ==========================================================================
-   CONVOCATORIAS LIST - pages/convocatorias/list.mustache
-   ========================================================================== */
-
-/* Page header */
-.jb-page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--jb-spacer-4);
-    flex-wrap: wrap;
-    gap: var(--jb-spacer-2);
-}
-
-/* Buttons */
-.jb-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--jb-spacer-2);
-    padding: 0.5rem 1rem;
-    font-size: var(--jb-font-size-base);
-    font-weight: var(--jb-font-weight-medium);
-    line-height: var(--jb-line-height);
-    text-align: center;
-    text-decoration: none;
-    vertical-align: middle;
-    cursor: pointer;
-    user-select: none;
-    border: var(--jb-border-width) solid transparent;
-    border-radius: var(--jb-border-radius);
-    transition: var(--jb-transition-base);
-}
-
-.jb-btn:focus {
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-.jb-btn:disabled {
-    opacity: 0.65;
-    pointer-events: none;
-}
-
-.jb-btn-primary {
-    color: var(--jb-white);
-    background-color: var(--jb-primary);
-    border-color: var(--jb-primary);
-}
-
-.jb-btn-primary:hover {
-    color: var(--jb-white);
-    background-color: var(--jb-primary-hover);
-    border-color: var(--jb-primary-hover);
-}
-
-.jb-btn-outline-secondary {
-    color: var(--jb-secondary);
-    border-color: var(--jb-secondary);
-    background-color: transparent;
-}
-
-.jb-btn-outline-secondary:hover {
-    color: var(--jb-white);
-    background-color: var(--jb-secondary);
-    border-color: var(--jb-secondary);
-}
-
-/* Filter form */
-.jb-filter-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--jb-spacer-3);
-    padding: var(--jb-spacer-3);
-    background-color: var(--jb-light);
-    border-radius: var(--jb-border-radius);
-    margin-bottom: var(--jb-spacer-4);
-}
-
-.jb-filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--jb-spacer-1);
-}
-
-/* Form controls */
-.jb-form-control,
-.jb-form-select {
-    display: block;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: var(--jb-font-size-base);
-    font-weight: var(--jb-font-weight-normal);
-    line-height: var(--jb-line-height);
-    color: var(--jb-body-color);
-    background-color: var(--jb-white);
-    border: var(--jb-border-width) solid var(--jb-border-color);
-    border-radius: var(--jb-border-radius);
-    transition: var(--jb-transition-base);
-}
-
-.jb-form-control:focus,
-.jb-form-select:focus {
-    border-color: var(--jb-primary);
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-/* Table */
-.jb-table {
-    width: 100%;
-    margin-bottom: var(--jb-spacer-3);
-    color: var(--jb-body-color);
-    border-collapse: collapse;
-}
-
-.jb-table th,
-.jb-table td {
-    padding: 0.75rem;
-    vertical-align: middle;
-    border-bottom: var(--jb-border-width) solid var(--jb-border-color);
-}
-
-.jb-table-hover tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.02);
-}
-
-.jb-thead-light th {
-    background-color: var(--jb-light);
-    font-weight: var(--jb-font-weight-medium);
-}
-
-/* Badges */
-.jb-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.5rem;
-    font-size: var(--jb-font-size-xs);
-    font-weight: var(--jb-font-weight-medium);
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: var(--jb-border-radius-pill);
-}
-
-.jb-badge-success {
-    color: var(--jb-white);
-    background-color: var(--jb-success);
-}
-
-.jb-badge-secondary {
-    color: var(--jb-white);
-    background-color: var(--jb-secondary);
-}
-
-/* Empty state */
-.jb-empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--jb-spacer-5);
-    text-align: center;
-}
-
-.jb-empty-state-icon {
-    font-size: 3rem;
-    color: var(--jb-muted);
-    margin-bottom: var(--jb-spacer-3);
-}
-
-.jb-empty-state-text {
-    color: var(--jb-muted);
-    max-width: 400px;
-}
-
-/* Skeleton loading */
-.jb-skeleton {
-    animation: jb-skeleton-pulse 1.5s ease-in-out infinite;
-}
-
-.jb-skeleton-text {
-    height: 1rem;
-    background-color: #e9ecef;
-    border-radius: var(--jb-border-radius-sm);
-}
-
-@keyframes jb-skeleton-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-/* Tooltip */
-.jb-tooltip {
-    position: relative;
-}
-
-.jb-tooltip::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 0.25rem 0.5rem;
-    background-color: var(--jb-dark);
-    color: var(--jb-white);
-    font-size: var(--jb-font-size-xs);
-    border-radius: var(--jb-border-radius-sm);
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: var(--jb-transition-fast);
-    z-index: 1000;
-}
-
-.jb-tooltip:hover::after,
-.jb-tooltip:focus::after {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Flexbox utilities */
-.jb-d-flex { display: flex; }
-.jb-justify-content-between { justify-content: space-between; }
-.jb-align-items-center { align-items: center; }
-
-/* Spacing utilities */
-.jb-mb-3 { margin-bottom: var(--jb-spacer-3); }
-.jb-mb-4 { margin-bottom: var(--jb-spacer-4); }
-.jb-mt-2 { margin-top: var(--jb-spacer-2); }
-```
+- Todas las capabilities en `db/access.php`
+- Todas las settings en `settings.php` (nombre y descripción)
+- Todos los roles en `db/install.php`
+- Todas las tareas en `db/tasks.php`
+- Todos los eventos del plugin
+- Todos los mensajes de CLI
+- Todos los metadatos de Privacy API
+- Todos los templates
+- Todos los tooltips
+- Paridad completa EN/ES
 
 ---
 
-**PASO 4: AGREGAR STRINGS**
+## 6. REGLAS ABSOLUTAS DE DESARROLLO
 
-Agregar a `lang/en/local_jobboard.php`:
-
-```php
-// ==========================================================================
-// CONVOCATORIAS LIST - pages/convocatorias/list.mustache
-// ==========================================================================
-$string['convocatorias'] = 'Job Announcements';
-$string['convocatorias_list'] = 'Job Announcements List';
-$string['create_convocatoria'] = 'Create Announcement';
-$string['edit_convocatoria'] = 'Edit';
-$string['view_convocatoria'] = 'View';
-$string['publish_convocatoria'] = 'Publish';
-$string['close_convocatoria'] = 'Close';
-$string['delete_convocatoria'] = 'Delete';
-
-// Tooltips
-$string['tooltip_create_convocatoria'] = 'Create a new job announcement';
-$string['tooltip_view_convocatoria'] = 'View announcement details';
-$string['tooltip_edit_convocatoria'] = 'Edit this announcement';
-$string['tooltip_publish_convocatoria'] = 'Publish for applications';
-$string['tooltip_close_convocatoria'] = 'Close this announcement';
-$string['tooltip_filter_status'] = 'Filter by status';
-$string['tooltip_filter_search'] = 'Search by name or code';
-
-// Table headers
-$string['convocatoria_name'] = 'Name';
-$string['convocatoria_code'] = 'Code';
-$string['convocatoria_status'] = 'Status';
-$string['convocatoria_dates'] = 'Dates';
-$string['convocatoria_vacancies'] = 'Vacancies';
-$string['actions'] = 'Actions';
-
-// Statuses
-$string['status_draft'] = 'Draft';
-$string['status_published'] = 'Published';
-$string['status_closed'] = 'Closed';
-$string['status_archived'] = 'Archived';
-
-// Filters
-$string['filter_by_status'] = 'Filter by status';
-$string['all_statuses'] = 'All statuses';
-$string['search'] = 'Search';
-$string['search_placeholder'] = 'Search by name or code...';
-$string['apply_filters'] = 'Apply';
-$string['clear_filters'] = 'Clear';
-
-// Empty state
-$string['no_convocatorias'] = 'No announcements found';
-$string['no_convocatorias_desc'] = 'There are no announcements matching your criteria.';
-$string['create_first_convocatoria'] = 'Create your first announcement';
-
-// Loading
-$string['loading'] = 'Loading...';
-```
-
-Agregar a `lang/es/local_jobboard.php`:
-
-```php
-// ==========================================================================
-// CONVOCATORIAS LIST - pages/convocatorias/list.mustache
-// ==========================================================================
-$string['convocatorias'] = 'Convocatorias';
-$string['convocatorias_list'] = 'Listado de Convocatorias';
-$string['create_convocatoria'] = 'Crear Convocatoria';
-$string['edit_convocatoria'] = 'Editar';
-$string['view_convocatoria'] = 'Ver';
-$string['publish_convocatoria'] = 'Publicar';
-$string['close_convocatoria'] = 'Cerrar';
-$string['delete_convocatoria'] = 'Eliminar';
-
-// Tooltips
-$string['tooltip_create_convocatoria'] = 'Crear una nueva convocatoria';
-$string['tooltip_view_convocatoria'] = 'Ver detalle de la convocatoria';
-$string['tooltip_edit_convocatoria'] = 'Editar esta convocatoria';
-$string['tooltip_publish_convocatoria'] = 'Publicar para postulaciones';
-$string['tooltip_close_convocatoria'] = 'Cerrar esta convocatoria';
-$string['tooltip_filter_status'] = 'Filtrar por estado';
-$string['tooltip_filter_search'] = 'Buscar por nombre o código';
-
-// Table headers
-$string['convocatoria_name'] = 'Nombre';
-$string['convocatoria_code'] = 'Código';
-$string['convocatoria_status'] = 'Estado';
-$string['convocatoria_dates'] = 'Fechas';
-$string['convocatoria_vacancies'] = 'Vacantes';
-$string['actions'] = 'Acciones';
-
-// Statuses
-$string['status_draft'] = 'Borrador';
-$string['status_published'] = 'Publicada';
-$string['status_closed'] = 'Cerrada';
-$string['status_archived'] = 'Archivada';
-
-// Filters
-$string['filter_by_status'] = 'Filtrar por estado';
-$string['all_statuses'] = 'Todos los estados';
-$string['search'] = 'Buscar';
-$string['search_placeholder'] = 'Buscar por nombre o código...';
-$string['apply_filters'] = 'Aplicar';
-$string['clear_filters'] = 'Limpiar';
-
-// Empty state
-$string['no_convocatorias'] = 'No se encontraron convocatorias';
-$string['no_convocatorias_desc'] = 'No hay convocatorias que coincidan con los criterios.';
-$string['create_first_convocatoria'] = 'Cree su primera convocatoria';
-
-// Loading
-$string['loading'] = 'Cargando...';
-```
-
----
-
-**PASO 5: VALIDAR**
-
-- [ ] Acceder a la vista en el navegador
-- [ ] Verificar estilos aplicados
-- [ ] Cambiar idioma y verificar strings
-- [ ] Probar tooltips
-- [ ] Probar filtros
-- [ ] Verificar empty state
-
----
-
-**PASO 6: VERSIONAR**
-
-```php
-// version.php
-$plugin->version = 2025121301; // Incrementar
-```
-
-```markdown
-// CHANGELOG.md
-## [4.0.1] - 2025-12-13
-### Added
-- Template `pages/convocatorias/list.mustache`
-- Estilos CSS para lista de convocatorias (botones, tabla, filtros, badges, empty state, tooltips)
-- 35 strings de idioma EN/ES para convocatorias
-```
-
----
-
-## 5. REGLAS ABSOLUTAS DE DESARROLLO
-
-### 5.1 Reglas de Análisis
+### 6.1 Reglas de Análisis
 
 | Regla | Descripción |
 |-------|-------------|
 | **Análisis primero** | NUNCA crear template sin analizar renderer y vista |
-| **Documentar variables** | Listar TODAS las variables antes de crear |
+| **Documentar variables** | Listar TODAS las variables antes de crear template |
 | **Entender condiciones** | Mapear TODAS las condiciones lógicas |
 | **Identificar tooltips** | Listar TODOS los elementos que necesitan tooltip |
 
-### 5.2 Reglas de CSS
+### 6.2 Reglas de CSS
 
 | Regla | Descripción |
 |-------|-------------|
-| **Por fases** | CSS se crea junto con cada template, NO todo de una vez |
 | **SOLO jb-*** | Nunca usar clases Bootstrap directamente |
-| **Comentar secciones** | Cada bloque CSS indica qué template lo usa |
-| **Estados completos** | normal, hover, focus, active, disabled |
-| **Contraste WCAG AA** | Texto legible sobre fondo |
+| **Por fases** | CSS crece con cada template, NO se crea todo de una vez |
+| **Variables CSS** | Usar variables de `:root` para colores, espaciados |
+| **Mobile-first** | Diseñar primero para móvil |
+| **Estados completos** | Cada elemento: normal, hover, focus, active, disabled |
+| **Contraste WCAG** | Cumplir AA para texto sobre fondo |
 
-### 5.3 Reglas de Templates
+### 6.3 Reglas de Templates
 
 | Regla | Descripción |
 |-------|-------------|
-| **Documentación** | Bloque de comentario con variables |
-| **No hardcodear** | Usar `{{#str}}stringkey, local_jobboard{{/str}}` |
-| **Tooltips obligatorios** | En botones, iconos, badges, campos especiales |
+| **Documentación** | Bloque de comentario con variables del contexto |
+| **No hardcodear** | Usar strings de idioma SIEMPRE |
+| **Tooltips** | En botones, iconos, badges, campos especiales |
 | **Loading state** | Skeleton mientras cargan datos |
 | **Empty state** | Mensaje cuando no hay datos |
+| **Accesibilidad** | aria-labels, roles, skip-links |
 
-### 5.4 Reglas de Strings
+### 6.4 Reglas de Strings
 
 | Regla | Descripción |
 |-------|-------------|
-| **Por fases** | Strings se crean junto con cada template |
-| **Paridad EN/ES** | Toda string en ambos archivos |
-| **Comentar secciones** | Cada bloque indica qué template lo usa |
-| **Prefijos** | `tooltip_`, `error_`, `confirm_`, `empty_` |
+| **Backend primero** | Crear strings de backend antes que las de frontend |
+| **Paridad EN/ES** | Toda string en ambos archivos simultáneamente |
+| **Prefijos consistentes** | Usar prefijos: `tooltip_`, `error_`, `confirm_`, `empty_`, `help_` |
+| **Placeholders** | Usar `{$a}` para valores dinámicos |
+| **Sin HTML** | No incluir HTML en strings |
 
-### 5.5 Reglas de Versionado
+### 6.5 Reglas de Versionado
 
-| Tipo de Cambio | version.php |
-|----------------|-------------|
-| Cada template completado | +1 |
+| Tipo de Cambio | version.php | release |
+|----------------|-------------|---------|
+| Template + strings | +1 | +0.0.1 |
+| Fase completa | +1 | +0.1.0 |
+| Bug fix | +1 | +0.0.1 |
 
 ---
 
-## 6. PRINCIPIOS UX: MINIMALISMO FUNCIONAL
+## 7. PRINCIPIOS UX: MINIMALISMO FUNCIONAL
 
-### 6.1 Filosofía de Diseño
+### 7.1 Filosofía de Diseño
 
 | Principio | Aplicación |
 |-----------|------------|
@@ -825,43 +258,50 @@ $plugin->version = 2025121301; // Incrementar
 | **Tipografía limpia** | Máximo 3 tamaños por vista |
 | **Colores con propósito** | Solo para estado o acción |
 | **Iconografía consistente** | Font Awesome 6, estilo solid |
-| **Feedback inmediato** | Respuesta visual a cada acción |
+| **Microinteracciones** | Transiciones 200-300ms |
+| **Feedback inmediato** | Respuesta visual instantánea |
 
-### 6.2 Características Visuales
+### 7.2 Características Visuales
 
 - Fondos blancos o grises claros
-- Bordes sutiles (1px)
-- Sombras mínimas
+- Bordes sutiles
+- Sombras mínimas solo en elementos flotantes
 - Botones con todos los estados distintos
 - Labels siempre visibles
+- Tablas con filas alternadas sutiles
 - Estados vacíos con icono y mensaje
 - Loading con skeletons
 
-### 6.3 Tooltips Obligatorios
+### 7.3 Especificación de Tooltips
 
-**Ubicación:**
+**Ubicación obligatoria:**
 - Botones de acción
 - Iconos sin texto
-- Campos especiales
-- Badges
+- Campos de formulario especiales
+- Badges y estados
 - Enlaces secundarios
 - Acciones masivas
+- Atajos de teclado
 
 **Comportamiento:**
 - Delay: 300ms
+- Desaparición: inmediata
 - Texto: máximo 10 palabras
+- Posición: automática
 - Accesible via teclado
 
 ---
 
-## 7. INVENTARIO DE RENDERERS Y VISTAS
+## 8. INVENTARIO DE RENDERERS Y VISTAS A ANALIZAR
 
-| Renderer | Vista PHP | Templates a Crear |
-|----------|-----------|-------------------|
-| `dashboard_renderer.php` | `index.php` | `pages/admin/dashboard` |
+### 8.1 Mapeo Renderer → Vista → Templates
+
+| Renderer Trait | Vista PHP | Templates a Crear |
+|----------------|-----------|-------------------|
+| `dashboard_renderer.php` | `index.php` (view=dashboard) | `pages/admin/dashboard` |
 | `convocatoria_renderer.php` | `views/convocatorias.php` | `pages/convocatorias/*` (4) |
-| `vacancy_renderer.php` | `views/vacancies.php` | `pages/vacancies/*` (7) |
-| `application_renderer.php` | `views/apply.php` | `pages/applications/*` (4) |
+| `vacancy_renderer.php` | `views/vacancies.php`, `views/vacancy.php` | `pages/vacancies/*` (7) |
+| `application_renderer.php` | `views/applications.php`, `views/apply.php` | `pages/applications/*` (4) |
 | `public_renderer.php` | `public.php` | `pages/public/*` (4) |
 | `review_renderer.php` | `views/review.php` | `pages/review/*` (6) |
 | `committee_renderer.php` | `admin/manage_committee.php` | `pages/review/committee*` (3) |
@@ -869,227 +309,494 @@ $plugin->version = 2025121301; // Incrementar
 | `exemption_renderer.php` | `admin/manage_exemptions.php` | `pages/admin/exemption*` (3) |
 | `reports_renderer.php` | `views/reports.php` | `pages/reports/*` (1) |
 
----
+### 8.2 Proceso de Análisis por Renderer
 
-## 8. FASES DE IMPLEMENTACIÓN
+Para cada renderer, ANTES de crear cualquier template:
 
-### FASE 0: ELIMINACIÓN Y PREPARACIÓN
-
-**OBLIGATORIO ANTES DE TODO:**
-1. Eliminar `templates/`
-2. Eliminar `lang/`
-3. Eliminar `styles.css`
-4. Eliminar `amd/build/`
-5. Crear estructura de carpetas vacía
-6. Crear archivos base (styles.css con variables, lang con cabecera)
-
----
-
-### FASE 1: COMPONENTES BASE
-
-**Por cada componente, seguir el flujo completo:**
-
-Orden de creación:
-1. `components/loading_skeleton.mustache`
-2. `components/tooltip.mustache`
-3. `components/alert.mustache`
-4. `components/status_badge.mustache`
-5. `components/empty_state.mustache`
-6. `components/card.mustache`
-7. `components/stat_card.mustache`
-8. `components/table.mustache`
-9. `components/pagination.mustache`
-10. `components/filter_form.mustache`
-11. `components/modal.mustache`
-12. `components/breadcrumb.mustache`
-13. `components/progress_bar.mustache`
-14. `components/document_item.mustache`
-15. `components/timeline_item.mustache`
-16. `components/vacancy_card.mustache`
+1. Abrir el archivo renderer trait
+2. Identificar TODOS los métodos `render_*()`
+3. Para cada método render, identificar el método `prepare_*_data()` correspondiente
+4. Documentar TODAS las variables que retorna el prepare
+5. Identificar condiciones de permisos
+6. Identificar navegación y URLs
+7. Listar tooltips necesarios
+8. Definir estados de carga y vacío
 
 ---
 
-### FASE 2: LAYOUT BASE
+## 9. ESTRUCTURA DE ARCHIVOS OBJETIVO
 
-Crear `layouts/base.mustache` con su CSS y strings
-
----
-
-### FASE 3: DASHBOARD
-
-1. Analizar `dashboard_renderer.php`
-2. Crear `pages/admin/dashboard.mustache`
-3. Agregar CSS del dashboard a styles.css
-4. Agregar strings del dashboard a lang/
-
----
-
-### FASE 4: PÁGINAS PÚBLICAS
-
-Por cada una (análisis → template → CSS → strings):
-1. `pages/public/index.mustache`
-2. `pages/public/convocatoria.mustache`
-3. `pages/public/vacancy.mustache`
-4. `pages/public/apply_prompt.mustache`
-
----
-
-### FASE 5: PÁGINAS DE CONVOCATORIAS
-
-Por cada una:
-1. `pages/convocatorias/list.mustache`
-2. `pages/convocatorias/form.mustache`
-3. `pages/convocatorias/detail.mustache`
-4. `pages/convocatorias/documents.mustache`
-
----
-
-### FASE 6: PÁGINAS DE VACANTES
-
-Por cada una:
-1. `pages/vacancies/list.mustache`
-2. `pages/vacancies/manage.mustache`
-3. `pages/vacancies/form.mustache`
-4. `pages/vacancies/detail.mustache`
-5. `pages/vacancies/applications.mustache`
-6. `pages/vacancies/select_convocatoria.mustache`
-7. `pages/vacancies/import.mustache`
-
----
-
-### FASE 7: PÁGINAS DE POSTULACIONES
-
-Por cada una:
-1. `pages/applications/list.mustache`
-2. `pages/applications/my.mustache`
-3. `pages/applications/apply.mustache`
-4. `pages/applications/detail.mustache`
-
----
-
-### FASE 8: PÁGINAS DE DOCUMENTOS
-
-Por cada una:
-1. `pages/documents/list.mustache`
-2. `pages/documents/upload.mustache`
-3. `pages/documents/detail.mustache`
-
----
-
-### FASE 9: PÁGINAS DE REVISIÓN
-
-Por cada una:
-1. `pages/review/list.mustache`
-2. `pages/review/panel.mustache`
-3. `pages/review/document.mustache`
-4. `pages/review/assign_reviewer.mustache`
-5. `pages/review/program_reviewers.mustache`
-6. `pages/review/schedule_interview.mustache`
-
----
-
-### FASE 10: PÁGINAS DE COMITÉ
-
-Por cada una:
-1. `pages/review/committee.mustache`
-2. `pages/review/committee_members.mustache`
-3. `pages/review/interview_complete.mustache`
-
----
-
-### FASE 11: PÁGINAS DE ADMINISTRACIÓN
-
-Por cada una:
-1. `pages/admin/doctypes.mustache`
-2. `pages/admin/doctype_form.mustache`
-3. `pages/admin/templates.mustache`
-4. `pages/admin/template_form.mustache`
-5. `pages/admin/roles.mustache`
-6. `pages/admin/audit.mustache`
-7. `pages/admin/migrate.mustache`
-8. `pages/admin/import_vacancies.mustache`
-9. `pages/admin/settings.mustache`
-
----
-
-### FASE 12: PÁGINAS DE EXCEPCIONES
-
-Por cada una:
-1. `pages/admin/exemptions.mustache`
-2. `pages/admin/exemption_form.mustache`
-3. `pages/admin/exemption_detail.mustache`
-
----
-
-### FASE 13: PÁGINAS DE REPORTES
-
-1. `pages/reports/index.mustache`
-
----
-
-### FASE 14: PÁGINAS DE USUARIO
-
-Por cada una:
-1. `pages/user/profile.mustache`
-2. `pages/user/edit_profile.mustache`
-3. `pages/user/consent.mustache`
-4. `pages/user/notifications.mustache`
-
----
-
-### FASE 15: MÓDULOS AMD
-
-Por cada módulo:
-1. Analizar funcionalidad
-2. Crear/modificar en `amd/src/`
-3. Compilar: `grunt amd --root=local/jobboard`
-
----
-
-### FASE 16: USER TOURS
-
-Por cada tour:
-1. Crear JSON en `db/tours/`
-2. Agregar strings EN
-3. Agregar strings ES
-
----
-
-### FASE 17: VALIDACIÓN FINAL
-
-Checklist completo de todo el plugin
-
----
-
-## 9. RESUMEN DEL CICLO
+### 9.1 Templates
 
 ```
-╔═══════════════════════════════════════════════════════════════╗
-║                                                               ║
-║   1. VISTA ANALIZADA                                          ║
-║      Renderer + Vista PHP estudiados                          ║
-║      Variables y condiciones documentadas                     ║
-║                         ↓                                     ║
-║   2. MUSTACHE CREADO                                          ║
-║      Template con clases jb-*, tooltips, estados              ║
-║                         ↓                                     ║
-║   3. ESTILOS CREADOS                                          ║
-║      CSS agregado a styles.css para este template             ║
-║                         ↓                                     ║
-║   4. CADENAS CREADAS                                          ║
-║      Strings EN + ES para este template                       ║
-║                         ↓                                     ║
-║   5. VALIDADO Y VERSIONADO                                    ║
-║      Funciona → version.php + CHANGELOG                       ║
-║                         ↓                                     ║
-║   → SIGUIENTE TEMPLATE                                        ║
-║                                                               ║
-╚═══════════════════════════════════════════════════════════════╝
+templates/
+├── components/                    # 16 componentes reutilizables
+├── layouts/                       # 1 layout base
+└── pages/
+    ├── admin/                     # 12 páginas
+    ├── applications/              # 4 páginas
+    ├── convocatorias/             # 4 páginas
+    ├── documents/                 # 3 páginas
+    ├── public/                    # 4 páginas
+    ├── reports/                   # 1 página
+    ├── review/                    # 8 páginas
+    ├── user/                      # 4 páginas
+    └── vacancies/                 # 7 páginas
+```
+
+### 9.2 Estructura de styles.css
+
+El archivo se construye por fases. Secciones que irán apareciendo conforme se crean templates:
+
+1. Variables CSS (`:root`)
+2. Reset y base
+3. Sistema de grid
+4. Utilidades de espaciado
+5. Utilidades flexbox
+6. Tipografía
+7. Colores de fondo
+8. Colores de texto
+9. Botones
+10. Cards
+11. Badges
+12. Alertas
+13. Tablas
+14. Formularios
+15. List groups
+16. Navegación
+17. Modales
+18. Progress bars
+19. Tooltips
+20. Componentes específicos del plugin
+21. Animaciones
+22. Skeletons
+23. Accesibilidad
+24. Utilidades adicionales
+25. Media queries
+26. Compatibilidad themes
+
+### 9.3 Módulos AMD
+
+| Módulo | Responsabilidad |
+|--------|-----------------|
+| `tooltips.js` | Sistema de tooltips |
+| `public_filters.js` | Filtros AJAX vista pública |
+| `review_ui.js` | Interfaz de revisión |
+| `document_viewer.js` | Visor de documentos PDF |
+| `application_form.js` | Formulario de postulación |
+| `navigation.js` | Navegación general |
+| `apply_progress.js` | Progreso del formulario |
+| `progress_steps.js` | Indicador visual de pasos |
+| `bulk_actions.js` | Acciones masivas |
+| `grading_panel.js` | Panel revisión estilo mod_assign |
+| `vacancy_manage.js` | Gestión de vacantes |
+| `convocatoria_manage.js` | Gestión de convocatorias |
+| `doctype_manage.js` | Gestión de doctypes |
+
+---
+
+## 10. FASES DE IMPLEMENTACIÓN
+
+### FASE 0: PREPARACIÓN Y ELIMINACIÓN
+
+**Tareas:**
+1. Crear backup completo de `lang/`, `templates/`, `styles.css`, `amd/src/`
+2. **ELIMINAR** carpeta `lang/` completa
+3. **ELIMINAR** carpeta `templates/` completa
+4. **ELIMINAR** archivo `styles.css`
+5. Crear carpetas vacías: `lang/en/`, `lang/es/`, `templates/`
+6. Crear archivo `styles.css` vacío
+7. Crear archivos vacíos `lang/en/local_jobboard.php` y `lang/es/local_jobboard.php` con estructura PHP básica
+8. Documentar en CHANGELOG.md el inicio de la reconstrucción
+
+---
+
+### FASE 1: STRINGS DEL BACKEND
+
+**Objetivo:** Crear todas las cadenas de idiomas del backend antes de cualquier template
+
+**Archivos a Analizar:**
+- `version.php` - identificación del plugin
+- `db/access.php` - todas las capabilities (~34)
+- `settings.php` - todas las configuraciones
+- `db/install.php` - roles personalizados
+- `db/tasks.php` - tareas programadas
+- `classes/event/*.php` - eventos
+- `cli/*.php` - mensajes CLI
+- `db/messages.php` - notificaciones
+- `classes/privacy/*.php` - Privacy API
+
+**Resultado:** Archivos de idioma con todas las strings del backend en EN y ES
+
+---
+
+### FASE 2: STRINGS COMUNES Y CSS BASE
+
+**Objetivo:** Crear strings de navegación/acciones comunes y variables CSS base
+
+**Strings a crear:**
+- Navegación principal
+- Acciones comunes
+- Estados comunes
+- Mensajes comunes
+- Validaciones comunes
+- Paginación
+- Filtros comunes
+
+**CSS a crear:**
+- Variables CSS en `:root`
+- Reset y estilos base
+- Sistema de grid responsivo
+- Utilidades de espaciado
+- Utilidades flexbox
+
+---
+
+### FASE 3: COMPONENTES UI
+
+**Objetivo:** Crear los 16 componentes reutilizables
+
+**Componentes (en orden de creación):**
+1. loading_skeleton
+2. tooltip
+3. alert
+4. status_badge
+5. breadcrumb
+6. empty_state
+7. card
+8. stat_card
+9. table
+10. pagination
+11. filter_form
+12. modal
+13. progress_bar
+14. document_item
+15. timeline_item
+16. vacancy_card
+
+**Por cada componente:**
+1. Analizar dónde se usa
+2. Crear template
+3. Agregar clases CSS necesarias
+4. Agregar strings EN
+5. Agregar strings ES
+6. Validar
+
+---
+
+### FASE 4: LAYOUT BASE
+
+**Objetivo:** Crear layout común para todas las páginas
+
+**Análisis:** Identificar estructura común de todas las páginas
+
+**Crear:**
+- Template de layout base
+- Clases CSS del layout
+- Strings del layout
+
+---
+
+### FASE 5: DASHBOARD
+
+**Análisis Obligatorio:**
+- Renderer: `dashboard_renderer.php`
+- Vista: `index.php`
+- Método: `prepare_dashboard_page_data()`
+
+**Crear:**
+- Template dashboard
+- CSS específico del dashboard
+- Strings EN del dashboard
+- Strings ES del dashboard
+- Tooltips en stat cards, quicklinks, notificaciones, timeline
+
+---
+
+### FASE 6: PÁGINAS PÚBLICAS
+
+**Análisis Obligatorio:**
+- Renderer: `public_renderer.php`
+- Vista: `public.php`
+- Métodos: todos los `prepare_public_*_data()`
+
+**Crear (análisis → template → CSS → strings para cada una):**
+1. Listado público de convocatorias
+2. Detalle público de convocatoria
+3. Detalle público de vacante
+4. Prompt de login/registro
+
+---
+
+### FASE 7: PÁGINAS DE CONVOCATORIAS
+
+**Análisis Obligatorio:**
+- Renderer: `convocatoria_renderer.php`
+- Vista: `views/convocatorias.php`
+- Métodos: todos los `prepare_convocatoria*_data()`
+
+**Crear:**
+1. Listado de convocatorias
+2. Formulario de convocatoria
+3. Detalle de convocatoria
+4. Configuración de documentos
+
+---
+
+### FASE 8: PÁGINAS DE VACANTES
+
+**Análisis Obligatorio:**
+- Renderer: `vacancy_renderer.php`
+- Vistas: `views/vacancies.php`, `views/vacancy.php`
+- Métodos: todos los `prepare_vacancy*_data()`
+
+**Crear:**
+1. Listado de vacantes
+2. Gestión de vacantes
+3. Formulario de vacante
+4. Detalle de vacante
+5. Postulaciones a vacante
+6. Selector de convocatoria
+7. Importación de vacantes
+
+---
+
+### FASE 9: PÁGINAS DE POSTULACIONES
+
+**Análisis Obligatorio:**
+- Renderer: `application_renderer.php`
+- Vistas: `views/applications.php`, `views/apply.php`
+- Métodos: todos los `prepare_application*_data()`
+
+**Crear:**
+1. Listado de postulaciones
+2. Mis postulaciones
+3. Formulario de postulación (6 tabs)
+4. Detalle de postulación
+
+---
+
+### FASE 10: PÁGINAS DE DOCUMENTOS
+
+**Análisis:** Identificar manejo de documentos en renderers
+
+**Crear:**
+1. Listado de documentos
+2. Subir documento
+3. Detalle de documento
+
+---
+
+### FASE 11: PÁGINAS DE REVISIÓN
+
+**Análisis Obligatorio:**
+- Renderer: `review_renderer.php`
+- Vista: `views/review.php`
+- Métodos: todos los `prepare_review*_data()`
+
+**Crear:**
+1. Cola de revisión
+2. Panel de revisión (split-pane)
+3. Vista de documento
+4. Asignar revisor
+5. Revisores por programa
+6. Programar entrevista
+
+---
+
+### FASE 12: PÁGINAS DE COMITÉ
+
+**Análisis Obligatorio:**
+- Renderer: `committee_renderer.php`
+- Vista: `admin/manage_committee.php`
+- Métodos: todos los `prepare_committee*_data()`
+
+**Crear:**
+1. Gestión de comité
+2. Miembros del comité
+3. Completar entrevista
+
+---
+
+### FASE 13: PÁGINAS DE ADMINISTRACIÓN
+
+**Análisis Obligatorio:**
+- Renderer: `admin_renderer.php`
+- Vistas: `admin/*.php`
+- Métodos: todos los `prepare_*_data()` de admin
+
+**Crear:**
+1. Tipos de documento
+2. Formulario de tipo de documento
+3. Plantillas de email
+4. Formulario de plantilla
+5. Roles
+6. Auditoría
+7. Migración
+8. Importar vacantes
+9. Configuración
+
+---
+
+### FASE 14: PÁGINAS DE EXCEPCIONES
+
+**Análisis Obligatorio:**
+- Renderer: `exemption_renderer.php`
+- Vista: `admin/manage_exemptions.php`
+- Métodos: todos los `prepare_exemption*_data()`
+
+**Crear:**
+1. Listado de excepciones
+2. Formulario de excepción
+3. Detalle de excepción
+
+---
+
+### FASE 15: PÁGINAS DE REPORTES
+
+**Análisis Obligatorio:**
+- Renderer: `reports_renderer.php`
+- Vista: `views/reports.php`
+- Método: `prepare_reports_data()`
+
+**Crear:**
+1. Página de reportes (con filtro obligatorio por convocatoria)
+
+---
+
+### FASE 16: PÁGINAS DE USUARIO
+
+**Análisis:** Identificar vistas de perfil
+
+**Crear:**
+1. Perfil de postulante
+2. Editar perfil
+3. Consentimientos
+4. Preferencias de notificación
+
+---
+
+### FASE 17: MÓDULOS AMD
+
+**Por cada módulo:**
+1. Analizar funcionalidad requerida
+2. Crear/modificar módulo
+3. Usar selectores jb-*
+4. Compilar con grunt
+5. Validar
+
+---
+
+### FASE 18: USER TOURS
+
+**Por cada tour (15 total):**
+1. Crear JSON del tour
+2. Usar selectores jb-*
+3. Agregar strings EN de pasos
+4. Agregar strings ES de pasos
+5. Validar selectores
+
+---
+
+### FASE 19: VALIDACIÓN FINAL
+
+**Verificar completitud total según checklist de Sección 11**
+
+---
+
+## 11. GARANTÍA DE COMPLETITUD
+
+### 11.1 Checklist de Verificación Total
+
+La reconstrucción se considera completa SOLO cuando:
+
+**Backend:**
+- [ ] Todas las ~34 capabilities tienen string EN y ES
+- [ ] Todas las settings de `settings.php` tienen string y descripción
+- [ ] Los 3 roles personalizados tienen nombre y descripción
+- [ ] Todas las tareas programadas tienen string
+- [ ] Todos los eventos tienen string
+- [ ] Todos los mensajes CLI tienen string
+- [ ] Privacy API tiene todos los metadatos traducidos
+
+**Frontend:**
+- [ ] Los 16 componentes UI están creados y funcionando
+- [ ] Todas las páginas tienen template funcional
+- [ ] Todos los tooltips implementados
+- [ ] Todos los empty states implementados
+- [ ] Todos los loading states implementados
+
+**Estilos:**
+- [ ] Todas las clases jb-* usadas en templates existen en CSS
+- [ ] Todos los estados (hover, focus, active, disabled) implementados
+- [ ] Responsive funcional en todas las vistas
+- [ ] Compatible con themes: Boost, Classic, Remui, Flavor
+
+**Idiomas:**
+- [ ] Paridad 100% EN/ES
+- [ ] Sin strings hardcodeadas en PHP
+- [ ] Sin strings hardcodeadas en templates
+
+**JavaScript:**
+- [ ] 13 módulos AMD compilados y funcionando
+- [ ] 15 User Tours funcionando
+
+### 11.2 Métricas Objetivo
+
+| Elemento | Cantidad Mínima |
+|----------|-----------------|
+| Templates Mustache | 47+ |
+| Componentes UI | 16 |
+| Strings de idioma | ~3000+ por idioma |
+| Clases CSS | ~500+ |
+| Módulos AMD | 13 |
+| User Tours | 15 |
+
+---
+
+## 12. RESUMEN DEL CICLO
+
+```
+╔═══════════════════════════════════════════════════════════════════╗
+║  ANTES DE EMPEZAR                                                 ║
+║  → Backup completo                                                ║
+║  → ELIMINAR /lang, /templates, styles.css                         ║
+╠═══════════════════════════════════════════════════════════════════╣
+║  FASE 1: STRINGS BACKEND                                          ║
+║  → Analizar archivos PHP del backend                              ║
+║  → Crear strings de capabilities, settings, roles, eventos, etc.  ║
+╠═══════════════════════════════════════════════════════════════════╣
+║  FASE 2: STRINGS COMUNES + CSS BASE                               ║
+║  → Crear strings de navegación y acciones comunes                 ║
+║  → Crear variables CSS y utilidades base                          ║
+╠═══════════════════════════════════════════════════════════════════╣
+║  FASES 3+: POR CADA VISTA                                         ║
+║                                                                   ║
+║  1. VISTA ANALIZADA                                               ║
+║     → Renderer + Vista PHP → Variables, condiciones, acciones     ║
+║                                                                   ║
+║  2. MUSTACHE CREADO                                               ║
+║     → Template con clases jb-*, tooltips, loading, empty state    ║
+║                                                                   ║
+║  3. ESTILOS CREADOS (solo los de este template)                   ║
+║     → Agregar a CSS las clases jb-* de este template              ║
+║                                                                   ║
+║  4. CADENAS CREADAS (solo las de este template)                   ║
+║     → Agregar a EN/ES las strings de este template                ║
+║                                                                   ║
+║  5. VALIDADO Y VERSIONADO                                         ║
+║     → Funciona → version.php + CHANGELOG                          ║
+╠═══════════════════════════════════════════════════════════════════╣
+║  VALIDACIÓN FINAL                                                 ║
+║  → Verificar completitud total                                    ║
+║  → El plugin debe funcionar al 100%                               ║
+║  → Cumplir con TODA la funcionalidad planteada                    ║
+╚═══════════════════════════════════════════════════════════════════╝
 ```
 
 ---
 
-## 10. CONTACTO
+## 13. CONTACTO
 
 | Rol | Nombre | Email |
 |-----|--------|-------|
@@ -1099,5 +806,6 @@ Checklist completo de todo el plugin
 ---
 
 *AGENTS.md para reconstrucción integral del plugin local_jobboard*
+*La reconstrucción debe ser TOTAL y garantizar el funcionamiento completo del plugin*
 *Versión: 1.0*
 *Fecha: 2025-12-13*
