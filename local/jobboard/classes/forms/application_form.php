@@ -356,37 +356,17 @@ class application_form extends \moodleform {
     /**
      * Load document types from database.
      *
-     * @param int $convocatoriaid Convocatoria ID (for custom requirements).
+     * @param int $convocatoriaid Convocatoria ID (reserved for future use).
      * @param bool $isexemption Whether user has exemption.
      * @return array Document types.
      */
     protected function load_document_types(int $convocatoriaid, bool $isexemption): array {
         global $DB;
 
-        // Check for convocatoria-specific document requirements.
-        if ($convocatoriaid > 0) {
-            $sql = "SELECT dt.*, cdr.isrequired as conv_required, cdr.customnotes
-                    FROM {local_jobboard_doctype} dt
-                    LEFT JOIN {local_jobboard_conv_docreq} cdr
-                        ON cdr.doctypeid = dt.id AND cdr.convocatoriaid = :convid
-                    WHERE dt.enabled = 1
-                    ORDER BY dt.sortorder, dt.name";
-            $doctypes = $DB->get_records_sql($sql, ['convid' => $convocatoriaid]);
+        // Load enabled document types ordered by sortorder and name.
+        $doctypes = $DB->get_records('local_jobboard_doctype', ['enabled' => 1], 'sortorder, name');
 
-            // Override isrequired if convocatoria has custom setting.
-            foreach ($doctypes as $doc) {
-                if ($doc->conv_required !== null) {
-                    $doc->isrequired = $doc->conv_required;
-                }
-                if (!empty($doc->customnotes)) {
-                    $doc->description = $doc->customnotes;
-                }
-            }
-        } else {
-            $doctypes = $DB->get_records('local_jobboard_doctype', ['enabled' => 1], 'sortorder, name');
-        }
-
-        // Apply exemption logic.
+        // Apply exemption logic - exempt users don't need ISER-exempted docs.
         if ($isexemption) {
             foreach ($doctypes as $id => $doc) {
                 if (!empty($doc->iserexempted)) {
