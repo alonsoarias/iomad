@@ -803,7 +803,7 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/ed
         return textarea ? textarea.value : '';
     }
 
-    // Save observations via AJAX
+    // Save observations via AJAX and reload page to continue workflow
     window.jobboardSaveObservations = function() {
         var observations = [];
         $('.jb-doc-observation').each(function() {
@@ -818,7 +818,9 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/ed
             }
         });
 
+        // If no observations to save, just reload to refresh the view
         if (observations.length === 0) {
+            window.location.reload();
             return;
         }
 
@@ -833,9 +835,10 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/ed
             },
             done: function(response) {
                 btn.prop('disabled', false).html('<i class="fa fa-check me-1"></i> {{#str}}changessaved{{/str}}');
+                // Reload page after brief delay to show success message and refresh view
                 setTimeout(function() {
-                    btn.html('<i class="fa fa-save me-1"></i> {{#str}}savechanges{{/str}}');
-                }, 2000);
+                    window.location.reload();
+                }, 800);
             },
             fail: function(error) {
                 btn.prop('disabled', false).html('<i class="fa fa-save me-1"></i> {{#str}}savechanges{{/str}}');
@@ -844,7 +847,7 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/ed
         }]);
     };
 
-    // Send observations email
+    // Send observations email and reload page
     window.jobboardSendObservationsEmail = function() {
         var observations = [];
         var hasObservations = false;
@@ -883,11 +886,10 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/ed
             done: function(response) {
                 Str.get_string('observationsemailsent', 'local_jobboard').then(function(str) {
                     btn.prop('disabled', false).html('<i class="fa fa-check me-1"></i> ' + str);
+                    // Reload page after showing success message
                     setTimeout(function() {
-                        Str.get_string('sendobservationsemail', 'local_jobboard').then(function(str2) {
-                            btn.html('<i class="fa fa-paper-plane me-1"></i> ' + str2);
-                        });
-                    }, 3000);
+                        window.location.reload();
+                    }, 1500);
                 });
             },
             fail: function(error) {
