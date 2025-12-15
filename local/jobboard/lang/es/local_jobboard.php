@@ -2631,6 +2631,12 @@ $string['sendobservationsemail'] = 'Enviar observaciones por email';
 $string['observationsemailsent'] = 'Email de observaciones enviado correctamente';
 $string['noobservationstosend'] = 'No hay observaciones para enviar';
 
+// Cadenas de aplicación y consentimiento
+$string['consentgiven'] = 'Consentimiento otorgado';
+$string['selectstatus'] = 'Seleccionar estado';
+$string['optionalnotes'] = 'Notas opcionales';
+$string['optionalnotes_placeholder'] = 'Ingrese notas opcionales...';
+
 // =============================================================================
 // CADENAS DE REVISIÓN Y COMITÉS
 // =============================================================================

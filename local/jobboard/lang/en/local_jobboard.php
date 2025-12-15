@@ -2615,6 +2615,12 @@ $string['sendobservationsemail'] = 'Send observations email';
 $string['observationsemailsent'] = 'Observations email sent successfully';
 $string['noobservationstosend'] = 'No observations to send';
 
+// Application and consent strings
+$string['consentgiven'] = 'Consent given';
+$string['selectstatus'] = 'Select status';
+$string['optionalnotes'] = 'Optional notes';
+$string['optionalnotes_placeholder'] = 'Enter optional notes...';
+
 // =============================================================================
 // REVIEW AND COMMITTEE STRINGS
 // =============================================================================
