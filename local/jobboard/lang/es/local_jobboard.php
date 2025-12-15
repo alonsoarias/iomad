@@ -2619,7 +2619,17 @@ $string['rejectselected'] = 'Rechazar seleccionados';
 $string['rejectreason'] = 'Razón de rechazo';
 $string['rejectreason_placeholder'] = 'Ingrese la razón del rechazo...';
 $string['rejectreason_wrongtype'] = 'Tipo de documento incorrecto';
+$string['rejectreason_help'] = 'Indique el motivo por el cual se rechaza el documento';
 $string['unknowndoctype'] = 'Tipo de documento desconocido';
+
+// Document observations (for reviewer feedback per document)
+$string['documentobservation'] = 'Observaciones del documento';
+$string['documentobservation_placeholder'] = 'Ingrese observaciones sobre este documento...';
+$string['documentobservation_help'] = 'Las observaciones se compilarán en un email para el postulante en caso de correcciones';
+$string['compiledocservations'] = 'Compilar observaciones';
+$string['sendobservationsemail'] = 'Enviar observaciones por email';
+$string['observationsemailsent'] = 'Email de observaciones enviado correctamente';
+$string['noobservationstosend'] = 'No hay observaciones para enviar';
 
 // =============================================================================
 // CADENAS DE REVISIÓN Y COMITÉS

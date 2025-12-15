@@ -2603,7 +2603,17 @@ $string['rejectselected'] = 'Reject selected';
 $string['rejectreason'] = 'Rejection reason';
 $string['rejectreason_placeholder'] = 'Enter reason for rejection...';
 $string['rejectreason_wrongtype'] = 'Wrong document type';
+$string['rejectreason_help'] = 'Indicate the reason why the document is rejected';
 $string['unknowndoctype'] = 'Unknown document type';
+
+// Document observations (for reviewer feedback per document)
+$string['documentobservation'] = 'Document observations';
+$string['documentobservation_placeholder'] = 'Enter observations about this document...';
+$string['documentobservation_help'] = 'Observations will be compiled into an email for the applicant in case of corrections';
+$string['compiledocservations'] = 'Compile observations';
+$string['sendobservationsemail'] = 'Send observations email';
+$string['observationsemailsent'] = 'Observations email sent successfully';
+$string['noobservationstosend'] = 'No observations to send';
 
 // =============================================================================
 // REVIEW AND COMMITTEE STRINGS

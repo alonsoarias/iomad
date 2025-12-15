@@ -217,25 +217,13 @@
                                      style="cursor: pointer;">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="d-flex align-items-center flex-grow-1 min-width-0 me-2">
-                                            <i class="fa fa-{{statusicon}} text-{{statuscolor}} me-2"></i>
+                                            <i class="fa fa-{{statusicon}} text-{{statuscolor}} me-2 flex-shrink-0"></i>
                                             <div class="min-width-0">
-                                                <div class="fw-medium text-truncate small" title="{{filename}}">{{filename}}</div>
-                                                <small class="text-muted text-truncate d-block">{{typename}}</small>
+                                                <div class="fw-medium text-truncate small">{{typename}}</div>
+                                                <small class="text-muted text-truncate d-block" title="{{filename}}">{{filename}}</small>
                                             </div>
                                         </div>
-                                        <div class="btn-group btn-group-sm flex-shrink-0" onclick="event.stopPropagation();">
-                                            {{#ispending}}
-                                            <a href="{{validateurl}}" class="btn btn-success btn-sm" title="{{#str}}approve, local_jobboard{{/str}}">
-                                                <i class="fa fa-check"></i>
-                                            </a>
-                                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#rejectModal{{id}}" title="{{#str}}reject, local_jobboard{{/str}}">
-                                                <i class="fa fa-xmark"></i>
-                                            </button>
-                                            {{/ispending}}
-                                            {{^ispending}}
-                                            <span class="badge bg-{{statuscolor}}">{{statuslabel}}</span>
-                                            {{/ispending}}
-                                        </div>
+                                        <span class="badge bg-{{statuscolor}} flex-shrink-0">{{statuslabel}}</span>
                                     </div>
                                     {{#rejectreason}}
                                     <div class="small text-danger mt-1">
@@ -243,6 +231,33 @@
                                         {{rejectreason}}
                                     </div>
                                     {{/rejectreason}}
+                                    {{! Observations textarea for reviewer feedback }}
+                                    <div class="mt-2" onclick="event.stopPropagation();">
+                                        <label for="doc_observation_{{id}}" class="form-label small text-muted mb-1">
+                                            <i class="fa fa-comment-dots me-1"></i>
+                                            {{#str}}documentobservation, local_jobboard{{/str}}
+                                        </label>
+                                        <textarea name="doc_observation_{{id}}"
+                                                  id="doc_observation_{{id}}"
+                                                  class="form-control form-control-sm jb-doc-observation"
+                                                  rows="2"
+                                                  placeholder="{{#str}}documentobservation_placeholder, local_jobboard{{/str}}"
+                                                  data-document-id="{{id}}"
+                                                  data-application-id="{{applicationid}}">{{observation}}</textarea>
+                                    </div>
+                                    {{! Action buttons }}
+                                    <div class="d-flex gap-1 mt-2" onclick="event.stopPropagation();">
+                                        {{#ispending}}
+                                        <a href="{{validateurl}}" class="btn btn-success btn-sm flex-grow-1">
+                                            <i class="fa fa-check me-1"></i>
+                                            {{#str}}approve, local_jobboard{{/str}}
+                                        </a>
+                                        <button type="button" class="btn btn-danger btn-sm flex-grow-1" data-bs-toggle="modal" data-bs-target="#rejectModal{{id}}">
+                                            <i class="fa fa-xmark me-1"></i>
+                                            {{#str}}reject, local_jobboard{{/str}}
+                                        </button>
+                                        {{/ispending}}
+                                    </div>
                                 </div>
 
                                 {{! Reject Modal }}
@@ -287,6 +302,23 @@
                                 </div>
                                 {{/ispending}}
                                 {{/documents}}
+                            </div>
+                        </div>
+                        {{! Observations Actions Footer }}
+                        <div class="card-footer bg-light d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <small class="text-muted">
+                                <i class="fa fa-info-circle me-1"></i>
+                                {{#str}}documentobservation_help, local_jobboard{{/str}}
+                            </small>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="saveObservationsBtn" onclick="jobboardSaveObservations()">
+                                    <i class="fa fa-save me-1"></i>
+                                    {{#str}}savechanges{{/str}}
+                                </button>
+                                <button type="button" class="btn btn-sm btn-warning" id="sendObservationsBtn" onclick="jobboardSendObservationsEmail()">
+                                    <i class="fa fa-paper-plane me-1"></i>
+                                    {{#str}}sendobservationsemail, local_jobboard{{/str}}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -675,4 +707,134 @@ function jobboardPreviewDocument(element) {
 .jb-preview-fullscreen img {
     max-height: 100vh !important;
 }
+.jb-doc-observation:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+.jb-doc-observation.border-success {
+    border-color: #198754 !important;
+}
 </style>
+
+{{! JavaScript for document observations }}
+{{#selectedapplication}}
+{{#js}}
+require(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Ajax, Notification, Str) {
+    // Save observations via AJAX
+    window.jobboardSaveObservations = function() {
+        var observations = [];
+        $('.jb-doc-observation').each(function() {
+            var docId = $(this).data('document-id');
+            var text = $(this).val().trim();
+            if (docId) {
+                observations.push({
+                    documentid: docId,
+                    observation: text
+                });
+            }
+        });
+
+        if (observations.length === 0) {
+            return;
+        }
+
+        var btn = $('#saveObservationsBtn');
+        btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> {{#str}}saving, admin{{/str}}');
+
+        Ajax.call([{
+            methodname: 'local_jobboard_save_document_observations',
+            args: {
+                applicationid: {{selectedapplication.id}},
+                observations: JSON.stringify(observations)
+            },
+            done: function(response) {
+                btn.prop('disabled', false).html('<i class="fa fa-check me-1"></i> {{#str}}changessaved{{/str}}');
+                setTimeout(function() {
+                    btn.html('<i class="fa fa-save me-1"></i> {{#str}}savechanges{{/str}}');
+                }, 2000);
+            },
+            fail: function(error) {
+                btn.prop('disabled', false).html('<i class="fa fa-save me-1"></i> {{#str}}savechanges{{/str}}');
+                Notification.exception(error);
+            }
+        }]);
+    };
+
+    // Send observations email
+    window.jobboardSendObservationsEmail = function() {
+        var observations = [];
+        var hasObservations = false;
+
+        $('.jb-doc-observation').each(function() {
+            var docId = $(this).data('document-id');
+            var text = $(this).val().trim();
+            if (docId && text) {
+                hasObservations = true;
+                observations.push({
+                    documentid: docId,
+                    observation: text
+                });
+            }
+        });
+
+        if (!hasObservations) {
+            Str.get_string('noobservationstosend', 'local_jobboard').then(function(str) {
+                Notification.alert('', str);
+            });
+            return;
+        }
+
+        var btn = $('#sendObservationsBtn');
+        btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> {{#str}}sending, admin{{/str}}');
+
+        Ajax.call([{
+            methodname: 'local_jobboard_send_observations_email',
+            args: {
+                applicationid: {{selectedapplication.id}},
+                observations: JSON.stringify(observations)
+            },
+            done: function(response) {
+                Str.get_string('observationsemailsent', 'local_jobboard').then(function(str) {
+                    btn.prop('disabled', false).html('<i class="fa fa-check me-1"></i> ' + str);
+                    setTimeout(function() {
+                        Str.get_string('sendobservationsemail', 'local_jobboard').then(function(str2) {
+                            btn.html('<i class="fa fa-paper-plane me-1"></i> ' + str2);
+                        });
+                    }, 3000);
+                });
+            },
+            fail: function(error) {
+                Str.get_string('sendobservationsemail', 'local_jobboard').then(function(str) {
+                    btn.prop('disabled', false).html('<i class="fa fa-paper-plane me-1"></i> ' + str);
+                });
+                Notification.exception(error);
+            }
+        }]);
+    };
+
+    // Auto-save observations on blur
+    $('.jb-doc-observation').on('blur', function() {
+        var $this = $(this);
+        var docId = $this.data('document-id');
+        var text = $this.val().trim();
+
+        Ajax.call([{
+            methodname: 'local_jobboard_save_document_observations',
+            args: {
+                applicationid: {{selectedapplication.id}},
+                observations: JSON.stringify([{documentid: docId, observation: text}])
+            },
+            done: function() {
+                $this.addClass('border-success');
+                setTimeout(function() {
+                    $this.removeClass('border-success');
+                }, 1000);
+            },
+            fail: function() {
+                // Silent fail for auto-save
+            }
+        }]);
+    });
+});
+{{/js}}
+{{/selectedapplication}}
