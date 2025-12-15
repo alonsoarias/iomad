@@ -651,6 +651,31 @@ class application {
     }
 
     /**
+     * Get available status transitions from current status.
+     *
+     * @return array Array of available transition data with status code and label.
+     */
+    public function get_available_transitions(): array {
+        $transitions = helper\status_helper::get_allowed_transitions();
+        $currentstatus = $this->status;
+
+        if (!isset($transitions[$currentstatus])) {
+            return [];
+        }
+
+        $available = [];
+        foreach ($transitions[$currentstatus] as $tostatus) {
+            $available[] = [
+                'status' => $tostatus,
+                'label' => helper\status_helper::get_status_label($tostatus, 'application'),
+                'color' => helper\status_helper::get_status_badge_class($tostatus, 'application'),
+            ];
+        }
+
+        return $available;
+    }
+
+    /**
      * Get additional application data.
      *
      * @return array Decoded application data.
