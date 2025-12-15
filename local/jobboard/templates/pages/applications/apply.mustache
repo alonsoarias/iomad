@@ -343,12 +343,4 @@
     </footer>
 </div>
 
-{{#js}}
-require(['local_jobboard/apply_progress'], function(progress) {
-    progress.init({
-        formContainer: '#application-form-container',
-        progressSteps: '#application-progress',
-        totalSteps: {{totalsteps}}
-    });
-});
-{{/js}}
+{{! JS initialization handled by view PHP file }}

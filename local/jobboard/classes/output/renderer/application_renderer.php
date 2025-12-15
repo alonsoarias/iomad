@@ -642,6 +642,11 @@ trait application_renderer {
             ];
         }
 
+        // Calculate progress data.
+        $totalsteps = count($stepsdata);
+        $currentstep = 1;
+        $progresspercent = $totalsteps > 0 ? round(($currentstep / $totalsteps) * 100) : 0;
+
         return [
             'vacancy' => [
                 'id' => $vacancy->id,
@@ -652,6 +657,9 @@ trait application_renderer {
                 'closedateformatted' => $closedate ? userdate($closedate, get_string('strftimedatetime', 'langconfig')) : '',
             ],
             'steps' => $stepsdata,
+            'totalsteps' => $totalsteps,
+            'currentstep' => $currentstep,
+            'progresspercent' => $progresspercent,
             'daysuntilclose' => $daysuntilclose,
             'showdeadlinewarning' => ($daysuntilclose <= 3 && $daysuntilclose > 0),
             'deadlinewarningtext' => get_string('deadlinewarning', 'local_jobboard', ceil($daysuntilclose)),
@@ -663,8 +671,10 @@ trait application_renderer {
             'exemptioninfo' => $exemptiondata,
             'formhtml' => $formhtml,
             'requireddocs' => $docsdata,
+            'requireddocscount' => count($docsdata),
             'hasrequireddocs' => !empty($docsdata),
             'quicktips' => $quicktips,
+            'supportemail' => get_config('local_jobboard', 'supportemail'),
             'viewvacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public', 'id' => $vacancyid]))->out(false),
             'backvacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]))->out(false),
             'browservacanciesurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']))->out(false),

@@ -615,3 +615,269 @@
     font-size: 0.75rem;
     border-radius: 0.375rem 0.375rem 0 0;
 }
+
+/* ==========================================================================
+   APPLICATION STEPS - Progress indicator for multi-step form
+   ========================================================================== */
+
+.jb-steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    counter-reset: step;
+}
+
+.jb-steps::before {
+    content: "";
+    position: absolute;
+    top: 1.25rem;
+    left: 2.5rem;
+    right: 2.5rem;
+    height: 2px;
+    background-color: #dee2e6;
+    z-index: 0;
+}
+
+.jb-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    cursor: pointer;
+    text-align: center;
+    padding: 0 0.5rem;
+    transition: all var(--jb-transition-fast);
+}
+
+.jb-step-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #6c757d;
+    transition: all var(--jb-transition-fast);
+    margin-bottom: 0.5rem;
+}
+
+.jb-step-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-weight: 500;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color var(--jb-transition-fast);
+}
+
+/* Active step */
+.jb-step.jb-active .jb-step-icon {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2);
+}
+
+.jb-step.jb-active .jb-step-label {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+/* Completed step */
+.jb-step.jb-completed .jb-step-icon {
+    background-color: #198754;
+    border-color: #198754;
+    color: #fff;
+}
+
+.jb-step.jb-completed .jb-step-label {
+    color: #198754;
+}
+
+/* Disabled step */
+.jb-step.jb-tab-disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Hover effect on clickable steps */
+.jb-step:not(.jb-tab-disabled):hover .jb-step-icon {
+    border-color: #0d6efd;
+    transform: scale(1.05);
+}
+
+/* ==========================================================================
+   APPLICATION SECTIONS - Form section visibility
+   ========================================================================== */
+
+.jb-apply-section {
+    transition: opacity var(--jb-transition-normal), transform var(--jb-transition-normal);
+}
+
+.jb-apply-section.jb-section-hidden {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    visibility: hidden;
+}
+
+.jb-apply-section.jb-section-visible {
+    opacity: 1;
+    pointer-events: auto;
+    position: relative;
+    visibility: visible;
+}
+
+/* ==========================================================================
+   SIDEBAR - Sticky positioning for desktop
+   ========================================================================== */
+
+.jb-sticky-sidebar {
+    position: sticky;
+    top: 1rem;
+}
+
+/* ==========================================================================
+   SKIP LINK - Accessibility
+   ========================================================================== */
+
+.jb-skip-link {
+    position: absolute;
+    left: -9999px;
+    z-index: 9999;
+    padding: 0.5rem 1rem;
+    background-color: #0d6efd;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 0.25rem;
+}
+
+.jb-skip-link:focus {
+    left: 0.5rem;
+    top: 0.5rem;
+}
+
+/* ==========================================================================
+   DOCUMENT TABS - Category navigation in application form
+   ========================================================================== */
+
+.jb-document-tabs .nav-pills .nav-link {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    color: #495057;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    margin: 0 0.25rem;
+    transition: all var(--jb-transition-fast);
+}
+
+.jb-document-tabs .nav-pills .nav-link:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.jb-document-tabs .nav-pills .nav-link.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+.jb-document-field {
+    transition: box-shadow var(--jb-transition-fast), border-color var(--jb-transition-fast);
+}
+
+.jb-document-field:hover {
+    border-color: #0d6efd !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(13, 110, 253, 0.1);
+}
+
+/* ==========================================================================
+   COLLAPSIBLE SECTIONS
+   ========================================================================== */
+
+.jb-collapse-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.jb-collapse-icon {
+    transition: transform var(--jb-transition-fast);
+}
+
+.jb-collapse-header[aria-expanded="false"] .jb-collapse-icon {
+    transform: rotate(-90deg);
+}
+
+/* ==========================================================================
+   BADGE COLORS - Deadline indicators
+   ========================================================================== */
+
+.jb-badge-success {
+    background-color: #198754 !important;
+    color: #fff !important;
+}
+
+.jb-badge-warning {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
+
+.jb-badge-danger {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE - Application form mobile adjustments
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+    .jb-steps {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .jb-steps::before {
+        display: none;
+    }
+
+    .jb-step {
+        flex: 0 0 auto;
+        min-width: 80px;
+    }
+
+    .jb-sticky-sidebar {
+        position: static;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .jb-step-label {
+        font-size: 0.65rem;
+    }
+
+    .jb-step-icon {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.875rem;
+    }
+
+    .jb-document-tabs .nav-pills {
+        flex-direction: column;
+    }
+
+    .jb-document-tabs .nav-pills .nav-link {
+        margin: 0.25rem 0;
+    }
+}

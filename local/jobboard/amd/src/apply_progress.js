@@ -14,15 +14,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Application progress module for tab-based form navigation.
+ * Application progress module for step-based form navigation.
+ *
+ * Provides visual progress indication and smooth scrolling between form sections.
+ * Works with Moodle form fieldsets (headers) as navigation targets.
  *
  * @module     local_jobboard/apply_progress
- * @copyright  2024-2025 ISER - Instituto Superior de Educación Rural
+ * @copyright  2024-2025 ISER - Instituto Superior de Educacion Rural
  * @author     Alonso Arias <soporteplataformas@iser.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['core/str', 'core/notification'], function(Str, Notification) {
+define([], function() {
     'use strict';
 
     /**
@@ -32,10 +35,10 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
     var state = {
         currentStep: 0,
         totalSteps: 0,
-        tabs: [],
-        sections: [],
+        steps: [],
+        fieldsets: [],
         strings: {},
-        tabMode: false,
+        tabMode: true,
         initialized: false
     };
 
@@ -44,210 +47,225 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
      * @type {Object}
      */
     var CLASSES = {
-        tabActive: 'jb-tab-active',
-        tabCompleted: 'jb-tab-completed',
-        tabDisabled: 'jb-tab-disabled',
-        sectionVisible: 'jb-section-visible',
-        sectionHidden: 'jb-section-hidden',
-        navButton: 'jb-nav-button'
+        stepActive: 'jb-active',
+        stepCompleted: 'jb-completed',
+        stepDisabled: 'jb-tab-disabled'
     };
 
     /**
-     * Validate a step/section.
+     * Get the fieldset element for a step by target ID.
      *
-     * @param {number} stepIndex The step index to validate.
-     * @return {boolean} Whether the step is valid.
+     * @param {string} targetId The target element ID.
+     * @return {HTMLElement|null} The fieldset element.
      */
-    var validateStep = function(stepIndex) {
-        var section = state.sections[stepIndex];
-        if (!section) {
-            return true;
+    var getFieldsetByTarget = function(targetId) {
+        if (!targetId) {
+            return null;
         }
 
-        // Check for required fields.
-        var requiredFields = section.querySelectorAll('[required]');
-        var valid = true;
+        // Try to find element directly.
+        var element = document.getElementById(targetId);
 
-        requiredFields.forEach(function(field) {
-            if (!field.value || field.value.trim() === '') {
-                valid = false;
-                field.classList.add('is-invalid');
-            } else {
-                field.classList.remove('is-invalid');
-            }
-        });
+        // If not found, try with 'id_' prefix (Moodle form convention).
+        if (!element && !targetId.startsWith('id_')) {
+            element = document.getElementById('id_' + targetId);
+        }
 
-        return valid;
+        if (!element) {
+            return null;
+        }
+
+        // Look for the parent fieldset containing the header.
+        var parentFieldset = element.closest('fieldset');
+        return parentFieldset || element;
     };
 
     /**
-     * Update tab states based on current step.
+     * Update step visual states.
      */
-    var updateTabs = function() {
-        state.tabs.forEach(function(tab, index) {
-            tab.classList.remove(CLASSES.tabActive, CLASSES.tabCompleted, CLASSES.tabDisabled);
+    var updateStepStates = function() {
+        state.steps.forEach(function(step, index) {
+            step.classList.remove(CLASSES.stepActive, CLASSES.stepCompleted, CLASSES.stepDisabled);
 
             if (index === state.currentStep) {
-                tab.classList.add(CLASSES.tabActive);
+                step.classList.add(CLASSES.stepActive);
             } else if (index < state.currentStep) {
-                tab.classList.add(CLASSES.tabCompleted);
+                step.classList.add(CLASSES.stepCompleted);
             } else {
-                tab.classList.add(CLASSES.tabDisabled);
+                step.classList.add(CLASSES.stepDisabled);
             }
+
+            // Update aria attributes.
+            step.setAttribute('aria-current', index === state.currentStep ? 'step' : 'false');
         });
     };
 
     /**
-     * Show only the current section.
+     * Scroll to a fieldset smoothly.
+     *
+     * @param {HTMLElement} fieldset The fieldset to scroll to.
      */
-    var showCurrentSection = function() {
-        state.sections.forEach(function(section, index) {
-            if (index === state.currentStep) {
-                section.classList.remove(CLASSES.sectionHidden);
-                section.classList.add(CLASSES.sectionVisible);
-                section.style.display = '';
-            } else {
-                section.classList.remove(CLASSES.sectionVisible);
-                section.classList.add(CLASSES.sectionHidden);
-                section.style.display = 'none';
-            }
+    var scrollToFieldset = function(fieldset) {
+        if (!fieldset) {
+            return;
+        }
+
+        // Account for sticky headers (navbar).
+        var offset = 120;
+        var rect = fieldset.getBoundingClientRect();
+        var scrollTop = window.pageYOffset + rect.top - offset;
+
+        window.scrollTo({
+            top: Math.max(0, scrollTop),
+            behavior: 'smooth'
         });
-    };
 
-    /**
-     * Update navigation buttons.
-     */
-    var updateNavButtons = function() {
-        var prevButton = document.querySelector('[data-action="prev-step"]');
-        var nextButton = document.querySelector('[data-action="next-step"]');
-        var submitButton = document.querySelector('[data-action="submit-application"]');
-
-        if (prevButton) {
-            prevButton.style.display = state.currentStep > 0 ? '' : 'none';
-        }
-
-        if (nextButton) {
-            nextButton.style.display = state.currentStep < state.totalSteps - 1 ? '' : 'none';
-        }
-
-        if (submitButton) {
-            submitButton.style.display = state.currentStep === state.totalSteps - 1 ? '' : 'none';
-        }
+        // Focus the legend or first focusable element.
+        setTimeout(function() {
+            var legend = fieldset.querySelector('legend');
+            if (legend) {
+                legend.setAttribute('tabindex', '-1');
+                legend.focus();
+            } else {
+                var focusable = fieldset.querySelector(
+                    'input:not([type="hidden"]), select, textarea, button, [tabindex]:not([tabindex="-1"])'
+                );
+                if (focusable) {
+                    focusable.focus();
+                }
+            }
+        }, 500);
     };
 
     /**
      * Go to a specific step.
      *
-     * @param {number} stepIndex The step index to go to.
-     * @param {boolean} [skipValidation=false] Whether to skip validation.
+     * @param {number} stepIndex The step index to navigate to.
      */
-    var goToStep = function(stepIndex, skipValidation) {
-        // Validate current step before moving forward.
-        if (!skipValidation && stepIndex > state.currentStep) {
-            if (!validateStep(state.currentStep)) {
-                Str.get_string('pleasecompleterequiredfields', 'local_jobboard').then(function(msg) {
-                    Notification.addNotification({
-                        message: msg,
-                        type: 'error'
-                    });
-                });
-                return;
-            }
-        }
-
+    var goToStep = function(stepIndex) {
         if (stepIndex < 0 || stepIndex >= state.totalSteps) {
             return;
         }
 
         state.currentStep = stepIndex;
-        updateTabs();
-        showCurrentSection();
-        updateNavButtons();
+        updateStepStates();
 
-        // Scroll to top of section.
-        var section = state.sections[stepIndex];
-        if (section) {
-            section.scrollIntoView({behavior: 'smooth', block: 'start'});
+        var step = state.steps[stepIndex];
+        if (step && step.dataset.target) {
+            var fieldset = getFieldsetByTarget(step.dataset.target);
+            if (fieldset) {
+                scrollToFieldset(fieldset);
+
+                // Expand if collapsed (Moodle collapse).
+                var collapseBody = fieldset.querySelector('.fcontainer.collapsible');
+                if (collapseBody && collapseBody.classList.contains('collapsed')) {
+                    var toggleLink = fieldset.querySelector('a.fheader');
+                    if (toggleLink) {
+                        toggleLink.click();
+                    }
+                }
+            }
         }
 
-        // Dispatch event.
-        var event = new CustomEvent('jobboard:applystepchange', {
+        // Dispatch custom event.
+        document.dispatchEvent(new CustomEvent('jobboard:stepchange', {
             detail: {
                 step: stepIndex,
                 totalSteps: state.totalSteps
             }
-        });
-        document.dispatchEvent(event);
+        }));
     };
 
     /**
-     * Go to the next step.
-     */
-    var nextStep = function() {
-        goToStep(state.currentStep + 1);
-    };
-
-    /**
-     * Go to the previous step.
-     */
-    var prevStep = function() {
-        goToStep(state.currentStep - 1, true);
-    };
-
-    /**
-     * Handle tab click.
+     * Handle step click.
      *
      * @param {Event} e The click event.
      */
-    var onTabClick = function(e) {
-        var tab = e.target.closest('[data-step]');
-        if (!tab) {
+    var onStepClick = function(e) {
+        var step = e.target.closest('.jb-step[data-step]');
+        if (!step) {
             return;
         }
 
         e.preventDefault();
-        var stepIndex = parseInt(tab.dataset.step, 10);
 
-        // Only allow clicking on completed tabs or current+1 (if tab mode allows).
-        if (state.tabMode && stepIndex <= state.currentStep + 1) {
-            goToStep(stepIndex);
+        var stepIndex = parseInt(step.dataset.step, 10) - 1; // Steps are 1-indexed in HTML.
+
+        // In tab mode, allow clicking completed steps or the next step.
+        if (state.tabMode) {
+            if (stepIndex <= state.currentStep || stepIndex === state.currentStep + 1) {
+                goToStep(stepIndex);
+            }
+        } else {
+            // Just scroll without changing progress.
+            if (step.dataset.target) {
+                var fieldset = getFieldsetByTarget(step.dataset.target);
+                if (fieldset) {
+                    scrollToFieldset(fieldset);
+                }
+            }
         }
     };
 
     /**
-     * Handle navigation button clicks.
+     * Calculate which step is currently visible based on scroll position.
      *
-     * @param {Event} e The click event.
+     * @return {number} The index of the currently visible step.
      */
-    var onNavClick = function(e) {
-        var button = e.target.closest('[data-action]');
-        if (!button) {
-            return;
+    var calculateCurrentStepFromScroll = function() {
+        var scrollPosition = window.pageYOffset + 200;
+
+        for (var i = state.steps.length - 1; i >= 0; i--) {
+            var step = state.steps[i];
+            if (step && step.dataset.target) {
+                var fieldset = getFieldsetByTarget(step.dataset.target);
+                if (fieldset && fieldset.offsetTop <= scrollPosition) {
+                    return i;
+                }
+            }
         }
 
-        var action = button.dataset.action;
+        return 0;
+    };
 
-        switch (action) {
-            case 'next-step':
-                e.preventDefault();
-                nextStep();
-                break;
-            case 'prev-step':
-                e.preventDefault();
-                prevStep();
-                break;
+    /**
+     * Update current step based on scroll position.
+     */
+    var updateStepOnScroll = function() {
+        var newStep = calculateCurrentStepFromScroll();
+        if (newStep !== state.currentStep) {
+            state.currentStep = newStep;
+            updateStepStates();
         }
     };
 
     /**
-     * Initialize the apply progress module.
+     * Debounce function.
+     *
+     * @param {Function} func Function to debounce.
+     * @param {number} wait Wait time in ms.
+     * @return {Function} Debounced function.
+     */
+    var debounce = function(func, wait) {
+        var timeout;
+        return function() {
+            var context = this;
+            var args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                func.apply(context, args);
+            }, wait);
+        };
+    };
+
+    /**
+     * Initialize the module.
      *
      * @param {Object} config Configuration object.
-     * @param {number} [config.initialStep=0] Initial step index.
-     * @param {boolean} [config.tabMode=false] Whether to enable tab click navigation.
-     * @param {string} [config.tabSelector='[data-step]'] CSS selector for tabs.
-     * @param {string} [config.sectionSelector='.jb-apply-section'] CSS selector for sections.
-     * @param {Object} [config.strings] Localized strings.
+     * @param {number} config.initialStep Initial step index (0-based).
+     * @param {boolean} config.tabMode Enable click navigation on steps.
+     * @param {string} config.stepSelector CSS selector for step elements.
+     * @param {Object} config.strings Localized strings.
      */
     var init = function(config) {
         if (state.initialized) {
@@ -256,27 +274,35 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
 
         config = config || {};
 
-        state.currentStep = config.initialStep || 0;
-        state.tabMode = config.tabMode !== false;
-        state.strings = config.strings || {};
+        // Collect step elements.
+        var stepSelector = config.stepSelector || '.jb-step[data-step]';
+        state.steps = Array.from(document.querySelectorAll(stepSelector));
+        state.totalSteps = state.steps.length;
 
-        // Collect tabs and sections.
-        state.tabs = Array.from(document.querySelectorAll(config.tabSelector || '[data-step]'));
-        state.sections = Array.from(document.querySelectorAll(config.sectionSelector || '.jb-apply-section'));
-        state.totalSteps = Math.max(state.tabs.length, state.sections.length);
+        if (state.totalSteps === 0) {
+            // Try alternative selector.
+            state.steps = Array.from(document.querySelectorAll('[data-step]'));
+            state.totalSteps = state.steps.length;
+        }
 
         if (state.totalSteps === 0) {
             return;
         }
 
-        // Initial state.
-        updateTabs();
-        showCurrentSection();
-        updateNavButtons();
+        // Set initial state.
+        state.currentStep = config.initialStep || 0;
+        state.tabMode = config.tabMode !== false;
+        state.strings = config.strings || {};
+
+        // Initial update.
+        updateStepStates();
 
         // Event listeners.
-        document.body.addEventListener('click', onTabClick);
-        document.body.addEventListener('click', onNavClick);
+        document.addEventListener('click', onStepClick);
+
+        // Scroll-based progress update (debounced).
+        var debouncedScrollUpdate = debounce(updateStepOnScroll, 150);
+        window.addEventListener('scroll', debouncedScrollUpdate, {passive: true});
 
         state.initialized = true;
     };
@@ -284,10 +310,11 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
     return {
         init: init,
         goToStep: goToStep,
-        nextStep: nextStep,
-        prevStep: prevStep,
         getCurrentStep: function() {
             return state.currentStep;
+        },
+        getTotalSteps: function() {
+            return state.totalSteps;
         }
     };
 });
