@@ -31,6 +31,7 @@ namespace local_jobboard\output\renderer;
 defined('MOODLE_INTERNAL') || die();
 
 use moodle_url;
+use local_jobboard\helper\date_helper;
 
 /**
  * Trait for convocatoria rendering functionality.
@@ -523,7 +524,7 @@ trait convocatoria_renderer {
         $vacanciesdata = [];
         foreach ($vacancies as $vacancy) {
             $vacclosedate = !empty($vacancy->closedate) ? $vacancy->closedate : $convocatoria->enddate;
-            $vacdaysremaining = \local_jobboard_days_between($now, $vacclosedate);
+            $vacdaysremaining = date_helper::days_between($now, $vacclosedate);
             $isurgent = ($vacdaysremaining <= 7 && $vacdaysremaining >= 0);
             $isclosed = ($vacclosedate < $now || $vacancy->status === 'closed');
             $vacisopen = $vacancy->is_open();
@@ -545,7 +546,7 @@ trait convocatoria_renderer {
                 'status' => $vacancy->status,
                 'statuslabel' => get_string('status_' . $vacancy->status, 'local_jobboard'),
                 'statuscolor' => $this->get_status_class($vacancy->status),
-                'closedateformatted' => \local_jobboard_format_date($vacclosedate),
+                'closedateformatted' => date_helper::format_date($vacclosedate),
                 'daysremaining' => $vacdaysremaining,
                 'isurgent' => $isurgent,
                 'isclosed' => $isclosed,

@@ -27,6 +27,8 @@ define('AJAX_SCRIPT', true);
 require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../lib.php');
 
+use local_jobboard\helper\iomad_helper;
+
 // Get the company ID parameter.
 $companyid = required_param('companyid', PARAM_INT);
 
@@ -39,7 +41,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 try {
     // Get departments for the company.
-    $departments = local_jobboard_get_departments($companyid);
+    $departments = iomad_helper::get_departments($companyid);
 
     // Format for JSON response.
     $result = [];

@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
+use local_jobboard\helper\iomad_helper;
+
 // Require capability to manage convocatorias.
 require_capability('local/jobboard:createvacancy', $context);
 
@@ -36,10 +38,10 @@ $convocatoriaid = optional_param('id', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
 
 // Check IOMAD installation.
-$isiomad = local_jobboard_is_iomad_installed();
+$isiomad = iomad_helper::is_iomad_installed();
 $companies = [];
 if ($isiomad) {
-    $companies = local_jobboard_get_companies();
+    $companies = iomad_helper::get_companies();
 }
 
 // Load existing convocatoria if editing.

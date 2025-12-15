@@ -34,6 +34,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 
 use moodleform;
+use local_jobboard\helper\iomad_helper;
 
 /**
  * Profile update form for job applicants.
@@ -311,7 +312,7 @@ class updateprofile_form extends moodleform {
             $departmentoptions = [0 => get_string('selectdepartment', 'local_jobboard')];
             // If user already has a company, load its departments.
             if (!empty($usercompanyid)) {
-                $departments = \local_jobboard_get_departments((int) $usercompanyid);
+                $departments = iomad_helper::get_departments((int) $usercompanyid);
                 if (!empty($departments)) {
                     $departmentoptions = $departmentoptions + $departments;
                 }

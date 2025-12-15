@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
+use local_jobboard\helper\iomad_helper;
+
 // Parameters.
 $id = required_param('id', PARAM_INT);
 
@@ -37,7 +39,7 @@ if (!$vacancy) {
 }
 
 // Check if user can view this vacancy.
-if (!local_jobboard_can_view_vacancy($vacancy->to_record())) {
+if (!iomad_helper::can_user_view_vacancy($vacancy->to_record())) {
     throw new moodle_exception('error:noaccess', 'local_jobboard');
 }
 

@@ -38,6 +38,8 @@ require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->libdir . '/authlib.php');
 require_once($CFG->dirroot . '/login/lib.php');
 
+use local_jobboard\helper\iomad_helper;
+
 // Check if user is already logged in.
 if (isloggedin() && !isguestuser()) {
     $vacancyid = optional_param('vacancyid', 0, PARAM_INT);
@@ -81,11 +83,11 @@ $PAGE->set_heading(get_string('signup_title', 'local_jobboard'));
 // Add custom CSS for the signup form.
 
 // Check IOMAD installation and get companies.
-$isiomad = local_jobboard_is_iomad_installed();
+$isiomad = iomad_helper::is_iomad_installed();
 $companies = [];
 
 if ($isiomad) {
-    $companies = local_jobboard_get_companies();
+    $companies = iomad_helper::get_companies();
 }
 
 // If vacancy has a company, pre-select it.

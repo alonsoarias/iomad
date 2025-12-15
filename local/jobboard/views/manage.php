@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once(__DIR__ . '/../lib.php');
 
 use local_jobboard\output\ui_helper;
+use local_jobboard\helper\iomad_helper;
 
 // Require manage capability.
 require_capability('local/jobboard:createvacancy', $context);
@@ -45,7 +46,7 @@ $action = optional_param('action', '', PARAM_ALPHA);
 $vacancyid = optional_param('id', 0, PARAM_INT);
 
 // Check if IOMAD is installed.
-$isiomad = local_jobboard_is_iomad_installed();
+$isiomad = iomad_helper::is_iomad_installed();
 
 // Page setup.
 $PAGE->set_pagelayout('standard');
@@ -224,7 +225,7 @@ if ($convocatoriaid) {
 
 // For non-admin users, filter by their company.
 if (!has_capability('local/jobboard:viewallvacancies', $context)) {
-    $usercompanyid = local_jobboard_get_user_companyid();
+    $usercompanyid = iomad_helper::get_user_companyid();
     if ($usercompanyid) {
         $filters['companyid'] = $usercompanyid;
     }

@@ -28,6 +28,8 @@ namespace local_jobboard;
 
 defined('MOODLE_INTERNAL') || die();
 
+use local_jobboard\helper\iomad_helper;
+
 /**
  * Class representing a job vacancy.
  */
@@ -466,7 +468,7 @@ class vacancy {
         }
 
         // For Iomad: require companyid if enabled.
-        if (\local_jobboard_is_iomad_installed()) {
+        if (iomad_helper::is_iomad_installed()) {
             // Company ID is recommended but not strictly required.
         }
 
@@ -884,7 +886,7 @@ class vacancy {
             return '';
         }
 
-        return local_jobboard_get_company_name($this->companyid);
+        return iomad_helper::get_company_name($this->companyid);
     }
 
     /**
@@ -897,7 +899,7 @@ class vacancy {
             return '';
         }
 
-        return local_jobboard_get_department_name($this->departmentid);
+        return iomad_helper::get_department_name($this->departmentid);
     }
 
     /**
@@ -1020,7 +1022,7 @@ class vacancy {
             $context = \context_system::instance();
             $userid = (int) $filters['userid'];
             if (!has_capability('local/jobboard:viewallvacancies', $context, $userid)) {
-                $usercompanyid = \local_jobboard_get_user_companyid($userid);
+                $usercompanyid = iomad_helper::get_user_companyid($userid);
                 if ($usercompanyid) {
                     $where[] = '(companyid IS NULL OR companyid = :usercompanyid)';
                     $params['usercompanyid'] = $usercompanyid;

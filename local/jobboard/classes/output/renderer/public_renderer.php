@@ -31,6 +31,7 @@ namespace local_jobboard\output\renderer;
 defined('MOODLE_INTERNAL') || die();
 
 use moodle_url;
+use local_jobboard\helper\iomad_helper;
 
 /**
  * Trait for public pages rendering functionality.
@@ -276,7 +277,7 @@ trait public_renderer {
         // Company name.
         $companyname = null;
         if (!empty($vacancy->companyid)) {
-            $companyname = \local_jobboard_get_company_name((int) $vacancy->companyid);
+            $companyname = iomad_helper::get_company_name((int) $vacancy->companyid);
         }
 
         // Convocatoria data.
@@ -603,7 +604,7 @@ trait public_renderer {
             // Location.
             $location = '';
             if (!empty($vacancy->companyid)) {
-                $location = \local_jobboard_get_company_name((int) $vacancy->companyid);
+                $location = iomad_helper::get_company_name((int) $vacancy->companyid);
             }
             if (empty($location) && !empty($vacancy->location)) {
                 $location = $vacancy->location;

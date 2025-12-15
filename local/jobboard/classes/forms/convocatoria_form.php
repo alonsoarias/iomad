@@ -30,6 +30,8 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
 
+use local_jobboard\helper\iomad_helper;
+
 /**
  * Form for creating and editing convocatorias.
  */
@@ -151,7 +153,7 @@ class convocatoria_form extends \moodleform {
             // Department selector - initial options with placeholder, populated via AJAX.
             $departmentoptions = [0 => get_string('selectdepartment', 'local_jobboard')];
             if ($currentcompanyid > 0) {
-                $departmentoptions += \local_jobboard_get_departments($currentcompanyid);
+                $departmentoptions += iomad_helper::get_departments($currentcompanyid);
             }
 
             $mform->addElement('select', 'departmentid', get_string('department', 'local_jobboard'),

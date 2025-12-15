@@ -32,6 +32,7 @@ use local_jobboard\application;
 use local_jobboard\document;
 use local_jobboard\vacancy;
 use local_jobboard\review_notifier;
+use local_jobboard\helper\iomad_helper;
 
 // Require review capability.
 require_capability('local/jobboard:reviewdocuments', $context);
@@ -141,8 +142,8 @@ if (!$applicationid) {
     }
 
     // Multi-tenant filter.
-    if (\local_jobboard_is_iomad_installed() && !has_capability('local/jobboard:viewallvacancies', $context)) {
-        $usercompanyid = \local_jobboard_get_user_companyid();
+    if (iomad_helper::is_iomad_installed() && !has_capability('local/jobboard:viewallvacancies', $context)) {
+        $usercompanyid = iomad_helper::get_user_companyid();
         if ($usercompanyid) {
             $where .= " AND v.companyid = :companyid";
             $sqlparams['companyid'] = $usercompanyid;
@@ -223,8 +224,8 @@ if (!$applicationid) {
         $navparams['vacancyid'] = $vacancyid;
     }
     // Multi-tenant filter.
-    if (\local_jobboard_is_iomad_installed() && !has_capability('local/jobboard:viewallvacancies', $context)) {
-        $usercompanyid = \local_jobboard_get_user_companyid();
+    if (iomad_helper::is_iomad_installed() && !has_capability('local/jobboard:viewallvacancies', $context)) {
+        $usercompanyid = iomad_helper::get_user_companyid();
         if ($usercompanyid) {
             $navwhere .= " AND v.companyid = :companyid";
             $navparams['companyid'] = $usercompanyid;

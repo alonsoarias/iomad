@@ -31,6 +31,7 @@ namespace local_jobboard\output\renderer;
 defined('MOODLE_INTERNAL') || die();
 
 use moodle_url;
+use local_jobboard\helper\date_helper;
 
 /**
  * Trait for vacancy rendering functionality.
@@ -130,7 +131,7 @@ trait vacancy_renderer {
         // Prepare vacancy data.
         $vacancydata = [];
         foreach ($vacancies as $v) {
-            $daysRemaining = local_jobboard_days_between(time(), $v->closedate);
+            $daysRemaining = date_helper::days_between(time(), $v->closedate);
             $isUrgent = ($daysRemaining <= 7 && $daysRemaining >= 0);
             $isClosed = ($v->closedate < time() || $v->status === 'closed');
 
@@ -160,7 +161,7 @@ trait vacancy_renderer {
                 'statuscolor' => $this->get_vacancy_status_class($v->status),
                 'convocatoriacode' => $convocatoriacode,
                 'daysremaining' => max(0, $daysRemaining),
-                'closedateformatted' => local_jobboard_format_date($v->closedate),
+                'closedateformatted' => date_helper::format_date($v->closedate),
                 'urgent' => $isUrgent && !$isClosed,
                 'isclosed' => $isClosed,
                 'hasapplied' => $hasApplied,
@@ -504,8 +505,8 @@ trait vacancy_renderer {
                 'statuslabel' => get_string('status:' . $v->status, 'local_jobboard'),
                 'statuscolor' => $this->get_status_class($v->status),
                 'statusicon' => $this->get_status_icon($v->status),
-                'opendateformatted' => $opendate ? local_jobboard_format_date($opendate) : '-',
-                'closedateformatted' => $closedate ? local_jobboard_format_date($closedate) : '-',
+                'opendateformatted' => $opendate ? date_helper::format_date($opendate) : '-',
+                'closedateformatted' => $closedate ? date_helper::format_date($closedate) : '-',
                 'isclosing' => $isClosing,
                 'applicationcount' => $v->application_count ?? 0,
                 'hasapplications' => ($v->application_count ?? 0) > 0,
@@ -664,13 +665,13 @@ trait vacancy_renderer {
         global $CFG, $USER;
 
         // Calculate dates and progress.
-        $daysremaining = \local_jobboard_days_between(time(), $vacancy->closedate);
+        $daysremaining = date_helper::days_between(time(), $vacancy->closedate);
         $isurgent = ($daysremaining <= 7 && $daysremaining >= 0);
         $isclosed = ($vacancy->closedate < time() || $vacancy->status === 'closed');
 
         // Progress calculation.
-        $totaldays = \local_jobboard_days_between($vacancy->opendate, $vacancy->closedate);
-        $elapseddays = \local_jobboard_days_between($vacancy->opendate, time());
+        $totaldays = date_helper::days_between($vacancy->opendate, $vacancy->closedate);
+        $elapseddays = date_helper::days_between($vacancy->opendate, time());
         $progresspercent = $totaldays > 0 ? min(100, round(($elapseddays / $totaldays) * 100)) : 100;
         $progresscolor = 'success';
         if ($progresspercent > 80) {
@@ -756,7 +757,7 @@ trait vacancy_renderer {
         $timecreatedformatted = '';
         if ($canmanage) {
             $createdbyname = fullname(\core_user::get_user($vacancy->createdby));
-            $timecreatedformatted = \local_jobboard_format_datetime($vacancy->timecreated);
+            $timecreatedformatted = date_helper::format_datetime($vacancy->timecreated);
             if ($vacancy->modifiedby) {
                 $modifiedbyname = fullname(\core_user::get_user($vacancy->modifiedby));
             }
@@ -781,8 +782,8 @@ trait vacancy_renderer {
                 'status' => $vacancy->status,
                 'statuslabel' => get_string('status_' . $vacancy->status, 'local_jobboard'),
                 'statuscolor' => $this->get_status_class($vacancy->status),
-                'opendateformatted' => \local_jobboard_format_date($vacancy->opendate),
-                'closedateformatted' => \local_jobboard_format_date($vacancy->closedate),
+                'opendateformatted' => date_helper::format_date($vacancy->opendate),
+                'closedateformatted' => date_helper::format_date($vacancy->closedate),
             ],
             'convocatoria' => $convdata,
             'statuscolor' => $statuscolor,

@@ -29,6 +29,8 @@ require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 require_once($CFG->dirroot . '/user/editlib.php');
 
+use local_jobboard\helper\iomad_helper;
+
 // Require login.
 require_login();
 
@@ -49,13 +51,13 @@ $PAGE->set_title(get_string('updateprofile_title', 'local_jobboard'));
 $PAGE->set_heading(get_string('updateprofile_title', 'local_jobboard'));
 
 // Check IOMAD installation.
-$isiomad = local_jobboard_is_iomad_installed();
+$isiomad = iomad_helper::is_iomad_installed();
 $companies = [];
 $usercompanyid = 0;
 $userdepartmentid = 0;
 
 if ($isiomad) {
-    $companies = local_jobboard_get_companies();
+    $companies = iomad_helper::get_companies();
 
     // Get user's current company assignment.
     $companyuser = $DB->get_record('company_users', ['userid' => $USER->id], 'companyid, departmentid');

@@ -37,6 +37,7 @@ use local_jobboard\application;
 use local_jobboard\document;
 use local_jobboard\vacancy;
 use local_jobboard\audit;
+use local_jobboard\helper\iomad_helper;
 
 // Parameters.
 $applicationid = optional_param('applicationid', 0, PARAM_INT);
@@ -140,7 +141,7 @@ if ($applicationid) {
 
     // Verify company exists if IOMAD is installed.
     $companyname = 'Company_' . $companyid;
-    if (local_jobboard_is_iomad_installed()) {
+    if (iomad_helper::is_iomad_installed()) {
         $company = $DB->get_record('company', ['id' => $companyid]);
         if (!$company) {
             throw new moodle_exception('companynotfound', 'local_jobboard');

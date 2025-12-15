@@ -27,6 +27,8 @@ define('AJAX_SCRIPT', true);
 require_once(__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../lib.php');
 
+use local_jobboard\helper\iomad_helper;
+
 // Get parameters.
 $search = optional_param('search', '', PARAM_TEXT);
 $companyid = optional_param('id', 0, PARAM_INT);
@@ -40,7 +42,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 try {
     // Check if IOMAD is installed.
-    if (!local_jobboard_is_iomad_installed()) {
+    if (!iomad_helper::is_iomad_installed()) {
         echo json_encode([
             'success' => false,
             'error' => 'IOMAD not installed',
@@ -64,7 +66,7 @@ try {
         }
     } else {
         // Get all companies or search.
-        $allcompanies = local_jobboard_get_companies();
+        $allcompanies = iomad_helper::get_companies();
 
         // Filter by search term if provided.
         foreach ($allcompanies as $id => $name) {

@@ -29,6 +29,7 @@ namespace local_jobboard;
 defined('MOODLE_INTERNAL') || die();
 
 use local_jobboard\trait\request_helper;
+use local_jobboard\helper\date_helper;
 
 /**
  * Class representing a job application.
@@ -518,7 +519,7 @@ class application {
             '{USER_EMAIL}' => $user->email,
             '{VACANCY_CODE}' => $vacancy->code,
             '{VACANCY_TITLE}' => $vacancy->title,
-            '{APPLICATION_DATE}' => local_jobboard_format_date($this->timecreated),
+            '{APPLICATION_DATE}' => date_helper::format_date($this->timecreated),
             '{CURRENT_STATUS}' => $this->get_status_display(),
             '{APPLICATION_URL}' => $CFG->wwwroot . '/local/jobboard/index.php?view=application&id=' . $this->id,
         ];

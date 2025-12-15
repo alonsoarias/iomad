@@ -30,6 +30,7 @@ require_once($CFG->libdir . '/formslib.php');
 require_once(__DIR__ . '/../lib.php');
 
 use local_jobboard\output\ui_helper;
+use local_jobboard\helper\iomad_helper;
 
 require_login();
 
@@ -101,7 +102,7 @@ $PAGE->set_pagelayout('admin');
 $convocatorias = $DB->get_records_menu('local_jobboard_convocatoria', null, 'name ASC', 'id, name');
 
 // Check if IOMAD is available for company selection.
-$isiomad = local_jobboard_is_iomad_installed();
+$isiomad = iomad_helper::is_iomad_installed();
 
 /**
  * CSV import form for vacancies.

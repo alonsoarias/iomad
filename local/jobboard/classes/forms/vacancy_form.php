@@ -30,6 +30,8 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
 
+use local_jobboard\helper\iomad_helper;
+
 /**
  * Form for creating and editing vacancies.
  *
@@ -184,7 +186,7 @@ class vacancy_form extends \moodleform {
         $mform->addHelpButton('desirable', 'desirable', 'local_jobboard');
 
         // Company and Department (Iomad multi-tenant).
-        $isiomad = \local_jobboard_is_iomad_installed();
+        $isiomad = iomad_helper::is_iomad_installed();
         if ($isiomad) {
             // Header for IOMAD section.
             $mform->addElement('header', 'iomadsection', get_string('iomadsettings', 'local_jobboard'));
@@ -195,7 +197,7 @@ class vacancy_form extends \moodleform {
             // Pre-select current user's company.
             $defaultcompanyid = 0;
             if (!$isedit) {
-                $usercompanyid = \local_jobboard_get_user_companyid();
+                $usercompanyid = iomad_helper::get_user_companyid();
                 if ($usercompanyid) {
                     $defaultcompanyid = $usercompanyid;
                 }
@@ -222,7 +224,7 @@ class vacancy_form extends \moodleform {
             }
 
             // Department selector (IOMAD).
-            $iomadinfo = \local_jobboard_get_iomad_info();
+            $iomadinfo = iomad_helper::get_iomad_info();
 
             // Get current department ID for preselection.
             $currentdeptid = 0;
@@ -234,7 +236,7 @@ class vacancy_form extends \moodleform {
                 // Initial options with placeholder - populated via AJAX.
                 $departments = [0 => get_string('selectdepartment', 'local_jobboard')];
                 if ($defaultcompanyid > 0) {
-                    $departments += \local_jobboard_get_departments($defaultcompanyid);
+                    $departments += iomad_helper::get_departments($defaultcompanyid);
                 }
 
                 $mform->addElement('select', 'departmentid', get_string('iomad_department', 'local_jobboard'), $departments, [

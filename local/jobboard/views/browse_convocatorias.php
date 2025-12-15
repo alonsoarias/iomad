@@ -31,6 +31,8 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
+use local_jobboard\helper\iomad_helper;
+
 // Parameters.
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 12, PARAM_INT);
@@ -42,7 +44,7 @@ $PAGE->set_title(get_string('convocatorias', 'local_jobboard'));
 $PAGE->set_heading(get_string('convocatorias', 'local_jobboard'));
 
 // Check IOMAD installation.
-$isiomad = local_jobboard_is_iomad_installed();
+$isiomad = iomad_helper::is_iomad_installed();
 
 // Build query.
 $where = ['1=1'];
@@ -56,7 +58,7 @@ if ($status) {
 
 // For non-admin users, respect tenant filtering.
 if ($isiomad && !has_capability('local/jobboard:viewallvacancies', $context)) {
-    $usercompanyid = local_jobboard_get_user_companyid();
+    $usercompanyid = iomad_helper::get_user_companyid();
     if ($usercompanyid) {
         $where[] = '(c.companyid IS NULL OR c.companyid = :companyid)';
         $params['companyid'] = $usercompanyid;

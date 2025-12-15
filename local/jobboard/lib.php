@@ -24,12 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// Use helper classes for better code organization.
-use local_jobboard\helper\status_helper;
-use local_jobboard\helper\iomad_helper;
-use local_jobboard\helper\file_helper;
-use local_jobboard\helper\date_helper;
-
 /**
  * Check if user has any of the jobboard custom roles.
  *
@@ -416,21 +410,6 @@ function local_jobboard_pluginfile($course, $cm, $context, $filearea, $args, $fo
 }
 
 /**
- * Get the list of vacancy statuses.
- *
- * @deprecated Use status_helper::get_vacancy_statuses() instead.
- * @return array List of status code => name.
- */
-function local_jobboard_get_vacancy_statuses(): array {
-    return [
-        'draft' => get_string('status:draft', 'local_jobboard'),
-        'published' => get_string('status:published', 'local_jobboard'),
-        'closed' => get_string('status:closed', 'local_jobboard'),
-        'assigned' => get_string('status:assigned', 'local_jobboard'),
-    ];
-}
-
-/**
  * Get the list of application statuses.
  *
  * @return array List of status code => name.
@@ -520,87 +499,6 @@ function local_jobboard_is_transition_allowed(string $from, string $to): bool {
     }
 
     return in_array($to, $transitions[$from]);
-}
-
-/**
- * Get the user's company ID (for Iomad multi-tenant).
- *
- * @deprecated Use iomad_helper::get_user_companyid() instead.
- * @param int|null $userid User ID or null for current user.
- * @return int|null Company ID or null if not in a company.
- */
-function local_jobboard_get_user_companyid(?int $userid = null): ?int {
-    return iomad_helper::get_user_companyid($userid);
-}
-
-/**
- * Check if user can view a vacancy (respects multi-tenant).
- *
- * @deprecated Use iomad_helper::can_user_view_vacancy() instead.
- * @param stdClass $vacancy The vacancy record.
- * @param int|null $userid User ID or null for current user.
- * @return bool True if user can view the vacancy.
- */
-function local_jobboard_can_view_vacancy(stdClass $vacancy, ?int $userid = null): bool {
-    return iomad_helper::can_user_view_vacancy($vacancy, $userid);
-}
-
-/**
- * Get company name by ID.
- *
- * @deprecated Use iomad_helper::get_company_name() instead.
- * @param int $companyid The company ID.
- * @return string Company name or empty string.
- */
-function local_jobboard_get_company_name(int $companyid): string {
-    return iomad_helper::get_company_name($companyid);
-}
-
-/**
- * Get list of available companies for dropdown.
- *
- * @deprecated Use iomad_helper::get_companies() instead.
- * @return array Company ID => name.
- */
-function local_jobboard_get_companies(): array {
-    return iomad_helper::get_companies();
-}
-
-/**
- * Check if Iomad is installed.
- *
- * @deprecated Use iomad_helper::is_iomad_installed() instead.
- * @return bool True if Iomad is installed.
- */
-function local_jobboard_is_iomad_installed(): bool {
-    return iomad_helper::is_iomad_installed();
-}
-
-/**
- * Get list of departments for a company (IOMAD).
- *
- * Only returns child departments (parent > 0), excluding the root department.
- * In IOMAD, each company has a root department (parent = 0) that serves as
- * a container, and the actual departments are children of this root.
- *
- * @deprecated Use iomad_helper::get_departments() instead.
- * @param int $companyid The company ID.
- * @param bool $includeroot Whether to include the root department (default: false).
- * @return array Department ID => name.
- */
-function local_jobboard_get_departments(int $companyid, bool $includeroot = false): array {
-    return iomad_helper::get_departments($companyid, $includeroot);
-}
-
-/**
- * Get department name by ID.
- *
- * @deprecated Use iomad_helper::get_department_name() instead.
- * @param int $departmentid The department ID.
- * @return string Department name or empty string.
- */
-function local_jobboard_get_department_name(int $departmentid): string {
-    return iomad_helper::get_department_name($departmentid);
 }
 
 /**
@@ -776,16 +674,6 @@ function local_jobboard_check_experience_requirements(int $userid, int $vacancyi
 }
 
 /**
- * Get IOMAD installation type and details.
- *
- * @deprecated Use iomad_helper::get_iomad_info() instead.
- * @return array Installation info with keys: is_iomad, version, has_departments.
- */
-function local_jobboard_get_iomad_info(): array {
-    return iomad_helper::get_iomad_info();
-}
-
-/**
  * Get the default document types to be exempted for ISER historic personnel.
  *
  * @return array Array of document type codes.
@@ -877,73 +765,6 @@ function local_jobboard_get_user_age(?int $userid = null): ?int {
     $age = $now->diff($birthDateTime)->y;
 
     return $age;
-}
-
-/**
- * Format a timestamp for display.
- *
- * @deprecated Use date_helper::format_date() instead.
- * @param int|null $timestamp Unix timestamp.
- * @param string $format Date format (strftime format).
- * @return string Formatted date or empty string if null.
- */
-function local_jobboard_format_date(?int $timestamp, string $format = '%d/%m/%Y'): string {
-    return date_helper::format_date($timestamp, $format);
-}
-
-/**
- * Format a timestamp for datetime display.
- *
- * @deprecated Use date_helper::format_datetime() instead.
- * @param int|null $timestamp Unix timestamp.
- * @return string Formatted datetime or empty string if null.
- */
-function local_jobboard_format_datetime(?int $timestamp): string {
-    return date_helper::format_datetime($timestamp);
-}
-
-/**
- * Calculate days between two timestamps.
- *
- * @deprecated Use date_helper::days_between() instead.
- * @param int $from Start timestamp.
- * @param int $to End timestamp.
- * @return int Number of days.
- */
-function local_jobboard_days_between(int $from, int $to): int {
-    return date_helper::days_between($from, $to);
-}
-
-/**
- * Get the maximum file size allowed for uploads.
- *
- * @deprecated Use file_helper::get_max_filesize() instead.
- * @return int File size in bytes.
- */
-function local_jobboard_get_max_filesize(): int {
-    return file_helper::get_max_filesize();
-}
-
-/**
- * Get allowed file extensions.
- *
- * @deprecated Use file_helper::get_allowed_extensions() instead.
- * @return array Array of allowed extensions.
- */
-function local_jobboard_get_allowed_extensions(): array {
-    return file_helper::get_allowed_extensions();
-}
-
-/**
- * Validate uploaded file type.
- *
- * @deprecated Use file_helper::validate_file_type() instead.
- * @param stored_file $file The file to validate.
- * @param array|null $allowedformats Allowed formats or null for defaults.
- * @return bool True if valid.
- */
-function local_jobboard_validate_file_type(stored_file $file, ?array $allowedformats = null): bool {
-    return file_helper::validate_file_type($file, $allowedformats);
 }
 
 /**

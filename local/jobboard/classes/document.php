@@ -28,6 +28,9 @@ namespace local_jobboard;
 
 defined('MOODLE_INTERNAL') || die();
 
+use local_jobboard\helper\file_helper;
+use local_jobboard\helper\date_helper;
+
 /**
  * Class representing an uploaded document.
  */
@@ -308,7 +311,7 @@ class document {
      */
     public static function validate_file(\stored_file $file): bool {
         // Check file size.
-        $maxsize = local_jobboard_get_max_filesize();
+        $maxsize = file_helper::get_max_filesize();
         if ($file->get_filesize() > $maxsize) {
             return false;
         }
@@ -321,7 +324,7 @@ class document {
         }
 
         // Check extension.
-        $allowedexts = local_jobboard_get_allowed_extensions();
+        $allowedexts = file_helper::get_allowed_extensions();
         $ext = strtolower(pathinfo($file->get_filename(), PATHINFO_EXTENSION));
 
         if (!in_array($ext, $allowedexts)) {
@@ -498,7 +501,7 @@ class document {
             return false;
         }
 
-        $dayssince = local_jobboard_days_between($this->issuedate, time());
+        $dayssince = date_helper::days_between($this->issuedate, time());
         return $dayssince > $maxdays;
     }
 
@@ -512,7 +515,7 @@ class document {
             return null;
         }
 
-        return local_jobboard_days_between($this->issuedate, time());
+        return date_helper::days_between($this->issuedate, time());
     }
 
     /**

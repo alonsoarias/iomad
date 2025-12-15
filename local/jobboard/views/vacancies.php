@@ -29,6 +29,9 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
+use local_jobboard\helper\iomad_helper;
+use local_jobboard\helper\date_helper;
+
 // Parameters.
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 12, PARAM_INT);
@@ -40,7 +43,7 @@ $contracttype = optional_param('contracttype', '', PARAM_ALPHA);
 $convocatoriaid = optional_param('convocatoriaid', 0, PARAM_INT);
 
 // Check if IOMAD is installed.
-$isiomad = local_jobboard_is_iomad_installed();
+$isiomad = iomad_helper::is_iomad_installed();
 
 // Load convocatoria if filtering by it.
 $convocatoria = null;
@@ -84,7 +87,7 @@ $total = $result['total'];
 // Count by urgency.
 $urgentCount = 0;
 foreach ($vacancies as $v) {
-    $daysRemaining = local_jobboard_days_between(time(), $v->closedate);
+    $daysRemaining = date_helper::days_between(time(), $v->closedate);
     if ($daysRemaining <= 7 && $daysRemaining >= 0) {
         $urgentCount++;
     }
