@@ -2632,6 +2632,9 @@ $string['observationsemailsent'] = 'Email de observaciones enviado correctamente
 $string['noobservationstosend'] = 'No hay observaciones para enviar';
 $string['saving'] = 'Guardando...';
 $string['sending'] = 'Enviando...';
+$string['saveandsend'] = 'Guardar y Enviar';
+$string['sent'] = '¡Enviado!';
+$string['emailerror'] = 'Error de email';
 
 // Cadenas de revisión secuencial
 $string['sequentialreview'] = 'Revisión Secuencial';

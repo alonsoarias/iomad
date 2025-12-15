@@ -2616,6 +2616,9 @@ $string['observationsemailsent'] = 'Observations email sent successfully';
 $string['noobservationstosend'] = 'No observations to send';
 $string['saving'] = 'Saving...';
 $string['sending'] = 'Sending...';
+$string['saveandsend'] = 'Save & Send';
+$string['sent'] = 'Sent!';
+$string['emailerror'] = 'Email error';
 
 // Sequential review strings
 $string['sequentialreview'] = 'Sequential Review';

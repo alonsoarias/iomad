@@ -346,16 +346,10 @@
                                 <i class="fa fa-info-circle me-1"></i>
                                 {{#str}}documentobservation_help, local_jobboard{{/str}}
                             </small>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-primary" id="saveObservationsBtn" onclick="jobboardSaveObservations()">
-                                    <i class="fa fa-save me-1"></i>
-                                    {{#str}}savechanges{{/str}}
-                                </button>
-                                <button type="button" class="btn btn-sm btn-warning" id="sendObservationsBtn" onclick="jobboardSendObservationsEmail()">
-                                    <i class="fa fa-paper-plane me-1"></i>
-                                    {{#str}}sendobservationsemail, local_jobboard{{/str}}
-                                </button>
-                            </div>
+                            <button type="button" class="btn btn-sm btn-primary" id="saveAndSendBtn" onclick="jobboardSaveAndSendObservations()">
+                                <i class="fa fa-paper-plane me-1"></i>
+                                {{#str}}saveandsend, local_jobboard{{/str}}
+                            </button>
                         </div>
                     </div>
 
@@ -803,9 +797,11 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/ed
         return textarea ? textarea.value : '';
     }
 
-    // Save observations via AJAX and reload page to continue workflow
-    window.jobboardSaveObservations = function() {
+    // Save observations and send email notification in one step
+    window.jobboardSaveAndSendObservations = function() {
         var observations = [];
+        var hasContent = false;
+
         $('.jb-doc-observation').each(function() {
             var docId = $(this).data('document-id');
             var elementId = $(this).attr('id');
@@ -815,18 +811,18 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/ed
                     documentid: docId,
                     observation: text
                 });
+                // Check if there's actual content (strip HTML)
+                var textContent = text.replace(/<[^>]*>/g, '').trim();
+                if (textContent) {
+                    hasContent = true;
+                }
             }
         });
 
-        // If no observations to save, just reload to refresh the view
-        if (observations.length === 0) {
-            window.location.reload();
-            return;
-        }
-
-        var btn = $('#saveObservationsBtn');
+        var btn = $('#saveAndSendBtn');
         btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> {{#str}}saving, local_jobboard{{/str}}');
 
+        // Step 1: Save observations
         Ajax.call([{
             methodname: 'local_jobboard_save_document_observations',
             args: {
@@ -834,68 +830,35 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/ed
                 observations: JSON.stringify(observations)
             },
             done: function(response) {
-                btn.prop('disabled', false).html('<i class="fa fa-check me-1"></i> {{#str}}changessaved{{/str}}');
-                // Reload page after brief delay to show success message and refresh view
-                setTimeout(function() {
-                    window.location.reload();
-                }, 800);
+                // Step 2: Send email notification (with or without observations)
+                btn.html('<i class="fa fa-spinner fa-spin me-1"></i> {{#str}}sending, local_jobboard{{/str}}');
+
+                Ajax.call([{
+                    methodname: 'local_jobboard_send_observations_email',
+                    args: {
+                        applicationid: {{selectedapplication.id}},
+                        observations: JSON.stringify(observations)
+                    },
+                    done: function(emailResponse) {
+                        btn.prop('disabled', false).html('<i class="fa fa-check me-1"></i> {{#str}}sent, local_jobboard{{/str}}');
+                        // Reload page to continue with the workflow
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 1000);
+                    },
+                    fail: function(error) {
+                        // Email failed but observations were saved
+                        btn.prop('disabled', false).html('<i class="fa fa-exclamation-triangle me-1"></i> {{#str}}emailerror, local_jobboard{{/str}}');
+                        Notification.exception(error);
+                        // Still reload after delay so user can see the error
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 3000);
+                    }
+                }]);
             },
             fail: function(error) {
-                btn.prop('disabled', false).html('<i class="fa fa-save me-1"></i> {{#str}}savechanges{{/str}}');
-                Notification.exception(error);
-            }
-        }]);
-    };
-
-    // Send observations email and reload page
-    window.jobboardSendObservationsEmail = function() {
-        var observations = [];
-        var hasObservations = false;
-
-        $('.jb-doc-observation').each(function() {
-            var docId = $(this).data('document-id');
-            var elementId = $(this).attr('id');
-            var text = getEditorContent(elementId);
-            // Strip HTML to check if there's actual content
-            var textContent = text.replace(/<[^>]*>/g, '').trim();
-            if (docId && textContent) {
-                hasObservations = true;
-                observations.push({
-                    documentid: docId,
-                    observation: text
-                });
-            }
-        });
-
-        if (!hasObservations) {
-            Str.get_string('noobservationstosend', 'local_jobboard').then(function(str) {
-                Notification.alert('', str);
-            });
-            return;
-        }
-
-        var btn = $('#sendObservationsBtn');
-        btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> {{#str}}sending, local_jobboard{{/str}}');
-
-        Ajax.call([{
-            methodname: 'local_jobboard_send_observations_email',
-            args: {
-                applicationid: {{selectedapplication.id}},
-                observations: JSON.stringify(observations)
-            },
-            done: function(response) {
-                Str.get_string('observationsemailsent', 'local_jobboard').then(function(str) {
-                    btn.prop('disabled', false).html('<i class="fa fa-check me-1"></i> ' + str);
-                    // Reload page after showing success message
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 1500);
-                });
-            },
-            fail: function(error) {
-                Str.get_string('sendobservationsemail', 'local_jobboard').then(function(str) {
-                    btn.prop('disabled', false).html('<i class="fa fa-paper-plane me-1"></i> ' + str);
-                });
+                btn.prop('disabled', false).html('<i class="fa fa-paper-plane me-1"></i> {{#str}}saveandsend, local_jobboard{{/str}}');
                 Notification.exception(error);
             }
         }]);
