@@ -777,7 +777,7 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/ed
         }
 
         var btn = $('#saveObservationsBtn');
-        btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> {{#str}}saving, admin{{/str}}');
+        btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> {{#str}}saving, local_jobboard{{/str}}');
 
         Ajax.call([{
             methodname: 'local_jobboard_save_document_observations',
@@ -826,7 +826,7 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/ed
         }
 
         var btn = $('#sendObservationsBtn');
-        btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> {{#str}}sending, admin{{/str}}');
+        btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> {{#str}}sending, local_jobboard{{/str}}');
 
         Ajax.call([{
             methodname: 'local_jobboard_send_observations_email',

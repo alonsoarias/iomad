@@ -2614,6 +2614,8 @@ $string['compiledocservations'] = 'Compile observations';
 $string['sendobservationsemail'] = 'Send observations email';
 $string['observationsemailsent'] = 'Observations email sent successfully';
 $string['noobservationstosend'] = 'No observations to send';
+$string['saving'] = 'Saving...';
+$string['sending'] = 'Sending...';
 
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';
