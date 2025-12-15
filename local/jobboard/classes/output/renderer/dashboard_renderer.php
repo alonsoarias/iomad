@@ -95,6 +95,7 @@ trait dashboard_renderer {
             'showpubliclink' => !empty($enablepublic),
             'publicurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false),
             'applicationsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
+            'profileurl' => (new moodle_url('/local/jobboard/updateprofile.php'))->out(false),
             'stats' => [],
             'adminsections' => [],
             'workflowsections' => [],
@@ -782,6 +783,17 @@ trait dashboard_renderer {
             'buttonlabel' => get_string('viewmyapplications', 'local_jobboard'),
             'alert' => $pendingDocs > 0 ? get_string('pending_docs_alert', 'local_jobboard', $pendingDocs) : null,
             'alerttype' => 'warning',
+        ];
+
+        // Update profile section.
+        $sections[] = [
+            'id' => 'updateprofile',
+            'title' => get_string('updateprofile_title', 'local_jobboard'),
+            'description' => get_string('updateprofile_dashboard_desc', 'local_jobboard'),
+            'icon' => 'user-pen',
+            'color' => 'secondary',
+            'url' => (new moodle_url('/local/jobboard/updateprofile.php'))->out(false),
+            'buttonlabel' => get_string('updateprofile_button', 'local_jobboard'),
         ];
 
         return $sections;

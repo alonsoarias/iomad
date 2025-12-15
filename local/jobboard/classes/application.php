@@ -56,8 +56,14 @@ class application {
     /** @var string Exemption reason. */
     public $exemptionreason = '';
 
-    /** @var string Digital consent text. */
-    public $consenttext = '';
+    /** @var string Status notes. */
+    public $statusnotes = '';
+
+    /** @var int Consent given flag. */
+    public $consentgiven = 0;
+
+    /** @var int Consent timestamp. */
+    public $consenttimestamp = 0;
 
     /** @var string IP at consent time. */
     public $consentip = '';
@@ -65,8 +71,11 @@ class application {
     /** @var string User agent at consent time. */
     public $consentuseragent = '';
 
-    /** @var int Consent timestamp. */
-    public $consenttime = 0;
+    /** @var string Digital signature (full name). */
+    public $digitalsignature = '';
+
+    /** @var string Cover letter / motivation. */
+    public $coverletter = '';
 
     /** @var string Additional application data (JSON). */
     public $applicationdata = '';
@@ -148,12 +157,15 @@ class application {
         $this->vacancyid = (int) $record->vacancyid;
         $this->userid = (int) $record->userid;
         $this->status = $record->status;
-        $this->isexemption = (int) $record->isexemption;
+        $this->statusnotes = $record->statusnotes ?? '';
+        $this->isexemption = (int) ($record->isexemption ?? 0);
         $this->exemptionreason = $record->exemptionreason ?? '';
-        $this->consenttext = $record->consenttext ?? '';
+        $this->consentgiven = (int) ($record->consentgiven ?? 0);
+        $this->consenttimestamp = (int) ($record->consenttimestamp ?? 0);
         $this->consentip = $record->consentip ?? '';
         $this->consentuseragent = $record->consentuseragent ?? '';
-        $this->consenttime = (int) ($record->consenttime ?? 0);
+        $this->digitalsignature = $record->digitalsignature ?? '';
+        $this->coverletter = $record->coverletter ?? '';
         $this->applicationdata = $record->applicationdata ?? '';
         $this->reviewerid = $record->reviewerid ? (int) $record->reviewerid : null;
         $this->timecreated = (int) $record->timecreated;
@@ -222,8 +234,13 @@ class application {
      * @return self The created application.
      * @throws \moodle_exception If validation fails.
      */
-    public static function create(\stdClass $data): self {
+    public static function create($data): self {
         global $DB, $USER;
+
+        // Accept both array and stdClass.
+        if (is_array($data)) {
+            $data = (object) $data;
+        }
 
         $application = new self();
         $application->vacancyid = (int) $data->vacancyid;
@@ -232,11 +249,21 @@ class application {
         $application->timecreated = time();
 
         // Set consent data.
-        if (!empty($data->consenttext)) {
-            $application->consenttext = $data->consenttext;
-            $application->consentip = self::get_user_ip();
+        if (!empty($data->consentgiven)) {
+            $application->consentgiven = 1;
+            $application->consenttimestamp = $data->consenttimestamp ?? time();
+            $application->consentip = $data->consentip ?? self::get_user_ip();
             $application->consentuseragent = self::get_user_agent();
-            $application->consenttime = time();
+        }
+
+        // Set digital signature.
+        if (!empty($data->digitalsignature)) {
+            $application->digitalsignature = $data->digitalsignature;
+        }
+
+        // Set cover letter.
+        if (!empty($data->coverletter)) {
+            $application->coverletter = $data->coverletter;
         }
 
         // Set ISER exemption if applicable.
@@ -315,7 +342,7 @@ class application {
         }
 
         // Check consent is provided (for new applications).
-        if (!$this->id && empty($this->consenttext)) {
+        if (!$this->id && empty($this->consentgiven)) {
             $errors[] = get_string('error:consentrequired', 'local_jobboard');
         }
 
@@ -648,12 +675,15 @@ class application {
             'vacancyid' => $this->vacancyid,
             'userid' => $this->userid,
             'status' => $this->status,
+            'statusnotes' => $this->statusnotes,
             'isexemption' => $this->isexemption,
             'exemptionreason' => $this->exemptionreason,
-            'consenttext' => $this->consenttext,
+            'consentgiven' => $this->consentgiven,
+            'consenttimestamp' => $this->consenttimestamp,
             'consentip' => $this->consentip,
             'consentuseragent' => $this->consentuseragent,
-            'consenttime' => $this->consenttime,
+            'digitalsignature' => $this->digitalsignature,
+            'coverletter' => $this->coverletter,
             'applicationdata' => $this->applicationdata,
             'reviewerid' => $this->reviewerid,
             'timecreated' => $this->timecreated,

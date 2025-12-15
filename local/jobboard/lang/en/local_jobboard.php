@@ -1719,6 +1719,8 @@ $string['updateprofile_intro'] = 'Update your profile information';
 $string['updateprofile_submit'] = 'Update profile';
 $string['updateprofile_success'] = 'Profile updated successfully';
 $string['updateprofile_title'] = 'Update profile';
+$string['updateprofile_button'] = 'Update profile';
+$string['updateprofile_dashboard_desc'] = 'Keep your personal information, contact details, and professional profile up to date for better application outcomes.';
 $string['update_username'] = 'Update username';
 $string['update_username_desc'] = 'Allow users to update their username';
 

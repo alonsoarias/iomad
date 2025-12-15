@@ -690,6 +690,7 @@ trait public_renderer {
             $vacancydata = [
                 'title' => format_string($vacancy->title),
                 'code' => format_string($vacancy->code),
+                'location' => format_string($vacancy->location ?? ''),
             ];
         }
 
@@ -699,6 +700,7 @@ trait public_renderer {
             'hasvacancy' => ($vacancy !== null),
             'vacancy' => $vacancydata,
             'formhtml' => $formhtml,
+            'dashboardurl' => (new \moodle_url('/local/jobboard/index.php'))->out(false),
             'str' => $strdata,
         ];
     }
