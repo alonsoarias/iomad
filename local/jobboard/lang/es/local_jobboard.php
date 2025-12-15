@@ -382,6 +382,7 @@ $string['vacancyupdated'] = 'Vacante actualizada exitosamente';
 $string['vacancydeleted'] = 'Vacante eliminada exitosamente';
 $string['vacancypublished'] = 'Vacante publicada exitosamente';
 $string['vacancyclosed'] = 'Vacante cerrada exitosamente';
+$string['vacancyclosed_desc'] = 'Esta vacante ya no acepta postulaciones';
 $string['confirmdeletevacancy'] = '¿Está seguro que desea eliminar esta vacante? Esta acción no se puede deshacer.';
 $string['vacancyhasapplications'] = 'Esta vacante tiene postulaciones y no puede ser eliminada';
 $string['closingsoon'] = 'Cierra pronto';
