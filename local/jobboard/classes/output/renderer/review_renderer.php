@@ -845,8 +845,10 @@ trait review_renderer {
             $config = $statusconfig[$status] ?? $statusconfig['pending'];
 
             $downloadurl = null;
+            $previewurlobj = null;
             if (method_exists($doc, 'get_download_url')) {
-                $downloadurl = $doc->get_download_url();
+                $downloadurl = $doc->get_download_url(true);  // Force download.
+                $previewurlobj = $doc->get_download_url(false);  // Inline view for preview.
             }
 
             $typename = method_exists($doc, 'get_doctype_name') ? $doc->get_doctype_name() : ($doc->typename ?? 'Document');
@@ -861,8 +863,8 @@ trait review_renderer {
                 }
             }
 
-            // Get preview info for document viewer.
-            $previewurl = $downloadurl ? $downloadurl->out(false) : null;
+            // Get preview info for document viewer (use inline URL, not download).
+            $previewurl = $previewurlobj ? $previewurlobj->out(false) : null;
             $mimetype = $doc->mimetype ?? 'application/octet-stream';
             $ispdf = ($mimetype === 'application/pdf');
             $isimage = (strpos($mimetype, 'image/') === 0);
