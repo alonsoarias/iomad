@@ -491,6 +491,15 @@ class document {
     }
 
     /**
+     * Get document type name (alias for get_type_display).
+     *
+     * @return string The document type name.
+     */
+    public function get_doctype_name(): string {
+        return $this->get_type_display();
+    }
+
+    /**
      * Check if document issue date is expired based on max age.
      *
      * @param int $maxdays Maximum days since issue.
