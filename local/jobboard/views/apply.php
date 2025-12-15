@@ -114,17 +114,23 @@ if (!$applicantprofile || empty($applicantprofile->profile_complete)) {
 $isexemption = false;
 $exemptioninfo = null;
 
-$exemption = $DB->get_record('local_jobboard_exemption', [
-    'userid' => $USER->id,
-    'status' => 'active',
-]);
+// An exemption is active if it's not revoked (timerevoked IS NULL) and within validity period.
+$now = time();
+$exemption = $DB->get_record_sql(
+    "SELECT *
+       FROM {local_jobboard_exemption}
+      WHERE userid = :userid
+        AND timerevoked IS NULL
+        AND validfrom <= :now1
+        AND (validuntil IS NULL OR validuntil > :now2)
+      ORDER BY timecreated DESC
+      LIMIT 1",
+    ['userid' => $USER->id, 'now1' => $now, 'now2' => $now]
+);
 
 if ($exemption) {
-    // Check if exemption is still valid.
-    if (empty($exemption->validuntil) || $exemption->validuntil > time()) {
-        $isexemption = true;
-        $exemptioninfo = $exemption;
-    }
+    $isexemption = true;
+    $exemptioninfo = $exemption;
 }
 
 // ============================================================================
