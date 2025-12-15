@@ -58,6 +58,14 @@ $PAGE->set_pagelayout('admin');
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 
+// Set up breadcrumbs via Moodle's native navbar.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php'));
+$PAGE->navbar->add(get_string('convocatorias', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']));
+$PAGE->navbar->add($convocatoriaid ? get_string('editconvocatoria', 'local_jobboard') :
+    get_string('addconvocatoria', 'local_jobboard'));
+
 // Base URLs.
 $returnurl = new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']);
 

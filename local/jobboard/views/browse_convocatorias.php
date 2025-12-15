@@ -43,6 +43,11 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('convocatorias', 'local_jobboard'));
 $PAGE->set_heading(get_string('convocatorias', 'local_jobboard'));
 
+// Set up breadcrumbs via Moodle's native navbar.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php'));
+$PAGE->navbar->add(get_string('convocatorias', 'local_jobboard'));
+
 // Check IOMAD installation.
 $isiomad = iomad_helper::is_iomad_installed();
 

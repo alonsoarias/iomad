@@ -70,16 +70,6 @@
 
     {{! Page Header }}
     <header class="jb-page-header mb-4 jb-fade-in">
-        <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="mb-3">
-            <ol class="breadcrumb">
-                {{#breadcrumbs}}
-                <li class="breadcrumb-item {{#active}}jb-active{{/active}}">
-                    {{#url}}<a href="{{url}}">{{label}}</a>{{/url}}
-                    {{^url}}<span aria-current="page">{{label}}</span>{{/url}}
-                </li>
-                {{/breadcrumbs}}
-            </ol>
-        </nav>
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
                 <h1 class="fs-4 mb-1">{{vacancy.title}}</h1>

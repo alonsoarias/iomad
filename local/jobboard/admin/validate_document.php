@@ -56,6 +56,13 @@ $PAGE->set_title(get_string('validatedocument', 'local_jobboard'));
 $PAGE->set_heading(get_string('validatedocument', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
+// Set up breadcrumbs via Moodle's native navbar.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php'));
+$PAGE->navbar->add(get_string('documents', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]));
+$PAGE->navbar->add(get_string('validate', 'local_jobboard'));
+
 // Handle form submission.
 if ($action === 'validate' || $action === 'reject') {
     require_sesskey();

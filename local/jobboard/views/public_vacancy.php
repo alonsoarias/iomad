@@ -67,6 +67,15 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title($vacancy->title);
 $PAGE->set_heading($vacancy->title);
 
+// Set up breadcrumbs via Moodle's native navbar.
+$PAGE->navbar->add(get_string('vacancies', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php', ['view' => 'public']));
+if ($convocatoria) {
+    $PAGE->navbar->add($convocatoria->name,
+        new moodle_url('/local/jobboard/index.php', ['view' => 'public_convocatoria', 'id' => $convocatoria->id]));
+}
+$PAGE->navbar->add($vacancy->title);
+
 // Check if user has already applied.
 $hasapplied = false;
 $userapplication = null;

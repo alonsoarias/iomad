@@ -133,6 +133,13 @@ $PAGE->set_title(get_string('applytovacancy', 'local_jobboard'));
 $PAGE->set_heading(get_string('applytovacancy', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
+// Set up breadcrumbs via Moodle's native navbar.
+$PAGE->navbar->add(get_string('vacancies', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']));
+$PAGE->navbar->add($vacancy->code,
+    new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]));
+$PAGE->navbar->add(get_string('apply', 'local_jobboard'));
+
 // Get convocatoria exemption summary for display.
 $convexemptionsummary = null;
 if ($convocatoriaid) {

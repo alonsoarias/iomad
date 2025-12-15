@@ -62,6 +62,13 @@ $PAGE->set_title(get_string('manageapplications', 'local_jobboard'));
 $PAGE->set_heading(get_string('manageapplications', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
 
+// Set up breadcrumbs via Moodle's native navbar.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php'));
+$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php', ['view' => 'manage']));
+$PAGE->navbar->add(get_string('applications', 'local_jobboard'));
+
 // Get applications.
 $filters = ['vacancyid' => $vacancyid];
 if (!empty($status)) {

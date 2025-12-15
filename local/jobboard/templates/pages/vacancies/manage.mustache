@@ -63,31 +63,6 @@
         {{#str}}skiptocontent, local_jobboard{{/str}}
     </a>
 
-    {{! Breadcrumb }}
-    <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="mb-3 jb-fade-in">
-        <ol class="breadcrumb">
-            {{#breadcrumbs}}
-            <li class="breadcrumb-item {{#active}}jb-active{{/active}}">
-                {{#url}}<a href="{{url}}">{{label}}</a>{{/url}}
-                {{^url}}<span aria-current="page">{{label}}</span>{{/url}}
-            </li>
-            {{/breadcrumbs}}
-            {{^breadcrumbs}}
-            <li class="breadcrumb-item">
-                <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
-            </li>
-            {{#convocatoriainfo}}
-            <li class="breadcrumb-item">
-                <a href="{{convocatoriasurl}}">{{#str}}convocatorias, local_jobboard{{/str}}</a>
-            </li>
-            {{/convocatoriainfo}}
-            <li class="breadcrumb-item jb-active" aria-current="page">
-                {{#str}}managevacancies, local_jobboard{{/str}}
-            </li>
-            {{/breadcrumbs}}
-        </ol>
-    </nav>
-
     {{! Page Header }}
     <header class="jb-page-header mb-4 jb-fade-in">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">

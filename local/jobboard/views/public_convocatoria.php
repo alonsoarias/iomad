@@ -55,6 +55,11 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title($convocatoria->name);
 $PAGE->set_heading($convocatoria->name);
 
+// Set up breadcrumbs via Moodle's native navbar.
+$PAGE->navbar->add(get_string('convocatorias', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php', ['view' => 'public']));
+$PAGE->navbar->add($convocatoria->name);
+
 // Log view (anonymous).
 \local_jobboard\audit::log('public_convocatoria_viewed', 'convocatoria', $convocatoria->id);
 

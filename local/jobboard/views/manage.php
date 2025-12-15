@@ -53,6 +53,15 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('managevacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('managevacancies', 'local_jobboard'));
 
+// Set up breadcrumbs via Moodle's native navbar.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php'));
+if ($convocatoriaid) {
+    $PAGE->navbar->add(get_string('convocatorias', 'local_jobboard'),
+        new moodle_url('/local/jobboard/index.php', ['view' => 'convocatorias']));
+}
+$PAGE->navbar->add(get_string('managevacancies', 'local_jobboard'));
+
 // Handle actions that don't need sesskey (just redirects).
 if ($action === 'create') {
     redirect(new moodle_url('/local/jobboard/admin/edit.php'));

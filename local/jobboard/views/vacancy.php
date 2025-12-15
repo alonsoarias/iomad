@@ -54,6 +54,19 @@ if ($vacancy->convocatoriaid) {
     $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $vacancy->convocatoriaid]);
 }
 
+// Set up breadcrumbs via Moodle's native navbar.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php'));
+$PAGE->navbar->add(get_string('vacancies', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']));
+if ($convocatoria) {
+    $PAGE->navbar->add($convocatoria->name,
+        new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]));
+}
+$PAGE->navbar->add($vacancy->title);
+
+// Note: convocatoria already loaded above for navbar.
+
 // Log view.
 \local_jobboard\audit::log('vacancy_viewed', 'vacancy', $vacancy->id);
 

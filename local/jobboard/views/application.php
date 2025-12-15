@@ -59,6 +59,18 @@ $PAGE->set_title(get_string('viewapplication', 'local_jobboard'));
 $PAGE->set_heading(get_string('viewapplication', 'local_jobboard'));
 $PAGE->set_pagelayout('standard');
 
+// Set up breadcrumbs via Moodle's native navbar.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/index.php'));
+if ($isowner) {
+    $PAGE->navbar->add(get_string('myapplications', 'local_jobboard'),
+        new moodle_url('/local/jobboard/index.php', ['view' => 'applications']));
+} else {
+    $PAGE->navbar->add(get_string('applications', 'local_jobboard'),
+        new moodle_url('/local/jobboard/admin/manage_applications.php', ['vacancyid' => $vacancy->id]));
+}
+$PAGE->navbar->add(get_string('application', 'local_jobboard') . ' #' . $application->id);
+
 // Handle withdraw action.
 if ($action === 'withdraw' && $isowner) {
     if (!in_array($application->status, ['submitted', 'under_review'])) {
