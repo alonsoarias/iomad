@@ -628,8 +628,11 @@ trait application_renderer {
         $docsdata = [];
         foreach ($requireddocs as $doc) {
             $docsdata[] = [
+                'code' => $doc->code ?? '',
                 'name' => format_string($doc->name),
                 'isrequired' => !empty($doc->isrequired),
+                'isuploaded' => false, // Will be updated by JS when files are uploaded.
+                'category' => $doc->category ?? 'employment',
             ];
         }
 

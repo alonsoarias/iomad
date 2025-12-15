@@ -3418,3 +3418,9 @@ $string['doccat_legal_desc'] = 'Legal documents, background checks and judicial 
 $string['multipledocs_certificacion_laboral'] = 'You can upload multiple employment certificates. Each certificate should be from a different employer or position.';
 $string['multipledocs_titulo_academico'] = 'You can upload multiple academic titles. Include all relevant degrees and certifications.';
 $string['multipledocs_formacion_complementaria'] = 'You can upload multiple complementary training certificates. Include all relevant courses and workshops.';
+
+// =============================================================================
+// CHECKLIST STRINGS
+// =============================================================================
+
+$string['allcomplete'] = 'All complete!';

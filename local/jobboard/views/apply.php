@@ -275,4 +275,9 @@ $PAGE->requires->js_call_amd('local_jobboard/application_confirm', 'init', [[
 // Initialize loading states.
 $PAGE->requires->js_call_amd('local_jobboard/loading_states', 'init', []);
 
+// Initialize document checklist for real-time tracking.
+$PAGE->requires->js_call_amd('local_jobboard/document_checklist', 'init', [[
+    'totalDocs' => count($requireddocs),
+]]);
+
 echo $OUTPUT->footer();

@@ -248,38 +248,63 @@
                     </div>
                 </section>
 
-                {{! Document Checklist - Important for UX }}
+                {{! Document Checklist - Interactive UX }}
                 {{#hasrequireddocs}}
-                <section class="card jb-sidebar-card shadow-sm mb-4 jb-fade-in-up" aria-labelledby="checklist-heading">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h2 class="fs-6 mb-0 d-flex align-items-center" id="checklist-heading">
-                            <i class="fa fa-clipboard-list fa-lg text-warning me-3" aria-hidden="true"></i>
-                            {{#str}}documentchecklist, local_jobboard{{/str}}
-                        </h2>
-                        <span class="badge bg-warning text-dark">{{requireddocscount}}</span>
+                <section class="card jb-sidebar-card shadow-sm mb-4 jb-fade-in-up"
+                         aria-labelledby="checklist-heading"
+                         data-region="document-checklist"
+                         data-total="{{requireddocscount}}">
+                    <div class="card-header bg-white">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h2 class="fs-6 mb-0 d-flex align-items-center" id="checklist-heading">
+                                <i class="fa fa-clipboard-list fa-lg text-warning me-3" aria-hidden="true"></i>
+                                {{#str}}documentchecklist, local_jobboard{{/str}}
+                            </h2>
+                            <span class="badge bg-secondary" data-region="checklist-counter">
+                                <span data-count="uploaded">0</span>/{{requireddocscount}}
+                            </span>
+                        </div>
+                        {{! Progress bar for documents }}
+                        <div class="progress" style="height: 6px;" role="progressbar" aria-label="{{#str}}documentprogress, local_jobboard{{/str}}">
+                            <div class="progress-bar bg-success" data-region="checklist-progress" style="width: 0%;"></div>
+                        </div>
                     </div>
-                    <ul class="list-group list-group-flush" role="list">
+                    <ul class="list-group list-group-flush jb-checklist" role="list" data-region="checklist-items">
                         {{#requireddocs}}
-                        <li class="list-group-item d-flex justify-content-between align-items-center py-2">
-                            <span class="small d-flex align-items-center">
-                                <i class="fa fa-file text-muted me-2" aria-hidden="true"></i>
-                                {{name}}
+                        <li class="list-group-item jb-checklist-item d-flex justify-content-between align-items-center py-2 {{^isuploaded}}unchecked{{/isuploaded}}{{#isuploaded}}checked{{/isuploaded}}"
+                            data-doc-code="{{code}}"
+                            data-doc-required="{{#isrequired}}1{{/isrequired}}{{^isrequired}}0{{/isrequired}}"
+                            role="listitem">
+                            <button type="button"
+                                    class="btn btn-link p-0 text-start text-decoration-none small d-flex align-items-center flex-grow-1"
+                                    data-action="scroll-to-doc"
+                                    data-target="doc_{{code}}">
+                                <span class="jb-checklist-checkbox me-2" aria-hidden="true">
+                                    <i class="fa fa-square-check text-success d-none" data-icon="checked"></i>
+                                    <i class="fa fa-square text-muted" data-icon="unchecked"></i>
+                                </span>
+                                <span class="jb-checklist-text">{{name}}</span>
                                 {{#isrequired}}
                                 <span class="text-danger ms-1" aria-label="{{#str}}required{{/str}}" title="{{#str}}required{{/str}}">*</span>
                                 {{/isrequired}}
+                            </button>
+                            <span class="jb-checklist-status ms-2">
+                                <i class="fa fa-circle-check text-success d-none" data-status="uploaded" aria-label="{{#str}}uploaded, local_jobboard{{/str}}"></i>
+                                <i class="fa fa-circle text-muted opacity-50" data-status="pending" aria-hidden="true"></i>
                             </span>
-                            {{#isuploaded}}
-                            <i class="fa fa-circle-check text-success" aria-label="{{#str}}uploaded, local_jobboard{{/str}}"></i>
-                            {{/isuploaded}}
-                            {{^isuploaded}}
-                            <i class="fa fa-circle text-muted small-dot" aria-hidden="true"></i>
-                            {{/isuploaded}}
                         </li>
                         {{/requireddocs}}
                     </ul>
-                    <div class="card-footer bg-light small text-muted">
-                        <i class="fa fa-circle-info me-1" aria-hidden="true"></i>
-                        <span class="text-danger">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
+                    <div class="card-footer bg-light">
+                        <div class="d-flex justify-content-between align-items-center small">
+                            <span class="text-muted">
+                                <span class="text-danger">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
+                            </span>
+                            <span class="text-success d-none" data-region="all-complete">
+                                <i class="fa fa-circle-check me-1" aria-hidden="true"></i>
+                                {{#str}}allcomplete, local_jobboard{{/str}}
+                            </span>
+                        </div>
                     </div>
                 </section>
                 {{/hasrequireddocs}}
