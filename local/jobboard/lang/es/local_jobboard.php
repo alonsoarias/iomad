@@ -2636,6 +2636,7 @@ $string['sending'] = 'Enviando...';
 // Cadenas de revisión secuencial
 $string['sequentialreview'] = 'Revisión Secuencial';
 $string['reviewingdocument'] = 'Revisando documento';
+$string['of'] = 'de';
 $string['current'] = 'Actual';
 $string['locked'] = 'Bloqueado';
 

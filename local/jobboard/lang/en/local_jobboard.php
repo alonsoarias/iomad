@@ -2620,6 +2620,7 @@ $string['sending'] = 'Sending...';
 // Sequential review strings
 $string['sequentialreview'] = 'Sequential Review';
 $string['reviewingdocument'] = 'Reviewing document';
+$string['of'] = 'of';
 $string['current'] = 'Current';
 $string['locked'] = 'Locked';
 
