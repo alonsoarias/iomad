@@ -62,9 +62,9 @@
 
     {{! Applicant Info Card }}
     <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.05s;" aria-labelledby="applicant-heading">
-        <div class="card-header bg-info text-white">
+        <div class="card-header bg-white d-flex align-items-center">
+            <i class="fa fa-user fa-lg text-info me-3" aria-hidden="true"></i>
             <h5 class="mb-0" id="applicant-heading">
-                <i class="fa fa-user me-2" aria-hidden="true"></i>
                 {{#str}}applicantinfo, local_jobboard{{/str}}
             </h5>
         </div>
@@ -98,12 +98,14 @@
     {{! Existing Interviews }}
     {{#hasinterviews}}
     <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="interviews-heading">
-        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-            <h5 class="mb-0" id="interviews-heading">
-                <i class="fa fa-calendar-check me-2" aria-hidden="true"></i>
-                {{#str}}scheduledinterviews, local_jobboard{{/str}}
-            </h5>
-            <span class="badge bg-light text-dark">{{interviewcount}}</span>
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <i class="fa fa-calendar-check fa-lg text-success me-3" aria-hidden="true"></i>
+                <h5 class="mb-0" id="interviews-heading">
+                    {{#str}}scheduledinterviews, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <span class="badge bg-success">{{interviewcount}}</span>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -189,9 +191,9 @@
     {{! New Interview Form }}
     <main id="interview-form-content">
         <section class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.15s;" aria-labelledby="newinterview-heading">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-white d-flex align-items-center">
+                <i class="fa fa-circle-plus fa-lg text-primary me-3" aria-hidden="true"></i>
                 <h5 class="mb-0" id="newinterview-heading">
-                    <i class="fa fa-circle-plus me-2" aria-hidden="true"></i>
                     {{#str}}schedulenewinterview, local_jobboard{{/str}}
                 </h5>
             </div>

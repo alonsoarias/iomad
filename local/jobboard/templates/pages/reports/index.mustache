@@ -127,9 +127,9 @@
     {{! Convocatoria Selection Card - Required before viewing reports }}
     {{#noconvocatoriaselected}}
     <section class="card shadow-sm mb-4 border-warning jb-fade-in-up" aria-labelledby="convocatoria-select-heading" style="animation-delay: 0.1s;">
-        <div class="card-header bg-warning text-dark">
+        <div class="card-header bg-white d-flex align-items-center">
+            <i class="fa fa-triangle-exclamation fa-lg text-warning me-3" aria-hidden="true"></i>
             <h2 class="fs-5 mb-0" id="convocatoria-select-heading">
-                <i class="fa fa-triangle-exclamation me-2" aria-hidden="true"></i>
                 {{#str}}selectconvocatoria_required, local_jobboard{{/str}}
             </h2>
         </div>
