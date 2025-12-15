@@ -47,6 +47,13 @@ $PAGE->set_title(get_string('bulkvalidation', 'local_jobboard'));
 $PAGE->set_heading(get_string('bulkvalidation', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
 
+// Add breadcrumbs for navigation.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('documents', 'local_jobboard'),
+    new moodle_url('/local/jobboard/views/review.php'));
+$PAGE->navbar->add(get_string('bulkvalidation', 'local_jobboard'));
+
 // Handle bulk actions.
 if ($action === 'validate' || $action === 'reject') {
     require_sesskey();

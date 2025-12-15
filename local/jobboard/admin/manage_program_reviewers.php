@@ -44,6 +44,13 @@ $PAGE->set_pagelayout('admin');
 $PAGE->set_title(get_string('programreviewers', 'local_jobboard'));
 $PAGE->set_heading(get_string('programreviewers', 'local_jobboard'));
 
+// Add breadcrumbs for navigation.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('administration', 'local_jobboard'),
+    new moodle_url('/local/jobboard/admin/'));
+$PAGE->navbar->add(get_string('programreviewers', 'local_jobboard'));
+
 // Handle actions.
 if ($action && confirm_sesskey()) {
     switch ($action) {

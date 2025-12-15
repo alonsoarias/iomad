@@ -53,6 +53,13 @@ $PAGE->set_title(get_string('manageexemptions', 'local_jobboard'));
 $PAGE->set_heading(get_string('manageexemptions', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
 
+// Add breadcrumbs for navigation.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('administration', 'local_jobboard'),
+    new moodle_url('/local/jobboard/admin/'));
+$PAGE->navbar->add(get_string('manageexemptions', 'local_jobboard'));
+
 // Handle actions (add/edit/view/revoke use ui_helper for complex form interactions).
 if ($action === 'add' || ($action === 'edit' && $id)) {
     // Add/Edit exemption form.

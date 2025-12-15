@@ -51,6 +51,13 @@ $PAGE->set_title(get_string('scheduleinterview', 'local_jobboard'));
 $PAGE->set_heading(get_string('scheduleinterview', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
 
+// Add breadcrumbs for navigation.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('applications', 'local_jobboard'),
+    new moodle_url('/local/jobboard/views/application.php', ['id' => $applicationid]));
+$PAGE->navbar->add(get_string('scheduleinterview', 'local_jobboard'));
+
 // Handle actions.
 if ($action === 'cancel' && $interviewid) {
     require_sesskey();

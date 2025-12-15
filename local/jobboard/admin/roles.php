@@ -48,6 +48,13 @@ $PAGE->set_title(get_string('manageroles', 'local_jobboard'));
 $PAGE->set_heading(get_string('manageroles', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
 
+// Add breadcrumbs for navigation.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('administration', 'local_jobboard'),
+    new moodle_url('/local/jobboard/admin/'));
+$PAGE->navbar->add(get_string('manageroles', 'local_jobboard'));
+
 // Define the plugin roles for action handling.
 $pluginroles = ['jobboard_reviewer', 'jobboard_coordinator', 'jobboard_committee'];
 

@@ -40,6 +40,13 @@ $PAGE->set_title(get_string('importexemptions', 'local_jobboard'));
 $PAGE->set_heading(get_string('importexemptions', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
 
+// Add breadcrumbs for navigation.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('manageexemptions', 'local_jobboard'),
+    new moodle_url('/local/jobboard/admin/manage_exemptions.php'));
+$PAGE->navbar->add(get_string('importexemptions', 'local_jobboard'));
+
 /**
  * CSV import form.
  */

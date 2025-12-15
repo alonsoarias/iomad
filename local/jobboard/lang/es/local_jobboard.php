@@ -2111,6 +2111,19 @@ $string['inputtype_file'] = 'Carga de archivo';
 $string['inputtype_number'] = 'Número';
 $string['inputtype_text'] = 'Texto';
 $string['inputtype_url'] = 'URL';
+$string['inputtype_help'] = 'Seleccione cómo los postulantes proporcionarán este documento: archivo (cargar PDF/imagen), texto (campo de texto libre), URL (enlace externo) o número (valor numérico).';
+
+// =============================================================================
+// CADENAS DE AYUDA - FORMULARIO DE TIPOS DE DOCUMENTO
+// =============================================================================
+
+$string['externalurl_help'] = 'URL opcional donde los postulantes pueden obtener o tramitar este documento (ej: sitio web gubernamental para certificados).';
+$string['defaultmaxagedays_help'] = 'Número máximo de días de antigüedad que puede tener el documento. Déjelo vacío o en 0 si no hay límite de vigencia.';
+$string['gendercondition_help'] = 'Seleccione si este documento solo aplica a un género específico. Por ejemplo, la libreta militar puede requerirse solo para hombres.';
+$string['ageexemptionthreshold_help'] = 'Edad a partir de la cual los postulantes quedan exentos de presentar este documento. Déjelo vacío si no hay exención por edad.';
+$string['professionexempt_help'] = 'Seleccione los niveles educativos que están exentos de presentar este documento. Por ejemplo, profesionales o posgraduados pueden estar exentos de ciertos requisitos.';
+$string['conditionalnote_help'] = 'Nota explicativa que se mostrará cuando este documento sea condicionalmente requerido, indicando en qué casos aplica o no aplica.';
+$string['checklistitems_help'] = 'Lista de verificación para validar el documento. Ingrese un elemento por línea. Los revisores marcarán cada elemento al validar.';
 
 // =============================================================================
 // CADENAS ADICIONALES - ELEMENTOS DE FORMULARIO

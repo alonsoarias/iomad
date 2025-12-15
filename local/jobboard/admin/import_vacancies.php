@@ -98,6 +98,13 @@ $PAGE->set_title(get_string('importvacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('importvacancies', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
 
+// Add breadcrumbs for navigation.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('convocatorias', 'local_jobboard'),
+    new moodle_url('/local/jobboard/views/manage.php'));
+$PAGE->navbar->add(get_string('importvacancies', 'local_jobboard'));
+
 // Get convocatorias for dropdown.
 $convocatorias = $DB->get_records_menu('local_jobboard_convocatoria', null, 'name ASC', 'id, name');
 

@@ -62,6 +62,13 @@ $PAGE->set_pagelayout('admin');
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 
+// Add breadcrumbs for navigation.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('vacancies', 'local_jobboard'),
+    new moodle_url('/local/jobboard/views/manage.php'));
+$PAGE->navbar->add($pagetitle);
+
 // Get convocatoria info.
 $convocatoriarecord = null;
 if ($convocatoriaid) {

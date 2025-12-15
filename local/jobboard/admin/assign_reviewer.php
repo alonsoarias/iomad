@@ -47,6 +47,13 @@ $PAGE->set_title(get_string('assignreviewer', 'local_jobboard'));
 $PAGE->set_heading(get_string('assignreviewer', 'local_jobboard'));
 $PAGE->set_pagelayout('admin');
 
+// Add breadcrumbs for navigation.
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
+    new moodle_url('/local/jobboard/'));
+$PAGE->navbar->add(get_string('review', 'local_jobboard'),
+    new moodle_url('/local/jobboard/views/myreviews.php'));
+$PAGE->navbar->add(get_string('assignreviewer', 'local_jobboard'));
+
 // Handle actions (before output).
 if ($action === 'assign') {
     require_sesskey();
