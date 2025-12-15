@@ -525,8 +525,15 @@ if ($createsample) {
         $sedecount++;
         $vacnum = 0;
 
-        // Distribute sedes between 2 convocatorias: first half → closed, second half → open.
-        $convocatoriaindex = ($sedecount <= ceil($totalsedes / 2)) ? 0 : 1;
+        // Distribute sedes between 3 convocatorias: first third → closed, second third → open, last third → future.
+        $thirdsize = ceil($totalsedes / 3);
+        if ($sedecount <= $thirdsize) {
+            $convocatoriaindex = 0; // Closed.
+        } else if ($sedecount <= $thirdsize * 2) {
+            $convocatoriaindex = 1; // Open.
+        } else {
+            $convocatoriaindex = 2; // Future.
+        }
 
         // Generate 4 vacancies per sede (1 per modalidad, rotating programs).
         $allprograms = [];
@@ -568,7 +575,8 @@ if ($createsample) {
         }
 
         if ($verbose) {
-            $convlabel = $convocatoriaindex === 0 ? 'Conv. Cerrada' : 'Conv. Abierta';
+            $convlabels = ['Conv. Cerrada', 'Conv. Abierta', 'Conv. Futura'];
+            $convlabel = $convlabels[$convocatoriaindex] ?? 'Conv. Abierta';
             echo "  {$sedeinfo['name']}: 4 vacancies ({$convlabel})\n";
         }
     }
@@ -787,13 +795,19 @@ if ($options['create-structure']) {
 
     $adminuser = get_admin();
 
-    // Determine which locations are needed.
+    // When --create-sample is used, create ALL sedes and departments.
+    // Otherwise, only create the ones needed based on profiles.
     $neededlocations = array_unique(array_column($allprofiles, 'location'));
-    echo "Locations needed: " . implode(', ', $neededlocations) . "\n\n";
+
+    if ($createsample) {
+        echo "Creating ALL sedes (companies) and their departments...\n\n";
+    } else {
+        echo "Locations needed: " . implode(', ', $neededlocations) . "\n\n";
+    }
 
     foreach ($ISER_SEDES as $key => $sedeinfo) {
-        // Check if this location is needed.
-        if (!in_array($key, $neededlocations) && $key !== 'PAMPLONA') {
+        // Check if this location is needed (skip check when --create-sample).
+        if (!$createsample && !in_array($key, $neededlocations) && $key !== 'PAMPLONA') {
             continue;
         }
 
@@ -890,7 +904,7 @@ if ($shouldpublish && empty($convocatoriaid)) {
     $year = date('Y');
     $semester = ceil(date('n') / 6);
 
-    // When --create-sample, create 2 convocatorias: one closed, one open.
+    // When --create-sample, create 3 convocatorias: closed, open, and future.
     if ($createsample) {
         $adminuser = get_admin();
 
@@ -950,6 +964,37 @@ if ($shouldpublish && empty($convocatoriaid)) {
             echo "Created OPEN convocatoria: $openname\n";
             echo "  Code: $opencode | ID: {$convocatoriaids[1]}\n";
             echo "  Period: " . date('Y-m-d', $openstart) . " to " . date('Y-m-d', $openend) . " (CURRENT)\n";
+        }
+
+        // Convocatoria 3: FUTURA (dates in the future).
+        $nextsemester = $semester + 1 > 2 ? 1 : $semester + 1;
+        $nextyear = $semester + 1 > 2 ? $year + 1 : $year;
+        $futurecode = "CONV-ISER-{$nextyear}-{$nextsemester}-FUTURE";
+        $futurename = "Convocatoria Docentes ISER {$nextyear}-{$nextsemester} (Próximamente)";
+
+        $existingfuture = $DB->get_record('local_jobboard_convocatoria', ['code' => $futurecode]);
+        if ($existingfuture) {
+            echo "Using existing FUTURE convocatoria: $futurecode (ID: {$existingfuture->id})\n";
+            $convocatoriaids[2] = $existingfuture->id;
+        } else if (!$dryrun) {
+            $futurestart = strtotime('+60 days');
+            $futureend = strtotime('+90 days');
+
+            $futureconv = new stdClass();
+            $futureconv->code = $futurecode;
+            $futureconv->name = $futurename;
+            $futureconv->description = "<div class='alert alert-info'><strong>Próximamente.</strong> Esta convocatoria aún no ha iniciado.</div><p>Convocatoria para docentes ocasionales y de cátedra del próximo semestre. Consulte las fechas de apertura.</p>";
+            $futureconv->startdate = $futurestart;
+            $futureconv->enddate = $futureend;
+            $futureconv->status = 'draft';
+            $futureconv->publicationtype = $options['public'] ? 'public' : 'internal';
+            $futureconv->createdby = $adminuser->id;
+            $futureconv->timecreated = $now;
+
+            $convocatoriaids[2] = $DB->insert_record('local_jobboard_convocatoria', $futureconv);
+            echo "Created FUTURE convocatoria: $futurename\n";
+            echo "  Code: $futurecode | ID: {$convocatoriaids[2]}\n";
+            echo "  Period: " . date('Y-m-d', $futurestart) . " to " . date('Y-m-d', $futureend) . " (FUTURE)\n";
         }
 
         echo "\nConvocatorias ready: " . count($convocatoriaids) . "\n";

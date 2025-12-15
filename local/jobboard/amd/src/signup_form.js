@@ -37,6 +37,68 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
     };
 
     /**
+     * Load all companies via AJAX.
+     *
+     * @return {Promise} Promise resolving with company data.
+     */
+    var loadCompanies = function() {
+        if (!state.ajaxEndpoint) {
+            return Promise.resolve([]);
+        }
+
+        var url = state.ajaxEndpoint + '/get_companies.php';
+
+        return fetch(url)
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.success && data.companies) {
+                    return data.companies;
+                }
+                return [];
+            })
+            .catch(function(error) {
+                Notification.exception(error);
+                return [];
+            });
+    };
+
+    /**
+     * Update the company select options.
+     *
+     * @param {Array} companies Array of company objects.
+     * @param {number} preselectedId ID to preselect.
+     */
+    var updateCompanyOptions = function(companies, preselectedId) {
+        if (!state.companySelect) {
+            return;
+        }
+
+        // Clear existing options except the first (placeholder).
+        while (state.companySelect.options.length > 1) {
+            state.companySelect.remove(1);
+        }
+
+        // Add new options.
+        companies.forEach(function(company) {
+            var option = document.createElement('option');
+            option.value = company.id;
+            option.textContent = company.name;
+            if (preselectedId && company.id === preselectedId) {
+                option.selected = true;
+            }
+            state.companySelect.appendChild(option);
+        });
+
+        // Enable select.
+        state.companySelect.disabled = companies.length === 0;
+    };
+
+    /**
      * Load departments for a given company.
      *
      * @param {number} companyId The company ID.
@@ -120,8 +182,9 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
      * @param {string} config.companySelector CSS selector for company select.
      * @param {string} config.departmentSelector CSS selector for department select.
      * @param {string} config.ajaxEndpoint Base URL for AJAX endpoints.
-     * @param {number} [config.preselectedCompany] Pre-selected company ID.
-     * @param {number} [config.preselectedDepartment] Pre-selected department ID.
+     * @param {boolean} [config.loadCompaniesAjax] Load companies via AJAX.
+     * @param {number} [config.companyPreselect] Pre-selected company ID.
+     * @param {number} [config.preselect] Pre-selected department ID.
      */
     var init = function(config) {
         if (state.initialized) {
@@ -131,20 +194,40 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
         config = config || {};
         state.ajaxEndpoint = config.ajaxEndpoint || M.cfg.wwwroot + '/local/jobboard/ajax';
 
-        state.companySelect = document.querySelector(config.companySelector || '#id_companyid');
-        state.departmentSelect = document.querySelector(config.departmentSelector || '#id_departmentid');
+        // Support both ID formats: #id_companyid and #id_companyid_signup.
+        state.companySelect = document.querySelector(config.companySelector || '#id_companyid_signup') ||
+                              document.querySelector('#id_companyid');
+        state.departmentSelect = document.querySelector(config.departmentSelector || '#id_departmentid_signup') ||
+                                 document.querySelector('#id_departmentid');
 
         if (state.companySelect) {
             state.companySelect.addEventListener('change', onCompanyChange);
 
-            // If there's a preselected company, load its departments.
-            if (config.preselectedCompany) {
-                loadDepartments(config.preselectedCompany).then(function(departments) {
+            // Load companies via AJAX if configured.
+            if (config.loadCompaniesAjax) {
+                loadCompanies().then(function(companies) {
+                    updateCompanyOptions(companies, config.companyPreselect);
+
+                    // If a company is preselected, load its departments.
+                    if (config.companyPreselect) {
+                        loadDepartments(config.companyPreselect).then(function(departments) {
+                            updateDepartmentOptions(departments);
+
+                            // Select preselected department if provided.
+                            if (config.preselect && state.departmentSelect) {
+                                state.departmentSelect.value = config.preselect;
+                            }
+                        });
+                    }
+                });
+            } else if (config.companyPreselect) {
+                // If not loading companies but has preselect, just load departments.
+                loadDepartments(config.companyPreselect).then(function(departments) {
                     updateDepartmentOptions(departments);
 
                     // Select preselected department if provided.
-                    if (config.preselectedDepartment && state.departmentSelect) {
-                        state.departmentSelect.value = config.preselectedDepartment;
+                    if (config.preselect && state.departmentSelect) {
+                        state.departmentSelect.value = config.preselect;
                     }
                 });
             }
