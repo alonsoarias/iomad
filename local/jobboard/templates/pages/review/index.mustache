@@ -231,47 +231,20 @@
                                         {{rejectreason}}
                                     </div>
                                     {{/rejectreason}}
-                                    {{! Observations HTML editor for reviewer feedback }}
+                                    {{! Observations using Moodle HTML editor }}
                                     <div class="mt-2 jb-observation-editor-wrapper" onclick="event.stopPropagation();">
                                         <label for="doc_observation_{{id}}" class="form-label small text-muted mb-1">
                                             <i class="fa fa-comment-dots me-1"></i>
                                             {{#str}}documentobservation, local_jobboard{{/str}}
                                         </label>
-                                        {{! Formatting toolbar }}
-                                        <div class="btn-toolbar mb-1 jb-editor-toolbar" role="toolbar">
-                                            <div class="btn-group btn-group-sm me-1" role="group">
-                                                <button type="button" class="btn btn-outline-secondary" onclick="jobboardFormatText('bold', 'doc_observation_{{id}}')" title="Negrita">
-                                                    <i class="fa fa-bold"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-outline-secondary" onclick="jobboardFormatText('italic', 'doc_observation_{{id}}')" title="Cursiva">
-                                                    <i class="fa fa-italic"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-outline-secondary" onclick="jobboardFormatText('underline', 'doc_observation_{{id}}')" title="Subrayado">
-                                                    <i class="fa fa-underline"></i>
-                                                </button>
-                                            </div>
-                                            <div class="btn-group btn-group-sm me-1" role="group">
-                                                <button type="button" class="btn btn-outline-secondary" onclick="jobboardFormatText('insertUnorderedList', 'doc_observation_{{id}}')" title="Lista">
-                                                    <i class="fa fa-list-ul"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-outline-secondary" onclick="jobboardFormatText('insertOrderedList', 'doc_observation_{{id}}')" title="Lista numerada">
-                                                    <i class="fa fa-list-ol"></i>
-                                                </button>
-                                            </div>
-                                            <div class="btn-group btn-group-sm" role="group">
-                                                <button type="button" class="btn btn-outline-danger" onclick="jobboardClearFormat('doc_observation_{{id}}')" title="Limpiar formato">
-                                                    <i class="fa fa-eraser"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        {{! Editable content area }}
-                                        <div id="doc_observation_{{id}}"
-                                             class="form-control jb-doc-observation jb-html-editor"
-                                             contenteditable="true"
-                                             data-document-id="{{id}}"
-                                             data-application-id="{{applicationid}}"
-                                             data-placeholder="{{#str}}documentobservation_placeholder, local_jobboard{{/str}}"
-                                             style="min-height: 60px; max-height: 150px; overflow-y: auto;">{{{observation}}}</div>
+                                        {{! Textarea for Moodle editor }}
+                                        <textarea name="doc_observation_{{id}}"
+                                                  id="doc_observation_{{id}}"
+                                                  class="form-control jb-doc-observation jb-moodle-editor"
+                                                  rows="3"
+                                                  data-document-id="{{id}}"
+                                                  data-application-id="{{applicationid}}"
+                                                  placeholder="{{#str}}documentobservation_placeholder, local_jobboard{{/str}}">{{{observation}}}</textarea>
                                     </div>
                                     {{! Action buttons }}
                                     <div class="d-flex gap-1 mt-2" onclick="event.stopPropagation();">
@@ -631,32 +604,6 @@
 
 {{! Document Preview JavaScript }}
 <script>
-// HTML Editor formatting functions
-function jobboardFormatText(command, editorId) {
-    var editor = document.getElementById(editorId);
-    if (editor) {
-        editor.focus();
-        document.execCommand(command, false, null);
-    }
-}
-
-function jobboardClearFormat(editorId) {
-    var editor = document.getElementById(editorId);
-    if (editor) {
-        editor.focus();
-        document.execCommand('removeFormat', false, null);
-    }
-}
-
-// Get HTML content from contenteditable div
-function jobboardGetEditorContent(editorId) {
-    var editor = document.getElementById(editorId);
-    if (editor) {
-        return editor.innerHTML.trim();
-    }
-    return '';
-}
-
 function jobboardPreviewDocument(element) {
     const previewUrl = element.dataset.previewUrl;
     const isPdf = element.dataset.isPdf === 'true' || element.dataset.isPdf === '1';
@@ -768,45 +715,93 @@ function jobboardPreviewDocument(element) {
 .jb-doc-observation.border-success {
     border-color: #198754 !important;
 }
-/* HTML Editor styles */
-.jb-html-editor {
-    background-color: #fff;
-    font-size: 0.875rem;
-    line-height: 1.5;
-}
-.jb-html-editor:empty:before {
-    content: attr(data-placeholder);
-    color: #6c757d;
-    pointer-events: none;
-}
-.jb-html-editor:focus {
-    outline: none;
-}
-.jb-html-editor ul, .jb-html-editor ol {
+/* Moodle Editor wrapper styles */
+.jb-observation-editor-wrapper .editor_atto_wrap {
     margin-bottom: 0;
-    padding-left: 1.5rem;
 }
-.jb-editor-toolbar .btn {
-    padding: 0.15rem 0.4rem;
-    font-size: 0.75rem;
+.jb-observation-editor-wrapper .editor_atto_toolbar {
+    background: #f8f9fa;
+    border-radius: 4px 4px 0 0;
 }
-.jb-observation-editor-wrapper .btn-toolbar {
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 0.25rem;
+.jb-observation-editor-wrapper .editor_atto_content_wrap {
+    min-height: 80px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.jb-observation-editor-wrapper .editor_atto_content {
+    min-height: 80px;
+    font-size: 0.875rem;
 }
 </style>
 
-{{! JavaScript for document observations }}
+{{! JavaScript for document observations with Moodle editor }}
 {{#selectedapplication}}
 {{#js}}
-require(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Ajax, Notification, Str) {
-    // Save observations via AJAX (supports both textarea and contenteditable)
+require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_atto/editor', 'core/editor'], function($, Ajax, Notification, Str, AttoEditor, Editor) {
+    // Initialize Moodle editors for all observation textareas
+    function initMoodleEditors() {
+        $('.jb-moodle-editor').each(function() {
+            var textarea = $(this);
+            var elementId = textarea.attr('id');
+
+            // Check if editor is already initialized
+            if (textarea.data('editor-initialized')) {
+                return;
+            }
+
+            // Initialize the editor using Moodle's editor API
+            require(['core/editor'], function(Editor) {
+                Editor.setupSmallEditor(elementId, {
+                    context: M.cfg.contextid,
+                    atto: {
+                        toolbar: 'bold italic | unorderedlist orderedlist | link',
+                        autosaveEnabled: false
+                    }
+                }).then(function() {
+                    textarea.data('editor-initialized', true);
+                }).catch(function() {
+                    // Fallback: editor may already be set up or not available
+                    textarea.data('editor-initialized', true);
+                });
+            });
+        });
+    }
+
+    // Initialize editors on page load
+    initMoodleEditors();
+
+    // Helper function to get editor content (supports Atto, TinyMCE, and plain textarea)
+    function getEditorContent(elementId) {
+        var textarea = document.getElementById(elementId);
+        if (!textarea) return '';
+
+        // Check for Atto editor
+        var attoContent = document.querySelector('#' + elementId + 'editable');
+        if (attoContent) {
+            // Update textarea from Atto before reading
+            if (typeof Y !== 'undefined' && Y.M && Y.M.editor_atto) {
+                var editor = Y.M.editor_atto.getEditor(elementId);
+                if (editor) {
+                    editor.updateOriginal();
+                }
+            }
+        }
+
+        // Check for TinyMCE
+        if (typeof tinyMCE !== 'undefined' && tinyMCE.get(elementId)) {
+            return tinyMCE.get(elementId).getContent();
+        }
+
+        return textarea.value || '';
+    }
+
+    // Save observations via AJAX
     window.jobboardSaveObservations = function() {
         var observations = [];
         $('.jb-doc-observation').each(function() {
             var docId = $(this).data('document-id');
-            // Support both textarea (val) and contenteditable (html)
-            var text = $(this).is('[contenteditable]') ? $(this).html().trim() : $(this).val().trim();
+            var elementId = $(this).attr('id');
+            var text = getEditorContent(elementId);
             if (docId) {
                 observations.push({
                     documentid: docId,
@@ -848,10 +843,10 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aj
 
         $('.jb-doc-observation').each(function() {
             var docId = $(this).data('document-id');
-            // Support both textarea (val) and contenteditable (html)
-            var text = $(this).is('[contenteditable]') ? $(this).html().trim() : $(this).val().trim();
-            // Check if content is not empty (ignore empty HTML tags)
-            var textContent = $(this).text().trim();
+            var elementId = $(this).attr('id');
+            var text = getEditorContent(elementId);
+            // Strip HTML to check if there's actual content
+            var textContent = text.replace(/<[^>]*>/g, '').trim();
             if (docId && textContent) {
                 hasObservations = true;
                 observations.push({
@@ -896,29 +891,39 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aj
         }]);
     };
 
-    // Auto-save observations on blur (supports contenteditable)
-    $('.jb-doc-observation').on('blur', function() {
-        var $this = $(this);
-        var docId = $this.data('document-id');
-        // Support both textarea (val) and contenteditable (html)
-        var text = $this.is('[contenteditable]') ? $this.html().trim() : $this.val().trim();
+    // Auto-save observations on blur (debounced for Moodle editors)
+    var saveTimeout = null;
+    $(document).on('blur', '.jb-doc-observation, .editor_atto_content', function(e) {
+        var $target = $(e.target);
+        var $textarea = $target.hasClass('jb-doc-observation') ? $target : $target.closest('.jb-observation-editor-wrapper').find('.jb-doc-observation');
 
-        Ajax.call([{
-            methodname: 'local_jobboard_save_document_observations',
-            args: {
-                applicationid: {{selectedapplication.id}},
-                observations: JSON.stringify([{documentid: docId, observation: text}])
-            },
-            done: function() {
-                $this.addClass('border-success');
-                setTimeout(function() {
-                    $this.removeClass('border-success');
-                }, 1000);
-            },
-            fail: function() {
-                // Silent fail for auto-save
-            }
-        }]);
+        if (!$textarea.length) return;
+
+        var docId = $textarea.data('document-id');
+        var elementId = $textarea.attr('id');
+
+        // Debounce the save
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(function() {
+            var text = getEditorContent(elementId);
+
+            Ajax.call([{
+                methodname: 'local_jobboard_save_document_observations',
+                args: {
+                    applicationid: {{selectedapplication.id}},
+                    observations: JSON.stringify([{documentid: docId, observation: text}])
+                },
+                done: function() {
+                    $textarea.addClass('border-success');
+                    setTimeout(function() {
+                        $textarea.removeClass('border-success');
+                    }, 1000);
+                },
+                fail: function() {
+                    // Silent fail for auto-save
+                }
+            }]);
+        }, 500);
     });
 });
 {{/js}}
