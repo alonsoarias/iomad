@@ -3347,3 +3347,7 @@ $string['pagenavigation'] = 'Page Navigation';
 $string['filterapplications'] = 'Filter Applications';
 $string['allcaughtup'] = 'All caught up!';
 $string['filterdocuments'] = 'Filter Documents';
+$string['doctypeactions'] = 'Document Type Actions';
+$string['exemptionactions'] = 'Exemption Actions';
+$string['filterexemptions'] = 'Filter Exemptions';
+$string['noexemptionsdesc'] = 'No exemptions have been created yet.';
