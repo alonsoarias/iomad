@@ -78,33 +78,27 @@
         {{! Preview Summary Stats }}
         <section class="row mb-4" aria-label="{{#str}}previewsummary, local_jobboard{{/str}}">
             <div class="col-md-4 mb-3">
-                <div class="card shadow-sm jb-stat-card jb-fade-in-up" style="animation-delay: 0.05s;">
-                    <div class="card-body text-center">
-                        <div class="jb-icon-circle bg-success text-white mx-auto mb-2">
-                            <i class="fa fa-plus" aria-hidden="true"></i>
-                        </div>
+                <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.05s;">
+                    <div class="card-body text-center py-3">
+                        <i class="fa fa-plus fa-2x text-success mb-2" aria-hidden="true"></i>
                         <h3 class="text-success mb-1">{{results.tocreate}}</h3>
                         <p class="text-muted small mb-0">{{str.tobecreated}}</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
-                <div class="card shadow-sm jb-stat-card jb-fade-in-up" style="animation-delay: 0.1s;">
-                    <div class="card-body text-center">
-                        <div class="jb-icon-circle bg-warning text-dark mx-auto mb-2">
-                            <i class="fa fa-arrows-rotate" aria-hidden="true"></i>
-                        </div>
+                <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="card-body text-center py-3">
+                        <i class="fa fa-arrows-rotate fa-2x text-warning mb-2" aria-hidden="true"></i>
                         <h3 class="text-warning mb-1">{{results.toupdate}}</h3>
                         <p class="text-muted small mb-0">{{str.tobeupdated}}</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
-                <div class="card shadow-sm jb-stat-card jb-fade-in-up" style="animation-delay: 0.15s;">
-                    <div class="card-body text-center">
-                        <div class="jb-icon-circle bg-secondary text-white mx-auto mb-2">
-                            <i class="fa fa-forward" aria-hidden="true"></i>
-                        </div>
+                <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.15s;">
+                    <div class="card-body text-center py-3">
+                        <i class="fa fa-forward fa-2x text-secondary mb-2" aria-hidden="true"></i>
                         <h3 class="text-secondary mb-1">{{results.toskip}}</h3>
                         <p class="text-muted small mb-0">{{str.tobeskipped}}</p>
                     </div>
@@ -189,8 +183,8 @@
         {{/haspreviewrows}}
 
         {{^haspreviewrows}}
-        <div class="jb-empty-state text-center py-5">
-            <i class="fa fa-file-excel fa-4x text-muted mb-3" aria-hidden="true"></i>
+        <div class="text-center py-5" role="status">
+            <i class="fa fa-file-excel fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
             <h5 class="text-muted">{{#str}}nopreviewdata, local_jobboard{{/str}}</h5>
             <a href="{{uploadurl}}" class="btn btn-primary mt-3">
                 <i class="fa fa-upload me-2" aria-hidden="true"></i>
@@ -214,10 +208,8 @@
         <section class="row mb-4" aria-label="{{#str}}importresults, local_jobboard{{/str}}">
             <div class="col-md-4 mb-3">
                 <div class="card shadow-sm text-center jb-fade-in-up" style="animation-delay: 0.05s;">
-                    <div class="card-body">
-                        <div class="jb-icon-circle bg-success text-white mx-auto mb-3">
-                            <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
-                        </div>
+                    <div class="card-body py-3">
+                        <i class="fa fa-plus fa-2x text-success mb-2" aria-hidden="true"></i>
                         <h3 class="text-success mb-1">{{results.created}}</h3>
                         <p class="mb-0 text-muted">{{str.vacanciescreated}}</p>
                     </div>
@@ -225,10 +217,8 @@
             </div>
             <div class="col-md-4 mb-3">
                 <div class="card shadow-sm text-center jb-fade-in-up" style="animation-delay: 0.1s;">
-                    <div class="card-body">
-                        <div class="jb-icon-circle bg-warning text-dark mx-auto mb-3">
-                            <i class="fa fa-arrows-rotate fa-lg" aria-hidden="true"></i>
-                        </div>
+                    <div class="card-body py-3">
+                        <i class="fa fa-arrows-rotate fa-2x text-warning mb-2" aria-hidden="true"></i>
                         <h3 class="text-warning mb-1">{{results.updated}}</h3>
                         <p class="mb-0 text-muted">{{str.vacanciesupdated}}</p>
                     </div>
@@ -236,10 +226,8 @@
             </div>
             <div class="col-md-4 mb-3">
                 <div class="card shadow-sm text-center jb-fade-in-up" style="animation-delay: 0.15s;">
-                    <div class="card-body">
-                        <div class="jb-icon-circle bg-secondary text-white mx-auto mb-3">
-                            <i class="fa fa-forward fa-lg" aria-hidden="true"></i>
-                        </div>
+                    <div class="card-body py-3">
+                        <i class="fa fa-forward fa-2x text-secondary mb-2" aria-hidden="true"></i>
                         <h3 class="text-secondary mb-1">{{results.skipped}}</h3>
                         <p class="mb-0 text-muted">{{str.vacanciesskipped}}</p>
                     </div>

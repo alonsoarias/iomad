@@ -219,18 +219,14 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="d-flex align-items-center">
-                            <div class="jb-icon-circle bg-success text-white me-2">
-                                <i class="fa fa-play" aria-hidden="true"></i>
-                            </div>
+                            <i class="fa fa-play fa-lg text-success me-2" aria-hidden="true"></i>
                             <span class="text-muted small">{{#str}}startdate, local_jobboard{{/str}}</span>
                         </div>
                         <strong>{{convocatoria.startdateformatted}}</strong>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="d-flex align-items-center">
-                            <div class="jb-icon-circle bg-danger text-white me-2">
-                                <i class="fa fa-stop" aria-hidden="true"></i>
-                            </div>
+                            <i class="fa fa-stop fa-lg text-danger me-2" aria-hidden="true"></i>
                             <span class="text-muted small">{{#str}}enddate, local_jobboard{{/str}}</span>
                         </div>
                         <div class="text-end">
@@ -290,9 +286,7 @@
             {{#totalvacancies}}
             <section class="card shadow-sm mb-4 border-primary jb-fade-in-up" aria-labelledby="cta-heading" style="animation-delay: 0.25s;">
                 <div class="card-body text-center py-4">
-                    <div class="jb-icon-circle-lg bg-primary text-white mx-auto mb-3">
-                        <i class="fa fa-briefcase fa-2x" aria-hidden="true"></i>
-                    </div>
+                    <i class="fa fa-briefcase fa-3x text-primary mb-3" aria-hidden="true"></i>
                     <h2 class="card-title fs-5 mb-2" id="cta-heading">{{#str}}viewvacancies, local_jobboard{{/str}}</h2>
                     <p class="card-text text-muted mb-3">{{#str}}vacanciesavailable, local_jobboard, {{totalvacancies}}{{/str}}</p>
                     <a href="{{vacanciesurl}}" class="btn btn-primary btn-lg w-100 jb-hover-lift">
@@ -307,9 +301,7 @@
             {{^isloggedin}}
             <section class="card shadow-sm mb-4 border-warning jb-fade-in-up" aria-labelledby="login-heading" style="animation-delay: 0.3s;">
                 <div class="card-body text-center py-4">
-                    <div class="jb-icon-circle-lg bg-warning text-white mx-auto mb-3">
-                        <i class="fa fa-circle-user fa-2x" aria-hidden="true"></i>
-                    </div>
+                    <i class="fa fa-circle-user fa-3x text-warning mb-3" aria-hidden="true"></i>
                     <h2 class="card-title fs-5 mb-2" id="login-heading">{{#str}}wanttoapply, local_jobboard{{/str}}</h2>
                     <p class="card-text text-muted mb-3">{{#str}}loginrequiredtoapply, local_jobboard{{/str}}</p>
                     <a href="{{loginurl}}" class="btn btn-primary btn-lg w-100 mb-2 jb-hover-lift">

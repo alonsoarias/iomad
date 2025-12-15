@@ -83,38 +83,38 @@
     {{! Statistics Cards }}
     <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         <div class="col-md-3 col-sm-6 mb-3">
-            <div class="card shadow-sm jb-stat-card bg-primary text-white h-100 jb-fade-in-up" style="animation-delay: 0.05s;">
-                <div class="card-body text-center d-flex flex-column justify-content-center">
-                    <i class="fa fa-envelope fa-2x mb-2 opacity-75" aria-hidden="true"></i>
-                    <div class="jb-stat-number fs-2 fw-bold">{{stats.total}}</div>
-                    <div class="jb-stat-label small">{{str.totaltemplates}}</div>
+            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.05s;">
+                <div class="card-body text-center py-3">
+                    <i class="fa fa-envelope fa-2x text-primary mb-2" aria-hidden="true"></i>
+                    <div class="fs-2 fw-bold text-dark">{{stats.total}}</div>
+                    <div class="small text-muted">{{str.totaltemplates}}</div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
-            <div class="card shadow-sm jb-stat-card bg-success text-white h-100 jb-fade-in-up" style="animation-delay: 0.1s;">
-                <div class="card-body text-center d-flex flex-column justify-content-center">
-                    <i class="fa fa-circle-check fa-2x mb-2 opacity-75" aria-hidden="true"></i>
-                    <div class="jb-stat-number fs-2 fw-bold">{{stats.enabled}}</div>
-                    <div class="jb-stat-label small">{{str.templatesenabled}}</div>
+            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.1s;">
+                <div class="card-body text-center py-3">
+                    <i class="fa fa-circle-check fa-2x text-success mb-2" aria-hidden="true"></i>
+                    <div class="fs-2 fw-bold text-dark">{{stats.enabled}}</div>
+                    <div class="small text-muted">{{str.templatesenabled}}</div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
-            <div class="card shadow-sm jb-stat-card bg-warning text-dark h-100 jb-fade-in-up" style="animation-delay: 0.15s;">
-                <div class="card-body text-center d-flex flex-column justify-content-center">
-                    <i class="fa fa-circle-pause fa-2x mb-2 opacity-75" aria-hidden="true"></i>
-                    <div class="jb-stat-number fs-2 fw-bold">{{stats.disabled}}</div>
-                    <div class="jb-stat-label small">{{str.templatesdisabled}}</div>
+            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.15s;">
+                <div class="card-body text-center py-3">
+                    <i class="fa fa-circle-pause fa-2x text-warning mb-2" aria-hidden="true"></i>
+                    <div class="fs-2 fw-bold text-dark">{{stats.disabled}}</div>
+                    <div class="small text-muted">{{str.templatesdisabled}}</div>
                 </div>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
-            <div class="card shadow-sm jb-stat-card bg-info text-white h-100 jb-fade-in-up" style="animation-delay: 0.2s;">
-                <div class="card-body text-center d-flex flex-column justify-content-center">
-                    <i class="fa fa-folder fa-2x mb-2 opacity-75" aria-hidden="true"></i>
-                    <div class="jb-stat-number fs-2 fw-bold">{{stats.categories}}</div>
-                    <div class="jb-stat-label small">{{str.templatecategories}}</div>
+            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.2s;">
+                <div class="card-body text-center py-3">
+                    <i class="fa fa-folder fa-2x text-info mb-2" aria-hidden="true"></i>
+                    <div class="fs-2 fw-bold text-dark">{{stats.categories}}</div>
+                    <div class="small text-muted">{{str.templatecategories}}</div>
                 </div>
             </div>
         </div>
@@ -150,10 +150,8 @@
             <div class="card-body">
                 {{^hastemplates}}
                 {{! Empty State }}
-                <div class="jb-empty-state text-center py-5">
-                    <div class="jb-empty-state-icon mb-3">
-                        <i class="fa fa-envelope-open fa-4x text-muted" aria-hidden="true"></i>
-                    </div>
+                <div class="text-center py-5" role="status">
+                    <i class="fa fa-envelope-open fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
                     <h5 class="text-muted mb-2">{{str.notemplates}}</h5>
                     <p class="text-muted small mb-4">{{#str}}notemplates_desc, local_jobboard{{/str}}</p>
                     <a href="{{installurl}}" class="btn btn-primary jb-hover-lift">
@@ -269,9 +267,7 @@
             <div class="row">
                 <div class="col-md-4 mb-3 mb-md-0">
                     <div class="d-flex align-items-start">
-                        <div class="jb-icon-circle bg-primary text-white me-3 flex-shrink-0">
-                            <i class="fa fa-code" aria-hidden="true"></i>
-                        </div>
+                        <i class="fa fa-code fa-lg text-primary me-3 mt-1" aria-hidden="true"></i>
                         <div>
                             <h6 class="mb-1">{{str.placeholders}}</h6>
                             <small class="text-muted">{{str.templatehelpplaceholders}}</small>
@@ -280,9 +276,7 @@
                 </div>
                 <div class="col-md-4 mb-3 mb-md-0">
                     <div class="d-flex align-items-start">
-                        <div class="jb-icon-circle bg-warning text-dark me-3 flex-shrink-0">
-                            <i class="fa fa-html5" aria-hidden="true"></i>
-                        </div>
+                        <i class="fa fa-code fa-lg text-warning me-3 mt-1" aria-hidden="true"></i>
                         <div>
                             <h6 class="mb-1">{{str.htmlsupport}}</h6>
                             <small class="text-muted">{{str.templatehelphtml}}</small>
@@ -291,9 +285,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="d-flex align-items-start">
-                        <div class="jb-icon-circle bg-info text-white me-3 flex-shrink-0">
-                            <i class="fa fa-building" aria-hidden="true"></i>
-                        </div>
+                        <i class="fa fa-building fa-lg text-info me-3 mt-1" aria-hidden="true"></i>
                         <div>
                             <h6 class="mb-1">{{str.multitenant}}</h6>
                             <small class="text-muted">{{str.templatehelptenant}}</small>

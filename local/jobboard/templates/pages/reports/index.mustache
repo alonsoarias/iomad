@@ -238,16 +238,12 @@
             {{! Stats Row }}
             <section class="row mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
                 {{#overview.stats}}
-                <div class="col-lg-3 col-md-6 mb-3 jb-fade-in-up" style="animation-delay: {{animdelay}}s;">
-                    <div class="card shadow-sm jb-stat-card jb-stat-card-{{color}} jb-hover-lift">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="jb-stat-icon jb-bg-{{color}} text-white rounded p-3 me-3">
-                                <i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>
-                            </div>
-                            <div>
-                                <div class="jb-stat-value fs-3 fw-bold">{{value}}</div>
-                                <div class="jb-stat-label small text-muted">{{label}}</div>
-                            </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center py-3">
+                            <i class="fa fa-{{icon}} fa-2x text-{{color}} mb-2" aria-hidden="true"></i>
+                            <div class="fs-3 fw-bold text-dark">{{value}}</div>
+                            <div class="small text-muted">{{label}}</div>
                         </div>
                     </div>
                 </div>
@@ -372,15 +368,11 @@
             <section class="row mb-4" role="region" aria-label="{{#str}}documentstats, local_jobboard{{/str}}">
                 {{#documents.stats}}
                 <div class="col-lg-3 col-md-6 mb-3 jb-fade-in-up" style="animation-delay: {{animdelay}}s;">
-                    <div class="card shadow-sm jb-stat-card jb-stat-card-{{color}} jb-hover-lift">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="jb-stat-icon jb-bg-{{color}} text-white rounded p-3 me-3">
-                                <i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>
-                            </div>
-                            <div>
-                                <div class="jb-stat-value fs-3 fw-bold">{{value}}</div>
-                                <div class="jb-stat-label small text-muted">{{label}}</div>
-                            </div>
+                    <div class="card shadow-sm h-100 jb-hover-lift">
+                        <div class="card-body text-center py-3">
+                            <i class="fa fa-{{icon}} fa-2x text-{{color}} mb-2" aria-hidden="true"></i>
+                            <div class="fs-3 fw-bold text-dark">{{value}}</div>
+                            <div class="small text-muted">{{label}}</div>
                         </div>
                     </div>
                 </div>
@@ -614,10 +606,8 @@
 
         {{! Empty State - No Data }}
         {{^hasdata}}
-        <div class="jb-empty-state text-center py-5 jb-fade-in-up" role="status">
-            <div class="jb-empty-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" style="width: 100px; height: 100px;">
-                <i class="fa fa-chart-bar fa-3x text-muted" aria-hidden="true"></i>
-            </div>
+        <div class="text-center py-5 jb-fade-in-up" role="status">
+            <i class="fa fa-chart-bar fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
             <h2 class="fs-4 text-muted mb-2">{{#str}}nodata, local_jobboard{{/str}}</h2>
             <p class="text-muted mb-0">{{#str}}trydifferentfilters, local_jobboard{{/str}}</p>
         </div>

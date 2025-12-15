@@ -189,9 +189,7 @@
                     {{#isloggedin}}
                         {{#hasapplied}}
                         <div class="text-success" role="status">
-                            <div class="jb-icon-circle-lg bg-success text-white mx-auto mb-3">
-                                <i class="fa fa-check fa-2x" aria-hidden="true"></i>
-                            </div>
+                            <i class="fa fa-circle-check fa-3x text-success mb-3" aria-hidden="true"></i>
                             <p class="fw-bold mb-3">{{#str}}alreadyapplied, local_jobboard{{/str}}</p>
                         </div>
                         <a href="{{applicationsurl}}" class="btn btn-outline-primary w-100 jb-hover-lift">
@@ -219,9 +217,7 @@
                     {{/isloggedin}}
 
                     {{^isloggedin}}
-                    <div class="jb-icon-circle-lg bg-light text-muted mx-auto mb-3">
-                        <i class="fa fa-user fa-2x" aria-hidden="true"></i>
-                    </div>
+                    <i class="fa fa-user fa-3x text-muted mb-3" aria-hidden="true"></i>
                     <p class="text-muted mb-3">{{#str}}logintoapply, local_jobboard{{/str}}</p>
                     <a href="{{loginapplyurl}}" class="btn btn-primary btn-lg w-100 jb-hover-lift">
                         <i class="fa fa-right-to-bracket me-2" aria-hidden="true"></i>

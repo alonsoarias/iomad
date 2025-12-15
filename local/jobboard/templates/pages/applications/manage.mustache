@@ -236,11 +236,9 @@
 
         {{! Empty State }}
         {{^hasapplications}}
-        <div class="jb-empty-state text-center py-5 jb-fade-in-up" role="status">
-            <div class="jb-empty-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" style="width: 100px; height: 100px;">
-                <i class="fa fa-users fa-3x text-muted" aria-hidden="true"></i>
-            </div>
-            <h2 class="fs-4 text-muted mb-2">{{#str}}noapplicationsfound, local_jobboard{{/str}}</h2>
+        <div class="text-center py-5" role="status">
+            <i class="fa fa-users fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
+            <h2 class="h5 text-muted mb-2">{{#str}}noapplicationsfound, local_jobboard{{/str}}</h2>
             <p class="text-muted mb-3">{{#str}}noapplicationsfound_desc, local_jobboard{{/str}}</p>
             {{#currentsearch}}
             <a href="{{reseturl}}" class="btn btn-outline-primary">

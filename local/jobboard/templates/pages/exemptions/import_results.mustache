@@ -82,10 +82,8 @@
         <section class="row mb-4" aria-label="{{#str}}previewsummary, local_jobboard{{/str}}">
             <div class="col-md-4 mb-3">
                 <div class="card shadow-sm text-center jb-fade-in-up" style="animation-delay: 0.1s;">
-                    <div class="card-body">
-                        <div class="jb-icon-circle bg-success text-white mx-auto mb-2">
-                            <i class="fa fa-check" aria-hidden="true"></i>
-                        </div>
+                    <div class="card-body py-3">
+                        <i class="fa fa-check fa-2x text-success mb-2" aria-hidden="true"></i>
                         <h3 class="text-success mb-1">{{previewtotal}}</h3>
                         <p class="text-muted small mb-0">{{#str}}recordstoprocess, local_jobboard{{/str}}</p>
                     </div>
@@ -154,8 +152,8 @@
         {{/haspreview}}
 
         {{^haspreview}}
-        <div class="jb-empty-state text-center py-5">
-            <i class="fa fa-file-excel fa-4x text-muted mb-3" aria-hidden="true"></i>
+        <div class="text-center py-5" role="status">
+            <i class="fa fa-file-excel fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
             <h5 class="text-muted">{{#str}}nopreviewdata, local_jobboard{{/str}}</h5>
         </div>
         {{/haspreview}}
@@ -164,9 +162,7 @@
         {{^ispreview}}
         {{! Actual Import Results }}
         <div class="alert alert-success d-flex align-items-center mb-4 jb-fade-in" role="status">
-            <div class="jb-icon-circle bg-success text-white me-3">
-                <i class="fa fa-check" aria-hidden="true"></i>
-            </div>
+            <i class="fa fa-check fa-lg text-success me-3" aria-hidden="true"></i>
             <div>
                 <strong class="d-block">{{str.import_complete}}</strong>
                 <span>{{str.imported_success}}</span>
@@ -180,10 +176,8 @@
         <section class="row mb-4" aria-label="{{#str}}importresults, local_jobboard{{/str}}">
             <div class="col-md-6 mb-3">
                 <div class="card shadow-sm text-center jb-fade-in-up" style="animation-delay: 0.05s;">
-                    <div class="card-body">
-                        <div class="jb-icon-circle bg-success text-white mx-auto mb-3">
-                            <i class="fa fa-check fa-lg" aria-hidden="true"></i>
-                        </div>
+                    <div class="card-body py-3">
+                        <i class="fa fa-check fa-2x text-success mb-2" aria-hidden="true"></i>
                         <h3 class="text-success mb-1">{{successcount}}</h3>
                         <p class="mb-0 text-muted">{{#str}}exemptionsimported, local_jobboard{{/str}}</p>
                     </div>
@@ -192,10 +186,8 @@
             {{#hasskipped}}
             <div class="col-md-6 mb-3">
                 <div class="card shadow-sm text-center jb-fade-in-up" style="animation-delay: 0.1s;">
-                    <div class="card-body">
-                        <div class="jb-icon-circle bg-warning text-dark mx-auto mb-3">
-                            <i class="fa fa-forward fa-lg" aria-hidden="true"></i>
-                        </div>
+                    <div class="card-body py-3">
+                        <i class="fa fa-forward fa-2x text-warning mb-2" aria-hidden="true"></i>
                         <h3 class="text-warning mb-1">{{skippedcount}}</h3>
                         <p class="mb-0 text-muted">{{#str}}exemptionsskipped, local_jobboard{{/str}}</p>
                     </div>

@@ -536,11 +536,9 @@
 
         {{! Empty State }}
         {{^hasapplications}}
-        <div class="jb-empty-state text-center py-5 jb-fade-in-up" role="status" aria-live="polite">
-            <div class="jb-empty-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle bg-success-light mb-4" style="width: 100px; height: 100px;">
-                <i class="fa fa-circle-check fa-3x text-success" aria-hidden="true"></i>
-            </div>
-            <h2 class="fs-4 text-muted mb-2">{{#str}}nodocumentstoreview, local_jobboard{{/str}}</h2>
+        <div class="text-center py-5" role="status" aria-live="polite">
+            <i class="fa fa-circle-check fa-4x text-success opacity-50 mb-3" aria-hidden="true"></i>
+            <h2 class="h5 text-muted mb-2">{{#str}}nodocumentstoreview, local_jobboard{{/str}}</h2>
             <p class="text-muted">{{#str}}allcaughtup, local_jobboard{{/str}}</p>
         </div>
         {{/hasapplications}}

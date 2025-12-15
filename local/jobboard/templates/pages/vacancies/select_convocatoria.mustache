@@ -42,9 +42,7 @@
 
     {{! Info Message }}
     <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="status">
-        <div class="jb-icon-circle bg-info text-white me-3 flex-shrink-0">
-            <i class="fa fa-info" aria-hidden="true"></i>
-        </div>
+        <i class="fa fa-circle-info fa-lg text-info me-3 mt-1" aria-hidden="true"></i>
         <div>
             <h5 class="mb-1 fw-bold">{{str.selectconvocatoriafirst}}</h5>
             <p class="mb-0">{{str.createvacancyinconvocatoriadesc}}</p>
@@ -54,10 +52,8 @@
     <main id="select-convocatoria-content">
         {{^hasconvocatorias}}
         {{! Empty State }}
-        <div class="jb-empty-state text-center py-5 jb-fade-in-up" style="animation-delay: 0.05s;" role="status">
-            <div class="jb-icon-circle bg-light text-muted mx-auto mb-3" style="width: 100px; height: 100px;">
-                <i class="fa fa-calendar-days fa-3x" aria-hidden="true"></i>
-            </div>
+        <div class="text-center py-5 jb-fade-in-up" style="animation-delay: 0.05s;" role="status">
+            <i class="fa fa-calendar-days fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
             <h4 class="text-muted mb-3">{{str.noconvocatoriasavailable}}</h4>
             <a href="{{createconvocatoriaurl}}" class="btn btn-primary jb-hover-lift">
                 <i class="fa fa-plus me-2" aria-hidden="true"></i>

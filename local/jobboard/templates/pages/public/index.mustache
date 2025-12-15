@@ -297,19 +297,17 @@
         {{! CTA for Non-Logged In }}
         {{^isloggedin}}
         {{#hasvacancies}}
-        <aside class="card jb-bg-gradient-primary text-white border-0 mt-5 jb-fade-in-up" aria-labelledby="cta-heading">
+        <aside class="card bg-primary text-white border-0 mt-5 jb-fade-in-up" aria-labelledby="cta-heading">
             <div class="card-body text-center py-5">
-                <div class="mb-3">
-                    <i class="fa fa-user-plus fa-3x opacity-75" aria-hidden="true"></i>
-                </div>
+                <i class="fa fa-user-plus fa-3x opacity-75 mb-3" aria-hidden="true"></i>
                 <h3 class="fs-4 mb-2" id="cta-heading">{{#str}}wanttoapply, local_jobboard{{/str}}</h3>
-                <p class="mb-4 jb-opacity-85">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
+                <p class="mb-4 opacity-75">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
                     <a href="{{signupurl}}" class="btn btn-light btn-lg jb-hover-lift">
                         <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
                         {{#str}}createaccount{{/str}}
                     </a>
-                    <a href="{{loginurl}}" class="btn jb-btn-outline-light btn-lg jb-hover-lift">
+                    <a href="{{loginurl}}" class="btn btn-outline-light btn-lg jb-hover-lift">
                         <i class="fa fa-right-to-bracket me-2" aria-hidden="true"></i>
                         {{#str}}login{{/str}}
                     </a>
@@ -326,18 +324,18 @@
     {{! ================================================================ }}
     {{#showconvocatorias}}
     {{! Welcome Header }}
-    <header class="jb-welcome-section jb-bg-gradient-primary text-white rounded-lg p-4 mb-4 jb-fade-in">
+    <header class="jb-welcome-section bg-primary text-white rounded p-4 mb-4 jb-fade-in">
         <div class="d-flex justify-content-between align-items-start">
             <div class="flex-grow-1">
                 <h1 class="fs-3 mb-2 fw-bold">{{pagetitle}}</h1>
                 {{#pagedescription}}
-                <p class="mb-0 jb-opacity-85 lead">{{{pagedescription}}}</p>
+                <p class="mb-0 opacity-75 lead">{{{pagedescription}}}</p>
                 {{/pagedescription}}
 
                 {{! Quick Access for Logged-In Users }}
                 {{#isloggedin}}
                 {{#hasquickaccess}}
-                <nav class="mt-3 pt-3 border-top jb-border-light d-flex flex-wrap gap-2" aria-label="{{#str}}quickactions, local_jobboard{{/str}}">
+                <nav class="mt-3 pt-3 border-top border-light d-flex flex-wrap gap-2" aria-label="{{#str}}quickactions, local_jobboard{{/str}}">
                     {{#quickaccess}}
                     <a href="{{url}}" class="btn btn-light btn-sm jb-hover-lift">
                         <i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>
@@ -498,19 +496,17 @@
         {{! CTA for Non-Logged In Users }}
         {{^isloggedin}}
         {{#hasconvocatorias}}
-        <aside class="card jb-bg-gradient-primary text-white border-0 mt-4 jb-fade-in-up" aria-labelledby="main-cta-heading">
+        <aside class="card bg-primary text-white border-0 mt-4 jb-fade-in-up" aria-labelledby="main-cta-heading">
             <div class="card-body text-center py-5">
-                <div class="mb-3">
-                    <i class="fa fa-user-plus fa-3x opacity-75" aria-hidden="true"></i>
-                </div>
+                <i class="fa fa-user-plus fa-3x opacity-75 mb-3" aria-hidden="true"></i>
                 <h3 class="fs-4 mb-2" id="main-cta-heading">{{#str}}wanttoapply, local_jobboard{{/str}}</h3>
-                <p class="mb-4 jb-opacity-85 mx-auto" style="max-width: 500px;">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
+                <p class="mb-4 opacity-75 mx-auto" style="max-width: 500px;">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
                     <a href="{{signupurl}}" class="btn btn-light btn-lg jb-hover-lift">
                         <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
                         {{#str}}createaccount{{/str}}
                     </a>
-                    <a href="{{loginurl}}" class="btn jb-btn-outline-light btn-lg jb-hover-lift">
+                    <a href="{{loginurl}}" class="btn btn-outline-light btn-lg jb-hover-lift">
                         <i class="fa fa-right-to-bracket me-2" aria-hidden="true"></i>
                         {{#str}}login{{/str}}
                     </a>

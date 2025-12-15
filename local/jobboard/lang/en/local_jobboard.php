@@ -284,8 +284,14 @@ $string['status_waitlist'] = 'Waitlist';
 $string['status_draft'] = 'Draft';
 $string['status_published'] = 'Published';
 $string['status_closed'] = 'Closed';
+$string['status_cancelled'] = 'Cancelled';
 $string['status_archived'] = 'Archived';
 $string['status_assigned'] = 'Assigned';
+// Document statuses
+$string['status_pending'] = 'Pending';
+$string['status_validated'] = 'Validated';
+$string['status_approved'] = 'Approved';
+$string['status_reupload'] = 'Reupload Required';
 
 // Vacancy status labels (used with get_string('vacancystatus:' . $status))
 $string['vacancystatus:draft'] = 'Draft';

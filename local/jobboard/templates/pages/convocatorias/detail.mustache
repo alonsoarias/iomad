@@ -327,11 +327,9 @@
 
             {{! Empty State }}
             {{^hasvacancies}}
-            <div class="jb-empty-state text-center py-5 jb-fade-in-up" role="status">
-                <div class="jb-empty-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" style="width: 100px; height: 100px;">
-                    <i class="fa fa-briefcase fa-3x text-muted" aria-hidden="true"></i>
-                </div>
-                <h3 class="fs-5 text-muted mb-2">{{#str}}novacancies, local_jobboard{{/str}}</h3>
+            <div class="text-center py-5" role="status">
+                <i class="fa fa-briefcase fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
+                <h3 class="h5 text-muted mb-2">{{#str}}novacancies, local_jobboard{{/str}}</h3>
                 <p class="text-muted mb-0">{{#str}}novacanciesinthisconvocatoria, local_jobboard{{/str}}</p>
             </div>
             {{/hasvacancies}}

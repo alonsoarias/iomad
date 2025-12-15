@@ -66,41 +66,29 @@
     {{! Statistics Cards }}
     <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         <div class="col-lg-4 col-md-4 mb-3">
-            <div class="card shadow-sm jb-stat-card jb-stat-card-primary jb-fade-in-up" style="animation-delay: 0.05s;">
-                <div class="card-body d-flex align-items-center">
-                    <div class="jb-stat-icon me-3">
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <div class="jb-stat-value fs-3 fw-bold">{{stats.totalcommittees}}</div>
-                        <div class="jb-stat-label small text-muted">{{#str}}totalcommittees, local_jobboard{{/str}}</div>
-                    </div>
+            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.05s;">
+                <div class="card-body text-center py-3">
+                    <i class="fa fa-users fa-2x text-primary mb-2" aria-hidden="true"></i>
+                    <div class="fs-3 fw-bold text-dark">{{stats.totalcommittees}}</div>
+                    <div class="small text-muted">{{#str}}totalcommittees, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         <div class="col-lg-4 col-md-4 mb-3">
-            <div class="card shadow-sm jb-stat-card jb-stat-card-success jb-fade-in-up" style="animation-delay: 0.1s;">
-                <div class="card-body d-flex align-items-center">
-                    <div class="jb-stat-icon me-3">
-                        <i class="fa fa-users-gear" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <div class="jb-stat-value fs-3 fw-bold">{{stats.activecommittees}}</div>
-                        <div class="jb-stat-label small text-muted">{{#str}}activecommittees, local_jobboard{{/str}}</div>
-                    </div>
+            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.1s;">
+                <div class="card-body text-center py-3">
+                    <i class="fa fa-users-gear fa-2x text-success mb-2" aria-hidden="true"></i>
+                    <div class="fs-3 fw-bold text-dark">{{stats.activecommittees}}</div>
+                    <div class="small text-muted">{{#str}}activecommittees, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         <div class="col-lg-4 col-md-4 mb-3">
-            <div class="card shadow-sm jb-stat-card jb-stat-card-info jb-fade-in-up" style="animation-delay: 0.15s;">
-                <div class="card-body d-flex align-items-center">
-                    <div class="jb-stat-icon me-3">
-                        <i class="fa fa-user-group" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <div class="jb-stat-value fs-3 fw-bold">{{stats.totalmembers}}</div>
-                        <div class="jb-stat-label small text-muted">{{#str}}totalcommmembers, local_jobboard{{/str}}</div>
-                    </div>
+            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.15s;">
+                <div class="card-body text-center py-3">
+                    <i class="fa fa-user-group fa-2x text-info mb-2" aria-hidden="true"></i>
+                    <div class="fs-3 fw-bold text-dark">{{stats.totalmembers}}</div>
+                    <div class="small text-muted">{{#str}}totalcommmembers, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
@@ -184,8 +172,8 @@
             </div>
             {{/hascommittees}}
             {{^hascommittees}}
-            <div class="jb-empty-state text-center py-4">
-                <i class="fa fa-users fa-3x text-muted mb-3" aria-hidden="true"></i>
+            <div class="text-center py-5" role="status">
+                <i class="fa fa-users fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
                 <p class="text-muted">{{#str}}nocommittees, local_jobboard{{/str}}</p>
             </div>
             {{/hascommittees}}
@@ -263,9 +251,7 @@
                     <div class="card h-100 border-0 bg-light">
                         <div class="card-body text-center">
                             {{! Avatar }}
-                            <div class="jb-icon-circle jb-avatar-circle jb-bg-{{rolecolor}}-light mb-2 mx-auto">
-                                <i class="fa fa-{{roleicon}} fs-4 jb-text-{{rolecolor}}" aria-hidden="true"></i>
-                            </div>
+                            <i class="fa fa-{{roleicon}} fa-2x text-{{rolecolor}} mb-2" aria-hidden="true"></i>
 
                             {{! Name }}
                             <h6 class="mb-1">{{fullname}}</h6>
@@ -309,8 +295,8 @@
             </div>
             {{/existingcommittee.hasmembers}}
             {{^existingcommittee.hasmembers}}
-            <div class="jb-empty-state text-center py-4">
-                <i class="fa fa-user-plus fa-3x text-muted mb-3" aria-hidden="true"></i>
+            <div class="text-center py-5" role="status">
+                <i class="fa fa-user-plus fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
                 <p class="text-muted">{{#str}}nomembers, local_jobboard{{/str}}</p>
             </div>
             {{/existingcommittee.hasmembers}}
@@ -541,8 +527,8 @@
     {{/hasexistingcommittee}}
 
     {{^hasexistingcommittee}}
-    <div class="jb-empty-state text-center py-4">
-        <i class="fa fa-users fa-3x text-muted mb-3" aria-hidden="true"></i>
+    <div class="text-center py-5" role="status">
+        <i class="fa fa-users fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
         <p class="text-muted">{{#str}}nocommitteeforthisvacancy, local_jobboard{{/str}}</p>
     </div>
     {{/hasexistingcommittee}}

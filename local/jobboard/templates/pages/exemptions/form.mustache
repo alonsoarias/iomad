@@ -85,14 +85,12 @@
     <main id="exemption-form-content">
         <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.1s;">
             <div class="card-header bg-white d-flex align-items-center">
-                <div class="jb-icon-circle jb-bg-{{#isedit}}primary{{/isedit}}{{^isedit}}success{{/isedit}} text-white me-3">
-                    {{#isedit}}
-                    <i class="fa fa-pen-to-square" aria-hidden="true"></i>
-                    {{/isedit}}
-                    {{^isedit}}
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                    {{/isedit}}
-                </div>
+                {{#isedit}}
+                <i class="fa fa-pen-to-square fa-lg text-primary me-3" aria-hidden="true"></i>
+                {{/isedit}}
+                {{^isedit}}
+                <i class="fa fa-plus fa-lg text-success me-3" aria-hidden="true"></i>
+                {{/isedit}}
                 <h5 class="mb-0">
                     {{#isedit}}
                     {{str.editexemption}}

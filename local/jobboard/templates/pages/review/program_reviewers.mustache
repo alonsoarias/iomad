@@ -73,54 +73,38 @@
         {{! Statistics Cards }}
         <section class="row mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
             <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card shadow-sm jb-stat-card jb-stat-card-primary jb-fade-in-up" style="animation-delay: 0.05s;">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="jb-stat-icon me-3">
-                            <i class="fa fa-users" aria-hidden="true"></i>
-                        </div>
-                        <div>
-                            <div class="jb-stat-value fs-3 fw-bold">{{stats.totalreviewers}}</div>
-                            <div class="jb-stat-label small text-muted">{{#str}}totalreviewers, local_jobboard{{/str}}</div>
-                        </div>
+                <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.05s;">
+                    <div class="card-body text-center py-3">
+                        <i class="fa fa-users fa-2x text-primary mb-2" aria-hidden="true"></i>
+                        <div class="fs-3 fw-bold text-dark">{{stats.totalreviewers}}</div>
+                        <div class="small text-muted">{{#str}}totalreviewers, local_jobboard{{/str}}</div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card shadow-sm jb-stat-card jb-stat-card-success jb-fade-in-up" style="animation-delay: 0.1s;">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="jb-stat-icon me-3">
-                            <i class="fa fa-circle-check" aria-hidden="true"></i>
-                        </div>
-                        <div>
-                            <div class="jb-stat-value fs-3 fw-bold">{{stats.active}}</div>
-                            <div class="jb-stat-label small text-muted">{{#str}}activereviewers, local_jobboard{{/str}}</div>
-                        </div>
+                <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="card-body text-center py-3">
+                        <i class="fa fa-circle-check fa-2x text-success mb-2" aria-hidden="true"></i>
+                        <div class="fs-3 fw-bold text-dark">{{stats.active}}</div>
+                        <div class="small text-muted">{{#str}}activereviewers, local_jobboard{{/str}}</div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card shadow-sm jb-stat-card jb-stat-card-warning jb-fade-in-up" style="animation-delay: 0.15s;">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="jb-stat-icon me-3">
-                            <i class="fa fa-star" aria-hidden="true"></i>
-                        </div>
-                        <div>
-                            <div class="jb-stat-value fs-3 fw-bold">{{stats.leadreviewers}}</div>
-                            <div class="jb-stat-label small text-muted">{{#str}}leadreviewers, local_jobboard{{/str}}</div>
-                        </div>
+                <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.15s;">
+                    <div class="card-body text-center py-3">
+                        <i class="fa fa-star fa-2x text-warning mb-2" aria-hidden="true"></i>
+                        <div class="fs-3 fw-bold text-dark">{{stats.leadreviewers}}</div>
+                        <div class="small text-muted">{{#str}}leadreviewers, local_jobboard{{/str}}</div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card shadow-sm jb-stat-card jb-stat-card-info jb-fade-in-up" style="animation-delay: 0.2s;">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="jb-stat-icon me-3">
-                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-                        </div>
-                        <div>
-                            <div class="jb-stat-value fs-3 fw-bold">{{stats.programswithreviewers}}</div>
-                            <div class="jb-stat-label small text-muted">{{#str}}programswithreviewers, local_jobboard{{/str}}</div>
-                        </div>
+                <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="card-body text-center py-3">
+                        <i class="fa fa-graduation-cap fa-2x text-info mb-2" aria-hidden="true"></i>
+                        <div class="fs-3 fw-bold text-dark">{{stats.programswithreviewers}}</div>
+                        <div class="small text-muted">{{#str}}programswithreviewers, local_jobboard{{/str}}</div>
                     </div>
                 </div>
             </div>
@@ -172,10 +156,8 @@
                 </div>
                 {{/hasprogramswithreviewers}}
                 {{^hasprogramswithreviewers}}
-                <div class="jb-empty-state text-center py-5">
-                    <div class="jb-icon-circle bg-light text-muted mx-auto mb-3" style="width: 80px; height: 80px;">
-                        <i class="fa fa-graduation-cap fa-2x" aria-hidden="true"></i>
-                    </div>
+                <div class="text-center py-5" role="status">
+                    <i class="fa fa-graduation-cap fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
                     <p class="text-muted mb-0">{{#str}}noprogramswithreviewers, local_jobboard{{/str}}</p>
                 </div>
                 {{/hasprogramswithreviewers}}
@@ -337,10 +319,8 @@
                 </div>
                 {{/hasreviewers}}
                 {{^hasreviewers}}
-                <div class="jb-empty-state text-center py-5">
-                    <div class="jb-icon-circle bg-light text-muted mx-auto mb-3" style="width: 80px; height: 80px;">
-                        <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>
-                    </div>
+                <div class="text-center py-5" role="status">
+                    <i class="fa fa-user-plus fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
                     <p class="text-muted mb-0">{{#str}}noreviewersforprogram, local_jobboard{{/str}}</p>
                 </div>
                 {{/hasreviewers}}

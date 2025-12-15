@@ -37,30 +37,22 @@
     {{! Statistics Cards }}
     <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm jb-stat-card jb-stat-card-info">
-                <div class="card-body d-flex align-items-center">
-                    <div class="jb-stat-icon me-3">
-                        <i class="fa fa-users" aria-hidden="true"></i>
-                    </div>
-                    <div>
-                        <div class="jb-stat-value fs-3 fw-bold">{{totalusers}}</div>
-                        <div class="jb-stat-label small text-muted">{{#str}}totalassignedusers, local_jobboard{{/str}}</div>
-                    </div>
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center py-3">
+                    <i class="fa fa-users fa-2x text-info mb-2" aria-hidden="true"></i>
+                    <div class="fs-3 fw-bold text-dark">{{totalusers}}</div>
+                    <div class="small text-muted">{{#str}}totalassignedusers, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         {{#pluginroles}}
         <div class="col-lg-3 col-md-6 mb-3">
             <a href="{{manageurl}}" class="text-decoration-none">
-                <div class="card shadow-sm jb-stat-card jb-stat-card-{{color}} jb-clickable">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="jb-stat-icon me-3">
-                            <i class="fa fa-{{icon}}" aria-hidden="true"></i>
-                        </div>
-                        <div>
-                            <div class="jb-stat-value fs-3 fw-bold">{{usercount}}</div>
-                            <div class="jb-stat-label small text-muted">{{name}}</div>
-                        </div>
+                <div class="card shadow-sm h-100 jb-hover-lift">
+                    <div class="card-body text-center py-3">
+                        <i class="fa fa-{{icon}} fa-2x text-{{color}} mb-2" aria-hidden="true"></i>
+                        <div class="fs-3 fw-bold text-dark">{{usercount}}</div>
+                        <div class="small text-muted">{{name}}</div>
                     </div>
                 </div>
             </a>
@@ -83,9 +75,7 @@
                     <div class="card-body">
                         {{! Role Header }}
                         <div class="d-flex align-items-center mb-3">
-                            <div class="jb-icon-circle jb-bg-{{color}}-light me-3">
-                                <i class="fa fa-{{icon}} fs-4 jb-text-{{color}}" aria-hidden="true"></i>
-                            </div>
+                            <i class="fa fa-{{icon}} fa-2x text-{{color}} me-3" aria-hidden="true"></i>
                             <div>
                                 <h5 class="mb-0">{{name}}</h5>
                                 <small class="text-muted">{{usercount}} {{#str}}usersassignedcount, local_jobboard{{/str}}</small>
@@ -197,8 +187,8 @@
                     </div>
                     {{/hasassignedusers}}
                     {{^hasassignedusers}}
-                    <div class="jb-empty-state text-center py-4">
-                        <i class="fa fa-user-plus fa-3x text-muted mb-3" aria-hidden="true"></i>
+                    <div class="text-center py-5" role="status">
+                        <i class="fa fa-user-plus fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
                         <p class="text-muted">{{#str}}nousersassigned, local_jobboard{{/str}}</p>
                     </div>
                     {{/hasassignedusers}}

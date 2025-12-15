@@ -77,7 +77,7 @@
     {{! Main Page View }}
 
     {{! Page Header }}
-    <header class="jb-welcome-section jb-bg-gradient-primary text-white rounded-lg p-4 mb-4 jb-fade-in-up">
+    <header class="jb-welcome-section bg-primary text-white rounded p-4 mb-4 jb-fade-in-up">
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h2 class="mb-1 fw-bold">{{pagetitle}}</h2>
@@ -89,9 +89,7 @@
 
     {{! Info Box }}
     <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
-        <div class="jb-icon-circle bg-info text-white me-3 flex-shrink-0">
-            <i class="fa fa-info" aria-hidden="true"></i>
-        </div>
+        <i class="fa fa-circle-info fa-lg text-info me-3 mt-1" aria-hidden="true"></i>
         <div>
             <strong class="d-block mb-1">{{infotitle}}</strong>
             <p class="mb-0">{{infodesc}}</p>
@@ -178,9 +176,7 @@
 
                     {{! Warning Box }}
                     <div class="alert alert-warning d-flex align-items-start">
-                        <div class="jb-icon-circle bg-warning text-dark me-3 flex-shrink-0">
-                            <i class="fa fa-triangle-exclamation" aria-hidden="true"></i>
-                        </div>
+                        <i class="fa fa-triangle-exclamation fa-lg text-warning me-3 mt-1" aria-hidden="true"></i>
                         <div>
                             <strong class="d-block mb-1">{{#str}}importwarningtitle, local_jobboard{{/str}}</strong>
                             {{importwarning}}
