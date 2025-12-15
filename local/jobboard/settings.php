@@ -35,26 +35,27 @@ if ($hassiteconfig) {
     // Add settings page to the category.
     $ADMIN->add('local_jobboard_category', $settings);
 
-    // Register external admin pages.
+    // Register external admin pages with appropriate capabilities.
+    // These pages are also accessible from the plugin dashboard.
     $ADMIN->add('local_jobboard_category', new admin_externalpage(
         'local_jobboard_doctypes',
         get_string('managedoctypes', 'local_jobboard'),
         new moodle_url('/local/jobboard/admin/doctypes.php'),
-        'local/jobboard:configure'
+        'local/jobboard:managedoctypes'
     ));
 
     $ADMIN->add('local_jobboard_category', new admin_externalpage(
         'local_jobboard_templates',
         get_string('emailtemplates', 'local_jobboard'),
         new moodle_url('/local/jobboard/admin/templates.php'),
-        'local/jobboard:configure'
+        'local/jobboard:manageemailtemplates'
     ));
 
     $ADMIN->add('local_jobboard_category', new admin_externalpage(
         'local_jobboard_exemptions',
         get_string('manageexemptions', 'local_jobboard'),
         new moodle_url('/local/jobboard/admin/exemptions.php'),
-        'local/jobboard:configure'
+        'local/jobboard:manageexemptions'
     ));
 
     $ADMIN->add('local_jobboard_category', new admin_externalpage(

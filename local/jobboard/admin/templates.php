@@ -18,7 +18,7 @@
  * Email templates management page - Refactored v3.0.
  *
  * Provides modern interface to customize email notifications sent by Job Board.
- * Supports multi-tenant templates per IOMAD company and template categories.
+ * Accessible from the plugin dashboard for users with manageemailtemplates capability.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -26,13 +26,27 @@
  */
 
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir . '/adminlib.php');
 
 use local_jobboard\email_template;
 use local_jobboard\forms\email_template_form;
 use local_jobboard\output\ui_helper;
 
-admin_externalpage_setup('local_jobboard_templates');
+// Require login and check capability.
+require_login();
+$context = context_system::instance();
+require_capability('local/jobboard:manageemailtemplates', $context);
+
+// Page setup.
+$PAGE->set_context($context);
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/templates.php'));
+$PAGE->set_pagelayout('standard');
+$PAGE->set_title(get_string('emailtemplates', 'local_jobboard'));
+$PAGE->set_heading(get_string('emailtemplates', 'local_jobboard'));
+
+// Add navigation breadcrumb back to dashboard.
+$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'dashboard']));
+$PAGE->navbar->add(get_string('emailtemplates', 'local_jobboard'));
 
 $action = optional_param('action', '', PARAM_ALPHA);
 $code = optional_param('code', '', PARAM_ALPHANUMEXT);
@@ -40,7 +54,6 @@ $id = optional_param('id', 0, PARAM_INT);
 $category = optional_param('category', '', PARAM_ALPHA);
 $companyid = optional_param('companyid', 0, PARAM_INT);
 
-$context = context_system::instance();
 $pageurl = new moodle_url('/local/jobboard/admin/templates.php');
 
 

@@ -18,6 +18,7 @@
  * Exemptions management page for local_jobboard.
  *
  * Redirects to the main exemptions management page.
+ * Accessible from the plugin dashboard for users with manageexemptions capability.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -25,9 +26,11 @@
  */
 
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir . '/adminlib.php');
 
-admin_externalpage_setup('local_jobboard_exemptions');
+// Require login and check capability.
+require_login();
+$context = context_system::instance();
+require_capability('local/jobboard:manageexemptions', $context);
 
 // Redirect to main exemptions management page.
 redirect(new moodle_url('/local/jobboard/admin/manage_exemptions.php'));

@@ -17,7 +17,7 @@
 /**
  * Document types management page for local_jobboard.
  *
- * Modern redesign with consistent UX pattern using ui_helper.
+ * Accessible from the plugin dashboard for users with managedoctypes capability.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -25,16 +25,28 @@
  */
 
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir . '/adminlib.php');
 
 use local_jobboard\forms\doctype_form;
 
-admin_externalpage_setup('local_jobboard_doctypes');
+// Require login and check capability.
+require_login();
+$context = context_system::instance();
+require_capability('local/jobboard:managedoctypes', $context);
+
+// Page setup.
+$PAGE->set_context($context);
+$PAGE->set_url(new moodle_url('/local/jobboard/admin/doctypes.php'));
+$PAGE->set_pagelayout('standard');
+$PAGE->set_title(get_string('managedoctypes', 'local_jobboard'));
+$PAGE->set_heading(get_string('managedoctypes', 'local_jobboard'));
+
+// Add navigation breadcrumb back to dashboard.
+$PAGE->navbar->add(get_string('pluginname', 'local_jobboard'), new moodle_url('/local/jobboard/index.php'));
+$PAGE->navbar->add(get_string('dashboard', 'local_jobboard'), new moodle_url('/local/jobboard/index.php', ['view' => 'dashboard']));
+$PAGE->navbar->add(get_string('managedoctypes', 'local_jobboard'));
 
 $action = optional_param('action', '', PARAM_ALPHA);
 $id = optional_param('id', 0, PARAM_INT);
-
-$context = context_system::instance();
 $pageurl = new moodle_url('/local/jobboard/admin/doctypes.php');
 
 // Handle toggle action.
