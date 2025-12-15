@@ -2,10 +2,10 @@
     @template local_jobboard/layouts/page
 
     Base page layout template.
+    Note: Breadcrumbs are handled natively by Moodle via $PAGE->navbar
 
     Context variables:
     * region (string) - Data region identifier
-    * breadcrumbs (array) - Breadcrumb items for navigation
     * pagetitle (string) - Page title
     * pageicon (string) - Icon for page title
     * headeractions (string) - HTML for header action buttons
@@ -23,26 +23,20 @@
     }
 }}
 <div class="local-jobboard-page" data-region="{{region}}">
-    {{#breadcrumbs}}
-    {{> local_jobboard/components/breadcrumb }}
-    {{/breadcrumbs}}
-
-    <header class="jb-page-header mb-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <h1 class="fs-4 mb-0">
-                {{#pageicon}}<i class="fa fa-{{pageicon}} text-primary me-2" aria-hidden="true"></i>{{/pageicon}}
-                {{pagetitle}}
-            </h1>
-            {{#headeractions}}
-            <div class="jb-header-actions">
-                {{{headeractions}}}
-            </div>
-            {{/headeractions}}
+    <header class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4 mb-0">
+            {{#pageicon}}<i class="fa fa-{{pageicon}} text-primary me-2" aria-hidden="true"></i>{{/pageicon}}
+            {{pagetitle}}
+        </h1>
+        {{#headeractions}}
+        <div class="d-flex gap-2">
+            {{{headeractions}}}
         </div>
+        {{/headeractions}}
     </header>
 
     {{#alerts.0}}
-    <div class="jb-alerts mb-4" role="region" aria-label="{{#str}}notifications{{/str}}">
+    <div class="mb-4" role="region" aria-label="{{#str}}notifications{{/str}}">
         {{#alerts}}
         {{> local_jobboard/components/alert }}
         {{/alerts}}
@@ -66,7 +60,7 @@
     {{/sidebar}}
 
     {{#footer}}
-    <footer class="jb-page-footer mt-4 pt-4 border-top">
+    <footer class="mt-4 pt-4 border-top">
         {{{footer}}}
     </footer>
     {{/footer}}

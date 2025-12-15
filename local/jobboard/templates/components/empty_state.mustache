@@ -29,12 +29,9 @@
      aria-live="polite"
      {{#variant}}data-variant="{{variant}}"{{/variant}}>
 
-    {{! Icon with visual enhancement }}
-    <div class="jb-empty-state-icon mb-4">
-        <div class="jb-empty-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle bg-light"
-             style="width: 100px; height: 100px;">
-            <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}folder-open{{/icon}} fa-3x text-muted" aria-hidden="true"></i>
-        </div>
+    {{! Icon }}
+    <div class="jb-empty-state-icon mb-3">
+        <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}folder-open{{/icon}} fa-4x text-muted opacity-50" aria-hidden="true"></i>
     </div>
 
     {{! Title }}

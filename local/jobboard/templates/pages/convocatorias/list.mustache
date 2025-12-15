@@ -76,51 +76,37 @@
 
 {{^loading}}
 <div class="local-jobboard-convocatorias" data-region="jobboard-convocatorias">
-    {{! Skip Link for Accessibility }}
-    <a href="#convocatorias-main-content" class="jb-skip-link">
+    {{! Skip Link - Hidden until focused (Bootstrap 5 native) }}
+    <a href="#convocatorias-main-content" class="visually-hidden-focusable">
         {{#str}}skiptocontent, local_jobboard{{/str}}
     </a>
 
-    {{! Page Header }}
-    <header class="jb-page-header mb-4 jb-fade-in">
-        <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="mb-3">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
-                </li>
-                <li class="breadcrumb-item jb-active" aria-current="page">
-                    {{#str}}manageconvocatorias, local_jobboard{{/str}}
-                </li>
-            </ol>
-        </nav>
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <h1 class="fs-4 mb-0">
-                <i class="fa fa-folder-open text-primary me-2" aria-hidden="true"></i>
-                {{#str}}manageconvocatorias, local_jobboard{{/str}}
-            </h1>
-            <div class="btn-group" role="group" aria-label="{{#str}}convocatoriaactions, local_jobboard{{/str}}">
-                <a href="{{importurl}}" class="btn btn-outline-secondary">
-                    <i class="fa fa-file-csv me-1" aria-hidden="true"></i>
-                    <span class="d-none jb-d-md-inline">{{#str}}importvacancies, local_jobboard{{/str}}</span>
-                    <span class="jb-d-md-none">{{#str}}import{{/str}}</span>
-                </a>
-                {{#cancreate}}
-                <a href="{{createurl}}" class="btn btn-primary jb-hover-lift">
-                    <i class="fa fa-plus me-1" aria-hidden="true"></i>
-                    <span class="d-none jb-d-md-inline">{{#str}}addconvocatoria, local_jobboard{{/str}}</span>
-                    <span class="jb-d-md-none">{{#str}}add{{/str}}</span>
-                </a>
-                {{/cancreate}}
-            </div>
+    {{! Page Header - Breadcrumbs handled by Moodle via $PAGE->navbar }}
+    <header class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <h1 class="h4 mb-0">
+            <i class="fa fa-folder-open text-primary me-2" aria-hidden="true"></i>
+            {{#str}}manageconvocatorias, local_jobboard{{/str}}
+        </h1>
+        <div class="btn-group" role="group" aria-label="{{#str}}convocatoriaactions, local_jobboard{{/str}}">
+            <a href="{{importurl}}" class="btn btn-outline-secondary">
+                <i class="fa fa-file-csv me-1" aria-hidden="true"></i>
+                <span class="d-none d-md-inline">{{#str}}importvacancies, local_jobboard{{/str}}</span>
+                <span class="d-md-none">{{#str}}import{{/str}}</span>
+            </a>
+            {{#cancreate}}
+            <a href="{{createurl}}" class="btn btn-primary">
+                <i class="fa fa-plus me-1" aria-hidden="true"></i>
+                <span class="d-none d-md-inline">{{#str}}addconvocatoria, local_jobboard{{/str}}</span>
+                <span class="d-md-none">{{#str}}add{{/str}}</span>
+            </a>
+            {{/cancreate}}
         </div>
     </header>
 
     {{! Help Text }}
     {{#helptext}}
-    <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="alert">
-        <div class="flex-shrink-0 me-3">
-            <i class="fa fa-circle-info fa-lg text-info" aria-hidden="true"></i>
-        </div>
+    <div class="alert alert-info d-flex align-items-start mb-4" role="alert">
+        <i class="fa fa-circle-info fa-lg text-info me-3 mt-1" aria-hidden="true"></i>
         <div class="flex-grow-1">{{{helptext}}}</div>
     </div>
     {{/helptext}}
@@ -314,14 +300,12 @@
 
         {{! Empty State }}
         {{^hasconvocatorias}}
-        <div class="jb-empty-state text-center py-5 jb-fade-in-up" role="status">
-            <div class="jb-empty-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" style="width: 100px; height: 100px;">
-                <i class="fa fa-folder-open fa-3x text-muted" aria-hidden="true"></i>
-            </div>
-            <h2 class="fs-4 text-muted mb-2">{{#str}}noconvocatorias, local_jobboard{{/str}}</h2>
+        <div class="text-center py-5" role="status">
+            <i class="fa fa-folder-open fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
+            <h2 class="h5 text-muted mb-2">{{#str}}noconvocatorias, local_jobboard{{/str}}</h2>
             <p class="text-muted mb-4 mx-auto" style="max-width: 400px;">{{#str}}noconvocatoriasdesc, local_jobboard{{/str}}</p>
             {{#cancreate}}
-            <a href="{{createurl}}" class="btn btn-primary btn-lg jb-hover-lift">
+            <a href="{{createurl}}" class="btn btn-primary btn-lg">
                 <i class="fa fa-plus me-2" aria-hidden="true"></i>
                 {{#str}}addconvocatoria, local_jobboard{{/str}}
             </a>

@@ -63,32 +63,14 @@
 
 {{^loading}}
 <div class="local-jobboard-vacancies" data-region="jobboard-vacancies">
-    {{! Skip Link for Accessibility }}
-    <a href="#vacancies-main-content" class="jb-skip-link">
+    {{! Skip Link - Hidden until focused (Bootstrap 5 native) }}
+    <a href="#vacancies-main-content" class="visually-hidden-focusable">
         {{#str}}skiptocontent, local_jobboard{{/str}}
     </a>
 
-    {{! Page Header }}
-    <header class="jb-page-header mb-4 jb-fade-in">
-        <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="mb-3">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
-                </li>
-                {{#convocatoria}}
-                <li class="breadcrumb-item">
-                    <a href="{{browseconvocatoriasurl}}">{{#str}}convocatorias, local_jobboard{{/str}}</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a href="{{convocatoria.viewurl}}">{{convocatoria.name}}</a>
-                </li>
-                {{/convocatoria}}
-                <li class="breadcrumb-item jb-active" aria-current="page">
-                    {{#str}}vacancies, local_jobboard{{/str}}
-                </li>
-            </ol>
-        </nav>
-        <h1 class="fs-4 mb-0">
+    {{! Page Header - Breadcrumbs handled by Moodle via $PAGE->navbar }}
+    <header class="mb-4">
+        <h1 class="h4 mb-2">
             <i class="fa fa-briefcase text-primary me-2" aria-hidden="true"></i>
             {{#convocatoria}}
             {{#str}}vacancies, local_jobboard{{/str}}: {{convocatoria.name}}
@@ -97,18 +79,10 @@
             {{#str}}vacancies, local_jobboard{{/str}}
             {{/convocatoria}}
         </h1>
+        {{#welcomedesc}}
+        <p class="text-muted mb-0">{{welcomedesc}}</p>
+        {{/welcomedesc}}
     </header>
-
-    {{! Welcome Banner }}
-    <div class="jb-welcome-section jb-bg-gradient-success text-white rounded-lg p-4 mb-4 jb-fade-in-up">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h2 class="mb-1 fw-bold fs-5">{{welcometitle}}</h2>
-                <p class="mb-0 opacity-75">{{welcomedesc}}</p>
-            </div>
-            <i class="fa fa-magnifying-glass fa-3x opacity-25 d-none d-md-block" aria-hidden="true"></i>
-        </div>
-    </div>
 
     {{! Statistics Row }}
     {{#stats.0}}
@@ -273,14 +247,12 @@
 
         {{! Empty State }}
         {{^hasvacancies}}
-        <div class="jb-empty-state text-center py-5 jb-fade-in-up" role="status">
-            <div class="jb-empty-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" style="width: 100px; height: 100px;">
-                <i class="fa fa-briefcase fa-3x text-muted" aria-hidden="true"></i>
-            </div>
-            <h2 class="fs-4 text-muted mb-2">{{#str}}noresults, local_jobboard{{/str}}</h2>
+        <div class="text-center py-5" role="status">
+            <i class="fa fa-briefcase fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
+            <h2 class="h5 text-muted mb-2">{{#str}}noresults, local_jobboard{{/str}}</h2>
             <p class="text-muted mb-4 mx-auto" style="max-width: 400px;">{{#str}}novacancies, local_jobboard{{/str}}</p>
             {{#browseconvocatoriasurl}}
-            <a href="{{browseconvocatoriasurl}}" class="btn btn-primary jb-hover-lift">
+            <a href="{{browseconvocatoriasurl}}" class="btn btn-primary">
                 <i class="fa fa-folder-open me-2" aria-hidden="true"></i>
                 {{#str}}browseconvocatorias, local_jobboard{{/str}}
             </a>

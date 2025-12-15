@@ -72,19 +72,19 @@
 
 {{^loading}}
 <div class="local-jobboard-exemptions" data-region="jobboard-manage-exemptions">
-    {{! Skip Link for Accessibility }}
-    <a href="#exemptions-main-content" class="jb-skip-link">
+    {{! Skip Link - Hidden until focused (Bootstrap 5 native) }}
+    <a href="#exemptions-main-content" class="visually-hidden-focusable">
         {{#str}}skiptocontent, local_jobboard{{/str}}
     </a>
 
-    {{! Page Header }}
-    <header class="jb-page-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 jb-fade-in">
-        <h1 class="fs-3 mb-0">
+    {{! Page Header - Breadcrumbs handled by Moodle via $PAGE->navbar }}
+    <header class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <h1 class="h4 mb-0">
             <i class="fa fa-shield text-primary me-2" aria-hidden="true"></i>
             {{pagetitle}}
         </h1>
         <div class="btn-group" role="group" aria-label="{{#str}}exemptionactions, local_jobboard{{/str}}">
-            <a href="{{addurl}}" class="btn btn-primary jb-hover-lift">
+            <a href="{{addurl}}" class="btn btn-primary">
                 <i class="fa fa-plus me-2" aria-hidden="true"></i>
                 {{#str}}addexemption, local_jobboard{{/str}}
             </a>
