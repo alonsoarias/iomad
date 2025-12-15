@@ -1,0 +1,49 @@
+{{!
+    @template local_jobboard/components/alert
+
+    Alert component for messages and notifications.
+    Uses Bootstrap 5 alert classes.
+
+    Context variables:
+    * type (string) - Alert type: success, danger, warning, info, primary
+    * title (string) - Optional alert title
+    * message (string) - Alert message (supports HTML)
+    * icon (string) - Optional FontAwesome icon
+    * dismissible (bool) - Allow dismissing the alert
+    * items (array) - Optional list of items to display
+
+    Example context (json):
+    {
+        "type": "success",
+        "title": "Success!",
+        "message": "Your changes have been saved.",
+        "icon": "check-circle",
+        "dismissible": true
+    }
+}}
+<div class="alert alert-{{#type}}{{type}}{{/type}}{{^type}}info{{/type}}{{#dismissible}} alert-dismissible fade show{{/dismissible}}"
+     role="alert">
+    <div class="d-flex">
+        {{#icon}}
+        <div class="me-3">
+            <i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>
+        </div>
+        {{/icon}}
+        <div class="flex-grow-1">
+            {{#title}}
+            <h4 class="alert-heading fs-6 fw-bold mb-1">{{title}}</h4>
+            {{/title}}
+            <div class="mb-0">{{{message}}}</div>
+            {{#items}}
+            <ul class="mb-0 mt-2">
+                {{#.}}
+                <li>{{.}}</li>
+                {{/.}}
+            </ul>
+            {{/items}}
+        </div>
+    </div>
+    {{#dismissible}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{#str}}close, local_jobboard{{/str}}"></button>
+    {{/dismissible}}
+</div>

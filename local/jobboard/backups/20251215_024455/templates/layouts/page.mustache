@@ -1,0 +1,73 @@
+{{!
+    @template local_jobboard/layouts/page
+
+    Base page layout template.
+
+    Context variables:
+    * region (string) - Data region identifier
+    * breadcrumbs (array) - Breadcrumb items for navigation
+    * pagetitle (string) - Page title
+    * pageicon (string) - Icon for page title
+    * headeractions (string) - HTML for header action buttons
+    * alerts (array) - Alert messages to display
+    * content (string) - Main page content (HTML)
+    * sidebar (string) - Optional sidebar content (HTML)
+    * footer (string) - Optional footer content (HTML)
+
+    Example context (json):
+    {
+        "region": "jobboard-page",
+        "pagetitle": "Page Title",
+        "pageicon": "cog",
+        "content": "<p>Content</p>"
+    }
+}}
+<div class="local-jobboard-page" data-region="{{region}}">
+    {{#breadcrumbs}}
+    {{> local_jobboard/components/breadcrumb }}
+    {{/breadcrumbs}}
+
+    <header class="jb-page-header jb-mb-4">
+        <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+            <h1 class="jb-fs-4 jb-mb-0">
+                {{#pageicon}}<i class="fa fa-{{pageicon}} jb-text-primary jb-mr-2" aria-hidden="true"></i>{{/pageicon}}
+                {{pagetitle}}
+            </h1>
+            {{#headeractions}}
+            <div class="jb-header-actions">
+                {{{headeractions}}}
+            </div>
+            {{/headeractions}}
+        </div>
+    </header>
+
+    {{#alerts.0}}
+    <div class="jb-alerts jb-mb-4" role="region" aria-label="{{#str}}notifications{{/str}}">
+        {{#alerts}}
+        {{> local_jobboard/components/alert }}
+        {{/alerts}}
+    </div>
+    {{/alerts.0}}
+
+    {{#sidebar}}
+    <div class="jb-row">
+        <main class="jb-col-lg-8">
+            {{{content}}}
+        </main>
+        <aside class="jb-col-lg-4">
+            {{{sidebar}}}
+        </aside>
+    </div>
+    {{/sidebar}}
+    {{^sidebar}}
+    <main>
+        {{{content}}}
+    </main>
+    {{/sidebar}}
+
+    {{#footer}}
+    <footer class="jb-page-footer jb-mt-4 jb-pt-4 jb-border-top">
+        {{{footer}}}
+    </footer>
+    {{/footer}}
+</div>

@@ -1,0 +1,44 @@
+{{!
+    @template local_jobboard/components/nav_tabs
+
+    Navigation tabs component.
+    Uses Bootstrap 5 nav-tabs classes.
+
+    Context variables:
+    * tabs (array) - Tab items [{id, label, url, active, icon, badge, badgecolor}]
+    * pills (bool) - Use pills variant instead of tabs
+    * justified (bool) - Justify tabs to fill width
+    * vertical (bool) - Vertical tabs layout
+
+    Example context (json):
+    {
+        "tabs": [
+            {"id": "overview", "label": "Overview", "url": "#overview", "active": true, "icon": "home"},
+            {"id": "details", "label": "Details", "url": "#details", "badge": "5", "badgecolor": "danger"}
+        ]
+    }
+}}
+<ul class="nav{{#pills}} nav-pills{{/pills}}{{^pills}} nav-tabs{{/pills}}{{#justified}} nav-justified{{/justified}}{{#vertical}} flex-column{{/vertical}}" role="tablist">
+    {{#tabs}}
+    <li class="nav-item" role="presentation">
+        <a class="nav-link{{#active}} active{{/active}}{{#disabled}} disabled{{/disabled}}"
+           {{#isinternal}}
+           id="{{id}}-tab"
+           data-bs-toggle="{{#pills}}pill{{/pills}}{{^pills}}tab{{/pills}}"
+           href="#{{id}}"
+           role="tab"
+           aria-controls="{{id}}"
+           {{#active}}aria-selected="true"{{/active}}
+           {{^active}}aria-selected="false"{{/active}}
+           {{/isinternal}}
+           {{^isinternal}}
+           href="{{url}}"
+           {{/isinternal}}
+           {{#disabled}}aria-disabled="true" tabindex="-1"{{/disabled}}>
+            {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}
+            {{label}}
+            {{#badge}}<span class="badge bg-{{#badgecolor}}{{badgecolor}}{{/badgecolor}}{{^badgecolor}}secondary{{/badgecolor}} ms-2">{{badge}}</span>{{/badge}}
+        </a>
+    </li>
+    {{/tabs}}
+</ul>

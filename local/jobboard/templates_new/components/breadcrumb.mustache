@@ -1,0 +1,34 @@
+{{!
+    @template local_jobboard/components/breadcrumb
+
+    Breadcrumb navigation component.
+    Uses Bootstrap 5 breadcrumb classes.
+
+    Context variables:
+    * items (array) - Breadcrumb items [{label, url, active, icon}]
+
+    Example context (json):
+    {
+        "items": [
+            {"label": "Dashboard", "url": "/dashboard", "icon": "home"},
+            {"label": "Vacancies", "url": "/vacancies"},
+            {"label": "Mathematics Professor", "active": true}
+        ]
+    }
+}}
+<nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}">
+    <ol class="breadcrumb mb-0">
+        {{#items}}
+        <li class="breadcrumb-item{{#active}} active{{/active}}"{{#active}} aria-current="page"{{/active}}>
+            {{^active}}
+            <a href="{{url}}" class="text-decoration-none">
+                {{#icon}}<i class="fa fa-{{icon}} me-1" aria-hidden="true"></i>{{/icon}}{{label}}
+            </a>
+            {{/active}}
+            {{#active}}
+            {{#icon}}<i class="fa fa-{{icon}} me-1" aria-hidden="true"></i>{{/icon}}{{label}}
+            {{/active}}
+        </li>
+        {{/items}}
+    </ol>
+</nav>

@@ -1,0 +1,60 @@
+{{!
+    @template local_jobboard/components/card
+
+    Card component for content containers.
+    Uses Bootstrap 5 card classes.
+
+    Context variables:
+    * title (string) - Card title
+    * subtitle (string) - Optional card subtitle
+    * body (string) - Card body content (HTML)
+    * headeractions (array) - Optional header action buttons
+    * footeractions (array) - Optional footer action buttons
+    * icon (string) - Optional header icon
+    * color (string) - Optional border/accent color
+    * hoverlift (bool) - Enable hover lift effect
+    * animate (bool) - Enable entrance animation
+    * noPadding (bool) - Remove card-body padding
+
+    Example context (json):
+    {
+        "title": "Card Title",
+        "body": "<p>Card content here</p>",
+        "hoverlift": true
+    }
+}}
+<div class="card{{#hoverlift}} jb-hover-lift{{/hoverlift}}{{#animate}} jb-fade-in-up{{/animate}}{{#color}} border-{{color}}{{/color}}">
+    {{#title}}
+    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+        <div>
+            {{#icon}}<i class="fa fa-{{icon}} me-2 text-muted" aria-hidden="true"></i>{{/icon}}
+            <span class="fw-semibold">{{title}}</span>
+            {{#subtitle}}<small class="text-muted ms-2">{{subtitle}}</small>{{/subtitle}}
+        </div>
+        {{#headeractions}}
+        <div class="d-flex gap-2">
+            {{#.}}
+            <a href="{{url}}" class="btn btn-sm btn-{{#color}}{{color}}{{/color}}{{^color}}outline-secondary{{/color}}"
+               {{#tooltip}}data-bs-toggle="tooltip" title="{{tooltip}}"{{/tooltip}}>
+                {{#icon}}<i class="fa fa-{{icon}}{{#label}} me-1{{/label}}" aria-hidden="true"></i>{{/icon}}{{label}}
+            </a>
+            {{/.}}
+        </div>
+        {{/headeractions}}
+    </div>
+    {{/title}}
+
+    <div class="{{^noPadding}}card-body{{/noPadding}}">
+        {{{body}}}
+    </div>
+
+    {{#footeractions}}
+    <div class="card-footer bg-transparent d-flex justify-content-end gap-2">
+        {{#.}}
+        <a href="{{url}}" class="btn btn-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}{{#outline}} btn-outline-{{color}}{{/outline}}">
+            {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}{{label}}
+        </a>
+        {{/.}}
+    </div>
+    {{/footeractions}}
+</div>

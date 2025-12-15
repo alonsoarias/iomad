@@ -1,0 +1,93 @@
+{{!
+    @template local_jobboard/components/table
+
+    Table component with sorting and responsive design.
+    Uses Bootstrap 5 table classes.
+
+    Context variables:
+    * headers (array) - Table headers [{label, sortable, sorted, direction, width}]
+    * rows (array) - Table rows [{cells: [{content, align, nowrap}], actions, rowclass}]
+    * striped (bool) - Enable striped rows
+    * hover (bool) - Enable hover effect
+    * bordered (bool) - Enable borders
+    * small (bool) - Use compact size
+    * caption (string) - Optional table caption
+    * emptytext (string) - Text to show when no data
+    * sorturl (string) - Base URL for sorting
+
+    Example context (json):
+    {
+        "headers": [
+            {"label": "Name", "sortable": true},
+            {"label": "Status"},
+            {"label": "Actions", "width": "100px"}
+        ],
+        "rows": [
+            {"cells": [{"content": "John"}, {"content": "Active"}]}
+        ],
+        "striped": true,
+        "hover": true
+    }
+}}
+<div class="table-responsive">
+    <table class="table{{#striped}} table-striped{{/striped}}{{#hover}} table-hover{{/hover}}{{#bordered}} table-bordered{{/bordered}}{{#small}} table-sm{{/small}} mb-0">
+        {{#caption}}
+        <caption class="text-muted">{{caption}}</caption>
+        {{/caption}}
+        <thead>
+            <tr>
+                {{#headers}}
+                <th scope="col" {{#width}}style="width: {{width}}"{{/width}} {{#align}}class="text-{{align}}"{{/align}}>
+                    {{#sortable}}
+                    <a href="{{sorturl}}&sort={{key}}&dir={{#sorted}}{{#isasc}}desc{{/isasc}}{{^isasc}}asc{{/isasc}}{{/sorted}}{{^sorted}}asc{{/sorted}}"
+                       class="text-decoration-none text-reset d-inline-flex align-items-center">
+                        {{label}}
+                        {{#sorted}}
+                        <i class="fa fa-sort-{{#isasc}}up{{/isasc}}{{^isasc}}down{{/isasc}} ms-1" aria-hidden="true"></i>
+                        {{/sorted}}
+                        {{^sorted}}
+                        <i class="fa fa-sort ms-1 text-muted" aria-hidden="true"></i>
+                        {{/sorted}}
+                    </a>
+                    {{/sortable}}
+                    {{^sortable}}
+                    {{label}}
+                    {{/sortable}}
+                </th>
+                {{/headers}}
+            </tr>
+        </thead>
+        <tbody>
+            {{#rows}}
+            <tr {{#rowclass}}class="{{rowclass}}"{{/rowclass}}>
+                {{#cells}}
+                <td {{#align}}class="text-{{align}}"{{/align}} {{#nowrap}}class="text-nowrap"{{/nowrap}}>
+                    {{{content}}}
+                </td>
+                {{/cells}}
+                {{#actions}}
+                <td class="text-end text-nowrap">
+                    {{#.}}
+                    <a href="{{url}}" class="btn btn-sm btn-{{#color}}{{color}}{{/color}}{{^color}}outline-secondary{{/color}} me-1"
+                       {{#tooltip}}data-bs-toggle="tooltip" title="{{tooltip}}"{{/tooltip}}
+                       {{#confirm}}data-confirm="{{confirm}}"{{/confirm}}>
+                        {{#icon}}<i class="fa fa-{{icon}}" aria-hidden="true"></i>{{/icon}}
+                        {{^icon}}{{label}}{{/icon}}
+                    </a>
+                    {{/.}}
+                </td>
+                {{/actions}}
+            </tr>
+            {{/rows}}
+            {{^rows}}
+            <tr>
+                <td colspan="{{headercount}}" class="text-center text-muted py-4">
+                    <i class="fa fa-inbox fa-2x mb-2 d-block" aria-hidden="true"></i>
+                    {{#emptytext}}{{emptytext}}{{/emptytext}}
+                    {{^emptytext}}{{#str}}nodatafound, local_jobboard{{/str}}{{/emptytext}}
+                </td>
+            </tr>
+            {{/rows}}
+        </tbody>
+    </table>
+</div>

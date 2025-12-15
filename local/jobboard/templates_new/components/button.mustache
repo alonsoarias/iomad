@@ -1,0 +1,61 @@
+{{!
+    @template local_jobboard/components/button
+
+    Button component with consistent styling.
+    Uses Bootstrap 5 button classes.
+
+    Context variables:
+    * label (string) - Button text
+    * url (string) - Optional URL for link buttons
+    * type (string) - Button type: submit, button, reset (default: button)
+    * color (string) - Bootstrap color (default: primary)
+    * outline (bool) - Use outline variant
+    * size (string) - Button size: sm, lg
+    * icon (string) - Optional FontAwesome icon
+    * iconright (bool) - Place icon on right side
+    * disabled (bool) - Disable button
+    * loading (bool) - Show loading state
+    * tooltip (string) - Optional tooltip text
+    * dataaction (string) - Optional data-action attribute
+    * dataregion (string) - Optional data-region attribute
+
+    Example context (json):
+    {
+        "label": "Save Changes",
+        "type": "submit",
+        "color": "primary",
+        "icon": "save"
+    }
+}}
+{{#url}}
+<a href="{{url}}"
+   class="btn btn-{{#outline}}outline-{{/outline}}{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}{{#size}} btn-{{size}}{{/size}}{{#disabled}} disabled{{/disabled}}"
+   {{#disabled}}aria-disabled="true" tabindex="-1"{{/disabled}}
+   {{#tooltip}}data-bs-toggle="tooltip" title="{{tooltip}}"{{/tooltip}}
+   {{#dataaction}}data-action="{{dataaction}}"{{/dataaction}}
+   {{#dataregion}}data-region="{{dataregion}}"{{/dataregion}}>
+{{/url}}
+{{^url}}
+<button type="{{#type}}{{type}}{{/type}}{{^type}}button{{/type}}"
+        class="btn btn-{{#outline}}outline-{{/outline}}{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}{{#size}} btn-{{size}}{{/size}}"
+        {{#disabled}}disabled{{/disabled}}
+        {{#tooltip}}data-bs-toggle="tooltip" title="{{tooltip}}"{{/tooltip}}
+        {{#dataaction}}data-action="{{dataaction}}"{{/dataaction}}
+        {{#dataregion}}data-region="{{dataregion}}"{{/dataregion}}>
+{{/url}}
+    {{#loading}}
+    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+    {{/loading}}
+    {{^iconright}}
+    {{#icon}}<i class="fa fa-{{icon}}{{#label}} me-2{{/label}}" aria-hidden="true"></i>{{/icon}}
+    {{/iconright}}
+    {{label}}
+    {{#iconright}}
+    {{#icon}}<i class="fa fa-{{icon}} ms-2" aria-hidden="true"></i>{{/icon}}
+    {{/iconright}}
+{{#url}}
+</a>
+{{/url}}
+{{^url}}
+</button>
+{{/url}}

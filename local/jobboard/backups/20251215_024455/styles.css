@@ -1,0 +1,3570 @@
+/**
+ * Styles for local_jobboard plugin.
+ *
+ * @package   local_jobboard
+ * @copyright 2024-2025 ISER - Instituto Superior de Educación Rural
+ * @author    Alonso Arias <soporteplataformas@iser.edu.co>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * FULLY ISOLATED CSS - Independent from any Moodle theme.
+ * All styles are scoped and include element resets.
+ */
+
+/* ==========================================================================
+   CSS VARIABLES
+   ========================================================================== */
+
+:root {
+    --jb-primary: #0d6efd;
+    --jb-primary-hover: #0b5ed7;
+    --jb-primary-light: rgba(13, 110, 253, 0.1);
+    --jb-secondary: #6c757d;
+    --jb-secondary-hover: #5c636a;
+    --jb-secondary-light: rgba(108, 117, 125, 0.1);
+    --jb-success: #198754;
+    --jb-success-hover: #157347;
+    --jb-success-light: rgba(25, 135, 84, 0.1);
+    --jb-danger: #dc3545;
+    --jb-danger-hover: #bb2d3b;
+    --jb-danger-light: rgba(220, 53, 69, 0.1);
+    --jb-warning: #ffc107;
+    --jb-warning-hover: #ffca2c;
+    --jb-warning-light: rgba(255, 193, 7, 0.15);
+    --jb-info: #0dcaf0;
+    --jb-info-hover: #31d2f2;
+    --jb-info-light: rgba(13, 202, 240, 0.1);
+    --jb-light: #f8f9fa;
+    --jb-dark: #212529;
+    --jb-white: #ffffff;
+    --jb-muted: #6c757d;
+    --jb-border: #dee2e6;
+    --jb-body-bg: #ffffff;
+    --jb-body-color: #212529;
+    --jb-link-color: #0d6efd;
+    --jb-link-hover-color: #0a58ca;
+    --jb-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --jb-font-size-base: 1rem;
+    --jb-line-height-base: 1.5;
+    --jb-border-radius: 0.375rem;
+    --jb-border-radius-sm: 0.25rem;
+    --jb-border-radius-lg: 0.5rem;
+    --jb-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --jb-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --jb-transition: all 0.15s ease-in-out;
+}
+
+/* ==========================================================================
+   SCOPED CONTAINER BASE RESET
+   Reset all HTML elements within plugin containers
+   ========================================================================== */
+
+[data-region^="jobboard"],
+.local-jobboard-dashboard,
+.local-jobboard-public {
+    /* Base container styles */
+    box-sizing: border-box;
+    font-family: var(--jb-font-family);
+    font-size: var(--jb-font-size-base);
+    line-height: var(--jb-line-height-base);
+    color: var(--jb-body-color);
+    background-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Box-sizing reset for all elements */
+[data-region^="jobboard"] *,
+[data-region^="jobboard"] *::before,
+[data-region^="jobboard"] *::after,
+.local-jobboard-dashboard *,
+.local-jobboard-dashboard *::before,
+.local-jobboard-dashboard *::after,
+.local-jobboard-public *,
+.local-jobboard-public *::before,
+.local-jobboard-public *::after {
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   TYPOGRAPHY RESET - Headings
+   ========================================================================== */
+
+[data-region^="jobboard"] h1,
+[data-region^="jobboard"] h2,
+[data-region^="jobboard"] h3,
+[data-region^="jobboard"] h4,
+[data-region^="jobboard"] h5,
+[data-region^="jobboard"] h6,
+.local-jobboard-dashboard h1,
+.local-jobboard-dashboard h2,
+.local-jobboard-dashboard h3,
+.local-jobboard-dashboard h4,
+.local-jobboard-dashboard h5,
+.local-jobboard-dashboard h6,
+.local-jobboard-public h1,
+.local-jobboard-public h2,
+.local-jobboard-public h3,
+.local-jobboard-public h4,
+.local-jobboard-public h5,
+.local-jobboard-public h6 {
+    margin: 0 0 0.5rem 0;
+    padding: 0;
+    font-family: var(--jb-font-family);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--jb-dark);
+}
+
+[data-region^="jobboard"] h1,
+.local-jobboard-dashboard h1,
+.local-jobboard-public h1 { font-size: 2.5rem; }
+
+[data-region^="jobboard"] h2,
+.local-jobboard-dashboard h2,
+.local-jobboard-public h2 { font-size: 2rem; }
+
+[data-region^="jobboard"] h3,
+.local-jobboard-dashboard h3,
+.local-jobboard-public h3 { font-size: 1.75rem; }
+
+[data-region^="jobboard"] h4,
+.local-jobboard-dashboard h4,
+.local-jobboard-public h4 { font-size: 1.5rem; }
+
+[data-region^="jobboard"] h5,
+.local-jobboard-dashboard h5,
+.local-jobboard-public h5 { font-size: 1.25rem; }
+
+[data-region^="jobboard"] h6,
+.local-jobboard-dashboard h6,
+.local-jobboard-public h6 { font-size: 1rem; }
+
+/* ==========================================================================
+   TYPOGRAPHY RESET - Paragraphs and Text
+   ========================================================================== */
+
+[data-region^="jobboard"] p,
+.local-jobboard-dashboard p,
+.local-jobboard-public p {
+    margin: 0 0 1rem 0;
+    padding: 0;
+    font-family: var(--jb-font-family);
+    font-size: var(--jb-font-size-base);
+    line-height: var(--jb-line-height-base);
+    color: var(--jb-body-color);
+}
+
+[data-region^="jobboard"] span,
+.local-jobboard-dashboard span,
+.local-jobboard-public span {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+}
+
+[data-region^="jobboard"] strong,
+[data-region^="jobboard"] b,
+.local-jobboard-dashboard strong,
+.local-jobboard-dashboard b,
+.local-jobboard-public strong,
+.local-jobboard-public b {
+    font-weight: 700;
+}
+
+[data-region^="jobboard"] em,
+[data-region^="jobboard"] i:not(.fa):not(.fas):not(.far):not(.fab),
+.local-jobboard-dashboard em,
+.local-jobboard-dashboard i:not(.fa):not(.fas):not(.far):not(.fab),
+.local-jobboard-public em,
+.local-jobboard-public i:not(.fa):not(.fas):not(.far):not(.fab) {
+    font-style: italic;
+}
+
+[data-region^="jobboard"] small,
+.local-jobboard-dashboard small,
+.local-jobboard-public small {
+    font-size: 0.875em;
+}
+
+[data-region^="jobboard"] code,
+.local-jobboard-dashboard code,
+.local-jobboard-public code {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875em;
+    color: #d63384;
+    background-color: #f8f9fa;
+    padding: 0.125rem 0.25rem;
+    border-radius: var(--jb-border-radius-sm);
+}
+
+/* ==========================================================================
+   LINKS RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] a,
+.local-jobboard-dashboard a,
+.local-jobboard-public a {
+    color: var(--jb-link-color);
+    text-decoration: none;
+    background-color: transparent;
+    transition: color 0.15s ease-in-out;
+}
+
+[data-region^="jobboard"] a:hover,
+.local-jobboard-dashboard a:hover,
+.local-jobboard-public a:hover {
+    color: var(--jb-link-hover-color);
+    text-decoration: underline;
+}
+
+[data-region^="jobboard"] a:focus,
+.local-jobboard-dashboard a:focus,
+.local-jobboard-public a:focus {
+    outline: 2px solid var(--jb-primary);
+    outline-offset: 2px;
+}
+
+/* ==========================================================================
+   LISTS RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] ul,
+[data-region^="jobboard"] ol,
+.local-jobboard-dashboard ul,
+.local-jobboard-dashboard ol,
+.local-jobboard-public ul,
+.local-jobboard-public ol {
+    margin: 0 0 1rem 0;
+    padding: 0 0 0 2rem;
+    font-family: var(--jb-font-family);
+}
+
+[data-region^="jobboard"] li,
+.local-jobboard-dashboard li,
+.local-jobboard-public li {
+    margin: 0 0 0.25rem 0;
+    padding: 0;
+    line-height: var(--jb-line-height-base);
+}
+
+/* ==========================================================================
+   IMAGES RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] img,
+.local-jobboard-dashboard img,
+.local-jobboard-public img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    border: 0;
+}
+
+/* ==========================================================================
+   TABLES RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] table,
+.local-jobboard-dashboard table,
+.local-jobboard-public table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 1rem;
+    background-color: transparent;
+}
+
+[data-region^="jobboard"] th,
+[data-region^="jobboard"] td,
+.local-jobboard-dashboard th,
+.local-jobboard-dashboard td,
+.local-jobboard-public th,
+.local-jobboard-public td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border: 1px solid var(--jb-border);
+    font-family: var(--jb-font-family);
+    font-size: var(--jb-font-size-base);
+    line-height: var(--jb-line-height-base);
+    color: var(--jb-body-color);
+    text-align: left;
+}
+
+[data-region^="jobboard"] th,
+.local-jobboard-dashboard th,
+.local-jobboard-public th {
+    font-weight: 600;
+    background-color: var(--jb-light);
+}
+
+[data-region^="jobboard"] thead,
+.local-jobboard-dashboard thead,
+.local-jobboard-public thead {
+    background-color: var(--jb-light);
+}
+
+[data-region^="jobboard"] tbody tr:hover,
+.local-jobboard-dashboard tbody tr:hover,
+.local-jobboard-public tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.035);
+}
+
+/* ==========================================================================
+   FORMS RESET - All form elements
+   ========================================================================== */
+
+[data-region^="jobboard"] input,
+[data-region^="jobboard"] select,
+[data-region^="jobboard"] textarea,
+[data-region^="jobboard"] button,
+.local-jobboard-dashboard input,
+.local-jobboard-dashboard select,
+.local-jobboard-dashboard textarea,
+.local-jobboard-dashboard button,
+.local-jobboard-public input,
+.local-jobboard-public select,
+.local-jobboard-public textarea,
+.local-jobboard-public button {
+    margin: 0;
+    font-family: var(--jb-font-family);
+    font-size: var(--jb-font-size-base);
+    line-height: var(--jb-line-height-base);
+}
+
+[data-region^="jobboard"] input:not([type="checkbox"]):not([type="radio"]),
+[data-region^="jobboard"] select,
+[data-region^="jobboard"] textarea,
+.local-jobboard-dashboard input:not([type="checkbox"]):not([type="radio"]),
+.local-jobboard-dashboard select,
+.local-jobboard-dashboard textarea,
+.local-jobboard-public input:not([type="checkbox"]):not([type="radio"]),
+.local-jobboard-public select,
+.local-jobboard-public textarea {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--jb-body-color);
+    background-color: var(--jb-white);
+    background-clip: padding-box;
+    border: 1px solid var(--jb-border);
+    border-radius: var(--jb-border-radius);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+[data-region^="jobboard"] input:focus,
+[data-region^="jobboard"] select:focus,
+[data-region^="jobboard"] textarea:focus,
+.local-jobboard-dashboard input:focus,
+.local-jobboard-dashboard select:focus,
+.local-jobboard-dashboard textarea:focus,
+.local-jobboard-public input:focus,
+.local-jobboard-public select:focus,
+.local-jobboard-public textarea:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+[data-region^="jobboard"] input[type="checkbox"],
+[data-region^="jobboard"] input[type="radio"],
+.local-jobboard-dashboard input[type="checkbox"],
+.local-jobboard-dashboard input[type="radio"],
+.local-jobboard-public input[type="checkbox"],
+.local-jobboard-public input[type="radio"] {
+    width: auto;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+[data-region^="jobboard"] select,
+.local-jobboard-dashboard select,
+.local-jobboard-public select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    padding-right: 2.25rem;
+}
+
+[data-region^="jobboard"] textarea,
+.local-jobboard-dashboard textarea,
+.local-jobboard-public textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+[data-region^="jobboard"] label,
+.local-jobboard-dashboard label,
+.local-jobboard-public label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    font-family: var(--jb-font-family);
+    font-weight: 500;
+    color: var(--jb-body-color);
+}
+
+[data-region^="jobboard"] fieldset,
+.local-jobboard-dashboard fieldset,
+.local-jobboard-public fieldset {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+[data-region^="jobboard"] legend,
+.local-jobboard-dashboard legend,
+.local-jobboard-public legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: inherit;
+    color: var(--jb-dark);
+}
+
+/* ==========================================================================
+   BUTTONS RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] button,
+.local-jobboard-dashboard button,
+.local-jobboard-public button {
+    border-radius: 0;
+    cursor: pointer;
+}
+
+[data-region^="jobboard"] button:focus:not(:focus-visible),
+.local-jobboard-dashboard button:focus:not(:focus-visible),
+.local-jobboard-public button:focus:not(:focus-visible) {
+    outline: 0;
+}
+
+/* ==========================================================================
+   DIVIDERS RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] hr,
+.local-jobboard-dashboard hr,
+.local-jobboard-public hr {
+    margin: 1rem 0;
+    color: inherit;
+    border: 0;
+    border-top: 1px solid var(--jb-border);
+    opacity: 1;
+}
+
+/* ==========================================================================
+   SECTIONS RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] section,
+[data-region^="jobboard"] article,
+[data-region^="jobboard"] header,
+[data-region^="jobboard"] footer,
+[data-region^="jobboard"] nav,
+[data-region^="jobboard"] aside,
+[data-region^="jobboard"] main,
+.local-jobboard-dashboard section,
+.local-jobboard-dashboard article,
+.local-jobboard-dashboard header,
+.local-jobboard-dashboard footer,
+.local-jobboard-dashboard nav,
+.local-jobboard-dashboard aside,
+.local-jobboard-dashboard main,
+.local-jobboard-public section,
+.local-jobboard-public article,
+.local-jobboard-public header,
+.local-jobboard-public footer,
+.local-jobboard-public nav,
+.local-jobboard-public aside,
+.local-jobboard-public main {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+/* ==========================================================================
+   DIV RESET
+   ========================================================================== */
+
+[data-region^="jobboard"] div,
+.local-jobboard-dashboard div,
+.local-jobboard-public div {
+    margin: 0;
+    padding: 0;
+}
+
+/* ==========================================================================
+   GRID SYSTEM
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-row,
+.local-jobboard-dashboard .jb-row,
+.local-jobboard-public .jb-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
+}
+
+[data-region^="jobboard"] .jb-row > *,
+.local-jobboard-dashboard .jb-row > *,
+.local-jobboard-public .jb-row > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+}
+
+[data-region^="jobboard"] .jb-col,
+.local-jobboard-dashboard .jb-col,
+.local-jobboard-public .jb-col { flex: 1 0 0%; }
+
+[data-region^="jobboard"] .jb-col-12,
+.local-jobboard-dashboard .jb-col-12,
+.local-jobboard-public .jb-col-12 { flex: 0 0 auto; width: 100%; }
+
+[data-region^="jobboard"] .jb-col-6,
+.local-jobboard-dashboard .jb-col-6,
+.local-jobboard-public .jb-col-6 { flex: 0 0 auto; width: 50%; }
+
+[data-region^="jobboard"] .jb-col-4,
+.local-jobboard-dashboard .jb-col-4,
+.local-jobboard-public .jb-col-4 { flex: 0 0 auto; width: 33.333333%; }
+
+[data-region^="jobboard"] .jb-col-3,
+.local-jobboard-dashboard .jb-col-3,
+.local-jobboard-public .jb-col-3 { flex: 0 0 auto; width: 25%; }
+
+@media (min-width: 768px) {
+    [data-region^="jobboard"] .jb-col-md-6,
+    .local-jobboard-dashboard .jb-col-md-6,
+    .local-jobboard-public .jb-col-md-6 { flex: 0 0 auto; width: 50%; }
+
+    [data-region^="jobboard"] .jb-col-md-4,
+    .local-jobboard-dashboard .jb-col-md-4,
+    .local-jobboard-public .jb-col-md-4 { flex: 0 0 auto; width: 33.333333%; }
+
+    [data-region^="jobboard"] .jb-col-md-3,
+    .local-jobboard-dashboard .jb-col-md-3,
+    .local-jobboard-public .jb-col-md-3 { flex: 0 0 auto; width: 25%; }
+}
+
+@media (min-width: 992px) {
+    [data-region^="jobboard"] .jb-col-lg-8,
+    .local-jobboard-dashboard .jb-col-lg-8,
+    .local-jobboard-public .jb-col-lg-8 { flex: 0 0 auto; width: 66.666667%; }
+
+    [data-region^="jobboard"] .jb-col-lg-6,
+    .local-jobboard-dashboard .jb-col-lg-6,
+    .local-jobboard-public .jb-col-lg-6 { flex: 0 0 auto; width: 50%; }
+
+    [data-region^="jobboard"] .jb-col-lg-4,
+    .local-jobboard-dashboard .jb-col-lg-4,
+    .local-jobboard-public .jb-col-lg-4 { flex: 0 0 auto; width: 33.333333%; }
+
+    [data-region^="jobboard"] .jb-col-lg-3,
+    .local-jobboard-dashboard .jb-col-lg-3,
+    .local-jobboard-public .jb-col-lg-3 { flex: 0 0 auto; width: 25%; }
+}
+
+/* ==========================================================================
+   SPACING UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-m-0,
+.local-jobboard-dashboard .jb-m-0,
+.local-jobboard-public .jb-m-0 { margin: 0; }
+
+[data-region^="jobboard"] .jb-m-1,
+.local-jobboard-dashboard .jb-m-1,
+.local-jobboard-public .jb-m-1 { margin: 0.25rem; }
+
+[data-region^="jobboard"] .jb-mb-0,
+.local-jobboard-dashboard .jb-mb-0,
+.local-jobboard-public .jb-mb-0 { margin-bottom: 0; }
+
+[data-region^="jobboard"] .jb-mb-1,
+.local-jobboard-dashboard .jb-mb-1,
+.local-jobboard-public .jb-mb-1 { margin-bottom: 0.25rem; }
+
+[data-region^="jobboard"] .jb-mb-2,
+.local-jobboard-dashboard .jb-mb-2,
+.local-jobboard-public .jb-mb-2 { margin-bottom: 0.5rem; }
+
+[data-region^="jobboard"] .jb-mb-3,
+.local-jobboard-dashboard .jb-mb-3,
+.local-jobboard-public .jb-mb-3 { margin-bottom: 1rem; }
+
+[data-region^="jobboard"] .jb-mb-4,
+.local-jobboard-dashboard .jb-mb-4,
+.local-jobboard-public .jb-mb-4 { margin-bottom: 1.5rem; }
+
+[data-region^="jobboard"] .jb-mb-5,
+.local-jobboard-dashboard .jb-mb-5,
+.local-jobboard-public .jb-mb-5 { margin-bottom: 3rem; }
+
+[data-region^="jobboard"] .jb-mt-2,
+.local-jobboard-dashboard .jb-mt-2,
+.local-jobboard-public .jb-mt-2 { margin-top: 0.5rem; }
+
+[data-region^="jobboard"] .jb-mt-3,
+.local-jobboard-dashboard .jb-mt-3,
+.local-jobboard-public .jb-mt-3 { margin-top: 1rem; }
+
+[data-region^="jobboard"] .jb-mt-4,
+.local-jobboard-dashboard .jb-mt-4,
+.local-jobboard-public .jb-mt-4 { margin-top: 1.5rem; }
+
+[data-region^="jobboard"] .jb-mr-1,
+.local-jobboard-dashboard .jb-mr-1,
+.local-jobboard-public .jb-mr-1 { margin-right: 0.25rem; }
+
+[data-region^="jobboard"] .jb-mr-2,
+.local-jobboard-dashboard .jb-mr-2,
+.local-jobboard-public .jb-mr-2 { margin-right: 0.5rem; }
+
+[data-region^="jobboard"] .jb-mr-3,
+.local-jobboard-dashboard .jb-mr-3,
+.local-jobboard-public .jb-mr-3 { margin-right: 1rem; }
+
+[data-region^="jobboard"] .jb-ml-2,
+.local-jobboard-dashboard .jb-ml-2,
+.local-jobboard-public .jb-ml-2 { margin-left: 0.5rem; }
+
+[data-region^="jobboard"] .jb-ml-3,
+.local-jobboard-dashboard .jb-ml-3,
+.local-jobboard-public .jb-ml-3 { margin-left: 1rem; }
+
+[data-region^="jobboard"] .jb-mx-2,
+.local-jobboard-dashboard .jb-mx-2,
+.local-jobboard-public .jb-mx-2 { margin-left: 0.5rem; margin-right: 0.5rem; }
+
+[data-region^="jobboard"] .jb-p-0,
+.local-jobboard-dashboard .jb-p-0,
+.local-jobboard-public .jb-p-0 { padding: 0; }
+
+[data-region^="jobboard"] .jb-p-3,
+.local-jobboard-dashboard .jb-p-3,
+.local-jobboard-public .jb-p-3 { padding: 1rem; }
+
+[data-region^="jobboard"] .jb-p-4,
+.local-jobboard-dashboard .jb-p-4,
+.local-jobboard-public .jb-p-4 { padding: 1.5rem; }
+
+[data-region^="jobboard"] .jb-py-3,
+.local-jobboard-dashboard .jb-py-3,
+.local-jobboard-public .jb-py-3 { padding-top: 1rem; padding-bottom: 1rem; }
+
+[data-region^="jobboard"] .jb-py-4,
+.local-jobboard-dashboard .jb-py-4,
+.local-jobboard-public .jb-py-4 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+
+[data-region^="jobboard"] .jb-pt-3,
+.local-jobboard-dashboard .jb-pt-3,
+.local-jobboard-public .jb-pt-3 { padding-top: 1rem; }
+
+/* ==========================================================================
+   DISPLAY UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-d-none,
+.local-jobboard-dashboard .jb-d-none,
+.local-jobboard-public .jb-d-none { display: none; }
+
+[data-region^="jobboard"] .jb-d-block,
+.local-jobboard-dashboard .jb-d-block,
+.local-jobboard-public .jb-d-block { display: block; }
+
+[data-region^="jobboard"] .jb-d-flex,
+.local-jobboard-dashboard .jb-d-flex,
+.local-jobboard-public .jb-d-flex { display: flex; }
+
+[data-region^="jobboard"] .jb-d-inline-block,
+.local-jobboard-dashboard .jb-d-inline-block,
+.local-jobboard-public .jb-d-inline-block { display: inline-block; }
+
+[data-region^="jobboard"] .jb-d-inline-flex,
+.local-jobboard-dashboard .jb-d-inline-flex,
+.local-jobboard-public .jb-d-inline-flex { display: inline-flex; }
+
+/* ==========================================================================
+   FLEXBOX UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-flex-wrap,
+.local-jobboard-dashboard .jb-flex-wrap,
+.local-jobboard-public .jb-flex-wrap { flex-wrap: wrap; }
+
+[data-region^="jobboard"] .jb-flex-grow-1,
+.local-jobboard-dashboard .jb-flex-grow-1,
+.local-jobboard-public .jb-flex-grow-1 { flex-grow: 1; }
+
+[data-region^="jobboard"] .jb-flex-shrink-0,
+.local-jobboard-dashboard .jb-flex-shrink-0,
+.local-jobboard-public .jb-flex-shrink-0 { flex-shrink: 0; }
+
+[data-region^="jobboard"] .jb-align-items-center,
+.local-jobboard-dashboard .jb-align-items-center,
+.local-jobboard-public .jb-align-items-center { align-items: center; }
+
+[data-region^="jobboard"] .jb-align-items-start,
+.local-jobboard-dashboard .jb-align-items-start,
+.local-jobboard-public .jb-align-items-start { align-items: flex-start; }
+
+[data-region^="jobboard"] .jb-justify-content-between,
+.local-jobboard-dashboard .jb-justify-content-between,
+.local-jobboard-public .jb-justify-content-between { justify-content: space-between; }
+
+[data-region^="jobboard"] .jb-justify-content-center,
+.local-jobboard-dashboard .jb-justify-content-center,
+.local-jobboard-public .jb-justify-content-center { justify-content: center; }
+
+/* ==========================================================================
+   TEXT UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-text-center,
+.local-jobboard-dashboard .jb-text-center,
+.local-jobboard-public .jb-text-center { text-align: center; }
+
+[data-region^="jobboard"] .jb-text-right,
+.local-jobboard-dashboard .jb-text-right,
+.local-jobboard-public .jb-text-right { text-align: right; }
+
+[data-region^="jobboard"] .jb-text-muted,
+.local-jobboard-dashboard .jb-text-muted,
+.local-jobboard-public .jb-text-muted { color: var(--jb-muted); }
+
+[data-region^="jobboard"] .jb-text-primary,
+.local-jobboard-dashboard .jb-text-primary,
+.local-jobboard-public .jb-text-primary { color: var(--jb-primary); }
+
+[data-region^="jobboard"] .jb-text-success,
+.local-jobboard-dashboard .jb-text-success,
+.local-jobboard-public .jb-text-success { color: var(--jb-success); }
+
+[data-region^="jobboard"] .jb-text-danger,
+.local-jobboard-dashboard .jb-text-danger,
+.local-jobboard-public .jb-text-danger { color: var(--jb-danger); }
+
+[data-region^="jobboard"] .jb-text-warning,
+.local-jobboard-dashboard .jb-text-warning,
+.local-jobboard-public .jb-text-warning { color: #856404; }
+
+[data-region^="jobboard"] .jb-text-info,
+.local-jobboard-dashboard .jb-text-info,
+.local-jobboard-public .jb-text-info { color: #0c5460; }
+
+[data-region^="jobboard"] .jb-text-white,
+.local-jobboard-dashboard .jb-text-white,
+.local-jobboard-public .jb-text-white { color: var(--jb-white); }
+
+[data-region^="jobboard"] .jb-text-dark,
+.local-jobboard-dashboard .jb-text-dark,
+.local-jobboard-public .jb-text-dark { color: var(--jb-dark); }
+
+[data-region^="jobboard"] .jb-fw-bold,
+.local-jobboard-dashboard .jb-fw-bold,
+.local-jobboard-public .jb-fw-bold { font-weight: 700; }
+
+[data-region^="jobboard"] .jb-fw-normal,
+.local-jobboard-dashboard .jb-fw-normal,
+.local-jobboard-public .jb-fw-normal { font-weight: 400; }
+
+[data-region^="jobboard"] .jb-fs-3,
+.local-jobboard-dashboard .jb-fs-3,
+.local-jobboard-public .jb-fs-3 { font-size: 1.75rem; }
+
+[data-region^="jobboard"] .jb-fs-4,
+.local-jobboard-dashboard .jb-fs-4,
+.local-jobboard-public .jb-fs-4 { font-size: 1.5rem; }
+
+[data-region^="jobboard"] .jb-fs-5,
+.local-jobboard-dashboard .jb-fs-5,
+.local-jobboard-public .jb-fs-5 { font-size: 1.25rem; }
+
+[data-region^="jobboard"] .jb-small,
+.local-jobboard-dashboard .jb-small,
+.local-jobboard-public .jb-small { font-size: 0.875rem; }
+
+[data-region^="jobboard"] .jb-text-decoration-none,
+.local-jobboard-dashboard .jb-text-decoration-none,
+.local-jobboard-public .jb-text-decoration-none { text-decoration: none; }
+
+[data-region^="jobboard"] .jb-opacity-25,
+.local-jobboard-dashboard .jb-opacity-25,
+.local-jobboard-public .jb-opacity-25 { opacity: 0.25; }
+
+[data-region^="jobboard"] .jb-opacity-75,
+.local-jobboard-dashboard .jb-opacity-75,
+.local-jobboard-public .jb-opacity-75 { opacity: 0.75; }
+
+/* ==========================================================================
+   BACKGROUND UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-bg-white,
+.local-jobboard-dashboard .jb-bg-white,
+.local-jobboard-public .jb-bg-white { background-color: var(--jb-white); }
+
+[data-region^="jobboard"] .jb-bg-light,
+.local-jobboard-dashboard .jb-bg-light,
+.local-jobboard-public .jb-bg-light { background-color: var(--jb-light); }
+
+[data-region^="jobboard"] .jb-bg-primary,
+.local-jobboard-dashboard .jb-bg-primary,
+.local-jobboard-public .jb-bg-primary { background-color: var(--jb-primary); }
+
+[data-region^="jobboard"] .jb-bg-success,
+.local-jobboard-dashboard .jb-bg-success,
+.local-jobboard-public .jb-bg-success { background-color: var(--jb-success); }
+
+[data-region^="jobboard"] .jb-bg-info,
+.local-jobboard-dashboard .jb-bg-info,
+.local-jobboard-public .jb-bg-info { background-color: var(--jb-info); }
+
+[data-region^="jobboard"] .jb-bg-warning,
+.local-jobboard-dashboard .jb-bg-warning,
+.local-jobboard-public .jb-bg-warning { background-color: var(--jb-warning); }
+
+[data-region^="jobboard"] .jb-bg-danger,
+.local-jobboard-dashboard .jb-bg-danger,
+.local-jobboard-public .jb-bg-danger { background-color: var(--jb-danger); }
+
+[data-region^="jobboard"] .jb-bg-gradient-primary,
+.local-jobboard-dashboard .jb-bg-gradient-primary,
+.local-jobboard-public .jb-bg-gradient-primary {
+    background: linear-gradient(135deg, var(--jb-primary) 0%, var(--jb-primary-hover) 100%);
+}
+
+/* ==========================================================================
+   BORDER UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-border,
+.local-jobboard-dashboard .jb-border,
+.local-jobboard-public .jb-border { border: 1px solid var(--jb-border); }
+
+[data-region^="jobboard"] .jb-border-top,
+.local-jobboard-dashboard .jb-border-top,
+.local-jobboard-public .jb-border-top { border-top: 1px solid var(--jb-border); }
+
+[data-region^="jobboard"] .jb-border-bottom,
+.local-jobboard-dashboard .jb-border-bottom,
+.local-jobboard-public .jb-border-bottom { border-bottom: 1px solid var(--jb-border); }
+
+[data-region^="jobboard"] .jb-border-left,
+.local-jobboard-dashboard .jb-border-left,
+.local-jobboard-public .jb-border-left { border-left: 3px solid; }
+
+[data-region^="jobboard"] .jb-border-light,
+.local-jobboard-dashboard .jb-border-light,
+.local-jobboard-public .jb-border-light { border-color: rgba(255,255,255,0.25); }
+
+[data-region^="jobboard"] .jb-border-primary,
+.local-jobboard-dashboard .jb-border-primary,
+.local-jobboard-public .jb-border-primary { border-color: var(--jb-primary); }
+
+[data-region^="jobboard"] .jb-border-success,
+.local-jobboard-dashboard .jb-border-success,
+.local-jobboard-public .jb-border-success { border-color: var(--jb-success); }
+
+[data-region^="jobboard"] .jb-border-warning,
+.local-jobboard-dashboard .jb-border-warning,
+.local-jobboard-public .jb-border-warning { border-color: var(--jb-warning); }
+
+[data-region^="jobboard"] .jb-border-danger,
+.local-jobboard-dashboard .jb-border-danger,
+.local-jobboard-public .jb-border-danger { border-color: var(--jb-danger); }
+
+[data-region^="jobboard"] .jb-border-info,
+.local-jobboard-dashboard .jb-border-info,
+.local-jobboard-public .jb-border-info { border-color: var(--jb-info); }
+
+[data-region^="jobboard"] .jb-rounded,
+.local-jobboard-dashboard .jb-rounded,
+.local-jobboard-public .jb-rounded { border-radius: var(--jb-border-radius); }
+
+[data-region^="jobboard"] .jb-rounded-lg,
+.local-jobboard-dashboard .jb-rounded-lg,
+.local-jobboard-public .jb-rounded-lg { border-radius: var(--jb-border-radius-lg); }
+
+/* ==========================================================================
+   SIZE UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-h-100,
+.local-jobboard-dashboard .jb-h-100,
+.local-jobboard-public .jb-h-100 { height: 100%; }
+
+[data-region^="jobboard"] .jb-w-100,
+.local-jobboard-dashboard .jb-w-100,
+.local-jobboard-public .jb-w-100 { width: 100%; }
+
+/* ==========================================================================
+   CARDS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-card,
+.local-jobboard-dashboard .jb-card,
+.local-jobboard-public .jb-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: var(--jb-white);
+    background-clip: border-box;
+    border: 1px solid var(--jb-border);
+    border-radius: var(--jb-border-radius);
+}
+
+[data-region^="jobboard"] .jb-card-shadow,
+.local-jobboard-dashboard .jb-card-shadow,
+.local-jobboard-public .jb-card-shadow {
+    box-shadow: var(--jb-shadow-sm);
+}
+
+[data-region^="jobboard"] .jb-card-body,
+.local-jobboard-dashboard .jb-card-body,
+.local-jobboard-public .jb-card-body {
+    flex: 1 1 auto;
+    padding: 1rem;
+}
+
+[data-region^="jobboard"] .jb-card-header,
+.local-jobboard-dashboard .jb-card-header,
+.local-jobboard-public .jb-card-header {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid var(--jb-border);
+    border-radius: calc(var(--jb-border-radius) - 1px) calc(var(--jb-border-radius) - 1px) 0 0;
+}
+
+[data-region^="jobboard"] .jb-card-title,
+.local-jobboard-dashboard .jb-card-title,
+.local-jobboard-public .jb-card-title {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   STAT CARDS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-stat-card,
+.local-jobboard-dashboard .jb-stat-card,
+.local-jobboard-public .jb-stat-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--jb-white);
+    border-radius: var(--jb-border-radius);
+    border: 1px solid var(--jb-border);
+    transition: var(--jb-transition);
+}
+
+[data-region^="jobboard"] .jb-stat-card:hover,
+.local-jobboard-dashboard .jb-stat-card:hover,
+.local-jobboard-public .jb-stat-card:hover {
+    box-shadow: var(--jb-shadow-sm);
+}
+
+[data-region^="jobboard"] .jb-stat-card-primary,
+.local-jobboard-dashboard .jb-stat-card-primary,
+.local-jobboard-public .jb-stat-card-primary { border-left: 4px solid var(--jb-primary); }
+
+[data-region^="jobboard"] .jb-stat-card-success,
+.local-jobboard-dashboard .jb-stat-card-success,
+.local-jobboard-public .jb-stat-card-success { border-left: 4px solid var(--jb-success); }
+
+[data-region^="jobboard"] .jb-stat-card-warning,
+.local-jobboard-dashboard .jb-stat-card-warning,
+.local-jobboard-public .jb-stat-card-warning { border-left: 4px solid var(--jb-warning); }
+
+[data-region^="jobboard"] .jb-stat-card-danger,
+.local-jobboard-dashboard .jb-stat-card-danger,
+.local-jobboard-public .jb-stat-card-danger { border-left: 4px solid var(--jb-danger); }
+
+[data-region^="jobboard"] .jb-stat-card-info,
+.local-jobboard-dashboard .jb-stat-card-info,
+.local-jobboard-public .jb-stat-card-info { border-left: 4px solid var(--jb-info); }
+
+[data-region^="jobboard"] .jb-stat-card-secondary,
+.local-jobboard-dashboard .jb-stat-card-secondary,
+.local-jobboard-public .jb-stat-card-secondary { border-left: 4px solid var(--jb-secondary); }
+
+[data-region^="jobboard"] .jb-stat-icon,
+.local-jobboard-dashboard .jb-stat-icon,
+.local-jobboard-public .jb-stat-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.25rem;
+}
+
+[data-region^="jobboard"] .jb-stat-card-primary .jb-stat-icon,
+.local-jobboard-dashboard .jb-stat-card-primary .jb-stat-icon,
+.local-jobboard-public .jb-stat-card-primary .jb-stat-icon {
+    color: var(--jb-primary);
+    background-color: var(--jb-primary-light);
+}
+
+[data-region^="jobboard"] .jb-stat-card-success .jb-stat-icon,
+.local-jobboard-dashboard .jb-stat-card-success .jb-stat-icon,
+.local-jobboard-public .jb-stat-card-success .jb-stat-icon {
+    color: var(--jb-success);
+    background-color: var(--jb-success-light);
+}
+
+[data-region^="jobboard"] .jb-stat-card-warning .jb-stat-icon,
+.local-jobboard-dashboard .jb-stat-card-warning .jb-stat-icon,
+.local-jobboard-public .jb-stat-card-warning .jb-stat-icon {
+    color: #856404;
+    background-color: var(--jb-warning-light);
+}
+
+[data-region^="jobboard"] .jb-stat-card-danger .jb-stat-icon,
+.local-jobboard-dashboard .jb-stat-card-danger .jb-stat-icon,
+.local-jobboard-public .jb-stat-card-danger .jb-stat-icon {
+    color: var(--jb-danger);
+    background-color: var(--jb-danger-light);
+}
+
+[data-region^="jobboard"] .jb-stat-card-info .jb-stat-icon,
+.local-jobboard-dashboard .jb-stat-card-info .jb-stat-icon,
+.local-jobboard-public .jb-stat-card-info .jb-stat-icon {
+    color: #0c5460;
+    background-color: var(--jb-info-light);
+}
+
+[data-region^="jobboard"] .jb-stat-card-secondary .jb-stat-icon,
+.local-jobboard-dashboard .jb-stat-card-secondary .jb-stat-icon,
+.local-jobboard-public .jb-stat-card-secondary .jb-stat-icon {
+    color: var(--jb-secondary);
+    background-color: var(--jb-secondary-light);
+}
+
+[data-region^="jobboard"] .jb-stat-value,
+.local-jobboard-dashboard .jb-stat-value,
+.local-jobboard-public .jb-stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--jb-dark);
+}
+
+[data-region^="jobboard"] .jb-stat-label,
+.local-jobboard-dashboard .jb-stat-label,
+.local-jobboard-public .jb-stat-label {
+    font-size: 0.8rem;
+    color: var(--jb-muted);
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-btn,
+.local-jobboard-dashboard .jb-btn,
+.local-jobboard-public .jb-btn {
+    display: inline-block;
+    font-family: var(--jb-font-family);
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: var(--jb-border-radius);
+    border: 1px solid transparent;
+    transition: var(--jb-transition);
+    background-color: transparent;
+}
+
+[data-region^="jobboard"] .jb-btn:hover,
+.local-jobboard-dashboard .jb-btn:hover,
+.local-jobboard-public .jb-btn:hover {
+    text-decoration: none;
+}
+
+[data-region^="jobboard"] .jb-btn:focus,
+.local-jobboard-dashboard .jb-btn:focus,
+.local-jobboard-public .jb-btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+[data-region^="jobboard"] .jb-btn-primary,
+.local-jobboard-dashboard .jb-btn-primary,
+.local-jobboard-public .jb-btn-primary {
+    color: var(--jb-white);
+    background-color: var(--jb-primary);
+    border-color: var(--jb-primary);
+}
+
+[data-region^="jobboard"] .jb-btn-primary:hover,
+.local-jobboard-dashboard .jb-btn-primary:hover,
+.local-jobboard-public .jb-btn-primary:hover {
+    color: var(--jb-white);
+    background-color: var(--jb-primary-hover);
+    border-color: var(--jb-primary-hover);
+}
+
+[data-region^="jobboard"] .jb-btn-success,
+.local-jobboard-dashboard .jb-btn-success,
+.local-jobboard-public .jb-btn-success {
+    color: var(--jb-white);
+    background-color: var(--jb-success);
+    border-color: var(--jb-success);
+}
+
+[data-region^="jobboard"] .jb-btn-success:hover,
+.local-jobboard-dashboard .jb-btn-success:hover,
+.local-jobboard-public .jb-btn-success:hover {
+    color: var(--jb-white);
+    background-color: var(--jb-success-hover);
+}
+
+[data-region^="jobboard"] .jb-btn-danger,
+.local-jobboard-dashboard .jb-btn-danger,
+.local-jobboard-public .jb-btn-danger {
+    color: var(--jb-white);
+    background-color: var(--jb-danger);
+    border-color: var(--jb-danger);
+}
+
+[data-region^="jobboard"] .jb-btn-warning,
+.local-jobboard-dashboard .jb-btn-warning,
+.local-jobboard-public .jb-btn-warning {
+    color: #212529;
+    background-color: var(--jb-warning);
+    border-color: var(--jb-warning);
+}
+
+[data-region^="jobboard"] .jb-btn-light,
+.local-jobboard-dashboard .jb-btn-light,
+.local-jobboard-public .jb-btn-light {
+    color: var(--jb-dark);
+    background-color: var(--jb-light);
+    border-color: var(--jb-light);
+}
+
+[data-region^="jobboard"] .jb-btn-light:hover,
+.local-jobboard-dashboard .jb-btn-light:hover,
+.local-jobboard-public .jb-btn-light:hover {
+    background-color: #e2e6ea;
+}
+
+[data-region^="jobboard"] .jb-btn-outline-secondary,
+.local-jobboard-dashboard .jb-btn-outline-secondary,
+.local-jobboard-public .jb-btn-outline-secondary {
+    color: var(--jb-secondary);
+    border-color: var(--jb-secondary);
+    background-color: transparent;
+}
+
+[data-region^="jobboard"] .jb-btn-outline-secondary:hover,
+.local-jobboard-dashboard .jb-btn-outline-secondary:hover,
+.local-jobboard-public .jb-btn-outline-secondary:hover {
+    color: var(--jb-white);
+    background-color: var(--jb-secondary);
+}
+
+[data-region^="jobboard"] .jb-btn-outline-primary,
+.local-jobboard-dashboard .jb-btn-outline-primary,
+.local-jobboard-public .jb-btn-outline-primary {
+    color: var(--jb-primary);
+    border-color: var(--jb-primary);
+    background-color: transparent;
+}
+
+[data-region^="jobboard"] .jb-btn-outline-primary:hover,
+.local-jobboard-dashboard .jb-btn-outline-primary:hover,
+.local-jobboard-public .jb-btn-outline-primary:hover {
+    color: var(--jb-white);
+    background-color: var(--jb-primary);
+}
+
+[data-region^="jobboard"] .jb-btn-outline-success,
+.local-jobboard-dashboard .jb-btn-outline-success,
+.local-jobboard-public .jb-btn-outline-success {
+    color: var(--jb-success);
+    border-color: var(--jb-success);
+    background-color: transparent;
+}
+
+[data-region^="jobboard"] .jb-btn-outline-success:hover,
+.local-jobboard-dashboard .jb-btn-outline-success:hover,
+.local-jobboard-public .jb-btn-outline-success:hover {
+    color: var(--jb-white);
+    background-color: var(--jb-success);
+}
+
+[data-region^="jobboard"] .jb-btn-outline-danger,
+.local-jobboard-dashboard .jb-btn-outline-danger,
+.local-jobboard-public .jb-btn-outline-danger {
+    color: var(--jb-danger);
+    border-color: var(--jb-danger);
+    background-color: transparent;
+}
+
+[data-region^="jobboard"] .jb-btn-outline-info,
+.local-jobboard-dashboard .jb-btn-outline-info,
+.local-jobboard-public .jb-btn-outline-info {
+    color: var(--jb-info);
+    border-color: var(--jb-info);
+    background-color: transparent;
+}
+
+[data-region^="jobboard"] .jb-btn-outline-light,
+.local-jobboard-dashboard .jb-btn-outline-light,
+.local-jobboard-public .jb-btn-outline-light {
+    color: var(--jb-white);
+    border-color: rgba(255,255,255,0.5);
+    background-color: transparent;
+}
+
+[data-region^="jobboard"] .jb-btn-outline-light:hover,
+.local-jobboard-dashboard .jb-btn-outline-light:hover,
+.local-jobboard-public .jb-btn-outline-light:hover {
+    color: var(--jb-dark);
+    background-color: var(--jb-white);
+}
+
+[data-region^="jobboard"] .jb-btn-link,
+.local-jobboard-dashboard .jb-btn-link,
+.local-jobboard-public .jb-btn-link {
+    color: var(--jb-primary);
+    background-color: transparent;
+    border-color: transparent;
+}
+
+[data-region^="jobboard"] .jb-btn-sm,
+.local-jobboard-dashboard .jb-btn-sm,
+.local-jobboard-public .jb-btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+[data-region^="jobboard"] .jb-btn-group,
+.local-jobboard-dashboard .jb-btn-group,
+.local-jobboard-public .jb-btn-group {
+    display: inline-flex;
+}
+
+[data-region^="jobboard"] .jb-btn-group .jb-btn,
+.local-jobboard-dashboard .jb-btn-group .jb-btn,
+.local-jobboard-public .jb-btn-group .jb-btn {
+    margin-left: 0.25rem;
+}
+
+/* ==========================================================================
+   BADGES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-badge,
+.local-jobboard-dashboard .jb-badge,
+.local-jobboard-public .jb-badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-family: var(--jb-font-family);
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: var(--jb-border-radius-sm);
+}
+
+[data-region^="jobboard"] .jb-badge-primary,
+.local-jobboard-dashboard .jb-badge-primary,
+.local-jobboard-public .jb-badge-primary {
+    color: var(--jb-white);
+    background-color: var(--jb-primary);
+}
+
+[data-region^="jobboard"] .jb-badge-secondary,
+.local-jobboard-dashboard .jb-badge-secondary,
+.local-jobboard-public .jb-badge-secondary {
+    color: var(--jb-white);
+    background-color: var(--jb-secondary);
+}
+
+[data-region^="jobboard"] .jb-badge-success,
+.local-jobboard-dashboard .jb-badge-success,
+.local-jobboard-public .jb-badge-success {
+    color: var(--jb-white);
+    background-color: var(--jb-success);
+}
+
+[data-region^="jobboard"] .jb-badge-danger,
+.local-jobboard-dashboard .jb-badge-danger,
+.local-jobboard-public .jb-badge-danger {
+    color: var(--jb-white);
+    background-color: var(--jb-danger);
+}
+
+[data-region^="jobboard"] .jb-badge-warning,
+.local-jobboard-dashboard .jb-badge-warning,
+.local-jobboard-public .jb-badge-warning {
+    color: #212529;
+    background-color: var(--jb-warning);
+}
+
+[data-region^="jobboard"] .jb-badge-info,
+.local-jobboard-dashboard .jb-badge-info,
+.local-jobboard-public .jb-badge-info {
+    color: #212529;
+    background-color: var(--jb-info);
+}
+
+[data-region^="jobboard"] .jb-badge-light,
+.local-jobboard-dashboard .jb-badge-light,
+.local-jobboard-public .jb-badge-light {
+    color: #212529;
+    background-color: var(--jb-light);
+}
+
+/* ==========================================================================
+   FORM UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-form-control,
+.local-jobboard-dashboard .jb-form-control,
+.local-jobboard-public .jb-form-control {
+    display: block;
+    width: 100%;
+}
+
+[data-region^="jobboard"] .jb-form-group,
+.local-jobboard-dashboard .jb-form-group,
+.local-jobboard-public .jb-form-group {
+    margin-bottom: 1rem;
+}
+
+[data-region^="jobboard"] .jb-form-label,
+.local-jobboard-dashboard .jb-form-label,
+.local-jobboard-public .jb-form-label {
+    margin-bottom: 0.5rem;
+    display: inline-block;
+}
+
+[data-region^="jobboard"] .jb-form-inline,
+.local-jobboard-dashboard .jb-form-inline,
+.local-jobboard-public .jb-form-inline {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+
+[data-region^="jobboard"] .jb-sr-only,
+.local-jobboard-dashboard .jb-sr-only,
+.local-jobboard-public .jb-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+[data-region^="jobboard"] .jb-narrow-input,
+.local-jobboard-dashboard .jb-narrow-input,
+.local-jobboard-public .jb-narrow-input {
+    width: 80px;
+}
+
+[data-region^="jobboard"] .jb-custom-control,
+.local-jobboard-dashboard .jb-custom-control,
+.local-jobboard-public .jb-custom-control {
+    position: relative;
+    display: block;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+[data-region^="jobboard"] .jb-custom-control-input,
+.local-jobboard-dashboard .jb-custom-control-input,
+.local-jobboard-public .jb-custom-control-input {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    width: 1rem;
+    height: 1.25rem;
+    opacity: 0;
+}
+
+[data-region^="jobboard"] .jb-custom-control-label,
+.local-jobboard-dashboard .jb-custom-control-label,
+.local-jobboard-public .jb-custom-control-label {
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+}
+
+/* ==========================================================================
+   TABLE UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-table,
+.local-jobboard-dashboard .jb-table,
+.local-jobboard-public .jb-table {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+[data-region^="jobboard"] .jb-table-hover tbody tr:hover,
+.local-jobboard-dashboard .jb-table-hover tbody tr:hover,
+.local-jobboard-public .jb-table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.035);
+}
+
+[data-region^="jobboard"] .jb-thead-light th,
+.local-jobboard-dashboard .jb-thead-light th,
+.local-jobboard-public .jb-thead-light th {
+    background-color: var(--jb-light);
+}
+
+[data-region^="jobboard"] .jb-table-responsive,
+.local-jobboard-dashboard .jb-table-responsive,
+.local-jobboard-public .jb-table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ==========================================================================
+   ALERTS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-alert,
+.local-jobboard-dashboard .jb-alert,
+.local-jobboard-public .jb-alert {
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--jb-border-radius);
+    font-family: var(--jb-font-family);
+}
+
+[data-region^="jobboard"] .jb-alert-warning,
+.local-jobboard-dashboard .jb-alert-warning,
+.local-jobboard-public .jb-alert-warning {
+    color: #664d03;
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+}
+
+[data-region^="jobboard"] .jb-alert-danger,
+.local-jobboard-dashboard .jb-alert-danger,
+.local-jobboard-public .jb-alert-danger {
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+}
+
+[data-region^="jobboard"] .jb-alert-success,
+.local-jobboard-dashboard .jb-alert-success,
+.local-jobboard-public .jb-alert-success {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+}
+
+[data-region^="jobboard"] .jb-alert-info,
+.local-jobboard-dashboard .jb-alert-info,
+.local-jobboard-public .jb-alert-info {
+    color: #055160;
+    background-color: #cff4fc;
+    border-color: #b6effb;
+}
+
+/* ==========================================================================
+   PAGE HEADER
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-page-header,
+.local-jobboard-dashboard .jb-page-header,
+.local-jobboard-public .jb-page-header {
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--jb-border);
+}
+
+/* ==========================================================================
+   WELCOME SECTION
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-welcome-section,
+.local-jobboard-dashboard .jb-welcome-section,
+.local-jobboard-public .jb-welcome-section {
+    border-radius: var(--jb-border-radius-lg);
+}
+
+/* ==========================================================================
+   EMPTY STATE
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-empty-state,
+.local-jobboard-dashboard .jb-empty-state,
+.local-jobboard-public .jb-empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+/* ==========================================================================
+   SECTION CARDS (Dashboard)
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-section-card,
+.local-jobboard-dashboard .jb-section-card,
+.local-jobboard-public .jb-section-card {
+    display: block;
+    padding: 1.25rem;
+    background: var(--jb-white);
+    border: 1px solid var(--jb-border);
+    border-radius: var(--jb-border-radius);
+    text-decoration: none;
+    color: inherit;
+    transition: var(--jb-transition);
+}
+
+[data-region^="jobboard"] .jb-section-card:hover,
+.local-jobboard-dashboard .jb-section-card:hover,
+.local-jobboard-public .jb-section-card:hover {
+    border-color: var(--jb-primary);
+    box-shadow: var(--jb-shadow-sm);
+    text-decoration: none;
+}
+
+[data-region^="jobboard"] .jb-section-card .jb-card-icon,
+.local-jobboard-dashboard .jb-section-card .jb-card-icon,
+.local-jobboard-public .jb-section-card .jb-card-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--jb-border-radius);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+[data-region^="jobboard"] .jb-section-card-title,
+.local-jobboard-dashboard .jb-section-card-title,
+.local-jobboard-public .jb-section-card-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--jb-dark);
+}
+
+[data-region^="jobboard"] .jb-section-card-desc,
+.local-jobboard-dashboard .jb-section-card-desc,
+.local-jobboard-public .jb-section-card-desc {
+    font-size: 0.875rem;
+    color: var(--jb-muted);
+    margin: 0;
+}
+
+/* Icon colors */
+[data-region^="jobboard"] .jb-icon-primary,
+.local-jobboard-dashboard .jb-icon-primary,
+.local-jobboard-public .jb-icon-primary { background-color: var(--jb-primary-light); color: var(--jb-primary); }
+
+[data-region^="jobboard"] .jb-icon-success,
+.local-jobboard-dashboard .jb-icon-success,
+.local-jobboard-public .jb-icon-success { background-color: var(--jb-success-light); color: var(--jb-success); }
+
+[data-region^="jobboard"] .jb-icon-warning,
+.local-jobboard-dashboard .jb-icon-warning,
+.local-jobboard-public .jb-icon-warning { background-color: var(--jb-warning-light); color: #856404; }
+
+[data-region^="jobboard"] .jb-icon-danger,
+.local-jobboard-dashboard .jb-icon-danger,
+.local-jobboard-public .jb-icon-danger { background-color: var(--jb-danger-light); color: var(--jb-danger); }
+
+[data-region^="jobboard"] .jb-icon-info,
+.local-jobboard-dashboard .jb-icon-info,
+.local-jobboard-public .jb-icon-info { background-color: var(--jb-info-light); color: #0c5460; }
+
+[data-region^="jobboard"] .jb-icon-secondary,
+.local-jobboard-dashboard .jb-icon-secondary,
+.local-jobboard-public .jb-icon-secondary { background-color: var(--jb-secondary-light); color: var(--jb-secondary); }
+
+/* ==========================================================================
+   CLICKABLE ELEMENTS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-clickable,
+.local-jobboard-dashboard .jb-clickable,
+.local-jobboard-public .jb-clickable {
+    cursor: pointer;
+    transition: var(--jb-transition);
+}
+
+[data-region^="jobboard"] .jb-clickable:hover,
+.local-jobboard-dashboard .jb-clickable:hover,
+.local-jobboard-public .jb-clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--jb-shadow-sm);
+}
+
+/* ==========================================================================
+   ICON CIRCLES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-icon-circle,
+.local-jobboard-dashboard .jb-icon-circle,
+.local-jobboard-public .jb-icon-circle {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* ==========================================================================
+   PUBLIC PAGE - DETAIL ITEMS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-detail-item,
+.local-jobboard-dashboard .jb-detail-item,
+.local-jobboard-public .jb-detail-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--jb-border);
+}
+
+[data-region^="jobboard"] .jb-detail-item:last-child,
+.local-jobboard-dashboard .jb-detail-item:last-child,
+.local-jobboard-public .jb-detail-item:last-child {
+    border-bottom: none;
+}
+
+[data-region^="jobboard"] .jb-detail-icon,
+.local-jobboard-dashboard .jb-detail-icon,
+.local-jobboard-public .jb-detail-icon {
+    width: 24px;
+    margin-right: 0.75rem;
+    color: var(--jb-muted);
+    flex-shrink: 0;
+}
+
+[data-region^="jobboard"] .jb-detail-label,
+.local-jobboard-dashboard .jb-detail-label,
+.local-jobboard-public .jb-detail-label {
+    font-weight: 500;
+    min-width: 120px;
+    color: var(--jb-muted);
+}
+
+[data-region^="jobboard"] .jb-detail-value,
+.local-jobboard-dashboard .jb-detail-value,
+.local-jobboard-public .jb-detail-value {
+    color: var(--jb-dark);
+    margin-left: auto;
+    text-align: right;
+}
+
+/* ==========================================================================
+   GRADING/REVIEW PANELS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-grading-panel,
+.local-jobboard-dashboard .jb-grading-panel {
+    background: var(--jb-white);
+    border: 1px solid var(--jb-border);
+    border-radius: var(--jb-border-radius);
+}
+
+[data-region^="jobboard"] .jb-document-panel,
+.local-jobboard-dashboard .jb-document-panel {
+    background: var(--jb-white);
+    border: 1px solid var(--jb-border);
+    border-radius: var(--jb-border-radius);
+}
+
+[data-region^="jobboard"] .jb-preview-panel,
+.local-jobboard-dashboard .jb-preview-panel {
+    background: var(--jb-light);
+    border: 1px solid var(--jb-border);
+    border-radius: var(--jb-border-radius);
+    min-height: 400px;
+}
+
+/* ==========================================================================
+   LIST GROUPS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-list-group,
+.local-jobboard-dashboard .jb-list-group,
+.local-jobboard-public .jb-list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+[data-region^="jobboard"] .jb-list-group-flush,
+.local-jobboard-dashboard .jb-list-group-flush,
+.local-jobboard-public .jb-list-group-flush {
+    border-radius: 0;
+}
+
+[data-region^="jobboard"] .jb-list-group-item,
+.local-jobboard-dashboard .jb-list-group-item,
+.local-jobboard-public .jb-list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--jb-white);
+    border: 1px solid var(--jb-border);
+}
+
+[data-region^="jobboard"] .jb-list-group-flush .jb-list-group-item,
+.local-jobboard-dashboard .jb-list-group-flush .jb-list-group-item,
+.local-jobboard-public .jb-list-group-flush .jb-list-group-item {
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+}
+
+[data-region^="jobboard"] .jb-list-group-flush .jb-list-group-item:first-child,
+.local-jobboard-dashboard .jb-list-group-flush .jb-list-group-item:first-child,
+.local-jobboard-public .jb-list-group-flush .jb-list-group-item:first-child {
+    border-top: 0;
+}
+
+[data-region^="jobboard"] .jb-list-group-flush .jb-list-group-item:last-child,
+.local-jobboard-dashboard .jb-list-group-flush .jb-list-group-item:last-child,
+.local-jobboard-public .jb-list-group-flush .jb-list-group-item:last-child {
+    border-bottom: 0;
+}
+
+[data-region^="jobboard"] .jb-list-unstyled,
+.local-jobboard-dashboard .jb-list-unstyled,
+.local-jobboard-public .jb-list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+
+/* ==========================================================================
+   CARD EXTENSIONS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-card-h100,
+.local-jobboard-dashboard .jb-card-h100,
+.local-jobboard-public .jb-card-h100 {
+    height: 100%;
+}
+
+[data-region^="jobboard"] .jb-card-footer,
+.local-jobboard-dashboard .jb-card-footer,
+.local-jobboard-public .jb-card-footer {
+    padding: 0.75rem 1rem;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-top: 1px solid var(--jb-border);
+}
+
+[data-region^="jobboard"] .jb-card-footer:last-child,
+.local-jobboard-dashboard .jb-card-footer:last-child,
+.local-jobboard-public .jb-card-footer:last-child {
+    border-radius: 0 0 calc(var(--jb-border-radius) - 1px) calc(var(--jb-border-radius) - 1px);
+}
+
+/* Card header colors */
+[data-region^="jobboard"] .jb-card-header-primary,
+.local-jobboard-dashboard .jb-card-header-primary,
+.local-jobboard-public .jb-card-header-primary {
+    background-color: var(--jb-primary);
+    color: var(--jb-white);
+    border-color: var(--jb-primary);
+}
+
+[data-region^="jobboard"] .jb-card-header-success,
+.local-jobboard-dashboard .jb-card-header-success,
+.local-jobboard-public .jb-card-header-success {
+    background-color: var(--jb-success);
+    color: var(--jb-white);
+    border-color: var(--jb-success);
+}
+
+[data-region^="jobboard"] .jb-card-header-info,
+.local-jobboard-dashboard .jb-card-header-info,
+.local-jobboard-public .jb-card-header-info {
+    background-color: var(--jb-info);
+    color: #212529;
+    border-color: var(--jb-info);
+}
+
+[data-region^="jobboard"] .jb-card-header-warning,
+.local-jobboard-dashboard .jb-card-header-warning,
+.local-jobboard-public .jb-card-header-warning {
+    background-color: var(--jb-warning);
+    color: #212529;
+    border-color: var(--jb-warning);
+}
+
+[data-region^="jobboard"] .jb-card-header-danger,
+.local-jobboard-dashboard .jb-card-header-danger,
+.local-jobboard-public .jb-card-header-danger {
+    background-color: var(--jb-danger);
+    color: var(--jb-white);
+    border-color: var(--jb-danger);
+}
+
+[data-region^="jobboard"] .jb-card-header-secondary,
+.local-jobboard-dashboard .jb-card-header-secondary,
+.local-jobboard-public .jb-card-header-secondary {
+    background-color: var(--jb-secondary);
+    color: var(--jb-white);
+    border-color: var(--jb-secondary);
+}
+
+/* ==========================================================================
+   ADDITIONAL SPACING UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-p-2,
+.local-jobboard-dashboard .jb-p-2,
+.local-jobboard-public .jb-p-2 { padding: 0.5rem; }
+
+[data-region^="jobboard"] .jb-py-5,
+.local-jobboard-dashboard .jb-py-5,
+.local-jobboard-public .jb-py-5 { padding-top: 3rem; padding-bottom: 3rem; }
+
+/* ==========================================================================
+   ADDITIONAL BORDER UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-border-top-0,
+.local-jobboard-dashboard .jb-border-top-0,
+.local-jobboard-public .jb-border-top-0 { border-top: 0; }
+
+[data-region^="jobboard"] .jb-border-0,
+.local-jobboard-dashboard .jb-border-0,
+.local-jobboard-public .jb-border-0 { border: 0; }
+
+[data-region^="jobboard"] .jb-rounded-circle,
+.local-jobboard-dashboard .jb-rounded-circle,
+.local-jobboard-public .jb-rounded-circle { border-radius: 50%; }
+
+/* ==========================================================================
+   ADDITIONAL TEXT UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-fw-medium,
+.local-jobboard-dashboard .jb-fw-medium,
+.local-jobboard-public .jb-fw-medium { font-weight: 500; }
+
+[data-region^="jobboard"] .jb-fs-6,
+.local-jobboard-dashboard .jb-fs-6,
+.local-jobboard-public .jb-fs-6 { font-size: 1rem; }
+
+/* ==========================================================================
+   BUTTON BLOCK
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-btn-block,
+.local-jobboard-dashboard .jb-btn-block,
+.local-jobboard-public .jb-btn-block {
+    display: block;
+    width: 100%;
+}
+
+/* ==========================================================================
+   BUTTON SIZES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-btn-lg,
+.local-jobboard-dashboard .jb-btn-lg,
+.local-jobboard-public .jb-btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    border-radius: var(--jb-border-radius-lg);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+    [data-region^="jobboard"] .jb-d-md-none,
+    .local-jobboard-dashboard .jb-d-md-none,
+    .local-jobboard-public .jb-d-md-none {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+
+@media print {
+    [data-region^="jobboard"] .jb-btn,
+    .local-jobboard-dashboard .jb-btn {
+        display: none;
+    }
+
+    [data-region^="jobboard"] .jb-card,
+    .local-jobboard-dashboard .jb-card {
+        border: 1px solid #000;
+        box-shadow: none;
+    }
+}
+
+/* ==========================================================================
+   ENHANCED UX - PHASE 1 IMPROVEMENTS
+   Added: December 2025
+   ========================================================================== */
+
+/* ==========================================================================
+   ADDITIONAL GRID UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-col-auto,
+.local-jobboard-dashboard .jb-col-auto,
+.local-jobboard-public .jb-col-auto { flex: 0 0 auto; width: auto; }
+
+[data-region^="jobboard"] .jb-col-1,
+.local-jobboard-dashboard .jb-col-1,
+.local-jobboard-public .jb-col-1 { flex: 0 0 auto; width: 8.333333%; }
+
+[data-region^="jobboard"] .jb-col-2,
+.local-jobboard-dashboard .jb-col-2,
+.local-jobboard-public .jb-col-2 { flex: 0 0 auto; width: 16.666667%; }
+
+[data-region^="jobboard"] .jb-col-5,
+.local-jobboard-dashboard .jb-col-5,
+.local-jobboard-public .jb-col-5 { flex: 0 0 auto; width: 41.666667%; }
+
+[data-region^="jobboard"] .jb-col-7,
+.local-jobboard-dashboard .jb-col-7,
+.local-jobboard-public .jb-col-7 { flex: 0 0 auto; width: 58.333333%; }
+
+[data-region^="jobboard"] .jb-col-8,
+.local-jobboard-dashboard .jb-col-8,
+.local-jobboard-public .jb-col-8 { flex: 0 0 auto; width: 66.666667%; }
+
+[data-region^="jobboard"] .jb-col-9,
+.local-jobboard-dashboard .jb-col-9,
+.local-jobboard-public .jb-col-9 { flex: 0 0 auto; width: 75%; }
+
+[data-region^="jobboard"] .jb-col-10,
+.local-jobboard-dashboard .jb-col-10,
+.local-jobboard-public .jb-col-10 { flex: 0 0 auto; width: 83.333333%; }
+
+@media (min-width: 576px) {
+    [data-region^="jobboard"] .jb-col-sm-6,
+    .local-jobboard-dashboard .jb-col-sm-6,
+    .local-jobboard-public .jb-col-sm-6 { flex: 0 0 auto; width: 50%; }
+
+    [data-region^="jobboard"] .jb-col-sm-4,
+    .local-jobboard-dashboard .jb-col-sm-4,
+    .local-jobboard-public .jb-col-sm-4 { flex: 0 0 auto; width: 33.333333%; }
+
+    [data-region^="jobboard"] .jb-col-sm-3,
+    .local-jobboard-dashboard .jb-col-sm-3,
+    .local-jobboard-public .jb-col-sm-3 { flex: 0 0 auto; width: 25%; }
+
+    [data-region^="jobboard"] .jb-col-sm-12,
+    .local-jobboard-dashboard .jb-col-sm-12,
+    .local-jobboard-public .jb-col-sm-12 { flex: 0 0 auto; width: 100%; }
+}
+
+@media (min-width: 768px) {
+    [data-region^="jobboard"] .jb-col-md-8,
+    .local-jobboard-dashboard .jb-col-md-8,
+    .local-jobboard-public .jb-col-md-8 { flex: 0 0 auto; width: 66.666667%; }
+
+    [data-region^="jobboard"] .jb-col-md-2,
+    .local-jobboard-dashboard .jb-col-md-2,
+    .local-jobboard-public .jb-col-md-2 { flex: 0 0 auto; width: 16.666667%; }
+
+    [data-region^="jobboard"] .jb-col-md-12,
+    .local-jobboard-dashboard .jb-col-md-12,
+    .local-jobboard-public .jb-col-md-12 { flex: 0 0 auto; width: 100%; }
+
+    [data-region^="jobboard"] .jb-d-md-flex,
+    .local-jobboard-dashboard .jb-d-md-flex,
+    .local-jobboard-public .jb-d-md-flex { display: flex; }
+
+    [data-region^="jobboard"] .jb-d-md-block,
+    .local-jobboard-dashboard .jb-d-md-block,
+    .local-jobboard-public .jb-d-md-block { display: block; }
+
+    [data-region^="jobboard"] .jb-mt-md-0,
+    .local-jobboard-dashboard .jb-mt-md-0,
+    .local-jobboard-public .jb-mt-md-0 { margin-top: 0; }
+
+    [data-region^="jobboard"] .jb-mb-md-0,
+    .local-jobboard-dashboard .jb-mb-md-0,
+    .local-jobboard-public .jb-mb-md-0 { margin-bottom: 0; }
+}
+
+@media (min-width: 992px) {
+    [data-region^="jobboard"] .jb-col-lg-2,
+    .local-jobboard-dashboard .jb-col-lg-2,
+    .local-jobboard-public .jb-col-lg-2 { flex: 0 0 auto; width: 16.666667%; }
+
+    [data-region^="jobboard"] .jb-col-lg-5,
+    .local-jobboard-dashboard .jb-col-lg-5,
+    .local-jobboard-public .jb-col-lg-5 { flex: 0 0 auto; width: 41.666667%; }
+
+    [data-region^="jobboard"] .jb-col-lg-7,
+    .local-jobboard-dashboard .jb-col-lg-7,
+    .local-jobboard-public .jb-col-lg-7 { flex: 0 0 auto; width: 58.333333%; }
+
+    [data-region^="jobboard"] .jb-col-lg-9,
+    .local-jobboard-dashboard .jb-col-lg-9,
+    .local-jobboard-public .jb-col-lg-9 { flex: 0 0 auto; width: 75%; }
+
+    [data-region^="jobboard"] .jb-col-lg-12,
+    .local-jobboard-dashboard .jb-col-lg-12,
+    .local-jobboard-public .jb-col-lg-12 { flex: 0 0 auto; width: 100%; }
+
+    [data-region^="jobboard"] .jb-d-lg-flex,
+    .local-jobboard-dashboard .jb-d-lg-flex,
+    .local-jobboard-public .jb-d-lg-flex { display: flex; }
+
+    [data-region^="jobboard"] .jb-d-lg-none,
+    .local-jobboard-dashboard .jb-d-lg-none,
+    .local-jobboard-public .jb-d-lg-none { display: none; }
+}
+
+/* ==========================================================================
+   GAP UTILITIES (Flexbox/Grid)
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-gap-1,
+.local-jobboard-dashboard .jb-gap-1,
+.local-jobboard-public .jb-gap-1 { gap: 0.25rem; }
+
+[data-region^="jobboard"] .jb-gap-2,
+.local-jobboard-dashboard .jb-gap-2,
+.local-jobboard-public .jb-gap-2 { gap: 0.5rem; }
+
+[data-region^="jobboard"] .jb-gap-3,
+.local-jobboard-dashboard .jb-gap-3,
+.local-jobboard-public .jb-gap-3 { gap: 1rem; }
+
+[data-region^="jobboard"] .jb-gap-4,
+.local-jobboard-dashboard .jb-gap-4,
+.local-jobboard-public .jb-gap-4 { gap: 1.5rem; }
+
+[data-region^="jobboard"] .jb-row-gap-3,
+.local-jobboard-dashboard .jb-row-gap-3,
+.local-jobboard-public .jb-row-gap-3 { row-gap: 1rem; }
+
+[data-region^="jobboard"] .jb-column-gap-3,
+.local-jobboard-dashboard .jb-column-gap-3,
+.local-jobboard-public .jb-column-gap-3 { column-gap: 1rem; }
+
+/* ==========================================================================
+   ADDITIONAL MARGIN UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-mx-auto,
+.local-jobboard-dashboard .jb-mx-auto,
+.local-jobboard-public .jb-mx-auto { margin-left: auto; margin-right: auto; }
+
+[data-region^="jobboard"] .jb-ml-auto,
+.local-jobboard-dashboard .jb-ml-auto,
+.local-jobboard-public .jb-ml-auto { margin-left: auto; }
+
+[data-region^="jobboard"] .jb-mr-auto,
+.local-jobboard-dashboard .jb-mr-auto,
+.local-jobboard-public .jb-mr-auto { margin-right: auto; }
+
+[data-region^="jobboard"] .jb-my-3,
+.local-jobboard-dashboard .jb-my-3,
+.local-jobboard-public .jb-my-3 { margin-top: 1rem; margin-bottom: 1rem; }
+
+[data-region^="jobboard"] .jb-my-4,
+.local-jobboard-dashboard .jb-my-4,
+.local-jobboard-public .jb-my-4 { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+
+[data-region^="jobboard"] .jb-px-3,
+.local-jobboard-dashboard .jb-px-3,
+.local-jobboard-public .jb-px-3 { padding-left: 1rem; padding-right: 1rem; }
+
+[data-region^="jobboard"] .jb-px-4,
+.local-jobboard-dashboard .jb-px-4,
+.local-jobboard-public .jb-px-4 { padding-left: 1.5rem; padding-right: 1.5rem; }
+
+[data-region^="jobboard"] .jb-pl-3,
+.local-jobboard-dashboard .jb-pl-3,
+.local-jobboard-public .jb-pl-3 { padding-left: 1rem; }
+
+[data-region^="jobboard"] .jb-pr-3,
+.local-jobboard-dashboard .jb-pr-3,
+.local-jobboard-public .jb-pr-3 { padding-right: 1rem; }
+
+[data-region^="jobboard"] .jb-mt-5,
+.local-jobboard-dashboard .jb-mt-5,
+.local-jobboard-public .jb-mt-5 { margin-top: 3rem; }
+
+[data-region^="jobboard"] .jb-ml-1,
+.local-jobboard-dashboard .jb-ml-1,
+.local-jobboard-public .jb-ml-1 { margin-left: 0.25rem; }
+
+[data-region^="jobboard"] .jb-mx-1,
+.local-jobboard-dashboard .jb-mx-1,
+.local-jobboard-public .jb-mx-1 { margin-left: 0.25rem; margin-right: 0.25rem; }
+
+/* ==========================================================================
+   ADDITIONAL FLEXBOX UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-flex-column,
+.local-jobboard-dashboard .jb-flex-column,
+.local-jobboard-public .jb-flex-column { flex-direction: column; }
+
+[data-region^="jobboard"] .jb-flex-row,
+.local-jobboard-dashboard .jb-flex-row,
+.local-jobboard-public .jb-flex-row { flex-direction: row; }
+
+[data-region^="jobboard"] .jb-align-items-end,
+.local-jobboard-dashboard .jb-align-items-end,
+.local-jobboard-public .jb-align-items-end { align-items: flex-end; }
+
+[data-region^="jobboard"] .jb-align-self-center,
+.local-jobboard-dashboard .jb-align-self-center,
+.local-jobboard-public .jb-align-self-center { align-self: center; }
+
+[data-region^="jobboard"] .jb-justify-content-start,
+.local-jobboard-dashboard .jb-justify-content-start,
+.local-jobboard-public .jb-justify-content-start { justify-content: flex-start; }
+
+[data-region^="jobboard"] .jb-justify-content-end,
+.local-jobboard-dashboard .jb-justify-content-end,
+.local-jobboard-public .jb-justify-content-end { justify-content: flex-end; }
+
+[data-region^="jobboard"] .jb-justify-content-around,
+.local-jobboard-dashboard .jb-justify-content-around,
+.local-jobboard-public .jb-justify-content-around { justify-content: space-around; }
+
+[data-region^="jobboard"] .jb-flex-fill,
+.local-jobboard-dashboard .jb-flex-fill,
+.local-jobboard-public .jb-flex-fill { flex: 1 1 auto; }
+
+/* ==========================================================================
+   SKELETON LOADING ANIMATIONS
+   ========================================================================== */
+
+@keyframes jb-skeleton-pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+
+@keyframes jb-skeleton-wave {
+    0% { background-position: -200px 0; }
+    100% { background-position: calc(200px + 100%) 0; }
+}
+
+[data-region^="jobboard"] .jb-skeleton,
+.local-jobboard-dashboard .jb-skeleton,
+.local-jobboard-public .jb-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: jb-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: var(--jb-border-radius-sm);
+}
+
+[data-region^="jobboard"] .jb-skeleton-text,
+.local-jobboard-dashboard .jb-skeleton-text,
+.local-jobboard-public .jb-skeleton-text {
+    height: 1em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: jb-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: var(--jb-border-radius-sm);
+}
+
+[data-region^="jobboard"] .jb-skeleton-title,
+.local-jobboard-dashboard .jb-skeleton-title,
+.local-jobboard-public .jb-skeleton-title {
+    height: 1.5em;
+    width: 60%;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: jb-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: var(--jb-border-radius-sm);
+}
+
+[data-region^="jobboard"] .jb-skeleton-circle,
+.local-jobboard-dashboard .jb-skeleton-circle,
+.local-jobboard-public .jb-skeleton-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: jb-skeleton-wave 1.5s ease-in-out infinite;
+}
+
+[data-region^="jobboard"] .jb-skeleton-card,
+.local-jobboard-dashboard .jb-skeleton-card,
+.local-jobboard-public .jb-skeleton-card {
+    height: 200px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: jb-skeleton-wave 1.5s ease-in-out infinite;
+    border-radius: var(--jb-border-radius);
+}
+
+/* ==========================================================================
+   FADE & TRANSITION ANIMATIONS
+   ========================================================================== */
+
+@keyframes jb-fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes jb-fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes jb-fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes jb-scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes jb-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes jb-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+[data-region^="jobboard"] .jb-fade-in,
+.local-jobboard-dashboard .jb-fade-in,
+.local-jobboard-public .jb-fade-in {
+    animation: jb-fadeIn 0.3s ease-out;
+}
+
+[data-region^="jobboard"] .jb-fade-in-up,
+.local-jobboard-dashboard .jb-fade-in-up,
+.local-jobboard-public .jb-fade-in-up {
+    animation: jb-fadeInUp 0.4s ease-out;
+}
+
+[data-region^="jobboard"] .jb-fade-in-down,
+.local-jobboard-dashboard .jb-fade-in-down,
+.local-jobboard-public .jb-fade-in-down {
+    animation: jb-fadeInDown 0.4s ease-out;
+}
+
+[data-region^="jobboard"] .jb-scale-in,
+.local-jobboard-dashboard .jb-scale-in,
+.local-jobboard-public .jb-scale-in {
+    animation: jb-scaleIn 0.3s ease-out;
+}
+
+[data-region^="jobboard"] .jb-pulse,
+.local-jobboard-dashboard .jb-pulse,
+.local-jobboard-public .jb-pulse {
+    animation: jb-pulse 2s infinite;
+}
+
+[data-region^="jobboard"] .jb-spin,
+.local-jobboard-dashboard .jb-spin,
+.local-jobboard-public .jb-spin {
+    animation: jb-spin 1s linear infinite;
+}
+
+/* ==========================================================================
+   LOADING SPINNER
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-spinner,
+.local-jobboard-dashboard .jb-spinner,
+.local-jobboard-public .jb-spinner {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: jb-spin 0.75s linear infinite;
+}
+
+[data-region^="jobboard"] .jb-spinner-sm,
+.local-jobboard-dashboard .jb-spinner-sm,
+.local-jobboard-public .jb-spinner-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 2px;
+}
+
+[data-region^="jobboard"] .jb-spinner-lg,
+.local-jobboard-dashboard .jb-spinner-lg,
+.local-jobboard-public .jb-spinner-lg {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-width: 3px;
+}
+
+/* ==========================================================================
+   ENHANCED FOCUS STATES (Accessibility)
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-btn:focus-visible,
+.local-jobboard-dashboard .jb-btn:focus-visible,
+.local-jobboard-public .jb-btn:focus-visible {
+    outline: 3px solid var(--jb-primary);
+    outline-offset: 2px;
+    box-shadow: none;
+}
+
+[data-region^="jobboard"] a:focus-visible,
+.local-jobboard-dashboard a:focus-visible,
+.local-jobboard-public a:focus-visible {
+    outline: 2px solid var(--jb-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+[data-region^="jobboard"] .jb-card:focus-within,
+.local-jobboard-dashboard .jb-card:focus-within,
+.local-jobboard-public .jb-card:focus-within {
+    box-shadow: var(--jb-shadow-sm), 0 0 0 2px var(--jb-primary-light);
+}
+
+/* Skip Link for Screen Readers */
+[data-region^="jobboard"] .jb-skip-link,
+.local-jobboard-dashboard .jb-skip-link,
+.local-jobboard-public .jb-skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--jb-primary);
+    color: var(--jb-white);
+    padding: 8px 16px;
+    z-index: 1000;
+    transition: top 0.3s;
+    border-radius: 0 0 var(--jb-border-radius) 0;
+}
+
+[data-region^="jobboard"] .jb-skip-link:focus,
+.local-jobboard-dashboard .jb-skip-link:focus,
+.local-jobboard-public .jb-skip-link:focus {
+    top: 0;
+}
+
+/* ==========================================================================
+   ENHANCED HOVER EFFECTS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-hover-lift,
+.local-jobboard-dashboard .jb-hover-lift,
+.local-jobboard-public .jb-hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-region^="jobboard"] .jb-hover-lift:hover,
+.local-jobboard-dashboard .jb-hover-lift:hover,
+.local-jobboard-public .jb-hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--jb-shadow);
+}
+
+[data-region^="jobboard"] .jb-hover-grow,
+.local-jobboard-dashboard .jb-hover-grow,
+.local-jobboard-public .jb-hover-grow {
+    transition: transform 0.2s ease;
+}
+
+[data-region^="jobboard"] .jb-hover-grow:hover,
+.local-jobboard-dashboard .jb-hover-grow:hover,
+.local-jobboard-public .jb-hover-grow:hover {
+    transform: scale(1.02);
+}
+
+[data-region^="jobboard"] .jb-hover-shadow,
+.local-jobboard-dashboard .jb-hover-shadow,
+.local-jobboard-public .jb-hover-shadow {
+    transition: box-shadow 0.2s ease;
+}
+
+[data-region^="jobboard"] .jb-hover-shadow:hover,
+.local-jobboard-dashboard .jb-hover-shadow:hover,
+.local-jobboard-public .jb-hover-shadow:hover {
+    box-shadow: var(--jb-shadow);
+}
+
+/* ==========================================================================
+   PROGRESS BAR ENHANCEMENTS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-progress,
+.local-jobboard-dashboard .jb-progress,
+.local-jobboard-public .jb-progress {
+    display: flex;
+    height: 0.75rem;
+    overflow: hidden;
+    font-size: 0.75rem;
+    background-color: #e9ecef;
+    border-radius: var(--jb-border-radius);
+}
+
+[data-region^="jobboard"] .jb-progress-bar,
+.local-jobboard-dashboard .jb-progress-bar,
+.local-jobboard-public .jb-progress-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--jb-white);
+    text-align: center;
+    white-space: nowrap;
+    background-color: var(--jb-primary);
+    transition: width 0.6s ease;
+}
+
+[data-region^="jobboard"] .jb-progress-bar-striped,
+.local-jobboard-dashboard .jb-progress-bar-striped,
+.local-jobboard-public .jb-progress-bar-striped {
+    background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 1rem 1rem;
+}
+
+[data-region^="jobboard"] .jb-progress-bar-animated,
+.local-jobboard-dashboard .jb-progress-bar-animated,
+.local-jobboard-public .jb-progress-bar-animated {
+    animation: progress-bar-stripes 1s linear infinite;
+}
+
+@keyframes progress-bar-stripes {
+    0% { background-position: 1rem 0; }
+    100% { background-position: 0 0; }
+}
+
+/* ==========================================================================
+   STEP PROGRESS INDICATOR
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-steps,
+.local-jobboard-dashboard .jb-steps,
+.local-jobboard-public .jb-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+[data-region^="jobboard"] .jb-steps::before,
+.local-jobboard-dashboard .jb-steps::before,
+.local-jobboard-public .jb-steps::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--jb-border);
+    z-index: 0;
+}
+
+[data-region^="jobboard"] .jb-step,
+.local-jobboard-dashboard .jb-step,
+.local-jobboard-public .jb-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    flex: 1;
+}
+
+[data-region^="jobboard"] .jb-step-icon,
+.local-jobboard-dashboard .jb-step-icon,
+.local-jobboard-public .jb-step-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--jb-white);
+    border: 2px solid var(--jb-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--jb-muted);
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+[data-region^="jobboard"] .jb-step.jb-active .jb-step-icon,
+.local-jobboard-dashboard .jb-step.jb-active .jb-step-icon,
+.local-jobboard-public .jb-step.jb-active .jb-step-icon {
+    background-color: var(--jb-primary);
+    border-color: var(--jb-primary);
+    color: var(--jb-white);
+    box-shadow: 0 0 0 4px var(--jb-primary-light);
+}
+
+[data-region^="jobboard"] .jb-step.jb-completed .jb-step-icon,
+.local-jobboard-dashboard .jb-step.jb-completed .jb-step-icon,
+.local-jobboard-public .jb-step.jb-completed .jb-step-icon {
+    background-color: var(--jb-success);
+    border-color: var(--jb-success);
+    color: var(--jb-white);
+}
+
+[data-region^="jobboard"] .jb-step-label,
+.local-jobboard-dashboard .jb-step-label,
+.local-jobboard-public .jb-step-label {
+    font-size: 0.75rem;
+    color: var(--jb-muted);
+    text-align: center;
+    max-width: 100px;
+}
+
+[data-region^="jobboard"] .jb-step.jb-active .jb-step-label,
+.local-jobboard-dashboard .jb-step.jb-active .jb-step-label,
+.local-jobboard-public .jb-step.jb-active .jb-step-label {
+    color: var(--jb-primary);
+    font-weight: 600;
+}
+
+[data-region^="jobboard"] .jb-step-connector,
+.local-jobboard-dashboard .jb-step-connector,
+.local-jobboard-public .jb-step-connector {
+    height: 2px;
+    background-color: var(--jb-border);
+    flex: 1;
+    margin-top: 20px;
+}
+
+[data-region^="jobboard"] .jb-step.jb-completed + .jb-step-connector,
+.local-jobboard-dashboard .jb-step.jb-completed + .jb-step-connector,
+.local-jobboard-public .jb-step.jb-completed + .jb-step-connector {
+    background-color: var(--jb-success);
+}
+
+/* ==========================================================================
+   TOOLTIP STYLES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-tooltip,
+.local-jobboard-dashboard .jb-tooltip,
+.local-jobboard-public .jb-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+[data-region^="jobboard"] .jb-tooltip-text,
+.local-jobboard-dashboard .jb-tooltip-text,
+.local-jobboard-public .jb-tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 200px;
+    background-color: var(--jb-dark);
+    color: var(--jb-white);
+    text-align: center;
+    border-radius: var(--jb-border-radius-sm);
+    padding: 0.5rem 0.75rem;
+    position: absolute;
+    z-index: 1000;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s, visibility 0.2s;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+[data-region^="jobboard"] .jb-tooltip-text::after,
+.local-jobboard-dashboard .jb-tooltip-text::after,
+.local-jobboard-public .jb-tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--jb-dark) transparent transparent transparent;
+}
+
+[data-region^="jobboard"] .jb-tooltip:hover .jb-tooltip-text,
+[data-region^="jobboard"] .jb-tooltip:focus .jb-tooltip-text,
+.local-jobboard-dashboard .jb-tooltip:hover .jb-tooltip-text,
+.local-jobboard-dashboard .jb-tooltip:focus .jb-tooltip-text,
+.local-jobboard-public .jb-tooltip:hover .jb-tooltip-text,
+.local-jobboard-public .jb-tooltip:focus .jb-tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ==========================================================================
+   NOTIFICATION DOT / BADGE INDICATOR
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-notification-dot,
+.local-jobboard-dashboard .jb-notification-dot,
+.local-jobboard-public .jb-notification-dot {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--jb-danger);
+    border-radius: 50%;
+    border: 2px solid var(--jb-white);
+}
+
+[data-region^="jobboard"] .jb-notification-badge,
+.local-jobboard-dashboard .jb-notification-badge,
+.local-jobboard-public .jb-notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background-color: var(--jb-danger);
+    color: var(--jb-white);
+    border-radius: 9px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--jb-white);
+}
+
+/* ==========================================================================
+   BREADCRUMB ENHANCEMENTS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-breadcrumb,
+.local-jobboard-dashboard .jb-breadcrumb,
+.local-jobboard-public .jb-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.5rem 0;
+    margin: 0;
+    list-style: none;
+    background-color: transparent;
+    border-radius: 0;
+}
+
+[data-region^="jobboard"] .jb-breadcrumb-item,
+.local-jobboard-dashboard .jb-breadcrumb-item,
+.local-jobboard-public .jb-breadcrumb-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+[data-region^="jobboard"] .jb-breadcrumb-item + .jb-breadcrumb-item::before,
+.local-jobboard-dashboard .jb-breadcrumb-item + .jb-breadcrumb-item::before,
+.local-jobboard-public .jb-breadcrumb-item + .jb-breadcrumb-item::before {
+    content: "/";
+    padding: 0 0.5rem;
+    color: var(--jb-muted);
+}
+
+[data-region^="jobboard"] .jb-breadcrumb-item.jb-active,
+.local-jobboard-dashboard .jb-breadcrumb-item.jb-active,
+.local-jobboard-public .jb-breadcrumb-item.jb-active {
+    color: var(--jb-muted);
+}
+
+[data-region^="jobboard"] .jb-breadcrumb-item a,
+.local-jobboard-dashboard .jb-breadcrumb-item a,
+.local-jobboard-public .jb-breadcrumb-item a {
+    color: var(--jb-primary);
+    text-decoration: none;
+}
+
+[data-region^="jobboard"] .jb-breadcrumb-item a:hover,
+.local-jobboard-dashboard .jb-breadcrumb-item a:hover,
+.local-jobboard-public .jb-breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   DROPDOWN MENU
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-dropdown,
+.local-jobboard-dashboard .jb-dropdown,
+.local-jobboard-public .jb-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+[data-region^="jobboard"] .jb-dropdown-menu,
+.local-jobboard-dashboard .jb-dropdown-menu,
+.local-jobboard-public .jb-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 10rem;
+    padding: 0.5rem 0;
+    margin: 0.125rem 0 0;
+    background-color: var(--jb-white);
+    border: 1px solid var(--jb-border);
+    border-radius: var(--jb-border-radius);
+    box-shadow: var(--jb-shadow);
+}
+
+[data-region^="jobboard"] .jb-dropdown-menu.jb-show,
+.local-jobboard-dashboard .jb-dropdown-menu.jb-show,
+.local-jobboard-public .jb-dropdown-menu.jb-show {
+    display: block;
+    animation: jb-fadeInDown 0.15s ease-out;
+}
+
+[data-region^="jobboard"] .jb-dropdown-menu-right,
+.local-jobboard-dashboard .jb-dropdown-menu-right,
+.local-jobboard-public .jb-dropdown-menu-right {
+    right: 0;
+    left: auto;
+}
+
+[data-region^="jobboard"] .jb-dropdown-item,
+.local-jobboard-dashboard .jb-dropdown-item,
+.local-jobboard-public .jb-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    clear: both;
+    font-weight: 400;
+    color: var(--jb-body-color);
+    text-align: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    transition: background-color 0.15s ease;
+}
+
+[data-region^="jobboard"] .jb-dropdown-item:hover,
+[data-region^="jobboard"] .jb-dropdown-item:focus,
+.local-jobboard-dashboard .jb-dropdown-item:hover,
+.local-jobboard-dashboard .jb-dropdown-item:focus,
+.local-jobboard-public .jb-dropdown-item:hover,
+.local-jobboard-public .jb-dropdown-item:focus {
+    color: var(--jb-dark);
+    text-decoration: none;
+    background-color: var(--jb-light);
+}
+
+[data-region^="jobboard"] .jb-dropdown-divider,
+.local-jobboard-dashboard .jb-dropdown-divider,
+.local-jobboard-public .jb-dropdown-divider {
+    height: 0;
+    margin: 0.5rem 0;
+    overflow: hidden;
+    border-top: 1px solid var(--jb-border);
+}
+
+/* ==========================================================================
+   ADDITIONAL TEXT UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-text-truncate,
+.local-jobboard-dashboard .jb-text-truncate,
+.local-jobboard-public .jb-text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+[data-region^="jobboard"] .jb-text-break,
+.local-jobboard-dashboard .jb-text-break,
+.local-jobboard-public .jb-text-break {
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+[data-region^="jobboard"] .jb-text-nowrap,
+.local-jobboard-dashboard .jb-text-nowrap,
+.local-jobboard-public .jb-text-nowrap {
+    white-space: nowrap;
+}
+
+[data-region^="jobboard"] .jb-text-uppercase,
+.local-jobboard-dashboard .jb-text-uppercase,
+.local-jobboard-public .jb-text-uppercase {
+    text-transform: uppercase;
+}
+
+[data-region^="jobboard"] .jb-text-lowercase,
+.local-jobboard-dashboard .jb-text-lowercase,
+.local-jobboard-public .jb-text-lowercase {
+    text-transform: lowercase;
+}
+
+[data-region^="jobboard"] .jb-text-capitalize,
+.local-jobboard-dashboard .jb-text-capitalize,
+.local-jobboard-public .jb-text-capitalize {
+    text-transform: capitalize;
+}
+
+[data-region^="jobboard"] .jb-fs-1,
+.local-jobboard-dashboard .jb-fs-1,
+.local-jobboard-public .jb-fs-1 { font-size: 2.5rem; }
+
+[data-region^="jobboard"] .jb-fs-2,
+.local-jobboard-dashboard .jb-fs-2,
+.local-jobboard-public .jb-fs-2 { font-size: 2rem; }
+
+[data-region^="jobboard"] .jb-lead,
+.local-jobboard-dashboard .jb-lead,
+.local-jobboard-public .jb-lead {
+    font-size: 1.25rem;
+    font-weight: 300;
+}
+
+/* ==========================================================================
+   VISIBILITY UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-invisible,
+.local-jobboard-dashboard .jb-invisible,
+.local-jobboard-public .jb-invisible {
+    visibility: hidden;
+}
+
+[data-region^="jobboard"] .jb-visible,
+.local-jobboard-dashboard .jb-visible,
+.local-jobboard-public .jb-visible {
+    visibility: visible;
+}
+
+/* ==========================================================================
+   POSITION UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-position-relative,
+.local-jobboard-dashboard .jb-position-relative,
+.local-jobboard-public .jb-position-relative {
+    position: relative;
+}
+
+[data-region^="jobboard"] .jb-position-absolute,
+.local-jobboard-dashboard .jb-position-absolute,
+.local-jobboard-public .jb-position-absolute {
+    position: absolute;
+}
+
+[data-region^="jobboard"] .jb-sticky-top,
+.local-jobboard-dashboard .jb-sticky-top,
+.local-jobboard-public .jb-sticky-top {
+    position: sticky;
+    top: 1rem;
+    z-index: 100;
+}
+
+/* ==========================================================================
+   DIVIDER COMPONENT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-divider,
+.local-jobboard-dashboard .jb-divider,
+.local-jobboard-public .jb-divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: var(--jb-muted);
+}
+
+[data-region^="jobboard"] .jb-divider::before,
+[data-region^="jobboard"] .jb-divider::after,
+.local-jobboard-dashboard .jb-divider::before,
+.local-jobboard-dashboard .jb-divider::after,
+.local-jobboard-public .jb-divider::before,
+.local-jobboard-public .jb-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--jb-border);
+}
+
+[data-region^="jobboard"] .jb-divider:not(:empty)::before,
+.local-jobboard-dashboard .jb-divider:not(:empty)::before,
+.local-jobboard-public .jb-divider:not(:empty)::before {
+    margin-right: 1rem;
+}
+
+[data-region^="jobboard"] .jb-divider:not(:empty)::after,
+.local-jobboard-dashboard .jb-divider:not(:empty)::after,
+.local-jobboard-public .jb-divider:not(:empty)::after {
+    margin-left: 1rem;
+}
+
+/* ==========================================================================
+   RESPONSIVE DISPLAY UTILITIES
+   ========================================================================== */
+
+@media (max-width: 575.98px) {
+    [data-region^="jobboard"] .jb-d-sm-none,
+    .local-jobboard-dashboard .jb-d-sm-none,
+    .local-jobboard-public .jb-d-sm-none { display: none; }
+}
+
+@media (min-width: 576px) {
+    [data-region^="jobboard"] .jb-d-sm-block,
+    .local-jobboard-dashboard .jb-d-sm-block,
+    .local-jobboard-public .jb-d-sm-block { display: block; }
+
+    [data-region^="jobboard"] .jb-d-sm-flex,
+    .local-jobboard-dashboard .jb-d-sm-flex,
+    .local-jobboard-public .jb-d-sm-flex { display: flex; }
+}
+
+/* ==========================================================================
+   BUTTON INFO VARIANT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-btn-info,
+.local-jobboard-dashboard .jb-btn-info,
+.local-jobboard-public .jb-btn-info {
+    color: #212529;
+    background-color: var(--jb-info);
+    border-color: var(--jb-info);
+}
+
+[data-region^="jobboard"] .jb-btn-info:hover,
+.local-jobboard-dashboard .jb-btn-info:hover,
+.local-jobboard-public .jb-btn-info:hover {
+    color: #212529;
+    background-color: var(--jb-info-hover);
+    border-color: var(--jb-info-hover);
+}
+
+[data-region^="jobboard"] .jb-btn-secondary,
+.local-jobboard-dashboard .jb-btn-secondary,
+.local-jobboard-public .jb-btn-secondary {
+    color: var(--jb-white);
+    background-color: var(--jb-secondary);
+    border-color: var(--jb-secondary);
+}
+
+[data-region^="jobboard"] .jb-btn-secondary:hover,
+.local-jobboard-dashboard .jb-btn-secondary:hover,
+.local-jobboard-public .jb-btn-secondary:hover {
+    color: var(--jb-white);
+    background-color: var(--jb-secondary-hover);
+    border-color: var(--jb-secondary-hover);
+}
+
+/* ==========================================================================
+   TABLE DANGER ROW
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-table-danger,
+.local-jobboard-dashboard .jb-table-danger,
+.local-jobboard-public .jb-table-danger {
+    background-color: var(--jb-danger-light);
+}
+
+[data-region^="jobboard"] .jb-table-warning,
+.local-jobboard-dashboard .jb-table-warning,
+.local-jobboard-public .jb-table-warning {
+    background-color: var(--jb-warning-light);
+}
+
+[data-region^="jobboard"] .jb-table-success,
+.local-jobboard-dashboard .jb-table-success,
+.local-jobboard-public .jb-table-success {
+    background-color: var(--jb-success-light);
+}
+
+/* ==========================================================================
+   SOCIAL SHARE BUTTONS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-social-btn,
+.local-jobboard-dashboard .jb-social-btn,
+.local-jobboard-public .jb-social-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-region^="jobboard"] .jb-social-btn:hover,
+.local-jobboard-dashboard .jb-social-btn:hover,
+.local-jobboard-public .jb-social-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--jb-shadow-sm);
+}
+
+/* ==========================================================================
+   BADGE PILL VARIANT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-badge-pill,
+.local-jobboard-dashboard .jb-badge-pill,
+.local-jobboard-public .jb-badge-pill {
+    border-radius: 50rem;
+}
+
+[data-region^="jobboard"] .jb-px-3,
+.local-jobboard-dashboard .jb-px-3,
+.local-jobboard-public .jb-px-3 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+[data-region^="jobboard"] .jb-py-2,
+.local-jobboard-dashboard .jb-py-2,
+.local-jobboard-public .jb-py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+/* ==========================================================================
+   BUTTON GROUP VERTICAL
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-btn-group-vertical,
+.local-jobboard-dashboard .jb-btn-group-vertical,
+.local-jobboard-public .jb-btn-group-vertical {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+[data-region^="jobboard"] .jb-btn-group-vertical .jb-btn,
+.local-jobboard-dashboard .jb-btn-group-vertical .jb-btn,
+.local-jobboard-public .jb-btn-group-vertical .jb-btn {
+    margin-left: 0;
+    margin-top: 0.25rem;
+}
+
+[data-region^="jobboard"] .jb-btn-group-vertical .jb-btn:first-child,
+.local-jobboard-dashboard .jb-btn-group-vertical .jb-btn:first-child,
+.local-jobboard-public .jb-btn-group-vertical .jb-btn:first-child {
+    margin-top: 0;
+}
+
+/* ==========================================================================
+   BUTTON GROUP SM
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-btn-group-sm .jb-btn,
+.local-jobboard-dashboard .jb-btn-group-sm .jb-btn,
+.local-jobboard-public .jb-btn-group-sm .jb-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   DISABLED STATE
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-disabled,
+.local-jobboard-dashboard .jb-disabled,
+.local-jobboard-public .jb-disabled {
+    pointer-events: none;
+    opacity: 0.65;
+}
+
+/* ==========================================================================
+   BACKGROUND WARNING LIGHT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-bg-warning-light,
+.local-jobboard-dashboard .jb-bg-warning-light,
+.local-jobboard-public .jb-bg-warning-light {
+    background-color: var(--jb-warning-light);
+}
+
+/* ==========================================================================
+   SMALL DOT INDICATOR
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-small-dot,
+.local-jobboard-dashboard .jb-small-dot,
+.local-jobboard-public .jb-small-dot {
+    font-size: 0.5rem;
+}
+
+/* ==========================================================================
+   STICKY SIDEBAR
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-sticky-sidebar,
+.local-jobboard-dashboard .jb-sticky-sidebar,
+.local-jobboard-public .jb-sticky-sidebar {
+    position: sticky;
+    top: 1rem;
+}
+
+@media (max-width: 991.98px) {
+    [data-region^="jobboard"] .jb-sticky-sidebar,
+    .local-jobboard-dashboard .jb-sticky-sidebar,
+    .local-jobboard-public .jb-sticky-sidebar {
+        position: static;
+    }
+}
+
+/* ==========================================================================
+   COLLAPSE UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-collapse-header,
+.local-jobboard-dashboard .jb-collapse-header,
+.local-jobboard-public .jb-collapse-header {
+    cursor: pointer;
+}
+
+[data-region^="jobboard"] .jb-collapse-icon,
+.local-jobboard-dashboard .jb-collapse-icon,
+.local-jobboard-public .jb-collapse-icon {
+    transition: transform 0.3s ease;
+}
+
+[data-region^="jobboard"] .jb-collapse-header[aria-expanded="false"] .jb-collapse-icon,
+.local-jobboard-dashboard .jb-collapse-header[aria-expanded="false"] .jb-collapse-icon,
+.local-jobboard-public .jb-collapse-header[aria-expanded="false"] .jb-collapse-icon {
+    transform: rotate(-90deg);
+}
+
+/* ==========================================================================
+   TEXT INHERIT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-text-inherit,
+.local-jobboard-dashboard .jb-text-inherit,
+.local-jobboard-public .jb-text-inherit {
+    color: inherit;
+}
+
+[data-region^="jobboard"] .jb-text-inherit:hover,
+.local-jobboard-dashboard .jb-text-inherit:hover,
+.local-jobboard-public .jb-text-inherit:hover {
+    color: inherit;
+}
+
+/* ==========================================================================
+   BORDER LEFT COLOR VARIANTS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-border-left-primary,
+.local-jobboard-dashboard .jb-border-left-primary,
+.local-jobboard-public .jb-border-left-primary {
+    border-left: 4px solid var(--jb-primary) !important;
+}
+
+[data-region^="jobboard"] .jb-border-left-success,
+.local-jobboard-dashboard .jb-border-left-success,
+.local-jobboard-public .jb-border-left-success {
+    border-left: 4px solid var(--jb-success) !important;
+}
+
+[data-region^="jobboard"] .jb-border-left-warning,
+.local-jobboard-dashboard .jb-border-left-warning,
+.local-jobboard-public .jb-border-left-warning {
+    border-left: 4px solid var(--jb-warning) !important;
+}
+
+[data-region^="jobboard"] .jb-border-left-danger,
+.local-jobboard-dashboard .jb-border-left-danger,
+.local-jobboard-public .jb-border-left-danger {
+    border-left: 4px solid var(--jb-danger) !important;
+}
+
+[data-region^="jobboard"] .jb-border-left-info,
+.local-jobboard-dashboard .jb-border-left-info,
+.local-jobboard-public .jb-border-left-info {
+    border-left: 4px solid var(--jb-info) !important;
+}
+
+[data-region^="jobboard"] .jb-border-left-secondary,
+.local-jobboard-dashboard .jb-border-left-secondary,
+.local-jobboard-public .jb-border-left-secondary {
+    border-left: 4px solid var(--jb-secondary) !important;
+}
+
+/* ==========================================================================
+   ADDITIONAL GRADIENT BACKGROUNDS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-bg-gradient-info,
+.local-jobboard-dashboard .jb-bg-gradient-info,
+.local-jobboard-public .jb-bg-gradient-info {
+    background: linear-gradient(135deg, var(--jb-info) 0%, #0aa2c0 100%);
+}
+
+[data-region^="jobboard"] .jb-bg-gradient-success,
+.local-jobboard-dashboard .jb-bg-gradient-success,
+.local-jobboard-public .jb-bg-gradient-success {
+    background: linear-gradient(135deg, var(--jb-success) 0%, #146c43 100%);
+}
+
+[data-region^="jobboard"] .jb-bg-gradient-warning,
+.local-jobboard-dashboard .jb-bg-gradient-warning,
+.local-jobboard-public .jb-bg-gradient-warning {
+    background: linear-gradient(135deg, var(--jb-warning) 0%, #cc9a06 100%);
+}
+
+[data-region^="jobboard"] .jb-bg-gradient-danger,
+.local-jobboard-dashboard .jb-bg-gradient-danger,
+.local-jobboard-public .jb-bg-gradient-danger {
+    background: linear-gradient(135deg, var(--jb-danger) 0%, #b02a37 100%);
+}
+
+[data-region^="jobboard"] .jb-bg-gradient-secondary,
+.local-jobboard-dashboard .jb-bg-gradient-secondary,
+.local-jobboard-public .jb-bg-gradient-secondary {
+    background: linear-gradient(135deg, var(--jb-secondary) 0%, #565e64 100%);
+}
+
+/* ==========================================================================
+   STRETCHED LINK
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-stretched-link::after,
+.local-jobboard-dashboard .jb-stretched-link::after,
+.local-jobboard-public .jb-stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    content: "";
+}
+
+/* ==========================================================================
+   ADDITIONAL BORDER COLORS
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-border-secondary,
+.local-jobboard-dashboard .jb-border-secondary,
+.local-jobboard-public .jb-border-secondary {
+    border-color: var(--jb-secondary) !important;
+}
+
+[data-region^="jobboard"] .jb-border-primary,
+.local-jobboard-dashboard .jb-border-primary,
+.local-jobboard-public .jb-border-primary {
+    border-color: var(--jb-primary) !important;
+}
+
+[data-region^="jobboard"] .jb-border-info,
+.local-jobboard-dashboard .jb-border-info,
+.local-jobboard-public .jb-border-info {
+    border-color: var(--jb-info) !important;
+}
+
+[data-region^="jobboard"] .jb-border-danger,
+.local-jobboard-dashboard .jb-border-danger,
+.local-jobboard-public .jb-border-danger {
+    border-color: var(--jb-danger) !important;
+}
+
+/* ==========================================================================
+   HOVER SHADOW EFFECT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-hover-shadow,
+.local-jobboard-dashboard .jb-hover-shadow,
+.local-jobboard-public .jb-hover-shadow {
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+[data-region^="jobboard"] .jb-hover-shadow:hover,
+.local-jobboard-dashboard .jb-hover-shadow:hover,
+.local-jobboard-public .jb-hover-shadow:hover {
+    box-shadow: var(--jb-shadow);
+}
+
+/* ==========================================================================
+   HOVER BACKGROUND LIGHT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-hover-bg-light,
+.local-jobboard-dashboard .jb-hover-bg-light,
+.local-jobboard-public .jb-hover-bg-light {
+    transition: background-color 0.15s ease-in-out;
+}
+
+[data-region^="jobboard"] .jb-hover-bg-light:hover,
+.local-jobboard-dashboard .jb-hover-bg-light:hover,
+.local-jobboard-public .jb-hover-bg-light:hover {
+    background-color: var(--jb-light);
+}
+
+/* ==========================================================================
+   GAP UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-gap-1,
+.local-jobboard-dashboard .jb-gap-1,
+.local-jobboard-public .jb-gap-1 { gap: 0.25rem; }
+
+[data-region^="jobboard"] .jb-gap-2,
+.local-jobboard-dashboard .jb-gap-2,
+.local-jobboard-public .jb-gap-2 { gap: 0.5rem; }
+
+[data-region^="jobboard"] .jb-gap-3,
+.local-jobboard-dashboard .jb-gap-3,
+.local-jobboard-public .jb-gap-3 { gap: 1rem; }
+
+/* ==========================================================================
+   MIN WIDTH UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-min-w-0,
+.local-jobboard-dashboard .jb-min-w-0,
+.local-jobboard-public .jb-min-w-0 {
+    min-width: 0;
+}
+
+/* ==========================================================================
+   TEXT TRUNCATE MULTILINE
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-text-truncate-2,
+.local-jobboard-dashboard .jb-text-truncate-2,
+.local-jobboard-public .jb-text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+[data-region^="jobboard"] .jb-text-truncate-3,
+.local-jobboard-dashboard .jb-text-truncate-3,
+.local-jobboard-public .jb-text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   OPACITY UTILITIES
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-opacity-25,
+.local-jobboard-dashboard .jb-opacity-25,
+.local-jobboard-public .jb-opacity-25 { opacity: 0.25; }
+
+[data-region^="jobboard"] .jb-opacity-50,
+.local-jobboard-dashboard .jb-opacity-50,
+.local-jobboard-public .jb-opacity-50 { opacity: 0.5; }
+
+[data-region^="jobboard"] .jb-opacity-75,
+.local-jobboard-dashboard .jb-opacity-75,
+.local-jobboard-public .jb-opacity-75 { opacity: 0.75; }
+
+[data-region^="jobboard"] .jb-opacity-85,
+.local-jobboard-dashboard .jb-opacity-85,
+.local-jobboard-public .jb-opacity-85 { opacity: 0.85; }
+
+/* ==========================================================================
+   LEAD TEXT
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-lead,
+.local-jobboard-dashboard .jb-lead,
+.local-jobboard-public .jb-lead {
+    font-size: 1.125rem;
+    font-weight: 300;
+}
+
+/* ==========================================================================
+   BORDER TOP UTILITY
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-border-top,
+.local-jobboard-dashboard .jb-border-top,
+.local-jobboard-public .jb-border-top {
+    border-top: 1px solid var(--jb-border);
+}
+
+[data-region^="jobboard"] .jb-border-light,
+.local-jobboard-dashboard .jb-border-light,
+.local-jobboard-public .jb-border-light {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* ==========================================================================
+   CUSTOM CONTROLS (CHECKBOXES)
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-custom-control,
+.local-jobboard-dashboard .jb-custom-control,
+.local-jobboard-public .jb-custom-control {
+    position: relative;
+    display: block;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+[data-region^="jobboard"] .jb-custom-control-input,
+.local-jobboard-dashboard .jb-custom-control-input,
+.local-jobboard-public .jb-custom-control-input {
+    position: absolute;
+    left: 0;
+    z-index: -1;
+    width: 1rem;
+    height: 1.25rem;
+    opacity: 0;
+}
+
+[data-region^="jobboard"] .jb-custom-control-label,
+.local-jobboard-dashboard .jb-custom-control-label,
+.local-jobboard-public .jb-custom-control-label {
+    position: relative;
+    margin-bottom: 0;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+[data-region^="jobboard"] .jb-custom-control-label::before,
+.local-jobboard-dashboard .jb-custom-control-label::before,
+.local-jobboard-public .jb-custom-control-label::before {
+    position: absolute;
+    top: 0.25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: var(--jb-white);
+    border: 1px solid var(--jb-border);
+    border-radius: var(--jb-border-radius-sm);
+}
+
+[data-region^="jobboard"] .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::before,
+.local-jobboard-dashboard .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::before,
+.local-jobboard-public .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::before {
+    background-color: var(--jb-primary);
+    border-color: var(--jb-primary);
+}
+
+[data-region^="jobboard"] .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::after,
+.local-jobboard-dashboard .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::after,
+.local-jobboard-public .jb-custom-checkbox .jb-custom-control-input:checked ~ .jb-custom-control-label::after {
+    position: absolute;
+    top: 0.25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    content: "";
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e") center/50% 50% no-repeat;
+}
+
+/* ==========================================================================
+   SCREEN READER ONLY
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-sr-only,
+.local-jobboard-dashboard .jb-sr-only,
+.local-jobboard-public .jb-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ==========================================================================
+   FORM INLINE
+   ========================================================================== */
+
+[data-region^="jobboard"] .jb-form-inline,
+.local-jobboard-dashboard .jb-form-inline,
+.local-jobboard-public .jb-form-inline {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}
+
+[data-region^="jobboard"] .jb-form-label,
+.local-jobboard-dashboard .jb-form-label,
+.local-jobboard-public .jb-form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}

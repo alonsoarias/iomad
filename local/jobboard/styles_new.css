@@ -1,0 +1,710 @@
+/**
+ * Minimal styles for local_jobboard plugin.
+ *
+ * @package   local_jobboard
+ * @copyright 2024-2025 ISER - Instituto Superior de Educación Rural
+ * @author    Alonso Arias <soporteplataformas@iser.edu.co>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * MINIMAL CSS - Uses Bootstrap from Moodle 4.5
+ * Only includes styles that Bootstrap does not provide.
+ */
+
+/* ==========================================================================
+   CSS VARIABLES - Plugin-specific colors
+   ========================================================================== */
+
+:root {
+    /* Status colors (semantic) */
+    --jb-status-draft: #6c757d;
+    --jb-status-published: #198754;
+    --jb-status-closed: #dc3545;
+    --jb-status-archived: #6c757d;
+
+    /* Application status colors */
+    --jb-status-submitted: #0dcaf0;
+    --jb-status-under-review: #ffc107;
+    --jb-status-docs-validated: #198754;
+    --jb-status-docs-rejected: #dc3545;
+    --jb-status-interview: #0d6efd;
+    --jb-status-selected: #198754;
+    --jb-status-rejected: #dc3545;
+    --jb-status-waitlist: #6c757d;
+    --jb-status-withdrawn: #6c757d;
+
+    /* Document status colors */
+    --jb-doc-pending: #ffc107;
+    --jb-doc-approved: #198754;
+    --jb-doc-rejected: #dc3545;
+
+    /* Transitions */
+    --jb-transition-fast: 150ms ease-in-out;
+    --jb-transition-normal: 300ms ease-in-out;
+}
+
+/* ==========================================================================
+   LOADING SKELETON - Bootstrap does not provide this
+   ========================================================================== */
+
+.jb-skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+}
+
+.jb-skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+    );
+    animation: jb-skeleton-loading 1.5s infinite;
+}
+
+@keyframes jb-skeleton-loading {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.jb-skeleton-text {
+    height: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.jb-skeleton-text:last-child {
+    margin-bottom: 0;
+    width: 80%;
+}
+
+.jb-skeleton-title {
+    height: 1.5rem;
+    width: 60%;
+    margin-bottom: 1rem;
+}
+
+.jb-skeleton-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+}
+
+.jb-skeleton-card {
+    height: 200px;
+}
+
+.jb-skeleton-btn {
+    height: 2.375rem;
+    width: 6rem;
+}
+
+/* ==========================================================================
+   ANIMATIONS - Subtle entrance animations
+   ========================================================================== */
+
+.jb-fade-in {
+    animation: jb-fade-in var(--jb-transition-normal) ease-out;
+}
+
+.jb-fade-in-up {
+    animation: jb-fade-in-up var(--jb-transition-normal) ease-out;
+}
+
+@keyframes jb-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes jb-fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered animation for lists */
+.jb-stagger > * {
+    animation: jb-fade-in-up var(--jb-transition-normal) ease-out both;
+}
+
+.jb-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.jb-stagger > *:nth-child(2) { animation-delay: 50ms; }
+.jb-stagger > *:nth-child(3) { animation-delay: 100ms; }
+.jb-stagger > *:nth-child(4) { animation-delay: 150ms; }
+.jb-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.jb-stagger > *:nth-child(n+6) { animation-delay: 250ms; }
+
+/* ==========================================================================
+   HOVER EFFECTS - Interactive feedback
+   ========================================================================== */
+
+.jb-hover-lift {
+    transition: transform var(--jb-transition-fast), box-shadow var(--jb-transition-fast);
+}
+
+.jb-hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.jb-hover-shadow {
+    transition: box-shadow var(--jb-transition-fast);
+}
+
+.jb-hover-shadow:hover {
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   STATUS BADGES - Semantic colors for statuses
+   ========================================================================== */
+
+/* Vacancy status badges */
+.jb-status-draft {
+    background-color: var(--jb-status-draft) !important;
+    color: #fff !important;
+}
+
+.jb-status-published {
+    background-color: var(--jb-status-published) !important;
+    color: #fff !important;
+}
+
+.jb-status-closed {
+    background-color: var(--jb-status-closed) !important;
+    color: #fff !important;
+}
+
+.jb-status-archived {
+    background-color: var(--jb-status-archived) !important;
+    color: #fff !important;
+}
+
+/* Application status badges */
+.jb-status-submitted {
+    background-color: var(--jb-status-submitted) !important;
+    color: #000 !important;
+}
+
+.jb-status-under-review,
+.jb-status-under_review {
+    background-color: var(--jb-status-under-review) !important;
+    color: #000 !important;
+}
+
+.jb-status-docs-validated,
+.jb-status-docs_validated {
+    background-color: var(--jb-status-docs-validated) !important;
+    color: #fff !important;
+}
+
+.jb-status-docs-rejected,
+.jb-status-docs_rejected {
+    background-color: var(--jb-status-docs-rejected) !important;
+    color: #fff !important;
+}
+
+.jb-status-interview {
+    background-color: var(--jb-status-interview) !important;
+    color: #fff !important;
+}
+
+.jb-status-selected {
+    background-color: var(--jb-status-selected) !important;
+    color: #fff !important;
+}
+
+.jb-status-rejected {
+    background-color: var(--jb-status-rejected) !important;
+    color: #fff !important;
+}
+
+.jb-status-waitlist {
+    background-color: var(--jb-status-waitlist) !important;
+    color: #fff !important;
+}
+
+.jb-status-withdrawn {
+    background-color: var(--jb-status-withdrawn) !important;
+    color: #fff !important;
+}
+
+/* Document status badges */
+.jb-doc-pending {
+    background-color: var(--jb-doc-pending) !important;
+    color: #000 !important;
+}
+
+.jb-doc-approved {
+    background-color: var(--jb-doc-approved) !important;
+    color: #fff !important;
+}
+
+.jb-doc-rejected {
+    background-color: var(--jb-doc-rejected) !important;
+    color: #fff !important;
+}
+
+/* ==========================================================================
+   DOCUMENT PREVIEW - Specific to document handling
+   ========================================================================== */
+
+.jb-document-preview {
+    position: relative;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    min-height: 200px;
+}
+
+.jb-document-preview-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+}
+
+.jb-document-thumbnail {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.25rem;
+}
+
+.jb-document-icon {
+    font-size: 4rem;
+    color: #6c757d;
+}
+
+/* ==========================================================================
+   TIMELINE - Application history display
+   ========================================================================== */
+
+.jb-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.jb-timeline::before {
+    content: "";
+    position: absolute;
+    left: 0.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #dee2e6;
+}
+
+.jb-timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.jb-timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.jb-timeline-marker {
+    position: absolute;
+    left: -1.75rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #0d6efd;
+}
+
+.jb-timeline-marker-success {
+    background-color: #198754;
+    box-shadow: 0 0 0 2px #198754;
+}
+
+.jb-timeline-marker-danger {
+    background-color: #dc3545;
+    box-shadow: 0 0 0 2px #dc3545;
+}
+
+.jb-timeline-marker-warning {
+    background-color: #ffc107;
+    box-shadow: 0 0 0 2px #ffc107;
+}
+
+.jb-timeline-content {
+    padding-left: 0.5rem;
+}
+
+.jb-timeline-date {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* ==========================================================================
+   GRADING PANEL - Evaluation interface
+   ========================================================================== */
+
+.jb-grading-panel {
+    position: sticky;
+    top: 1rem;
+}
+
+.jb-grading-criteria {
+    border-left: 3px solid #0d6efd;
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+.jb-grading-score {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.jb-grading-vote {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.jb-grading-vote-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid;
+    border-radius: 0.375rem;
+    background: transparent;
+    cursor: pointer;
+    transition: all var(--jb-transition-fast);
+}
+
+.jb-grading-vote-btn.jb-vote-yes {
+    border-color: #198754;
+    color: #198754;
+}
+
+.jb-grading-vote-btn.jb-vote-yes:hover,
+.jb-grading-vote-btn.jb-vote-yes.active {
+    background-color: #198754;
+    color: #fff;
+}
+
+.jb-grading-vote-btn.jb-vote-no {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.jb-grading-vote-btn.jb-vote-no:hover,
+.jb-grading-vote-btn.jb-vote-no.active {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* ==========================================================================
+   PROGRESS STEPS - Multi-step form indicator
+   ========================================================================== */
+
+.jb-progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    counter-reset: step;
+}
+
+.jb-progress-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.jb-progress-step::before {
+    content: counter(step);
+    counter-increment: step;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0 auto 0.5rem;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.jb-progress-step::after {
+    content: "";
+    position: absolute;
+    top: 1.25rem;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background-color: #e9ecef;
+}
+
+.jb-progress-step:last-child::after {
+    display: none;
+}
+
+.jb-progress-step.active::before {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+.jb-progress-step.completed::before {
+    content: "\f00c";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    background-color: #198754;
+    color: #fff;
+}
+
+.jb-progress-step.completed::after {
+    background-color: #198754;
+}
+
+.jb-progress-step-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.jb-progress-step.active .jb-progress-step-label,
+.jb-progress-step.completed .jb-progress-step-label {
+    color: #212529;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   STAT CARDS - Dashboard statistics
+   ========================================================================== */
+
+.jb-stat-card {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.jb-stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #0d6efd;
+}
+
+.jb-stat-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+.jb-stat-trend {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.jb-stat-trend-up {
+    color: #198754;
+}
+
+.jb-stat-trend-down {
+    color: #dc3545;
+}
+
+/* ==========================================================================
+   EMPTY STATE - When no data is available
+   ========================================================================== */
+
+.jb-empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.jb-empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.jb-empty-state-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 0.5rem;
+}
+
+.jb-empty-state-text {
+    max-width: 400px;
+    margin: 0 auto 1rem;
+}
+
+/* ==========================================================================
+   VACANCY CARD - Special card for vacancy display
+   ========================================================================== */
+
+.jb-vacancy-card {
+    transition: all var(--jb-transition-fast);
+    border-left: 4px solid transparent;
+}
+
+.jb-vacancy-card:hover {
+    border-left-color: #0d6efd;
+}
+
+.jb-vacancy-card.jb-urgent {
+    border-left-color: #dc3545;
+}
+
+.jb-vacancy-card.jb-closing-soon {
+    border-left-color: #ffc107;
+}
+
+.jb-vacancy-deadline {
+    font-size: 0.875rem;
+}
+
+.jb-vacancy-deadline.jb-urgent {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.jb-vacancy-deadline.jb-closing-soon {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   CHECKLIST - Document validation checklist
+   ========================================================================== */
+
+.jb-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.jb-checklist-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.jb-checklist-item:last-child {
+    border-bottom: none;
+}
+
+.jb-checklist-checkbox {
+    margin-right: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.jb-checklist-text {
+    flex: 1;
+}
+
+.jb-checklist-item.checked .jb-checklist-text {
+    color: #198754;
+}
+
+.jb-checklist-item.unchecked .jb-checklist-text {
+    color: #6c757d;
+}
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+
+@media print {
+    .jb-no-print {
+        display: none !important;
+    }
+
+    .jb-print-only {
+        display: block !important;
+    }
+
+    .jb-timeline::before {
+        background-color: #000;
+    }
+
+    .jb-timeline-marker {
+        background-color: #000;
+        box-shadow: none;
+        border: 2px solid #000;
+    }
+}
+
+/* ==========================================================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+    .jb-progress-steps {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .jb-progress-step {
+        display: flex;
+        align-items: center;
+        text-align: left;
+        margin-bottom: 1rem;
+    }
+
+    .jb-progress-step::before {
+        margin: 0 1rem 0 0;
+    }
+
+    .jb-progress-step::after {
+        display: none;
+    }
+
+    .jb-stat-value {
+        font-size: 2rem;
+    }
+
+    .jb-grading-panel {
+        position: static;
+    }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .jb-fade-in,
+    .jb-fade-in-up,
+    .jb-stagger > *,
+    .jb-hover-lift,
+    .jb-hover-shadow,
+    .jb-skeleton::after {
+        animation: none;
+        transition: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .jb-skeleton {
+        background-color: #ccc;
+    }
+
+    .jb-timeline::before {
+        background-color: #000;
+    }
+}

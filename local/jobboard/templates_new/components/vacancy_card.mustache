@@ -1,0 +1,132 @@
+{{!
+    @template local_jobboard/components/vacancy_card
+
+    Vacancy card component for displaying job listings.
+    Uses Bootstrap 5 with custom jb-vacancy-* classes.
+
+    Context variables:
+    * id (int) - Vacancy ID
+    * code (string) - Vacancy code
+    * title (string) - Vacancy title
+    * department (string) - Department name
+    * location (string) - Location
+    * contracttype (string) - Contract type
+    * modality (string) - Work modality
+    * positions (int) - Number of positions
+    * status (string) - Vacancy status
+    * statuslabel (string) - Status display label
+    * closedate (string) - Application deadline
+    * daysremaining (int) - Days until deadline
+    * isurgent (bool) - Less than 3 days remaining
+    * isclosingsoon (bool) - Less than 7 days remaining
+    * applicantcount (int) - Number of applicants
+    * viewurl (string) - URL to view vacancy
+    * editurl (string) - URL to edit vacancy
+    * applyurl (string) - URL to apply
+    * canmanage (bool) - User can manage this vacancy
+    * canapply (bool) - User can apply
+    * hasapplied (bool) - User has already applied
+
+    Example context (json):
+    {
+        "id": 1,
+        "code": "VAC-001",
+        "title": "Mathematics Professor",
+        "department": "Science Faculty",
+        "status": "published",
+        "closedate": "Dec 31, 2024",
+        "daysremaining": 16,
+        "viewurl": "/vacancy/1"
+    }
+}}
+<div class="card jb-vacancy-card jb-hover-lift{{#isurgent}} jb-urgent{{/isurgent}}{{#isclosingsoon}} jb-closing-soon{{/isclosingsoon}} h-100"
+     data-vacancy-id="{{id}}">
+    <div class="card-body">
+        {{! Header with code and status }}
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <small class="text-muted">{{code}}</small>
+            <span class="badge jb-status-{{status}}">{{statuslabel}}</span>
+        </div>
+
+        {{! Title }}
+        <h5 class="card-title mb-2">
+            <a href="{{viewurl}}" class="text-decoration-none text-dark stretched-link">{{title}}</a>
+        </h5>
+
+        {{! Details }}
+        <div class="mb-3">
+            {{#department}}
+            <div class="small text-muted mb-1">
+                <i class="fa fa-building me-2" aria-hidden="true"></i>{{department}}
+            </div>
+            {{/department}}
+            {{#location}}
+            <div class="small text-muted mb-1">
+                <i class="fa fa-map-marker me-2" aria-hidden="true"></i>{{location}}
+            </div>
+            {{/location}}
+            {{#contracttype}}
+            <div class="small text-muted mb-1">
+                <i class="fa fa-file-text me-2" aria-hidden="true"></i>{{contracttype}}
+            </div>
+            {{/contracttype}}
+            {{#modality}}
+            <div class="small text-muted mb-1">
+                <i class="fa fa-laptop me-2" aria-hidden="true"></i>{{modality}}
+            </div>
+            {{/modality}}
+        </div>
+
+        {{! Footer with deadline and positions }}
+        <div class="d-flex justify-content-between align-items-center mt-auto">
+            <div>
+                {{#positions}}
+                <span class="badge bg-light text-dark" data-bs-toggle="tooltip" title="{{#str}}positions, local_jobboard{{/str}}">
+                    <i class="fa fa-users me-1" aria-hidden="true"></i>{{positions}}
+                </span>
+                {{/positions}}
+                {{#applicantcount}}
+                <span class="badge bg-light text-dark" data-bs-toggle="tooltip" title="{{#str}}applicants, local_jobboard{{/str}}">
+                    <i class="fa fa-user-plus me-1" aria-hidden="true"></i>{{applicantcount}}
+                </span>
+                {{/applicantcount}}
+            </div>
+            {{#closedate}}
+            <small class="jb-vacancy-deadline{{#isurgent}} jb-urgent{{/isurgent}}{{#isclosingsoon}} jb-closing-soon{{/isclosingsoon}}">
+                <i class="fa fa-clock-o me-1" aria-hidden="true"></i>
+                {{#daysremaining}}
+                {{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
+                {{/daysremaining}}
+                {{^daysremaining}}
+                {{closedate}}
+                {{/daysremaining}}
+            </small>
+            {{/closedate}}
+        </div>
+    </div>
+
+    {{! Actions footer }}
+    {{#showactions}}
+    <div class="card-footer bg-transparent border-top-0 pt-0">
+        <div class="d-flex gap-2 position-relative" style="z-index: 1;">
+            {{#canapply}}
+            {{^hasapplied}}
+            <a href="{{applyurl}}" class="btn btn-primary btn-sm flex-grow-1">
+                <i class="fa fa-paper-plane me-1" aria-hidden="true"></i>{{#str}}applynow, local_jobboard{{/str}}
+            </a>
+            {{/hasapplied}}
+            {{#hasapplied}}
+            <span class="btn btn-outline-secondary btn-sm flex-grow-1 disabled">
+                <i class="fa fa-check me-1" aria-hidden="true"></i>{{#str}}alreadyapplied, local_jobboard{{/str}}
+            </span>
+            {{/hasapplied}}
+            {{/canapply}}
+            {{#canmanage}}
+            <a href="{{editurl}}" class="btn btn-outline-secondary btn-sm" data-bs-toggle="tooltip" title="{{#str}}edit, local_jobboard{{/str}}">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+            </a>
+            {{/canmanage}}
+        </div>
+    </div>
+    {{/showactions}}
+</div>

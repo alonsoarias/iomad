@@ -1,0 +1,31 @@
+{{!
+    @template local_jobboard/components/nav_tabs
+
+    Navigation tabs/pills component.
+
+    Context variables:
+    * style (string) - Style: tabs, pills (default: pills)
+    * items (array) - Tab items {label, url, icon, active, badge}
+
+    Example context (json):
+    {
+        "style": "pills",
+        "items": [
+            {"label": "Overview", "url": "?tab=overview", "icon": "chart-pie", "active": true},
+            {"label": "Details", "url": "?tab=details", "badge": {"value": "3", "color": "danger"}}
+        ]
+    }
+}}
+<nav class="jb-mb-4" aria-label="{{#str}}navigation{{/str}}">
+    <ul class="jb-nav jb-nav-{{#style}}{{style}}{{/style}}{{^style}}pills{{/style}} jb-flex-wrap" role="tablist">
+        {{#items}}
+        <li class="jb-nav-item" role="presentation">
+            <a class="jb-nav-link{{#active}} jb-active{{/active}}" href="{{url}}" role="tab" aria-selected="{{#active}}true{{/active}}{{^active}}false{{/active}}">
+                {{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}
+                {{label}}
+                {{#badge}}<span class="jb-badge jb-badge-{{badge.color}} jb-ml-2">{{badge.value}}</span>{{/badge}}
+            </a>
+        </li>
+        {{/items}}
+    </ul>
+</nav>
