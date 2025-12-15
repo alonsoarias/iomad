@@ -837,8 +837,24 @@ trait review_renderer {
         ]))->out(false) : null;
 
         // Prepare documents with preview info.
+        // Sequential review: find the first pending document (current) and mark others as locked.
         $docsdata = [];
-        $firstdocid = null;
+        $currentdocid = null;
+        $currentdocindex = null;
+        $docindex = 0;
+
+        // First pass: find the current document (first pending one).
+        foreach ($documents as $doc) {
+            $status = $doc->status ?? 'pending';
+            if ($status === 'pending' && $currentdocid === null) {
+                $currentdocid = $doc->id;
+                $currentdocindex = $docindex;
+            }
+            $docindex++;
+        }
+
+        // Second pass: build document data with sequential review flags.
+        $docindex = 0;
         foreach ($documents as $doc) {
             $status = $doc->status ?? 'pending';
             $statusconfig = [
@@ -874,23 +890,24 @@ trait review_renderer {
             $isimage = (strpos($mimetype, 'image/') === 0);
             $canpreview = ($ispdf || $isimage);
 
-            // Track first document for initial preview.
-            if ($firstdocid === null && $previewurl) {
-                $firstdocid = $doc->id;
-            }
-
             // Get existing observation for this document.
             $observation = $doc->observation ?? '';
 
-            // Initialize editor for this document's observation field.
-            // The element ID must match exactly what's in the template.
-            $editorid = 'doc_observation_' . $doc->id;
-            $editoroptions = [
-                'context' => $PAGE->context,
-                'maxfiles' => 0,
-                'maxbytes' => 0,
-            ];
-            $editor->use_editor($editorid, $editoroptions);
+            // Sequential review flags.
+            $iscurrent = ($doc->id == $currentdocid);
+            $islocked = ($status === 'pending' && !$iscurrent);
+            $isreviewed = ($status !== 'pending');
+
+            // Only initialize editor for the current document being reviewed.
+            if ($iscurrent) {
+                $editorid = 'doc_observation_' . $doc->id;
+                $editoroptions = [
+                    'context' => $PAGE->context,
+                    'maxfiles' => 0,
+                    'maxbytes' => 0,
+                ];
+                $editor->use_editor($editorid, $editoroptions);
+            }
 
             $docsdata[] = [
                 'id' => $doc->id,
@@ -921,19 +938,29 @@ trait review_renderer {
                 'reviewedat' => $reviewedat,
                 'sesskey' => sesskey(),
                 'observation' => $observation,
+                // Sequential review fields.
+                'docindex' => $docindex + 1,
+                'iscurrent' => $iscurrent,
+                'islocked' => $islocked,
+                'isreviewed' => $isreviewed,
             ];
+
+            $docindex++;
         }
 
-        // Get first document for initial preview.
+        // Get current document for initial preview (the one being reviewed).
         $initialpreview = null;
-        if ($firstdocid && !empty($docsdata)) {
+        if ($currentdocid !== null && !empty($docsdata)) {
             foreach ($docsdata as $docdata) {
-                if ($docdata['id'] == $firstdocid) {
+                if ($docdata['id'] == $currentdocid) {
                     $initialpreview = $docdata;
                     break;
                 }
             }
         }
+
+        // Calculate current document position for progress display.
+        $currentdocposition = $currentdocindex !== null ? $currentdocindex + 1 : count($docsdata) + 1;
 
         // Application status class.
         $appstatusclass = 'secondary';
@@ -1020,13 +1047,14 @@ trait review_renderer {
         $data['haspending'] = $haspending;
         $data['completebtncolor'] = $completebtncolor;
 
-        $data['canvalidateall'] = ($docstats['pending'] > 0);
-        $data['validateallurl'] = (new moodle_url('/local/jobboard/index.php', [
-            'view' => 'review',
-            'applicationid' => $applicationid,
-            'action' => 'validateall',
-            'sesskey' => sesskey(),
-        ]))->out(false);
+        // Sequential review progress.
+        $data['currentdocposition'] = $currentdocposition;
+        $data['totaldocs'] = $totaldocs;
+        $data['hascurrentdoc'] = ($currentdocid !== null);
+
+        // Remove "validate all" in sequential mode - documents must be reviewed one by one.
+        $data['canvalidateall'] = false;
+        $data['validateallurl'] = '';
 
         $data['submitreviewurl'] = (new moodle_url('/local/jobboard/index.php'))->out(false);
         $data['sesskey'] = sesskey();

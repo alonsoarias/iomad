@@ -2633,6 +2633,12 @@ $string['noobservationstosend'] = 'No hay observaciones para enviar';
 $string['saving'] = 'Guardando...';
 $string['sending'] = 'Enviando...';
 
+// Cadenas de revisión secuencial
+$string['sequentialreview'] = 'Revisión Secuencial';
+$string['reviewingdocument'] = 'Revisando documento';
+$string['current'] = 'Actual';
+$string['locked'] = 'Bloqueado';
+
 // Cadenas de aplicación y consentimiento
 $string['consentgiven'] = 'Consentimiento otorgado';
 $string['selectstatus'] = 'Seleccionar estado';

@@ -2617,6 +2617,12 @@ $string['noobservationstosend'] = 'No observations to send';
 $string['saving'] = 'Saving...';
 $string['sending'] = 'Sending...';
 
+// Sequential review strings
+$string['sequentialreview'] = 'Sequential Review';
+$string['reviewingdocument'] = 'Reviewing document';
+$string['current'] = 'Current';
+$string['locked'] = 'Locked';
+
 // Application and consent strings
 $string['consentgiven'] = 'Consent given';
 $string['selectstatus'] = 'Select status';

@@ -82,13 +82,16 @@
                     </div>
                 </div>
 
-                {{! Pending Documents Warning }}
+                {{! Sequential Review Progress }}
                 {{#haspending}}
-                <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
-                    <i class="fa fa-clock fa-lg me-3"></i>
-                    <div>
-                        <strong>{{#str}}pendingdocuments, local_jobboard{{/str}}</strong>
-                        <span class="d-block">{{pendingcount}} {{#str}}documentsremaining, local_jobboard{{/str}}</span>
+                <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+                    <i class="fa fa-list-check fa-lg me-3"></i>
+                    <div class="flex-grow-1">
+                        <strong>{{#str}}sequentialreview, local_jobboard{{/str}}</strong>
+                        <span class="d-block">{{#str}}reviewingdocument, local_jobboard{{/str}} {{currentdocposition}} {{#str}}of{{/str}} {{totaldocs}}</span>
+                    </div>
+                    <div class="ms-3">
+                        <span class="badge bg-primary fs-6">{{currentdocposition}} / {{totaldocs}}</span>
                     </div>
                 </div>
                 {{/haspending}}
@@ -201,9 +204,9 @@
                             {{/canvalidateall}}
                         </div>
                         <div class="card-body p-0">
-                            <div class="list-group list-group-flush jb-documents-list" data-region="documents-list" style="max-height: 350px; overflow-y: auto;">
+                            <div class="list-group list-group-flush jb-documents-list" data-region="documents-list" style="max-height: 450px; overflow-y: auto;">
                                 {{#documents}}
-                                <div class="list-group-item list-group-item-action jb-doc-item {{#ispending}}border-start border-warning border-3{{/ispending}}"
+                                <div class="list-group-item jb-doc-item {{#iscurrent}}active border-start border-primary border-4 bg-primary-subtle{{/iscurrent}} {{#islocked}}disabled opacity-50{{/islocked}} {{#isreviewed}}{{#status}}border-start border-{{statuscolor}} border-3{{/status}}{{/isreviewed}}"
                                      data-document-id="{{id}}"
                                      data-preview-url="{{previewurl}}"
                                      data-mimetype="{{mimetype}}"
@@ -213,31 +216,53 @@
                                      data-typename="{{typename}}"
                                      data-filename="{{filename}}"
                                      data-download-url="{{downloadurl}}"
-                                     onclick="jobboardPreviewDocument(this)"
-                                     style="cursor: pointer;">
+                                     {{#iscurrent}}onclick="jobboardPreviewDocument(this)" style="cursor: pointer;"{{/iscurrent}}
+                                     {{#isreviewed}}onclick="jobboardPreviewDocument(this)" style="cursor: pointer;"{{/isreviewed}}
+                                     {{#islocked}}style="cursor: not-allowed;"{{/islocked}}>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="d-flex align-items-center flex-grow-1 min-width-0 me-2">
+                                            {{! Step number indicator }}
+                                            <span class="badge rounded-pill {{#iscurrent}}bg-primary{{/iscurrent}}{{#isreviewed}}bg-{{statuscolor}}{{/isreviewed}}{{#islocked}}bg-secondary{{/islocked}} me-2 flex-shrink-0">{{docindex}}</span>
                                             <i class="fa fa-{{statusicon}} text-{{statuscolor}} me-2 flex-shrink-0"></i>
                                             <div class="min-width-0">
-                                                <div class="fw-medium text-truncate small">{{typename}}</div>
+                                                <div class="fw-medium text-truncate small {{#iscurrent}}text-primary{{/iscurrent}}">{{typename}}</div>
                                                 <small class="text-muted text-truncate d-block" title="{{filename}}">{{filename}}</small>
                                             </div>
                                         </div>
-                                        <span class="badge bg-{{statuscolor}} flex-shrink-0">{{statuslabel}}</span>
+                                        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                                            {{#iscurrent}}
+                                            <span class="badge bg-primary">
+                                                <i class="fa fa-arrow-right me-1"></i>
+                                                {{#str}}current, local_jobboard{{/str}}
+                                            </span>
+                                            {{/iscurrent}}
+                                            {{#islocked}}
+                                            <span class="badge bg-secondary">
+                                                <i class="fa fa-lock me-1"></i>
+                                                {{#str}}locked, local_jobboard{{/str}}
+                                            </span>
+                                            {{/islocked}}
+                                            {{#isreviewed}}
+                                            <span class="badge bg-{{statuscolor}}">{{statuslabel}}</span>
+                                            {{/isreviewed}}
+                                        </div>
                                     </div>
+
+                                    {{! Show rejection reason for rejected documents }}
                                     {{#rejectreason}}
                                     <div class="small text-danger mt-1">
                                         <i class="fa fa-circle-exclamation me-1"></i>
                                         {{rejectreason}}
                                     </div>
                                     {{/rejectreason}}
-                                    {{! Observations using Moodle HTML editor }}
-                                    <div class="mt-2 jb-observation-editor-wrapper" onclick="event.stopPropagation();">
+
+                                    {{! Only show observation editor for CURRENT document }}
+                                    {{#iscurrent}}
+                                    <div class="mt-3 jb-observation-editor-wrapper" onclick="event.stopPropagation();">
                                         <label for="doc_observation_{{id}}" class="form-label small text-muted mb-1">
                                             <i class="fa fa-comment-dots me-1"></i>
                                             {{#str}}documentobservation, local_jobboard{{/str}}
                                         </label>
-                                        {{! Textarea for Moodle editor }}
                                         <textarea name="doc_observation_{{id}}"
                                                   id="doc_observation_{{id}}"
                                                   class="form-control jb-doc-observation jb-moodle-editor"
@@ -246,9 +271,9 @@
                                                   data-application-id="{{applicationid}}"
                                                   placeholder="{{#str}}documentobservation_placeholder, local_jobboard{{/str}}">{{{observation}}}</textarea>
                                     </div>
-                                    {{! Action buttons }}
-                                    <div class="d-flex gap-1 mt-2" onclick="event.stopPropagation();">
-                                        {{#ispending}}
+
+                                    {{! Action buttons only for CURRENT document }}
+                                    <div class="d-flex gap-2 mt-3" onclick="event.stopPropagation();">
                                         <a href="{{validateurl}}" class="btn btn-success btn-sm flex-grow-1">
                                             <i class="fa fa-check me-1"></i>
                                             {{#str}}approve, local_jobboard{{/str}}
@@ -257,12 +282,22 @@
                                             <i class="fa fa-xmark me-1"></i>
                                             {{#str}}reject, local_jobboard{{/str}}
                                         </button>
-                                        {{/ispending}}
                                     </div>
+                                    {{/iscurrent}}
+
+                                    {{! Show existing observation for reviewed documents }}
+                                    {{#isreviewed}}
+                                    {{#observation}}
+                                    <div class="mt-2 small">
+                                        <i class="fa fa-comment text-muted me-1"></i>
+                                        <span class="text-muted">{{{observation}}}</span>
+                                    </div>
+                                    {{/observation}}
+                                    {{/isreviewed}}
                                 </div>
 
-                                {{! Reject Modal }}
-                                {{#ispending}}
+                                {{! Reject Modal - only for current document }}
+                                {{#iscurrent}}
                                 <div class="modal fade" id="rejectModal{{id}}" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
@@ -301,7 +336,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{/ispending}}
+                                {{/iscurrent}}
                                 {{/documents}}
                             </div>
                         </div>
@@ -707,6 +742,17 @@ function jobboardPreviewDocument(element) {
 .jb-preview-fullscreen iframe,
 .jb-preview-fullscreen img {
     max-height: 100vh !important;
+}
+/* Sequential review document states */
+.jb-doc-item.active {
+    background-color: rgba(13, 110, 253, 0.1) !important;
+}
+.jb-doc-item.disabled {
+    pointer-events: none;
+    background-color: #f8f9fa;
+}
+.jb-doc-item.disabled .badge.bg-secondary {
+    opacity: 0.7;
 }
 .jb-doc-observation:focus {
     border-color: #0d6efd;
