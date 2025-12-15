@@ -3350,4 +3350,5 @@ $string['filterdocuments'] = 'Filter Documents';
 $string['doctypeactions'] = 'Document Type Actions';
 $string['exemptionactions'] = 'Exemption Actions';
 $string['filterexemptions'] = 'Filter Exemptions';
+$string['filtervacancies'] = 'Filter Vacancies';
 $string['noexemptionsdesc'] = 'No exemptions have been created yet.';
