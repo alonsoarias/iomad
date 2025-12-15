@@ -1,7 +1,4 @@
 <?php
-// This file is part of Moodle
-declare(strict_types=1);
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -17,11 +14,16 @@ declare(strict_types=1);
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+declare(strict_types=1);
+
 /**
- * Application form with consent and document uploads.
+ * Application form - Rebuilt for reliability and admin customization.
+ *
+ * Document types are configurable from admin at:
+ * Site administration > Plugins > Local plugins > Job Board > Manage document types
  *
  * @package   local_jobboard
- * @copyright 2024 ISER
+ * @copyright 2024-2025 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,516 +33,462 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
 
-use moodleform;
-use local_jobboard\exemption;
-
 /**
- * Form for submitting a job application.
+ * Application submission form.
+ *
+ * Reads document types from database (local_jobboard_doctype table).
+ * Documents can be managed at Site admin > Plugins > Job Board > Manage document types.
  */
-class application_form extends moodleform {
+class application_form extends \moodleform {
+
+    /** @var array Filtered document types for this user */
+    protected $filtereddocs = [];
 
     /**
      * Form definition.
      */
     protected function definition() {
-        global $DB, $USER;
+        global $DB, $USER, $CFG;
 
         $mform = $this->_form;
-        $vacancy = $this->_customdata['vacancy'];
-        $requireddocs = $this->_customdata['requireddocs'] ?? [];
+
+        // Get custom data.
+        $vacancy = $this->_customdata['vacancy'] ?? null;
         $isexemption = $this->_customdata['isexemption'] ?? false;
-        $exemptioninfo = $this->_customdata['exemptioninfo'] ?? null;
-        $usergender = $this->_customdata['usergender'] ?? '';
-        $userage = $this->_customdata['userage'] ?? null;
+        $convocatoriaid = $this->_customdata['convocatoriaid'] ?? 0;
 
-        // Filter documents based on user's gender.
-        // gender_condition: 'M' = men only, 'F' = women only, null = all.
-        $requireddocs = array_filter($requireddocs, function($doctype) use ($usergender) {
-            if (empty($doctype->gender_condition)) {
-                return true; // No gender restriction.
-            }
-            // If user's gender matches the condition, show the document.
-            return $usergender === $doctype->gender_condition;
-        });
+        if (!$vacancy) {
+            throw new \moodle_exception('missingvacancy', 'local_jobboard');
+        }
 
-        // Filter documents based on user's age (age exemptions).
-        // age_exemption_threshold: users at or above this age are exempt from this document.
-        $requireddocs = array_filter($requireddocs, function($doctype) use ($userage) {
-            if ($userage === null || empty($doctype->age_exemption_threshold)) {
-                return true; // No age restriction or age unknown.
-            }
-            $threshold = (int) $doctype->age_exemption_threshold;
-            // If user is at or above threshold, they're exempt from this document.
-            return $userage < $threshold;
-        });
+        // Get user profile for filtering.
+        $userprofile = $DB->get_record('local_jobboard_applicant_profile', ['userid' => $USER->id]);
+        $usergender = $userprofile->gender ?? '';
+        $userage = $this->calculate_user_age($userprofile->birthdate ?? 0);
 
-        // Document codes that accept multiple certificates in a single file.
-        $multipledocs = [
-            'titulo_academico',
-            'formacion_complementaria',
-            'certificacion_laboral',
-        ];
+        // Load enabled document types.
+        $doctypes = $this->load_document_types($convocatoriaid, $isexemption);
 
-        // Hidden fields.
+        // Filter based on user profile.
+        $this->filtereddocs = $this->filter_documents_for_user($doctypes, $usergender, $userage);
+
+        // Add form CSS class for styling.
+        $mform->_attributes['class'] = 'jb-application-form';
+
+        // ============================================================
+        // HIDDEN FIELDS
+        // ============================================================
         $mform->addElement('hidden', 'vacancyid', $vacancy->id);
         $mform->setType('vacancyid', PARAM_INT);
 
-        // TAB 1: Profile review section - shows user's profile for verification.
-        $mform->addElement('header', 'profilereviewheader', get_string('profilereview', 'local_jobboard'));
-        $mform->setExpanded('profilereviewheader', true);
-
-        // Get applicant profile for review.
-        $applicantprofile = $DB->get_record('local_jobboard_applicant_profile', ['userid' => $USER->id]);
-        if ($applicantprofile) {
-            $profilehtml = '<div class="jb-profile-review">';
-            $profilehtml .= '<div class="alert alert-info mb-3">';
-            $profilehtml .= '<i class="fa fa-user-check me-2"></i>';
-            $profilehtml .= get_string('profilereview_info', 'local_jobboard');
-            $profilehtml .= '</div>';
-
-            $profilehtml .= '<div class="card mb-3">';
-            $profilehtml .= '<div class="card-body">';
-            $profilehtml .= '<div class="row">';
-
-            // Personal information.
-            $profilehtml .= '<div class="col-md-6">';
-            $profilehtml .= '<h6 class="text-primary"><i class="fa fa-user me-2"></i>' .
-                get_string('personalinfo', 'local_jobboard') . '</h6>';
-            $profilehtml .= '<dl class="row small mb-0">';
-            $profilehtml .= '<dt class="col-5">' . get_string('fullname', 'local_jobboard') . '</dt>';
-            $profilehtml .= '<dd class="col-7">' . fullname($USER) . '</dd>';
-            $profilehtml .= '<dt class="col-5">' . get_string('email') . '</dt>';
-            $profilehtml .= '<dd class="col-7">' . format_string($USER->email) . '</dd>';
-            if (!empty($applicantprofile->phone)) {
-                $profilehtml .= '<dt class="col-5">' . get_string('phone') . '</dt>';
-                $profilehtml .= '<dd class="col-7">' . format_string($applicantprofile->phone) . '</dd>';
-            }
-            if (!empty($applicantprofile->documentnumber)) {
-                $profilehtml .= '<dt class="col-5">' . get_string('documentnumber', 'local_jobboard') . '</dt>';
-                $profilehtml .= '<dd class="col-7">' . format_string($applicantprofile->documentnumber) . '</dd>';
-            }
-            $profilehtml .= '</dl>';
-            $profilehtml .= '</div>';
-
-            // Education and address.
-            $profilehtml .= '<div class="col-md-6">';
-            $profilehtml .= '<h6 class="text-primary"><i class="fa fa-graduation-cap me-2"></i>' .
-                get_string('education', 'local_jobboard') . '</h6>';
-            $profilehtml .= '<dl class="row small mb-0">';
-            if (!empty($applicantprofile->educationlevel)) {
-                $edukey = 'signup_edu_' . $applicantprofile->educationlevel;
-                $edulevel = get_string_manager()->string_exists($edukey, 'local_jobboard')
-                    ? get_string($edukey, 'local_jobboard')
-                    : ucfirst($applicantprofile->educationlevel);
-                $profilehtml .= '<dt class="col-5">' . get_string('educationlevel', 'local_jobboard') . '</dt>';
-                $profilehtml .= '<dd class="col-7">' . $edulevel . '</dd>';
-            }
-            if (!empty($applicantprofile->city)) {
-                $profilehtml .= '<dt class="col-5">' . get_string('city') . '</dt>';
-                $profilehtml .= '<dd class="col-7">' . format_string($applicantprofile->city) . '</dd>';
-            }
-            $profilehtml .= '</dl>';
-            $profilehtml .= '</div>';
-
-            $profilehtml .= '</div>'; // row
-            $profilehtml .= '</div>'; // card-body
-            $profilehtml .= '</div>'; // card
-
-            // Edit profile link.
-            $profileurl = new \moodle_url('/local/jobboard/updateprofile.php');
-            $profilehtml .= '<div class="text-right">';
-            $profilehtml .= '<a href="' . $profileurl->out() . '" class="btn btn-sm btn-outline-primary" target="_blank">';
-            $profilehtml .= '<i class="fa fa-edit me-1"></i>' . get_string('editprofile', 'local_jobboard');
-            $profilehtml .= '</a>';
-            $profilehtml .= '</div>';
-
-            $profilehtml .= '</div>';
-            $mform->addElement('html', $profilehtml);
-        }
-
-        // Vacancy information header (now part of profile review section).
-        $mform->addElement('header', 'vacancyheader', get_string('vacancyinfo', 'local_jobboard'));
-
-        $vacancyhtml = '<div class="vacancy-summary">';
-        $vacancyhtml .= '<p><strong>' . get_string('code', 'local_jobboard') . ':</strong> ' .
-            format_string($vacancy->code) . '</p>';
-        $vacancyhtml .= '<p><strong>' . get_string('title', 'local_jobboard') . ':</strong> ' .
-            format_string($vacancy->title) . '</p>';
-        if (!empty($vacancy->location)) {
-            $vacancyhtml .= '<p><strong>' . get_string('location', 'local_jobboard') . ':</strong> ' .
-                format_string($vacancy->location) . '</p>';
-        }
-        // Get closedate from convocatoria (dates are now inherited from convocatoria).
-        $closedate = null;
-        if (!empty($vacancy->convocatoriaid)) {
-            $convocatoria = \local_jobboard_get_convocatoria($vacancy->convocatoriaid);
-            if ($convocatoria && !empty($convocatoria->enddate)) {
-                $closedate = $convocatoria->enddate;
-            }
-        }
-        // Fallback to vacancy closedate if it exists (backwards compatibility).
-        if (empty($closedate) && !empty($vacancy->closedate)) {
-            $closedate = $vacancy->closedate;
-        }
-        if ($closedate) {
-            $vacancyhtml .= '<p><strong>' . get_string('closedate', 'local_jobboard') . ':</strong> ' .
-                userdate($closedate, get_string('strftimedatetime', 'langconfig')) . '</p>';
-        }
-        $vacancyhtml .= '</div>';
-        $mform->addElement('html', $vacancyhtml);
-
-        // ISER Exemption notice if applicable.
-        if ($isexemption && $exemptioninfo) {
-            $mform->addElement('header', 'exemptionheader', get_string('exemptionnotice', 'local_jobboard'));
-            $mform->setExpanded('exemptionheader', true);
-
-            $exemptionhtml = '<div class="alert alert-info">';
-            $exemptionhtml .= '<p><strong>' . get_string('exemptionapplied', 'local_jobboard') . '</strong></p>';
-            $exemptionhtml .= '<p>' . get_string('exemptiontype_' . $exemptioninfo->exemptiontype, 'local_jobboard') . '</p>';
-            if (!empty($exemptioninfo->documentref)) {
-                $exemptionhtml .= '<p>' . get_string('documentref', 'local_jobboard') . ': ' .
-                    format_string($exemptioninfo->documentref) . '</p>';
-            }
-            $exemptionhtml .= '<p><em>' . get_string('exemptionreduceddocs', 'local_jobboard') . '</em></p>';
-            $exemptionhtml .= '</div>';
-            $mform->addElement('html', $exemptionhtml);
-
-            $mform->addElement('hidden', 'isexemption', 1);
-            $mform->setType('isexemption', PARAM_INT);
-        }
-
-        // Consent section - MANDATORY.
+        // ============================================================
+        // SECTION 1: CONSENT AND SIGNATURE
+        // ============================================================
         $mform->addElement('header', 'consentheader', get_string('consentheader', 'local_jobboard'));
         $mform->setExpanded('consentheader', true);
 
-        // Data treatment policy text.
+        // Data treatment policy.
+        $this->add_policy_section($mform);
+
+        // Consent checkbox.
+        $mform->addElement(
+            'advcheckbox',
+            'consentaccepted',
+            get_string('consent', 'local_jobboard'),
+            get_string('consentaccepttext', 'local_jobboard'),
+            ['class' => 'jb-consent-checkbox'],
+            [0, 1]
+        );
+        $mform->addRule('consentaccepted', get_string('consentrequired', 'local_jobboard'), 'nonzero', null, 'server');
+
+        // Digital signature.
+        $mform->addElement(
+            'text',
+            'digitalsignature',
+            get_string('digitalsignature', 'local_jobboard'),
+            ['size' => 50, 'maxlength' => 200, 'placeholder' => fullname($USER)]
+        );
+        $mform->setType('digitalsignature', PARAM_TEXT);
+        $mform->addRule('digitalsignature', get_string('required'), 'required', null, 'server');
+        $mform->setDefault('digitalsignature', fullname($USER));
+        $mform->addHelpButton('digitalsignature', 'digitalsignature', 'local_jobboard');
+
+        // ============================================================
+        // SECTION 2: DOCUMENT UPLOADS
+        // ============================================================
+        if (!empty($this->filtereddocs)) {
+            $mform->addElement('header', 'documentsheader', get_string('documents', 'local_jobboard'));
+            $mform->setExpanded('documentsheader', true);
+
+            // Instructions alert.
+            $instructions = '<div class="alert alert-info">';
+            $instructions .= '<i class="fa fa-info-circle me-2"></i>';
+            $instructions .= get_string('documentshelp', 'local_jobboard');
+            $instructions .= '</div>';
+            $mform->addElement('html', $instructions);
+
+            // Add document fields grouped by category.
+            $this->add_document_fields($mform);
+        }
+
+        // ============================================================
+        // SECTION 3: COVER LETTER (Optional)
+        // ============================================================
+        $mform->addElement('header', 'additionalheader', get_string('additionalinfo', 'local_jobboard'));
+
+        $mform->addElement(
+            'textarea',
+            'coverletter',
+            get_string('coverletter', 'local_jobboard'),
+            ['rows' => 6, 'cols' => 60, 'class' => 'form-control']
+        );
+        $mform->setType('coverletter', PARAM_TEXT);
+        $mform->addHelpButton('coverletter', 'coverletter', 'local_jobboard');
+
+        // ============================================================
+        // SECTION 4: DECLARATION
+        // ============================================================
+        $mform->addElement('header', 'declarationheader', get_string('declaration', 'local_jobboard'));
+        $mform->setExpanded('declarationheader', true);
+
+        // Declaration text.
+        $declhtml = '<div class="alert alert-warning">';
+        $declhtml .= '<i class="fa fa-exclamation-triangle me-2"></i>';
+        $declhtml .= '<strong>' . get_string('declarationtitle', 'local_jobboard') . '</strong><br>';
+        $declhtml .= get_string('declarationtext', 'local_jobboard');
+        $declhtml .= '</div>';
+        $mform->addElement('html', $declhtml);
+
+        // Declaration checkbox.
+        $mform->addElement(
+            'advcheckbox',
+            'declarationaccepted',
+            get_string('declaration', 'local_jobboard'),
+            get_string('declarationaccept', 'local_jobboard'),
+            ['class' => 'jb-declaration-checkbox'],
+            [0, 1]
+        );
+        $mform->addRule('declarationaccepted', get_string('declarationrequired', 'local_jobboard'), 'nonzero', null, 'server');
+
+        // ============================================================
+        // SUBMIT BUTTONS
+        // ============================================================
+        $this->add_action_buttons(true, get_string('submitapplication', 'local_jobboard'));
+    }
+
+    /**
+     * Add the data treatment policy section.
+     *
+     * @param \MoodleQuickForm $mform Form object.
+     */
+    protected function add_policy_section(\MoodleQuickForm $mform): void {
         $policytext = get_config('local_jobboard', 'datatreatmentpolicy');
         if (empty($policytext)) {
             $policytext = get_string('defaultdatatreatmentpolicy', 'local_jobboard');
         }
 
-        $policyhtml = '<div class="data-treatment-policy">';
-        $policyhtml .= '<h5>' . get_string('datatreatmentpolicytitle', 'local_jobboard') . '</h5>';
-        $policyhtml .= '<div class="policy-text">' . format_text($policytext, FORMAT_HTML) . '</div>';
-        $policyhtml .= '</div>';
-        $mform->addElement('html', $policyhtml);
+        $html = '<div class="jb-policy-container card mb-3">';
+        $html .= '<div class="card-header bg-light">';
+        $html .= '<h6 class="mb-0"><i class="fa fa-shield-halved me-2"></i>';
+        $html .= get_string('datatreatmentpolicytitle', 'local_jobboard') . '</h6>';
+        $html .= '</div>';
+        $html .= '<div class="card-body" style="max-height: 200px; overflow-y: auto;">';
+        $html .= '<div class="small">' . format_text($policytext, FORMAT_HTML) . '</div>';
+        $html .= '</div>';
+        $html .= '</div>';
 
-        // Consent checkbox.
-        $mform->addElement('advcheckbox', 'consentaccepted', '',
-            get_string('consentaccepttext', 'local_jobboard'), ['group' => 1], [0, 1]);
-        $mform->addRule('consentaccepted', get_string('consentrequired', 'local_jobboard'), 'required', null, 'client');
-        $mform->addRule('consentaccepted', get_string('consentrequired', 'local_jobboard'), 'nonzero', null, 'client');
-        $mform->addHelpButton('consentaccepted', 'consentaccepted', 'local_jobboard');
-
-        // Digital signature - Full name.
-        $mform->addElement('text', 'digitalsignature', get_string('digitalsignature', 'local_jobboard'),
-            ['size' => 50, 'maxlength' => 200]);
-        $mform->setType('digitalsignature', PARAM_TEXT);
-        $mform->addRule('digitalsignature', get_string('required'), 'required', null, 'client');
-        $mform->addHelpButton('digitalsignature', 'digitalsignature', 'local_jobboard');
-
-        // Pre-fill with user's full name as suggestion.
-        $fullname = fullname($USER);
-        $mform->setDefault('digitalsignature', $fullname);
-
-        // Documents section with tabbed interface by category.
-        if (!empty($requireddocs)) {
-            $mform->addElement('header', 'documentsheader', get_string('documents', 'local_jobboard'));
-            $mform->setExpanded('documentsheader', true);
-
-            $mform->addElement('html', '<div class="alert alert-warning">' .
-                get_string('documentshelp', 'local_jobboard') . '</div>');
-
-            // Get accepted file types from settings.
-            $acceptedtypes = get_config('local_jobboard', 'acceptedfiletypes');
-            if (empty($acceptedtypes)) {
-                $acceptedtypes = '.pdf';
-            }
-            $maxsize = get_config('local_jobboard', 'maxfilesize');
-            if (empty($maxsize)) {
-                $maxsize = 10 * 1024 * 1024; // 10MB default.
-            }
-
-            $fileoptions = [
-                'subdirs' => 0,
-                'maxbytes' => $maxsize,
-                'maxfiles' => 1,
-                'accepted_types' => explode(',', $acceptedtypes),
-            ];
-
-            // Group documents by category.
-            $categories = [
-                'employment' => ['icon' => 'fa-briefcase', 'docs' => []],
-                'identification' => ['icon' => 'fa-id-card', 'docs' => []],
-                'academic' => ['icon' => 'fa-graduation-cap', 'docs' => []],
-                'financial' => ['icon' => 'fa-university', 'docs' => []],
-                'health' => ['icon' => 'fa-heartbeat', 'docs' => []],
-                'legal' => ['icon' => 'fa-gavel', 'docs' => []],
-            ];
-
-            foreach ($requireddocs as $doctype) {
-                $cat = $doctype->category ?? 'employment';
-                if (!isset($categories[$cat])) {
-                    $cat = 'employment';
-                }
-                $categories[$cat]['docs'][] = $doctype;
-            }
-
-            // Remove empty categories.
-            $categories = array_filter($categories, function($cat) {
-                return !empty($cat['docs']);
-            });
-
-            // Build tabbed interface.
-            $tabshtml = '<div class="jb-document-tabs mb-4">';
-            $tabshtml .= '<ul class="nav nav-pills nav-fill mb-3" id="docCategoryTabs" role="tablist">';
-
-            $first = true;
-            foreach ($categories as $catkey => $catdata) {
-                $active = $first ? 'active' : '';
-                $selected = $first ? 'true' : 'false';
-                $doccount = count($catdata['docs']);
-                $requiredcount = count(array_filter($catdata['docs'], function($d) {
-                    return !empty($d->isrequired);
-                }));
-                $badge = $requiredcount > 0 ? '<span class="badge bg-danger ms-1">' . $requiredcount . '</span>' : '';
-
-                $tabshtml .= '<li class="nav-item" role="presentation">';
-                $tabshtml .= '<button class="nav-link ' . $active . '" id="tab-' . $catkey . '" ';
-                $tabshtml .= 'data-bs-toggle="pill" data-bs-target="#panel-' . $catkey . '" type="button" role="tab" ';
-                $tabshtml .= 'aria-controls="panel-' . $catkey . '" aria-selected="' . $selected . '">';
-                $tabshtml .= '<i class="fa ' . $catdata['icon'] . ' me-1"></i>';
-                $tabshtml .= '<span class="d-none d-md-inline">' . get_string('doccat_' . $catkey, 'local_jobboard') . '</span>';
-                $tabshtml .= $badge;
-                $tabshtml .= '</button></li>';
-                $first = false;
-            }
-
-            $tabshtml .= '</ul>';
-            $tabshtml .= '<div class="tab-content" id="docCategoryTabsContent">';
-
-            $mform->addElement('html', $tabshtml);
-
-            // Render each category panel with its documents.
-            $first = true;
-            foreach ($categories as $catkey => $catdata) {
-                $activeclass = $first ? 'show active' : '';
-
-                $panelhtml = '<div class="tab-pane fade ' . $activeclass . '" id="panel-' . $catkey . '" ';
-                $panelhtml .= 'role="tabpanel" aria-labelledby="tab-' . $catkey . '">';
-                $panelhtml .= '<div class="card border-0 shadow-sm">';
-                $panelhtml .= '<div class="card-header bg-light">';
-                $panelhtml .= '<h5 class="mb-0"><i class="fa ' . $catdata['icon'] . ' me-2 text-primary"></i>';
-                $panelhtml .= get_string('doccat_' . $catkey, 'local_jobboard');
-                $panelhtml .= '</h5>';
-                $panelhtml .= '<small class="text-muted">' . get_string('doccat_' . $catkey . '_desc', 'local_jobboard') . '</small>';
-                $panelhtml .= '</div>';
-                $panelhtml .= '<div class="card-body">';
-                $mform->addElement('html', $panelhtml);
-
-                // Add document fields for this category.
-                foreach ($catdata['docs'] as $doctype) {
-                    $fieldname = 'doc_' . $doctype->code;
-                    $required = !empty($doctype->isrequired);
-                    $ismultiple = in_array($doctype->code, $multipledocs);
-
-                    // Document card wrapper.
-                    $dochtml = '<div class="jb-document-field mb-4 p-3 border rounded bg-white">';
-                    $dochtml .= '<div class="d-flex justify-content-between align-items-start mb-2">';
-                    $dochtml .= '<h6 class="mb-0">';
-                    $dochtml .= format_string($doctype->name);
-                    if ($required) {
-                        $dochtml .= ' <span class="badge bg-danger">' . get_string('required') . '</span>';
-                    } else {
-                        $dochtml .= ' <span class="badge bg-secondary">' . get_string('optional', 'local_jobboard') . '</span>';
-                    }
-                    $dochtml .= '</h6>';
-                    $dochtml .= '</div>';
-
-                    // Description in a prominent box.
-                    if (!empty($doctype->description)) {
-                        $dochtml .= '<div class="alert alert-info py-2 px-3 mb-2">';
-                        $dochtml .= '<i class="fa fa-info-circle me-2"></i>';
-                        $dochtml .= '<span>' . format_string($doctype->description) . '</span>';
-                        $dochtml .= '</div>';
-                    }
-
-                    // Conditional note (e.g., tarjeta_profesional requirement for teachers).
-                    if (!empty($doctype->conditional_note)) {
-                        $dochtml .= '<div class="alert alert-secondary py-2 px-3 mb-2">';
-                        $dochtml .= '<i class="fa fa-exclamation-triangle me-2"></i>';
-                        $dochtml .= '<small>' . get_string('conditional_document_note', 'local_jobboard',
-                            format_string($doctype->conditional_note)) . '</small>';
-                        $dochtml .= '</div>';
-                    }
-
-                    // Multiple documents notice - prominent warning for certificates that may have multiple files.
-                    if ($ismultiple) {
-                        $dochtml .= '<div class="alert alert-warning py-2 px-3 mb-2">';
-                        $dochtml .= '<i class="fa fa-file-pdf me-2"></i>';
-                        $dochtml .= '<strong>' . get_string('multipledocs_notice', 'local_jobboard') . '</strong><br>';
-                        $dochtml .= '<small>' . get_string('multipledocs_' . $doctype->code, 'local_jobboard') . '</small>';
-                        $dochtml .= '</div>';
-                    }
-
-                    // Requirements in collapsible section.
-                    if (!empty($doctype->requirements)) {
-                        $dochtml .= '<details class="mb-2">';
-                        $dochtml .= '<summary class="text-primary jb-collapse-header">';
-                        $dochtml .= '<i class="fa fa-list-ul me-1"></i>' . get_string('docrequirements', 'local_jobboard');
-                        $dochtml .= '</summary>';
-                        $dochtml .= '<div class="small text-muted mt-1 ps-3">' . format_string($doctype->requirements) . '</div>';
-                        $dochtml .= '</details>';
-                    }
-
-                    $dochtml .= '</div>';
-                    $mform->addElement('html', $dochtml);
-
-                    // File manager for document upload (label hidden, shown in card above).
-                    $mform->addElement('filemanager', $fieldname, '', null, $fileoptions);
-
-                    if ($required) {
-                        $mform->addRule($fieldname, get_string('documentrequired', 'local_jobboard', $doctype->name),
-                            'required', null, 'client');
-                    }
-
-                    // Issue date for certain document types.
-                    if (in_array($doctype->code, ['antecedentes_disciplinarios', 'antecedentes_fiscales',
-                        'antecedentes_judiciales', 'medidas_correctivas', 'inhabilidades', 'redam',
-                        'libreta_militar', 'certificado_medico', 'eps', 'pension'])) {
-                        $mform->addElement('date_selector', $fieldname . '_issuedate',
-                            get_string('documentissuedate', 'local_jobboard'));
-                        $mform->hideIf($fieldname . '_issuedate', $fieldname, 'eq', 0);
-                    }
-                }
-
-                // Close card-body and card.
-                $mform->addElement('html', '</div></div></div>');
-                $first = false;
-            }
-
-            // Close tab-content and tabs container.
-            $mform->addElement('html', '</div></div>');
-        }
-
-        // Additional information section.
-        $mform->addElement('header', 'additionalheader', get_string('additionalinfo', 'local_jobboard'));
-
-        // Cover letter / motivation (rich text editor).
-        $mform->addElement('editor', 'coverletter', get_string('coverletter', 'local_jobboard'), null, [
-            'maxfiles' => 0,
-            'noclean' => false,
-            'maxbytes' => 0,
-            'rows' => 8,
-        ]);
-        $mform->setType('coverletter', PARAM_RAW);
-        $mform->addHelpButton('coverletter', 'coverletter', 'local_jobboard');
-
-        // Declaration.
-        $mform->addElement('header', 'declarationheader', get_string('declaration', 'local_jobboard'));
-        $mform->setExpanded('declarationheader', true);
-
-        $declarationtext = get_string('declarationtext', 'local_jobboard');
-        $mform->addElement('html', '<div class="declaration-text">' . $declarationtext . '</div>');
-
-        $mform->addElement('advcheckbox', 'declarationaccepted', '',
-            get_string('declarationaccept', 'local_jobboard'), ['group' => 1], [0, 1]);
-        $mform->addRule('declarationaccepted', get_string('declarationrequired', 'local_jobboard'),
-            'required', null, 'client');
-        $mform->addRule('declarationaccepted', get_string('declarationrequired', 'local_jobboard'),
-            'nonzero', null, 'client');
-        $mform->addHelpButton('declarationaccepted', 'declarationaccepted', 'local_jobboard');
-
-        // Submit buttons.
-        $this->add_action_buttons(true, get_string('submitapplication', 'local_jobboard'));
+        $mform->addElement('html', $html);
     }
 
     /**
-     * Form validation.
+     * Add document upload fields grouped by category.
      *
-     * @param array $data Form data.
+     * @param \MoodleQuickForm $mform Form object.
+     */
+    protected function add_document_fields(\MoodleQuickForm $mform): void {
+        // Get file options from settings.
+        $maxsize = (int) get_config('local_jobboard', 'maxfilesize');
+        $maxsize = $maxsize > 0 ? $maxsize * 1024 * 1024 : 10 * 1024 * 1024;
+
+        $allowedformats = get_config('local_jobboard', 'allowedformats');
+        $acceptedtypes = !empty($allowedformats) ? '.' . str_replace(',', ',.', $allowedformats) : '.pdf';
+
+        $fileoptions = [
+            'subdirs' => 0,
+            'maxbytes' => $maxsize,
+            'maxfiles' => 1,
+            'accepted_types' => explode(',', $acceptedtypes),
+        ];
+
+        // Group documents by category.
+        $categories = [];
+        foreach ($this->filtereddocs as $doc) {
+            $cat = $doc->category ?: 'general';
+            if (!isset($categories[$cat])) {
+                $categories[$cat] = [];
+            }
+            $categories[$cat][] = $doc;
+        }
+
+        // Category icons.
+        $caticons = [
+            'identification' => 'fa-id-card',
+            'academic' => 'fa-graduation-cap',
+            'employment' => 'fa-briefcase',
+            'health' => 'fa-heart-pulse',
+            'financial' => 'fa-building-columns',
+            'legal' => 'fa-scale-balanced',
+            'general' => 'fa-folder-open',
+        ];
+
+        foreach ($categories as $catkey => $catdocs) {
+            // Category header.
+            $catname = get_string_manager()->string_exists('doccat_' . $catkey, 'local_jobboard')
+                ? get_string('doccat_' . $catkey, 'local_jobboard')
+                : ucfirst($catkey);
+            $caticon = $caticons[$catkey] ?? 'fa-folder';
+
+            $catheader = '<div class="jb-doc-category-header mt-4 mb-3 pb-2 border-bottom">';
+            $catheader .= '<h5 class="mb-0 text-primary">';
+            $catheader .= '<i class="fa ' . $caticon . ' me-2"></i>' . $catname;
+            $catheader .= '</h5>';
+            $catheader .= '</div>';
+            $mform->addElement('html', $catheader);
+
+            // Add each document in this category.
+            foreach ($catdocs as $doctype) {
+                $this->add_single_document_field($mform, $doctype, $fileoptions);
+            }
+        }
+    }
+
+    /**
+     * Add a single document field.
+     *
+     * @param \MoodleQuickForm $mform Form object.
+     * @param object $doctype Document type record.
+     * @param array $fileoptions File manager options.
+     */
+    protected function add_single_document_field(\MoodleQuickForm $mform, object $doctype, array $fileoptions): void {
+        $fieldname = 'doc_' . $doctype->code;
+        $isrequired = !empty($doctype->isrequired);
+
+        // Document card.
+        $cardclass = $isrequired ? 'border-danger' : 'border-secondary';
+        $html = '<div class="jb-document-card card mb-3 ' . $cardclass . '">';
+        $html .= '<div class="card-body py-3">';
+
+        // Title with badge.
+        $html .= '<div class="d-flex justify-content-between align-items-center mb-2">';
+        $html .= '<strong>' . format_string($doctype->name) . '</strong>';
+        if ($isrequired) {
+            $html .= '<span class="badge bg-danger">' . get_string('required') . '</span>';
+        } else {
+            $html .= '<span class="badge bg-secondary">' . get_string('optional', 'local_jobboard') . '</span>';
+        }
+        $html .= '</div>';
+
+        // Description.
+        if (!empty($doctype->description)) {
+            $html .= '<p class="small text-muted mb-2">' . format_string($doctype->description) . '</p>';
+        }
+
+        // Requirements in collapsible.
+        if (!empty($doctype->requirements)) {
+            $html .= '<details class="small mb-2">';
+            $html .= '<summary class="text-primary" style="cursor: pointer;">';
+            $html .= '<i class="fa fa-list-check me-1"></i>' . get_string('docrequirements', 'local_jobboard');
+            $html .= '</summary>';
+            $html .= '<div class="mt-1 ps-3 text-muted">' . format_string($doctype->requirements) . '</div>';
+            $html .= '</details>';
+        }
+
+        // Conditional note.
+        if (!empty($doctype->conditional_note)) {
+            $html .= '<div class="alert alert-secondary py-1 px-2 small mb-2">';
+            $html .= '<i class="fa fa-info-circle me-1"></i>';
+            $html .= format_string($doctype->conditional_note);
+            $html .= '</div>';
+        }
+
+        // External URL.
+        if (!empty($doctype->externalurl)) {
+            $html .= '<div class="small mb-2">';
+            $html .= '<i class="fa fa-external-link me-1"></i>';
+            $html .= '<a href="' . s($doctype->externalurl) . '" target="_blank" rel="noopener">';
+            $html .= get_string('obtaindocument', 'local_jobboard');
+            $html .= '</a>';
+            $html .= '</div>';
+        }
+
+        $html .= '</div></div>';
+        $mform->addElement('html', $html);
+
+        // Determine input type.
+        $inputtype = $doctype->input_type ?? 'file';
+
+        switch ($inputtype) {
+            case 'text':
+                $mform->addElement('text', $fieldname, '', ['size' => 50, 'class' => 'form-control']);
+                $mform->setType($fieldname, PARAM_TEXT);
+                break;
+
+            case 'textarea':
+                $mform->addElement('textarea', $fieldname, '', ['rows' => 4, 'class' => 'form-control']);
+                $mform->setType($fieldname, PARAM_TEXT);
+                break;
+
+            case 'file':
+            default:
+                $mform->addElement('filemanager', $fieldname, '', null, $fileoptions);
+                break;
+        }
+
+        // Add rule for required documents.
+        if ($isrequired && $inputtype === 'file') {
+            // We validate in the validation() method for files.
+        } else if ($isrequired) {
+            $mform->addRule($fieldname, get_string('required'), 'required', null, 'server');
+        }
+    }
+
+    /**
+     * Load document types from database.
+     *
+     * @param int $convocatoriaid Convocatoria ID (for custom requirements).
+     * @param bool $isexemption Whether user has exemption.
+     * @return array Document types.
+     */
+    protected function load_document_types(int $convocatoriaid, bool $isexemption): array {
+        global $DB;
+
+        // Check for convocatoria-specific document requirements.
+        if ($convocatoriaid > 0) {
+            $sql = "SELECT dt.*, cdr.isrequired as conv_required, cdr.customnotes
+                    FROM {local_jobboard_doctype} dt
+                    LEFT JOIN {local_jobboard_conv_docreq} cdr
+                        ON cdr.doctypeid = dt.id AND cdr.convocatoriaid = :convid
+                    WHERE dt.enabled = 1
+                    ORDER BY dt.sortorder, dt.name";
+            $doctypes = $DB->get_records_sql($sql, ['convid' => $convocatoriaid]);
+
+            // Override isrequired if convocatoria has custom setting.
+            foreach ($doctypes as $doc) {
+                if ($doc->conv_required !== null) {
+                    $doc->isrequired = $doc->conv_required;
+                }
+                if (!empty($doc->customnotes)) {
+                    $doc->description = $doc->customnotes;
+                }
+            }
+        } else {
+            $doctypes = $DB->get_records('local_jobboard_doctype', ['enabled' => 1], 'sortorder, name');
+        }
+
+        // Apply exemption logic.
+        if ($isexemption) {
+            foreach ($doctypes as $id => $doc) {
+                if (!empty($doc->iserexempted)) {
+                    $doc->isrequired = 0;
+                }
+            }
+        }
+
+        return $doctypes;
+    }
+
+    /**
+     * Filter documents based on user's gender and age.
+     *
+     * @param array $doctypes Document types.
+     * @param string $gender User gender (M/F).
+     * @param int|null $age User age in years.
+     * @return array Filtered documents.
+     */
+    protected function filter_documents_for_user(array $doctypes, string $gender, ?int $age): array {
+        $filtered = [];
+
+        foreach ($doctypes as $doc) {
+            // Gender filter.
+            if (!empty($doc->gender_condition)) {
+                if ($gender !== $doc->gender_condition) {
+                    continue; // Skip this document.
+                }
+            }
+
+            // Age exemption filter.
+            if ($age !== null && !empty($doc->age_exemption_threshold)) {
+                if ($age >= (int) $doc->age_exemption_threshold) {
+                    continue; // User is exempt by age.
+                }
+            }
+
+            $filtered[] = $doc;
+        }
+
+        return $filtered;
+    }
+
+    /**
+     * Calculate user age from birthdate.
+     *
+     * @param int $birthdate Unix timestamp of birthdate.
+     * @return int|null Age in years or null if unknown.
+     */
+    protected function calculate_user_age(int $birthdate): ?int {
+        if ($birthdate <= 0) {
+            return null;
+        }
+
+        $now = new \DateTime();
+        $birth = new \DateTime();
+        $birth->setTimestamp($birthdate);
+
+        return $birth->diff($now)->y;
+    }
+
+    /**
+     * Validate form submission.
+     *
+     * @param array $data Submitted data.
      * @param array $files Uploaded files.
      * @return array Validation errors.
      */
     public function validation($data, $files) {
-        global $USER;
-
         $errors = parent::validation($data, $files);
 
-        // Validate consent acceptance.
+        // Validate consent.
         if (empty($data['consentaccepted'])) {
             $errors['consentaccepted'] = get_string('consentrequired', 'local_jobboard');
         }
 
-        // Validate declaration acceptance.
+        // Validate declaration.
         if (empty($data['declarationaccepted'])) {
             $errors['declarationaccepted'] = get_string('declarationrequired', 'local_jobboard');
         }
 
-        // Validate digital signature matches user's name.
-        $fullname = fullname($USER);
+        // Validate digital signature.
         $signature = trim($data['digitalsignature'] ?? '');
         if (empty($signature)) {
             $errors['digitalsignature'] = get_string('required');
-        } else if (strlen($signature) < 5) {
+        } else if (mb_strlen($signature) < 3) {
             $errors['digitalsignature'] = get_string('signaturetoooshort', 'local_jobboard');
         }
 
-        // Filter documents by gender and age (same logic as definition).
-        $requireddocs = $this->_customdata['requireddocs'] ?? [];
-        $usergender = $this->_customdata['usergender'] ?? '';
-        $userage = $this->_customdata['userage'] ?? null;
-
-        $requireddocs = array_filter($requireddocs, function($doctype) use ($usergender) {
-            if (empty($doctype->gender_condition)) {
-                return true;
-            }
-            return $usergender === $doctype->gender_condition;
-        });
-
-        // Filter by age.
-        $requireddocs = array_filter($requireddocs, function($doctype) use ($userage) {
-            if ($userage === null || empty($doctype->age_exemption_threshold)) {
-                return true;
-            }
-            $threshold = (int) $doctype->age_exemption_threshold;
-            return $userage < $threshold;
-        });
-
         // Validate required documents.
-        foreach ($requireddocs as $doctype) {
+        foreach ($this->filtereddocs as $doctype) {
             if (!empty($doctype->isrequired)) {
                 $fieldname = 'doc_' . $doctype->code;
-                $draftitemid = $data[$fieldname] ?? 0;
-                if (empty($draftitemid) || !$this->has_files_in_draft($draftitemid)) {
-                    $errors[$fieldname] = get_string('documentrequired', 'local_jobboard', $doctype->name);
-                }
-            }
-        }
+                $inputtype = $doctype->input_type ?? 'file';
 
-        // Validate document issue dates where applicable.
-        foreach ($requireddocs as $doctype) {
-            $fieldname = 'doc_' . $doctype->code;
-            $issuedatefield = $fieldname . '_issuedate';
-
-            if (isset($data[$issuedatefield]) && !empty($data[$fieldname])) {
-                $issuedate = $data[$issuedatefield];
-
-                // Check document is not expired based on validity rules.
-                if (in_array($doctype->code, ['antecedentes_procuraduria', 'antecedentes_contraloria',
-                    'antecedentes_policia', 'rnmc', 'sijin'])) {
-                    // Background checks typically valid for 3 months.
-                    $maxage = 90 * 24 * 60 * 60;
-                    if ($issuedate < (time() - $maxage)) {
-                        $errors[$issuedatefield] = get_string('documentexpired', 'local_jobboard', '90 ' .
-                            get_string('days', 'local_jobboard'));
+                if ($inputtype === 'file') {
+                    $draftid = $data[$fieldname] ?? 0;
+                    if (empty($draftid) || !$this->draft_has_files((int) $draftid)) {
+                        $errors[$fieldname] = get_string('documentrequired', 'local_jobboard', $doctype->name);
                     }
-                } else if ($doctype->code === 'certificado_medico') {
-                    // Medical certificate valid for 6 months.
-                    $maxage = 180 * 24 * 60 * 60;
-                    if ($issuedate < (time() - $maxage)) {
-                        $errors[$issuedatefield] = get_string('documentexpired', 'local_jobboard', '180 ' .
-                            get_string('days', 'local_jobboard'));
+                } else {
+                    if (empty(trim($data[$fieldname] ?? ''))) {
+                        $errors[$fieldname] = get_string('required');
                     }
                 }
             }
@@ -555,8 +503,12 @@ class application_form extends moodleform {
      * @param int $draftitemid Draft item ID.
      * @return bool True if files exist.
      */
-    protected function has_files_in_draft(int $draftitemid): bool {
+    protected function draft_has_files(int $draftitemid): bool {
         global $USER;
+
+        if ($draftitemid <= 0) {
+            return false;
+        }
 
         $fs = get_file_storage();
         $context = \context_user::instance($USER->id);
@@ -566,48 +518,51 @@ class application_form extends moodleform {
     }
 
     /**
-     * Get submitted document data.
+     * Get the filtered document types.
      *
-     * @return array Array of document data keyed by document type code.
+     * @return array Document types applicable to this user.
      */
-    public function get_document_data(): array {
+    public function get_filtered_documents(): array {
+        return $this->filtereddocs;
+    }
+
+    /**
+     * Get submitted documents data for storage.
+     *
+     * @return array Document data array.
+     */
+    public function get_submitted_documents(): array {
         $data = $this->get_data();
         if (!$data) {
             return [];
         }
 
         $documents = [];
-        $requireddocs = $this->_customdata['requireddocs'] ?? [];
-        $usergender = $this->_customdata['usergender'] ?? '';
-        $userage = $this->_customdata['userage'] ?? null;
 
-        // Filter by gender.
-        $requireddocs = array_filter($requireddocs, function($doctype) use ($usergender) {
-            if (empty($doctype->gender_condition)) {
-                return true;
-            }
-            return $usergender === $doctype->gender_condition;
-        });
-
-        // Filter by age.
-        $requireddocs = array_filter($requireddocs, function($doctype) use ($userage) {
-            if ($userage === null || empty($doctype->age_exemption_threshold)) {
-                return true;
-            }
-            $threshold = (int) $doctype->age_exemption_threshold;
-            return $userage < $threshold;
-        });
-
-        foreach ($requireddocs as $doctype) {
+        foreach ($this->filtereddocs as $doctype) {
             $fieldname = 'doc_' . $doctype->code;
-            $issuedatefield = $fieldname . '_issuedate';
+            $inputtype = $doctype->input_type ?? 'file';
 
-            if (!empty($data->$fieldname)) {
-                $documents[$doctype->code] = [
-                    'draftitemid' => $data->$fieldname,
-                    'issuedate' => $data->$issuedatefield ?? null,
-                    'doctypeid' => $doctype->id,
-                ];
+            if ($inputtype === 'file') {
+                $draftid = $data->$fieldname ?? 0;
+                if (!empty($draftid) && $this->draft_has_files((int) $draftid)) {
+                    $documents[$doctype->code] = [
+                        'type' => 'file',
+                        'draftitemid' => (int) $draftid,
+                        'doctypeid' => $doctype->id,
+                        'doctypecode' => $doctype->code,
+                    ];
+                }
+            } else {
+                $value = trim($data->$fieldname ?? '');
+                if (!empty($value)) {
+                    $documents[$doctype->code] = [
+                        'type' => $inputtype,
+                        'value' => $value,
+                        'doctypeid' => $doctype->id,
+                        'doctypecode' => $doctype->code,
+                    ];
+                }
             }
         }
 

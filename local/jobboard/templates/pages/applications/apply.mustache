@@ -1,29 +1,22 @@
 {{!
-    @template local_jobboard/pages/apply
+    @template local_jobboard/pages/applications/apply
 
-    Application form page template with enhanced UX.
-    Uses jb-* CSS classes for consistent styling.
+    Application form page - Clean and professional design.
 
     Context variables:
-    * vacancy - Vacancy data (code, title, location, modality, closedate, etc.)
+    * vacancy - Vacancy data {id, code, title, location, modality, closedateformatted}
     * convocatoria - Convocatoria info {code, name}
-    * steps - Array of progress step items
-    * currentstep - Current active step number
-    * totalsteps - Total number of steps
     * daysuntilclose - Days remaining until deadline
     * showdeadlinewarning - Whether to show urgent deadline warning
-    * deadlinewarningtext - Warning message with days
-    * guidelines - Array of guideline strings
-    * requireddocs - Array of required document types
-    * formhtml - Moodle form HTML (rendered by application_form)
     * isexemption - Boolean if user has exemption
     * exemptioninfo - Exemption details if applicable
-    * quicktips - Array of quick tip strings
+    * formhtml - Moodle form HTML
+    * requireddocs - Array of required document types
+    * hasrequireddocs - Boolean if there are required documents
+    * requireddocscount - Number of required documents
+    * viewvacancyurl - URL to view vacancy details
     * backvacancyurl - URL to vacancy details
     * browservacanciesurl - URL to browse vacancies
-    * viewvacancyurl - URL to view vacancy details
-    * hasrequireddocs - Boolean if there are required documents
-    * loading - Show loading state
 
     Example context (json):
     {
@@ -31,341 +24,216 @@
         "showdeadlinewarning": true
     }
 }}
-<div class="jb-apply-container" data-region="jobboard-apply">
-    {{! Skip Link for Accessibility }}
-    <a href="#application-form-container" class="jb-skip-link">
-        {{#str}}skiptoform, local_jobboard{{/str}}
-    </a>
-
-    <div class="row">
-        {{! Main content area (left column) }}
-        <main class="col-lg-8 mb-4 mb-lg-0">
-            <div class="jb-content-area">
+<div class="jb-apply-page" id="jobboard-apply">
+    <div class="container-fluid px-0">
+        <div class="row g-4">
+            {{! Main Content }}
+            <div class="col-lg-8">
                 {{! Page Header }}
-                <header class="jb-page-header mb-4 jb-fade-in">
-                    <h1 class="fs-3 mb-2 fw-bold">{{#str}}applytovacancy, local_jobboard{{/str}}</h1>
-                    <p class="lead text-muted mb-0">{{vacancy.title}}</p>
-
-                    {{#convocatoria}}
-                    <div class="mt-2">
-                        <span class="badge bg-info text-dark rounded-pill">
-                            <i class="fa fa-folder-open me-1" aria-hidden="true"></i>
-                            {{convocatoria.code}} - {{convocatoria.name}}
-                        </span>
-                    </div>
-                    {{/convocatoria}}
-                </header>
-
-                {{! Progress Steps - Enhanced }}
-                <nav class="jb-steps mb-4 jb-fade-in-up" id="application-progress" aria-label="{{#str}}applicationprogress, local_jobboard{{/str}}">
-                    {{#steps}}
-                    <div class="jb-step {{#isactive}}jb-active{{/isactive}} {{#iscompleted}}jb-completed{{/iscompleted}}"
-                         data-step="{{stepnum}}" data-target="{{target}}">
-                        <div class="jb-step-icon" role="img" aria-label="{{#str}}step, local_jobboard{{/str}} {{stepnum}} {{#iscompleted}}{{#str}}completed, local_jobboard{{/str}}{{/iscompleted}}">
-                            {{#iscompleted}}
-                            <i class="fa fa-check" aria-hidden="true"></i>
-                            {{/iscompleted}}
-                            {{^iscompleted}}
-                            {{stepnum}}
-                            {{/iscompleted}}
-                        </div>
-                        <span class="jb-step-label">{{label}}</span>
-                    </div>
-                    {{/steps}}
-                </nav>
-
-                {{! Progress Bar Alternative - For Mobile }}
-                <div class="jb-d-lg-none mb-4 jb-fade-in-up">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="small text-muted">{{#str}}step, local_jobboard{{/str}} {{currentstep}} {{#str}}of, local_jobboard{{/str}} {{totalsteps}}</span>
-                        <span class="small fw-bold">{{progresspercent}}%</span>
-                    </div>
-                    <div class="progress" role="progressbar" aria-valuenow="{{progresspercent}}" aria-valuemin="0" aria-valuemax="100">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: {{progresspercent}}%"></div>
-                    </div>
+                <div class="jb-page-header mb-4">
+                    <nav aria-label="breadcrumb" class="mb-2">
+                        <ol class="breadcrumb small mb-0">
+                            <li class="breadcrumb-item">
+                                <a href="{{browservacanciesurl}}">{{#str}}vacancies, local_jobboard{{/str}}</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{viewvacancyurl}}">{{vacancy.code}}</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">{{#str}}apply, local_jobboard{{/str}}</li>
+                        </ol>
+                    </nav>
+                    <h1 class="h3 mb-1">{{#str}}applytovacancy, local_jobboard{{/str}}</h1>
+                    <p class="text-muted mb-0">{{vacancy.title}}</p>
                 </div>
 
-                {{! Deadline Warning - Critical Alert }}
+                {{! Deadline Warning }}
                 {{#showdeadlinewarning}}
-                <div class="alert alert-danger d-flex align-items-center mb-4 jb-fade-in-down" role="alert" aria-live="assertive">
-                    <div class="flex-shrink-0 me-3">
-                        <span class="jb-pulse">
-                            <i class="fa fa-triangle-exclamation fa-2x" aria-hidden="true"></i>
-                        </span>
-                    </div>
+                <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                    <i class="fa fa-exclamation-triangle fa-lg me-3"></i>
                     <div>
-                        <strong class="d-block mb-1">{{#str}}deadlinewarning_title, local_jobboard{{/str}}</strong>
-                        <span>{{deadlinewarningtext}}</span>
+                        <strong>{{#str}}deadlinewarning_title, local_jobboard{{/str}}</strong>
+                        <span class="d-block">{{deadlinewarningtext}}</span>
                     </div>
                 </div>
                 {{/showdeadlinewarning}}
 
-                {{! Exemption Info Badge }}
+                {{! Exemption Notice }}
                 {{#isexemption}}
-                <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="status">
-                    <div class="flex-shrink-0 me-3">
-                        <i class="fa fa-id-card fa-2x" aria-hidden="true"></i>
-                    </div>
-                    <div class="flex-grow-1">
-                        <strong class="d-block mb-1">
-                            <i class="fa fa-circle-check text-success me-1" aria-hidden="true"></i>
-                            {{#str}}exemptionapplied, local_jobboard{{/str}}
-                        </strong>
+                <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+                    <i class="fa fa-id-badge fa-lg me-3"></i>
+                    <div>
+                        <strong>{{#str}}exemptionapplied, local_jobboard{{/str}}</strong>
                         {{#exemptioninfo}}
-                        <div class="small">
-                            <span class="d-block">
-                                <strong>{{#str}}exemptiontype, local_jobboard{{/str}}:</strong> {{exemptiontype}}
-                            </span>
-                            {{#documentref}}
-                            <span class="d-block">
-                                <strong>{{#str}}documentref, local_jobboard{{/str}}:</strong> {{documentref}}
-                            </span>
-                            {{/documentref}}
-                            {{#validuntil}}
-                            <span class="d-block text-muted">
-                                <i class="fa fa-calendar me-1" aria-hidden="true"></i>
-                                {{#str}}validuntil, local_jobboard{{/str}}: {{validuntil}}
-                            </span>
-                            {{/validuntil}}
-                        </div>
+                        <span class="d-block small">{{exemptiontype}}</span>
                         {{/exemptioninfo}}
                     </div>
                 </div>
                 {{/isexemption}}
 
-                {{! Guidelines Card (collapsible) }}
-                {{#guidelines.0}}
-                <section class="card jb-guidelines-card mb-4 shadow-sm jb-fade-in-up" id="guidelines-card" aria-labelledby="guidelines-heading">
-                    <div class="card-header bg-white jb-collapse-header d-flex justify-content-between align-items-center"
-                         data-bs-toggle="collapse" data-bs-target="#guidelines-collapse"
-                         aria-expanded="true" aria-controls="guidelines-collapse"
-                         role="button" tabindex="0">
-                        <span id="guidelines-heading" class="d-flex align-items-center">
-                            <i class="fa fa-circle-info fa-lg text-info me-3" aria-hidden="true"></i>
-                            {{#str}}applicationguidelines, local_jobboard{{/str}}
-                        </span>
-                        <i class="fa fa-chevron-down jb-collapse-icon text-muted" aria-hidden="true"></i>
+                {{! Application Form Card }}
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0">
+                            <i class="fa fa-file-signature text-primary me-2"></i>
+                            {{#str}}applicationform, local_jobboard{{/str}}
+                        </h5>
                     </div>
-                    <div class="collapse show" id="guidelines-collapse">
-                        <div class="card-body">
-                            <ul class="mb-0 jb-pl-3">
-                                {{#guidelines}}
-                                <li class="mb-2">
-                                    <i class="fa fa-check text-info me-2" aria-hidden="true"></i>
-                                    {{.}}
-                                </li>
-                                {{/guidelines}}
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-                {{/guidelines.0}}
-
-                {{! Application Form Container }}
-                <div class="jb-application-form card shadow-sm jb-fade-in-up" id="application-form-container">
                     <div class="card-body">
                         {{{formhtml}}}
                     </div>
                 </div>
-
             </div>
-        </main>
 
-        {{! Sidebar (right column) }}
-        <aside class="col-lg-4">
-            <div class="jb-sticky-sidebar">
-                {{! Vacancy Summary Card }}
-                <section class="card jb-sidebar-card shadow-sm mb-4 jb-fade-in-up" aria-labelledby="vacancy-summary-heading">
-                    <div class="card-header bg-white d-flex align-items-center">
-                        <i class="fa fa-briefcase fa-lg text-primary me-3" aria-hidden="true"></i>
-                        <h2 class="fs-6 mb-0" id="vacancy-summary-heading">
-                            {{#str}}vacancysummary, local_jobboard{{/str}}
-                        </h2>
-                    </div>
-                    <div class="card-body">
-                        {{! Vacancy Code }}
-                        <div class="mb-3">
-                            <label class="small text-muted jb-text-uppercase fw-medium d-block">{{#str}}code, local_jobboard{{/str}}</label>
-                            <code class="badge bg-light text-dark fs-6">{{vacancy.code}}</code>
+            {{! Sidebar }}
+            <div class="col-lg-4">
+                <div class="jb-sidebar sticky-top" style="top: 80px;">
+                    {{! Vacancy Summary }}
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">
+                                <i class="fa fa-briefcase text-primary me-2"></i>
+                                {{#str}}vacancysummary, local_jobboard{{/str}}
+                            </h6>
                         </div>
+                        <div class="card-body">
+                            <dl class="row mb-0 small">
+                                <dt class="col-5 text-muted">{{#str}}code, local_jobboard{{/str}}</dt>
+                                <dd class="col-7"><code>{{vacancy.code}}</code></dd>
 
-                        {{! Vacancy Title }}
-                        <div class="mb-3">
-                            <label class="small text-muted jb-text-uppercase fw-medium d-block">{{#str}}title, local_jobboard{{/str}}</label>
-                            <span class="fw-medium">{{vacancy.title}}</span>
-                        </div>
+                                <dt class="col-5 text-muted">{{#str}}title, local_jobboard{{/str}}</dt>
+                                <dd class="col-7">{{vacancy.title}}</dd>
 
-                        {{! Location }}
-                        {{#vacancy.location}}
-                        <div class="mb-3 d-flex align-items-start">
-                            <i class="fa fa-location-dot text-primary me-2 mt-1" style="width: 16px;" aria-hidden="true"></i>
-                            <div>
-                                <label class="small text-muted jb-text-uppercase fw-medium d-block">{{#str}}location, local_jobboard{{/str}}</label>
-                                <span>{{vacancy.location}}</span>
-                            </div>
-                        </div>
-                        {{/vacancy.location}}
+                                {{#vacancy.location}}
+                                <dt class="col-5 text-muted">{{#str}}location, local_jobboard{{/str}}</dt>
+                                <dd class="col-7">{{vacancy.location}}</dd>
+                                {{/vacancy.location}}
 
-                        {{! Modality }}
-                        {{#vacancy.modality}}
-                        <div class="mb-3 d-flex align-items-start">
-                            <i class="fa fa-house-laptop text-info me-2 mt-1" style="width: 16px;" aria-hidden="true"></i>
-                            <div>
-                                <label class="small text-muted jb-text-uppercase fw-medium d-block">{{#str}}modality, local_jobboard{{/str}}</label>
-                                <span>{{vacancy.modality}}</span>
-                            </div>
-                        </div>
-                        {{/vacancy.modality}}
+                                {{#vacancy.modality}}
+                                <dt class="col-5 text-muted">{{#str}}modality, local_jobboard{{/str}}</dt>
+                                <dd class="col-7">{{vacancy.modality}}</dd>
+                                {{/vacancy.modality}}
 
-                        <hr class="my-3">
+                                <dt class="col-5 text-muted">{{#str}}closedate, local_jobboard{{/str}}</dt>
+                                <dd class="col-7">
+                                    <span class="{{#showdeadlinewarning}}text-danger fw-bold{{/showdeadlinewarning}}">
+                                        {{vacancy.closedateformatted}}
+                                    </span>
+                                </dd>
+                            </dl>
 
-                        {{! Close Date }}
-                        <div class="mb-3 d-flex align-items-start">
-                            <i class="fa fa-calendar-xmark text-danger me-2 mt-1" style="width: 16px;" aria-hidden="true"></i>
-                            <div class="flex-grow-1">
-                                <label class="small text-muted jb-text-uppercase fw-medium d-block">{{#str}}closedate, local_jobboard{{/str}}</label>
-                                <time datetime="{{vacancy.closedateiso}}" class="fw-medium">{{vacancy.closedateformatted}}</time>
-                            </div>
-                        </div>
-
-                        {{! Days Remaining Badge }}
-                        {{#showdaysremaining}}
-                        <div class="d-flex justify-content-center">
-                            <span class="badge jb-badge-{{deadlinebadgecolor}} py-2 px-3 {{#showdeadlinewarning}}jb-pulse{{/showdeadlinewarning}}">
-                                <i class="fa fa-clock me-1" aria-hidden="true"></i>
-                                {{daysremainingtext}}
-                            </span>
-                        </div>
-                        {{/showdaysremaining}}
-                    </div>
-
-                    {{! View Vacancy Details Button }}
-                    <div class="card-footer bg-light">
-                        <a href="{{viewvacancyurl}}" class="btn btn-outline-primary btn-sm w-100 jb-hover-lift">
-                            <i class="fa fa-circle-info me-1" aria-hidden="true"></i>
-                            {{#str}}viewvacancydetails, local_jobboard{{/str}}
-                        </a>
-                    </div>
-                </section>
-
-                {{! Document Checklist - Interactive UX }}
-                {{#hasrequireddocs}}
-                <section class="card jb-sidebar-card shadow-sm mb-4 jb-fade-in-up"
-                         aria-labelledby="checklist-heading"
-                         data-region="document-checklist"
-                         data-total="{{requireddocscount}}">
-                    <div class="card-header bg-white">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h2 class="fs-6 mb-0 d-flex align-items-center" id="checklist-heading">
-                                <i class="fa fa-clipboard-list fa-lg text-warning me-3" aria-hidden="true"></i>
-                                {{#str}}documentchecklist, local_jobboard{{/str}}
-                            </h2>
-                            <span class="badge bg-secondary" data-region="checklist-counter">
-                                <span data-count="uploaded">0</span>/{{requireddocscount}}
-                            </span>
-                        </div>
-                        {{! Progress bar for documents }}
-                        <div class="progress" style="height: 6px;" role="progressbar" aria-label="{{#str}}documentprogress, local_jobboard{{/str}}">
-                            <div class="progress-bar bg-success" data-region="checklist-progress" style="width: 0%;"></div>
-                        </div>
-                    </div>
-                    <ul class="list-group list-group-flush jb-checklist" role="list" data-region="checklist-items">
-                        {{#requireddocs}}
-                        <li class="list-group-item jb-checklist-item d-flex justify-content-between align-items-center py-2 {{^isuploaded}}unchecked{{/isuploaded}}{{#isuploaded}}checked{{/isuploaded}}"
-                            data-doc-code="{{code}}"
-                            data-doc-required="{{#isrequired}}1{{/isrequired}}{{^isrequired}}0{{/isrequired}}"
-                            role="listitem">
-                            <button type="button"
-                                    class="btn btn-link p-0 text-start text-decoration-none small d-flex align-items-center flex-grow-1"
-                                    data-action="scroll-to-doc"
-                                    data-target="doc_{{code}}">
-                                <span class="jb-checklist-checkbox me-2" aria-hidden="true">
-                                    <i class="fa fa-square-check text-success d-none" data-icon="checked"></i>
-                                    <i class="fa fa-square text-muted" data-icon="unchecked"></i>
+                            {{#showdaysremaining}}
+                            <div class="text-center mt-3 pt-3 border-top">
+                                <span class="badge bg-{{deadlinebadgecolor}} py-2 px-3">
+                                    <i class="fa fa-clock me-1"></i>
+                                    {{daysremainingtext}}
                                 </span>
-                                <span class="jb-checklist-text">{{name}}</span>
-                                {{#isrequired}}
-                                <span class="text-danger ms-1" aria-label="{{#str}}required{{/str}}" title="{{#str}}required{{/str}}">*</span>
-                                {{/isrequired}}
-                            </button>
-                            <span class="jb-checklist-status ms-2">
-                                <i class="fa fa-circle-check text-success d-none" data-status="uploaded" aria-label="{{#str}}uploaded, local_jobboard{{/str}}"></i>
-                                <i class="fa fa-circle text-muted opacity-50" data-status="pending" aria-hidden="true"></i>
-                            </span>
-                        </li>
-                        {{/requireddocs}}
-                    </ul>
-                    <div class="card-footer bg-light">
-                        <div class="d-flex justify-content-between align-items-center small">
-                            <span class="text-muted">
-                                <span class="text-danger">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
-                            </span>
-                            <span class="text-success d-none" data-region="all-complete">
-                                <i class="fa fa-circle-check me-1" aria-hidden="true"></i>
-                                {{#str}}allcomplete, local_jobboard{{/str}}
-                            </span>
+                            </div>
+                            {{/showdaysremaining}}
+                        </div>
+                        <div class="card-footer bg-light">
+                            <a href="{{viewvacancyurl}}" class="btn btn-outline-primary btn-sm w-100">
+                                <i class="fa fa-eye me-1"></i>
+                                {{#str}}viewvacancydetails, local_jobboard{{/str}}
+                            </a>
                         </div>
                     </div>
-                </section>
-                {{/hasrequireddocs}}
 
-                {{! Help Card }}
-                <section class="card jb-sidebar-card shadow-sm jb-fade-in-up" aria-labelledby="help-heading">
-                    <div class="card-header bg-white d-flex align-items-center">
-                        <i class="fa fa-circle-question fa-lg text-secondary me-3" aria-hidden="true"></i>
-                        <h2 class="fs-6 mb-0" id="help-heading">
-                            {{#str}}needhelp, local_jobboard{{/str}}
-                        </h2>
+                    {{! Document Checklist }}
+                    {{#hasrequireddocs}}
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">
+                                    <i class="fa fa-list-check text-warning me-2"></i>
+                                    {{#str}}documentchecklist, local_jobboard{{/str}}
+                                </h6>
+                                <span class="badge bg-secondary">{{requireddocscount}}</span>
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush small">
+                            {{#requireddocs}}
+                            <li class="list-group-item d-flex align-items-center py-2">
+                                <i class="fa fa-square text-muted me-2"></i>
+                                <span class="flex-grow-1">{{name}}</span>
+                                {{#isrequired}}
+                                <span class="text-danger" title="{{#str}}required{{/str}}">*</span>
+                                {{/isrequired}}
+                            </li>
+                            {{/requireddocs}}
+                        </ul>
+                        <div class="card-footer bg-light small text-muted">
+                            <span class="text-danger">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <p class="small mb-3">{{#str}}applyhelp_text, local_jobboard{{/str}}</p>
+                    {{/hasrequireddocs}}
 
-                        {{! Quick Tips }}
-                        {{#quicktips.0}}
-                        <div class="small bg-light rounded p-3">
-                            <p class="fw-bold mb-2 d-flex align-items-center">
-                                <i class="fa fa-lightbulb text-warning me-2" aria-hidden="true"></i>
-                                {{#str}}quicktips, local_jobboard{{/str}}
-                            </p>
-                            <ul class="mb-0 jb-pl-3">
+                    {{! Help Card }}
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">
+                                <i class="fa fa-circle-question text-info me-2"></i>
+                                {{#str}}needhelp, local_jobboard{{/str}}
+                            </h6>
+                        </div>
+                        <div class="card-body small">
+                            <p class="mb-2">{{#str}}applyhelp_text, local_jobboard{{/str}}</p>
+                            <ul class="mb-0 ps-3">
                                 {{#quicktips}}
                                 <li class="mb-1">{{.}}</li>
                                 {{/quicktips}}
                             </ul>
-                        </div>
-                        {{/quicktips.0}}
 
-                        {{! Support Contact }}
-                        {{#supportemail}}
-                        <div class="mt-3 pt-3 border-top">
-                            <p class="small mb-2 fw-medium">{{#str}}contactsupport, local_jobboard{{/str}}</p>
-                            <a href="mailto:{{supportemail}}" class="btn btn-outline-secondary btn-sm w-100">
-                                <i class="fa fa-envelope me-1" aria-hidden="true"></i>
-                                {{supportemail}}
-                            </a>
+                            {{#supportemail}}
+                            <div class="mt-3 pt-3 border-top">
+                                <strong class="d-block mb-2">{{#str}}contactsupport, local_jobboard{{/str}}</strong>
+                                <a href="mailto:{{supportemail}}" class="btn btn-outline-secondary btn-sm w-100">
+                                    <i class="fa fa-envelope me-1"></i>
+                                    {{supportemail}}
+                                </a>
+                            </div>
+                            {{/supportemail}}
                         </div>
-                        {{/supportemail}}
                     </div>
-                </section>
-            </div>
-        </aside>
-    </div>
-
-    {{! Navigation Footer }}
-    <footer class="row mt-4">
-        <div class="col-12">
-            <div class="jb-navigation-footer d-flex flex-column jb-flex-sm-row justify-content-between align-items-center py-3 border-top gap-2">
-                <a href="{{backvacancyurl}}" class="btn btn-outline-secondary jb-hover-lift">
-                    <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
-                    {{#str}}backtovacancy, local_jobboard{{/str}}
-                </a>
-                <a href="{{browservacanciesurl}}" class="btn btn-link text-muted">
-                    {{#str}}browservacancies, local_jobboard{{/str}}
-                    <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
-                </a>
+                </div>
             </div>
         </div>
-    </footer>
+
+        {{! Navigation Footer }}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center py-3 border-top">
+                    <a href="{{backvacancyurl}}" class="btn btn-outline-secondary">
+                        <i class="fa fa-arrow-left me-2"></i>
+                        {{#str}}backtovacancy, local_jobboard{{/str}}
+                    </a>
+                    <a href="{{browservacanciesurl}}" class="btn btn-link text-muted">
+                        {{#str}}browservacancies, local_jobboard{{/str}}
+                        <i class="fa fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-{{! JS initialization handled by view PHP file }}
+{{! Minimal CSS for form styling }}
+<style>
+.jb-apply-page .card {
+    border-radius: 0.5rem;
+}
+.jb-apply-page .jb-sidebar {
+    z-index: 10;
+}
+.jb-apply-page .jb-document-card {
+    border-left-width: 3px;
+}
+.jb-apply-page .jb-policy-container .card-body {
+    font-size: 0.875rem;
+}
+.jb-apply-page .mform fieldset {
+    margin-bottom: 1.5rem;
+}
+.jb-apply-page .mform .fitem {
+    margin-bottom: 1rem;
+}
+</style>

@@ -3429,3 +3429,15 @@ $string['multipledocs_formacion_complementaria'] = 'You can upload multiple comp
 // =============================================================================
 
 $string['allcomplete'] = 'All complete!';
+
+// =============================================================================
+// APPLICATION FORM STRINGS (Rebuilt)
+// =============================================================================
+
+$string['applicationform'] = 'Application Form';
+$string['applicationsubmitted'] = 'Your application has been submitted successfully.';
+$string['applicationsubmitfailed'] = 'Failed to submit application. Please try again.';
+$string['applicationcreatefailed'] = 'Failed to create application record.';
+$string['declarationtitle'] = 'Declaration of Accuracy';
+$string['obtaindocument'] = 'Obtain this document';
+$string['missingvacancy'] = 'Vacancy information is missing.';
