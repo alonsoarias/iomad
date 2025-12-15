@@ -2924,6 +2924,7 @@ $string['selectapplication'] = 'Seleccionar una postulación';
 $string['selectdocument'] = 'Seleccionar un documento';
 $string['selectdocumenttopreview'] = 'Seleccione un documento para previsualizar';
 $string['selectdocumenthelp'] = 'Haga clic en un documento de la lista de la izquierda para previsualizarlo';
+$string['previewnotavailable'] = 'Vista previa no disponible para este tipo de archivo';
 $string['filterbyname'] = 'Filtrar por nombre...';
 $string['togglesidebar'] = 'Mostrar/ocultar panel lateral';
 $string['pendingdocs'] = 'Documentos pendientes';

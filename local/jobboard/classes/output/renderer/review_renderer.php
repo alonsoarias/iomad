@@ -832,8 +832,9 @@ trait review_renderer {
             'vacancyid' => $vacancyid,
         ]))->out(false) : null;
 
-        // Prepare documents.
+        // Prepare documents with preview info.
         $docsdata = [];
+        $firstdocid = null;
         foreach ($documents as $doc) {
             $status = $doc->status ?? 'pending';
             $statusconfig = [
@@ -860,6 +861,18 @@ trait review_renderer {
                 }
             }
 
+            // Get preview info for document viewer.
+            $previewurl = $downloadurl ? $downloadurl->out(false) : null;
+            $mimetype = $doc->mimetype ?? 'application/octet-stream';
+            $ispdf = ($mimetype === 'application/pdf');
+            $isimage = (strpos($mimetype, 'image/') === 0);
+            $canpreview = ($ispdf || $isimage);
+
+            // Track first document for initial preview.
+            if ($firstdocid === null && $previewurl) {
+                $firstdocid = $doc->id;
+            }
+
             $docsdata[] = [
                 'id' => $doc->id,
                 'typename' => format_string($typename),
@@ -869,7 +882,12 @@ trait review_renderer {
                 'statusicon' => $config['icon'],
                 'statuscolor' => $config['color'],
                 'ispending' => ($status === 'pending'),
-                'downloadurl' => $downloadurl,
+                'downloadurl' => $downloadurl ? $downloadurl->out(false) : null,
+                'previewurl' => $previewurl,
+                'mimetype' => $mimetype,
+                'ispdf' => $ispdf,
+                'isimage' => $isimage,
+                'canpreview' => $canpreview,
                 'validateurl' => (new moodle_url('/local/jobboard/index.php', [
                     'view' => 'review',
                     'applicationid' => $applicationid,
@@ -883,6 +901,17 @@ trait review_renderer {
                 'reviewedat' => $reviewedat,
                 'sesskey' => sesskey(),
             ];
+        }
+
+        // Get first document for initial preview.
+        $initialpreview = null;
+        if ($firstdocid && !empty($docsdata)) {
+            foreach ($docsdata as $docdata) {
+                if ($docdata['id'] == $firstdocid) {
+                    $initialpreview = $docdata;
+                    break;
+                }
+            }
         }
 
         // Application status class.
@@ -951,6 +980,8 @@ trait review_renderer {
 
         $data['hasdocuments'] = !empty($docsdata);
         $data['documents'] = $docsdata;
+        $data['initialpreview'] = $initialpreview;
+        $data['hasinitialpreview'] = ($initialpreview !== null && !empty($initialpreview['previewurl']));
 
         $data['shownav'] = $shownav;
         $data['prevurl'] = $prevurl;

@@ -2908,6 +2908,7 @@ $string['selectapplication'] = 'Select an application';
 $string['selectdocument'] = 'Select a document';
 $string['selectdocumenttopreview'] = 'Select a document to preview';
 $string['selectdocumenthelp'] = 'Click on a document from the list on the left to preview it';
+$string['previewnotavailable'] = 'Preview not available for this file type';
 $string['filterbyname'] = 'Filter by name...';
 $string['togglesidebar'] = 'Toggle sidebar';
 $string['pendingdocs'] = 'Pending documents';
