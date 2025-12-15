@@ -653,7 +653,7 @@ class application {
     /**
      * Get available status transitions from current status.
      *
-     * @return array Array of available transition data with status code and label.
+     * @return array Array of available status codes.
      */
     public function get_available_transitions(): array {
         $transitions = helper\status_helper::get_allowed_transitions();
@@ -663,16 +663,7 @@ class application {
             return [];
         }
 
-        $available = [];
-        foreach ($transitions[$currentstatus] as $tostatus) {
-            $available[] = [
-                'status' => $tostatus,
-                'label' => helper\status_helper::get_status_label($tostatus, 'application'),
-                'color' => helper\status_helper::get_status_badge_class($tostatus, 'application'),
-            ];
-        }
-
-        return $available;
+        return $transitions[$currentstatus];
     }
 
     /**
