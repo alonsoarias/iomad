@@ -41,26 +41,27 @@ define(['core/modal_factory', 'core/modal_events', 'core/str', 'core/notificatio
      *
      * @param {Event} e The click event.
      * @param {string} action The action type.
-     * @param {HTMLElement} card The card element.
      */
-    var handleConfirmAction = function(e, action, card) {
+    var handleConfirmAction = function(e, action) {
         e.preventDefault();
 
         var stringKey = action + '_confirm';
         var url = e.target.closest('a').href;
+        var loadedStrings = null;
 
         Str.get_strings([
             {key: stringKey, component: 'local_jobboard'},
             {key: 'confirm', component: 'core'},
             {key: 'cancel', component: 'core'}
         ]).then(function(strings) {
+            loadedStrings = strings;
             return ModalFactory.create({
                 type: ModalFactory.types.SAVE_CANCEL,
                 title: strings[1],
                 body: strings[0]
             });
         }).then(function(modal) {
-            modal.setSaveButtonText(strings[1]);
+            modal.setSaveButtonText(loadedStrings[1]);
             modal.show();
 
             modal.getRoot().on(ModalEvents.save, function() {
@@ -135,7 +136,7 @@ define(['core/modal_factory', 'core/modal_events', 'core/str', 'core/notificatio
             case 'archive':
             case 'publish':
             case 'unpublish':
-                handleConfirmAction(e, action, card);
+                handleConfirmAction(e, action);
                 break;
             case 'quickview':
                 handleQuickView(e, card);

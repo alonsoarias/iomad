@@ -191,6 +191,7 @@ define(['core/modal_factory', 'core/modal_events', 'core/str', 'core/notificatio
      */
     var confirmBulkAction = function(action, callback) {
         var count = state.selectedItems.length;
+        var loadedStrings = null;
 
         Str.get_strings([
             {key: 'confirm', component: 'core'},
@@ -198,13 +199,14 @@ define(['core/modal_factory', 'core/modal_events', 'core/str', 'core/notificatio
             {key: 'yes', component: 'core'},
             {key: 'cancel', component: 'core'}
         ]).then(function(strings) {
+            loadedStrings = strings;
             return ModalFactory.create({
                 type: ModalFactory.types.SAVE_CANCEL,
                 title: strings[0],
                 body: strings[1]
             });
         }).then(function(modal) {
-            modal.setSaveButtonText(strings[2]);
+            modal.setSaveButtonText(loadedStrings[2]);
             modal.show();
 
             modal.getRoot().on(ModalEvents.save, function() {
