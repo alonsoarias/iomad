@@ -783,21 +783,9 @@ trait review_renderer {
         $vacancyid = $params['vacancyid'] ?? 0;
         $applicationid = $application->id;
 
-        // Initialize editors for observations.
-        $context = $PAGE->context;
-        $editoroptions = [
-            'maxfiles' => 0,
-            'maxbytes' => 0,
-            'trusttext' => false,
-            'noclean' => false,
-            'autosave' => false,
-            'context' => $context,
-            'subdirs' => false,
-        ];
-
-        // Get the preferred editor.
+        // Initialize TinyMCE editor for document observations.
+        // Get the preferred editor (TinyMCE in Moodle 4.x).
         $editor = editors_get_preferred_editor(FORMAT_HTML);
-        $editorname = get_class($editor);
 
         // Update page title.
         $data['pagetitle'] = get_string('reviewapplication', 'local_jobboard');
@@ -895,8 +883,13 @@ trait review_renderer {
             $observation = $doc->observation ?? '';
 
             // Initialize editor for this document's observation field.
+            // The element ID must match exactly what's in the template.
             $editorid = 'doc_observation_' . $doc->id;
-            $editor->set_text($observation);
+            $editoroptions = [
+                'context' => $PAGE->context,
+                'maxfiles' => 0,
+                'maxbytes' => 0,
+            ];
             $editor->use_editor($editorid, $editoroptions);
 
             $docsdata[] = [
@@ -928,7 +921,6 @@ trait review_renderer {
                 'reviewedat' => $reviewedat,
                 'sesskey' => sesskey(),
                 'observation' => $observation,
-                'editorid' => $editorid,
             ];
         }
 

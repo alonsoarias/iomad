@@ -715,47 +715,46 @@ function jobboardPreviewDocument(element) {
 .jb-doc-observation.border-success {
     border-color: #198754 !important;
 }
-/* Moodle Editor wrapper styles */
-.jb-observation-editor-wrapper .editor_atto_wrap {
-    margin-bottom: 0;
+/* TinyMCE Editor wrapper styles */
+.jb-observation-editor-wrapper .tox-tinymce {
+    border-radius: 4px;
+    border-color: #dee2e6;
 }
-.jb-observation-editor-wrapper .editor_atto_toolbar {
+.jb-observation-editor-wrapper .tox-tinymce.border-success {
+    border-color: #198754 !important;
+}
+.jb-observation-editor-wrapper .tox-editor-header {
     background: #f8f9fa;
-    border-radius: 4px 4px 0 0;
 }
-.jb-observation-editor-wrapper .editor_atto_content_wrap {
-    min-height: 80px;
-    max-height: 200px;
-    overflow-y: auto;
+.jb-observation-editor-wrapper .tox-toolbar__primary {
+    background: #f8f9fa;
 }
-.jb-observation-editor-wrapper .editor_atto_content {
+.jb-observation-editor-wrapper .tox-edit-area__iframe {
     min-height: 80px;
-    font-size: 0.875rem;
+}
+.jb-observation-editor-wrapper .tox-statusbar {
+    display: none; /* Hide status bar for compact view */
 }
 </style>
 
 {{! JavaScript for document observations with Moodle editor }}
 {{#selectedapplication}}
 {{#js}}
-require(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Ajax, Notification, Str) {
-    // Helper function to get editor content (supports Atto, TinyMCE, and plain textarea)
-    // Moodle editors are initialized via PHP using use_editor()
+require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_tiny/editor'], function($, Ajax, Notification, Str, TinyEditor) {
+    // Editors are initialized via PHP's use_editor() method.
+    // This JS helper function retrieves content from TinyMCE editors.
+
+    // Helper function to get editor content from TinyMCE
     function getEditorContent(elementId) {
+        // Try to get TinyMCE instance for this element
+        var editor = TinyEditor.getInstanceForElementId(elementId);
+        if (editor) {
+            return editor.getContent();
+        }
+
+        // Fallback to textarea value
         var textarea = document.getElementById(elementId);
-        if (!textarea) return '';
-
-        // For Atto editor, update textarea from editable div first
-        var attoContent = document.querySelector('#' + elementId + 'editable');
-        if (attoContent) {
-            textarea.value = attoContent.innerHTML;
-        }
-
-        // Check for TinyMCE
-        if (typeof tinyMCE !== 'undefined' && tinyMCE.get(elementId)) {
-            return tinyMCE.get(elementId).getContent();
-        }
-
-        return textarea.value || '';
+        return textarea ? textarea.value : '';
     }
 
     // Save observations via AJAX
@@ -854,21 +853,88 @@ require(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aj
         }]);
     };
 
-    // Auto-save observations on blur (debounced for Moodle editors)
+    // Auto-save observations when TinyMCE editor loses focus
+    // TinyMCE fires a blur event and saves content to textarea automatically
     var saveTimeout = null;
-    $(document).on('blur', '.jb-doc-observation, .editor_atto_content', function(e) {
-        var $target = $(e.target);
-        var $textarea = $target.hasClass('jb-doc-observation') ? $target : $target.closest('.jb-observation-editor-wrapper').find('.jb-doc-observation');
 
-        if (!$textarea.length) return;
+    // Function to setup auto-save for a TinyMCE editor
+    function setupAutoSaveForEditor(elementId) {
+        var editor = TinyEditor.getInstanceForElementId(elementId);
+        if (editor) {
+            editor.on('blur', function() {
+                var $textarea = $('#' + elementId);
+                var docId = $textarea.data('document-id');
+
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(function() {
+                    var text = getEditorContent(elementId);
+
+                    Ajax.call([{
+                        methodname: 'local_jobboard_save_document_observations',
+                        args: {
+                            applicationid: {{selectedapplication.id}},
+                            observations: JSON.stringify([{documentid: docId, observation: text}])
+                        },
+                        done: function() {
+                            // Visual feedback that save was successful
+                            var editorContainer = editor.getContainer();
+                            if (editorContainer) {
+                                $(editorContainer).addClass('border-success');
+                                setTimeout(function() {
+                                    $(editorContainer).removeClass('border-success');
+                                }, 1000);
+                            }
+                        },
+                        fail: function() {
+                            // Silent fail for auto-save
+                        }
+                    }]);
+                }, 500);
+            });
+        }
+    }
+
+    // Wait for editors to be initialized, then set up auto-save
+    // Check periodically for editor instances
+    var setupAttempts = 0;
+    var maxAttempts = 20; // 10 seconds max
+    var setupInterval = setInterval(function() {
+        setupAttempts++;
+        var allEditorsReady = true;
+
+        $('.jb-doc-observation').each(function() {
+            var elementId = $(this).attr('id');
+            var editor = TinyEditor.getInstanceForElementId(elementId);
+            if (!editor) {
+                allEditorsReady = false;
+            } else {
+                // Setup auto-save for this editor if not already done
+                if (!$(this).data('autosave-setup')) {
+                    setupAutoSaveForEditor(elementId);
+                    $(this).data('autosave-setup', true);
+                }
+            }
+        });
+
+        if (allEditorsReady || setupAttempts >= maxAttempts) {
+            clearInterval(setupInterval);
+        }
+    }, 500);
+
+    // Fallback: auto-save on plain textarea blur (if editor doesn't load)
+    $(document).on('blur', '.jb-doc-observation', function(e) {
+        var $textarea = $(this);
+        var editor = TinyEditor.getInstanceForElementId($textarea.attr('id'));
+
+        // Only handle if TinyMCE is not active for this textarea
+        if (editor) return;
 
         var docId = $textarea.data('document-id');
         var elementId = $textarea.attr('id');
 
-        // Debounce the save
         clearTimeout(saveTimeout);
         saveTimeout = setTimeout(function() {
-            var text = getEditorContent(elementId);
+            var text = $textarea.val();
 
             Ajax.call([{
                 methodname: 'local_jobboard_save_document_observations',
