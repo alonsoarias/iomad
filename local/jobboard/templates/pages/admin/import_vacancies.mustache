@@ -66,9 +66,9 @@
 
     {{! CSV Format Help Card }}
     <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.05s;" aria-labelledby="csv-format-heading">
-        <div class="card-header bg-info text-white">
+        <div class="card-header bg-white d-flex align-items-center">
+            <i class="fa fa-file-csv fa-lg text-info me-3" aria-hidden="true"></i>
             <h5 class="mb-0" id="csv-format-heading">
-                <i class="fa fa-file-csv me-2" aria-hidden="true"></i>
                 {{str.csvformat}}
             </h5>
         </div>
@@ -120,9 +120,9 @@
 
             {{! CSV Example }}
             <div class="card bg-light mb-0">
-                <div class="card-header bg-secondary text-white">
+                <div class="card-header bg-white d-flex align-items-center">
+                    <i class="fa fa-code fa-lg text-secondary me-3" aria-hidden="true"></i>
                     <h6 class="mb-0">
-                        <i class="fa fa-code me-2" aria-hidden="true"></i>
                         {{str.csvexample}}
                     </h6>
                 </div>
@@ -141,9 +141,9 @@
     {{! Import Form Card }}
     <main id="import-form-content">
         <section class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="import-form-heading">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-white d-flex align-items-center">
+                <i class="fa fa-upload fa-lg text-primary me-3" aria-hidden="true"></i>
                 <h5 class="mb-0" id="import-form-heading">
-                    <i class="fa fa-upload me-2" aria-hidden="true"></i>
                     {{#str}}uploadcsv, local_jobboard{{/str}}
                 </h5>
             </div>
