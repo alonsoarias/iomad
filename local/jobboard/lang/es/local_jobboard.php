@@ -388,6 +388,9 @@ $string['closingsoon'] = 'Cierra pronto';
 $string['urgent'] = 'Urgente';
 $string['newapplicants'] = 'Nuevos postulantes';
 $string['totalapplicants'] = 'Total de postulantes';
+$string['vacancyactions'] = 'Acciones';
+$string['vacancyoverview'] = 'Resumen';
+$string['metadata'] = 'Metadatos';
 
 // Tipos de contrato
 $string['contract:catedra'] = 'Docente de Cátedra';
