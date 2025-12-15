@@ -53,7 +53,7 @@ if (!$vacancy->is_open_for_applications()) {
 }
 
 // Check user hasn't already applied to this specific vacancy.
-if (application::user_has_applied($USER->id, $vacancyid)) {
+if (application::user_has_applied($vacancyid, $USER->id)) {
     redirect(
         new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
         get_string('alreadyapplied', 'local_jobboard'),

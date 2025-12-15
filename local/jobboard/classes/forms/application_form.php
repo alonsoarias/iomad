@@ -94,7 +94,7 @@ class application_form extends moodleform {
         if ($applicantprofile) {
             $profilehtml = '<div class="jb-profile-review">';
             $profilehtml .= '<div class="alert alert-info mb-3">';
-            $profilehtml .= '<i class="fa fa-user-check mr-2"></i>';
+            $profilehtml .= '<i class="fa fa-user-check me-2"></i>';
             $profilehtml .= get_string('profilereview_info', 'local_jobboard');
             $profilehtml .= '</div>';
 
@@ -104,7 +104,7 @@ class application_form extends moodleform {
 
             // Personal information.
             $profilehtml .= '<div class="col-md-6">';
-            $profilehtml .= '<h6 class="text-primary"><i class="fa fa-user mr-2"></i>' .
+            $profilehtml .= '<h6 class="text-primary"><i class="fa fa-user me-2"></i>' .
                 get_string('personalinfo', 'local_jobboard') . '</h6>';
             $profilehtml .= '<dl class="row small mb-0">';
             $profilehtml .= '<dt class="col-5">' . get_string('fullname', 'local_jobboard') . '</dt>';
@@ -124,7 +124,7 @@ class application_form extends moodleform {
 
             // Education and address.
             $profilehtml .= '<div class="col-md-6">';
-            $profilehtml .= '<h6 class="text-primary"><i class="fa fa-graduation-cap mr-2"></i>' .
+            $profilehtml .= '<h6 class="text-primary"><i class="fa fa-graduation-cap me-2"></i>' .
                 get_string('education', 'local_jobboard') . '</h6>';
             $profilehtml .= '<dl class="row small mb-0">';
             if (!empty($applicantprofile->educationlevel)) {
@@ -150,7 +150,7 @@ class application_form extends moodleform {
             $profileurl = new \moodle_url('/local/jobboard/updateprofile.php');
             $profilehtml .= '<div class="text-right">';
             $profilehtml .= '<a href="' . $profileurl->out() . '" class="btn btn-sm btn-outline-primary" target="_blank">';
-            $profilehtml .= '<i class="fa fa-edit mr-1"></i>' . get_string('editprofile', 'local_jobboard');
+            $profilehtml .= '<i class="fa fa-edit me-1"></i>' . get_string('editprofile', 'local_jobboard');
             $profilehtml .= '</a>';
             $profilehtml .= '</div>';
 
@@ -303,16 +303,16 @@ class application_form extends moodleform {
                 $requiredcount = count(array_filter($catdata['docs'], function($d) {
                     return !empty($d->isrequired);
                 }));
-                $badge = $requiredcount > 0 ? '<span class="badge badge-danger ml-1">' . $requiredcount . '</span>' : '';
+                $badge = $requiredcount > 0 ? '<span class="badge bg-danger ms-1">' . $requiredcount . '</span>' : '';
 
                 $tabshtml .= '<li class="nav-item" role="presentation">';
-                $tabshtml .= '<a class="nav-link ' . $active . '" id="tab-' . $catkey . '" ';
-                $tabshtml .= 'data-toggle="pill" href="#panel-' . $catkey . '" role="tab" ';
+                $tabshtml .= '<button class="nav-link ' . $active . '" id="tab-' . $catkey . '" ';
+                $tabshtml .= 'data-bs-toggle="pill" data-bs-target="#panel-' . $catkey . '" type="button" role="tab" ';
                 $tabshtml .= 'aria-controls="panel-' . $catkey . '" aria-selected="' . $selected . '">';
-                $tabshtml .= '<i class="fa ' . $catdata['icon'] . ' mr-1"></i>';
+                $tabshtml .= '<i class="fa ' . $catdata['icon'] . ' me-1"></i>';
                 $tabshtml .= '<span class="d-none d-md-inline">' . get_string('doccat_' . $catkey, 'local_jobboard') . '</span>';
                 $tabshtml .= $badge;
-                $tabshtml .= '</a></li>';
+                $tabshtml .= '</button></li>';
                 $first = false;
             }
 
@@ -330,7 +330,7 @@ class application_form extends moodleform {
                 $panelhtml .= 'role="tabpanel" aria-labelledby="tab-' . $catkey . '">';
                 $panelhtml .= '<div class="card border-0 shadow-sm">';
                 $panelhtml .= '<div class="card-header bg-light">';
-                $panelhtml .= '<h5 class="mb-0"><i class="fa ' . $catdata['icon'] . ' mr-2 text-primary"></i>';
+                $panelhtml .= '<h5 class="mb-0"><i class="fa ' . $catdata['icon'] . ' me-2 text-primary"></i>';
                 $panelhtml .= get_string('doccat_' . $catkey, 'local_jobboard');
                 $panelhtml .= '</h5>';
                 $panelhtml .= '<small class="text-muted">' . get_string('doccat_' . $catkey . '_desc', 'local_jobboard') . '</small>';
@@ -350,9 +350,9 @@ class application_form extends moodleform {
                     $dochtml .= '<h6 class="mb-0">';
                     $dochtml .= format_string($doctype->name);
                     if ($required) {
-                        $dochtml .= ' <span class="badge badge-danger">' . get_string('required') . '</span>';
+                        $dochtml .= ' <span class="badge bg-danger">' . get_string('required') . '</span>';
                     } else {
-                        $dochtml .= ' <span class="badge badge-secondary">' . get_string('optional', 'local_jobboard') . '</span>';
+                        $dochtml .= ' <span class="badge bg-secondary">' . get_string('optional', 'local_jobboard') . '</span>';
                     }
                     $dochtml .= '</h6>';
                     $dochtml .= '</div>';
@@ -360,7 +360,7 @@ class application_form extends moodleform {
                     // Description in a prominent box.
                     if (!empty($doctype->description)) {
                         $dochtml .= '<div class="alert alert-info py-2 px-3 mb-2">';
-                        $dochtml .= '<i class="fa fa-info-circle mr-2"></i>';
+                        $dochtml .= '<i class="fa fa-info-circle me-2"></i>';
                         $dochtml .= '<span>' . format_string($doctype->description) . '</span>';
                         $dochtml .= '</div>';
                     }
@@ -368,7 +368,7 @@ class application_form extends moodleform {
                     // Conditional note (e.g., tarjeta_profesional requirement for teachers).
                     if (!empty($doctype->conditional_note)) {
                         $dochtml .= '<div class="alert alert-secondary py-2 px-3 mb-2">';
-                        $dochtml .= '<i class="fa fa-exclamation-triangle mr-2"></i>';
+                        $dochtml .= '<i class="fa fa-exclamation-triangle me-2"></i>';
                         $dochtml .= '<small>' . get_string('conditional_document_note', 'local_jobboard',
                             format_string($doctype->conditional_note)) . '</small>';
                         $dochtml .= '</div>';
@@ -377,7 +377,7 @@ class application_form extends moodleform {
                     // Multiple documents notice - prominent warning for certificates that may have multiple files.
                     if ($ismultiple) {
                         $dochtml .= '<div class="alert alert-warning py-2 px-3 mb-2">';
-                        $dochtml .= '<i class="fa fa-file-pdf mr-2"></i>';
+                        $dochtml .= '<i class="fa fa-file-pdf me-2"></i>';
                         $dochtml .= '<strong>' . get_string('multipledocs_notice', 'local_jobboard') . '</strong><br>';
                         $dochtml .= '<small>' . get_string('multipledocs_' . $doctype->code, 'local_jobboard') . '</small>';
                         $dochtml .= '</div>';
@@ -387,9 +387,9 @@ class application_form extends moodleform {
                     if (!empty($doctype->requirements)) {
                         $dochtml .= '<details class="mb-2">';
                         $dochtml .= '<summary class="text-primary jb-collapse-header">';
-                        $dochtml .= '<i class="fa fa-list-ul mr-1"></i>' . get_string('docrequirements', 'local_jobboard');
+                        $dochtml .= '<i class="fa fa-list-ul me-1"></i>' . get_string('docrequirements', 'local_jobboard');
                         $dochtml .= '</summary>';
-                        $dochtml .= '<div class="small text-muted mt-1 pl-3">' . format_string($doctype->requirements) . '</div>';
+                        $dochtml .= '<div class="small text-muted mt-1 ps-3">' . format_string($doctype->requirements) . '</div>';
                         $dochtml .= '</details>';
                     }
 

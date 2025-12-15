@@ -117,7 +117,7 @@ class application_test extends \advanced_testcase {
         ]);
 
         // Verify user has applied.
-        $this->assertTrue(application::user_has_applied($this->user->id, $this->vacancy->id));
+        $this->assertTrue(application::user_has_applied($this->vacancy->id, $this->user->id));
 
         // Attempt to create duplicate should fail.
         $this->expectException(\moodle_exception::class);
