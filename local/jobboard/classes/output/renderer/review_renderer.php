@@ -778,10 +778,26 @@ trait review_renderer {
         array $documents,
         array $navdata
     ): array {
-        global $DB;
+        global $DB, $PAGE;
 
         $vacancyid = $params['vacancyid'] ?? 0;
         $applicationid = $application->id;
+
+        // Initialize editors for observations.
+        $context = $PAGE->context;
+        $editoroptions = [
+            'maxfiles' => 0,
+            'maxbytes' => 0,
+            'trusttext' => false,
+            'noclean' => false,
+            'autosave' => false,
+            'context' => $context,
+            'subdirs' => false,
+        ];
+
+        // Get the preferred editor.
+        $editor = editors_get_preferred_editor(FORMAT_HTML);
+        $editorname = get_class($editor);
 
         // Update page title.
         $data['pagetitle'] = get_string('reviewapplication', 'local_jobboard');
@@ -875,8 +891,17 @@ trait review_renderer {
                 $firstdocid = $doc->id;
             }
 
+            // Get existing observation for this document.
+            $observation = $doc->observation ?? '';
+
+            // Initialize editor for this document's observation field.
+            $editorid = 'doc_observation_' . $doc->id;
+            $editor->set_text($observation);
+            $editor->use_editor($editorid, $editoroptions);
+
             $docsdata[] = [
                 'id' => $doc->id,
+                'applicationid' => $applicationid,
                 'typename' => format_string($typename),
                 'filename' => format_string($doc->filename ?? ''),
                 'status' => $status,
@@ -902,6 +927,8 @@ trait review_renderer {
                 'reviewedby' => $reviewedby,
                 'reviewedat' => $reviewedat,
                 'sesskey' => sesskey(),
+                'observation' => $observation,
+                'editorid' => $editorid,
             ];
         }
 

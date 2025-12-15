@@ -737,54 +737,17 @@ function jobboardPreviewDocument(element) {
 {{! JavaScript for document observations with Moodle editor }}
 {{#selectedapplication}}
 {{#js}}
-require(['jquery', 'core/ajax', 'core/notification', 'core/str', 'editor_atto/editor', 'core/editor'], function($, Ajax, Notification, Str, AttoEditor, Editor) {
-    // Initialize Moodle editors for all observation textareas
-    function initMoodleEditors() {
-        $('.jb-moodle-editor').each(function() {
-            var textarea = $(this);
-            var elementId = textarea.attr('id');
-
-            // Check if editor is already initialized
-            if (textarea.data('editor-initialized')) {
-                return;
-            }
-
-            // Initialize the editor using Moodle's editor API
-            require(['core/editor'], function(Editor) {
-                Editor.setupSmallEditor(elementId, {
-                    context: M.cfg.contextid,
-                    atto: {
-                        toolbar: 'bold italic | unorderedlist orderedlist | link',
-                        autosaveEnabled: false
-                    }
-                }).then(function() {
-                    textarea.data('editor-initialized', true);
-                }).catch(function() {
-                    // Fallback: editor may already be set up or not available
-                    textarea.data('editor-initialized', true);
-                });
-            });
-        });
-    }
-
-    // Initialize editors on page load
-    initMoodleEditors();
-
+require(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Ajax, Notification, Str) {
     // Helper function to get editor content (supports Atto, TinyMCE, and plain textarea)
+    // Moodle editors are initialized via PHP using use_editor()
     function getEditorContent(elementId) {
         var textarea = document.getElementById(elementId);
         if (!textarea) return '';
 
-        // Check for Atto editor
+        // For Atto editor, update textarea from editable div first
         var attoContent = document.querySelector('#' + elementId + 'editable');
         if (attoContent) {
-            // Update textarea from Atto before reading
-            if (typeof Y !== 'undefined' && Y.M && Y.M.editor_atto) {
-                var editor = Y.M.editor_atto.getEditor(elementId);
-                if (editor) {
-                    editor.updateOriginal();
-                }
-            }
+            textarea.value = attoContent.innerHTML;
         }
 
         // Check for TinyMCE
