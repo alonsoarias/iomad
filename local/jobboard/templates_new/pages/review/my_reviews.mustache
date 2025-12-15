@@ -1,0 +1,263 @@
+{{!
+    @template local_jobboard/pages/review/my_reviews
+
+    My reviews page template for reviewers with Bootstrap 5.
+
+    Context variables:
+    * dashboardurl (string) - URL to dashboard
+    * reviewqueueurl (string) - URL to review queue
+    * stats (array) - Reviewer statistics
+    * filterform (object) - Filter form data
+    * showinginfo (string) - Showing X-Y of Z text
+    * hasassignments (bool) - Has assignments
+    * assignments (array) - Array of assigned applications
+    * pagination (string) - Pagination HTML
+    * loading (bool) - Show skeleton loading state
+
+    Example context (json):
+    {
+        "hasassignments": true,
+        "assignments": [{"id": 1, "applicantname": "John Doe"}]
+    }
+}}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="local-jobboard-myreviews" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton jb-skeleton-text mb-3" style="width: 200px;"></div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="jb-skeleton jb-skeleton-text" style="width: 30%; height: 2em;"></div>
+        <div class="jb-skeleton jb-skeleton-text" style="width: 150px; height: 40px;"></div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3"><div class="card"><div class="card-body"><div class="jb-skeleton jb-skeleton-text" style="height: 60px;"></div></div></div></div>
+        <div class="col-lg-3 col-md-6 mb-3"><div class="card"><div class="card-body"><div class="jb-skeleton jb-skeleton-text" style="height: 60px;"></div></div></div></div>
+        <div class="col-lg-3 col-md-6 mb-3"><div class="card"><div class="card-body"><div class="jb-skeleton jb-skeleton-text" style="height: 60px;"></div></div></div></div>
+        <div class="col-lg-3 col-md-6 mb-3"><div class="card"><div class="card-body"><div class="jb-skeleton jb-skeleton-text" style="height: 60px;"></div></div></div></div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="local-jobboard-myreviews" data-region="jobboard-myreviews">
+    {{! Skip Link for Accessibility }}
+    <a href="#reviews-main-content" class="visually-hidden-focusable">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="mb-4 jb-fade-in">
+        <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="mb-3">
+            <ol class="breadcrumb small">
+                <li class="breadcrumb-item">
+                    <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{#str}}myreviews, local_jobboard{{/str}}
+                </li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h1 class="fs-3 mb-0">
+                <i class="fa fa-clipboard-list text-primary me-2" aria-hidden="true"></i>
+                {{#str}}myreviews, local_jobboard{{/str}}
+            </h1>
+            <a href="{{reviewqueueurl}}" class="btn btn-primary jb-hover-lift">
+                <i class="fa fa-clipboard-check me-2" aria-hidden="true"></i>
+                {{#str}}reviewdocuments, local_jobboard{{/str}}
+            </a>
+        </div>
+    </header>
+
+    {{! Statistics Row }}
+    {{#stats.0}}
+    <section class="row mb-4" role="region" aria-label="{{#str}}reviewerstatistics, local_jobboard{{/str}}">
+        {{#stats}}
+        <div class="col-lg-3 col-md-6 mb-3 jb-fade-in-up" style="animation-delay: {{animdelay}}s;">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        {{/stats}}
+    </section>
+    {{/stats.0}}
+
+    {{! Filter Form }}
+    {{#filterform}}
+    <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.15s;">
+        <div class="card-body">
+            <form method="get" action="{{filterform.action}}" class="jb-filter-form" role="search" aria-label="{{#str}}filterreviews, local_jobboard{{/str}}">
+                {{#filterform.hiddenfields}}
+                <input type="hidden" name="{{name}}" value="{{value}}">
+                {{/filterform.hiddenfields}}
+                <div class="row align-items-end">
+                    {{#filterform.fields}}
+                    <div class="{{col}} mb-2">
+                        {{#istext}}
+                        <label for="filter-{{name}}" class="form-label small text-muted visually-hidden">{{label}}</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">
+                                <i class="fa fa-magnifying-glass text-muted" aria-hidden="true"></i>
+                            </span>
+                            <input type="text" name="{{name}}" id="filter-{{name}}" class="form-control" placeholder="{{placeholder}}" value="{{value}}">
+                        </div>
+                        {{/istext}}
+                        {{#isselect}}
+                        <label for="filter-{{name}}" class="form-label small text-muted">{{label}}</label>
+                        <select name="{{name}}" id="filter-{{name}}" class="form-select">
+                            {{#options}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/options}}
+                        </select>
+                        {{/isselect}}
+                    </div>
+                    {{/filterform.fields}}
+                    <div class="col-auto mb-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-filter me-1" aria-hidden="true"></i>
+                            {{#str}}filter, local_jobboard{{/str}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    {{/filterform}}
+
+    {{! Results Info }}
+    {{#showinginfo}}
+    <p class="text-muted small mb-3 jb-fade-in" aria-live="polite">{{showinginfo}}</p>
+    {{/showinginfo}}
+
+    {{! Main Content }}
+    <main id="reviews-main-content">
+        {{#hasassignments}}
+        <section class="row" aria-label="{{#str}}myreviews, local_jobboard{{/str}}">
+            {{#assignments}}
+            <div class="col-lg-6 mb-4 jb-fade-in-up" style="animation-delay: {{animdelay}}s;">
+                <article class="card h-100 shadow-sm jb-hover-lift {{#isurgent}}border-danger{{/isurgent}}" data-assignment-id="{{id}}" aria-labelledby="assignment-{{id}}">
+                    <div class="card-header bg-{{statuscolor}} text-white d-flex justify-content-between align-items-center py-2">
+                        <span class="fw-bold small">
+                            <i class="fa fa-circle me-1 small" aria-hidden="true"></i>
+                            {{statuslabel}}
+                        </span>
+                        {{#isurgent}}
+                        <span class="badge bg-danger jb-pulse">
+                            <i class="fa fa-triangle-exclamation me-1" aria-hidden="true"></i>
+                            {{#str}}closingsoon, local_jobboard{{/str}}: {{daysuntilclose}}d
+                        </span>
+                        {{/isurgent}}
+                        {{#isclosed}}
+                        <span class="badge bg-dark">
+                            <i class="fa fa-lock me-1" aria-hidden="true"></i>
+                            {{#str}}closed{{/str}}
+                        </span>
+                        {{/isclosed}}
+                    </div>
+
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-light me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                <i class="fa fa-user fa-lg text-muted" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h2 class="card-title fs-5 mb-0" id="assignment-{{id}}">{{applicantname}}</h2>
+                                <a href="mailto:{{email}}" class="small text-muted">{{email}}</a>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <span class="badge bg-secondary me-2">
+                                <i class="fa fa-hashtag me-1" aria-hidden="true"></i>
+                                {{vacancycode}}
+                            </span>
+                            <span class="text-muted small">{{vacancytitle}}</span>
+                        </div>
+
+                        <div class="mb-3">
+                            <small class="text-muted d-block mb-2">
+                                <i class="fa fa-file-lines me-1" aria-hidden="true"></i>
+                                {{#str}}documents, local_jobboard{{/str}}
+                            </small>
+                            {{#totaldocs}}
+                            <div class="progress mb-2" style="height: 8px;" role="progressbar" aria-valuenow="{{approvedpercent}}" aria-valuemin="0" aria-valuemax="100" aria-label="{{#str}}documentprogress, local_jobboard{{/str}}">
+                                <div class="progress-bar bg-success" style="width: {{approvedpercent}}%;"></div>
+                                <div class="progress-bar bg-danger" style="width: {{rejectedpercent}}%;"></div>
+                                <div class="progress-bar bg-warning" style="width: {{pendingpercent}}%;"></div>
+                            </div>
+                            {{/totaldocs}}
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge rounded-pill bg-success" title="{{#str}}docstatus:approved, local_jobboard{{/str}}">
+                                    <i class="fa fa-check me-1" aria-hidden="true"></i>{{approvedcount}}
+                                </span>
+                                <span class="badge rounded-pill bg-danger" title="{{#str}}docstatus:rejected, local_jobboard{{/str}}">
+                                    <i class="fa fa-xmark me-1" aria-hidden="true"></i>{{rejectedcount}}
+                                </span>
+                                <span class="badge rounded-pill bg-warning" title="{{#str}}docstatus:pending, local_jobboard{{/str}}">
+                                    <i class="fa fa-clock me-1" aria-hidden="true"></i>{{pendingcount}}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="small border-top pt-2 mt-2">
+                            {{#isurgent}}
+                            <i class="fa fa-triangle-exclamation text-danger me-2" aria-hidden="true"></i>
+                            <span class="text-danger fw-bold">
+                            {{/isurgent}}
+                            {{^isurgent}}
+                            <i class="fa fa-calendar-days text-muted me-2" aria-hidden="true"></i>
+                            <span class="text-muted">
+                            {{/isurgent}}
+                                {{#str}}closedate, local_jobboard{{/str}}: {{closedate}}
+                            </span>
+                        </div>
+                    </div>
+
+                    <footer class="card-footer bg-white d-flex justify-content-between align-items-center">
+                        <a href="{{reviewurl}}" class="btn btn-sm {{#pendingcount}}btn-primary jb-hover-lift{{/pendingcount}}{{^pendingcount}}btn-outline-primary{{/pendingcount}}">
+                            <i class="fa fa-magnifying-glass me-1" aria-hidden="true"></i>
+                            {{#str}}reviewdocuments, local_jobboard{{/str}}
+                            {{#pendingcount}}
+                            <span class="badge bg-light text-dark ms-1">{{pendingcount}}</span>
+                            {{/pendingcount}}
+                        </a>
+                        <a href="{{viewurl}}" class="btn btn-outline-secondary btn-sm" title="{{#str}}viewapplication, local_jobboard{{/str}}">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                    </footer>
+                </article>
+            </div>
+            {{/assignments}}
+        </section>
+        {{/hasassignments}}
+
+        {{^hasassignments}}
+        <div class="text-center py-5 jb-fade-in-up" role="status">
+            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" style="width: 100px; height: 100px;">
+                <i class="fa fa-clipboard-list fa-3x text-muted" aria-hidden="true"></i>
+            </div>
+            <h2 class="fs-4 text-muted mb-2">{{#str}}noassignments, local_jobboard{{/str}}</h2>
+            <p class="text-muted mb-4">{{#str}}noassignments_desc, local_jobboard{{/str}}</p>
+            <a href="{{reviewqueueurl}}" class="btn btn-primary jb-hover-lift">
+                <i class="fa fa-clipboard-check me-2" aria-hidden="true"></i>
+                {{#str}}reviewdocuments, local_jobboard{{/str}}
+            </a>
+        </div>
+        {{/hasassignments}}
+    </main>
+
+    {{#pagination}}
+    <nav class="mt-4 jb-fade-in" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
+        {{{pagination}}}
+    </nav>
+    {{/pagination}}
+
+    <nav class="d-flex justify-content-between align-items-center mt-4 py-3 border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
+        <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+            {{#str}}backtodashboard, local_jobboard{{/str}}
+        </a>
+        <a href="{{reviewqueueurl}}" class="btn btn-link text-muted">
+            {{#str}}reviewdocuments, local_jobboard{{/str}}
+            <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
+        </a>
+    </nav>
+</div>
+{{/loading}}

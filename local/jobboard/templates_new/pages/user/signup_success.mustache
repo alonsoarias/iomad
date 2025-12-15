@@ -1,0 +1,124 @@
+{{!
+    @template local_jobboard/pages/user/signup_success
+
+    Signup success confirmation page with Bootstrap 5.
+    Includes accessibility features, animations, and visual feedback.
+
+    Context variables required for this template:
+    * useremail - string - The user's email address
+    * backurl - string - URL to return to vacancies
+    * loginurl - string - URL to login page
+    * loading - bool - Show skeleton loading state
+    * str - object - Language strings
+      * title - string - Success title
+      * message - string - Success message with email
+      * instructions_title - string - Email instructions title
+      * instruction_1 - string - First instruction
+      * instruction_2 - string - Second instruction
+      * instruction_3 - string - Third instruction
+      * check_spam - string - Check spam notice
+      * back_to_vacancies - string - Back button text
+      * login - string - Login button text
+
+    Example context (json):
+    {
+        "useremail": "user@example.com",
+        "backurl": "/local/jobboard/public.php",
+        "loginurl": "/login/index.php"
+    }
+}}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-signup-success text-center my-5" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton jb-skeleton-avatar mx-auto mb-4" style="width: 80px; height: 80px; border-radius: 50%;"></div>
+    <div class="jb-skeleton jb-skeleton-text mx-auto mb-3" style="width: 60%; height: 2em;"></div>
+    <div class="jb-skeleton jb-skeleton-text mx-auto mb-4" style="width: 80%;"></div>
+    <div class="jb-skeleton jb-skeleton-text mx-auto mb-3" style="width: 70%; height: 120px;"></div>
+    <div class="d-flex justify-content-center gap-3">
+        <div class="jb-skeleton jb-skeleton-text" style="width: 150px; height: 45px;"></div>
+        <div class="jb-skeleton jb-skeleton-text" style="width: 120px; height: 45px;"></div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-signup-success text-center my-5" data-region="jobboard-signup-success">
+    {{! Success Animation Icon }}
+    <div class="text-success mb-4 jb-fade-in jb-scale-in">
+        <div class="jb-success-checkmark">
+            <i class="fa fa-circle-check fa-5x" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    {{! Title with animation }}
+    <h2 class="mb-3 jb-fade-in-up" style="animation-delay: 0.1s;">
+        {{str.title}}
+    </h2>
+
+    {{! Message with email highlight }}
+    <p class="lead text-muted jb-fade-in-up" style="animation-delay: 0.15s;">
+        {{str.message}}
+    </p>
+
+    {{! Email Badge }}
+    <div class="jb-fade-in-up" style="animation-delay: 0.2s;">
+        <span class="badge bg-primary fs-6 px-3 py-2">
+            <i class="fa fa-envelope me-2" aria-hidden="true"></i>
+            {{useremail}}
+        </span>
+    </div>
+
+    {{! Instructions Card }}
+    <div class="card shadow-sm text-start mt-4 mx-auto jb-fade-in-up" style="max-width: 500px; animation-delay: 0.25s;">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">
+                <i class="fa fa-envelope-open-text me-2" aria-hidden="true"></i>
+                {{str.instructions_title}}
+            </h5>
+        </div>
+        <div class="card-body">
+            <ol class="mb-0">
+                <li class="mb-2 jb-fade-in" style="animation-delay: 0.3s;">
+                    <i class="fa fa-inbox text-info me-2" aria-hidden="true"></i>
+                    {{str.instruction_1}}
+                </li>
+                <li class="mb-2 jb-fade-in" style="animation-delay: 0.35s;">
+                    <i class="fa fa-mouse-pointer text-info me-2" aria-hidden="true"></i>
+                    {{str.instruction_2}}
+                </li>
+                <li class="jb-fade-in" style="animation-delay: 0.4s;">
+                    <i class="fa fa-key text-info me-2" aria-hidden="true"></i>
+                    {{str.instruction_3}}
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    {{! Spam Notice }}
+    <div class="alert alert-warning d-inline-flex align-items-center mt-4 jb-fade-in-up" role="alert" style="animation-delay: 0.45s;">
+        <i class="fa fa-triangle-exclamation me-2" aria-hidden="true"></i>
+        <small>{{str.check_spam}}</small>
+    </div>
+
+    {{! Action Buttons }}
+    <div class="mt-4 jb-fade-in-up" style="animation-delay: 0.5s;">
+        <a href="{{backurl}}" class="btn btn-primary btn-lg me-2 jb-hover-lift">
+            <i class="fa fa-briefcase me-2" aria-hidden="true"></i>
+            {{str.back_to_vacancies}}
+        </a>
+        <a href="{{loginurl}}" class="btn btn-outline-secondary btn-lg jb-hover-lift">
+            <i class="fa fa-right-to-bracket me-2" aria-hidden="true"></i>
+            {{str.login}}
+        </a>
+    </div>
+
+    {{! Additional Help }}
+    <div class="mt-5 pt-4 border-top jb-fade-in" style="animation-delay: 0.55s;">
+        <p class="text-muted small mb-0">
+            <i class="fa fa-circle-question me-1" aria-hidden="true"></i>
+            {{#str}}emailnotreceived, local_jobboard{{/str}}
+            <a href="{{backurl}}" class="text-primary">{{#str}}contactsupport, local_jobboard{{/str}}</a>
+        </p>
+    </div>
+</div>
+{{/loading}}

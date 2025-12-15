@@ -1,0 +1,309 @@
+{{!
+    @template local_jobboard/pages/admin/roles
+
+    Role management page template with Bootstrap 5.
+    Includes accessibility features, animations, and loading states.
+
+    Context variables:
+    * pagetitle - Page title string
+    * totalusers - Total assigned users count
+    * pluginroles - Array of plugin roles with stats
+    * selectedrole - Currently selected role (null if none)
+    * assignedusers - Array of users assigned to selected role
+    * availableusers - Array of users available for assignment
+    * dashboardurl - URL to dashboard
+    * committeeurl - URL to committee management
+    * settingsurl - URL to plugin settings
+    * loading - bool - Show skeleton loading state
+
+    Example context (json):
+    {
+        "pagetitle": "Manage Roles",
+        "selectedrole": null
+    }
+}}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-admin-roles" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="d-flex justify-content-between mb-4">
+        <div class="jb-skeleton jb-skeleton-text" style="width: 200px; height: 2em;"></div>
+        <div class="jb-skeleton jb-skeleton-text" style="width: 150px; height: 38px;"></div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3"><div class="jb-skeleton jb-skeleton-text" style="height: 100px;"></div></div>
+        <div class="col-lg-3 col-md-6 mb-3"><div class="jb-skeleton jb-skeleton-text" style="height: 100px;"></div></div>
+        <div class="col-lg-3 col-md-6 mb-3"><div class="jb-skeleton jb-skeleton-text" style="height: 100px;"></div></div>
+        <div class="col-lg-3 col-md-6 mb-3"><div class="jb-skeleton jb-skeleton-text" style="height: 100px;"></div></div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-admin-roles" data-region="jobboard-admin-roles">
+    {{! Skip Link for Accessibility }}
+    <a href="#roles-content" class="visually-hidden-focusable">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="d-flex justify-content-between align-items-center mb-4 jb-fade-in">
+        <h1 class="fs-3 mb-0">
+            <i class="fa fa-user-tag text-primary me-2" aria-hidden="true"></i>
+            {{#str}}manageroles, local_jobboard{{/str}}
+        </h1>
+        <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-gauge me-2" aria-hidden="true"></i>
+            {{#str}}dashboard, local_jobboard{{/str}}
+        </a>
+    </header>
+
+    {{! Statistics Cards }}
+    <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card shadow-sm h-100 border-start border-info border-4 jb-fade-in-up" style="animation-delay: 0.05s;">
+                <div class="card-body d-flex align-items-center">
+                    <div class="rounded bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center p-3 me-3">
+                        <i class="fa fa-users fa-lg" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="fs-3 fw-bold">{{totalusers}}</div>
+                        <div class="small text-muted">{{#str}}totalassignedusers, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{#pluginroles}}
+        <div class="col-lg-3 col-md-6 mb-3">
+            <a href="{{manageurl}}" class="text-decoration-none">
+                <div class="card shadow-sm h-100 border-start border-{{color}} border-4 jb-fade-in-up jb-hover-lift" style="animation-delay: calc(0.1s + {{@index}} * 0.05s);">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="rounded bg-{{color}} bg-opacity-10 text-{{color}} d-flex align-items-center justify-content-center p-3 me-3">
+                            <i class="fa fa-{{icon}} fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <div class="fs-3 fw-bold">{{usercount}}</div>
+                            <div class="small text-muted">{{name}}</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {{/pluginroles}}
+    </section>
+
+    <main id="roles-content">
+    {{^selectedrole}}
+    {{! Role Selection View }}
+    <section aria-labelledby="roles-heading" class="jb-fade-in-up" style="animation-delay: 0.2s;">
+        <h4 class="mb-3" id="roles-heading">
+            <i class="fa fa-user-tag me-2" aria-hidden="true"></i>
+            {{#str}}selectroletoassign, local_jobboard{{/str}}
+        </h4>
+
+        <div class="row">
+            {{#pluginroles}}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-sm h-100 jb-hover-lift">
+                    <div class="card-body">
+                        {{! Role Header }}
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-{{color}} bg-opacity-10 d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                                <i class="fa fa-{{icon}} fs-4 text-{{color}}" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0">{{name}}</h5>
+                                <small class="text-muted">{{usercount}} {{#str}}usersassignedcount, local_jobboard{{/str}}</small>
+                            </div>
+                        </div>
+
+                        {{! Description }}
+                        <p class="text-muted small mb-3">{{description}}</p>
+
+                        {{! Capabilities Preview }}
+                        {{#hascaps}}
+                        <div class="mb-3">
+                            <small class="d-block text-muted mb-1">{{#str}}capabilities, local_jobboard{{/str}}:</small>
+                            {{#capspreview}}
+                            <span class="badge bg-light text-dark me-1 mb-1">{{.}}</span>
+                            {{/capspreview}}
+                        </div>
+                        {{/hascaps}}
+
+                        {{! Actions }}
+                        <div class="d-flex">
+                            {{#roleexists}}
+                            <a href="{{manageurl}}" class="btn btn-{{color}} btn-sm">
+                                <i class="fa fa-users-gear me-1" aria-hidden="true"></i>
+                                {{#str}}manageusers, local_jobboard{{/str}}
+                            </a>
+                            {{/roleexists}}
+                            {{^roleexists}}
+                            <span class="text-danger small">
+                                <i class="fa fa-triangle-exclamation me-1" aria-hidden="true"></i>
+                                {{#str}}rolenotcreated, local_jobboard{{/str}}
+                            </span>
+                            {{/roleexists}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/pluginroles}}
+        </div>
+    </section>
+    {{/selectedrole}}
+
+    {{#selectedrole}}
+    {{! Single Role Management View }}
+    <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm mb-3 jb-hover-lift">
+        <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+        {{#str}}backtorolelist, local_jobboard{{/str}}
+    </a>
+
+    {{! Role Header Card }}
+    <section class="card shadow-sm mb-4 jb-fade-in-up" aria-labelledby="selected-role-heading" style="animation-delay: 0.05s;">
+        <div class="card-header bg-{{selectedrole.color}} text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0" id="selected-role-heading">
+                    <i class="fa fa-{{selectedrole.icon}} me-2" aria-hidden="true"></i>
+                    {{selectedrole.name}}
+                </h5>
+                <span class="badge bg-light text-dark">{{selectedrole.usercount}} {{#str}}users{{/str}}</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-0">{{selectedrole.description}}</p>
+        </div>
+    </section>
+
+    <div class="row">
+        {{! Left Column: Assigned Users }}
+        <div class="col-lg-7 mb-4">
+            <section class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="assigned-users-heading">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0" id="assigned-users-heading">
+                        <i class="fa fa-users me-2" aria-hidden="true"></i>
+                        {{#str}}assignedusers, local_jobboard{{/str}}
+                    </h6>
+                    <span class="badge bg-primary rounded-pill">{{assignedusercount}} {{#str}}users{{/str}}</span>
+                </div>
+                <div class="card-body">
+                    {{#hasassignedusers}}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>{{#str}}user{{/str}}</th>
+                                    <th>{{#str}}email{{/str}}</th>
+                                    <th>{{#str}}assigned, local_jobboard{{/str}}</th>
+                                    <th>{{#str}}actions{{/str}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#assignedusers}}
+                                <tr class="jb-fade-in">
+                                    <td>
+                                        <strong>{{fullname}}</strong>
+                                        <br><small class="text-muted">#{{id}}</small>
+                                    </td>
+                                    <td>{{email}}</td>
+                                    <td>{{assigneddate}}</td>
+                                    <td>
+                                        <a href="{{unassignurl}}" class="btn btn-sm btn-outline-danger"
+                                           title="{{#str}}unassign, local_jobboard{{/str}}"
+                                           onclick="return confirm('{{#str}}confirmunassign, local_jobboard{{/str}}');">
+                                            <i class="fa fa-user-minus" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {{/assignedusers}}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{/hasassignedusers}}
+                    {{^hasassignedusers}}
+                    <div class="text-center py-4">
+                        <i class="fa fa-user-plus fa-3x text-muted mb-3" aria-hidden="true"></i>
+                        <p class="text-muted">{{#str}}nousersassigned, local_jobboard{{/str}}</p>
+                    </div>
+                    {{/hasassignedusers}}
+                </div>
+            </section>
+        </div>
+
+        {{! Right Column: Assign New Users }}
+        <div class="col-lg-5 mb-4">
+            <section class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.15s;" aria-labelledby="assign-users-heading">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0" id="assign-users-heading">
+                        <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
+                        {{#str}}assignnewusers, local_jobboard{{/str}}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{{assignformurl}}" id="assignform">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="assign">
+                        <input type="hidden" name="role" value="{{selectedrole.shortname}}">
+
+                        {{! Search Input }}
+                        <div class="mb-3">
+                            <label class="form-label" for="usersearch">{{#str}}searchusers, local_jobboard{{/str}}</label>
+                            <input type="text" class="form-control" id="usersearch"
+                                   placeholder="{{#str}}searchusersplaceholder, local_jobboard{{/str}}" autocomplete="off">
+                        </div>
+
+                        {{! User Selection }}
+                        <div class="mb-3">
+                            <label class="form-label">{{#str}}selectusers, local_jobboard{{/str}}</label>
+                            <select name="userids[]" id="userselect" class="form-select" multiple size="10">
+                                {{#availableusers}}
+                                <option value="{{id}}">{{fullname}} ({{email}})</option>
+                                {{/availableusers}}
+                            </select>
+                            <div class="form-text">{{#str}}selectmultiplehelp, local_jobboard{{/str}}</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
+                            {{#str}}assignselected, local_jobboard{{/str}}
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+    {{/selectedrole}}
+    </main>
+
+    {{! Navigation Footer }}
+    <footer class="card shadow-sm mt-4 bg-light jb-fade-in" style="animation-delay: 0.25s;">
+        <div class="card-body d-flex flex-wrap align-items-center justify-content-center gap-2">
+            <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-hover-lift">
+                <i class="fa fa-gauge me-2" aria-hidden="true"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+            <a href="{{committeeurl}}" class="btn btn-outline-primary jb-hover-lift">
+                <i class="fa fa-users me-2" aria-hidden="true"></i>
+                {{#str}}committees, local_jobboard{{/str}}
+            </a>
+            <a href="{{settingsurl}}" class="btn btn-outline-info jb-hover-lift">
+                <i class="fa fa-gear me-2" aria-hidden="true"></i>
+                {{#str}}pluginsettings, local_jobboard{{/str}}
+            </a>
+        </div>
+    </footer>
+</div>
+
+{{#selectedrole}}
+{{#js}}
+document.getElementById('usersearch').addEventListener('keyup', function() {
+    var filter = this.value.toLowerCase();
+    var options = document.querySelectorAll('#userselect option');
+    options.forEach(function(option) {
+        var text = option.textContent.toLowerCase();
+        option.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+{{/js}}
+{{/selectedrole}}
+{{/loading}}

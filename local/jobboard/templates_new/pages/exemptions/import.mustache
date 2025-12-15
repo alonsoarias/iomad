@@ -1,0 +1,156 @@
+{{!
+    @template local_jobboard/pages/exemptions/import
+
+    CSV import page for ISER exemptions with Bootstrap 5.
+    Includes accessibility features, animations, and loading states.
+
+    Context variables required for this template:
+    * pagetitle - string - Page title
+    * formhtml - string - Rendered form HTML
+    * backurl - string - Back URL
+    * sample - string - Sample CSV content
+    * loading - bool - Show skeleton loading state
+
+    Example context (json):
+    {
+        "pagetitle": "Import Exemptions"
+    }
+}}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="local-jobboard-import-exemptions" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton jb-skeleton-text mb-4" style="width: 200px; height: 2em;"></div>
+    <div class="card mb-4">
+        <div class="card-header"><div class="jb-skeleton jb-skeleton-text" style="width: 150px;"></div></div>
+        <div class="card-body"><div class="jb-skeleton jb-skeleton-text" style="height: 250px;"></div></div>
+    </div>
+    <div class="card">
+        <div class="card-body"><div class="jb-skeleton jb-skeleton-text" style="height: 150px;"></div></div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="local-jobboard-import-exemptions" data-region="jobboard-import-exemptions">
+    {{! Skip Link for Accessibility }}
+    <a href="#import-form-content" class="visually-hidden-focusable">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="d-flex justify-content-between align-items-center mb-4 jb-fade-in">
+        <h2 class="mb-0">
+            <i class="fa fa-file-import text-primary me-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h2>
+        {{#backurl}}
+        <a href="{{backurl}}" class="btn btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+            {{#str}}back, local_jobboard{{/str}}
+        </a>
+        {{/backurl}}
+    </header>
+
+    {{! Instructions Card }}
+    <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.05s;" aria-labelledby="instructions-heading">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0" id="instructions-heading">
+                <i class="fa fa-circle-info me-2" aria-hidden="true"></i>
+                {{#str}}instructions_title, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-4">{{#str}}instructions_text, local_jobboard{{/str}}</p>
+
+            <div class="row">
+                {{! Required Columns }}
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-light h-100">
+                        <div class="card-header bg-danger text-white">
+                            <h6 class="mb-0">
+                                <i class="fa fa-asterisk me-2" aria-hidden="true"></i>
+                                {{#str}}required_columns, local_jobboard{{/str}}
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                <li class="d-flex align-items-start mb-2">
+                                    <i class="fa fa-circle-check text-success me-2 mt-1" aria-hidden="true"></i>
+                                    <div>
+                                        <code class="text-primary">email</code>
+                                        <span class="mx-1">{{#str}}or, local_jobboard{{/str}}</span>
+                                        <code class="text-primary">username</code>
+                                        <span class="mx-1">{{#str}}or, local_jobboard{{/str}}</span>
+                                        <code class="text-primary">idnumber</code>
+                                        <br><small class="text-muted">{{#str}}user_identifier, local_jobboard{{/str}}</small>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {{! Optional Columns }}
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-light h-100">
+                        <div class="card-header bg-secondary text-white">
+                            <h6 class="mb-0">
+                                <i class="fa fa-circle-plus me-2" aria-hidden="true"></i>
+                                {{#str}}optional_columns, local_jobboard{{/str}}
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0 small">
+                                <li class="mb-2">
+                                    <code class="text-info">exemptiontype</code>
+                                    <span class="text-muted">- {{#str}}exemptiontype_desc, local_jobboard{{/str}}</span>
+                                </li>
+                                <li class="mb-2">
+                                    <code class="text-info">exempteddocs</code>
+                                    <span class="text-muted">- {{#str}}exempteddocs_desc, local_jobboard{{/str}}</span>
+                                </li>
+                                <li class="mb-2">
+                                    <code class="text-info">documentref</code>
+                                    <span class="text-muted">- {{#str}}documentref_desc, local_jobboard{{/str}}</span>
+                                </li>
+                                <li>
+                                    <code class="text-info">notes</code>
+                                    <span class="text-muted">- {{#str}}notes_desc, local_jobboard{{/str}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{! Sample CSV }}
+            <div class="card bg-dark text-light">
+                <div class="card-header">
+                    <h6 class="mb-0 text-white">
+                        <i class="fa fa-code me-2" aria-hidden="true"></i>
+                        {{#str}}sample_csv, local_jobboard{{/str}}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <pre class="mb-0 text-light small"><code>{{{sample}}}</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{! Form Card }}
+    <main id="import-form-content">
+        <section class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="import-form-heading">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0" id="import-form-heading">
+                    <i class="fa fa-upload me-2" aria-hidden="true"></i>
+                    {{#str}}uploadcsv, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="card-body">
+                {{{formhtml}}}
+            </div>
+        </section>
+    </main>
+</div>
+{{/loading}}

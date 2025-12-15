@@ -1,0 +1,332 @@
+{{!
+    @template local_jobboard/pages/documents/validate
+
+    Single document validation page template with Bootstrap 5.
+    Includes accessibility features, animations, and loading states.
+
+    Context variables:
+    * pagetitle (string) - Page title
+    * document (object) - Document data {id, type, typename, filename, uploadeddate, issuedate}
+    * applicant (object) - Applicant data {fullname, email, idnumber}
+    * application (object) - Application data {id}
+    * preview (object) - Preview data {downloadurl, previewurl, mimetype, canpreview, isconverting, isfailed}
+    * checklist (array) - Validation checklist items
+    * haschecklist (bool) - Has checklist items
+    * rejectreasons (array) - Rejection reason options
+    * approveformurl (string) - Approve form URL
+    * rejectformurl (string) - Reject form URL
+    * backurl (string) - Back URL
+    * sesskey (string) - Session key
+    * loading (bool) - Show skeleton loading state
+
+    Example context (json):
+    {
+        "document": {"id": 1, "typename": "Cedula", "filename": "cedula.pdf"}
+    }
+}}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="local-jobboard-validate-document" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton jb-skeleton-text mb-4" style="width: 40%; height: 2em;"></div>
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="jb-skeleton jb-skeleton-text mb-3" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="jb-skeleton jb-skeleton-text mb-2" style="width: 60%;"></div>
+                    <div class="jb-skeleton jb-skeleton-text mb-2" style="width: 80%;"></div>
+                    <div class="jb-skeleton jb-skeleton-text" style="width: 50%;"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="jb-skeleton jb-skeleton-text mb-3" style="width: 100%; height: 100px;"></div>
+                    <div class="jb-skeleton jb-skeleton-text" style="width: 100%; height: 100px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="local-jobboard-validate-document" data-region="jobboard-validate-document" data-document-id="{{document.id}}">
+    {{! Skip Link for Accessibility }}
+    <a href="#validate-main-content" class="visually-hidden-focusable">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="mb-4 jb-fade-in">
+        <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="mb-2">
+            <ol class="breadcrumb small">
+                <li class="breadcrumb-item">
+                    <a href="{{backurl}}">{{#str}}documents, local_jobboard{{/str}}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{#str}}validate, local_jobboard{{/str}}
+                </li>
+            </ol>
+        </nav>
+        <h1 class="fs-3 mb-0">
+            <i class="fa fa-file-check text-primary me-2" aria-hidden="true"></i>
+            {{pagetitle}}
+        </h1>
+    </header>
+
+    {{! Main Content }}
+    <main id="validate-main-content">
+        <div class="row">
+            {{! Left Column - Preview }}
+            <div class="col-lg-8 mb-4">
+                {{! Document Preview Card }}
+                <section class="card shadow-sm jb-fade-in-up" aria-labelledby="preview-heading" style="animation-delay: 0.05s;">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h2 class="fs-5 mb-0" id="preview-heading">
+                            <i class="fa fa-eye text-info me-2" aria-hidden="true"></i>
+                            {{#str}}documentpreview, local_jobboard{{/str}}
+                        </h2>
+                        <div class="btn-group btn-group-sm" role="group">
+                            {{#preview.downloadurl}}
+                            <a href="{{preview.downloadurl}}" class="btn btn-outline-primary" target="_blank">
+                                <i class="fa fa-download me-1" aria-hidden="true"></i>
+                                {{#str}}download{{/str}}
+                            </a>
+                            {{/preview.downloadurl}}
+                            <button type="button" class="btn btn-outline-secondary" id="toggle-preview">
+                                <i class="fa fa-expand me-1" aria-hidden="true"></i>
+                                {{#str}}togglepreview, local_jobboard{{/str}}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        {{! Preview Content }}
+                        {{#preview.canpreview}}
+                        <div class="jb-preview-content" id="preview-container">
+                            {{#preview.ispdf}}
+                            <iframe src="{{preview.previewurl}}#toolbar=0&navpanes=0"
+                                    class="w-100 border-0"
+                                    style="min-height: 500px;"
+                                    title="{{#str}}documentpreview, local_jobboard{{/str}}"></iframe>
+                            {{/preview.ispdf}}
+                            {{#preview.isimage}}
+                            <div class="text-center p-3">
+                                <img src="{{preview.downloadurl}}" class="img-fluid mw-100" alt="{{document.filename}}" style="max-height: 500px;">
+                            </div>
+                            {{/preview.isimage}}
+                        </div>
+                        {{/preview.canpreview}}
+
+                        {{#preview.isconverting}}
+                        <div class="text-center py-5" id="preview-container">
+                            <div class="mb-3">
+                                <i class="fa fa-spinner fa-spin fa-3x text-primary" aria-hidden="true"></i>
+                            </div>
+                            <h3 class="fs-5 mb-2">{{#str}}conversioninprogress, local_jobboard{{/str}}</h3>
+                            <p class="text-muted mb-0">{{#str}}conversionwait, local_jobboard{{/str}}</p>
+                        </div>
+                        {{/preview.isconverting}}
+
+                        {{#preview.isfailed}}
+                        <div class="text-center py-5" id="preview-container">
+                            <div class="alert alert-warning d-inline-block mb-3">
+                                <i class="fa fa-triangle-exclamation me-2" aria-hidden="true"></i>
+                                {{#str}}conversionfailed, local_jobboard{{/str}}
+                            </div>
+                            <p class="mb-0">
+                                <a href="{{preview.downloadurl}}" class="btn btn-outline-primary" target="_blank">
+                                    <i class="fa fa-download me-1" aria-hidden="true"></i>
+                                    {{#str}}downloadtoview, local_jobboard{{/str}}
+                                </a>
+                            </p>
+                        </div>
+                        {{/preview.isfailed}}
+
+                        {{^preview.canpreview}}
+                        {{^preview.isconverting}}
+                        {{^preview.isfailed}}
+                        <div class="text-center py-5">
+                            <i class="fa fa-file fa-4x text-muted mb-3" aria-hidden="true"></i>
+                            <p class="text-muted mb-3">{{#str}}nopreviewavailable, local_jobboard{{/str}}</p>
+                            {{#preview.downloadurl}}
+                            <a href="{{preview.downloadurl}}" class="btn btn-primary" target="_blank">
+                                <i class="fa fa-download me-1" aria-hidden="true"></i>
+                                {{#str}}downloadtoview, local_jobboard{{/str}}
+                            </a>
+                            {{/preview.downloadurl}}
+                        </div>
+                        {{/preview.isfailed}}
+                        {{/preview.isconverting}}
+                        {{/preview.canpreview}}
+                    </div>
+                </section>
+
+                {{! Validation Checklist Card }}
+                {{#haschecklist}}
+                <section class="card shadow-sm mt-4 jb-fade-in-up" aria-labelledby="checklist-heading" style="animation-delay: 0.15s;">
+                    <div class="card-header bg-white">
+                        <h2 class="fs-5 mb-0" id="checklist-heading">
+                            <i class="fa fa-list-check text-warning me-2" aria-hidden="true"></i>
+                            {{#str}}validationchecklist, local_jobboard{{/str}}
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {{#checklist}}
+                            <li class="list-group-item px-0">
+                                <div class="form-check">
+                                    <input class="form-check-input checklist-item" type="checkbox" id="check_{{id}}" aria-describedby="check_{{id}}_desc">
+                                    <label class="form-check-label" for="check_{{id}}">{{text}}</label>
+                                    {{#description}}
+                                    <small class="d-block text-muted ms-4" id="check_{{id}}_desc">{{description}}</small>
+                                    {{/description}}
+                                </div>
+                            </li>
+                            {{/checklist}}
+                        </ul>
+                    </div>
+                </section>
+                {{/haschecklist}}
+            </div>
+
+            {{! Right Column - Info & Actions }}
+            <div class="col-lg-4">
+                {{! Document Information Card }}
+                <section class="card shadow-sm mb-4 jb-fade-in-up" aria-labelledby="docinfo-heading" style="animation-delay: 0.1s;">
+                    <div class="card-header bg-info text-white">
+                        <h2 class="fs-6 mb-0" id="docinfo-heading">
+                            <i class="fa fa-file-lines me-2" aria-hidden="true"></i>
+                            {{#str}}documentinfo, local_jobboard{{/str}}
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <dl class="mb-0">
+                            <dt class="small text-muted">{{#str}}documenttype, local_jobboard{{/str}}</dt>
+                            <dd class="fw-bold mb-3">{{document.typename}}</dd>
+
+                            <dt class="small text-muted">{{#str}}filename, local_jobboard{{/str}}</dt>
+                            <dd class="mb-3"><code class="small">{{document.filename}}</code></dd>
+
+                            <dt class="small text-muted">{{#str}}uploaded, local_jobboard{{/str}}</dt>
+                            <dd class="mb-3">{{document.uploadeddate}}</dd>
+
+                            {{#document.issuedate}}
+                            <dt class="small text-muted">{{#str}}documentissuedate, local_jobboard{{/str}}</dt>
+                            <dd class="mb-0">{{document.issuedate}}</dd>
+                            {{/document.issuedate}}
+                        </dl>
+                    </div>
+                </section>
+
+                {{! Applicant Information Card }}
+                <section class="card shadow-sm mb-4 jb-fade-in-up" aria-labelledby="applicant-heading" style="animation-delay: 0.15s;">
+                    <div class="card-header bg-success text-white">
+                        <h2 class="fs-6 mb-0" id="applicant-heading">
+                            <i class="fa fa-user me-2" aria-hidden="true"></i>
+                            {{#str}}applicantinfo, local_jobboard{{/str}}
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-light me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                <i class="fa fa-user fa-lg text-muted" aria-hidden="true"></i>
+                            </div>
+                            <div>
+                                <strong class="d-block">{{applicant.fullname}}</strong>
+                                <small class="text-muted">{{applicant.email}}</small>
+                            </div>
+                        </div>
+                        {{#applicant.idnumber}}
+                        <div class="small">
+                            <span class="text-muted">{{#str}}idnumber{{/str}}:</span>
+                            <code>{{applicant.idnumber}}</code>
+                        </div>
+                        {{/applicant.idnumber}}
+                    </div>
+                </section>
+
+                {{! Validation Decision Card }}
+                <section class="card shadow-sm jb-fade-in-up" aria-labelledby="decision-heading" style="animation-delay: 0.2s;">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="fs-6 mb-0" id="decision-heading">
+                            <i class="fa fa-gavel me-2" aria-hidden="true"></i>
+                            {{#str}}validationdecision, local_jobboard{{/str}}
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        {{! Approve Form }}
+                        <div class="mb-4">
+                            <h3 class="fs-6 text-success mb-3">
+                                <i class="fa fa-circle-check me-2" aria-hidden="true"></i>
+                                {{#str}}approvedocument, local_jobboard{{/str}}
+                            </h3>
+                            <form method="post" action="{{approveformurl}}">
+                                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                <div class="mb-3">
+                                    <label for="notes_approve" class="form-label small text-muted">
+                                        {{#str}}notes, local_jobboard{{/str}}
+                                    </label>
+                                    <textarea name="notes" id="notes_approve" class="form-control form-control-sm" rows="2" placeholder="{{#str}}optionalnotes, local_jobboard{{/str}}"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100 jb-hover-lift">
+                                    <i class="fa fa-check me-2" aria-hidden="true"></i>
+                                    {{#str}}approvedocument, local_jobboard{{/str}}
+                                </button>
+                            </form>
+                        </div>
+
+                        <hr class="my-4">
+
+                        {{! Reject Form }}
+                        <div>
+                            <h3 class="fs-6 text-danger mb-3">
+                                <i class="fa fa-circle-xmark me-2" aria-hidden="true"></i>
+                                {{#str}}rejectdocument, local_jobboard{{/str}}
+                            </h3>
+                            <form method="post" action="{{rejectformurl}}">
+                                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                <div class="mb-3">
+                                    <label for="rejectreason" class="form-label small text-muted">
+                                        {{#str}}rejectreason, local_jobboard{{/str}}
+                                        <span class="text-danger" aria-label="{{#str}}required{{/str}}">*</span>
+                                    </label>
+                                    <select name="rejectreason" id="rejectreason" class="form-select form-select-sm" required aria-required="true">
+                                        <option value="">{{#str}}selectreason, local_jobboard{{/str}}</option>
+                                        {{#rejectreasons}}
+                                        <option value="{{code}}">{{label}}</option>
+                                        {{/rejectreasons}}
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="notes_reject" class="form-label small text-muted">
+                                        {{#str}}additionalnotes, local_jobboard{{/str}}
+                                    </label>
+                                    <textarea name="notes" id="notes_reject" class="form-control form-control-sm" rows="2"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-danger w-100 jb-hover-lift">
+                                    <i class="fa fa-xmark me-2" aria-hidden="true"></i>
+                                    {{#str}}rejectdocument, local_jobboard{{/str}}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    {{! Navigation Footer }}
+    <nav class="mt-4 py-3 border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
+        <a href="{{backurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+            {{#str}}back{{/str}}
+        </a>
+    </nav>
+</div>
+{{/loading}}

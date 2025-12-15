@@ -1,0 +1,179 @@
+{{!
+    @template local_jobboard/pages/convocatorias/form
+
+    Single convocatoria create/edit page with Bootstrap 5.
+
+    Context variables:
+    * pagetitle - Page title string
+    * breadcrumbs - Array of breadcrumb items
+    * isediting - Boolean if editing existing
+    * convocatoria - Convocatoria data if editing
+    * stats - Statistics cards (vacancies, applications, status)
+    * vacancies - Array of vacancies in this convocatoria (max 5)
+    * hasvacancies - Boolean if has vacancies
+    * vacancycount - Total vacancy count
+    * applicationcount - Total application count
+    * canaddvacancy - Boolean if can add vacancy
+    * addvacancyurl - URL to add vacancy
+    * viewallurl - URL to view all vacancies
+    * applicationsurl - URL to view applications
+    * showviewall - Boolean if should show view all link
+    * formhtml - Moodle form HTML
+    * backurl - URL to go back to convocatorias list
+    * dashboardurl - URL to dashboard
+
+    Example context (json):
+    {
+        "isediting": true,
+        "convocatoria": {"id": 1, "name": "Call 2025"}
+    }
+}}
+<div class="jb-convocatoria-edit" data-region="jobboard-convocatoria-edit">
+    {{! Breadcrumbs }}
+    {{#breadcrumbs.0}}
+    {{> local_jobboard/components/breadcrumb }}
+    {{/breadcrumbs.0}}
+
+    {{! Page Header }}
+    <header class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fs-3 mb-0">{{pagetitle}}</h1>
+        <a href="{{backurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+            {{#str}}backtoconvocatorias, local_jobboard{{/str}}
+        </a>
+    </header>
+
+    {{#isediting}}
+    {{! Statistics Row }}
+    {{#hasstats}}
+    <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        {{#stats}}
+        <div class="col-lg-4 col-md-6 mb-3">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        {{/stats}}
+    </section>
+    {{/hasstats}}
+
+    {{! Convocatoria Info Card }}
+    <section class="card shadow-sm mb-4 border-{{convocatoria.statuscolor}}" aria-labelledby="convocatoria-info-heading">
+        <div class="card-header d-flex justify-content-between align-items-center bg-{{convocatoria.statuscolor}} text-white">
+            <h2 class="fs-5 mb-0" id="convocatoria-info-heading">{{convocatoria.name}}</h2>
+            <span class="badge bg-light text-dark">{{convocatoria.statuslabel}}</span>
+        </div>
+        <div class="card-body">
+            {{! Dates }}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <small class="d-block text-muted">{{#str}}convocatoriastartdate, local_jobboard{{/str}}</small>
+                    <strong>
+                        <i class="fa fa-calendar-days text-success me-2" aria-hidden="true"></i>
+                        {{convocatoria.startdateformatted}}
+                    </strong>
+                </div>
+                <div class="col-md-6">
+                    <small class="d-block text-muted">{{#str}}convocatoriaenddate, local_jobboard{{/str}}</small>
+                    <strong>
+                        <i class="fa fa-calendar-xmark text-danger me-2" aria-hidden="true"></i>
+                        {{convocatoria.enddateformatted}}
+                    </strong>
+                </div>
+            </div>
+
+            {{! Action Buttons }}
+            <div class="d-flex flex-wrap gap-2">
+                {{#canaddvacancy}}
+                <a href="{{addvacancyurl}}" class="btn btn-success">
+                    <i class="fa fa-plus me-2" aria-hidden="true"></i>
+                    {{#str}}addvacancy, local_jobboard{{/str}}
+                </a>
+                {{/canaddvacancy}}
+
+                {{#hasvacancies}}
+                <a href="{{viewallurl}}" class="btn btn-info">
+                    <i class="fa fa-list me-2" aria-hidden="true"></i>
+                    {{#str}}viewvacancies, local_jobboard{{/str}} ({{vacancycount}})
+                </a>
+                {{/hasvacancies}}
+
+                {{#hasapplications}}
+                <a href="{{applicationsurl}}" class="btn btn-outline-info">
+                    <i class="fa fa-file-lines me-2" aria-hidden="true"></i>
+                    {{#str}}applications, local_jobboard{{/str}} ({{applicationcount}})
+                </a>
+                {{/hasapplications}}
+            </div>
+        </div>
+    </section>
+
+    {{! Vacancies List Card }}
+    {{#hasvacancies}}
+    <section class="card shadow-sm mb-4" aria-labelledby="vacancies-heading">
+        <div class="card-header bg-white fw-bold">
+            <i class="fa fa-briefcase me-2" aria-hidden="true"></i>
+            <span id="vacancies-heading">{{#str}}vacancies, local_jobboard{{/str}}</span>
+            <span class="badge bg-primary ms-2">{{vacancycount}}</span>
+        </div>
+        <div class="card-body p-0">
+            <ul class="list-group list-group-flush">
+                {{#vacancies}}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-secondary me-2">{{code}}</span>
+                        <strong>{{title}}</strong>
+                        <span class="badge bg-{{statuscolor}} ms-2">{{statuslabel}}</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-info me-2" title="{{#str}}applications, local_jobboard{{/str}}">
+                            <i class="fa fa-file-lines me-1" aria-hidden="true"></i>{{applicationcount}}
+                        </span>
+                        <a href="{{editurl}}" class="btn btn-sm btn-outline-primary" aria-label="{{#str}}edit{{/str}} {{title}}">
+                            <i class="fa fa-pen-to-square" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </li>
+                {{/vacancies}}
+
+                {{#showviewall}}
+                <li class="list-group-item text-center">
+                    <a href="{{viewallurl}}" class="btn btn-sm btn-outline-secondary">
+                        {{#str}}viewall, local_jobboard{{/str}} ({{vacancycount}})
+                    </a>
+                </li>
+                {{/showviewall}}
+            </ul>
+        </div>
+    </section>
+    {{/hasvacancies}}
+    {{/isediting}}
+
+    {{! Form Card }}
+    <section class="card shadow-sm mb-4" aria-labelledby="form-heading">
+        <div class="card-header bg-primary text-white fw-bold">
+            <i class="fa fa-pen-to-square me-2" aria-hidden="true"></i>
+            <span id="form-heading">
+                {{#isediting}}
+                {{#str}}editconvocatoria, local_jobboard{{/str}}
+                {{/isediting}}
+                {{^isediting}}
+                {{#str}}addconvocatoria, local_jobboard{{/str}}
+                {{/isediting}}
+            </span>
+        </div>
+        <div class="card-body">
+            {{{formhtml}}}
+        </div>
+    </section>
+
+    {{! Navigation Footer }}
+    <footer class="d-flex justify-content-between align-items-center mt-4 py-3 border-top">
+        <a href="{{backurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+            {{#str}}backtoconvocatorias, local_jobboard{{/str}}
+        </a>
+        <a href="{{dashboardurl}}" class="btn btn-link text-muted">
+            {{#str}}backtodashboard, local_jobboard{{/str}}
+            <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
+        </a>
+    </footer>
+</div>

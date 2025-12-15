@@ -1,0 +1,288 @@
+{{!
+    @template local_jobboard/pages/admin/import_vacancies_results
+
+    Import vacancies results page with Bootstrap 5.
+    Includes accessibility features, animations, and loading states.
+
+    Context variables:
+    * pagetitle - string - Page title
+    * ispreview - boolean - Whether this is preview mode
+    * results - object - Import results
+    * previewrows - array - Preview data rows
+    * haspreviewrows - bool - Has preview rows
+    * convocatoriaid - int - Convocatoria ID
+    * backurl - string - Back URL
+    * uploadurl - string - URL to upload new file
+    * confirmurl - string - URL to confirm import
+    * haserrors - boolean - Whether there are errors
+    * errors - array - List of error messages
+    * hasmoreerrors - bool - Has more errors
+    * errorcount - int - Total error count
+    * loading - bool - Show skeleton loading state
+
+    Example context (json):
+    {
+        "pagetitle": "Import Results",
+        "ispreview": true,
+        "results": {"created": 5, "updated": 2, "skipped": 1}
+    }
+}}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="jb-import-results" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="jb-skeleton jb-skeleton-text mb-4" style="width: 200px; height: 2em;"></div>
+    <div class="jb-skeleton jb-skeleton-text mb-4" style="width: 100%; height: 60px;"></div>
+    <div class="row mb-4">
+        <div class="col-md-4"><div class="jb-skeleton jb-skeleton-text" style="height: 100px;"></div></div>
+        <div class="col-md-4"><div class="jb-skeleton jb-skeleton-text" style="height: 100px;"></div></div>
+        <div class="col-md-4"><div class="jb-skeleton jb-skeleton-text" style="height: 100px;"></div></div>
+    </div>
+    <div class="jb-skeleton jb-skeleton-text" style="width: 100%; height: 200px;"></div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-import-results" data-region="jobboard-import-results">
+    {{! Skip Link for Accessibility }}
+    <a href="#import-results-content" class="visually-hidden-focusable">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="d-flex justify-content-between align-items-center mb-4 jb-fade-in">
+        <h2 class="mb-0">
+            <i class="fa fa-file-import text-primary me-2" aria-hidden="true"></i>
+            {{#str}}importresults, local_jobboard{{/str}}
+        </h2>
+        <a href="{{backurl}}" class="btn btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+            {{#str}}backtoconvocatorias, local_jobboard{{/str}}
+        </a>
+    </header>
+
+    <main id="import-results-content">
+        {{#ispreview}}
+        {{! Preview Mode }}
+        <div class="alert alert-warning d-flex align-items-center mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.05s;">
+            <i class="fa fa-eye fa-lg me-3" aria-hidden="true"></i>
+            <div>
+                <strong class="d-block">{{#str}}previewmodeheader, local_jobboard{{/str}}</strong>
+                <small>{{#str}}previewmode, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+
+        {{#haspreviewrows}}
+        {{! Preview Summary Stats }}
+        <section class="row mb-4" aria-label="{{#str}}previewsummary, local_jobboard{{/str}}">
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.05s;">
+                    <div class="card-body text-center">
+                        <div class="rounded-circle bg-success bg-opacity-10 text-success mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                            <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-success mb-1">{{results.tocreate}}</h3>
+                        <p class="text-muted small mb-0">{{#str}}tobecreated, local_jobboard{{/str}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="card-body text-center">
+                        <div class="rounded-circle bg-warning bg-opacity-10 text-warning mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                            <i class="fa fa-arrows-rotate fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-warning mb-1">{{results.toupdate}}</h3>
+                        <p class="text-muted small mb-0">{{#str}}tobeupdated, local_jobboard{{/str}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.15s;">
+                    <div class="card-body text-center">
+                        <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                            <i class="fa fa-forward fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-secondary mb-1">{{results.toskip}}</h3>
+                        <p class="text-muted small mb-0">{{#str}}tobeskipped, local_jobboard{{/str}}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {{! Preview Table }}
+        <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.2s;" aria-labelledby="preview-table-heading">
+            <div class="card-header bg-white">
+                <h5 class="mb-0" id="preview-table-heading">
+                    <i class="fa fa-table text-primary me-2" aria-hidden="true"></i>
+                    {{#str}}previewdata, local_jobboard{{/str}}
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0" aria-describedby="preview-table-heading">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">{{#str}}row, local_jobboard{{/str}}</th>
+                                <th scope="col">{{#str}}code, local_jobboard{{/str}}</th>
+                                <th scope="col">{{#str}}title{{/str}}</th>
+                                <th scope="col">{{#str}}location{{/str}}</th>
+                                <th scope="col">{{#str}}modality, local_jobboard{{/str}}</th>
+                                <th scope="col">{{#str}}contracttype, local_jobboard{{/str}}</th>
+                                <th scope="col">{{#str}}courses{{/str}}</th>
+                                <th scope="col" class="text-center">{{#str}}action{{/str}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#previewrows}}
+                            <tr class="jb-fade-in">
+                                <td><span class="badge bg-light text-dark">{{row}}</span></td>
+                                <td><code class="text-primary">{{code}}</code></td>
+                                <td>
+                                    <span class="text-truncate d-inline-block" style="max-width: 200px;" title="{{title}}">{{title}}</span>
+                                </td>
+                                <td>{{location}}</td>
+                                <td>{{modality}}</td>
+                                <td>{{contracttype}}</td>
+                                <td class="text-center"><span class="badge bg-info rounded-pill">{{coursecount}}</span></td>
+                                <td class="text-center">
+                                    <span class="badge {{actionbadgeclass}}">
+                                        {{#iscreate}}<i class="fa fa-plus me-1" aria-hidden="true"></i>{{/iscreate}}
+                                        {{#isupdate}}<i class="fa fa-arrows-rotate me-1" aria-hidden="true"></i>{{/isupdate}}
+                                        {{#isskip}}<i class="fa fa-forward me-1" aria-hidden="true"></i>{{/isskip}}
+                                        {{action}}
+                                    </span>
+                                </td>
+                            </tr>
+                            {{/previewrows}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        {{! Confirm Actions }}
+        <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.3s;">
+            <div class="card-body d-flex flex-wrap justify-content-between align-items-center">
+                <p class="mb-2 mb-md-0">
+                    <i class="fa fa-circle-question text-info me-2" aria-hidden="true"></i>
+                    {{#str}}previewconfirm, local_jobboard{{/str}}
+                </p>
+                <div class="d-flex gap-2">
+                    <a href="{{confirmurl}}" class="btn btn-success jb-hover-lift">
+                        <i class="fa fa-check me-2" aria-hidden="true"></i>
+                        {{#str}}confirmimport, local_jobboard{{/str}}
+                    </a>
+                    <a href="{{uploadurl}}" class="btn btn-outline-secondary jb-hover-lift">
+                        <i class="fa fa-upload me-2" aria-hidden="true"></i>
+                        {{#str}}uploadnewfile, local_jobboard{{/str}}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{/haspreviewrows}}
+
+        {{^haspreviewrows}}
+        <div class="text-center py-5">
+            <i class="fa fa-file-excel fa-4x text-muted mb-3" aria-hidden="true"></i>
+            <h5 class="text-muted">{{#str}}nopreviewdata, local_jobboard{{/str}}</h5>
+            <a href="{{uploadurl}}" class="btn btn-primary mt-3">
+                <i class="fa fa-upload me-2" aria-hidden="true"></i>
+                {{#str}}uploadnewfile, local_jobboard{{/str}}
+            </a>
+        </div>
+        {{/haspreviewrows}}
+        {{/ispreview}}
+
+        {{^ispreview}}
+        {{! Actual Import Results }}
+        <div class="alert alert-success d-flex align-items-center mb-4 jb-fade-in" role="status">
+            <i class="fa fa-circle-check fa-lg me-3" aria-hidden="true"></i>
+            <div>
+                <strong class="d-block">{{#str}}importcomplete, local_jobboard{{/str}}</strong>
+                <small>{{#str}}importcompletedesc, local_jobboard{{/str}}</small>
+            </div>
+        </div>
+
+        {{! Results Stats }}
+        <section class="row mb-4" aria-label="{{#str}}importresults, local_jobboard{{/str}}">
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm text-center jb-fade-in-up" style="animation-delay: 0.05s;">
+                    <div class="card-body">
+                        <div class="rounded-circle bg-success bg-opacity-10 text-success mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                            <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-success mb-1">{{results.created}}</h3>
+                        <p class="mb-0 text-muted">{{#str}}vacanciescreated, local_jobboard{{/str}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm text-center jb-fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="card-body">
+                        <div class="rounded-circle bg-warning bg-opacity-10 text-warning mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                            <i class="fa fa-arrows-rotate fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-warning mb-1">{{results.updated}}</h3>
+                        <p class="mb-0 text-muted">{{#str}}vacanciesupdated, local_jobboard{{/str}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm text-center jb-fade-in-up" style="animation-delay: 0.15s;">
+                    <div class="card-body">
+                        <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                            <i class="fa fa-forward fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <h3 class="text-secondary mb-1">{{results.skipped}}</h3>
+                        <p class="mb-0 text-muted">{{#str}}vacanciesskipped, local_jobboard{{/str}}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {{/ispreview}}
+
+        {{! Errors List }}
+        {{#haserrors}}
+        <section class="card shadow-sm border-danger mb-4 jb-fade-in-up" style="animation-delay: 0.2s;" aria-labelledby="errors-heading">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0" id="errors-heading">
+                    <i class="fa fa-triangle-exclamation me-2" aria-hidden="true"></i>
+                    {{#str}}errors{{/str}} ({{errorcount}})
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {{#errors}}
+                    <li class="list-group-item list-group-item-danger d-flex align-items-start">
+                        <i class="fa fa-circle-xmark me-2 mt-1" aria-hidden="true"></i>
+                        <div>
+                            {{#row}}<strong>{{#str}}row, local_jobboard{{/str}} {{row}}:</strong> {{/row}}
+                            {{message}}
+                        </div>
+                    </li>
+                    {{/errors}}
+                    {{#hasmoreerrors}}
+                    <li class="list-group-item list-group-item-warning text-center">
+                        <i class="fa fa-ellipsis me-2" aria-hidden="true"></i>
+                        {{#str}}andmore, local_jobboard{{/str}}
+                    </li>
+                    {{/hasmoreerrors}}
+                </ul>
+            </div>
+        </section>
+        {{/haserrors}}
+
+        {{! Action Buttons }}
+        <div class="d-flex flex-wrap gap-2 mt-4 jb-fade-in" style="animation-delay: 0.25s;">
+            <a href="{{backurl}}" class="btn btn-primary jb-hover-lift">
+                <i class="fa fa-list me-2" aria-hidden="true"></i>
+                {{#str}}backtoconvocatorias, local_jobboard{{/str}}
+            </a>
+            <a href="{{uploadurl}}" class="btn btn-outline-secondary jb-hover-lift">
+                <i class="fa fa-upload me-2" aria-hidden="true"></i>
+                {{#str}}importmore, local_jobboard{{/str}}
+            </a>
+        </div>
+    </main>
+</div>
+{{/loading}}

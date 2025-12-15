@@ -1,0 +1,302 @@
+{{!
+    @template local_jobboard/pages/convocatorias/list
+
+    Convocatorias admin list page with Bootstrap 5.
+    Admin interface for managing convocatorias (job posting campaigns).
+
+    Context variables:
+    * dashboardurl - URL to dashboard
+    * createurl - URL to create new convocatoria
+    * importurl - URL to import vacancies
+    * cancreate - Boolean if can create
+    * helptext - Help text message
+    * stats - Statistics cards array
+    * filterform - Filter form data
+    * showinginfo - Showing X-Y of Z text
+    * hasconvocatorias - Boolean
+    * convocatorias - Array of convocatoria data
+    * pagination - Pagination HTML
+    * loading - Show skeleton loading state
+
+    Example context (json):
+    {
+        "hasconvocatorias": true,
+        "convocatorias": [{"id": 1, "name": "Call 2025", "code": "CONV-2025-001"}]
+    }
+}}
+{{#loading}}
+{{! Skeleton Loading State }}
+<div class="local-jobboard-convocatorias" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="mb-4">
+        <div class="jb-skeleton jb-skeleton-text" style="width: 200px; height: 1em;"></div>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="jb-skeleton jb-skeleton-text" style="width: 45%;"></div>
+            <div class="jb-skeleton jb-skeleton-text" style="width: 180px; height: 40px;"></div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        {{#stats}}
+        <div class="col-lg-3 col-md-6 mb-3">
+            {{> local_jobboard/components/skeleton }}
+        </div>
+        {{/stats}}
+    </div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="local-jobboard-convocatorias" data-region="jobboard-convocatorias">
+    {{! Skip Link for Accessibility }}
+    <a href="#convocatorias-main-content" class="visually-hidden-focusable">
+        {{#str}}skiptocontent, local_jobboard{{/str}}
+    </a>
+
+    {{! Page Header }}
+    <header class="mb-4 jb-fade-in">
+        {{> local_jobboard/components/breadcrumb }}
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+            <h1 class="fs-4 mb-0">
+                <i class="fa fa-folder-open text-primary me-2" aria-hidden="true"></i>
+                {{#str}}manageconvocatorias, local_jobboard{{/str}}
+            </h1>
+            <div class="btn-group" role="group" aria-label="{{#str}}convocatoriaactions, local_jobboard{{/str}}">
+                <a href="{{importurl}}" class="btn btn-outline-secondary">
+                    <i class="fa fa-file-csv me-1" aria-hidden="true"></i>
+                    <span class="d-none d-md-inline">{{#str}}importvacancies, local_jobboard{{/str}}</span>
+                    <span class="d-md-none">{{#str}}import{{/str}}</span>
+                </a>
+                {{#cancreate}}
+                <a href="{{createurl}}" class="btn btn-primary jb-hover-lift">
+                    <i class="fa fa-plus me-1" aria-hidden="true"></i>
+                    <span class="d-none d-md-inline">{{#str}}addconvocatoria, local_jobboard{{/str}}</span>
+                    <span class="d-md-none">{{#str}}add{{/str}}</span>
+                </a>
+                {{/cancreate}}
+            </div>
+        </div>
+    </header>
+
+    {{! Help Text }}
+    {{#helptext}}
+    <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="alert">
+        <div class="flex-shrink-0 me-3">
+            <i class="fa fa-circle-info fa-lg text-info" aria-hidden="true"></i>
+        </div>
+        <div class="flex-grow-1">{{{helptext}}}</div>
+    </div>
+    {{/helptext}}
+
+    {{! Statistics Row }}
+    {{#stats.0}}
+    <section class="row mb-4" role="region" aria-label="{{#str}}adminstatistics, local_jobboard{{/str}}">
+        {{#stats}}
+        <div class="col-lg-3 col-md-6 mb-3 jb-fade-in-up" style="animation-delay: {{animdelay}}s;">
+            {{> local_jobboard/components/stat_card }}
+        </div>
+        {{/stats}}
+    </section>
+    {{/stats.0}}
+
+    {{! Filter Form }}
+    {{#filterform}}
+    <div class="card mb-4 jb-fade-in-up" style="animation-delay: 0.1s;">
+        <div class="card-body">
+            <form method="get" action="{{filterform.action}}" class="jb-filter-form" role="search" aria-label="{{#str}}filterconvocatorias, local_jobboard{{/str}}">
+                {{#filterform.hiddenfields}}
+                <input type="hidden" name="{{name}}" value="{{value}}">
+                {{/filterform.hiddenfields}}
+                <div class="row align-items-end">
+                    {{#filterform.fields}}
+                    <div class="{{col}} mb-2">
+                        {{#isselect}}
+                        <label for="filter-{{name}}" class="form-label small text-muted">{{label}}</label>
+                        <select name="{{name}}" id="filter-{{name}}" class="form-select">
+                            {{#options}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/options}}
+                        </select>
+                        {{/isselect}}
+                        {{#istext}}
+                        <label for="filter-{{name}}" class="form-label small text-muted">{{label}}</label>
+                        <input type="text" name="{{name}}" id="filter-{{name}}" class="form-control" value="{{value}}" placeholder="{{placeholder}}">
+                        {{/istext}}
+                    </div>
+                    {{/filterform.fields}}
+                    <div class="col-auto mb-2">
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fa fa-filter me-1" aria-hidden="true"></i>
+                            {{#str}}filter, local_jobboard{{/str}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {{/filterform}}
+
+    {{! Results Info }}
+    {{#showinginfo}}
+    <p class="text-muted small mb-3 jb-fade-in" role="status" aria-live="polite">
+        <i class="fa fa-circle-info me-1" aria-hidden="true"></i>
+        {{showinginfo}}
+    </p>
+    {{/showinginfo}}
+
+    {{! Convocatorias List }}
+    <div id="convocatorias-main-content">
+        {{#hasconvocatorias}}
+        <section class="row" aria-label="{{#str}}convocatorias, local_jobboard{{/str}}">
+            {{#convocatorias}}
+            <div class="col-lg-6 mb-4">
+                <article class="card h-100 shadow-sm jb-hover-lift jb-fade-in-up"
+                         data-convocatoria-id="{{id}}"
+                         aria-labelledby="conv-title-{{id}}"
+                         style="animation-delay: {{animdelay}}s;">
+                    {{! Card Header }}
+                    <div class="card-header bg-{{statuscolor}} text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-light text-dark">{{code}}</span>
+                                <span class="fw-bold">{{statuslabel}}</span>
+                            </div>
+                            {{#publicationtypelabel}}
+                            <span class="badge bg-{{publicationtypecolor}}">
+                                <i class="fa fa-{{publicationtypeicon}} me-1" aria-hidden="true"></i>
+                                {{publicationtypelabel}}
+                            </span>
+                            {{/publicationtypelabel}}
+                        </div>
+                    </div>
+
+                    {{! Card Body }}
+                    <div class="card-body">
+                        <h2 class="card-title fs-5 mb-2" id="conv-title-{{id}}">
+                            <a href="{{editurl}}" class="text-dark text-decoration-none">
+                                {{name}}
+                            </a>
+                        </h2>
+
+                        {{#description}}
+                        <p class="text-muted small mb-3">{{{description}}}</p>
+                        {{/description}}
+
+                        {{! Dates Row }}
+                        <div class="row mb-3 small">
+                            <div class="col-6">
+                                <div class="text-muted mb-1">{{#str}}startdate, local_jobboard{{/str}}</div>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa fa-calendar-days text-success me-2" aria-hidden="true"></i>
+                                    <span>{{startdateformatted}}</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted mb-1">{{#str}}enddate, local_jobboard{{/str}}</div>
+                                <div class="d-flex align-items-center {{#isending}}text-warning{{/isending}}">
+                                    <i class="fa fa-calendar-xmark text-danger me-2" aria-hidden="true"></i>
+                                    <span class="{{#isending}}fw-bold{{/isending}}">{{enddateformatted}}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{! Stats Row }}
+                        <div class="d-flex justify-content-around text-center py-3 bg-light rounded">
+                            <div>
+                                <div class="fs-4 fw-bold text-primary">{{vacancycount}}</div>
+                                <small class="text-muted">{{#str}}vacancies, local_jobboard{{/str}}</small>
+                            </div>
+                            <div class="border-start border-end px-3">
+                                <div class="fs-4 fw-bold text-info">{{applicationcount}}</div>
+                                <small class="text-muted">{{#str}}applications, local_jobboard{{/str}}</small>
+                            </div>
+                            <div>
+                                <div class="fs-4 fw-bold text-success">{{selectedcount}}</div>
+                                <small class="text-muted">{{#str}}appstatus:selected, local_jobboard{{/str}}</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{! Card Footer }}
+                    <footer class="card-footer bg-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            {{! Quick Actions }}
+                            <div class="btn-group btn-group-sm" role="group" aria-label="{{#str}}quickactions, local_jobboard{{/str}}">
+                                <a href="{{editurl}}" class="btn btn-outline-primary" title="{{#str}}edit{{/str}}">
+                                    <i class="fa fa-pen-to-square" aria-hidden="true"></i>
+                                    <span class="visually-hidden">{{#str}}edit{{/str}}</span>
+                                </a>
+                                {{#isdraft}}
+                                <a href="{{addvacancyurl}}" class="btn btn-outline-success" title="{{#str}}addvacancy, local_jobboard{{/str}}">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    <span class="visually-hidden">{{#str}}addvacancy, local_jobboard{{/str}}</span>
+                                </a>
+                                {{/isdraft}}
+                                {{#hasvacancies}}
+                                <a href="{{vacanciesurl}}" class="btn btn-outline-info" title="{{#str}}viewvacancies, local_jobboard{{/str}}">
+                                    <i class="fa fa-briefcase" aria-hidden="true"></i>
+                                    <span class="badge bg-info ms-1">{{vacancycount}}</span>
+                                    <span class="visually-hidden">{{#str}}viewvacancies, local_jobboard{{/str}}</span>
+                                </a>
+                                {{/hasvacancies}}
+                            </div>
+
+                            {{! Status Actions Dropdown }}
+                            {{#hasstatusactions}}
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-{{statuscolor}} dropdown-toggle"
+                                        type="button"
+                                        id="statusDropdown{{id}}"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        aria-haspopup="true">
+                                    <i class="fa fa-gear me-1" aria-hidden="true"></i>
+                                    {{#str}}actions{{/str}}
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="statusDropdown{{id}}">
+                                    {{#statusactions}}
+                                    <li>
+                                        <a href="{{url}}" class="dropdown-item {{#isdanger}}text-danger{{/isdanger}}"
+                                           {{#confirm}}onclick="return confirm('{{confirm}}');"{{/confirm}}>
+                                            <i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>
+                                            {{label}}
+                                        </a>
+                                    </li>
+                                    {{/statusactions}}
+                                </ul>
+                            </div>
+                            {{/hasstatusactions}}
+                        </div>
+                    </footer>
+                </article>
+            </div>
+            {{/convocatorias}}
+        </section>
+        {{/hasconvocatorias}}
+
+        {{! Empty State }}
+        {{^hasconvocatorias}}
+        {{> local_jobboard/components/empty_state }}
+        {{/hasconvocatorias}}
+    </div>
+
+    {{! Pagination }}
+    {{#pagination}}
+    <nav class="mt-4 jb-fade-in" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
+        {{{pagination}}}
+    </nav>
+    {{/pagination}}
+
+    {{! Navigation Footer }}
+    <nav class="d-flex justify-content-between align-items-center mt-4 py-3 border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
+        <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+            {{#str}}backtodashboard, local_jobboard{{/str}}
+        </a>
+        {{#reportsurl}}
+        <a href="{{reportsurl}}" class="btn btn-link text-muted">
+            {{#str}}viewreports, local_jobboard{{/str}}
+            <i class="fa fa-chart-bar ms-2" aria-hidden="true"></i>
+        </a>
+        {{/reportsurl}}
+    </nav>
+</div>
+{{/loading}}
