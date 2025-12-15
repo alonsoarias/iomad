@@ -660,8 +660,8 @@ class document {
             $where .= ' AND issuperseded = 0';
         }
 
-        $sql = "SELECT d.*, dv.status as validation_status, dv.reason as validation_reason,
-                       dv.reviewedby, dv.timereviewed
+        $sql = "SELECT d.*, dv.status as validation_status, dv.rejectreason as validation_reason,
+                       dv.validatedby, dv.timemodified as timereviewed
                   FROM {local_jobboard_document} d
              LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
                  WHERE d.{$where}
@@ -676,7 +676,7 @@ class document {
             // Add status property for easy access.
             $doc->status = $record->validation_status ?? 'pending';
             $doc->validation_reason = $record->validation_reason ?? '';
-            $doc->reviewedby = $record->reviewedby ?? null;
+            $doc->reviewedby = $record->validatedby ?? null;
             $doc->timereviewed = $record->timereviewed ?? null;
             $documents[$doc->id] = $doc;
         }
