@@ -64,7 +64,8 @@ class application_form extends \moodleform {
         // Get user profile for filtering.
         $userprofile = $DB->get_record('local_jobboard_applicant_profile', ['userid' => $USER->id]);
         $usergender = $userprofile->gender ?? '';
-        $userage = $this->calculate_user_age($userprofile->birthdate ?? 0);
+        $birthdate = (int) ($userprofile->birthdate ?? 0);
+        $userage = $this->calculate_user_age($birthdate);
 
         // Load enabled document types.
         $doctypes = $this->load_document_types($convocatoriaid, $isexemption);
