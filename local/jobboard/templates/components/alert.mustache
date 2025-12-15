@@ -1,7 +1,7 @@
 {{!
     @template local_jobboard/components/alert
 
-    Alert component for displaying messages with enhanced UX.
+    Alert component using Bootstrap 5 native classes.
 
     Context variables:
     * type (string) - Alert type: success, danger, warning, info, primary
@@ -9,29 +9,20 @@
     * title (string) - Optional alert title/heading
     * icon (string) - Optional FontAwesome icon name (auto-detected if not provided)
     * dismissible (bool) - Whether alert can be dismissed
-    * animate (bool) - Enable entrance animation
-    * compact (bool) - Use compact padding
     * actions (array) - Optional action buttons [{url, label, color}]
-    * list (array) - Optional list of items to display
 
     Example context (json):
     {
         "type": "success",
         "title": "Success!",
         "message": "Operation completed successfully",
-        "icon": "check-circle",
-        "dismissible": true,
-        "animate": true,
-        "actions": [{"url": "/view", "label": "View Details", "color": "success"}]
+        "dismissible": true
     }
 }}
-<div class="alert jb-alert-{{type}}{{#dismissible}} jb-alert-dismissible{{/dismissible}}{{#animate}} jb-fade-in-down{{/animate}}{{#compact}} py-2 px-3{{/compact}}"
-     role="alert"
-     aria-live="{{#isdanger}}assertive{{/isdanger}}{{^isdanger}}polite{{/isdanger}}">
-
+<div class="alert alert-{{type}}{{#dismissible}} alert-dismissible fade show{{/dismissible}}" role="alert">
     <div class="d-flex align-items-start">
-        {{! Icon - auto-detect based on type if not provided }}
-        <div class="jb-alert-icon me-3 mt-1" aria-hidden="true">
+        {{! Icon }}
+        <div class="me-3" aria-hidden="true">
             {{#icon}}
             <i class="fa fa-{{icon}} fa-lg"></i>
             {{/icon}}
@@ -46,25 +37,14 @@
 
         <div class="flex-grow-1">
             {{#title}}
-            <h4 class="jb-alert-heading fw-bold mb-1">{{title}}</h4>
+            <h5 class="alert-heading fw-bold mb-1">{{title}}</h5>
             {{/title}}
-
-            <div class="jb-alert-content">
-                {{{message}}}
-            </div>
-
-            {{#list}}
-            <ul class="mb-0 mt-2 jb-pl-3">
-                {{#items}}
-                <li>{{.}}</li>
-                {{/items}}
-            </ul>
-            {{/list}}
+            <div>{{{message}}}</div>
 
             {{#actions}}
-            <div class="jb-alert-actions mt-3 d-flex gap-2 flex-wrap">
+            <div class="mt-3 d-flex gap-2 flex-wrap">
                 {{#.}}
-                <a href="{{url}}" class="btn btn-sm jb-btn-{{#color}}{{color}}{{/color}}{{^color}}outline-{{type}}{{/color}}">
+                <a href="{{url}}" class="btn btn-sm btn-{{#color}}{{color}}{{/color}}{{^color}}outline-{{type}}{{/color}}">
                     {{#icon}}<i class="fa fa-{{icon}} me-1" aria-hidden="true"></i>{{/icon}}
                     {{label}}
                 </a>
@@ -74,12 +54,7 @@
         </div>
 
         {{#dismissible}}
-        <button type="button"
-                class="jb-btn-close ms-2"
-                data-dismiss="alert"
-                aria-label="{{#str}}dismiss, local_jobboard{{/str}}">
-            <i class="fa fa-xmark" aria-hidden="true"></i>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         {{/dismissible}}
     </div>
 </div>

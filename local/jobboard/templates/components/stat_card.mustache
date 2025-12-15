@@ -1,7 +1,7 @@
 {{!
     @template local_jobboard/components/stat_card
 
-    Statistics card component for displaying numeric values with enhanced UX.
+    Statistics card component for displaying numeric values.
 
     Context variables:
     * value (string|number) - The statistic value
@@ -9,12 +9,7 @@
     * icon (string) - FontAwesome icon name
     * color (string) - Color theme: primary, success, warning, danger, info
     * url (string) - Optional link URL
-    * trend (object) - Optional trend data {value, direction: up|down, isup: bool}
     * loading (bool) - Show skeleton loading state
-    * animate (bool) - Enable entrance animation
-    * size (string) - Size variant: sm, md (default), lg
-    * description (string) - Optional tooltip/description text
-    * badge (object) - Optional notification badge {value, color}
 
     Example context (json):
     {
@@ -22,49 +17,38 @@
         "label": "Applications",
         "icon": "file-alt",
         "color": "primary",
-        "url": "/applications",
-        "animate": true,
-        "trend": {"value": "+12%", "direction": "up", "isup": true}
+        "url": "/applications"
     }
 }}
 {{#loading}}
 {{! Skeleton loading state }}
-<div class="card shadow-sm jb-stat-card jb-stat-card-loading" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="card-body d-flex align-items-center">
-        <div class="jb-skeleton-circle me-3"></div>
-        <div class="flex-grow-1">
-            <div class="jb-skeleton-title" style="width: 40%;"></div>
-            <div class="jb-skeleton-text" style="width: 60%;"></div>
-        </div>
+<div class="card shadow-sm h-100" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="card-body text-center py-4">
+        <div class="jb-skeleton jb-skeleton-avatar mx-auto mb-3"></div>
+        <div class="jb-skeleton jb-skeleton-text mx-auto" style="width: 40%;"></div>
+        <div class="jb-skeleton jb-skeleton-text mx-auto" style="width: 60%;"></div>
     </div>
 </div>
 {{/loading}}
 
 {{^loading}}
-<div class="card shadow-sm jb-stat-card jb-stat-card-{{color}}{{#animate}} jb-fade-in-up{{/animate}}{{#size}} jb-stat-card-{{size}}{{/size}} jb-hover-lift position-relative"
-     {{#description}}title="{{description}}"{{/description}}>
-    {{#badge}}
-    <span class="jb-notification-badge jb-bg-{{color}}">{{value}}</span>
-    {{/badge}}
-    {{#url}}
-    <a href="{{url}}" class="text-decoration-none jb-text-inherit d-block" aria-label="{{label}}: {{value}}">
-    {{/url}}
-    <div class="card-body d-flex align-items-center">
-        <div class="jb-stat-icon me-3" aria-hidden="true">
-            <i class="fa fa-{{icon}}"></i>
+{{#url}}
+<a href="{{url}}" class="card shadow-sm h-100 text-decoration-none text-reset">
+{{/url}}
+{{^url}}
+<div class="card shadow-sm h-100">
+{{/url}}
+    <div class="card-body text-center py-4">
+        <div class="rounded-circle bg-{{color}} bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+            <i class="fa fa-{{icon}} fa-lg text-{{color}}" aria-hidden="true"></i>
         </div>
-        <div class="flex-grow-1 jb-min-w-0">
-            <div class="jb-stat-value fs-3 fw-bold text-truncate">{{value}}</div>
-            <div class="jb-stat-label small text-muted text-truncate">{{label}}</div>
-        </div>
-        {{#trend}}
-        <div class="jb-stat-trend jb-text-{{#isup}}success{{/isup}}{{^isup}}danger{{/isup}} ms-2 text-nowrap"
-             aria-label="{{#str}}trend, local_jobboard{{/str}}: {{value}}">
-            <i class="fa fa-arrow-{{direction}} me-1" aria-hidden="true"></i>
-            <small class="fw-medium">{{value}}</small>
-        </div>
-        {{/trend}}
+        <div class="fs-2 fw-bold text-{{color}}">{{value}}</div>
+        <div class="small text-muted">{{label}}</div>
     </div>
-    {{#url}}</a>{{/url}}
+{{#url}}
+</a>
+{{/url}}
+{{^url}}
 </div>
+{{/url}}
 {{/loading}}
