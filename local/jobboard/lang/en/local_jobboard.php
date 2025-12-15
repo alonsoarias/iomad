@@ -3358,3 +3358,63 @@ $string['exemptionactions'] = 'Exemption Actions';
 $string['filterexemptions'] = 'Filter Exemptions';
 $string['filtervacancies'] = 'Filter Vacancies';
 $string['noexemptionsdesc'] = 'No exemptions have been created yet.';
+
+// =============================================================================
+// MISSING STRINGS - SHARING AND SOCIAL
+// =============================================================================
+
+$string['available'] = 'Available';
+$string['shareon'] = 'Share on {$a}';
+$string['shareconvocatoria'] = 'Share this convocatoria';
+
+// =============================================================================
+// MISSING STRINGS - SIGNUP/UPDATE PROFILE FORM
+// =============================================================================
+
+$string['signup_email'] = 'Email address';
+$string['signup_email_help'] = 'Enter a valid email address. This will be used for communications regarding your applications and account recovery.';
+$string['currentpassword_help'] = 'Enter your current password to confirm any changes to your account settings.';
+$string['signup_password'] = 'Password';
+$string['signup_password_help'] = 'Create a strong password with at least 8 characters, including uppercase, lowercase letters and numbers.';
+$string['signup_doctype_help'] = 'Select the type of identification document you are using.';
+$string['signup_birthdate_help'] = 'Enter your date of birth. This information is required for some verification processes.';
+$string['signup_phone'] = 'Phone number';
+$string['signup_phone_help'] = 'Enter your phone number including country code. This will be used for urgent communications.';
+$string['signup_education_level_help'] = 'Select your highest completed education level.';
+$string['signup_degree_title_help'] = 'Enter the official title of your highest degree or certification.';
+$string['signup_institution'] = 'Educational institution';
+$string['signup_institution_help'] = 'Enter the name of the institution where you obtained your highest qualification.';
+$string['signup_expertise_area_help'] = 'Describe your main areas of professional expertise and specialization.';
+$string['signup_professional_profile_help'] = 'Provide a brief professional summary highlighting your experience and key skills.';
+
+// =============================================================================
+// MISSING STRINGS - APPLICATION FORM
+// =============================================================================
+
+$string['skiptoform'] = 'Skip to application form';
+$string['indicatesrequired'] = 'indicates required field';
+$string['consentaccepted'] = 'Data processing consent';
+$string['consentaccepted_help'] = 'By checking this box, you consent to the processing of your personal data for recruitment purposes in accordance with data protection regulations.';
+$string['digitalsignature_help'] = 'Type your full name exactly as it appears on your official documents. This serves as your electronic signature.';
+$string['coverletter_help'] = 'Write a brief cover letter explaining your interest in the position and why you are a suitable candidate.';
+$string['declarationaccepted'] = 'Declaration of truthfulness';
+$string['declarationaccepted_help'] = 'By checking this box, you declare that all information provided in this application is true and accurate to the best of your knowledge.';
+
+// =============================================================================
+// MISSING STRINGS - DOCUMENT CATEGORIES
+// =============================================================================
+
+$string['doccat_employment_desc'] = 'Employment certificates and work-related documents';
+$string['doccat_identification_desc'] = 'Official identification documents and personal certificates';
+$string['doccat_academic_desc'] = 'Academic credentials, degrees and educational certificates';
+$string['doccat_financial_desc'] = 'Financial documents and bank certificates';
+$string['doccat_health_desc'] = 'Health certificates and medical documentation';
+$string['doccat_legal_desc'] = 'Legal documents, background checks and judicial certificates';
+
+// =============================================================================
+// MISSING STRINGS - MULTIPLE DOCUMENTS
+// =============================================================================
+
+$string['multipledocs_certificacion_laboral'] = 'You can upload multiple employment certificates. Each certificate should be from a different employer or position.';
+$string['multipledocs_titulo_academico'] = 'You can upload multiple academic titles. Include all relevant degrees and certifications.';
+$string['multipledocs_formacion_complementaria'] = 'You can upload multiple complementary training certificates. Include all relevant courses and workshops.';
