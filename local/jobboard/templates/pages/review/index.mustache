@@ -110,9 +110,12 @@
                         <h5 class="mb-0">
                             <i class="fa fa-file-lines text-primary me-2"></i>
                             <span data-region="preview-title">
-                                {{#hasinitialpreview}}{{initialpreview.typename}}{{/hasinitialpreview}}
+                                {{#hasinitialpreview}}{{initialpreview.filename}}{{/hasinitialpreview}}
                                 {{^hasinitialpreview}}{{#str}}selectdocument, local_jobboard{{/str}}{{/hasinitialpreview}}
                             </span>
+                            {{#hasinitialpreview}}
+                            <small class="d-block text-muted" data-region="preview-subtitle">{{initialpreview.typename}}</small>
+                            {{/hasinitialpreview}}
                         </h5>
                         <div class="btn-group btn-group-sm">
                             {{#hasinitialpreview}}
@@ -208,6 +211,7 @@
                                      data-is-image="{{isimage}}"
                                      data-can-preview="{{canpreview}}"
                                      data-typename="{{typename}}"
+                                     data-filename="{{filename}}"
                                      data-download-url="{{downloadurl}}"
                                      onclick="jobboardPreviewDocument(this)"
                                      style="cursor: pointer;">
@@ -215,8 +219,8 @@
                                         <div class="d-flex align-items-center flex-grow-1 min-width-0 me-2">
                                             <i class="fa fa-{{statusicon}} text-{{statuscolor}} me-2"></i>
                                             <div class="min-width-0">
-                                                <div class="fw-medium text-truncate small">{{typename}}</div>
-                                                <small class="text-muted text-truncate d-block">{{filename}}</small>
+                                                <div class="fw-medium text-truncate small" title="{{filename}}">{{filename}}</div>
+                                                <small class="text-muted text-truncate d-block">{{typename}}</small>
                                             </div>
                                         </div>
                                         <div class="btn-group btn-group-sm flex-shrink-0" onclick="event.stopPropagation();">
@@ -572,6 +576,7 @@ function jobboardPreviewDocument(element) {
     const isPdf = element.dataset.isPdf === 'true' || element.dataset.isPdf === '1';
     const isImage = element.dataset.isImage === 'true' || element.dataset.isImage === '1';
     const typename = element.dataset.typename;
+    const filename = element.dataset.filename;
     const downloadUrl = element.dataset.downloadUrl;
 
     // Update active state
@@ -580,9 +585,23 @@ function jobboardPreviewDocument(element) {
     });
     element.classList.add('active');
 
-    // Update title
+    // Update title (filename) and subtitle (typename)
     const titleEl = document.querySelector('[data-region="preview-title"]');
-    if (titleEl) titleEl.textContent = typename;
+    if (titleEl) titleEl.textContent = filename;
+
+    let subtitleEl = document.querySelector('[data-region="preview-subtitle"]');
+    if (subtitleEl) {
+        subtitleEl.textContent = typename;
+    } else {
+        // Create subtitle if it doesn't exist
+        subtitleEl = document.createElement('small');
+        subtitleEl.className = 'd-block text-muted';
+        subtitleEl.dataset.region = 'preview-subtitle';
+        subtitleEl.textContent = typename;
+        if (titleEl && titleEl.parentNode) {
+            titleEl.parentNode.appendChild(subtitleEl);
+        }
+    }
 
     // Update download button
     const downloadBtn = document.querySelector('[data-region="download-btn"]');
@@ -599,7 +618,7 @@ function jobboardPreviewDocument(element) {
             previewFrame.innerHTML = '<iframe src="' + previewUrl + '" class="w-100 h-100 border-0" style="min-height: 500px;"></iframe>';
         } else if (isImage) {
             previewFrame.innerHTML = '<div class="d-flex align-items-center justify-content-center h-100 p-4" style="min-height: 500px;">' +
-                '<img src="' + previewUrl + '" alt="' + typename + '" class="img-fluid shadow rounded" style="max-height: 480px;">' +
+                '<img src="' + previewUrl + '" alt="' + filename + '" class="img-fluid shadow rounded" style="max-height: 480px;">' +
                 '</div>';
         }
     } else {
