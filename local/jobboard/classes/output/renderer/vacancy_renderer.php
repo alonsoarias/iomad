@@ -32,6 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 
 use moodle_url;
 use local_jobboard\helper\date_helper;
+use local_jobboard\helper\status_helper;
 
 /**
  * Trait for vacancy rendering functionality.
@@ -203,7 +204,7 @@ trait vacancy_renderer {
 
         // Status filter (only for managers).
         if ($canviewall) {
-            $vacancyStatuses = local_jobboard_get_vacancy_statuses();
+            $vacancyStatuses = status_helper::get_vacancy_statuses();
             $statusoptions = [['value' => '', 'label' => get_string('allstatuses', 'local_jobboard'), 'selected' => empty($filters['status'])]];
             foreach ($vacancyStatuses as $key => $label) {
                 $statusoptions[] = [
@@ -545,7 +546,7 @@ trait vacancy_renderer {
 
         // Filter form.
         $statusOptions = [['value' => '', 'label' => get_string('allstatuses', 'local_jobboard'), 'selected' => empty($filtervalues['status'])]];
-        $vacancyStatuses = local_jobboard_get_vacancy_statuses();
+        $vacancyStatuses = status_helper::get_vacancy_statuses();
         foreach ($vacancyStatuses as $key => $label) {
             $statusOptions[] = [
                 'value' => $key,

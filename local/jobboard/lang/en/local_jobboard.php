@@ -3335,3 +3335,15 @@ $string['statistics'] = 'Statistics';
 // Error messages
 $string['error:usernotfound'] = 'User not found';
 $string['unknownuser'] = 'Unknown user';
+
+// =============================================================================
+// UI FILTER AND NAVIGATION STRINGS
+// =============================================================================
+
+$string['openconvocatorias'] = 'Open Convocatorias';
+$string['convocatoriaactions'] = 'Convocatoria Actions';
+$string['filterconvocatorias'] = 'Filter Convocatorias';
+$string['pagenavigation'] = 'Page Navigation';
+$string['filterapplications'] = 'Filter Applications';
+$string['allcaughtup'] = 'All caught up!';
+$string['filterdocuments'] = 'Filter Documents';
