@@ -132,7 +132,7 @@ if (!$applicant) {
 $exemption = exemption::get_active_for_user($application->userid);
 
 // Get status history.
-$history = $application->get_status_history();
+$history = $application->get_workflow_history();
 
 // Get available workflow actions for managers.
 $workflowactions = [];
