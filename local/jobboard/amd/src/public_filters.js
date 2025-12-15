@@ -190,8 +190,8 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
      * Initialize the public filters module.
      *
      * @param {Object} config Configuration object.
-     * @param {string} [config.formSelector='.jb-filter-form'] CSS selector for filter form.
-     * @param {string} [config.resultsSelector='[data-region="vacancy-cards"]'] CSS selector for results.
+     * @param {string} config.formSelector CSS selector for filter form. Defaults to '.jb-filter-form'.
+     * @param {string} config.resultsSelector CSS selector for results. Defaults to '[data-region="vacancy-cards"]'.
      */
     var init = function(config) {
         if (state.initialized) {
