@@ -28,31 +28,31 @@
 }}
 {{#loading}}
 <div class="jb-timeline jb-timeline-loading" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="jb-timeline-item jb-d-flex jb-mb-3 jb-pb-3 jb-border-bottom">
-        <div class="jb-timeline-marker jb-flex-shrink-0 jb-mr-3">
-            <span class="jb-skeleton-avatar jb-rounded-circle" style="width: 36px; height: 36px;"></span>
+    <div class="jb-timeline-item d-flex mb-3 pb-3 border-bottom">
+        <div class="jb-timeline-marker flex-shrink-0 me-3">
+            <span class="jb-skeleton-avatar rounded-circle" style="width: 36px; height: 36px;"></span>
         </div>
-        <div class="jb-timeline-content jb-flex-grow-1">
+        <div class="jb-timeline-content flex-grow-1">
             <div class="jb-skeleton-text" style="width: 60%;"></div>
-            <div class="jb-skeleton-text jb-mt-2" style="width: 40%;"></div>
+            <div class="jb-skeleton-text mt-2" style="width: 40%;"></div>
         </div>
     </div>
-    <div class="jb-timeline-item jb-d-flex jb-mb-3 jb-pb-3 jb-border-bottom">
-        <div class="jb-timeline-marker jb-flex-shrink-0 jb-mr-3">
-            <span class="jb-skeleton-avatar jb-rounded-circle" style="width: 36px; height: 36px;"></span>
+    <div class="jb-timeline-item d-flex mb-3 pb-3 border-bottom">
+        <div class="jb-timeline-marker flex-shrink-0 me-3">
+            <span class="jb-skeleton-avatar rounded-circle" style="width: 36px; height: 36px;"></span>
         </div>
-        <div class="jb-timeline-content jb-flex-grow-1">
+        <div class="jb-timeline-content flex-grow-1">
             <div class="jb-skeleton-text" style="width: 70%;"></div>
-            <div class="jb-skeleton-text jb-mt-2" style="width: 50%;"></div>
+            <div class="jb-skeleton-text mt-2" style="width: 50%;"></div>
         </div>
     </div>
-    <div class="jb-timeline-item jb-d-flex">
-        <div class="jb-timeline-marker jb-flex-shrink-0 jb-mr-3">
-            <span class="jb-skeleton-avatar jb-rounded-circle" style="width: 36px; height: 36px;"></span>
+    <div class="jb-timeline-item d-flex">
+        <div class="jb-timeline-marker flex-shrink-0 me-3">
+            <span class="jb-skeleton-avatar rounded-circle" style="width: 36px; height: 36px;"></span>
         </div>
-        <div class="jb-timeline-content jb-flex-grow-1">
+        <div class="jb-timeline-content flex-grow-1">
             <div class="jb-skeleton-text" style="width: 55%;"></div>
-            <div class="jb-skeleton-text jb-mt-2" style="width: 35%;"></div>
+            <div class="jb-skeleton-text mt-2" style="width: 35%;"></div>
         </div>
     </div>
 </div>
@@ -61,37 +61,37 @@
 {{^loading}}
 <div class="jb-timeline {{#compact}}jb-timeline-compact{{/compact}}" role="list" aria-label="{{#arialabel}}{{arialabel}}{{/arialabel}}{{^arialabel}}{{#str}}timeline, local_jobboard{{/str}}{{/arialabel}}">
     {{#items}}
-    <div class="jb-timeline-item jb-d-flex jb-mb-3 jb-pb-3{{^islast}} jb-border-bottom{{/islast}} {{#animate}}jb-fade-in-up{{/animate}}"
+    <div class="jb-timeline-item d-flex mb-3 pb-3{{^islast}} border-bottom{{/islast}} {{#animate}}jb-fade-in-up{{/animate}}"
          role="listitem"
          {{#animate}}style="animation-delay: {{animdelay}}s;"{{/animate}}>
-        <div class="jb-timeline-marker jb-flex-shrink-0 jb-mr-3">
-            <span class="jb-rounded-circle jb-bg-{{color}} jb-text-white jb-p-2 jb-d-inline-flex jb-align-items-center jb-justify-content-center jb-shadow-sm" style="width: 36px; height: 36px;">
+        <div class="jb-timeline-marker flex-shrink-0 me-3">
+            <span class="rounded-circle jb-bg-{{color}} text-white p-2 d-inline-flex align-items-center justify-content-center jb-shadow-sm" style="width: 36px; height: 36px;">
                 <i class="fa fa-{{icon}}" aria-hidden="true"></i>
             </span>
         </div>
-        <div class="jb-timeline-content jb-flex-grow-1">
-            <div class="jb-d-flex jb-justify-content-between jb-align-items-start jb-flex-wrap jb-gap-1">
-                <div class="jb-flex-grow-1">
-                    <div class="jb-d-flex jb-align-items-center jb-gap-2 jb-flex-wrap">
-                        <strong class="jb-d-block">{{title}}</strong>
+        <div class="jb-timeline-content flex-grow-1">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-1">
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <strong class="d-block">{{title}}</strong>
                         {{#badge}}
-                        <span class="jb-badge jb-badge-{{badge.color}} jb-badge-pill">{{badge.label}}</span>
+                        <span class="badge jb-badge-{{badge.color}} rounded-pill">{{badge.label}}</span>
                         {{/badge}}
                     </div>
-                    {{#subtitle}}<small class="jb-text-muted jb-d-block">{{subtitle}}</small>{{/subtitle}}
+                    {{#subtitle}}<small class="text-muted d-block">{{subtitle}}</small>{{/subtitle}}
                 </div>
-                <small class="jb-text-muted jb-flex-shrink-0 jb-text-nowrap">
-                    <i class="fa fa-clock jb-mr-1" aria-hidden="true"></i>{{time}}
+                <small class="text-muted flex-shrink-0 text-nowrap">
+                    <i class="fa fa-clock me-1" aria-hidden="true"></i>{{time}}
                 </small>
             </div>
             {{#content}}
-            <div class="jb-mt-2 jb-text-muted jb-small jb-bg-light jb-rounded jb-p-2">{{{content}}}</div>
+            <div class="mt-2 text-muted small bg-light rounded p-2">{{{content}}}</div>
             {{/content}}
             {{#actions}}
-            <div class="jb-mt-2 jb-d-flex jb-gap-2">
+            <div class="mt-2 d-flex gap-2">
                 {{#actions}}
-                <a href="{{url}}" class="jb-btn jb-btn-sm jb-btn-{{class}}">
-                    {{#icon}}<i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>{{/icon}}
+                <a href="{{url}}" class="btn btn-sm jb-btn-{{class}}">
+                    {{#icon}}<i class="fa fa-{{icon}} me-1" aria-hidden="true"></i>{{/icon}}
                     {{label}}
                 </a>
                 {{/actions}}
@@ -102,9 +102,9 @@
     {{/items}}
 
     {{^items}}
-    <div class="jb-text-center jb-py-4 jb-text-muted" role="status">
-        <i class="fa fa-clock-rotate-left fa-2x jb-mb-2" aria-hidden="true"></i>
-        <p class="jb-mb-0">{{#str}}nohistory, local_jobboard{{/str}}</p>
+    <div class="text-center py-4 text-muted" role="status">
+        <i class="fa fa-clock-rotate-left fa-2x mb-2" aria-hidden="true"></i>
+        <p class="mb-0">{{#str}}nohistory, local_jobboard{{/str}}</p>
     </div>
     {{/items}}
 </div>

@@ -25,13 +25,13 @@
         "actions": [{"url": "/view", "label": "View Details", "color": "success"}]
     }
 }}
-<div class="jb-alert jb-alert-{{type}}{{#dismissible}} jb-alert-dismissible{{/dismissible}}{{#animate}} jb-fade-in-down{{/animate}}{{#compact}} jb-py-2 jb-px-3{{/compact}}"
+<div class="alert jb-alert-{{type}}{{#dismissible}} jb-alert-dismissible{{/dismissible}}{{#animate}} jb-fade-in-down{{/animate}}{{#compact}} py-2 px-3{{/compact}}"
      role="alert"
      aria-live="{{#isdanger}}assertive{{/isdanger}}{{^isdanger}}polite{{/isdanger}}">
 
-    <div class="jb-d-flex jb-align-items-start">
+    <div class="d-flex align-items-start">
         {{! Icon - auto-detect based on type if not provided }}
-        <div class="jb-alert-icon jb-mr-3 jb-mt-1" aria-hidden="true">
+        <div class="jb-alert-icon me-3 mt-1" aria-hidden="true">
             {{#icon}}
             <i class="fa fa-{{icon}} fa-lg"></i>
             {{/icon}}
@@ -44,9 +44,9 @@
             {{/icon}}
         </div>
 
-        <div class="jb-flex-grow-1">
+        <div class="flex-grow-1">
             {{#title}}
-            <h4 class="jb-alert-heading jb-fw-bold jb-mb-1">{{title}}</h4>
+            <h4 class="jb-alert-heading fw-bold mb-1">{{title}}</h4>
             {{/title}}
 
             <div class="jb-alert-content">
@@ -54,7 +54,7 @@
             </div>
 
             {{#list}}
-            <ul class="jb-mb-0 jb-mt-2 jb-pl-3">
+            <ul class="mb-0 mt-2 jb-pl-3">
                 {{#items}}
                 <li>{{.}}</li>
                 {{/items}}
@@ -62,10 +62,10 @@
             {{/list}}
 
             {{#actions}}
-            <div class="jb-alert-actions jb-mt-3 jb-d-flex jb-gap-2 jb-flex-wrap">
+            <div class="jb-alert-actions mt-3 d-flex gap-2 flex-wrap">
                 {{#.}}
-                <a href="{{url}}" class="jb-btn jb-btn-sm jb-btn-{{#color}}{{color}}{{/color}}{{^color}}outline-{{type}}{{/color}}">
-                    {{#icon}}<i class="fa fa-{{icon}} jb-mr-1" aria-hidden="true"></i>{{/icon}}
+                <a href="{{url}}" class="btn btn-sm jb-btn-{{#color}}{{color}}{{/color}}{{^color}}outline-{{type}}{{/color}}">
+                    {{#icon}}<i class="fa fa-{{icon}} me-1" aria-hidden="true"></i>{{/icon}}
                     {{label}}
                 </a>
                 {{/.}}
@@ -75,7 +75,7 @@
 
         {{#dismissible}}
         <button type="button"
-                class="jb-btn-close jb-ml-2"
+                class="jb-btn-close ms-2"
                 data-dismiss="alert"
                 aria-label="{{#str}}dismiss, local_jobboard{{/str}}">
             <i class="fa fa-xmark" aria-hidden="true"></i>

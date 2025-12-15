@@ -28,9 +28,9 @@
 }}
 {{#loading}}
 {{! Loading Skeleton State }}
-{{#responsive}}<div class="jb-table-responsive">{{/responsive}}
-<table class="jb-table jb-table-loading jb-mb-0" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <thead class="jb-thead-light">
+{{#responsive}}<div class="table-responsive">{{/responsive}}
+<table class="table jb-table-loading mb-0" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <thead class="table-light">
         <tr>
             {{#headers}}
             <th scope="col"{{#class}} class="{{class}}"{{/class}}{{#width}} style="width: {{width}};"{{/width}}>
@@ -70,26 +70,26 @@
 {{/loading}}
 
 {{^loading}}
-{{#responsive}}<div class="jb-table-responsive">{{/responsive}}
-<table class="jb-table{{#hover}} jb-table-hover{{/hover}}{{#striped}} jb-table-striped{{/striped}}{{#compact}} jb-table-sm{{/compact}}{{#selectable}} jb-table-selectable{{/selectable}} jb-mb-0"
+{{#responsive}}<div class="table-responsive">{{/responsive}}
+<table class="jb-table{{#hover}} table-hover{{/hover}}{{#striped}} table-striped{{/striped}}{{#compact}} jb-table-sm{{/compact}}{{#selectable}} jb-table-selectable{{/selectable}} mb-0"
        {{#arialabel}}aria-label="{{arialabel}}"{{/arialabel}}>
     {{#caption}}
-    <caption class="jb-sr-only">{{caption}}</caption>
+    <caption class="visually-hidden">{{caption}}</caption>
     {{/caption}}
-    <thead class="jb-thead-light">
+    <thead class="table-light">
         <tr>
             {{#selectable}}
-            <th scope="col" class="jb-text-center" style="width: 40px;">
+            <th scope="col" class="text-center" style="width: 40px;">
                 <input type="checkbox" class="jb-form-check-input jb-select-all" aria-label="{{#str}}selectall{{/str}}">
             </th>
             {{/selectable}}
             {{#headers}}
             <th scope="col"{{#class}} class="{{class}}"{{/class}}{{#width}} style="width: {{width}};"{{/width}}>
                 {{#sortable}}
-                <a href="{{sorturl}}" class="jb-text-decoration-none jb-text-dark jb-d-inline-flex jb-align-items-center jb-sort-link">
+                <a href="{{sorturl}}" class="text-decoration-none text-dark d-inline-flex align-items-center jb-sort-link">
                     {{label}}
-                    {{#sorticon}}<span class="jb-ml-1">{{{sorticon}}}</span>{{/sorticon}}
-                    {{^sorticon}}<i class="fa fa-sort jb-ml-1 jb-text-muted" aria-hidden="true"></i>{{/sorticon}}
+                    {{#sorticon}}<span class="ms-1">{{{sorticon}}}</span>{{/sorticon}}
+                    {{^sorticon}}<i class="fa fa-sort ms-1 text-muted" aria-hidden="true"></i>{{/sorticon}}
                 </a>
                 {{/sortable}}
                 {{^sortable}}{{label}}{{/sortable}}
@@ -101,8 +101,8 @@
         {{#rows}}
         <tr{{#class}} class="{{class}}"{{/class}}{{#dataid}} data-id="{{dataid}}"{{/dataid}}{{#clickable}} role="button" tabindex="0"{{/clickable}}>
             {{#selectable}}
-            <td class="jb-text-center">
-                <input type="checkbox" class="jb-form-check-input jb-row-select" value="{{dataid}}" aria-label="{{#str}}selectrow{{/str}}">
+            <td class="text-center">
+                <input type="checkbox" class="jb-form-check-input row-select" value="{{dataid}}" aria-label="{{#str}}selectrow{{/str}}">
             </td>
             {{/selectable}}
             {{#cells}}
@@ -115,15 +115,15 @@
         {{/rows}}
         {{^rows}}
         <tr>
-            <td colspan="{{headercount}}" class="jb-text-center jb-py-5">
+            <td colspan="{{headercount}}" class="text-center py-5">
                 <div class="jb-empty-table" role="status">
                     {{#emptyicon}}
-                    <i class="fa fa-{{emptyicon}} fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                    <i class="fa fa-{{emptyicon}} fa-3x text-muted mb-3" aria-hidden="true"></i>
                     {{/emptyicon}}
                     {{^emptyicon}}
-                    <i class="fa fa-inbox fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
+                    <i class="fa fa-inbox fa-3x text-muted mb-3" aria-hidden="true"></i>
                     {{/emptyicon}}
-                    <p class="jb-text-muted jb-mb-0">
+                    <p class="text-muted mb-0">
                         {{#emptytext}}{{emptytext}}{{/emptytext}}
                         {{^emptytext}}{{#str}}nodata, local_jobboard{{/str}}{{/emptytext}}
                     </p>
@@ -133,7 +133,7 @@
         {{/rows}}
     </tbody>
     {{#footer}}
-    <tfoot class="jb-thead-light">
+    <tfoot class="table-light">
         <tr>
             {{#footercells}}
             <td{{#class}} class="{{class}}"{{/class}}{{#colspan}} colspan="{{colspan}}"{{/colspan}}>

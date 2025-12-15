@@ -24,18 +24,18 @@
 {{#loading}}
 {{! Skeleton Loading State }}
 <div class="jb-exemptions" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="jb-skeleton-title" style="width: 180px;"></div>
         <div class="jb-skeleton-text" style="width: 100px; height: 38px;"></div>
     </div>
-    <div class="jb-card">
-        <div class="jb-card-header">
+    <div class="card">
+        <div class="card-header">
             <div class="jb-skeleton-text" style="width: 150px;"></div>
         </div>
-        <div class="jb-card-body">
-            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
-            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 50px;"></div>
-            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 100px;"></div>
+        <div class="card-body">
+            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 50px;"></div>
+            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 50px;"></div>
+            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 100px;"></div>
             <div class="jb-skeleton-text" style="width: 150px; height: 45px;"></div>
         </div>
     </div>
@@ -50,30 +50,30 @@
     </a>
 
     {{! Page Header }}
-    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
-        <h3 class="jb-mb-0">
+    <header class="d-flex justify-content-between align-items-center mb-4 jb-fade-in">
+        <h3 class="mb-0">
             {{#isedit}}
-            <i class="fa fa-pen-to-square jb-text-primary jb-mr-2" aria-hidden="true"></i>
+            <i class="fa fa-pen-to-square text-primary me-2" aria-hidden="true"></i>
             {{/isedit}}
             {{^isedit}}
-            <i class="fa fa-circle-plus jb-text-success jb-mr-2" aria-hidden="true"></i>
+            <i class="fa fa-circle-plus text-success me-2" aria-hidden="true"></i>
             {{/isedit}}
             {{pagetitle}}
         </h3>
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+        <a href="{{backurl}}" class="btn btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
             {{str.back}}
         </a>
     </header>
 
     {{! Edit Mode Info Banner }}
     {{#isedit}}
-    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-center jb-mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.05s;">
-        <i class="fa fa-circle-info jb-mr-3" aria-hidden="true"></i>
+    <div class="alert alert-info d-flex align-items-center mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.05s;">
+        <i class="fa fa-circle-info me-3" aria-hidden="true"></i>
         <div>
-            <strong class="jb-d-block">{{#str}}editingexemption, local_jobboard{{/str}}</strong>
+            <strong class="d-block">{{#str}}editingexemption, local_jobboard{{/str}}</strong>
             {{#exemption.userfullname}}
-            <small class="jb-text-muted">
+            <small class="text-muted">
                 {{#str}}user{{/str}}: <strong>{{exemption.userfullname}}</strong>
             </small>
             {{/exemption.userfullname}}
@@ -83,9 +83,9 @@
 
     {{! Form Card }}
     <main id="exemption-form-content">
-        <div class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.1s;">
-            <div class="jb-card-header jb-bg-white jb-d-flex jb-align-items-center">
-                <div class="jb-icon-circle jb-bg-{{#isedit}}primary{{/isedit}}{{^isedit}}success{{/isedit}} jb-text-white jb-mr-3">
+        <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="card-header bg-white d-flex align-items-center">
+                <div class="jb-icon-circle jb-bg-{{#isedit}}primary{{/isedit}}{{^isedit}}success{{/isedit}} text-white me-3">
                     {{#isedit}}
                     <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                     {{/isedit}}
@@ -93,7 +93,7 @@
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     {{/isedit}}
                 </div>
-                <h5 class="jb-mb-0">
+                <h5 class="mb-0">
                     {{#isedit}}
                     {{str.editexemption}}
                     {{/isedit}}
@@ -102,49 +102,49 @@
                     {{/isedit}}
                 </h5>
             </div>
-            <div class="jb-card-body">
+            <div class="card-body">
                 {{{formhtml}}}
             </div>
         </div>
     </main>
 
     {{! Help Section }}
-    <aside class="jb-mt-4 jb-fade-in" style="animation-delay: 0.15s;">
-        <div class="jb-alert jb-alert-light jb-d-flex jb-align-items-start">
-            <i class="fa fa-lightbulb jb-text-warning jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+    <aside class="mt-4 jb-fade-in" style="animation-delay: 0.15s;">
+        <div class="alert jb-alert-light d-flex align-items-start">
+            <i class="fa fa-lightbulb text-warning me-3 mt-1" aria-hidden="true"></i>
             <div>
-                <strong class="jb-d-block jb-mb-1">{{#str}}exemptionhelptitle, local_jobboard{{/str}}</strong>
-                <p class="jb-mb-0 jb-small jb-text-muted">{{#str}}exemptionhelpdesc, local_jobboard{{/str}}</p>
+                <strong class="d-block mb-1">{{#str}}exemptionhelptitle, local_jobboard{{/str}}</strong>
+                <p class="mb-0 small text-muted">{{#str}}exemptionhelpdesc, local_jobboard{{/str}}</p>
             </div>
         </div>
     </aside>
 
     {{! Exemption Types Info }}
-    <div class="jb-card jb-card-shadow jb-mt-4 jb-fade-in" style="animation-delay: 0.2s;">
-        <div class="jb-card-header jb-bg-secondary jb-text-white">
-            <h6 class="jb-mb-0">
-                <i class="fa fa-list jb-mr-2" aria-hidden="true"></i>
+    <div class="card shadow-sm mt-4 jb-fade-in" style="animation-delay: 0.2s;">
+        <div class="card-header bg-secondary text-white">
+            <h6 class="mb-0">
+                <i class="fa fa-list me-2" aria-hidden="true"></i>
                 {{#str}}exemptiontypes, local_jobboard{{/str}}
             </h6>
         </div>
-        <div class="jb-card-body">
-            <div class="jb-row">
-                <div class="jb-col-md-4 jb-mb-3 jb-mb-md-0">
-                    <div class="jb-d-flex jb-align-items-start">
-                        <span class="jb-badge jb-badge-info jb-mr-2">{{#str}}permanent, local_jobboard{{/str}}</span>
-                        <small class="jb-text-muted">{{#str}}permanentdesc, local_jobboard{{/str}}</small>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="d-flex align-items-start">
+                        <span class="badge bg-info text-dark me-2">{{#str}}permanent, local_jobboard{{/str}}</span>
+                        <small class="text-muted">{{#str}}permanentdesc, local_jobboard{{/str}}</small>
                     </div>
                 </div>
-                <div class="jb-col-md-4 jb-mb-3 jb-mb-md-0">
-                    <div class="jb-d-flex jb-align-items-start">
-                        <span class="jb-badge jb-badge-warning jb-mr-2">{{#str}}temporary, local_jobboard{{/str}}</span>
-                        <small class="jb-text-muted">{{#str}}temporarydesc, local_jobboard{{/str}}</small>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="d-flex align-items-start">
+                        <span class="badge bg-warning text-dark me-2">{{#str}}temporary, local_jobboard{{/str}}</span>
+                        <small class="text-muted">{{#str}}temporarydesc, local_jobboard{{/str}}</small>
                     </div>
                 </div>
-                <div class="jb-col-md-4">
-                    <div class="jb-d-flex jb-align-items-start">
-                        <span class="jb-badge jb-badge-success jb-mr-2">{{#str}}conditional, local_jobboard{{/str}}</span>
-                        <small class="jb-text-muted">{{#str}}conditionaldesc, local_jobboard{{/str}}</small>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-start">
+                        <span class="badge bg-success me-2">{{#str}}conditional, local_jobboard{{/str}}</span>
+                        <small class="text-muted">{{#str}}conditionaldesc, local_jobboard{{/str}}</small>
                     </div>
                 </div>
             </div>

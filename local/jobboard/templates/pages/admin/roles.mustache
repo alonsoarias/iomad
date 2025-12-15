@@ -23,43 +23,43 @@
 }}
 <div class="jb-admin-roles" data-region="jobboard-admin-roles">
     {{! Page Header }}
-    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
-        <h1 class="jb-fs-3 jb-mb-0">
-            <i class="fa fa-user-tag jb-text-primary jb-mr-2" aria-hidden="true"></i>
+    <header class="jb-page-header d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fs-3 mb-0">
+            <i class="fa fa-user-tag text-primary me-2" aria-hidden="true"></i>
             {{#str}}manageroles, local_jobboard{{/str}}
         </h1>
-        <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
+        <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-gauge me-2" aria-hidden="true"></i>
             {{#str}}dashboard, local_jobboard{{/str}}
         </a>
     </header>
 
     {{! Statistics Cards }}
-    <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
-        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-info">
-                <div class="jb-card-body jb-d-flex jb-align-items-center">
-                    <div class="jb-stat-icon jb-mr-3">
+    <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card shadow-sm jb-stat-card jb-stat-card-info">
+                <div class="card-body d-flex align-items-center">
+                    <div class="jb-stat-icon me-3">
                         <i class="fa fa-users" aria-hidden="true"></i>
                     </div>
                     <div>
-                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{totalusers}}</div>
-                        <div class="jb-stat-label jb-small jb-text-muted">{{#str}}totalassignedusers, local_jobboard{{/str}}</div>
+                        <div class="jb-stat-value fs-3 fw-bold">{{totalusers}}</div>
+                        <div class="jb-stat-label small text-muted">{{#str}}totalassignedusers, local_jobboard{{/str}}</div>
                     </div>
                 </div>
             </div>
         </div>
         {{#pluginroles}}
-        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
-            <a href="{{manageurl}}" class="jb-text-decoration-none">
-                <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-{{color}} jb-clickable">
-                    <div class="jb-card-body jb-d-flex jb-align-items-center">
-                        <div class="jb-stat-icon jb-mr-3">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <a href="{{manageurl}}" class="text-decoration-none">
+                <div class="card shadow-sm jb-stat-card jb-stat-card-{{color}} jb-clickable">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="jb-stat-icon me-3">
                             <i class="fa fa-{{icon}}" aria-hidden="true"></i>
                         </div>
                         <div>
-                            <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{usercount}}</div>
-                            <div class="jb-stat-label jb-small jb-text-muted">{{name}}</div>
+                            <div class="jb-stat-value fs-3 fw-bold">{{usercount}}</div>
+                            <div class="jb-stat-label small text-muted">{{name}}</div>
                         </div>
                     </div>
                 </div>
@@ -71,51 +71,51 @@
     {{^selectedrole}}
     {{! Role Selection View }}
     <section aria-labelledby="roles-heading">
-        <h4 class="jb-mb-3" id="roles-heading">
-            <i class="fa fa-user-tag jb-mr-2" aria-hidden="true"></i>
+        <h4 class="mb-3" id="roles-heading">
+            <i class="fa fa-user-tag me-2" aria-hidden="true"></i>
             {{#str}}selectroletoassign, local_jobboard{{/str}}
         </h4>
 
-        <div class="jb-row">
+        <div class="row">
             {{#pluginroles}}
-            <div class="jb-col-lg-4 jb-col-md-6 jb-mb-4">
-                <div class="jb-card jb-card-shadow jb-h-100">
-                    <div class="jb-card-body">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
                         {{! Role Header }}
-                        <div class="jb-d-flex jb-align-items-center jb-mb-3">
-                            <div class="jb-icon-circle jb-bg-{{color}}-light jb-mr-3">
-                                <i class="fa fa-{{icon}} jb-fs-4 jb-text-{{color}}" aria-hidden="true"></i>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="jb-icon-circle jb-bg-{{color}}-light me-3">
+                                <i class="fa fa-{{icon}} fs-4 jb-text-{{color}}" aria-hidden="true"></i>
                             </div>
                             <div>
-                                <h5 class="jb-mb-0">{{name}}</h5>
-                                <small class="jb-text-muted">{{usercount}} {{#str}}usersassignedcount, local_jobboard{{/str}}</small>
+                                <h5 class="mb-0">{{name}}</h5>
+                                <small class="text-muted">{{usercount}} {{#str}}usersassignedcount, local_jobboard{{/str}}</small>
                             </div>
                         </div>
 
                         {{! Description }}
-                        <p class="jb-text-muted jb-small jb-mb-3">{{description}}</p>
+                        <p class="text-muted small mb-3">{{description}}</p>
 
                         {{! Capabilities Preview }}
                         {{#hascaps}}
-                        <div class="jb-mb-3">
-                            <small class="jb-d-block jb-text-muted jb-mb-1">{{#str}}capabilities, local_jobboard{{/str}}:</small>
+                        <div class="mb-3">
+                            <small class="d-block text-muted mb-1">{{#str}}capabilities, local_jobboard{{/str}}:</small>
                             {{#capspreview}}
-                            <span class="jb-badge jb-badge-light jb-mr-1 jb-mb-1">{{.}}</span>
+                            <span class="badge bg-light text-dark me-1 mb-1">{{.}}</span>
                             {{/capspreview}}
                         </div>
                         {{/hascaps}}
 
                         {{! Actions }}
-                        <div class="jb-d-flex">
+                        <div class="d-flex">
                             {{#roleexists}}
-                            <a href="{{manageurl}}" class="jb-btn jb-btn-{{color}} jb-btn-sm">
-                                <i class="fa fa-users-gear jb-mr-1" aria-hidden="true"></i>
+                            <a href="{{manageurl}}" class="btn jb-btn-{{color}} btn-sm">
+                                <i class="fa fa-users-gear me-1" aria-hidden="true"></i>
                                 {{#str}}manageusers, local_jobboard{{/str}}
                             </a>
                             {{/roleexists}}
                             {{^roleexists}}
-                            <span class="jb-text-danger jb-small">
-                                <i class="fa fa-triangle-exclamation jb-mr-1" aria-hidden="true"></i>
+                            <span class="text-danger small">
+                                <i class="fa fa-triangle-exclamation me-1" aria-hidden="true"></i>
                                 {{#str}}rolenotcreated, local_jobboard{{/str}}
                             </span>
                             {{/roleexists}}
@@ -130,43 +130,43 @@
 
     {{#selectedrole}}
     {{! Single Role Management View }}
-    <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-sm jb-mb-3">
-        <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+    <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm mb-3">
+        <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
         {{#str}}backtorolelist, local_jobboard{{/str}}
     </a>
 
     {{! Role Header Card }}
-    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="selected-role-heading">
-        <div class="jb-card-header jb-bg-{{selectedrole.color}} jb-text-white">
-            <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
-                <h5 class="jb-mb-0" id="selected-role-heading">
-                    <i class="fa fa-{{selectedrole.icon}} jb-mr-2" aria-hidden="true"></i>
+    <section class="card shadow-sm mb-4" aria-labelledby="selected-role-heading">
+        <div class="card-header jb-bg-{{selectedrole.color}} text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0" id="selected-role-heading">
+                    <i class="fa fa-{{selectedrole.icon}} me-2" aria-hidden="true"></i>
                     {{selectedrole.name}}
                 </h5>
-                <span class="jb-badge jb-badge-light">{{selectedrole.usercount}} {{#str}}users{{/str}}</span>
+                <span class="badge bg-light text-dark">{{selectedrole.usercount}} {{#str}}users{{/str}}</span>
             </div>
         </div>
-        <div class="jb-card-body">
-            <p class="jb-text-muted jb-mb-0">{{selectedrole.description}}</p>
+        <div class="card-body">
+            <p class="text-muted mb-0">{{selectedrole.description}}</p>
         </div>
     </section>
 
-    <div class="jb-row">
+    <div class="row">
         {{! Left Column: Assigned Users }}
-        <div class="jb-col-lg-7 jb-mb-4">
-            <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="assigned-users-heading">
-                <div class="jb-card-header jb-bg-white jb-d-flex jb-justify-content-between jb-align-items-center">
-                    <h6 class="jb-mb-0" id="assigned-users-heading">
-                        <i class="fa fa-users jb-mr-2" aria-hidden="true"></i>
+        <div class="col-lg-7 mb-4">
+            <section class="card shadow-sm h-100" aria-labelledby="assigned-users-heading">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0" id="assigned-users-heading">
+                        <i class="fa fa-users me-2" aria-hidden="true"></i>
                         {{#str}}assignedusers, local_jobboard{{/str}}
                     </h6>
-                    <span class="jb-badge jb-badge-primary">{{assignedusercount}} {{#str}}users{{/str}}</span>
+                    <span class="badge bg-primary">{{assignedusercount}} {{#str}}users{{/str}}</span>
                 </div>
-                <div class="jb-card-body">
+                <div class="card-body">
                     {{#hasassignedusers}}
-                    <div class="jb-table-responsive">
-                        <table class="jb-table jb-table-hover">
-                            <thead class="jb-thead-light">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
                                 <tr>
                                     <th>{{#str}}user{{/str}}</th>
                                     <th>{{#str}}email{{/str}}</th>
@@ -179,12 +179,12 @@
                                 <tr>
                                     <td>
                                         <strong>{{fullname}}</strong>
-                                        <br><small class="jb-text-muted">#{{id}}</small>
+                                        <br><small class="text-muted">#{{id}}</small>
                                     </td>
                                     <td>{{email}}</td>
                                     <td>{{assigneddate}}</td>
                                     <td>
-                                        <a href="{{unassignurl}}" class="jb-btn jb-btn-sm jb-btn-outline-danger"
+                                        <a href="{{unassignurl}}" class="btn btn-sm btn-outline-danger"
                                            title="{{#str}}unassign, local_jobboard{{/str}}"
                                            onclick="return confirm('{{#str}}confirmunassign, local_jobboard{{/str}}');">
                                             <i class="fa fa-user-minus" aria-hidden="true"></i>
@@ -197,9 +197,9 @@
                     </div>
                     {{/hasassignedusers}}
                     {{^hasassignedusers}}
-                    <div class="jb-empty-state jb-text-center jb-py-4">
-                        <i class="fa fa-user-plus fa-3x jb-text-muted jb-mb-3" aria-hidden="true"></i>
-                        <p class="jb-text-muted">{{#str}}nousersassigned, local_jobboard{{/str}}</p>
+                    <div class="jb-empty-state text-center py-4">
+                        <i class="fa fa-user-plus fa-3x text-muted mb-3" aria-hidden="true"></i>
+                        <p class="text-muted">{{#str}}nousersassigned, local_jobboard{{/str}}</p>
                     </div>
                     {{/hasassignedusers}}
                 </div>
@@ -207,40 +207,40 @@
         </div>
 
         {{! Right Column: Assign New Users }}
-        <div class="jb-col-lg-5 jb-mb-4">
-            <section class="jb-card jb-card-shadow jb-h-100" aria-labelledby="assign-users-heading">
-                <div class="jb-card-header jb-bg-success jb-text-white">
-                    <h6 class="jb-mb-0" id="assign-users-heading">
-                        <i class="fa fa-user-plus jb-mr-2" aria-hidden="true"></i>
+        <div class="col-lg-5 mb-4">
+            <section class="card shadow-sm h-100" aria-labelledby="assign-users-heading">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0" id="assign-users-heading">
+                        <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
                         {{#str}}assignnewusers, local_jobboard{{/str}}
                     </h6>
                 </div>
-                <div class="jb-card-body">
+                <div class="card-body">
                     <form method="post" action="{{assignformurl}}" id="assignform">
                         <input type="hidden" name="sesskey" value="{{sesskey}}">
                         <input type="hidden" name="action" value="assign">
                         <input type="hidden" name="role" value="{{selectedrole.shortname}}">
 
                         {{! Search Input }}
-                        <div class="jb-form-group jb-mb-3">
-                            <label class="jb-form-label" for="usersearch">{{#str}}searchusers, local_jobboard{{/str}}</label>
-                            <input type="text" class="jb-form-control" id="usersearch"
+                        <div class="mb-3 mb-3">
+                            <label class="form-label" for="usersearch">{{#str}}searchusers, local_jobboard{{/str}}</label>
+                            <input type="text" class="form-control" id="usersearch"
                                    placeholder="{{#str}}searchusersplaceholder, local_jobboard{{/str}}" autocomplete="off">
                         </div>
 
                         {{! User Selection }}
-                        <div class="jb-form-group jb-mb-3">
-                            <label class="jb-form-label">{{#str}}selectusers, local_jobboard{{/str}}</label>
-                            <select name="userids[]" id="userselect" class="jb-form-control" multiple size="10">
+                        <div class="mb-3 mb-3">
+                            <label class="form-label">{{#str}}selectusers, local_jobboard{{/str}}</label>
+                            <select name="userids[]" id="userselect" class="form-control" multiple size="10">
                                 {{#availableusers}}
                                 <option value="{{id}}">{{fullname}} ({{email}})</option>
                                 {{/availableusers}}
                             </select>
-                            <small class="jb-form-text jb-text-muted">{{#str}}selectmultiplehelp, local_jobboard{{/str}}</small>
+                            <small class="form-text text-muted">{{#str}}selectmultiplehelp, local_jobboard{{/str}}</small>
                         </div>
 
-                        <button type="submit" class="jb-btn jb-btn-success jb-btn-block">
-                            <i class="fa fa-user-plus jb-mr-2" aria-hidden="true"></i>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
                             {{#str}}assignselected, local_jobboard{{/str}}
                         </button>
                     </form>
@@ -251,18 +251,18 @@
     {{/selectedrole}}
 
     {{! Navigation Footer }}
-    <footer class="jb-card jb-card-shadow jb-mt-4 jb-bg-light">
-        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center">
-            <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-m-1">
-                <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
+    <footer class="card shadow-sm mt-4 bg-light">
+        <div class="card-body d-flex flex-wrap align-items-center justify-content-center">
+            <a href="{{dashboardurl}}" class="btn btn-outline-secondary m-1">
+                <i class="fa fa-gauge me-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-            <a href="{{committeeurl}}" class="jb-btn jb-btn-outline-primary jb-m-1">
-                <i class="fa fa-users jb-mr-2" aria-hidden="true"></i>
+            <a href="{{committeeurl}}" class="btn btn-outline-primary m-1">
+                <i class="fa fa-users me-2" aria-hidden="true"></i>
                 {{#str}}committees, local_jobboard{{/str}}
             </a>
-            <a href="{{settingsurl}}" class="jb-btn jb-btn-outline-info jb-m-1">
-                <i class="fa fa-gear jb-mr-2" aria-hidden="true"></i>
+            <a href="{{settingsurl}}" class="btn btn-outline-info m-1">
+                <i class="fa fa-gear me-2" aria-hidden="true"></i>
                 {{#str}}pluginsettings, local_jobboard{{/str}}
             </a>
         </div>

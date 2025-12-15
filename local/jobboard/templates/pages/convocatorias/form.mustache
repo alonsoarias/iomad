@@ -32,10 +32,10 @@
 <div class="jb-convocatoria-edit" data-region="jobboard-convocatoria-edit">
     {{! Breadcrumbs }}
     {{#breadcrumbs.0}}
-    <nav aria-label="{{#str}}breadcrumb{{/str}}" class="jb-mb-3">
-        <ol class="jb-breadcrumb">
+    <nav aria-label="{{#str}}breadcrumb{{/str}}" class="mb-3">
+        <ol class="breadcrumb">
             {{#breadcrumbs}}
-            <li class="jb-breadcrumb-item {{#active}}jb-active{{/active}}">
+            <li class="breadcrumb-item {{#active}}jb-active{{/active}}">
                 {{#url}}
                 <a href="{{url}}">{{label}}</a>
                 {{/url}}
@@ -49,10 +49,10 @@
     {{/breadcrumbs.0}}
 
     {{! Page Header }}
-    <header class="jb-page-header jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4">
-        <h1 class="jb-fs-3 jb-mb-0">{{pagetitle}}</h1>
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+    <header class="jb-page-header d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fs-3 mb-0">{{pagetitle}}</h1>
+        <a href="{{backurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
             {{#str}}backtoconvocatorias, local_jobboard{{/str}}
         </a>
     </header>
@@ -60,17 +60,17 @@
     {{#isediting}}
     {{! Statistics Row }}
     {{#hasstats}}
-    <section class="jb-row jb-mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
+    <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         {{#stats}}
-        <div class="jb-col-lg-4 jb-col-md-6 jb-mb-3">
-            <div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-{{color}}">
-                <div class="jb-card-body jb-d-flex jb-align-items-center">
-                    <div class="jb-stat-icon jb-mr-3">
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="card shadow-sm jb-stat-card jb-stat-card-{{color}}">
+                <div class="card-body d-flex align-items-center">
+                    <div class="jb-stat-icon me-3">
                         <i class="fa fa-{{icon}}" aria-hidden="true"></i>
                     </div>
                     <div>
-                        <div class="jb-stat-value jb-fs-3 jb-fw-bold">{{value}}</div>
-                        <div class="jb-stat-label jb-small jb-text-muted">{{label}}</div>
+                        <div class="jb-stat-value fs-3 fw-bold">{{value}}</div>
+                        <div class="jb-stat-label small text-muted">{{label}}</div>
                     </div>
                 </div>
             </div>
@@ -80,49 +80,49 @@
     {{/hasstats}}
 
     {{! Convocatoria Info Card }}
-    <section class="jb-card jb-card-shadow jb-mb-4 jb-border-{{convocatoria.statuscolor}}" aria-labelledby="convocatoria-info-heading">
-        <div class="jb-card-header jb-d-flex jb-justify-content-between jb-align-items-center jb-bg-{{convocatoria.statuscolor}} jb-text-white">
-            <h2 class="jb-fs-5 jb-mb-0" id="convocatoria-info-heading">{{convocatoria.name}}</h2>
-            <span class="jb-badge jb-badge-light">{{convocatoria.statuslabel}}</span>
+    <section class="card shadow-sm mb-4 jb-border-{{convocatoria.statuscolor}}" aria-labelledby="convocatoria-info-heading">
+        <div class="card-header d-flex justify-content-between align-items-center jb-bg-{{convocatoria.statuscolor}} text-white">
+            <h2 class="fs-5 mb-0" id="convocatoria-info-heading">{{convocatoria.name}}</h2>
+            <span class="badge bg-light text-dark">{{convocatoria.statuslabel}}</span>
         </div>
-        <div class="jb-card-body">
+        <div class="card-body">
             {{! Dates }}
-            <div class="jb-row jb-mb-3">
-                <div class="jb-col-md-6">
-                    <small class="jb-d-block jb-text-muted">{{#str}}convocatoriastartdate, local_jobboard{{/str}}</small>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <small class="d-block text-muted">{{#str}}convocatoriastartdate, local_jobboard{{/str}}</small>
                     <strong>
-                        <i class="fa fa-calendar-days jb-text-success jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-calendar-days text-success me-2" aria-hidden="true"></i>
                         {{convocatoria.startdateformatted}}
                     </strong>
                 </div>
-                <div class="jb-col-md-6">
-                    <small class="jb-d-block jb-text-muted">{{#str}}convocatoriaenddate, local_jobboard{{/str}}</small>
+                <div class="col-md-6">
+                    <small class="d-block text-muted">{{#str}}convocatoriaenddate, local_jobboard{{/str}}</small>
                     <strong>
-                        <i class="fa fa-calendar-xmark jb-text-danger jb-mr-2" aria-hidden="true"></i>
+                        <i class="fa fa-calendar-xmark text-danger me-2" aria-hidden="true"></i>
                         {{convocatoria.enddateformatted}}
                     </strong>
                 </div>
             </div>
 
             {{! Action Buttons }}
-            <div class="jb-d-flex jb-flex-wrap">
+            <div class="d-flex flex-wrap">
                 {{#canaddvacancy}}
-                <a href="{{addvacancyurl}}" class="jb-btn jb-btn-success jb-mr-2 jb-mb-2">
-                    <i class="fa fa-plus jb-mr-2" aria-hidden="true"></i>
+                <a href="{{addvacancyurl}}" class="btn btn-success me-2 mb-2">
+                    <i class="fa fa-plus me-2" aria-hidden="true"></i>
                     {{#str}}addvacancy, local_jobboard{{/str}}
                 </a>
                 {{/canaddvacancy}}
 
                 {{#hasvacancies}}
-                <a href="{{viewallurl}}" class="jb-btn jb-btn-info jb-mr-2 jb-mb-2">
-                    <i class="fa fa-list jb-mr-2" aria-hidden="true"></i>
+                <a href="{{viewallurl}}" class="btn btn-info me-2 mb-2">
+                    <i class="fa fa-list me-2" aria-hidden="true"></i>
                     {{#str}}viewvacancies, local_jobboard{{/str}} ({{vacancycount}})
                 </a>
                 {{/hasvacancies}}
 
                 {{#hasapplications}}
-                <a href="{{applicationsurl}}" class="jb-btn jb-btn-outline-info jb-mr-2 jb-mb-2">
-                    <i class="fa fa-file-lines jb-mr-2" aria-hidden="true"></i>
+                <a href="{{applicationsurl}}" class="btn btn-outline-info me-2 mb-2">
+                    <i class="fa fa-file-lines me-2" aria-hidden="true"></i>
                     {{#str}}applications, local_jobboard{{/str}} ({{applicationcount}})
                 </a>
                 {{/hasapplications}}
@@ -132,26 +132,26 @@
 
     {{! Vacancies List Card }}
     {{#hasvacancies}}
-    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="vacancies-heading">
-        <div class="jb-card-header jb-bg-white jb-fw-bold">
-            <i class="fa fa-briefcase jb-mr-2" aria-hidden="true"></i>
+    <section class="card shadow-sm mb-4" aria-labelledby="vacancies-heading">
+        <div class="card-header bg-white fw-bold">
+            <i class="fa fa-briefcase me-2" aria-hidden="true"></i>
             <span id="vacancies-heading">{{#str}}vacancies, local_jobboard{{/str}}</span>
-            <span class="jb-badge jb-badge-primary jb-ml-2">{{vacancycount}}</span>
+            <span class="badge bg-primary ms-2">{{vacancycount}}</span>
         </div>
-        <div class="jb-card-body jb-p-0">
-            <ul class="jb-list-group jb-list-group-flush">
+        <div class="card-body p-0">
+            <ul class="list-group list-group-flush">
                 {{#vacancies}}
-                <li class="jb-list-group-item jb-d-flex jb-justify-content-between jb-align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
-                        <span class="jb-badge jb-badge-secondary jb-mr-2">{{code}}</span>
+                        <span class="badge bg-secondary me-2">{{code}}</span>
                         <strong>{{title}}</strong>
-                        <span class="jb-badge jb-badge-{{statuscolor}} jb-ml-2">{{statuslabel}}</span>
+                        <span class="badge jb-badge-{{statuscolor}} ms-2">{{statuslabel}}</span>
                     </div>
-                    <div class="jb-d-flex jb-align-items-center">
-                        <span class="jb-badge jb-badge-info jb-mr-2" title="{{#str}}applications, local_jobboard{{/str}}">
-                            <i class="fa fa-file-lines jb-mr-1" aria-hidden="true"></i>{{applicationcount}}
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-info text-dark me-2" title="{{#str}}applications, local_jobboard{{/str}}">
+                            <i class="fa fa-file-lines me-1" aria-hidden="true"></i>{{applicationcount}}
                         </span>
-                        <a href="{{editurl}}" class="jb-btn jb-btn-sm jb-btn-outline-primary" aria-label="{{#str}}edit{{/str}} {{title}}">
+                        <a href="{{editurl}}" class="btn btn-sm btn-outline-primary" aria-label="{{#str}}edit{{/str}} {{title}}">
                             <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -159,8 +159,8 @@
                 {{/vacancies}}
 
                 {{#showviewall}}
-                <li class="jb-list-group-item jb-text-center">
-                    <a href="{{viewallurl}}" class="jb-btn jb-btn-sm jb-btn-outline-secondary">
+                <li class="list-group-item text-center">
+                    <a href="{{viewallurl}}" class="btn btn-sm btn-outline-secondary">
                         {{#str}}viewall, local_jobboard{{/str}} ({{vacancycount}})
                     </a>
                 </li>
@@ -172,9 +172,9 @@
     {{/isediting}}
 
     {{! Form Card }}
-    <section class="jb-card jb-card-shadow jb-mb-4" aria-labelledby="form-heading">
-        <div class="jb-card-header jb-bg-primary jb-text-white jb-fw-bold">
-            <i class="fa fa-pen-to-square jb-mr-2" aria-hidden="true"></i>
+    <section class="card shadow-sm mb-4" aria-labelledby="form-heading">
+        <div class="card-header bg-primary text-white fw-bold">
+            <i class="fa fa-pen-to-square me-2" aria-hidden="true"></i>
             <span id="form-heading">
                 {{#isediting}}
                 {{#str}}editconvocatoria, local_jobboard{{/str}}
@@ -184,20 +184,20 @@
                 {{/isediting}}
             </span>
         </div>
-        <div class="jb-card-body">
+        <div class="card-body">
             {{{formhtml}}}
         </div>
     </section>
 
     {{! Navigation Footer }}
-    <footer class="jb-navigation-footer jb-d-flex jb-justify-content-between jb-align-items-center jb-mt-4 jb-py-3 jb-border-top">
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+    <footer class="jb-navigation-footer d-flex justify-content-between align-items-center mt-4 py-3 border-top">
+        <a href="{{backurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
             {{#str}}backtoconvocatorias, local_jobboard{{/str}}
         </a>
-        <a href="{{dashboardurl}}" class="jb-btn jb-btn-link jb-text-muted">
+        <a href="{{dashboardurl}}" class="btn btn-link text-muted">
             {{#str}}backtodashboard, local_jobboard{{/str}}
-            <i class="fa fa-arrow-right jb-ml-2" aria-hidden="true"></i>
+            <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
         </a>
     </footer>
 </div>

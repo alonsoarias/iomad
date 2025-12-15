@@ -29,10 +29,10 @@
 }}
 {{#loading}}
 {{! Skeleton loading state }}
-<div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-loading" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="jb-card-body jb-d-flex jb-align-items-center">
-        <div class="jb-skeleton-circle jb-mr-3"></div>
-        <div class="jb-flex-grow-1">
+<div class="card shadow-sm jb-stat-card jb-stat-card-loading" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="card-body d-flex align-items-center">
+        <div class="jb-skeleton-circle me-3"></div>
+        <div class="flex-grow-1">
             <div class="jb-skeleton-title" style="width: 40%;"></div>
             <div class="jb-skeleton-text" style="width: 60%;"></div>
         </div>
@@ -41,27 +41,27 @@
 {{/loading}}
 
 {{^loading}}
-<div class="jb-card jb-card-shadow jb-stat-card jb-stat-card-{{color}}{{#animate}} jb-fade-in-up{{/animate}}{{#size}} jb-stat-card-{{size}}{{/size}} jb-hover-lift jb-position-relative"
+<div class="card shadow-sm jb-stat-card jb-stat-card-{{color}}{{#animate}} jb-fade-in-up{{/animate}}{{#size}} jb-stat-card-{{size}}{{/size}} jb-hover-lift position-relative"
      {{#description}}title="{{description}}"{{/description}}>
     {{#badge}}
     <span class="jb-notification-badge jb-bg-{{color}}">{{value}}</span>
     {{/badge}}
     {{#url}}
-    <a href="{{url}}" class="jb-text-decoration-none jb-text-inherit jb-d-block" aria-label="{{label}}: {{value}}">
+    <a href="{{url}}" class="text-decoration-none jb-text-inherit d-block" aria-label="{{label}}: {{value}}">
     {{/url}}
-    <div class="jb-card-body jb-d-flex jb-align-items-center">
-        <div class="jb-stat-icon jb-mr-3" aria-hidden="true">
+    <div class="card-body d-flex align-items-center">
+        <div class="jb-stat-icon me-3" aria-hidden="true">
             <i class="fa fa-{{icon}}"></i>
         </div>
-        <div class="jb-flex-grow-1 jb-min-w-0">
-            <div class="jb-stat-value jb-fs-3 jb-fw-bold jb-text-truncate">{{value}}</div>
-            <div class="jb-stat-label jb-small jb-text-muted jb-text-truncate">{{label}}</div>
+        <div class="flex-grow-1 jb-min-w-0">
+            <div class="jb-stat-value fs-3 fw-bold text-truncate">{{value}}</div>
+            <div class="jb-stat-label small text-muted text-truncate">{{label}}</div>
         </div>
         {{#trend}}
-        <div class="jb-stat-trend jb-text-{{#isup}}success{{/isup}}{{^isup}}danger{{/isup}} jb-ml-2 jb-text-nowrap"
+        <div class="jb-stat-trend jb-text-{{#isup}}success{{/isup}}{{^isup}}danger{{/isup}} ms-2 text-nowrap"
              aria-label="{{#str}}trend, local_jobboard{{/str}}: {{value}}">
-            <i class="fa fa-arrow-{{direction}} jb-mr-1" aria-hidden="true"></i>
-            <small class="jb-fw-medium">{{value}}</small>
+            <i class="fa fa-arrow-{{direction}} me-1" aria-hidden="true"></i>
+            <small class="fw-medium">{{value}}</small>
         </div>
         {{/trend}}
     </div>

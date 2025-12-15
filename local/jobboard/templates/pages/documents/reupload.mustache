@@ -25,10 +25,10 @@
 {{#loading}}
 {{! Skeleton Loading State }}
 <div class="jb-local-jobboard-reupload" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="jb-skeleton-title jb-mb-4" style="width: 200px;"></div>
-    <div class="jb-skeleton-text jb-mb-4" style="width: 100%; height: 80px;"></div>
-    <div class="jb-card">
-        <div class="jb-card-body">
+    <div class="jb-skeleton-title mb-4" style="width: 200px;"></div>
+    <div class="jb-skeleton-text mb-4" style="width: 100%; height: 80px;"></div>
+    <div class="card">
+        <div class="card-body">
             <div class="jb-skeleton-text" style="height: 200px;"></div>
         </div>
     </div>
@@ -43,14 +43,14 @@
     </a>
 
     {{! Page Header }}
-    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
-        <h2 class="jb-mb-0">
-            <i class="fa fa-upload jb-text-primary jb-mr-2" aria-hidden="true"></i>
+    <header class="d-flex justify-content-between align-items-center mb-4 jb-fade-in">
+        <h2 class="mb-0">
+            <i class="fa fa-upload text-primary me-2" aria-hidden="true"></i>
             {{pagetitle}}
         </h2>
         {{#backurl}}
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+        <a href="{{backurl}}" class="btn btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
             {{#str}}back, local_jobboard{{/str}}
         </a>
         {{/backurl}}
@@ -58,41 +58,41 @@
 
     {{! Rejection Info Alert }}
     {{#rejectreason}}
-    <div class="jb-alert jb-alert-danger jb-d-flex jb-align-items-start jb-mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
-        <div class="jb-icon-circle jb-bg-danger jb-text-white jb-mr-3 jb-flex-shrink-0">
+    <div class="alert alert-danger d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
+        <div class="jb-icon-circle bg-danger text-white me-3 flex-shrink-0">
             <i class="fa fa-circle-xmark" aria-hidden="true"></i>
         </div>
         <div>
-            <strong class="jb-d-block jb-mb-1">{{#str}}documentrejected, local_jobboard{{/str}}</strong>
-            <p class="jb-mb-0">{{{rejectreason}}}</p>
+            <strong class="d-block mb-1">{{#str}}documentrejected, local_jobboard{{/str}}</strong>
+            <p class="mb-0">{{{rejectreason}}}</p>
         </div>
     </div>
     {{/rejectreason}}
 
     {{! Document Info Card }}
     {{#documentname}}
-    <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="document-info-heading">
-        <div class="jb-card-header jb-bg-light">
-            <h5 class="jb-mb-0" id="document-info-heading">
-                <i class="fa fa-file-lines jb-text-info jb-mr-2" aria-hidden="true"></i>
+    <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="document-info-heading">
+        <div class="card-header bg-light">
+            <h5 class="mb-0" id="document-info-heading">
+                <i class="fa fa-file-lines text-info me-2" aria-hidden="true"></i>
                 {{#str}}documentinfo, local_jobboard{{/str}}
             </h5>
         </div>
-        <div class="jb-card-body">
-            <dl class="jb-row jb-mb-0">
-                <dt class="jb-col-sm-4 jb-text-muted">
-                    <i class="fa fa-file jb-mr-1" aria-hidden="true"></i>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-muted">
+                    <i class="fa fa-file me-1" aria-hidden="true"></i>
                     {{#str}}documentname, local_jobboard{{/str}}
                 </dt>
-                <dd class="jb-col-sm-8"><strong>{{documentname}}</strong></dd>
+                <dd class="col-sm-8"><strong>{{documentname}}</strong></dd>
 
                 {{#documenttype}}
-                <dt class="jb-col-sm-4 jb-text-muted">
-                    <i class="fa fa-tag jb-mr-1" aria-hidden="true"></i>
+                <dt class="col-sm-4 text-muted">
+                    <i class="fa fa-tag me-1" aria-hidden="true"></i>
                     {{#str}}documenttype, local_jobboard{{/str}}
                 </dt>
-                <dd class="jb-col-sm-8">
-                    <span class="jb-badge jb-badge-secondary">{{documenttype}}</span>
+                <dd class="col-sm-8">
+                    <span class="badge bg-secondary">{{documenttype}}</span>
                 </dd>
                 {{/documenttype}}
             </dl>
@@ -101,40 +101,40 @@
     {{/documentname}}
 
     {{! Help Text Alert }}
-    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-start jb-mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.15s;">
-        <i class="fa fa-circle-info jb-mr-3 jb-mt-1" aria-hidden="true"></i>
+    <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.15s;">
+        <i class="fa fa-circle-info me-3 mt-1" aria-hidden="true"></i>
         <div>
-            <strong class="jb-d-block jb-mb-1">{{#str}}reuploadinstructions, local_jobboard{{/str}}</strong>
-            <p class="jb-mb-0">{{helptext}}</p>
+            <strong class="d-block mb-1">{{#str}}reuploadinstructions, local_jobboard{{/str}}</strong>
+            <p class="mb-0">{{helptext}}</p>
         </div>
     </div>
 
     {{! Upload Form Card }}
     <main id="reupload-form-content">
-        <section class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.2s;" aria-labelledby="upload-form-heading">
-            <div class="jb-card-header jb-bg-primary jb-text-white">
-                <h5 class="jb-mb-0" id="upload-form-heading">
-                    <i class="fa fa-cloud-arrow-up jb-mr-2" aria-hidden="true"></i>
+        <section class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.2s;" aria-labelledby="upload-form-heading">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0" id="upload-form-heading">
+                    <i class="fa fa-cloud-arrow-up me-2" aria-hidden="true"></i>
                     {{#str}}uploadnewversion, local_jobboard{{/str}}
                 </h5>
             </div>
-            <div class="jb-card-body">
+            <div class="card-body">
                 {{{formhtml}}}
             </div>
         </section>
     </main>
 
     {{! Tips Section }}
-    <aside class="jb-mt-4 jb-fade-in" style="animation-delay: 0.25s;">
-        <div class="jb-card jb-card-shadow jb-bg-light">
-            <div class="jb-card-header jb-bg-secondary jb-text-white">
-                <h6 class="jb-mb-0">
-                    <i class="fa fa-lightbulb jb-mr-2" aria-hidden="true"></i>
+    <aside class="mt-4 jb-fade-in" style="animation-delay: 0.25s;">
+        <div class="card shadow-sm bg-light">
+            <div class="card-header bg-secondary text-white">
+                <h6 class="mb-0">
+                    <i class="fa fa-lightbulb me-2" aria-hidden="true"></i>
                     {{#str}}uploadtips, local_jobboard{{/str}}
                 </h6>
             </div>
-            <div class="jb-card-body">
-                <ul class="jb-mb-0 jb-small">
+            <div class="card-body">
+                <ul class="mb-0 small">
                     <li>{{#str}}uploadtip1, local_jobboard{{/str}}</li>
                     <li>{{#str}}uploadtip2, local_jobboard{{/str}}</li>
                     <li>{{#str}}uploadtip3, local_jobboard{{/str}}</li>

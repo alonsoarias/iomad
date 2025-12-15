@@ -22,7 +22,7 @@
 }}
 {{! Single skeleton or multiple based on count }}
 {{#count}}
-<div class="jb-d-flex jb-flex-wrap jb-gap-3" role="status" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+<div class="d-flex flex-wrap gap-3" role="status" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
 {{/count}}
 {{^count}}
 <div role="status" aria-busy="true" aria-label="{{#str}}loading{{/str}}" class="jb-skeleton-wrapper">
@@ -56,11 +56,11 @@
 
 {{! CARD SKELETON }}
 {{#iscard}}
-<div class="jb-card jb-card-shadow">
-    <div class="jb-card-header jb-bg-light">
+<div class="card shadow-sm">
+    <div class="card-header bg-light">
         <div class="jb-skeleton-text" style="width: 50%; height: 1.2em;"></div>
     </div>
-    <div class="jb-card-body">
+    <div class="card-body">
         <div class="jb-skeleton-text" style="width: 100%;"></div>
         <div class="jb-skeleton-text" style="width: 85%;"></div>
         <div class="jb-skeleton-text" style="width: 70%;"></div>
@@ -70,10 +70,10 @@
 
 {{! STAT CARD SKELETON }}
 {{#isstat}}
-<div class="jb-card jb-card-shadow jb-stat-card">
-    <div class="jb-card-body jb-d-flex jb-align-items-center">
-        <div class="jb-skeleton-circle jb-mr-3" style="width: 48px; height: 48px;"></div>
-        <div class="jb-flex-grow-1">
+<div class="card shadow-sm jb-stat-card">
+    <div class="card-body d-flex align-items-center">
+        <div class="jb-skeleton-circle me-3" style="width: 48px; height: 48px;"></div>
+        <div class="flex-grow-1">
             <div class="jb-skeleton-title" style="width: 40%;"></div>
             <div class="jb-skeleton-text" style="width: 60%;"></div>
         </div>
@@ -83,8 +83,8 @@
 
 {{! TABLE SKELETON }}
 {{#istable}}
-<div class="jb-table-responsive">
-    <table class="jb-table">
+<div class="table-responsive">
+    <table class="table">
         <thead>
             <tr>
                 <th><div class="jb-skeleton-text" style="width: 60%;"></div></th>
@@ -131,31 +131,31 @@
 
 {{! LIST SKELETON }}
 {{#islist}}
-<ul class="jb-list-group">
-    <li class="jb-list-group-item jb-d-flex jb-align-items-center">
-        <div class="jb-skeleton-circle jb-mr-3" style="width: 40px; height: 40px;"></div>
-        <div class="jb-flex-grow-1">
+<ul class="list-group">
+    <li class="list-group-item d-flex align-items-center">
+        <div class="jb-skeleton-circle me-3" style="width: 40px; height: 40px;"></div>
+        <div class="flex-grow-1">
             <div class="jb-skeleton-text" style="width: 70%;"></div>
             <div class="jb-skeleton-text" style="width: 40%;"></div>
         </div>
     </li>
-    <li class="jb-list-group-item jb-d-flex jb-align-items-center">
-        <div class="jb-skeleton-circle jb-mr-3" style="width: 40px; height: 40px;"></div>
-        <div class="jb-flex-grow-1">
+    <li class="list-group-item d-flex align-items-center">
+        <div class="jb-skeleton-circle me-3" style="width: 40px; height: 40px;"></div>
+        <div class="flex-grow-1">
             <div class="jb-skeleton-text" style="width: 60%;"></div>
             <div class="jb-skeleton-text" style="width: 50%;"></div>
         </div>
     </li>
-    <li class="jb-list-group-item jb-d-flex jb-align-items-center">
-        <div class="jb-skeleton-circle jb-mr-3" style="width: 40px; height: 40px;"></div>
-        <div class="jb-flex-grow-1">
+    <li class="list-group-item d-flex align-items-center">
+        <div class="jb-skeleton-circle me-3" style="width: 40px; height: 40px;"></div>
+        <div class="flex-grow-1">
             <div class="jb-skeleton-text" style="width: 80%;"></div>
             <div class="jb-skeleton-text" style="width: 35%;"></div>
         </div>
     </li>
-    <li class="jb-list-group-item jb-d-flex jb-align-items-center">
-        <div class="jb-skeleton-circle jb-mr-3" style="width: 40px; height: 40px;"></div>
-        <div class="jb-flex-grow-1">
+    <li class="list-group-item d-flex align-items-center">
+        <div class="jb-skeleton-circle me-3" style="width: 40px; height: 40px;"></div>
+        <div class="flex-grow-1">
             <div class="jb-skeleton-text" style="width: 55%;"></div>
             <div class="jb-skeleton-text" style="width: 45%;"></div>
         </div>
@@ -165,7 +165,7 @@
 
 {{! INLINE SKELETON (generic) }}
 {{#isinline}}
-<span class="jb-skeleton jb-d-inline-block" style="width: {{#width}}{{width}}{{/width}}{{^width}}100px{{/width}}; height: {{#height}}{{height}}{{/height}}{{^height}}1em{{/height}};"></span>
+<span class="jb-skeleton d-inline-block" style="width: {{#width}}{{width}}{{/width}}{{^width}}100px{{/width}}; height: {{#height}}{{height}}{{/height}}{{^height}}1em{{/height}};"></span>
 {{/isinline}}
 
 {{/type}}
@@ -181,4 +181,4 @@
 
 </div>
 
-<span class="jb-sr-only">{{#str}}loading{{/str}}</span>
+<span class="visually-hidden">{{#str}}loading{{/str}}</span>

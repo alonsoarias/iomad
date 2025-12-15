@@ -23,8 +23,8 @@
         "icon": "save"
     }
 }}
-<a href="{{url}}" class="jb-btn jb-btn-{{#outline}}outline-{{/outline}}{{color}}{{#size}} jb-btn-{{size}}{{/size}}{{#block}} jb-btn-block{{/block}}"{{#disabled}} disabled aria-disabled="true"{{/disabled}}{{#confirm}} onclick="return confirm('{{confirm}}');"{{/confirm}}>
-    {{^iconright}}{{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+<a href="{{url}}" class="btn jb-btn-{{#outline}}outline-{{/outline}}{{color}}{{#size}} jb-btn-{{size}}{{/size}}{{#block}} w-100{{/block}}"{{#disabled}} disabled aria-disabled="true"{{/disabled}}{{#confirm}} onclick="return confirm('{{confirm}}');"{{/confirm}}>
+    {{^iconright}}{{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}{{/iconright}}
     {{label}}
-    {{#iconright}}{{#icon}}<i class="fa fa-{{icon}} jb-ml-2" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+    {{#iconright}}{{#icon}}<i class="fa fa-{{icon}} ms-2" aria-hidden="true"></i>{{/icon}}{{/iconright}}
 </a>

@@ -26,12 +26,12 @@
 }}
 {{#segments}}
 {{! Stacked Progress Bar }}
-<div class="jb-progress jb-progress-stacked {{#size}}jb-progress-{{size}}{{/size}}"
+<div class="progress jb-progress-stacked {{#size}}jb-progress-{{size}}{{/size}}"
      {{#height}}style="height: {{height}}px;"{{/height}}
      role="progressbar"
      aria-label="{{#arialabel}}{{arialabel}}{{/arialabel}}{{^arialabel}}{{#str}}progress, local_jobboard{{/str}}{{/arialabel}}">
     {{#segments}}
-    <div class="jb-progress-bar jb-bg-{{color}}{{#striped}} jb-progress-bar-striped{{/striped}}{{#animated}} jb-progress-bar-animated{{/animated}}"
+    <div class="progress-bar jb-bg-{{color}}{{#striped}} progress-bar-striped{{/striped}}{{#animated}} progress-bar-animated{{/animated}}"
          style="width: {{value}}%;"
          role="presentation"
          title="{{label}}: {{value}}%">
@@ -41,11 +41,11 @@
     {{/segments}}
 </div>
 {{#legend}}
-<div class="jb-d-flex jb-flex-wrap jb-gap-3 jb-mt-2 jb-small">
+<div class="d-flex flex-wrap gap-3 mt-2 small">
     {{#segments}}
-    <span class="jb-d-flex jb-align-items-center">
-        <span class="jb-badge jb-badge-{{color}} jb-mr-1" style="width: 12px; height: 12px; padding: 0;"></span>
-        {{label}}: <strong class="jb-ml-1">{{value}}%</strong>
+    <span class="d-flex align-items-center">
+        <span class="badge jb-badge-{{color}} me-1" style="width: 12px; height: 12px; padding: 0;"></span>
+        {{label}}: <strong class="ms-1">{{value}}%</strong>
     </span>
     {{/segments}}
 </div>
@@ -56,26 +56,26 @@
 {{! Single Progress Bar }}
 <div class="jb-progress-wrapper">
     {{#toplabel}}
-    <div class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-1">
-        <span class="jb-small jb-text-muted">{{toplabel}}</span>
-        {{#showpercent}}<span class="jb-small jb-fw-medium">{{value}}%</span>{{/showpercent}}
+    <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="small text-muted">{{toplabel}}</span>
+        {{#showpercent}}<span class="small fw-medium">{{value}}%</span>{{/showpercent}}
     </div>
     {{/toplabel}}
-    <div class="jb-progress {{#size}}jb-progress-{{size}}{{/size}}"
+    <div class="progress {{#size}}jb-progress-{{size}}{{/size}}"
          {{#height}}style="height: {{height}}px;"{{/height}}
          role="progressbar"
          aria-valuenow="{{value}}"
          aria-valuemin="0"
          aria-valuemax="100"
          aria-label="{{#arialabel}}{{arialabel}}{{/arialabel}}{{^arialabel}}{{#str}}progress, local_jobboard{{/str}}{{/arialabel}}">
-        <div class="jb-progress-bar jb-bg-{{color}}{{#striped}} jb-progress-bar-striped{{/striped}}{{#animated}} jb-progress-bar-animated{{/animated}} {{#pulse}}jb-pulse{{/pulse}}"
+        <div class="progress-bar jb-bg-{{color}}{{#striped}} progress-bar-striped{{/striped}}{{#animated}} progress-bar-animated{{/animated}} {{#pulse}}jb-pulse{{/pulse}}"
              style="width: {{value}}%;">
             {{^toplabel}}{{#showpercent}}{{value}}%{{/showpercent}}{{/toplabel}}
             {{#label}}{{label}}{{/label}}
         </div>
     </div>
     {{#bottomlabel}}
-    <div class="jb-small jb-text-muted jb-mt-1">{{bottomlabel}}</div>
+    <div class="small text-muted mt-1">{{bottomlabel}}</div>
     {{/bottomlabel}}
 </div>
 {{/segments}}

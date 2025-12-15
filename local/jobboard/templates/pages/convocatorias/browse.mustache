@@ -25,21 +25,21 @@
 {{#loading}}
 {{! Skeleton Loading State }}
 <div class="local-jobboard-browse-convocatorias" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="jb-mb-4">
-        <div class="jb-skeleton-text jb-mb-2" style="width: 200px;"></div>
+    <div class="mb-4">
+        <div class="jb-skeleton-text mb-2" style="width: 200px;"></div>
         <div class="jb-skeleton-title" style="width: 250px;"></div>
     </div>
-    <div class="jb-skeleton-text jb-mb-4" style="width: 100%; height: 100px;"></div>
-    <div class="jb-row jb-mb-4">
-        <div class="jb-col-lg-3 jb-col-md-6"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
-        <div class="jb-col-lg-3 jb-col-md-6"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
-        <div class="jb-col-lg-3 jb-col-md-6"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
-        <div class="jb-col-lg-3 jb-col-md-6"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
+    <div class="jb-skeleton-text mb-4" style="width: 100%; height: 100px;"></div>
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
+        <div class="col-lg-3 col-md-6"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
+        <div class="col-lg-3 col-md-6"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
+        <div class="col-lg-3 col-md-6"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
     </div>
-    <div class="jb-row">
-        <div class="jb-col-lg-4 jb-col-md-6 jb-mb-4"><div class="jb-skeleton-text" style="height: 250px;"></div></div>
-        <div class="jb-col-lg-4 jb-col-md-6 jb-mb-4"><div class="jb-skeleton-text" style="height: 250px;"></div></div>
-        <div class="jb-col-lg-4 jb-col-md-6 jb-mb-4"><div class="jb-skeleton-text" style="height: 250px;"></div></div>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4"><div class="jb-skeleton-text" style="height: 250px;"></div></div>
+        <div class="col-lg-4 col-md-6 mb-4"><div class="jb-skeleton-text" style="height: 250px;"></div></div>
+        <div class="col-lg-4 col-md-6 mb-4"><div class="jb-skeleton-text" style="height: 250px;"></div></div>
     </div>
 </div>
 {{/loading}}
@@ -52,42 +52,42 @@
     </a>
 
     {{! Page Header }}
-    <header class="jb-page-header jb-mb-4 jb-fade-in">
-        <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="jb-mb-3">
-            <ol class="jb-breadcrumb">
-                <li class="jb-breadcrumb-item">
+    <header class="jb-page-header mb-4 jb-fade-in">
+        <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
                     <a href="{{dashboardurl}}">
-                        <i class="fa fa-house jb-mr-1" aria-hidden="true"></i>
+                        <i class="fa fa-house me-1" aria-hidden="true"></i>
                         {{#str}}dashboard, local_jobboard{{/str}}
                     </a>
                 </li>
-                <li class="jb-breadcrumb-item jb-active" aria-current="page">
+                <li class="breadcrumb-item jb-active" aria-current="page">
                     {{#str}}convocatorias, local_jobboard{{/str}}
                 </li>
             </ol>
         </nav>
-        <h1 class="jb-fs-4 jb-mb-0">
-            <i class="fa fa-calendar-days jb-text-primary jb-mr-2" aria-hidden="true"></i>
+        <h1 class="fs-4 mb-0">
+            <i class="fa fa-calendar-days text-primary me-2" aria-hidden="true"></i>
             {{#str}}convocatorias, local_jobboard{{/str}}
         </h1>
     </header>
 
     {{! Welcome Banner }}
-    <div class="jb-welcome-section jb-bg-gradient-primary jb-text-white jb-rounded-lg jb-p-4 jb-mb-4 jb-fade-in-up" style="animation-delay: 0.05s;">
-        <div class="jb-d-flex jb-justify-content-between jb-align-items-center">
+    <div class="jb-welcome-section jb-bg-gradient-primary text-white rounded-lg p-4 mb-4 jb-fade-in-up" style="animation-delay: 0.05s;">
+        <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h2 class="jb-mb-1 jb-fw-bold">{{#str}}browseconvocatorias, local_jobboard{{/str}}</h2>
-                <p class="jb-mb-0 jb-opacity-75">{{#str}}convocatoriahelp, local_jobboard{{/str}}</p>
+                <h2 class="mb-1 fw-bold">{{#str}}browseconvocatorias, local_jobboard{{/str}}</h2>
+                <p class="mb-0 opacity-75">{{#str}}convocatoriahelp, local_jobboard{{/str}}</p>
             </div>
-            <i class="fa fa-calendar-days fa-3x jb-opacity-25" aria-hidden="true"></i>
+            <i class="fa fa-calendar-days fa-3x opacity-25" aria-hidden="true"></i>
         </div>
     </div>
 
     {{! Statistics Row }}
     {{#stats.0}}
-    <section class="jb-row jb-mb-4" role="region" aria-label="{{#str}}convocatoriastatistics, local_jobboard{{/str}}">
+    <section class="row mb-4" role="region" aria-label="{{#str}}convocatoriastatistics, local_jobboard{{/str}}">
         {{#stats}}
-        <div class="jb-col-lg-3 jb-col-md-6 jb-mb-3">
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="jb-fade-in-up" style="animation-delay: calc(0.1s + {{@index}} * 0.05s);">
                 {{> local_jobboard/components/stat_card }}
             </div>
@@ -98,14 +98,14 @@
 
     {{! Filter Tabs }}
     {{#tabs.0}}
-    <nav class="jb-mb-4 jb-fade-in" style="animation-delay: 0.15s;" aria-label="{{#str}}statustabs, local_jobboard{{/str}}">
-        <ul class="jb-nav jb-nav-tabs">
+    <nav class="mb-4 jb-fade-in" style="animation-delay: 0.15s;" aria-label="{{#str}}statustabs, local_jobboard{{/str}}">
+        <ul class="nav nav-tabs">
             {{#tabs}}
-            <li class="jb-nav-item">
-                <a href="{{url}}" class="jb-nav-link {{#active}}jb-active{{/active}}" {{#active}}aria-current="page"{{/active}}>
-                    <i class="fa fa-filter jb-mr-1" aria-hidden="true"></i>
+            <li class="nav-item">
+                <a href="{{url}}" class="nav-link {{#active}}jb-active{{/active}}" {{#active}}aria-current="page"{{/active}}>
+                    <i class="fa fa-filter me-1" aria-hidden="true"></i>
                     {{label}}
-                    <span class="jb-badge jb-badge-{{color}} jb-ml-1">{{count}}</span>
+                    <span class="badge jb-badge-{{color}} ms-1">{{count}}</span>
                 </a>
             </li>
             {{/tabs}}
@@ -115,8 +115,8 @@
 
     {{! Results Info }}
     {{#showinginfo}}
-    <p class="jb-text-muted jb-small jb-mb-3 jb-fade-in" style="animation-delay: 0.2s;">
-        <i class="fa fa-circle-info jb-mr-1" aria-hidden="true"></i>
+    <p class="text-muted small mb-3 jb-fade-in" style="animation-delay: 0.2s;">
+        <i class="fa fa-circle-info me-1" aria-hidden="true"></i>
         {{showinginfo}}
     </p>
     {{/showinginfo}}
@@ -124,32 +124,32 @@
     {{! Convocatorias Grid }}
     <main id="convocatorias-grid">
         {{#hasconvocatorias}}
-        <section class="jb-row" aria-label="{{#str}}convocatorias, local_jobboard{{/str}}">
+        <section class="row" aria-label="{{#str}}convocatorias, local_jobboard{{/str}}">
             {{#convocatorias}}
-            <div class="jb-col-lg-4 jb-col-md-6 jb-mb-4">
-                <article class="jb-card jb-card-h100 jb-card-shadow jb-convocatoria-card jb-hover-lift jb-fade-in-up {{#isclosingsoon}}jb-border-warning{{/isclosingsoon}} {{#isclosed}}jb-border-secondary{{/isclosed}} {{#isopen}}jb-border-success{{/isopen}}"
+            <div class="col-lg-4 col-md-6 mb-4">
+                <article class="card h-100 shadow-sm jb-convocatoria-card jb-hover-lift jb-fade-in-up {{#isclosingsoon}}border-warning{{/isclosingsoon}} {{#isclosed}}jb-border-secondary{{/isclosed}} {{#isopen}}jb-border-success{{/isopen}}"
                          style="animation-delay: calc(0.25s + {{@index}} * 0.05s);"
                          data-convocatoria-id="{{id}}"
                          aria-labelledby="conv-title-{{id}}">
                     {{! Card Header }}
-                    <div class="jb-card-header {{#isclosed}}jb-bg-secondary{{/isclosed}} {{#isclosingsoon}}jb-bg-warning jb-text-dark{{/isclosingsoon}} {{^isclosed}}{{^isclosingsoon}}jb-bg-success{{/isclosingsoon}}{{/isclosed}} jb-text-white jb-d-flex jb-justify-content-between jb-align-items-center">
-                        <code class="jb-small {{#isclosingsoon}}jb-text-dark{{/isclosingsoon}}">{{code}}</code>
+                    <div class="card-header {{#isclosed}}bg-secondary{{/isclosed}} {{#isclosingsoon}}bg-warning text-dark{{/isclosingsoon}} {{^isclosed}}{{^isclosingsoon}}bg-success{{/isclosingsoon}}{{/isclosed}} text-white d-flex justify-content-between align-items-center">
+                        <code class="small {{#isclosingsoon}}text-dark{{/isclosingsoon}}">{{code}}</code>
                         {{#isclosingsoon}}
-                        <span class="jb-badge jb-badge-light jb-pulse">
-                            <i class="fa fa-clock jb-mr-1" aria-hidden="true"></i>
+                        <span class="badge bg-light text-dark jb-pulse">
+                            <i class="fa fa-clock me-1" aria-hidden="true"></i>
                             {{#str}}daysleft, local_jobboard{{/str}}: {{daysremaining}}
                         </span>
                         {{/isclosingsoon}}
                         {{^isclosingsoon}}
                         {{#isopen}}
-                        <span class="jb-badge jb-badge-light">
-                            <i class="fa fa-door-open jb-mr-1" aria-hidden="true"></i>
+                        <span class="badge bg-light text-dark">
+                            <i class="fa fa-door-open me-1" aria-hidden="true"></i>
                             {{#str}}convocatoria_status_open, local_jobboard{{/str}}
                         </span>
                         {{/isopen}}
                         {{#isclosed}}
-                        <span class="jb-badge jb-badge-dark">
-                            <i class="fa fa-door-closed jb-mr-1" aria-hidden="true"></i>
+                        <span class="badge bg-dark">
+                            <i class="fa fa-door-closed me-1" aria-hidden="true"></i>
                             {{#str}}convocatoria_status_closed, local_jobboard{{/str}}
                         </span>
                         {{/isclosed}}
@@ -157,35 +157,35 @@
                     </div>
 
                     {{! Card Body }}
-                    <div class="jb-card-body">
-                        <h2 class="jb-card-title jb-fs-5 jb-mb-3" id="conv-title-{{id}}">
-                            <a href="{{viewurl}}" class="jb-text-dark jb-stretched-link">{{name}}</a>
+                    <div class="card-body">
+                        <h2 class="card-title fs-5 mb-3" id="conv-title-{{id}}">
+                            <a href="{{viewurl}}" class="text-dark jb-stretched-link">{{name}}</a>
                         </h2>
 
                         {{! Description }}
                         {{#description}}
-                        <p class="jb-card-text jb-text-muted jb-small jb-mb-3">{{description}}</p>
+                        <p class="card-text text-muted small mb-3">{{description}}</p>
                         {{/description}}
 
                         {{! Dates }}
-                        <div class="jb-small jb-mb-2">
-                            <i class="fa fa-calendar-days jb-text-muted jb-mr-2" aria-hidden="true"></i>
+                        <div class="small mb-2">
+                            <i class="fa fa-calendar-days text-muted me-2" aria-hidden="true"></i>
                             {{startdateformatted}}
-                            <span class="jb-mx-1">→</span>
+                            <span class="mx-1">→</span>
                             {{enddateformatted}}
                         </div>
 
                         {{! Vacancy Count }}
-                        <div class="jb-d-flex jb-align-items-center">
-                            <i class="fa fa-briefcase jb-text-primary jb-mr-2" aria-hidden="true"></i>
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-briefcase text-primary me-2" aria-hidden="true"></i>
                             {{#hasvacancies}}
-                            <span class="jb-text-primary jb-fw-medium">
-                                <span class="jb-badge jb-badge-primary">{{vacancycount}}</span>
+                            <span class="text-primary fw-medium">
+                                <span class="badge bg-primary">{{vacancycount}}</span>
                                 {{#str}}vacancies, local_jobboard{{/str}}
                             </span>
                             {{/hasvacancies}}
                             {{^hasvacancies}}
-                            <span class="jb-text-muted">
+                            <span class="text-muted">
                                 {{#str}}novacancies, local_jobboard{{/str}}
                             </span>
                             {{/hasvacancies}}
@@ -193,24 +193,24 @@
                     </div>
 
                     {{! Card Footer }}
-                    <footer class="jb-card-footer jb-bg-white">
+                    <footer class="card-footer bg-white">
                         {{#hasvacancies}}
                         {{#isopen}}
-                        <a href="{{viewurl}}" class="jb-btn jb-btn-success jb-btn-block">
-                            <i class="fa fa-arrow-right jb-mr-2" aria-hidden="true"></i>
+                        <a href="{{viewurl}}" class="btn btn-success w-100">
+                            <i class="fa fa-arrow-right me-2" aria-hidden="true"></i>
                             {{#str}}viewvacancies, local_jobboard{{/str}}
                         </a>
                         {{/isopen}}
                         {{^isopen}}
-                        <a href="{{viewurl}}" class="jb-btn jb-btn-outline-secondary jb-btn-block">
-                            <i class="fa fa-eye jb-mr-2" aria-hidden="true"></i>
+                        <a href="{{viewurl}}" class="btn btn-outline-secondary w-100">
+                            <i class="fa fa-eye me-2" aria-hidden="true"></i>
                             {{#str}}viewconvocatoria, local_jobboard{{/str}}
                         </a>
                         {{/isopen}}
                         {{/hasvacancies}}
                         {{^hasvacancies}}
-                        <span class="jb-btn jb-btn-outline-secondary jb-btn-block jb-disabled" aria-disabled="true">
-                            <i class="fa fa-circle-minus jb-mr-2" aria-hidden="true"></i>
+                        <span class="btn btn-outline-secondary w-100 disabled" aria-disabled="true">
+                            <i class="fa fa-circle-minus me-2" aria-hidden="true"></i>
                             {{#str}}novacancies, local_jobboard{{/str}}
                         </span>
                         {{/hasvacancies}}
@@ -223,14 +223,14 @@
 
         {{! Empty State }}
         {{^hasconvocatorias}}
-        <div class="jb-empty-state jb-text-center jb-py-5 jb-fade-in" role="status">
-            <div class="jb-empty-state-icon jb-mb-3">
-                <i class="fa fa-calendar-xmark fa-4x jb-text-muted" aria-hidden="true"></i>
+        <div class="jb-empty-state text-center py-5 jb-fade-in" role="status">
+            <div class="jb-empty-state-icon mb-3">
+                <i class="fa fa-calendar-xmark fa-4x text-muted" aria-hidden="true"></i>
             </div>
-            <h2 class="jb-fs-4 jb-text-muted jb-mb-2">{{#str}}noconvocatorias, local_jobboard{{/str}}</h2>
-            <p class="jb-text-muted jb-mb-4">{{#str}}noconvocatorias_desc, local_jobboard{{/str}}</p>
-            <a href="{{dashboardurl}}" class="jb-btn jb-btn-primary jb-hover-lift">
-                <i class="fa fa-house jb-mr-2" aria-hidden="true"></i>
+            <h2 class="fs-4 text-muted mb-2">{{#str}}noconvocatorias, local_jobboard{{/str}}</h2>
+            <p class="text-muted mb-4">{{#str}}noconvocatorias_desc, local_jobboard{{/str}}</p>
+            <a href="{{dashboardurl}}" class="btn btn-primary jb-hover-lift">
+                <i class="fa fa-house me-2" aria-hidden="true"></i>
                 {{#str}}backtodashboard, local_jobboard{{/str}}
             </a>
         </div>
@@ -239,20 +239,20 @@
 
     {{! Pagination }}
     {{#pagination}}
-    <nav class="jb-mt-4 jb-fade-in" style="animation-delay: 0.3s;" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
+    <nav class="mt-4 jb-fade-in" style="animation-delay: 0.3s;" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
         {{{pagination}}}
     </nav>
     {{/pagination}}
 
     {{! Navigation Footer }}
-    <footer class="jb-navigation-footer jb-d-flex jb-justify-content-between jb-align-items-center jb-mt-4 jb-py-3 jb-border-top jb-fade-in" style="animation-delay: 0.35s;">
-        <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+    <footer class="jb-navigation-footer d-flex justify-content-between align-items-center mt-4 py-3 border-top jb-fade-in" style="animation-delay: 0.35s;">
+        <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
             {{#str}}backtodashboard, local_jobboard{{/str}}
         </a>
-        <a href="{{vacanciesurl}}" class="jb-btn jb-btn-link jb-text-muted">
+        <a href="{{vacanciesurl}}" class="btn btn-link text-muted">
             {{#str}}browservacancies, local_jobboard{{/str}}
-            <i class="fa fa-arrow-right jb-ml-2" aria-hidden="true"></i>
+            <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
         </a>
     </footer>
 </div>

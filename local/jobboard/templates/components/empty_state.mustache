@@ -24,36 +24,36 @@
         "animate": true
     }
 }}
-<div class="jb-empty-state jb-text-center{{#compact}} jb-py-3{{/compact}}{{^compact}} jb-py-5{{/compact}}{{#animate}} jb-fade-in-up{{/animate}}"
+<div class="jb-empty-state text-center{{#compact}} py-3{{/compact}}{{^compact}} py-5{{/compact}}{{#animate}} jb-fade-in-up{{/animate}}"
      role="status"
      aria-live="polite"
      {{#variant}}data-variant="{{variant}}"{{/variant}}>
 
     {{! Icon with visual enhancement }}
-    <div class="jb-empty-state-icon jb-mb-4">
-        <div class="jb-empty-icon-wrapper jb-d-inline-flex jb-align-items-center jb-justify-content-center jb-rounded-circle jb-bg-light"
+    <div class="jb-empty-state-icon mb-4">
+        <div class="jb-empty-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle bg-light"
              style="width: 100px; height: 100px;">
-            <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}folder-open{{/icon}} fa-3x jb-text-muted" aria-hidden="true"></i>
+            <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}folder-open{{/icon}} fa-3x text-muted" aria-hidden="true"></i>
         </div>
     </div>
 
     {{! Title }}
-    <h3 class="jb-fs-5 jb-fw-medium jb-text-dark jb-mb-2">{{title}}</h3>
+    <h3 class="fs-5 fw-medium text-dark mb-2">{{title}}</h3>
 
     {{! Description }}
     {{#description}}
-    <p class="jb-text-muted jb-mb-4 jb-mx-auto" style="max-width: 400px;">{{description}}</p>
+    <p class="text-muted mb-4 mx-auto" style="max-width: 400px;">{{description}}</p>
     {{/description}}
 
     {{! Actions }}
     {{#action}}
-    <div class="jb-empty-state-actions jb-d-flex jb-flex-column jb-flex-sm-row jb-justify-content-center jb-align-items-center jb-gap-2">
-        <a href="{{url}}" class="jb-btn jb-btn-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}">
-            {{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}
+    <div class="jb-empty-state-actions d-flex flex-column jb-flex-sm-row justify-content-center align-items-center gap-2">
+        <a href="{{url}}" class="btn jb-btn-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}">
+            {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}
             {{label}}
         </a>
         {{#secondaryaction}}
-        <a href="{{url}}" class="jb-btn jb-btn-link jb-text-muted">
+        <a href="{{url}}" class="btn btn-link text-muted">
             {{label}}
         </a>
         {{/secondaryaction}}
@@ -63,7 +63,7 @@
     {{^action}}
     {{#secondaryaction}}
     <div class="jb-empty-state-actions">
-        <a href="{{url}}" class="jb-btn jb-btn-outline-secondary">
+        <a href="{{url}}" class="btn btn-outline-secondary">
             {{label}}
         </a>
     </div>

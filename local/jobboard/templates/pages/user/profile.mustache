@@ -26,26 +26,26 @@
 {{#loading}}
 {{! Skeleton Loading State }}
 <div class="local-jobboard-profile" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="jb-skeleton-text jb-mb-3" style="width: 200px; height: 1em;"></div>
-    <div class="jb-mb-4">
-        <div class="jb-skeleton-title jb-mb-2" style="width: 60%;"></div>
+    <div class="jb-skeleton-text mb-3" style="width: 200px; height: 1em;"></div>
+    <div class="mb-4">
+        <div class="jb-skeleton-title mb-2" style="width: 60%;"></div>
         <div class="jb-skeleton-text" style="width: 80%;"></div>
     </div>
-    <div class="jb-card jb-mb-4">
-        <div class="jb-card-header jb-bg-light">
+    <div class="card mb-4">
+        <div class="card-header bg-light">
             <div class="jb-skeleton-text" style="width: 40%;"></div>
         </div>
-        <div class="jb-card-body">
-            <div class="jb-skeleton-text jb-mb-2" style="width: 70%;"></div>
+        <div class="card-body">
+            <div class="jb-skeleton-text mb-2" style="width: 70%;"></div>
             <div class="jb-skeleton-text" style="width: 50%;"></div>
         </div>
     </div>
-    <div class="jb-card">
-        <div class="jb-card-body">
-            <div class="jb-skeleton-text jb-mb-3" style="width: 30%; height: 2em;"></div>
-            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 40px;"></div>
-            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 40px;"></div>
-            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 40px;"></div>
+    <div class="card">
+        <div class="card-body">
+            <div class="jb-skeleton-text mb-3" style="width: 30%; height: 2em;"></div>
+            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
+            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
+            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
         </div>
     </div>
 </div>
@@ -59,19 +59,19 @@
     </a>
 
     {{! Breadcrumb }}
-    <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="jb-mb-3 jb-fade-in">
-        <ol class="jb-breadcrumb">
+    <nav aria-label="{{#str}}breadcrumb, local_jobboard{{/str}}" class="mb-3 jb-fade-in">
+        <ol class="breadcrumb">
             {{#breadcrumbs}}
-            <li class="jb-breadcrumb-item {{#active}}jb-active{{/active}}">
+            <li class="breadcrumb-item {{#active}}jb-active{{/active}}">
                 {{#url}}<a href="{{url}}">{{label}}</a>{{/url}}
                 {{^url}}<span aria-current="page">{{label}}</span>{{/url}}
             </li>
             {{/breadcrumbs}}
             {{^breadcrumbs}}
-            <li class="jb-breadcrumb-item">
+            <li class="breadcrumb-item">
                 <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
             </li>
-            <li class="jb-breadcrumb-item jb-active" aria-current="page">
+            <li class="breadcrumb-item jb-active" aria-current="page">
                 {{pagetitle}}
             </li>
             {{/breadcrumbs}}
@@ -79,35 +79,35 @@
     </nav>
 
     {{! Page Header }}
-    <header class="jb-page-header jb-mb-4 jb-fade-in">
-        <h1 class="jb-fs-3 jb-mb-2">
-            <i class="fa fa-user-pen jb-text-primary jb-mr-2" aria-hidden="true"></i>
+    <header class="jb-page-header mb-4 jb-fade-in">
+        <h1 class="fs-3 mb-2">
+            <i class="fa fa-user-pen text-primary me-2" aria-hidden="true"></i>
             {{pagetitle}}
         </h1>
         {{#intro}}
-        <p class="jb-lead jb-text-muted jb-mb-0">{{intro}}</p>
+        <p class="lead text-muted mb-0">{{intro}}</p>
         {{/intro}}
     </header>
 
     {{! Vacancy Info Card (if applying for a specific vacancy) }}
     {{#hasvacancy}}
-    <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-start jb-mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.1s;">
-        <div class="jb-alert-icon jb-mr-3">
+    <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.1s;">
+        <div class="jb-alert-icon me-3">
             <i class="fa fa-briefcase fa-lg" aria-hidden="true"></i>
         </div>
-        <div class="jb-flex-grow-1">
-            <h2 class="jb-fs-6 jb-mb-2 jb-fw-bold">
+        <div class="flex-grow-1">
+            <h2 class="fs-6 mb-2 fw-bold">
                 {{#str}}signup_applying_for, local_jobboard{{/str}}
             </h2>
-            <p class="jb-mb-1 jb-fw-medium">{{vacancy.title}}</p>
-            <div class="jb-d-flex jb-flex-wrap jb-gap-3 jb-small">
+            <p class="mb-1 fw-medium">{{vacancy.title}}</p>
+            <div class="d-flex flex-wrap gap-3 small">
                 <span>
-                    <i class="fa fa-hashtag jb-text-muted jb-mr-1" aria-hidden="true"></i>
+                    <i class="fa fa-hashtag text-muted me-1" aria-hidden="true"></i>
                     <strong>{{vacancy.code}}</strong>
                 </span>
                 {{#vacancy.location}}
                 <span>
-                    <i class="fa fa-location-dot jb-text-muted jb-mr-1" aria-hidden="true"></i>
+                    <i class="fa fa-location-dot text-muted me-1" aria-hidden="true"></i>
                     {{vacancy.location}}
                 </span>
                 {{/vacancy.location}}
@@ -118,17 +118,17 @@
 
     {{! Profile Form }}
     <main id="profile-main-content">
-        <div class="jb-card jb-card-shadow jb-fade-in-up" style="animation-delay: 0.15s;">
-            <div class="jb-card-body">
+        <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.15s;">
+            <div class="card-body">
                 {{{formhtml}}}
             </div>
         </div>
     </main>
 
     {{! Navigation Footer }}
-    <nav class="jb-navigation-footer jb-d-flex jb-justify-content-between jb-align-items-center jb-mt-4 jb-py-3 jb-border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
-        <a href="{{dashboardurl}}" class="jb-btn jb-btn-outline-secondary">
-            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+    <nav class="jb-navigation-footer d-flex justify-content-between align-items-center mt-4 py-3 border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
+        <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
             {{#str}}backtodashboard, local_jobboard{{/str}}
         </a>
     </nav>

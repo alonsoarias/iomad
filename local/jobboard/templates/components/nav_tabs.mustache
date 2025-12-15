@@ -16,14 +16,14 @@
         ]
     }
 }}
-<nav class="jb-mb-4" aria-label="{{#str}}navigation{{/str}}">
-    <ul class="jb-nav jb-nav-{{#style}}{{style}}{{/style}}{{^style}}pills{{/style}} jb-flex-wrap" role="tablist">
+<nav class="mb-4" aria-label="{{#str}}navigation{{/str}}">
+    <ul class="nav jb-nav-{{#style}}{{style}}{{/style}}{{^style}}pills{{/style}} flex-wrap" role="tablist">
         {{#items}}
-        <li class="jb-nav-item" role="presentation">
-            <a class="jb-nav-link{{#active}} jb-active{{/active}}" href="{{url}}" role="tab" aria-selected="{{#active}}true{{/active}}{{^active}}false{{/active}}">
-                {{#icon}}<i class="fa fa-{{icon}} jb-mr-2" aria-hidden="true"></i>{{/icon}}
+        <li class="nav-item" role="presentation">
+            <a class="nav-link{{#active}} jb-active{{/active}}" href="{{url}}" role="tab" aria-selected="{{#active}}true{{/active}}{{^active}}false{{/active}}">
+                {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}
                 {{label}}
-                {{#badge}}<span class="jb-badge jb-badge-{{badge.color}} jb-ml-2">{{badge.value}}</span>{{/badge}}
+                {{#badge}}<span class="badge jb-badge-{{badge.color}} ms-2">{{badge.value}}</span>{{/badge}}
             </a>
         </li>
         {{/items}}

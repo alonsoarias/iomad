@@ -27,16 +27,16 @@
 {{#loading}}
 {{! Skeleton Loading State }}
 <div class="jb-local-jobboard-templates" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="jb-d-flex jb-justify-content-between jb-mb-4">
+    <div class="d-flex justify-content-between mb-4">
         <div class="jb-skeleton-title" style="width: 180px;"></div>
         <div class="jb-skeleton-text" style="width: 150px; height: 38px;"></div>
     </div>
-    <div class="jb-card jb-mb-4">
-        <div class="jb-card-header jb-bg-primary">
+    <div class="card mb-4">
+        <div class="card-header bg-primary">
             <div class="jb-skeleton-text" style="width: 200px; height: 24px;"></div>
         </div>
-        <div class="jb-card-body">
-            <div class="jb-skeleton-text jb-mb-3" style="width: 100%; height: 80px;"></div>
+        <div class="card-body">
+            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 80px;"></div>
             <div class="jb-skeleton-text" style="height: 300px;"></div>
         </div>
     </div>
@@ -51,37 +51,37 @@
     </a>
 
     {{! Page Header }}
-    <header class="jb-d-flex jb-justify-content-between jb-align-items-center jb-mb-4 jb-fade-in">
-        <h3 class="jb-mb-0">
-            <i class="fa fa-envelope jb-text-primary jb-mr-2" aria-hidden="true"></i>
+    <header class="d-flex justify-content-between align-items-center mb-4 jb-fade-in">
+        <h3 class="mb-0">
+            <i class="fa fa-envelope text-primary me-2" aria-hidden="true"></i>
             {{str.email_templates}}
         </h3>
-        <a href="{{backurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-            <i class="fa fa-arrow-left jb-mr-2" aria-hidden="true"></i>
+        <a href="{{backurl}}" class="btn btn-outline-secondary jb-hover-lift">
+            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
             {{str.back_to_templates}}
         </a>
     </header>
 
     {{! Template Edit Card }}
     <main id="template-edit-form">
-        <section class="jb-card jb-card-shadow jb-mb-4 jb-fade-in-up" style="animation-delay: 0.05s;" aria-labelledby="template-edit-heading">
-            <div class="jb-card-header jb-bg-primary jb-text-white jb-d-flex jb-justify-content-between jb-align-items-center">
-                <h5 class="jb-mb-0" id="template-edit-heading">
-                    <i class="fa fa-pen-to-square jb-mr-2" aria-hidden="true"></i>
+        <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.05s;" aria-labelledby="template-edit-heading">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0" id="template-edit-heading">
+                    <i class="fa fa-pen-to-square me-2" aria-hidden="true"></i>
                     {{str.edit_template}}: {{templatename}}
                 </h5>
-                <code class="jb-badge jb-badge-light jb-text-primary">{{templatecode}}</code>
+                <code class="badge bg-light text-dark text-primary">{{templatecode}}</code>
             </div>
-            <div class="jb-card-body">
+            <div class="card-body">
                 {{! Template Description }}
                 {{#hasdescription}}
-                <div class="jb-alert jb-alert-info jb-d-flex jb-align-items-start jb-mb-4" role="note">
-                    <div class="jb-icon-circle jb-bg-info jb-text-white jb-mr-3 jb-flex-shrink-0">
+                <div class="alert alert-info d-flex align-items-start mb-4" role="note">
+                    <div class="jb-icon-circle bg-info text-white me-3 flex-shrink-0">
                         <i class="fa fa-info" aria-hidden="true"></i>
                     </div>
                     <div>
-                        <strong class="jb-d-block jb-mb-1">{{#str}}templatedescription, local_jobboard{{/str}}</strong>
-                        <p class="jb-mb-0">{{description}}</p>
+                        <strong class="d-block mb-1">{{#str}}templatedescription, local_jobboard{{/str}}</strong>
+                        <p class="mb-0">{{description}}</p>
                     </div>
                 </div>
                 {{/hasdescription}}
@@ -93,48 +93,48 @@
     </main>
 
     {{! Placeholder Help }}
-    <aside class="jb-card jb-card-shadow jb-mb-4 jb-fade-in" style="animation-delay: 0.1s;">
-        <div class="jb-card-header jb-bg-secondary jb-text-white">
-            <h6 class="jb-mb-0">
-                <i class="fa fa-code jb-mr-2" aria-hidden="true"></i>
+    <aside class="card shadow-sm mb-4 jb-fade-in" style="animation-delay: 0.1s;">
+        <div class="card-header bg-secondary text-white">
+            <h6 class="mb-0">
+                <i class="fa fa-code me-2" aria-hidden="true"></i>
                 {{#str}}availableplaceholders, local_jobboard{{/str}}
             </h6>
         </div>
-        <div class="jb-card-body">
-            <div class="jb-row jb-small">
-                <div class="jb-col-md-4 jb-mb-2">
-                    <code class="jb-text-primary">{user_fullname}</code>
-                    <span class="jb-text-muted jb-ml-1">- {{#str}}placeholder_username, local_jobboard{{/str}}</span>
+        <div class="card-body">
+            <div class="row small">
+                <div class="col-md-4 mb-2">
+                    <code class="text-primary">{user_fullname}</code>
+                    <span class="text-muted ms-1">- {{#str}}placeholder_username, local_jobboard{{/str}}</span>
                 </div>
-                <div class="jb-col-md-4 jb-mb-2">
-                    <code class="jb-text-primary">{vacancy_title}</code>
-                    <span class="jb-text-muted jb-ml-1">- {{#str}}placeholder_vacancytitle, local_jobboard{{/str}}</span>
+                <div class="col-md-4 mb-2">
+                    <code class="text-primary">{vacancy_title}</code>
+                    <span class="text-muted ms-1">- {{#str}}placeholder_vacancytitle, local_jobboard{{/str}}</span>
                 </div>
-                <div class="jb-col-md-4 jb-mb-2">
-                    <code class="jb-text-primary">{site_name}</code>
-                    <span class="jb-text-muted jb-ml-1">- {{#str}}placeholder_sitename, local_jobboard{{/str}}</span>
+                <div class="col-md-4 mb-2">
+                    <code class="text-primary">{site_name}</code>
+                    <span class="text-muted ms-1">- {{#str}}placeholder_sitename, local_jobboard{{/str}}</span>
                 </div>
             </div>
         </div>
     </aside>
 
     {{! Navigation Footer }}
-    <footer class="jb-card jb-card-shadow jb-bg-light jb-fade-in" style="animation-delay: 0.15s;">
-        <div class="jb-card-body jb-d-flex jb-flex-wrap jb-align-items-center jb-justify-content-center jb-gap-2">
-            <a href="{{navfooter.dashboardurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-gauge jb-mr-2" aria-hidden="true"></i>
+    <footer class="card shadow-sm bg-light jb-fade-in" style="animation-delay: 0.15s;">
+        <div class="card-body d-flex flex-wrap align-items-center justify-content-center gap-2">
+            <a href="{{navfooter.dashboardurl}}" class="btn btn-outline-secondary jb-hover-lift">
+                <i class="fa fa-gauge me-2" aria-hidden="true"></i>
                 {{str.dashboard}}
             </a>
-            <a href="{{navfooter.doctypesurl}}" class="jb-btn jb-btn-outline-primary jb-hover-lift">
-                <i class="fa fa-file-lines jb-mr-2" aria-hidden="true"></i>
+            <a href="{{navfooter.doctypesurl}}" class="btn btn-outline-primary jb-hover-lift">
+                <i class="fa fa-file-lines me-2" aria-hidden="true"></i>
                 {{str.doctypes}}
             </a>
-            <a href="{{navfooter.rolesurl}}" class="jb-btn jb-btn-outline-info jb-hover-lift">
-                <i class="fa fa-user-tag jb-mr-2" aria-hidden="true"></i>
+            <a href="{{navfooter.rolesurl}}" class="btn btn-outline-info jb-hover-lift">
+                <i class="fa fa-user-tag me-2" aria-hidden="true"></i>
                 {{str.manageroles}}
             </a>
-            <a href="{{navfooter.settingsurl}}" class="jb-btn jb-btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-gear jb-mr-2" aria-hidden="true"></i>
+            <a href="{{navfooter.settingsurl}}" class="btn btn-outline-secondary jb-hover-lift">
+                <i class="fa fa-gear me-2" aria-hidden="true"></i>
                 {{str.pluginsettings}}
             </a>
         </div>

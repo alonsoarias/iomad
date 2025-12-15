@@ -16,15 +16,15 @@
         ]
     }
 }}
-<nav aria-label="{{#str}}breadcrumb{{/str}}" class="jb-mb-3">
-    <ol class="jb-breadcrumb">
+<nav aria-label="{{#str}}breadcrumb{{/str}}" class="mb-3">
+    <ol class="breadcrumb">
         {{#breadcrumbs}}
-        <li class="jb-breadcrumb-item{{#active}} jb-active{{/active}}"{{#active}} aria-current="page"{{/active}}>
+        <li class="breadcrumb-item{{#active}} jb-active{{/active}}"{{#active}} aria-current="page"{{/active}}>
             {{#url}}<a href="{{url}}">{{/url}}{{label}}{{#url}}</a>{{/url}}
         </li>
         {{/breadcrumbs}}
         {{#items}}
-        <li class="jb-breadcrumb-item{{#active}} jb-active{{/active}}"{{#active}} aria-current="page"{{/active}}>
+        <li class="breadcrumb-item{{#active}} jb-active{{/active}}"{{#active}} aria-current="page"{{/active}}>
             {{#url}}<a href="{{url}}">{{/url}}{{label}}{{#url}}</a>{{/url}}
         </li>
         {{/items}}
