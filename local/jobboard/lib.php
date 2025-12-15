@@ -24,6 +24,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+// Use helper classes for better code organization.
+use local_jobboard\helper\status_helper;
+use local_jobboard\helper\iomad_helper;
+use local_jobboard\helper\file_helper;
+use local_jobboard\helper\date_helper;
+
 /**
  * Check if user has any of the jobboard custom roles.
  *
@@ -412,6 +418,7 @@ function local_jobboard_pluginfile($course, $cm, $context, $filearea, $args, $fo
 /**
  * Get the list of vacancy statuses.
  *
+ * @deprecated Use status_helper::get_vacancy_statuses() instead.
  * @return array List of status code => name.
  */
 function local_jobboard_get_vacancy_statuses(): array {
@@ -518,118 +525,55 @@ function local_jobboard_is_transition_allowed(string $from, string $to): bool {
 /**
  * Get the user's company ID (for Iomad multi-tenant).
  *
+ * @deprecated Use iomad_helper::get_user_companyid() instead.
  * @param int|null $userid User ID or null for current user.
  * @return int|null Company ID or null if not in a company.
  */
 function local_jobboard_get_user_companyid(?int $userid = null): ?int {
-    global $DB, $USER;
-
-    $userid = $userid ?? $USER->id;
-
-    // Check if Iomad is installed.
-    if (!file_exists(__DIR__ . '/../../local/iomad/lib/company.php')) {
-        return null;
-    }
-
-    require_once(__DIR__ . '/../../local/iomad/lib/company.php');
-
-    $companies = $DB->get_records_sql(
-        "SELECT companyid FROM {company_users} WHERE userid = :userid ORDER BY lastused DESC, companyid DESC",
-        ['userid' => $userid]
-    );
-
-    if (!empty($companies)) {
-        $first = reset($companies);
-        return (int) $first->companyid;
-    }
-
-    return null;
+    return iomad_helper::get_user_companyid($userid);
 }
 
 /**
  * Check if user can view a vacancy (respects multi-tenant).
  *
+ * @deprecated Use iomad_helper::can_user_view_vacancy() instead.
  * @param stdClass $vacancy The vacancy record.
  * @param int|null $userid User ID or null for current user.
  * @return bool True if user can view the vacancy.
  */
 function local_jobboard_can_view_vacancy(stdClass $vacancy, ?int $userid = null): bool {
-    global $USER;
-
-    $userid = $userid ?? $USER->id;
-    $context = context_system::instance();
-
-    // Users with viewallvacancies can see everything.
-    if (has_capability('local/jobboard:viewallvacancies', $context, $userid)) {
-        return true;
-    }
-
-    // For published vacancies, check company filtering.
-    if ($vacancy->status !== 'published') {
-        return false;
-    }
-
-    // If vacancy has no company restriction, anyone can view.
-    if (empty($vacancy->companyid)) {
-        return true;
-    }
-
-    // Check if user belongs to the same company.
-    $usercompanyid = local_jobboard_get_user_companyid($userid);
-    return $usercompanyid === (int) $vacancy->companyid;
+    return iomad_helper::can_user_view_vacancy($vacancy, $userid);
 }
 
 /**
  * Get company name by ID.
  *
+ * @deprecated Use iomad_helper::get_company_name() instead.
  * @param int $companyid The company ID.
  * @return string Company name or empty string.
  */
 function local_jobboard_get_company_name(int $companyid): string {
-    global $DB;
-
-    if (!$companyid) {
-        return '';
-    }
-
-    $company = $DB->get_record('company', ['id' => $companyid], 'name');
-    return $company ? $company->name : '';
+    return iomad_helper::get_company_name($companyid);
 }
 
 /**
  * Get list of available companies for dropdown.
  *
+ * @deprecated Use iomad_helper::get_companies() instead.
  * @return array Company ID => name.
  */
 function local_jobboard_get_companies(): array {
-    global $DB;
-
-    // Check if company table exists (Iomad).
-    $dbman = $DB->get_manager();
-    if (!$dbman->table_exists('company')) {
-        return [];
-    }
-
-    $companies = $DB->get_records('company', ['suspended' => 0], 'name ASC', 'id, name');
-
-    $result = [];
-    foreach ($companies as $company) {
-        $result[$company->id] = $company->name;
-    }
-
-    return $result;
+    return iomad_helper::get_companies();
 }
 
 /**
  * Check if Iomad is installed.
  *
+ * @deprecated Use iomad_helper::is_iomad_installed() instead.
  * @return bool True if Iomad is installed.
  */
 function local_jobboard_is_iomad_installed(): bool {
-    global $DB;
-
-    $dbman = $DB->get_manager();
-    return $dbman->table_exists('company') && $dbman->table_exists('company_users');
+    return iomad_helper::is_iomad_installed();
 }
 
 /**
@@ -639,65 +583,24 @@ function local_jobboard_is_iomad_installed(): bool {
  * In IOMAD, each company has a root department (parent = 0) that serves as
  * a container, and the actual departments are children of this root.
  *
+ * @deprecated Use iomad_helper::get_departments() instead.
  * @param int $companyid The company ID.
  * @param bool $includeroot Whether to include the root department (default: false).
  * @return array Department ID => name.
  */
 function local_jobboard_get_departments(int $companyid, bool $includeroot = false): array {
-    global $DB;
-
-    if (!$companyid) {
-        return [];
-    }
-
-    // Check if department table exists (IOMAD).
-    $dbman = $DB->get_manager();
-    if (!$dbman->table_exists('department')) {
-        return [];
-    }
-
-    // Build query conditions - exclude root department by default.
-    $conditions = ['company' => $companyid];
-    $sql = "SELECT id, name, parent FROM {department} WHERE company = :company";
-    $params = ['company' => $companyid];
-
-    if (!$includeroot) {
-        // Only get child departments (parent > 0).
-        $sql .= " AND parent > 0";
-    }
-
-    $sql .= " ORDER BY name ASC";
-
-    $departments = $DB->get_records_sql($sql, $params);
-
-    $result = [];
-    foreach ($departments as $dept) {
-        $result[$dept->id] = $dept->name;
-    }
-
-    return $result;
+    return iomad_helper::get_departments($companyid, $includeroot);
 }
 
 /**
  * Get department name by ID.
  *
+ * @deprecated Use iomad_helper::get_department_name() instead.
  * @param int $departmentid The department ID.
  * @return string Department name or empty string.
  */
 function local_jobboard_get_department_name(int $departmentid): string {
-    global $DB;
-
-    if (!$departmentid) {
-        return '';
-    }
-
-    $dbman = $DB->get_manager();
-    if (!$dbman->table_exists('department')) {
-        return '';
-    }
-
-    $dept = $DB->get_record('department', ['id' => $departmentid], 'name');
-    return $dept ? $dept->name : '';
+    return iomad_helper::get_department_name($departmentid);
 }
 
 /**
@@ -875,40 +778,11 @@ function local_jobboard_check_experience_requirements(int $userid, int $vacancyi
 /**
  * Get IOMAD installation type and details.
  *
+ * @deprecated Use iomad_helper::get_iomad_info() instead.
  * @return array Installation info with keys: is_iomad, version, has_departments.
  */
 function local_jobboard_get_iomad_info(): array {
-    global $DB, $CFG;
-
-    $info = [
-        'is_iomad' => false,
-        'version' => null,
-        'has_departments' => false,
-        'has_companies' => false,
-    ];
-
-    $dbman = $DB->get_manager();
-
-    // Check for IOMAD tables.
-    if (!$dbman->table_exists('company')) {
-        return $info;
-    }
-
-    $info['is_iomad'] = true;
-    $info['has_companies'] = true;
-
-    // Check for departments.
-    if ($dbman->table_exists('department')) {
-        $info['has_departments'] = true;
-    }
-
-    // Get IOMAD version if available.
-    $iomadversion = get_config('local_iomad', 'version');
-    if ($iomadversion) {
-        $info['version'] = $iomadversion;
-    }
-
-    return $info;
+    return iomad_helper::get_iomad_info();
 }
 
 /**
@@ -1008,103 +882,68 @@ function local_jobboard_get_user_age(?int $userid = null): ?int {
 /**
  * Format a timestamp for display.
  *
+ * @deprecated Use date_helper::format_date() instead.
  * @param int|null $timestamp Unix timestamp.
  * @param string $format Date format (strftime format).
  * @return string Formatted date or empty string if null.
  */
 function local_jobboard_format_date(?int $timestamp, string $format = '%d/%m/%Y'): string {
-    if ($timestamp === null || $timestamp === 0) {
-        return '';
-    }
-    return userdate($timestamp, $format);
+    return date_helper::format_date($timestamp, $format);
 }
 
 /**
  * Format a timestamp for datetime display.
  *
+ * @deprecated Use date_helper::format_datetime() instead.
  * @param int|null $timestamp Unix timestamp.
  * @return string Formatted datetime or empty string if null.
  */
 function local_jobboard_format_datetime(?int $timestamp): string {
-    if ($timestamp === null || $timestamp === 0) {
-        return '';
-    }
-    return userdate($timestamp, '%d/%m/%Y %H:%M');
+    return date_helper::format_datetime($timestamp);
 }
 
 /**
  * Calculate days between two timestamps.
  *
+ * @deprecated Use date_helper::days_between() instead.
  * @param int $from Start timestamp.
  * @param int $to End timestamp.
  * @return int Number of days.
  */
 function local_jobboard_days_between(int $from, int $to): int {
-    return (int) floor(abs($to - $from) / 86400);
+    return date_helper::days_between($from, $to);
 }
 
 /**
  * Get the maximum file size allowed for uploads.
  *
+ * @deprecated Use file_helper::get_max_filesize() instead.
  * @return int File size in bytes.
  */
 function local_jobboard_get_max_filesize(): int {
-    $configsize = get_config('local_jobboard', 'maxfilesize');
-
-    if ($configsize) {
-        return (int) $configsize * 1024 * 1024; // MB to bytes.
-    }
-
-    // Default 10MB.
-    return 10 * 1024 * 1024;
+    return file_helper::get_max_filesize();
 }
 
 /**
  * Get allowed file extensions.
  *
+ * @deprecated Use file_helper::get_allowed_extensions() instead.
  * @return array Array of allowed extensions.
  */
 function local_jobboard_get_allowed_extensions(): array {
-    $config = get_config('local_jobboard', 'allowedformats');
-
-    if ($config) {
-        return array_map('trim', explode(',', $config));
-    }
-
-    return ['pdf'];
+    return file_helper::get_allowed_extensions();
 }
 
 /**
  * Validate uploaded file type.
  *
+ * @deprecated Use file_helper::validate_file_type() instead.
  * @param stored_file $file The file to validate.
  * @param array|null $allowedformats Allowed formats or null for defaults.
  * @return bool True if valid.
  */
 function local_jobboard_validate_file_type(stored_file $file, ?array $allowedformats = null): bool {
-    $allowedformats = $allowedformats ?? local_jobboard_get_allowed_extensions();
-
-    // Get the extension.
-    $filename = $file->get_filename();
-    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-
-    if (!in_array($extension, $allowedformats)) {
-        return false;
-    }
-
-    // Check MIME type.
-    $mimetype = $file->get_mimetype();
-    $allowedmimes = [
-        'pdf' => 'application/pdf',
-    ];
-
-    if (isset($allowedmimes[$extension])) {
-        if ($mimetype !== $allowedmimes[$extension]) {
-            return false;
-        }
-    }
-
-    return true;
+    return file_helper::validate_file_type($file, $allowedformats);
 }
 
 /**
