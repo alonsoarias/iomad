@@ -76,6 +76,18 @@ if ($id) {
     $urlparams['id'] = $id;
 }
 
+// Include vacancyid for apply view (used by form action).
+$vacancyid = optional_param('vacancyid', 0, PARAM_INT);
+if ($vacancyid) {
+    $urlparams['vacancyid'] = $vacancyid;
+}
+
+// Include convocatoriaid if present.
+$convocatoriaid = optional_param('convocatoriaid', 0, PARAM_INT);
+if ($convocatoriaid) {
+    $urlparams['convocatoriaid'] = $convocatoriaid;
+}
+
 $PAGE->set_url(new moodle_url('/local/jobboard/index.php', $urlparams));
 
 // Route to the appropriate view.
