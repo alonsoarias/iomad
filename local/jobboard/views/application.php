@@ -120,7 +120,7 @@ if ($action === 'changestatus' && $canmanageworkflow) {
 }
 
 // Get documents.
-$documents = document::get_for_application($application->id);
+$documents = document::get_by_application($application->id);
 
 // Get applicant info.
 $applicant = $DB->get_record('user', ['id' => $application->userid]);
