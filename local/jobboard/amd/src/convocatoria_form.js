@@ -87,7 +87,8 @@ define(['core/notification', 'core/str'], function(Notification, Str) {
                 }
                 return response.json();
             })
-            .then(function(departments) {
+            .then(function(data) {
+                var departments = (data.success && data.departments) ? data.departments : [];
                 updateDepartmentOptions(departments);
                 hideLoading(state.departmentSelect);
             })

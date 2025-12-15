@@ -90,6 +90,22 @@ define(['core/notification'], function(Notification) {
                 }
                 return response.json();
             })
+            .then(function(data) {
+                if (!data.success) {
+                    return [];
+                }
+                // Extract data array based on endpoint type.
+                if (data.departments) {
+                    return data.departments;
+                }
+                if (data.convocatorias) {
+                    return data.convocatorias;
+                }
+                if (data.companies) {
+                    return data.companies;
+                }
+                return [];
+            })
             .catch(function(error) {
                 Notification.exception(error);
                 return [];

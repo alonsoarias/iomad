@@ -56,6 +56,12 @@ define(['core/ajax', 'core/notification'], function(Ajax, Notification) {
                 }
                 return response.json();
             })
+            .then(function(data) {
+                if (data.success && data.departments) {
+                    return data.departments;
+                }
+                return [];
+            })
             .catch(function(error) {
                 Notification.exception(error);
                 return [];
