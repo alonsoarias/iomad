@@ -83,7 +83,7 @@
             <h6 class="mb-0"><i class="fa fa-filter me-2 text-muted"></i>{{#str}}filter{{/str}}</h6>
         </div>
         <div class="card-body py-3">
-            <form method="get" action="{{filterformurl}}" class="d-flex flex-wrap align-items-center gap-2">
+            <form method="get" action="{{filterformurl}}" class="d-flex flex-wrap align-items-center gap-2 jb-filter-form">
                 <select name="vacancyid" id="vacancyid" class="form-select form-select-sm" style="max-width: 300px;">
                     <option value="0">{{#str}}allvacancies, local_jobboard{{/str}}</option>
                     {{#vacancies}}

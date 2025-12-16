@@ -63,7 +63,7 @@
             <h6 class="mb-0"><i class="fa fa-filter me-2 text-muted"></i>{{#str}}filterconvocatorias, local_jobboard{{/str}}</h6>
         </div>
         <div class="card-body py-3">
-            <form method="get" action="{{filterform.action}}">
+            <form method="get" action="{{filterform.action}}" class="jb-filter-form">
                 {{#filterform.hiddenfields}}
                 <input type="hidden" name="{{name}}" value="{{value}}">
                 {{/filterform.hiddenfields}}

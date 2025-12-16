@@ -97,7 +97,7 @@
     {{! Faculty Filter Form }}
     <section class="card shadow-sm mb-4" aria-label="{{#str}}filter{{/str}}">
         <div class="card-body">
-            <form method="get" action="{{filterformurl}}" class="jb-form-inline">
+            <form method="get" action="{{filterformurl}}" class="jb-form-inline jb-filter-form">
                 <div class="mb-3 me-3">
                     <label class="visually-hidden" for="companyid">{{#str}}faculty, local_jobboard{{/str}}</label>
                     <select name="companyid" id="companyid" class="form-control" onchange="this.form.submit()">
@@ -315,7 +315,7 @@
         </div>
         <div class="card-body">
             {{! User Search Form }}
-            <form method="get" action="{{filterformurl}}" class="mb-3">
+            <form method="get" action="{{filterformurl}}" class="mb-3 jb-filter-form">
                 <input type="hidden" name="companyid" value="{{company.id}}">
                 <div class="input-group">
                     <input type="text" name="usersearch" class="form-control"
@@ -400,7 +400,7 @@
         </div>
         <div class="card-body">
             {{! User Search Form }}
-            <form method="get" action="{{filterformurl}}" class="mb-3">
+            <form method="get" action="{{filterformurl}}" class="mb-3 jb-filter-form">
                 <input type="hidden" name="companyid" value="{{company.id}}">
                 <div class="input-group">
                     <input type="text" name="usersearch" class="form-control"

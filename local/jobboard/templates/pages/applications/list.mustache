@@ -89,7 +89,7 @@
         {{#filterform}}
         <div class="card shadow-sm mb-4">
             <div class="card-body py-3">
-                <form method="get" action="{{filterform.action}}">
+                <form method="get" action="{{filterform.action}}" class="jb-filter-form">
                     {{#filterform.hiddenfields}}
                     <input type="hidden" name="{{name}}" value="{{value}}">
                     {{/filterform.hiddenfields}}
