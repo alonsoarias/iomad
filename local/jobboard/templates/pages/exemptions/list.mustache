@@ -251,7 +251,7 @@
                                 </td>
                                 <td class="text-end">
                                     <div class="btn-group btn-group-sm" role="group" aria-label="{{#str}}exemptionactions, local_jobboard{{/str}}">
-                                        <a href="{{viewurl}}" class="btn btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
+                                        <a href="{{viewurl}}" class="btn btn-outline-primary jb-btn-outline-primary" title="{{#str}}view, local_jobboard{{/str}}">
                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                             <span class="visually-hidden">{{#str}}view, local_jobboard{{/str}}</span>
                                         </a>
@@ -260,7 +260,7 @@
                                             <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                                             <span class="visually-hidden">{{#str}}edit, local_jobboard{{/str}}</span>
                                         </a>
-                                        <a href="{{revokeurl}}" class="btn btn-outline-danger" title="{{#str}}revoke, local_jobboard{{/str}}" onclick="return confirm('{{#str}}confirmrevoke, local_jobboard{{/str}}');">
+                                        <a href="{{revokeurl}}" class="btn btn-outline-danger jb-btn-outline-danger" title="{{#str}}revoke, local_jobboard{{/str}}" onclick="return confirm('{{#str}}confirmrevoke, local_jobboard{{/str}}');">
                                             <i class="fa fa-ban" aria-hidden="true"></i>
                                             <span class="visually-hidden">{{#str}}revoke, local_jobboard{{/str}}</span>
                                         </a>
@@ -307,12 +307,12 @@
             <i class="fa fa-gauge me-2" aria-hidden="true"></i>
             {{#str}}dashboard, local_jobboard{{/str}}
         </a>
-        <a href="{{doctypesurl}}" class="btn btn-outline-primary">
+        <a href="{{doctypesurl}}" class="btn btn-outline-primary jb-btn-outline-primary">
             <i class="fa fa-folder me-2" aria-hidden="true"></i>
             {{#str}}managedoctypes, local_jobboard{{/str}}
         </a>
         {{#canviewreports}}
-        <a href="{{reportsurl}}" class="btn btn-outline-info">
+        <a href="{{reportsurl}}" class="btn btn-outline-info jb-btn-outline-info">
             <i class="fa fa-chart-bar me-2" aria-hidden="true"></i>
             {{#str}}reports, local_jobboard{{/str}}
         </a>

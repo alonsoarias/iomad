@@ -58,13 +58,13 @@
                 </div>
                 {{! Quick Actions - Desktop }}
                 <div class="btn-group d-none d-md-flex" role="group" aria-label="{{#str}}quickactions, local_jobboard{{/str}}">
-                    <a href="{{reviewurl}}" class="btn btn-outline-primary btn-sm">
+                    <a href="{{reviewurl}}" class="btn btn-outline-primary jb-btn-outline-primary btn-sm">
                         <i class="fa fa-magnifying-glass me-1"></i>
                         {{#str}}reviewdocuments, local_jobboard{{/str}}
                     </a>
                     {{#hasapplications}}
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button type="button" class="btn btn-outline-success jb-btn-outline-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-download me-1"></i>
                             {{#str}}export, local_jobboard{{/str}}
                         </button>
@@ -240,7 +240,7 @@
                     <p class="text-muted mb-4">{{#str}}noapplicationsfound_desc, local_jobboard{{/str}}</p>
                     <div class="d-flex justify-content-center gap-2">
                         {{#currentsearch}}
-                        <a href="{{reseturl}}" class="btn btn-outline-primary btn-sm">
+                        <a href="{{reseturl}}" class="btn btn-outline-primary jb-btn-outline-primary btn-sm">
                             <i class="fa fa-rotate-left me-1"></i>
                             {{#str}}clearfilters, local_jobboard{{/str}}
                         </a>
@@ -259,12 +259,12 @@
         <div class="card shadow-sm mt-4 d-md-none">
             <div class="card-body py-3">
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="{{reviewurl}}" class="btn btn-outline-primary btn-sm flex-fill">
+                    <a href="{{reviewurl}}" class="btn btn-outline-primary jb-btn-outline-primary btn-sm flex-fill">
                         <i class="fa fa-magnifying-glass me-1"></i>
                         {{#str}}reviewdocuments, local_jobboard{{/str}}
                     </a>
                     {{#hasapplications}}
-                    <a href="{{exportcsvurl}}" class="btn btn-outline-success btn-sm flex-fill">
+                    <a href="{{exportcsvurl}}" class="btn btn-outline-success jb-btn-outline-success btn-sm flex-fill">
                         <i class="fa fa-download me-1"></i>
                         {{#str}}export, local_jobboard{{/str}}
                     </a>

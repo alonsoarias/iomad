@@ -239,7 +239,7 @@
 
                     {{! Card Footer }}
                     <footer class="card-footer bg-white d-flex justify-content-between align-items-center">
-                        <a href="{{reviewurl}}" class="btn btn-sm {{#pendingcount}}btn-primary jb-hover-lift{{/pendingcount}}{{^pendingcount}}btn-outline-primary{{/pendingcount}}">
+                        <a href="{{reviewurl}}" class="btn btn-sm {{#pendingcount}}btn-primary jb-btn-primary jb-hover-lift{{/pendingcount}}{{^pendingcount}}btn-outline-primary jb-btn-outline-primary{{/pendingcount}}">
                             <i class="fa fa-magnifying-glass me-1" aria-hidden="true"></i>
                             {{#str}}reviewdocuments, local_jobboard{{/str}}
                             {{#pendingcount}}

@@ -229,7 +229,7 @@
                                 </td>
                                 <td class="text-center jb-action-buttons">
                                     <div class="btn-group" role="group" aria-label="{{#str}}actions{{/str}}">
-                                        <a href="{{editurl}}" class="btn btn-sm btn-outline-primary" title="{{str.edit}}" aria-label="{{str.edit}} {{name}}">
+                                        <a href="{{editurl}}" class="btn btn-sm btn-outline-primary jb-btn-outline-primary" title="{{str.edit}}" aria-label="{{str.edit}} {{name}}">
                                             <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                                         </a>
                                         {{#hassavedid}}
@@ -238,7 +238,7 @@
                                         </a>
                                         {{/hassavedid}}
                                         {{#canreset}}
-                                        <a href="{{reseturl}}" class="btn btn-sm btn-outline-warning" title="{{str.resettodefault}}" aria-label="{{str.resettodefault}} {{name}}"
+                                        <a href="{{reseturl}}" class="btn btn-sm btn-outline-warning jb-btn-outline-warning" title="{{str.resettodefault}}" aria-label="{{str.resettodefault}} {{name}}"
                                            onclick="return confirm('{{str.confirmreset}}');">
                                             <i class="fa fa-rotate-left" aria-hidden="true"></i>
                                         </a>
@@ -303,11 +303,11 @@
                 <i class="fa fa-gauge me-2" aria-hidden="true"></i>
                 {{str.dashboard}}
             </a>
-            <a href="{{doctypesurl}}" class="btn btn-outline-primary jb-hover-lift">
+            <a href="{{doctypesurl}}" class="btn btn-outline-primary jb-btn-outline-primary jb-hover-lift">
                 <i class="fa fa-file-lines me-2" aria-hidden="true"></i>
                 {{str.doctypes}}
             </a>
-            <a href="{{rolesurl}}" class="btn btn-outline-info jb-hover-lift">
+            <a href="{{rolesurl}}" class="btn btn-outline-info jb-btn-outline-info jb-hover-lift">
                 <i class="fa fa-user-tag me-2" aria-hidden="true"></i>
                 {{str.manageroles}}
             </a>

@@ -170,16 +170,16 @@
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         {{! Quick Actions }}
                         <div class="btn-group btn-group-sm">
-                            <a href="{{editurl}}" class="btn btn-outline-primary" title="{{#str}}edit{{/str}}">
+                            <a href="{{editurl}}" class="btn btn-outline-primary jb-btn-outline-primary" title="{{#str}}edit{{/str}}">
                                 <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                             </a>
                             {{#isdraft}}
-                            <a href="{{addvacancyurl}}" class="btn btn-outline-success" title="{{#str}}addvacancy, local_jobboard{{/str}}">
+                            <a href="{{addvacancyurl}}" class="btn btn-outline-success jb-btn-outline-success" title="{{#str}}addvacancy, local_jobboard{{/str}}">
                                 <i class="fa fa-plus" aria-hidden="true"></i>
                             </a>
                             {{/isdraft}}
                             {{#hasvacancies}}
-                            <a href="{{vacanciesurl}}" class="btn btn-outline-info" title="{{#str}}viewvacancies, local_jobboard{{/str}}">
+                            <a href="{{vacanciesurl}}" class="btn btn-outline-info jb-btn-outline-info" title="{{#str}}viewvacancies, local_jobboard{{/str}}">
                                 <i class="fa fa-briefcase" aria-hidden="true"></i>
                                 <span class="badge bg-info text-dark ms-1">{{vacancycount}}</span>
                             </a>

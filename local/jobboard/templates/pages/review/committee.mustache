@@ -52,7 +52,7 @@
             {{pagetitle}}
         </h1>
         <div class="btn-group">
-            <a href="{{rolesurl}}" class="btn btn-outline-primary">
+            <a href="{{rolesurl}}" class="btn btn-outline-primary jb-btn-outline-primary">
                 <i class="fa fa-user-tag me-2" aria-hidden="true"></i>
                 {{#str}}manageroles, local_jobboard{{/str}}
             </a>
@@ -160,7 +160,7 @@
                                 {{/isactive}}
                             </td>
                             <td class="text-center">
-                                <a href="{{manageurl}}" class="btn btn-sm btn-outline-primary"
+                                <a href="{{manageurl}}" class="btn btn-sm btn-outline-primary jb-btn-outline-primary"
                                    title="{{#str}}manage, local_jobboard{{/str}}">
                                     <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                                 </a>
@@ -284,7 +284,7 @@
                                 </div>
 
                                 {{! Remove Button }}
-                                <a href="{{removeurl}}" class="btn btn-sm btn-outline-danger"
+                                <a href="{{removeurl}}" class="btn btn-sm btn-outline-danger jb-btn-outline-danger"
                                    title="{{#str}}removemember, local_jobboard{{/str}}"
                                    onclick="return confirm('{{#str}}confirmremovemember, local_jobboard{{/str}}');">
                                     <i class="fa fa-user-minus" aria-hidden="true"></i>
@@ -545,11 +545,11 @@
                 <i class="fa fa-gauge me-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-            <a href="{{rolesurl}}" class="btn btn-outline-primary jb-hover-lift">
+            <a href="{{rolesurl}}" class="btn btn-outline-primary jb-btn-outline-primary jb-hover-lift">
                 <i class="fa fa-user-tag me-2" aria-hidden="true"></i>
                 {{#str}}manageroles, local_jobboard{{/str}}
             </a>
-            <a href="{{reviewurl}}" class="btn btn-outline-info jb-hover-lift">
+            <a href="{{reviewurl}}" class="btn btn-outline-info jb-btn-outline-info jb-hover-lift">
                 <i class="fa fa-clipboard-check me-2" aria-hidden="true"></i>
                 {{#str}}reviewapplications, local_jobboard{{/str}}
             </a>

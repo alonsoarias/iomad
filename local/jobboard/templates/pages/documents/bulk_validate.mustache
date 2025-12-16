@@ -83,7 +83,7 @@
                 <i class="fa fa-gauge me-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-            <a href="{{reviewurl}}" class="btn btn-outline-primary">
+            <a href="{{reviewurl}}" class="btn btn-outline-primary jb-btn-outline-primary">
                 <i class="fa fa-clipboard-check me-2" aria-hidden="true"></i>
                 {{#str}}reviewapplications, local_jobboard{{/str}}
             </a>
@@ -260,12 +260,12 @@
                                     <td class="text-center">
                                         <div class="btn-group btn-group-sm" role="group">
                                             {{#downloadurl}}
-                                            <a href="{{downloadurl}}" class="btn btn-outline-primary" target="_blank" title="{{#str}}view{{/str}}">
+                                            <a href="{{downloadurl}}" class="btn btn-outline-primary jb-btn-outline-primary" target="_blank" title="{{#str}}view{{/str}}">
                                                 <i class="fa fa-eye" aria-hidden="true"></i>
                                                 <span class="visually-hidden">{{#str}}view{{/str}}</span>
                                             </a>
                                             {{/downloadurl}}
-                                            <a href="{{validateurl}}" class="btn btn-outline-success" title="{{#str}}validate, local_jobboard{{/str}}">
+                                            <a href="{{validateurl}}" class="btn btn-outline-success jb-btn-outline-success" title="{{#str}}validate, local_jobboard{{/str}}">
                                                 <i class="fa fa-check" aria-hidden="true"></i>
                                                 <span class="visually-hidden">{{#str}}validate, local_jobboard{{/str}}</span>
                                             </a>
@@ -385,12 +385,12 @@
             <i class="fa fa-gauge me-2" aria-hidden="true"></i>
             {{#str}}dashboard, local_jobboard{{/str}}
         </a>
-        <a href="{{assignreviewerurl}}" class="btn btn-outline-primary">
+        <a href="{{assignreviewerurl}}" class="btn btn-outline-primary jb-btn-outline-primary">
             <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
             {{#str}}assignreviewer, local_jobboard{{/str}}
         </a>
         {{#canviewreports}}
-        <a href="{{reportsurl}}" class="btn btn-outline-info">
+        <a href="{{reportsurl}}" class="btn btn-outline-info jb-btn-outline-info">
             <i class="fa fa-chart-bar me-2" aria-hidden="true"></i>
             {{#str}}reports, local_jobboard{{/str}}
         </a>

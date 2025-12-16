@@ -180,12 +180,12 @@
                                     <td class="text-end">
                                         <div class="btn-group btn-group-sm">
                                             {{#downloadurl}}
-                                            <a href="{{downloadurl}}" class="btn btn-outline-primary" target="_blank" title="{{#str}}download{{/str}}">
+                                            <a href="{{downloadurl}}" class="btn btn-outline-primary jb-btn-outline-primary" target="_blank" title="{{#str}}download{{/str}}">
                                                 <i class="fa fa-download"></i>
                                             </a>
                                             {{/downloadurl}}
                                             {{#canreupload}}
-                                            <a href="{{reuploadurl}}" class="btn btn-outline-warning" title="{{#str}}reupload, local_jobboard{{/str}}">
+                                            <a href="{{reuploadurl}}" class="btn btn-outline-warning jb-btn-outline-warning" title="{{#str}}reupload, local_jobboard{{/str}}">
                                                 <i class="fa fa-upload"></i>
                                             </a>
                                             {{/canreupload}}
@@ -283,7 +283,7 @@
                             </dl>
                         </div>
                         <div class="card-footer bg-light">
-                            <a href="{{vacancy.viewurl}}" class="btn btn-outline-primary btn-sm w-100">
+                            <a href="{{vacancy.viewurl}}" class="btn btn-outline-primary jb-btn-outline-primary btn-sm w-100">
                                 <i class="fa fa-eye me-1"></i>
                                 {{#str}}viewvacancydetails, local_jobboard{{/str}}
                             </a>
@@ -434,7 +434,7 @@
                         <div class="card-body">
                             <p class="small text-muted mb-3">{{#str}}withdrawwarning, local_jobboard{{/str}}</p>
                             <button type="button"
-                                    class="btn btn-outline-danger btn-sm w-100"
+                                    class="btn btn-outline-danger jb-btn-outline-danger btn-sm w-100"
                                     data-action="withdraw"
                                     data-url="{{withdrawurl}}"
                                     data-confirm="{{#str}}confirmwithdraw, local_jobboard{{/str}}">
