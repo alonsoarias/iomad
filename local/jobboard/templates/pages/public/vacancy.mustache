@@ -1,8 +1,8 @@
 {{!
     @template local_jobboard/pages/public_vacancy
 
-    Public vacancy detail page template.
-    Simplified design following apply.mustache pattern.
+    Public vacancy detail page - ISER Brand Design
+    Based on Manual de Identidad Visual ISER (M-GCRP-01 v01)
 
     Context variables:
     * vacancy - Vacancy data object
@@ -16,364 +16,346 @@
     * sharelinks - Social sharing URLs
     * applyurl - URL to apply
     * backurl - Back URL
-
-    Example context (json):
-    {
-        "vacancy": {"id": 1, "title": "Developer", "code": "VAC-001"},
-        "canapply": true,
-        "hasapplied": false
-    }
 }}
-<div class="jb-vacancy-page" data-region="jobboard-public-vacancy" data-vacancy-id="{{vacancy.id}}">
-    <div class="container-fluid px-0">
-        {{! Quick Info Bar }}
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-            <div class="d-flex align-items-center gap-3">
-                <code class="badge bg-primary">{{vacancy.code}}</code>
-                {{#isurgent}}
-                {{^isclosed}}
-                <span class="badge bg-warning text-dark">
-                    <i class="fa fa-clock me-1" aria-hidden="true"></i>
-                    {{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
-                </span>
-                {{/isclosed}}
-                {{/isurgent}}
+<div class="jb-vacancy-page jb-iser-theme" data-region="jobboard-public-vacancy" data-vacancy-id="{{vacancy.id}}">
+    {{! Hero Header }}
+    <div class="jb-vacancy-hero" style="background: linear-gradient(135deg, var(--iser-verde) 0%, var(--iser-verde-dark) 100%); border-radius: var(--jb-radius-xl); padding: var(--jb-space-6); margin-bottom: var(--jb-space-5); color: var(--iser-blanco);">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+                    <code style="background: rgba(255,255,255,0.2); padding: var(--jb-space-2) var(--jb-space-3); border-radius: var(--jb-radius-md); font-weight: var(--jb-font-bold);">{{vacancy.code}}</code>
+                    {{#isurgent}}{{^isclosed}}
+                    <span style="background: var(--iser-amarillo); color: var(--iser-negro); padding: var(--jb-space-1) var(--jb-space-3); border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm); font-weight: var(--jb-font-bold);">
+                        <i class="fa fa-clock me-1"></i>{{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
+                    </span>
+                    {{/isclosed}}{{/isurgent}}
+                    {{#isclosed}}
+                    <span style="background: var(--iser-gris-oscuro); color: var(--iser-blanco); padding: var(--jb-space-1) var(--jb-space-3); border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm);">
+                        <i class="fa fa-lock me-1"></i>{{#str}}vacancyclosed, local_jobboard{{/str}}
+                    </span>
+                    {{/isclosed}}
+                </div>
+                <h1 style="font-size: var(--jb-text-3xl); font-weight: var(--jb-font-bold); margin-bottom: var(--jb-space-2);">{{vacancy.title}}</h1>
+                {{#vacancy.department}}
+                <p style="font-size: var(--jb-text-lg); opacity: 0.9; margin: 0;">
+                    <i class="fa fa-building me-2"></i>{{vacancy.department}}
+                </p>
+                {{/vacancy.department}}
             </div>
-            {{^isclosed}}
-            {{#canapply}}
-            {{^hasapplied}}
-            <a href="{{applyurl}}" class="btn btn-success jb-btn-success">
-                <i class="fa fa-paper-plane me-2" aria-hidden="true"></i>
-                {{#str}}apply, local_jobboard{{/str}}
-            </a>
-            {{/hasapplied}}
-            {{/canapply}}
-            {{/isclosed}}
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                {{^isclosed}}{{#canapply}}{{^hasapplied}}
+                <a href="{{applyurl}}" style="display: inline-block; background: var(--iser-amarillo); color: var(--iser-negro); padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-bold); font-size: var(--jb-text-lg);">
+                    <i class="fa fa-paper-plane me-2"></i>{{#str}}apply, local_jobboard{{/str}}
+                </a>
+                {{/hasapplied}}{{/canapply}}{{/isclosed}}
+                {{#hasapplied}}
+                <span style="display: inline-block; background: rgba(255,255,255,0.2); padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md); font-weight: var(--jb-font-medium);">
+                    <i class="fa fa-check-circle me-2"></i>{{#str}}applied, local_jobboard{{/str}}
+                </span>
+                {{/hasapplied}}
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {{! Main Content Column }}
+        <div class="col-lg-8">
+            {{! Description Card }}
+            {{#vacancy.description}}
+            <div class="jb-content-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden;">
+                <div style="padding: var(--jb-space-4) var(--jb-space-5); border-bottom: 3px solid var(--iser-verde); background: var(--jb-gray-50);">
+                    <h2 style="font-size: var(--jb-text-lg); font-weight: var(--jb-font-semibold); color: var(--iser-rojo); margin: 0;">
+                        <i class="fa fa-file-lines me-2" style="color: var(--iser-verde);"></i>{{#str}}vacancydescription, local_jobboard{{/str}}
+                    </h2>
+                </div>
+                <div style="padding: var(--jb-space-5);">
+                    <div class="jb-rich-content">{{{vacancy.description}}}</div>
+                </div>
+            </div>
+            {{/vacancy.description}}
+
+            {{! Requirements Card }}
+            {{#vacancy.requirements}}
+            <div class="jb-content-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden;">
+                <div style="padding: var(--jb-space-4) var(--jb-space-5); border-bottom: 3px solid var(--iser-amarillo); background: var(--iser-amarillo-lighter);">
+                    <h2 style="font-size: var(--jb-text-lg); font-weight: var(--jb-font-semibold); color: var(--iser-amarillo-darker); margin: 0;">
+                        <i class="fa fa-list-check me-2" style="color: var(--iser-amarillo);"></i>{{#str}}requirements, local_jobboard{{/str}}
+                    </h2>
+                </div>
+                <div style="padding: var(--jb-space-5);">
+                    <div class="jb-rich-content">{{{vacancy.requirements}}}</div>
+                </div>
+            </div>
+            {{/vacancy.requirements}}
+
+            {{! Desirable Card }}
+            {{#vacancy.desirable}}
+            <div class="jb-content-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden;">
+                <div style="padding: var(--jb-space-4) var(--jb-space-5); border-bottom: 3px solid var(--iser-azul); background: var(--iser-azul-lighter);">
+                    <h2 style="font-size: var(--jb-text-lg); font-weight: var(--jb-font-semibold); color: var(--iser-azul); margin: 0;">
+                        <i class="fa fa-star me-2"></i>{{#str}}desirable, local_jobboard{{/str}}
+                    </h2>
+                </div>
+                <div style="padding: var(--jb-space-5);">
+                    <div class="jb-rich-content">{{{vacancy.desirable}}}</div>
+                </div>
+            </div>
+            {{/vacancy.desirable}}
+
+            {{! Benefits Card }}
+            {{#vacancy.benefits}}
+            <div class="jb-content-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden;">
+                <div style="padding: var(--jb-space-4) var(--jb-space-5); border-bottom: 3px solid var(--iser-verde); background: var(--iser-verde-lighter);">
+                    <h2 style="font-size: var(--jb-text-lg); font-weight: var(--jb-font-semibold); color: var(--iser-verde-dark); margin: 0;">
+                        <i class="fa fa-gift me-2" style="color: var(--iser-verde);"></i>{{#str}}benefits, local_jobboard{{/str}}
+                    </h2>
+                </div>
+                <div style="padding: var(--jb-space-5);">
+                    <div class="jb-rich-content">{{{vacancy.benefits}}}</div>
+                </div>
+            </div>
+            {{/vacancy.benefits}}
         </div>
 
-        <div class="row">
-            {{! Main Content Column }}
-            <div class="col-lg-8">
-                {{! Description Card }}
-                {{#vacancy.description}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-file-lines text-primary me-2" aria-hidden="true"></i>
-                            {{#str}}vacancydescription, local_jobboard{{/str}}
-                        </h5>
+        {{! Sidebar Column }}
+        <div class="col-lg-4">
+            <div class="jb-sidebar" style="position: sticky; top: 100px;">
+                {{! Key Details Card }}
+                <div class="jb-sidebar-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
+                    <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--iser-verde-lighter); border-bottom: 2px solid var(--iser-verde);">
+                        <h3 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-verde-dark); margin: 0;">
+                            <i class="fa fa-circle-info me-2"></i>{{#str}}details, local_jobboard{{/str}}
+                        </h3>
                     </div>
-                    <div class="card-body">
-                        {{{vacancy.description}}}
-                    </div>
-                </div>
-                {{/vacancy.description}}
-
-                {{! Requirements Card }}
-                {{#vacancy.requirements}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-list-check text-warning me-2" aria-hidden="true"></i>
-                            {{#str}}requirements, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        {{{vacancy.requirements}}}
-                    </div>
-                </div>
-                {{/vacancy.requirements}}
-
-                {{! Desirable Card }}
-                {{#vacancy.desirable}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-star text-info me-2" aria-hidden="true"></i>
-                            {{#str}}desirable, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        {{{vacancy.desirable}}}
-                    </div>
-                </div>
-                {{/vacancy.desirable}}
-
-                {{! Benefits Card }}
-                {{#vacancy.benefits}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-gift text-success me-2" aria-hidden="true"></i>
-                            {{#str}}benefits, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        {{{vacancy.benefits}}}
-                    </div>
-                </div>
-                {{/vacancy.benefits}}
-            </div>
-
-            {{! Sidebar Column }}
-            <div class="col-lg-4">
-                <div class="jb-sidebar sticky-top" style="top: 1rem;">
-                    {{! Key Details Card }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white py-3">
-                            <h6 class="mb-0">
-                                <i class="fa fa-circle-info text-primary me-2" aria-hidden="true"></i>
-                                {{#str}}details, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <dl class="mb-0">
-                                {{#vacancy.contracttypelabel}}
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-file-contract me-2" aria-hidden="true"></i>
-                                        {{#str}}contracttype, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0 fw-bold">{{vacancy.contracttypelabel}}</dd>
-                                </div>
-                                {{/vacancy.contracttypelabel}}
-
-                                {{#vacancy.duration}}
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-hourglass-half me-2" aria-hidden="true"></i>
-                                        {{#str}}duration, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0 fw-bold">{{vacancy.duration}}</dd>
-                                </div>
-                                {{/vacancy.duration}}
-
-                                {{#vacancy.location}}
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-location-dot me-2" aria-hidden="true"></i>
-                                        {{#str}}location, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0 fw-bold">{{vacancy.location}}</dd>
-                                </div>
-                                {{/vacancy.location}}
-
-                                {{#vacancy.modality}}
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-house-laptop me-2" aria-hidden="true"></i>
-                                        {{#str}}modality, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0 fw-bold">{{vacancy.modality}}</dd>
-                                </div>
-                                {{/vacancy.modality}}
-
-                                {{#vacancy.department}}
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-building me-2" aria-hidden="true"></i>
-                                        {{#str}}department, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0 fw-bold">{{vacancy.department}}</dd>
-                                </div>
-                                {{/vacancy.department}}
-
-                                {{#vacancy.companyname}}
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-industry me-2" aria-hidden="true"></i>
-                                        {{#str}}company, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0 fw-bold">{{vacancy.companyname}}</dd>
-                                </div>
-                                {{/vacancy.companyname}}
-
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-users me-2" aria-hidden="true"></i>
-                                        {{#str}}positions, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0"><span class="badge bg-primary">{{vacancy.positions}}</span></dd>
-                                </div>
-
-                                {{#convocatoria}}
-                                <div class="d-flex justify-content-between py-2">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-folder-open me-2" aria-hidden="true"></i>
-                                        {{#str}}convocatoria, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0">
-                                        <a href="{{convocatoria.viewurl}}" class="badge bg-info text-dark">{{convocatoria.code}}</a>
-                                    </dd>
-                                </div>
-                                {{/convocatoria}}
-                            </dl>
-                        </div>
-                    </div>
-
-                    {{! Dates Card }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white py-3">
-                            <h6 class="mb-0">
-                                <i class="fa fa-calendar-days text-primary me-2" aria-hidden="true"></i>
-                                {{#str}}dates, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <dl class="mb-0">
-                                {{#convocatoria}}
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">{{#str}}startdate, local_jobboard{{/str}}</dt>
-                                    <dd class="mb-0 fw-bold">{{convocatoria.startdateformatted}}</dd>
-                                </div>
-                                {{/convocatoria}}
-                                <div class="d-flex justify-content-between py-2">
-                                    <dt class="fw-normal text-muted">{{#str}}closedate, local_jobboard{{/str}}</dt>
-                                    <dd class="mb-0 text-end">
-                                        <span class="fw-bold {{#isurgent}}text-warning{{/isurgent}} {{#isclosed}}text-secondary{{/isclosed}}">{{closedateformatted}}</span>
-                                        {{^isclosed}}
-                                        <span class="d-block small {{#isurgent}}text-warning{{/isurgent}}{{^isurgent}}text-muted{{/isurgent}}">
-                                            ({{daysremaining}} {{#str}}days, local_jobboard{{/str}})
-                                        </span>
-                                        {{/isclosed}}
-                                    </dd>
-                                </div>
-                            </dl>
-
-                            {{! Progress Bar }}
-                            {{^isclosed}}
+                    <div style="padding: var(--jb-space-4);">
+                        <dl style="margin: 0;">
+                            {{#vacancy.contracttypelabel}}
+                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-100);">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
+                                    <i class="fa fa-file-contract me-2"></i>{{#str}}contracttype, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0; font-weight: var(--jb-font-semibold); color: var(--iser-negro);">{{vacancy.contracttypelabel}}</dd>
+                            </div>
+                            {{/vacancy.contracttypelabel}}
+                            {{#vacancy.duration}}
+                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-100);">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
+                                    <i class="fa fa-hourglass-half me-2"></i>{{#str}}duration, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0; font-weight: var(--jb-font-semibold); color: var(--iser-negro);">{{vacancy.duration}}</dd>
+                            </div>
+                            {{/vacancy.duration}}
+                            {{#vacancy.location}}
+                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-100);">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
+                                    <i class="fa fa-location-dot me-2"></i>{{#str}}location, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0; font-weight: var(--jb-font-semibold); color: var(--iser-negro);">{{vacancy.location}}</dd>
+                            </div>
+                            {{/vacancy.location}}
+                            {{#vacancy.modality}}
+                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-100);">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
+                                    <i class="fa fa-house-laptop me-2"></i>{{#str}}modality, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0; font-weight: var(--jb-font-semibold); color: var(--iser-negro);">{{vacancy.modality}}</dd>
+                            </div>
+                            {{/vacancy.modality}}
+                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-100);">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
+                                    <i class="fa fa-users me-2"></i>{{#str}}positions, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0;">
+                                    <span style="background: var(--iser-verde); color: var(--iser-blanco); padding: 2px 10px; border-radius: var(--jb-radius-full); font-weight: var(--jb-font-bold);">{{vacancy.positions}}</span>
+                                </dd>
+                            </div>
                             {{#convocatoria}}
-                            <div class="mt-3 pt-3 border-top">
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar bg-{{progresscolor}}" style="width: {{progresspercent}}%;"></div>
-                                </div>
-                                <small class="text-muted d-block mt-1">{{#str}}deadlineprogress, local_jobboard{{/str}}</small>
+                            <div class="d-flex justify-content-between py-2">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
+                                    <i class="fa fa-folder-open me-2"></i>{{#str}}convocatoria, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0;">
+                                    <a href="{{convocatoria.viewurl}}" style="background: var(--iser-azul-lighter); color: var(--iser-azul); padding: 2px 8px; border-radius: var(--jb-radius-sm); text-decoration: none; font-size: var(--jb-text-sm);">{{convocatoria.code}}</a>
+                                </dd>
                             </div>
                             {{/convocatoria}}
-                            {{/isclosed}}
-                        </div>
+                        </dl>
                     </div>
-
-                    {{! Share Card }}
-                    {{#sharelinks}}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white py-3">
-                            <h6 class="mb-0">
-                                <i class="fa fa-share-nodes text-primary me-2" aria-hidden="true"></i>
-                                {{#str}}share, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body text-center">
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="{{facebook}}" class="btn btn-outline-primary jb-btn-outline-primary" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                                </a>
-                                <a href="{{twitter}}" class="btn btn-outline-info jb-btn-outline-info" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                                    <i class="fab fa-twitter" aria-hidden="true"></i>
-                                </a>
-                                <a href="{{linkedin}}" class="btn btn-outline-primary jb-btn-outline-primary" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                                    <i class="fab fa-linkedin-in" aria-hidden="true"></i>
-                                </a>
-                                <a href="{{whatsapp}}" class="btn btn-outline-success jb-btn-outline-success" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    {{/sharelinks}}
-
-                    {{! Apply CTA Card }}
-                    {{^isclosed}}
-                    {{^hasapplied}}
-                    {{#canapply}}
-                    <div class="card shadow-sm mb-4 border-success">
-                        <div class="card-body text-center py-4">
-                            <i class="fa fa-paper-plane fa-2x text-success mb-3" aria-hidden="true"></i>
-                            <h6 class="mb-2">{{#str}}readytoapply, local_jobboard{{/str}}</h6>
-                            <p class="text-muted small mb-3">{{#str}}applynow_desc, local_jobboard{{/str}}</p>
-                            <a href="{{applyurl}}" class="btn btn-success jb-btn-success w-100">
-                                <i class="fa fa-paper-plane me-2" aria-hidden="true"></i>
-                                {{#str}}apply, local_jobboard{{/str}}
-                            </a>
-                            {{#isurgent}}
-                            <p class="text-warning small mt-2 mb-0">
-                                <i class="fa fa-clock me-1" aria-hidden="true"></i>
-                                {{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
-                            </p>
-                            {{/isurgent}}
-                        </div>
-                    </div>
-                    {{/canapply}}
-
-                    {{^canapply}}
-                    {{^isloggedin}}
-                    {{! Login CTA }}
-                    <div class="card shadow-sm mb-4 border-primary">
-                        <div class="card-body text-center py-4">
-                            <i class="fa fa-circle-user fa-2x text-muted mb-3" aria-hidden="true"></i>
-                            <h6 class="mb-2">{{#str}}wanttoapply, local_jobboard{{/str}}</h6>
-                            <p class="text-muted small mb-3">{{#str}}loginrequiredtoapply, local_jobboard{{/str}}</p>
-                            <a href="{{loginurl}}" class="btn btn-primary jb-btn-primary w-100 mb-2">
-                                <i class="fa fa-right-to-bracket me-2" aria-hidden="true"></i>
-                                {{#str}}login{{/str}}
-                            </a>
-                            <a href="{{signupurl}}" class="btn btn-outline-primary jb-btn-outline-primary w-100">
-                                <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
-                                {{#str}}createaccount{{/str}}
-                            </a>
-                        </div>
-                    </div>
-                    {{/isloggedin}}
-                    {{/canapply}}
-                    {{/hasapplied}}
-                    {{/isclosed}}
-
-                    {{! Already Applied Card }}
-                    {{#hasapplied}}
-                    <div class="card shadow-sm mb-4 border-info">
-                        <div class="card-body text-center py-4">
-                            <i class="fa fa-circle-check fa-2x text-info mb-3" aria-hidden="true"></i>
-                            <h6 class="mb-2">{{#str}}applied, local_jobboard{{/str}}</h6>
-                            <p class="text-muted small mb-3">{{#str}}alreadyappliedtothisvacancy, local_jobboard{{/str}}</p>
-                            <a href="{{viewapplicationurl}}" class="btn btn-info jb-btn-info w-100 mb-2">
-                                <i class="fa fa-eye me-2" aria-hidden="true"></i>
-                                {{#str}}viewmyapplication, local_jobboard{{/str}}
-                            </a>
-                            <a href="{{myapplicationsurl}}" class="btn btn-outline-info jb-btn-outline-info w-100">
-                                {{#str}}viewmyapplications, local_jobboard{{/str}}
-                            </a>
-                        </div>
-                    </div>
-                    {{/hasapplied}}
-
-                    {{! Closed Card }}
-                    {{#isclosed}}
-                    <div class="card shadow-sm mb-4 border-secondary">
-                        <div class="card-body text-center py-4">
-                            <i class="fa fa-lock fa-2x text-secondary mb-3" aria-hidden="true"></i>
-                            <h6 class="mb-2">{{#str}}vacancyclosed, local_jobboard{{/str}}</h6>
-                            <p class="text-muted small mb-0">{{#str}}vacancycloseddesc, local_jobboard{{/str}}</p>
-                        </div>
-                    </div>
-                    {{/isclosed}}
                 </div>
+
+                {{! Dates Card }}
+                <div class="jb-sidebar-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
+                    <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--iser-amarillo-lighter); border-bottom: 2px solid var(--iser-amarillo);">
+                        <h3 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-amarillo-darker); margin: 0;">
+                            <i class="fa fa-calendar-days me-2"></i>{{#str}}dates, local_jobboard{{/str}}
+                        </h3>
+                    </div>
+                    <div style="padding: var(--jb-space-4);">
+                        <dl style="margin: 0;">
+                            {{#convocatoria}}
+                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-100);">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">{{#str}}startdate, local_jobboard{{/str}}</dt>
+                                <dd style="margin: 0; font-weight: var(--jb-font-semibold); color: var(--iser-negro);">{{convocatoria.startdateformatted}}</dd>
+                            </div>
+                            {{/convocatoria}}
+                            <div class="d-flex justify-content-between py-2">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">{{#str}}closedate, local_jobboard{{/str}}</dt>
+                                <dd style="margin: 0; text-align: end;">
+                                    <span style="font-weight: var(--jb-font-bold); {{#isurgent}}color: var(--iser-rojo);{{/isurgent}}{{#isclosed}}color: var(--iser-gris-medio);{{/isclosed}}">{{closedateformatted}}</span>
+                                    {{^isclosed}}
+                                    <span style="display: block; font-size: var(--jb-text-xs); {{#isurgent}}color: var(--iser-rojo);{{/isurgent}}{{^isurgent}}color: var(--iser-gris-medio);{{/isurgent}}">
+                                        ({{daysremaining}} {{#str}}days, local_jobboard{{/str}})
+                                    </span>
+                                    {{/isclosed}}
+                                </dd>
+                            </div>
+                        </dl>
+                        {{^isclosed}}{{#convocatoria}}
+                        <div style="margin-top: var(--jb-space-3); padding-top: var(--jb-space-3); border-top: 1px solid var(--jb-gray-100);">
+                            <div style="height: 6px; background: var(--jb-gray-200); border-radius: var(--jb-radius-full); overflow: hidden;">
+                                <div style="height: 100%; width: {{progresspercent}}%; background: var(--iser-{{progresscolor}}, var(--iser-verde)); border-radius: var(--jb-radius-full);"></div>
+                            </div>
+                            <p style="font-size: var(--jb-text-xs); color: var(--iser-gris-medio); margin: var(--jb-space-2) 0 0 0;">{{#str}}deadlineprogress, local_jobboard{{/str}}</p>
+                        </div>
+                        {{/convocatoria}}{{/isclosed}}
+                    </div>
+                </div>
+
+                {{! Share Card }}
+                {{#sharelinks}}
+                <div class="jb-sidebar-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
+                    <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); border-bottom: 1px solid var(--jb-gray-200);">
+                        <h3 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-gris-oscuro); margin: 0;">
+                            <i class="fa fa-share-nodes me-2" style="color: var(--iser-verde);"></i>{{#str}}share, local_jobboard{{/str}}
+                        </h3>
+                    </div>
+                    <div style="padding: var(--jb-space-4); text-align: center;">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="{{facebook}}" target="_blank" rel="noopener" style="width: 40px; height: 40px; border-radius: var(--jb-radius-full); background: #1877F2; color: white; display: flex; align-items: center; justify-content: center; text-decoration: none;"><i class="fab fa-facebook-f"></i></a>
+                            <a href="{{twitter}}" target="_blank" rel="noopener" style="width: 40px; height: 40px; border-radius: var(--jb-radius-full); background: #1DA1F2; color: white; display: flex; align-items: center; justify-content: center; text-decoration: none;"><i class="fab fa-twitter"></i></a>
+                            <a href="{{linkedin}}" target="_blank" rel="noopener" style="width: 40px; height: 40px; border-radius: var(--jb-radius-full); background: #0A66C2; color: white; display: flex; align-items: center; justify-content: center; text-decoration: none;"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="{{whatsapp}}" target="_blank" rel="noopener" style="width: 40px; height: 40px; border-radius: var(--jb-radius-full); background: #25D366; color: white; display: flex; align-items: center; justify-content: center; text-decoration: none;"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {{/sharelinks}}
+
+                {{! CTA Cards }}
+                {{^isclosed}}{{^hasapplied}}{{#canapply}}
+                <div style="background: linear-gradient(135deg, var(--iser-verde-lighter) 0%, var(--iser-blanco) 100%); border: 2px solid var(--iser-verde); border-radius: var(--jb-radius-lg); padding: var(--jb-space-5); text-align: center;">
+                    <i class="fa fa-paper-plane" style="font-size: 2.5rem; color: var(--iser-verde); margin-bottom: var(--jb-space-3); display: block;"></i>
+                    <h4 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-negro); margin-bottom: var(--jb-space-2);">{{#str}}readytoapply, local_jobboard{{/str}}</h4>
+                    <p style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-4);">{{#str}}applynow_desc, local_jobboard{{/str}}</p>
+                    <a href="{{applyurl}}" style="display: block; background: var(--iser-verde); color: var(--iser-blanco); padding: var(--jb-space-3); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-semibold);">
+                        <i class="fa fa-paper-plane me-2"></i>{{#str}}apply, local_jobboard{{/str}}
+                    </a>
+                    {{#isurgent}}
+                    <p style="font-size: var(--jb-text-sm); color: var(--iser-rojo); margin: var(--jb-space-3) 0 0 0;">
+                        <i class="fa fa-clock me-1"></i>{{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
+                    </p>
+                    {{/isurgent}}
+                </div>
+                {{/canapply}}{{^canapply}}{{^isloggedin}}
+                <div style="background: var(--iser-blanco); border: 2px solid var(--iser-verde); border-radius: var(--jb-radius-lg); padding: var(--jb-space-5); text-align: center;">
+                    <i class="fa fa-circle-user" style="font-size: 2.5rem; color: var(--iser-gris-medio); margin-bottom: var(--jb-space-3); display: block;"></i>
+                    <h4 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-negro); margin-bottom: var(--jb-space-2);">{{#str}}wanttoapply, local_jobboard{{/str}}</h4>
+                    <p style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-4);">{{#str}}loginrequiredtoapply, local_jobboard{{/str}}</p>
+                    <a href="{{loginurl}}" style="display: block; background: var(--iser-verde); color: var(--iser-blanco); padding: var(--jb-space-3); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-semibold); margin-bottom: var(--jb-space-2);">
+                        <i class="fa fa-right-to-bracket me-2"></i>{{#str}}login{{/str}}
+                    </a>
+                    <a href="{{signupurl}}" style="display: block; background: transparent; border: 2px solid var(--iser-verde); color: var(--iser-verde); padding: var(--jb-space-3); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-medium);">
+                        <i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}
+                    </a>
+                </div>
+                {{/isloggedin}}{{/canapply}}{{/hasapplied}}{{/isclosed}}
+
+                {{#hasapplied}}
+                <div style="background: var(--iser-azul-lighter); border: 2px solid var(--iser-azul); border-radius: var(--jb-radius-lg); padding: var(--jb-space-5); text-align: center;">
+                    <i class="fa fa-circle-check" style="font-size: 2.5rem; color: var(--iser-azul); margin-bottom: var(--jb-space-3); display: block;"></i>
+                    <h4 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-negro); margin-bottom: var(--jb-space-2);">{{#str}}applied, local_jobboard{{/str}}</h4>
+                    <p style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-4);">{{#str}}alreadyappliedtothisvacancy, local_jobboard{{/str}}</p>
+                    <a href="{{viewapplicationurl}}" style="display: block; background: var(--iser-azul); color: var(--iser-blanco); padding: var(--jb-space-3); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-semibold); margin-bottom: var(--jb-space-2);">
+                        <i class="fa fa-eye me-2"></i>{{#str}}viewmyapplication, local_jobboard{{/str}}
+                    </a>
+                    <a href="{{myapplicationsurl}}" style="display: block; color: var(--iser-azul); padding: var(--jb-space-2); text-decoration: none; font-size: var(--jb-text-sm);">
+                        {{#str}}viewmyapplications, local_jobboard{{/str}}
+                    </a>
+                </div>
+                {{/hasapplied}}
+
+                {{#isclosed}}
+                <div style="background: var(--jb-gray-100); border: 2px solid var(--iser-gris-medio); border-radius: var(--jb-radius-lg); padding: var(--jb-space-5); text-align: center;">
+                    <i class="fa fa-lock" style="font-size: 2.5rem; color: var(--iser-gris-medio); margin-bottom: var(--jb-space-3); display: block;"></i>
+                    <h4 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-gris-oscuro); margin-bottom: var(--jb-space-2);">{{#str}}vacancyclosed, local_jobboard{{/str}}</h4>
+                    <p style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin: 0;">{{#str}}vacancycloseddesc, local_jobboard{{/str}}</p>
+                </div>
+                {{/isclosed}}
             </div>
         </div>
+    </div>
 
-        {{! Back Navigation }}
-        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-            <a href="{{backurl}}" class="btn btn-outline-secondary">
-                <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
-                {{backlabel}}
-            </a>
-            {{#browseurl}}
-            <a href="{{browseurl}}" class="btn btn-link text-muted">
-                {{#str}}browsevacancies, local_jobboard{{/str}}
-                <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
-            </a>
-            {{/browseurl}}
-        </div>
+    {{! Back Navigation }}
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--jb-space-6); padding-top: var(--jb-space-4); border-top: 2px solid var(--jb-gray-200);">
+        <a href="{{backurl}}" style="display: inline-flex; align-items: center; padding: var(--jb-space-2) var(--jb-space-4); border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-medium);">
+            <i class="fa fa-arrow-left me-2"></i>{{backlabel}}
+        </a>
+        {{#browseurl}}
+        <a href="{{browseurl}}" style="color: var(--iser-verde); text-decoration: none; font-weight: var(--jb-font-medium);">
+            {{#str}}browsevacancies, local_jobboard{{/str}}<i class="fa fa-arrow-right ms-2"></i>
+        </a>
+        {{/browseurl}}
     </div>
 </div>
 
-{{! Styles consolidated in styles.css }}
+<style>
+.jb-vacancy-page.jb-iser-theme {
+    font-family: var(--jb-font-sans);
+}
+
+.jb-vacancy-page .jb-rich-content {
+    font-size: var(--jb-text-base);
+    line-height: var(--jb-leading-relaxed);
+    color: var(--iser-gris-oscuro);
+}
+
+.jb-vacancy-page .jb-rich-content ul,
+.jb-vacancy-page .jb-rich-content ol {
+    padding-left: var(--jb-space-5);
+    margin-bottom: var(--jb-space-4);
+}
+
+.jb-vacancy-page .jb-rich-content li {
+    margin-bottom: var(--jb-space-2);
+}
+
+.jb-vacancy-page .jb-sidebar-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jb-vacancy-page .jb-sidebar-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 991.98px) {
+    .jb-vacancy-page .jb-sidebar {
+        position: static !important;
+        margin-top: var(--jb-space-4);
+    }
+
+    .jb-vacancy-page .jb-vacancy-hero {
+        text-align: center;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .jb-vacancy-page .jb-vacancy-hero {
+        padding: var(--jb-space-4) !important;
+        border-radius: var(--jb-radius-md) !important;
+    }
+
+    .jb-vacancy-page .jb-vacancy-hero h1 {
+        font-size: var(--jb-text-2xl) !important;
+    }
+}
+</style>
