@@ -55,6 +55,7 @@ if ($convocatoriaid) {
 
 // Page setup.
 $PAGE->set_pagelayout('admin');
+$PAGE->activityheader->disable();
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 

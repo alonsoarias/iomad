@@ -52,6 +52,7 @@ if ($convocatoria->status !== 'open' || $convocatoria->enddate < $now) {
 
 // Page setup.
 $PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title($convocatoria->name);
 $PAGE->set_heading($convocatoria->name);
 

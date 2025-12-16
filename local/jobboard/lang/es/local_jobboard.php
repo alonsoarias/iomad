@@ -3512,3 +3512,14 @@ $string['allstatuses'] = 'Todos los estados';
 $string['applicantslist'] = 'Lista de postulantes';
 $string['noapplicationsfound_desc'] = 'No hay postulaciones que coincidan con sus filtros actuales. Intente ajustar sus criterios de búsqueda.';
 $string['exportdesc'] = 'Descargue los datos de las postulaciones en su formato preferido para análisis fuera de línea.';
+
+// =============================================================================
+// CADENAS DE FILTRO Y UX
+// =============================================================================
+
+$string['filterbyvacancy'] = 'Filtrar por vacante';
+$string['selectvacancytofilter'] = 'Seleccione una vacante para filtrar las postulaciones';
+$string['applyfilters'] = 'Aplicar filtros';
+$string['totaldocuments'] = 'Total de documentos';
+$string['allreviewed'] = 'Todos revisados';
+$string['urgent'] = 'Urgente';

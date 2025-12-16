@@ -3514,3 +3514,14 @@ $string['allstatuses'] = 'All statuses';
 $string['applicantslist'] = 'Applicants list';
 $string['noapplicationsfound_desc'] = 'No applications match your current filters. Try adjusting your search criteria.';
 $string['exportdesc'] = 'Download the applications data in your preferred format for offline analysis.';
+
+// =============================================================================
+// FILTER AND UX STRINGS
+// =============================================================================
+
+$string['filterbyvacancy'] = 'Filter by vacancy';
+$string['selectvacancytofilter'] = 'Select a vacancy to filter applications';
+$string['applyfilters'] = 'Apply filters';
+$string['totaldocuments'] = 'Total documents';
+$string['allreviewed'] = 'All reviewed';
+$string['urgent'] = 'Urgent';

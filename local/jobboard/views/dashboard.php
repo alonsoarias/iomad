@@ -36,6 +36,7 @@ defined('MOODLE_INTERNAL') || die();
 
 // Page setup.
 $PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title(get_string('dashboard', 'local_jobboard'));
 $PAGE->set_heading(get_string('jobboard', 'local_jobboard'));
 

@@ -80,9 +80,10 @@ $pagetitle = get_config('local_jobboard', 'public_page_title');
 if (empty($pagetitle)) {
     $pagetitle = get_string('jobboard', 'local_jobboard');
 }
+$PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
-$PAGE->set_pagelayout('standard');
 
 // Add navigation breadcrumb for the main public page.
 $PAGE->navbar->add($pagetitle, new moodle_url('/local/jobboard/index.php', ['view' => 'public']));

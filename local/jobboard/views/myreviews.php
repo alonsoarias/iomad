@@ -40,9 +40,10 @@ $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 20, PARAM_INT);
 
 // Set up page.
+$PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title(get_string('myreviews', 'local_jobboard'));
 $PAGE->set_heading(get_string('myreviews', 'local_jobboard'));
-$PAGE->set_pagelayout('standard');
 
 // Set up breadcrumbs via Moodle's native navbar.
 $PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),

@@ -39,9 +39,10 @@ $perpage = optional_param('perpage', 20, PARAM_INT);
 $status = optional_param('status', '', PARAM_ALPHA);
 
 // Set up page.
+$PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title(get_string('myapplications', 'local_jobboard'));
 $PAGE->set_heading(get_string('myapplications', 'local_jobboard'));
-$PAGE->set_pagelayout('standard');
 
 // Get user's applications with status filter.
 $filters = ['userid' => $USER->id];

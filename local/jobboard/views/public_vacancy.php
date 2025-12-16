@@ -64,6 +64,7 @@ if ($vacancy->convocatoriaid) {
 
 // Page setup.
 $PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title($vacancy->title);
 $PAGE->set_heading($vacancy->title);
 

@@ -185,6 +185,7 @@ if ($action && $convocatoriaid && confirm_sesskey()) {
 
 // Page setup.
 $PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title(get_string('manageconvocatorias', 'local_jobboard'));
 $PAGE->set_heading(get_string('manageconvocatorias', 'local_jobboard'));
 

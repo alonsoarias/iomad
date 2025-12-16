@@ -40,6 +40,7 @@ $status = optional_param('status', 'open', PARAM_ALPHA);
 
 // Page setup.
 $PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title(get_string('convocatorias', 'local_jobboard'));
 $PAGE->set_heading(get_string('convocatorias', 'local_jobboard'));
 

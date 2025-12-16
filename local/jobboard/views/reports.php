@@ -71,9 +71,10 @@ if ($convocatoriaid) {
 }
 
 // Set up page.
+$PAGE->set_pagelayout('report');
+$PAGE->activityheader->disable();
 $PAGE->set_title(get_string('reports', 'local_jobboard'));
 $PAGE->set_heading(get_string('reports', 'local_jobboard'));
-$PAGE->set_pagelayout('report');
 
 // Handle export.
 if ($format === 'csv' || $format === 'excel' || $format === 'pdf') {

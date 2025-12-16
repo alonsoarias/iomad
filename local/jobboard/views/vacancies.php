@@ -53,6 +53,7 @@ if ($convocatoriaid) {
 
 // Page setup.
 $PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title(get_string('vacancies', 'local_jobboard'));
 $PAGE->set_heading(get_string('vacancies', 'local_jobboard'));
 

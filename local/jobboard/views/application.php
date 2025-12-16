@@ -55,9 +55,10 @@ if (!$isowner && !$canreview && !$canmanageworkflow) {
 $vacancy = vacancy::get($application->vacancyid);
 
 // Set up page.
+$PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title(get_string('viewapplication', 'local_jobboard'));
 $PAGE->set_heading(get_string('viewapplication', 'local_jobboard'));
-$PAGE->set_pagelayout('standard');
 
 // Set up breadcrumbs via Moodle's native navbar.
 $PAGE->navbar->add(get_string('dashboard', 'local_jobboard'),
