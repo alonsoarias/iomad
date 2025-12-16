@@ -2,8 +2,7 @@
     @template local_jobboard/pages/review/assign_reviewer
 
     Assign reviewer to applications page template.
-    Uses jb-* CSS classes for consistent styling.
-    Includes accessibility features, animations, and loading states.
+    Simplified design following apply.mustache pattern.
 
     Context variables:
     * pagetitle - Page title string
@@ -20,7 +19,6 @@
     * reviewurl - URL to review applications
     * bulkvalidateurl - URL to bulk validation
     * sesskey - Session key
-    * loading - bool - Show skeleton loading state
 
     Example context (json):
     {
@@ -28,296 +26,239 @@
         "stats": {"unassigned": 10, "reviewers": 5, "assigned": 25, "avgworkload": 5.0}
     }
 }}
-{{#loading}}
-{{! Skeleton Loading State }}
-<div class="jb-assign-reviewer" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="d-flex justify-content-between mb-4">
-        <div class="jb-skeleton-title" style="width: 200px;"></div>
-        <div class="jb-skeleton-text" style="width: 250px; height: 38px;"></div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-3"><div class="jb-skeleton-text" style="height: 100px;"></div></div>
-        <div class="col-lg-3 col-md-6 mb-3"><div class="jb-skeleton-text" style="height: 100px;"></div></div>
-        <div class="col-lg-3 col-md-6 mb-3"><div class="jb-skeleton-text" style="height: 100px;"></div></div>
-        <div class="col-lg-3 col-md-6 mb-3"><div class="jb-skeleton-text" style="height: 100px;"></div></div>
-    </div>
-    <div class="jb-skeleton-text mb-4" style="height: 60px;"></div>
-    <div class="jb-skeleton-text mb-4" style="height: 200px;"></div>
-    <div class="jb-skeleton-text" style="height: 300px;"></div>
-</div>
-{{/loading}}
-
-{{^loading}}
 <div class="jb-assign-reviewer" data-region="jobboard-assign-reviewer">
-    {{! Skip Link for Accessibility }}
-    <a href="#assign-reviewer-content" class="jb-skip-link">
-        {{#str}}skiptocontent, local_jobboard{{/str}}
-    </a>
-
-    {{! Page Header }}
-    <header class="jb-page-header d-flex justify-content-between align-items-center mb-4 jb-fade-in">
-        <h1 class="fs-3 mb-0">
-            <i class="fa fa-user-plus text-primary me-2" aria-hidden="true"></i>
-            {{pagetitle}}
-        </h1>
-        <div class="btn-group">
-            <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-gauge me-2" aria-hidden="true"></i>
+    {{! Quick Actions Bar }}
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <div class="btn-group btn-group-sm">
+            <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+                <i class="fa fa-gauge me-1" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-            <a href="{{reviewurl}}" class="btn btn-outline-primary jb-hover-lift">
-                <i class="fa fa-clipboard-check me-2" aria-hidden="true"></i>
+            <a href="{{reviewurl}}" class="btn btn-outline-primary">
+                <i class="fa fa-clipboard-check me-1" aria-hidden="true"></i>
                 {{#str}}reviewapplications, local_jobboard{{/str}}
             </a>
         </div>
-    </header>
+    </div>
 
-    <main id="assign-reviewer-content">
-        {{! Statistics Cards }}
-        <section class="row mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.05s;">
-                    <div class="card-body text-center py-3">
-                        <i class="fa fa-triangle-exclamation fa-2x text-warning mb-2" aria-hidden="true"></i>
-                        <div class="fs-3 fw-bold text-dark">{{stats.unassigned}}</div>
-                        <div class="small text-muted">{{#str}}unassignedapplications, local_jobboard{{/str}}</div>
-                    </div>
+    {{! Statistics Cards }}
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-2">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center py-3">
+                    <div class="h3 text-warning mb-0">{{stats.unassigned}}</div>
+                    <small class="text-muted">{{#str}}unassignedapplications, local_jobboard{{/str}}</small>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.1s;">
-                    <div class="card-body text-center py-3">
-                        <i class="fa fa-users fa-2x text-primary mb-2" aria-hidden="true"></i>
-                        <div class="fs-3 fw-bold text-dark">{{stats.reviewers}}</div>
-                        <div class="small text-muted">{{#str}}availablereviewers, local_jobboard{{/str}}</div>
-                    </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center py-3">
+                    <div class="h3 text-primary mb-0">{{stats.reviewers}}</div>
+                    <small class="text-muted">{{#str}}availablereviewers, local_jobboard{{/str}}</small>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.15s;">
-                    <div class="card-body text-center py-3">
-                        <i class="fa fa-circle-check fa-2x text-success mb-2" aria-hidden="true"></i>
-                        <div class="fs-3 fw-bold text-dark">{{stats.assigned}}</div>
-                        <div class="small text-muted">{{#str}}totalassigned, local_jobboard{{/str}}</div>
-                    </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center py-3">
+                    <div class="h3 text-success mb-0">{{stats.assigned}}</div>
+                    <small class="text-muted">{{#str}}totalassigned, local_jobboard{{/str}}</small>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.2s;">
-                    <div class="card-body text-center py-3">
-                        <i class="fa fa-chart-bar fa-2x text-info mb-2" aria-hidden="true"></i>
-                        <div class="fs-3 fw-bold text-dark">{{stats.avgworkload}}</div>
-                        <div class="small text-muted">{{#str}}avgworkload, local_jobboard{{/str}}</div>
-                    </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-2">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center py-3">
+                    <div class="h3 text-info mb-0">{{stats.avgworkload}}</div>
+                    <small class="text-muted">{{#str}}avgworkload, local_jobboard{{/str}}</small>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
 
-        {{! Vacancy Filter }}
-        <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.25s;" aria-label="{{#str}}filter{{/str}}">
-            <div class="card-body">
-                <form method="get" action="{{filterformurl}}" class="jb-form-inline flex-wrap align-items-center">
-                    <div class="mb-3 me-3 mb-2">
-                        <label class="visually-hidden" for="vacancyid">{{#str}}vacancy, local_jobboard{{/str}}</label>
-                        <select name="vacancyid" id="vacancyid" class="form-control">
-                            <option value="0">{{#str}}allvacancies, local_jobboard{{/str}}</option>
-                            {{#vacancies}}
-                            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                            {{/vacancies}}
+    {{! Vacancy Filter }}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light py-2">
+            <h6 class="mb-0"><i class="fa fa-filter me-2 text-muted"></i>{{#str}}filter{{/str}}</h6>
+        </div>
+        <div class="card-body py-3">
+            <form method="get" action="{{filterformurl}}" class="d-flex flex-wrap align-items-center gap-2">
+                <select name="vacancyid" id="vacancyid" class="form-select form-select-sm" style="max-width: 300px;">
+                    <option value="0">{{#str}}allvacancies, local_jobboard{{/str}}</option>
+                    {{#vacancies}}
+                    <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                    {{/vacancies}}
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="fa fa-filter me-1" aria-hidden="true"></i>
+                    {{#str}}filter{{/str}}
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {{! Reviewer Workload Summary }}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light py-2 d-flex justify-content-between align-items-center">
+            <h6 class="mb-0"><i class="fa fa-users me-2 text-muted"></i>{{#str}}reviewerworkload, local_jobboard{{/str}}</h6>
+            <span class="badge bg-secondary">{{stats.reviewers}} {{#str}}reviewers, local_jobboard{{/str}}</span>
+        </div>
+        <div class="card-body py-3">
+            {{#hasreviewers}}
+            <div class="row">
+                {{#reviewers}}
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="card h-100 border-start border-{{workloadcolor}} border-3">
+                        <div class="card-body py-2">
+                            <h6 class="mb-1">
+                                <i class="fa fa-user text-muted me-2" aria-hidden="true"></i>
+                                {{fullname}}
+                            </h6>
+                            <span class="badge bg-{{workloadcolor}} mb-2">
+                                {{workload}} {{#str}}activeassignments, local_jobboard{{/str}}
+                            </span>
+                            {{#hasstats}}
+                            <div class="small text-muted">
+                                <i class="fa fa-check me-1" aria-hidden="true"></i>
+                                {{#str}}reviewed, local_jobboard{{/str}}: <strong>{{stats.reviewed}}</strong>
+                                <span class="mx-2">|</span>
+                                <i class="fa fa-clock me-1" aria-hidden="true"></i>
+                                {{#str}}avgtime, local_jobboard{{/str}}: <strong>{{stats.avgtime}}h</strong>
+                            </div>
+                            {{/hasstats}}
+                        </div>
+                    </div>
+                </div>
+                {{/reviewers}}
+            </div>
+            {{/hasreviewers}}
+            {{^hasreviewers}}
+            <div class="text-center py-4">
+                <i class="fa fa-users fa-3x text-muted mb-3" aria-hidden="true"></i>
+                <p class="text-muted mb-0">{{#str}}noreviewers, local_jobboard{{/str}}</p>
+            </div>
+            {{/hasreviewers}}
+        </div>
+    </div>
+
+    {{! Auto-Assign Section }}
+    <div class="card shadow-sm mb-4 border-info">
+        <div class="card-header bg-light py-2">
+            <h6 class="mb-0">
+                <i class="fa fa-wand-magic-sparkles me-2 text-info" aria-hidden="true"></i>
+                {{#str}}autoassign, local_jobboard{{/str}}
+            </h6>
+        </div>
+        <div class="card-body py-3">
+            <form method="post" action="{{actionformurl}}" class="d-flex flex-wrap align-items-center gap-2">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="autoassign">
+                <input type="hidden" name="vacancyid" value="{{selectedvacancyid}}">
+                <label for="maxperreviewer" class="form-label mb-0 small">{{#str}}maxperreviewer, local_jobboard{{/str}}</label>
+                <input type="number" name="maxperreviewer" id="maxperreviewer" value="20"
+                       min="1" max="100" class="form-control form-control-sm" style="width: 80px;">
+                <button type="submit" class="btn btn-info btn-sm">
+                    <i class="fa fa-wand-magic-sparkles me-1" aria-hidden="true"></i>
+                    {{#str}}autoassignall, local_jobboard{{/str}}
+                </button>
+            </form>
+            <small class="text-muted mt-2 d-block">
+                <i class="fa fa-circle-info me-1" aria-hidden="true"></i>
+                {{#str}}autoassignhelp, local_jobboard{{/str}}
+            </small>
+        </div>
+    </div>
+
+    {{! Manual Assignment Section }}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light py-2 d-flex justify-content-between align-items-center">
+            <h6 class="mb-0"><i class="fa fa-hand-pointer me-2 text-muted"></i>{{#str}}manualassign, local_jobboard{{/str}}</h6>
+            <span class="badge bg-warning text-dark">{{stats.unassigned}} {{#str}}pendingassignment, local_jobboard{{/str}}</span>
+        </div>
+        <div class="card-body py-3">
+            {{#hasunassigned}}
+            <form method="post" action="{{actionformurl}}" id="manual-assign-form">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="assign">
+                <input type="hidden" name="vacancyid" value="{{selectedvacancyid}}">
+
+                {{! Reviewer Selection }}
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label for="reviewerid" class="form-label small fw-bold">
+                            <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
+                            {{#str}}assignto, local_jobboard{{/str}}
+                        </label>
+                        <select name="reviewerid" id="reviewerid" class="form-select form-select-sm" required>
+                            <option value="">{{#str}}selectreviewer, local_jobboard{{/str}}</option>
+                            {{#reviewers}}
+                            <option value="{{id}}">{{fullname}} ({{workload}} {{#str}}assigned, local_jobboard{{/str}}){{workloadindicator}}</option>
+                            {{/reviewers}}
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary mb-2 jb-hover-lift">
-                        <i class="fa fa-filter me-1" aria-hidden="true"></i>
-                        {{#str}}filter{{/str}}
+                </div>
+
+                {{! Select All Checkbox }}
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="selectallapp">
+                    <label class="form-check-label fw-bold" for="selectallapp">{{#str}}selectall{{/str}}</label>
+                </div>
+
+                {{! Applications Table }}
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" style="width: 40px;"></th>
+                                <th scope="col">{{#str}}applicant, local_jobboard{{/str}}</th>
+                                <th scope="col">{{#str}}vacancy, local_jobboard{{/str}}</th>
+                                <th scope="col">{{#str}}status{{/str}}</th>
+                                <th scope="col">{{#str}}dateapplied, local_jobboard{{/str}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#unassigned}}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="applications[]" value="{{id}}" class="form-check-input app-checkbox">
+                                </td>
+                                <td><strong>{{applicantname}}</strong></td>
+                                <td><code class="text-primary small">{{vacancycode}}</code></td>
+                                <td><span class="badge bg-{{statuscolor}}">{{statustext}}</span></td>
+                                <td class="text-muted small">{{dateapplied}}</td>
+                            </tr>
+                            {{/unassigned}}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
+                        {{#str}}assignselected, local_jobboard{{/str}}
                     </button>
-                </form>
-            </div>
-        </section>
-
-        {{! Reviewer Workload Summary }}
-        <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.3s;" aria-labelledby="workload-heading">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0" id="workload-heading">
-                    <i class="fa fa-users text-primary me-2" aria-hidden="true"></i>
-                    {{#str}}reviewerworkload, local_jobboard{{/str}}
-                </h5>
-                <span class="badge bg-secondary">{{stats.reviewers}} {{#str}}reviewers, local_jobboard{{/str}}</span>
-            </div>
-            <div class="card-body">
-                {{#hasreviewers}}
-                <div class="row">
-                    {{#reviewers}}
-                    <div class="col-lg-4 col-md-6 mb-3">
-                        <div class="card h-100 jb-border-left-{{workloadcolor}} jb-fade-in" style="animation-delay: calc(0.35s + {{@index}} * 0.03s);">
-                            <div class="card-body">
-                                <h6 class="mb-2">
-                                    <i class="fa fa-user text-muted me-2" aria-hidden="true"></i>
-                                    {{fullname}}
-                                </h6>
-                                <span class="badge jb-badge-{{workloadcolor}} mb-2">
-                                    {{workload}} {{#str}}activeassignments, local_jobboard{{/str}}
-                                </span>
-                                {{#hasstats}}
-                                <div class="small text-muted mt-2">
-                                    <i class="fa fa-check me-1" aria-hidden="true"></i>
-                                    {{#str}}reviewed, local_jobboard{{/str}}: <strong>{{stats.reviewed}}</strong>
-                                    <span class="mx-2">|</span>
-                                    <i class="fa fa-clock me-1" aria-hidden="true"></i>
-                                    {{#str}}avgtime, local_jobboard{{/str}}: <strong>{{stats.avgtime}}h</strong>
-                                </div>
-                                {{/hasstats}}
-                            </div>
-                        </div>
-                    </div>
-                    {{/reviewers}}
                 </div>
-                {{/hasreviewers}}
-                {{^hasreviewers}}
-                <div class="text-center py-5" role="status">
-                    <i class="fa fa-users fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-                    <p class="text-muted mb-0">{{#str}}noreviewers, local_jobboard{{/str}}</p>
-                </div>
-                {{/hasreviewers}}
+            </form>
+            {{/hasunassigned}}
+            {{^hasunassigned}}
+            <div class="text-center py-4">
+                <i class="fa fa-circle-check fa-3x text-success mb-3" aria-hidden="true"></i>
+                <h6 class="text-success mb-2">{{#str}}alldone, local_jobboard{{/str}}</h6>
+                <p class="text-muted mb-0">{{#str}}nounassignedapplications, local_jobboard{{/str}}</p>
             </div>
-        </section>
-
-        {{! Auto-Assign Section }}
-        <section class="card shadow-sm mb-4 jb-border-info jb-fade-in-up" style="animation-delay: 0.35s;" aria-labelledby="autoassign-heading">
-            <div class="card-header bg-white d-flex align-items-center">
-                <i class="fa fa-wand-magic-sparkles fa-lg text-info me-3" aria-hidden="true"></i>
-                <h5 class="mb-0" id="autoassign-heading">
-                    {{#str}}autoassign, local_jobboard{{/str}}
-                </h5>
-            </div>
-            <div class="card-body">
-                <form method="post" action="{{actionformurl}}" class="d-flex flex-wrap align-items-center">
-                    <input type="hidden" name="sesskey" value="{{sesskey}}">
-                    <input type="hidden" name="action" value="autoassign">
-                    <input type="hidden" name="vacancyid" value="{{selectedvacancyid}}">
-                    <div class="mb-3 me-3 mb-2">
-                        <label for="maxperreviewer" class="me-2">{{#str}}maxperreviewer, local_jobboard{{/str}}</label>
-                        <input type="number" name="maxperreviewer" id="maxperreviewer" value="20"
-                               min="1" max="100" class="form-control jb-narrow-input">
-                    </div>
-                    <button type="submit" class="btn btn-light mb-2 jb-hover-lift">
-                        <i class="fa fa-wand-magic-sparkles me-2" aria-hidden="true"></i>
-                        {{#str}}autoassignall, local_jobboard{{/str}}
-                    </button>
-                </form>
-                <small class="text-muted mt-2 d-block">
-                    <i class="fa fa-circle-info me-1" aria-hidden="true"></i>
-                    {{#str}}autoassignhelp, local_jobboard{{/str}}
-                </small>
-            </div>
-        </section>
-
-        {{! Manual Assignment Section }}
-        <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.4s;" aria-labelledby="manual-heading">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0" id="manual-heading">
-                    <i class="fa fa-hand-pointer text-primary me-2" aria-hidden="true"></i>
-                    {{#str}}manualassign, local_jobboard{{/str}}
-                </h5>
-                <span class="badge bg-warning text-dark">{{stats.unassigned}} {{#str}}pendingassignment, local_jobboard{{/str}}</span>
-            </div>
-            <div class="card-body">
-                {{#hasunassigned}}
-                <form method="post" action="{{actionformurl}}" id="manual-assign-form">
-                    <input type="hidden" name="sesskey" value="{{sesskey}}">
-                    <input type="hidden" name="action" value="assign">
-                    <input type="hidden" name="vacancyid" value="{{selectedvacancyid}}">
-
-                    {{! Reviewer Selection }}
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="reviewerid" class="form-label fw-bold">
-                                    <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
-                                    {{#str}}assignto, local_jobboard{{/str}}
-                                </label>
-                                <select name="reviewerid" id="reviewerid" class="form-control" required>
-                                    <option value="">{{#str}}selectreviewer, local_jobboard{{/str}}</option>
-                                    {{#reviewers}}
-                                    <option value="{{id}}">{{fullname}} ({{workload}} {{#str}}assigned, local_jobboard{{/str}}){{workloadindicator}}</option>
-                                    {{/reviewers}}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{! Select All Checkbox }}
-                    <div class="jb-custom-control jb-custom-checkbox mb-3">
-                        <input type="checkbox" class="jb-custom-control-input" id="selectallapp">
-                        <label class="jb-custom-control-label fw-bold" for="selectallapp">{{#str}}selectall{{/str}}</label>
-                    </div>
-
-                    {{! Applications Table }}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th scope="col" style="width: 40px;"></th>
-                                    <th scope="col">{{#str}}applicant, local_jobboard{{/str}}</th>
-                                    <th scope="col">{{#str}}vacancy, local_jobboard{{/str}}</th>
-                                    <th scope="col">{{#str}}status{{/str}}</th>
-                                    <th scope="col">{{#str}}dateapplied, local_jobboard{{/str}}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#unassigned}}
-                                <tr class="jb-fade-in" style="animation-delay: calc(0.45s + {{@index}} * 0.02s);">
-                                    <td>
-                                        <input type="checkbox" name="applications[]" value="{{id}}" class="app-checkbox">
-                                    </td>
-                                    <td><strong>{{applicantname}}</strong></td>
-                                    <td><code class="text-primary">{{vacancycode}}</code></td>
-                                    <td><span class="badge jb-badge-{{statuscolor}}">{{statustext}}</span></td>
-                                    <td class="text-muted">{{dateapplied}}</td>
-                                </tr>
-                                {{/unassigned}}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="mt-3">
-                        <button type="submit" class="btn btn-primary jb-hover-lift">
-                            <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
-                            {{#str}}assignselected, local_jobboard{{/str}}
-                        </button>
-                    </div>
-                </form>
-                {{/hasunassigned}}
-                {{^hasunassigned}}
-                <div class="text-center py-5" role="status">
-                    <i class="fa fa-circle-check fa-4x text-success mb-3" aria-hidden="true"></i>
-                    <h5 class="text-success mb-2">{{#str}}alldone, local_jobboard{{/str}}</h5>
-                    <p class="text-muted mb-0">{{#str}}nounassignedapplications, local_jobboard{{/str}}</p>
-                </div>
-                {{/hasunassigned}}
-            </div>
-        </section>
-    </main>
-
-    {{! Navigation Footer }}
-    <footer class="card shadow-sm mt-4 bg-light jb-fade-in" style="animation-delay: 0.5s;">
-        <div class="card-body d-flex flex-wrap align-items-center justify-content-center gap-2">
-            <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-gauge me-2" aria-hidden="true"></i>
-                {{#str}}dashboard, local_jobboard{{/str}}
-            </a>
-            <a href="{{reviewurl}}" class="btn btn-outline-primary jb-hover-lift">
-                <i class="fa fa-clipboard-check me-2" aria-hidden="true"></i>
-                {{#str}}reviewapplications, local_jobboard{{/str}}
-            </a>
-            <a href="{{bulkvalidateurl}}" class="btn btn-outline-success jb-hover-lift">
-                <i class="fa fa-check-double me-2" aria-hidden="true"></i>
-                {{#str}}bulkvalidation, local_jobboard{{/str}}
-            </a>
+            {{/hasunassigned}}
         </div>
-    </footer>
+    </div>
 </div>
 
-{{! JavaScript for select all - moved outside conditional blocks for consistency }}
+<style>
+.jb-assign-reviewer .card {
+    border-radius: 0.5rem;
+}
+</style>
+
+{{! JavaScript for select all }}
 {{#hasunassigned}}
 {{#js}}
 (function() {
@@ -334,4 +275,3 @@
 })();
 {{/js}}
 {{/hasunassigned}}
-{{/loading}}
