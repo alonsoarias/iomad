@@ -44,34 +44,34 @@
     {{! Statistics Cards }}
     <div class="row mb-4">
         <div class="col-lg-3 col-md-6 mb-2">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-warning">
                 <div class="card-body text-center py-3">
-                    <div class="h3 text-warning mb-0">{{stats.unassigned}}</div>
-                    <small class="text-muted">{{#str}}unassignedapplications, local_jobboard{{/str}}</small>
+                    <div class="h3 text-warning mb-0 jb-stat-value">{{stats.unassigned}}</div>
+                    <small class="text-muted jb-stat-label">{{#str}}unassignedapplications, local_jobboard{{/str}}</small>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-2">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-primary">
                 <div class="card-body text-center py-3">
-                    <div class="h3 text-primary mb-0">{{stats.reviewers}}</div>
-                    <small class="text-muted">{{#str}}availablereviewers, local_jobboard{{/str}}</small>
+                    <div class="h3 text-primary mb-0 jb-stat-value">{{stats.reviewers}}</div>
+                    <small class="text-muted jb-stat-label">{{#str}}availablereviewers, local_jobboard{{/str}}</small>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-2">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-success">
                 <div class="card-body text-center py-3">
-                    <div class="h3 text-success mb-0">{{stats.assigned}}</div>
-                    <small class="text-muted">{{#str}}totalassigned, local_jobboard{{/str}}</small>
+                    <div class="h3 text-success mb-0 jb-stat-value">{{stats.assigned}}</div>
+                    <small class="text-muted jb-stat-label">{{#str}}totalassigned, local_jobboard{{/str}}</small>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-2">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-info">
                 <div class="card-body text-center py-3">
-                    <div class="h3 text-info mb-0">{{stats.avgworkload}}</div>
-                    <small class="text-muted">{{#str}}avgworkload, local_jobboard{{/str}}</small>
+                    <div class="h3 text-info mb-0 jb-stat-value">{{stats.avgworkload}}</div>
+                    <small class="text-muted jb-stat-label">{{#str}}avgworkload, local_jobboard{{/str}}</small>
                 </div>
             </div>
         </div>
@@ -90,7 +90,7 @@
                     <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
                     {{/vacancies}}
                 </select>
-                <button type="submit" class="btn btn-primary btn-sm">
+                <button type="submit" class="btn btn-primary jb-btn-primary btn-sm">
                     <i class="fa fa-filter me-1" aria-hidden="true"></i>
                     {{#str}}filter{{/str}}
                 </button>
@@ -158,7 +158,7 @@
                 <label for="maxperreviewer" class="form-label mb-0 small">{{#str}}maxperreviewer, local_jobboard{{/str}}</label>
                 <input type="number" name="maxperreviewer" id="maxperreviewer" value="20"
                        min="1" max="100" class="form-control form-control-sm" style="width: 80px;">
-                <button type="submit" class="btn btn-info btn-sm">
+                <button type="submit" class="btn btn-info jb-btn-info btn-sm">
                     <i class="fa fa-wand-magic-sparkles me-1" aria-hidden="true"></i>
                     {{#str}}autoassignall, local_jobboard{{/str}}
                 </button>
@@ -234,7 +234,7 @@
                 </div>
 
                 <div class="mt-3">
-                    <button type="submit" class="btn btn-primary btn-sm">
+                    <button type="submit" class="btn btn-primary jb-btn-primary btn-sm">
                         <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
                         {{#str}}assignselected, local_jobboard{{/str}}
                     </button>

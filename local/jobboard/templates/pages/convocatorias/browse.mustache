@@ -26,10 +26,10 @@
     <div class="row mb-4">
         {{#stats}}
         <div class="col-lg-3 col-md-6 mb-2">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-{{color}}">
                 <div class="card-body text-center py-3">
-                    <div class="h3 text-{{color}} mb-0">{{value}}</div>
-                    <small class="text-muted">{{label}}</small>
+                    <div class="h3 text-{{color}} mb-0 jb-stat-value">{{value}}</div>
+                    <small class="text-muted jb-stat-label">{{label}}</small>
                 </div>
             </div>
         </div>
@@ -114,7 +114,7 @@
                 <div class="card-footer bg-white">
                     {{#hasvacancies}}
                     {{#isopen}}
-                    <a href="{{viewurl}}" class="btn btn-primary btn-sm w-100">
+                    <a href="{{viewurl}}" class="btn btn-primary jb-btn-primary btn-sm w-100">
                         <i class="fa fa-arrow-right me-2" aria-hidden="true"></i>
                         {{#str}}viewvacancies, local_jobboard{{/str}}
                     </a>
@@ -142,13 +142,17 @@
     {{^hasconvocatorias}}
     <div class="card shadow-sm">
         <div class="card-body text-center py-5">
-            <i class="fa fa-calendar-xmark fa-3x text-muted mb-3" aria-hidden="true"></i>
-            <h5 class="text-muted">{{#str}}noconvocatorias, local_jobboard{{/str}}</h5>
-            <p class="text-muted mb-3">{{#str}}noconvocatorias_desc, local_jobboard{{/str}}</p>
-            <a href="{{dashboardurl}}" class="btn btn-primary">
-                <i class="fa fa-house me-2" aria-hidden="true"></i>
-                {{#str}}backtodashboard, local_jobboard{{/str}}
-            </a>
+            <div class="jb-empty-state">
+                <i class="fa fa-calendar-xmark jb-empty-state-icon" aria-hidden="true"></i>
+                <h5 class="jb-empty-state-title">{{#str}}noconvocatorias, local_jobboard{{/str}}</h5>
+                <p class="jb-empty-state-description">{{#str}}noconvocatorias_desc, local_jobboard{{/str}}</p>
+                <div class="jb-empty-state-actions">
+                    <a href="{{dashboardurl}}" class="btn btn-primary jb-btn-primary">
+                        <i class="fa fa-house me-2" aria-hidden="true"></i>
+                        {{#str}}backtodashboard, local_jobboard{{/str}}
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
     {{/hasconvocatorias}}

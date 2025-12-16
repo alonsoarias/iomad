@@ -126,7 +126,7 @@
                     </div>
                     {{/filterform.fields}}
                     <div class="jb-col-auto mb-2">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary jb-btn-primary">
                             <i class="fa fa-filter me-1" aria-hidden="true"></i>
                             {{#str}}filter, local_jobboard{{/str}}
                         </button>
@@ -247,15 +247,17 @@
 
         {{! Empty State }}
         {{^hasvacancies}}
-        <div class="text-center py-5" role="status">
-            <i class="fa fa-briefcase fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-            <h2 class="h5 text-muted mb-2">{{#str}}noresults, local_jobboard{{/str}}</h2>
-            <p class="text-muted mb-4 mx-auto" style="max-width: 400px;">{{#str}}novacancies, local_jobboard{{/str}}</p>
+        <div class="jb-empty-state py-5" role="status">
+            <i class="fa fa-briefcase jb-empty-state-icon" aria-hidden="true"></i>
+            <h2 class="jb-empty-state-title">{{#str}}noresults, local_jobboard{{/str}}</h2>
+            <p class="jb-empty-state-description">{{#str}}novacancies, local_jobboard{{/str}}</p>
             {{#browseconvocatoriasurl}}
-            <a href="{{browseconvocatoriasurl}}" class="btn btn-primary">
-                <i class="fa fa-folder-open me-2" aria-hidden="true"></i>
-                {{#str}}browseconvocatorias, local_jobboard{{/str}}
-            </a>
+            <div class="jb-empty-state-actions">
+                <a href="{{browseconvocatoriasurl}}" class="btn btn-primary jb-btn-primary">
+                    <i class="fa fa-folder-open me-2" aria-hidden="true"></i>
+                    {{#str}}browseconvocatorias, local_jobboard{{/str}}
+                </a>
+            </div>
             {{/browseconvocatoriasurl}}
         </div>
         {{/hasvacancies}}

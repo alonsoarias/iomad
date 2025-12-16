@@ -41,7 +41,7 @@
     </a>
 
     {{! Info Message }}
-    <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="status">
+    <div class="alert jb-alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="status">
         <i class="fa fa-circle-info fa-lg text-info me-3 mt-1" aria-hidden="true"></i>
         <div>
             <h5 class="mb-1 fw-bold">{{str.selectconvocatoriafirst}}</h5>
@@ -52,13 +52,15 @@
     <main id="select-convocatoria-content">
         {{^hasconvocatorias}}
         {{! Empty State }}
-        <div class="text-center py-5 jb-fade-in-up" style="animation-delay: 0.05s;" role="status">
-            <i class="fa fa-calendar-days fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-            <h4 class="text-muted mb-3">{{str.noconvocatoriasavailable}}</h4>
-            <a href="{{createconvocatoriaurl}}" class="btn btn-primary jb-hover-lift">
-                <i class="fa fa-plus me-2" aria-hidden="true"></i>
-                {{str.gotocreateconvocatoria}}
-            </a>
+        <div class="jb-empty-state py-5 jb-fade-in-up" style="animation-delay: 0.05s;" role="status">
+            <i class="fa fa-calendar-days jb-empty-state-icon" aria-hidden="true"></i>
+            <h4 class="jb-empty-state-title">{{str.noconvocatoriasavailable}}</h4>
+            <div class="jb-empty-state-actions">
+                <a href="{{createconvocatoriaurl}}" class="btn btn-primary jb-btn-primary jb-hover-lift">
+                    <i class="fa fa-plus me-2" aria-hidden="true"></i>
+                    {{str.gotocreateconvocatoria}}
+                </a>
+            </div>
         </div>
         {{/hasconvocatorias}}
 
@@ -103,7 +105,7 @@
                     </div>
 
                     <footer class="card-footer bg-white border-top">
-                        <a href="{{selecturl}}" class="btn btn-primary w-100">
+                        <a href="{{selecturl}}" class="btn btn-primary jb-btn-primary w-100">
                             <i class="fa fa-plus me-2" aria-hidden="true"></i>
                             {{str.addvacancy}}
                         </a>

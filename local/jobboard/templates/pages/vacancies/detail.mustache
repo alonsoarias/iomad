@@ -78,7 +78,7 @@
                 {{! Urgent Warning }}
                 {{#isurgent}}
                 {{^isclosed}}
-                <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+                <div class="alert jb-alert-warning d-flex align-items-center mb-4" role="alert">
                     <i class="fa fa-clock fa-lg me-3"></i>
                     <div>
                         <strong>{{#str}}closingsoon, local_jobboard{{/str}}</strong>
@@ -188,7 +188,7 @@
                             {{^isclosed}}
                             <div class="py-2">
                                 <p class="text-muted mb-3">{{#str}}applynowdesc, local_jobboard{{/str}}</p>
-                                <a href="{{applyurl}}" class="btn btn-success btn-lg w-100">
+                                <a href="{{applyurl}}" class="btn btn-success jb-btn-success btn-lg w-100">
                                     <i class="fa fa-paper-plane me-2"></i>
                                     {{#str}}apply, local_jobboard{{/str}}
                                 </a>
@@ -225,7 +225,7 @@
                             {{^isloggedin}}
                             <div class="py-2">
                                 <p class="text-muted mb-3">{{#str}}logintoapply, local_jobboard{{/str}}</p>
-                                <a href="{{loginurl}}" class="btn btn-primary btn-lg w-100">
+                                <a href="{{loginurl}}" class="btn btn-primary jb-btn-primary btn-lg w-100">
                                     <i class="fa fa-sign-in-alt me-2"></i>
                                     {{#str}}login{{/str}}
                                 </a>
@@ -345,7 +345,7 @@
                                     <small class="text-muted">{{#str}}validated, local_jobboard{{/str}}</small>
                                 </div>
                             </div>
-                            <a href="{{manageurl}}" class="btn btn-info w-100">
+                            <a href="{{manageurl}}" class="btn btn-info jb-btn-info w-100">
                                 <i class="fa fa-list-check me-2"></i>
                                 {{#str}}manageapplications, local_jobboard{{/str}}
                             </a>
