@@ -5842,5 +5842,714 @@ audio:focus-visible {
 }
 
 /* ==========================================================================
+   PHASE 8: PERCEIVED PERFORMANCE
+   Optimized loading states, transitions, and instant feedback patterns
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   8.1 Enhanced Skeleton Loading
+   -------------------------------------------------------------------------- */
+
+/* Skeleton shimmer animation - optimized for GPU */
+@keyframes jb-skeleton-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Base skeleton styles */
+.jb-skeleton,
+.jb-skeleton-text,
+.jb-skeleton-title,
+.jb-skeleton-circle {
+    background: linear-gradient(
+        90deg,
+        var(--jb-gray-200) 25%,
+        var(--jb-gray-100) 50%,
+        var(--jb-gray-200) 75%
+    );
+    background-size: 200% 100%;
+    animation: jb-skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: var(--jb-radius-sm);
+    will-change: background-position;
+}
+
+.jb-skeleton-text {
+    height: 0.875rem;
+    margin-bottom: var(--jb-space-2);
+}
+
+.jb-skeleton-text:last-child {
+    margin-bottom: 0;
+}
+
+.jb-skeleton-title {
+    height: 1.5rem;
+    margin-bottom: var(--jb-space-3);
+}
+
+.jb-skeleton-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--jb-radius-full);
+    flex-shrink: 0;
+}
+
+.jb-skeleton-text-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--jb-space-2);
+}
+
+/* Skeleton variants */
+.jb-skeleton-inline {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.jb-skeleton-button {
+    height: 38px;
+    width: 100px;
+    border-radius: var(--jb-radius-md);
+}
+
+.jb-skeleton-image {
+    aspect-ratio: 16/9;
+    width: 100%;
+    border-radius: var(--jb-radius-md);
+}
+
+.jb-skeleton-avatar-sm {
+    width: 32px;
+    height: 32px;
+}
+
+.jb-skeleton-avatar-lg {
+    width: 64px;
+    height: 64px;
+}
+
+/* Skeleton wrapper for cards */
+.jb-skeleton-card {
+    background: var(--jb-white);
+    border: 1px solid var(--jb-gray-200);
+    border-radius: var(--jb-radius-lg);
+    padding: var(--jb-space-4);
+}
+
+.jb-skeleton-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--jb-space-3);
+    margin-bottom: var(--jb-space-4);
+    padding-bottom: var(--jb-space-3);
+    border-bottom: 1px solid var(--jb-gray-100);
+}
+
+.jb-skeleton-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--jb-space-3);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .jb-skeleton,
+    .jb-skeleton-text,
+    .jb-skeleton-title,
+    .jb-skeleton-circle {
+        animation: none;
+        background: var(--jb-gray-200);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   8.2 Lazy Loading and Progressive Images
+   -------------------------------------------------------------------------- */
+
+/* Lazy load wrapper */
+.jb-lazy-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: var(--jb-gray-100);
+}
+
+/* Lazy image placeholder */
+.jb-lazy-img {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    will-change: opacity;
+}
+
+.jb-lazy-img.jb-loaded {
+    opacity: 1;
+}
+
+/* Blur-up placeholder */
+.jb-lazy-placeholder {
+    position: absolute;
+    inset: 0;
+    filter: blur(20px);
+    transform: scale(1.1);
+    transition: opacity 0.3s ease 0.1s;
+    z-index: 1;
+}
+
+.jb-lazy-wrapper.jb-loaded .jb-lazy-placeholder {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Progressive loading indicator */
+.jb-lazy-loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 25%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 75%
+    );
+    background-size: 200% 100%;
+    animation: jb-skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+/* Intersection observer trigger */
+.jb-lazy-trigger {
+    position: absolute;
+    bottom: 200px;
+    height: 1px;
+    width: 100%;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   8.3 Optimistic UI Updates
+   -------------------------------------------------------------------------- */
+
+/* Pending state while waiting for server */
+.jb-optimistic-pending {
+    position: relative;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.jb-optimistic-pending::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: wait;
+}
+
+/* Success flash */
+@keyframes jb-optimistic-success {
+    0% {
+        background-color: var(--jb-success-100);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+.jb-optimistic-success {
+    animation: jb-optimistic-success 0.6s ease-out;
+}
+
+/* Error shake */
+@keyframes jb-optimistic-error {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+.jb-optimistic-error {
+    animation: jb-optimistic-error 0.4s ease;
+    border-color: var(--jb-danger) !important;
+}
+
+/* Rollback transition */
+.jb-optimistic-rollback {
+    transition: all 0.3s ease;
+}
+
+/* --------------------------------------------------------------------------
+   8.4 Instant Feedback
+   -------------------------------------------------------------------------- */
+
+/* Click ripple effect */
+@keyframes jb-ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.jb-ripple-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.jb-ripple {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: currentColor;
+    opacity: 0.3;
+    border-radius: 50%;
+    transform: scale(0);
+    pointer-events: none;
+    animation: jb-ripple 0.6s ease-out;
+}
+
+/* Active press state - instant feedback */
+.jb-btn:active,
+.jb-card.jb-clickable:active,
+.jb-list-item:active {
+    transform: scale(0.98);
+    transition: transform 0.05s ease;
+}
+
+/* Button loading state */
+.jb-btn-loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.jb-btn-loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin: -8px 0 0 -8px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: jb-spin 0.6s linear infinite;
+}
+
+.jb-btn-loading * {
+    visibility: hidden;
+}
+
+/* Spinner animation */
+@keyframes jb-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Form submit progress */
+.jb-form-submitting {
+    position: relative;
+}
+
+.jb-form-submitting::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 30%;
+    background: var(--jb-primary);
+    animation: jb-progress-indeterminate 1.5s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes jb-progress-indeterminate {
+    0% {
+        left: 0;
+        width: 30%;
+    }
+    50% {
+        left: 35%;
+        width: 50%;
+    }
+    100% {
+        left: 100%;
+        width: 0%;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   8.5 Page Transition States
+   -------------------------------------------------------------------------- */
+
+/* Page loading overlay */
+.jb-page-loading {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--jb-z-modal);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.jb-page-loading.jb-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Page loading spinner */
+.jb-page-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--jb-gray-200);
+    border-top-color: var(--jb-primary);
+    border-radius: 50%;
+    animation: jb-spin 0.8s linear infinite;
+}
+
+/* Top progress bar */
+.jb-progress-bar-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--jb-primary);
+    z-index: var(--jb-z-tooltip);
+    transition: width 0.3s ease;
+    transform-origin: left;
+}
+
+/* Content fade in */
+@keyframes jb-content-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.jb-content-loaded {
+    animation: jb-content-fade-in 0.3s ease;
+}
+
+/* Stagger children animation */
+.jb-stagger-children > * {
+    opacity: 0;
+    animation: jb-content-fade-in 0.3s ease forwards;
+}
+
+.jb-stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.jb-stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.jb-stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.jb-stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.jb-stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.jb-stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+.jb-stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
+.jb-stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
+.jb-stagger-children > *:nth-child(n+9) { animation-delay: 0.45s; }
+
+/* --------------------------------------------------------------------------
+   8.6 Content Placeholders
+   -------------------------------------------------------------------------- */
+
+/* Placeholder for empty/loading content areas */
+.jb-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    padding: var(--jb-space-6);
+    text-align: center;
+    color: var(--jb-gray-500);
+}
+
+.jb-placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: var(--jb-space-4);
+    opacity: 0.5;
+}
+
+.jb-placeholder-title {
+    font-size: var(--jb-text-lg);
+    font-weight: var(--jb-font-semibold);
+    color: var(--jb-gray-600);
+    margin-bottom: var(--jb-space-2);
+}
+
+.jb-placeholder-text {
+    max-width: 300px;
+}
+
+/* Inline loading dots */
+.jb-loading-dots {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.jb-loading-dots span {
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    border-radius: 50%;
+    animation: jb-dots-bounce 1.4s ease-in-out infinite;
+}
+
+.jb-loading-dots span:nth-child(1) { animation-delay: 0s; }
+.jb-loading-dots span:nth-child(2) { animation-delay: 0.16s; }
+.jb-loading-dots span:nth-child(3) { animation-delay: 0.32s; }
+
+@keyframes jb-dots-bounce {
+    0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   8.7 Prefetch and Preload Indicators
+   -------------------------------------------------------------------------- */
+
+/* Link prefetch on hover */
+.jb-prefetch-hover {
+    position: relative;
+}
+
+.jb-prefetch-hover::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--jb-primary);
+    transition: width 0.3s ease;
+}
+
+.jb-prefetch-hover:hover::after {
+    width: 100%;
+}
+
+/* Background prefetch indicator */
+.jb-prefetching {
+    position: relative;
+}
+
+.jb-prefetching::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--jb-primary-200),
+        transparent
+    );
+    animation: jb-prefetch-pulse 2s ease-in-out infinite;
+}
+
+@keyframes jb-prefetch-pulse {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   8.8 Smooth State Transitions
+   -------------------------------------------------------------------------- */
+
+/* Generic content transition */
+.jb-transition-content {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.jb-transition-content.jb-hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+/* Collapse transition */
+.jb-collapse {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.jb-collapse.jb-expanded {
+    max-height: 1000px; /* Arbitrary large value */
+}
+
+/* Smooth height transition (requires JS) */
+.jb-height-transition {
+    transition: height 0.3s ease;
+    overflow: hidden;
+}
+
+/* Fade swap for content replacement */
+.jb-fade-swap {
+    position: relative;
+}
+
+.jb-fade-swap-enter {
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+}
+
+.jb-fade-swap-enter-active {
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+.jb-fade-swap-exit {
+    opacity: 1;
+}
+
+.jb-fade-swap-exit-active {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* --------------------------------------------------------------------------
+   8.9 Perceived Speed Optimizations
+   -------------------------------------------------------------------------- */
+
+/* Instant visual response for interactive elements */
+.jb-instant-active:active {
+    transition: none !important;
+}
+
+/* Preload critical hover states */
+.jb-preload-hover {
+    transition: background-color 0.15s ease,
+                border-color 0.15s ease,
+                color 0.15s ease,
+                box-shadow 0.15s ease;
+}
+
+/* Optimized scroll */
+.jb-smooth-scroll {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .jb-smooth-scroll {
+        scroll-behavior: auto;
+    }
+}
+
+/* Hardware accelerated transforms */
+.jb-gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+/* Content visibility for off-screen content */
+.jb-content-visibility {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+}
+
+/* --------------------------------------------------------------------------
+   8.10 Loading Progress Components
+   -------------------------------------------------------------------------- */
+
+/* Circular progress */
+.jb-progress-circle {
+    width: 40px;
+    height: 40px;
+    position: relative;
+}
+
+.jb-progress-circle svg {
+    transform: rotate(-90deg);
+}
+
+.jb-progress-circle-bg {
+    fill: none;
+    stroke: var(--jb-gray-200);
+    stroke-width: 3;
+}
+
+.jb-progress-circle-fill {
+    fill: none;
+    stroke: var(--jb-primary);
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.jb-progress-circle-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--jb-text-xs);
+    font-weight: var(--jb-font-semibold);
+}
+
+/* Linear progress */
+.jb-progress-linear {
+    height: 4px;
+    background: var(--jb-gray-200);
+    border-radius: var(--jb-radius-full);
+    overflow: hidden;
+}
+
+.jb-progress-linear-fill {
+    height: 100%;
+    background: var(--jb-primary);
+    border-radius: var(--jb-radius-full);
+    transition: width 0.3s ease;
+}
+
+.jb-progress-linear-indeterminate .jb-progress-linear-fill {
+    width: 30%;
+    animation: jb-progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+/* Steps progress */
+.jb-progress-steps {
+    display: flex;
+    align-items: center;
+    gap: var(--jb-space-2);
+}
+
+.jb-progress-step {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--jb-gray-300);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.jb-progress-step.jb-active {
+    background: var(--jb-primary);
+    transform: scale(1.25);
+}
+
+.jb-progress-step.jb-completed {
+    background: var(--jb-success);
+}
+
+/* ==========================================================================
    END OF STYLES
    ========================================================================== */

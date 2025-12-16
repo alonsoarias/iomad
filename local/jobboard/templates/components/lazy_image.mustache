@@ -1,0 +1,55 @@
+{{!
+    @template local_jobboard/components/lazy_image
+
+    Lazy loading image component with blur-up placeholder.
+    Uses Intersection Observer for efficient loading.
+
+    Context variables:
+    * src (string) - Full resolution image URL
+    * placeholder (string) - Low-res placeholder URL (for blur-up effect)
+    * alt (string) - Alt text for accessibility
+    * width (number) - Image width
+    * height (number) - Image height
+    * aspectratio (string) - Aspect ratio (e.g., "16/9", "4/3", "1/1")
+    * class (string) - Additional CSS classes
+    * rounded (bool) - Apply rounded corners
+    * circle (bool) - Circular crop
+    * cover (bool) - Object-fit cover
+    * contain (bool) - Object-fit contain
+    * fallback (string) - Fallback image if main fails
+    * loading (string) - Native loading: lazy, eager (default: lazy)
+
+    Example context (json):
+    {
+        "src": "/images/job-photo.jpg",
+        "placeholder": "/images/job-photo-tiny.jpg",
+        "alt": "Job location photo",
+        "aspectratio": "16/9",
+        "rounded": true
+    }
+}}
+<div class="jb-lazy-wrapper{{#rounded}} jb-rounded{{/rounded}}{{#circle}} jb-circle{{/circle}}{{#class}} {{class}}{{/class}}"
+     {{#aspectratio}}style="aspect-ratio: {{aspectratio}};"{{/aspectratio}}>
+    {{! Low-res placeholder for blur-up effect }}
+    {{#placeholder}}
+    <img src="{{placeholder}}"
+         class="jb-lazy-placeholder"
+         alt=""
+         aria-hidden="true"
+         {{#width}}width="{{width}}"{{/width}}
+         {{#height}}height="{{height}}"{{/height}}>
+    {{/placeholder}}
+
+    {{! Main image with lazy loading }}
+    <img data-lazy-src="{{src}}"
+         src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+         class="jb-lazy-img{{#cover}} jb-img-cover{{/cover}}{{#contain}} jb-img-contain{{/contain}}"
+         alt="{{#alt}}{{alt}}{{/alt}}{{^alt}}{{/alt}}"
+         {{#width}}width="{{width}}"{{/width}}
+         {{#height}}height="{{height}}"{{/height}}
+         loading="{{#loading}}{{loading}}{{/loading}}{{^loading}}lazy{{/loading}}"
+         {{#fallback}}onerror="this.src='{{fallback}}'; this.classList.add('jb-loaded');"{{/fallback}}>
+
+    {{! Loading indicator }}
+    <div class="jb-lazy-loading" aria-hidden="true"></div>
+</div>

@@ -1,0 +1,117 @@
+{{!
+    @template local_jobboard/components/progress_bar
+
+    Progress bar component for showing completion status.
+    Supports linear and circular variants with percentage display.
+
+    Context variables:
+    * value (number) - Current progress value (0-100)
+    * max (number) - Maximum value (default: 100)
+    * type (string) - Type: linear, circular, steps (default: linear)
+    * size (string) - Size: sm, md, lg (default: md)
+    * color (string) - Color: primary, success, warning, danger (default: primary)
+    * showvalue (bool) - Show percentage value
+    * label (string) - Accessible label
+    * animated (bool) - Enable animation
+    * striped (bool) - Striped pattern (linear only)
+    * indeterminate (bool) - Indeterminate state (unknown progress)
+    * steps (number) - Number of steps (for steps type)
+    * currentstep (number) - Current step (for steps type)
+
+    Example context (json):
+    {
+        "value": 75,
+        "type": "linear",
+        "showvalue": true,
+        "color": "primary",
+        "label": "Upload progress"
+    }
+}}
+{{! Linear Progress Bar }}
+{{#islinear}}{{^type}}1{{/type}}{{/islinear}}
+{{^type}}
+<div class="jb-progress-wrapper{{#size}} jb-progress-{{size}}{{/size}}"
+     role="progressbar"
+     aria-valuenow="{{#value}}{{value}}{{/value}}{{^value}}0{{/value}}"
+     aria-valuemin="0"
+     aria-valuemax="{{#max}}{{max}}{{/max}}{{^max}}100{{/max}}"
+     {{#label}}aria-label="{{label}}"{{/label}}>
+    {{#showvalue}}
+    <div class="jb-progress-label">
+        <span class="jb-progress-label-text">{{#label}}{{label}}{{/label}}</span>
+        <span class="jb-progress-value">{{#value}}{{value}}{{/value}}{{^value}}0{{/value}}%</span>
+    </div>
+    {{/showvalue}}
+    <div class="jb-progress-linear{{#indeterminate}} jb-progress-linear-indeterminate{{/indeterminate}}{{#striped}} jb-progress-striped{{/striped}}{{#animated}} jb-progress-animated{{/animated}}">
+        <div class="jb-progress-linear-fill jb-bg-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}"
+             style="width: {{#indeterminate}}30{{/indeterminate}}{{^indeterminate}}{{#value}}{{value}}{{/value}}{{^value}}0{{/value}}{{/indeterminate}}%;">
+        </div>
+    </div>
+</div>
+{{/type}}
+
+{{#type}}
+{{! Linear type explicit }}
+{{#islinear}}
+<div class="jb-progress-wrapper{{#size}} jb-progress-{{size}}{{/size}}"
+     role="progressbar"
+     aria-valuenow="{{#value}}{{value}}{{/value}}{{^value}}0{{/value}}"
+     aria-valuemin="0"
+     aria-valuemax="{{#max}}{{max}}{{/max}}{{^max}}100{{/max}}"
+     {{#label}}aria-label="{{label}}"{{/label}}>
+    {{#showvalue}}
+    <div class="jb-progress-label">
+        <span class="jb-progress-label-text">{{#label}}{{label}}{{/label}}</span>
+        <span class="jb-progress-value">{{#value}}{{value}}{{/value}}{{^value}}0{{/value}}%</span>
+    </div>
+    {{/showvalue}}
+    <div class="jb-progress-linear{{#indeterminate}} jb-progress-linear-indeterminate{{/indeterminate}}{{#striped}} jb-progress-striped{{/striped}}{{#animated}} jb-progress-animated{{/animated}}">
+        <div class="jb-progress-linear-fill jb-bg-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}"
+             style="width: {{#indeterminate}}30{{/indeterminate}}{{^indeterminate}}{{#value}}{{value}}{{/value}}{{^value}}0{{/value}}{{/indeterminate}}%;">
+        </div>
+    </div>
+</div>
+{{/islinear}}
+
+{{! Circular Progress }}
+{{#iscircular}}
+<div class="jb-progress-circle{{#size}} jb-progress-circle-{{size}}{{/size}}"
+     role="progressbar"
+     aria-valuenow="{{#value}}{{value}}{{/value}}{{^value}}0{{/value}}"
+     aria-valuemin="0"
+     aria-valuemax="{{#max}}{{max}}{{/max}}{{^max}}100{{/max}}"
+     {{#label}}aria-label="{{label}}"{{/label}}>
+    <svg viewBox="0 0 36 36" class="jb-progress-circle-svg">
+        <circle class="jb-progress-circle-bg"
+                cx="18" cy="18" r="16"></circle>
+        <circle class="jb-progress-circle-fill jb-stroke-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}"
+                cx="18" cy="18" r="16"
+                stroke-dasharray="{{#value}}{{value}}{{/value}}{{^value}}0{{/value}}, 100"></circle>
+    </svg>
+    {{#showvalue}}
+    <span class="jb-progress-circle-text">{{#value}}{{value}}{{/value}}{{^value}}0{{/value}}%</span>
+    {{/showvalue}}
+</div>
+{{/iscircular}}
+
+{{! Steps Progress }}
+{{#issteps}}
+<div class="jb-progress-steps"
+     role="progressbar"
+     aria-valuenow="{{#currentstep}}{{currentstep}}{{/currentstep}}{{^currentstep}}1{{/currentstep}}"
+     aria-valuemin="1"
+     aria-valuemax="{{#steps}}{{steps}}{{/steps}}{{^steps}}5{{/steps}}"
+     {{#label}}aria-label="{{label}}"{{/label}}>
+    {{#stepitems}}
+    <span class="jb-progress-step{{#active}} jb-active{{/active}}{{#completed}} jb-completed{{/completed}}"></span>
+    {{/stepitems}}
+    {{^stepitems}}
+    <span class="jb-progress-step jb-completed"></span>
+    <span class="jb-progress-step jb-completed"></span>
+    <span class="jb-progress-step jb-active"></span>
+    <span class="jb-progress-step"></span>
+    <span class="jb-progress-step"></span>
+    {{/stepitems}}
+</div>
+{{/issteps}}
+{{/type}}

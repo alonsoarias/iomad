@@ -1,0 +1,30 @@
+{{!
+    @template local_jobboard/components/loading_dots
+
+    Inline loading dots indicator for text content.
+    Shows animated dots to indicate loading or processing state.
+
+    Context variables:
+    * size (string) - Size: sm, md, lg (default: md)
+    * color (string) - Color class or CSS color
+    * text (string) - Optional text before dots
+    * textafter (string) - Optional text after dots
+    * label (string) - Accessible label for screen readers
+
+    Example context (json):
+    {
+        "text": "Loading",
+        "size": "md",
+        "label": "Content is loading"
+    }
+}}
+<span class="jb-loading-indicator{{#size}} jb-loading-{{size}}{{/size}}" role="status"{{#label}} aria-label="{{label}}"{{/label}}>
+    {{#text}}<span class="jb-loading-text">{{text}}</span>{{/text}}
+    <span class="jb-loading-dots"{{#color}} style="color: {{color}}"{{/color}}>
+        <span></span>
+        <span></span>
+        <span></span>
+    </span>
+    {{#textafter}}<span class="jb-loading-text-after">{{textafter}}</span>{{/textafter}}
+    <span class="visually-hidden">{{#label}}{{label}}{{/label}}{{^label}}{{#str}}loading{{/str}}{{/label}}</span>
+</span>

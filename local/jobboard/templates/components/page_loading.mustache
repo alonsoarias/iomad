@@ -1,0 +1,41 @@
+{{!
+    @template local_jobboard/components/page_loading
+
+    Full page loading overlay for page transitions.
+    Shows spinner and optional message during load.
+
+    Context variables:
+    * id (string) - Element ID for JS control
+    * message (string) - Loading message
+    * logo (string) - Optional logo URL
+    * transparent (bool) - Semi-transparent background
+    * blur (bool) - Blur background content
+    * active (bool) - Show immediately
+
+    Example context (json):
+    {
+        "id": "page-loader",
+        "message": "Loading content...",
+        "transparent": true
+    }
+}}
+<div class="jb-page-loading{{#active}} jb-active{{/active}}{{#transparent}} jb-page-loading-transparent{{/transparent}}{{#blur}} jb-page-loading-blur{{/blur}}"
+     {{#id}}id="{{id}}"{{/id}}
+     role="alert"
+     aria-busy="true"
+     aria-live="polite">
+    <div class="jb-page-loading-content">
+        {{#logo}}
+        <img src="{{logo}}" alt="" class="jb-page-loading-logo" aria-hidden="true">
+        {{/logo}}
+
+        <div class="jb-page-spinner" aria-hidden="true"></div>
+
+        {{#message}}
+        <p class="jb-page-loading-message mt-3">{{message}}</p>
+        {{/message}}
+        {{^message}}
+        <span class="visually-hidden">{{#str}}loading{{/str}}</span>
+        {{/message}}
+    </div>
+</div>
