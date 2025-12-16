@@ -1,0 +1,111 @@
+{{!
+    @template local_jobboard/components/confirm_dialog
+
+    Confirmation dialog component for destructive or important actions.
+    Modal dialog with customizable content and buttons.
+
+    Context variables:
+    * id (string) - Dialog ID
+    * type (string) - Type: danger, warning, info (default: warning)
+    * icon (string) - Dialog icon (auto-set based on type if not provided)
+    * title (string) - Dialog title
+    * message (string) - Message content (supports HTML)
+    * details (string) - Additional details or list
+    * confirmtext (string) - Confirm button text (default: Confirm)
+    * canceltext (string) - Cancel button text (default: Cancel)
+    * confirmcolor (string) - Confirm button color (auto-set based on type)
+    * confirmurl (string) - URL for confirm action (alternative to JS callback)
+    * focuscancel (bool) - Focus cancel button by default for safety
+    * requireinput (string) - Require user to type this text to confirm (for dangerous actions)
+
+    Example context (json):
+    {
+        "id": "delete-confirm",
+        "type": "danger",
+        "title": "Delete Vacancy?",
+        "message": "This action cannot be undone. The vacancy and all associated data will be permanently removed.",
+        "confirmtext": "Delete",
+        "canceltext": "Keep it",
+        "focuscancel": true,
+        "requireinput": "DELETE"
+    }
+}}
+<div class="modal fade jb-modal jb-confirm-modal" id="{{id}}" tabindex="-1" aria-labelledby="{{id}}-title" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered jb-modal-dialog">
+        <div class="modal-content jb-modal-content">
+            <div class="modal-body jb-confirm-body text-center py-5">
+                {{! Icon }}
+                <div class="jb-confirm-icon mb-4">
+                    <div class="jb-confirm-icon-circle jb-confirm-icon-{{#type}}{{type}}{{/type}}{{^type}}warning{{/type}}">
+                        {{#icon}}
+                        <i class="fa fa-{{icon}}" aria-hidden="true"></i>
+                        {{/icon}}
+                        {{^icon}}
+                        {{#isdanger}}<i class="fa fa-trash" aria-hidden="true"></i>{{/isdanger}}
+                        {{#iswarning}}<i class="fa fa-triangle-exclamation" aria-hidden="true"></i>{{/iswarning}}
+                        {{#isinfo}}<i class="fa fa-circle-info" aria-hidden="true"></i>{{/isinfo}}
+                        {{^isdanger}}{{^iswarning}}{{^isinfo}}
+                        <i class="fa fa-triangle-exclamation" aria-hidden="true"></i>
+                        {{/isinfo}}{{/iswarning}}{{/isdanger}}
+                        {{/icon}}
+                    </div>
+                </div>
+
+                {{! Title }}
+                <h5 class="jb-confirm-title mb-3" id="{{id}}-title">{{title}}</h5>
+
+                {{! Message }}
+                <p class="jb-confirm-message text-muted mb-4">{{{message}}}</p>
+
+                {{! Details list }}
+                {{#details}}
+                <div class="jb-confirm-details mb-4">
+                    {{{details}}}
+                </div>
+                {{/details}}
+
+                {{! Required input for dangerous actions }}
+                {{#requireinput}}
+                <div class="jb-confirm-input mb-4">
+                    <label for="{{id}}-input" class="form-label small text-muted">
+                        {{#str}}type_to_confirm, local_jobboard, "{{requireinput}}"{{/str}}
+                    </label>
+                    <input type="text"
+                           class="form-control jb-form-control text-center"
+                           id="{{id}}-input"
+                           data-confirm-value="{{requireinput}}"
+                           autocomplete="off"
+                           spellcheck="false">
+                </div>
+                {{/requireinput}}
+
+                {{! Buttons }}
+                <div class="jb-confirm-actions d-flex justify-content-center gap-3">
+                    <button type="button"
+                            class="btn jb-btn-ghost"
+                            data-bs-dismiss="modal"
+                            {{#focuscancel}}autofocus{{/focuscancel}}>
+                        {{#canceltext}}{{canceltext}}{{/canceltext}}{{^canceltext}}{{#str}}cancel{{/str}}{{/canceltext}}
+                    </button>
+                    {{#confirmurl}}
+                    <a href="{{confirmurl}}"
+                       class="btn jb-btn-{{#confirmcolor}}{{confirmcolor}}{{/confirmcolor}}{{^confirmcolor}}{{#isdanger}}danger{{/isdanger}}{{#iswarning}}warning{{/iswarning}}{{^isdanger}}{{^iswarning}}primary{{/iswarning}}{{/isdanger}}{{/confirmcolor}} jb-confirm-btn"
+                       {{#requireinput}}disabled{{/requireinput}}
+                       {{^focuscancel}}autofocus{{/focuscancel}}>
+                        {{#confirmtext}}{{confirmtext}}{{/confirmtext}}{{^confirmtext}}{{#str}}confirm{{/str}}{{/confirmtext}}
+                    </a>
+                    {{/confirmurl}}
+                    {{^confirmurl}}
+                    <button type="button"
+                            class="btn jb-btn-{{#confirmcolor}}{{confirmcolor}}{{/confirmcolor}}{{^confirmcolor}}{{#isdanger}}danger{{/isdanger}}{{#iswarning}}warning{{/iswarning}}{{^isdanger}}{{^iswarning}}primary{{/iswarning}}{{/isdanger}}{{/confirmcolor}} jb-confirm-btn"
+                            data-confirm="true"
+                            {{#requireinput}}disabled{{/requireinput}}
+                            {{^focuscancel}}autofocus{{/focuscancel}}>
+                        {{#confirmtext}}{{confirmtext}}{{/confirmtext}}{{^confirmtext}}{{#str}}confirm{{/str}}{{/confirmtext}}
+                    </button>
+                    {{/confirmurl}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

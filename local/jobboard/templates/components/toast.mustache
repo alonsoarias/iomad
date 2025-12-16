@@ -1,0 +1,86 @@
+{{!
+    @template local_jobboard/components/toast
+
+    Toast notification component for transient feedback messages.
+    Auto-dismisses after a timeout, supports multiple types and positions.
+
+    Context variables:
+    * id (string) - Unique toast ID
+    * type (string) - Type: success, error, warning, info (default: info)
+    * title (string) - Optional toast title
+    * message (string) - Toast message content (supports HTML)
+    * icon (string) - Custom icon (auto-set based on type if not provided)
+    * duration (number) - Auto-dismiss duration in ms (0 = no auto-dismiss, default: 5000)
+    * dismissible (bool) - Show close button (default: true)
+    * action (object) - Optional action button {label, url, onclick}
+    * progress (bool) - Show dismiss progress bar
+    * position (string) - Position: top-right, top-left, top-center, bottom-right, bottom-left, bottom-center
+
+    Example context (json):
+    {
+        "id": "toast-1",
+        "type": "success",
+        "title": "Success!",
+        "message": "Your application has been submitted.",
+        "icon": "check-circle",
+        "duration": 5000,
+        "dismissible": true,
+        "progress": true,
+        "action": {"label": "View", "url": "/applications"}
+    }
+}}
+<div id="{{id}}"
+     class="jb-toast jb-toast-{{#type}}{{type}}{{/type}}{{^type}}info{{/type}}"
+     role="alert"
+     aria-live="{{#iserror}}assertive{{/iserror}}{{^iserror}}polite{{/iserror}}"
+     aria-atomic="true"
+     data-duration="{{#duration}}{{duration}}{{/duration}}{{^duration}}5000{{/duration}}">
+
+    {{! Icon }}
+    <div class="jb-toast-icon">
+        {{#icon}}
+        <i class="fa fa-{{icon}}" aria-hidden="true"></i>
+        {{/icon}}
+        {{^icon}}
+        {{#issuccess}}<i class="fa fa-circle-check" aria-hidden="true"></i>{{/issuccess}}
+        {{#iserror}}<i class="fa fa-circle-xmark" aria-hidden="true"></i>{{/iserror}}
+        {{#iswarning}}<i class="fa fa-triangle-exclamation" aria-hidden="true"></i>{{/iswarning}}
+        {{#isinfo}}<i class="fa fa-circle-info" aria-hidden="true"></i>{{/isinfo}}
+        {{^issuccess}}{{^iserror}}{{^iswarning}}{{^isinfo}}
+        <i class="fa fa-circle-info" aria-hidden="true"></i>
+        {{/isinfo}}{{/iswarning}}{{/iserror}}{{/issuccess}}
+        {{/icon}}
+    </div>
+
+    {{! Content }}
+    <div class="jb-toast-content">
+        {{#title}}
+        <div class="jb-toast-title">{{title}}</div>
+        {{/title}}
+        <div class="jb-toast-message">{{{message}}}</div>
+        {{#action}}
+        <div class="jb-toast-action">
+            <a href="{{url}}" class="jb-toast-action-link" {{#onclick}}onclick="{{onclick}}"{{/onclick}}>
+                {{label}}
+            </a>
+        </div>
+        {{/action}}
+    </div>
+
+    {{! Close button }}
+    {{^nodismiss}}
+    <button type="button"
+            class="jb-toast-close"
+            data-dismiss="toast"
+            aria-label="{{#str}}close{{/str}}">
+        <i class="fa fa-xmark" aria-hidden="true"></i>
+    </button>
+    {{/nodismiss}}
+
+    {{! Progress bar }}
+    {{#progress}}
+    <div class="jb-toast-progress">
+        <div class="jb-toast-progress-bar" style="animation-duration: {{#duration}}{{duration}}{{/duration}}{{^duration}}5000{{/duration}}ms;"></div>
+    </div>
+    {{/progress}}
+</div>

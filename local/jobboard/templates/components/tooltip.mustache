@@ -1,0 +1,37 @@
+{{!
+    @template local_jobboard/components/tooltip
+
+    Tooltip component for contextual help and information.
+    Wraps content and shows tooltip on hover/focus.
+
+    Context variables:
+    * content (string) - Tooltip content (supports HTML with rich: true)
+    * position (string) - Position: top, bottom, left, right (default: top)
+    * trigger (string) - Trigger: hover, click, focus (default: hover focus)
+    * delay (number) - Show delay in ms (default: 200)
+    * rich (bool) - Enable rich HTML content
+    * maxwidth (string) - Max width (default: 200px)
+    * theme (string) - Theme: dark, light (default: dark)
+    * arrow (bool) - Show arrow pointer (default: true)
+
+    Example context (json):
+    {
+        "content": "This is helpful information",
+        "position": "top",
+        "trigger": "hover",
+        "theme": "dark"
+    }
+
+    Usage: Wrap the trigger element inside {{#tooltip}}...{{/tooltip}}
+}}
+<span class="jb-tooltip-wrapper"
+      data-jb-tooltip="{{content}}"
+      data-jb-tooltip-position="{{#position}}{{position}}{{/position}}{{^position}}top{{/position}}"
+      data-jb-tooltip-trigger="{{#trigger}}{{trigger}}{{/trigger}}{{^trigger}}hover focus{{/trigger}}"
+      {{#delay}}data-jb-tooltip-delay="{{delay}}"{{/delay}}
+      {{#rich}}data-jb-tooltip-rich="true"{{/rich}}
+      {{#maxwidth}}data-jb-tooltip-maxwidth="{{maxwidth}}"{{/maxwidth}}
+      {{#theme}}data-jb-tooltip-theme="{{theme}}"{{/theme}}
+      {{^noarrow}}data-jb-tooltip-arrow="true"{{/noarrow}}>
+    {{{trigger_content}}}
+</span>
