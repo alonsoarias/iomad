@@ -63,7 +63,7 @@
     </header>
 
     {{! Warning Alert }}
-    <div class="alert alert-danger d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
+    <div class="alert alert-danger jb-alert-danger d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
         <i class="fa fa-triangle-exclamation fa-lg text-danger me-3 mt-1" aria-hidden="true"></i>
         <div>
             <strong class="d-block mb-1">{{#str}}warningirreversible, local_jobboard{{/str}}</strong>
@@ -150,13 +150,13 @@
                         </small>
                     </div>
 
-                    <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+                    <div class="alert alert-warning jb-alert-warning d-flex align-items-center mb-4" role="alert">
                         <i class="fa fa-triangle-exclamation me-2" aria-hidden="true"></i>
                         <small>{{#str}}revocationwarning, local_jobboard{{/str}}</small>
                     </div>
 
                     <div class="d-flex gap-2 flex-wrap">
-                        <button type="submit" class="btn btn-danger jb-hover-lift"
+                        <button type="submit" class="btn btn-danger jb-btn-danger jb-hover-lift"
                                 onclick="return confirm('{{#str}}finalconfirmrevoke, local_jobboard{{/str}}');">
                             <i class="fa fa-ban me-2" aria-hidden="true"></i>
                             {{str.confirm}}

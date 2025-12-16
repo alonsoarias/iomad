@@ -329,7 +329,7 @@
                             <p class="text-muted mb-3">{{#str}}myreviews_desc, local_jobboard{{/str}}</p>
 
                             {{#reviewersection.haspendingreview}}
-                            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                            <div class="alert alert-warning jb-alert-warning d-flex align-items-center" role="alert">
                                 <i class="fa fa-triangle-exclamation fa-lg me-3" aria-hidden="true"></i>
                                 <div>
                                     <strong>{{#str}}attentionrequired, local_jobboard{{/str}}</strong>
@@ -339,7 +339,7 @@
                             {{/reviewersection.haspendingreview}}
 
                             {{^reviewersection.haspendingreview}}
-                            <div class="alert alert-success d-flex align-items-center" role="status">
+                            <div class="alert alert-success jb-alert-success d-flex align-items-center" role="status">
                                 <i class="fa fa-circle-check fa-lg me-3" aria-hidden="true"></i>
                                 <span>{{#str}}nopendingreview, local_jobboard{{/str}}</span>
                             </div>

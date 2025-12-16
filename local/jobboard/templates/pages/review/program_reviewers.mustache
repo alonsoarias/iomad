@@ -233,14 +233,14 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-success mb-2 jb-hover-lift">
+                    <button type="submit" class="btn btn-success jb-btn-success mb-2 jb-hover-lift">
                         <i class="fa fa-plus me-1" aria-hidden="true"></i>
                         {{#str}}add{{/str}}
                     </button>
                 </form>
                 {{/hasavailableusers}}
                 {{^hasavailableusers}}
-                <div class="alert alert-info mb-0">
+                <div class="alert alert-info jb-alert-info mb-0">
                     <i class="fa fa-circle-info me-2" aria-hidden="true"></i>
                     {{#str}}nousersavailable, local_jobboard{{/str}}
                 </div>
