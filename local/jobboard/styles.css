@@ -966,3 +966,77 @@
 .min-width-0 {
     min-width: 0;
 }
+
+/* ==========================================================================
+   REVIEW PAGE - Queue mode filter and layout
+   ========================================================================== */
+
+/* Vacancy filter select - Handle long option labels */
+.jb-vacancy-filter {
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Limit the visual width of long options */
+.jb-vacancy-filter option {
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Filter form horizontal layout */
+.jb-filter-form .form-select {
+    font-size: 0.875rem;
+}
+
+/* Stats bar compact layout */
+.jb-stat-item {
+    transition: transform var(--jb-transition-fast);
+}
+
+.jb-stat-item:hover {
+    transform: translateY(-1px);
+}
+
+/* Responsive adjustments for review queue */
+@media (max-width: 767.98px) {
+    .jb-vacancy-filter {
+        font-size: 0.8125rem;
+    }
+
+    .jb-stat-item {
+        flex: 1 1 calc(50% - 0.75rem);
+        min-width: 120px;
+    }
+
+    .jb-stat-item .badge {
+        padding: 0.35rem 0.5rem;
+    }
+
+    .jb-stat-item .h6 {
+        font-size: 0.875rem;
+    }
+}
+
+/* Review queue table improvements */
+.jb-review-page .table th {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    color: #6c757d;
+}
+
+.jb-review-page .table td {
+    vertical-align: middle;
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
+}
+
+/* Avatar circle in table */
+.jb-review-page .avatar-circle {
+    font-size: 0.875rem;
+}

@@ -744,6 +744,7 @@ trait review_renderer {
 
         $data['hasapplications'] = !empty($appsdata);
         $data['applications'] = $appsdata;
+        $data['applicationcount'] = $total;
 
         // Pagination.
         if ($total > $perpage) {

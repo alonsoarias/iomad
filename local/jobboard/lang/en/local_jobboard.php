@@ -398,6 +398,8 @@ $string['closingsoon'] = 'Closing soon';
 $string['urgent'] = 'Urgent';
 $string['newapplicants'] = 'New applicants';
 $string['totalapplicants'] = 'Total applicants';
+$string['pagination'] = 'Page navigation';
+$string['applicationcount'] = 'Applications';
 
 // Contract types
 $string['contract:catedra'] = 'Adjunct Professor';
