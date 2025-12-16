@@ -66,7 +66,7 @@
                 {{/dryrunmessages}}
             </div>
         </div>
-        <a href="{{backurl}}" class="btn btn-primary jb-hover-lift jb-fade-in" style="animation-delay: 0.2s;">
+        <a href="{{backurl}}" class="btn btn-primary jb-btn-primary jb-hover-lift jb-fade-in" style="animation-delay: 0.2s;">
             <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
             {{#str}}back{{/str}}
         </a>
@@ -88,7 +88,7 @@
     </header>
 
     {{! Info Box }}
-    <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
+    <div class="alert alert-info jb-alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
         <i class="fa fa-circle-info fa-lg text-info me-3 mt-1" aria-hidden="true"></i>
         <div>
             <strong class="d-block mb-1">{{infotitle}}</strong>
@@ -111,7 +111,7 @@
                     <p class="text-muted mb-3">{{exportdesc}}</p>
 
                     {{! Export Counts Info }}
-                    <div class="alert alert-info mb-3">
+                    <div class="alert alert-info jb-alert-info mb-3">
                         <i class="fa fa-circle-info me-2" aria-hidden="true"></i>
                         <strong>{{#str}}fullexport_info, local_jobboard{{/str}}</strong>
                     </div>
@@ -148,7 +148,7 @@
                     </div>
 
                     {{#hasfiles}}
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning jb-alert-warning">
                         <i class="fa fa-triangle-exclamation me-2" aria-hidden="true"></i>
                         {{filewarning}}
                     </div>
@@ -175,7 +175,7 @@
                     <p class="text-muted mb-3">{{importdesc}}</p>
 
                     {{! Warning Box }}
-                    <div class="alert alert-warning d-flex align-items-start">
+                    <div class="alert alert-warning jb-alert-warning d-flex align-items-start">
                         <i class="fa fa-triangle-exclamation fa-lg text-warning me-3 mt-1" aria-hidden="true"></i>
                         <div>
                             <strong class="d-block mb-1">{{#str}}importwarningtitle, local_jobboard{{/str}}</strong>

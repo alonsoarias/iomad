@@ -58,7 +58,7 @@
 
     {{! Rejection Info Alert }}
     {{#rejectreason}}
-    <div class="alert alert-danger d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
+    <div class="alert alert-danger jb-alert-danger d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
         <i class="fa fa-circle-xmark fa-lg text-danger me-3 mt-1" aria-hidden="true"></i>
         <div>
             <strong class="d-block mb-1">{{#str}}documentrejected, local_jobboard{{/str}}</strong>
@@ -99,7 +99,7 @@
     {{/documentname}}
 
     {{! Help Text Alert }}
-    <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.15s;">
+    <div class="alert alert-info jb-alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.15s;">
         <i class="fa fa-circle-info me-3 mt-1" aria-hidden="true"></i>
         <div>
             <strong class="d-block mb-1">{{#str}}reuploadinstructions, local_jobboard{{/str}}</strong>

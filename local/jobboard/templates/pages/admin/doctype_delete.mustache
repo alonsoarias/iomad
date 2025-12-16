@@ -58,7 +58,7 @@
             <div class="card-body">
                 {{#inuse}}
                 {{! Cannot delete - in use }}
-                <div class="alert alert-danger d-flex align-items-start mb-4" role="alert">
+                <div class="alert alert-danger jb-alert-danger d-flex align-items-start mb-4" role="alert">
                     <i class="fa fa-xmark fa-lg text-danger me-3 mt-1" aria-hidden="true"></i>
                     <div>
                         <strong class="d-block mb-1">{{str.error_doctypeinuse}}</strong>
@@ -92,7 +92,7 @@
 
                 {{^inuse}}
                 {{! Can delete }}
-                <div class="alert alert-warning d-flex align-items-start mb-4" role="alert">
+                <div class="alert alert-warning jb-alert-warning d-flex align-items-start mb-4" role="alert">
                     <i class="fa fa-circle-exclamation fa-lg me-3 mt-1" aria-hidden="true"></i>
                     <div>
                         <strong class="d-block mb-1">{{#str}}warningirreversible, local_jobboard{{/str}}</strong>
@@ -114,7 +114,7 @@
 
                 {{! Action Buttons }}
                 <div class="d-flex gap-2 flex-wrap">
-                    <a href="{{deleteurl}}" class="btn btn-danger jb-hover-lift"
+                    <a href="{{deleteurl}}" class="btn btn-danger jb-btn-danger jb-hover-lift"
                        onclick="return confirm('{{#str}}finalconfirmdelete, local_jobboard{{/str}}');">
                         <i class="fa fa-trash-can me-2" aria-hidden="true"></i>
                         {{str.delete}}

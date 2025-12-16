@@ -128,7 +128,7 @@
 
                         {{#preview.isfailed}}
                         <div class="jb-preview-content text-center py-5" id="preview-container">
-                            <div class="alert alert-warning d-inline-block mb-3">
+                            <div class="alert alert-warning jb-alert-warning d-inline-block mb-3">
                                 <i class="fa fa-triangle-exclamation me-2" aria-hidden="true"></i>
                                 {{#str}}conversionfailed, local_jobboard{{/str}}
                             </div>
@@ -148,7 +148,7 @@
                             <i class="fa fa-file fa-4x text-muted mb-3" aria-hidden="true"></i>
                             <p class="text-muted mb-3">{{#str}}nopreviewavailable, local_jobboard{{/str}}</p>
                             {{#preview.downloadurl}}
-                            <a href="{{preview.downloadurl}}" class="btn btn-primary" target="_blank">
+                            <a href="{{preview.downloadurl}}" class="btn btn-primary jb-btn-primary" target="_blank">
                                 <i class="fa fa-download me-1" aria-hidden="true"></i>
                                 {{#str}}downloadtoview, local_jobboard{{/str}}
                             </a>
@@ -267,7 +267,7 @@
                                     </label>
                                     <textarea name="notes" id="notes_approve" class="form-control form-control-sm" rows="2" placeholder="{{#str}}optionalnotes, local_jobboard{{/str}}"></textarea>
                                 </div>
-                                <button type="submit" class="btn btn-success w-100 jb-hover-lift">
+                                <button type="submit" class="btn btn-success jb-btn-success w-100 jb-hover-lift">
                                     <i class="fa fa-check me-2" aria-hidden="true"></i>
                                     {{#str}}approvedocument, local_jobboard{{/str}}
                                 </button>
@@ -302,7 +302,7 @@
                                     </label>
                                     <textarea name="notes" id="notes_reject" class="form-control form-control-sm" rows="2"></textarea>
                                 </div>
-                                <button type="submit" class="btn btn-danger w-100 jb-hover-lift">
+                                <button type="submit" class="btn btn-danger jb-btn-danger w-100 jb-hover-lift">
                                     <i class="fa fa-xmark me-2" aria-hidden="true"></i>
                                     {{#str}}rejectdocument, local_jobboard{{/str}}
                                 </button>

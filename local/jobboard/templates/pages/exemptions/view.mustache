@@ -108,7 +108,7 @@
 
     {{! Revoked Alert Banner }}
     {{#isrevoked}}
-    <div class="alert alert-danger d-flex align-items-center mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
+    <div class="alert alert-danger jb-alert-danger d-flex align-items-center mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.05s;">
         <i class="fa fa-ban fa-2x me-3" aria-hidden="true"></i>
         <div>
             <strong class="d-block">{{#str}}exemptionrevoked, local_jobboard{{/str}}</strong>
@@ -242,7 +242,7 @@
                         {{str.revokereason}}
                     </dt>
                     <dd class="col-sm-9">
-                        <div class="alert alert-danger py-2 mb-0">
+                        <div class="alert alert-danger jb-alert-danger py-2 mb-0">
                             {{{revokereason}}}
                         </div>
                     </dd>
@@ -254,7 +254,7 @@
             {{#canmodify}}
             {{^isrevoked}}
             <div class="card-footer bg-light d-flex gap-2">
-                <a href="{{editurl}}" class="btn btn-primary jb-hover-lift">
+                <a href="{{editurl}}" class="btn btn-primary jb-btn-primary jb-hover-lift">
                     <i class="fa fa-pen-to-square me-2" aria-hidden="true"></i>
                     {{str.edit}}
                 </a>

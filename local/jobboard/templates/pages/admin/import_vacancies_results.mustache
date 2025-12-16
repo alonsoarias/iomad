@@ -66,7 +66,7 @@
     <main id="import-results-content">
         {{#ispreview}}
         {{! Preview Mode }}
-        <div class="alert alert-warning d-flex align-items-center mb-4 jb-fade-in-up" role="status">
+        <div class="alert alert-warning jb-alert-warning d-flex align-items-center mb-4 jb-fade-in-up" role="status">
             <i class="fa fa-eye fa-lg me-3" aria-hidden="true"></i>
             <div>
                 <strong class="d-block">{{#str}}previewmodeheader, local_jobboard{{/str}}</strong>
@@ -169,7 +169,7 @@
                     {{str.previewconfirm}}
                 </p>
                 <div class="d-flex gap-2">
-                    <a href="{{confirmurl}}" class="btn btn-success jb-hover-lift">
+                    <a href="{{confirmurl}}" class="btn btn-success jb-btn-success jb-hover-lift">
                         <i class="fa fa-check me-2" aria-hidden="true"></i>
                         {{#str}}confirmimport, local_jobboard{{/str}}
                     </a>
@@ -186,7 +186,7 @@
         <div class="text-center py-5" role="status">
             <i class="fa fa-file-excel fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
             <h5 class="text-muted">{{#str}}nopreviewdata, local_jobboard{{/str}}</h5>
-            <a href="{{uploadurl}}" class="btn btn-primary mt-3">
+            <a href="{{uploadurl}}" class="btn btn-primary jb-btn-primary mt-3">
                 <i class="fa fa-upload me-2" aria-hidden="true"></i>
                 {{str.uploadnewfile}}
             </a>
@@ -196,7 +196,7 @@
 
         {{^ispreview}}
         {{! Actual Import Results }}
-        <div class="alert alert-success d-flex align-items-center mb-4 jb-fade-in" role="status">
+        <div class="alert alert-success jb-alert-success d-flex align-items-center mb-4 jb-fade-in" role="status">
             <i class="fa fa-circle-check fa-lg me-3" aria-hidden="true"></i>
             <div>
                 <strong class="d-block">{{#str}}importcomplete, local_jobboard{{/str}}</strong>
@@ -269,7 +269,7 @@
 
         {{! Action Buttons }}
         <div class="d-flex flex-wrap gap-2 mt-4 jb-fade-in" style="animation-delay: 0.25s;">
-            <a href="{{backurl}}" class="btn btn-primary jb-hover-lift">
+            <a href="{{backurl}}" class="btn btn-primary jb-btn-primary jb-hover-lift">
                 <i class="fa fa-list me-2" aria-hidden="true"></i>
                 {{str.backtoconvocatorias}}
             </a>
