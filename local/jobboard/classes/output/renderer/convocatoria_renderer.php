@@ -219,7 +219,7 @@ trait convocatoria_renderer {
         if ($total > 0) {
             $from = ($page * $perpage) + 1;
             $to = min(($page + 1) * $perpage, $total);
-            $showinginfo = get_string('showingxtoy', 'local_jobboard', (object)['from' => $from, 'to' => $to, 'total' => $total]);
+            $showinginfo = get_string('showingxofy', 'local_jobboard', (object)['from' => $from, 'to' => $to, 'total' => $total]);
         }
 
         // Pagination.
@@ -424,7 +424,7 @@ trait convocatoria_renderer {
         if ($total > 0) {
             $from = ($page * $perpage) + 1;
             $to = min(($page + 1) * $perpage, $total);
-            $showinginfo = get_string('showingxtoy', 'local_jobboard', (object)['from' => $from, 'to' => $to, 'total' => $total]);
+            $showinginfo = get_string('showingxofy', 'local_jobboard', (object)['from' => $from, 'to' => $to, 'total' => $total]);
         }
 
         // Pagination.
