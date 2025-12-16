@@ -2,7 +2,7 @@
     @template local_jobboard/pages/applications/manage
 
     Manage applications for a vacancy page template.
-    Redesigned to follow apply.mustache pattern with 2-column layout.
+    Redesigned with horizontal layout pattern - full width, no sidebar.
 
     Context variables:
     * vacancytitle (string) - Vacancy title
@@ -22,6 +22,8 @@
     * exportexcelurl (string) - Excel export URL
     * browseurl (string) - Browse vacancies URL
     * dashboardurl (string) - Dashboard URL
+    * reviewurl (string) - Review documents URL
+    * totalapplications (number) - Total applications count
 
     Example context (json):
     {
@@ -33,304 +35,258 @@
 }}
 <div class="jb-manage-applications-page" id="jobboard-manage-applications" data-vacancy-id="{{vacancyid}}">
     <div class="container-fluid px-0">
-        <div class="row g-4">
-            {{! Main Content }}
-            <div class="col-lg-8">
-                {{! Page Header }}
-                <div class="jb-page-header mb-4">
-                    <nav aria-label="breadcrumb" class="mb-2">
-                        <ol class="breadcrumb small mb-0">
-                            <li class="breadcrumb-item">
-                                <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="{{backurl}}">{{#str}}managevacancies, local_jobboard{{/str}}</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">{{#str}}applications, local_jobboard{{/str}}</li>
-                        </ol>
-                    </nav>
+        {{! Page Header with Breadcrumb }}
+        <div class="jb-page-header mb-4">
+            <nav aria-label="breadcrumb" class="mb-2">
+                <ol class="breadcrumb small mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{backurl}}">{{#str}}managevacancies, local_jobboard{{/str}}</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">{{#str}}applications, local_jobboard{{/str}}</li>
+                </ol>
+            </nav>
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+                <div>
                     <h1 class="h3 mb-1">{{#str}}manageapplications, local_jobboard{{/str}}</h1>
-                    <p class="text-muted mb-0">{{vacancytitle}}</p>
+                    <p class="text-muted mb-0">
+                        <code class="badge bg-light text-dark border me-2">{{vacancycode}}</code>
+                        {{vacancytitle}}
+                    </p>
                 </div>
-
-                {{! Applications Table Card }}
-                {{#hasapplications}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">
-                                <i class="fa fa-users text-primary me-2"></i>
-                                {{#str}}applicantslist, local_jobboard{{/str}}
-                            </h5>
-                            <span class="badge bg-secondary">{{totalapplications}} {{#str}}total, local_jobboard{{/str}}</span>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        {{#tableheaders}}
-                                        <th scope="col" class="small">
-                                            {{#sortable}}
-                                            <a href="{{sorturl}}" class="text-dark text-decoration-none">
-                                                {{label}}
-                                                {{{sorticon}}}
-                                            </a>
-                                            {{/sortable}}
-                                            {{^sortable}}
-                                            {{label}}
-                                            {{/sortable}}
-                                        </th>
-                                        {{/tableheaders}}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{#applications}}
-                                    <tr data-application-id="{{id}}">
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div>
-                                                    <strong class="d-block">{{fullname}}</strong>
-                                                    <small class="text-muted">{{email}}</small>
-                                                    {{#isexemption}}
-                                                    <span class="badge bg-info text-dark ms-1">
-                                                        <i class="fa fa-shield me-1" aria-hidden="true"></i>
-                                                        {{#str}}exemption, local_jobboard{{/str}}
-                                                    </span>
-                                                    {{/isexemption}}
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">{{dateapplied}}</small>
-                                        </td>
-                                        <td>
-                                            <span class="badge {{statusbadgeclass}} rounded-pill">
-                                                {{#statusicon}}<i class="fa fa-{{statusicon}} me-1" aria-hidden="true"></i>{{/statusicon}}
-                                                {{statuslabel}}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {{{docstatushtml}}}
-                                        </td>
-                                        <td>
-                                            <a href="{{viewurl}}" class="btn btn-sm btn-primary">
-                                                <i class="fa fa-eye me-1" aria-hidden="true"></i>
-                                                {{#str}}view, local_jobboard{{/str}}
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    {{/applications}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    {{#paginationhtml}}
-                    <div class="card-footer bg-white">
-                        {{{paginationhtml}}}
-                    </div>
-                    {{/paginationhtml}}
-                </div>
-
-                {{! Export Section }}
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-download text-success me-2"></i>
+                {{! Quick Actions - Desktop }}
+                <div class="btn-group d-none d-md-flex" role="group" aria-label="{{#str}}quickactions, local_jobboard{{/str}}">
+                    <a href="{{reviewurl}}" class="btn btn-outline-primary btn-sm">
+                        <i class="fa fa-magnifying-glass me-1"></i>
+                        {{#str}}reviewdocuments, local_jobboard{{/str}}
+                    </a>
+                    {{#hasapplications}}
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-download me-1"></i>
                             {{#str}}export, local_jobboard{{/str}}
-                        </h5>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{exportcsvurl}}"><i class="fa fa-file-csv me-2"></i>{{#str}}exportcsv, local_jobboard{{/str}}</a></li>
+                            <li><a class="dropdown-item" href="{{exportexcelurl}}"><i class="fa fa-file-excel me-2"></i>{{#str}}exportexcel, local_jobboard{{/str}}</a></li>
+                        </ul>
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted small mb-3">{{#str}}exportdesc, local_jobboard{{/str}}</p>
-                        <div class="btn-group">
-                            <a href="{{exportcsvurl}}" class="btn btn-outline-success">
-                                <i class="fa fa-file-csv me-2" aria-hidden="true"></i>
-                                {{#str}}exportcsv, local_jobboard{{/str}}
-                            </a>
-                            <a href="{{exportexcelurl}}" class="btn btn-outline-primary">
-                                <i class="fa fa-file-excel me-2" aria-hidden="true"></i>
-                                {{#str}}exportexcel, local_jobboard{{/str}}
-                            </a>
+                    {{/hasapplications}}
+                    <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fa fa-arrow-left me-1"></i>
+                        {{#str}}back{{/str}}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {{! Stats Bar - Compact Horizontal }}
+        {{#stats.0}}
+        <div class="card shadow-sm mb-4 border-0 bg-light">
+            <div class="card-body py-3">
+                <div class="d-flex flex-wrap align-items-center justify-content-start gap-3 gap-md-4">
+                    <span class="text-muted small fw-medium">
+                        <i class="fa fa-chart-pie me-1"></i>
+                        {{#str}}statistics, local_jobboard{{/str}}:
+                    </span>
+                    {{#stats}}
+                    <div class="d-flex align-items-center gap-2 jb-stat-item">
+                        <span class="badge bg-{{color}} rounded-pill px-3 py-2">
+                            <span class="h6 mb-0 me-1">{{count}}</span>
+                        </span>
+                        <small class="text-muted">{{label}}</small>
+                    </div>
+                    {{/stats}}
+                </div>
+            </div>
+        </div>
+        {{/stats.0}}
+
+        {{! Filter Bar - Horizontal Full Width }}
+        <div class="card shadow-sm mb-4">
+            <div class="card-body py-3">
+                <form method="get" action="" role="search" aria-label="{{#str}}filterapplications, local_jobboard{{/str}}" class="jb-filter-form">
+                    <input type="hidden" name="view" value="manage_applications">
+                    <input type="hidden" name="vacancyid" value="{{vacancyid}}">
+                    <div class="row align-items-end g-3">
+                        <div class="col-12 col-md-5 col-lg-4">
+                            <label for="search" class="form-label small fw-medium mb-1">
+                                <i class="fa fa-search text-muted me-1"></i>
+                                {{#str}}search{{/str}}
+                            </label>
+                            <input type="text" name="search" id="search" class="form-control"
+                                   placeholder="{{#str}}searchapplicant, local_jobboard{{/str}}" value="{{currentsearch}}">
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-3">
+                            <label for="status" class="form-label small fw-medium mb-1">
+                                <i class="fa fa-filter text-warning me-1"></i>
+                                {{#str}}status, local_jobboard{{/str}}
+                            </label>
+                            <select name="status" id="status" class="form-select" onchange="this.form.submit()">
+                                <option value="">{{#str}}allstatuses, local_jobboard{{/str}}</option>
+                                {{#statuses}}
+                                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                                {{/statuses}}
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3 col-lg-auto">
+                            <div class="btn-group w-100">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search me-1"></i>
+                                    <span class="d-none d-sm-inline">{{#str}}filter, local_jobboard{{/str}}</span>
+                                </button>
+                                <a href="{{reseturl}}" class="btn btn-outline-secondary" title="{{#str}}reset{{/str}}">
+                                    <i class="fa fa-rotate-left"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                {{/hasapplications}}
+                </form>
+            </div>
+        </div>
 
-                {{! Empty State }}
-                {{^hasapplications}}
-                <div class="card shadow-sm">
-                    <div class="card-body text-center py-5">
-                        <i class="fa fa-users fa-3x text-muted mb-3" aria-hidden="true"></i>
-                        <h5 class="text-muted">{{#str}}noapplicationsfound, local_jobboard{{/str}}</h5>
-                        <p class="text-muted mb-3">{{#str}}noapplicationsfound_desc, local_jobboard{{/str}}</p>
+        {{! Applications Table - Full Width }}
+        {{#hasapplications}}
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <h5 class="mb-0">
+                    <i class="fa fa-users text-primary me-2"></i>
+                    {{#str}}applicantslist, local_jobboard{{/str}}
+                </h5>
+                <span class="badge bg-primary rounded-pill fs-6">{{totalapplications}} {{#str}}total{{/str}}</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" role="grid" aria-label="{{#str}}applicantslist, local_jobboard{{/str}}">
+                        <thead class="table-light">
+                            <tr>
+                                {{#tableheaders}}
+                                <th scope="col" class="small text-uppercase">
+                                    {{#sortable}}
+                                    <a href="{{sorturl}}" class="text-dark text-decoration-none">
+                                        {{label}}
+                                        {{{sorticon}}}
+                                    </a>
+                                    {{/sortable}}
+                                    {{^sortable}}
+                                    {{label}}
+                                    {{/sortable}}
+                                </th>
+                                {{/tableheaders}}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#applications}}
+                            <tr data-application-id="{{id}}">
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width: 40px; height: 40px;">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <div class="min-width-0">
+                                            <div class="fw-semibold">{{fullname}}</div>
+                                            <a href="mailto:{{email}}" class="small text-muted text-decoration-none">{{email}}</a>
+                                            {{#isexemption}}
+                                            <span class="badge bg-info text-dark ms-1" title="{{#str}}exemption, local_jobboard{{/str}}">
+                                                <i class="fa fa-shield" aria-hidden="true"></i>
+                                            </span>
+                                            {{/isexemption}}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="small text-muted">
+                                        <i class="fa fa-calendar me-1 d-none d-lg-inline"></i>{{dateapplied}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge {{statusbadgeclass}} rounded-pill">
+                                        {{#statusicon}}<i class="fa fa-{{statusicon}} me-1" aria-hidden="true"></i>{{/statusicon}}
+                                        {{statuslabel}}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{{docstatushtml}}}
+                                </td>
+                                <td class="text-end">
+                                    <a href="{{viewurl}}" class="btn btn-sm btn-primary" title="{{#str}}view, local_jobboard{{/str}}">
+                                        <i class="fa fa-eye me-1" aria-hidden="true"></i>
+                                        <span class="d-none d-lg-inline">{{#str}}view, local_jobboard{{/str}}</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {{/applications}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {{#paginationhtml}}
+            <div class="card-footer bg-white">
+                <nav aria-label="{{#str}}pagination, local_jobboard{{/str}}">{{{paginationhtml}}}</nav>
+            </div>
+            {{/paginationhtml}}
+        </div>
+        {{/hasapplications}}
+
+        {{! Empty State }}
+        {{^hasapplications}}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="jb-empty-state">
+                    <i class="fa fa-users jb-empty-state-icon text-muted"></i>
+                    <h5 class="jb-empty-state-title">{{#str}}noapplicationsfound, local_jobboard{{/str}}</h5>
+                    <p class="text-muted mb-4">{{#str}}noapplicationsfound_desc, local_jobboard{{/str}}</p>
+                    <div class="d-flex justify-content-center gap-2">
                         {{#currentsearch}}
                         <a href="{{reseturl}}" class="btn btn-outline-primary btn-sm">
-                            <i class="fa fa-rotate-left me-2" aria-hidden="true"></i>
+                            <i class="fa fa-rotate-left me-1"></i>
                             {{#str}}clearfilters, local_jobboard{{/str}}
                         </a>
                         {{/currentsearch}}
+                        <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fa fa-arrow-left me-1"></i>
+                            {{#str}}backtomanage, local_jobboard{{/str}}
+                        </a>
                     </div>
                 </div>
-                {{/hasapplications}}
             </div>
+        </div>
+        {{/hasapplications}}
 
-            {{! Sidebar }}
-            <div class="col-lg-4">
-                <div class="jb-sidebar sticky-top" style="top: 80px;">
-                    {{! Vacancy Summary Card }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-briefcase text-primary me-2"></i>
-                                {{#str}}vacancysummary, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <dl class="row mb-0 small">
-                                <dt class="col-4 text-muted">{{#str}}code, local_jobboard{{/str}}</dt>
-                                <dd class="col-8"><code>{{vacancycode}}</code></dd>
-
-                                <dt class="col-4 text-muted">{{#str}}title, local_jobboard{{/str}}</dt>
-                                <dd class="col-8">{{vacancytitle}}</dd>
-                            </dl>
-                        </div>
-                    </div>
-
-                    {{! Stats Cards }}
-                    {{#stats.0}}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-chart-pie text-info me-2"></i>
-                                {{#str}}statistics, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body py-3">
-                            <div class="row g-2">
-                                {{#stats}}
-                                <div class="col-6">
-                                    <div class="text-center p-2 rounded bg-{{color}}-subtle">
-                                        <div class="h4 text-{{color}} mb-0">{{count}}</div>
-                                        <small class="text-muted">{{label}}</small>
-                                    </div>
-                                </div>
-                                {{/stats}}
-                            </div>
-                        </div>
-                    </div>
-                    {{/stats.0}}
-
-                    {{! Filter Card }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-filter text-warning me-2"></i>
-                                {{#str}}filterapplications, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <form method="get" action="">
-                                <input type="hidden" name="view" value="manage_applications">
-                                <input type="hidden" name="vacancyid" value="{{vacancyid}}">
-
-                                <div class="mb-3">
-                                    <label class="form-label small text-muted mb-1" for="search">{{#str}}search{{/str}}</label>
-                                    <input type="text" name="search" id="search" class="form-control form-control-sm"
-                                           placeholder="{{#str}}searchapplicant, local_jobboard{{/str}}" value="{{currentsearch}}">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label small text-muted mb-1" for="status">{{#str}}status, local_jobboard{{/str}}</label>
-                                    <select name="status" id="status" class="form-select form-select-sm">
-                                        <option value="">{{#str}}allstatuses, local_jobboard{{/str}}</option>
-                                        {{#statuses}}
-                                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                                        {{/statuses}}
-                                    </select>
-                                </div>
-
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-primary btn-sm">
-                                        <i class="fa fa-search me-1" aria-hidden="true"></i>
-                                        {{#str}}filter, local_jobboard{{/str}}
-                                    </button>
-                                    <a href="{{reseturl}}" class="btn btn-outline-secondary btn-sm">
-                                        <i class="fa fa-rotate-left me-1" aria-hidden="true"></i>
-                                        {{#str}}reset{{/str}}
-                                    </a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    {{! Quick Actions Card }}
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-bolt text-warning me-2"></i>
-                                {{#str}}quickactions, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-grid gap-2">
-                                <a href="{{reviewurl}}" class="btn btn-outline-primary btn-sm">
-                                    <i class="fa fa-magnifying-glass me-2"></i>
-                                    {{#str}}reviewdocuments, local_jobboard{{/str}}
-                                </a>
-                                <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm">
-                                    <i class="fa fa-arrow-left me-2"></i>
-                                    {{#str}}backtomanage, local_jobboard{{/str}}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+        {{! Quick Actions - Mobile Only }}
+        <div class="card shadow-sm mt-4 d-md-none">
+            <div class="card-body py-3">
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{{reviewurl}}" class="btn btn-outline-primary btn-sm flex-fill">
+                        <i class="fa fa-magnifying-glass me-1"></i>
+                        {{#str}}reviewdocuments, local_jobboard{{/str}}
+                    </a>
+                    {{#hasapplications}}
+                    <a href="{{exportcsvurl}}" class="btn btn-outline-success btn-sm flex-fill">
+                        <i class="fa fa-download me-1"></i>
+                        {{#str}}export, local_jobboard{{/str}}
+                    </a>
+                    {{/hasapplications}}
+                    <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm flex-fill">
+                        <i class="fa fa-arrow-left me-1"></i>
+                        {{#str}}back{{/str}}
+                    </a>
                 </div>
             </div>
         </div>
 
         {{! Navigation Footer }}
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center py-3 border-top">
-                    <a href="{{backurl}}" class="btn btn-outline-secondary">
-                        <i class="fa fa-arrow-left me-2"></i>
-                        {{#str}}backtomanage, local_jobboard{{/str}}
-                    </a>
-                    <a href="{{dashboardurl}}" class="btn btn-link text-muted">
-                        {{#str}}dashboard, local_jobboard{{/str}}
-                        <i class="fa fa-arrow-right ms-2"></i>
-                    </a>
-                </div>
-            </div>
+        <div class="d-flex justify-content-between align-items-center py-3 mt-4 border-top">
+            <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm">
+                <i class="fa fa-arrow-left me-1"></i>
+                <span class="d-none d-sm-inline">{{#str}}backtomanage, local_jobboard{{/str}}</span>
+            </a>
+            <a href="{{dashboardurl}}" class="btn btn-link text-muted btn-sm">
+                {{#str}}dashboard, local_jobboard{{/str}}
+                <i class="fa fa-arrow-right ms-1"></i>
+            </a>
         </div>
     </div>
 </div>
-
-{{! Minimal CSS for page styling }}
-<style>
-.jb-manage-applications-page .card {
-    border-radius: 0.5rem;
-}
-.jb-manage-applications-page .jb-sidebar {
-    z-index: 10;
-}
-.jb-manage-applications-page .bg-primary-subtle {
-    background-color: rgba(13, 110, 253, 0.1) !important;
-}
-.jb-manage-applications-page .bg-success-subtle {
-    background-color: rgba(25, 135, 84, 0.1) !important;
-}
-.jb-manage-applications-page .bg-danger-subtle {
-    background-color: rgba(220, 53, 69, 0.1) !important;
-}
-.jb-manage-applications-page .bg-warning-subtle {
-    background-color: rgba(255, 193, 7, 0.1) !important;
-}
-.jb-manage-applications-page .bg-info-subtle {
-    background-color: rgba(13, 202, 240, 0.1) !important;
-}
-.jb-manage-applications-page .bg-secondary-subtle {
-    background-color: rgba(108, 117, 125, 0.1) !important;
-}
-</style>
