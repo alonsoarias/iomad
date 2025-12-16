@@ -45,11 +45,11 @@
     <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         {{#stats}}
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-{{color}}">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-{{icon}} fa-2x text-{{color}} mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{value}}</div>
-                    <div class="small text-muted">{{label}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{value}}</div>
+                    <div class="small text-muted jb-stat-label">{{label}}</div>
                 </div>
             </div>
         </div>
@@ -85,21 +85,21 @@
             {{! Action Buttons }}
             <div class="d-flex flex-wrap">
                 {{#canaddvacancy}}
-                <a href="{{addvacancyurl}}" class="btn btn-success me-2 mb-2">
+                <a href="{{addvacancyurl}}" class="btn btn-success jb-btn-success me-2 mb-2">
                     <i class="fa fa-plus me-2" aria-hidden="true"></i>
                     {{#str}}addvacancy, local_jobboard{{/str}}
                 </a>
                 {{/canaddvacancy}}
 
                 {{#hasvacancies}}
-                <a href="{{viewallurl}}" class="btn btn-info me-2 mb-2">
+                <a href="{{viewallurl}}" class="btn btn-info jb-btn-info me-2 mb-2">
                     <i class="fa fa-list me-2" aria-hidden="true"></i>
                     {{#str}}viewvacancies, local_jobboard{{/str}} ({{vacancycount}})
                 </a>
                 {{/hasvacancies}}
 
                 {{#hasapplications}}
-                <a href="{{applicationsurl}}" class="btn btn-outline-info me-2 mb-2">
+                <a href="{{applicationsurl}}" class="btn btn-outline-info jb-btn-outline-info me-2 mb-2">
                     <i class="fa fa-file-lines me-2" aria-hidden="true"></i>
                     {{#str}}applications, local_jobboard{{/str}} ({{applicationcount}})
                 </a>

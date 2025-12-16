@@ -81,7 +81,7 @@
                 <i class="fa fa-clipboard-list text-primary me-2" aria-hidden="true"></i>
                 {{#str}}myreviews, local_jobboard{{/str}}
             </h1>
-            <a href="{{reviewqueueurl}}" class="btn btn-primary jb-hover-lift">
+            <a href="{{reviewqueueurl}}" class="btn btn-primary jb-btn-primary jb-hover-lift">
                 <i class="fa fa-clipboard-check me-2" aria-hidden="true"></i>
                 {{#str}}reviewdocuments, local_jobboard{{/str}}
             </a>
@@ -130,7 +130,7 @@
                     </div>
                     {{/filterform.fields}}
                     <div class="jb-col-auto mb-2">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary jb-btn-primary">
                             <i class="fa fa-filter me-1" aria-hidden="true"></i>
                             {{#str}}filter, local_jobboard{{/str}}
                         </button>
@@ -259,14 +259,16 @@
 
         {{! Empty State }}
         {{^hasassignments}}
-        <div class="text-center py-5" role="status">
-            <i class="fa fa-clipboard-list fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-            <h2 class="h5 text-muted mb-2">{{#str}}noassignments, local_jobboard{{/str}}</h2>
-            <p class="text-muted mb-4">{{#str}}noassignments_desc, local_jobboard{{/str}}</p>
-            <a href="{{reviewqueueurl}}" class="btn btn-primary">
-                <i class="fa fa-clipboard-check me-2" aria-hidden="true"></i>
-                {{#str}}reviewdocuments, local_jobboard{{/str}}
-            </a>
+        <div class="jb-empty-state" role="status">
+            <i class="fa fa-clipboard-list jb-empty-state-icon" aria-hidden="true"></i>
+            <h2 class="jb-empty-state-title">{{#str}}noassignments, local_jobboard{{/str}}</h2>
+            <p class="jb-empty-state-description">{{#str}}noassignments_desc, local_jobboard{{/str}}</p>
+            <div class="jb-empty-state-actions">
+                <a href="{{reviewqueueurl}}" class="btn btn-primary jb-btn-primary">
+                    <i class="fa fa-clipboard-check me-2" aria-hidden="true"></i>
+                    {{#str}}reviewdocuments, local_jobboard{{/str}}
+                </a>
+            </div>
         </div>
         {{/hasassignments}}
     </main>

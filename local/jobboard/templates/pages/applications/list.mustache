@@ -37,7 +37,7 @@
             </nav>
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <h1 class="h3 mb-0">{{#str}}myapplications, local_jobboard{{/str}}</h1>
-                <a href="{{browseurl}}" class="btn btn-primary">
+                <a href="{{browseurl}}" class="btn btn-primary jb-btn-primary jb-hover-lift">
                     <i class="fa fa-search me-1"></i>
                     {{#str}}browsevacancies, local_jobboard{{/str}}
                 </a>
@@ -46,7 +46,7 @@
 
         {{! Exemption Notice }}
         {{#hasexemption}}
-        <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+        <div class="alert jb-alert-info d-flex align-items-center mb-4" role="alert">
             <i class="fa fa-id-badge fa-lg me-3"></i>
             <div>
                 <strong>{{#str}}exemptionactive, local_jobboard{{/str}}</strong>
@@ -60,7 +60,7 @@
 
         {{! Pending Documents Alert }}
         {{#pendingdocscount}}
-        <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+        <div class="alert jb-alert-warning d-flex align-items-center mb-4" role="alert">
             <i class="fa fa-exclamation-triangle fa-lg me-3"></i>
             <div>
                 <strong>{{#str}}actionrequired, local_jobboard{{/str}}</strong>
@@ -74,10 +74,10 @@
         <div class="row mb-4">
             {{#stats}}
             <div class="col-lg-3 col-md-6 mb-3">
-                <div class="card shadow-sm h-100">
+                <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-{{color}}">
                     <div class="card-body text-center">
-                        <div class="h2 text-{{color}} mb-1">{{value}}</div>
-                        <small class="text-muted">{{label}}</small>
+                        <div class="h2 text-{{color}} mb-1 jb-stat-value">{{value}}</div>
+                        <small class="text-muted jb-stat-label">{{label}}</small>
                     </div>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                         </div>
                         {{/filterform.fields}}
                         <div class="col-auto">
-                            <button type="submit" class="btn btn-secondary btn-sm">
+                            <button type="submit" class="btn btn-primary btn-sm jb-btn-primary">
                                 <i class="fa fa-filter me-1"></i>
                                 {{#str}}filter, local_jobboard{{/str}}
                             </button>
@@ -224,7 +224,7 @@
                                     <i class="fa fa-xmark"></i>
                                 </button>
                                 {{/canwithdraw}}
-                                <a href="{{viewurl}}" class="btn btn-primary">
+                                <a href="{{viewurl}}" class="btn btn-primary jb-btn-primary">
                                     {{#str}}viewdetails, local_jobboard{{/str}}
                                     <i class="fa fa-arrow-right ms-1"></i>
                                 </a>
@@ -241,13 +241,17 @@
         {{^hasapplications}}
         <div class="card shadow-sm">
             <div class="card-body text-center py-5">
-                <i class="fa fa-folder-open fa-4x text-muted mb-3"></i>
-                <h5 class="text-muted mb-3">{{#str}}noapplications, local_jobboard{{/str}}</h5>
-                <p class="text-muted mb-4">{{#str}}noapplications_desc, local_jobboard{{/str}}</p>
-                <a href="{{browseurl}}" class="btn btn-primary">
-                    <i class="fa fa-search me-1"></i>
-                    {{#str}}browsevacancies, local_jobboard{{/str}}
-                </a>
+                <div class="jb-empty-state">
+                    <i class="fa fa-folder-open jb-empty-state-icon" aria-hidden="true"></i>
+                    <h5 class="jb-empty-state-title">{{#str}}noapplications, local_jobboard{{/str}}</h5>
+                    <p class="jb-empty-state-description">{{#str}}noapplications_desc, local_jobboard{{/str}}</p>
+                    <div class="jb-empty-state-actions">
+                        <a href="{{browseurl}}" class="btn btn-primary jb-btn-primary">
+                            <i class="fa fa-search me-1"></i>
+                            {{#str}}browsevacancies, local_jobboard{{/str}}
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
         {{/hasapplications}}

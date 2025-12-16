@@ -149,7 +149,7 @@
                         {{/convocatorias}}
                     </select>
                 </div>
-                <button type="submit" class="btn btn-warning jb-hover-lift">
+                <button type="submit" class="btn btn-warning jb-btn-warning jb-hover-lift">
                     <i class="fa fa-check me-2" aria-hidden="true"></i>
                     {{#str}}continue, local_jobboard{{/str}}
                 </button>
@@ -161,13 +161,13 @@
     {{^noconvocatoriaselected}}
     {{! Current Convocatoria Banner }}
     {{#selectedconvocatoriaid}}
-    <div class="alert alert-info d-flex align-items-center mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.1s;">
+    <div class="alert jb-alert-info d-flex align-items-center mb-4 jb-fade-in-up" role="status" style="animation-delay: 0.1s;">
         <i class="fa fa-calendar-days me-3 fs-4" aria-hidden="true"></i>
         <div class="flex-grow-1">
             <strong>{{#str}}currentconvocatoria, local_jobboard{{/str}}:</strong>
             <span class="ms-1">{{selectedconvocatoria}}</span>
         </div>
-        <a href="{{filteraction}}?view=reports" class="btn btn-sm btn-outline-info jb-hover-lift">
+        <a href="{{filteraction}}?view=reports" class="btn btn-sm btn-outline-info jb-btn-outline-info jb-hover-lift">
             <i class="fa fa-right-left me-1" aria-hidden="true"></i>
             {{#str}}changeconvocatoria, local_jobboard{{/str}}
         </a>
@@ -215,7 +215,7 @@
                     </div>
 
                     <div class="col-lg-3 col-md-6 mb-2">
-                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                        <button type="submit" class="btn btn-primary btn-sm jb-btn-primary w-100">
                             <i class="fa fa-filter me-1" aria-hidden="true"></i>
                             {{#str}}filter{{/str}}
                         </button>

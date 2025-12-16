@@ -66,29 +66,29 @@
     {{! Statistics Cards }}
     <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         <div class="col-lg-4 col-md-4 mb-3">
-            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.05s;">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-primary jb-fade-in-up" style="animation-delay: 0.05s;">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-users fa-2x text-primary mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.totalcommittees}}</div>
-                    <div class="small text-muted">{{#str}}totalcommittees, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.totalcommittees}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}totalcommittees, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         <div class="col-lg-4 col-md-4 mb-3">
-            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-success jb-fade-in-up" style="animation-delay: 0.1s;">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-users-gear fa-2x text-success mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.activecommittees}}</div>
-                    <div class="small text-muted">{{#str}}activecommittees, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.activecommittees}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}activecommittees, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         <div class="col-lg-4 col-md-4 mb-3">
-            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.15s;">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-info jb-fade-in-up" style="animation-delay: 0.15s;">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-user-group fa-2x text-info mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.totalmembers}}</div>
-                    <div class="small text-muted">{{#str}}totalcommmembers, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.totalmembers}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}totalcommmembers, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
@@ -118,17 +118,17 @@
     {{! ================================================================== }}
 
     {{! All Committees Table }}
-    <section class="card shadow-sm mb-4" aria-labelledby="committees-heading">
+    <section class="card shadow-sm mb-4 jb-table-card" aria-labelledby="committees-heading">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0" id="committees-heading">
                 <i class="fa fa-users text-primary me-2" aria-hidden="true"></i>
                 {{#str}}allcommittees, local_jobboard{{/str}}
             </h5>
         </div>
-        <div class="card-body">
+        <div class="card-body p-0">
             {{#hascommittees}}
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover mb-0 jb-table">
                     <thead class="table-light">
                         <tr>
                             <th>{{#str}}faculty, local_jobboard{{/str}}</th>
@@ -172,9 +172,9 @@
             </div>
             {{/hascommittees}}
             {{^hascommittees}}
-            <div class="text-center py-5" role="status">
-                <i class="fa fa-users fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-                <p class="text-muted">{{#str}}nocommittees, local_jobboard{{/str}}</p>
+            <div class="jb-empty-state py-5" role="status">
+                <i class="fa fa-users jb-empty-state-icon" aria-hidden="true"></i>
+                <h5 class="jb-empty-state-title">{{#str}}nocommittees, local_jobboard{{/str}}</h5>
             </div>
             {{/hascommittees}}
         </div>
@@ -197,7 +197,7 @@
                         <i class="fa fa-building text-warning me-2" aria-hidden="true"></i>
                         {{name}}
                     </span>
-                    <a href="{{createurl}}" class="btn btn-sm btn-warning">
+                    <a href="{{createurl}}" class="btn btn-sm btn-warning jb-btn-warning">
                         <i class="fa fa-plus me-1" aria-hidden="true"></i>
                         {{#str}}createcommittee, local_jobboard{{/str}}
                     </a>
@@ -297,9 +297,9 @@
             </div>
             {{/existingcommittee.hasmembers}}
             {{^existingcommittee.hasmembers}}
-            <div class="text-center py-5" role="status">
-                <i class="fa fa-user-plus fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-                <p class="text-muted">{{#str}}nomembers, local_jobboard{{/str}}</p>
+            <div class="jb-empty-state py-5" role="status">
+                <i class="fa fa-user-plus jb-empty-state-icon" aria-hidden="true"></i>
+                <h5 class="jb-empty-state-title">{{#str}}nomembers, local_jobboard{{/str}}</h5>
             </div>
             {{/existingcommittee.hasmembers}}
         </div>
@@ -354,7 +354,7 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary mb-2">
+                <button type="submit" class="btn btn-primary jb-btn-primary mb-2">
                     <i class="fa fa-user-plus me-1" aria-hidden="true"></i>
                     {{#str}}addmember, local_jobboard{{/str}}
                 </button>
@@ -473,12 +473,12 @@
                 </div>
 
                 {{! Info Alert }}
-                <div class="alert alert-info mb-3">
+                <div class="alert jb-alert-info mb-3">
                     <i class="fa fa-circle-info me-2" aria-hidden="true"></i>
                     {{#str}}committeeautoroleassign, local_jobboard{{/str}}
                 </div>
 
-                <button type="submit" class="btn btn-success btn-lg">
+                <button type="submit" class="btn btn-success btn-lg jb-btn-success">
                     <i class="fa fa-check me-2" aria-hidden="true"></i>
                     {{#str}}createcommittee, local_jobboard{{/str}}
                 </button>
@@ -529,9 +529,9 @@
     {{/hasexistingcommittee}}
 
     {{^hasexistingcommittee}}
-    <div class="text-center py-5" role="status">
-        <i class="fa fa-users fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-        <p class="text-muted">{{#str}}nocommitteeforthisvacancy, local_jobboard{{/str}}</p>
+    <div class="jb-empty-state py-5" role="status">
+        <i class="fa fa-users jb-empty-state-icon" aria-hidden="true"></i>
+        <h5 class="jb-empty-state-title">{{#str}}nocommitteeforthisvacancy, local_jobboard{{/str}}</h5>
     </div>
     {{/hasexistingcommittee}}
 

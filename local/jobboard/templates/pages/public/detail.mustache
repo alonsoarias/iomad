@@ -83,7 +83,7 @@
 
                         {{! Urgent Warning }}
                         {{#vacancy.isurgent}}
-                        <div class="alert alert-warning d-flex align-items-center mb-0" role="alert">
+                        <div class="alert jb-alert-warning d-flex align-items-center mb-0" role="alert">
                             <i class="fa fa-triangle-exclamation me-2" aria-hidden="true"></i>
                             <div>
                                 <strong>{{#str}}urgent, local_jobboard{{/str}}:</strong>
@@ -167,7 +167,7 @@
                                 {{^hasapplied}}
                                     {{#canapply}}
                                     <p class="text-muted mb-3">{{#str}}applynowdesc, local_jobboard{{/str}}</p>
-                                    <a href="{{applyurl}}" class="btn btn-primary btn-lg w-100">
+                                    <a href="{{applyurl}}" class="btn btn-primary btn-lg jb-btn-primary w-100">
                                         <i class="fa fa-paper-plane me-2" aria-hidden="true"></i>
                                         {{#str}}apply, local_jobboard{{/str}}
                                     </a>
@@ -183,7 +183,7 @@
                             {{^isloggedin}}
                             <i class="fa fa-user fa-2x text-muted mb-3" aria-hidden="true"></i>
                             <p class="text-muted mb-3">{{#str}}logintoapply, local_jobboard{{/str}}</p>
-                            <a href="{{loginapplyurl}}" class="btn btn-primary btn-lg w-100">
+                            <a href="{{loginapplyurl}}" class="btn btn-primary btn-lg jb-btn-primary w-100">
                                 <i class="fa fa-right-to-bracket me-2" aria-hidden="true"></i>
                                 {{#str}}loginandapply, local_jobboard{{/str}}
                             </a>
