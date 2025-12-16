@@ -78,11 +78,14 @@ if ($isloggedin) {
 // Set page title from config or default.
 $pagetitle = get_config('local_jobboard', 'public_page_title');
 if (empty($pagetitle)) {
-    $pagetitle = get_string('publicpagetitle', 'local_jobboard');
+    $pagetitle = get_string('jobboard', 'local_jobboard');
 }
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 $PAGE->set_pagelayout('standard');
+
+// Add navigation breadcrumb for the main public page.
+$PAGE->navbar->add($pagetitle, new moodle_url('/local/jobboard/index.php', ['view' => 'public']));
 
 // Get contract types for display.
 $contracttypes = local_jobboard_get_contract_types();
@@ -106,9 +109,12 @@ if ($convocatoriaid > 0) {
         throw new moodle_exception('error:convocatoriaclosed', 'local_jobboard');
     }
 
-    // Update page title.
+    // Update page title and breadcrumbs.
     $PAGE->set_title($convocatoria->name . ' - ' . get_string('vacancies', 'local_jobboard'));
     $PAGE->set_heading($convocatoria->name);
+
+    // Add breadcrumb for convocatoria vacancies.
+    $PAGE->navbar->add(format_string($convocatoria->name));
 
     // Build vacancies query with filters.
     $vacancyParams = ['convid' => $convocatoriaid];

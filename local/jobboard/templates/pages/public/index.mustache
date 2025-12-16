@@ -34,6 +34,22 @@
         {{! MODE: VACANCIES FOR SPECIFIC CONVOCATORIA }}
         {{! ================================================================ }}
         {{#showvacancies}}
+        {{! Breadcrumbs }}
+        {{#breadcrumbs}}
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb mb-0">
+                {{#.}}
+                {{#active}}
+                <li class="breadcrumb-item active" aria-current="page">{{label}}</li>
+                {{/active}}
+                {{^active}}
+                <li class="breadcrumb-item"><a href="{{url}}">{{label}}</a></li>
+                {{/active}}
+                {{/.}}
+            </ol>
+        </nav>
+        {{/breadcrumbs}}
+
         {{! Back Navigation }}
         <div class="mb-4">
             <a href="{{backtoconvocatoriasurl}}" class="btn btn-outline-secondary">

@@ -653,9 +653,23 @@ trait public_renderer {
             $pagination = $OUTPUT->paging_bar($totalVacancies, $page, $perpage, $baseurl);
         }
 
+        // Breadcrumbs for vacancies view.
+        $breadcrumbs = [
+            [
+                'label' => get_string('jobboard', 'local_jobboard'),
+                'url' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false),
+            ],
+            [
+                'label' => format_string($convocatoria->name),
+                'url' => null,
+                'active' => true,
+            ],
+        ];
+
         return [
             'showconvocatorias' => false,
             'showvacancies' => true,
+            'breadcrumbs' => $breadcrumbs,
             'backtoconvocatoriasurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false),
             'convocatoria' => $convdata,
             'filterform' => $filterform,
