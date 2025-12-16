@@ -1,31 +1,101 @@
 {{!
     @template local_jobboard/components/nav_tabs
 
-    Navigation tabs/pills component.
+    Enhanced navigation tabs/pills component with variants.
+    Supports tabs, pills, underlined, and segmented control styles.
 
     Context variables:
-    * style (string) - Style: tabs, pills (default: pills)
-    * items (array) - Tab items {label, url, icon, active, badge}
+    * style (string) - Style: tabs, pills, underline, segment (default: pills)
+    * items (array) - Tab items [{id, label, url, icon, active, badge, disabled, content}]
+    * size (string) - Size: sm, lg
+    * fill (bool) - Fill available width equally
+    * justified (bool) - Justify items to fill width
+    * vertical (bool) - Vertical orientation
+    * scroll (bool) - Enable horizontal scrolling on overflow
+    * panel (bool) - Include tab panels (for JS tabs)
+    * animated (bool) - Animate tab transitions
 
     Example context (json):
     {
-        "style": "pills",
+        "style": "underline",
         "items": [
-            {"label": "Overview", "url": "?tab=overview", "icon": "chart-pie", "active": true},
-            {"label": "Details", "url": "?tab=details", "badge": {"value": "3", "color": "danger"}}
-        ]
+            {"id": "overview", "label": "Overview", "url": "#overview", "icon": "chart-pie", "active": true},
+            {"id": "details", "label": "Details", "url": "#details", "badge": {"value": "3", "color": "danger"}},
+            {"id": "settings", "label": "Settings", "url": "#settings", "icon": "cog", "disabled": true}
+        ],
+        "fill": false,
+        "animated": true
     }
 }}
-<nav class="mb-4" aria-label="{{#str}}navigation{{/str}}">
-    <ul class="nav jb-nav-{{#style}}{{style}}{{/style}}{{^style}}pills{{/style}} flex-wrap" role="tablist">
-        {{#items}}
-        <li class="nav-item" role="presentation">
-            <a class="nav-link{{#active}} jb-active{{/active}}" href="{{url}}" role="tab" aria-selected="{{#active}}true{{/active}}{{^active}}false{{/active}}">
-                {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}
-                {{label}}
-                {{#badge}}<span class="badge jb-badge-{{badge.color}} ms-2">{{badge.value}}</span>{{/badge}}
-            </a>
-        </li>
-        {{/items}}
-    </ul>
-</nav>
+<div class="jb-nav-wrapper{{#scroll}} jb-nav-scroll{{/scroll}}{{#vertical}} jb-nav-vertical{{/vertical}}">
+    <nav aria-label="{{#arialabel}}{{arialabel}}{{/arialabel}}{{^arialabel}}{{#str}}navigation{{/str}}{{/arialabel}}">
+        <ul class="nav jb-nav jb-nav-{{#style}}{{style}}{{/style}}{{^style}}pills{{/style}}{{#size}} jb-nav-{{size}}{{/size}}{{#fill}} nav-fill{{/fill}}{{#justified}} nav-justified{{/justified}}{{#vertical}} flex-column{{/vertical}}" role="tablist">
+            {{#items}}
+            <li class="nav-item jb-nav-item" role="presentation">
+                {{#panel}}
+                {{! Tab with panel (JS controlled) }}
+                <button type="button"
+                        class="nav-link jb-nav-link{{#active}} active{{/active}}{{#disabled}} disabled{{/disabled}}"
+                        id="{{id}}-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#{{id}}-panel"
+                        role="tab"
+                        aria-controls="{{id}}-panel"
+                        aria-selected="{{#active}}true{{/active}}{{^active}}false{{/active}}"
+                        {{#disabled}}disabled tabindex="-1"{{/disabled}}>
+                    {{#icon}}<i class="fa fa-{{icon}}{{#label}} me-2{{/label}}" aria-hidden="true"></i>{{/icon}}
+                    {{label}}
+                    {{#badge}}
+                    <span class="badge jb-badge-{{#variant}}{{variant}}-{{/variant}}{{badge.color}} ms-2">
+                        {{badge.value}}
+                    </span>
+                    {{/badge}}
+                </button>
+                {{/panel}}
+                {{^panel}}
+                {{! Link tab }}
+                <a class="nav-link jb-nav-link{{#active}} active{{/active}}{{#disabled}} disabled{{/disabled}}"
+                   href="{{url}}"
+                   role="tab"
+                   aria-selected="{{#active}}true{{/active}}{{^active}}false{{/active}}"
+                   {{#disabled}}tabindex="-1" aria-disabled="true"{{/disabled}}
+                   {{#active}}aria-current="page"{{/active}}>
+                    {{#icon}}<i class="fa fa-{{icon}}{{#label}} me-2{{/label}}" aria-hidden="true"></i>{{/icon}}
+                    {{label}}
+                    {{#badge}}
+                    <span class="badge jb-badge-{{#variant}}{{variant}}-{{/variant}}{{badge.color}} ms-2">
+                        {{badge.value}}
+                    </span>
+                    {{/badge}}
+                </a>
+                {{/panel}}
+            </li>
+            {{/items}}
+        </ul>
+    </nav>
+
+    {{! Scroll indicators for overflow }}
+    {{#scroll}}
+    <button type="button" class="jb-nav-scroll-btn jb-nav-scroll-left" aria-label="{{#str}}scroll_left{{/str}}" style="display: none;">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <button type="button" class="jb-nav-scroll-btn jb-nav-scroll-right" aria-label="{{#str}}scroll_right{{/str}}" style="display: none;">
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </button>
+    {{/scroll}}
+</div>
+
+{{! Tab panels }}
+{{#panel}}
+<div class="tab-content jb-tab-content{{#animated}} jb-tab-animated{{/animated}} mt-4">
+    {{#items}}
+    <div class="tab-pane jb-tab-pane fade{{#active}} show active{{/active}}"
+         id="{{id}}-panel"
+         role="tabpanel"
+         aria-labelledby="{{id}}-tab"
+         tabindex="0">
+        {{{content}}}
+    </div>
+    {{/items}}
+</div>
+{{/panel}}

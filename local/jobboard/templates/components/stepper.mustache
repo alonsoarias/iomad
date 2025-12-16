@@ -1,0 +1,110 @@
+{{!
+    @template local_jobboard/components/stepper
+
+    Step indicator/wizard component for multi-step processes.
+    Shows progress through a series of steps with visual feedback.
+
+    Context variables:
+    * steps (array) - Step items [{number, label, description, status, icon, url}]
+    *   status: pending, current, completed, error
+    * orientation (string) - Orientation: horizontal, vertical (default: horizontal)
+    * variant (string) - Variant: default, simple, dots
+    * size (string) - Size: sm, lg
+    * clickable (bool) - Make completed steps clickable
+    * showlabels (bool) - Show step labels (default: true)
+    * connector (string) - Connector style: solid, dashed, none
+
+    Example context (json):
+    {
+        "steps": [
+            {"number": 1, "label": "Personal Info", "description": "Basic details", "status": "completed", "icon": "user"},
+            {"number": 2, "label": "Documents", "description": "Upload required files", "status": "current", "icon": "file"},
+            {"number": 3, "label": "Review", "description": "Verify your application", "status": "pending", "icon": "check"},
+            {"number": 4, "label": "Submit", "status": "pending", "icon": "paper-plane"}
+        ],
+        "clickable": true
+    }
+}}
+<nav class="jb-stepper jb-stepper-{{#orientation}}{{orientation}}{{/orientation}}{{^orientation}}horizontal{{/orientation}}{{#variant}} jb-stepper-{{variant}}{{/variant}}{{#size}} jb-stepper-{{size}}{{/size}}"
+     aria-label="{{#str}}progress_steps{{/str}}">
+    <ol class="jb-stepper-list">
+        {{#steps}}
+        <li class="jb-stepper-item jb-stepper-{{status}}{{#isfirst}} jb-stepper-first{{/isfirst}}{{#islast}} jb-stepper-last{{/islast}}">
+            {{! Connector line (before) }}
+            {{^isfirst}}
+            <div class="jb-stepper-connector jb-stepper-connector-before{{#connector}} jb-connector-{{connector}}{{/connector}}" aria-hidden="true">
+                <span class="jb-stepper-connector-line"></span>
+            </div>
+            {{/isfirst}}
+
+            {{! Step indicator }}
+            {{#clickable}}{{#iscompleted}}
+            <a href="{{url}}" class="jb-stepper-indicator" aria-label="{{label}}: {{#str}}completed{{/str}}">
+            {{/iscompleted}}{{/clickable}}
+            {{^clickable}}
+            <div class="jb-stepper-indicator"
+                 {{#iscurrent}}aria-current="step"{{/iscurrent}}
+                 aria-label="{{label}}{{#iscurrent}}: {{#str}}current_step{{/str}}{{/iscurrent}}{{#iscompleted}}: {{#str}}completed{{/str}}{{/iscompleted}}{{#iserror}}: {{#str}}error{{/str}}{{/iserror}}">
+            {{/clickable}}
+            {{#clickable}}{{^iscompleted}}
+            <div class="jb-stepper-indicator"
+                 {{#iscurrent}}aria-current="step"{{/iscurrent}}
+                 aria-label="{{label}}{{#iscurrent}}: {{#str}}current_step{{/str}}{{/iscurrent}}">
+            {{/iscompleted}}{{/clickable}}
+                {{! Indicator content }}
+                {{#isdots}}
+                <span class="jb-stepper-dot"></span>
+                {{/isdots}}
+                {{^isdots}}
+                {{#iscompleted}}
+                <i class="fa fa-check" aria-hidden="true"></i>
+                {{/iscompleted}}
+                {{#iserror}}
+                <i class="fa fa-exclamation" aria-hidden="true"></i>
+                {{/iserror}}
+                {{^iscompleted}}{{^iserror}}
+                {{#icon}}
+                <i class="fa fa-{{icon}}" aria-hidden="true"></i>
+                {{/icon}}
+                {{^icon}}
+                <span class="jb-stepper-number">{{number}}</span>
+                {{/icon}}
+                {{/iserror}}{{/iscompleted}}
+                {{/isdots}}
+            {{#clickable}}{{#iscompleted}}</a>{{/iscompleted}}{{/clickable}}
+            {{^clickable}}</div>{{/clickable}}
+            {{#clickable}}{{^iscompleted}}</div>{{/iscompleted}}{{/clickable}}
+
+            {{! Step label and description }}
+            {{^showlabelsfalse}}
+            <div class="jb-stepper-content">
+                <span class="jb-stepper-label">{{label}}</span>
+                {{#description}}
+                <span class="jb-stepper-description">{{description}}</span>
+                {{/description}}
+            </div>
+            {{/showlabelsfalse}}
+
+            {{! Connector line (after) }}
+            {{^islast}}
+            <div class="jb-stepper-connector jb-stepper-connector-after{{#connector}} jb-connector-{{connector}}{{/connector}}" aria-hidden="true">
+                <span class="jb-stepper-connector-line"></span>
+            </div>
+            {{/islast}}
+        </li>
+        {{/steps}}
+    </ol>
+</nav>
+
+{{! Mobile-friendly step indicator }}
+<div class="jb-stepper-mobile d-md-none">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="small text-muted">
+            {{#str}}step_x_of_y, local_jobboard, {"current": "{{currentstep}}", "total": "{{totalsteps}}"}{{/str}}
+        </span>
+        <span class="fw-medium">{{currentlabel}}</span>
+    </div>
+    <div class="progress jb-progress-sm" role="progressbar" aria-valuenow="{{progresspercent}}" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar bg-primary" style="width: {{progresspercent}}%"></div>
+    </div>
+</div>

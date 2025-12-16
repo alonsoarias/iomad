@@ -1,0 +1,58 @@
+{{!
+    @template local_jobboard/components/breadcrumb
+
+    Breadcrumb navigation component with enhanced accessibility.
+    Provides hierarchical navigation context for users.
+
+    Context variables:
+    * items (array) - Breadcrumb items [{label, url, icon, active}]
+    * separator (string) - Separator icon: chevron, slash, arrow (default: chevron)
+    * size (string) - Size: sm, lg
+    * variant (string) - Variant: default, contained
+    * homeicononly (bool) - Show only icon for home item
+    * truncate (bool) - Truncate long labels with ellipsis
+
+    Example context (json):
+    {
+        "items": [
+            {"label": "Home", "url": "/", "icon": "home"},
+            {"label": "Job Board", "url": "/local/jobboard"},
+            {"label": "Vacancies", "url": "/local/jobboard/vacancies.php"},
+            {"label": "Software Developer", "active": true}
+        ],
+        "separator": "chevron",
+        "truncate": true
+    }
+}}
+<nav aria-label="{{#str}}breadcrumb{{/str}}" class="jb-breadcrumb-nav{{#variant}}{{#iscontained}} jb-breadcrumb-contained{{/iscontained}}{{/variant}}{{#size}} jb-breadcrumb-{{size}}{{/size}}">
+    <ol class="breadcrumb jb-breadcrumb mb-0" itemscope itemtype="https://schema.org/BreadcrumbList">
+        {{#items}}
+        <li class="breadcrumb-item jb-breadcrumb-item{{#active}} active{{/active}}{{#truncate}} jb-breadcrumb-truncate{{/truncate}}"
+            itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"
+            {{#active}}aria-current="page"{{/active}}>
+            {{^active}}
+            <a href="{{url}}" class="jb-breadcrumb-link" itemprop="item">
+                {{#icon}}
+                <i class="fa fa-{{icon}}{{^homeicononly}} me-1{{/homeicononly}}" aria-hidden="true"></i>
+                {{^homeicononly}}<span itemprop="name">{{label}}</span>{{/homeicononly}}
+                {{#homeicononly}}<span class="visually-hidden" itemprop="name">{{label}}</span>{{/homeicononly}}
+                {{/icon}}
+                {{^icon}}<span itemprop="name">{{label}}</span>{{/icon}}
+            </a>
+            {{/active}}
+            {{#active}}
+            {{#icon}}<i class="fa fa-{{icon}} me-1" aria-hidden="true"></i>{{/icon}}
+            <span itemprop="name">{{label}}</span>
+            {{/active}}
+            <meta itemprop="position" content="{{position}}">
+        </li>
+        {{^active}}
+        <li class="jb-breadcrumb-separator" aria-hidden="true">
+            {{#isseparatorslash}}/{{/isseparatorslash}}
+            {{#isseparatorarrow}}<i class="fa fa-arrow-right"></i>{{/isseparatorarrow}}
+            {{^isseparatorslash}}{{^isseparatorarrow}}<i class="fa fa-chevron-right"></i>{{/isseparatorarrow}}{{/isseparatorslash}}
+        </li>
+        {{/active}}
+        {{/items}}
+    </ol>
+</nav>

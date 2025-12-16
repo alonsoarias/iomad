@@ -1,0 +1,132 @@
+{{!
+    @template local_jobboard/components/pagination
+
+    Pagination component with multiple display options.
+    Supports page numbers, previous/next, and jump-to-page.
+
+    Context variables:
+    * baseurl (string) - Base URL for pagination links (will append ?page=N)
+    * currentpage (number) - Current page number (1-based)
+    * totalpages (number) - Total number of pages
+    * totalitems (number) - Total number of items
+    * perpage (number) - Items per page
+    * showfirstlast (bool) - Show first/last page buttons
+    * showprevnext (bool) - Show previous/next buttons (default: true)
+    * showinfo (bool) - Show "Showing X-Y of Z" info
+    * size (string) - Size: sm, lg
+    * alignment (string) - Alignment: start, center, end (default: center)
+    * compact (bool) - Compact mode (numbers only)
+    * maxvisible (number) - Max visible page numbers (default: 5)
+    * arialabel (string) - ARIA label for navigation
+
+    Example context (json):
+    {
+        "baseurl": "/vacancies.php",
+        "currentpage": 5,
+        "totalpages": 20,
+        "totalitems": 195,
+        "perpage": 10,
+        "showfirstlast": true,
+        "showprevnext": true,
+        "showinfo": true,
+        "maxvisible": 5
+    }
+}}
+<nav aria-label="{{#arialabel}}{{arialabel}}{{/arialabel}}{{^arialabel}}{{#str}}pagination{{/str}}{{/arialabel}}" class="jb-pagination-wrapper">
+    {{#showinfo}}
+    <div class="jb-pagination-info text-muted small mb-2 mb-md-0">
+        {{#str}}showing_x_to_y_of_z, local_jobboard, {"start": "{{startitem}}", "end": "{{enditem}}", "total": "{{totalitems}}"}{{/str}}
+    </div>
+    {{/showinfo}}
+
+    <ul class="pagination jb-pagination{{#size}} jb-pagination-{{size}}{{/size}}{{#alignment}} justify-content-{{alignment}}{{/alignment}}{{^alignment}} justify-content-center{{/alignment}} mb-0">
+        {{! First page button }}
+        {{#showfirstlast}}
+        <li class="page-item jb-page-item{{#isfirst}} disabled{{/isfirst}}">
+            <a class="page-link jb-page-link"
+               href="{{baseurl}}{{#hasquery}}&{{/hasquery}}{{^hasquery}}?{{/hasquery}}page=1"
+               {{#isfirst}}tabindex="-1" aria-disabled="true"{{/isfirst}}
+               aria-label="{{#str}}first_page{{/str}}"
+               title="{{#str}}first_page{{/str}}">
+                <i class="fa fa-angles-left" aria-hidden="true"></i>
+                <span class="visually-hidden">{{#str}}first_page{{/str}}</span>
+            </a>
+        </li>
+        {{/showfirstlast}}
+
+        {{! Previous page button }}
+        {{^showprevnextfalse}}
+        <li class="page-item jb-page-item{{#isfirst}} disabled{{/isfirst}}">
+            <a class="page-link jb-page-link"
+               href="{{baseurl}}{{#hasquery}}&{{/hasquery}}{{^hasquery}}?{{/hasquery}}page={{prevpage}}"
+               {{#isfirst}}tabindex="-1" aria-disabled="true"{{/isfirst}}
+               aria-label="{{#str}}previous_page{{/str}}">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                {{^compact}}<span class="d-none d-sm-inline ms-1">{{#str}}previous{{/str}}</span>{{/compact}}
+            </a>
+        </li>
+        {{/showprevnextfalse}}
+
+        {{! Page numbers }}
+        {{#pages}}
+        {{#isellipsis}}
+        <li class="page-item jb-page-item jb-page-ellipsis disabled" aria-hidden="true">
+            <span class="page-link jb-page-link">...</span>
+        </li>
+        {{/isellipsis}}
+        {{^isellipsis}}
+        <li class="page-item jb-page-item{{#iscurrent}} active{{/iscurrent}}">
+            <a class="page-link jb-page-link"
+               href="{{baseurl}}{{#hasquery}}&{{/hasquery}}{{^hasquery}}?{{/hasquery}}page={{number}}"
+               {{#iscurrent}}aria-current="page"{{/iscurrent}}>
+                {{number}}
+            </a>
+        </li>
+        {{/isellipsis}}
+        {{/pages}}
+
+        {{! Next page button }}
+        {{^showprevnextfalse}}
+        <li class="page-item jb-page-item{{#islast}} disabled{{/islast}}">
+            <a class="page-link jb-page-link"
+               href="{{baseurl}}{{#hasquery}}&{{/hasquery}}{{^hasquery}}?{{/hasquery}}page={{nextpage}}"
+               {{#islast}}tabindex="-1" aria-disabled="true"{{/islast}}
+               aria-label="{{#str}}next_page{{/str}}">
+                {{^compact}}<span class="d-none d-sm-inline me-1">{{#str}}next{{/str}}</span>{{/compact}}
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </a>
+        </li>
+        {{/showprevnextfalse}}
+
+        {{! Last page button }}
+        {{#showfirstlast}}
+        <li class="page-item jb-page-item{{#islast}} disabled{{/islast}}">
+            <a class="page-link jb-page-link"
+               href="{{baseurl}}{{#hasquery}}&{{/hasquery}}{{^hasquery}}?{{/hasquery}}page={{totalpages}}"
+               {{#islast}}tabindex="-1" aria-disabled="true"{{/islast}}
+               aria-label="{{#str}}last_page{{/str}}"
+               title="{{#str}}last_page{{/str}}">
+                <i class="fa fa-angles-right" aria-hidden="true"></i>
+                <span class="visually-hidden">{{#str}}last_page{{/str}}</span>
+            </a>
+        </li>
+        {{/showfirstlast}}
+    </ul>
+
+    {{! Jump to page }}
+    {{#showjump}}
+    <div class="jb-pagination-jump ms-3 d-none d-md-flex align-items-center gap-2">
+        <label for="jb-page-jump" class="small text-muted mb-0">{{#str}}go_to_page{{/str}}</label>
+        <input type="number"
+               id="jb-page-jump"
+               class="form-control form-control-sm jb-page-jump-input"
+               min="1"
+               max="{{totalpages}}"
+               value="{{currentpage}}"
+               style="width: 70px;">
+        <button type="button" class="btn btn-sm jb-btn-ghost" id="jb-page-jump-btn">
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        </button>
+    </div>
+    {{/showjump}}
+</nav>

@@ -1,0 +1,178 @@
+{{!
+    @template local_jobboard/components/page_header
+
+    Page header component with title, breadcrumb, actions, and metadata.
+    Provides consistent page header styling across the plugin.
+
+    Context variables:
+    * title (string) - Page title
+    * subtitle (string) - Optional subtitle/description
+    * icon (string) - Title icon
+    * iconcolor (string) - Icon background color
+    * breadcrumb (object) - Breadcrumb data (see breadcrumb.mustache)
+    * actions (array) - Action buttons [{url, label, icon, color, variant, dropdown}]
+    * metadata (array) - Metadata items [{icon, label, value}]
+    * badge (object) - Status badge {value, color, variant}
+    * tabs (object) - Navigation tabs (see nav_tabs.mustache)
+    * backurl (string) - URL for back button
+    * backlabel (string) - Label for back button
+    * divider (bool) - Show bottom divider (default: true)
+    * sticky (bool) - Make header sticky
+    * compact (bool) - Use compact spacing
+    * banner (object) - Optional banner message {type, icon, message, dismissible}
+
+    Example context (json):
+    {
+        "title": "Software Developer",
+        "subtitle": "Full-time position at ACME Corporation",
+        "icon": "briefcase",
+        "iconcolor": "primary",
+        "breadcrumb": {
+            "items": [
+                {"label": "Home", "url": "/", "icon": "home"},
+                {"label": "Vacancies", "url": "/vacancies.php"},
+                {"label": "Software Developer", "active": true}
+            ]
+        },
+        "actions": [
+            {"url": "/edit.php?id=1", "label": "Edit", "icon": "edit", "color": "primary"},
+            {"label": "More", "icon": "ellipsis-v", "color": "ghost", "dropdown": [
+                {"url": "/duplicate.php?id=1", "label": "Duplicate", "icon": "copy"},
+                {"url": "/delete.php?id=1", "label": "Delete", "icon": "trash", "color": "danger"}
+            ]}
+        ],
+        "metadata": [
+            {"icon": "calendar", "label": "Posted", "value": "Dec 15, 2024"},
+            {"icon": "eye", "label": "Views", "value": "1,234"},
+            {"icon": "users", "label": "Applications", "value": "45"}
+        ],
+        "badge": {"value": "Active", "color": "success"}
+    }
+}}
+{{#banner}}
+<div class="jb-page-banner alert jb-alert-{{type}} d-flex align-items-center mb-0 rounded-0" role="alert">
+    {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}
+    <div class="flex-grow-1">{{{message}}}</div>
+    {{#dismissible}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{#str}}close{{/str}}"></button>
+    {{/dismissible}}
+</div>
+{{/banner}}
+
+<header class="jb-page-header{{#sticky}} jb-page-header-sticky{{/sticky}}{{#compact}} jb-page-header-compact{{/compact}}{{#divider}} jb-page-header-divider{{/divider}}{{^divider}}{{^nodivider}} jb-page-header-divider{{/nodivider}}{{/divider}}">
+    <div class="jb-page-header-content">
+        {{! Breadcrumb }}
+        {{#breadcrumb}}
+        <div class="jb-page-header-breadcrumb mb-3">
+            {{> local_jobboard/components/breadcrumb}}
+        </div>
+        {{/breadcrumb}}
+
+        {{! Back button (alternative to breadcrumb) }}
+        {{#backurl}}{{^breadcrumb}}
+        <div class="jb-page-header-back mb-3">
+            <a href="{{backurl}}" class="jb-back-link text-muted">
+                <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+                {{#backlabel}}{{backlabel}}{{/backlabel}}
+                {{^backlabel}}{{#str}}back{{/str}}{{/backlabel}}
+            </a>
+        </div>
+        {{/breadcrumb}}{{/backurl}}
+
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start gap-3">
+            {{! Left side: Title and metadata }}
+            <div class="jb-page-header-main flex-grow-1 min-width-0">
+                <div class="d-flex align-items-start gap-3">
+                    {{! Icon }}
+                    {{#icon}}
+                    <div class="jb-page-header-icon flex-shrink-0">
+                        <div class="d-flex align-items-center justify-content-center rounded-3 bg-{{#iconcolor}}{{iconcolor}}{{/iconcolor}}{{^iconcolor}}primary{{/iconcolor}}-subtle"
+                             style="width: 56px; height: 56px;">
+                            <i class="fa fa-{{icon}} fa-lg text-{{#iconcolor}}{{iconcolor}}{{/iconcolor}}{{^iconcolor}}primary{{/iconcolor}}" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    {{/icon}}
+
+                    <div class="flex-grow-1 min-width-0">
+                        {{! Title row with badge }}
+                        <div class="d-flex align-items-center flex-wrap gap-2 mb-1">
+                            <h1 class="jb-page-title h3 fw-bold mb-0">{{title}}</h1>
+                            {{#badge}}
+                            <span class="badge jb-badge-{{#variant}}{{variant}}-{{/variant}}{{color}}">
+                                {{#badgeicon}}<i class="fa fa-{{badgeicon}} me-1" aria-hidden="true"></i>{{/badgeicon}}
+                                {{value}}
+                            </span>
+                            {{/badge}}
+                        </div>
+
+                        {{! Subtitle }}
+                        {{#subtitle}}
+                        <p class="jb-page-subtitle text-muted mb-0">{{{subtitle}}}</p>
+                        {{/subtitle}}
+
+                        {{! Metadata }}
+                        {{#metadata}}
+                        <div class="jb-page-metadata d-flex flex-wrap gap-3 mt-2">
+                            {{#.}}
+                            <span class="jb-metadata-item text-muted small">
+                                {{#icon}}<i class="fa fa-{{icon}} me-1 opacity-75" aria-hidden="true"></i>{{/icon}}
+                                {{#label}}<span class="jb-metadata-label">{{label}}:</span>{{/label}}
+                                <span class="jb-metadata-value{{#valuecolor}} text-{{valuecolor}}{{/valuecolor}}">{{value}}</span>
+                            </span>
+                            {{/.}}
+                        </div>
+                        {{/metadata}}
+                    </div>
+                </div>
+            </div>
+
+            {{! Right side: Actions }}
+            {{#actions}}
+            <div class="jb-page-header-actions d-flex flex-wrap gap-2 flex-shrink-0">
+                {{#.}}
+                {{#dropdown}}
+                <div class="dropdown">
+                    <button type="button"
+                            class="btn jb-btn-{{#color}}{{color}}{{/color}}{{^color}}ghost{{/color}}{{#variant}} btn-{{variant}}{{/variant}}"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        {{#icon}}<i class="fa fa-{{icon}}{{#label}} me-2{{/label}}" aria-hidden="true"></i>{{/icon}}
+                        {{label}}
+                        <i class="fa fa-chevron-down ms-1 fa-xs" aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end jb-dropdown-menu">
+                        {{#dropdown}}
+                        {{#divider}}
+                        <li><hr class="dropdown-divider"></li>
+                        {{/divider}}
+                        {{^divider}}
+                        <li>
+                            <a class="dropdown-item jb-dropdown-item{{#color}} text-{{color}}{{/color}}" href="{{url}}">
+                                {{#icon}}<i class="fa fa-{{icon}} me-2 fa-fw" aria-hidden="true"></i>{{/icon}}
+                                {{label}}
+                            </a>
+                        </li>
+                        {{/divider}}
+                        {{/dropdown}}
+                    </ul>
+                </div>
+                {{/dropdown}}
+                {{^dropdown}}
+                <a href="{{url}}" class="btn jb-btn-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}{{#variant}} btn-{{variant}}{{/variant}}">
+                    {{#icon}}<i class="fa fa-{{icon}}{{#label}} me-2{{/label}}" aria-hidden="true"></i>{{/icon}}
+                    {{label}}
+                </a>
+                {{/dropdown}}
+                {{/.}}
+            </div>
+            {{/actions}}
+        </div>
+
+        {{! Navigation tabs }}
+        {{#tabs}}
+        <div class="jb-page-header-tabs mt-4">
+            {{> local_jobboard/components/nav_tabs}}
+        </div>
+        {{/tabs}}
+    </div>
+</header>
