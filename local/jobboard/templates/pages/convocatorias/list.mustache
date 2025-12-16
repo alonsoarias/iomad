@@ -25,7 +25,7 @@
 }}
 <div class="jb-convocatorias-list" data-region="jobboard-convocatorias">
     {{! Page Header }}
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <header class="jb-page-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
         <div class="btn-group">
             <a href="{{importurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
                 <i class="fa fa-file-csv me-1" aria-hidden="true"></i>
@@ -38,7 +38,7 @@
             </a>
             {{/cancreate}}
         </div>
-    </div>
+    </header>
 
     {{! Statistics Row }}
     {{#stats.0}}
@@ -228,10 +228,26 @@
 
     {{! Pagination }}
     {{#pagination}}
-    <nav class="mt-4 d-flex justify-content-center">
+    <nav class="mt-4 d-flex justify-content-center jb-fade-in" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
         {{{pagination}}}
     </nav>
     {{/pagination}}
+
+    {{! Navigation Footer }}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center py-3 border-top jb-fade-in">
+                <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
+                    <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+                    {{#str}}backtodashboard, local_jobboard{{/str}}
+                </a>
+                <a href="{{importurl}}" class="btn btn-link text-muted jb-hover-primary">
+                    {{#str}}importvacancies, local_jobboard{{/str}}
+                    <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{! Styles consolidated in styles.css }}

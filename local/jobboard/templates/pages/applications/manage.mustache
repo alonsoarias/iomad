@@ -278,15 +278,19 @@
         </div>
 
         {{! Navigation Footer }}
-        <div class="d-flex justify-content-between align-items-center py-3 mt-4 border-top">
-            <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm">
-                <i class="fa fa-arrow-left me-1"></i>
-                <span class="d-none d-sm-inline">{{#str}}backtomanage, local_jobboard{{/str}}</span>
-            </a>
-            <a href="{{dashboardurl}}" class="btn btn-link text-muted btn-sm">
-                {{#str}}dashboard, local_jobboard{{/str}}
-                <i class="fa fa-arrow-right ms-1"></i>
-            </a>
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center py-3 border-top jb-fade-in">
+                    <a href="{{backurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary btn-sm">
+                        <i class="fa fa-arrow-left me-1"></i>
+                        <span class="d-none d-sm-inline">{{#str}}backtomanage, local_jobboard{{/str}}</span>
+                    </a>
+                    <a href="{{dashboardurl}}" class="btn btn-link text-muted jb-hover-primary btn-sm">
+                        {{#str}}dashboard, local_jobboard{{/str}}
+                        <i class="fa fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

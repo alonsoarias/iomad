@@ -65,7 +65,7 @@
                 </div>
 
                 {{! Status Alert }}
-                <div class="alert alert-{{application.statuscolor}} d-flex align-items-center mb-4" role="alert">
+                <div class="alert alert-{{application.statuscolor}} jb-alert-{{application.statuscolor}} d-flex align-items-center mb-4 jb-fade-in-up" role="alert">
                     <i class="fa fa-{{application.statusicon}} fa-lg me-3"></i>
                     <div>
                         <strong>{{#str}}currentstatus, local_jobboard{{/str}}: {{application.statuslabel}}</strong>
@@ -461,12 +461,12 @@
         {{! Navigation Footer }}
         <div class="row mt-4">
             <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center py-3 border-top">
-                    <a href="{{backurl}}" class="btn btn-outline-secondary">
+                <div class="d-flex justify-content-between align-items-center py-3 border-top jb-fade-in">
+                    <a href="{{backurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
                         <i class="fa fa-arrow-left me-2"></i>
                         {{backlabel}}
                     </a>
-                    <a href="{{dashboardurl}}" class="btn btn-link text-muted">
+                    <a href="{{dashboardurl}}" class="btn btn-link text-muted jb-hover-primary">
                         {{#str}}backtodashboard, local_jobboard{{/str}}
                         <i class="fa fa-arrow-right ms-2"></i>
                     </a>
