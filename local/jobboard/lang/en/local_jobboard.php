@@ -3474,3 +3474,43 @@ $string['applicationcreatefailed'] = 'Failed to create application record.';
 $string['declarationtitle'] = 'Declaration of Accuracy';
 $string['obtaindocument'] = 'Obtain this document';
 $string['missingvacancy'] = 'Vacancy information is missing.';
+
+// =============================================================================
+// PROFILE PAGE STRINGS
+// =============================================================================
+
+$string['profilerequired_title'] = 'Profile completion required';
+$string['profilerequired_desc'] = 'Please complete all required fields in your profile before proceeding with your application.';
+$string['profilechecklist'] = 'Profile checklist';
+$string['profile_field_names'] = 'First and last name';
+$string['profile_field_email'] = 'Email address';
+$string['profile_field_phone'] = 'Phone number';
+$string['profile_field_idnumber'] = 'ID number';
+$string['profile_required_note'] = 'Fields marked with yellow need to be completed.';
+$string['profile_help_text'] = 'If you need assistance completing your profile, please contact support.';
+$string['completeprofiletoapply'] = 'Complete your profile to continue with your application.';
+
+// =============================================================================
+// REVIEW PAGE STRINGS
+// =============================================================================
+
+$string['reviewqueue_desc'] = 'Review and validate applicant documents submitted for vacancies.';
+$string['reviewapplication'] = 'Review application';
+$string['selectdocumenttopreview'] = 'Select a document from the list to preview it here.';
+$string['sequentialreview'] = 'Sequential review';
+$string['reviewingdocument'] = 'Reviewing document';
+$string['readytosubmit'] = 'All documents reviewed. You can submit your review now.';
+$string['alldocsreviewed'] = 'All documents reviewed';
+$string['submitreview'] = 'Submit review';
+$string['reviewobservations_placeholder'] = 'Add any final observations about this application...';
+$string['fullscreen'] = 'Fullscreen';
+
+// =============================================================================
+// MANAGE APPLICATIONS PAGE STRINGS
+// =============================================================================
+
+$string['searchapplicant'] = 'Search by name or email...';
+$string['allstatuses'] = 'All statuses';
+$string['applicantslist'] = 'Applicants list';
+$string['noapplicationsfound_desc'] = 'No applications match your current filters. Try adjusting your search criteria.';
+$string['exportdesc'] = 'Download the applications data in your preferred format for offline analysis.';

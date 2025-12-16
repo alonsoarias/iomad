@@ -975,13 +975,17 @@ trait vacancy_renderer {
 
         return [
             'vacancytitle' => format_string($vacancy->title),
+            'vacancycode' => format_string($vacancy->code),
             'vacancyid' => $vacancy->id,
             'backurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'manage']))->out(false),
             'reseturl' => (new \moodle_url('/local/jobboard/admin/manage_applications.php', ['vacancyid' => $vacancy->id]))->out(false),
+            'dashboardurl' => (new \moodle_url('/local/jobboard/index.php'))->out(false),
+            'reviewurl' => (new \moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancy->id]))->out(false),
             'stats' => $statscards,
             'statuses' => $statusoptions,
             'currentstatus' => $status,
             'currentsearch' => s($search),
+            'totalapplications' => $total,
             'hasapplications' => !empty($applications),
             'applications' => $appsdata,
             'tableheaders' => $tableheaders,

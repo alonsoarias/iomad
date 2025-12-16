@@ -881,3 +881,88 @@
         margin: 0.25rem 0;
     }
 }
+
+/* ==========================================================================
+   BACKGROUND SUBTLE COLORS - For Bootstrap 5.3+ compatibility
+   ========================================================================== */
+
+/* These classes provide subtle background colors for stats cards and UI elements */
+.bg-primary-subtle {
+    background-color: rgba(13, 110, 253, 0.1) !important;
+}
+
+.bg-secondary-subtle {
+    background-color: rgba(108, 117, 125, 0.1) !important;
+}
+
+.bg-success-subtle {
+    background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+.bg-danger-subtle {
+    background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+.bg-warning-subtle {
+    background-color: rgba(255, 193, 7, 0.15) !important;
+}
+
+.bg-info-subtle {
+    background-color: rgba(13, 202, 240, 0.1) !important;
+}
+
+/* ==========================================================================
+   PAGE LAYOUTS - Common page structure styles
+   ========================================================================== */
+
+/* Sidebar styling for 2-column layouts */
+.jb-sidebar {
+    z-index: 10;
+}
+
+/* Cards consistent styling */
+.jb-apply-page .card,
+.jb-manage-applications-page .card,
+.jb-review-page .card,
+.jb-profile-page .card {
+    border-radius: 0.5rem;
+}
+
+/* Document preview fullscreen mode */
+.jb-preview-fullscreen {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: white;
+}
+
+.jb-preview-fullscreen iframe,
+.jb-preview-fullscreen img {
+    max-height: 100vh !important;
+}
+
+/* Document list in review page */
+.jb-documents-list {
+    scrollbar-width: thin;
+}
+
+.jb-documents-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.jb-documents-list::-webkit-scrollbar-thumb {
+    background-color: #dee2e6;
+    border-radius: 3px;
+}
+
+.jb-doc-item.active {
+    background-color: rgba(13, 110, 253, 0.1) !important;
+}
+
+/* Minimum width utility */
+.min-width-0 {
+    min-width: 0;
+}

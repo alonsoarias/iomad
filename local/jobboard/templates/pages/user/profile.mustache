@@ -1,9 +1,8 @@
 {{!
     @template local_jobboard/pages/user/profile
 
-    Update profile page for Job Board applicants.
-    Uses jb-* CSS classes for consistent styling.
-    Includes accessibility features, animations, and loading states.
+    Update profile page template - Redesigned following apply.mustache pattern.
+    Uses 2-column layout with sidebar for consistent UX across jobboard.
 
     Context variables:
     * pagetitle (string) - Page title
@@ -13,7 +12,7 @@
     * formhtml (string) - Rendered form HTML
     * dashboardurl (string) - URL to dashboard
     * loading (bool) - Show skeleton loading state
-    * breadcrumbs (array) - Breadcrumb items
+    * str (object) - Language strings
 
     Example context (json):
     {
@@ -25,92 +24,203 @@
 }}
 {{#loading}}
 {{! Skeleton Loading State }}
-<div class="local-jobboard-profile" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="jb-skeleton-text mb-3" style="width: 200px; height: 1em;"></div>
-    <div class="mb-4">
-        <div class="jb-skeleton-title mb-2" style="width: 60%;"></div>
-        <div class="jb-skeleton-text" style="width: 80%;"></div>
-    </div>
-    <div class="card mb-4">
-        <div class="card-header bg-light">
-            <div class="jb-skeleton-text" style="width: 40%;"></div>
-        </div>
-        <div class="card-body">
-            <div class="jb-skeleton-text mb-2" style="width: 70%;"></div>
-            <div class="jb-skeleton-text" style="width: 50%;"></div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="jb-skeleton-text mb-3" style="width: 30%; height: 2em;"></div>
-            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
-            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
-            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
+<div class="jb-profile-page" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="container-fluid px-0">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="jb-skeleton-text mb-3" style="width: 200px; height: 1em;"></div>
+                <div class="jb-skeleton-title mb-2" style="width: 60%;"></div>
+                <div class="jb-skeleton-text mb-4" style="width: 80%;"></div>
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <div class="jb-skeleton-text" style="width: 40%;"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
+                        <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
+                        <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
+                    <div class="card-body">
+                        <div class="jb-skeleton-text mb-2" style="width: 80%;"></div>
+                        <div class="jb-skeleton-text" style="width: 50%;"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 {{/loading}}
 
 {{^loading}}
-<div class="local-jobboard-profile" data-region="jobboard-profile">
-    {{! Skip Link for Accessibility }}
-    <a href="#profile-main-content" class="jb-skip-link">
-        {{#str}}skiptocontent, local_jobboard{{/str}}
-    </a>
+<div class="jb-profile-page" id="jobboard-updateprofile" data-region="jobboard-profile">
+    <div class="container-fluid px-0">
+        <div class="row g-4">
+            {{! Main Content }}
+            <div class="col-lg-8">
+                {{! Page Header }}
+                <div class="jb-page-header mb-4">
+                    <nav aria-label="breadcrumb" class="mb-2">
+                        <ol class="breadcrumb small mb-0">
+                            <li class="breadcrumb-item">
+                                <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
+                            </li>
+                            {{#hasvacancy}}
+                            <li class="breadcrumb-item">
+                                <a href="{{applyurl}}">{{#str}}apply, local_jobboard{{/str}}</a>
+                            </li>
+                            {{/hasvacancy}}
+                            <li class="breadcrumb-item active" aria-current="page">{{pagetitle}}</li>
+                        </ol>
+                    </nav>
+                    <h1 class="h3 mb-1">
+                        <i class="fa fa-user-pen text-primary me-2" aria-hidden="true"></i>
+                        {{pagetitle}}
+                    </h1>
+                    {{#intro}}
+                    <p class="text-muted mb-0">{{intro}}</p>
+                    {{/intro}}
+                </div>
 
-    {{! Page Header }}
-    <header class="jb-page-header mb-4 jb-fade-in">
-        <h1 class="fs-3 mb-2">
-            <i class="fa fa-user-pen text-primary me-2" aria-hidden="true"></i>
-            {{pagetitle}}
-        </h1>
-        {{#intro}}
-        <p class="lead text-muted mb-0">{{intro}}</p>
-        {{/intro}}
-    </header>
+                {{! Info Alert }}
+                <div class="alert alert-info d-flex align-items-start mb-4" role="alert">
+                    <i class="fa fa-circle-info fa-lg me-3 mt-1"></i>
+                    <div>
+                        <strong>{{#str}}profilerequired_title, local_jobboard{{/str}}</strong>
+                        <p class="mb-0 small">{{#str}}profilerequired_desc, local_jobboard{{/str}}</p>
+                    </div>
+                </div>
 
-    {{! Vacancy Info Card (if applying for a specific vacancy) }}
-    {{#hasvacancy}}
-    <div class="alert alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.1s;">
-        <div class="jb-alert-icon me-3">
-            <i class="fa fa-briefcase fa-lg" aria-hidden="true"></i>
+                {{! Profile Form Card }}
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0">
+                            <i class="fa fa-id-card text-primary me-2"></i>
+                            {{#str}}personalinformation, local_jobboard{{/str}}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {{{formhtml}}}
+                    </div>
+                </div>
+            </div>
+
+            {{! Sidebar }}
+            <div class="col-lg-4">
+                <div class="jb-sidebar sticky-top" style="top: 80px;">
+                    {{! Vacancy Summary Card - Only if applying for a vacancy }}
+                    {{#hasvacancy}}
+                    <div class="card shadow-sm mb-4 border-primary">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">
+                                <i class="fa fa-briefcase text-primary me-2"></i>
+                                {{str.signup_applying_for}}
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-2">{{vacancy.title}}</h6>
+                            <dl class="row mb-0 small">
+                                <dt class="col-4 text-muted">{{str.code}}</dt>
+                                <dd class="col-8"><code>{{vacancy.code}}</code></dd>
+
+                                {{#vacancy.location}}
+                                <dt class="col-4 text-muted">{{#str}}location, local_jobboard{{/str}}</dt>
+                                <dd class="col-8">{{vacancy.location}}</dd>
+                                {{/vacancy.location}}
+                            </dl>
+                        </div>
+                    </div>
+                    {{/hasvacancy}}
+
+                    {{! Profile Checklist Card }}
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">
+                                <i class="fa fa-list-check text-success me-2"></i>
+                                {{#str}}profilechecklist, local_jobboard{{/str}}
+                            </h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush small">
+                                <li class="list-group-item d-flex align-items-center py-2">
+                                    <i class="fa fa-circle-check text-success me-2"></i>
+                                    {{#str}}profile_field_names, local_jobboard{{/str}}
+                                </li>
+                                <li class="list-group-item d-flex align-items-center py-2">
+                                    <i class="fa fa-circle-check text-success me-2"></i>
+                                    {{#str}}profile_field_email, local_jobboard{{/str}}
+                                </li>
+                                <li class="list-group-item d-flex align-items-center py-2">
+                                    <i class="fa fa-circle text-warning me-2"></i>
+                                    {{#str}}profile_field_phone, local_jobboard{{/str}}
+                                </li>
+                                <li class="list-group-item d-flex align-items-center py-2">
+                                    <i class="fa fa-circle text-warning me-2"></i>
+                                    {{#str}}profile_field_idnumber, local_jobboard{{/str}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-footer bg-white py-2">
+                            <small class="text-muted">
+                                <i class="fa fa-info-circle me-1"></i>
+                                {{#str}}profile_required_note, local_jobboard{{/str}}
+                            </small>
+                        </div>
+                    </div>
+
+                    {{! Help Card }}
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h6 class="mb-0">
+                                <i class="fa fa-question-circle text-info me-2"></i>
+                                {{#str}}help, local_jobboard{{/str}}
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="small text-muted mb-3">{{#str}}profile_help_text, local_jobboard{{/str}}</p>
+                            <div class="d-grid gap-2">
+                                <a href="{{dashboardurl}}" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fa fa-home me-2"></i>
+                                    {{#str}}dashboard, local_jobboard{{/str}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="flex-grow-1">
-            <h2 class="fs-6 mb-2 fw-bold">
-                {{#str}}signup_applying_for, local_jobboard{{/str}}
-            </h2>
-            <p class="mb-1 fw-medium">{{vacancy.title}}</p>
-            <div class="d-flex flex-wrap gap-3 small">
-                <span>
-                    <i class="fa fa-hashtag text-muted me-1" aria-hidden="true"></i>
-                    <strong>{{vacancy.code}}</strong>
-                </span>
-                {{#vacancy.location}}
-                <span>
-                    <i class="fa fa-location-dot text-muted me-1" aria-hidden="true"></i>
-                    {{vacancy.location}}
-                </span>
-                {{/vacancy.location}}
+
+        {{! Navigation Footer }}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center py-3 border-top">
+                    <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+                        <i class="fa fa-arrow-left me-2"></i>
+                        {{#str}}backtodashboard, local_jobboard{{/str}}
+                    </a>
+                    {{#hasvacancy}}
+                    <span class="text-muted small">
+                        <i class="fa fa-info-circle me-1"></i>
+                        {{#str}}completeprofiletoapply, local_jobboard{{/str}}
+                    </span>
+                    {{/hasvacancy}}
+                </div>
             </div>
         </div>
     </div>
-    {{/hasvacancy}}
-
-    {{! Profile Form }}
-    <main id="profile-main-content">
-        <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.15s;">
-            <div class="card-body">
-                {{{formhtml}}}
-            </div>
-        </div>
-    </main>
-
-    {{! Navigation Footer }}
-    <nav class="jb-navigation-footer d-flex justify-content-between align-items-center mt-4 py-3 border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
-        <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
-            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
-            {{#str}}backtodashboard, local_jobboard{{/str}}
-        </a>
-    </nav>
 </div>
 {{/loading}}
+
+{{! Minimal CSS for page styling }}
+<style>
+.jb-profile-page .card {
+    border-radius: 0.5rem;
+}
+.jb-profile-page .jb-sidebar {
+    z-index: 10;
+}
+</style>
