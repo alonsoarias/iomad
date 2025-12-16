@@ -47,6 +47,7 @@ $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url(new moodle_url('/local/jobboard/updateprofile.php', ['vacancyid' => $vacancyid]));
 $PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title(get_string('updateprofile_title', 'local_jobboard'));
 $PAGE->set_heading(get_string('updateprofile_title', 'local_jobboard'));
 
