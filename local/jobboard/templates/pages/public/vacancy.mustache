@@ -26,11 +26,18 @@
 }}
 <div class="jb-vacancy-page" data-region="jobboard-public-vacancy" data-vacancy-id="{{vacancy.id}}">
     <div class="container-fluid px-0">
-        {{! Page Header }}
+        {{! Quick Info Bar }}
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-            <div>
-                <h1 class="h4 mb-1">{{vacancy.title}}</h1>
-                <code class="small text-muted">{{vacancy.code}}</code>
+            <div class="d-flex align-items-center gap-3">
+                <code class="badge bg-primary">{{vacancy.code}}</code>
+                {{#isurgent}}
+                {{^isclosed}}
+                <span class="badge bg-warning text-dark">
+                    <i class="fa fa-clock me-1" aria-hidden="true"></i>
+                    {{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
+                </span>
+                {{/isclosed}}
+                {{/isurgent}}
             </div>
             {{^isclosed}}
             {{#canapply}}
@@ -42,28 +49,6 @@
             {{/hasapplied}}
             {{/canapply}}
             {{/isclosed}}
-        </div>
-
-        {{! Urgent Alert }}
-        {{#isurgent}}
-        {{^isclosed}}
-        <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
-            <i class="fa fa-triangle-exclamation me-2" aria-hidden="true"></i>
-            <div>
-                <strong>{{#str}}closingsoon, local_jobboard{{/str}}</strong>
-                <span class="ms-2">{{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}</span>
-            </div>
-        </div>
-        {{/isclosed}}
-        {{/isurgent}}
-
-        {{! Status Alert }}
-        <div class="alert alert-{{statuscolor}} d-flex justify-content-between align-items-center mb-4" role="status">
-            <span>
-                <i class="fa fa-{{statusicon}} me-2" aria-hidden="true"></i>
-                {{statusmessage}}
-            </span>
-            <span class="badge bg-{{vacancy.statuscolor}}">{{vacancy.statuslabel}}</span>
         </div>
 
         <div class="row">
