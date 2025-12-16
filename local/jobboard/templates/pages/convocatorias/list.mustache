@@ -167,7 +167,7 @@
 
                 {{! Card Footer }}
                 <div class="card-footer bg-white">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         {{! Quick Actions }}
                         <div class="btn-group btn-group-sm">
                             <a href="{{editurl}}" class="btn btn-outline-primary" title="{{#str}}edit{{/str}}">
@@ -186,23 +186,15 @@
                             {{/hasvacancies}}
                         </div>
 
-                        {{! Status Actions Dropdown }}
+                        {{! Status Actions - Direct buttons }}
                         {{#hasstatusactions}}
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-outline-{{statuscolor}} dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-gear me-1" aria-hidden="true"></i>
-                                {{#str}}actions{{/str}}
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                {{#statusactions}}
-                                <li>
-                                    <a href="{{url}}" class="dropdown-item {{#isdanger}}text-danger{{/isdanger}}" {{#confirm}}onclick="return confirm('{{confirm}}');"{{/confirm}}>
-                                        <i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>
-                                        {{label}}
-                                    </a>
-                                </li>
-                                {{/statusactions}}
-                            </ul>
+                        <div class="btn-group btn-group-sm">
+                            {{#statusactions}}
+                            <a href="{{url}}" class="btn {{#isdanger}}btn-outline-danger{{/isdanger}}{{^isdanger}}btn-outline-secondary{{/isdanger}}" title="{{label}}" {{#confirm}}onclick="return confirm('{{confirm}}');"{{/confirm}}>
+                                <i class="fa fa-{{icon}}" aria-hidden="true"></i>
+                                <span class="d-none d-xl-inline ms-1">{{label}}</span>
+                            </a>
+                            {{/statusactions}}
                         </div>
                         {{/hasstatusactions}}
                     </div>

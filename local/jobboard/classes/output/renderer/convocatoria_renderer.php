@@ -127,6 +127,7 @@ trait convocatoria_renderer {
                     'icon' => 'trash',
                     'label' => get_string('delete'),
                     'confirm' => get_string('confirmdeletevconvocatoria', 'local_jobboard'),
+                    'isdanger' => true,
                 ];
             } elseif ($c->status === 'open') {
                 $statusactions[] = [
@@ -154,6 +155,7 @@ trait convocatoria_renderer {
                     'icon' => 'trash',
                     'label' => get_string('delete'),
                     'confirm' => get_string('confirmdeletevconvocatoria', 'local_jobboard'),
+                    'isdanger' => true,
                 ];
             }
 
