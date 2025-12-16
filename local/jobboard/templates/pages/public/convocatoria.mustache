@@ -29,27 +29,24 @@
 }}
 <div class="jb-convocatoria-page" data-region="jobboard-public-convocatoria" data-convocatoria-id="{{convocatoria.id}}">
     <div class="container-fluid px-0">
-        {{! Page Header }}
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-            <div>
-                <h1 class="h4 mb-1">{{convocatoria.name}}</h1>
-                <code class="small text-muted">{{convocatoria.code}}</code>
+        {{! Quick Info Bar }}
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+            <div class="d-flex align-items-center gap-2">
+                <code class="badge bg-light text-dark">{{convocatoria.code}}</code>
+                <span class="badge bg-{{convocatoria.statuscolor}}">{{convocatoria.statuslabel}}</span>
+                {{#isclosingsoon}}
+                <span class="badge bg-warning text-dark">
+                    <i class="fa fa-clock me-1" aria-hidden="true"></i>
+                    {{daysremaining}} {{#str}}days, local_jobboard{{/str}}
+                </span>
+                {{/isclosingsoon}}
             </div>
             {{#totalvacancies}}
-            <a href="{{vacanciesurl}}" class="btn btn-primary">
+            <a href="{{vacanciesurl}}" class="btn btn-primary btn-sm">
                 <i class="fa fa-briefcase me-2" aria-hidden="true"></i>
                 {{#str}}viewvacancies, local_jobboard{{/str}} ({{totalvacancies}})
             </a>
             {{/totalvacancies}}
-        </div>
-
-        {{! Status Alert }}
-        <div class="alert alert-{{statuscolor}} d-flex justify-content-between align-items-center mb-4" role="status">
-            <span>
-                <i class="fa fa-info-circle me-2" aria-hidden="true"></i>
-                {{statusmessage}}
-            </span>
-            <span class="badge bg-{{convocatoria.statuscolor}}">{{convocatoria.statuslabel}}</span>
         </div>
 
         <div class="row">
