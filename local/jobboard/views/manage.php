@@ -307,15 +307,15 @@ $data = $renderer->prepare_manage_page_data(
 echo $OUTPUT->header();
 echo $renderer->render_manage_page($data);
 
+// Initialize filter auto-submit for all users.
+$PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+    'formSelector' => '.jb-filter-form',
+]]);
+
 // Add JavaScript for AJAX department loading (IOMAD).
 if ($isiomad && has_capability('local/jobboard:viewallvacancies', $context)) {
     $allDepartmentsLabel = get_string('alldepartments', 'local_jobboard');
-    $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
-        'companySelector' => '#filter-companyid',
-        'departmentSelector' => '#filter-departmentid',
-        'preselect' => $departmentid,
-        'allLabel' => $allDepartmentsLabel,
-    ]]);
+    // IOMAD department cascade is handled separately.
 }
 
 echo $OUTPUT->footer();

@@ -120,15 +120,9 @@ $PAGE->requires->js_call_amd('local_jobboard/card_actions', 'init', [[
     'cardSelector' => '.jb-vacancy-card'
 ]]);
 
-// IOMAD department filter AJAX.
-if ($isiomad && $canviewall) {
-    $allDepartmentsLabel = get_string('alldepartments', 'local_jobboard');
-    $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
-        'companySelector' => '#filter-companyid',
-        'departmentSelector' => '#filter-departmentid',
-        'preselect' => $departmentid,
-        'allLabel' => $allDepartmentsLabel,
-    ]]);
-}
+// Initialize filter auto-submit for all users.
+$PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+    'formSelector' => '.jb-filter-form',
+]]);
 
 echo $OUTPUT->footer();

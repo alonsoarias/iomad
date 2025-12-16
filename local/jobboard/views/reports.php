@@ -124,6 +124,12 @@ $data['noconvocatoriaselected'] = !$convocatoriaid && $requiresconvocatoria;
 // Output page.
 echo $OUTPUT->header();
 echo $renderer->render_reports_page($data);
+
+// Initialize filter auto-submit for all users.
+$PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+    'formSelector' => '.jb-filter-form',
+]]);
+
 echo $OUTPUT->footer();
 
 /**

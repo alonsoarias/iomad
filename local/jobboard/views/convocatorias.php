@@ -253,4 +253,10 @@ $data = $renderer->prepare_convocatorias_page_data(
 // Output the page.
 echo $OUTPUT->header();
 echo $renderer->render_convocatorias_page($data);
+
+// Initialize filter auto-submit for all users.
+$PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+    'formSelector' => '.jb-filter-form',
+]]);
+
 echo $OUTPUT->footer();

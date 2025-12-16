@@ -204,6 +204,12 @@ if ($convocatoriaid > 0) {
     // Output page.
     echo $OUTPUT->header();
     echo $renderer->render_public_page($data);
+
+    // Initialize filter auto-submit for all users.
+    $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+        'formSelector' => '.jb-filter-form',
+    ]]);
+
     echo $OUTPUT->footer();
     exit;
 }
@@ -256,4 +262,10 @@ $data = $renderer->prepare_public_convocatorias_data(
 // Output page.
 echo $OUTPUT->header();
 echo $renderer->render_public_page($data);
+
+// Initialize filter auto-submit for all users.
+$PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+    'formSelector' => '.jb-filter-form',
+]]);
+
 echo $OUTPUT->footer();
