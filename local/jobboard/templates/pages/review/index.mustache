@@ -646,52 +646,7 @@ function jobboardPreviewDocument(element) {
 }
 </script>
 
-{{! Minimal CSS for page styling }}
-<style>
-.jb-review-page .card {
-    border-radius: 0.5rem;
-}
-.jb-review-page .jb-sidebar {
-    z-index: 10;
-}
-.jb-review-page .min-width-0 {
-    min-width: 0;
-}
-.jb-preview-fullscreen {
-    position: fixed !important;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: 9999;
-    background: white;
-}
-.jb-preview-fullscreen iframe, .jb-preview-fullscreen img {
-    max-height: 100vh !important;
-}
-.jb-doc-item.active {
-    background-color: rgba(13, 110, 253, 0.1) !important;
-}
-.jb-documents-list {
-    scrollbar-width: thin;
-}
-.jb-documents-list::-webkit-scrollbar {
-    width: 6px;
-}
-.jb-documents-list::-webkit-scrollbar-thumb {
-    background-color: #dee2e6;
-    border-radius: 3px;
-}
-.jb-review-page .bg-primary-subtle {
-    background-color: rgba(13, 110, 253, 0.1) !important;
-}
-.jb-review-page .bg-success-subtle {
-    background-color: rgba(25, 135, 84, 0.1) !important;
-}
-.jb-review-page .bg-danger-subtle {
-    background-color: rgba(220, 53, 69, 0.1) !important;
-}
-.jb-review-page .bg-warning-subtle {
-    background-color: rgba(255, 193, 7, 0.1) !important;
-}
-</style>
+{{! Styles consolidated in styles.css }}
 
 {{! JavaScript for document observations }}
 {{#selectedapplication}}

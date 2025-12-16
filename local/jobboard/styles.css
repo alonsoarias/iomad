@@ -1047,3 +1047,273 @@
 .jb-review-page .avatar-circle {
     font-size: 0.875rem;
 }
+
+/* ==========================================================================
+   UNIFIED PAGE LAYOUTS - Consolidated styles from inline blocks
+   ========================================================================== */
+
+/* Base card styling for all jobboard pages */
+.jb-apply-page .card,
+.jb-manage-applications-page .card,
+.jb-review-page .card,
+.jb-profile-page .card,
+.jb-vacancy-detail .card,
+.jb-applications-list .card,
+.jb-convocatorias-list .card,
+.jb-application-detail .card,
+.jb-public-page .card,
+.jb-convocatoria-page .card,
+.jb-vacancy-page .card,
+.jb-detail-page .card,
+.jb-exemptions-page .card,
+.jb-my-reviews-page .card,
+.jb-assign-reviewer .card,
+.jb-browse-convocatorias .card {
+    border-radius: 0.5rem;
+}
+
+/* Card header border radius */
+.jb-applications-list .card-header,
+.jb-convocatorias-list .card-header {
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Sidebar sticky positioning - unified */
+.jb-sidebar {
+    z-index: 10;
+}
+
+.jb-sidebar.sticky-top {
+    top: 80px;
+}
+
+/* Progress bar styling */
+.jb-apply-page .progress,
+.jb-applications-list .progress,
+.jb-application-detail .progress,
+.jb-vacancy-detail .progress,
+.jb-my-reviews-page .progress {
+    border-radius: 0.25rem;
+}
+
+/* ==========================================================================
+   AVATAR SIZES - Utility classes for consistent avatar sizing
+   ========================================================================== */
+
+.jb-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.jb-avatar-xs {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+}
+
+.jb-avatar-sm {
+    width: 36px;
+    height: 36px;
+    font-size: 0.8125rem;
+}
+
+.jb-avatar-md {
+    width: 40px;
+    height: 40px;
+    font-size: 0.875rem;
+}
+
+.jb-avatar-lg {
+    width: 48px;
+    height: 48px;
+    font-size: 1rem;
+}
+
+.jb-avatar-xl {
+    width: 64px;
+    height: 64px;
+    font-size: 1.25rem;
+}
+
+/* ==========================================================================
+   PROGRESS BAR SIZES - Utility classes for progress bar heights
+   ========================================================================== */
+
+.jb-progress-xs {
+    height: 4px;
+}
+
+.jb-progress-sm {
+    height: 6px;
+}
+
+.jb-progress-md {
+    height: 8px;
+}
+
+.jb-progress-lg {
+    height: 12px;
+}
+
+/* ==========================================================================
+   ANIMATION DELAY UTILITIES - For staggered animations
+   ========================================================================== */
+
+.jb-delay-0 {
+    animation-delay: 0s;
+}
+
+.jb-delay-1 {
+    animation-delay: 0.05s;
+}
+
+.jb-delay-2 {
+    animation-delay: 0.1s;
+}
+
+.jb-delay-3 {
+    animation-delay: 0.15s;
+}
+
+.jb-delay-4 {
+    animation-delay: 0.2s;
+}
+
+.jb-delay-5 {
+    animation-delay: 0.25s;
+}
+
+/* ==========================================================================
+   MAX-WIDTH UTILITIES - For text truncation and content sizing
+   ========================================================================== */
+
+.jb-max-width-xs {
+    max-width: 100px;
+}
+
+.jb-max-width-sm {
+    max-width: 150px;
+}
+
+.jb-max-width-md {
+    max-width: 250px;
+}
+
+.jb-max-width-lg {
+    max-width: 400px;
+}
+
+.jb-max-width-xl {
+    max-width: 500px;
+}
+
+/* ==========================================================================
+   TABLE COLUMN UTILITIES - For consistent table column widths
+   ========================================================================== */
+
+.jb-col-code {
+    min-width: 100px;
+    width: 100px;
+}
+
+.jb-col-status {
+    min-width: 120px;
+    width: 120px;
+}
+
+.jb-col-date {
+    min-width: 110px;
+    width: 110px;
+}
+
+.jb-col-actions {
+    min-width: 140px;
+    width: 140px;
+}
+
+.jb-col-actions-sm {
+    min-width: 100px;
+    width: 100px;
+}
+
+/* ==========================================================================
+   PROSE CONTENT - For rich text/HTML content blocks
+   ========================================================================== */
+
+.jb-prose {
+    line-height: 1.7;
+}
+
+.jb-prose ul,
+.jb-prose ol {
+    margin-bottom: 1rem;
+    padding-left: 1.25rem;
+}
+
+.jb-prose p {
+    margin-bottom: 1rem;
+}
+
+.jb-prose p:last-child {
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   MOODLE FORM ADJUSTMENTS - For embedded Moodle forms
+   ========================================================================== */
+
+.jb-apply-page .mform fieldset {
+    margin-bottom: 1.5rem;
+}
+
+.jb-apply-page .mform .fitem {
+    margin-bottom: 1rem;
+}
+
+/* Document card border styling */
+.jb-apply-page .jb-document-card {
+    border-left-width: 3px;
+}
+
+/* Policy container text sizing */
+.jb-apply-page .jb-policy-container .card-body {
+    font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   APPLICATION DETAIL PAGE - Table and detail styling
+   ========================================================================== */
+
+.jb-application-detail .table > :not(caption) > * > * {
+    padding: 0.5rem 0.75rem;
+}
+
+/* ==========================================================================
+   RESPONSIVE TABLE UTILITY - Show/hide table cells responsively
+   ========================================================================== */
+
+.jb-d-lg-table-cell {
+    display: none;
+}
+
+@media (min-width: 992px) {
+    .jb-d-lg-table-cell {
+        display: table-cell;
+    }
+}
+
+/* ==========================================================================
+   NAVIGATION FOOTER - Consistent page footer navigation
+   ========================================================================== */
+
+.jb-navigation-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    margin-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+}
