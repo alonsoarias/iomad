@@ -184,7 +184,7 @@
                              {{#islocked}}style="cursor: not-allowed;"{{/islocked}}>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex align-items-center flex-grow-1 min-width-0 me-2">
-                                    <span class="badge rounded-pill {{#iscurrent}}bg-primary{{/iscurrent}}{{#isreviewed}}bg-{{statuscolor}}{{/isreviewed}}{{#islocked}}bg-secondary{{/islocked}} me-2 flex-shrink-0">{{docindex}}</span>
+                                    <span class="badge rounded-pill bg-{{statuscolor}} me-2 flex-shrink-0">{{docindex}}</span>
                                     <i class="fa fa-{{statusicon}} text-{{statuscolor}} me-2 flex-shrink-0"></i>
                                     <div class="min-width-0">
                                         <div class="fw-medium text-truncate small">{{typename}}</div>
@@ -310,11 +310,12 @@
 
     {{! ========== APPLICATIONS QUEUE MODE ========== }}
     {{^selectedapplication}}
-    {{! Quick Actions Bar }}
+    {{! Quick Actions Bar with Stats }}
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center flex-wrap gap-2">
             {{#stats}}
             <span class="badge bg-{{color}} px-3 py-2">
+                <i class="fa fa-{{icon}} me-1"></i>
                 <span class="fw-bold">{{value}}</span> {{label}}
             </span>
             {{/stats}}
@@ -342,8 +343,8 @@
                 {{/hiddenfields}}
                 <div class="row align-items-end g-2">
                     {{#fields}}
-                    <div class="col-md-4">
-                        <label for="filter-{{name}}" class="form-label small text-muted mb-1">{{label}}</label>
+                    <div class="col-md-8">
+                        <label for="filter-{{name}}" class="form-label small text-muted mb-1">{{#str}}vacancy, local_jobboard{{/str}}</label>
                         <select name="{{name}}" id="filter-{{name}}" class="form-select form-select-sm">
                             {{#options}}
                             <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
@@ -351,8 +352,8 @@
                         </select>
                     </div>
                     {{/fields}}
-                    <div class="col-md-auto">
-                        <button type="submit" class="btn btn-primary btn-sm">
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary btn-sm w-100">
                             <i class="fa fa-search me-1"></i>{{#str}}filter, local_jobboard{{/str}}
                         </button>
                     </div>
@@ -364,45 +365,62 @@
 
     {{! Applications List }}
     {{#hasapplications}}
-    {{#applications}}
-    <div class="card shadow-sm mb-3 {{#isurgent}}border-danger{{/isurgent}}">
-        <div class="card-body py-3">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="d-flex align-items-center gap-2 mb-1">
-                        <h6 class="mb-0">{{applicantname}}</h6>
-                        {{#isurgent}}
-                        <span class="badge bg-danger"><i class="fa fa-triangle-exclamation me-1"></i>{{#str}}urgent, local_jobboard{{/str}}</span>
-                        {{/isurgent}}
-                    </div>
-                    <p class="text-muted small mb-1"><i class="fa fa-envelope me-2"></i>{{email}}</p>
-                    <div class="d-flex flex-wrap gap-2 align-items-center small">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>{{#str}}applicant, local_jobboard{{/str}}</th>
+                    <th>{{#str}}vacancy, local_jobboard{{/str}}</th>
+                    <th class="text-center">{{#str}}documents, local_jobboard{{/str}}</th>
+                    <th class="text-center">{{#str}}date, local_jobboard{{/str}}</th>
+                    <th class="text-end">{{#str}}actions, local_jobboard{{/str}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#applications}}
+                <tr class="{{#isurgent}}table-danger{{/isurgent}}">
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <strong>{{applicantname}}</strong>
+                                {{#isurgent}}
+                                <span class="badge bg-danger ms-1"><i class="fa fa-exclamation-triangle"></i></span>
+                                {{/isurgent}}
+                                <div class="small text-muted">{{email}}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
                         <code class="badge bg-light text-dark">{{vacancycode}}</code>
-                        <span class="text-muted">{{vacancytitle}}</span>
-                    </div>
-                </div>
-                <div class="col-md-3 text-md-center my-2 my-md-0">
-                    <span class="badge bg-secondary me-1">{{doccount}} {{#str}}documents, local_jobboard{{/str}}</span>
-                    {{#pendingcount}}
-                    <span class="badge bg-warning text-dark">{{pendingcount}} {{#str}}pending, local_jobboard{{/str}}</span>
-                    {{/pendingcount}}
-                    {{^pendingcount}}
-                    <span class="badge bg-success">{{#str}}allvalidated, local_jobboard{{/str}}</span>
-                    {{/pendingcount}}
-                    <div class="small text-muted mt-1"><i class="fa fa-calendar me-1"></i>{{datesubmitted}}</div>
-                </div>
-                <div class="col-md-3 text-md-end">
-                    <a href="{{reviewurl}}" class="btn btn-primary btn-sm me-1">
-                        <i class="fa fa-magnifying-glass me-1"></i>{{#str}}review, local_jobboard{{/str}}
-                    </a>
-                    <a href="{{viewurl}}" class="btn btn-outline-secondary btn-sm">
-                        <i class="fa fa-eye"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
+                        <div class="small text-muted text-truncate" style="max-width: 200px;">{{vacancytitle}}</div>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge bg-secondary">{{doccount}}</span>
+                        {{#pendingcount}}
+                        <span class="badge bg-warning text-dark">{{pendingcount}} {{#str}}pending, local_jobboard{{/str}}</span>
+                        {{/pendingcount}}
+                        {{^pendingcount}}
+                        <span class="badge bg-success"><i class="fa fa-check"></i></span>
+                        {{/pendingcount}}
+                    </td>
+                    <td class="text-center">
+                        <small class="text-muted">{{datesubmitted}}</small>
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{reviewurl}}" class="btn btn-primary" title="{{#str}}review, local_jobboard{{/str}}">
+                                <i class="fa fa-magnifying-glass"></i>
+                            </a>
+                            <a href="{{viewurl}}" class="btn btn-outline-secondary" title="{{#str}}viewapplication, local_jobboard{{/str}}">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {{/applications}}
+            </tbody>
+        </table>
     </div>
-    {{/applications}}
     {{/hasapplications}}
 
     {{! Empty State }}
@@ -426,22 +444,22 @@
 {{! Document Preview JavaScript }}
 <script>
 function jobboardPreviewDocument(element) {
-    const previewUrl = element.dataset.previewUrl;
-    const isPdf = element.dataset.isPdf === 'true' || element.dataset.isPdf === '1';
-    const isImage = element.dataset.isImage === 'true' || element.dataset.isImage === '1';
-    const typename = element.dataset.typename;
-    const filename = element.dataset.filename;
-    const downloadUrl = element.dataset.downloadUrl;
+    var previewUrl = element.dataset.previewUrl;
+    var isPdf = element.dataset.isPdf === 'true' || element.dataset.isPdf === '1';
+    var isImage = element.dataset.isImage === 'true' || element.dataset.isImage === '1';
+    var typename = element.dataset.typename;
+    var filename = element.dataset.filename;
+    var downloadUrl = element.dataset.downloadUrl;
 
-    document.querySelectorAll('[data-region="documents-list"] .list-group-item').forEach(item => {
+    document.querySelectorAll('[data-region="documents-list"] .list-group-item').forEach(function(item) {
         item.classList.remove('active', 'bg-primary-subtle');
     });
     element.classList.add('active', 'bg-primary-subtle');
 
-    const titleEl = document.querySelector('[data-region="preview-title"]');
+    var titleEl = document.querySelector('[data-region="preview-title"]');
     if (titleEl) titleEl.textContent = filename;
 
-    let subtitleEl = document.querySelector('[data-region="preview-subtitle"]');
+    var subtitleEl = document.querySelector('[data-region="preview-subtitle"]');
     if (subtitleEl) {
         subtitleEl.textContent = typename;
     } else {
@@ -452,10 +470,10 @@ function jobboardPreviewDocument(element) {
         if (titleEl && titleEl.parentNode) titleEl.parentNode.appendChild(subtitleEl);
     }
 
-    const downloadBtn = document.querySelector('[data-region="download-btn"]');
+    var downloadBtn = document.querySelector('[data-region="download-btn"]');
     if (downloadBtn && downloadUrl) downloadBtn.href = downloadUrl;
 
-    const previewFrame = document.querySelector('[data-region="preview-frame"]');
+    var previewFrame = document.querySelector('[data-region="preview-frame"]');
     if (!previewFrame) return;
 
     if (previewUrl && (isPdf || isImage)) {
