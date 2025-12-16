@@ -1,10 +1,11 @@
 {{!
     @template local_jobboard/components/form_group
 
-    Form group component for form fields.
+    Form group component for form fields with enhanced UX.
+    Includes validation states, helper text, icons, and accessibility features.
 
     Context variables:
-    * type (string) - Input type: text, email, password, select, textarea, date, file
+    * type (string) - Input type: text, email, password, select, textarea, date, file, number, tel, url
     * name (string) - Field name
     * id (string) - Field ID
     * label (string) - Field label
@@ -12,49 +13,218 @@
     * placeholder (string) - Placeholder text
     * required (bool) - Required field
     * disabled (bool) - Disabled state
-    * help (string) - Help text
+    * readonly (bool) - Read-only state
+    * help (string) - Help text below field
     * error (string) - Error message
-    * options (array) - Options for select {value, label, selected}
-    * rows (number) - Rows for textarea
+    * success (string) - Success message
+    * options (array) - Options for select {value, label, selected, disabled}
+    * rows (number) - Rows for textarea (default: 3)
     * size (string) - Size: sm, lg
+    * icon (string) - Prepend icon
+    * iconafter (string) - Append icon
+    * maxlength (number) - Max character length (shows counter)
+    * min (number) - Min value for number inputs
+    * max (number) - Max value for number inputs
+    * step (number) - Step for number inputs
+    * pattern (string) - Regex pattern for validation
+    * autocomplete (string) - Autocomplete attribute
+    * multiple (bool) - Multiple file select
+    * accept (string) - File accept types
+    * floating (bool) - Use floating label style
+    * horizontal (bool) - Horizontal layout
+    * labelwidth (string) - Label column width for horizontal (default: col-sm-3)
+    * inputwidth (string) - Input column width for horizontal (default: col-sm-9)
+    * ariadescribedby (string) - Custom aria-describedby
 
     Example context (json):
     {
-        "type": "text",
-        "name": "title",
-        "label": "Title",
-        "required": true
+        "type": "email",
+        "name": "email",
+        "id": "user-email",
+        "label": "Email Address",
+        "placeholder": "name@example.com",
+        "required": true,
+        "icon": "envelope",
+        "help": "We'll never share your email."
     }
 }}
-<div class="mb-3 mb-3{{#error}} jb-has-error{{/error}}">
+{{#horizontal}}
+<div class="row mb-3{{#error}} jb-has-error{{/error}}{{#success}} jb-has-success{{/success}}">
     {{#label}}
-    <label class="form-label" for="{{id}}">
+    <label class="col-form-label {{#labelwidth}}{{labelwidth}}{{/labelwidth}}{{^labelwidth}}col-sm-3{{/labelwidth}} fw-medium" for="{{id}}">
         {{label}}
-        {{#required}}<span class="text-danger">*</span>{{/required}}
+        {{#required}}<span class="text-danger ms-1" aria-hidden="true">*</span>{{/required}}
     </label>
     {{/label}}
+    <div class="{{#inputwidth}}{{inputwidth}}{{/inputwidth}}{{^inputwidth}}col-sm-9{{/inputwidth}}">
+{{/horizontal}}
+
+{{^horizontal}}
+{{#floating}}
+{{! Floating label variant }}
+<div class="form-floating mb-3{{#error}} jb-has-error{{/error}}{{#success}} jb-has-success{{/success}}">
+{{/floating}}
+{{^floating}}
+<div class="mb-3{{#error}} jb-has-error{{/error}}{{#success}} jb-has-success{{/success}}">
+    {{#label}}
+    <label class="jb-form-label{{#required}} jb-form-label-required{{/required}}" for="{{id}}">
+        {{label}}
+    </label>
+    {{/label}}
+{{/floating}}
+{{/horizontal}}
+
+    {{! Input with optional icons }}
+    {{#icon}}{{^iconafter}}
+    <div class="input-group{{#error}} has-validation{{/error}}">
+        <span class="input-group-text" id="{{id}}-icon">
+            <i class="fa fa-{{icon}} text-muted" aria-hidden="true"></i>
+        </span>
+    {{/iconafter}}{{/icon}}
+    {{#iconafter}}{{^icon}}
+    <div class="input-group{{#error}} has-validation{{/error}}">
+    {{/icon}}{{/iconafter}}
+    {{#icon}}{{#iconafter}}
+    <div class="input-group{{#error}} has-validation{{/error}}">
+        <span class="input-group-text" id="{{id}}-icon">
+            <i class="fa fa-{{icon}} text-muted" aria-hidden="true"></i>
+        </span>
+    {{/iconafter}}{{/icon}}
 
     {{#istext}}
-    <input type="{{type}}" name="{{name}}" id="{{id}}" class="form-control{{#size}} form-control-{{size}}{{/size}}{{#error}} jb-is-invalid{{/error}}" value="{{value}}"{{#placeholder}} placeholder="{{placeholder}}"{{/placeholder}}{{#required}} required{{/required}}{{#disabled}} disabled{{/disabled}}>
+    <input type="{{type}}"
+           name="{{name}}"
+           id="{{id}}"
+           class="jb-form-control form-control{{#size}} form-control-{{size}}{{/size}}{{#error}} is-invalid{{/error}}{{#success}} is-valid{{/success}}"
+           {{#value}}value="{{value}}"{{/value}}
+           {{#placeholder}}placeholder="{{placeholder}}"{{/placeholder}}
+           {{#required}}required aria-required="true"{{/required}}
+           {{#disabled}}disabled{{/disabled}}
+           {{#readonly}}readonly{{/readonly}}
+           {{#maxlength}}maxlength="{{maxlength}}"{{/maxlength}}
+           {{#min}}min="{{min}}"{{/min}}
+           {{#max}}max="{{max}}"{{/max}}
+           {{#step}}step="{{step}}"{{/step}}
+           {{#pattern}}pattern="{{pattern}}"{{/pattern}}
+           {{#autocomplete}}autocomplete="{{autocomplete}}"{{/autocomplete}}
+           {{#icon}}aria-describedby="{{id}}-icon{{#help}} {{id}}-help{{/help}}{{#error}} {{id}}-error{{/error}}"{{/icon}}
+           {{^icon}}{{#help}}aria-describedby="{{id}}-help{{#error}} {{id}}-error{{/error}}"{{/help}}{{/icon}}
+           {{^icon}}{{^help}}{{#error}}aria-describedby="{{id}}-error"{{/error}}{{/help}}{{/icon}}
+           {{#ariadescribedby}}aria-describedby="{{ariadescribedby}}"{{/ariadescribedby}}>
     {{/istext}}
 
     {{#isselect}}
-    <select name="{{name}}" id="{{id}}" class="form-select{{#size}} form-select-{{size}}{{/size}}{{#error}} jb-is-invalid{{/error}}"{{#required}} required{{/required}}{{#disabled}} disabled{{/disabled}}>
+    <select name="{{name}}"
+            id="{{id}}"
+            class="jb-form-control form-select{{#size}} form-select-{{size}}{{/size}}{{#error}} is-invalid{{/error}}{{#success}} is-valid{{/success}}"
+            {{#required}}required aria-required="true"{{/required}}
+            {{#disabled}}disabled{{/disabled}}
+            {{#multiple}}multiple{{/multiple}}
+            {{#help}}aria-describedby="{{id}}-help{{#error}} {{id}}-error{{/error}}"{{/help}}
+            {{^help}}{{#error}}aria-describedby="{{id}}-error"{{/error}}{{/help}}>
+        {{#placeholder}}
+        <option value="" disabled {{^value}}selected{{/value}}>{{placeholder}}</option>
+        {{/placeholder}}
         {{#options}}
-        <option value="{{value}}"{{#selected}} selected{{/selected}}>{{label}}</option>
+        <option value="{{value}}"{{#selected}} selected{{/selected}}{{#disabled}} disabled{{/disabled}}>{{label}}</option>
         {{/options}}
     </select>
     {{/isselect}}
 
     {{#istextarea}}
-    <textarea name="{{name}}" id="{{id}}" class="form-control{{#error}} jb-is-invalid{{/error}}" rows="{{rows}}"{{#placeholder}} placeholder="{{placeholder}}"{{/placeholder}}{{#required}} required{{/required}}{{#disabled}} disabled{{/disabled}}>{{value}}</textarea>
+    <textarea name="{{name}}"
+              id="{{id}}"
+              class="jb-form-control form-control{{#error}} is-invalid{{/error}}{{#success}} is-valid{{/success}}"
+              rows="{{#rows}}{{rows}}{{/rows}}{{^rows}}3{{/rows}}"
+              {{#placeholder}}placeholder="{{placeholder}}"{{/placeholder}}
+              {{#required}}required aria-required="true"{{/required}}
+              {{#disabled}}disabled{{/disabled}}
+              {{#readonly}}readonly{{/readonly}}
+              {{#maxlength}}maxlength="{{maxlength}}"{{/maxlength}}
+              {{#help}}aria-describedby="{{id}}-help{{#error}} {{id}}-error{{/error}}"{{/help}}
+              {{^help}}{{#error}}aria-describedby="{{id}}-error"{{/error}}{{/help}}>{{value}}</textarea>
     {{/istextarea}}
 
+    {{#isfile}}
+    <input type="file"
+           name="{{name}}"
+           id="{{id}}"
+           class="form-control{{#size}} form-control-{{size}}{{/size}}{{#error}} is-invalid{{/error}}{{#success}} is-valid{{/success}}"
+           {{#required}}required aria-required="true"{{/required}}
+           {{#disabled}}disabled{{/disabled}}
+           {{#multiple}}multiple{{/multiple}}
+           {{#accept}}accept="{{accept}}"{{/accept}}
+           {{#help}}aria-describedby="{{id}}-help{{#error}} {{id}}-error{{/error}}"{{/help}}
+           {{^help}}{{#error}}aria-describedby="{{id}}-error"{{/error}}{{/help}}>
+    {{/isfile}}
+
+    {{#iconafter}}
+        <span class="input-group-text">
+            <i class="fa fa-{{iconafter}} text-muted" aria-hidden="true"></i>
+        </span>
+    {{/iconafter}}
+
+    {{#icon}}{{^iconafter}}
+    </div>
+    {{/iconafter}}{{/icon}}
+    {{#iconafter}}{{^icon}}
+    </div>
+    {{/icon}}{{/iconafter}}
+    {{#icon}}{{#iconafter}}
+    </div>
+    {{/iconafter}}{{/icon}}
+
+    {{#floating}}
+    {{#label}}
+    <label for="{{id}}">
+        {{label}}
+        {{#required}}<span class="text-danger ms-1" aria-hidden="true">*</span>{{/required}}
+    </label>
+    {{/label}}
+    {{/floating}}
+
+    {{! Character counter for maxlength }}
+    {{#maxlength}}
+    <div class="d-flex justify-content-end mt-1">
+        <small class="text-muted jb-char-counter" data-for="{{id}}">
+            <span class="jb-char-current">0</span>/<span class="jb-char-max">{{maxlength}}</span>
+        </small>
+    </div>
+    {{/maxlength}}
+
+    {{! Help text }}
     {{#help}}
-    <small class="form-text text-muted">{{help}}</small>
+    <div id="{{id}}-help" class="jb-form-text form-text">
+        {{help}}
+    </div>
     {{/help}}
 
+    {{! Error message }}
     {{#error}}
-    <div class="jb-invalid-feedback">{{error}}</div>
+    <div id="{{id}}-error" class="jb-form-text jb-form-text-error invalid-feedback d-block" role="alert">
+        <i class="fa fa-circle-exclamation me-1" aria-hidden="true"></i>
+        {{error}}
+    </div>
     {{/error}}
+
+    {{! Success message }}
+    {{#success}}
+    <div class="jb-form-text jb-form-text-success valid-feedback d-block">
+        <i class="fa fa-circle-check me-1" aria-hidden="true"></i>
+        {{success}}
+    </div>
+    {{/success}}
+
+{{#horizontal}}
+    </div>
 </div>
+{{/horizontal}}
+
+{{^horizontal}}
+{{#floating}}
+</div>
+{{/floating}}
+{{^floating}}
+</div>
+{{/floating}}
+{{/horizontal}}

@@ -1,0 +1,132 @@
+{{!
+    @template local_jobboard/components/checkbox
+
+    Enhanced checkbox component with better UX and accessibility.
+    Supports single checkbox, checkbox group, and switch variant.
+
+    Context variables:
+    * name (string) - Input name
+    * id (string) - Input ID
+    * value (string) - Input value
+    * label (string) - Label text
+    * description (string) - Optional description text
+    * checked (bool) - Checked state
+    * disabled (bool) - Disabled state
+    * required (bool) - Required field
+    * error (string) - Error message
+    * variant (string) - Variant: default, switch, card
+    * size (string) - Size: sm, lg
+    * color (string) - Color for switch: primary, success, danger
+    * indeterminate (bool) - Indeterminate state (requires JS)
+
+    Example context (json):
+    {
+        "name": "terms",
+        "id": "accept-terms",
+        "value": "1",
+        "label": "I accept the terms and conditions",
+        "description": "By checking this box, you agree to our terms of service.",
+        "required": true
+    }
+}}
+{{#isswitch}}
+{{! Switch variant }}
+<label class="jb-toggle{{#size}} jb-toggle-{{size}}{{/size}}{{#disabled}} jb-toggle-disabled{{/disabled}}" for="{{id}}">
+    <input type="checkbox"
+           class="jb-toggle-input"
+           name="{{name}}"
+           id="{{id}}"
+           {{#value}}value="{{value}}"{{/value}}
+           {{#checked}}checked{{/checked}}
+           {{#disabled}}disabled{{/disabled}}
+           {{#required}}required aria-required="true"{{/required}}
+           {{#error}}aria-invalid="true" aria-describedby="{{id}}-error"{{/error}}>
+    <span class="jb-toggle-track{{#color}} jb-toggle-{{color}}{{/color}}">
+        <span class="jb-toggle-thumb"></span>
+    </span>
+    {{#label}}
+    <span class="jb-toggle-label">
+        {{label}}
+        {{#required}}<span class="text-danger ms-1" aria-hidden="true">*</span>{{/required}}
+    </span>
+    {{/label}}
+</label>
+{{#description}}
+<div class="jb-toggle-description text-muted small mt-1 ms-5">
+    {{description}}
+</div>
+{{/description}}
+{{#error}}
+<div id="{{id}}-error" class="jb-form-text jb-form-text-error ms-5" role="alert">
+    <i class="fa fa-circle-exclamation me-1" aria-hidden="true"></i>
+    {{error}}
+</div>
+{{/error}}
+{{/isswitch}}
+
+{{#iscard}}
+{{! Card variant }}
+<label class="jb-checkbox-card{{#checked}} jb-checkbox-card-checked{{/checked}}{{#disabled}} jb-checkbox-card-disabled{{/disabled}}" for="{{id}}">
+    <input type="checkbox"
+           class="jb-checkbox-card-input visually-hidden"
+           name="{{name}}"
+           id="{{id}}"
+           {{#value}}value="{{value}}"{{/value}}
+           {{#checked}}checked{{/checked}}
+           {{#disabled}}disabled{{/disabled}}
+           {{#required}}required aria-required="true"{{/required}}
+           {{#error}}aria-invalid="true" aria-describedby="{{id}}-error"{{/error}}>
+    <span class="jb-checkbox-card-indicator">
+        <i class="fa fa-check" aria-hidden="true"></i>
+    </span>
+    <span class="jb-checkbox-card-content">
+        {{#icon}}
+        <i class="fa fa-{{icon}} jb-checkbox-card-icon" aria-hidden="true"></i>
+        {{/icon}}
+        <span class="jb-checkbox-card-label">{{label}}</span>
+        {{#description}}
+        <span class="jb-checkbox-card-description">{{description}}</span>
+        {{/description}}
+    </span>
+</label>
+{{#error}}
+<div id="{{id}}-error" class="jb-form-text jb-form-text-error mt-2" role="alert">
+    <i class="fa fa-circle-exclamation me-1" aria-hidden="true"></i>
+    {{error}}
+</div>
+{{/error}}
+{{/iscard}}
+
+{{^isswitch}}{{^iscard}}
+{{! Default checkbox variant }}
+<div class="jb-checkbox{{#size}} jb-checkbox-{{size}}{{/size}}{{#error}} jb-has-error{{/error}}">
+    <input type="checkbox"
+           class="jb-checkbox-input form-check-input"
+           name="{{name}}"
+           id="{{id}}"
+           {{#value}}value="{{value}}"{{/value}}
+           {{#checked}}checked{{/checked}}
+           {{#disabled}}disabled{{/disabled}}
+           {{#required}}required aria-required="true"{{/required}}
+           {{#indeterminate}}data-indeterminate="true"{{/indeterminate}}
+           {{#error}}aria-invalid="true" aria-describedby="{{id}}-error"{{/error}}
+           {{#description}}aria-describedby="{{id}}-description{{#error}} {{id}}-error{{/error}}"{{/description}}>
+    <div class="jb-checkbox-label">
+        <label class="jb-checkbox-label-text" for="{{id}}">
+            {{label}}
+            {{#required}}<span class="text-danger ms-1" aria-hidden="true">*</span>{{/required}}
+        </label>
+        {{#description}}
+        <div id="{{id}}-description" class="jb-checkbox-label-description">
+            {{{description}}}
+        </div>
+        {{/description}}
+    </div>
+</div>
+{{#error}}
+<div id="{{id}}-error" class="jb-form-text jb-form-text-error" role="alert">
+    <i class="fa fa-circle-exclamation me-1" aria-hidden="true"></i>
+    {{error}}
+</div>
+{{/error}}
+{{/iscard}}{{/isswitch}}

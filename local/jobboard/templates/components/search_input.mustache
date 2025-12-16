@@ -1,0 +1,67 @@
+{{!
+    @template local_jobboard/components/search_input
+
+    Enhanced search input component with clear button and loading state.
+
+    Context variables:
+    * name (string) - Input name
+    * id (string) - Input ID
+    * value (string) - Current value
+    * placeholder (string) - Placeholder text
+    * size (string) - Size: sm, lg
+    * loading (bool) - Show loading spinner
+    * autofocus (bool) - Autofocus on load
+    * autocomplete (string) - Autocomplete attribute
+    * arialabel (string) - Accessible label
+    * minlength (number) - Minimum search length
+    * debounce (number) - Debounce delay in ms
+    * action (string) - Form action URL (if wrapped in form)
+    * instant (bool) - Submit on input (AJAX search)
+
+    Example context (json):
+    {
+        "name": "q",
+        "id": "vacancy-search",
+        "placeholder": "Search vacancies...",
+        "arialabel": "Search vacancies",
+        "size": "lg",
+        "instant": true,
+        "debounce": 300
+    }
+}}
+<div class="jb-search-input{{#size}} jb-search-input-{{size}}{{/size}}{{#loading}} jb-search-loading{{/loading}}"
+     {{#debounce}}data-debounce="{{debounce}}"{{/debounce}}
+     {{#instant}}data-instant="true"{{/instant}}
+     {{#minlength}}data-minlength="{{minlength}}"{{/minlength}}>
+
+    {{! Search icon }}}
+    <span class="jb-search-input-icon" aria-hidden="true">
+        {{#loading}}
+        <span class="jb-spinner jb-spinner-sm"></span>
+        {{/loading}}
+        {{^loading}}
+        <i class="fa fa-search"></i>
+        {{/loading}}
+    </span>
+
+    {{! Input field }}
+    <input type="search"
+           class="jb-form-control form-control{{#size}} form-control-{{size}}{{/size}}"
+           name="{{name}}"
+           id="{{id}}"
+           {{#value}}value="{{value}}"{{/value}}
+           {{#placeholder}}placeholder="{{placeholder}}"{{/placeholder}}
+           {{#autofocus}}autofocus{{/autofocus}}
+           {{#autocomplete}}autocomplete="{{autocomplete}}"{{/autocomplete}}
+           {{#minlength}}minlength="{{minlength}}"{{/minlength}}
+           {{#arialabel}}aria-label="{{arialabel}}"{{/arialabel}}
+           {{^arialabel}}aria-label="{{#str}}search{{/str}}"{{/arialabel}}>
+
+    {{! Clear button }}
+    <button type="button"
+            class="jb-search-input-clear"
+            aria-label="{{#str}}clear{{/str}}"
+            {{^value}}style="opacity: 0; pointer-events: none;"{{/value}}>
+        <i class="fa fa-times" aria-hidden="true"></i>
+    </button>
+</div>

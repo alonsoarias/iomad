@@ -1,0 +1,114 @@
+{{!
+    @template local_jobboard/components/radio
+
+    Enhanced radio button component with better UX and accessibility.
+    Supports single radio, radio group, and card variant.
+
+    Context variables:
+    * name (string) - Input name (required for grouping)
+    * options (array) - Radio options [{id, value, label, description, checked, disabled, icon}]
+    * inline (bool) - Display options inline
+    * variant (string) - Variant: default, card, button
+    * size (string) - Size: sm, lg
+    * error (string) - Error message for the group
+    * required (bool) - Required field
+    * legend (string) - Fieldset legend (recommended for groups)
+    * legendhidden (bool) - Visually hide legend but keep for screen readers
+
+    Example context (json):
+    {
+        "name": "priority",
+        "legend": "Select priority level",
+        "required": true,
+        "options": [
+            {"id": "priority-low", "value": "low", "label": "Low", "description": "Non-urgent tasks"},
+            {"id": "priority-medium", "value": "medium", "label": "Medium", "checked": true},
+            {"id": "priority-high", "value": "high", "label": "High", "description": "Urgent attention needed"}
+        ]
+    }
+}}
+<fieldset class="jb-radio-group{{#error}} jb-has-error{{/error}}">
+    {{#legend}}
+    <legend class="jb-radio-legend{{#legendhidden}} visually-hidden{{/legendhidden}}">
+        {{legend}}
+        {{#required}}<span class="text-danger ms-1" aria-hidden="true">*</span>{{/required}}
+    </legend>
+    {{/legend}}
+
+    <div class="jb-radio-options{{#inline}} jb-radio-options-inline{{/inline}}{{#isbutton}} jb-radio-options-button btn-group{{/isbutton}}{{#iscard}} jb-radio-options-card{{/iscard}}" role="radiogroup">
+        {{#options}}
+        {{#isbutton}}
+        {{! Button variant }}
+        <input type="radio"
+               class="btn-check"
+               name="{{name}}"
+               id="{{id}}"
+               value="{{value}}"
+               {{#checked}}checked{{/checked}}
+               {{#disabled}}disabled{{/disabled}}
+               {{#required}}required{{/required}}
+               autocomplete="off">
+        <label class="btn jb-btn-outline-primary{{#size}} jb-btn-{{size}}{{/size}}" for="{{id}}">
+            {{#icon}}<i class="fa fa-{{icon}}{{^icononly}} me-2{{/icononly}}" aria-hidden="true"></i>{{/icon}}
+            {{^icononly}}{{label}}{{/icononly}}
+        </label>
+        {{/isbutton}}
+
+        {{#iscard}}
+        {{! Card variant }}
+        <label class="jb-radio-card{{#checked}} jb-radio-card-checked{{/checked}}{{#disabled}} jb-radio-card-disabled{{/disabled}}" for="{{id}}">
+            <input type="radio"
+                   class="jb-radio-card-input visually-hidden"
+                   name="{{name}}"
+                   id="{{id}}"
+                   value="{{value}}"
+                   {{#checked}}checked{{/checked}}
+                   {{#disabled}}disabled{{/disabled}}
+                   {{#required}}required{{/required}}>
+            <span class="jb-radio-card-indicator"></span>
+            <span class="jb-radio-card-content">
+                {{#icon}}
+                <i class="fa fa-{{icon}} jb-radio-card-icon" aria-hidden="true"></i>
+                {{/icon}}
+                <span class="jb-radio-card-label">{{label}}</span>
+                {{#description}}
+                <span class="jb-radio-card-description">{{description}}</span>
+                {{/description}}
+            </span>
+        </label>
+        {{/iscard}}
+
+        {{^isbutton}}{{^iscard}}
+        {{! Default radio variant }}
+        <div class="jb-radio{{#size}} jb-radio-{{size}}{{/size}}">
+            <input type="radio"
+                   class="jb-radio-input form-check-input"
+                   name="{{name}}"
+                   id="{{id}}"
+                   value="{{value}}"
+                   {{#checked}}checked{{/checked}}
+                   {{#disabled}}disabled{{/disabled}}
+                   {{#required}}required{{/required}}
+                   {{#description}}aria-describedby="{{id}}-description"{{/description}}>
+            <div class="jb-radio-label">
+                <label class="jb-radio-label-text" for="{{id}}">
+                    {{label}}
+                </label>
+                {{#description}}
+                <div id="{{id}}-description" class="jb-radio-label-description">
+                    {{{description}}}
+                </div>
+                {{/description}}
+            </div>
+        </div>
+        {{/iscard}}{{/isbutton}}
+        {{/options}}
+    </div>
+
+    {{#error}}
+    <div class="jb-form-text jb-form-text-error mt-2" role="alert">
+        <i class="fa fa-circle-exclamation me-1" aria-hidden="true"></i>
+        {{error}}
+    </div>
+    {{/error}}
+</fieldset>
