@@ -3389,6 +3389,9 @@ $string['openconvocatorias'] = 'Convocatorias Abiertas';
 $string['filtervacancies'] = 'Filtrar Vacantes';
 $string['available'] = 'Disponible';
 
+// Mensajes adicionales
+$string['allcaughtup'] = '¡Todo al día!';
+
 // Mensajes de error
 $string['error:usernotfound'] = 'Usuario no encontrado';
 $string['unknownuser'] = 'Usuario desconocido';
