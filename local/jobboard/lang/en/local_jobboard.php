@@ -437,6 +437,7 @@ $string['applicationupdated'] = 'Application updated successfully';
 $string['applicationwithdrawn'] = 'Application withdrawn successfully';
 $string['applicationdeleted'] = 'Application deleted successfully';
 $string['noapplications'] = 'No applications found';
+$string['noapplications_desc'] = 'You haven\'t applied to any vacancies yet. Browse available positions to get started.';
 $string['yourapplications'] = 'Your applications';
 $string['allapplications'] = 'All applications';
 $string['pendingapplications'] = 'Pending applications';

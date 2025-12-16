@@ -1,7 +1,9 @@
 {{!
-    @template local_jobboard/pages/applications
+    @template local_jobboard/pages/applications_list
 
     My applications list page template with enhanced UX.
+    Follows the same design pattern as vacancy detail and review pages.
+    Uses jb-* CSS classes for consistent styling.
     Includes accessibility features, animations, and loading states.
 
     Context variables:
@@ -15,6 +17,7 @@
     * applications - Array of application data
     * pagination - Pagination HTML
     * browseurl - URL to browse vacancies
+    * dashboardurl - URL to dashboard
     * loading - Show skeleton loading state
 
     Example context (json):
@@ -25,46 +28,68 @@
 }}
 {{#loading}}
 {{! Skeleton Loading State }}
-<div class="local-jobboard-applications" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="jb-page-header mb-4">
-        <div class="jb-skeleton-text" style="width: 200px; height: 1em;"></div>
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <div class="jb-skeleton-title" style="width: 40%;"></div>
-            <div class="jb-skeleton-text" style="width: 150px; height: 40px;"></div>
+<div class="jb-applications-list" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="container-fluid px-0">
+        <div class="jb-page-header mb-4">
+            <div class="jb-skeleton-text" style="width: 200px; height: 1em;"></div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="jb-skeleton-title" style="width: 40%;"></div>
+                <div class="jb-skeleton-text" style="width: 150px; height: 40px;"></div>
+            </div>
         </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
-                <div class="card-body">
-                    <div class="jb-skeleton-title" style="width: 80%;"></div>
-                    <div class="jb-skeleton-text" style="width: 100%;"></div>
-                    <div class="jb-skeleton-text" style="width: 70%;"></div>
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="jb-skeleton-text" style="width: 60%; height: 2rem;"></div>
+                        <div class="jb-skeleton-text mt-2" style="width: 80%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="jb-skeleton-text" style="width: 60%; height: 2rem;"></div>
+                        <div class="jb-skeleton-text mt-2" style="width: 80%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="jb-skeleton-text" style="width: 60%; height: 2rem;"></div>
+                        <div class="jb-skeleton-text mt-2" style="width: 80%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="jb-skeleton-text" style="width: 60%; height: 2rem;"></div>
+                        <div class="jb-skeleton-text mt-2" style="width: 80%;"></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
-                <div class="card-body">
-                    <div class="jb-skeleton-title" style="width: 80%;"></div>
-                    <div class="jb-skeleton-text" style="width: 100%;"></div>
-                    <div class="jb-skeleton-text" style="width: 70%;"></div>
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
+                    <div class="card-body">
+                        <div class="jb-skeleton-title" style="width: 80%;"></div>
+                        <div class="jb-skeleton-text" style="width: 100%;"></div>
+                        <div class="jb-skeleton-text" style="width: 70%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
+                    <div class="card-body">
+                        <div class="jb-skeleton-title" style="width: 80%;"></div>
+                        <div class="jb-skeleton-text" style="width: 100%;"></div>
+                        <div class="jb-skeleton-text" style="width: 70%;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,23 +98,34 @@
 {{/loading}}
 
 {{^loading}}
-<div class="local-jobboard-applications" data-region="jobboard-applications">
-    {{! Skip Link - Hidden until focused (Bootstrap 5 native) }}
-    <a href="#applications-main-content" class="visually-hidden-focusable">
-        {{#str}}skiptocontent, local_jobboard{{/str}}
-    </a>
-
-    {{! Page Header - Breadcrumbs handled by Moodle via $PAGE->navbar }}
-    <header class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-        <h1 class="h4 mb-0">
-            <i class="fa fa-folder-open text-primary me-2" aria-hidden="true"></i>
-            {{#str}}myapplications, local_jobboard{{/str}}
-        </h1>
-        <a href="{{browseurl}}" class="btn btn-primary">
-            <i class="fa fa-magnifying-glass me-2" aria-hidden="true"></i>
-            {{#str}}browsevacancies, local_jobboard{{/str}}
+<div class="jb-applications-list" id="jobboard-applications-list" data-region="jobboard-applications">
+    <div class="container-fluid px-0">
+        {{! Skip Link for Accessibility }}
+        <a href="#applications-main-content" class="jb-skip-link">
+            {{#str}}skiptocontent, local_jobboard{{/str}}
         </a>
-    </header>
+
+        {{! Page Header }}
+        <header class="jb-page-header mb-4 jb-fade-in">
+            <nav aria-label="breadcrumb" class="mb-2">
+                <ol class="breadcrumb small mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">{{#str}}myapplications, local_jobboard{{/str}}</li>
+                </ol>
+            </nav>
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <h1 class="h3 mb-0">
+                    <i class="fa fa-folder-open text-primary me-2" aria-hidden="true"></i>
+                    {{#str}}myapplications, local_jobboard{{/str}}
+                </h1>
+                <a href="{{browseurl}}" class="btn btn-primary">
+                    <i class="fa fa-magnifying-glass me-2" aria-hidden="true"></i>
+                    {{#str}}browsevacancies, local_jobboard{{/str}}
+                </a>
+            </div>
+        </header>
 
     {{! Exemption Notice }}
     {{#hasexemption}}
@@ -303,15 +339,52 @@
 
         {{! Empty State }}
         {{^hasapplications}}
-        {{> local_jobboard/components/empty_state }}
+        <div class="card shadow-sm jb-fade-in-up">
+            <div class="card-body text-center py-5">
+                <i class="fa fa-folder-open fa-4x text-muted mb-3" aria-hidden="true"></i>
+                <h3 class="h5 text-muted mb-3">{{#str}}noapplications, local_jobboard{{/str}}</h3>
+                <p class="text-muted mb-4">{{#str}}noapplications_desc, local_jobboard{{/str}}</p>
+                <a href="{{browseurl}}" class="btn btn-primary">
+                    <i class="fa fa-magnifying-glass me-2" aria-hidden="true"></i>
+                    {{#str}}browsevacancies, local_jobboard{{/str}}
+                </a>
+            </div>
+        </div>
         {{/hasapplications}}
     </div>
 
-    {{! Pagination }}
-    {{#pagination}}
-    <nav class="mt-4 jb-fade-in" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
-        {{{pagination}}}
-    </nav>
-    {{/pagination}}
+        {{! Pagination }}
+        {{#pagination}}
+        <nav class="mt-4 jb-fade-in" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
+            {{{pagination}}}
+        </nav>
+        {{/pagination}}
+
+        {{! Back to Dashboard }}
+        <div class="mt-4 pt-3 border-top jb-fade-in">
+            <a href="{{dashboardurl}}" class="btn btn-link text-muted px-0">
+                <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+                {{#str}}backtodashboard, local_jobboard{{/str}}
+            </a>
+        </div>
+    </div>
 </div>
 {{/loading}}
+
+{{! Page-specific CSS }}
+<style>
+.jb-applications-list .card {
+    border-radius: 0.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.jb-applications-list .jb-application-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+}
+.jb-applications-list .jb-application-card .card-header {
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+.jb-applications-list .progress {
+    border-radius: 0.25rem;
+}
+</style>

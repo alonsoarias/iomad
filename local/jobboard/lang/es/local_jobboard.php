@@ -431,6 +431,7 @@ $string['applicationupdated'] = 'Postulación actualizada exitosamente';
 $string['applicationwithdrawn'] = 'Postulación retirada exitosamente';
 $string['applicationdeleted'] = 'Postulación eliminada exitosamente';
 $string['noapplications'] = 'No se encontraron postulaciones';
+$string['noapplications_desc'] = 'Aún no ha postulado a ninguna vacante. Explore las posiciones disponibles para comenzar.';
 $string['yourapplications'] = 'Sus postulaciones';
 $string['allapplications'] = 'Todas las postulaciones';
 $string['pendingapplications'] = 'Postulaciones pendientes';
