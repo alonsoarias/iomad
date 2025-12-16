@@ -222,6 +222,23 @@ trait vacancy_renderer {
             ];
         }
 
+        // Per-page options.
+        $perpageoptions = [];
+        foreach ([10, 20, 50, 100] as $opt) {
+            $perpageoptions[] = [
+                'value' => $opt,
+                'label' => $opt,
+                'selected' => $perpage == $opt,
+            ];
+        }
+        $filterfields[] = [
+            'name' => 'perpage',
+            'label' => get_string('perpage', 'local_jobboard'),
+            'isselect' => true,
+            'options' => $perpageoptions,
+            'col' => 'jb-col-md-2',
+        ];
+
         // Hidden fields.
         $hiddenfields = [['name' => 'view', 'value' => 'vacancies']];
         if (!empty($filters['convocatoriaid'])) {
@@ -555,6 +572,16 @@ trait vacancy_renderer {
             ];
         }
 
+        // Per-page options.
+        $perpageoptions = [];
+        foreach ([10, 20, 50, 100] as $opt) {
+            $perpageoptions[] = [
+                'value' => $opt,
+                'label' => $opt,
+                'selected' => $perpage == $opt,
+            ];
+        }
+
         $filterform = [
             'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'hiddenfields' => [['name' => 'view', 'value' => 'manage']],
@@ -573,6 +600,13 @@ trait vacancy_renderer {
                     'isselect' => true,
                     'options' => $statusOptions,
                     'col' => 'jb-col-md-3',
+                ],
+                [
+                    'name' => 'perpage',
+                    'label' => get_string('perpage', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $perpageoptions,
+                    'col' => 'jb-col-md-2',
                 ],
             ],
         ];
@@ -614,6 +648,7 @@ trait vacancy_renderer {
                 'status' => $filtervalues['status'] ?? '',
                 'companyid' => $filtervalues['companyid'] ?? 0,
                 'departmentid' => $filtervalues['departmentid'] ?? 0,
+                'perpage' => $perpage,
             ];
             if (!empty($filtervalues['convocatoriaid'])) {
                 $paginationParams['convocatoriaid'] = $filtervalues['convocatoriaid'];

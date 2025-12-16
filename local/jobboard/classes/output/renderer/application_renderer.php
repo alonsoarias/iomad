@@ -162,6 +162,16 @@ trait application_renderer {
             ];
         }
 
+        // Per-page options.
+        $perpageoptions = [];
+        foreach ([10, 20, 50, 100] as $opt) {
+            $perpageoptions[] = [
+                'value' => $opt,
+                'label' => $opt,
+                'selected' => $perpage == $opt,
+            ];
+        }
+
         $filterform = [
             'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'hiddenfields' => [
@@ -174,6 +184,13 @@ trait application_renderer {
                     'isselect' => true,
                     'options' => $statusoptions,
                     'col' => 'jb-col-md-4',
+                ],
+                [
+                    'name' => 'perpage',
+                    'label' => get_string('perpage', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $perpageoptions,
+                    'col' => 'jb-col-md-2',
                 ],
             ],
         ];
@@ -192,6 +209,7 @@ trait application_renderer {
             $baseurl = new moodle_url('/local/jobboard/index.php', [
                 'view' => 'applications',
                 'status' => $status,
+                'perpage' => $perpage,
             ]);
             $pagination = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
         }

@@ -217,6 +217,16 @@ trait review_renderer {
             ['value' => 'pending', 'label' => get_string('pendingdocuments', 'local_jobboard'), 'selected' => ($filtervalues['priority'] ?? '') === 'pending'],
         ];
 
+        // Per-page options.
+        $perpageoptions = [];
+        foreach ([10, 20, 50, 100] as $opt) {
+            $perpageoptions[] = [
+                'value' => $opt,
+                'label' => $opt,
+                'selected' => $perpage == $opt,
+            ];
+        }
+
         $filterform = [
             'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'hiddenfields' => [['name' => 'view', 'value' => 'myreviews']],
@@ -226,14 +236,14 @@ trait review_renderer {
                     'label' => get_string('status', 'local_jobboard'),
                     'isselect' => true,
                     'options' => $statusOptions,
-                    'col' => 'jb-col-md-3',
+                    'col' => 'jb-col-md-2',
                 ],
                 [
                     'name' => 'vacancy',
                     'label' => get_string('vacancy', 'local_jobboard'),
                     'isselect' => true,
                     'options' => $vacancyOptions,
-                    'col' => 'jb-col-md-4',
+                    'col' => 'jb-col-md-3',
                 ],
                 [
                     'name' => 'priority',
@@ -241,6 +251,13 @@ trait review_renderer {
                     'isselect' => true,
                     'options' => $priorityOptions,
                     'col' => 'jb-col-md-3',
+                ],
+                [
+                    'name' => 'perpage',
+                    'label' => get_string('perpage', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $perpageoptions,
+                    'col' => 'jb-col-md-2',
                 ],
             ],
         ];
@@ -261,6 +278,7 @@ trait review_renderer {
                 'status' => $filtervalues['status'] ?? '',
                 'vacancy' => $filtervalues['vacancy'] ?? 0,
                 'priority' => $filtervalues['priority'] ?? '',
+                'perpage' => $perpage,
             ]);
             $pagination = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
         }
