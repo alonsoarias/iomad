@@ -87,7 +87,7 @@
                 </div>
 
                 {{! Info Alert }}
-                <div class="alert jb-alert-info d-flex align-items-start mb-4" role="alert">
+                <div class="alert alert-info jb-alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="alert">
                     <i class="fa fa-circle-info fa-lg me-3 mt-1"></i>
                     <div>
                         <strong>{{#str}}profilerequired_title, local_jobboard{{/str}}</strong>
@@ -96,7 +96,7 @@
                 </div>
 
                 {{! Profile Form Card }}
-                <div class="card shadow-sm mb-4">
+                <div class="card shadow-sm mb-4 jb-fade-in-up">
                     <div class="card-header bg-white py-3">
                         <h5 class="mb-0">
                             <i class="fa fa-id-card text-primary me-2"></i>
@@ -114,7 +114,7 @@
                 <div class="jb-sidebar sticky-top" style="top: 80px;">
                     {{! Vacancy Summary Card - Only if applying for a vacancy }}
                     {{#hasvacancy}}
-                    <div class="card shadow-sm mb-4 border-primary">
+                    <div class="card shadow-sm mb-4 border-primary jb-hover-lift">
                         <div class="card-header bg-white">
                             <h6 class="mb-0">
                                 <i class="fa fa-briefcase text-primary me-2"></i>
@@ -137,7 +137,7 @@
                     {{/hasvacancy}}
 
                     {{! Profile Checklist Card }}
-                    <div class="card shadow-sm mb-4">
+                    <div class="card shadow-sm mb-4 jb-hover-lift">
                         <div class="card-header bg-white">
                             <h6 class="mb-0">
                                 <i class="fa fa-list-check text-success me-2"></i>
@@ -173,7 +173,7 @@
                     </div>
 
                     {{! Help Card }}
-                    <div class="card shadow-sm">
+                    <div class="card shadow-sm jb-hover-lift">
                         <div class="card-header bg-white">
                             <h6 class="mb-0">
                                 <i class="fa fa-question-circle text-info me-2"></i>
@@ -183,7 +183,7 @@
                         <div class="card-body">
                             <p class="small text-muted mb-3">{{#str}}profile_help_text, local_jobboard{{/str}}</p>
                             <div class="d-grid gap-2">
-                                <a href="{{dashboardurl}}" class="btn btn-outline-secondary btn-sm">
+                                <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary btn-sm">
                                     <i class="fa fa-home me-2"></i>
                                     {{#str}}dashboard, local_jobboard{{/str}}
                                 </a>
@@ -198,7 +198,7 @@
         <div class="row mt-4">
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center py-3 border-top">
-                    <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+                    <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
                         <i class="fa fa-arrow-left me-2"></i>
                         {{#str}}backtodashboard, local_jobboard{{/str}}
                     </a>
