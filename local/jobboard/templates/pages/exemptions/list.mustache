@@ -84,11 +84,11 @@
             {{pagetitle}}
         </h1>
         <div class="btn-group" role="group" aria-label="{{#str}}exemptionactions, local_jobboard{{/str}}">
-            <a href="{{addurl}}" class="btn btn-primary">
+            <a href="{{addurl}}" class="btn btn-primary jb-btn-primary">
                 <i class="fa fa-plus me-2" aria-hidden="true"></i>
                 {{#str}}addexemption, local_jobboard{{/str}}
             </a>
-            <a href="{{importurl}}" class="btn btn-outline-secondary">
+            <a href="{{importurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
                 <i class="fa fa-upload me-2" aria-hidden="true"></i>
                 {{#str}}importexemptions, local_jobboard{{/str}}
             </a>
@@ -98,38 +98,38 @@
     {{! Statistics Cards }}
     <section class="row mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-primary">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-shield fa-2x text-primary mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.total}}</div>
-                    <div class="small text-muted">{{#str}}totalexemptions, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.total}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}totalexemptions, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-success">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-circle-check fa-2x text-success mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.active}}</div>
-                    <div class="small text-muted">{{#str}}activeexemptions, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.active}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}activeexemptions, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-warning">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-clock fa-2x text-warning mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.expired}}</div>
-                    <div class="small text-muted">{{#str}}expiredexemptions, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.expired}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}expiredexemptions, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-danger">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-ban fa-2x text-danger mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.revoked}}</div>
-                    <div class="small text-muted">{{#str}}revokedexemptions, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.revoked}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}revokedexemptions, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
@@ -167,7 +167,7 @@
                         </select>
                     </div>
                     <div class="col-lg-2 col-md-6 mb-2">
-                        <button type="submit" class="btn btn-primary w-100">
+                        <button type="submit" class="btn btn-primary jb-btn-primary w-100">
                             <i class="fa fa-filter me-1" aria-hidden="true"></i>
                             {{#str}}filter{{/str}}
                         </button>
@@ -179,20 +179,20 @@
 
     {{! Exemptions Table }}
     <main id="exemptions-main-content">
-        <section class="card shadow-sm mb-4 jb-fade-in-up" aria-labelledby="exemptions-heading" style="animation-delay: 0.3s;">
+        <section class="card shadow-sm mb-4 jb-fade-in-up jb-table-card" aria-labelledby="exemptions-heading" style="animation-delay: 0.3s;">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h2 class="fs-5 mb-0" id="exemptions-heading">
                     <i class="fa fa-list text-primary me-2" aria-hidden="true"></i>
                     {{#str}}exemptionlist, local_jobboard{{/str}}
                 </h2>
-                <span class="badge bg-secondary rounded-pill">
+                <span class="badge bg-primary rounded-pill">
                     {{totalcount}} {{#str}}items, local_jobboard{{/str}}
                 </span>
             </div>
             <div class="card-body p-0">
                 {{#hasexemptions}}
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0" aria-label="{{#str}}exemptionlist, local_jobboard{{/str}}">
+                    <table class="table table-hover mb-0 jb-table" aria-label="{{#str}}exemptionlist, local_jobboard{{/str}}">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col">{{#str}}user{{/str}}</th>
@@ -276,14 +276,16 @@
 
                 {{! Empty State }}
                 {{^hasexemptions}}
-                <div class="text-center py-5" role="status">
-                    <i class="fa fa-shield fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-                    <h3 class="h5 text-muted mb-2">{{#str}}noexemptions, local_jobboard{{/str}}</h3>
-                    <p class="text-muted mb-4">{{#str}}noexemptionsdesc, local_jobboard{{/str}}</p>
-                    <a href="{{addurl}}" class="btn btn-primary">
-                        <i class="fa fa-plus me-2" aria-hidden="true"></i>
-                        {{#str}}addexemption, local_jobboard{{/str}}
-                    </a>
+                <div class="jb-empty-state" role="status">
+                    <i class="fa fa-shield jb-empty-state-icon" aria-hidden="true"></i>
+                    <h3 class="jb-empty-state-title">{{#str}}noexemptions, local_jobboard{{/str}}</h3>
+                    <p class="jb-empty-state-description">{{#str}}noexemptionsdesc, local_jobboard{{/str}}</p>
+                    <div class="jb-empty-state-actions">
+                        <a href="{{addurl}}" class="btn btn-primary jb-btn-primary">
+                            <i class="fa fa-plus me-2" aria-hidden="true"></i>
+                            {{#str}}addexemption, local_jobboard{{/str}}
+                        </a>
+                    </div>
                 </div>
                 {{/hasexemptions}}
             </div>

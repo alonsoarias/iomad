@@ -75,7 +75,7 @@
                 {{#str}}managevacancies, local_jobboard{{/str}}
                 {{/convocatoriainfo}}
             </h1>
-            <a href="{{newvacancyurl}}" class="btn btn-primary jb-hover-lift">
+            <a href="{{newvacancyurl}}" class="btn btn-primary jb-btn-primary jb-hover-lift">
                 <i class="fa fa-plus me-2" aria-hidden="true"></i>
                 {{#str}}newvacancy, local_jobboard{{/str}}
             </a>
@@ -141,7 +141,7 @@
                     </div>
                     {{/filterform.fields}}
                     <div class="jb-col-auto mb-2">
-                        <button type="submit" class="btn btn-secondary">
+                        <button type="submit" class="btn btn-primary jb-btn-primary">
                             <i class="fa fa-filter me-1" aria-hidden="true"></i>
                             {{#str}}filter, local_jobboard{{/str}}
                         </button>
@@ -163,10 +163,10 @@
     {{! Vacancies Table }}
     <div id="manage-main-content">
         {{#hasvacancies}}
-        <div class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.15s;">
+        <div class="card shadow-sm mb-4 jb-fade-in-up jb-table-card" style="animation-delay: 0.15s;">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0" aria-label="{{#str}}vacancylist, local_jobboard{{/str}}">
+                    <table class="table table-hover mb-0 jb-table" aria-label="{{#str}}vacancylist, local_jobboard{{/str}}">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col" style="min-width: 100px;">{{#str}}thcode, local_jobboard{{/str}}</th>
@@ -239,14 +239,16 @@
 
         {{! Empty State }}
         {{^hasvacancies}}
-        <div class="text-center py-5" role="status">
-            <i class="fa fa-briefcase fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-            <h2 class="h5 text-muted mb-2">{{#str}}noresults, local_jobboard{{/str}}</h2>
-            <p class="text-muted mb-4 mx-auto" style="max-width: 400px;">{{#str}}novacanciesyet, local_jobboard{{/str}}</p>
-            <a href="{{newvacancyurl}}" class="btn btn-primary btn-lg">
-                <i class="fa fa-plus me-2" aria-hidden="true"></i>
-                {{#str}}newvacancy, local_jobboard{{/str}}
-            </a>
+        <div class="jb-empty-state" role="status">
+            <i class="fa fa-briefcase jb-empty-state-icon" aria-hidden="true"></i>
+            <h2 class="jb-empty-state-title">{{#str}}noresults, local_jobboard{{/str}}</h2>
+            <p class="jb-empty-state-description">{{#str}}novacanciesyet, local_jobboard{{/str}}</p>
+            <div class="jb-empty-state-actions">
+                <a href="{{newvacancyurl}}" class="btn btn-primary btn-lg jb-btn-primary">
+                    <i class="fa fa-plus me-2" aria-hidden="true"></i>
+                    {{#str}}newvacancy, local_jobboard{{/str}}
+                </a>
+            </div>
         </div>
         {{/hasvacancies}}
     </div>

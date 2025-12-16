@@ -1317,3 +1317,702 @@
     margin-top: 1.5rem;
     border-top: 1px solid #dee2e6;
 }
+
+/* ==========================================================================
+   ENHANCED BUTTONS - Improved hover/focus states and transitions
+   ========================================================================== */
+
+/* Primary action buttons with enhanced hover */
+.jb-btn-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+    border-color: #0d6efd;
+    color: #fff;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.15);
+}
+
+.jb-btn-primary:hover,
+.jb-btn-primary:focus {
+    background: linear-gradient(135deg, #0b5ed7 0%, #0a58ca 100%);
+    border-color: #0a58ca;
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.25);
+    transform: translateY(-1px);
+}
+
+.jb-btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);
+}
+
+/* Success action buttons */
+.jb-btn-success {
+    background: linear-gradient(135deg, #198754 0%, #157347 100%);
+    border-color: #198754;
+    color: #fff;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(25, 135, 84, 0.15);
+}
+
+.jb-btn-success:hover,
+.jb-btn-success:focus {
+    background: linear-gradient(135deg, #157347 0%, #146c43 100%);
+    box-shadow: 0 4px 8px rgba(25, 135, 84, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Info buttons */
+.jb-btn-info {
+    background: linear-gradient(135deg, #0dcaf0 0%, #31d2f2 100%);
+    border-color: #0dcaf0;
+    color: #000;
+    transition: all 0.2s ease;
+}
+
+.jb-btn-info:hover,
+.jb-btn-info:focus {
+    background: linear-gradient(135deg, #31d2f2 0%, #3dd5f3 100%);
+    box-shadow: 0 4px 8px rgba(13, 202, 240, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Warning buttons */
+.jb-btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+    border-color: #ffc107;
+    color: #000;
+    transition: all 0.2s ease;
+}
+
+.jb-btn-warning:hover,
+.jb-btn-warning:focus {
+    background: linear-gradient(135deg, #ffca2c 0%, #ffcd39 100%);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Danger buttons */
+.jb-btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #bb2d3b 100%);
+    border-color: #dc3545;
+    color: #fff;
+    transition: all 0.2s ease;
+}
+
+.jb-btn-danger:hover,
+.jb-btn-danger:focus {
+    background: linear-gradient(135deg, #bb2d3b 0%, #b02a37 100%);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Outline button enhancements */
+.jb-btn-outline-primary {
+    color: #0d6efd;
+    border: 2px solid #0d6efd;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.jb-btn-outline-primary:hover,
+.jb-btn-outline-primary:focus {
+    background: #0d6efd;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.2);
+}
+
+.jb-btn-outline-success {
+    color: #198754;
+    border: 2px solid #198754;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.jb-btn-outline-success:hover,
+.jb-btn-outline-success:focus {
+    background: #198754;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(25, 135, 84, 0.2);
+}
+
+.jb-btn-outline-info {
+    color: #0dcaf0;
+    border: 2px solid #0dcaf0;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.jb-btn-outline-info:hover,
+.jb-btn-outline-info:focus {
+    background: #0dcaf0;
+    color: #000;
+    box-shadow: 0 4px 8px rgba(13, 202, 240, 0.2);
+}
+
+.jb-btn-outline-warning {
+    color: #997404;
+    border: 2px solid #ffc107;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.jb-btn-outline-warning:hover,
+.jb-btn-outline-warning:focus {
+    background: #ffc107;
+    color: #000;
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.2);
+}
+
+.jb-btn-outline-danger {
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.jb-btn-outline-danger:hover,
+.jb-btn-outline-danger:focus {
+    background: #dc3545;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.jb-btn-outline-secondary {
+    color: #6c757d;
+    border: 2px solid #6c757d;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.jb-btn-outline-secondary:hover,
+.jb-btn-outline-secondary:focus {
+    background: #6c757d;
+    color: #fff;
+}
+
+/* ==========================================================================
+   ENHANCED FORM CONTROLS - Better focus states and styling
+   ========================================================================== */
+
+/* Filter form container */
+.jb-filter-form {
+    padding: 0.25rem 0;
+}
+
+/* Enhanced form controls */
+.jb-filter-form .form-control,
+.jb-filter-form .form-select {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    font-size: 0.9375rem;
+}
+
+.jb-filter-form .form-control:hover,
+.jb-filter-form .form-select:hover {
+    border-color: #adb5bd;
+}
+
+.jb-filter-form .form-control:focus,
+.jb-filter-form .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+    outline: none;
+}
+
+/* Input group enhancements */
+.jb-filter-form .input-group {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.jb-filter-form .input-group-text {
+    border: 1px solid #dee2e6;
+    border-right: none;
+    transition: all 0.2s ease;
+}
+
+.jb-filter-form .input-group:focus-within .input-group-text {
+    border-color: #86b7fe;
+    background-color: #e7f1ff;
+    color: #0d6efd;
+}
+
+.jb-filter-form .input-group:focus-within .form-control {
+    border-color: #86b7fe;
+}
+
+/* Filter button styling */
+.jb-filter-form .btn {
+    border-radius: 0.5rem;
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+}
+
+/* Active filter indicator */
+.jb-filter-active {
+    position: relative;
+}
+
+.jb-filter-active::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    background: #dc3545;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+/* ==========================================================================
+   ENHANCED TABLES - Better visual hierarchy and interactions
+   ========================================================================== */
+
+/* Table container card */
+.jb-table-card {
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.jb-table-card .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-bottom: 2px solid #e9ecef;
+    padding: 1rem 1.25rem;
+}
+
+/* Enhanced table styling */
+.jb-table {
+    margin-bottom: 0;
+}
+
+.jb-table thead {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.jb-table thead th {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #495057;
+    padding: 0.875rem 1rem;
+    border-bottom: 2px solid #dee2e6;
+    white-space: nowrap;
+}
+
+.jb-table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f4;
+    transition: background-color 0.15s ease;
+}
+
+.jb-table tbody tr:hover td {
+    background-color: rgba(13, 110, 253, 0.04);
+}
+
+.jb-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Row states */
+.jb-table-warning td {
+    background-color: rgba(255, 193, 7, 0.08) !important;
+    border-left: 3px solid #ffc107;
+}
+
+.jb-table-warning:hover td {
+    background-color: rgba(255, 193, 7, 0.12) !important;
+}
+
+.jb-table-danger td {
+    background-color: rgba(220, 53, 69, 0.06) !important;
+    border-left: 3px solid #dc3545;
+}
+
+.jb-table-success td {
+    background-color: rgba(25, 135, 84, 0.06) !important;
+    border-left: 3px solid #198754;
+}
+
+.jb-table-secondary td {
+    background-color: rgba(108, 117, 125, 0.05) !important;
+}
+
+/* Action buttons in tables */
+.jb-table .btn-group-sm .btn {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.8125rem;
+    border-radius: 0.375rem;
+}
+
+.jb-table .btn-group-sm .btn + .btn {
+    margin-left: 0.25rem;
+}
+
+/* ==========================================================================
+   ENHANCED BADGES - Outline variants and improved styling
+   ========================================================================== */
+
+/* Outline badge variants */
+.jb-badge-outline-primary {
+    color: #0d6efd;
+    background: transparent;
+    border: 1.5px solid #0d6efd;
+    font-weight: 500;
+}
+
+.jb-badge-outline-secondary {
+    color: #6c757d;
+    background: transparent;
+    border: 1.5px solid #6c757d;
+    font-weight: 500;
+}
+
+.jb-badge-outline-success {
+    color: #198754;
+    background: transparent;
+    border: 1.5px solid #198754;
+    font-weight: 500;
+}
+
+.jb-badge-outline-info {
+    color: #0dcaf0;
+    background: transparent;
+    border: 1.5px solid #0dcaf0;
+    font-weight: 500;
+}
+
+.jb-badge-outline-warning {
+    color: #997404;
+    background: transparent;
+    border: 1.5px solid #ffc107;
+    font-weight: 500;
+}
+
+.jb-badge-outline-danger {
+    color: #dc3545;
+    background: transparent;
+    border: 1.5px solid #dc3545;
+    font-weight: 500;
+}
+
+/* Status badges with subtle backgrounds */
+.jb-badge-status {
+    padding: 0.4em 0.75em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 50rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+/* ==========================================================================
+   ENHANCED NAV PILLS - Better tab styling
+   ========================================================================== */
+
+.jb-nav-pills {
+    gap: 0.5rem;
+}
+
+.jb-nav-pills .nav-link {
+    border-radius: 0.75rem;
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+    color: #495057;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.jb-nav-pills .nav-link:hover {
+    background: #e9ecef;
+    border-color: #dee2e6;
+    color: #212529;
+}
+
+.jb-nav-pills .nav-link.jb-active,
+.jb-nav-pills .nav-link.active {
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+    border-color: #0d6efd;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
+}
+
+.jb-nav-pills .nav-link.jb-active i,
+.jb-nav-pills .nav-link.active i {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ==========================================================================
+   ENHANCED CARDS - Semantic borders and improved styling
+   ========================================================================== */
+
+/* Card with left border accent */
+.jb-card-accent-primary {
+    border-left: 4px solid #0d6efd !important;
+}
+
+.jb-card-accent-success {
+    border-left: 4px solid #198754 !important;
+}
+
+.jb-card-accent-warning {
+    border-left: 4px solid #ffc107 !important;
+}
+
+.jb-card-accent-danger {
+    border-left: 4px solid #dc3545 !important;
+}
+
+.jb-card-accent-info {
+    border-left: 4px solid #0dcaf0 !important;
+}
+
+/* Semantic border cards */
+.jb-border-primary {
+    border: 1px solid #0d6efd !important;
+}
+
+.jb-border-success {
+    border: 1px solid #198754 !important;
+}
+
+.jb-border-warning {
+    border: 1px solid #ffc107 !important;
+}
+
+.jb-border-danger {
+    border: 1px solid #dc3545 !important;
+}
+
+.jb-border-info {
+    border: 1px solid #0dcaf0 !important;
+}
+
+/* Card header with color background */
+.jb-card-header-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%) !important;
+    color: #fff !important;
+    border-bottom: none;
+}
+
+.jb-card-header-success {
+    background: linear-gradient(135deg, #198754 0%, #157347 100%) !important;
+    color: #fff !important;
+    border-bottom: none;
+}
+
+.jb-card-header-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+    color: #000 !important;
+    border-bottom: none;
+}
+
+.jb-card-header-info {
+    background: linear-gradient(135deg, #0dcaf0 0%, #31d2f2 100%) !important;
+    color: #000 !important;
+    border-bottom: none;
+}
+
+/* ==========================================================================
+   ENHANCED STAT CARDS - More visual impact
+   ========================================================================== */
+
+.jb-stat-card {
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.jb-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: currentColor;
+    opacity: 0.3;
+}
+
+.jb-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.jb-stat-card .jb-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.jb-stat-card .jb-stat-label {
+    font-size: 0.8125rem;
+    color: #6c757d;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+.jb-stat-card .jb-stat-icon {
+    font-size: 2.5rem;
+    opacity: 0.15;
+    position: absolute;
+    right: 1rem;
+    bottom: 0.5rem;
+}
+
+/* ==========================================================================
+   ENHANCED EMPTY STATE - More engaging empty states
+   ========================================================================== */
+
+.jb-empty-state {
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.jb-empty-state-icon {
+    font-size: 4rem;
+    color: #dee2e6;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.jb-empty-state-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.75rem;
+}
+
+.jb-empty-state-description {
+    color: #6c757d;
+    max-width: 400px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
+}
+
+.jb-empty-state-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   ENHANCED ALERTS - Better visual hierarchy
+   ========================================================================== */
+
+.jb-alert-info {
+    background: linear-gradient(135deg, rgba(13, 202, 240, 0.1) 0%, rgba(13, 202, 240, 0.05) 100%);
+    border: 1px solid rgba(13, 202, 240, 0.3);
+    border-left: 4px solid #0dcaf0;
+    color: #055160;
+}
+
+.jb-alert-warning {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 193, 7, 0.08) 100%);
+    border: 1px solid rgba(255, 193, 7, 0.4);
+    border-left: 4px solid #ffc107;
+    color: #664d03;
+}
+
+.jb-alert-danger {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(220, 53, 69, 0.05) 100%);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-left: 4px solid #dc3545;
+    color: #842029;
+}
+
+.jb-alert-success {
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.1) 0%, rgba(25, 135, 84, 0.05) 100%);
+    border: 1px solid rgba(25, 135, 84, 0.3);
+    border-left: 4px solid #198754;
+    color: #0f5132;
+}
+
+/* ==========================================================================
+   HOVER TEXT COLOR UTILITIES
+   ========================================================================== */
+
+.jb-hover-primary:hover {
+    color: #0d6efd !important;
+}
+
+.jb-hover-success:hover {
+    color: #198754 !important;
+}
+
+.jb-hover-danger:hover {
+    color: #dc3545 !important;
+}
+
+/* ==========================================================================
+   COLUMN AUTO WIDTH UTILITY
+   ========================================================================== */
+
+.jb-col-auto {
+    flex: 0 0 auto;
+    width: auto;
+}
+
+/* ==========================================================================
+   RESPONSIVE FLEX UTILITIES
+   ========================================================================== */
+
+@media (min-width: 768px) {
+    .jb-flex-md-row {
+        flex-direction: row !important;
+    }
+
+    .jb-align-items-md-center {
+        align-items: center !important;
+    }
+
+    .jb-ml-md-auto {
+        margin-left: auto !important;
+    }
+
+    .jb-mt-md-0 {
+        margin-top: 0 !important;
+    }
+}
+
+/* ==========================================================================
+   LIST UNSTYLED ENHANCEMENT
+   ========================================================================== */
+
+.jb-list-unstyled {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.jb-mt-auto {
+    margin-top: auto !important;
+}
+
+/* ==========================================================================
+   TEXT COLOR UTILITIES
+   ========================================================================== */
+
+.jb-text-primary {
+    color: #0d6efd !important;
+}
+
+.jb-text-success {
+    color: #198754 !important;
+}
+
+.jb-text-warning {
+    color: #ffc107 !important;
+}
+
+.jb-text-danger {
+    color: #dc3545 !important;
+}
+
+.jb-text-info {
+    color: #0dcaf0 !important;
+}

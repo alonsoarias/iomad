@@ -70,11 +70,11 @@
             {{pagetitle}}
         </h1>
         <div class="btn-group" role="group" aria-label="{{#str}}doctypeactions, local_jobboard{{/str}}">
-            <a href="{{addurl}}" class="btn btn-primary">
+            <a href="{{addurl}}" class="btn btn-primary jb-btn-primary">
                 <i class="fa fa-plus me-2" aria-hidden="true"></i>
                 {{#str}}adddoctype, local_jobboard{{/str}}
             </a>
-            <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+            <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
                 <i class="fa fa-gauge me-2" aria-hidden="true"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
@@ -84,45 +84,45 @@
     {{! Statistics Cards }}
     <section class="row mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-primary">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-folder fa-2x text-primary mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.total}}</div>
-                    <div class="small text-muted">{{#str}}totaldoctypes, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.total}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}totaldoctypes, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-success">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-circle-check fa-2x text-success mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.enabled}}</div>
-                    <div class="small text-muted">{{#str}}enableddoctypes, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.enabled}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}enableddoctypes, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-info">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-star fa-2x text-info mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.required}}</div>
-                    <div class="small text-muted">{{#str}}requireddoctypes, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.required}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}requireddoctypes, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
+            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-warning">
                 <div class="card-body text-center py-3">
                     <i class="fa fa-filter fa-2x text-warning mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark">{{stats.conditional}}</div>
-                    <div class="small text-muted">{{#str}}conditionaldoctypes, local_jobboard{{/str}}</div>
+                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.conditional}}</div>
+                    <div class="small text-muted jb-stat-label">{{#str}}conditionaldoctypes, local_jobboard{{/str}}</div>
                 </div>
             </div>
         </div>
     </section>
 
     {{! Help Info }}
-    <div class="alert alert-info d-flex align-items-start mb-4" role="alert">
+    <div class="alert jb-alert-info d-flex align-items-start mb-4" role="alert">
         <i class="fa fa-circle-info fa-lg me-3 mt-1" aria-hidden="true"></i>
         <div>
             <strong class="d-block mb-1">{{abouttitle}}</strong>
@@ -134,19 +134,19 @@
     <main id="doctypes-main-content">
         {{! Document Types List }}
         {{#hasdoctypes}}
-        <section class="card shadow-sm mb-4 jb-fade-in-up" aria-labelledby="doctypes-heading" style="animation-delay: 0.3s;">
+        <section class="card shadow-sm mb-4 jb-fade-in-up jb-table-card" aria-labelledby="doctypes-heading" style="animation-delay: 0.3s;">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h2 class="fs-5 mb-0" id="doctypes-heading">
                     <i class="fa fa-list text-primary me-2" aria-hidden="true"></i>
                     {{#str}}doctypelist, local_jobboard{{/str}}
                 </h2>
-                <span class="badge bg-secondary rounded-pill">
+                <span class="badge bg-primary rounded-pill">
                     {{totalcount}} {{#str}}items, local_jobboard{{/str}}
                 </span>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0" aria-label="{{#str}}doctypelist, local_jobboard{{/str}}">
+                    <table class="table table-hover mb-0 jb-table" aria-label="{{#str}}doctypelist, local_jobboard{{/str}}">
                         <thead class="table-light">
                             <tr>
                                 <th scope="col" class="text-center" style="width: 60px;">
@@ -233,14 +233,16 @@
 
         {{! Empty State }}
         {{^hasdoctypes}}
-        <div class="text-center py-5" role="status">
-            <i class="fa fa-folder-open fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-            <h2 class="h5 text-muted mb-2">{{#str}}nodoctypes, local_jobboard{{/str}}</h2>
-            <p class="text-muted mb-4">{{#str}}nodoctypesdesc, local_jobboard{{/str}}</p>
-            <a href="{{addurl}}" class="btn btn-primary">
-                <i class="fa fa-plus me-2" aria-hidden="true"></i>
-                {{#str}}adddoctype, local_jobboard{{/str}}
-            </a>
+        <div class="jb-empty-state" role="status">
+            <i class="fa fa-folder-open jb-empty-state-icon" aria-hidden="true"></i>
+            <h2 class="jb-empty-state-title">{{#str}}nodoctypes, local_jobboard{{/str}}</h2>
+            <p class="jb-empty-state-description">{{#str}}nodoctypesdesc, local_jobboard{{/str}}</p>
+            <div class="jb-empty-state-actions">
+                <a href="{{addurl}}" class="btn btn-primary jb-btn-primary">
+                    <i class="fa fa-plus me-2" aria-hidden="true"></i>
+                    {{#str}}adddoctype, local_jobboard{{/str}}
+                </a>
+            </div>
         </div>
         {{/hasdoctypes}}
     </main>
