@@ -4999,5 +4999,357 @@ a.jb-stepper-indicator:hover {
 }
 
 /* ==========================================================================
+   ACCESSIBILITY WCAG 2.1 AA
+   ========================================================================== */
+
+/* Skip links */
+.jb-skip-links {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: var(--jb-z-tooltip);
+}
+
+.jb-skip-link {
+    position: absolute;
+    top: -100px;
+    left: var(--jb-space-4);
+    padding: var(--jb-space-3) var(--jb-space-4);
+    background: var(--jb-primary);
+    color: white;
+    font-weight: var(--jb-font-semibold);
+    text-decoration: none;
+    border-radius: 0 0 var(--jb-radius-md) var(--jb-radius-md);
+    box-shadow: var(--jb-shadow-lg);
+    transition: top var(--jb-duration-fast) var(--jb-ease-out);
+}
+
+.jb-skip-link:focus {
+    top: 0;
+    outline: none;
+}
+
+/* Screen reader only (focusable variant) */
+.jb-sr-only-focusable {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.jb-sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: var(--jb-space-2) var(--jb-space-4);
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    background: var(--jb-surface-base);
+    box-shadow: var(--jb-shadow-lg);
+    z-index: var(--jb-z-tooltip);
+}
+
+/* Enhanced focus styles for keyboard users */
+.jb-keyboard-user *:focus {
+    outline: 2px solid var(--jb-primary);
+    outline-offset: 2px;
+}
+
+.jb-keyboard-user *:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Focus visible polyfill support */
+*:focus-visible {
+    outline: 2px solid var(--jb-primary);
+    outline-offset: 2px;
+}
+
+/* Custom focus styles for specific elements */
+.jb-btn:focus-visible,
+.btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--jb-primary-200);
+}
+
+.jb-form-control:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible {
+    outline: none;
+    border-color: var(--jb-primary);
+    box-shadow: 0 0 0 3px var(--jb-primary-100);
+}
+
+.jb-card:focus-visible,
+.card:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--jb-primary-200), var(--jb-shadow-lg);
+}
+
+/* High contrast mode */
+@media (prefers-contrast: more) {
+    :root {
+        --jb-primary: #0052cc;
+        --jb-success: #006644;
+        --jb-danger: #cc0000;
+        --jb-warning: #996600;
+        --jb-info: #004d99;
+        --jb-text-primary: #000000;
+        --jb-text-secondary: #333333;
+        --jb-border-default: #000000;
+    }
+
+    .jb-btn,
+    .btn {
+        border-width: 2px;
+    }
+
+    .jb-form-control,
+    .form-control,
+    .form-select {
+        border-width: 2px;
+    }
+
+    .jb-card,
+    .card {
+        border: 2px solid var(--jb-border-default);
+    }
+
+    .jb-badge {
+        border: 1px solid currentColor;
+    }
+
+    /* Ensure sufficient contrast for links */
+    a {
+        text-decoration: underline;
+    }
+
+    a:hover {
+        text-decoration: none;
+        background-color: var(--jb-primary-100);
+    }
+}
+
+/* Windows High Contrast Mode */
+@media (-ms-high-contrast: active) {
+    .jb-btn,
+    .btn,
+    .jb-form-control,
+    .form-control,
+    .form-select,
+    .jb-card,
+    .card {
+        border: 2px solid WindowText;
+    }
+
+    .jb-btn:focus,
+    .btn:focus {
+        outline: 2px solid Highlight;
+    }
+
+    .jb-badge {
+        border: 1px solid WindowText;
+    }
+
+    /* Ensure icons are visible */
+    .fa,
+    [class^="fa-"],
+    [class*=" fa-"] {
+        forced-color-adjust: none;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .jb-skeleton-animated {
+        animation: none;
+        background: var(--jb-gray-200);
+    }
+
+    .jb-toast {
+        transform: none;
+    }
+
+    .jb-toast-visible {
+        transform: none;
+    }
+
+    .jb-fade-in,
+    .jb-fade-in-up,
+    .jb-slide-in {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Minimum touch target sizes (WCAG 2.5.5) */
+@media (pointer: coarse) {
+    .jb-btn,
+    .btn,
+    .jb-nav-link,
+    .nav-link,
+    .jb-page-link,
+    .page-link {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .jb-checkbox-input,
+    .jb-radio-input,
+    .form-check-input {
+        width: 24px;
+        height: 24px;
+    }
+
+    .jb-toggle-track {
+        width: 52px;
+        height: 28px;
+    }
+}
+
+/* Text spacing (WCAG 1.4.12) */
+.jb-text-spacing-enhanced {
+    line-height: 1.8 !important;
+    letter-spacing: 0.12em !important;
+    word-spacing: 0.16em !important;
+}
+
+.jb-text-spacing-enhanced p {
+    margin-bottom: 2em !important;
+}
+
+/* Color not sole indicator (WCAG 1.4.1) */
+.jb-has-error .jb-form-control::before,
+.jb-has-error .form-control::before {
+    content: "!";
+    position: absolute;
+    right: 8px;
+    color: var(--jb-danger);
+}
+
+/* Error messages with icons (not just color) */
+.jb-form-text-error,
+.invalid-feedback {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--jb-space-2);
+}
+
+.jb-form-text-error::before,
+.invalid-feedback::before {
+    content: "\f06a"; /* Font Awesome exclamation-circle */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+/* Success messages with icons */
+.jb-form-text-success,
+.valid-feedback {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--jb-space-2);
+}
+
+.jb-form-text-success::before,
+.valid-feedback::before {
+    content: "\f058"; /* Font Awesome check-circle */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+/* Link purpose clarity (WCAG 2.4.4) */
+.jb-link-external::after {
+    content: " \f08e"; /* External link icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.75em;
+    margin-left: var(--jb-space-1);
+}
+
+.jb-link-download::after {
+    content: " \f019"; /* Download icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.75em;
+    margin-left: var(--jb-space-1);
+}
+
+/* Reading mask utility */
+.jb-reading-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: var(--jb-z-tooltip);
+}
+
+.jb-reading-mask::before,
+.jb-reading-mask::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: rgb(0 0 0 / 0.6);
+}
+
+.jb-reading-mask::before {
+    top: 0;
+    height: var(--mask-top, 40%);
+}
+
+.jb-reading-mask::after {
+    bottom: 0;
+    height: var(--mask-bottom, 40%);
+}
+
+/* Focus indicator for images/media */
+img:focus-visible,
+video:focus-visible,
+audio:focus-visible {
+    outline: 3px solid var(--jb-primary);
+    outline-offset: 2px;
+}
+
+/* Disable focus outline on mouse click */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Live region styling (visually hidden but accessible) */
+#jb-live-region-polite,
+#jb-live-region-assertive {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ==========================================================================
    END OF STYLES
    ========================================================================== */

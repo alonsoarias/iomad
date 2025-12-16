@@ -1,0 +1,33 @@
+{{!
+    @template local_jobboard/components/skip_links
+
+    Skip links component for keyboard navigation accessibility.
+    Allows keyboard users to skip directly to main content areas.
+
+    Should be placed at the very beginning of the page body.
+
+    Context variables:
+    * links (array) - Skip link items [{id, label}]
+    * maincontent (string) - Main content area ID (default: maincontent)
+
+    Example context (json):
+    {
+        "links": [
+            {"id": "maincontent", "label": "Skip to main content"},
+            {"id": "navigation", "label": "Skip to navigation"},
+            {"id": "search", "label": "Skip to search"}
+        ]
+    }
+}}
+<nav class="jb-skip-links" aria-label="{{#str}}skip_navigation, local_jobboard{{/str}}">
+    {{#links}}
+    <a href="#{{id}}" class="jb-skip-link">
+        {{label}}
+    </a>
+    {{/links}}
+    {{^links}}
+    <a href="#{{#maincontent}}{{maincontent}}{{/maincontent}}{{^maincontent}}maincontent{{/maincontent}}" class="jb-skip-link">
+        {{#str}}skip_to_main_content{{/str}}
+    </a>
+    {{/links}}
+</nav>

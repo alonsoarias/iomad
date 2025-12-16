@@ -1,0 +1,28 @@
+{{!
+    @template local_jobboard/components/sr_only
+
+    Screen reader only text component.
+    Visually hidden but accessible to screen readers.
+
+    Context variables:
+    * text (string) - Text content for screen readers
+    * tag (string) - HTML tag to use (default: span)
+    * focusable (bool) - Make focusable (shows on focus)
+    * live (string) - ARIA live region: polite, assertive, off
+    * atomic (bool) - ARIA atomic attribute
+    * role (string) - ARIA role
+
+    Example context (json):
+    {
+        "text": "3 new notifications",
+        "live": "polite",
+        "atomic": true
+    }
+}}
+<{{#tag}}{{tag}}{{/tag}}{{^tag}}span{{/tag}}
+    class="{{#focusable}}jb-sr-only-focusable{{/focusable}}{{^focusable}}visually-hidden{{/focusable}}"
+    {{#live}}aria-live="{{live}}"{{/live}}
+    {{#atomic}}aria-atomic="true"{{/atomic}}
+    {{#role}}role="{{role}}"{{/role}}>
+    {{{text}}}
+</{{#tag}}{{tag}}{{/tag}}{{^tag}}span{{/tag}}>
