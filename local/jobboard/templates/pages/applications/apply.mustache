@@ -1,7 +1,8 @@
 {{!
     @template local_jobboard/pages/applications/apply
 
-    Application form page - Clean and professional design.
+    Application form page - ISER Brand Design
+    Based on Manual de Identidad Visual ISER (M-GCRP-01 v01)
 
     Context variables:
     * vacancy - Vacancy data {id, code, title, location, modality, closedateformatted}
@@ -17,203 +18,413 @@
     * viewvacancyurl - URL to view vacancy details
     * backvacancyurl - URL to vacancy details
     * browservacanciesurl - URL to browse vacancies
-
-    Example context (json):
-    {
-        "vacancy": {"code": "VAC-001", "title": "Professor Position"},
-        "showdeadlinewarning": true
-    }
 }}
-<div class="jb-apply-page" id="jobboard-apply">
-    <div class="container-fluid px-0">
-        <div class="row g-4">
-            {{! Main Content }}
+<div class="jb-apply-page jb-iser-theme" id="jobboard-apply">
+    {{! Top Header Bar with ISER Verde }}
+    <div class="jb-apply-header" style="background: linear-gradient(135deg, var(--iser-verde) 0%, var(--iser-verde-dark) 100%); border-radius: var(--jb-radius-lg); padding: var(--jb-space-6); margin-bottom: var(--jb-space-6); color: var(--iser-blanco);">
+        <div class="row align-items-center">
             <div class="col-lg-8">
-                {{! Page Header }}
-                <div class="jb-page-header mb-4">
-                    <nav aria-label="breadcrumb" class="mb-2">
-                        <ol class="breadcrumb small mb-0">
-                            <li class="breadcrumb-item">
-                                <a href="{{browservacanciesurl}}">{{#str}}vacancies, local_jobboard{{/str}}</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="{{viewvacancyurl}}">{{vacancy.code}}</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">{{#str}}apply, local_jobboard{{/str}}</li>
-                        </ol>
-                    </nav>
-                    <h1 class="h3 mb-1">{{#str}}applytovacancy, local_jobboard{{/str}}</h1>
-                    <p class="text-muted mb-0">{{vacancy.title}}</p>
-                </div>
+                {{! Breadcrumb }}
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb mb-0" style="background: transparent; padding: 0;">
+                        <li class="breadcrumb-item">
+                            <a href="{{browservacanciesurl}}" style="color: rgba(255,255,255,0.8);">
+                                <i class="fa fa-home me-1"></i>{{#str}}vacancies, local_jobboard{{/str}}
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{{viewvacancyurl}}" style="color: rgba(255,255,255,0.8);">{{vacancy.code}}</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page" style="color: var(--iser-blanco);">
+                            {{#str}}apply, local_jobboard{{/str}}
+                        </li>
+                    </ol>
+                </nav>
 
-                {{! Deadline Warning }}
-                {{#showdeadlinewarning}}
-                <div class="alert alert-danger jb-alert-danger d-flex align-items-center mb-4" role="alert">
-                    <i class="fa fa-exclamation-triangle fa-lg me-3"></i>
-                    <div>
-                        <strong>{{#str}}deadlinewarning_title, local_jobboard{{/str}}</strong>
-                        <span class="d-block">{{deadlinewarningtext}}</span>
-                    </div>
+                {{! Main Title }}
+                <h1 style="font-size: var(--jb-text-3xl); font-weight: var(--jb-font-bold); margin-bottom: var(--jb-space-2); color: var(--iser-blanco);">
+                    {{#str}}applytovacancy, local_jobboard{{/str}}
+                </h1>
+                <p style="font-size: var(--jb-text-lg); margin-bottom: 0; opacity: 0.9;">
+                    <i class="fa fa-briefcase me-2"></i>{{vacancy.title}}
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                {{! Deadline Badge }}
+                {{#showdaysremaining}}
+                <div class="d-inline-block" style="background: {{#showdeadlinewarning}}var(--iser-rojo){{/showdeadlinewarning}}{{^showdeadlinewarning}}rgba(255,255,255,0.2){{/showdeadlinewarning}}; border-radius: var(--jb-radius-full); padding: var(--jb-space-3) var(--jb-space-5);">
+                    <i class="fa fa-clock me-2"></i>
+                    <strong>{{daysremainingtext}}</strong>
                 </div>
-                {{/showdeadlinewarning}}
+                {{/showdaysremaining}}
+            </div>
+        </div>
+    </div>
 
-                {{! Exemption Notice }}
-                {{#isexemption}}
-                <div class="alert alert-info jb-alert-info d-flex align-items-center mb-4" role="alert">
-                    <i class="fa fa-id-badge fa-lg me-3"></i>
-                    <div>
-                        <strong>{{#str}}exemptionapplied, local_jobboard{{/str}}</strong>
-                        {{#exemptioninfo}}
-                        <span class="d-block small">{{exemptiontype}}</span>
-                        {{/exemptioninfo}}
+    <div class="row g-4">
+        {{! Main Content Column }}
+        <div class="col-lg-8">
+            {{! Deadline Warning Alert }}
+            {{#showdeadlinewarning}}
+            <div class="jb-alert jb-alert-danger mb-4" role="alert" style="background: var(--iser-rojo-lighter); border-left: 4px solid var(--iser-rojo); border-radius: var(--jb-radius-md); padding: var(--jb-space-4);">
+                <div class="d-flex align-items-start">
+                    <div style="background: var(--iser-rojo); border-radius: var(--jb-radius-full); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa fa-exclamation-triangle" style="color: var(--iser-blanco);"></i>
                     </div>
-                </div>
-                {{/isexemption}}
-
-                {{! Application Form Card }}
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-file-signature text-primary me-2"></i>
-                            {{#str}}applicationform, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        {{{formhtml}}}
+                    <div class="ms-3">
+                        <strong style="color: var(--iser-rojo); display: block; margin-bottom: var(--jb-space-1);">
+                            {{#str}}deadlinewarning_title, local_jobboard{{/str}}
+                        </strong>
+                        <span style="color: var(--iser-gris-oscuro);">{{deadlinewarningtext}}</span>
                     </div>
                 </div>
             </div>
+            {{/showdeadlinewarning}}
 
-            {{! Sidebar }}
-            <div class="col-lg-4">
-                <div class="jb-sidebar sticky-top" style="top: 80px;">
-                    {{! Vacancy Summary }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-briefcase text-primary me-2"></i>
-                                {{#str}}vacancysummary, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <dl class="row mb-0 small">
-                                <dt class="col-5 text-muted">{{#str}}code, local_jobboard{{/str}}</dt>
-                                <dd class="col-7"><code>{{vacancy.code}}</code></dd>
-
-                                <dt class="col-5 text-muted">{{#str}}title, local_jobboard{{/str}}</dt>
-                                <dd class="col-7">{{vacancy.title}}</dd>
-
-                                {{#vacancy.location}}
-                                <dt class="col-5 text-muted">{{#str}}location, local_jobboard{{/str}}</dt>
-                                <dd class="col-7">{{vacancy.location}}</dd>
-                                {{/vacancy.location}}
-
-                                {{#vacancy.modality}}
-                                <dt class="col-5 text-muted">{{#str}}modality, local_jobboard{{/str}}</dt>
-                                <dd class="col-7">{{vacancy.modality}}</dd>
-                                {{/vacancy.modality}}
-
-                                <dt class="col-5 text-muted">{{#str}}closedate, local_jobboard{{/str}}</dt>
-                                <dd class="col-7">
-                                    <span class="{{#showdeadlinewarning}}text-danger fw-bold{{/showdeadlinewarning}}">
-                                        {{vacancy.closedateformatted}}
-                                    </span>
-                                </dd>
-                            </dl>
-
-                            {{#showdaysremaining}}
-                            <div class="text-center mt-3 pt-3 border-top">
-                                <span class="badge bg-{{deadlinebadgecolor}} py-2 px-3">
-                                    <i class="fa fa-clock me-1"></i>
-                                    {{daysremainingtext}}
-                                </span>
-                            </div>
-                            {{/showdaysremaining}}
-                        </div>
-                        <div class="card-footer bg-light">
-                            <a href="{{viewvacancyurl}}" class="btn btn-outline-primary jb-btn-outline-primary btn-sm w-100">
-                                <i class="fa fa-eye me-1"></i>
-                                {{#str}}viewvacancydetails, local_jobboard{{/str}}
-                            </a>
-                        </div>
+            {{! Exemption Notice }}
+            {{#isexemption}}
+            <div class="jb-alert jb-alert-info mb-4" role="alert" style="background: var(--iser-azul-lighter); border-left: 4px solid var(--iser-azul); border-radius: var(--jb-radius-md); padding: var(--jb-space-4);">
+                <div class="d-flex align-items-start">
+                    <div style="background: var(--iser-azul); border-radius: var(--jb-radius-full); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fa fa-id-badge" style="color: var(--iser-blanco);"></i>
                     </div>
-
-                    {{! Document Checklist }}
-                    {{#hasrequireddocs}}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0">
-                                    <i class="fa fa-list-check text-warning me-2"></i>
-                                    {{#str}}documentchecklist, local_jobboard{{/str}}
-                                </h6>
-                                <span class="badge bg-secondary">{{requireddocscount}}</span>
-                            </div>
-                        </div>
-                        <ul class="list-group list-group-flush small">
-                            {{#requireddocs}}
-                            <li class="list-group-item d-flex align-items-center py-2">
-                                <i class="fa fa-square text-muted me-2"></i>
-                                <span class="flex-grow-1">{{name}}</span>
-                                {{#isrequired}}
-                                <span class="text-danger" title="{{#str}}required{{/str}}">*</span>
-                                {{/isrequired}}
-                            </li>
-                            {{/requireddocs}}
-                        </ul>
-                        <div class="card-footer bg-light small text-muted">
-                            <span class="text-danger">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
-                        </div>
+                    <div class="ms-3">
+                        <strong style="color: var(--iser-azul); display: block; margin-bottom: var(--jb-space-1);">
+                            {{#str}}exemptionapplied, local_jobboard{{/str}}
+                        </strong>
+                        {{#exemptioninfo}}
+                        <span style="color: var(--iser-gris-oscuro);">{{exemptiontype}}</span>
+                        {{/exemptioninfo}}
                     </div>
-                    {{/hasrequireddocs}}
+                </div>
+            </div>
+            {{/isexemption}}
 
-                    {{! Help Card }}
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-circle-question text-info me-2"></i>
-                                {{#str}}needhelp, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body small">
-                            <p class="mb-2">{{#str}}applyhelp_text, local_jobboard{{/str}}</p>
-                            <ul class="mb-0 ps-3">
-                                {{#quicktips}}
-                                <li class="mb-1">{{.}}</li>
-                                {{/quicktips}}
-                            </ul>
+            {{! Application Form Card }}
+            <div class="jb-card" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden;">
+                {{! Card Header with ISER Rojo accent }}
+                <div class="jb-card-header" style="background: var(--jb-gray-50); padding: var(--jb-space-4) var(--jb-space-5); border-bottom: 3px solid var(--iser-verde);">
+                    <h2 style="font-size: var(--jb-text-xl); font-weight: var(--jb-font-semibold); color: var(--iser-rojo); margin: 0; display: flex; align-items: center;">
+                        <i class="fa fa-file-signature me-3" style="color: var(--iser-verde);"></i>
+                        {{#str}}applicationform, local_jobboard{{/str}}
+                    </h2>
+                </div>
 
-                            {{#supportemail}}
-                            <div class="mt-3 pt-3 border-top">
-                                <strong class="d-block mb-2">{{#str}}contactsupport, local_jobboard{{/str}}</strong>
-                                <a href="mailto:{{supportemail}}" class="btn btn-outline-secondary btn-sm w-100">
-                                    <i class="fa fa-envelope me-1"></i>
-                                    {{supportemail}}
-                                </a>
-                            </div>
-                            {{/supportemail}}
-                        </div>
+                {{! Card Body - Form Container }}
+                <div class="jb-card-body" style="padding: var(--jb-space-5);">
+                    <div class="jb-form-container">
+                        {{{formhtml}}}
                     </div>
                 </div>
             </div>
         </div>
 
-        {{! Navigation Footer }}
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center py-3 border-top jb-fade-in">
-                    <a href="{{backvacancyurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
-                        <i class="fa fa-arrow-left me-2"></i>
-                        {{#str}}backtovacancy, local_jobboard{{/str}}
-                    </a>
-                    <a href="{{browservacanciesurl}}" class="btn btn-link text-muted jb-hover-primary">
-                        {{#str}}browservacancies, local_jobboard{{/str}}
-                        <i class="fa fa-arrow-right ms-2"></i>
-                    </a>
+        {{! Sidebar Column }}
+        <div class="col-lg-4">
+            <div class="jb-sidebar" style="position: sticky; top: 100px;">
+                {{! Vacancy Summary Card }}
+                <div class="jb-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
+                    <div class="jb-card-header" style="background: var(--iser-verde-lighter); padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 2px solid var(--iser-verde);">
+                        <h3 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-verde-dark); margin: 0;">
+                            <i class="fa fa-briefcase me-2"></i>
+                            {{#str}}vacancysummary, local_jobboard{{/str}}
+                        </h3>
+                    </div>
+                    <div class="jb-card-body" style="padding: var(--jb-space-4);">
+                        <dl style="margin: 0;">
+                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-200);">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
+                                    {{#str}}code, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0; font-weight: var(--jb-font-semibold); color: var(--iser-negro);">
+                                    <code style="background: var(--iser-verde-lighter); color: var(--iser-verde-dark); padding: 2px 8px; border-radius: 4px; font-size: var(--jb-text-sm);">{{vacancy.code}}</code>
+                                </dd>
+                            </div>
+
+                            <div class="py-2" style="border-bottom: 1px solid var(--jb-gray-200);">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm); margin-bottom: var(--jb-space-1);">
+                                    {{#str}}title, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0; font-weight: var(--jb-font-medium); color: var(--iser-negro);">{{vacancy.title}}</dd>
+                            </div>
+
+                            {{#vacancy.location}}
+                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-200);">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
+                                    <i class="fa fa-map-marker-alt me-1"></i>{{#str}}location, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0; color: var(--iser-negro);">{{vacancy.location}}</dd>
+                            </div>
+                            {{/vacancy.location}}
+
+                            {{#vacancy.modality}}
+                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-200);">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
+                                    <i class="fa fa-laptop-house me-1"></i>{{#str}}modality, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0; color: var(--iser-negro);">{{vacancy.modality}}</dd>
+                            </div>
+                            {{/vacancy.modality}}
+
+                            <div class="d-flex justify-content-between py-2">
+                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
+                                    <i class="fa fa-calendar-alt me-1"></i>{{#str}}closedate, local_jobboard{{/str}}
+                                </dt>
+                                <dd style="margin: 0; {{#showdeadlinewarning}}color: var(--iser-rojo); font-weight: var(--jb-font-bold);{{/showdeadlinewarning}}{{^showdeadlinewarning}}color: var(--iser-negro);{{/showdeadlinewarning}}">
+                                    {{vacancy.closedateformatted}}
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                    <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); border-top: 1px solid var(--jb-gray-200);">
+                        <a href="{{viewvacancyurl}}" class="btn w-100" style="background: transparent; border: 2px solid var(--iser-verde); color: var(--iser-verde); font-weight: var(--jb-font-medium); border-radius: var(--jb-radius-md); transition: all 0.2s ease;">
+                            <i class="fa fa-eye me-2"></i>
+                            {{#str}}viewvacancydetails, local_jobboard{{/str}}
+                        </a>
+                    </div>
                 </div>
+
+                {{! Document Checklist Card }}
+                {{#hasrequireddocs}}
+                <div class="jb-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
+                    <div class="jb-card-header" style="background: var(--iser-amarillo-lighter); padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 2px solid var(--iser-amarillo);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-amarillo-darker); margin: 0;">
+                                <i class="fa fa-list-check me-2"></i>
+                                {{#str}}documentchecklist, local_jobboard{{/str}}
+                            </h3>
+                            <span style="background: var(--iser-amarillo); color: var(--iser-negro); padding: 4px 12px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm); font-weight: var(--jb-font-bold);">
+                                {{requireddocscount}}
+                            </span>
+                        </div>
+                    </div>
+                    <ul style="list-style: none; margin: 0; padding: 0;">
+                        {{#requireddocs}}
+                        <li style="padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 1px solid var(--jb-gray-100); display: flex; align-items: center; font-size: var(--jb-text-sm);">
+                            <span style="width: 20px; height: 20px; border: 2px solid var(--iser-gris-claro); border-radius: 4px; margin-right: var(--jb-space-3); flex-shrink: 0;"></span>
+                            <span style="flex: 1; color: var(--iser-gris-oscuro);">{{name}}</span>
+                            {{#isrequired}}
+                            <span style="color: var(--iser-rojo); font-weight: var(--jb-font-bold);" title="{{#str}}required{{/str}}">*</span>
+                            {{/isrequired}}
+                        </li>
+                        {{/requireddocs}}
+                    </ul>
+                    <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); font-size: var(--jb-text-xs); color: var(--iser-gris-medio);">
+                        <span style="color: var(--iser-rojo); font-weight: var(--jb-font-bold);">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
+                    </div>
+                </div>
+                {{/hasrequireddocs}}
+
+                {{! Help Card }}
+                <div class="jb-card" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
+                    <div class="jb-card-header" style="background: var(--iser-azul-lighter); padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 2px solid var(--iser-azul);">
+                        <h3 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-azul); margin: 0;">
+                            <i class="fa fa-circle-question me-2"></i>
+                            {{#str}}needhelp, local_jobboard{{/str}}
+                        </h3>
+                    </div>
+                    <div class="jb-card-body" style="padding: var(--jb-space-4);">
+                        <p style="font-size: var(--jb-text-sm); color: var(--iser-gris-oscuro); margin-bottom: var(--jb-space-3);">
+                            {{#str}}applyhelp_text, local_jobboard{{/str}}
+                        </p>
+                        {{#quicktips}}
+                        <ul style="font-size: var(--jb-text-sm); color: var(--iser-gris-oscuro); padding-left: var(--jb-space-4); margin-bottom: 0;">
+                            {{#quicktips}}
+                            <li style="margin-bottom: var(--jb-space-2);">{{.}}</li>
+                            {{/quicktips}}
+                        </ul>
+                        {{/quicktips}}
+
+                        {{#supportemail}}
+                        <div style="margin-top: var(--jb-space-4); padding-top: var(--jb-space-4); border-top: 1px solid var(--jb-gray-200);">
+                            <strong style="display: block; font-size: var(--jb-text-sm); color: var(--iser-negro); margin-bottom: var(--jb-space-2);">
+                                {{#str}}contactsupport, local_jobboard{{/str}}
+                            </strong>
+                            <a href="mailto:{{supportemail}}" class="btn w-100" style="background: transparent; border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); font-size: var(--jb-text-sm); border-radius: var(--jb-radius-md);">
+                                <i class="fa fa-envelope me-2"></i>
+                                {{supportemail}}
+                            </a>
+                        </div>
+                        {{/supportemail}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{! Bottom Navigation }}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--jb-space-4) 0; border-top: 2px solid var(--jb-gray-200);">
+                <a href="{{backvacancyurl}}" class="btn" style="background: transparent; border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); font-weight: var(--jb-font-medium); padding: var(--jb-space-2) var(--jb-space-4); border-radius: var(--jb-radius-md);">
+                    <i class="fa fa-arrow-left me-2"></i>
+                    {{#str}}backtovacancy, local_jobboard{{/str}}
+                </a>
+                <a href="{{browservacanciesurl}}" style="color: var(--iser-verde); font-weight: var(--jb-font-medium); text-decoration: none;">
+                    {{#str}}browservacancies, local_jobboard{{/str}}
+                    <i class="fa fa-arrow-right ms-2"></i>
+                </a>
             </div>
         </div>
     </div>
 </div>
 
-{{! Styles consolidated in styles.css }}
+{{! ISER Theme Specific Styles }}
+<style>
+/* ISER Theme Override for Apply Page */
+.jb-apply-page.jb-iser-theme {
+    font-family: var(--jb-font-sans);
+}
+
+/* Breadcrumb styling */
+.jb-apply-page .breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(255,255,255,0.5);
+}
+
+/* Button hover states */
+.jb-apply-page .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.jb-apply-page a[style*="border: 2px solid var(--iser-verde)"]:hover {
+    background: var(--iser-verde) !important;
+    color: var(--iser-blanco) !important;
+}
+
+/* Form styling within the apply page */
+.jb-apply-page .jb-form-container .form-group,
+.jb-apply-page .jb-form-container .fitem {
+    margin-bottom: var(--jb-space-4);
+}
+
+.jb-apply-page .jb-form-container label {
+    font-weight: var(--jb-font-medium);
+    color: var(--iser-negro);
+    margin-bottom: var(--jb-space-2);
+}
+
+.jb-apply-page .jb-form-container .form-control,
+.jb-apply-page .jb-form-container input[type="text"],
+.jb-apply-page .jb-form-container input[type="email"],
+.jb-apply-page .jb-form-container textarea,
+.jb-apply-page .jb-form-container select {
+    border: 2px solid var(--iser-gris-claro);
+    border-radius: var(--jb-radius-md);
+    padding: var(--jb-space-3);
+    font-size: var(--jb-text-base);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jb-apply-page .jb-form-container .form-control:focus,
+.jb-apply-page .jb-form-container input:focus,
+.jb-apply-page .jb-form-container textarea:focus,
+.jb-apply-page .jb-form-container select:focus {
+    border-color: var(--iser-verde);
+    box-shadow: 0 0 0 3px rgba(27, 158, 136, 0.15);
+    outline: none;
+}
+
+/* Primary submit button */
+.jb-apply-page .jb-form-container .btn-primary,
+.jb-apply-page .jb-form-container input[type="submit"] {
+    background: var(--iser-verde);
+    border: none;
+    color: var(--iser-blanco);
+    padding: var(--jb-space-3) var(--jb-space-5);
+    font-weight: var(--jb-font-semibold);
+    border-radius: var(--jb-radius-md);
+    transition: all 0.2s ease;
+}
+
+.jb-apply-page .jb-form-container .btn-primary:hover,
+.jb-apply-page .jb-form-container input[type="submit"]:hover {
+    background: var(--iser-verde-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(27, 158, 136, 0.3);
+}
+
+/* Cancel/Secondary button */
+.jb-apply-page .jb-form-container .btn-secondary,
+.jb-apply-page .jb-form-container .btn-cancel {
+    background: transparent;
+    border: 2px solid var(--iser-gris-medio);
+    color: var(--iser-gris-oscuro);
+}
+
+/* File upload area */
+.jb-apply-page .jb-form-container .filepicker-container,
+.jb-apply-page .jb-form-container .filemanager {
+    border: 2px dashed var(--iser-gris-claro);
+    border-radius: var(--jb-radius-md);
+    padding: var(--jb-space-4);
+    background: var(--jb-gray-50);
+}
+
+.jb-apply-page .jb-form-container .filepicker-container:hover,
+.jb-apply-page .jb-form-container .filemanager:hover {
+    border-color: var(--iser-verde);
+    background: var(--iser-verde-lighter);
+}
+
+/* Required field indicator */
+.jb-apply-page .jb-form-container .required::after,
+.jb-apply-page .jb-form-container .fdescription.required::before {
+    color: var(--iser-rojo);
+}
+
+/* Error messages */
+.jb-apply-page .jb-form-container .error,
+.jb-apply-page .jb-form-container .invalid-feedback {
+    color: var(--iser-rojo);
+    font-size: var(--jb-text-sm);
+}
+
+/* Help text */
+.jb-apply-page .jb-form-container .form-text,
+.jb-apply-page .jb-form-container .fdescription {
+    color: var(--iser-gris-medio);
+    font-size: var(--jb-text-sm);
+}
+
+/* Document checklist checkbox hover */
+.jb-apply-page .jb-card ul li:hover {
+    background: var(--jb-gray-50);
+}
+
+/* Card hover effect */
+.jb-apply-page .jb-sidebar .jb-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jb-apply-page .jb-sidebar .jb-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .jb-apply-page .jb-sidebar {
+        position: static !important;
+        margin-top: var(--jb-space-4);
+    }
+
+    .jb-apply-page .jb-apply-header {
+        text-align: center;
+    }
+
+    .jb-apply-page .jb-apply-header .breadcrumb {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .jb-apply-page .jb-apply-header {
+        padding: var(--jb-space-4) !important;
+    }
+
+    .jb-apply-page .jb-card-body {
+        padding: var(--jb-space-4) !important;
+    }
+}
+</style>

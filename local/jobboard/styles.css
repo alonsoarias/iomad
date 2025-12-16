@@ -6,172 +6,281 @@
  * @author    Alonso Arias <soporteplataformas@iser.edu.co>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * DESIGN SYSTEM based on Bootstrap 5 with custom extensions
+ * DESIGN SYSTEM based on ISER Brand Guidelines (M-GCRP-01 v01)
+ * Manual de Identidad Visual ISER - Fecha: 22/07/2024
  * Follows UX best practices and WCAG 2.1 AA accessibility guidelines
  */
 
 /* ==========================================================================
-   PHASE 1: DESIGN TOKENS
-   A comprehensive token system for consistent design
+   PHASE 1: DESIGN TOKENS - ISER BRAND IDENTITY
+   Based on Instituto Superior de Educación Rural Manual de Identidad
    ========================================================================== */
 
 :root {
     /* ====================================================================
-       COLOR TOKENS
+       ISER COLOR PALETTE
+       Colores Institucionales según Manual de Identidad M-GCRP-01
+
+       REGLAS DE USO:
+       - Máximo 3 colores por diseño
+       - Colores secundarios: máximo 30% del uso
+       - No más de un color secundario por diseño
+       - Al menos un color primario debe estar presente
        ==================================================================== */
 
-    /* Primary Brand Colors */
-    --jb-primary-50: #eff6ff;
-    --jb-primary-100: #dbeafe;
-    --jb-primary-200: #bfdbfe;
-    --jb-primary-300: #93c5fd;
-    --jb-primary-400: #60a5fa;
-    --jb-primary-500: #3b82f6;
-    --jb-primary-600: #2563eb;
-    --jb-primary-700: #1d4ed8;
-    --jb-primary-800: #1e40af;
-    --jb-primary-900: #1e3a8a;
-    --jb-primary: #0d6efd;
-    --jb-primary-hover: #0b5ed7;
-    --jb-primary-active: #0a58ca;
+    /* ----------------------------------------------------------------
+       COLORES PRIMARIOS - Bandera Institucional (No alterar)
+       ---------------------------------------------------------------- */
 
-    /* Secondary/Neutral Colors */
-    --jb-secondary-50: #f8fafc;
-    --jb-secondary-100: #f1f5f9;
-    --jb-secondary-200: #e2e8f0;
-    --jb-secondary-300: #cbd5e1;
-    --jb-secondary-400: #94a3b8;
-    --jb-secondary-500: #64748b;
-    --jb-secondary-600: #475569;
-    --jb-secondary-700: #334155;
-    --jb-secondary-800: #1e293b;
-    --jb-secondary-900: #0f172a;
-    --jb-secondary: #6c757d;
+    /* ISER Verde - Color Principal Institucional */
+    --iser-verde: #1B9E88;
+    --iser-verde-rgb: 27, 158, 136;
+    --iser-verde-light: #2AB89F;
+    --iser-verde-lighter: #E8F7F4;
+    --iser-verde-dark: #167A6B;
+    --iser-verde-darker: #115C51;
 
-    /* Success Colors */
-    --jb-success-50: #f0fdf4;
-    --jb-success-100: #dcfce7;
-    --jb-success-200: #bbf7d0;
-    --jb-success-300: #86efac;
-    --jb-success-400: #4ade80;
-    --jb-success-500: #22c55e;
-    --jb-success-600: #16a34a;
-    --jb-success-700: #15803d;
-    --jb-success-800: #166534;
-    --jb-success-900: #14532d;
-    --jb-success: #198754;
-    --jb-success-hover: #157347;
-    --jb-success-active: #146c43;
+    /* ISER Amarillo - Acento Energético */
+    --iser-amarillo: #FCBD05;
+    --iser-amarillo-rgb: 252, 189, 7;
+    --iser-amarillo-light: #FDCE47;
+    --iser-amarillo-lighter: #FFF8E5;
+    --iser-amarillo-dark: #D9A304;
+    --iser-amarillo-darker: #B38603;
 
-    /* Danger/Error Colors */
-    --jb-danger-50: #fef2f2;
-    --jb-danger-100: #fee2e2;
-    --jb-danger-200: #fecaca;
-    --jb-danger-300: #fca5a5;
-    --jb-danger-400: #f87171;
-    --jb-danger-500: #ef4444;
-    --jb-danger-600: #dc2626;
-    --jb-danger-700: #b91c1c;
-    --jb-danger-800: #991b1b;
-    --jb-danger-900: #7f1d1d;
-    --jb-danger: #dc3545;
-    --jb-danger-hover: #bb2d3b;
-    --jb-danger-active: #b02a37;
+    /* ISER Rojo - Títulos y Énfasis */
+    --iser-rojo: #EB4335;
+    --iser-rojo-rgb: 235, 67, 53;
+    --iser-rojo-light: #EF6B5F;
+    --iser-rojo-lighter: #FEF2F1;
+    --iser-rojo-dark: #CC3628;
+    --iser-rojo-darker: #A82B20;
 
-    /* Warning Colors */
-    --jb-warning-50: #fffbeb;
-    --jb-warning-100: #fef3c7;
-    --jb-warning-200: #fde68a;
-    --jb-warning-300: #fcd34d;
-    --jb-warning-400: #fbbf24;
-    --jb-warning-500: #f59e0b;
-    --jb-warning-600: #d97706;
-    --jb-warning-700: #b45309;
-    --jb-warning-800: #92400e;
-    --jb-warning-900: #78350f;
-    --jb-warning: #ffc107;
-    --jb-warning-hover: #e0a800;
-    --jb-warning-active: #d39e00;
+    /* ISER Blanco */
+    --iser-blanco: #FFFFFF;
+    --iser-blanco-rgb: 255, 255, 255;
 
-    /* Info Colors */
-    --jb-info-50: #ecfeff;
-    --jb-info-100: #cffafe;
-    --jb-info-200: #a5f3fc;
-    --jb-info-300: #67e8f9;
-    --jb-info-400: #22d3ee;
-    --jb-info-500: #06b6d4;
-    --jb-info-600: #0891b2;
-    --jb-info-700: #0e7490;
-    --jb-info-800: #155e75;
-    --jb-info-900: #164e63;
-    --jb-info: #0dcaf0;
-    --jb-info-hover: #31d2f2;
-    --jb-info-active: #3dd5f3;
+    /* ----------------------------------------------------------------
+       COLORES SECUNDARIOS - Máximo 30% uso, uno por diseño
+       ---------------------------------------------------------------- */
 
-    /* Neutral/Gray Colors */
-    --jb-gray-50: #f9fafb;
-    --jb-gray-100: #f3f4f6;
-    --jb-gray-200: #e5e7eb;
-    --jb-gray-300: #d1d5db;
-    --jb-gray-400: #9ca3af;
-    --jb-gray-500: #6b7280;
-    --jb-gray-600: #4b5563;
-    --jb-gray-700: #374151;
-    --jb-gray-800: #1f2937;
-    --jb-gray-900: #111827;
+    /* Naranja */
+    --iser-naranja: #E27C32;
+    --iser-naranja-rgb: 226, 124, 50;
+    --iser-naranja-light: #E9975C;
+    --iser-naranja-lighter: #FDF3EB;
+
+    /* Verde Lima */
+    --iser-verde-lima: #CFDA4B;
+    --iser-verde-lima-rgb: 207, 218, 75;
+    --iser-verde-lima-light: #DBE470;
+    --iser-verde-lima-lighter: #F9FAE9;
+
+    /* Azul */
+    --iser-azul: #5894EF;
+    --iser-azul-rgb: 88, 148, 239;
+    --iser-azul-light: #7CABF3;
+    --iser-azul-lighter: #EDF4FE;
+
+    /* Magenta */
+    --iser-magenta: #C82260;
+    --iser-magenta-rgb: 200, 34, 96;
+    --iser-magenta-light: #D54D7E;
+    --iser-magenta-lighter: #FBEDF2;
+
+    /* ----------------------------------------------------------------
+       COLORES NEUTRALES - Escala de Grises
+       ---------------------------------------------------------------- */
+
+    /* Gris Claro */
+    --iser-gris-claro: #CFCFCF;
+    --iser-gris-claro-rgb: 207, 207, 207;
+
+    /* Gris Medio */
+    --iser-gris-medio: #9C9C9B;
+    --iser-gris-medio-rgb: 156, 156, 155;
+
+    /* Gris Oscuro */
+    --iser-gris-oscuro: #646363;
+    --iser-gris-oscuro-rgb: 100, 100, 99;
+
+    /* Negro */
+    --iser-negro: #000000;
+    --iser-negro-rgb: 0, 0, 0;
+
+    /* ================================================================
+       MAPPED DESIGN TOKENS (Using ISER Colors)
+       These map ISER brand colors to functional UI tokens
+       ================================================================ */
+
+    /* Primary Brand Colors - Using ISER Verde */
+    --jb-primary-50: var(--iser-verde-lighter);
+    --jb-primary-100: #D1F0EA;
+    --jb-primary-200: #A3E1D5;
+    --jb-primary-300: #75D2C0;
+    --jb-primary-400: #47C3AB;
+    --jb-primary-500: var(--iser-verde);
+    --jb-primary-600: var(--iser-verde-dark);
+    --jb-primary-700: var(--iser-verde-darker);
+    --jb-primary-800: #0E4A40;
+    --jb-primary-900: #073830;
+    --jb-primary: var(--iser-verde);
+    --jb-primary-hover: var(--iser-verde-dark);
+    --jb-primary-active: var(--iser-verde-darker);
+
+    /* Secondary Colors - Using Neutrals */
+    --jb-secondary-50: #F8F8F8;
+    --jb-secondary-100: #F0F0F0;
+    --jb-secondary-200: #E0E0E0;
+    --jb-secondary-300: var(--iser-gris-claro);
+    --jb-secondary-400: #B0B0B0;
+    --jb-secondary-500: var(--iser-gris-medio);
+    --jb-secondary-600: #7D7D7D;
+    --jb-secondary-700: var(--iser-gris-oscuro);
+    --jb-secondary-800: #4A4A4A;
+    --jb-secondary-900: #2D2D2D;
+    --jb-secondary: var(--iser-gris-oscuro);
+
+    /* Success Colors - Using ISER Verde */
+    --jb-success-50: var(--iser-verde-lighter);
+    --jb-success-100: #D1F0EA;
+    --jb-success-200: #A3E1D5;
+    --jb-success-300: #75D2C0;
+    --jb-success-400: #47C3AB;
+    --jb-success-500: var(--iser-verde);
+    --jb-success-600: var(--iser-verde-dark);
+    --jb-success-700: var(--iser-verde-darker);
+    --jb-success-800: #0E4A40;
+    --jb-success-900: #073830;
+    --jb-success: var(--iser-verde);
+    --jb-success-hover: var(--iser-verde-dark);
+    --jb-success-active: var(--iser-verde-darker);
+
+    /* Danger/Error Colors - Using ISER Rojo */
+    --jb-danger-50: var(--iser-rojo-lighter);
+    --jb-danger-100: #FCD9D6;
+    --jb-danger-200: #F9B3AD;
+    --jb-danger-300: #F58D84;
+    --jb-danger-400: #F2675B;
+    --jb-danger-500: var(--iser-rojo);
+    --jb-danger-600: var(--iser-rojo-dark);
+    --jb-danger-700: var(--iser-rojo-darker);
+    --jb-danger-800: #7F1F17;
+    --jb-danger-900: #55150F;
+    --jb-danger: var(--iser-rojo);
+    --jb-danger-hover: var(--iser-rojo-dark);
+    --jb-danger-active: var(--iser-rojo-darker);
+
+    /* Warning Colors - Using ISER Amarillo */
+    --jb-warning-50: var(--iser-amarillo-lighter);
+    --jb-warning-100: #FEF0C7;
+    --jb-warning-200: #FDE18F;
+    --jb-warning-300: #FCD257;
+    --jb-warning-400: var(--iser-amarillo-light);
+    --jb-warning-500: var(--iser-amarillo);
+    --jb-warning-600: var(--iser-amarillo-dark);
+    --jb-warning-700: var(--iser-amarillo-darker);
+    --jb-warning-800: #8A6502;
+    --jb-warning-900: #5C4401;
+    --jb-warning: var(--iser-amarillo);
+    --jb-warning-hover: var(--iser-amarillo-dark);
+    --jb-warning-active: var(--iser-amarillo-darker);
+
+    /* Info Colors - Using ISER Azul (secondary) */
+    --jb-info-50: var(--iser-azul-lighter);
+    --jb-info-100: #D4E5FC;
+    --jb-info-200: #A9CBF9;
+    --jb-info-300: #7EB1F6;
+    --jb-info-400: var(--iser-azul-light);
+    --jb-info-500: var(--iser-azul);
+    --jb-info-600: #3D75C9;
+    --jb-info-700: #2E5899;
+    --jb-info-800: #1F3B66;
+    --jb-info-900: #0F1E33;
+    --jb-info: var(--iser-azul);
+    --jb-info-hover: #3D75C9;
+    --jb-info-active: #2E5899;
+
+    /* Neutral/Gray Colors - Using ISER Neutrals */
+    --jb-gray-50: #FAFAFA;
+    --jb-gray-100: #F5F5F5;
+    --jb-gray-200: #E8E8E8;
+    --jb-gray-300: var(--iser-gris-claro);
+    --jb-gray-400: #ABABAB;
+    --jb-gray-500: var(--iser-gris-medio);
+    --jb-gray-600: #7A7A7A;
+    --jb-gray-700: var(--iser-gris-oscuro);
+    --jb-gray-800: #3D3D3D;
+    --jb-gray-900: #1A1A1A;
+
+    /* ISER White */
+    --jb-white: var(--iser-blanco);
+    --jb-black: var(--iser-negro);
 
     /* Surface Colors (for backgrounds) */
-    --jb-surface-base: #ffffff;
-    --jb-surface-raised: #ffffff;
-    --jb-surface-overlay: #ffffff;
-    --jb-surface-sunken: #f8f9fa;
-    --jb-surface-disabled: #e9ecef;
+    --jb-surface-base: var(--iser-blanco);
+    --jb-surface-raised: var(--iser-blanco);
+    --jb-surface-overlay: var(--iser-blanco);
+    --jb-surface-sunken: #F8F8F8;
+    --jb-surface-disabled: #E8E8E8;
 
     /* Text Colors */
-    --jb-text-primary: #212529;
-    --jb-text-secondary: #6c757d;
-    --jb-text-tertiary: #adb5bd;
-    --jb-text-disabled: #adb5bd;
-    --jb-text-inverse: #ffffff;
-    --jb-text-link: #0d6efd;
-    --jb-text-link-hover: #0a58ca;
+    --jb-text-primary: var(--iser-negro);
+    --jb-text-secondary: var(--iser-gris-oscuro);
+    --jb-text-tertiary: var(--iser-gris-medio);
+    --jb-text-disabled: var(--iser-gris-claro);
+    --jb-text-inverse: var(--iser-blanco);
+    --jb-text-link: var(--iser-verde);
+    --jb-text-link-hover: var(--iser-verde-dark);
+    --jb-text-accent: var(--iser-rojo);
 
     /* Border Colors */
-    --jb-border-default: #dee2e6;
-    --jb-border-light: #e9ecef;
-    --jb-border-strong: #adb5bd;
-    --jb-border-focus: #86b7fe;
+    --jb-border-default: var(--iser-gris-claro);
+    --jb-border-light: #E8E8E8;
+    --jb-border-strong: var(--iser-gris-medio);
+    --jb-border-focus: var(--iser-verde);
 
     /* Status Colors (Vacancy/Application specific) */
-    --jb-status-draft: #6c757d;
-    --jb-status-published: #198754;
-    --jb-status-closed: #dc3545;
-    --jb-status-archived: #6c757d;
-    --jb-status-submitted: #0dcaf0;
-    --jb-status-under-review: #ffc107;
-    --jb-status-docs-validated: #198754;
-    --jb-status-docs-rejected: #dc3545;
-    --jb-status-interview: #0d6efd;
-    --jb-status-selected: #198754;
-    --jb-status-rejected: #dc3545;
-    --jb-status-waitlist: #6c757d;
-    --jb-status-withdrawn: #6c757d;
+    --jb-status-draft: var(--iser-gris-oscuro);
+    --jb-status-published: var(--iser-verde);
+    --jb-status-closed: var(--iser-rojo);
+    --jb-status-archived: var(--iser-gris-medio);
+    --jb-status-submitted: var(--iser-azul);
+    --jb-status-under-review: var(--iser-amarillo);
+    --jb-status-docs-validated: var(--iser-verde);
+    --jb-status-docs-rejected: var(--iser-rojo);
+    --jb-status-interview: var(--iser-azul);
+    --jb-status-selected: var(--iser-verde);
+    --jb-status-rejected: var(--iser-rojo);
+    --jb-status-waitlist: var(--iser-gris-oscuro);
+    --jb-status-withdrawn: var(--iser-gris-medio);
 
     /* Document Status Colors */
-    --jb-doc-pending: #ffc107;
-    --jb-doc-approved: #198754;
-    --jb-doc-rejected: #dc3545;
+    --jb-doc-pending: var(--iser-amarillo);
+    --jb-doc-approved: var(--iser-verde);
+    --jb-doc-rejected: var(--iser-rojo);
 
     /* ====================================================================
-       TYPOGRAPHY TOKENS
-       Based on a modular scale (1.25 ratio)
+       TYPOGRAPHY TOKENS - ISER Brand Guidelines
+
+       TIPOGRAFÍAS AUTORIZADAS:
+       - Verdana: Aplicaciones digitales (web, email, multimedia)
+       - Arial: Papelería oficial, documentos Word, informes
+       - Elza: Tipografía corporativa del logotipo
+
+       REGLAS:
+       - No deformar, ensanchar ni angostarse las fuentes
+       - No engrosar bordes para crear bold artificial
+       - Máximo 2 fuentes por diseño
+       - Textos en altas y bajas, nunca solo mayúsculas
        ==================================================================== */
 
-    /* Font Families */
-    --jb-font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --jb-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    /* Font Families - ISER Digital (Verdana primary, Arial fallback) */
+    --jb-font-sans: Verdana, Arial, "Helvetica Neue", sans-serif;
+    --jb-font-display: Verdana, Arial, sans-serif;
+    --jb-font-mono: "Courier New", Consolas, monospace;
 
-    /* Font Sizes (based on 16px base, 1.25 ratio) */
+    /* Font Sizes (based on 16px base) */
     --jb-text-xs: 0.75rem;      /* 12px */
     --jb-text-sm: 0.875rem;     /* 14px */
     --jb-text-base: 1rem;       /* 16px */
@@ -182,7 +291,7 @@
     --jb-text-4xl: 2.25rem;     /* 36px */
     --jb-text-5xl: 3rem;        /* 48px */
 
-    /* Font Weights */
+    /* Font Weights - Never artificially bold */
     --jb-font-light: 300;
     --jb-font-normal: 400;
     --jb-font-medium: 500;

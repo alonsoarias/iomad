@@ -1,8 +1,8 @@
 {{!
     @template local_jobboard/pages/public/index
 
-    Public page - Clean and professional design.
-    Follows the same pattern as the apply page.
+    Public page - ISER Brand Design
+    Based on Manual de Identidad Visual ISER (M-GCRP-01 v01)
 
     Context variables:
     * showconvocatorias - Boolean to show convocatorias list
@@ -21,305 +21,388 @@
     * pagination - Pagination HTML
     * loginurl - Login URL
     * signupurl - Signup URL
-
-    Example context (json):
-    {
-        "showconvocatorias": true,
-        "pagetitle": "Job Opportunities"
-    }
 }}
-<div class="jb-public-page" id="jobboard-public">
-    <div class="container-fluid px-0">
-        {{! ================================================================ }}
-        {{! MODE: VACANCIES FOR SPECIFIC CONVOCATORIA }}
-        {{! ================================================================ }}
-        {{#showvacancies}}
-        {{! Convocatoria Info Card }}
-        {{#convocatoria}}
-        <div class="card shadow-sm mb-4 {{#isurgent}}border-warning{{/isurgent}}">
-            <div class="card-header bg-white py-3">
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <div>
-                        <code class="badge {{#isurgent}}bg-warning text-dark{{/isurgent}}{{^isurgent}}bg-primary{{/isurgent}} me-2">{{code}}</code>
-                        <span class="h5 mb-0">{{name}}</span>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <span class="badge bg-light text-dark">
-                            <i class="fa fa-briefcase me-1"></i>{{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}
-                        </span>
-                        <span class="badge bg-light text-dark">
-                            <i class="fa fa-users me-1"></i>{{totalpositions}} {{#str}}positions, local_jobboard{{/str}}
-                        </span>
-                        {{#isurgent}}
-                        <span class="badge bg-danger">
-                            <i class="fa fa-exclamation-triangle me-1"></i>{{urgenttext}}
-                        </span>
-                        {{/isurgent}}
-                    </div>
+<div class="jb-public-page jb-iser-theme" id="jobboard-public">
+    {{! ================================================================ }}
+    {{! HERO SECTION - ISER BRANDED }}
+    {{! ================================================================ }}
+    <div class="jb-hero-section" style="background: linear-gradient(135deg, var(--iser-verde) 0%, var(--iser-verde-dark) 100%); border-radius: var(--jb-radius-xl); padding: var(--jb-space-8); margin-bottom: var(--jb-space-6); color: var(--iser-blanco);">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 style="font-size: var(--jb-text-4xl); font-weight: var(--jb-font-bold); margin-bottom: var(--jb-space-3);">
+                    {{#showconvocatorias}}
+                    <i class="fa fa-folder-open me-3"></i>{{#str}}openconvocatorias, local_jobboard{{/str}}
+                    {{/showconvocatorias}}
+                    {{#showvacancies}}
+                    <i class="fa fa-briefcase me-3"></i>{{#str}}vacancies, local_jobboard{{/str}}
+                    {{/showvacancies}}
+                </h1>
+                <p style="font-size: var(--jb-text-lg); opacity: 0.9; margin-bottom: 0;">
+                    {{#showconvocatorias}}{{#str}}browseconvocatorias_desc, local_jobboard{{/str}}{{/showconvocatorias}}
+                    {{#showvacancies}}{{#str}}browsevacancies_desc, local_jobboard{{/str}}{{/showvacancies}}
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                {{^isloggedin}}
+                <a href="{{signupurl}}" class="btn btn-lg" style="background: var(--iser-amarillo); color: var(--iser-negro); font-weight: var(--jb-font-bold); border: none; padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md);">
+                    <i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}
+                </a>
+                {{/isloggedin}}
+            </div>
+        </div>
+    </div>
+
+    {{! ================================================================ }}
+    {{! MODE: VACANCIES FOR SPECIFIC CONVOCATORIA }}
+    {{! ================================================================ }}
+    {{#showvacancies}}
+    {{! Convocatoria Info Card }}
+    {{#convocatoria}}
+    <div class="jb-convocatoria-header mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; {{#isurgent}}border-left: 4px solid var(--iser-amarillo);{{/isurgent}}">
+        <div style="padding: var(--jb-space-4) var(--jb-space-5); border-bottom: 2px solid var(--iser-verde);">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-3">
+                    <code style="background: {{#isurgent}}var(--iser-amarillo){{/isurgent}}{{^isurgent}}var(--iser-verde){{/isurgent}}; color: {{#isurgent}}var(--iser-negro){{/isurgent}}{{^isurgent}}var(--iser-blanco){{/isurgent}}; padding: var(--jb-space-2) var(--jb-space-3); border-radius: var(--jb-radius-md); font-weight: var(--jb-font-bold);">{{code}}</code>
+                    <h2 style="font-size: var(--jb-text-xl); font-weight: var(--jb-font-semibold); color: var(--iser-rojo); margin: 0;">{{name}}</h2>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span style="background: var(--iser-verde-lighter); color: var(--iser-verde-dark); padding: var(--jb-space-1) var(--jb-space-3); border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm);">
+                        <i class="fa fa-briefcase me-1"></i>{{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}
+                    </span>
+                    <span style="background: var(--iser-azul-lighter); color: var(--iser-azul); padding: var(--jb-space-1) var(--jb-space-3); border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm);">
+                        <i class="fa fa-users me-1"></i>{{totalpositions}} {{#str}}positions, local_jobboard{{/str}}
+                    </span>
+                    {{#isurgent}}
+                    <span style="background: var(--iser-rojo); color: var(--iser-blanco); padding: var(--jb-space-1) var(--jb-space-3); border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm); font-weight: var(--jb-font-bold);">
+                        <i class="fa fa-exclamation-triangle me-1"></i>{{urgenttext}}
+                    </span>
+                    {{/isurgent}}
                 </div>
             </div>
-            <div class="card-body py-2">
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 small">
-                    <div class="d-flex gap-3">
-                        <span><i class="fa fa-calendar-check text-success me-1"></i> {{#str}}startdate, local_jobboard{{/str}}: <strong>{{startdateformatted}}</strong></span>
-                        <span class="{{#isurgent}}text-danger fw-bold{{/isurgent}}"><i class="fa fa-calendar-xmark text-warning me-1"></i> {{#str}}enddate, local_jobboard{{/str}}: <strong>{{enddateformatted}}</strong></span>
-                        {{#daysremaining}}
-                        <span class="badge bg-{{#isurgent}}warning{{/isurgent}}{{^isurgent}}info{{/isurgent}}">{{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}</span>
-                        {{/daysremaining}}
+        </div>
+        <div style="padding: var(--jb-space-3) var(--jb-space-5); background: var(--jb-gray-50);">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex gap-4 flex-wrap" style="font-size: var(--jb-text-sm);">
+                    <span><i class="fa fa-calendar-check me-2" style="color: var(--iser-verde);"></i>{{#str}}startdate, local_jobboard{{/str}}: <strong>{{startdateformatted}}</strong></span>
+                    <span style="{{#isurgent}}color: var(--iser-rojo); font-weight: var(--jb-font-bold);{{/isurgent}}"><i class="fa fa-calendar-xmark me-2" style="color: var(--iser-amarillo);"></i>{{#str}}enddate, local_jobboard{{/str}}: <strong>{{enddateformatted}}</strong></span>
+                    {{#daysremaining}}
+                    <span style="background: {{#isurgent}}var(--iser-amarillo){{/isurgent}}{{^isurgent}}var(--iser-azul-lighter){{/isurgent}}; color: {{#isurgent}}var(--iser-negro){{/isurgent}}{{^isurgent}}var(--iser-azul){{/isurgent}}; padding: 2px 10px; border-radius: var(--jb-radius-full); font-weight: var(--jb-font-semibold);">{{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}</span>
+                    {{/daysremaining}}
+                </div>
+                <a href="{{detailsurl}}" style="color: var(--iser-verde); font-weight: var(--jb-font-medium); text-decoration: none;">
+                    <i class="fa fa-info-circle me-1"></i>{{#str}}viewdetails, local_jobboard{{/str}}
+                </a>
+            </div>
+        </div>
+    </div>
+    {{/convocatoria}}
+
+    {{! Filter Form }}
+    {{#filterform}}
+    <div class="jb-filter-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
+        <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); border-bottom: 1px solid var(--jb-gray-200);">
+            <h6 style="margin: 0; color: var(--iser-gris-oscuro); font-weight: var(--jb-font-semibold);">
+                <i class="fa fa-filter me-2" style="color: var(--iser-verde);"></i>{{#str}}filtervacancies, local_jobboard{{/str}}
+            </h6>
+        </div>
+        <div style="padding: var(--jb-space-4);">
+            <form method="get" action="{{action}}" class="jb-filter-form">
+                {{#hiddenfields}}
+                <input type="hidden" name="{{name}}" value="{{value}}">
+                {{/hiddenfields}}
+                <div class="row align-items-end g-3">
+                    <div class="col-lg-4 col-md-6">
+                        <label for="filter-search" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">{{#str}}search{{/str}}</label>
+                        <input type="search" name="search" id="filter-search" value="{{searchvalue}}" placeholder="{{#str}}searchvacancies, local_jobboard{{/str}}" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base);">
                     </div>
-                    <a href="{{detailsurl}}" class="btn btn-sm btn-outline-info jb-btn-outline-info">
-                        <i class="fa fa-info-circle me-1"></i>{{#str}}viewdetails, local_jobboard{{/str}}
+                    {{#showcontractfilter}}
+                    <div class="col-lg-3 col-md-6">
+                        <label for="filter-contracttype" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">{{#str}}contracttype, local_jobboard{{/str}}</label>
+                        <select name="contracttype" id="filter-contracttype" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco);">
+                            <option value="">{{#str}}all{{/str}}</option>
+                            {{#contractoptions}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/contractoptions}}
+                        </select>
+                    </div>
+                    {{/showcontractfilter}}
+                    {{#showlocationfilter}}
+                    <div class="col-lg-3 col-md-6">
+                        <label for="filter-location" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">{{#str}}location, local_jobboard{{/str}}</label>
+                        <select name="location" id="filter-location" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco);">
+                            <option value="">{{#str}}all{{/str}}</option>
+                            {{#locationoptions}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/locationoptions}}
+                        </select>
+                    </div>
+                    {{/showlocationfilter}}
+                    <div class="col-auto">
+                        <button type="submit" style="background: var(--iser-verde); color: var(--iser-blanco); border: none; padding: var(--jb-space-2) var(--jb-space-4); border-radius: var(--jb-radius-md); font-weight: var(--jb-font-semibold); cursor: pointer;">
+                            <i class="fa fa-search me-1"></i>{{#str}}filter, local_jobboard{{/str}}
+                        </button>
+                    </div>
+                </div>
+                {{#hasfilters}}
+                <div style="margin-top: var(--jb-space-3); padding-top: var(--jb-space-3); border-top: 1px solid var(--jb-gray-200);">
+                    <a href="{{clearfiltersurl}}" style="color: var(--iser-rojo); font-size: var(--jb-text-sm); text-decoration: none;">
+                        <i class="fa fa-xmark me-1"></i>{{#str}}clearfilters, local_jobboard{{/str}}
                     </a>
                 </div>
+                {{/hasfilters}}
+            </form>
+        </div>
+    </div>
+    {{/filterform}}
+
+    {{! Results Header }}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 style="font-size: var(--jb-text-xl); font-weight: var(--jb-font-semibold); color: var(--iser-rojo); margin: 0;">
+            <i class="fa fa-briefcase me-2" style="color: var(--iser-verde);"></i>{{#str}}vacancies, local_jobboard{{/str}}
+        </h3>
+        <span style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio);">{{resultstext}}</span>
+    </div>
+
+    {{! Vacancies Grid }}
+    {{#hasvacancies}}
+    <div class="row g-4">
+        {{#vacancies}}
+        <div class="col-lg-4 col-md-6">
+            <div class="jb-vacancy-card" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 16px rgba(0,0,0,0.08); overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; {{#isurgent}}border-top: 3px solid var(--iser-amarillo);{{/isurgent}}">
+                {{#isurgent}}
+                <div style="background: var(--iser-amarillo); color: var(--iser-negro); padding: var(--jb-space-1) var(--jb-space-3); font-size: var(--jb-text-xs); text-align: center; font-weight: var(--jb-font-bold);">
+                    <i class="fa fa-clock me-1"></i>{{urgenttext}}
+                </div>
+                {{/isurgent}}
+                <div style="padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 1px solid var(--jb-gray-100); display: flex; justify-content: space-between; align-items: center;">
+                    <code style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio);">{{code}}</code>
+                    <span style="background: var(--iser-{{publicationtypecolor}}-lighter, var(--jb-gray-100)); color: var(--iser-{{publicationtypecolor}}, var(--iser-gris-oscuro)); padding: 2px 8px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-xs);">{{publicationtypelabel}}</span>
+                </div>
+                <div style="padding: var(--jb-space-4); flex: 1;">
+                    <h4 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); margin-bottom: var(--jb-space-3);">
+                        <a href="{{viewurl}}" style="color: var(--iser-negro); text-decoration: none;">{{title}}</a>
+                    </h4>
+                    <div style="font-size: var(--jb-text-sm); color: var(--iser-gris-oscuro);">
+                        {{#location}}<div style="margin-bottom: var(--jb-space-1);"><i class="fa fa-location-dot me-2" style="color: var(--iser-verde); width: 16px;"></i>{{location}}</div>{{/location}}
+                        {{#contracttypelabel}}<div style="margin-bottom: var(--jb-space-1);"><i class="fa fa-file-contract me-2" style="color: var(--iser-gris-medio); width: 16px;"></i>{{contracttypelabel}}</div>{{/contracttypelabel}}
+                        <div><i class="fa fa-users me-2" style="color: var(--iser-azul); width: 16px;"></i>{{positions}} {{#str}}positions, local_jobboard{{/str}}</div>
+                    </div>
+                </div>
+                <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); border-top: 1px solid var(--jb-gray-100);">
+                    <div style="font-size: var(--jb-text-sm); margin-bottom: var(--jb-space-2); {{#isurgent}}color: var(--iser-rojo); font-weight: var(--jb-font-bold);{{/isurgent}}{{^isurgent}}color: var(--iser-gris-medio);{{/isurgent}}">
+                        <i class="fa fa-calendar-xmark me-1"></i>{{closedateformatted}}
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{viewurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); border: 2px solid var(--iser-verde); color: var(--iser-verde); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
+                            <i class="fa fa-eye me-1"></i>{{#str}}view{{/str}}
+                        </a>
+                        {{#hasapplied}}
+                        <span style="flex: 1; text-align: center; padding: var(--jb-space-2); background: var(--iser-verde); color: var(--iser-blanco); border-radius: var(--jb-radius-md); font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
+                            <i class="fa fa-check me-1"></i>{{#str}}applied, local_jobboard{{/str}}
+                        </span>
+                        {{/hasapplied}}
+                        {{^hasapplied}}
+                        {{#canapply}}
+                        <a href="{{applyurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); background: var(--iser-verde); color: var(--iser-blanco); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
+                            <i class="fa fa-paper-plane me-1"></i>{{#str}}apply, local_jobboard{{/str}}
+                        </a>
+                        {{/canapply}}
+                        {{^isloggedin}}
+                        <a href="{{loginapplyurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
+                            <i class="fa fa-sign-in-alt me-1"></i>{{#str}}login{{/str}}
+                        </a>
+                        {{/isloggedin}}
+                        {{/hasapplied}}
+                    </div>
+                </div>
             </div>
         </div>
-        {{/convocatoria}}
+        {{/vacancies}}
+    </div>
+    {{/hasvacancies}}
 
-        {{! Filter Form }}
-        {{#filterform}}
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-light py-2">
-                <h6 class="mb-0"><i class="fa fa-filter me-2 text-muted"></i>{{#str}}filtervacancies, local_jobboard{{/str}}</h6>
+    {{! Empty State }}
+    {{^hasvacancies}}
+    <div style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: var(--jb-space-8); text-align: center;">
+        <i class="fa fa-briefcase" style="font-size: 4rem; color: var(--iser-gris-claro); margin-bottom: var(--jb-space-4); display: block;"></i>
+        <h4 style="color: var(--iser-rojo); margin-bottom: var(--jb-space-2);">{{#str}}novacancies, local_jobboard{{/str}}</h4>
+        <p style="color: var(--iser-gris-medio); max-width: 400px; margin: 0 auto;">{{#str}}novacancies_desc, local_jobboard{{/str}}</p>
+    </div>
+    {{/hasvacancies}}
+
+    {{! Pagination }}
+    {{#pagination}}
+    <nav class="mt-5 d-flex justify-content-center">{{{pagination}}}</nav>
+    {{/pagination}}
+
+    {{! CTA for Non-Logged In }}
+    {{^isloggedin}}
+    {{#hasvacancies}}
+    <div style="background: linear-gradient(135deg, var(--iser-verde-lighter) 0%, var(--iser-blanco) 100%); border: 2px solid var(--iser-verde); border-radius: var(--jb-radius-lg); padding: var(--jb-space-6); text-align: center; margin-top: var(--jb-space-6);">
+        <p style="color: var(--iser-gris-oscuro); margin-bottom: var(--jb-space-4);">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{{signupurl}}" style="background: var(--iser-verde); color: var(--iser-blanco); padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-semibold);">
+                <i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}
+            </a>
+            <a href="{{loginurl}}" style="background: transparent; border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-medium);">
+                <i class="fa fa-sign-in-alt me-2"></i>{{#str}}login{{/str}}
+            </a>
+        </div>
+    </div>
+    {{/hasvacancies}}
+    {{/isloggedin}}
+    {{/showvacancies}}
+
+    {{! ================================================================ }}
+    {{! MODE: CONVOCATORIAS LIST (DEFAULT) }}
+    {{! ================================================================ }}
+    {{#showconvocatorias}}
+    {{! Statistics Row }}
+    {{#hasstats}}
+    <div class="row g-4 mb-5">
+        {{#stats}}
+        <div class="col-lg-3 col-md-6">
+            <div style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: var(--jb-space-4); text-align: center; border-top: 4px solid var(--iser-{{color}}, var(--iser-verde));">
+                <div style="font-size: var(--jb-text-3xl); font-weight: var(--jb-font-bold); color: var(--iser-{{color}}, var(--iser-verde)); margin-bottom: var(--jb-space-1);">{{value}}</div>
+                <div style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio);">{{label}}</div>
             </div>
-            <div class="card-body py-3">
-                <form method="get" action="{{action}}" class="jb-filter-form">
-                    {{#hiddenfields}}
-                    <input type="hidden" name="{{name}}" value="{{value}}">
-                    {{/hiddenfields}}
-                    <div class="row align-items-end">
-                        <div class="col-lg-4 col-md-6 mb-2 mb-lg-0">
-                            <label for="filter-search" class="form-label small text-muted mb-1">{{#str}}search{{/str}}</label>
-                            <input type="search" name="search" id="filter-search" class="form-control form-control-sm" value="{{searchvalue}}" placeholder="{{#str}}searchvacancies, local_jobboard{{/str}}">
-                        </div>
-                        {{#showcontractfilter}}
-                        <div class="col-lg-3 col-md-6 mb-2 mb-lg-0">
-                            <label for="filter-contracttype" class="form-label small text-muted mb-1">{{#str}}contracttype, local_jobboard{{/str}}</label>
-                            <select name="contracttype" id="filter-contracttype" class="form-select form-select-sm">
-                                <option value="">{{#str}}all{{/str}}</option>
-                                {{#contractoptions}}
-                                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                                {{/contractoptions}}
-                            </select>
-                        </div>
-                        {{/showcontractfilter}}
-                        {{#showlocationfilter}}
-                        <div class="col-lg-3 col-md-6 mb-2 mb-lg-0">
-                            <label for="filter-location" class="form-label small text-muted mb-1">{{#str}}location, local_jobboard{{/str}}</label>
-                            <select name="location" id="filter-location" class="form-select form-select-sm">
-                                <option value="">{{#str}}all{{/str}}</option>
-                                {{#locationoptions}}
-                                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                                {{/locationoptions}}
-                            </select>
-                        </div>
-                        {{/showlocationfilter}}
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary btn-sm jb-btn-primary">
-                                <i class="fa fa-search me-1"></i>{{#str}}filter, local_jobboard{{/str}}
-                            </button>
-                        </div>
+        </div>
+        {{/stats}}
+    </div>
+    {{/hasstats}}
+
+    {{! Section Title }}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 style="font-size: var(--jb-text-xl); font-weight: var(--jb-font-semibold); color: var(--iser-rojo); margin: 0;">
+            <i class="fa fa-folder-open me-2" style="color: var(--iser-verde);"></i>{{#str}}openconvocatorias, local_jobboard{{/str}}
+        </h3>
+    </div>
+
+    {{! Convocatorias Grid }}
+    {{#hasconvocatorias}}
+    <div class="row g-4">
+        {{#convocatorias}}
+        <div class="col-lg-4 col-md-6">
+            <div class="jb-convocatoria-card" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 16px rgba(0,0,0,0.08); overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; {{#isurgent}}border-top: 3px solid var(--iser-amarillo);{{/isurgent}}">
+                <div style="padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 1px solid var(--jb-gray-100); display: flex; justify-content: space-between; align-items: center;">
+                    <code style="background: {{#isurgent}}var(--iser-amarillo){{/isurgent}}{{^isurgent}}var(--iser-verde){{/isurgent}}; color: {{#isurgent}}var(--iser-negro){{/isurgent}}{{^isurgent}}var(--iser-blanco){{/isurgent}}; padding: var(--jb-space-1) var(--jb-space-2); border-radius: var(--jb-radius-sm); font-size: var(--jb-text-sm); font-weight: var(--jb-font-bold);">{{code}}</code>
+                    {{#isurgent}}
+                    <span style="background: var(--iser-rojo); color: var(--iser-blanco); padding: 2px 8px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-xs); font-weight: var(--jb-font-bold);">
+                        <i class="fa fa-exclamation-triangle me-1"></i>{{urgenttext}}
+                    </span>
+                    {{/isurgent}}
+                    {{^isurgent}}
+                    <span style="background: var(--iser-verde-lighter); color: var(--iser-verde); padding: 2px 8px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-xs);">
+                        <i class="fa fa-check-circle me-1"></i>{{#str}}convocatoria_status_open, local_jobboard{{/str}}
+                    </span>
+                    {{/isurgent}}
+                </div>
+                <div style="padding: var(--jb-space-4); flex: 1; display: flex; flex-direction: column;">
+                    <h4 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); margin-bottom: var(--jb-space-3);">
+                        <a href="{{detailsurl}}" style="color: var(--iser-negro); text-decoration: none;">{{name}}</a>
+                    </h4>
+                    {{#descriptionexcerpt}}<p style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-3);">{{descriptionexcerpt}}</p>{{/descriptionexcerpt}}
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span style="background: var(--iser-verde-lighter); color: var(--iser-verde-dark); padding: 2px 10px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-xs);">
+                            <i class="fa fa-briefcase me-1"></i>{{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}
+                        </span>
+                        <span style="background: var(--iser-azul-lighter); color: var(--iser-azul); padding: 2px 10px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-xs);">
+                            <i class="fa fa-users me-1"></i>{{totalpositions}} {{#str}}positions, local_jobboard{{/str}}
+                        </span>
                     </div>
-                    {{#hasfilters}}
-                    <div class="mt-3 pt-2 border-top">
-                        <a href="{{clearfiltersurl}}" class="btn btn-sm btn-outline-danger jb-btn-outline-danger">
-                            <i class="fa fa-xmark me-1"></i>{{#str}}clearfilters, local_jobboard{{/str}}
+                    <div style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-top: auto;">
+                        <div style="margin-bottom: var(--jb-space-1);"><i class="fa fa-calendar-check me-2" style="color: var(--iser-verde);"></i>{{#str}}startdate, local_jobboard{{/str}}: <strong style="color: var(--iser-negro);">{{startdateformatted}}</strong></div>
+                        <div style="{{#isurgent}}color: var(--iser-rojo); font-weight: var(--jb-font-bold);{{/isurgent}}"><i class="fa fa-calendar-xmark me-2" style="color: var(--iser-amarillo);"></i>{{#str}}enddate, local_jobboard{{/str}}: <strong>{{enddateformatted}}</strong></div>
+                    </div>
+                </div>
+                <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); border-top: 1px solid var(--jb-gray-100);">
+                    <div class="d-flex gap-2">
+                        <a href="{{detailsurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); border: 2px solid var(--iser-azul); color: var(--iser-azul); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
+                            <i class="fa fa-info-circle me-1"></i>{{#str}}details{{/str}}
+                        </a>
+                        <a href="{{vacanciesurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); background: var(--iser-verde); color: var(--iser-blanco); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
+                            <i class="fa fa-briefcase me-1"></i>{{#str}}viewvacancies, local_jobboard{{/str}}
                         </a>
                     </div>
-                    {{/hasfilters}}
-                </form>
-            </div>
-        </div>
-        {{/filterform}}
-
-        {{! Results Header }}
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0"><i class="fa fa-briefcase me-2 text-primary"></i>{{#str}}vacancies, local_jobboard{{/str}}</h5>
-            <small class="text-muted">{{resultstext}}</small>
-        </div>
-
-        {{! Vacancies Grid }}
-        {{#hasvacancies}}
-        <div class="row">
-            {{#vacancies}}
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card h-100 shadow-sm {{#isurgent}}border-warning{{/isurgent}}">
-                    {{#isurgent}}
-                    <div class="bg-warning text-dark py-1 px-3 small text-center">
-                        <i class="fa fa-clock me-1"></i><strong>{{urgenttext}}</strong>
-                    </div>
-                    {{/isurgent}}
-                    <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
-                        <code class="small text-muted">{{code}}</code>
-                        <span class="badge bg-{{publicationtypecolor}}">{{publicationtypelabel}}</span>
-                    </div>
-                    <div class="card-body">
-                        <h6 class="card-title mb-3">
-                            <a href="{{viewurl}}" class="text-decoration-none text-dark">{{title}}</a>
-                        </h6>
-                        <div class="small text-muted">
-                            {{#location}}<div><i class="fa fa-location-dot text-primary me-2"></i>{{location}}</div>{{/location}}
-                            {{#contracttypelabel}}<div><i class="fa fa-file-contract text-secondary me-2"></i>{{contracttypelabel}}</div>{{/contracttypelabel}}
-                            <div><i class="fa fa-users text-success me-2"></i>{{positions}} {{#str}}positions, local_jobboard{{/str}}</div>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-white">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <small class="{{#isurgent}}text-warning fw-bold{{/isurgent}}{{^isurgent}}text-muted{{/isurgent}}">
-                                <i class="fa fa-calendar-xmark me-1"></i>{{closedateformatted}}
-                            </small>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a href="{{viewurl}}" class="btn btn-sm btn-outline-primary jb-btn-outline-primary flex-fill">
-                                <i class="fa fa-eye me-1"></i>{{#str}}view{{/str}}
-                            </a>
-                            {{#hasapplied}}
-                            <span class="btn btn-sm btn-success disabled flex-fill"><i class="fa fa-check me-1"></i>{{#str}}applied, local_jobboard{{/str}}</span>
-                            {{/hasapplied}}
-                            {{^hasapplied}}
-                            {{#canapply}}
-                            <a href="{{applyurl}}" class="btn btn-sm btn-primary jb-btn-primary flex-fill"><i class="fa fa-paper-plane me-1"></i>{{#str}}apply, local_jobboard{{/str}}</a>
-                            {{/canapply}}
-                            {{^isloggedin}}
-                            <a href="{{loginapplyurl}}" class="btn btn-sm btn-outline-secondary flex-fill"><i class="fa fa-sign-in-alt me-1"></i>{{#str}}login{{/str}}</a>
-                            {{/isloggedin}}
-                            {{/hasapplied}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/vacancies}}
-        </div>
-        {{/hasvacancies}}
-
-        {{! Empty State }}
-        {{^hasvacancies}}
-        <div class="card shadow-sm">
-            <div class="card-body text-center py-5">
-                <div class="jb-empty-state">
-                    <i class="fa fa-briefcase jb-empty-state-icon" aria-hidden="true"></i>
-                    <h5 class="jb-empty-state-title">{{#str}}novacancies, local_jobboard{{/str}}</h5>
-                    <p class="jb-empty-state-description">{{#str}}novacancies_desc, local_jobboard{{/str}}</p>
                 </div>
             </div>
         </div>
-        {{/hasvacancies}}
-
-        {{! Pagination }}
-        {{#pagination}}
-        <nav class="mt-4 d-flex justify-content-center">{{{pagination}}}</nav>
-        {{/pagination}}
-
-        {{! CTA for Non-Logged In }}
-        {{^isloggedin}}
-        {{#hasvacancies}}
-        <div class="card border-primary mt-4">
-            <div class="card-body text-center py-4">
-                <p class="mb-3 text-muted">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
-                <div class="d-flex justify-content-center gap-2">
-                    <a href="{{signupurl}}" class="btn btn-primary jb-btn-primary"><i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}</a>
-                    <a href="{{loginurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary"><i class="fa fa-sign-in-alt me-2"></i>{{#str}}login{{/str}}</a>
-                </div>
-            </div>
-        </div>
-        {{/hasvacancies}}
-        {{/isloggedin}}
-        {{/showvacancies}}
-
-        {{! ================================================================ }}
-        {{! MODE: CONVOCATORIAS LIST (DEFAULT) }}
-        {{! ================================================================ }}
-        {{#showconvocatorias}}
-        {{! Statistics Row }}
-        {{#hasstats}}
-        <div class="row mb-4">
-            {{#stats}}
-            <div class="col-lg-3 col-md-6 mb-2">
-                <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-{{color}}">
-                    <div class="card-body text-center py-3">
-                        <div class="h3 text-{{color}} mb-0 jb-stat-value">{{value}}</div>
-                        <small class="text-muted jb-stat-label">{{label}}</small>
-                    </div>
-                </div>
-            </div>
-            {{/stats}}
-        </div>
-        {{/hasstats}}
-
-        {{! Section Title }}
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0"><i class="fa fa-folder-open me-2 text-primary"></i>{{#str}}openconvocatorias, local_jobboard{{/str}}</h5>
-        </div>
-
-        {{! Convocatorias Grid }}
-        {{#hasconvocatorias}}
-        <div class="row">
-            {{#convocatorias}}
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card h-100 shadow-sm {{#isurgent}}border-warning{{/isurgent}}">
-                    <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
-                        <code class="badge {{#isurgent}}bg-warning text-dark{{/isurgent}}{{^isurgent}}bg-primary{{/isurgent}}">{{code}}</code>
-                        {{#isurgent}}
-                        <span class="badge bg-danger small"><i class="fa fa-exclamation-triangle me-1"></i>{{urgenttext}}</span>
-                        {{/isurgent}}
-                        {{^isurgent}}
-                        <span class="badge bg-success small"><i class="fa fa-check-circle me-1"></i>{{#str}}convocatoria_status_open, local_jobboard{{/str}}</span>
-                        {{/isurgent}}
-                    </div>
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="card-title mb-3">
-                            <a href="{{detailsurl}}" class="text-decoration-none text-dark">{{name}}</a>
-                        </h6>
-                        {{#descriptionexcerpt}}<p class="text-muted small mb-3">{{descriptionexcerpt}}</p>{{/descriptionexcerpt}}
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge bg-light text-dark"><i class="fa fa-briefcase text-primary me-1"></i>{{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}</span>
-                            <span class="badge bg-light text-dark"><i class="fa fa-users text-info me-1"></i>{{totalpositions}} {{#str}}positions, local_jobboard{{/str}}</span>
-                        </div>
-                        <div class="small text-muted mt-auto">
-                            <div class="mb-1"><i class="fa fa-calendar-check text-success me-2"></i>{{#str}}startdate, local_jobboard{{/str}}: <strong>{{startdateformatted}}</strong></div>
-                            <div class="{{#isurgent}}text-danger fw-bold{{/isurgent}}"><i class="fa fa-calendar-xmark text-warning me-2"></i>{{#str}}enddate, local_jobboard{{/str}}: <strong>{{enddateformatted}}</strong></div>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-white">
-                        <div class="d-flex gap-2">
-                            <a href="{{detailsurl}}" class="btn btn-sm btn-outline-info jb-btn-outline-info flex-fill"><i class="fa fa-info-circle me-1"></i>{{#str}}details{{/str}}</a>
-                            <a href="{{vacanciesurl}}" class="btn btn-sm btn-primary jb-btn-primary flex-fill"><i class="fa fa-briefcase me-1"></i>{{#str}}viewvacancies, local_jobboard{{/str}}</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{/convocatorias}}
-        </div>
-        {{/hasconvocatorias}}
-
-        {{! Empty State }}
-        {{^hasconvocatorias}}
-        <div class="card shadow-sm">
-            <div class="card-body text-center py-5">
-                <div class="jb-empty-state">
-                    <i class="fa fa-folder-open jb-empty-state-icon" aria-hidden="true"></i>
-                    <h5 class="jb-empty-state-title">{{#str}}noconvocatorias, local_jobboard{{/str}}</h5>
-                    <p class="jb-empty-state-description">{{#str}}noconvocatorias_desc, local_jobboard{{/str}}</p>
-                </div>
-            </div>
-        </div>
-        {{/hasconvocatorias}}
-
-        {{! CTA for Non-Logged In }}
-        {{^isloggedin}}
-        {{#hasconvocatorias}}
-        <div class="card border-primary mt-4">
-            <div class="card-body text-center py-4">
-                <p class="mb-3 text-muted">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
-                <div class="d-flex justify-content-center gap-2">
-                    <a href="{{signupurl}}" class="btn btn-primary jb-btn-primary"><i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}</a>
-                    <a href="{{loginurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary"><i class="fa fa-sign-in-alt me-2"></i>{{#str}}login{{/str}}</a>
-                </div>
-            </div>
-        </div>
-        {{/hasconvocatorias}}
-        {{/isloggedin}}
-        {{/showconvocatorias}}
+        {{/convocatorias}}
     </div>
+    {{/hasconvocatorias}}
+
+    {{! Empty State }}
+    {{^hasconvocatorias}}
+    <div style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: var(--jb-space-8); text-align: center;">
+        <i class="fa fa-folder-open" style="font-size: 4rem; color: var(--iser-gris-claro); margin-bottom: var(--jb-space-4); display: block;"></i>
+        <h4 style="color: var(--iser-rojo); margin-bottom: var(--jb-space-2);">{{#str}}noconvocatorias, local_jobboard{{/str}}</h4>
+        <p style="color: var(--iser-gris-medio); max-width: 400px; margin: 0 auto;">{{#str}}noconvocatorias_desc, local_jobboard{{/str}}</p>
+    </div>
+    {{/hasconvocatorias}}
+
+    {{! CTA for Non-Logged In }}
+    {{^isloggedin}}
+    {{#hasconvocatorias}}
+    <div style="background: linear-gradient(135deg, var(--iser-verde-lighter) 0%, var(--iser-blanco) 100%); border: 2px solid var(--iser-verde); border-radius: var(--jb-radius-lg); padding: var(--jb-space-6); text-align: center; margin-top: var(--jb-space-6);">
+        <p style="color: var(--iser-gris-oscuro); margin-bottom: var(--jb-space-4);">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{{signupurl}}" style="background: var(--iser-verde); color: var(--iser-blanco); padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-semibold);">
+                <i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}
+            </a>
+            <a href="{{loginurl}}" style="background: transparent; border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-medium);">
+                <i class="fa fa-sign-in-alt me-2"></i>{{#str}}login{{/str}}
+            </a>
+        </div>
+    </div>
+    {{/hasconvocatorias}}
+    {{/isloggedin}}
+    {{/showconvocatorias}}
 </div>
 
-{{! Styles consolidated in styles.css }}
+{{! ISER Theme Styles }}
+<style>
+.jb-public-page.jb-iser-theme {
+    font-family: var(--jb-font-sans);
+}
+
+.jb-public-page .jb-vacancy-card:hover,
+.jb-public-page .jb-convocatoria-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.jb-public-page input:focus,
+.jb-public-page select:focus {
+    border-color: var(--iser-verde) !important;
+    box-shadow: 0 0 0 3px rgba(27, 158, 136, 0.15);
+    outline: none;
+}
+
+.jb-public-page a[style*="border: 2px solid var(--iser-verde)"]:hover {
+    background: var(--iser-verde) !important;
+    color: var(--iser-blanco) !important;
+}
+
+.jb-public-page a[style*="border: 2px solid var(--iser-azul)"]:hover {
+    background: var(--iser-azul) !important;
+    color: var(--iser-blanco) !important;
+}
+
+@media (max-width: 991.98px) {
+    .jb-public-page .jb-hero-section {
+        text-align: center;
+        padding: var(--jb-space-6) !important;
+    }
+
+    .jb-public-page .jb-hero-section h1 {
+        font-size: var(--jb-text-2xl) !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .jb-public-page .jb-hero-section {
+        padding: var(--jb-space-4) !important;
+        border-radius: var(--jb-radius-md) !important;
+    }
+}
+</style>
