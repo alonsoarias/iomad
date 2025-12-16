@@ -46,7 +46,7 @@
 
         {{! Exemption Notice }}
         {{#hasexemption}}
-        <div class="alert jb-alert-info d-flex align-items-center mb-4" role="alert">
+        <div class="alert alert-info jb-alert-info d-flex align-items-center mb-4" role="alert">
             <i class="fa fa-id-badge fa-lg me-3"></i>
             <div>
                 <strong>{{#str}}exemptionactive, local_jobboard{{/str}}</strong>
@@ -60,7 +60,7 @@
 
         {{! Pending Documents Alert }}
         {{#pendingdocscount}}
-        <div class="alert jb-alert-warning d-flex align-items-center mb-4" role="alert">
+        <div class="alert alert-warning jb-alert-warning d-flex align-items-center mb-4" role="alert">
             <i class="fa fa-exclamation-triangle fa-lg me-3"></i>
             <div>
                 <strong>{{#str}}actionrequired, local_jobboard{{/str}}</strong>
@@ -267,11 +267,11 @@
         <div class="row mt-4">
             <div class="col-12">
                 <div class="d-flex justify-content-between align-items-center py-3 border-top">
-                    <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+                    <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
                         <i class="fa fa-arrow-left me-2"></i>
                         {{#str}}backtodashboard, local_jobboard{{/str}}
                     </a>
-                    <a href="{{browseurl}}" class="btn btn-link text-muted">
+                    <a href="{{browseurl}}" class="btn btn-link text-muted jb-hover-primary">
                         {{#str}}browsevacancies, local_jobboard{{/str}}
                         <i class="fa fa-arrow-right ms-2"></i>
                     </a>

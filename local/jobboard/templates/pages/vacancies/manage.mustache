@@ -27,7 +27,7 @@
 }}
 {{#loading}}
 {{! Skeleton Loading State }}
-<div class="local-jobboard-manage" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+<div class="jb-manage-page local-jobboard-manage" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
     <div class="jb-skeleton-text mb-3" style="width: 200px; height: 1em;"></div>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="jb-skeleton-title" style="width: 45%;"></div>
@@ -57,7 +57,7 @@
 {{/loading}}
 
 {{^loading}}
-<div class="local-jobboard-manage" data-region="jobboard-manage">
+<div class="jb-manage-page local-jobboard-manage" data-region="jobboard-manage">
     {{! Skip Link for Accessibility }}
     <a href="#manage-main-content" class="jb-skip-link">
         {{#str}}skiptocontent, local_jobboard{{/str}}
@@ -262,11 +262,11 @@
 
     {{! Navigation Footer }}
     <nav class="jb-navigation-footer d-flex justify-content-between align-items-center mt-4 py-3 border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
-        <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+        <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
             <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
             {{#str}}backtodashboard, local_jobboard{{/str}}
         </a>
-        <a href="{{convocatoriasurl}}" class="btn btn-link text-muted">
+        <a href="{{convocatoriasurl}}" class="btn btn-link text-muted jb-hover-primary">
             {{#str}}manageconvocatorias, local_jobboard{{/str}}
             <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
         </a>

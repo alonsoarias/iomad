@@ -36,7 +36,7 @@ require_capability('local/jobboard:createvacancy', $context);
 
 // Parameters.
 $page = optional_param('page', 0, PARAM_INT);
-$perpage = optional_param('perpage', 25, PARAM_INT);
+$perpage = optional_param('perpage', 20, PARAM_INT);
 $search = optional_param('search', '', PARAM_TEXT);
 $status = optional_param('status', '', PARAM_ALPHA);
 $companyid = optional_param('companyid', 0, PARAM_INT);

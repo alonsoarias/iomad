@@ -198,6 +198,16 @@ trait convocatoria_renderer {
             ['value' => 'archived', 'label' => get_string('convocatoria_status_archived', 'local_jobboard'), 'selected' => $status === 'archived'],
         ];
 
+        // Per-page options.
+        $perpageoptions = [];
+        foreach ([10, 20, 50, 100] as $opt) {
+            $perpageoptions[] = [
+                'value' => $opt,
+                'label' => $opt,
+                'selected' => $perpage == $opt,
+            ];
+        }
+
         $filterform = [
             'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'hiddenfields' => [
@@ -209,7 +219,14 @@ trait convocatoria_renderer {
                     'label' => get_string('status', 'local_jobboard'),
                     'isselect' => true,
                     'options' => $statusoptions,
-                    'col' => 'jb-col-md-4',
+                    'col' => 'jb-col-md-3',
+                ],
+                [
+                    'name' => 'perpage',
+                    'label' => get_string('perpage', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $perpageoptions,
+                    'col' => 'jb-col-md-2',
                 ],
             ],
         ];
