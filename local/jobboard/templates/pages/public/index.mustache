@@ -34,30 +34,6 @@
         {{! MODE: VACANCIES FOR SPECIFIC CONVOCATORIA }}
         {{! ================================================================ }}
         {{#showvacancies}}
-        {{! Breadcrumbs }}
-        {{#breadcrumbs}}
-        <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb mb-0">
-                {{#.}}
-                {{#active}}
-                <li class="breadcrumb-item active" aria-current="page">{{label}}</li>
-                {{/active}}
-                {{^active}}
-                <li class="breadcrumb-item"><a href="{{url}}">{{label}}</a></li>
-                {{/active}}
-                {{/.}}
-            </ol>
-        </nav>
-        {{/breadcrumbs}}
-
-        {{! Back Navigation }}
-        <div class="mb-4">
-            <a href="{{backtoconvocatoriasurl}}" class="btn btn-outline-secondary">
-                <i class="fa fa-arrow-left me-2"></i>
-                {{#str}}backtoconvocatorias, local_jobboard{{/str}}
-            </a>
-        </div>
-
         {{! Convocatoria Info Card }}
         {{#convocatoria}}
         <div class="card shadow-sm mb-4 {{#isurgent}}border-warning{{/isurgent}}">
@@ -234,14 +210,12 @@
         {{! CTA for Non-Logged In }}
         {{^isloggedin}}
         {{#hasvacancies}}
-        <div class="card bg-primary text-white border-0 mt-5">
-            <div class="card-body text-center py-5">
-                <i class="fa fa-user-plus fa-3x opacity-75 mb-3"></i>
-                <h4 class="mb-2">{{#str}}wanttoapply, local_jobboard{{/str}}</h4>
-                <p class="mb-4 opacity-75">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="{{signupurl}}" class="btn btn-light btn-lg"><i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}</a>
-                    <a href="{{loginurl}}" class="btn btn-outline-light btn-lg"><i class="fa fa-sign-in-alt me-2"></i>{{#str}}login{{/str}}</a>
+        <div class="card border-primary mt-4">
+            <div class="card-body text-center py-4">
+                <p class="mb-3 text-muted">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="{{signupurl}}" class="btn btn-primary"><i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}</a>
+                    <a href="{{loginurl}}" class="btn btn-outline-secondary"><i class="fa fa-sign-in-alt me-2"></i>{{#str}}login{{/str}}</a>
                 </div>
             </div>
         </div>
@@ -253,34 +227,14 @@
         {{! MODE: CONVOCATORIAS LIST (DEFAULT) }}
         {{! ================================================================ }}
         {{#showconvocatorias}}
-        {{! Welcome Header }}
-        <div class="bg-primary text-white rounded p-4 mb-4">
-            <div class="d-flex justify-content-between align-items-start">
-                <div class="flex-grow-1">
-                    <h1 class="h3 mb-2 fw-bold">{{pagetitle}}</h1>
-                    {{#pagedescription}}<p class="mb-0 opacity-75">{{{pagedescription}}}</p>{{/pagedescription}}
-                    {{#isloggedin}}
-                    {{#hasquickaccess}}
-                    <div class="mt-3 pt-3 border-top border-light d-flex flex-wrap gap-2">
-                        {{#quickaccess}}
-                        <a href="{{url}}" class="btn btn-light btn-sm"><i class="fa fa-{{icon}} me-2"></i>{{label}}</a>
-                        {{/quickaccess}}
-                    </div>
-                    {{/hasquickaccess}}
-                    {{/isloggedin}}
-                </div>
-                <div class="d-none d-md-block ms-4"><i class="fa fa-briefcase fa-4x opacity-25"></i></div>
-            </div>
-        </div>
-
         {{! Statistics Row }}
         {{#hasstats}}
         <div class="row mb-4">
             {{#stats}}
-            <div class="col-lg-3 col-md-6 mb-3">
+            <div class="col-lg-3 col-md-6 mb-2">
                 <div class="card shadow-sm h-100">
-                    <div class="card-body text-center">
-                        <div class="h2 text-{{color}} mb-1">{{value}}</div>
+                    <div class="card-body text-center py-3">
+                        <div class="h3 text-{{color}} mb-0">{{value}}</div>
                         <small class="text-muted">{{label}}</small>
                     </div>
                 </div>
@@ -290,11 +244,8 @@
         {{/hasstats}}
 
         {{! Section Title }}
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0"><i class="fa fa-folder-open me-2 text-primary"></i>{{#str}}openconvocatorias, local_jobboard{{/str}}</h5>
-            {{#hasconvocatorias}}
-            <span class="badge bg-primary rounded-pill">{{convocatoriascount}} {{#str}}available, local_jobboard{{/str}}</span>
-            {{/hasconvocatorias}}
         </div>
 
         {{! Convocatorias Grid }}
@@ -352,14 +303,12 @@
         {{! CTA for Non-Logged In }}
         {{^isloggedin}}
         {{#hasconvocatorias}}
-        <div class="card bg-primary text-white border-0 mt-5">
-            <div class="card-body text-center py-5">
-                <i class="fa fa-user-plus fa-3x opacity-75 mb-3"></i>
-                <h4 class="mb-2">{{#str}}wanttoapply, local_jobboard{{/str}}</h4>
-                <p class="mb-4 opacity-75">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="{{signupurl}}" class="btn btn-light btn-lg"><i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}</a>
-                    <a href="{{loginurl}}" class="btn btn-outline-light btn-lg"><i class="fa fa-sign-in-alt me-2"></i>{{#str}}login{{/str}}</a>
+        <div class="card border-primary mt-4">
+            <div class="card-body text-center py-4">
+                <p class="mb-3 text-muted">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="{{signupurl}}" class="btn btn-primary"><i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}</a>
+                    <a href="{{loginurl}}" class="btn btn-outline-secondary"><i class="fa fa-sign-in-alt me-2"></i>{{#str}}login{{/str}}</a>
                 </div>
             </div>
         </div>

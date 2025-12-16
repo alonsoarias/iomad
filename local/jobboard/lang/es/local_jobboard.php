@@ -3384,6 +3384,11 @@ $string['reviewertasks'] = 'Tareas del Revisor';
 $string['recentactivity'] = 'Actividad Reciente';
 $string['statistics'] = 'Estadísticas';
 
+// Página pública
+$string['openconvocatorias'] = 'Convocatorias Abiertas';
+$string['filtervacancies'] = 'Filtrar Vacantes';
+$string['available'] = 'Disponible';
+
 // Mensajes de error
 $string['error:usernotfound'] = 'Usuario no encontrado';
 $string['unknownuser'] = 'Usuario desconocido';
