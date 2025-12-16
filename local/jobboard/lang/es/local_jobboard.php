@@ -3395,3 +3395,120 @@ $string['allcaughtup'] = '¡Todo al día!';
 // Mensajes de error
 $string['error:usernotfound'] = 'Usuario no encontrado';
 $string['unknownuser'] = 'Usuario desconocido';
+
+// =============================================================================
+// CADENAS FALTANTES - COMPARTIR EN REDES SOCIALES
+// =============================================================================
+
+$string['shareon'] = 'Compartir en {$a}';
+$string['shareconvocatoria'] = 'Compartir esta convocatoria';
+
+// =============================================================================
+// CADENAS FALTANTES - FORMULARIO DE REGISTRO/ACTUALIZAR PERFIL
+// =============================================================================
+
+$string['signup_email'] = 'Correo electrónico';
+$string['signup_email_help'] = 'Ingrese una dirección de correo electrónico válida. Se utilizará para comunicaciones relacionadas con sus postulaciones y recuperación de cuenta.';
+$string['currentpassword_help'] = 'Ingrese su contraseña actual para confirmar cualquier cambio en la configuración de su cuenta.';
+$string['signup_password'] = 'Contraseña';
+$string['signup_password_help'] = 'Cree una contraseña segura con al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números.';
+$string['signup_doctype_help'] = 'Seleccione el tipo de documento de identificación que está utilizando.';
+$string['signup_birthdate_help'] = 'Ingrese su fecha de nacimiento. Esta información es requerida para algunos procesos de verificación.';
+$string['signup_phone'] = 'Número de teléfono';
+$string['signup_phone_help'] = 'Ingrese su número de teléfono incluyendo código de país. Se utilizará para comunicaciones urgentes.';
+$string['signup_education_level_help'] = 'Seleccione su nivel de educación más alto completado.';
+$string['signup_degree_title_help'] = 'Ingrese el título oficial de su grado o certificación más alto.';
+$string['signup_institution'] = 'Institución educativa';
+$string['signup_institution_help'] = 'Ingrese el nombre de la institución donde obtuvo su cualificación más alta.';
+$string['signup_expertise_area_help'] = 'Describa sus principales áreas de experiencia y especialización profesional.';
+$string['signup_professional_profile_help'] = 'Proporcione un breve resumen profesional destacando su experiencia y habilidades clave.';
+
+// =============================================================================
+// CADENAS FALTANTES - FORMULARIO DE POSTULACIÓN
+// =============================================================================
+
+$string['skiptoform'] = 'Ir al formulario de postulación';
+$string['indicatesrequired'] = 'indica campo requerido';
+$string['consentaccepted'] = 'Consentimiento de procesamiento de datos';
+$string['consentaccepted_help'] = 'Al marcar esta casilla, usted consiente el procesamiento de sus datos personales con fines de reclutamiento de acuerdo con las regulaciones de protección de datos.';
+$string['digitalsignature_help'] = 'Escriba su nombre completo exactamente como aparece en sus documentos oficiales. Esto sirve como su firma electrónica.';
+$string['coverletter_help'] = 'Escriba una breve carta de presentación explicando su interés en el puesto y por qué es un candidato adecuado.';
+$string['declarationaccepted'] = 'Declaración de veracidad';
+$string['declarationaccepted_help'] = 'Al marcar esta casilla, usted declara que toda la información proporcionada en esta postulación es verdadera y precisa según su mejor conocimiento.';
+
+// =============================================================================
+// CADENAS FALTANTES - CATEGORÍAS DE DOCUMENTOS
+// =============================================================================
+
+$string['doccat_employment_desc'] = 'Certificados laborales y documentos relacionados con el trabajo';
+$string['doccat_identification_desc'] = 'Documentos de identificación oficiales y certificados personales';
+$string['doccat_academic_desc'] = 'Credenciales académicas, títulos y certificados educativos';
+$string['doccat_financial_desc'] = 'Documentos financieros y certificados bancarios';
+$string['doccat_health_desc'] = 'Certificados de salud y documentación médica';
+$string['doccat_legal_desc'] = 'Documentos legales, antecedentes y certificados judiciales';
+
+// =============================================================================
+// CADENAS FALTANTES - MÚLTIPLES DOCUMENTOS
+// =============================================================================
+
+$string['multipledocs_certificacion_laboral'] = 'Puede cargar múltiples certificados laborales. Cada certificado debe ser de un empleador o puesto diferente.';
+$string['multipledocs_titulo_academico'] = 'Puede cargar múltiples títulos académicos. Incluya todos los grados y certificaciones relevantes.';
+$string['multipledocs_formacion_complementaria'] = 'Puede cargar múltiples certificados de formación complementaria. Incluya todos los cursos y talleres relevantes.';
+
+// =============================================================================
+// CADENAS DE LISTA DE VERIFICACIÓN
+// =============================================================================
+
+$string['allcomplete'] = '¡Todo completo!';
+
+// =============================================================================
+// CADENAS DE FORMULARIO DE POSTULACIÓN (Reconstruidas)
+// =============================================================================
+
+$string['applicationform'] = 'Formulario de Postulación';
+$string['applicationsubmitted'] = 'Su postulación ha sido enviada exitosamente.';
+$string['applicationsubmitfailed'] = 'Error al enviar la postulación. Por favor intente nuevamente.';
+$string['applicationcreatefailed'] = 'Error al crear el registro de postulación.';
+$string['declarationtitle'] = 'Declaración de Veracidad';
+$string['obtaindocument'] = 'Obtener este documento';
+$string['missingvacancy'] = 'Falta información de la vacante.';
+
+// =============================================================================
+// CADENAS DE PÁGINA DE PERFIL
+// =============================================================================
+
+$string['profilerequired_title'] = 'Completar perfil requerido';
+$string['profilerequired_desc'] = 'Por favor complete todos los campos requeridos en su perfil antes de continuar con su postulación.';
+$string['profilechecklist'] = 'Lista de verificación del perfil';
+$string['profile_field_names'] = 'Nombre y apellidos';
+$string['profile_field_email'] = 'Correo electrónico';
+$string['profile_field_phone'] = 'Número de teléfono';
+$string['profile_field_idnumber'] = 'Número de identificación';
+$string['profile_required_note'] = 'Los campos marcados en amarillo necesitan ser completados.';
+$string['profile_help_text'] = 'Si necesita ayuda para completar su perfil, por favor contacte a soporte.';
+$string['completeprofiletoapply'] = 'Complete su perfil para continuar con su postulación.';
+
+// =============================================================================
+// CADENAS DE PÁGINA DE REVISIÓN
+// =============================================================================
+
+$string['reviewqueue_desc'] = 'Revise y valide los documentos de los postulantes enviados para las vacantes.';
+$string['reviewapplication'] = 'Revisar postulación';
+$string['selectdocumenttopreview'] = 'Seleccione un documento de la lista para previsualizarlo aquí.';
+$string['sequentialreview'] = 'Revisión secuencial';
+$string['reviewingdocument'] = 'Revisando documento';
+$string['readytosubmit'] = 'Todos los documentos revisados. Puede enviar su revisión ahora.';
+$string['alldocsreviewed'] = 'Todos los documentos revisados';
+$string['submitreview'] = 'Enviar revisión';
+$string['reviewobservations_placeholder'] = 'Agregue cualquier observación final sobre esta postulación...';
+$string['fullscreen'] = 'Pantalla completa';
+
+// =============================================================================
+// CADENAS DE PÁGINA DE GESTIÓN DE POSTULACIONES
+// =============================================================================
+
+$string['searchapplicant'] = 'Buscar por nombre o correo...';
+$string['allstatuses'] = 'Todos los estados';
+$string['applicantslist'] = 'Lista de postulantes';
+$string['noapplicationsfound_desc'] = 'No hay postulaciones que coincidan con sus filtros actuales. Intente ajustar sus criterios de búsqueda.';
+$string['exportdesc'] = 'Descargue los datos de las postulaciones en su formato preferido para análisis fuera de línea.';
