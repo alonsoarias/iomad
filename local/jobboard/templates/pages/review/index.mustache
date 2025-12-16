@@ -27,59 +27,63 @@
 <div class="jb-review-page" id="jobboard-review-page">
     {{! ========== SINGLE APPLICATION REVIEW MODE ========== }}
     {{#selectedapplication}}
+    {{! Quick Info Bar }}
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <div class="d-flex align-items-center gap-2">
+            <code class="badge bg-light text-dark">{{selectedapplication.vacancycode}}</code>
+            <span class="badge bg-{{selectedapplication.statuscolor}}">{{selectedapplication.statuslabel}}</span>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            {{#shownav}}
+            <div class="btn-group btn-group-sm">
+                {{#prevurl}}
+                <a href="{{prevurl}}" class="btn btn-outline-secondary"><i class="fa fa-chevron-left"></i></a>
+                {{/prevurl}}
+                {{^prevurl}}
+                <button class="btn btn-outline-secondary" disabled><i class="fa fa-chevron-left"></i></button>
+                {{/prevurl}}
+                <span class="btn btn-outline-secondary disabled">{{navposition}}/{{navtotal}}</span>
+                {{#nexturl}}
+                <a href="{{nexturl}}" class="btn btn-outline-secondary"><i class="fa fa-chevron-right"></i></a>
+                {{/nexturl}}
+                {{^nexturl}}
+                <button class="btn btn-outline-secondary" disabled><i class="fa fa-chevron-right"></i></button>
+                {{/nexturl}}
+            </div>
+            {{/shownav}}
+            <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm">
+                <i class="fa fa-arrow-left me-1"></i>{{#str}}back{{/str}}
+            </a>
+        </div>
+    </div>
+
+    {{! Sequential Review Progress }}
+    {{#haspending}}
+    <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+        <i class="fa fa-list-check me-3"></i>
+        <div class="flex-grow-1">
+            <strong>{{#str}}sequentialreview, local_jobboard{{/str}}</strong>
+            <span class="d-block small">{{#str}}reviewingdocument, local_jobboard{{/str}} {{currentdocposition}} {{#str}}of, local_jobboard{{/str}} {{totaldocs}}</span>
+        </div>
+        <span class="badge bg-primary">{{currentdocposition}} / {{totaldocs}}</span>
+    </div>
+    {{/haspending}}
+
+    {{! All Reviewed Success }}
+    {{#allreviewed}}
+    <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
+        <i class="fa fa-check-circle me-3"></i>
+        <div>
+            <strong>{{#str}}alldocsreviewed, local_jobboard{{/str}}</strong>
+            <span class="d-block small">{{#str}}readytosubmit, local_jobboard{{/str}}</span>
+        </div>
+    </div>
+    {{/allreviewed}}
+
     <div class="row g-4">
         {{! Main Content - Document Preview }}
         <div class="col-lg-8">
-            {{! Quick Info Bar }}
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-                <div class="d-flex align-items-center gap-2">
-                    <code class="badge bg-light text-dark">{{selectedapplication.vacancycode}}</code>
-                    <span class="badge bg-{{selectedapplication.statuscolor}}">{{selectedapplication.statuslabel}}</span>
-                </div>
-                {{#shownav}}
-                <div class="btn-group btn-group-sm">
-                    {{#prevurl}}
-                    <a href="{{prevurl}}" class="btn btn-outline-secondary"><i class="fa fa-chevron-left"></i></a>
-                    {{/prevurl}}
-                    {{^prevurl}}
-                    <button class="btn btn-outline-secondary" disabled><i class="fa fa-chevron-left"></i></button>
-                    {{/prevurl}}
-                    <span class="btn btn-outline-secondary disabled">{{navposition}}/{{navtotal}}</span>
-                    {{#nexturl}}
-                    <a href="{{nexturl}}" class="btn btn-outline-secondary"><i class="fa fa-chevron-right"></i></a>
-                    {{/nexturl}}
-                    {{^nexturl}}
-                    <button class="btn btn-outline-secondary" disabled><i class="fa fa-chevron-right"></i></button>
-                    {{/nexturl}}
-                </div>
-                {{/shownav}}
-            </div>
-
-            {{! Sequential Review Progress }}
-            {{#haspending}}
-            <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
-                <i class="fa fa-list-check me-3"></i>
-                <div class="flex-grow-1">
-                    <strong>{{#str}}sequentialreview, local_jobboard{{/str}}</strong>
-                    <span class="d-block small">{{#str}}reviewingdocument, local_jobboard{{/str}} {{currentdocposition}} {{#str}}of, local_jobboard{{/str}} {{totaldocs}}</span>
-                </div>
-                <span class="badge bg-primary">{{currentdocposition}} / {{totaldocs}}</span>
-            </div>
-            {{/haspending}}
-
-            {{! All Reviewed Success }}
-            {{#allreviewed}}
-            <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
-                <i class="fa fa-check-circle me-3"></i>
-                <div>
-                    <strong>{{#str}}alldocsreviewed, local_jobboard{{/str}}</strong>
-                    <span class="d-block small">{{#str}}readytosubmit, local_jobboard{{/str}}</span>
-                </div>
-            </div>
-            {{/allreviewed}}
-
-            {{! Document Preview Card }}
-            <div class="card shadow-sm mb-4">
+            <div class="card shadow-sm">
                 <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">
                         <i class="fa fa-file-lines text-primary me-2"></i>
@@ -136,81 +140,71 @@
 
         {{! Sidebar }}
         <div class="col-lg-4">
-            <div class="jb-sidebar sticky-top" style="top: 1rem;">
-                {{! Applicant Info Card }}
-                <div class="card shadow-sm mb-3 border-primary">
-                    <div class="card-header bg-white py-2">
-                        <h6 class="mb-0"><i class="fa fa-user text-primary me-2"></i>{{#str}}applicantinfo, local_jobboard{{/str}}</h6>
-                    </div>
-                    <div class="card-body py-3">
-                        <h6 class="mb-2">{{selectedapplication.applicantname}}</h6>
-                        <p class="small text-muted mb-1">
-                            <i class="fa fa-envelope me-2"></i>
-                            <a href="mailto:{{selectedapplication.email}}">{{selectedapplication.email}}</a>
-                        </p>
-                        <p class="small text-muted mb-0">
-                            <i class="fa fa-briefcase me-2"></i>{{selectedapplication.vacancytitle}}
-                        </p>
-                    </div>
+            {{! Applicant Info Card }}
+            <div class="card shadow-sm mb-3 border-primary">
+                <div class="card-header bg-white py-2">
+                    <h6 class="mb-0"><i class="fa fa-user text-primary me-2"></i>{{#str}}applicantinfo, local_jobboard{{/str}}</h6>
                 </div>
+                <div class="card-body py-3">
+                    <h6 class="mb-2">{{selectedapplication.applicantname}}</h6>
+                    <p class="small text-muted mb-1">
+                        <i class="fa fa-envelope me-2"></i>
+                        <a href="mailto:{{selectedapplication.email}}">{{selectedapplication.email}}</a>
+                    </p>
+                    <p class="small text-muted mb-0">
+                        <i class="fa fa-briefcase me-2"></i>{{selectedapplication.vacancytitle}}
+                    </p>
+                </div>
+            </div>
 
-                {{! Documents List Card }}
-                <div class="card shadow-sm mb-3">
-                    <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0"><i class="fa fa-folder-open text-info me-2"></i>{{#str}}documents, local_jobboard{{/str}}</h6>
-                        {{#canvalidateall}}
-                        <a href="{{validateallurl}}" class="btn btn-success btn-sm">
-                            <i class="fa fa-check-double me-1"></i>{{#str}}validateall, local_jobboard{{/str}}
-                        </a>
-                        {{/canvalidateall}}
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="list-group list-group-flush jb-documents-list" data-region="documents-list" style="max-height: 400px; overflow-y: auto;">
-                            {{#documents}}
-                            <div class="list-group-item jb-doc-item {{#iscurrent}}active bg-primary-subtle{{/iscurrent}} {{#islocked}}disabled opacity-50{{/islocked}}"
-                                 data-document-id="{{id}}"
-                                 data-preview-url="{{previewurl}}"
-                                 data-mimetype="{{mimetype}}"
-                                 data-is-pdf="{{ispdf}}"
-                                 data-is-image="{{isimage}}"
-                                 data-can-preview="{{canpreview}}"
-                                 data-typename="{{typename}}"
-                                 data-filename="{{filename}}"
-                                 data-download-url="{{downloadurl}}"
-                                 {{#iscurrent}}onclick="jobboardPreviewDocument(this)" style="cursor: pointer;"{{/iscurrent}}
-                                 {{#isreviewed}}onclick="jobboardPreviewDocument(this)" style="cursor: pointer;"{{/isreviewed}}
-                                 {{#islocked}}style="cursor: not-allowed;"{{/islocked}}>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="d-flex align-items-center flex-grow-1 min-width-0 me-2">
-                                        <span class="badge rounded-pill {{#iscurrent}}bg-primary{{/iscurrent}}{{#isreviewed}}bg-{{statuscolor}}{{/isreviewed}}{{#islocked}}bg-secondary{{/islocked}} me-2">{{docindex}}</span>
-                                        <i class="fa fa-{{statusicon}} text-{{statuscolor}} me-2"></i>
-                                        <div class="min-width-0">
-                                            <div class="fw-medium text-truncate small">{{typename}}</div>
-                                            <small class="text-muted text-truncate d-block">{{filename}}</small>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-1">
-                                        {{#iscurrent}}<span class="badge bg-primary small">{{#str}}current, local_jobboard{{/str}}</span>{{/iscurrent}}
-                                        {{#islocked}}<span class="badge bg-secondary small"><i class="fa fa-lock"></i></span>{{/islocked}}
-                                        {{#isreviewed}}<span class="badge bg-{{statuscolor}} small">{{statuslabel}}</span>{{/isreviewed}}
+            {{! Documents List Card }}
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="fa fa-folder-open text-info me-2"></i>{{#str}}documents, local_jobboard{{/str}}</h6>
+                    {{#canvalidateall}}
+                    <a href="{{validateallurl}}" class="btn btn-success btn-sm">
+                        <i class="fa fa-check-double me-1"></i>{{#str}}validateall, local_jobboard{{/str}}
+                    </a>
+                    {{/canvalidateall}}
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush jb-documents-list" data-region="documents-list" style="max-height: 350px; overflow-y: auto;">
+                        {{#documents}}
+                        <div class="list-group-item jb-doc-item py-2 {{#iscurrent}}active bg-primary-subtle{{/iscurrent}} {{#islocked}}disabled opacity-50{{/islocked}}"
+                             data-document-id="{{id}}"
+                             data-preview-url="{{previewurl}}"
+                             data-mimetype="{{mimetype}}"
+                             data-is-pdf="{{ispdf}}"
+                             data-is-image="{{isimage}}"
+                             data-can-preview="{{canpreview}}"
+                             data-typename="{{typename}}"
+                             data-filename="{{filename}}"
+                             data-download-url="{{downloadurl}}"
+                             {{^islocked}}onclick="jobboardPreviewDocument(this)" style="cursor: pointer;"{{/islocked}}
+                             {{#islocked}}style="cursor: not-allowed;"{{/islocked}}>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center flex-grow-1 min-width-0 me-2">
+                                    <span class="badge rounded-pill {{#iscurrent}}bg-primary{{/iscurrent}}{{#isreviewed}}bg-{{statuscolor}}{{/isreviewed}}{{#islocked}}bg-secondary{{/islocked}} me-2 flex-shrink-0">{{docindex}}</span>
+                                    <i class="fa fa-{{statusicon}} text-{{statuscolor}} me-2 flex-shrink-0"></i>
+                                    <div class="min-width-0">
+                                        <div class="fw-medium text-truncate small">{{typename}}</div>
+                                        <small class="text-muted text-truncate d-block" style="font-size: 0.7rem;">{{filename}}</small>
                                     </div>
                                 </div>
+                                <span class="badge bg-{{statuscolor}} small flex-shrink-0">{{statuslabel}}</span>
+                            </div>
 
-                                {{#rejectreason}}
-                                <div class="small text-danger mt-1"><i class="fa fa-circle-exclamation me-1"></i>{{rejectreason}}</div>
-                                {{/rejectreason}}
+                            {{#rejectreason}}
+                            <div class="small text-danger mt-1"><i class="fa fa-circle-exclamation me-1"></i>{{rejectreason}}</div>
+                            {{/rejectreason}}
 
-                                {{#iscurrent}}
-                                <div class="mt-3" onclick="event.stopPropagation();">
-                                    <label for="doc_observation_{{id}}" class="form-label small text-muted mb-1">
-                                        <i class="fa fa-comment-dots me-1"></i>{{#str}}documentobservation, local_jobboard{{/str}}
-                                    </label>
-                                    <textarea name="doc_observation_{{id}}" id="doc_observation_{{id}}"
-                                              class="form-control form-control-sm jb-doc-observation"
-                                              rows="2" data-document-id="{{id}}" data-application-id="{{applicationid}}"
-                                              placeholder="{{#str}}documentobservation_placeholder, local_jobboard{{/str}}">{{{observation}}}</textarea>
-                                </div>
-                                <div class="d-flex gap-2 mt-2" onclick="event.stopPropagation();">
+                            {{#iscurrent}}
+                            <div class="mt-2 pt-2 border-top" onclick="event.stopPropagation();">
+                                <textarea name="doc_observation_{{id}}" id="doc_observation_{{id}}"
+                                          class="form-control form-control-sm jb-doc-observation mb-2"
+                                          rows="2" data-document-id="{{id}}" data-application-id="{{applicationid}}"
+                                          placeholder="{{#str}}documentobservation_placeholder, local_jobboard{{/str}}">{{{observation}}}</textarea>
+                                <div class="d-flex gap-2">
                                     <a href="{{validateurl}}" class="btn btn-success btn-sm flex-grow-1">
                                         <i class="fa fa-check me-1"></i>{{#str}}approve, local_jobboard{{/str}}
                                     </a>
@@ -218,243 +212,214 @@
                                         <i class="fa fa-xmark me-1"></i>{{#str}}reject, local_jobboard{{/str}}
                                     </button>
                                 </div>
-                                {{/iscurrent}}
-
-                                {{#isreviewed}}{{#observation}}
-                                <div class="mt-2 small"><i class="fa fa-comment text-muted me-1"></i><span class="text-muted">{{{observation}}}</span></div>
-                                {{/observation}}{{/isreviewed}}
-                            </div>
-
-                            {{#iscurrent}}
-                            <div class="modal fade" id="rejectModal{{id}}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <form method="post" action="{{rejecturl}}">
-                                            <input type="hidden" name="sesskey" value="{{sesskey}}">
-                                            <input type="hidden" name="view" value="review">
-                                            <input type="hidden" name="applicationid" value="{{../selectedapplication.id}}">
-                                            <input type="hidden" name="documentid" value="{{id}}">
-                                            <input type="hidden" name="action" value="reject">
-                                            <div class="modal-header bg-danger text-white py-2">
-                                                <h6 class="modal-title"><i class="fa fa-triangle-exclamation me-2"></i>{{#str}}rejectdocument, local_jobboard{{/str}}</h6>
-                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p class="text-muted small mb-3"><i class="fa fa-file me-2"></i>{{typename}}</p>
-                                                <div class="mb-3">
-                                                    <label for="reason{{id}}" class="form-label small fw-bold">{{#str}}rejectreason, local_jobboard{{/str}} *</label>
-                                                    <textarea name="reason" id="reason{{id}}" class="form-control form-control-sm" rows="3" required placeholder="{{#str}}rejectreason_placeholder, local_jobboard{{/str}}"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer py-2">
-                                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">{{#str}}cancel{{/str}}</button>
-                                                <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-xmark me-1"></i>{{#str}}reject, local_jobboard{{/str}}</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
                             </div>
                             {{/iscurrent}}
-                            {{/documents}}
+
+                            {{#isreviewed}}{{#observation}}
+                            <div class="mt-1 small text-muted"><i class="fa fa-comment me-1"></i>{{{observation}}}</div>
+                            {{/observation}}{{/isreviewed}}
                         </div>
-                    </div>
-                    <div class="card-footer bg-light py-2 d-flex justify-content-between align-items-center">
-                        <small class="text-muted"><i class="fa fa-info-circle me-1"></i>{{#str}}documentobservation_help, local_jobboard{{/str}}</small>
-                        <button type="button" class="btn btn-sm btn-primary" id="saveAndSendBtn" onclick="jobboardSaveAndSendObservations()">
-                            <i class="fa fa-paper-plane me-1"></i>{{#str}}saveandsend, local_jobboard{{/str}}
-                        </button>
+                        {{/documents}}
                     </div>
                 </div>
+                <div class="card-footer bg-light py-2 text-end">
+                    <button type="button" class="btn btn-sm btn-primary" id="saveAndSendBtn" onclick="jobboardSaveAndSendObservations()">
+                        <i class="fa fa-paper-plane me-1"></i>{{#str}}saveandsend, local_jobboard{{/str}}
+                    </button>
+                </div>
+            </div>
 
-                {{! Review Progress Card }}
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white py-2">
-                        <h6 class="mb-0"><i class="fa fa-chart-pie text-success me-2"></i>{{#str}}reviewprogress, local_jobboard{{/str}}</h6>
+            {{! Review Progress Card }}
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-2">
+                    <h6 class="mb-0"><i class="fa fa-chart-pie text-success me-2"></i>{{#str}}reviewprogress, local_jobboard{{/str}}</h6>
+                </div>
+                <div class="card-body py-3">
+                    <div class="d-flex justify-content-around text-center mb-3">
+                        <div>
+                            <div class="h5 mb-0 text-success">{{approvedcount}}</div>
+                            <small class="text-muted">{{#str}}docstatus:approved, local_jobboard{{/str}}</small>
+                        </div>
+                        <div>
+                            <div class="h5 mb-0 text-danger">{{rejectedcount}}</div>
+                            <small class="text-muted">{{#str}}docstatus:rejected, local_jobboard{{/str}}</small>
+                        </div>
+                        <div>
+                            <div class="h5 mb-0 text-warning">{{pendingcount}}</div>
+                            <small class="text-muted">{{#str}}docstatus:pending, local_jobboard{{/str}}</small>
+                        </div>
                     </div>
-                    <div class="card-body py-3">
-                        <div class="row text-center mb-3">
-                            <div class="col-4">
-                                <div class="h5 mb-0 text-success">{{approvedcount}}</div>
-                                <small class="text-muted">{{#str}}docstatus:approved, local_jobboard{{/str}}</small>
-                            </div>
-                            <div class="col-4">
-                                <div class="h5 mb-0 text-danger">{{rejectedcount}}</div>
-                                <small class="text-muted">{{#str}}docstatus:rejected, local_jobboard{{/str}}</small>
-                            </div>
-                            <div class="col-4">
-                                <div class="h5 mb-0 text-warning">{{pendingcount}}</div>
-                                <small class="text-muted">{{#str}}docstatus:pending, local_jobboard{{/str}}</small>
-                            </div>
-                        </div>
-                        <div class="progress mb-3" style="height: 6px;">
-                            <div class="progress-bar bg-success" style="width: {{approvedpercent}}%;"></div>
-                            <div class="progress-bar bg-danger" style="width: {{rejectedpercent}}%;"></div>
-                        </div>
+                    <div class="progress mb-3" style="height: 6px;">
+                        <div class="progress-bar bg-success" style="width: {{approvedpercent}}%;"></div>
+                        <div class="progress-bar bg-danger" style="width: {{rejectedpercent}}%;"></div>
+                    </div>
 
-                        {{#allreviewed}}
-                        <form method="post" action="{{submitreviewurl}}">
-                            <input type="hidden" name="sesskey" value="{{sesskey}}">
-                            <input type="hidden" name="action" value="markreviewed">
-                            <input type="hidden" name="applicationid" value="{{selectedapplication.id}}">
-                            <input type="hidden" name="view" value="review">
-                            <div class="mb-3">
-                                <label for="observations" class="form-label small fw-bold">{{#str}}reviewobservations, local_jobboard{{/str}}</label>
-                                <textarea name="observations" id="observations" class="form-control form-control-sm" rows="2" placeholder="{{#str}}reviewobservations_placeholder, local_jobboard{{/str}}"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-{{completebtncolor}} btn-sm w-100">
-                                <i class="fa fa-clipboard-check me-2"></i>{{#str}}submitreview, local_jobboard{{/str}}
-                            </button>
-                        </form>
-                        {{/allreviewed}}
-                    </div>
+                    {{#allreviewed}}
+                    <form method="post" action="{{submitreviewurl}}">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="markreviewed">
+                        <input type="hidden" name="applicationid" value="{{selectedapplication.id}}">
+                        <input type="hidden" name="view" value="review">
+                        <div class="mb-2">
+                            <textarea name="observations" id="observations" class="form-control form-control-sm" rows="2" placeholder="{{#str}}reviewobservations_placeholder, local_jobboard{{/str}}"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-{{completebtncolor}} btn-sm w-100">
+                            <i class="fa fa-clipboard-check me-2"></i>{{#str}}submitreview, local_jobboard{{/str}}
+                        </button>
+                    </form>
+                    {{/allreviewed}}
                 </div>
             </div>
         </div>
     </div>
 
-    {{! Back Navigation }}
-    <div class="mt-4 pt-3 border-top">
-        <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm">
-            <i class="fa fa-arrow-left me-2"></i>{{#str}}backtoreviewlist, local_jobboard{{/str}}
-        </a>
+    {{! Rejection Modals - Outside the card structure }}
+    {{#documents}}
+    {{#iscurrent}}
+    <div class="modal fade" id="rejectModal{{id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="post" action="{{rejecturl}}">
+                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                    <input type="hidden" name="view" value="review">
+                    <input type="hidden" name="applicationid" value="{{applicationid}}">
+                    <input type="hidden" name="documentid" value="{{id}}">
+                    <input type="hidden" name="action" value="reject">
+                    <div class="modal-header bg-danger text-white py-2">
+                        <h6 class="modal-title"><i class="fa fa-triangle-exclamation me-2"></i>{{#str}}rejectdocument, local_jobboard{{/str}}</h6>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted small mb-3"><i class="fa fa-file me-2"></i>{{typename}}</p>
+                        <div class="mb-3">
+                            <label for="reason{{id}}" class="form-label small fw-bold">{{#str}}rejectreason, local_jobboard{{/str}} *</label>
+                            <textarea name="reason" id="reason{{id}}" class="form-control form-control-sm" rows="3" required placeholder="{{#str}}rejectreason_placeholder, local_jobboard{{/str}}"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer py-2">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">{{#str}}cancel{{/str}}</button>
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-xmark me-1"></i>{{#str}}reject, local_jobboard{{/str}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+    {{/iscurrent}}
+    {{/documents}}
     {{/selectedapplication}}
 
     {{! ========== APPLICATIONS QUEUE MODE ========== }}
     {{^selectedapplication}}
-    <div class="row g-4">
-        {{! Main Content }}
-        <div class="col-lg-8">
-            {{! Filter Form Card }}
-            {{#filterform}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-light py-2">
-                    <h6 class="mb-0"><i class="fa fa-filter me-2 text-muted"></i>{{#str}}filter, local_jobboard{{/str}}</h6>
-                </div>
-                <div class="card-body py-3">
-                    <form method="get" action="{{action}}">
-                        {{#hiddenfields}}
-                        <input type="hidden" name="{{name}}" value="{{value}}">
-                        {{/hiddenfields}}
-                        <div class="row align-items-end">
-                            {{#fields}}
-                            <div class="col-md-5 mb-2">
-                                <label for="filter-{{name}}" class="form-label small text-muted mb-1">{{label}}</label>
-                                <select name="{{name}}" id="filter-{{name}}" class="form-select form-select-sm">
-                                    {{#options}}
-                                    <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                                    {{/options}}
-                                </select>
-                            </div>
-                            {{/fields}}
-                            <div class="col-md-2 mb-2">
-                                <button type="submit" class="btn btn-primary btn-sm w-100">
-                                    <i class="fa fa-search me-1"></i>{{#str}}filter, local_jobboard{{/str}}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            {{/filterform}}
+    {{! Quick Actions Bar }}
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <div class="d-flex align-items-center gap-2">
+            {{#stats}}
+            <span class="badge bg-{{color}} px-3 py-2">
+                <span class="fw-bold">{{value}}</span> {{label}}
+            </span>
+            {{/stats}}
+        </div>
+        <div class="btn-group btn-group-sm">
+            <a href="{{myreviewsurl}}" class="btn btn-outline-primary">
+                <i class="fa fa-clipboard-list me-1"></i>{{#str}}myreviews, local_jobboard{{/str}}
+            </a>
+            <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
+                <i class="fa fa-home me-1"></i>{{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+        </div>
+    </div>
 
-            {{! Applications List }}
-            {{#hasapplications}}
-            {{#applications}}
-            <div class="card shadow-sm mb-3 {{#isurgent}}border-danger{{/isurgent}}">
-                <div class="card-body py-3">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div class="flex-grow-1">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <h6 class="mb-0">
-                                    <i class="fa fa-user text-muted me-2"></i>{{applicantname}}
-                                </h6>
-                                {{#isurgent}}
-                                <span class="badge bg-danger"><i class="fa fa-triangle-exclamation me-1"></i>{{#str}}urgent, local_jobboard{{/str}}</span>
-                                {{/isurgent}}
-                            </div>
-                            <p class="text-muted small mb-2"><i class="fa fa-envelope me-2"></i>{{email}}</p>
-                            <div class="d-flex flex-wrap gap-2 align-items-center small">
-                                <span class="badge bg-secondary">{{vacancycode}}</span>
-                                <span class="text-muted">{{vacancytitle}}</span>
-                            </div>
-                        </div>
-                        <div class="text-end">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <span class="badge bg-secondary">{{doccount}} {{#str}}documents, local_jobboard{{/str}}</span>
-                                {{#pendingcount}}
-                                <span class="badge bg-warning text-dark">{{pendingcount}} {{#str}}pending, local_jobboard{{/str}}</span>
-                                {{/pendingcount}}
-                                {{^pendingcount}}
-                                <span class="badge bg-success">{{#str}}allvalidated, local_jobboard{{/str}}</span>
-                                {{/pendingcount}}
-                            </div>
-                            <small class="text-muted"><i class="fa fa-calendar me-1"></i>{{datesubmitted}}</small>
-                        </div>
+    {{! Filter Form }}
+    {{#filterform}}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light py-2">
+            <h6 class="mb-0"><i class="fa fa-filter me-2 text-muted"></i>{{#str}}filter, local_jobboard{{/str}}</h6>
+        </div>
+        <div class="card-body py-3">
+            <form method="get" action="{{action}}">
+                {{#hiddenfields}}
+                <input type="hidden" name="{{name}}" value="{{value}}">
+                {{/hiddenfields}}
+                <div class="row align-items-end g-2">
+                    {{#fields}}
+                    <div class="col-md-4">
+                        <label for="filter-{{name}}" class="form-label small text-muted mb-1">{{label}}</label>
+                        <select name="{{name}}" id="filter-{{name}}" class="form-select form-select-sm">
+                            {{#options}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/options}}
+                        </select>
+                    </div>
+                    {{/fields}}
+                    <div class="col-md-auto">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="fa fa-search me-1"></i>{{#str}}filter, local_jobboard{{/str}}
+                        </button>
                     </div>
                 </div>
-                <div class="card-footer bg-white py-2 d-flex justify-content-between">
-                    <a href="{{reviewurl}}" class="btn btn-primary btn-sm">
-                        <i class="fa fa-magnifying-glass me-1"></i>{{#str}}reviewdocuments, local_jobboard{{/str}}
+            </form>
+        </div>
+    </div>
+    {{/filterform}}
+
+    {{! Applications List }}
+    {{#hasapplications}}
+    {{#applications}}
+    <div class="card shadow-sm mb-3 {{#isurgent}}border-danger{{/isurgent}}">
+        <div class="card-body py-3">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <h6 class="mb-0">{{applicantname}}</h6>
+                        {{#isurgent}}
+                        <span class="badge bg-danger"><i class="fa fa-triangle-exclamation me-1"></i>{{#str}}urgent, local_jobboard{{/str}}</span>
+                        {{/isurgent}}
+                    </div>
+                    <p class="text-muted small mb-1"><i class="fa fa-envelope me-2"></i>{{email}}</p>
+                    <div class="d-flex flex-wrap gap-2 align-items-center small">
+                        <code class="badge bg-light text-dark">{{vacancycode}}</code>
+                        <span class="text-muted">{{vacancytitle}}</span>
+                    </div>
+                </div>
+                <div class="col-md-3 text-md-center my-2 my-md-0">
+                    <span class="badge bg-secondary me-1">{{doccount}} {{#str}}documents, local_jobboard{{/str}}</span>
+                    {{#pendingcount}}
+                    <span class="badge bg-warning text-dark">{{pendingcount}} {{#str}}pending, local_jobboard{{/str}}</span>
+                    {{/pendingcount}}
+                    {{^pendingcount}}
+                    <span class="badge bg-success">{{#str}}allvalidated, local_jobboard{{/str}}</span>
+                    {{/pendingcount}}
+                    <div class="small text-muted mt-1"><i class="fa fa-calendar me-1"></i>{{datesubmitted}}</div>
+                </div>
+                <div class="col-md-3 text-md-end">
+                    <a href="{{reviewurl}}" class="btn btn-primary btn-sm me-1">
+                        <i class="fa fa-magnifying-glass me-1"></i>{{#str}}review, local_jobboard{{/str}}
                     </a>
                     <a href="{{viewurl}}" class="btn btn-outline-secondary btn-sm">
-                        <i class="fa fa-eye me-1"></i>{{#str}}viewapplication, local_jobboard{{/str}}
+                        <i class="fa fa-eye"></i>
                     </a>
-                </div>
-            </div>
-            {{/applications}}
-            {{/hasapplications}}
-
-            {{! Empty State }}
-            {{^hasapplications}}
-            <div class="card shadow-sm">
-                <div class="card-body text-center py-5">
-                    <i class="fa fa-circle-check fa-3x text-success mb-3"></i>
-                    <h5 class="text-muted">{{#str}}nodocumentstoreview, local_jobboard{{/str}}</h5>
-                    <p class="text-muted">{{#str}}allcaughtup, local_jobboard{{/str}}</p>
-                </div>
-            </div>
-            {{/hasapplications}}
-
-            {{! Pagination }}
-            {{#pagination}}
-            <nav class="mt-4">{{{pagination}}}</nav>
-            {{/pagination}}
-        </div>
-
-        {{! Sidebar }}
-        <div class="col-lg-4">
-            <div class="jb-sidebar sticky-top" style="top: 1rem;">
-                {{! Statistics Cards }}
-                {{#stats}}
-                <div class="card shadow-sm mb-3 border-start border-{{color}} border-4">
-                    <div class="card-body py-3 d-flex align-items-center">
-                        <div class="me-3"><i class="fa fa-{{icon}} fa-2x text-{{color}}"></i></div>
-                        <div>
-                            <div class="h4 mb-0 text-{{color}}">{{value}}</div>
-                            <small class="text-muted">{{label}}</small>
-                        </div>
-                    </div>
-                </div>
-                {{/stats}}
-
-                {{! Quick Actions Card }}
-                <div class="card shadow-sm">
-                    <div class="card-header bg-light py-2">
-                        <h6 class="mb-0"><i class="fa fa-bolt text-warning me-2"></i>{{#str}}quickactions, local_jobboard{{/str}}</h6>
-                    </div>
-                    <div class="card-body py-3">
-                        <a href="{{myreviewsurl}}" class="btn btn-outline-primary btn-sm w-100 mb-2">
-                            <i class="fa fa-clipboard-list me-2"></i>{{#str}}myreviews, local_jobboard{{/str}}
-                        </a>
-                        <a href="{{dashboardurl}}" class="btn btn-outline-secondary btn-sm w-100">
-                            <i class="fa fa-home me-2"></i>{{#str}}backtodashboard, local_jobboard{{/str}}
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+    {{/applications}}
+    {{/hasapplications}}
+
+    {{! Empty State }}
+    {{^hasapplications}}
+    <div class="card shadow-sm">
+        <div class="card-body text-center py-5">
+            <i class="fa fa-circle-check fa-3x text-success mb-3"></i>
+            <h5 class="text-muted">{{#str}}nodocumentstoreview, local_jobboard{{/str}}</h5>
+            <p class="text-muted">{{#str}}allcaughtup, local_jobboard{{/str}}</p>
+        </div>
+    </div>
+    {{/hasapplications}}
+
+    {{! Pagination }}
+    {{#pagination}}
+    <nav class="mt-4">{{{pagination}}}</nav>
+    {{/pagination}}
     {{/selectedapplication}}
 </div>
 
@@ -469,9 +434,9 @@ function jobboardPreviewDocument(element) {
     const downloadUrl = element.dataset.downloadUrl;
 
     document.querySelectorAll('[data-region="documents-list"] .list-group-item').forEach(item => {
-        item.classList.remove('active');
+        item.classList.remove('active', 'bg-primary-subtle');
     });
-    element.classList.add('active');
+    element.classList.add('active', 'bg-primary-subtle');
 
     const titleEl = document.querySelector('[data-region="preview-title"]');
     if (titleEl) titleEl.textContent = filename;
@@ -516,6 +481,9 @@ function jobboardPreviewDocument(element) {
 }
 .jb-preview-fullscreen iframe, .jb-preview-fullscreen img { max-height: 100vh !important; }
 .jb-doc-item.active { background-color: rgba(13, 110, 253, 0.1) !important; }
+.jb-documents-list { scrollbar-width: thin; }
+.jb-documents-list::-webkit-scrollbar { width: 6px; }
+.jb-documents-list::-webkit-scrollbar-thumb { background-color: #dee2e6; border-radius: 3px; }
 </style>
 
 {{! JavaScript for document observations }}
@@ -559,7 +527,6 @@ require(['jquery', 'core/ajax', 'core/notification'], function($, Ajax, Notifica
         }]);
     };
 
-    // Auto-save on blur
     $(document).on('blur', '.jb-doc-observation', function() {
         var $textarea = $(this);
         var docId = $textarea.data('document-id');
