@@ -2962,7 +2962,9 @@ $string['fullscreen'] = 'Pantalla completa';
 $string['approveall'] = 'Aprobar todos';
 $string['confirmapproveall'] = '¿Está seguro de que desea aprobar todos los documentos pendientes de esta postulación?';
 $string['previewunavailable'] = 'Vista previa no disponible para este tipo de archivo';
+$string['previewnotavailable'] = 'Vista previa no disponible';
 $string['downloadtoview'] = 'Descargar para ver';
+$string['withdrawwarning'] = 'Esta acción no se puede deshacer. Deberá volver a postularse si desea ser considerado para esta posición.';
 $string['selectrejectreason'] = 'Seleccione motivo de rechazo...';
 
 // Keyboard shortcuts

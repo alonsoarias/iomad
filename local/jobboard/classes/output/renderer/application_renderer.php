@@ -385,8 +385,16 @@ trait application_renderer {
             'active' => true,
         ];
 
-        // Prepare documents data.
+        // Document statistics.
+        $docsapproved = 0;
+        $docsrejected = 0;
+        $docspending = 0;
+
+        // Prepare documents data with preview info.
         $documentsdata = [];
+        $initialpreview = null;
+        $hasinitialpreview = false;
+
         foreach ($documents as $doc) {
             $docstatus = $doc->status ?? 'pending';
             $docstatuscolor = 'warning';
@@ -398,15 +406,40 @@ trait application_renderer {
                     $docstatuscolor = 'success';
                     $docstatusicon = 'check-circle';
                     $filecolor = 'success';
+                    $docsapproved++;
                     break;
                 case 'rejected':
                     $docstatuscolor = 'danger';
                     $docstatusicon = 'times-circle';
                     $filecolor = 'danger';
+                    $docsrejected++;
+                    break;
+                default:
+                    $docspending++;
                     break;
             }
 
-            $documentsdata[] = [
+            // Get download URL.
+            $downloadurl = $doc->get_download_url() ? $doc->get_download_url()->out(false) : null;
+
+            // Get preview info.
+            $previewurl = $downloadurl;
+            $mimetype = $doc->mimetype ?? '';
+            $ispdf = ($mimetype === 'application/pdf');
+            $isimage = (strpos($mimetype, 'image/') === 0);
+            $canpreview = $ispdf || $isimage;
+
+            // Check for PDF conversion preview.
+            if (class_exists('\local_jobboard\document_services')) {
+                $previewinfo = \local_jobboard\document_services::get_preview_info($doc);
+                if ($previewinfo['status'] === 'ready' && $previewinfo['url']) {
+                    $previewurl = $previewinfo['url'];
+                    $ispdf = true;
+                    $canpreview = true;
+                }
+            }
+
+            $docdata = [
                 'id' => $doc->id,
                 'typename' => $doc->get_doctype_name(),
                 'filename' => format_string($doc->filename),
@@ -415,16 +448,43 @@ trait application_renderer {
                 'statuscolor' => $docstatuscolor,
                 'statusicon' => $docstatusicon,
                 'filecolor' => $filecolor,
-                'downloadurl' => $doc->get_download_url() ? $doc->get_download_url()->out(false) : null,
+                'downloadurl' => $downloadurl,
+                'previewurl' => $previewurl,
+                'mimetype' => $mimetype,
+                'ispdf' => $ispdf,
+                'isimage' => $isimage,
+                'canpreview' => $canpreview,
                 'rejectreason' => $doc->rejectreason ?? null,
                 'canreupload' => $isowner && $docstatus === 'rejected' && in_array($application->status, ['docs_rejected', 'submitted']),
                 'reuploadurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id, 'reupload' => $doc->id]))->out(false),
             ];
+
+            $documentsdata[] = $docdata;
+
+            // Set initial preview to first document that can be previewed.
+            if (!$hasinitialpreview && $canpreview) {
+                $initialpreview = $docdata;
+                $hasinitialpreview = true;
+            }
         }
 
-        // Prepare history data.
+        // If no previewable document found, use first document.
+        if (!$hasinitialpreview && !empty($documentsdata)) {
+            $initialpreview = $documentsdata[0];
+            $hasinitialpreview = true;
+        }
+
+        // Calculate progress percentages.
+        $totaldocs = count($documentsdata);
+        $docsprogress = $totaldocs > 0 ? round(($docsapproved / $totaldocs) * 100) : 0;
+        $docsrejectedpercent = $totaldocs > 0 ? round(($docsrejected / $totaldocs) * 100) : 0;
+
+        // Prepare history data with islast flag.
         $historydata = [];
+        $historycount = count($history);
+        $idx = 0;
         foreach ($history as $entry) {
+            $idx++;
             $hstatuscolor = $this->get_application_status_class($entry->newstatus);
             $changedbyname = '';
             if (!empty($entry->changedby)) {
@@ -439,6 +499,7 @@ trait application_renderer {
                 'timeformatted' => userdate($entry->timecreated, get_string('strftimedatetime', 'langconfig')),
                 'notes' => $entry->notes ?? null,
                 'changedbyname' => $changedbyname,
+                'islast' => ($idx === $historycount),
             ];
         }
 
@@ -465,11 +526,22 @@ trait application_renderer {
         // Applicant info (for reviewers).
         $applicantdata = null;
         if ($canreview || $canmanage) {
+            // Generate initials.
+            $names = explode(' ', fullname($applicant));
+            $initials = '';
+            foreach ($names as $name) {
+                if (!empty($name)) {
+                    $initials .= strtoupper(substr($name, 0, 1));
+                }
+            }
+            $initials = substr($initials, 0, 2);
+
             $applicantdata = [
                 'fullname' => fullname($applicant),
                 'email' => $applicant->email,
                 'idnumber' => $applicant->idnumber ?? null,
                 'phone' => $applicant->phone1 ?? null,
+                'initials' => $initials,
             ];
         }
 
@@ -484,7 +556,9 @@ trait application_renderer {
         }
 
         return [
+            'pagetitle' => get_string('applicationdetails', 'local_jobboard'),
             'breadcrumbs' => $breadcrumbs,
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'application' => [
                 'id' => $application->id,
                 'status' => $application->status,
@@ -511,7 +585,14 @@ trait application_renderer {
             'exemptionref' => $exemptionref,
             'documents' => $documentsdata,
             'hasdocuments' => !empty($documentsdata),
-            'documentcount' => count($documentsdata),
+            'documentcount' => $totaldocs,
+            'docsapproved' => $docsapproved,
+            'docsrejected' => $docsrejected,
+            'docspending' => $docspending,
+            'docsprogress' => $docsprogress,
+            'docsrejectedpercent' => $docsrejectedpercent,
+            'initialpreview' => $initialpreview,
+            'hasinitialpreview' => $hasinitialpreview,
             'history' => $historydata,
             'hashistory' => !empty($historydata),
             'isowner' => $isowner,

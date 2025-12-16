@@ -2946,7 +2946,9 @@ $string['fullscreen'] = 'Fullscreen';
 $string['approveall'] = 'Approve all';
 $string['confirmapproveall'] = 'Are you sure you want to approve all pending documents for this application?';
 $string['previewunavailable'] = 'Preview not available for this file type';
+$string['previewnotavailable'] = 'Preview not available';
 $string['downloadtoview'] = 'Download to view';
+$string['withdrawwarning'] = 'This action cannot be undone. You will need to re-apply if you want to be considered for this position.';
 $string['selectrejectreason'] = 'Select rejection reason...';
 
 // Keyboard shortcuts
