@@ -973,18 +973,25 @@
 
 /* Vacancy filter select - Handle long option labels */
 .jb-vacancy-filter {
-    max-width: 100%;
+    max-width: 500px;
+    width: 100%;
     text-overflow: ellipsis;
-    white-space: nowrap;
     overflow: hidden;
 }
 
 /* Limit the visual width of long options */
 .jb-vacancy-filter option {
-    max-width: 400px;
+    max-width: 480px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+/* Responsive max-width for smaller screens */
+@media (max-width: 991.98px) {
+    .jb-vacancy-filter {
+        max-width: 100%;
+    }
 }
 
 /* Filter form horizontal layout */
