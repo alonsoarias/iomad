@@ -146,7 +146,7 @@
     {{/showinginfo}}
 
     {{! Vacancy Cards Grid }}
-    <div id="vacancies-main-content">
+    <div id="vacancies-main-content" data-region="filter-results">
         {{#hasvacancies}}
         <section class="row" aria-label="{{#str}}vacancies, local_jobboard{{/str}}">
             {{#vacancies}}
@@ -261,14 +261,14 @@
             {{/browseconvocatoriasurl}}
         </div>
         {{/hasvacancies}}
-    </div>
 
-    {{! Pagination }}
-    {{#pagination}}
-    <nav class="mt-4 jb-fade-in" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
-        {{{pagination}}}
-    </nav>
-    {{/pagination}}
+        {{! Pagination }}
+        {{#pagination}}
+        <nav class="mt-4 jb-fade-in" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
+            {{{pagination}}}
+        </nav>
+        {{/pagination}}
+    </div>{{! Close filter-results }}
 
     {{! Navigation Footer }}
     <nav class="jb-navigation-footer d-flex justify-content-between align-items-center mt-4 py-3 border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">

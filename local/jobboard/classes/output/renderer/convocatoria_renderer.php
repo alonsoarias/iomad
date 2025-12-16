@@ -59,6 +59,16 @@ trait convocatoria_renderer {
     }
 
     /**
+     * Render convocatorias list results partial (for AJAX).
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_convocatorias_results(array $data): string {
+        return $this->render_from_template('local_jobboard/partials/convocatorias_results', $data);
+    }
+
+    /**
      * Render view convocatoria page.
      *
      * @param array $data Page data.

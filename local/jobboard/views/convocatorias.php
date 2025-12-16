@@ -250,13 +250,22 @@ $data = $renderer->prepare_convocatorias_page_data(
     sesskey()
 );
 
-// Output the page.
-echo $OUTPUT->header();
-echo $renderer->render_convocatorias_page($data);
+// Check for AJAX request.
+$ajax = optional_param('ajax', 0, PARAM_INT);
 
-// Initialize filter auto-submit for all users.
-$PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
-    'formSelector' => '.jb-filter-form',
-]]);
+if ($ajax) {
+    // Return only the results partial for AJAX requests.
+    echo $renderer->render_convocatorias_results($data);
+} else {
+    // Output the full page.
+    echo $OUTPUT->header();
+    echo $renderer->render_convocatorias_page($data);
 
-echo $OUTPUT->footer();
+    // Initialize filter auto-submit for all users.
+    $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+        'formSelector' => '.jb-filter-form',
+        'resultsSelector' => '[data-region="filter-results"]',
+    ]]);
+
+    echo $OUTPUT->footer();
+}

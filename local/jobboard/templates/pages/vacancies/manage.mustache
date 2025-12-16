@@ -161,7 +161,7 @@
     {{/showinginfo}}
 
     {{! Vacancies Table }}
-    <div id="manage-main-content">
+    <div id="manage-main-content" data-region="filter-results">
         {{#hasvacancies}}
         <div class="card shadow-sm mb-4 jb-fade-in-up jb-table-card" style="animation-delay: 0.15s;">
             <div class="card-body p-0">
@@ -251,14 +251,14 @@
             </div>
         </div>
         {{/hasvacancies}}
-    </div>
 
-    {{! Pagination }}
-    {{#pagination}}
-    <nav class="mt-4 jb-fade-in" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
-        {{{pagination}}}
-    </nav>
-    {{/pagination}}
+        {{! Pagination }}
+        {{#pagination}}
+        <nav class="mt-4 jb-fade-in" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
+            {{{pagination}}}
+        </nav>
+        {{/pagination}}
+    </div>{{! Close filter-results }}
 
     {{! Navigation Footer }}
     <nav class="jb-navigation-footer d-flex justify-content-between align-items-center mt-4 py-3 border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">

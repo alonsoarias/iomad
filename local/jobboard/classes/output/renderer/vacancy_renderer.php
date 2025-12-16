@@ -50,6 +50,16 @@ trait vacancy_renderer {
     }
 
     /**
+     * Render vacancies results partial (for AJAX).
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_vacancies_results(array $data): string {
+        return $this->render_from_template('local_jobboard/partials/vacancies_results', $data);
+    }
+
+    /**
      * Render vacancy management page.
      *
      * @param array $data Page data.
@@ -57,6 +67,16 @@ trait vacancy_renderer {
      */
     public function render_manage_page(array $data): string {
         return $this->render_from_template('local_jobboard/pages/vacancies/manage', $data);
+    }
+
+    /**
+     * Render vacancy management results partial (for AJAX).
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_manage_results(array $data): string {
+        return $this->render_from_template('local_jobboard/partials/manage_results', $data);
     }
 
     /**

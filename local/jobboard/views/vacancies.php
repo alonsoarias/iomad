@@ -110,19 +110,28 @@ $data = $renderer->prepare_vacancies_page_data(
     $canviewall
 );
 
-// Output the page.
-echo $OUTPUT->header();
-echo $renderer->render_vacancies_page($data);
+// Check for AJAX request.
+$ajax = optional_param('ajax', 0, PARAM_INT);
 
-// Initialize JavaScript via AMD modules.
-$PAGE->requires->js_call_amd('local_jobboard/card_actions', 'init', [[
-    'buttonSelector' => '.jb-vacancy-card .jb-card-action',
-    'cardSelector' => '.jb-vacancy-card'
-]]);
+if ($ajax) {
+    // Return only the results partial for AJAX requests.
+    echo $renderer->render_vacancies_results($data);
+} else {
+    // Output the full page.
+    echo $OUTPUT->header();
+    echo $renderer->render_vacancies_page($data);
 
-// Initialize filter auto-submit for all users.
-$PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
-    'formSelector' => '.jb-filter-form',
-]]);
+    // Initialize JavaScript via AMD modules.
+    $PAGE->requires->js_call_amd('local_jobboard/card_actions', 'init', [[
+        'buttonSelector' => '.jb-vacancy-card .jb-card-action',
+        'cardSelector' => '.jb-vacancy-card'
+    ]]);
 
-echo $OUTPUT->footer();
+    // Initialize filter auto-submit for all users.
+    $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+        'formSelector' => '.jb-filter-form',
+        'resultsSelector' => '[data-region="filter-results"]',
+    ]]);
+
+    echo $OUTPUT->footer();
+}

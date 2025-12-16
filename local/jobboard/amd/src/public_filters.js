@@ -191,7 +191,7 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
      *
      * @param {Object} config Configuration object.
      * @param {string} config.formSelector CSS selector for filter form. Defaults to '.jb-filter-form'.
-     * @param {string} config.resultsSelector CSS selector for results. Defaults to '[data-region="vacancy-cards"]'.
+     * @param {string} config.resultsSelector CSS selector for results. Defaults to '[data-region="filter-results"]'.
      */
     var init = function(config) {
         if (state.initialized) {
@@ -200,7 +200,7 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
 
         config = config || {};
         state.formSelector = config.formSelector || '.jb-filter-form';
-        state.resultsSelector = config.resultsSelector || '[data-region="vacancy-cards"]';
+        state.resultsSelector = config.resultsSelector || '[data-region="filter-results"]';
 
         // Event delegation.
         document.body.addEventListener('change', onFilterChange);

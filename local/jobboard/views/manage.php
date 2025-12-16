@@ -303,19 +303,28 @@ $data = $renderer->prepare_manage_page_data(
     $caps
 );
 
-// Output the page.
-echo $OUTPUT->header();
-echo $renderer->render_manage_page($data);
+// Check for AJAX request.
+$ajax = optional_param('ajax', 0, PARAM_INT);
 
-// Initialize filter auto-submit for all users.
-$PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
-    'formSelector' => '.jb-filter-form',
-]]);
+if ($ajax) {
+    // Return only the results partial for AJAX requests.
+    echo $renderer->render_manage_results($data);
+} else {
+    // Output the full page.
+    echo $OUTPUT->header();
+    echo $renderer->render_manage_page($data);
 
-// Add JavaScript for AJAX department loading (IOMAD).
-if ($isiomad && has_capability('local/jobboard:viewallvacancies', $context)) {
-    $allDepartmentsLabel = get_string('alldepartments', 'local_jobboard');
-    // IOMAD department cascade is handled separately.
+    // Initialize filter auto-submit for all users.
+    $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+        'formSelector' => '.jb-filter-form',
+        'resultsSelector' => '[data-region="filter-results"]',
+    ]]);
+
+    // Add JavaScript for AJAX department loading (IOMAD).
+    if ($isiomad && has_capability('local/jobboard:viewallvacancies', $context)) {
+        $allDepartmentsLabel = get_string('alldepartments', 'local_jobboard');
+        // IOMAD department cascade is handled separately.
+    }
+
+    echo $OUTPUT->footer();
 }
-
-echo $OUTPUT->footer();

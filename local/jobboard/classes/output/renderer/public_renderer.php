@@ -89,6 +89,16 @@ trait public_renderer {
     }
 
     /**
+     * Render browse convocatorias results partial (for AJAX).
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_browse_convocatorias_results(array $data): string {
+        return $this->render_from_template('local_jobboard/partials/browse_convocatorias_results', $data);
+    }
+
+    /**
      * Render update profile page.
      *
      * @param array $data Page data.
