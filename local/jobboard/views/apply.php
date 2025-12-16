@@ -136,6 +136,8 @@ if ($exemption) {
 // ============================================================================
 // STEP 4: Set up page
 // ============================================================================
+$PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title(get_string('applytovacancy', 'local_jobboard') . ': ' . format_string($vacancy->title));
 $PAGE->set_heading(get_string('applytovacancy', 'local_jobboard'));
 

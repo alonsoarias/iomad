@@ -45,6 +45,7 @@ if (!iomad_helper::can_user_view_vacancy($vacancy->to_record())) {
 
 // Page setup.
 $PAGE->set_pagelayout('standard');
+$PAGE->activityheader->disable();
 $PAGE->set_title($vacancy->title);
 $PAGE->set_heading($vacancy->title);
 
