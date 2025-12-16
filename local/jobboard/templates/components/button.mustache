@@ -1,30 +1,83 @@
 {{!
     @template local_jobboard/components/button
 
-    Button component with various styles.
+    Button component with various styles and states.
+    Enhanced with loading states, icons, and better accessibility.
 
     Context variables:
     * label (string) - Button text
     * url (string) - Link URL (renders as <a>)
+    * type (string) - Button type for <button>: submit, button, reset
     * color (string) - Color: primary, secondary, success, danger, warning, info
-    * outline (bool) - Whether to use outline style
-    * size (string) - Size: sm, lg (default is normal)
+    * variant (string) - Style variant: solid (default), outline, ghost, soft
+    * size (string) - Size: xs, sm, (default), lg, xl
     * icon (string) - Optional icon
     * iconright (bool) - Place icon on right side
+    * icononly (bool) - Icon-only button (requires icon)
     * block (bool) - Full width button
     * disabled (bool) - Disabled state
+    * loading (bool) - Loading state with spinner
+    * loadingtext (string) - Text to show during loading
     * confirm (string) - Confirmation message for onclick
+    * tooltip (string) - Tooltip text
+    * id (string) - Button ID
+    * name (string) - Button name for forms
+    * value (string) - Button value for forms
+    * arialabel (string) - Custom aria-label (auto-generated for icononly)
 
     Example context (json):
     {
-        "label": "Save",
+        "label": "Save Changes",
         "url": "/save",
         "color": "primary",
-        "icon": "save"
+        "icon": "save",
+        "variant": "solid"
     }
 }}
-<a href="{{url}}" class="btn jb-btn-{{#outline}}outline-{{/outline}}{{color}}{{#size}} jb-btn-{{size}}{{/size}}{{#block}} w-100{{/block}}"{{#disabled}} disabled aria-disabled="true"{{/disabled}}{{#confirm}} onclick="return confirm('{{confirm}}');"{{/confirm}}>
-    {{^iconright}}{{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}{{/iconright}}
-    {{label}}
-    {{#iconright}}{{#icon}}<i class="fa fa-{{icon}} ms-2" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+{{#url}}
+{{! Link button }}
+<a href="{{url}}"
+   class="btn jb-btn{{#variant}}{{#isoutline}}-outline{{/isoutline}}{{#isghost}}-ghost{{/isghost}}{{#issoft}}-soft{{/issoft}}{{/variant}}-{{color}}{{#size}} jb-btn-{{size}}{{/size}}{{#block}} w-100{{/block}}{{#icononly}} jb-btn-icon{{/icononly}}{{#loading}} jb-btn-loading{{/loading}}"
+   {{#id}}id="{{id}}"{{/id}}
+   {{#disabled}}aria-disabled="true" tabindex="-1"{{/disabled}}
+   {{#confirm}}onclick="return confirm('{{confirm}}');"{{/confirm}}
+   {{#tooltip}}data-tooltip="{{tooltip}}" class="jb-tooltip"{{/tooltip}}
+   {{#arialabel}}aria-label="{{arialabel}}"{{/arialabel}}
+   {{#icononly}}{{^arialabel}}aria-label="{{label}}"{{/arialabel}}{{/icononly}}
+   role="button">
+    {{#loading}}
+    <span class="jb-spinner jb-spinner-sm" aria-hidden="true"></span>
+    <span class="visually-hidden">{{#loadingtext}}{{loadingtext}}{{/loadingtext}}{{^loadingtext}}{{#str}}loading{{/str}}{{/loadingtext}}</span>
+    {{/loading}}
+    {{^loading}}
+    {{^iconright}}{{#icon}}<i class="fa fa-{{icon}}{{^icononly}} me-2{{/icononly}}" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+    {{^icononly}}{{label}}{{/icononly}}
+    {{#iconright}}{{#icon}}<i class="fa fa-{{icon}}{{^icononly}} ms-2{{/icononly}}" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+    {{/loading}}
 </a>
+{{/url}}
+
+{{^url}}
+{{! Form button }}
+<button type="{{#type}}{{type}}{{/type}}{{^type}}button{{/type}}"
+        class="btn jb-btn{{#variant}}{{#isoutline}}-outline{{/isoutline}}{{#isghost}}-ghost{{/isghost}}{{#issoft}}-soft{{/issoft}}{{/variant}}-{{color}}{{#size}} jb-btn-{{size}}{{/size}}{{#block}} w-100{{/block}}{{#icononly}} jb-btn-icon{{/icononly}}{{#loading}} jb-btn-loading{{/loading}}"
+        {{#id}}id="{{id}}"{{/id}}
+        {{#name}}name="{{name}}"{{/name}}
+        {{#value}}value="{{value}}"{{/value}}
+        {{#disabled}}disabled aria-disabled="true"{{/disabled}}
+        {{#loading}}disabled{{/loading}}
+        {{#confirm}}onclick="return confirm('{{confirm}}');"{{/confirm}}
+        {{#tooltip}}data-tooltip="{{tooltip}}"{{/tooltip}}
+        {{#arialabel}}aria-label="{{arialabel}}"{{/arialabel}}
+        {{#icononly}}{{^arialabel}}aria-label="{{label}}"{{/arialabel}}{{/icononly}}>
+    {{#loading}}
+    <span class="jb-spinner jb-spinner-sm" aria-hidden="true"></span>
+    <span class="visually-hidden">{{#loadingtext}}{{loadingtext}}{{/loadingtext}}{{^loadingtext}}{{#str}}loading{{/str}}{{/loadingtext}}</span>
+    {{/loading}}
+    {{^loading}}
+    {{^iconright}}{{#icon}}<i class="fa fa-{{icon}}{{^icononly}} me-2{{/icononly}}" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+    {{^icononly}}{{label}}{{/icononly}}
+    {{#iconright}}{{#icon}}<i class="fa fa-{{icon}}{{^icononly}} ms-2{{/icononly}}" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+    {{/loading}}
+</button>
+{{/url}}

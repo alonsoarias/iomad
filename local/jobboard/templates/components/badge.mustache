@@ -2,21 +2,43 @@
     @template local_jobboard/components/badge
 
     Badge component for status indicators.
+    Enhanced with multiple variants: solid, soft, outline.
 
     Context variables:
     * label (string) - Badge text
     * color (string) - Color: primary, secondary, success, danger, warning, info
+    * variant (string) - Style variant: solid (default), soft, outline
     * icon (string) - Optional icon
-    * pill (bool) - Whether to use pill style
+    * iconright (bool) - Place icon on right side
+    * pill (bool) - Whether to use pill style (default: true)
+    * size (string) - Size: sm, (default), lg
+    * pulse (bool) - Add pulse animation for attention
+    * dot (bool) - Show as dot indicator only (no label)
+    * sronly (string) - Screen reader only text (for dot variant)
 
     Example context (json):
     {
         "label": "Published",
         "color": "success",
-        "icon": "check"
+        "variant": "soft",
+        "icon": "check",
+        "pill": true
     }
 }}
-<span class="badge jb-badge-{{color}}{{#pill}} rounded-pill{{/pill}}">
-    {{#icon}}<i class="fa fa-{{icon}} me-1" aria-hidden="true"></i>{{/icon}}
-    {{label}}
+{{#dot}}
+{{! Dot indicator variant }}
+<span class="jb-badge jb-badge-dot jb-badge-{{color}}{{#pulse}} jb-pulse{{/pulse}}"
+      aria-hidden="{{^sronly}}true{{/sronly}}"
+      {{#sronly}}role="status"{{/sronly}}>
+    {{#sronly}}<span class="visually-hidden">{{sronly}}</span>{{/sronly}}
 </span>
+{{/dot}}
+
+{{^dot}}
+<span class="jb-badge{{#size}} jb-badge-{{size}}{{/size}}{{^pill}} rounded{{/pill}}{{#pill}} rounded-pill{{/pill}}{{#pulse}} jb-pulse{{/pulse}} {{#variant}}{{#issoft}}jb-badge-soft-{{color}}{{/issoft}}{{#isoutline}}jb-badge-outline-{{color}}{{/isoutline}}{{^issoft}}{{^isoutline}}jb-badge-{{color}}{{/isoutline}}{{/issoft}}{{/variant}}{{^variant}}jb-badge-{{color}}{{/variant}}"
+      {{#label}}aria-label="{{label}}"{{/label}}>
+    {{^iconright}}{{#icon}}<i class="fa fa-{{icon}}{{#label}} me-1{{/label}}" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+    {{label}}
+    {{#iconright}}{{#icon}}<i class="fa fa-{{icon}}{{#label}} ms-1{{/label}}" aria-hidden="true"></i>{{/icon}}{{/iconright}}
+</span>
+{{/dot}}

@@ -2,14 +2,14 @@
     @template local_jobboard/components/card
 
     Card component with header, body and optional footer.
-    Enhanced with loading states, animations, and better accessibility.
+    Enhanced with loading states, animations, variants, and better accessibility.
 
     Context variables:
     * title (string) - Card header title
     * titleid (string) - ID for header (for aria-labelledby)
     * icon (string) - Optional header icon
     * headercolor (string) - Header background color: primary, secondary, success, danger, warning, info, light, dark, white
-    * badge (object) - Optional badge {value, color}
+    * badge (object) - Optional badge {value, color, variant}
     * body (string) - Card body content (HTML)
     * footer (string) - Optional footer content (HTML)
     * shadow (bool) - Whether to add shadow (default: true)
@@ -18,9 +18,11 @@
     * collapsible (bool) - Make card collapsible
     * collapsed (bool) - Start collapsed (requires collapsible)
     * noPadding (bool) - Remove body padding
-    * actions (array) - Header action buttons [{url, icon, label, color}]
-    * bordercolor (string) - Optional border accent color
+    * actions (array) - Header action buttons [{url, icon, label, color, text}]
+    * bordercolor (string) - Optional border accent color (left border)
     * hoverable (bool) - Add hover effect
+    * variant (string) - Card variant: default, elevated, outlined, flat
+    * fullheight (bool) - Use h-100 for equal height cards
 
     Example context (json):
     {
@@ -31,29 +33,37 @@
         "body": "<p>Content here</p>",
         "shadow": true,
         "animate": true,
+        "variant": "elevated",
         "actions": [{"url": "#", "icon": "ellipsis-v", "label": "Options"}]
     }
 }}
 {{#loading}}
 {{! Skeleton loading state }}
-<div class="card shadow-sm" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="card-header bg-light">
-        <div class="jb-skeleton-text" style="width: 50%; height: 1.2em;"></div>
+<div class="card jb-card{{#shadow}} shadow-sm{{/shadow}}" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
+    <div class="card-header bg-light border-0">
+        <div class="d-flex align-items-center">
+            <div class="jb-skeleton jb-skeleton-avatar me-3" style="width: 32px; height: 32px;"></div>
+            <div class="flex-grow-1">
+                <div class="jb-skeleton jb-skeleton-text" style="width: 50%; height: 1rem;"></div>
+            </div>
+        </div>
     </div>
     <div class="card-body">
-        <div class="jb-skeleton-text" style="width: 100%;"></div>
-        <div class="jb-skeleton-text" style="width: 85%;"></div>
-        <div class="jb-skeleton-text" style="width: 70%;"></div>
+        <div class="jb-skeleton jb-skeleton-text" style="width: 100%;"></div>
+        <div class="jb-skeleton jb-skeleton-text" style="width: 85%;"></div>
+        <div class="jb-skeleton jb-skeleton-text" style="width: 70%;"></div>
+        <div class="jb-skeleton jb-skeleton-text mt-3" style="width: 60%;"></div>
     </div>
 </div>
 {{/loading}}
 
 {{^loading}}
-<div class="jb-card{{#shadow}} shadow-sm{{/shadow}}{{^shadow}}{{^noshadow}} shadow-sm{{/noshadow}}{{/shadow}}{{#animate}} jb-fade-in-up{{/animate}}{{#bordercolor}} jb-border-{{bordercolor}}{{/bordercolor}}{{#hoverable}} jb-hover-lift{{/hoverable}}"
-     {{#titleid}}aria-labelledby="{{titleid}}"{{/titleid}}>
+<div class="card jb-card{{#variant}}{{#iselevated}} jb-card-elevated{{/iselevated}}{{#isoutlined}} border{{/isoutlined}}{{#isflat}} border-0 bg-transparent{{/isflat}}{{/variant}}{{#shadow}}{{^isflat}} shadow-sm{{/isflat}}{{/shadow}}{{^shadow}}{{^noshadow}}{{^isflat}} shadow-sm{{/isflat}}{{/noshadow}}{{/shadow}}{{#animate}} jb-fade-in-up{{/animate}}{{#bordercolor}} jb-card-accent-{{bordercolor}}{{/bordercolor}}{{#hoverable}} jb-card-interactive{{/hoverable}}{{#fullheight}} h-100{{/fullheight}}"
+     {{#titleid}}aria-labelledby="{{titleid}}"{{/titleid}}
+     {{#hoverable}}tabindex="0"{{/hoverable}}>
 
     {{#title}}
-    <div class="card-header{{#headercolor}} jb-bg-{{headercolor}}{{#headerwhitetext}} text-white{{/headerwhitetext}}{{/headercolor}} d-flex justify-content-between align-items-center{{#collapsible}} jb-collapse-header{{/collapsible}}"
+    <div class="card-header{{#headercolor}} jb-card-header-{{headercolor}}{{/headercolor}}{{^headercolor}} bg-transparent{{/headercolor}} d-flex justify-content-between align-items-center{{#collapsible}} jb-collapse-header{{/collapsible}} py-3"
          {{#collapsible}}
          data-bs-toggle="collapse"
          data-bs-target="#collapse-{{titleid}}"
@@ -62,23 +72,31 @@
          role="button"
          tabindex="0"
          {{/collapsible}}>
-        <h3 class="fs-6 mb-0 d-flex align-items-center" {{#titleid}}id="{{titleid}}"{{/titleid}}>
-            {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}
+        <h3 class="card-title fs-6 fw-semibold mb-0 d-flex align-items-center" {{#titleid}}id="{{titleid}}"{{/titleid}}>
+            {{#icon}}
+            <span class="jb-card-icon me-2 d-inline-flex align-items-center justify-content-center rounded{{#headercolor}} bg-white bg-opacity-25{{/headercolor}}{{^headercolor}} bg-{{#iconcolor}}{{iconcolor}}{{/iconcolor}}{{^iconcolor}}primary{{/iconcolor}}-subtle{{/headercolor}}" style="width: 32px; height: 32px;">
+                <i class="fa fa-{{icon}}{{^headercolor}} text-{{#iconcolor}}{{iconcolor}}{{/iconcolor}}{{^iconcolor}}primary{{/iconcolor}}{{/headercolor}}" aria-hidden="true"></i>
+            </span>
+            {{/icon}}
             <span>{{title}}</span>
         </h3>
         <div class="d-flex align-items-center gap-2">
             {{#badge}}
-            <span class="badge jb-badge-{{color}}">{{value}}</span>
+            <span class="badge {{#variant}}jb-badge-{{variant}}-{{/variant}}{{^variant}}jb-badge-{{/variant}}{{color}}">
+                {{#icon}}<i class="fa fa-{{icon}} me-1" aria-hidden="true"></i>{{/icon}}
+                {{value}}
+            </span>
             {{/badge}}
             {{#actions}}
-            <a href="{{url}}" class="btn btn-sm jb-btn-{{#color}}{{color}}{{/color}}{{^color}}outline-secondary{{/color}}"
+            <a href="{{url}}"
+               class="btn btn-sm jb-btn-{{#color}}{{color}}{{/color}}{{^color}}ghost{{/color}}"
                {{#label}}title="{{label}}" aria-label="{{label}}"{{/label}}>
                 <i class="fa fa-{{icon}}" aria-hidden="true"></i>
-                {{#text}}<span class="ms-1 d-none jb-d-md-inline">{{text}}</span>{{/text}}
+                {{#text}}<span class="ms-1 d-none d-md-inline">{{text}}</span>{{/text}}
             </a>
             {{/actions}}
             {{#collapsible}}
-            <i class="fa fa-chevron-down jb-collapse-icon ms-2" aria-hidden="true"></i>
+            <i class="fa fa-chevron-down jb-collapse-icon text-muted" aria-hidden="true"></i>
             {{/collapsible}}
         </div>
     </div>
@@ -97,7 +115,7 @@
     {{/collapsible}}
 
     {{#footer}}
-    <div class="card-footer bg-light">
+    <div class="card-footer bg-light border-top-0 py-3">
         {{{footer}}}
     </div>
     {{/footer}}

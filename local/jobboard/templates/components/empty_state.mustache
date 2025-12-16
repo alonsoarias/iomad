@@ -2,66 +2,90 @@
     @template local_jobboard/components/empty_state
 
     Empty state component for when no data is available.
-    Enhanced with better visual hierarchy and optional illustrations.
+    Enhanced with better visual hierarchy, animations, and accessibility.
 
     Context variables:
     * icon (string) - FontAwesome icon name (default: folder-open)
     * title (string) - Main message
-    * description (string) - Optional secondary message
+    * description (string) - Optional secondary message (supports HTML)
     * action (object) - Optional primary action button {url, label, color, icon}
-    * secondaryaction (object) - Optional secondary action {url, label}
+    * secondaryaction (object) - Optional secondary action {url, label, icon}
     * compact (bool) - Use compact variant with less padding
     * animate (bool) - Enable entrance animation
-    * variant (string) - Visual variant: default, minimal, illustrated
+    * iconcolor (string) - Icon color: primary, secondary, success, warning, danger, info
+    * centered (bool) - Center in container (default: true)
 
     Example context (json):
     {
-        "icon": "folder-open",
-        "title": "No items found",
-        "description": "Try adjusting your filters or create a new item",
-        "action": {"url": "/create", "label": "Create New", "color": "primary", "icon": "plus"},
-        "secondaryaction": {"url": "/help", "label": "Learn more"},
+        "icon": "inbox",
+        "iconcolor": "primary",
+        "title": "No applications yet",
+        "description": "When candidates apply for your vacancies, they will appear here.",
+        "action": {"url": "/create", "label": "Create Vacancy", "color": "primary", "icon": "plus"},
+        "secondaryaction": {"url": "/help", "label": "Learn more", "icon": "question-circle"},
         "animate": true
     }
 }}
-<div class="jb-empty-state text-center{{#compact}} py-3{{/compact}}{{^compact}} py-5{{/compact}}{{#animate}} jb-fade-in-up{{/animate}}"
+<div class="jb-empty-state{{#compact}} jb-empty-state-compact{{/compact}}{{#animate}} jb-fade-in-up{{/animate}}{{^centered}}{{/centered}}{{#centered}} text-center{{/centered}}"
      role="status"
-     aria-live="polite"
-     {{#variant}}data-variant="{{variant}}"{{/variant}}>
+     aria-live="polite">
 
-    {{! Icon }}
-    <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}folder-open{{/icon}} fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
+    {{! Icon with subtle background circle }}
+    <div class="jb-empty-state-icon-wrapper mb-4">
+        <div class="jb-empty-state-icon-bg d-inline-flex align-items-center justify-content-center rounded-circle {{#iconcolor}}bg-{{iconcolor}}-subtle{{/iconcolor}}{{^iconcolor}}bg-secondary-subtle{{/iconcolor}}"
+             style="width: 96px; height: 96px;"
+             aria-hidden="true">
+            <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}folder-open{{/icon}} jb-empty-state-icon {{#iconcolor}}text-{{iconcolor}}{{/iconcolor}}{{^iconcolor}}text-secondary{{/iconcolor}}"
+               style="font-size: 2.5rem; opacity: 0.7;"></i>
+        </div>
+    </div>
 
     {{! Title }}
-    <h3 class="fs-5 fw-medium text-dark mb-2">{{title}}</h3>
+    <h3 class="jb-empty-state-title h5 fw-semibold text-dark mb-2">
+        {{title}}
+    </h3>
 
     {{! Description }}
     {{#description}}
-    <p class="text-muted mb-4 mx-auto" style="max-width: 400px;">{{description}}</p>
+    <p class="jb-empty-state-description text-muted mb-4 mx-auto" style="max-width: 400px; line-height: 1.6;">
+        {{{description}}}
+    </p>
     {{/description}}
 
     {{! Actions }}
-    {{#action}}
-    <div class="jb-empty-state-actions d-flex flex-column jb-flex-sm-row justify-content-center align-items-center gap-2">
-        <a href="{{url}}" class="btn jb-btn-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}}">
+    <div class="jb-empty-state-actions d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3">
+        {{#action}}
+        <a href="{{url}}"
+           class="btn jb-btn-{{#color}}{{color}}{{/color}}{{^color}}primary{{/color}} px-4">
             {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}
             {{label}}
         </a>
+        {{/action}}
+
         {{#secondaryaction}}
-        <a href="{{url}}" class="btn btn-link text-muted">
+        <a href="{{url}}"
+           class="btn jb-btn-ghost text-muted">
+            {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}
             {{label}}
         </a>
         {{/secondaryaction}}
     </div>
-    {{/action}}
 
-    {{^action}}
-    {{#secondaryaction}}
-    <div class="jb-empty-state-actions">
-        <a href="{{url}}" class="btn btn-outline-secondary">
-            {{label}}
-        </a>
+    {{! Helpful tips section (optional) }}
+    {{#tips}}
+    <div class="jb-empty-state-tips mt-5 pt-4 border-top">
+        <p class="text-muted small mb-3">
+            <i class="fa fa-lightbulb me-1" aria-hidden="true"></i>
+            {{#str}}helpful_tips, local_jobboard{{/str}}
+        </p>
+        <ul class="list-unstyled text-muted small mb-0">
+            {{#.}}
+            <li class="mb-1">
+                <i class="fa fa-chevron-right fa-xs me-2 opacity-50" aria-hidden="true"></i>
+                {{.}}
+            </li>
+            {{/.}}
+        </ul>
     </div>
-    {{/secondaryaction}}
-    {{/action}}
+    {{/tips}}
 </div>
