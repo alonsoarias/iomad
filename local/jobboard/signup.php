@@ -189,7 +189,7 @@ if ($vacancy) {
 }
 
 // Render using template.
-echo $OUTPUT->render_from_template('local_jobboard/signup_page', $templatecontext);
+echo $OUTPUT->render_from_template('local_jobboard/pages/user/signup', $templatecontext);
 
 // JavaScript for dynamic department loading.
 if ($isiomad) {
