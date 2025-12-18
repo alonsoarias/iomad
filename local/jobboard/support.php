@@ -51,8 +51,16 @@ if ($mform->is_cancelled()) {
 }
 
 if ($data = $mform->get_data()) {
-    // Prepare email data.
-    $supportemail = get_string('supportemail', 'local_jobboard');
+    // Get support emails from plugin settings (comma or newline separated).
+    $supportemailssetting = get_config('local_jobboard', 'support_emails');
+    if (empty($supportemailssetting)) {
+        // Default emails if setting is not configured.
+        $supportemailssetting = 'mtic@iser.edu.co, soporteplataformas@iser.edu.co';
+    }
+
+    // Parse email addresses (support both comma and newline separation).
+    $supportemailssetting = str_replace(["\r\n", "\r", "\n"], ',', $supportemailssetting);
+    $supportemails = array_filter(array_map('trim', explode(',', $supportemailssetting)));
 
     // Build email subject.
     $subject = get_string('support_email_subject', 'local_jobboard') . ': ' . $data->error_type;
@@ -92,12 +100,6 @@ if ($data = $mform->get_data()) {
     $body .= get_string('support_browser', 'local_jobboard') . ": " . ($_SERVER['HTTP_USER_AGENT'] ?? 'Unknown') . "\n";
     $body .= get_string('support_timestamp', 'local_jobboard') . ": " . userdate(time(), get_string('strftimedatetime', 'langconfig')) . "\n";
 
-    // Send email using Moodle's email API.
-    $supportuser = \core_user::get_support_user();
-    $supportuser->email = $supportemail;
-    $supportuser->firstname = 'Soporte';
-    $supportuser->lastname = 'Técnico';
-
     // Create a fake user for the reporter if not logged in.
     if (isloggedin() && !isguestuser()) {
         global $USER;
@@ -112,8 +114,22 @@ if ($data = $mform->get_data()) {
         $fromuser->mailformat = 1;
     }
 
-    // Try to send the email.
-    $emailsent = email_to_user($supportuser, $fromuser, $subject, $body);
+    // Send email to all configured support email addresses.
+    $emailsent = false;
+    foreach ($supportemails as $supportemail) {
+        if (!validate_email($supportemail)) {
+            continue;
+        }
+
+        $supportuser = \core_user::get_support_user();
+        $supportuser->email = $supportemail;
+        $supportuser->firstname = 'Soporte';
+        $supportuser->lastname = 'Técnico';
+
+        if (email_to_user($supportuser, $fromuser, $subject, $body)) {
+            $emailsent = true;
+        }
+    }
 
     if ($emailsent) {
         // Log the support request.

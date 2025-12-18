@@ -316,4 +316,22 @@ if ($hassiteconfig) {
         '',
         0
     ));
+
+    // ==========================================================================
+    // Support settings.
+    // ==========================================================================
+    $settings->add(new admin_setting_heading(
+        'local_jobboard/supportheading',
+        get_string('supportsettings', 'local_jobboard'),
+        get_string('supportsettings_desc', 'local_jobboard')
+    ));
+
+    // Support emails (comma-separated list).
+    $settings->add(new admin_setting_configtextarea(
+        'local_jobboard/support_emails',
+        get_string('support_emails', 'local_jobboard'),
+        get_string('support_emails_desc', 'local_jobboard'),
+        'mtic@iser.edu.co, soporteplataformas@iser.edu.co',
+        PARAM_TEXT
+    ));
 }

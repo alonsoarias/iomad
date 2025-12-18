@@ -149,8 +149,8 @@
                     <table class="table table-hover mb-0 jb-table" aria-label="{{#str}}doctypelist, local_jobboard{{/str}}">
                         <thead class="table-light">
                             <tr>
-                                <th scope="col" class="text-center" style="width: 60px;">
-                                    <span class="text-muted">#</span>
+                                <th scope="col" class="text-center" style="width: 80px;">
+                                    <i class="fa fa-arrows-up-down text-muted" aria-hidden="true" title="{{#str}}dragtoorder, local_jobboard{{/str}}"></i>
                                 </th>
                                 <th scope="col">{{#str}}code, local_jobboard{{/str}}</th>
                                 <th scope="col">{{#str}}name{{/str}}</th>
@@ -158,14 +158,17 @@
                                 <th scope="col" class="text-center">{{#str}}required, local_jobboard{{/str}}</th>
                                 <th scope="col" class="d-none d-md-table-cell">{{#str}}conditions, local_jobboard{{/str}}</th>
                                 <th scope="col" class="text-center">{{#str}}status{{/str}}</th>
-                                <th scope="col" class="text-end" style="min-width: 180px;">{{#str}}actions{{/str}}</th>
+                                <th scope="col" class="text-end" style="min-width: 120px;">{{#str}}actions{{/str}}</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="doctypes-sortable-body" data-ajax-url="{{ajaxreorderurl}}">
                             {{#doctypes}}
-                            <tr data-doctype-id="{{id}}" class="{{^enabled}}jb-table-secondary opacity-75{{/enabled}}">
-                                <td class="text-center">
-                                    <span class="badge bg-light text-dark fw-normal">{{sortorder}}</span>
+                            <tr data-doctype-id="{{id}}" class="jb-sortable-row {{^enabled}}jb-table-secondary opacity-75{{/enabled}}" draggable="true">
+                                <td class="text-center jb-drag-cell">
+                                    <span class="jb-drag-handle" title="{{#str}}dragtoorder, local_jobboard{{/str}}">
+                                        <i class="fa fa-grip-vertical text-muted"></i>
+                                    </span>
+                                    <span class="badge bg-light text-dark fw-normal ms-2">{{sortorder}}</span>
                                 </td>
                                 <td>
                                     <code class="text-primary fw-bold">{{code}}</code>
@@ -186,28 +189,6 @@
                                 <td class="text-center">{{{statusbadge}}}</td>
                                 <td class="text-end">
                                     <div class="btn-group btn-group-sm" role="group" aria-label="{{#str}}doctypeactions, local_jobboard{{/str}}">
-                                        {{#canmoveup}}
-                                        <a href="{{moveupurl}}" class="btn btn-outline-secondary" title="{{#str}}moveup{{/str}}">
-                                            <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                                            <span class="visually-hidden">{{#str}}moveup{{/str}}</span>
-                                        </a>
-                                        {{/canmoveup}}
-                                        {{^canmoveup}}
-                                        <span class="btn btn-outline-secondary disabled" aria-disabled="true">
-                                            <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                                        </span>
-                                        {{/canmoveup}}
-                                        {{#canmovedown}}
-                                        <a href="{{movedownurl}}" class="btn btn-outline-secondary" title="{{#str}}movedown{{/str}}">
-                                            <i class="fa fa-arrow-down" aria-hidden="true"></i>
-                                            <span class="visually-hidden">{{#str}}movedown{{/str}}</span>
-                                        </a>
-                                        {{/canmovedown}}
-                                        {{^canmovedown}}
-                                        <span class="btn btn-outline-secondary disabled" aria-disabled="true">
-                                            <i class="fa fa-arrow-down" aria-hidden="true"></i>
-                                        </span>
-                                        {{/canmovedown}}
                                         <a href="{{editurl}}" class="btn btn-outline-primary jb-btn-outline-primary" title="{{#str}}edit{{/str}}">
                                             <i class="fa fa-pen-to-square" aria-hidden="true"></i>
                                             <span class="visually-hidden">{{#str}}edit{{/str}}</span>
@@ -260,3 +241,9 @@
     </nav>
 </div>
 {{/loading}}
+
+{{#js}}
+require(['local_jobboard/doctypes_sortable'], function(module) {
+    module.init('#doctypes-sortable-body', '{{ajaxreorderurl}}');
+});
+{{/js}}

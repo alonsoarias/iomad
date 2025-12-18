@@ -1421,6 +1421,12 @@ $string['timezone'] = 'Zona horaria';
 $string['language'] = 'Idioma';
 $string['selectlanguage'] = 'Seleccionar idioma';
 
+// Configuración de soporte.
+$string['supportsettings'] = 'Configuración de Soporte';
+$string['supportsettings_desc'] = 'Configure el sistema de soporte para reportes de problemas técnicos.';
+$string['support_emails'] = 'Correos de Soporte';
+$string['support_emails_desc'] = 'Ingrese las direcciones de correo (una por línea o separadas por coma) que recibirán las solicitudes de soporte técnico de los usuarios. Estas direcciones reciben notificaciones cuando los usuarios reportan errores o problemas a través del formulario de soporte.';
+
 // Accesibilidad
 $string['skiptomaincontent'] = 'Saltar al contenido principal';
 $string['opensinnewwindow'] = 'Abre en nueva ventana';
@@ -2148,6 +2154,8 @@ $string['andmore'] = 'y {$a} más';
 $string['moveup'] = 'Mover arriba';
 $string['movedown'] = 'Mover abajo';
 $string['sortorder'] = 'Orden';
+$string['dragtoorder'] = 'Arrastra para reordenar';
+$string['reorder_success'] = 'Orden guardado exitosamente';
 
 // =============================================================================
 // CADENAS ADICIONALES - CONVERSIÓN Y ARCHIVOS
