@@ -50,7 +50,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             {key: 'sending', component: 'local_jobboard'},
             {key: 'sent', component: 'local_jobboard'},
             {key: 'emailerror', component: 'local_jobboard'},
-            {key: 'saveandsend', component: 'local_jobboard'}
+            {key: 'saveandsend', component: 'local_jobboard'},
+            {key: 'observation_required_for_rejection', component: 'local_jobboard'}
         ]).then(function(strings) {
             state.strings = {
                 rejectPrompt: strings[0],
@@ -59,7 +60,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                 sending: strings[3],
                 sent: strings[4],
                 emailError: strings[5],
-                saveAndSend: strings[6]
+                saveAndSend: strings[6],
+                observationRequired: strings[7]
             };
             return strings;
         });
@@ -134,25 +136,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
-     * Reject a document with a reason.
+     * Reject a document with a reason from the observation field.
      *
      * @param {string} baseUrl The base URL for the reject action.
      * @param {string} sesskey The session key.
      * @param {string} applicationId The application ID.
      * @param {string} documentId The document ID.
+     * @param {string} reason The rejection reason from observation field.
      */
-    var rejectDocument = function(baseUrl, sesskey, applicationId, documentId) {
-        var reason = window.prompt(state.strings.rejectPrompt || 'Enter rejection reason:');
-
-        if (reason === null) {
-            return; // User cancelled.
-        }
-
-        if (reason.trim() === '') {
-            window.alert(state.strings.rejectRequired || 'You must enter a reason to reject the document.');
-            return;
-        }
-
+    var rejectDocument = function(baseUrl, sesskey, applicationId, documentId, reason) {
         // Create and submit form.
         var form = document.createElement('form');
         form.method = 'POST';
@@ -165,6 +157,57 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                          '<input type="hidden" name="reason" value="' + reason.replace(/"/g, '&quot;') + '">';
         document.body.appendChild(form);
         form.submit();
+    };
+
+    /**
+     * Handle reject button click - validates observation field before rejection.
+     *
+     * @param {Event} e The click event.
+     */
+    var handleRejectClick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var btn = e.currentTarget;
+        var documentId = btn.dataset.documentId;
+        var rejectUrl = btn.dataset.rejectUrl;
+        var sesskey = btn.dataset.sesskey;
+        var applicationId = btn.dataset.applicationid;
+
+        // Find the observation textarea for this document.
+        var observationField = document.querySelector('#doc_observation_' + documentId);
+        if (!observationField) {
+            observationField = document.querySelector('[data-document-id="' + documentId + '"].jb-doc-observation');
+        }
+
+        var reason = observationField ? observationField.value.trim() : '';
+
+        if (!reason) {
+            // Observation is required for rejection.
+            if (observationField) {
+                observationField.classList.add('is-invalid', 'border-danger');
+                observationField.focus();
+                // Add shake animation.
+                observationField.classList.add('jb-shake');
+                setTimeout(function() {
+                    observationField.classList.remove('jb-shake');
+                }, 500);
+            }
+            // Show error message using notification.
+            Notification.addNotification({
+                message: state.strings.observationRequired || 'You must enter an observation to reject the document.',
+                type: 'error'
+            });
+            return;
+        }
+
+        // Remove validation styling if present.
+        if (observationField) {
+            observationField.classList.remove('is-invalid', 'border-danger');
+        }
+
+        // Proceed with rejection.
+        rejectDocument(rejectUrl, sesskey, applicationId, documentId, reason);
     };
 
     /**
@@ -267,6 +310,14 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
 
             // Observation auto-save.
             $(document).on('blur', '.jb-doc-observation', autoSaveObservation);
+
+            // Clear validation styling on observation input.
+            $(document).on('input', '.jb-doc-observation', function() {
+                $(this).removeClass('is-invalid border-danger');
+            });
+
+            // Reject button click handler - validates observation is required.
+            $(document).on('click', '.jb-reject-btn', handleRejectClick);
 
             // Save and send button.
             $('#saveAndSendBtn').on('click', saveAndSendObservations);

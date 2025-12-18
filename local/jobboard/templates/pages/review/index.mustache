@@ -222,6 +222,10 @@
 
                                     {{#iscurrent}}
                                     <div class="mt-2 pt-2 border-top" onclick="event.stopPropagation();">
+                                        <label for="doc_observation_{{id}}" class="form-label small fw-bold mb-1">
+                                            {{#str}}documentobservation, local_jobboard{{/str}}
+                                            <span class="text-danger" title="{{#str}}required_for_rejection, local_jobboard{{/str}}">*</span>
+                                        </label>
                                         <textarea name="doc_observation_{{id}}" id="doc_observation_{{id}}"
                                                   class="form-control form-control-sm jb-doc-observation mb-2"
                                                   rows="2" data-document-id="{{id}}" data-application-id="{{applicationid}}"
@@ -230,12 +234,18 @@
                                             <a href="{{validateurl}}" class="btn btn-success jb-btn-success btn-sm flex-grow-1">
                                                 <i class="fa fa-check me-1"></i>{{#str}}approve, local_jobboard{{/str}}
                                             </a>
-                                            <button type="button" class="btn btn-danger jb-btn-danger btn-sm flex-grow-1"
-                                                    data-bs-toggle="modal" data-bs-target="#rejectModal{{id}}"
+                                            <button type="button" class="btn btn-danger jb-btn-danger btn-sm flex-grow-1 jb-reject-btn"
+                                                    data-document-id="{{id}}"
+                                                    data-reject-url="{{rejecturl}}"
+                                                    data-sesskey="{{sesskey}}"
+                                                    data-applicationid="{{applicationid}}"
                                                     title="{{#str}}reject, local_jobboard{{/str}}">
                                                 <i class="fa fa-xmark me-1"></i>{{#str}}reject, local_jobboard{{/str}}
                                             </button>
                                         </div>
+                                        <small class="text-muted d-block mt-1">
+                                            <i class="fa fa-info-circle me-1"></i>{{#str}}observation_required_for_rejection, local_jobboard{{/str}}
+                                        </small>
                                     </div>
                                     {{/iscurrent}}
 
@@ -317,39 +327,7 @@
             </div>
         </div>
 
-        {{! Rejection Modals }}
-        {{#documents}}
-        {{#iscurrent}}
-        <div class="modal fade" id="rejectModal{{id}}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <form method="post" action="{{rejecturl}}">
-                        <input type="hidden" name="sesskey" value="{{sesskey}}">
-                        <input type="hidden" name="view" value="review">
-                        <input type="hidden" name="applicationid" value="{{applicationid}}">
-                        <input type="hidden" name="documentid" value="{{id}}">
-                        <input type="hidden" name="action" value="reject">
-                        <div class="modal-header bg-danger text-white py-2">
-                            <h6 class="modal-title"><i class="fa fa-triangle-exclamation me-2"></i>{{#str}}rejectdocument, local_jobboard{{/str}}</h6>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p class="text-muted small mb-3"><i class="fa fa-file me-2"></i>{{typename}}</p>
-                            <div class="mb-3">
-                                <label for="reason{{id}}" class="form-label small fw-bold">{{#str}}rejectreason, local_jobboard{{/str}} *</label>
-                                <textarea name="reason" id="reason{{id}}" class="form-control form-control-sm" rows="3" required placeholder="{{#str}}rejectreason_placeholder, local_jobboard{{/str}}"></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer py-2">
-                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">{{#str}}cancel{{/str}}</button>
-                            <button type="submit" class="btn btn-danger jb-btn-danger btn-sm"><i class="fa fa-xmark me-1"></i>{{#str}}reject, local_jobboard{{/str}}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        {{/iscurrent}}
-        {{/documents}}
+        {{! Rejection is now handled inline via observation field }}
         {{/selectedapplication}}
 
         {{! ========== APPLICATIONS QUEUE MODE ========== }}
