@@ -303,7 +303,7 @@ function create_user_from_form($data, $isiomad) {
 
         // Assign to company in IOMAD if selected.
         if ($isiomad && !empty($data->companyid)) {
-            assign_user_to_company($user->id, $data->companyid, $data->departmentid ?? 0);
+            iomad_helper::assign_user_to_company($user->id, (int)$data->companyid, (int)($data->departmentid ?? 0));
         }
 
         // Store the vacancy they were applying for as user preference.
@@ -427,45 +427,15 @@ function store_user_consents($userid, $data) {
 /**
  * Assign user to an IOMAD company.
  *
+ * @deprecated Use iomad_helper::assign_user_to_company() instead.
  * @param int $userid The user ID.
  * @param int $companyid The company ID.
  * @param int $departmentid The department ID (optional).
+ * @return bool True on success, false on failure.
  */
 function assign_user_to_company($userid, $companyid, $departmentid = 0) {
-    global $DB;
-
-    // Check if company_users table exists.
-    $dbman = $DB->get_manager();
-    if (!$dbman->table_exists('company_users')) {
-        return;
-    }
-
-    // Get the default department for the company if none specified.
-    if (!$departmentid && $dbman->table_exists('department')) {
-        $dept = $DB->get_record('department', [
-            'company' => $companyid,
-            'parent' => 0,
-        ], 'id', IGNORE_MULTIPLE);
-        if ($dept) {
-            $departmentid = $dept->id;
-        }
-    }
-
-    // Check if user is already assigned.
-    if ($DB->record_exists('company_users', ['userid' => $userid, 'companyid' => $companyid])) {
-        return;
-    }
-
-    // Create the company user record.
-    $companyuser = new stdClass();
-    $companyuser->companyid = $companyid;
-    $companyuser->userid = $userid;
-    $companyuser->departmentid = $departmentid;
-    $companyuser->managertype = 0;
-    $companyuser->educator = 0;
-    $companyuser->lastused = time();
-
-    $DB->insert_record('company_users', $companyuser);
+    // Use the centralized helper function that handles company changes properly.
+    return iomad_helper::assign_user_to_company((int)$userid, (int)$companyid, (int)$departmentid);
 }
 
 /**

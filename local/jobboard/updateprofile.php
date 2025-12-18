@@ -217,9 +217,9 @@ if ($data = $mform->get_data()) {
         }
     }
 
-    // Update company assignment in IOMAD.
+    // Update company assignment in IOMAD (handles both new assignments and company changes).
     if ($isiomad && !empty($data->companyid)) {
-        update_user_company($USER->id, $data->companyid, $data->departmentid ?? 0);
+        iomad_helper::assign_user_to_company($USER->id, (int)$data->companyid, (int)($data->departmentid ?? 0));
     }
 
     // Show success and redirect.
@@ -250,44 +250,16 @@ echo $OUTPUT->footer();
 /**
  * Update user's company assignment in IOMAD.
  *
+ * This function handles changing a user from one company to another,
+ * removing the old assignment and creating the new one.
+ *
+ * @deprecated Use iomad_helper::assign_user_to_company() instead.
  * @param int $userid The user ID.
  * @param int $companyid The company ID.
  * @param int $departmentid The department ID.
+ * @return bool True on success, false on failure.
  */
 function update_user_company($userid, $companyid, $departmentid = 0) {
-    global $DB;
-
-    $dbman = $DB->get_manager();
-    if (!$dbman->table_exists('company_users')) {
-        return;
-    }
-
-    // Get default department if not specified.
-    if (!$departmentid && $dbman->table_exists('department')) {
-        $dept = $DB->get_record('department', ['company' => $companyid, 'parent' => 0], 'id', IGNORE_MULTIPLE);
-        if ($dept) {
-            $departmentid = $dept->id;
-        }
-    }
-
-    // Check if user already has a company assignment.
-    $existing = $DB->get_record('company_users', ['userid' => $userid]);
-
-    if ($existing) {
-        // Update existing assignment.
-        $existing->companyid = $companyid;
-        $existing->departmentid = $departmentid;
-        $existing->lastused = time();
-        $DB->update_record('company_users', $existing);
-    } else {
-        // Create new assignment.
-        $companyuser = new stdClass();
-        $companyuser->companyid = $companyid;
-        $companyuser->userid = $userid;
-        $companyuser->departmentid = $departmentid;
-        $companyuser->managertype = 0;
-        $companyuser->educator = 0;
-        $companyuser->lastused = time();
-        $DB->insert_record('company_users', $companyuser);
-    }
+    // Use the centralized helper function that handles company changes properly.
+    return iomad_helper::assign_user_to_company((int)$userid, (int)$companyid, (int)$departmentid);
 }

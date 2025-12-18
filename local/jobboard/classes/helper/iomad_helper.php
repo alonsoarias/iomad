@@ -310,4 +310,163 @@ class iomad_helper {
             'companyid' => $companyid,
         ]);
     }
+
+    /**
+     * Assign a user to a company, removing from previous company if needed.
+     *
+     * This function handles:
+     * - New user assignment to a company
+     * - Changing user from one company to another
+     * - Getting the default (root) department if none specified
+     *
+     * @param int $userid The user ID.
+     * @param int $companyid The company ID to assign to.
+     * @param int $departmentid The department ID (optional, will use root department if 0).
+     * @return bool True on success, false on failure.
+     */
+    public static function assign_user_to_company(int $userid, int $companyid, int $departmentid = 0): bool {
+        global $DB, $CFG;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('company_users') || !$dbman->table_exists('company')) {
+            return false;
+        }
+
+        // Verify company exists and is not suspended.
+        $company = $DB->get_record('company', ['id' => $companyid, 'suspended' => 0]);
+        if (!$company) {
+            return false;
+        }
+
+        // Get the default (root) department for the company if none specified.
+        if (!$departmentid && $dbman->table_exists('department')) {
+            $rootdept = $DB->get_record('department', [
+                'company' => $companyid,
+                'parent' => 0,
+            ], 'id', IGNORE_MULTIPLE);
+            if ($rootdept) {
+                $departmentid = $rootdept->id;
+            }
+        }
+
+        // Validate department belongs to this company if specified.
+        if ($departmentid && $dbman->table_exists('department')) {
+            $dept = $DB->get_record('department', ['id' => $departmentid, 'company' => $companyid]);
+            if (!$dept) {
+                // Department doesn't belong to this company, get root department.
+                $rootdept = $DB->get_record('department', [
+                    'company' => $companyid,
+                    'parent' => 0,
+                ], 'id', IGNORE_MULTIPLE);
+                if ($rootdept) {
+                    $departmentid = $rootdept->id;
+                }
+            }
+        }
+
+        // Check if user already has any company assignments.
+        $existingassignments = $DB->get_records('company_users', ['userid' => $userid]);
+
+        // Check if already assigned to this exact company and department.
+        $alreadyassigned = false;
+        foreach ($existingassignments as $assignment) {
+            if ((int)$assignment->companyid === $companyid) {
+                $alreadyassigned = true;
+                // Update the department and lastused if different.
+                if ((int)$assignment->departmentid !== $departmentid || empty($assignment->lastused)) {
+                    $assignment->departmentid = $departmentid;
+                    $assignment->lastused = time();
+                    $DB->update_record('company_users', $assignment);
+                }
+                break;
+            }
+        }
+
+        if (!$alreadyassigned) {
+            // Try to use IOMAD's native API if available.
+            $iomadcompanyfile = $CFG->dirroot . '/local/iomad/lib/company.php';
+            if (file_exists($iomadcompanyfile)) {
+                require_once($iomadcompanyfile);
+
+                // Remove from all previous companies first (for jobboard users, we want single company assignment).
+                foreach ($existingassignments as $assignment) {
+                    $DB->delete_records('company_users', ['id' => $assignment->id]);
+                }
+
+                // Use IOMAD's company class for proper assignment.
+                try {
+                    $companyobj = new \company($companyid);
+                    // managertype = 0 (regular user), ws = false, import = false
+                    return $companyobj->assign_user_to_company($userid, $departmentid, 0, false, false);
+                } catch (\Exception $e) {
+                    // Fallback to direct insert if IOMAD API fails.
+                    debugging('IOMAD API failed, using direct insert: ' . $e->getMessage(), DEBUG_DEVELOPER);
+                }
+            }
+
+            // Fallback: Direct database insert.
+            // First remove any existing company assignments (single company per jobboard user).
+            $DB->delete_records('company_users', ['userid' => $userid]);
+
+            // Create the new company user record.
+            $companyuser = new \stdClass();
+            $companyuser->companyid = $companyid;
+            $companyuser->userid = $userid;
+            $companyuser->departmentid = $departmentid;
+            $companyuser->managertype = 0; // Regular user.
+            $companyuser->educator = 0;
+            $companyuser->suspended = 0;
+            $companyuser->lastused = time();
+
+            return (bool) $DB->insert_record('company_users', $companyuser);
+        }
+
+        return true;
+    }
+
+    /**
+     * Change a user's company assignment, removing from old company and assigning to new.
+     *
+     * @param int $userid The user ID.
+     * @param int $newcompanyid The new company ID.
+     * @param int $newdepartmentid The new department ID (optional).
+     * @return bool True on success, false on failure.
+     */
+    public static function change_user_company(int $userid, int $newcompanyid, int $newdepartmentid = 0): bool {
+        return self::assign_user_to_company($userid, $newcompanyid, $newdepartmentid);
+    }
+
+    /**
+     * Get user's current company assignment details.
+     *
+     * @param int|null $userid User ID or null for current user.
+     * @return object|null Object with companyid, departmentid, companyname, departmentname or null.
+     */
+    public static function get_user_company_assignment(?int $userid = null): ?object {
+        global $DB, $USER;
+
+        $userid = $userid ?? $USER->id;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('company_users')) {
+            return null;
+        }
+
+        $sql = "SELECT cu.id, cu.companyid, cu.departmentid, cu.managertype, cu.lastused,
+                       c.name as companyname, c.shortname as companyshortname
+                FROM {company_users} cu
+                JOIN {company} c ON c.id = cu.companyid
+                WHERE cu.userid = :userid
+                ORDER BY cu.lastused DESC, cu.id DESC
+                LIMIT 1";
+
+        $assignment = $DB->get_record_sql($sql, ['userid' => $userid]);
+
+        if ($assignment && $dbman->table_exists('department')) {
+            $dept = $DB->get_record('department', ['id' => $assignment->departmentid], 'name');
+            $assignment->departmentname = $dept ? $dept->name : '';
+        }
+
+        return $assignment ?: null;
+    }
 }
