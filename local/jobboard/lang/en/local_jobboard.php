@@ -3560,3 +3560,284 @@ $string['modality_virtual'] = 'Virtual';
 $string['modality_hibrida'] = 'Hybrid';
 $string['modality_distancia'] = 'Distance';
 $string['department'] = 'Academic Program';
+
+// =============================================================================
+// USER TOURS - GENERAL
+// =============================================================================
+
+$string['tour_endlabel'] = 'End tour';
+
+// =============================================================================
+// USER TOUR: DASHBOARD
+// =============================================================================
+
+$string['tour_dashboard_name'] = 'Job Board Dashboard Tour';
+$string['tour_dashboard_desc'] = 'Learn how to navigate the Job Board dashboard and discover its main features.';
+$string['tour_dashboard_welcome_title'] = 'Welcome to the Job Board';
+$string['tour_dashboard_welcome_content'] = 'This is your main dashboard where you can access all Job Board features based on your role. Here you\'ll find quick actions and important information at a glance.';
+$string['tour_dashboard_stats_title'] = 'Statistics Overview';
+$string['tour_dashboard_stats_content'] = 'These cards show key statistics about vacancies, applications, and the review process. Monitor the status of your recruitment activities in real-time.';
+$string['tour_dashboard_admin_title'] = 'Administration Sections';
+$string['tour_dashboard_admin_content'] = 'As an administrator, you can manage convocatorias, vacancies, applications, and system configuration from these sections. Each card provides quick access to specific management areas.';
+$string['tour_dashboard_reviewer_title'] = 'Reviewer Tasks';
+$string['tour_dashboard_reviewer_content'] = 'If you are a document reviewer, this section shows your pending reviews and completed work. Click "View My Reviews" to access applications assigned to you.';
+$string['tour_dashboard_applicant_title'] = 'My Applications';
+$string['tour_dashboard_applicant_content'] = 'As an applicant, you can view your submitted applications, track their status, and browse available vacancies from this section.';
+
+// =============================================================================
+// USER TOUR: PUBLIC PAGE
+// =============================================================================
+
+$string['tour_public_name'] = 'Public Job Board Tour';
+$string['tour_public_desc'] = 'Discover how to browse and apply for available vacancies on the public job board.';
+$string['tour_public_welcome_title'] = 'Welcome to the Job Board';
+$string['tour_public_welcome_content'] = 'This is the public page where all available job opportunities are listed. You can browse vacancies without logging in, but you\'ll need to register or sign in to apply.';
+$string['tour_public_stats_title'] = 'Available Opportunities';
+$string['tour_public_stats_content'] = 'These statistics show the current number of open convocatorias and available vacancies. Keep an eye on these numbers for new opportunities.';
+$string['tour_public_convocatorias_title'] = 'Active Convocatorias';
+$string['tour_public_convocatorias_content'] = 'Convocatorias are job calls that group related vacancies. Click on a convocatoria card to see all its associated positions and requirements.';
+$string['tour_public_vacancies_title'] = 'Job Vacancies';
+$string['tour_public_vacancies_content'] = 'Each vacancy card shows the position title, location, modality, and key requirements. Click on a card to view full details and application instructions.';
+$string['tour_public_filters_title'] = 'Filter Options';
+$string['tour_public_filters_content'] = 'Use these filters to narrow down vacancies by convocatoria, modality, location, or keyword. This helps you find positions that match your profile.';
+$string['tour_public_apply_title'] = 'Apply Now';
+$string['tour_public_apply_content'] = 'When you find a vacancy that interests you, click the "Apply" or "View Details" button. You\'ll need to create an account or log in to submit your application.';
+
+// =============================================================================
+// USER TOUR: APPLY FOR VACANCY
+// =============================================================================
+
+$string['tour_apply_name'] = 'Application Process Tour';
+$string['tour_apply_desc'] = 'Learn how to complete and submit your job application step by step.';
+$string['tour_apply_header_title'] = 'Application Form';
+$string['tour_apply_header_content'] = 'This is the application form for the selected vacancy. Follow the steps carefully to ensure your application is complete and accurate.';
+$string['tour_apply_progress_title'] = 'Progress Steps';
+$string['tour_apply_progress_content'] = 'These steps show your progress through the application process. Complete each section before moving to the next one.';
+$string['tour_apply_guidelines_title'] = 'Application Guidelines';
+$string['tour_apply_guidelines_content'] = 'Read these guidelines carefully before starting your application. They contain important information about required documents and deadlines.';
+$string['tour_apply_form_title'] = 'Document Upload';
+$string['tour_apply_form_content'] = 'Upload all required documents here. Make sure each file meets the format and size requirements. Required documents are marked with an asterisk (*).';
+$string['tour_apply_sidebar_title'] = 'Vacancy Information';
+$string['tour_apply_sidebar_content'] = 'This sidebar shows details about the vacancy you\'re applying for, including position requirements and important dates.';
+$string['tour_apply_checklist_title'] = 'Document Checklist';
+$string['tour_apply_checklist_content'] = 'Track your document submission progress with this checklist. Green checkmarks indicate uploaded documents, while empty circles show pending items.';
+$string['tour_apply_submit_title'] = 'Submit Application';
+$string['tour_apply_submit_content'] = 'Once you\'ve uploaded all required documents and reviewed your information, click this button to submit your application. You cannot modify it after submission.';
+
+// =============================================================================
+// USER TOUR: VACANCIES LIST
+// =============================================================================
+
+$string['tour_vacancies_name'] = 'Vacancies Management Tour';
+$string['tour_vacancies_desc'] = 'Learn how to browse and manage job vacancies in the system.';
+$string['tour_vacancies_header_title'] = 'Vacancies Page';
+$string['tour_vacancies_header_content'] = 'This page displays all vacancies in the system. As an administrator, you can create, edit, and manage vacancy statuses from here.';
+$string['tour_vacancies_selector_title'] = 'Filter by Convocatoria';
+$string['tour_vacancies_selector_content'] = 'Use this dropdown to filter vacancies by their parent convocatoria. This helps you manage vacancies for specific job calls.';
+$string['tour_vacancies_card_title'] = 'Vacancy Cards';
+$string['tour_vacancies_card_content'] = 'Each card represents a vacancy with its code, title, and key information. Cards are color-coded by status for quick identification.';
+$string['tour_vacancies_status_title'] = 'Status Badges';
+$string['tour_vacancies_status_content'] = 'The badge shows the current status of each vacancy: Draft (not published), Published (accepting applications), Closed (no longer accepting), or Assigned (position filled).';
+$string['tour_vacancies_actions_title'] = 'Quick Actions';
+$string['tour_vacancies_actions_content'] = 'Use these buttons to view, edit, publish, or close a vacancy. Available actions depend on the vacancy\'s current status and your permissions.';
+
+// =============================================================================
+// USER TOUR: CONVOCATORIAS
+// =============================================================================
+
+$string['tour_convocatorias_name'] = 'Convocatorias Management Tour';
+$string['tour_convocatorias_desc'] = 'Learn how to create and manage job call convocatorias.';
+$string['tour_convocatorias_header_title'] = 'Convocatorias Page';
+$string['tour_convocatorias_header_content'] = 'This page shows all convocatorias (job calls) in the system. Convocatorias group related vacancies under a single application period.';
+$string['tour_convocatorias_create_title'] = 'Create New Convocatoria';
+$string['tour_convocatorias_create_content'] = 'Click this button to create a new convocatoria. You\'ll define the application period, terms, and can then add vacancies to it.';
+$string['tour_convocatorias_stats_title'] = 'Statistics';
+$string['tour_convocatorias_stats_content'] = 'These cards show the count of convocatorias by status: Open (accepting applications), Closed (ended), and Draft (not yet published).';
+$string['tour_convocatorias_filter_title'] = 'Filter Options';
+$string['tour_convocatorias_filter_content'] = 'Use these filters to find specific convocatorias by status, date range, or keyword search.';
+$string['tour_convocatorias_card_title'] = 'Convocatoria Cards';
+$string['tour_convocatorias_card_content'] = 'Each card displays a convocatoria with its code, name, dates, and vacancy count. Click on a card to view its details and associated vacancies.';
+$string['tour_convocatorias_actions_title'] = 'Actions Menu';
+$string['tour_convocatorias_actions_content'] = 'Use these buttons to view details, edit, open, close, or delete a convocatoria. Available actions depend on the current status.';
+
+// =============================================================================
+// USER TOUR: DOCUMENT REVIEW
+// =============================================================================
+
+$string['tour_review_name'] = 'Document Review Tour';
+$string['tour_review_desc'] = 'Learn how to review and validate applicant documents effectively.';
+$string['tour_review_header_title'] = 'Document Review Interface';
+$string['tour_review_header_content'] = 'This is the document review interface where you validate applicant submissions. Each application contains documents that need to be verified.';
+$string['tour_review_stats_title'] = 'Review Statistics';
+$string['tour_review_stats_content'] = 'These cards show the review progress: total documents, validated, rejected, and pending review. Track your workload at a glance.';
+$string['tour_review_navigation_title'] = 'Navigation';
+$string['tour_review_navigation_content'] = 'Navigate between applications using these controls. You can move to the next pending review or jump to a specific application.';
+$string['tour_review_documents_title'] = 'Document List';
+$string['tour_review_documents_content'] = 'Each item in this list represents a document submitted by the applicant. Click on a document to preview it and perform validation.';
+$string['tour_review_actions_title'] = 'Validation Actions';
+$string['tour_review_actions_content'] = 'Use these buttons to approve or reject documents. You can also add notes and select specific reasons for rejection.';
+$string['tour_review_applicant_title'] = 'Applicant Information';
+$string['tour_review_applicant_content'] = 'This panel shows the applicant\'s profile information including name, contact details, and application history.';
+$string['tour_review_progress_title'] = 'Review Progress';
+$string['tour_review_progress_content'] = 'This progress bar shows how many documents you\'ve reviewed for the current application. Complete all reviews to finalize the validation.';
+$string['tour_review_submit_title'] = 'Complete Review';
+$string['tour_review_submit_content'] = 'After reviewing all documents, click this button to finalize the application review. This will update the application status accordingly.';
+
+// =============================================================================
+// USER TOUR: MY APPLICATIONS
+// =============================================================================
+
+$string['tour_myapplications_name'] = 'My Applications Tour';
+$string['tour_myapplications_desc'] = 'Learn how to track and manage your job applications.';
+$string['tour_myapplications_header_title'] = 'My Applications';
+$string['tour_myapplications_header_content'] = 'This page shows all your submitted job applications. Track their status and view feedback from reviewers.';
+$string['tour_myapplications_filters_title'] = 'Filter Applications';
+$string['tour_myapplications_filters_content'] = 'Use these filters to find specific applications by status, vacancy, or date submitted.';
+$string['tour_myapplications_card_title'] = 'Application Cards';
+$string['tour_myapplications_card_content'] = 'Each card represents one of your applications showing the vacancy name, submission date, and current status.';
+$string['tour_myapplications_status_title'] = 'Application Status';
+$string['tour_myapplications_status_content'] = 'The status badge shows where your application is in the review process: Submitted, Under Review, Documents Validated, Interview Scheduled, Selected, or Rejected.';
+$string['tour_myapplications_actions_title'] = 'View Details';
+$string['tour_myapplications_actions_content'] = 'Click this button to view your full application including uploaded documents, reviewer feedback, and any required actions.';
+
+// =============================================================================
+// USER TOUR: MY REVIEWS (REVIEWER)
+// =============================================================================
+
+$string['tour_myreviews_name'] = 'My Reviews Tour';
+$string['tour_myreviews_desc'] = 'Learn how to manage your assigned document reviews.';
+$string['tour_myreviews_header_title'] = 'My Review Queue';
+$string['tour_myreviews_header_content'] = 'This page shows all applications assigned to you for document review. Prioritize pending reviews to keep the hiring process moving.';
+$string['tour_myreviews_stats_title'] = 'Review Statistics';
+$string['tour_myreviews_stats_content'] = 'Track your review workload with these statistics: pending reviews, completed today, and total reviewed this month.';
+$string['tour_myreviews_pending_title'] = 'Pending Reviews';
+$string['tour_myreviews_pending_content'] = 'These applications are waiting for your review. Click on any card to start the document validation process.';
+$string['tour_myreviews_completed_title'] = 'Completed Reviews';
+$string['tour_myreviews_completed_content'] = 'Here you can see applications you\'ve already reviewed. You can revisit them if needed.';
+$string['tour_myreviews_start_title'] = 'Start Review';
+$string['tour_myreviews_start_content'] = 'Click this button to begin reviewing the application documents. You\'ll be taken to the document validation interface.';
+
+// =============================================================================
+// USER TOUR: APPLICATION DETAIL
+// =============================================================================
+
+$string['tour_application_name'] = 'Application Detail Tour';
+$string['tour_application_desc'] = 'Learn how to view and understand your application details.';
+$string['tour_application_header_title'] = 'Application Details';
+$string['tour_application_header_content'] = 'This page shows the complete details of your application including status, submitted documents, and reviewer feedback.';
+$string['tour_application_status_title'] = 'Current Status';
+$string['tour_application_status_content'] = 'This section shows your application\'s current status and any important messages from the review team.';
+$string['tour_application_documents_title'] = 'Submitted Documents';
+$string['tour_application_documents_content'] = 'View all documents you submitted with this application. Each document shows its validation status and any reviewer comments.';
+$string['tour_application_timeline_title'] = 'Application Timeline';
+$string['tour_application_timeline_content'] = 'This timeline shows the history of your application from submission through each review stage.';
+$string['tour_application_actions_title'] = 'Available Actions';
+$string['tour_application_actions_content'] = 'Depending on your application status, you may be able to reupload documents, withdraw your application, or complete additional steps.';
+
+// =============================================================================
+// USER TOUR: VACANCY DETAIL
+// =============================================================================
+
+$string['tour_vacancy_name'] = 'Vacancy Detail Tour';
+$string['tour_vacancy_desc'] = 'Learn how to view vacancy details and requirements.';
+$string['tour_vacancy_header_title'] = 'Vacancy Details';
+$string['tour_vacancy_header_content'] = 'This page shows complete information about the job vacancy including requirements, responsibilities, and application instructions.';
+$string['tour_vacancy_info_title'] = 'Position Information';
+$string['tour_vacancy_info_content'] = 'Here you\'ll find the job title, department, location, modality, and contract details.';
+$string['tour_vacancy_requirements_title'] = 'Requirements';
+$string['tour_vacancy_requirements_content'] = 'This section lists the required qualifications, experience, and skills for the position. Make sure you meet these before applying.';
+$string['tour_vacancy_documents_title'] = 'Required Documents';
+$string['tour_vacancy_documents_content'] = 'Review the list of documents you\'ll need to submit with your application. Prepare these before starting your application.';
+$string['tour_vacancy_apply_title'] = 'Apply Now';
+$string['tour_vacancy_apply_content'] = 'If you meet the requirements, click this button to start your application. You\'ll be guided through the document upload process.';
+
+// =============================================================================
+// USER TOUR: MANAGE VACANCIES
+// =============================================================================
+
+$string['tour_manage_name'] = 'Vacancy Management Tour';
+$string['tour_manage_desc'] = 'Learn how to manage and administer job vacancies.';
+$string['tour_manage_header_title'] = 'Vacancy Management';
+$string['tour_manage_header_content'] = 'This page provides comprehensive tools for managing all vacancies in the system including creation, editing, and status management.';
+$string['tour_manage_create_title'] = 'Create Vacancy';
+$string['tour_manage_create_content'] = 'Click this button to create a new vacancy. You\'ll select a convocatoria first, then fill in the position details.';
+$string['tour_manage_filters_title'] = 'Advanced Filters';
+$string['tour_manage_filters_content'] = 'Use these filters to find specific vacancies by status, convocatoria, date range, or keyword.';
+$string['tour_manage_bulk_title'] = 'Bulk Actions';
+$string['tour_manage_bulk_content'] = 'Select multiple vacancies to perform bulk actions like publish, close, or export. Use the checkboxes to select items.';
+$string['tour_manage_table_title'] = 'Vacancy Table';
+$string['tour_manage_table_content'] = 'This table shows all vacancies with sortable columns. Click column headers to sort, or use the action buttons for individual management.';
+$string['tour_manage_actions_title'] = 'Quick Actions';
+$string['tour_manage_actions_content'] = 'Each row has action buttons for viewing, editing, publishing, or managing applications for that vacancy.';
+
+// =============================================================================
+// USER TOUR: DOCUMENTS
+// =============================================================================
+
+$string['tour_documents_name'] = 'Document Management Tour';
+$string['tour_documents_desc'] = 'Learn how to manage and review application documents.';
+$string['tour_documents_header_title'] = 'Document Management';
+$string['tour_documents_header_content'] = 'This page allows you to view and manage all documents submitted with applications.';
+$string['tour_documents_filters_title'] = 'Filter Documents';
+$string['tour_documents_filters_content'] = 'Use these filters to find documents by type, status, or applicant name.';
+$string['tour_documents_list_title'] = 'Document List';
+$string['tour_documents_list_content'] = 'Each row shows a document with its type, applicant, upload date, and validation status.';
+$string['tour_documents_preview_title'] = 'Preview Documents';
+$string['tour_documents_preview_content'] = 'Click the preview button to view documents without downloading. This helps speed up the review process.';
+$string['tour_documents_validate_title'] = 'Validate Documents';
+$string['tour_documents_validate_content'] = 'Use the validation buttons to approve or reject documents. Add notes to provide feedback to applicants.';
+
+// =============================================================================
+// USER TOUR: VALIDATE DOCUMENT
+// =============================================================================
+
+$string['tour_validate_document_name'] = 'Document Validation Tour';
+$string['tour_validate_document_desc'] = 'Learn the step-by-step process for validating applicant documents.';
+$string['tour_validate_document_header_title'] = 'Document Validation';
+$string['tour_validate_document_header_content'] = 'This interface allows you to thoroughly review and validate individual documents from applicants.';
+$string['tour_validate_document_preview_title'] = 'Document Preview';
+$string['tour_validate_document_preview_content'] = 'The document is displayed here for your review. You can zoom in, scroll through pages, and check all details.';
+$string['tour_validate_document_checklist_title'] = 'Validation Checklist';
+$string['tour_validate_document_checklist_content'] = 'Use this checklist to verify that the document meets all requirements. Check each item as you verify it.';
+$string['tour_validate_document_notes_title'] = 'Reviewer Notes';
+$string['tour_validate_document_notes_content'] = 'Add notes to explain your validation decision. These notes help the applicant understand what needs to be corrected if rejected.';
+$string['tour_validate_document_decision_title'] = 'Make Decision';
+$string['tour_validate_document_decision_content'] = 'Select Approve if the document is valid, or Reject if it needs corrections. Be sure to add notes explaining any rejection.';
+$string['tour_validate_document_submit_title'] = 'Submit Validation';
+$string['tour_validate_document_submit_content'] = 'Click this button to submit your validation decision. The applicant will be notified of the result.';
+
+// =============================================================================
+// USER TOUR: REPORTS
+// =============================================================================
+
+$string['tour_reports_name'] = 'Reports Dashboard Tour';
+$string['tour_reports_desc'] = 'Learn how to access and generate reports from the job board data.';
+$string['tour_reports_header_title'] = 'Reports Dashboard';
+$string['tour_reports_header_content'] = 'This page provides access to various reports and analytics about the recruitment process.';
+$string['tour_reports_overview_title'] = 'Overview Statistics';
+$string['tour_reports_overview_content'] = 'These charts and numbers give you a quick overview of recruitment activity, application volumes, and processing times.';
+$string['tour_reports_filters_title'] = 'Report Filters';
+$string['tour_reports_filters_content'] = 'Use these filters to customize the date range, convocatoria, or other parameters for your reports.';
+$string['tour_reports_types_title'] = 'Report Types';
+$string['tour_reports_types_content'] = 'Select from different report types: Applications by Status, Documents by Type, Processing Times, and more.';
+$string['tour_reports_export_title'] = 'Export Data';
+$string['tour_reports_export_content'] = 'Download reports in various formats (PDF, Excel, CSV) for offline analysis or sharing with stakeholders.';
+
+// =============================================================================
+// USER TOUR: CONVOCATORIA MANAGE (CREATE/EDIT)
+// =============================================================================
+
+$string['tour_convocatoria_manage_name'] = 'Convocatoria Form Tour';
+$string['tour_convocatoria_manage_desc'] = 'Learn how to create and configure a job call convocatoria.';
+$string['tour_convocatoria_manage_header_title'] = 'Convocatoria Form';
+$string['tour_convocatoria_manage_header_content'] = 'Use this form to create or edit a convocatoria. Fill in all required fields to define your job call.';
+$string['tour_convocatoria_manage_basic_title'] = 'Basic Information';
+$string['tour_convocatoria_manage_basic_content'] = 'Enter the convocatoria code, name, and description. The code should be unique and help identify this job call.';
+$string['tour_convocatoria_manage_dates_title'] = 'Date Configuration';
+$string['tour_convocatoria_manage_dates_content'] = 'Set the start and end dates for accepting applications. Make sure to allow enough time for applicants to submit their documents.';
+$string['tour_convocatoria_manage_settings_title'] = 'Application Settings';
+$string['tour_convocatoria_manage_settings_content'] = 'Configure whether applicants can apply to multiple vacancies within this convocatoria and set any application limits.';
+$string['tour_convocatoria_manage_terms_title'] = 'Terms and Conditions';
+$string['tour_convocatoria_manage_terms_content'] = 'Define the terms applicants must accept when applying. This can include privacy policies and data handling agreements.';
+$string['tour_convocatoria_manage_save_title'] = 'Save Convocatoria';
+$string['tour_convocatoria_manage_save_content'] = 'Click Save to create or update the convocatoria. You can add vacancies after saving.';

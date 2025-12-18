@@ -1,20 +1,20 @@
 {
   "name": "tour_dashboard_name,local_jobboard",
   "description": "tour_dashboard_desc,local_jobboard",
-  "pathmatch": "/local/jobboard/index.php",
+  "pathmatch": "/local/jobboard/index.php%",
   "enabled": "1",
   "sortorder": "0",
   "endtourlabel": "tour_endlabel,local_jobboard",
-  "configdata": "{\"placement\":\"bottom\",\"orphan\":\"0\",\"backdrop\":\"1\",\"reflex\":\"0\",\"filtervalues\":{\"accessdate\":{\"filter_accessdate\":\"tool_usertours_accountcreation\",\"filter_accessdate_range\":0,\"filter_accessdate_enabled\":\"0\"},\"category\":[],\"course\":[],\"courseformat\":[],\"role\":[],\"theme\":[],\"cssselector\":[]}}",
+  "configdata": "{\"placement\":\"bottom\",\"orphan\":\"1\",\"backdrop\":\"1\",\"reflex\":\"0\",\"filtervalues\":{\"accessdate\":{\"filter_accessdate\":\"tool_usertours_accountcreation\",\"filter_accessdate_range\":0,\"filter_accessdate_enabled\":\"0\"},\"category\":[],\"course\":[],\"courseformat\":[],\"role\":[],\"theme\":[],\"cssselector\":[]}}",
   "displaystepnumbers": true,
-  "version": "2025121200",
+  "version": "2025121800",
   "steps": [
     {
       "title": "tour_dashboard_welcome_title,local_jobboard",
       "content": "tour_dashboard_welcome_content,local_jobboard",
       "contentformat": "1",
       "targettype": "0",
-      "targetvalue": ".jb-welcome-section",
+      "targetvalue": ".local-jobboard-dashboard, [data-region='jobboard-dashboard']",
       "sortorder": "0",
       "configdata": "{\"placement\":\"bottom\"}"
     },
@@ -23,16 +23,16 @@
       "content": "tour_dashboard_stats_content,local_jobboard",
       "contentformat": "1",
       "targettype": "0",
-      "targetvalue": ".jb-admin-section .jb-row",
+      "targetvalue": ".jb-admin-section .row, .col-lg-3 .card",
       "sortorder": "1",
-      "configdata": "{\"placement\":\"top\"}"
+      "configdata": "{\"placement\":\"bottom\"}"
     },
     {
       "title": "tour_dashboard_admin_title,local_jobboard",
       "content": "tour_dashboard_admin_content,local_jobboard",
       "contentformat": "1",
       "targettype": "0",
-      "targetvalue": ".jb-section-card",
+      "targetvalue": ".jb-admin-section .col-lg-4 .card, .jb-admin-section article.card",
       "sortorder": "2",
       "configdata": "{\"placement\":\"right\"}"
     },
@@ -41,7 +41,7 @@
       "content": "tour_dashboard_reviewer_content,local_jobboard",
       "contentformat": "1",
       "targettype": "0",
-      "targetvalue": ".jb-reviewer-section",
+      "targetvalue": ".jb-reviewer-section, [aria-labelledby='reviewer-heading']",
       "sortorder": "3",
       "configdata": "{\"placement\":\"top\"}"
     },
@@ -50,7 +50,7 @@
       "content": "tour_dashboard_applicant_content,local_jobboard",
       "contentformat": "1",
       "targettype": "0",
-      "targetvalue": ".jb-applicant-section",
+      "targetvalue": ".jb-applicant-section, [aria-labelledby='applicant-heading']",
       "sortorder": "4",
       "configdata": "{\"placement\":\"top\"}"
     }
