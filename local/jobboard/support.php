@@ -62,6 +62,22 @@ if ($data = $mform->get_data()) {
     $supportemailssetting = str_replace(["\r\n", "\r", "\n"], ',', $supportemailssetting);
     $supportemails = array_filter(array_map('trim', explode(',', $supportemailssetting)));
 
+    // Extract text from editor fields (editor returns array with 'text' key).
+    $description = '';
+    if (!empty($data->description_editor['text'])) {
+        $description = strip_tags($data->description_editor['text']);
+    }
+
+    $stepstoreproduce = '';
+    if (!empty($data->steps_to_reproduce_editor['text'])) {
+        $stepstoreproduce = strip_tags($data->steps_to_reproduce_editor['text']);
+    }
+
+    $expectedbehavior = '';
+    if (!empty($data->expected_behavior_editor['text'])) {
+        $expectedbehavior = strip_tags($data->expected_behavior_editor['text']);
+    }
+
     // Build email subject.
     $subject = get_string('support_email_subject', 'local_jobboard') . ': ' . $data->error_type;
 
@@ -73,18 +89,18 @@ if ($data = $mform->get_data()) {
 
     $body .= get_string('support_error_description', 'local_jobboard') . ":\n";
     $body .= "-------------------------------------------\n";
-    $body .= $data->description . "\n\n";
+    $body .= $description . "\n\n";
 
-    if (!empty($data->steps_to_reproduce)) {
+    if (!empty($stepstoreproduce)) {
         $body .= get_string('support_steps_to_reproduce', 'local_jobboard') . ":\n";
         $body .= "-------------------------------------------\n";
-        $body .= $data->steps_to_reproduce . "\n\n";
+        $body .= $stepstoreproduce . "\n\n";
     }
 
-    if (!empty($data->expected_behavior)) {
+    if (!empty($expectedbehavior)) {
         $body .= get_string('support_expected_behavior', 'local_jobboard') . ":\n";
         $body .= "-------------------------------------------\n";
-        $body .= $data->expected_behavior . "\n\n";
+        $body .= $expectedbehavior . "\n\n";
     }
 
     $body .= "===========================================\n";

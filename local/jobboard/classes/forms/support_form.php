@@ -37,6 +37,15 @@ class support_form extends \moodleform {
 
         $mform = $this->_form;
 
+        // Editor options for Moodle text editor.
+        $editoroptions = [
+            'maxfiles' => 0,
+            'maxbytes' => 0,
+            'trusttext' => false,
+            'noclean' => false,
+            'context' => \context_system::instance(),
+        ];
+
         // Error type section.
         $mform->addElement('header', 'errorheader', get_string('support_error_details', 'local_jobboard'));
         $mform->setExpanded('errorheader', true);
@@ -56,31 +65,19 @@ class support_form extends \moodleform {
         $mform->addRule('error_type', get_string('required'), 'required', null, 'client');
         $mform->setType('error_type', PARAM_TEXT);
 
-        // Error description.
-        $mform->addElement('textarea', 'description', get_string('support_error_description', 'local_jobboard'), [
-            'rows' => 5,
-            'cols' => 60,
-            'placeholder' => get_string('support_description_placeholder', 'local_jobboard'),
-        ]);
-        $mform->addRule('description', get_string('required'), 'required', null, 'client');
-        $mform->setType('description', PARAM_TEXT);
-        $mform->addHelpButton('description', 'support_error_description', 'local_jobboard');
+        // Error description using Moodle editor.
+        $mform->addElement('editor', 'description_editor', get_string('support_error_description', 'local_jobboard'), null, $editoroptions);
+        $mform->addRule('description_editor', get_string('required'), 'required', null, 'client');
+        $mform->setType('description_editor', PARAM_RAW);
+        $mform->addHelpButton('description_editor', 'support_error_description', 'local_jobboard');
 
-        // Steps to reproduce (optional).
-        $mform->addElement('textarea', 'steps_to_reproduce', get_string('support_steps_to_reproduce', 'local_jobboard'), [
-            'rows' => 4,
-            'cols' => 60,
-            'placeholder' => get_string('support_steps_placeholder', 'local_jobboard'),
-        ]);
-        $mform->setType('steps_to_reproduce', PARAM_TEXT);
+        // Steps to reproduce (optional) using Moodle editor.
+        $mform->addElement('editor', 'steps_to_reproduce_editor', get_string('support_steps_to_reproduce', 'local_jobboard'), null, $editoroptions);
+        $mform->setType('steps_to_reproduce_editor', PARAM_RAW);
 
-        // Expected behavior (optional).
-        $mform->addElement('textarea', 'expected_behavior', get_string('support_expected_behavior', 'local_jobboard'), [
-            'rows' => 3,
-            'cols' => 60,
-            'placeholder' => get_string('support_expected_placeholder', 'local_jobboard'),
-        ]);
-        $mform->setType('expected_behavior', PARAM_TEXT);
+        // Expected behavior (optional) using Moodle editor.
+        $mform->addElement('editor', 'expected_behavior_editor', get_string('support_expected_behavior', 'local_jobboard'), null, $editoroptions);
+        $mform->setType('expected_behavior_editor', PARAM_RAW);
 
         // Page URL where the error occurred (optional).
         $mform->addElement('text', 'page_url', get_string('support_page_url', 'local_jobboard'), ['size' => 60]);
@@ -130,9 +127,13 @@ class support_form extends \moodleform {
             $errors['error_type'] = get_string('required');
         }
 
-        // Validate description has minimum length.
-        if (!empty($data['description']) && strlen(trim($data['description'])) < 20) {
-            $errors['description'] = get_string('support_description_too_short', 'local_jobboard');
+        // Validate description has minimum length (editor returns array with 'text' key).
+        $descriptiontext = '';
+        if (!empty($data['description_editor']['text'])) {
+            $descriptiontext = strip_tags($data['description_editor']['text']);
+        }
+        if (strlen(trim($descriptiontext)) < 20) {
+            $errors['description_editor'] = get_string('support_description_too_short', 'local_jobboard');
         }
 
         return $errors;
