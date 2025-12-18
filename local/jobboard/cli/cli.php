@@ -608,12 +608,15 @@ if ($createsample) {
     echo "JSON source: " . ($jsondata['source'] ?? 'Unknown') . "\n";
     echo "Generated: " . ($jsondata['generated'] ?? 'Unknown') . "\n\n";
 
+    $consolidatedCount = 0;
+    $totalPositions = 0;
+
     foreach ($jsondata['vacancies'] as $profile) {
         $code = $profile['code'] ?? '';
         if (empty($code)) continue;
 
-        // Use composite key: code_location_modality to allow same code in different locations/modalities.
-        $loc = $profile['location'] ?? 'PAMPLONA';
+        // Normalize location (e.g., "PAMPLONA - CENTROS TUTORIALES" -> "PAMPLONA").
+        $loc = normalize_location($profile['location'] ?? 'PAMPLONA');
         $mod = $profile['modality'] ?? 'PRESENCIAL';
         // Normalize modality key.
         if (stripos($mod, 'DISTANCIA') !== false) {
@@ -627,22 +630,46 @@ if ($createsample) {
         }
         $uniquekey = $code . '_' . $loc . '_' . $modkey;
 
-        $allprofiles[$uniquekey] = $profile;
-        $parsestats['profiles']++;
-        if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
-        else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
+        // Get positions from this profile (default 1).
+        $positions = (int) ($profile['positions'] ?? 1);
+        if ($positions < 1) $positions = 1;
 
+        // Update location in profile to normalized value.
+        $profile['location'] = $loc;
+
+        // Consolidate duplicates: sum positions instead of overwriting.
+        if (isset($allprofiles[$uniquekey])) {
+            // Add positions to existing vacancy.
+            $existingPositions = (int) ($allprofiles[$uniquekey]['positions'] ?? 1);
+            $allprofiles[$uniquekey]['positions'] = $existingPositions + $positions;
+            $consolidatedCount++;
+            if ($verbose) {
+                echo "  Consolidated: $code @ $loc ($modkey) - now has {$allprofiles[$uniquekey]['positions']} positions\n";
+            }
+        } else {
+            // New vacancy.
+            $profile['positions'] = $positions;
+            $allprofiles[$uniquekey] = $profile;
+            if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
+            else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
+        }
+
+        $parsestats['profiles']++;
+        $totalPositions += $positions;
         $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
     }
     $parsestats['files'] = 1;
 
     echo "JSON import complete:\n";
-    echo "  Profiles imported: {$parsestats['profiles']}\n";
-    echo "    - FCAS: {$parsestats['fcas']}\n";
-    echo "    - FII: {$parsestats['fii']}\n";
+    echo "  Total entries in JSON: {$parsestats['profiles']}\n";
+    echo "  Unique vacancies: " . count($allprofiles) . "\n";
+    echo "  Consolidated (duplicates merged): $consolidatedCount\n";
+    echo "  Total positions: $totalPositions\n";
+    echo "    - FCAS vacancies: {$parsestats['fcas']}\n";
+    echo "    - FII vacancies: {$parsestats['fii']}\n";
     echo "\n  By location:\n";
     foreach ($locationstats as $loc => $cnt) {
-        echo "    - $loc: $cnt\n";
+        echo "    - $loc: $cnt entries\n";
     }
 
 } else if ($csvfile) {
@@ -650,10 +677,12 @@ if ($createsample) {
     cli_heading('Phase 1: Importing from CSV File');
 
     $profiles = parse_csv_file($csvfile, $verbose);
+    $consolidatedCount = 0;
+    $totalPositions = 0;
 
     foreach ($profiles as $code => $profile) {
-        // Use composite key: code_location_modality to allow same code in different locations/modalities.
-        $loc = $profile['location'] ?? 'PAMPLONA';
+        // Normalize location.
+        $loc = normalize_location($profile['location'] ?? 'PAMPLONA');
         $mod = $profile['modality'] ?? 'PRESENCIAL';
         // Normalize modality key.
         if (stripos($mod, 'DISTANCIA') !== false) {
@@ -667,17 +696,39 @@ if ($createsample) {
         }
         $uniquekey = $code . '_' . $loc . '_' . $modkey;
 
-        $allprofiles[$uniquekey] = $profile;
-        $parsestats['profiles']++;
-        if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
-        else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
+        // Get positions from this profile (default 1).
+        $positions = (int) ($profile['positions'] ?? 1);
+        if ($positions < 1) $positions = 1;
 
+        // Update location in profile to normalized value.
+        $profile['location'] = $loc;
+
+        // Consolidate duplicates: sum positions instead of overwriting.
+        if (isset($allprofiles[$uniquekey])) {
+            $existingPositions = (int) ($allprofiles[$uniquekey]['positions'] ?? 1);
+            $allprofiles[$uniquekey]['positions'] = $existingPositions + $positions;
+            $consolidatedCount++;
+            if ($verbose) {
+                echo "  Consolidated: $code @ $loc ($modkey) - now has {$allprofiles[$uniquekey]['positions']} positions\n";
+            }
+        } else {
+            $profile['positions'] = $positions;
+            $allprofiles[$uniquekey] = $profile;
+            if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
+            else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
+        }
+
+        $parsestats['profiles']++;
+        $totalPositions += $positions;
         $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
     }
     $parsestats['files'] = 1;
 
     echo "\nCSV import complete:\n";
-    echo "  Profiles imported: {$parsestats['profiles']}\n";
+    echo "  Total entries: {$parsestats['profiles']}\n";
+    echo "  Unique vacancies: " . count($allprofiles) . "\n";
+    echo "  Consolidated: $consolidatedCount\n";
+    echo "  Total positions: $totalPositions\n";
     echo "    - FCAS: {$parsestats['fcas']}\n";
     echo "    - FII: {$parsestats['fii']}\n";
     echo "\n  By location:\n";
@@ -695,6 +746,9 @@ if ($createsample) {
 
     echo "Found " . count($files) . " text files\n\n";
 
+    $consolidatedCount = 0;
+    $totalPositions = 0;
+
     foreach ($files as $file) {
         $filename = basename($file);
         $content = file_get_contents($file);
@@ -710,8 +764,8 @@ if ($createsample) {
         }
 
         foreach ($profiles as $code => $profile) {
-            // Use composite key: code_location_modality to allow same code in different locations/modalities.
-            $loc = $profile['location'] ?? 'PAMPLONA';
+            // Normalize location.
+            $loc = normalize_location($profile['location'] ?? 'PAMPLONA');
             $mod = $profile['modality'] ?? 'PRESENCIAL';
             // Normalize modality key.
             if (stripos($mod, 'DISTANCIA') !== false) {
@@ -725,15 +779,31 @@ if ($createsample) {
             }
             $uniquekey = $code . '_' . $loc . '_' . $modkey;
 
-            if (!isset($allprofiles[$uniquekey])) {
+            // Get positions from this profile (default 1).
+            $positions = (int) ($profile['positions'] ?? 1);
+            if ($positions < 1) $positions = 1;
+
+            // Update location in profile to normalized value.
+            $profile['location'] = $loc;
+
+            // Consolidate duplicates: sum positions instead of overwriting.
+            if (isset($allprofiles[$uniquekey])) {
+                $existingPositions = (int) ($allprofiles[$uniquekey]['positions'] ?? 1);
+                $allprofiles[$uniquekey]['positions'] = $existingPositions + $positions;
+                $consolidatedCount++;
+                if ($verbose) {
+                    echo "    Consolidated: $code @ $loc ($modkey) - now has {$allprofiles[$uniquekey]['positions']} positions\n";
+                }
+            } else {
+                $profile['positions'] = $positions;
                 $allprofiles[$uniquekey] = $profile;
-                $parsestats['profiles']++;
                 if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
                 else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
-
-                // Track location stats.
-                $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
             }
+
+            $parsestats['profiles']++;
+            $totalPositions += $positions;
+            $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
         }
         $parsestats['files']++;
     }
@@ -742,7 +812,10 @@ if ($createsample) {
 
     echo "\nParsing complete:\n";
     echo "  Files processed: {$parsestats['files']}\n";
-    echo "  Profiles found: {$parsestats['profiles']}\n";
+    echo "  Total entries: {$parsestats['profiles']}\n";
+    echo "  Unique vacancies: " . count($allprofiles) . "\n";
+    echo "  Consolidated: $consolidatedCount\n";
+    echo "  Total positions: $totalPositions\n";
     echo "    - FCAS: {$parsestats['fcas']}\n";
     echo "    - FII: {$parsestats['fii']}\n";
     echo "\n  By location:\n";
@@ -1327,7 +1400,7 @@ foreach ($allprofiles as $uniquekey => $profile) {
     }
 
     // Extract location and modality for duplicate check.
-    $location = $profile['location'] ?? 'PAMPLONA';
+    $location = normalize_location($profile['location'] ?? 'PAMPLONA');
     $modality = $profile['modality'] ?? 'PRESENCIAL';
     // Normalize modality key.
     if (stripos($modality, 'DISTANCIA') !== false) {
@@ -1366,7 +1439,7 @@ foreach ($allprofiles as $uniquekey => $profile) {
     $proftext = $profile['profile'] ?: '';
     $courses = $profile['courses'] ?? [];
     $faculty = $profile['faculty'] ?? '';
-    $location = $profile['location'] ?? 'PAMPLONA';
+    $location = normalize_location($profile['location'] ?? 'PAMPLONA');
     $modality = $profile['modality'] ?? 'PRESENCIAL';
     // Map modality to key: A DISTANCIA -> DISTANCIA, PRESENCIAL -> PRESENCIAL, VIRTUAL -> VIRTUAL, HIBRIDA -> HIBRIDA
     if (stripos($modality, 'DISTANCIA') !== false) {
@@ -1573,9 +1646,10 @@ foreach ($allprofiles as $uniquekey => $profile) {
         $record->convocatoriaid = $convocatoriaid;
     }
 
-    // Number of positions - always 1 per vacancy (each profile = 1 position).
-    // Multiple profiles don't mean multiple positions per vacancy.
-    $record->positions = 1;
+    // Number of positions - use consolidated value from profile (default 1).
+    // Duplicate entries for same code+location+modality are merged with summed positions.
+    $record->positions = (int) ($profile['positions'] ?? 1);
+    if ($record->positions < 1) $record->positions = 1;
 
     // Status and publication type.
     $record->status = $options['status'];
@@ -1696,10 +1770,57 @@ function detect_location($text) {
 
     foreach ($patterns as $pattern => $location) {
         if (preg_match('/' . $pattern . '/iu', $text_upper)) {
-            return $location;
+            return normalize_location($location);
         }
     }
     return null;
+}
+
+/**
+ * Normalize location names to standard keys.
+ * Handles variations like "PAMPLONA - CENTROS TUTORIALES" -> "PAMPLONA".
+ *
+ * @param string $location Raw location string.
+ * @return string Normalized location key.
+ */
+function normalize_location($location) {
+    $location = strtoupper(trim($location));
+
+    // Normalize Pamplona variations (sede principal and centros tutoriales are the same).
+    if (strpos($location, 'PAMPLONA') !== false) {
+        return 'PAMPLONA';
+    }
+
+    // Normalize other common variations.
+    $normalizations = [
+        'CUCUTA' => 'CUCUTA',
+        'CÚCUTA' => 'CUCUTA',
+        'TIBU' => 'TIBU',
+        'TIBÚ' => 'TIBU',
+        'OCANA' => 'OCANA',
+        'OCAÑA' => 'OCANA',
+        'EL TARRA' => 'ELTARRA',
+        'ELTARRA' => 'ELTARRA',
+        'SAN VICENTE' => 'SANVICENTE',
+        'SANVICENTE' => 'SANVICENTE',
+        'PUEBLO BELLO' => 'PUEBLOBELLO',
+        'PUEBLOBELLO' => 'PUEBLOBELLO',
+        'SAN PABLO' => 'SANPABLO',
+        'SANPABLO' => 'SANPABLO',
+        'SANTA ROSA' => 'SANTAROSA',
+        'SANTAROSA' => 'SANTAROSA',
+        'FUNDACION' => 'FUNDACION',
+        'FUNDACIÓN' => 'FUNDACION',
+    ];
+
+    foreach ($normalizations as $pattern => $normalized) {
+        if (strpos($location, $pattern) !== false) {
+            return $normalized;
+        }
+    }
+
+    // Return as-is if no normalization needed.
+    return $location;
 }
 
 /**
@@ -2388,6 +2509,11 @@ function parse_csv_file($filepath, $verbose = false) {
  */
 function normalize_location_key($location) {
     $location = strtoupper(trim($location));
+
+    // Handle Pamplona variations first (sede principal and centros tutoriales are the same).
+    if (strpos($location, 'PAMPLONA') !== false) {
+        return 'PAMPLONA';
+    }
 
     // Remove common prefixes.
     $location = preg_replace('/^(?:ISER\s+)?(?:SEDE\s+|CENTRO\s+TUTORIAL\s+)?/i', '', $location);

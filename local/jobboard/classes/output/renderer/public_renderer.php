@@ -688,6 +688,9 @@ trait public_renderer {
                 'loginapplyurl' => (new moodle_url('/login/index.php', [
                     'wantsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id]))->out(false),
                 ]))->out(false),
+                'signupurl' => (new moodle_url('/local/jobboard/signup.php', [
+                    'vacancyid' => $vacancy->id,
+                ]))->out(false),
                 'hasapplied' => $hasApplied,
                 'canapply' => $canapply && !$hasApplied,
                 'isloggedin' => $isloggedin,

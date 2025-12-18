@@ -189,10 +189,24 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
     /**
      * Reset the filter form.
      *
+     * Note: We don't use form.reset() because it restores fields to their
+     * initial values (from the template), not empty values.
+     *
      * @param {HTMLFormElement} form The filter form.
      */
     var resetFilters = function(form) {
-        form.reset();
+        // Clear text and search inputs.
+        var textInputs = form.querySelectorAll('input[type="text"], input[type="search"]');
+        textInputs.forEach(function(input) {
+            input.value = '';
+        });
+
+        // Reset select dropdowns to first option (usually "All").
+        var selects = form.querySelectorAll('select');
+        selects.forEach(function(select) {
+            select.selectedIndex = 0;
+        });
+
         loadResults(form);
     };
 

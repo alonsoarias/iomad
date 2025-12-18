@@ -6,9 +6,14 @@
     Context variables:
     * resultstext - String showing number of results
     * hasvacancies - Boolean if vacancies exist
-    * vacancies - Array of vacancy data
+    * vacancies - Array of vacancy data with:
+        - isloggedin: Boolean if user is logged in
+        - canapply: Boolean if user can apply
+        - hasapplied: Boolean if user has already applied
+        - signupurl: URL to signup page
+        - loginapplyurl: URL to login then apply
+        - applyurl: URL to apply directly
     * pagination - Pagination HTML
-    * isloggedin - Boolean if user is logged in
 }}
 {{! Results Header }}
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -65,8 +70,11 @@
                     </a>
                     {{/canapply}}
                     {{^isloggedin}}
-                    <a href="{{loginapplyurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
+                    <a href="{{loginapplyurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); background: var(--iser-verde); color: var(--iser-blanco); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
                         <i class="fa fa-sign-in-alt me-1"></i>{{#str}}login{{/str}}
+                    </a>
+                    <a href="{{signupurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); border: 2px solid var(--iser-verde); color: var(--iser-verde); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
+                        <i class="fa fa-user-plus me-1"></i>{{#str}}createaccount{{/str}}
                     </a>
                     {{/isloggedin}}
                     {{/hasapplied}}
