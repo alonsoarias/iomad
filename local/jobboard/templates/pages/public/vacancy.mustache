@@ -295,21 +295,21 @@
     </div>
 
     {{! Back Navigation }}
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--jb-space-6); padding-top: var(--jb-space-4); border-top: 2px solid var(--jb-gray-200);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--jb-space-3); margin-top: var(--jb-space-6); padding-top: var(--jb-space-4); border-top: 2px solid var(--jb-gray-200);">
         <a href="{{backurl}}" style="display: inline-flex; align-items: center; padding: var(--jb-space-2) var(--jb-space-4); border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-medium);">
             <i class="fa fa-arrow-left me-2"></i>{{backlabel}}
         </a>
-        {{#browseurl}}
-        <a href="{{browseurl}}" style="color: var(--iser-verde); text-decoration: none; font-weight: var(--jb-font-medium);">
-            {{#str}}browsevacancies, local_jobboard{{/str}}<i class="fa fa-arrow-right ms-2"></i>
-        </a>
-        {{/browseurl}}
+        <div class="d-flex gap-2 align-items-center flex-wrap">
+            {{#showsupport}}
+            {{> local_jobboard/partials/support_button }}
+            {{/showsupport}}
+            {{#browseurl}}
+            <a href="{{browseurl}}" style="color: var(--iser-verde); text-decoration: none; font-weight: var(--jb-font-medium);">
+                {{#str}}browsevacancies, local_jobboard{{/str}}<i class="fa fa-arrow-right ms-2"></i>
+            </a>
+            {{/browseurl}}
+        </div>
     </div>
-
-    {{! Floating Support Button }}
-    {{#showsupport}}
-    {{> local_jobboard/partials/support_button }}
-    {{/showsupport}}
 </div>
 
 <style>

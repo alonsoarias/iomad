@@ -1,7 +1,8 @@
 {{!
     @template local_jobboard/partials/support_button
 
-    Floating support button that links to the technical support form page.
+    Support button that links to the technical support form page.
+    Displayed as a regular inline button within the page layout.
 
     Context variables:
     * supportpageurl (string) - URL to support.php page
@@ -11,47 +12,10 @@
         "supportpageurl": "/local/jobboard/support.php"
     }
 }}
-{{! Floating Support Button - Links directly to support form page }}
-<div class="jb-support-button-container" data-region="jobboard-support">
-    <a href="{{supportpageurl}}"
-       class="btn btn-warning jb-support-fab shadow-lg"
-       title="{{#str}}reporterror, local_jobboard{{/str}}"
-       aria-label="{{#str}}reporterror, local_jobboard{{/str}}">
-        <i class="fa fa-bug fa-lg" aria-hidden="true"></i>
-    </a>
-</div>
-
-{{! Floating button styles }}
-<style>
-.jb-support-fab {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1040;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    text-decoration: none;
-}
-.jb-support-fab:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
-    color: inherit;
-}
-.jb-support-fab:focus {
-    outline: 3px solid rgba(255,193,7,0.5);
-    outline-offset: 2px;
-}
-@media (max-width: 576px) {
-    .jb-support-fab {
-        bottom: 16px;
-        right: 16px;
-        width: 48px;
-        height: 48px;
-    }
-}
-</style>
+{{! Support Button - Links directly to support form page }}
+<a href="{{supportpageurl}}"
+   class="btn btn-outline-warning jb-support-btn"
+   title="{{#str}}reporterror, local_jobboard{{/str}}">
+    <i class="fa fa-bug me-2" aria-hidden="true"></i>
+    {{#str}}reporterror, local_jobboard{{/str}}
+</a>
