@@ -62,14 +62,14 @@ if ($status) {
     $params['status'] = $status;
 }
 
-// For non-admin users, respect tenant filtering.
-if ($isiomad && !has_capability('local/jobboard:viewallvacancies', $context)) {
-    $usercompanyid = iomad_helper::get_user_companyid();
-    if ($usercompanyid) {
-        $where[] = '(c.companyid IS NULL OR c.companyid = :companyid)';
-        $params['companyid'] = $usercompanyid;
-    }
+// Also filter by end date for open convocatorias to ensure they're still active.
+if ($status === 'open') {
+    $where[] = '(c.enddate IS NULL OR c.enddate >= :now)';
+    $params['now'] = time();
 }
+
+// Note: All convocatorias are visible to all users regardless of company.
+// Convocatorias are public job calls - users can apply to any company's vacancies.
 
 // Get total count.
 $wheresql = implode(' AND ', $where);

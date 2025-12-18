@@ -1163,4 +1163,288 @@ trait vacancy_renderer {
             'str' => $strdata,
         ];
     }
+
+    /**
+     * Prepare vacancies page data v2 - with filter options like public page.
+     *
+     * @param array $vacancies Array of vacancy records.
+     * @param int $total Total count.
+     * @param int $urgentcount Number of urgent vacancies.
+     * @param array $filters Current filter values.
+     * @param array $filteroptions Available filter options.
+     * @param int $page Current page.
+     * @param int $perpage Items per page.
+     * @param object|null $convocatoria Convocatoria if filtering by one.
+     * @param bool $canapply Whether user can apply.
+     * @param bool $canviewall Whether user can view all vacancies.
+     * @param bool $hasfilters Whether any filters are active.
+     * @param bool $isiomad Whether IOMAD is installed.
+     * @param array $contracttypes Contract type labels.
+     * @return array Complete template data.
+     */
+    public function prepare_vacancies_page_data_v2(
+        array $vacancies,
+        int $total,
+        int $urgentcount,
+        array $filters,
+        array $filteroptions,
+        int $page,
+        int $perpage,
+        ?object $convocatoria,
+        bool $canapply,
+        bool $canviewall,
+        bool $hasfilters,
+        bool $isiomad,
+        array $contracttypes
+    ): array {
+        global $DB, $USER, $OUTPUT;
+
+        // Prepare vacancy data.
+        $vacancydata = [];
+        foreach ($vacancies as $v) {
+            $daysRemaining = date_helper::days_between(time(), $v->closedate);
+            $isUrgent = ($daysRemaining <= 7 && $daysRemaining >= 0);
+            $isClosed = ($v->closedate < time() || $v->status === 'closed');
+
+            // Check if user has applied.
+            $hasApplied = $DB->record_exists('local_jobboard_application', [
+                'vacancyid' => $v->id,
+                'userid' => $USER->id,
+            ]);
+
+            // Get convocatoria code if exists.
+            $convocatoriacode = null;
+            if (!empty($v->convocatoriaid)) {
+                $convocatoriacode = $DB->get_field('local_jobboard_convocatoria', 'code', ['id' => $v->convocatoriaid]);
+            }
+
+            // Get company name if IOMAD.
+            $companyname = null;
+            if ($isiomad && !empty($v->companyid)) {
+                $companyname = $DB->get_field('company', 'name', ['id' => $v->companyid]);
+            }
+
+            $vacancydata[] = [
+                'id' => $v->id,
+                'code' => format_string($v->code),
+                'title' => format_string($v->title),
+                'location' => !empty($v->location) ? format_string($v->location) : null,
+                'department' => !empty($v->department) ? format_string($v->department) : null,
+                'contracttype' => $v->contracttype ?? null,
+                'contracttypelabel' => !empty($v->contracttype) && isset($contracttypes[$v->contracttype])
+                    ? $contracttypes[$v->contracttype] : null,
+                'companyname' => $companyname,
+                'positions' => $v->positions,
+                'status' => $v->status,
+                'statuslabel' => get_string('status:' . $v->status, 'local_jobboard'),
+                'statuscolor' => $this->get_vacancy_status_class($v->status),
+                'convocatoriacode' => $convocatoriacode,
+                'daysremaining' => max(0, $daysRemaining),
+                'closedateformatted' => date_helper::format_date($v->closedate),
+                'urgent' => $isUrgent && !$isClosed,
+                'isclosed' => $isClosed,
+                'hasapplied' => $hasApplied,
+                'canapply' => $canapply && !$isClosed && !$hasApplied,
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $v->id]))->out(false),
+                'applyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $v->id]))->out(false),
+            ];
+        }
+
+        // Build filter form fields.
+        $filterfields = [];
+
+        // Search field.
+        $filterfields[] = [
+            'name' => 'search',
+            'label' => get_string('search', 'local_jobboard'),
+            'istext' => true,
+            'placeholder' => get_string('searchvacancies', 'local_jobboard') . '...',
+            'value' => $filters['search'] ?? '',
+            'col' => 'col-md-12 col-lg-4',
+        ];
+
+        // Department filter.
+        if (!empty($filteroptions['departments'])) {
+            $deptoptions = [['value' => '', 'label' => get_string('alldepartments', 'local_jobboard'), 'selected' => empty($filters['department'])]];
+            foreach ($filteroptions['departments'] as $key => $label) {
+                $deptoptions[] = [
+                    'value' => $key,
+                    'label' => $label,
+                    'selected' => ($filters['department'] ?? '') === $key,
+                ];
+            }
+            $filterfields[] = [
+                'name' => 'department',
+                'label' => get_string('department', 'local_jobboard'),
+                'isselect' => true,
+                'options' => $deptoptions,
+                'col' => 'col-md-6 col-lg-3',
+            ];
+        }
+
+        // Contract type filter.
+        if (!empty($filteroptions['contracttypes'])) {
+            $contractoptions = [['value' => '', 'label' => get_string('allcontracttypes', 'local_jobboard'), 'selected' => empty($filters['contracttype'])]];
+            foreach ($filteroptions['contracttypes'] as $key => $label) {
+                $contractoptions[] = [
+                    'value' => $key,
+                    'label' => $label,
+                    'selected' => ($filters['contracttype'] ?? '') === $key,
+                ];
+            }
+            $filterfields[] = [
+                'name' => 'contracttype',
+                'label' => get_string('contracttype', 'local_jobboard'),
+                'isselect' => true,
+                'options' => $contractoptions,
+                'col' => 'col-md-6 col-lg-3',
+            ];
+        }
+
+        // Location filter.
+        if (!empty($filteroptions['locations'])) {
+            $locoptions = [['value' => '', 'label' => get_string('alllocations', 'local_jobboard'), 'selected' => empty($filters['location'])]];
+            foreach ($filteroptions['locations'] as $key => $label) {
+                $locoptions[] = [
+                    'value' => $key,
+                    'label' => $label,
+                    'selected' => ($filters['location'] ?? '') === $key,
+                ];
+            }
+            $filterfields[] = [
+                'name' => 'location',
+                'label' => get_string('location', 'local_jobboard'),
+                'isselect' => true,
+                'options' => $locoptions,
+                'col' => 'col-md-6 col-lg-3',
+            ];
+        }
+
+        // Modality filter.
+        if (!empty($filteroptions['modalities'])) {
+            $modoptions = [['value' => '', 'label' => get_string('allmodalities', 'local_jobboard'), 'selected' => empty($filters['modality'])]];
+            foreach ($filteroptions['modalities'] as $key => $label) {
+                $modoptions[] = [
+                    'value' => $key,
+                    'label' => $label,
+                    'selected' => ($filters['modality'] ?? '') === $key,
+                ];
+            }
+            $filterfields[] = [
+                'name' => 'modality',
+                'label' => get_string('modality', 'local_jobboard'),
+                'isselect' => true,
+                'options' => $modoptions,
+                'col' => 'col-md-6 col-lg-3',
+            ];
+        }
+
+        // Company filter (IOMAD).
+        if ($isiomad && !empty($filteroptions['companies'])) {
+            $companyoptions = [['value' => '', 'label' => get_string('allcompanies', 'local_jobboard'), 'selected' => empty($filters['companyid'])]];
+            foreach ($filteroptions['companies'] as $key => $label) {
+                $companyoptions[] = [
+                    'value' => $key,
+                    'label' => $label,
+                    'selected' => ($filters['companyid'] ?? 0) == $key,
+                ];
+            }
+            $filterfields[] = [
+                'name' => 'companyid',
+                'label' => get_string('company', 'local_jobboard'),
+                'isselect' => true,
+                'options' => $companyoptions,
+                'col' => 'col-md-6 col-lg-3',
+            ];
+        }
+
+        // Hidden fields.
+        $hiddenfields = [['name' => 'view', 'value' => 'vacancies']];
+        if (!empty($filters['convocatoriaid'])) {
+            $hiddenfields[] = ['name' => 'convocatoriaid', 'value' => $filters['convocatoriaid']];
+        }
+
+        $filterform = [
+            'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'hiddenfields' => $hiddenfields,
+            'fields' => $filterfields,
+        ];
+
+        // Clear filters URL.
+        $clearfiltersparams = ['view' => 'vacancies', 'allcompanies' => 1];
+        if (!empty($filters['convocatoriaid'])) {
+            $clearfiltersparams['convocatoriaid'] = $filters['convocatoriaid'];
+        }
+        $clearfiltersurl = (new moodle_url('/local/jobboard/index.php', $clearfiltersparams))->out(false);
+
+        // Showing info.
+        $showinginfo = '';
+        if ($total > 0) {
+            $from = ($page * $perpage) + 1;
+            $to = min(($page + 1) * $perpage, $total);
+            $showinginfo = get_string('showingxtoy', 'local_jobboard', (object)['from' => $from, 'to' => $to, 'total' => $total]);
+        }
+
+        // Pagination.
+        $pagination = '';
+        if ($total > $perpage) {
+            $paginationParams = array_filter([
+                'view' => 'vacancies',
+                'convocatoriaid' => $filters['convocatoriaid'] ?? 0,
+                'search' => $filters['search'] ?? '',
+                'department' => $filters['department'] ?? '',
+                'contracttype' => $filters['contracttype'] ?? '',
+                'location' => $filters['location'] ?? '',
+                'modality' => $filters['modality'] ?? '',
+                'companyid' => $filters['companyid'] ?? 0,
+                'allcompanies' => $filters['showallcompanies'] ?? 0,
+            ]);
+            $baseurl = new moodle_url('/local/jobboard/index.php', $paginationParams);
+            $pagination = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
+        }
+
+        // Stats cards.
+        $stats = [
+            [
+                'value' => (string)$total,
+                'label' => get_string('availablevacancies', 'local_jobboard'),
+                'icon' => 'briefcase',
+                'color' => 'success',
+            ],
+            [
+                'value' => (string)$urgentcount,
+                'label' => get_string('closingsoon', 'local_jobboard'),
+                'icon' => 'clock',
+                'color' => 'warning',
+            ],
+        ];
+
+        // Convocatoria data for breadcrumbs.
+        $convocatoriadata = null;
+        if ($convocatoria) {
+            $convocatoriadata = [
+                'id' => $convocatoria->id,
+                'name' => format_string($convocatoria->name),
+                'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'view_convocatoria', 'id' => $convocatoria->id]))->out(false),
+            ];
+        }
+
+        return [
+            'dashboardurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+            'browseconvocatoriasurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']))->out(false),
+            'convocatoria' => $convocatoriadata,
+            'welcometitle' => get_string('explorevacancias', 'local_jobboard'),
+            'welcomedesc' => get_string('browse_vacancies_desc', 'local_jobboard'),
+            'stats' => $stats,
+            'filterform' => $filterform,
+            'hasfilters' => $hasfilters,
+            'clearfiltersurl' => $clearfiltersurl,
+            'showinginfo' => $showinginfo,
+            'hasvacancies' => !empty($vacancydata),
+            'vacancies' => $vacancydata,
+            'pagination' => $pagination,
+            'isiomad' => $isiomad,
+            'usercompanyid' => $filters['usercompanyid'] ?? 0,
+        ];
+    }
 }
