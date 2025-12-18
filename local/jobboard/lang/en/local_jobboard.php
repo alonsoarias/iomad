@@ -1416,6 +1416,12 @@ $string['timezone'] = 'Timezone';
 $string['language'] = 'Language';
 $string['selectlanguage'] = 'Select language';
 
+// Support settings.
+$string['supportsettings'] = 'Support Settings';
+$string['supportsettings_desc'] = 'Configure the support system for technical issue reporting.';
+$string['support_emails'] = 'Support Email Addresses';
+$string['support_emails_desc'] = 'Enter email addresses (one per line or comma-separated) that will receive technical support requests from users. These addresses receive notifications when users report bugs or errors through the support form.';
+
 // Accessibility
 $string['skiptomaincontent'] = 'Skip to main content';
 $string['opensinnewwindow'] = 'Opens in new window';
@@ -2145,6 +2151,8 @@ $string['andmore'] = 'and {$a} more';
 $string['moveup'] = 'Move up';
 $string['movedown'] = 'Move down';
 $string['sortorder'] = 'Sort order';
+$string['dragtoorder'] = 'Drag to reorder';
+$string['reorder_success'] = 'Order saved successfully';
 
 // =============================================================================
 // ADDITIONAL STRINGS - CONVERSION & FILES

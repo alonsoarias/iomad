@@ -502,6 +502,7 @@ trait admin_renderer {
             'pageurl' => $pageurl->out(false),
             'abouttitle' => get_string('aboutdoctypes', 'local_jobboard'),
             'aboutdesc' => get_string('doctypeshelp', 'local_jobboard'),
+            'ajaxreorderurl' => (new \moodle_url('/local/jobboard/ajax_reorder_doctypes.php'))->out(false),
         ];
     }
 
