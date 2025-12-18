@@ -81,40 +81,117 @@ if ($data = $mform->get_data()) {
     // Build email subject.
     $subject = get_string('support_email_subject', 'local_jobboard') . ': ' . $data->error_type;
 
-    // Build email body.
-    $body = get_string('support_email_header', 'local_jobboard') . "\n\n";
-    $body .= "===========================================\n";
-    $body .= get_string('support_error_type', 'local_jobboard') . ": " . $data->error_type . "\n";
-    $body .= "===========================================\n\n";
+    // Get error type label.
+    $errortypelabel = get_string('support_type_' . $data->error_type, 'local_jobboard');
 
-    $body .= get_string('support_error_description', 'local_jobboard') . ":\n";
-    $body .= "-------------------------------------------\n";
-    $body .= $description . "\n\n";
+    // Build plain text email body.
+    $body = get_string('support_email_header', 'local_jobboard') . "\n\n";
+    $body .= "TIPO DE ERROR: " . $errortypelabel . "\n\n";
+    $body .= "DESCRIPCIÓN:\n" . $description . "\n\n";
 
     if (!empty($stepstoreproduce)) {
-        $body .= get_string('support_steps_to_reproduce', 'local_jobboard') . ":\n";
-        $body .= "-------------------------------------------\n";
-        $body .= $stepstoreproduce . "\n\n";
+        $body .= "PASOS PARA REPRODUCIR:\n" . $stepstoreproduce . "\n\n";
     }
 
     if (!empty($expectedbehavior)) {
-        $body .= get_string('support_expected_behavior', 'local_jobboard') . ":\n";
-        $body .= "-------------------------------------------\n";
-        $body .= $expectedbehavior . "\n\n";
+        $body .= "COMPORTAMIENTO ESPERADO:\n" . $expectedbehavior . "\n\n";
     }
 
-    $body .= "===========================================\n";
-    $body .= get_string('support_user_info', 'local_jobboard') . "\n";
-    $body .= "===========================================\n";
-    $body .= get_string('support_reporter_name', 'local_jobboard') . ": " . $data->reporter_name . "\n";
-    $body .= get_string('support_reporter_email', 'local_jobboard') . ": " . $data->reporter_email . "\n";
+    $body .= "INFORMACIÓN DEL USUARIO\n";
+    $body .= "Nombre: " . $data->reporter_name . "\n";
+    $body .= "Correo: " . $data->reporter_email . "\n";
 
     if (!empty($data->page_url)) {
-        $body .= get_string('support_page_url', 'local_jobboard') . ": " . $data->page_url . "\n";
+        $body .= "URL: " . $data->page_url . "\n";
     }
 
-    $body .= get_string('support_browser', 'local_jobboard') . ": " . ($_SERVER['HTTP_USER_AGENT'] ?? 'Unknown') . "\n";
-    $body .= get_string('support_timestamp', 'local_jobboard') . ": " . userdate(time(), get_string('strftimedatetime', 'langconfig')) . "\n";
+    $body .= "Navegador: " . ($_SERVER['HTTP_USER_AGENT'] ?? 'Desconocido') . "\n";
+    $body .= "Fecha/Hora: " . userdate(time(), get_string('strftimedatetime', 'langconfig')) . "\n";
+
+    // Build HTML email body for better formatting.
+    $htmlbody = '
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0;">
+            <h2 style="margin: 0; font-size: 18px;">🎫 ' . get_string('support_email_header', 'local_jobboard') . '</h2>
+        </div>
+
+        <div style="background: #f8f9fa; padding: 20px; border: 1px solid #dee2e6;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 8px 12px; background: #e9ecef; font-weight: bold; width: 150px; border: 1px solid #dee2e6;">' . get_string('support_error_type', 'local_jobboard') . '</td>
+                    <td style="padding: 8px 12px; background: white; border: 1px solid #dee2e6;">
+                        <span style="background: #dc3545; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">' . htmlspecialchars($errortypelabel) . '</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="background: white; padding: 20px; border: 1px solid #dee2e6; border-top: none;">
+            <h3 style="color: #1e3a5f; margin-top: 0; border-bottom: 2px solid #1e3a5f; padding-bottom: 8px;">
+                📝 ' . get_string('support_error_description', 'local_jobboard') . '
+            </h3>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; border-left: 4px solid #1e3a5f;">
+                ' . nl2br(htmlspecialchars($description)) . '
+            </div>';
+
+    if (!empty($stepstoreproduce)) {
+        $htmlbody .= '
+            <h3 style="color: #1e3a5f; margin-top: 20px; border-bottom: 2px solid #17a2b8; padding-bottom: 8px;">
+                🔄 ' . get_string('support_steps_to_reproduce', 'local_jobboard') . '
+            </h3>
+            <div style="background: #e7f5ff; padding: 15px; border-radius: 4px; border-left: 4px solid #17a2b8;">
+                ' . nl2br(htmlspecialchars($stepstoreproduce)) . '
+            </div>';
+    }
+
+    if (!empty($expectedbehavior)) {
+        $htmlbody .= '
+            <h3 style="color: #1e3a5f; margin-top: 20px; border-bottom: 2px solid #28a745; padding-bottom: 8px;">
+                ✅ ' . get_string('support_expected_behavior', 'local_jobboard') . '
+            </h3>
+            <div style="background: #d4edda; padding: 15px; border-radius: 4px; border-left: 4px solid #28a745;">
+                ' . nl2br(htmlspecialchars($expectedbehavior)) . '
+            </div>';
+    }
+
+    $htmlbody .= '
+        </div>
+
+        <div style="background: #1e3a5f; color: white; padding: 20px; border-radius: 0 0 8px 8px;">
+            <h3 style="margin-top: 0; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 8px;">
+                👤 ' . get_string('support_user_info', 'local_jobboard') . '
+            </h3>
+            <table style="width: 100%; color: white; font-size: 13px;">
+                <tr>
+                    <td style="padding: 4px 0;"><strong>' . get_string('support_reporter_name', 'local_jobboard') . ':</strong></td>
+                    <td style="padding: 4px 0;">' . htmlspecialchars($data->reporter_name) . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 4px 0;"><strong>' . get_string('support_reporter_email', 'local_jobboard') . ':</strong></td>
+                    <td style="padding: 4px 0;"><a href="mailto:' . htmlspecialchars($data->reporter_email) . '" style="color: #87ceeb;">' . htmlspecialchars($data->reporter_email) . '</a></td>
+                </tr>';
+
+    if (!empty($data->page_url)) {
+        $htmlbody .= '
+                <tr>
+                    <td style="padding: 4px 0;"><strong>' . get_string('support_page_url', 'local_jobboard') . ':</strong></td>
+                    <td style="padding: 4px 0;"><a href="' . htmlspecialchars($data->page_url) . '" style="color: #87ceeb;">' . htmlspecialchars($data->page_url) . '</a></td>
+                </tr>';
+    }
+
+    $htmlbody .= '
+                <tr>
+                    <td style="padding: 4px 0;"><strong>' . get_string('support_browser', 'local_jobboard') . ':</strong></td>
+                    <td style="padding: 4px 0; font-size: 11px;">' . htmlspecialchars($_SERVER['HTTP_USER_AGENT'] ?? 'Desconocido') . '</td>
+                </tr>
+                <tr>
+                    <td style="padding: 4px 0;"><strong>' . get_string('support_timestamp', 'local_jobboard') . ':</strong></td>
+                    <td style="padding: 4px 0;">' . userdate(time(), get_string('strftimedatetime', 'langconfig')) . '</td>
+                </tr>
+            </table>
+        </div>
+    </div>';
+
 
     // Create a fake user for the reporter if not logged in.
     if (isloggedin() && !isguestuser()) {
@@ -142,7 +219,7 @@ if ($data = $mform->get_data()) {
         $supportuser->firstname = 'Soporte';
         $supportuser->lastname = 'Técnico';
 
-        if (email_to_user($supportuser, $fromuser, $subject, $body)) {
+        if (email_to_user($supportuser, $fromuser, $subject, $body, $htmlbody)) {
             $emailsent = true;
         }
     }
