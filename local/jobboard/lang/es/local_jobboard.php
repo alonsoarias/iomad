@@ -3535,6 +3535,7 @@ $string['indicatesrequired'] = 'indica campo requerido';
 $string['pending'] = 'Pendiente';
 $string['uploaded'] = 'Cargado';
 $string['alldocumentsuploaded'] = '¡Todos los documentos han sido cargados!';
+$string['textcontent'] = 'Contenido de texto';
 $string['consentaccepted'] = 'Consentimiento de procesamiento de datos';
 $string['consentaccepted_help'] = 'Al marcar esta casilla, usted consiente el procesamiento de sus datos personales con fines de reclutamiento de acuerdo con las regulaciones de protección de datos.';
 $string['digitalsignature_help'] = 'Escriba su nombre completo exactamente como aparece en sus documentos oficiales. Esto sirve como su firma electrónica.';

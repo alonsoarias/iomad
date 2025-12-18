@@ -869,6 +869,15 @@ trait review_renderer {
             'vacancyid' => $vacancyid,
         ]))->out(false) : null;
 
+        // Get text documents from applicationdata (e.g., carta_intencion).
+        $textdocuments = [];
+        if (!empty($application->applicationdata)) {
+            $appdata = json_decode($application->applicationdata, true);
+            if (!empty($appdata['text_documents'])) {
+                $textdocuments = $appdata['text_documents'];
+            }
+        }
+
         // Prepare documents with preview info.
         // Sequential review: find the first pending document (current) and mark others as locked.
         $docsdata = [];
@@ -978,6 +987,47 @@ trait review_renderer {
                 'isreviewed' => $isreviewed,
             ];
 
+            $docindex++;
+        }
+
+        // Add text documents (carta_intencion, etc.) to the document list.
+        foreach ($textdocuments as $doccode => $textdoc) {
+            // Get document type info.
+            $doctyperecord = $DB->get_record('local_jobboard_doctype', ['code' => $doccode]);
+            $typename = $doctyperecord ? format_string($doctyperecord->name) : $doccode;
+
+            // Text documents are considered "approved" by default (no file validation needed).
+            $docsdata[] = [
+                'id' => 'text_' . $doccode,
+                'applicationid' => $applicationid,
+                'typename' => $typename,
+                'filename' => null,
+                'status' => 'text', // Special status for text content.
+                'statuslabel' => get_string('textcontent', 'local_jobboard'),
+                'statusicon' => 'file-alt',
+                'statuscolor' => 'info',
+                'ispending' => false,
+                'downloadurl' => null,
+                'previewurl' => null,
+                'mimetype' => 'text/html',
+                'ispdf' => false,
+                'isimage' => false,
+                'canpreview' => false,
+                'istext' => true,
+                'textcontent' => $textdoc['value'],
+                'validateurl' => null,
+                'rejecturl' => null,
+                'rejectreason' => null,
+                'reviewedby' => null,
+                'reviewedat' => null,
+                'sesskey' => sesskey(),
+                'observation' => '',
+                'docindex' => $docindex + 1,
+                'iscurrent' => false,
+                'islocked' => false,
+                'isreviewed' => true, // Text docs don't need file review.
+            ];
+            $totaldocs++;
             $docindex++;
         }
 

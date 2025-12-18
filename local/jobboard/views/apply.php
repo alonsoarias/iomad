@@ -200,10 +200,13 @@ if ($data = $mform->get_data()) {
             throw new moodle_exception('applicationcreatefailed', 'local_jobboard');
         }
 
-        // Store uploaded documents.
+        // Store uploaded documents and text content.
         $submitteddocs = $mform->get_submitted_documents();
+        $textdocuments = []; // Store text/editor documents in applicationdata.
+
         foreach ($submitteddocs as $doccode => $docdata) {
             if ($docdata['type'] === 'file' && !empty($docdata['draftitemid'])) {
+                // File documents go to the document storage.
                 try {
                     document::store_from_draft(
                         $application->id,
@@ -214,7 +217,22 @@ if ($data = $mform->get_data()) {
                     debugging('Failed to store document ' . $doccode . ': ' . $e->getMessage(), DEBUG_DEVELOPER);
                     // Continue with other documents.
                 }
+            } else if (in_array($docdata['type'], ['text', 'textarea', 'editor']) && !empty($docdata['value'])) {
+                // Text/editor documents go to applicationdata JSON field.
+                $textdocuments[$doccode] = [
+                    'type' => $docdata['type'],
+                    'value' => $docdata['value'],
+                    'doctypeid' => $docdata['doctypeid'] ?? 0,
+                ];
             }
+        }
+
+        // Update applicationdata with text documents if any.
+        if (!empty($textdocuments)) {
+            $DB->set_field('local_jobboard_application', 'applicationdata',
+                json_encode(['text_documents' => $textdocuments]),
+                ['id' => $application->id]
+            );
         }
 
         // Commit transaction.

@@ -3537,6 +3537,7 @@ $string['indicatesrequired'] = 'indicates required field';
 $string['pending'] = 'Pending';
 $string['uploaded'] = 'Uploaded';
 $string['alldocumentsuploaded'] = 'All documents have been uploaded!';
+$string['textcontent'] = 'Text content';
 $string['consentaccepted'] = 'Data processing consent';
 $string['consentaccepted_help'] = 'By checking this box, you consent to the processing of your personal data for recruitment purposes in accordance with data protection regulations.';
 $string['digitalsignature_help'] = 'Type your full name exactly as it appears on your official documents. This serves as your electronic signature.';
