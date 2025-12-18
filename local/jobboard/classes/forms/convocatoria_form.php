@@ -87,12 +87,19 @@ class convocatoria_form extends \moodleform {
         $mform->setType('description', PARAM_RAW);
         $mform->addHelpButton('description', 'convocatoriadescription', 'local_jobboard');
 
-        // PDF document upload.
+        // PDF document upload (Acuerdo/Resolución).
         $mform->addElement('filepicker', 'convocatoria_pdf', get_string('convocatoriapdf', 'local_jobboard'), null, [
             'accepted_types' => ['.pdf'],
             'maxfiles' => 1,
         ]);
         $mform->addHelpButton('convocatoria_pdf', 'convocatoriapdf', 'local_jobboard');
+
+        // Terms PDF document upload.
+        $mform->addElement('filepicker', 'convocatoria_terms_pdf', get_string('convocatoriaterms_pdf', 'local_jobboard'), null, [
+            'accepted_types' => ['.pdf'],
+            'maxfiles' => 1,
+        ]);
+        $mform->addHelpButton('convocatoria_terms_pdf', 'convocatoriaterms_pdf', 'local_jobboard');
 
         // Header: Dates.
         $mform->addElement('header', 'datesheader', get_string('dates', 'local_jobboard'));
@@ -304,7 +311,7 @@ class convocatoria_form extends \moodleform {
         // Load document exemptions for this convocatoria.
         $data->exempted_doctypes = \local_jobboard\convocatoria_exemption::get_exempted_doctype_ids((int) $convocatoria->id);
 
-        // Prepare PDF filepicker draft area if PDF exists.
+        // Prepare PDF filepicker draft area if PDF exists (Acuerdo).
         $context = \context_system::instance();
         $draftitemid = file_get_submitted_draft_itemid('convocatoria_pdf');
         file_prepare_draft_area(
@@ -316,6 +323,18 @@ class convocatoria_form extends \moodleform {
             ['maxfiles' => 1, 'accepted_types' => ['.pdf']]
         );
         $data->convocatoria_pdf = $draftitemid;
+
+        // Prepare Terms PDF filepicker draft area if PDF exists.
+        $draftitemidterms = file_get_submitted_draft_itemid('convocatoria_terms_pdf');
+        file_prepare_draft_area(
+            $draftitemidterms,
+            $context->id,
+            'local_jobboard',
+            'convocatoria_terms_pdf',
+            $convocatoria->id,
+            ['maxfiles' => 1, 'accepted_types' => ['.pdf']]
+        );
+        $data->convocatoria_terms_pdf = $draftitemidterms;
 
         $this->set_data($data);
     }

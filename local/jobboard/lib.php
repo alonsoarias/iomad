@@ -400,6 +400,38 @@ function local_jobboard_pluginfile($course, $cm, $context, $filearea, $args, $fo
         return;
     }
 
+    // Handle convocatoria Terms PDF files (public access for open convocatorias).
+    if ($filearea === 'convocatoria_terms_pdf') {
+        // Get the convocatoria record.
+        $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $itemid]);
+        if (!$convocatoria) {
+            return false;
+        }
+
+        // Allow public access if convocatoria is open.
+        $isopen = ($convocatoria->status === 'open' && $convocatoria->enddate >= time());
+        $canview = $isopen || (isloggedin() && has_capability('local/jobboard:manageconvocatorias', $context));
+
+        if (!$canview) {
+            return false;
+        }
+
+        $fs = get_file_storage();
+        $file = $fs->get_file($context->id, 'local_jobboard', $filearea, $itemid, $filepath, $filename);
+
+        if (!$file || $file->is_directory()) {
+            return false;
+        }
+
+        // Log the access if user is logged in.
+        if (isloggedin()) {
+            \local_jobboard\audit::log('convocatoria_terms_pdf_download', 'convocatoria', $convocatoria->id);
+        }
+
+        send_stored_file($file, 86400, 0, $forcedownload, $options);
+        return;
+    }
+
     // Handle application documents (requires login).
     if ($filearea === 'application_documents') {
         require_login();

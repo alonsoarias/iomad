@@ -190,43 +190,77 @@ trait public_renderer {
             'whatsapp' => 'https://wa.me/?text=' . $sharetext . '%20' . rawurlencode($shareurl),
         ];
 
-        // Build attachments array for PDF document.
+        // Build attachments array for PDF documents (Acuerdo and Terms).
         $attachments = [];
         $hasattachments = false;
+        $context = \context_system::instance();
+        $fs = get_file_storage();
 
-        if (!empty($convocatoria->pdf_filename)) {
-            // Get PDF file from Moodle file storage.
-            $context = \context_system::instance();
-            $fs = get_file_storage();
-            $files = $fs->get_area_files(
-                $context->id,
-                'local_jobboard',
-                'convocatoria_pdf',
-                $convocatoria->id,
-                'itemid, filepath, filename',
-                false
-            );
+        // Get Acuerdo/Resolución PDF.
+        $files = $fs->get_area_files(
+            $context->id,
+            'local_jobboard',
+            'convocatoria_pdf',
+            $convocatoria->id,
+            'itemid, filepath, filename',
+            false
+        );
 
-            foreach ($files as $file) {
-                if ($file->get_filename() !== '.') {
-                    $pdfurl = moodle_url::make_pluginfile_url(
-                        $context->id,
-                        'local_jobboard',
-                        'convocatoria_pdf',
-                        $convocatoria->id,
-                        $file->get_filepath(),
-                        $file->get_filename(),
-                        false
-                    );
+        foreach ($files as $file) {
+            if ($file->get_filename() !== '.') {
+                $pdfurl = moodle_url::make_pluginfile_url(
+                    $context->id,
+                    'local_jobboard',
+                    'convocatoria_pdf',
+                    $convocatoria->id,
+                    $file->get_filepath(),
+                    $file->get_filename(),
+                    false
+                );
 
-                    $attachments[] = [
-                        'name' => $file->get_filename(),
-                        'url' => $pdfurl->out(false),
-                        'icon' => 'pdf',
-                    ];
-                    $hasattachments = true;
-                    break; // Only one PDF per convocatoria.
-                }
+                $attachments[] = [
+                    'name' => $file->get_filename(),
+                    'label' => get_string('convocatoriapdf', 'local_jobboard'),
+                    'url' => $pdfurl->out(false),
+                    'icon' => 'pdf',
+                    'type' => 'agreement',
+                ];
+                $hasattachments = true;
+                break; // Only one PDF per area.
+            }
+        }
+
+        // Get Terms PDF.
+        $termsfiles = $fs->get_area_files(
+            $context->id,
+            'local_jobboard',
+            'convocatoria_terms_pdf',
+            $convocatoria->id,
+            'itemid, filepath, filename',
+            false
+        );
+
+        foreach ($termsfiles as $file) {
+            if ($file->get_filename() !== '.') {
+                $termspdfurl = moodle_url::make_pluginfile_url(
+                    $context->id,
+                    'local_jobboard',
+                    'convocatoria_terms_pdf',
+                    $convocatoria->id,
+                    $file->get_filepath(),
+                    $file->get_filename(),
+                    false
+                );
+
+                $attachments[] = [
+                    'name' => $file->get_filename(),
+                    'label' => get_string('convocatoriaterms_pdf', 'local_jobboard'),
+                    'url' => $termspdfurl->out(false),
+                    'icon' => 'pdf',
+                    'type' => 'terms',
+                ];
+                $hasattachments = true;
+                break; // Only one PDF per area.
             }
         }
 

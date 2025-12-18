@@ -165,6 +165,30 @@ if ($data = $form->get_data()) {
                 );
             }
 
+            // Save PDF files (Acuerdo).
+            if (!empty($data->convocatoria_pdf)) {
+                file_save_draft_area_files(
+                    $data->convocatoria_pdf,
+                    $context->id,
+                    'local_jobboard',
+                    'convocatoria_pdf',
+                    $convocatoria->id,
+                    ['maxfiles' => 1, 'accepted_types' => ['.pdf']]
+                );
+            }
+
+            // Save Terms PDF file.
+            if (!empty($data->convocatoria_terms_pdf)) {
+                file_save_draft_area_files(
+                    $data->convocatoria_terms_pdf,
+                    $context->id,
+                    'local_jobboard',
+                    'convocatoria_terms_pdf',
+                    $convocatoria->id,
+                    ['maxfiles' => 1, 'accepted_types' => ['.pdf']]
+                );
+            }
+
             $message = get_string('convocatoriaupdated', 'local_jobboard');
 
             // Redirect back to edit page to continue editing.
@@ -211,6 +235,30 @@ if ($data = $form->get_data()) {
                     $newid,
                     $data->exempted_doctypes,
                     $data->exemption_reason ?? null
+                );
+            }
+
+            // Save PDF files (Acuerdo).
+            if (!empty($data->convocatoria_pdf)) {
+                file_save_draft_area_files(
+                    $data->convocatoria_pdf,
+                    $context->id,
+                    'local_jobboard',
+                    'convocatoria_pdf',
+                    $newid,
+                    ['maxfiles' => 1, 'accepted_types' => ['.pdf']]
+                );
+            }
+
+            // Save Terms PDF file.
+            if (!empty($data->convocatoria_terms_pdf)) {
+                file_save_draft_area_files(
+                    $data->convocatoria_terms_pdf,
+                    $context->id,
+                    'local_jobboard',
+                    'convocatoria_terms_pdf',
+                    $newid,
+                    ['maxfiles' => 1, 'accepted_types' => ['.pdf']]
                 );
             }
 
