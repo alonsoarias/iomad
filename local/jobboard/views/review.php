@@ -103,7 +103,8 @@ if ($action && confirm_sesskey()) {
                     $newstatus = 'docs_validated';
                 }
 
-                $app->update_status($newstatus, $USER->id);
+                // Update application status with observations as comments.
+                $app->change_status($newstatus, $observations, $USER->id);
 
                 // Send consolidated email notification.
                 try {

@@ -66,12 +66,16 @@ class application_form extends \moodleform {
         $usergender = $userprofile->gender ?? '';
         $birthdate = (int) ($userprofile->birthdate ?? 0);
         $userage = $this->calculate_user_age($birthdate);
+        $usereducation = $userprofile->education_level ?? '';
+
+        // Check if user has active ISER exemption.
+        $hasiserexemption = \local_jobboard\exemption::user_has_active_exemption($USER->id);
 
         // Load enabled document types.
         $doctypes = $this->load_document_types($convocatoriaid, $isexemption);
 
-        // Filter based on user profile.
-        $this->filtereddocs = $this->filter_documents_for_user($doctypes, $usergender, $userage);
+        // Filter based on user profile and exemptions.
+        $this->filtereddocs = $this->filter_documents_for_user($doctypes, $usergender, $userage, $usereducation, $hasiserexemption);
 
         // Add form CSS class for styling.
         $mform->_attributes['class'] = 'jb-application-form';
@@ -384,23 +388,42 @@ class application_form extends \moodleform {
      * @param array $doctypes Document types.
      * @param string $gender User gender (M/F).
      * @param int|null $age User age in years.
+     * @param string $education User education level (tecnico, tecnologo, profesional, etc.).
+     * @param bool $hasiserexemption Whether user has active ISER exemption.
      * @return array Filtered documents.
      */
-    protected function filter_documents_for_user(array $doctypes, string $gender, ?int $age): array {
+    protected function filter_documents_for_user(array $doctypes, string $gender, ?int $age, string $education = '', bool $hasiserexemption = false): array {
         $filtered = [];
 
         foreach ($doctypes as $doc) {
+            // ISER exemption filter.
+            // If user has ISER exemption and document is marked as ISER exempted, skip it.
+            if ($hasiserexemption && !empty($doc->iserexempted)) {
+                continue; // User is exempt from this document as ISER employee.
+            }
+
             // Gender filter.
+            // If document has gender condition and user's gender doesn't match, skip it.
             if (!empty($doc->gender_condition)) {
                 if ($gender !== $doc->gender_condition) {
-                    continue; // Skip this document.
+                    continue; // Skip - document is for different gender.
                 }
             }
 
             // Age exemption filter.
+            // If user's age is >= threshold, they are exempt from this document.
             if ($age !== null && !empty($doc->age_exemption_threshold)) {
                 if ($age >= (int) $doc->age_exemption_threshold) {
                     continue; // User is exempt by age.
+                }
+            }
+
+            // Profession/Education exemption filter.
+            // If document has profession exemptions and user's education matches, skip it.
+            if (!empty($doc->profession_exempt) && !empty($education)) {
+                $exemptedEducations = json_decode($doc->profession_exempt, true);
+                if (is_array($exemptedEducations) && in_array($education, $exemptedEducations)) {
+                    continue; // User is exempt by education level.
                 }
             }
 
