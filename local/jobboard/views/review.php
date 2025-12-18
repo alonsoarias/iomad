@@ -272,6 +272,13 @@ if (!$applicationid) {
     );
 }
 
+// Initialize document review module if viewing a single application.
+if ($applicationid && isset($application) && $application->id) {
+    $PAGE->requires->js_call_amd('local_jobboard/document_review', 'init', [[
+        'applicationId' => $applicationid,
+    ]]);
+}
+
 // Output the page.
 echo $OUTPUT->header();
 echo $renderer->render_review_page($data);
