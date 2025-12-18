@@ -17,7 +17,8 @@
 /**
  * View convocatoria details with vacancies for applicants.
  *
- * Uses renderer + Mustache template for clean separation of concerns.
+ * Reuses the same renderer methods as the public page for consistency.
+ * Shows all vacancies from the convocatoria without company filtering.
  *
  * @package   local_jobboard
  * @copyright 2024 ISER
@@ -28,10 +29,19 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../lib.php');
 
-// Parameters.
+// Parameters - same filters as public page.
 $convocatoriaid = required_param('id', PARAM_INT);
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 12, PARAM_INT);
+$filtercode = optional_param('code', '', PARAM_TEXT);
+$filtercontract = optional_param('contracttype', '', PARAM_ALPHANUMEXT);
+$filterdepartment = optional_param('department', '', PARAM_TEXT);
+$filterlocation = optional_param('location', '', PARAM_TEXT);
+$filtermodality = optional_param('modality', '', PARAM_ALPHANUMEXT);
+$filtersearch = optional_param('search', '', PARAM_TEXT);
+
+// AJAX request flag.
+$isajax = optional_param('ajax', 0, PARAM_INT);
 
 // Load convocatoria.
 $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $convocatoriaid], '*', MUST_EXIST);
@@ -54,63 +64,183 @@ $PAGE->navbar->add($convocatoria->name);
 
 // Check capabilities.
 $canapply = has_capability('local/jobboard:apply', $context);
-$canmanage = has_capability('local/jobboard:createvacancy', $context);
+$canviewinternal = has_capability('local/jobboard:viewinternalvacancies', $context);
 
-// Get vacancies for this convocatoria.
+// Get contract types for display.
+$contracttypes = local_jobboard_get_contract_types();
+
+// Build vacancies query with filters (same as public.php - no company filtering).
+$vacancyParams = ['convid' => $convocatoriaid];
+$vacancyWhere = "v.convocatoriaid = :convid AND v.status = 'published'";
+
+if (!$canviewinternal) {
+    $vacancyWhere .= " AND v.publicationtype = 'public'";
+}
+
+// Filter: Code.
+if (!empty($filtercode)) {
+    $vacancyWhere .= " AND " . $DB->sql_like('v.code', ':code', false);
+    $vacancyParams['code'] = '%' . $DB->sql_like_escape($filtercode) . '%';
+}
+
+// Filter: Contract type.
+if (!empty($filtercontract)) {
+    $vacancyWhere .= " AND v.contracttype = :contracttype";
+    $vacancyParams['contracttype'] = $filtercontract;
+}
+
+// Filter: Department (Programa académico).
+if (!empty($filterdepartment)) {
+    $vacancyWhere .= " AND v.department = :department";
+    $vacancyParams['department'] = $filterdepartment;
+}
+
+// Filter: Location (Ubicación).
+if (!empty($filterlocation)) {
+    $vacancyWhere .= " AND v.location = :location";
+    $vacancyParams['location'] = $filterlocation;
+}
+
+// Filter: Modality.
+if (!empty($filtermodality)) {
+    $vacancyWhere .= " AND v.modality = :modality";
+    $vacancyParams['modality'] = $filtermodality;
+}
+
+// Filter: General search.
+if (!empty($filtersearch)) {
+    $searchlike = '%' . $DB->sql_like_escape($filtersearch) . '%';
+    $vacancyWhere .= " AND (" . $DB->sql_like('v.title', ':search1', false) .
+                     " OR " . $DB->sql_like('v.code', ':search2', false) .
+                     " OR " . $DB->sql_like('v.description', ':search3', false) . ")";
+    $vacancyParams['search1'] = $searchlike;
+    $vacancyParams['search2'] = $searchlike;
+    $vacancyParams['search3'] = $searchlike;
+}
+
+// Get total count.
+$totalVacancies = $DB->count_records_sql(
+    "SELECT COUNT(*) FROM {local_jobboard_vacancy} v WHERE $vacancyWhere",
+    $vacancyParams
+);
+
+// Get vacancies.
+$vacancySql = "SELECT v.* FROM {local_jobboard_vacancy} v WHERE $vacancyWhere ORDER BY v.code ASC";
+$vacancies = $DB->get_records_sql($vacancySql, $vacancyParams, $page * $perpage, $perpage);
+
+// Get all vacancies for stats (unfiltered).
+$allVacanciesForStats = $DB->get_records_sql(
+    "SELECT v.* FROM {local_jobboard_vacancy} v
+     WHERE v.convocatoriaid = :convid AND v.status = 'published'" .
+    ($canviewinternal ? "" : " AND v.publicationtype = 'public'"),
+    ['convid' => $convocatoriaid]
+);
+
+// Build filter options from all vacancies (same as public.php).
+$departmentsList = [];
+$contractTypesList = [];
+$locationsList = [];
+$modalitiesList = [];
+
+// Get predefined modalities for proper labels.
+$predefinedModalities = local_jobboard_get_modalities();
+
+foreach ($allVacanciesForStats as $v) {
+    // Departments (Programa académico).
+    if (!empty($v->department) && !isset($departmentsList[$v->department])) {
+        $departmentsList[$v->department] = $v->department;
+    }
+    // Contract types (Tipo de Vinculación).
+    if (!empty($v->contracttype) && !isset($contractTypesList[$v->contracttype])) {
+        $contractTypesList[$v->contracttype] = $contracttypes[$v->contracttype] ?? $v->contracttype;
+    }
+    // Locations (Ubicación).
+    if (!empty($v->location) && !isset($locationsList[$v->location])) {
+        $locationsList[$v->location] = $v->location;
+    }
+    // Modalities.
+    if (!empty($v->modality) && !isset($modalitiesList[$v->modality])) {
+        // Use predefined label if available, otherwise use stored value.
+        $modalitylabel = $predefinedModalities[$v->modality] ?? $v->modality;
+        $modalitiesList[$v->modality] = $modalitylabel;
+    }
+}
+
+// Sort options alphabetically.
+asort($departmentsList);
+asort($contractTypesList);
+asort($locationsList);
+asort($modalitiesList);
+
 $filters = [
-    'convocatoriaid' => $convocatoriaid,
-    'status' => 'published',
-    'respect_tenant' => true,
-    'userid' => $USER->id,
+    'code' => $filtercode,
+    'contracttype' => $filtercontract,
+    'department' => $filterdepartment,
+    'location' => $filterlocation,
+    'modality' => $filtermodality,
+    'search' => $filtersearch,
 ];
 
-$result = \local_jobboard\vacancy::get_list($filters, 'closedate', 'ASC', $page, $perpage);
-$vacancies = $result['vacancies'];
-$totalvacancies = $result['total'];
-
-// Get statistics.
-$stats = [
-    'total_vacancies' => $totalvacancies,
-    'positions' => 0,
-    'applications' => 0,
+$filterOptions = [
+    'contracttypes' => $contractTypesList,
+    'departments' => $departmentsList,
+    'locations' => $locationsList,
+    'modalities' => $modalitiesList,
 ];
-
-foreach ($vacancies as $v) {
-    $stats['positions'] += $v->positions;
-}
-
-if ($canmanage) {
-    $stats['applications'] = $DB->count_records_sql(
-        "SELECT COUNT(a.id) FROM {local_jobboard_application} a
-           JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
-          WHERE v.convocatoriaid = :convid",
-        ['convid' => $convocatoriaid]
-    );
-}
 
 // Get the renderer.
 $renderer = $PAGE->get_renderer('local_jobboard');
 
-// Prepare template data using the renderer.
-$data = $renderer->prepare_view_convocatoria_page_data(
+// Prepare template data using the same method as public.php.
+$data = $renderer->prepare_public_vacancies_data(
     $convocatoria,
     $vacancies,
-    $totalvacancies,
-    $stats,
+    $totalVacancies,
+    $allVacanciesForStats,
+    $filters,
+    $filterOptions,
+    true, // isloggedin - always true for authenticated view
     $canapply,
-    $canmanage,
+    $contracttypes,
     $page,
     $perpage
 );
 
-// Output the page.
-echo $OUTPUT->header();
-echo $renderer->render_view_convocatoria_page($data);
+// Override view parameter in filter form for view_convocatoria view.
+foreach ($data['filterform']['hiddenfields'] as $key => $field) {
+    if ($field['name'] === 'view') {
+        $data['filterform']['hiddenfields'][$key]['value'] = 'view_convocatoria';
+    }
+    if ($field['name'] === 'convocatoriaid') {
+        // Change to 'id' for view_convocatoria.
+        $data['filterform']['hiddenfields'][$key]['name'] = 'id';
+    }
+}
 
-// Initialize JavaScript via AMD modules.
-$PAGE->requires->js_call_amd('local_jobboard/card_actions', 'init', [[
-    'buttonSelector' => '.jb-vacancy-card .jb-card-action',
-    'cardSelector' => '.jb-vacancy-card',
+// Update clear filters URL for view_convocatoria view.
+$data['clearfiltersurl'] = (new moodle_url('/local/jobboard/index.php', [
+    'view' => 'view_convocatoria',
+    'id' => $convocatoriaid,
+]))->out(false);
+
+// Update back URL for view_convocatoria view.
+$data['backtoconvocatoriasurl'] = (new moodle_url('/local/jobboard/index.php', ['view' => 'browse_convocatorias']))->out(false);
+
+// Handle AJAX request - return only vacancy results.
+if ($isajax) {
+    header('Content-Type: text/html; charset=utf-8');
+    echo $renderer->render_public_vacancies_results($data);
+    exit;
+}
+
+// Output page using the same template as public.php.
+echo $OUTPUT->header();
+echo $renderer->render_public_page($data);
+
+// Initialize filter auto-submit for all users.
+$PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
+    'formSelector' => '.jb-filter-form',
+    'resultsSelector' => '[data-region="filter-results"]',
 ]]);
 
 echo $OUTPUT->footer();
