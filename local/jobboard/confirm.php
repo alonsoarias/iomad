@@ -27,6 +27,7 @@
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/authlib.php');
+require_once($CFG->dirroot . '/user/lib.php');
 
 $data = optional_param('data', '', PARAM_RAW);
 $p = optional_param('p', '', PARAM_ALPHANUM);
