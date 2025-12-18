@@ -2832,6 +2832,7 @@ $string['nousersavailable'] = 'No hay usuarios disponibles';
 $string['userunassigned'] = 'Usuario desasignado';
 $string['usernotfound'] = 'Usuario no encontrado';
 $string['username_differs_idnumber'] = 'El nombre de usuario difiere del número de identificación';
+$string['username_matches_idnumber'] = 'El nombre de usuario coincide con su número de identificación';
 $string['username_updated'] = 'Nombre de usuario actualizado';
 
 // =============================================================================

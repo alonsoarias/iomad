@@ -2816,6 +2816,7 @@ $string['nousersavailable'] = 'No users available';
 $string['userunassigned'] = 'User unassigned';
 $string['usernotfound'] = 'User not found';
 $string['username_differs_idnumber'] = 'Username differs from ID number';
+$string['username_matches_idnumber'] = 'Username matches your ID number';
 $string['username_updated'] = 'Username updated';
 
 // =============================================================================

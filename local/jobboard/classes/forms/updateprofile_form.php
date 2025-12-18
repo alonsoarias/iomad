@@ -67,19 +67,33 @@ class updateprofile_form extends moodleform {
         $mform->addElement('header', 'accountheader', get_string('signup_account_header', 'local_jobboard'));
         $mform->setExpanded('accountheader', true);
 
-        // Check if username differs from idnumber (needs update option).
-        $usernameneedsupdate = !empty($user->idnumber) && $user->username !== strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $user->idnumber));
+        // Always show current username.
+        $mform->addElement('static', 'username_display', get_string('username'),
+            '<strong>' . s($user->username) . '</strong>');
 
-        // Username field - show if different from idnumber.
+        // Check if username differs from idnumber (needs update option).
+        $expectedusername = !empty($user->idnumber) ? strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $user->idnumber)) : '';
+        $usernameneedsupdate = !empty($user->idnumber) && $user->username !== $expectedusername;
+
+        // Username update option - show if different from idnumber.
         if ($usernameneedsupdate) {
             $mform->addElement('static', 'username_notice', '',
-                '<div class="alert alert-warning">' .
-                '<i class="fa fa-exclamation-triangle mr-2"></i>' .
+                '<div class="alert alert-warning mt-2">' .
+                '<i class="fa fa-exclamation-triangle me-2"></i>' .
                 get_string('username_differs_idnumber', 'local_jobboard') .
-                '</div>');
+                '<br><small class="text-muted">' .
+                get_string('username') . ': <code>' . s($user->username) . '</code> → ' .
+                get_string('signup_idnumber', 'local_jobboard') . ': <code>' . s($expectedusername) . '</code>' .
+                '</small></div>');
             $mform->addElement('advcheckbox', 'update_username',
                 get_string('update_username', 'local_jobboard'),
                 get_string('update_username_desc', 'local_jobboard'));
+        } else if (!empty($user->idnumber)) {
+            // Username matches idnumber - show confirmation.
+            $mform->addElement('static', 'username_ok', '',
+                '<div class="alert alert-success mt-2 mb-0 py-2">' .
+                '<i class="fa fa-check-circle me-2"></i>' .
+                '<small>' . get_string('username_matches_idnumber', 'local_jobboard') . '</small></div>');
         }
 
         // Email (editable).
