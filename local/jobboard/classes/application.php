@@ -315,6 +315,9 @@ class application {
         ]);
         $event->trigger();
 
+        // Queue confirmation notification to applicant.
+        notification::queue_application_received($application);
+
         return $application;
     }
 
