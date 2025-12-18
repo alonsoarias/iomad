@@ -18,7 +18,7 @@
  * Post-installation script for local_jobboard.
  *
  * @package   local_jobboard
- * @copyright 2024 ISER
+ * @copyright 2024-2025 ISER
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -32,12 +32,69 @@ defined('MOODLE_INTERNAL') || die();
 function xmldb_local_jobboard_install() {
     global $DB;
 
-    // Insert predefined document types.
-    $doctypes = [
+    // Insert predefined document types in the required order.
+    $doctypes = local_jobboard_get_default_doctypes();
+
+    $now = time();
+    foreach ($doctypes as $doctype) {
+        $doctype['timecreated'] = $now;
+        $DB->insert_record('local_jobboard_doctype', (object) $doctype);
+    }
+
+    // Insert default email templates.
+    $templates = local_jobboard_get_default_email_templates();
+
+    foreach ($templates as $template) {
+        $template['timecreated'] = $now;
+        $DB->insert_record('local_jobboard_email_template', (object) $template);
+    }
+
+    // Import User Tours.
+    local_jobboard_install_tours();
+
+    // Create custom roles.
+    local_jobboard_create_roles();
+
+    return true;
+}
+
+/**
+ * Get default document types for installation.
+ *
+ * Documents are ordered according to application process requirements.
+ *
+ * @return array Array of document type definitions.
+ */
+function local_jobboard_get_default_doctypes(): array {
+    return [
+        // 1. Carta de intención (campo de texto).
+        [
+            'code' => 'carta_intencion',
+            'name' => 'Carta de Intención',
+            'description' => 'Carta de intención del aspirante',
+            'requirements' => 'Redacte su carta de intención explicando su motivación para aplicar',
+            'checklistitems' => json_encode([
+                'Expresa claramente la motivación para postularse',
+                'Menciona experiencia relevante',
+                'Indica disponibilidad y compromiso',
+                'Redacción clara y profesional',
+            ]),
+            'externalurl' => '',
+            'isrequired' => 1,
+            'iserexempted' => 0,
+            'gender_condition' => null,
+            'profession_exempt' => null,
+            'input_type' => 'textarea',
+            'category' => 'application',
+            'defaultmaxagedays' => null,
+            'sortorder' => 1,
+            'enabled' => 1,
+        ],
+        // 2. Hoja de vida formato función pública (SIGEP II).
         [
             'code' => 'sigep',
-            'name' => 'Formato Único Hoja de Vida SIGEP II',
-            'description' => 'Hoja de vida actualizada en SIGEP II',
+            'name' => 'Hoja de Vida Formato Función Pública',
+            'description' => 'Hoja de vida actualizada en formato SIGEP II',
             'requirements' => 'Todos los campos diligenciados, experiencia conforme certificaciones laborales adjuntas, toda experiencia con soporte, debe estar firmado',
             'checklistitems' => json_encode([
                 'Es el formato oficial de SIGEP II',
@@ -47,15 +104,18 @@ function xmldb_local_jobboard_install() {
                 'Documento está firmado',
                 'Datos personales son consistentes con otros documentos',
             ]),
-            'externalurl' => '',
+            'externalurl' => 'https://www.funcionpublica.gov.co/web/sigep2',
+            'isrequired' => 1,
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'employment',
             'defaultmaxagedays' => null,
-            'sortorder' => 1,
+            'sortorder' => 2,
             'enabled' => 1,
         ],
+        // 3. Formato Declaración de Bienes y Rentas.
         [
             'code' => 'bienes_rentas',
             'name' => 'Formato Declaración de Bienes y Rentas',
@@ -69,18 +129,21 @@ function xmldb_local_jobboard_install() {
                 'Información es legible',
             ]),
             'externalurl' => '',
+            'isrequired' => 1,
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'employment',
             'defaultmaxagedays' => null,
-            'sortorder' => 2,
+            'sortorder' => 3,
             'enabled' => 1,
         ],
+        // 4. Documento de identidad.
         [
             'code' => 'cedula',
-            'name' => 'Cédula de Ciudadanía',
-            'description' => 'Fotocopia de cédula',
+            'name' => 'Documento de Identidad',
+            'description' => 'Fotocopia de cédula de ciudadanía',
             'requirements' => 'Copia en una sola página, legible',
             'checklistitems' => json_encode([
                 'Documento legible',
@@ -90,58 +153,17 @@ function xmldb_local_jobboard_install() {
                 'Nombre completo coincide con datos de postulación',
             ]),
             'externalurl' => '',
+            'isrequired' => 1,
             'iserexempted' => 1,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'identification',
-            'defaultmaxagedays' => null,
-            'sortorder' => 3,
-            'enabled' => 1,
-        ],
-        [
-            'code' => 'titulo_academico',
-            'name' => 'Títulos Académicos',
-            'description' => 'Copia de títulos académicos (pregrado, posgrado, especialización)',
-            'requirements' => 'Legibles, completos, debe evidenciarse número de folio, registro y fecha. Títulos extranjeros: Diploma, acta de grado y resolución de convalidación',
-            'checklistitems' => json_encode([
-                'Es diploma o acta de grado legible y completo',
-                'Nombre del programa es visible',
-                'Título obtenido es claro',
-                'Número de folio es visible',
-                'Número de registro es visible',
-                'Fecha de grado es visible',
-                'Firma de autoridad universitaria presente',
-                'Si es título extranjero: incluye diploma, acta de grado Y resolución de convalidación',
-            ]),
-            'externalurl' => '',
-            'iserexempted' => 1,
-            'gender_condition' => null,
-            'profession_exempt' => null,
-            'category' => 'academic',
             'defaultmaxagedays' => null,
             'sortorder' => 4,
             'enabled' => 1,
         ],
-        [
-            'code' => 'tarjeta_profesional',
-            'name' => 'Tarjeta Profesional',
-            'description' => 'Fotocopia de tarjeta profesional',
-            'requirements' => 'Legible, vigente. No aplica para licenciados en educación.',
-            'checklistitems' => json_encode([
-                'Número de tarjeta profesional visible',
-                'Nombre del profesional coincide',
-                'Consejo profesional que la expide',
-                'No está vencida (si tiene fecha)',
-            ]),
-            'externalurl' => '',
-            'iserexempted' => 1,
-            'gender_condition' => null,
-            'profession_exempt' => json_encode(['licenciatura']),
-            'category' => 'academic',
-            'defaultmaxagedays' => null,
-            'sortorder' => 5,
-            'enabled' => 1,
-        ],
+        // 5. Libreta militar (si aplica).
         [
             'code' => 'libreta_militar',
             'name' => 'Libreta Militar',
@@ -155,65 +177,203 @@ function xmldb_local_jobboard_install() {
                 'Nombre coincide con datos de postulación',
             ]),
             'externalurl' => '',
+            'isrequired' => 0,
             'iserexempted' => 1,
             'gender_condition' => 'M',
+            'age_exemption_threshold' => 50,
             'profession_exempt' => null,
+            'conditional_note' => 'Aplica solo para hombres menores de 50 años',
+            'input_type' => 'file',
             'category' => 'identification',
+            'defaultmaxagedays' => null,
+            'sortorder' => 5,
+            'enabled' => 1,
+        ],
+        // 6. Títulos pregrado y posgrado.
+        [
+            'code' => 'titulo_academico',
+            'name' => 'Títulos Pregrado y Posgrado',
+            'description' => 'Copia de títulos académicos (pregrado, posgrado, especialización, maestría, doctorado)',
+            'requirements' => 'Legibles, completos, debe evidenciarse número de folio, registro y fecha. Títulos extranjeros: Diploma, acta de grado y resolución de convalidación',
+            'checklistitems' => json_encode([
+                'Es diploma o acta de grado legible y completo',
+                'Nombre del programa es visible',
+                'Título obtenido es claro',
+                'Número de folio es visible',
+                'Número de registro es visible',
+                'Fecha de grado es visible',
+                'Firma de autoridad universitaria presente',
+                'Si es título extranjero: incluye diploma, acta de grado Y resolución de convalidación',
+            ]),
+            'externalurl' => '',
+            'isrequired' => 1,
+            'iserexempted' => 1,
+            'gender_condition' => null,
+            'profession_exempt' => null,
+            'input_type' => 'file',
+            'category' => 'academic',
             'defaultmaxagedays' => null,
             'sortorder' => 6,
             'enabled' => 1,
         ],
+        // 7. Tarjeta profesional (si aplica).
+        [
+            'code' => 'tarjeta_profesional',
+            'name' => 'Tarjeta Profesional',
+            'description' => 'Fotocopia de tarjeta profesional',
+            'requirements' => 'Legible, vigente. No aplica para licenciados en educación.',
+            'checklistitems' => json_encode([
+                'Número de tarjeta profesional visible',
+                'Nombre del profesional coincide',
+                'Consejo profesional que la expide',
+                'No está vencida (si tiene fecha)',
+            ]),
+            'externalurl' => '',
+            'isrequired' => 0,
+            'iserexempted' => 1,
+            'gender_condition' => null,
+            'profession_exempt' => json_encode(['licenciatura']),
+            'conditional_note' => 'No aplica para Licenciados en Educación',
+            'input_type' => 'file',
+            'category' => 'academic',
+            'defaultmaxagedays' => null,
+            'sortorder' => 7,
+            'enabled' => 1,
+        ],
+        // 8. Certificaciones complementarias (mínimo 40 horas).
         [
             'code' => 'formacion_complementaria',
-            'name' => 'Certificados de Formación Complementaria',
-            'description' => 'Fotocopia de certificados de formación complementaria',
-            'requirements' => 'Legibles, completos',
+            'name' => 'Certificaciones Complementarias',
+            'description' => 'Certificados de formación complementaria (mínimo 40 horas)',
+            'requirements' => 'Legibles, completos. Mínimo 40 horas de intensidad por certificado.',
             'checklistitems' => json_encode([
                 'Certificado es legible',
                 'Certificado está completo',
                 'Nombre del programa/curso es visible',
                 'Nombre del participante coincide con postulante',
                 'Institución que expide es identificable',
-                'Duración o intensidad horaria especificada',
+                'Duración o intensidad horaria especificada (mínimo 40 horas)',
                 'Fecha de realización o expedición visible',
             ]),
             'externalurl' => '',
+            'isrequired' => 0,
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'academic',
             'defaultmaxagedays' => null,
-            'sortorder' => 7,
+            'sortorder' => 8,
             'enabled' => 1,
         ],
+        // 9. Experiencia docente.
         [
-            'code' => 'certificacion_laboral',
-            'name' => 'Certificaciones Laborales',
-            'description' => 'Constancias laborales',
-            'requirements' => 'SOLO certificados laborales. NO son válidos: contratos, actas de finalización, actos administrativos de nombramientos',
+            'code' => 'experiencia_docente',
+            'name' => 'Experiencia Docente',
+            'description' => 'Certificaciones de experiencia en docencia',
+            'requirements' => 'SOLO certificados laborales de experiencia docente. Deben indicar: institución, fechas, carga horaria, programas/asignaturas.',
+            'checklistitems' => json_encode([
+                'Es certificado laboral de institución educativa',
+                'Indica fechas de vinculación (desde - hasta)',
+                'Especifica cargo docente desempeñado',
+                'Indica programas o asignaturas dictadas',
+                'Menciona carga horaria o intensidad',
+                'Incluye firma de autoridad competente',
+                'Tiene fecha de expedición',
+            ]),
+            'externalurl' => '',
+            'isrequired' => 0,
+            'iserexempted' => 1,
+            'gender_condition' => null,
+            'profession_exempt' => null,
+            'input_type' => 'file',
+            'category' => 'employment',
+            'defaultmaxagedays' => null,
+            'sortorder' => 9,
+            'enabled' => 1,
+        ],
+        // 10. Experiencia profesional.
+        [
+            'code' => 'experiencia_profesional',
+            'name' => 'Experiencia Profesional',
+            'description' => 'Certificaciones de experiencia laboral profesional',
+            'requirements' => 'SOLO certificados laborales. NO son válidos: contratos, actas de finalización, actos administrativos de nombramientos.',
             'checklistitems' => json_encode([
                 'Es un certificado laboral (NO contrato, acta de finalización o acto administrativo)',
                 'Contiene membrete de la empresa',
                 'Indica fechas de vinculación (desde - hasta)',
                 'Especifica cargo desempeñado',
+                'Describe funciones o responsabilidades',
                 'Incluye firma de autoridad competente',
-                'Tiene fecha de expedición reciente',
-                'Documento es original o copia legible',
+                'Tiene fecha de expedición',
             ]),
             'externalurl' => '',
+            'isrequired' => 0,
             'iserexempted' => 1,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'employment',
             'defaultmaxagedays' => null,
-            'sortorder' => 8,
+            'sortorder' => 10,
             'enabled' => 1,
         ],
+        // 11. Formación en pedagogía.
+        [
+            'code' => 'formacion_pedagogia',
+            'name' => 'Formación en Pedagogía',
+            'description' => 'Certificados de formación en pedagogía, didáctica o enseñanza',
+            'requirements' => 'Certificados de cursos, diplomados o programas en pedagogía, didáctica o metodologías de enseñanza.',
+            'checklistitems' => json_encode([
+                'Certificado es legible y completo',
+                'Tema del curso es relacionado con pedagogía/didáctica',
+                'Nombre del participante coincide con postulante',
+                'Institución que expide es identificable',
+                'Duración o intensidad horaria especificada',
+                'Fecha de realización o expedición visible',
+            ]),
+            'externalurl' => '',
+            'isrequired' => 0,
+            'iserexempted' => 0,
+            'gender_condition' => null,
+            'profession_exempt' => null,
+            'input_type' => 'file',
+            'category' => 'academic',
+            'defaultmaxagedays' => null,
+            'sortorder' => 11,
+            'enabled' => 1,
+        ],
+        // 12. Formación en TIC.
+        [
+            'code' => 'formacion_tic',
+            'name' => 'Formación en TIC',
+            'description' => 'Certificados de formación en Tecnologías de la Información y Comunicación',
+            'requirements' => 'Certificados de cursos, diplomados o programas en TIC aplicadas a la educación.',
+            'checklistitems' => json_encode([
+                'Certificado es legible y completo',
+                'Tema del curso es relacionado con TIC',
+                'Nombre del participante coincide con postulante',
+                'Institución que expide es identificable',
+                'Duración o intensidad horaria especificada',
+                'Fecha de realización o expedición visible',
+            ]),
+            'externalurl' => '',
+            'isrequired' => 0,
+            'iserexempted' => 0,
+            'gender_condition' => null,
+            'profession_exempt' => null,
+            'input_type' => 'file',
+            'category' => 'academic',
+            'defaultmaxagedays' => null,
+            'sortorder' => 12,
+            'enabled' => 1,
+        ],
+        // 13. RUT actualizado.
         [
             'code' => 'rut',
-            'name' => 'RUT (Registro Único Tributario)',
-            'description' => 'Fotocopia del RUT actualizado',
-            'requirements' => 'Verificar fecha en parte inferior derecha del documento, debe estar actualizado',
+            'name' => 'RUT Actualizado',
+            'description' => 'Registro Único Tributario actualizado',
+            'requirements' => 'Verificar fecha en parte inferior derecha del documento, debe estar actualizado.',
             'checklistitems' => json_encode([
                 'Documento legible',
                 'Número de NIT/RUT visible',
@@ -221,86 +381,23 @@ function xmldb_local_jobboard_install() {
                 'Fecha de actualización visible en parte inferior derecha',
                 'Fecha de actualización es reciente',
             ]),
-            'externalurl' => '',
+            'externalurl' => 'https://muisca.dian.gov.co/WebRutMuisca/DefInscripcionRutPortal.faces',
+            'isrequired' => 1,
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'financial',
             'defaultmaxagedays' => null,
-            'sortorder' => 9,
+            'sortorder' => 13,
             'enabled' => 1,
         ],
-        [
-            'code' => 'eps',
-            'name' => 'Certificado EPS',
-            'description' => 'Certificado de afiliación a EPS',
-            'requirements' => 'Fecha de expedición no mayor a 30 días, debe evidenciar estado activo',
-            'checklistitems' => json_encode([
-                'Es certificado de afiliación (no carné)',
-                'Nombre de la EPS',
-                'Nombre del afiliado coincide',
-                'Fecha de expedición no mayor a 30 días',
-                'Estado: activo',
-            ]),
-            'externalurl' => '',
-            'iserexempted' => 0,
-            'gender_condition' => null,
-            'profession_exempt' => null,
-            'category' => 'health',
-            'defaultmaxagedays' => 30,
-            'sortorder' => 10,
-            'enabled' => 1,
-        ],
-        [
-            'code' => 'pension',
-            'name' => 'Certificado Pensión',
-            'description' => 'Certificado del fondo de pensión',
-            'requirements' => 'Fecha de expedición no mayor a 30 días. Pensionados: adjuntar resolución de pensión. Magisterio: adjuntar certificado RUAF',
-            'checklistitems' => json_encode([
-                'Es certificado de afiliación al fondo de pensión',
-                'Nombre del fondo de pensiones visible',
-                'Nombre del afiliado coincide con postulante',
-                'Fecha de expedición no mayor a 30 días',
-                'Estado: activo o cotizando',
-                'CASO ESPECIAL Pensionados: adjuntar resolución de pensión',
-                'CASO ESPECIAL Magisterio: adjuntar certificado RUAF',
-            ]),
-            'externalurl' => '',
-            'iserexempted' => 0,
-            'gender_condition' => null,
-            'profession_exempt' => null,
-            'category' => 'health',
-            'defaultmaxagedays' => 30,
-            'sortorder' => 11,
-            'enabled' => 1,
-        ],
-        [
-            'code' => 'cuenta_bancaria',
-            'name' => 'Certificado Cuenta Bancaria',
-            'description' => 'Certificado de cuenta bancaria',
-            'requirements' => 'Debe evidenciar número de cuenta, tipo de cuenta, entidad bancaria, cuenta a nombre del postulante',
-            'checklistitems' => json_encode([
-                'Es certificado oficial de la entidad bancaria',
-                'Número de cuenta es visible',
-                'Tipo de cuenta especificado (ahorros/corriente)',
-                'Entidad bancaria identificada',
-                'Cuenta está a nombre del postulante',
-                'Nombres coinciden con documento de identidad',
-            ]),
-            'externalurl' => '',
-            'iserexempted' => 0,
-            'gender_condition' => null,
-            'profession_exempt' => null,
-            'category' => 'financial',
-            'defaultmaxagedays' => null,
-            'sortorder' => 12,
-            'enabled' => 1,
-        ],
+        // 14. Antecedentes disciplinarios.
         [
             'code' => 'antecedentes_disciplinarios',
             'name' => 'Antecedentes Disciplinarios',
-            'description' => 'Certificado expedido por Procuraduría General de la Nación',
-            'requirements' => 'Fecha reciente (no mayor a 30 días recomendado)',
+            'description' => 'Certificado de la Procuraduría General de la Nación',
+            'requirements' => 'Fecha de expedición no mayor a 30 días recomendado.',
             'checklistitems' => json_encode([
                 'Es certificado oficial de la Procuraduría General de la Nación',
                 'Nombre del consultado coincide con postulante',
@@ -309,42 +406,48 @@ function xmldb_local_jobboard_install() {
                 'Código de verificación visible (si aplica)',
                 'Estado de antecedentes es claro',
             ]),
-            'externalurl' => '',
+            'externalurl' => 'https://www.procuraduria.gov.co/portal/Antecedentes.page',
+            'isrequired' => 1,
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'legal',
             'defaultmaxagedays' => 30,
-            'sortorder' => 13,
+            'sortorder' => 14,
             'enabled' => 1,
         ],
+        // 15. Antecedentes fiscales.
         [
             'code' => 'antecedentes_fiscales',
             'name' => 'Antecedentes Fiscales',
-            'description' => 'Certificado expedido por Contraloría General de la Nación',
-            'requirements' => 'Fecha reciente (no mayor a 30 días recomendado)',
+            'description' => 'Certificado de la Contraloría General de la República',
+            'requirements' => 'Fecha de expedición no mayor a 30 días recomendado.',
             'checklistitems' => json_encode([
-                'Es certificado oficial de la Contraloría General de la Nación',
+                'Es certificado oficial de la Contraloría General de la República',
                 'Nombre del consultado coincide con postulante',
                 'Número de cédula coincide',
                 'Fecha de expedición es reciente (preferible <30 días)',
                 'Código de verificación visible (si aplica)',
                 'Estado de antecedentes es claro',
             ]),
-            'externalurl' => '',
+            'externalurl' => 'https://www.contraloria.gov.co/web/certificados',
+            'isrequired' => 1,
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'legal',
             'defaultmaxagedays' => 30,
-            'sortorder' => 14,
+            'sortorder' => 15,
             'enabled' => 1,
         ],
+        // 16. Antecedentes judiciales.
         [
             'code' => 'antecedentes_judiciales',
             'name' => 'Antecedentes Judiciales',
-            'description' => 'Certificado expedido por Policía Nacional',
-            'requirements' => 'Fecha reciente (no mayor a 30 días recomendado)',
+            'description' => 'Certificado de la Policía Nacional',
+            'requirements' => 'Fecha de expedición no mayor a 30 días recomendado.',
             'checklistitems' => json_encode([
                 'Es certificado oficial de Policía Nacional',
                 'Descargado desde portal oficial',
@@ -354,19 +457,22 @@ function xmldb_local_jobboard_install() {
                 'Tiene código de verificación',
             ]),
             'externalurl' => 'https://antecedentes.policia.gov.co:7005/WebJudicial',
+            'isrequired' => 1,
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'legal',
             'defaultmaxagedays' => 30,
-            'sortorder' => 15,
+            'sortorder' => 16,
             'enabled' => 1,
         ],
+        // 17. Registro Nacional de Medidas Correctivas.
         [
             'code' => 'medidas_correctivas',
             'name' => 'Registro Nacional de Medidas Correctivas',
-            'description' => 'Certificado de medidas correctivas',
-            'requirements' => 'Descargado del portal oficial',
+            'description' => 'Certificado de medidas correctivas de la Policía Nacional',
+            'requirements' => 'Descargado del portal oficial.',
             'checklistitems' => json_encode([
                 'Es certificado oficial de Policía Nacional',
                 'Descargado desde portal oficial',
@@ -376,19 +482,22 @@ function xmldb_local_jobboard_install() {
                 'Estado es claro',
             ]),
             'externalurl' => 'https://srvcnpc.policia.gov.co/PSC/frm_cnp_consulta.aspx',
+            'isrequired' => 1,
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'legal',
             'defaultmaxagedays' => 30,
-            'sortorder' => 16,
+            'sortorder' => 17,
             'enabled' => 1,
         ],
+        // 18. Consulta de Inhabilidades.
         [
             'code' => 'inhabilidades',
-            'name' => 'Consulta de Inhabilidades (Delitos Sexuales)',
+            'name' => 'Consulta de Inhabilidades',
             'description' => 'Consulta de inhabilidades por delitos sexuales contra menores (Ley 1918 de 2018)',
-            'requirements' => 'Certificado descargado del portal oficial',
+            'requirements' => 'Certificado descargado del portal oficial.',
             'checklistitems' => json_encode([
                 'Es certificado oficial del Sistema de Información de Inhabilidades',
                 'Descargado desde portal oficial',
@@ -398,19 +507,22 @@ function xmldb_local_jobboard_install() {
                 'Resultado de consulta es claro',
             ]),
             'externalurl' => 'https://inhabilidades.policia.gov.co:8080/',
+            'isrequired' => 1,
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'legal',
             'defaultmaxagedays' => 30,
-            'sortorder' => 17,
+            'sortorder' => 18,
             'enabled' => 1,
         ],
+        // 19. REDAM.
         [
             'code' => 'redam',
-            'name' => 'REDAM (Registro de Deudores Alimentarios Morosos)',
-            'description' => 'Certificado REDAM',
-            'requirements' => 'Registrarse en el portal y descargar certificado',
+            'name' => 'REDAM',
+            'description' => 'Registro de Deudores Alimentarios Morosos',
+            'requirements' => 'Registrarse en el portal y descargar certificado.',
             'checklistitems' => json_encode([
                 'Es certificado oficial de REDAM',
                 'Descargado desde Carpeta Ciudadana',
@@ -420,24 +532,26 @@ function xmldb_local_jobboard_install() {
                 'Estado de registro es claro',
             ]),
             'externalurl' => 'https://carpetaciudadana.and.gov.co/inicio-de-sesion',
+            'isrequired' => 1,
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
+            'input_type' => 'file',
             'category' => 'legal',
             'defaultmaxagedays' => 30,
-            'sortorder' => 18,
+            'sortorder' => 19,
             'enabled' => 1,
         ],
     ];
+}
 
-    $now = time();
-    foreach ($doctypes as $doctype) {
-        $doctype['timecreated'] = $now;
-        $DB->insert_record('local_jobboard_doctype', (object) $doctype);
-    }
-
-    // Insert default email templates.
-    $templates = [
+/**
+ * Get default email templates for installation.
+ *
+ * @return array Array of email template definitions.
+ */
+function local_jobboard_get_default_email_templates(): array {
+    return [
         [
             'code' => 'application_submitted',
             'name' => 'Confirmación de postulación',
@@ -523,19 +637,6 @@ function xmldb_local_jobboard_install() {
             'enabled' => 1,
         ],
     ];
-
-    foreach ($templates as $template) {
-        $template['timecreated'] = $now;
-        $DB->insert_record('local_jobboard_email_template', (object) $template);
-    }
-
-    // Import User Tours.
-    local_jobboard_install_tours();
-
-    // Create custom roles.
-    local_jobboard_create_roles();
-
-    return true;
 }
 
 /**

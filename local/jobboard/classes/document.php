@@ -707,17 +707,17 @@ class document {
 
         if ($validation) {
             $validation->status = 'approved';
-            $validation->reason = null;
-            $validation->reviewedby = $userid;
-            $validation->timereviewed = time();
+            $validation->rejectreason = null;
+            $validation->validatedby = $userid;
+            $validation->timemodified = time();
             $DB->update_record('local_jobboard_doc_validation', $validation);
         } else {
             $validation = new \stdClass();
             $validation->documentid = $this->id;
             $validation->status = 'approved';
-            $validation->reviewedby = $userid;
-            $validation->timereviewed = time();
+            $validation->validatedby = $userid;
             $validation->timecreated = time();
+            $validation->timemodified = time();
             $DB->insert_record('local_jobboard_doc_validation', $validation);
         }
 
@@ -731,7 +731,7 @@ class document {
             'status',
             $oldstatus,
             'approved',
-            ['documenttype' => $this->documenttype, 'reviewedby' => $userid, 'applicationid' => $this->applicationid]
+            ['documenttype' => $this->documenttype, 'validatedby' => $userid, 'applicationid' => $this->applicationid]
         );
 
         return true;
@@ -752,18 +752,18 @@ class document {
 
         if ($validation) {
             $validation->status = 'rejected';
-            $validation->reason = $reason;
-            $validation->reviewedby = $userid;
-            $validation->timereviewed = time();
+            $validation->rejectreason = $reason;
+            $validation->validatedby = $userid;
+            $validation->timemodified = time();
             $DB->update_record('local_jobboard_doc_validation', $validation);
         } else {
             $validation = new \stdClass();
             $validation->documentid = $this->id;
             $validation->status = 'rejected';
-            $validation->reason = $reason;
-            $validation->reviewedby = $userid;
-            $validation->timereviewed = time();
+            $validation->rejectreason = $reason;
+            $validation->validatedby = $userid;
             $validation->timecreated = time();
+            $validation->timemodified = time();
             $DB->insert_record('local_jobboard_doc_validation', $validation);
         }
 
@@ -777,7 +777,7 @@ class document {
             'status',
             $oldstatus,
             'rejected',
-            ['documenttype' => $this->documenttype, 'reviewedby' => $userid, 'reason' => $reason, 'applicationid' => $this->applicationid]
+            ['documenttype' => $this->documenttype, 'validatedby' => $userid, 'rejectreason' => $reason, 'applicationid' => $this->applicationid]
         );
 
         return true;
@@ -812,6 +812,69 @@ class document {
     }
 
     /**
+     * Get a specific document for an application by document type.
+     *
+     * @param int $applicationid The application ID.
+     * @param string $documenttype The document type code.
+     * @return self|null The document or null if not found.
+     */
+    public static function get_for_application_by_type(int $applicationid, string $documenttype): ?self {
+        global $DB;
+
+        $sql = "SELECT d.*, dv.status as validation_status, dv.rejectreason as validation_reason,
+                       dv.validatedby, dv.timemodified as timereviewed
+                  FROM {local_jobboard_document} d
+             LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
+                 WHERE d.applicationid = :applicationid
+                   AND d.documenttype = :documenttype
+                   AND d.issuperseded = 0
+              ORDER BY d.timecreated DESC
+                 LIMIT 1";
+
+        $record = $DB->get_record_sql($sql, [
+            'applicationid' => $applicationid,
+            'documenttype' => $documenttype,
+        ]);
+
+        if (!$record) {
+            return null;
+        }
+
+        $doc = new self();
+        $doc->load_from_record($record);
+        $doc->status = $record->validation_status ?? 'pending';
+        $doc->validation_reason = $record->validation_reason ?? '';
+        $doc->reviewedby = $record->validatedby ?? null;
+        $doc->timereviewed = $record->timereviewed ?? null;
+
+        return $doc;
+    }
+
+    /**
+     * Mark this document as superseded.
+     *
+     * @return bool True on success.
+     */
+    public function supersede(): bool {
+        global $DB;
+
+        $this->issuperseded = 1;
+        $DB->set_field('local_jobboard_document', 'issuperseded', 1, ['id' => $this->id]);
+
+        // Log audit.
+        audit::log_transition(
+            audit::ENTITY_DOCUMENT,
+            $this->id,
+            'issuperseded',
+            '0',
+            '1',
+            ['documenttype' => $this->documenttype, 'applicationid' => $this->applicationid]
+        );
+
+        return true;
+    }
+
+    /**
      * Get rejected documents for an application.
      *
      * @param int $applicationid The application ID.
@@ -820,7 +883,7 @@ class document {
     public static function get_rejected(int $applicationid): array {
         global $DB;
 
-        $sql = "SELECT d.*, dv.reason as validation_reason
+        $sql = "SELECT d.*, dv.rejectreason as validation_reason
                   FROM {local_jobboard_document} d
                   JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
                  WHERE d.applicationid = :applicationid

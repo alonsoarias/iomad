@@ -619,6 +619,43 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121241, 'local', 'jobboard');
     }
 
+    // Version 3.6.38 - Update document types with new structure.
+    // Add new document types and reorganize sortorder.
+    if ($oldversion < 2025121624) {
+        local_jobboard_upgrade_doctypes();
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121624, 'local', 'jobboard');
+    }
+
+    // Version 3.6.43 - Change vacancy unique index to composite key.
+    // Allow same vacancy code with different locations/modalities.
+    if ($oldversion < 2025121629) {
+        $dbman = $DB->get_manager();
+        $table = new xmldb_table('local_jobboard_vacancy');
+
+        // Drop old unique index on code only (if it exists).
+        $oldindex = new xmldb_index('code_unique', XMLDB_INDEX_UNIQUE, ['code']);
+        if ($dbman->index_exists($table, $oldindex)) {
+            $dbman->drop_index($table, $oldindex);
+        }
+
+        // Create new composite unique index on code + location + modality.
+        $newindex = new xmldb_index('code_location_modality_unique', XMLDB_INDEX_UNIQUE, ['code', 'location', 'modality']);
+        if (!$dbman->index_exists($table, $newindex)) {
+            $dbman->add_index($table, $newindex);
+        }
+
+        // Create non-unique index on code for search performance.
+        $codeindex = new xmldb_index('code_idx', XMLDB_INDEX_NOTUNIQUE, ['code']);
+        if (!$dbman->index_exists($table, $codeindex)) {
+            $dbman->add_index($table, $codeindex);
+        }
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121629, 'local', 'jobboard');
+    }
+
     return true;
 }
 
@@ -797,6 +834,82 @@ function local_jobboard_upgrade_update_role_capabilities(): void {
             if (!in_array($cap, $currentcapnames)) {
                 assign_capability($cap, CAP_ALLOW, $role->id, $systemcontext->id);
             }
+        }
+    }
+}
+
+/**
+ * Upgrade document types to the new structure.
+ *
+ * This upgrade:
+ * - Adds new document types (carta_intencion, experiencia_docente, experiencia_profesional, formacion_pedagogia, formacion_tic)
+ * - Reorganizes sortorder for all document types
+ * - Disables obsolete document types (eps, pension, cuenta_bancaria, certificacion_laboral)
+ * - Updates existing document types with new properties
+ *
+ * @return void
+ */
+function local_jobboard_upgrade_doctypes(): void {
+    global $DB;
+
+    $now = time();
+
+    // Define the new document type structure with correct order.
+    // Include function from install.php if available, otherwise define here.
+    require_once(__DIR__ . '/install.php');
+
+    if (function_exists('local_jobboard_get_default_doctypes')) {
+        $newdoctypes = local_jobboard_get_default_doctypes();
+    } else {
+        // Fallback: Define doctypes inline.
+        return;
+    }
+
+    // Codes of obsolete document types to disable.
+    $obsoletecodes = ['eps', 'pension', 'cuenta_bancaria', 'certificacion_laboral'];
+
+    // Disable obsolete document types.
+    foreach ($obsoletecodes as $code) {
+        $existing = $DB->get_record('local_jobboard_doctype', ['code' => $code]);
+        if ($existing && $existing->enabled) {
+            $DB->set_field('local_jobboard_doctype', 'enabled', 0, ['id' => $existing->id]);
+            $DB->set_field('local_jobboard_doctype', 'timemodified', $now, ['id' => $existing->id]);
+        }
+    }
+
+    // Process each new document type.
+    foreach ($newdoctypes as $doctype) {
+        $existing = $DB->get_record('local_jobboard_doctype', ['code' => $doctype['code']]);
+
+        if ($existing) {
+            // Update existing document type.
+            $update = new stdClass();
+            $update->id = $existing->id;
+            $update->name = $doctype['name'];
+            $update->description = $doctype['description'];
+            $update->requirements = $doctype['requirements'];
+            $update->checklistitems = $doctype['checklistitems'];
+            $update->externalurl = $doctype['externalurl'] ?? '';
+            $update->isrequired = $doctype['isrequired'] ?? 1;
+            $update->iserexempted = $doctype['iserexempted'] ?? 0;
+            $update->gender_condition = $doctype['gender_condition'] ?? null;
+            $update->age_exemption_threshold = $doctype['age_exemption_threshold'] ?? null;
+            $update->profession_exempt = $doctype['profession_exempt'] ?? null;
+            $update->conditional_note = $doctype['conditional_note'] ?? '';
+            $update->input_type = $doctype['input_type'] ?? 'file';
+            $update->category = $doctype['category'] ?? '';
+            $update->defaultmaxagedays = $doctype['defaultmaxagedays'] ?? null;
+            $update->sortorder = $doctype['sortorder'];
+            $update->enabled = 1;
+            $update->timemodified = $now;
+
+            $DB->update_record('local_jobboard_doctype', $update);
+        } else {
+            // Insert new document type.
+            $insert = (object) $doctype;
+            $insert->timecreated = $now;
+            $insert->timemodified = $now;
+            $DB->insert_record('local_jobboard_doctype', $insert);
         }
     }
 }

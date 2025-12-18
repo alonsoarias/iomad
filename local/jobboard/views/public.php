@@ -50,9 +50,15 @@ if ($vacancyid > 0) {
 }
 
 // Filter parameters for vacancies.
+$filtercode = optional_param('code', '', PARAM_TEXT);
 $filtercontract = optional_param('contracttype', '', PARAM_ALPHANUMEXT);
+$filterdepartment = optional_param('department', '', PARAM_TEXT);
 $filterlocation = optional_param('location', '', PARAM_TEXT);
+$filtermodality = optional_param('modality', '', PARAM_ALPHANUMEXT);
 $filtersearch = optional_param('search', '', PARAM_TEXT);
+
+// AJAX request flag.
+$isajax = optional_param('ajax', 0, PARAM_INT);
 
 // Check if user is logged in.
 $isloggedin = isloggedin() && !isguestuser();
@@ -125,16 +131,37 @@ if ($convocatoriaid > 0) {
         $vacancyWhere .= " AND v.publicationtype = 'public'";
     }
 
+    // Filter: Code.
+    if (!empty($filtercode)) {
+        $vacancyWhere .= " AND " . $DB->sql_like('v.code', ':code', false);
+        $vacancyParams['code'] = '%' . $DB->sql_like_escape($filtercode) . '%';
+    }
+
+    // Filter: Contract type.
     if (!empty($filtercontract)) {
         $vacancyWhere .= " AND v.contracttype = :contracttype";
         $vacancyParams['contracttype'] = $filtercontract;
     }
 
-    if (!empty($filterlocation)) {
-        $vacancyWhere .= " AND " . $DB->sql_like('v.location', ':location', false);
-        $vacancyParams['location'] = '%' . $DB->sql_like_escape($filterlocation) . '%';
+    // Filter: Department (Programa académico).
+    if (!empty($filterdepartment)) {
+        $vacancyWhere .= " AND v.department = :department";
+        $vacancyParams['department'] = $filterdepartment;
     }
 
+    // Filter: Location (Ubicación).
+    if (!empty($filterlocation)) {
+        $vacancyWhere .= " AND v.location = :location";
+        $vacancyParams['location'] = $filterlocation;
+    }
+
+    // Filter: Modality.
+    if (!empty($filtermodality)) {
+        $vacancyWhere .= " AND v.modality = :modality";
+        $vacancyParams['modality'] = $filtermodality;
+    }
+
+    // Filter: General search.
     if (!empty($filtersearch)) {
         $searchlike = '%' . $DB->sql_like_escape($filtersearch) . '%';
         $vacancyWhere .= " AND (" . $DB->sql_like('v.title', ':search1', false) .
@@ -163,27 +190,56 @@ if ($convocatoriaid > 0) {
         ['convid' => $convocatoriaid]
     );
 
-    // Build filter options.
-    $locationsList = [];
+    // Build filter options from all vacancies.
+    $departmentsList = [];
     $contractTypesList = [];
+    $locationsList = [];
+    $modalitiesList = [];
+
+    // Get predefined modalities for proper labels.
+    $predefinedModalities = local_jobboard_get_modalities();
+
     foreach ($allVacanciesForStats as $v) {
-        if (!empty($v->location) && !in_array($v->location, $locationsList)) {
-            $locationsList[] = $v->location;
+        // Departments (Programa académico).
+        if (!empty($v->department) && !isset($departmentsList[$v->department])) {
+            $departmentsList[$v->department] = $v->department;
         }
-        if (!empty($v->contracttype)) {
+        // Contract types (Tipo de Vinculación).
+        if (!empty($v->contracttype) && !isset($contractTypesList[$v->contracttype])) {
             $contractTypesList[$v->contracttype] = $contracttypes[$v->contracttype] ?? $v->contracttype;
+        }
+        // Locations (Ubicación).
+        if (!empty($v->location) && !isset($locationsList[$v->location])) {
+            $locationsList[$v->location] = $v->location;
+        }
+        // Modalities.
+        if (!empty($v->modality) && !isset($modalitiesList[$v->modality])) {
+            // Use predefined label if available, otherwise use stored value.
+            $modalitylabel = $predefinedModalities[$v->modality] ?? $v->modality;
+            $modalitiesList[$v->modality] = $modalitylabel;
         }
     }
 
+    // Sort options alphabetically.
+    asort($departmentsList);
+    asort($contractTypesList);
+    asort($locationsList);
+    asort($modalitiesList);
+
     $filters = [
+        'code' => $filtercode,
         'contracttype' => $filtercontract,
+        'department' => $filterdepartment,
         'location' => $filterlocation,
+        'modality' => $filtermodality,
         'search' => $filtersearch,
     ];
 
     $filterOptions = [
         'contracttypes' => $contractTypesList,
+        'departments' => $departmentsList,
         'locations' => $locationsList,
+        'modalities' => $modalitiesList,
     ];
 
     // Prepare template data.
@@ -201,6 +257,13 @@ if ($convocatoriaid > 0) {
         $perpage
     );
 
+    // Handle AJAX request - return only vacancy results.
+    if ($isajax) {
+        header('Content-Type: text/html; charset=utf-8');
+        echo $renderer->render_public_vacancies_results($data);
+        exit;
+    }
+
     // Output page.
     echo $OUTPUT->header();
     echo $renderer->render_public_page($data);
@@ -208,6 +271,7 @@ if ($convocatoriaid > 0) {
     // Initialize filter auto-submit for all users.
     $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
         'formSelector' => '.jb-filter-form',
+        'resultsSelector' => '[data-region="filter-results"]',
     ]]);
 
     echo $OUTPUT->footer();

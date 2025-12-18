@@ -406,6 +406,8 @@ $string['contract:catedra'] = 'Adjunct Professor';
 $string['contract:planta'] = 'Full-time Professor';
 $string['contract:temporal'] = 'Temporary';
 $string['contract:ocasional'] = 'Occasional';
+$string['contract:ocasional_tc'] = 'Full-time Occasional';
+$string['contract:ocasional_mt'] = 'Part-time Occasional';
 $string['contract:hora_catedra'] = 'Hourly';
 
 // Modalities
@@ -3528,3 +3530,32 @@ $string['applyfilters'] = 'Apply filters';
 $string['totaldocuments'] = 'Total documents';
 $string['allreviewed'] = 'All reviewed';
 $string['urgent'] = 'Urgent';
+
+// =============================================================================
+// DOCUMENT TYPES - v3.6.38
+// =============================================================================
+
+$string['doctype_experiencia_docente'] = 'Teaching Experience';
+$string['doctype_experiencia_profesional'] = 'Professional Experience';
+$string['doctype_formacion_pedagogia'] = 'Pedagogy Training';
+$string['doctype_formacion_tic'] = 'ICT Training';
+$string['doctype_formacion_complementaria'] = 'Complementary Certifications';
+$string['doctype_titulo_academico'] = 'Undergraduate and Graduate Degrees';
+$string['doctype_bienes_rentas'] = 'Assets and Income Declaration Form';
+$string['doctype_antecedentes_judiciales'] = 'Criminal Record';
+$string['doctype_medidas_correctivas'] = 'National Corrective Measures Registry';
+$string['doctype_inhabilidades'] = 'Disqualifications Check';
+$string['doctype_redam'] = 'REDAM (Child Support Debtors Registry)';
+
+// =============================================================================
+// VACANCY FILTERS - v3.6.38
+// =============================================================================
+
+$string['filterbycode'] = 'Search by code...';
+$string['filtering'] = 'Filtering...';
+$string['modality'] = 'Modality';
+$string['modality_presencial'] = 'On-site';
+$string['modality_virtual'] = 'Virtual';
+$string['modality_hibrida'] = 'Hybrid';
+$string['modality_distancia'] = 'Distance';
+$string['department'] = 'Academic Program';

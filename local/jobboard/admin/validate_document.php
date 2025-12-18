@@ -67,15 +67,20 @@ $PAGE->navbar->add(get_string('validate', 'local_jobboard'));
 if ($action === 'validate' || $action === 'reject') {
     require_sesskey();
 
-    $isvalid = ($action === 'validate');
-    $rejectreason = optional_param('rejectreason', '', PARAM_TEXT);
-    $notes = optional_param('notes', '', PARAM_TEXT);
+    global $USER;
 
-    $document->validate($isvalid, $rejectreason, $notes);
+    if ($action === 'validate') {
+        $document->validate($USER->id);
+        $messagekey = 'documentvalidated';
+    } else {
+        $rejectreason = optional_param('rejectreason', '', PARAM_TEXT);
+        $document->reject($USER->id, $rejectreason);
+        $messagekey = 'documentrejected';
+    }
 
     redirect(
         new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]),
-        get_string($isvalid ? 'documentvalidated' : 'documentrejected', 'local_jobboard'),
+        get_string($messagekey, 'local_jobboard'),
         null,
         \core\output\notification::NOTIFY_SUCCESS
     );

@@ -97,28 +97,38 @@
     </div>
     {{/convocatoria}}
 
-    {{! Filter Form }}
+    {{! Filter Form - AJAX Enabled }}
     {{#filterform}}
     <div class="jb-filter-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
         <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); border-bottom: 1px solid var(--jb-gray-200);">
-            <h6 style="margin: 0; color: var(--iser-gris-oscuro); font-weight: var(--jb-font-semibold);">
-                <i class="fa fa-filter me-2" style="color: var(--iser-verde);"></i>{{#str}}filtervacancies, local_jobboard{{/str}}
-            </h6>
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 style="margin: 0; color: var(--iser-gris-oscuro); font-weight: var(--jb-font-semibold);">
+                    <i class="fa fa-filter me-2" style="color: var(--iser-verde);"></i>{{#str}}filtervacancies, local_jobboard{{/str}}
+                </h6>
+                <span class="jb-filter-loading d-none" style="color: var(--iser-verde);">
+                    <i class="fa fa-spinner fa-spin me-1"></i>{{#str}}filtering, local_jobboard{{/str}}
+                </span>
+            </div>
         </div>
         <div style="padding: var(--jb-space-4);">
             <form method="get" action="{{action}}" class="jb-filter-form">
                 {{#hiddenfields}}
                 <input type="hidden" name="{{name}}" value="{{value}}">
                 {{/hiddenfields}}
-                <div class="row align-items-end g-3">
-                    <div class="col-lg-4 col-md-6">
-                        <label for="filter-search" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">{{#str}}search{{/str}}</label>
-                        <input type="search" name="search" id="filter-search" value="{{searchvalue}}" placeholder="{{#str}}searchvacancies, local_jobboard{{/str}}" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base);">
+                <div class="row g-3">
+                    {{! Row 1: Code and Search }}
+                    <div class="col-lg-3 col-md-6">
+                        <label for="filter-code" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
+                            <i class="fa fa-hashtag me-1"></i>{{#str}}code, local_jobboard{{/str}}
+                        </label>
+                        <input type="text" name="code" id="filter-code" value="{{codevalue}}" placeholder="{{#str}}filterbycode, local_jobboard{{/str}}" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base);">
                     </div>
                     {{#showcontractfilter}}
                     <div class="col-lg-3 col-md-6">
-                        <label for="filter-contracttype" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">{{#str}}contracttype, local_jobboard{{/str}}</label>
-                        <select name="contracttype" id="filter-contracttype" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco);">
+                        <label for="filter-contracttype" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
+                            <i class="fa fa-file-contract me-1"></i>{{#str}}contracttype, local_jobboard{{/str}}
+                        </label>
+                        <select name="contracttype" id="filter-contracttype" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco); color: var(--iser-negro);">
                             <option value="">{{#str}}all{{/str}}</option>
                             {{#contractoptions}}
                             <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
@@ -126,10 +136,25 @@
                         </select>
                     </div>
                     {{/showcontractfilter}}
+                    {{#showdepartmentfilter}}
+                    <div class="col-lg-3 col-md-6">
+                        <label for="filter-department" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
+                            <i class="fa fa-graduation-cap me-1"></i>{{#str}}department, local_jobboard{{/str}}
+                        </label>
+                        <select name="department" id="filter-department" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco); color: var(--iser-negro);">
+                            <option value="">{{#str}}all{{/str}}</option>
+                            {{#departmentoptions}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/departmentoptions}}
+                        </select>
+                    </div>
+                    {{/showdepartmentfilter}}
                     {{#showlocationfilter}}
                     <div class="col-lg-3 col-md-6">
-                        <label for="filter-location" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">{{#str}}location, local_jobboard{{/str}}</label>
-                        <select name="location" id="filter-location" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco);">
+                        <label for="filter-location" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
+                            <i class="fa fa-map-marker-alt me-1"></i>{{#str}}location, local_jobboard{{/str}}
+                        </label>
+                        <select name="location" id="filter-location" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco); color: var(--iser-negro);">
                             <option value="">{{#str}}all{{/str}}</option>
                             {{#locationoptions}}
                             <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
@@ -137,15 +162,29 @@
                         </select>
                     </div>
                     {{/showlocationfilter}}
-                    <div class="col-auto">
-                        <button type="submit" style="background: var(--iser-verde); color: var(--iser-blanco); border: none; padding: var(--jb-space-2) var(--jb-space-4); border-radius: var(--jb-radius-md); font-weight: var(--jb-font-semibold); cursor: pointer;">
-                            <i class="fa fa-search me-1"></i>{{#str}}filter, local_jobboard{{/str}}
-                        </button>
+                    {{#showmodalityfilter}}
+                    <div class="col-lg-3 col-md-6">
+                        <label for="filter-modality" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
+                            <i class="fa fa-laptop-house me-1"></i>{{#str}}modality, local_jobboard{{/str}}
+                        </label>
+                        <select name="modality" id="filter-modality" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco); color: var(--iser-negro);">
+                            <option value="">{{#str}}all{{/str}}</option>
+                            {{#modalityoptions}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                            {{/modalityoptions}}
+                        </select>
+                    </div>
+                    {{/showmodalityfilter}}
+                    <div class="col-lg-3 col-md-6">
+                        <label for="filter-search" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
+                            <i class="fa fa-search me-1"></i>{{#str}}search{{/str}}
+                        </label>
+                        <input type="search" name="search" id="filter-search" value="{{searchvalue}}" placeholder="{{#str}}searchvacancies, local_jobboard{{/str}}" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base);">
                     </div>
                 </div>
                 {{#hasfilters}}
                 <div style="margin-top: var(--jb-space-3); padding-top: var(--jb-space-3); border-top: 1px solid var(--jb-gray-200);">
-                    <a href="{{clearfiltersurl}}" style="color: var(--iser-rojo); font-size: var(--jb-text-sm); text-decoration: none;">
+                    <a href="{{clearfiltersurl}}" class="jb-clear-filters" data-action="reset-filters" style="color: var(--iser-rojo); font-size: var(--jb-text-sm); text-decoration: none;">
                         <i class="fa fa-xmark me-1"></i>{{#str}}clearfilters, local_jobboard{{/str}}
                     </a>
                 </div>
@@ -155,85 +194,10 @@
     </div>
     {{/filterform}}
 
-    {{! Results Header }}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 style="font-size: var(--jb-text-xl); font-weight: var(--jb-font-semibold); color: var(--iser-rojo); margin: 0;">
-            <i class="fa fa-briefcase me-2" style="color: var(--iser-verde);"></i>{{#str}}vacancies, local_jobboard{{/str}}
-        </h3>
-        <span style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio);">{{resultstext}}</span>
+    {{! AJAX Results Container }}
+    <div data-region="filter-results">
+        {{> local_jobboard/partials/public_vacancies_results }}
     </div>
-
-    {{! Vacancies Grid }}
-    {{#hasvacancies}}
-    <div class="row g-4">
-        {{#vacancies}}
-        <div class="col-lg-4 col-md-6">
-            <div class="jb-vacancy-card" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 16px rgba(0,0,0,0.08); overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; {{#isurgent}}border-top: 3px solid var(--iser-amarillo);{{/isurgent}}">
-                {{#isurgent}}
-                <div style="background: var(--iser-amarillo); color: var(--iser-negro); padding: var(--jb-space-1) var(--jb-space-3); font-size: var(--jb-text-xs); text-align: center; font-weight: var(--jb-font-bold);">
-                    <i class="fa fa-clock me-1"></i>{{urgenttext}}
-                </div>
-                {{/isurgent}}
-                <div style="padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 1px solid var(--jb-gray-100); display: flex; justify-content: space-between; align-items: center;">
-                    <code style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio);">{{code}}</code>
-                    <span style="background: var(--iser-{{publicationtypecolor}}-lighter, var(--jb-gray-100)); color: var(--iser-{{publicationtypecolor}}, var(--iser-gris-oscuro)); padding: 2px 8px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-xs);">{{publicationtypelabel}}</span>
-                </div>
-                <div style="padding: var(--jb-space-4); flex: 1;">
-                    <h4 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); margin-bottom: var(--jb-space-3);">
-                        <a href="{{viewurl}}" style="color: var(--iser-negro); text-decoration: none;">{{title}}</a>
-                    </h4>
-                    <div style="font-size: var(--jb-text-sm); color: var(--iser-gris-oscuro);">
-                        {{#location}}<div style="margin-bottom: var(--jb-space-1);"><i class="fa fa-location-dot me-2" style="color: var(--iser-verde); width: 16px;"></i>{{location}}</div>{{/location}}
-                        {{#contracttypelabel}}<div style="margin-bottom: var(--jb-space-1);"><i class="fa fa-file-contract me-2" style="color: var(--iser-gris-medio); width: 16px;"></i>{{contracttypelabel}}</div>{{/contracttypelabel}}
-                        <div><i class="fa fa-users me-2" style="color: var(--iser-azul); width: 16px;"></i>{{positions}} {{#str}}positions, local_jobboard{{/str}}</div>
-                    </div>
-                </div>
-                <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); border-top: 1px solid var(--jb-gray-100);">
-                    <div style="font-size: var(--jb-text-sm); margin-bottom: var(--jb-space-2); {{#isurgent}}color: var(--iser-rojo); font-weight: var(--jb-font-bold);{{/isurgent}}{{^isurgent}}color: var(--iser-gris-medio);{{/isurgent}}">
-                        <i class="fa fa-calendar-xmark me-1"></i>{{closedateformatted}}
-                    </div>
-                    <div class="d-flex gap-2">
-                        <a href="{{viewurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); border: 2px solid var(--iser-verde); color: var(--iser-verde); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
-                            <i class="fa fa-eye me-1"></i>{{#str}}view{{/str}}
-                        </a>
-                        {{#hasapplied}}
-                        <span style="flex: 1; text-align: center; padding: var(--jb-space-2); background: var(--iser-verde); color: var(--iser-blanco); border-radius: var(--jb-radius-md); font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
-                            <i class="fa fa-check me-1"></i>{{#str}}applied, local_jobboard{{/str}}
-                        </span>
-                        {{/hasapplied}}
-                        {{^hasapplied}}
-                        {{#canapply}}
-                        <a href="{{applyurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); background: var(--iser-verde); color: var(--iser-blanco); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
-                            <i class="fa fa-paper-plane me-1"></i>{{#str}}apply, local_jobboard{{/str}}
-                        </a>
-                        {{/canapply}}
-                        {{^isloggedin}}
-                        <a href="{{loginapplyurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
-                            <i class="fa fa-sign-in-alt me-1"></i>{{#str}}login{{/str}}
-                        </a>
-                        {{/isloggedin}}
-                        {{/hasapplied}}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{/vacancies}}
-    </div>
-    {{/hasvacancies}}
-
-    {{! Empty State }}
-    {{^hasvacancies}}
-    <div style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: var(--jb-space-8); text-align: center;">
-        <i class="fa fa-briefcase" style="font-size: 4rem; color: var(--iser-gris-claro); margin-bottom: var(--jb-space-4); display: block;"></i>
-        <h4 style="color: var(--iser-rojo); margin-bottom: var(--jb-space-2);">{{#str}}novacancies, local_jobboard{{/str}}</h4>
-        <p style="color: var(--iser-gris-medio); max-width: 400px; margin: 0 auto;">{{#str}}novacancies_desc, local_jobboard{{/str}}</p>
-    </div>
-    {{/hasvacancies}}
-
-    {{! Pagination }}
-    {{#pagination}}
-    <nav class="mt-5 d-flex justify-content-center">{{{pagination}}}</nav>
-    {{/pagination}}
 
     {{! CTA for Non-Logged In }}
     {{^isloggedin}}

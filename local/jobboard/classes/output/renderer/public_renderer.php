@@ -99,6 +99,16 @@ trait public_renderer {
     }
 
     /**
+     * Render public vacancies results partial (for AJAX filtering).
+     *
+     * @param array $data Page data with vacancies.
+     * @return string HTML output.
+     */
+    public function render_public_vacancies_results(array $data): string {
+        return $this->render_from_template('local_jobboard/partials/public_vacancies_results', $data);
+    }
+
+    /**
      * Render update profile page.
      *
      * @param array $data Page data.
@@ -568,20 +578,36 @@ trait public_renderer {
             'detailsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public_convocatoria', 'id' => $convocatoria->id]))->out(false),
         ];
 
-        // Filter form.
+        // Filter form values.
+        $filtercode = $filters['code'] ?? '';
         $filtercontract = $filters['contracttype'] ?? '';
+        $filterdepartment = $filters['department'] ?? '';
         $filterlocation = $filters['location'] ?? '';
+        $filtermodality = $filters['modality'] ?? '';
         $filtersearch = $filters['search'] ?? '';
-        $hasfilters = !empty($filtercontract) || !empty($filterlocation) || !empty($filtersearch);
 
+        $hasfilters = !empty($filtercode) || !empty($filtercontract) || !empty($filterdepartment) ||
+                      !empty($filterlocation) || !empty($filtermodality) || !empty($filtersearch);
+
+        // Build filter options arrays.
         $contractoptions = [];
         foreach ($filterOptions['contracttypes'] ?? [] as $key => $label) {
             $contractoptions[] = ['value' => $key, 'label' => $label, 'selected' => ($filtercontract === $key)];
         }
 
+        $departmentoptions = [];
+        foreach ($filterOptions['departments'] ?? [] as $key => $label) {
+            $departmentoptions[] = ['value' => $key, 'label' => $label, 'selected' => ($filterdepartment === $key)];
+        }
+
         $locationoptions = [];
-        foreach ($filterOptions['locations'] ?? [] as $loc) {
-            $locationoptions[] = ['value' => $loc, 'label' => $loc, 'selected' => ($filterlocation === $loc)];
+        foreach ($filterOptions['locations'] ?? [] as $key => $label) {
+            $locationoptions[] = ['value' => $key, 'label' => $label, 'selected' => ($filterlocation === $key)];
+        }
+
+        $modalityoptions = [];
+        foreach ($filterOptions['modalities'] ?? [] as $key => $label) {
+            $modalityoptions[] = ['value' => $key, 'label' => $label, 'selected' => ($filtermodality === $key)];
         }
 
         $filterform = [
@@ -590,11 +616,19 @@ trait public_renderer {
                 ['name' => 'view', 'value' => 'public'],
                 ['name' => 'convocatoriaid', 'value' => $convocatoriaid],
             ],
+            // Filter values.
+            'codevalue' => $filtercode,
             'searchvalue' => $filtersearch,
+            // Filter options.
             'showcontractfilter' => !empty($contractoptions),
             'contractoptions' => $contractoptions,
+            'showdepartmentfilter' => !empty($departmentoptions),
+            'departmentoptions' => $departmentoptions,
             'showlocationfilter' => !empty($locationoptions),
             'locationoptions' => $locationoptions,
+            'showmodalityfilter' => !empty($modalityoptions),
+            'modalityoptions' => $modalityoptions,
+            // Filter state.
             'hasfilters' => $hasfilters,
             'clearfiltersurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public', 'convocatoriaid' => $convocatoriaid]))->out(false),
         ];
@@ -626,12 +660,23 @@ trait public_renderer {
                 ? get_string('public', 'local_jobboard')
                 : get_string('internal', 'local_jobboard');
 
+            // Modality label.
+            $modalitylabel = '';
+            if (!empty($vacancy->modality)) {
+                $modalitykey = 'modality_' . strtolower($vacancy->modality);
+                $modalitylabel = get_string_manager()->string_exists($modalitykey, 'local_jobboard')
+                    ? get_string($modalitykey, 'local_jobboard')
+                    : $vacancy->modality;
+            }
+
             $vacsdata[] = [
                 'id' => $vacancy->id,
                 'code' => format_string($vacancy->code),
                 'title' => format_string($vacancy->title),
                 'location' => $location,
                 'contracttypelabel' => $contracttypes[$vacancy->contracttype] ?? '',
+                'department' => !empty($vacancy->department) ? format_string($vacancy->department) : '',
+                'modality' => $modalitylabel,
                 'positions' => (int) $vacancy->positions,
                 'publicationtypecolor' => $publicationtypecolor,
                 'publicationtypelabel' => $publicationtypelabel,
@@ -649,17 +694,20 @@ trait public_renderer {
             ];
         }
 
-        // Pagination.
+        // Pagination with all filter params.
         $pagination = null;
         if ($totalVacancies > $perpage) {
-            $baseurl = new moodle_url('/local/jobboard/index.php', [
+            $baseurl = new moodle_url('/local/jobboard/index.php', array_filter([
                 'view' => 'public',
                 'convocatoriaid' => $convocatoriaid,
                 'perpage' => $perpage,
+                'code' => $filtercode,
                 'contracttype' => $filtercontract,
-                'location' => $filterlocation,
+                'department' => $filterdepartment,
+                'location' => $filterlocation ?: null,
+                'modality' => $filtermodality,
                 'search' => $filtersearch,
-            ]);
+            ]));
             $pagination = $OUTPUT->paging_bar($totalVacancies, $page, $perpage, $baseurl);
         }
 

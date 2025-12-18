@@ -78,11 +78,8 @@ class reupload_form extends moodleform {
         $validation = $this->_customdata['validation'];
 
         // Show rejection reason if applicable.
-        if ($validation && !$validation->isvalid) {
-            $reasontext = get_string('rejectreason_' . $validation->rejectreason, 'local_jobboard');
-            if (!empty($validation->notes)) {
-                $reasontext .= '<br><em>' . format_string($validation->notes) . '</em>';
-            }
+        if ($validation && $validation->status === 'rejected' && !empty($validation->rejectreason)) {
+            $reasontext = format_string($validation->rejectreason);
 
             $mform->addElement('html', '<div class="alert alert-warning">' .
                 '<strong>' . get_string('rejectionreason', 'local_jobboard') . ':</strong><br>' .
@@ -208,9 +205,23 @@ ob_start();
 $mform->display();
 $formhtml = ob_get_clean();
 
+// Get document type name.
+$doctypename = get_string_manager()->string_exists('doctype_' . $documenttype, 'local_jobboard')
+    ? get_string('doctype_' . $documenttype, 'local_jobboard')
+    : $documenttype;
+
+// Get rejection reason.
+$rejectreason = ($validation && $validation->status === 'rejected') ? $validation->rejectreason : null;
+
+// Get document filename.
+$documentname = $existingdoc ? $existingdoc->filename : null;
+
+// Build back URL.
+$backurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $applicationid]))->out(false);
+
 // Use renderer + template pattern.
 echo $OUTPUT->header();
 $renderer = $PAGE->get_renderer('local_jobboard');
-$data = $renderer->prepare_reupload_document_data($formhtml);
+$data = $renderer->prepare_reupload_document_data($formhtml, $documentname, $doctypename, $rejectreason, $backurl);
 echo $renderer->render_reupload_document_page($data);
 echo $OUTPUT->footer();

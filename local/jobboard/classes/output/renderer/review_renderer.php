@@ -650,13 +650,27 @@ trait review_renderer {
      * Prepare reupload document page data.
      *
      * @param string $formhtml Rendered form HTML.
+     * @param string|null $documentname Original document name.
+     * @param string|null $documenttype Document type label.
+     * @param string|null $rejectreason Reason for rejection.
+     * @param string|null $backurl Back URL.
      * @return array Template data.
      */
-    public function prepare_reupload_document_data(string $formhtml): array {
+    public function prepare_reupload_document_data(
+        string $formhtml,
+        ?string $documentname = null,
+        ?string $documenttype = null,
+        ?string $rejectreason = null,
+        ?string $backurl = null
+    ): array {
         return [
             'pagetitle' => get_string('reuploaddocument', 'local_jobboard'),
             'helptext' => get_string('reuploadhelp', 'local_jobboard'),
             'formhtml' => $formhtml,
+            'documentname' => $documentname,
+            'documenttype' => $documenttype,
+            'rejectreason' => $rejectreason,
+            'backurl' => $backurl,
         ];
     }
 
@@ -952,7 +966,7 @@ trait review_renderer {
                     'sesskey' => sesskey(),
                 ]))->out(false),
                 'rejecturl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
-                'rejectreason' => $doc->rejectreason ?? null,
+                'rejectreason' => $doc->validation_reason ?? null,
                 'reviewedby' => $reviewedby,
                 'reviewedat' => $reviewedat,
                 'sesskey' => sesskey(),

@@ -448,6 +448,8 @@ function local_jobboard_get_document_statuses(): array {
 function local_jobboard_get_contract_types(): array {
     return [
         'catedra' => get_string('contract:catedra', 'local_jobboard'),
+        'ocasional_tc' => get_string('contract:ocasional_tc', 'local_jobboard'),
+        'ocasional_mt' => get_string('contract:ocasional_mt', 'local_jobboard'),
         'temporal' => get_string('contract:temporal', 'local_jobboard'),
         'termino_fijo' => get_string('contract:termino_fijo', 'local_jobboard'),
         'prestacion_servicios' => get_string('contract:prestacion_servicios', 'local_jobboard'),

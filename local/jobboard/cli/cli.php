@@ -612,12 +612,26 @@ if ($createsample) {
         $code = $profile['code'] ?? '';
         if (empty($code)) continue;
 
-        $allprofiles[$code] = $profile;
+        // Use composite key: code_location_modality to allow same code in different locations/modalities.
+        $loc = $profile['location'] ?? 'PAMPLONA';
+        $mod = $profile['modality'] ?? 'PRESENCIAL';
+        // Normalize modality key.
+        if (stripos($mod, 'DISTANCIA') !== false) {
+            $modkey = 'DISTANCIA';
+        } else if (stripos($mod, 'VIRTUAL') !== false) {
+            $modkey = 'VIRTUAL';
+        } else if (stripos($mod, 'HIBRIDA') !== false || stripos($mod, 'HÍBRIDA') !== false) {
+            $modkey = 'HIBRIDA';
+        } else {
+            $modkey = 'PRESENCIAL';
+        }
+        $uniquekey = $code . '_' . $loc . '_' . $modkey;
+
+        $allprofiles[$uniquekey] = $profile;
         $parsestats['profiles']++;
         if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
         else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
 
-        $loc = $profile['location'] ?? 'PAMPLONA';
         $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
     }
     $parsestats['files'] = 1;
@@ -636,14 +650,28 @@ if ($createsample) {
     cli_heading('Phase 1: Importing from CSV File');
 
     $profiles = parse_csv_file($csvfile, $verbose);
-    $allprofiles = $profiles;
 
     foreach ($profiles as $code => $profile) {
+        // Use composite key: code_location_modality to allow same code in different locations/modalities.
+        $loc = $profile['location'] ?? 'PAMPLONA';
+        $mod = $profile['modality'] ?? 'PRESENCIAL';
+        // Normalize modality key.
+        if (stripos($mod, 'DISTANCIA') !== false) {
+            $modkey = 'DISTANCIA';
+        } else if (stripos($mod, 'VIRTUAL') !== false) {
+            $modkey = 'VIRTUAL';
+        } else if (stripos($mod, 'HIBRIDA') !== false || stripos($mod, 'HÍBRIDA') !== false) {
+            $modkey = 'HIBRIDA';
+        } else {
+            $modkey = 'PRESENCIAL';
+        }
+        $uniquekey = $code . '_' . $loc . '_' . $modkey;
+
+        $allprofiles[$uniquekey] = $profile;
         $parsestats['profiles']++;
         if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
         else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
 
-        $loc = $profile['location'] ?? 'PAMPLONA';
         $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
     }
     $parsestats['files'] = 1;
@@ -682,14 +710,28 @@ if ($createsample) {
         }
 
         foreach ($profiles as $code => $profile) {
-            if (!isset($allprofiles[$code])) {
-                $allprofiles[$code] = $profile;
+            // Use composite key: code_location_modality to allow same code in different locations/modalities.
+            $loc = $profile['location'] ?? 'PAMPLONA';
+            $mod = $profile['modality'] ?? 'PRESENCIAL';
+            // Normalize modality key.
+            if (stripos($mod, 'DISTANCIA') !== false) {
+                $modkey = 'DISTANCIA';
+            } else if (stripos($mod, 'VIRTUAL') !== false) {
+                $modkey = 'VIRTUAL';
+            } else if (stripos($mod, 'HIBRIDA') !== false || stripos($mod, 'HÍBRIDA') !== false) {
+                $modkey = 'HIBRIDA';
+            } else {
+                $modkey = 'PRESENCIAL';
+            }
+            $uniquekey = $code . '_' . $loc . '_' . $modkey;
+
+            if (!isset($allprofiles[$uniquekey])) {
+                $allprofiles[$uniquekey] = $profile;
                 $parsestats['profiles']++;
                 if (strpos($code, 'FCAS') === 0) $parsestats['fcas']++;
                 else if (strpos($code, 'FII') === 0) $parsestats['fii']++;
 
                 // Track location stats.
-                $loc = $profile['location'] ?? 'PAMPLONA';
                 $locationstats[$loc] = ($locationstats[$loc] ?? 0) + 1;
             }
         }
@@ -1272,15 +1314,45 @@ if (!empty($options['company'])) {
     $defaultcompanyid = (int) $options['company'];
 }
 
-foreach ($allprofiles as $code => $profile) {
+foreach ($allprofiles as $uniquekey => $profile) {
     $current++;
     $prefix = "[$current/$totalprofiles]";
 
-    // Check if exists.
-    $existing = $DB->get_record('local_jobboard_vacancy', ['code' => $code]);
+    // Get the actual vacancy code from the profile (not the composite key).
+    $code = $profile['code'] ?? '';
+    if (empty($code)) {
+        if ($verbose) echo "$prefix SKIP: empty code\n";
+        $importstats['skipped']++;
+        continue;
+    }
+
+    // Extract location and modality for duplicate check.
+    $location = $profile['location'] ?? 'PAMPLONA';
+    $modality = $profile['modality'] ?? 'PRESENCIAL';
+    // Normalize modality key.
+    if (stripos($modality, 'DISTANCIA') !== false) {
+        $modalitykey = 'DISTANCIA';
+    } else if (stripos($modality, 'VIRTUAL') !== false) {
+        $modalitykey = 'VIRTUAL';
+    } else if (stripos($modality, 'HIBRIDA') !== false || stripos($modality, 'HÍBRIDA') !== false) {
+        $modalitykey = 'HIBRIDA';
+    } else {
+        $modalitykey = 'PRESENCIAL';
+    }
+    $modalityFormKey = strtolower($modalitykey);
+
+    // Get location name for comparison.
+    $locationName = $ISER_SEDES[$location]['name'] ?? $location;
+
+    // Check if exists by code + location + modality (allows same code in different locations/modalities).
+    $existing = $DB->get_record_sql(
+        "SELECT * FROM {local_jobboard_vacancy}
+         WHERE code = :code AND location = :location AND modality = :modality",
+        ['code' => $code, 'location' => $locationName, 'modality' => $modalityFormKey]
+    );
 
     if ($existing && !$options['update']) {
-        if ($verbose) echo "$prefix SKIP: $code (exists)\n";
+        if ($verbose) echo "$prefix SKIP: $code @ $locationName ($modalityFormKey) (exists)\n";
         $importstats['skipped']++;
         continue;
     }
@@ -1307,19 +1379,25 @@ foreach ($allprofiles as $code => $profile) {
         $modalitykey = 'PRESENCIAL';
     }
     $contracttypeRaw = $profile['contracttype'] ?: 'CATEDRA';
+    $isOcasionalTC = stripos($contracttypeRaw, 'OCASIONAL') !== false && stripos($contracttypeRaw, 'TIEMPO COMPLETO') !== false;
+    $isOcasionalMT = stripos($contracttypeRaw, 'OCASIONAL') !== false && stripos($contracttypeRaw, 'MEDIO TIEMPO') !== false;
     $isOcasional = stripos($contracttypeRaw, 'OCASIONAL') !== false;
 
     // Map contract type from JSON to form-expected keys.
-    // Form expects: catedra, temporal, termino_fijo, prestacion_servicios, planta.
-    if ($isOcasional) {
-        $contracttype = 'temporal'; // Ocasional Tiempo Completo -> temporal.
+    // Form expects: catedra, ocasional_tc, ocasional_mt, temporal, termino_fijo, prestacion_servicios, planta.
+    if ($isOcasionalTC) {
+        $contracttype = 'ocasional_tc'; // Ocasional Tiempo Completo.
+    } else if ($isOcasionalMT) {
+        $contracttype = 'ocasional_mt'; // Ocasional Medio Tiempo.
+    } else if ($isOcasional) {
+        $contracttype = 'ocasional_tc'; // Default ocasional to tiempo completo.
     } else if (stripos($contracttypeRaw, 'CATEDRA') !== false || stripos($contracttypeRaw, 'CÁTEDRA') !== false) {
         $contracttype = 'catedra';
     } else if (stripos($contracttypeRaw, 'PLANTA') !== false) {
         $contracttype = 'planta';
     } else if (stripos($contracttypeRaw, 'PRESTACION') !== false || stripos($contracttypeRaw, 'SERVICIOS') !== false) {
         $contracttype = 'prestacion_servicios';
-    } else if (stripos($contracttypeRaw, 'FIJO') !== false) {
+    } else if (stripos($contracttypeRaw, 'FIJO') !== false || stripos($contracttypeRaw, 'TEMPORAL') !== false) {
         $contracttype = 'termino_fijo';
     } else {
         $contracttype = 'catedra'; // Default to catedra.
@@ -1412,8 +1490,9 @@ foreach ($allprofiles as $code => $profile) {
     $modalityFormKey = strtolower($modalitykey);
     $record->modality = $modalityFormKey;
 
-    // Department (text field = modality display name).
-    $record->department = $modalityName;
+    // Department (text field = academic program name).
+    // Use program name for proper filtering by "Programa Académico".
+    $record->department = $program ?: $facultyName;
 
     // Build requirements.
     $reqhtml = "<div class=\"vacancy-requirements\">\n";

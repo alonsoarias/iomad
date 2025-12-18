@@ -59,6 +59,9 @@ class vacancy {
     /** @var string The department. */
     public $department = '';
 
+    /** @var string The educational modality (presencial, distancia, virtual, hibrida). */
+    public $modality = '';
+
     /** @var int|null The Iomad company ID. */
     public $companyid = null;
 
@@ -184,6 +187,7 @@ class vacancy {
         $this->contracttype = $record->contracttype ?? '';
         $this->duration = $record->duration ?? '';
         $this->location = $record->location ?? '';
+        $this->modality = $record->modality ?? '';
         $this->department = $record->department ?? '';
         $this->companyid = $record->companyid ? (int) $record->companyid : null;
         $this->departmentid = isset($record->departmentid) && $record->departmentid ? (int) $record->departmentid : null;
@@ -401,7 +405,7 @@ class vacancy {
     protected function set_from_data(\stdClass $data): void {
         $fields = [
             'code', 'title', 'description', 'contracttype', 'duration',
-            'location', 'department', 'companyid', 'departmentid',
+            'location', 'modality', 'department', 'companyid', 'departmentid',
             'convocatoriaid', 'positions',
             'requirements', 'desirable', 'status', 'publicationtype',
         ];
@@ -507,6 +511,7 @@ class vacancy {
             'contracttype' => $this->contracttype,
             'duration' => $this->duration,
             'location' => $this->location,
+            'modality' => $this->modality,
             'department' => $this->department,
             'companyid' => $this->companyid,
             'departmentid' => $this->departmentid,

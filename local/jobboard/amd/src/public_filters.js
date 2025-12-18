@@ -75,6 +75,22 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
     };
 
     /**
+     * Show/hide loading indicator.
+     *
+     * @param {boolean} show Whether to show or hide.
+     */
+    var toggleLoadingIndicator = function(show) {
+        var loadingEl = document.querySelector('.jb-filter-loading');
+        if (loadingEl) {
+            if (show) {
+                loadingEl.classList.remove('d-none');
+            } else {
+                loadingEl.classList.add('d-none');
+            }
+        }
+    };
+
+    /**
      * Load filtered results via AJAX.
      *
      * @param {HTMLFormElement} form The filter form.
@@ -92,6 +108,9 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
 
         // Show loading state.
         resultsContainer.classList.add('jb-loading');
+        resultsContainer.style.opacity = '0.5';
+        resultsContainer.style.pointerEvents = 'none';
+        toggleLoadingIndicator(true);
 
         fetch(url)
             .then(function(response) {
@@ -103,7 +122,13 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
             .then(function(html) {
                 resultsContainer.innerHTML = html;
                 resultsContainer.classList.remove('jb-loading');
+                resultsContainer.style.opacity = '1';
+                resultsContainer.style.pointerEvents = 'auto';
+                toggleLoadingIndicator(false);
                 updateUrl(queryString);
+
+                // Scroll to results smoothly.
+                resultsContainer.scrollIntoView({behavior: 'smooth', block: 'start'});
 
                 // Dispatch event for other modules.
                 var event = new CustomEvent('jobboard:filtersapplied', {
@@ -116,6 +141,9 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
             })
             .catch(function(error) {
                 resultsContainer.classList.remove('jb-loading');
+                resultsContainer.style.opacity = '1';
+                resultsContainer.style.pointerEvents = 'auto';
+                toggleLoadingIndicator(false);
                 Notification.exception(error);
             });
     };

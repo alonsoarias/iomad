@@ -8,7 +8,7 @@
     <TABLE NAME="local_jobboard_vacancy" COMMENT="Job vacancies for adjunct professors">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Unique internal vacancy code"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy code (can repeat for different locations/modalities)"/>
         <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Vacancy title"/>
         <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Full vacancy description"/>
         <FIELD NAME="contracttype" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Type of contract"/>
@@ -38,7 +38,8 @@
         <KEY NAME="convocatoriaid_fk" TYPE="foreign" FIELDS="convocatoriaid" REFTABLE="local_jobboard_convocatoria" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="code_unique" UNIQUE="true" FIELDS="code"/>
+        <INDEX NAME="code_location_modality_unique" UNIQUE="true" FIELDS="code, location, modality" COMMENT="Same code allowed in different locations/modalities"/>
+        <INDEX NAME="code_idx" UNIQUE="false" FIELDS="code"/>
         <INDEX NAME="status_idx" UNIQUE="false" FIELDS="status"/>
         <INDEX NAME="companyid_idx" UNIQUE="false" FIELDS="companyid"/>
         <INDEX NAME="departmentid_idx" UNIQUE="false" FIELDS="departmentid"/>

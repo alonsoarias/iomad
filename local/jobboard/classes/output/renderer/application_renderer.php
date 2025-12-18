@@ -472,9 +472,9 @@ trait application_renderer {
                 'ispdf' => $ispdf,
                 'isimage' => $isimage,
                 'canpreview' => $canpreview,
-                'rejectreason' => $doc->rejectreason ?? null,
-                'canreupload' => $isowner && $docstatus === 'rejected' && in_array($application->status, ['docs_rejected', 'submitted']),
-                'reuploadurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancy->id, 'reupload' => $doc->id]))->out(false),
+                'rejectreason' => $doc->validation_reason ?? null,
+                'canreupload' => $isowner && $docstatus === 'rejected' && in_array($application->status, ['docs_rejected', 'submitted', 'under_review']),
+                'reuploadurl' => (new moodle_url('/local/jobboard/reupload_document.php', ['applicationid' => $application->id, 'documenttype' => $doc->documenttype]))->out(false),
             ];
 
             $documentsdata[] = $docdata;

@@ -400,6 +400,8 @@ $string['contract:catedra'] = 'Docente de Cátedra';
 $string['contract:planta'] = 'Docente de Planta';
 $string['contract:temporal'] = 'Temporal';
 $string['contract:ocasional'] = 'Ocasional';
+$string['contract:ocasional_tc'] = 'Ocasional Tiempo Completo';
+$string['contract:ocasional_mt'] = 'Ocasional Medio Tiempo';
 $string['contract:hora_catedra'] = 'Hora Cátedra';
 
 // Modalidades
@@ -3526,3 +3528,32 @@ $string['applyfilters'] = 'Aplicar filtros';
 $string['totaldocuments'] = 'Total de documentos';
 $string['allreviewed'] = 'Todos revisados';
 $string['urgent'] = 'Urgente';
+
+// =============================================================================
+// TIPOS DE DOCUMENTOS - v3.6.38
+// =============================================================================
+
+$string['doctype_experiencia_docente'] = 'Experiencia Docente';
+$string['doctype_experiencia_profesional'] = 'Experiencia Profesional';
+$string['doctype_formacion_pedagogia'] = 'Formación en Pedagogía';
+$string['doctype_formacion_tic'] = 'Formación en TIC';
+$string['doctype_formacion_complementaria'] = 'Certificaciones Complementarias';
+$string['doctype_titulo_academico'] = 'Títulos Pregrado y Posgrado';
+$string['doctype_bienes_rentas'] = 'Formato Declaración de Bienes y Rentas';
+$string['doctype_antecedentes_judiciales'] = 'Antecedentes Judiciales';
+$string['doctype_medidas_correctivas'] = 'Registro Nacional de Medidas Correctivas';
+$string['doctype_inhabilidades'] = 'Consulta de Inhabilidades';
+$string['doctype_redam'] = 'REDAM';
+
+// =============================================================================
+// FILTROS DE VACANTES - v3.6.38
+// =============================================================================
+
+$string['filterbycode'] = 'Buscar por código...';
+$string['filtering'] = 'Filtrando...';
+$string['modality'] = 'Modalidad';
+$string['modality_presencial'] = 'Presencial';
+$string['modality_virtual'] = 'Virtual';
+$string['modality_hibrida'] = 'Híbrida';
+$string['modality_distancia'] = 'A Distancia';
+$string['department'] = 'Programa Académico';
