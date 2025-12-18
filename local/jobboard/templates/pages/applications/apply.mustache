@@ -184,31 +184,48 @@
                     </div>
                 </div>
 
-                {{! Document Checklist Card }}
+                {{! Document Checklist Card - Dynamic with auto-marking }}
                 {{#hasrequireddocs}}
-                <div class="jb-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
+                <div class="jb-card mb-4" data-region="document-checklist" data-total="{{requireddocscount}}" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
                     <div class="jb-card-header" style="background: var(--iser-amarillo-lighter); padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 2px solid var(--iser-amarillo);">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-amarillo-darker); margin: 0;">
                                 <i class="fa fa-list-check me-2"></i>
                                 {{#str}}documentchecklist, local_jobboard{{/str}}
                             </h3>
-                            <span style="background: var(--iser-amarillo); color: var(--iser-negro); padding: 4px 12px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm); font-weight: var(--jb-font-bold);">
-                                {{requireddocscount}}
+                            <span data-region="checklist-counter" class="bg-secondary" style="color: var(--iser-blanco); padding: 4px 12px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm); font-weight: var(--jb-font-bold);">
+                                <span data-count="uploaded">0</span>/{{requireddocscount}}
                             </span>
                         </div>
+                        {{! Progress bar }}
+                        <div style="margin-top: var(--jb-space-2); height: 4px; background: rgba(0,0,0,0.1); border-radius: 2px; overflow: hidden;">
+                            <div data-region="checklist-progress" style="width: 0%; height: 100%; background: var(--iser-verde); transition: width 0.3s ease;"></div>
+                        </div>
                     </div>
-                    <ul style="list-style: none; margin: 0; padding: 0;">
+                    <ul data-region="checklist-items" style="list-style: none; margin: 0; padding: 0;">
                         {{#requireddocs}}
-                        <li style="padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 1px solid var(--jb-gray-100); display: flex; align-items: center; font-size: var(--jb-text-sm);">
-                            <span style="width: 20px; height: 20px; border: 2px solid var(--iser-gris-claro); border-radius: 4px; margin-right: var(--jb-space-3); flex-shrink: 0;"></span>
+                        <li data-doc-code="{{code}}" class="unchecked" style="padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 1px solid var(--jb-gray-100); display: flex; align-items: center; font-size: var(--jb-text-sm); cursor: pointer; transition: background 0.2s ease;" data-action="scroll-to-doc" data-target="doc_{{code}}">
+                            {{! Unchecked icon (empty box) }}
+                            <span data-icon="unchecked" style="width: 20px; height: 20px; border: 2px solid var(--iser-gris-claro); border-radius: 4px; margin-right: var(--jb-space-3); flex-shrink: 0; display: flex; align-items: center; justify-content: center;"></span>
+                            {{! Checked icon (green checkmark) - hidden by default }}
+                            <span data-icon="checked" class="d-none" style="width: 20px; height: 20px; background: var(--iser-verde); border-radius: 4px; margin-right: var(--jb-space-3); flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa fa-check" style="color: white; font-size: 12px;"></i>
+                            </span>
                             <span style="flex: 1; color: var(--iser-gris-oscuro);">{{name}}</span>
+                            {{! Status badges }}
+                            <span data-status="pending" class="badge bg-secondary" style="font-size: 10px;">{{#str}}pending, local_jobboard{{/str}}</span>
+                            <span data-status="uploaded" class="badge bg-success d-none" style="font-size: 10px;">{{#str}}uploaded, local_jobboard{{/str}}</span>
                             {{#isrequired}}
-                            <span style="color: var(--iser-rojo); font-weight: var(--jb-font-bold);" title="{{#str}}required{{/str}}">*</span>
+                            <span style="color: var(--iser-rojo); font-weight: var(--jb-font-bold); margin-left: 4px;" title="{{#str}}required{{/str}}">*</span>
                             {{/isrequired}}
                         </li>
                         {{/requireddocs}}
                     </ul>
+                    {{! All complete message - hidden by default }}
+                    <div data-region="all-complete" class="d-none" style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--iser-verde-lighter); text-align: center;">
+                        <i class="fa fa-check-circle me-2" style="color: var(--iser-verde);"></i>
+                        <span style="color: var(--iser-verde-dark); font-weight: var(--jb-font-semibold);">{{#str}}alldocumentsuploaded, local_jobboard{{/str}}</span>
+                    </div>
                     <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); font-size: var(--jb-text-xs); color: var(--iser-gris-medio);">
                         <span style="color: var(--iser-rojo); font-weight: var(--jb-font-bold);">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
                     </div>

@@ -672,6 +672,18 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121803, 'local', 'jobboard');
     }
 
+    // Version 3.6.67 - Change carta_intencion from textarea to editor (Moodle HTML editor).
+    if ($oldversion < 2025121819) {
+        // Update carta_intencion to use the Moodle HTML editor instead of plain textarea.
+        $DB->set_field('local_jobboard_doctype', 'input_type', 'editor', ['code' => 'carta_intencion']);
+
+        // Update timemodified.
+        $DB->set_field('local_jobboard_doctype', 'timemodified', time(), ['code' => 'carta_intencion']);
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121819, 'local', 'jobboard');
+    }
+
     return true;
 }
 

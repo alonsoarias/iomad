@@ -84,7 +84,7 @@ function local_jobboard_get_default_doctypes(): array {
             'iserexempted' => 0,
             'gender_condition' => null,
             'profession_exempt' => null,
-            'input_type' => 'textarea',
+            'input_type' => 'editor',
             'category' => 'application',
             'defaultmaxagedays' => null,
             'sortorder' => 1,

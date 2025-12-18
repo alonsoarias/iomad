@@ -281,6 +281,11 @@ $templatedata = $renderer->prepare_apply_page_data(
     $daysuntilclose
 );
 
+// Initialize document checklist JavaScript for auto-marking.
+$PAGE->requires->js_call_amd('local_jobboard/document_checklist', 'init', [[
+    'totalDocs' => count($requireddocs),
+]]);
+
 // Output page.
 echo $OUTPUT->header();
 echo $renderer->render_apply_page($templatedata);

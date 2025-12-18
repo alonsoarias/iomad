@@ -342,6 +342,20 @@ class application_form extends \moodleform {
                 $mform->setType($fieldname, PARAM_TEXT);
                 break;
 
+            case 'editor':
+                // Moodle HTML editor for rich text content (e.g., letter of intent).
+                $editoroptions = [
+                    'maxfiles' => 0,
+                    'maxbytes' => 0,
+                    'trusttext' => false,
+                    'noclean' => false,
+                    'context' => \context_system::instance(),
+                    'subdirs' => false,
+                ];
+                $mform->addElement('editor', $fieldname . '_editor', '', null, $editoroptions);
+                $mform->setType($fieldname . '_editor', PARAM_RAW);
+                break;
+
             case 'file':
             default:
                 $mform->addElement('filemanager', $fieldname, '', null, $fileoptions);
@@ -351,6 +365,9 @@ class application_form extends \moodleform {
         // Add rule for required documents.
         if ($isrequired && $inputtype === 'file') {
             // We validate in the validation() method for files.
+        } else if ($isrequired && $inputtype === 'editor') {
+            // We validate in the validation() method for editors.
+            $mform->addRule($fieldname . '_editor', get_string('required'), 'required', null, 'server');
         } else if ($isrequired) {
             $mform->addRule($fieldname, get_string('required'), 'required', null, 'server');
         }
@@ -479,6 +496,14 @@ class application_form extends \moodleform {
                     if (empty($draftid) || !$this->draft_has_files((int) $draftid)) {
                         $errors[$fieldname] = get_string('documentrequired', 'local_jobboard', $doctype->name);
                     }
+                } else if ($inputtype === 'editor') {
+                    // Editor returns array with 'text' key.
+                    $editorfield = $fieldname . '_editor';
+                    $editordata = $data[$editorfield] ?? [];
+                    $editortext = is_array($editordata) ? ($editordata['text'] ?? '') : '';
+                    if (empty(trim(strip_tags($editortext)))) {
+                        $errors[$editorfield] = get_string('documentrequired', 'local_jobboard', $doctype->name);
+                    }
                 } else {
                     if (empty(trim($data[$fieldname] ?? ''))) {
                         $errors[$fieldname] = get_string('required');
@@ -542,6 +567,19 @@ class application_form extends \moodleform {
                     $documents[$doctype->code] = [
                         'type' => 'file',
                         'draftitemid' => (int) $draftid,
+                        'doctypeid' => $doctype->id,
+                        'doctypecode' => $doctype->code,
+                    ];
+                }
+            } else if ($inputtype === 'editor') {
+                // Editor returns array with 'text' key.
+                $editorfield = $fieldname . '_editor';
+                $editordata = $data->$editorfield ?? [];
+                $editortext = is_array($editordata) ? ($editordata['text'] ?? '') : '';
+                if (!empty(trim(strip_tags($editortext)))) {
+                    $documents[$doctype->code] = [
+                        'type' => 'editor',
+                        'value' => $editortext,
                         'doctypeid' => $doctype->id,
                         'doctypecode' => $doctype->code,
                     ];
