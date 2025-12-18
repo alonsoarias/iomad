@@ -370,7 +370,7 @@ class document {
         // Generate standardized filename.
         $standardizedfilename = self::generate_standardized_filename(
             $documenttype,
-            $USER->id,
+            (int) $USER->id,
             $draftfile->get_filename()
         );
 
