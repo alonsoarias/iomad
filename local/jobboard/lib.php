@@ -364,49 +364,83 @@ function local_jobboard_pluginfile($course, $cm, $context, $filearea, $args, $fo
         return false;
     }
 
-    require_login();
-
-    if ($filearea !== 'application_documents') {
-        return false;
-    }
-
     $itemid = array_shift($args);
     $filename = array_pop($args);
     $filepath = $args ? '/' . implode('/', $args) . '/' : '/';
 
-    // Get the document record.
-    $document = $DB->get_record('local_jobboard_document', ['id' => $itemid], '*', MUST_EXIST);
-    $application = $DB->get_record('local_jobboard_application', ['id' => $document->applicationid], '*', MUST_EXIST);
+    // Handle convocatoria PDF files (public access for open convocatorias).
+    if ($filearea === 'convocatoria_pdf') {
+        // Get the convocatoria record.
+        $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $itemid]);
+        if (!$convocatoria) {
+            return false;
+        }
 
-    // Check access permissions.
-    $candownload = false;
+        // Allow public access if convocatoria is open.
+        $isopen = ($convocatoria->status === 'open' && $convocatoria->enddate >= time());
+        $canview = $isopen || (isloggedin() && has_capability('local/jobboard:manageconvocatorias', $context));
 
-    // Owner can always download their own documents.
-    if ($application->userid == $USER->id) {
-        $candownload = true;
+        if (!$canview) {
+            return false;
+        }
+
+        $fs = get_file_storage();
+        $file = $fs->get_file($context->id, 'local_jobboard', $filearea, $itemid, $filepath, $filename);
+
+        if (!$file || $file->is_directory()) {
+            return false;
+        }
+
+        // Log the access if user is logged in.
+        if (isloggedin()) {
+            \local_jobboard\audit::log('convocatoria_pdf_download', 'convocatoria', $convocatoria->id);
+        }
+
+        send_stored_file($file, 86400, 0, $forcedownload, $options);
+        return;
     }
 
-    // Reviewers can download any document.
-    if (has_capability('local/jobboard:downloadanydocument', $context)) {
-        $candownload = true;
+    // Handle application documents (requires login).
+    if ($filearea === 'application_documents') {
+        require_login();
+
+        // Get the document record.
+        $document = $DB->get_record('local_jobboard_document', ['id' => $itemid], '*', MUST_EXIST);
+        $application = $DB->get_record('local_jobboard_application', ['id' => $document->applicationid], '*', MUST_EXIST);
+
+        // Check access permissions.
+        $candownload = false;
+
+        // Owner can always download their own documents.
+        if ($application->userid == $USER->id) {
+            $candownload = true;
+        }
+
+        // Reviewers can download any document.
+        if (has_capability('local/jobboard:downloadanydocument', $context)) {
+            $candownload = true;
+        }
+
+        if (!$candownload) {
+            return false;
+        }
+
+        // Log the access.
+        \local_jobboard\audit::log('document_download', 'document', $document->id);
+
+        $fs = get_file_storage();
+        // Files are stored with applicationid as itemid, not document id.
+        $file = $fs->get_file($context->id, 'local_jobboard', $filearea, $document->applicationid, $filepath, $filename);
+
+        if (!$file || $file->is_directory()) {
+            return false;
+        }
+
+        send_stored_file($file, 86400, 0, $forcedownload, $options);
+        return;
     }
 
-    if (!$candownload) {
-        return false;
-    }
-
-    // Log the access.
-    \local_jobboard\audit::log('document_download', 'document', $document->id);
-
-    $fs = get_file_storage();
-    // Files are stored with applicationid as itemid, not document id.
-    $file = $fs->get_file($context->id, 'local_jobboard', $filearea, $document->applicationid, $filepath, $filename);
-
-    if (!$file || $file->is_directory()) {
-        return false;
-    }
-
-    send_stored_file($file, 86400, 0, $forcedownload, $options);
+    return false;
 }
 
 /**

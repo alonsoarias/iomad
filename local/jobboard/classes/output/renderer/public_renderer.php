@@ -190,6 +190,46 @@ trait public_renderer {
             'whatsapp' => 'https://wa.me/?text=' . $sharetext . '%20' . rawurlencode($shareurl),
         ];
 
+        // Build attachments array for PDF document.
+        $attachments = [];
+        $hasattachments = false;
+
+        if (!empty($convocatoria->pdf_filename)) {
+            // Get PDF file from Moodle file storage.
+            $context = \context_system::instance();
+            $fs = get_file_storage();
+            $files = $fs->get_area_files(
+                $context->id,
+                'local_jobboard',
+                'convocatoria_pdf',
+                $convocatoria->id,
+                'itemid, filepath, filename',
+                false
+            );
+
+            foreach ($files as $file) {
+                if ($file->get_filename() !== '.') {
+                    $pdfurl = moodle_url::make_pluginfile_url(
+                        $context->id,
+                        'local_jobboard',
+                        'convocatoria_pdf',
+                        $convocatoria->id,
+                        $file->get_filepath(),
+                        $file->get_filename(),
+                        false
+                    );
+
+                    $attachments[] = [
+                        'name' => $file->get_filename(),
+                        'url' => $pdfurl->out(false),
+                        'icon' => 'pdf',
+                    ];
+                    $hasattachments = true;
+                    break; // Only one PDF per convocatoria.
+                }
+            }
+        }
+
         return [
             'breadcrumbs' => $breadcrumbs,
             'convocatoria' => [
@@ -203,6 +243,8 @@ trait public_renderer {
                 'status' => $convocatoria->status,
                 'statuslabel' => get_string('convocatoria_status_' . $convocatoria->status, 'local_jobboard'),
                 'statuscolor' => $this->get_convocatoria_status_class($convocatoria->status),
+                'hasattachments' => $hasattachments,
+                'attachments' => $attachments,
             ],
             'totalvacancies' => $totalvacancies,
             'totalpositions' => $totalpositions,
