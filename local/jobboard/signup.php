@@ -441,16 +441,58 @@ function assign_user_to_company($userid, $companyid, $departmentid = 0) {
 /**
  * Send confirmation email to the new user.
  *
- * This function uses Moodle's standard confirmation email mechanism.
+ * This function sends a custom confirmation email with the jobboard
+ * confirmation URL instead of the standard Moodle URL. This allows
+ * email confirmation to work even when global registration is disabled.
  *
  * @param stdClass $user The user object.
  * @return bool True if email was sent successfully.
  */
 function send_confirmation_email_to_user($user) {
-    global $CFG;
+    global $CFG, $DB;
 
-    // Use Moodle's standard confirmation email function.
-    return send_confirmation_email($user);
+    // Check if plugin self-registration is enabled.
+    $pluginselfreg = get_config('local_jobboard', 'enable_self_registration');
+
+    // If plugin registration is not enabled, use standard Moodle confirmation.
+    if (empty($pluginselfreg)) {
+        return send_confirmation_email($user);
+    }
+
+    // Build the custom jobboard confirmation URL.
+    $data = $user->secret . '/' . urlencode($user->username);
+    $confirmurl = new moodle_url('/local/jobboard/confirm.php', ['data' => $data]);
+
+    // Get the support user for the 'from' field.
+    $supportuser = core_user::get_support_user();
+
+    // Build the email subject.
+    $site = get_site();
+    $subject = get_string('emailconfirmationsubject', '', format_string($site->fullname));
+
+    // Build the email body.
+    $a = new stdClass();
+    $a->firstname = fullname($user, true);
+    $a->sitename = format_string($site->fullname);
+    $a->admin = generate_email_signoff();
+    $a->link = $confirmurl->out(false);
+
+    // Use a custom message that includes the jobboard confirmation link.
+    $messagetext = get_string('emailconfirmation', '', $a);
+
+    // Also build HTML version.
+    $messagehtml = text_to_html($messagetext, false, false, true);
+
+    // Send the email.
+    $result = email_to_user(
+        $user,
+        $supportuser,
+        $subject,
+        $messagetext,
+        $messagehtml
+    );
+
+    return $result;
 }
 
 /**

@@ -1089,6 +1089,13 @@ $string['confirm_archive'] = '¿Está seguro que desea archivar?';
 $string['confirm_action'] = '¿Está seguro que desea realizar esta acción?';
 $string['actioncannnotbeundone'] = 'Esta acción no se puede deshacer.';
 
+// Cadenas de página de confirmación de correo.
+$string['confirm_success_title'] = 'Correo Electrónico Confirmado';
+$string['confirm_success_message'] = 'Su dirección de correo electrónico ha sido verificada exitosamente. Ahora puede iniciar sesión en su cuenta.';
+$string['confirm_failed_title'] = 'Confirmación Fallida';
+$string['confirm_failed_message'] = 'No pudimos verificar su dirección de correo electrónico. El enlace de confirmación puede haber expirado o es inválido. Por favor intente registrarse nuevamente o contacte a soporte.';
+$string['confirm_pending_vacancy'] = 'Tiene una postulación pendiente. Después de iniciar sesión, será redirigido para completar su postulación.';
+
 // =============================================================================
 // CADENAS DE AYUDA
 // =============================================================================

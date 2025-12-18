@@ -1095,6 +1095,13 @@ $string['confirm_archive'] = 'Are you sure you want to archive?';
 $string['confirm_action'] = 'Are you sure you want to perform this action?';
 $string['actioncannnotbeundone'] = 'This action cannot be undone.';
 
+// Email confirmation page strings.
+$string['confirm_success_title'] = 'Email Confirmed';
+$string['confirm_success_message'] = 'Your email address has been verified successfully. You can now log in to your account.';
+$string['confirm_failed_title'] = 'Confirmation Failed';
+$string['confirm_failed_message'] = 'We could not verify your email address. The confirmation link may have expired or is invalid. Please try registering again or contact support.';
+$string['confirm_pending_vacancy'] = 'You have a pending job application. After logging in, you will be redirected to complete your application.';
+
 // =============================================================================
 // HELP STRINGS
 // =============================================================================
