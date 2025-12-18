@@ -1,8 +1,8 @@
 {{!
     @template local_jobboard/partials/support_button
 
-    Support button that links to the technical support form page.
-    Displayed as a regular inline button within the page layout.
+    Support banner that appears prominently at the top of the page content.
+    Provides easy access to the technical support form.
 
     Context variables:
     * supportpageurl (string) - URL to support.php page
@@ -12,10 +12,114 @@
         "supportpageurl": "/local/jobboard/support.php"
     }
 }}
-{{! Support Button - Links directly to support form page }}
-<a href="{{supportpageurl}}"
-   class="btn btn-outline-warning jb-support-btn"
-   title="{{#str}}reporterror, local_jobboard{{/str}}">
-    <i class="fa fa-bug me-2" aria-hidden="true"></i>
-    {{#str}}reporterror, local_jobboard{{/str}}
-</a>
+{{! Support Banner - Prominent and always visible at top of content }}
+<div class="jb-support-banner" data-region="support-banner">
+    <div class="jb-support-banner-content">
+        <div class="jb-support-banner-icon">
+            <i class="fa fa-circle-question" aria-hidden="true"></i>
+        </div>
+        <div class="jb-support-banner-text">
+            <span class="jb-support-banner-title">{{#str}}needhelp, local_jobboard{{/str}}</span>
+            <span class="jb-support-banner-desc">{{#str}}supporthelptext, local_jobboard{{/str}}</span>
+        </div>
+        <a href="{{supportpageurl}}" class="jb-support-banner-btn">
+            <i class="fa fa-headset me-2" aria-hidden="true"></i>
+            {{#str}}contactsupport, local_jobboard{{/str}}
+        </a>
+    </div>
+</div>
+
+<style>
+/* Support Banner Styles */
+.jb-support-banner {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+    border: 1px solid #ffc107;
+    border-left: 4px solid #ffc107;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
+}
+
+.jb-support-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.jb-support-banner-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: #ffc107;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #856404;
+    font-size: 24px;
+}
+
+.jb-support-banner-text {
+    flex: 1;
+    min-width: 200px;
+}
+
+.jb-support-banner-title {
+    display: block;
+    font-weight: 600;
+    font-size: 16px;
+    color: #856404;
+    margin-bottom: 2px;
+}
+
+.jb-support-banner-desc {
+    display: block;
+    font-size: 14px;
+    color: #664d03;
+}
+
+.jb-support-banner-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: #dc3545;
+    color: #fff !important;
+    text-decoration: none !important;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+}
+
+.jb-support-banner-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+    color: #fff !important;
+}
+
+.jb-support-banner-btn:active {
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .jb-support-banner-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .jb-support-banner-text {
+        text-align: center;
+    }
+
+    .jb-support-banner-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>

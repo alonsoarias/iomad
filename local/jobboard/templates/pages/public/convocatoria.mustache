@@ -29,6 +29,11 @@
 }}
 <div class="jb-convocatoria-page" data-region="jobboard-public-convocatoria" data-convocatoria-id="{{convocatoria.id}}">
     <div class="container-fluid px-0">
+        {{! Support Banner - Prominent at top }}
+        {{#showsupport}}
+        {{> local_jobboard/partials/support_button }}
+        {{/showsupport}}
+
         {{! Quick Info Bar }}
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
             <div class="d-flex align-items-center gap-2">
@@ -270,15 +275,10 @@
 
         {{! Back Navigation }}
         <div class="mt-4 pt-3 border-top">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <a href="{{backurl}}" class="btn btn-outline-secondary">
-                    <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
-                    {{#str}}backtoconvocatorias, local_jobboard{{/str}}
-                </a>
-                {{#showsupport}}
-                {{> local_jobboard/partials/support_button }}
-                {{/showsupport}}
-            </div>
+            <a href="{{backurl}}" class="btn btn-outline-secondary">
+                <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
+                {{#str}}backtoconvocatorias, local_jobboard{{/str}}
+            </a>
         </div>
     </div>
 </div>

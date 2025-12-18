@@ -23,6 +23,11 @@
     * signupurl - Signup URL
 }}
 <div class="jb-public-page jb-iser-theme" id="jobboard-public">
+    {{! Support Banner - Prominent at top }}
+    {{#showsupport}}
+    {{> local_jobboard/partials/support_button }}
+    {{/showsupport}}
+
     {{! ================================================================ }}
     {{! HERO SECTION - ISER BRANDED }}
     {{! ================================================================ }}
@@ -322,12 +327,6 @@
     {{/isloggedin}}
     {{/showconvocatorias}}
 
-    {{! Support Section }}
-    {{#showsupport}}
-    <div class="mt-5 pt-4 border-top text-end">
-        {{> local_jobboard/partials/support_button }}
-    </div>
-    {{/showsupport}}
 </div>
 
 {{! ISER Theme Styles }}

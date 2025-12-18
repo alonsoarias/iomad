@@ -18,6 +18,11 @@
     * backurl - Back URL
 }}
 <div class="jb-vacancy-page jb-iser-theme" data-region="jobboard-public-vacancy" data-vacancy-id="{{vacancy.id}}">
+    {{! Support Banner - Prominent at top }}
+    {{#showsupport}}
+    {{> local_jobboard/partials/support_button }}
+    {{/showsupport}}
+
     {{! Hero Header }}
     <div class="jb-vacancy-hero" style="background: linear-gradient(135deg, var(--iser-verde) 0%, var(--iser-verde-dark) 100%); border-radius: var(--jb-radius-xl); padding: var(--jb-space-6); margin-bottom: var(--jb-space-5); color: var(--iser-blanco);">
         <div class="row align-items-center">
@@ -299,16 +304,11 @@
         <a href="{{backurl}}" style="display: inline-flex; align-items: center; padding: var(--jb-space-2) var(--jb-space-4); border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-medium);">
             <i class="fa fa-arrow-left me-2"></i>{{backlabel}}
         </a>
-        <div class="d-flex gap-2 align-items-center flex-wrap">
-            {{#showsupport}}
-            {{> local_jobboard/partials/support_button }}
-            {{/showsupport}}
-            {{#browseurl}}
-            <a href="{{browseurl}}" style="color: var(--iser-verde); text-decoration: none; font-weight: var(--jb-font-medium);">
-                {{#str}}browsevacancies, local_jobboard{{/str}}<i class="fa fa-arrow-right ms-2"></i>
-            </a>
-            {{/browseurl}}
-        </div>
+        {{#browseurl}}
+        <a href="{{browseurl}}" style="color: var(--iser-verde); text-decoration: none; font-weight: var(--jb-font-medium);">
+            {{#str}}browsevacancies, local_jobboard{{/str}}<i class="fa fa-arrow-right ms-2"></i>
+        </a>
+        {{/browseurl}}
     </div>
 </div>
 
