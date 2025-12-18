@@ -511,6 +511,9 @@ $SAMPLE_PROGRAMS = [
     ],
 ];
 
+// Initialize metadata array for JSON imports (will be populated if using --json).
+$jsonMetadata = [];
+
 if ($createsample) {
     // Generate sample vacancies: 4 per sede.
     cli_heading('Phase 1: Generating Sample Vacancy Data');
@@ -606,7 +609,24 @@ if ($createsample) {
     }
 
     echo "JSON source: " . ($jsondata['source'] ?? 'Unknown') . "\n";
-    echo "Generated: " . ($jsondata['generated'] ?? 'Unknown') . "\n\n";
+    echo "Generated: " . ($jsondata['generated'] ?? 'Unknown') . "\n";
+
+    // Extract metadata from JSON if available.
+    if (isset($jsondata['convocatoria'])) {
+        $jsonMetadata['convocatoria'] = $jsondata['convocatoria'];
+        echo "Convocatoria: " . ($jsondata['convocatoria']['name'] ?? 'N/A') . "\n";
+    }
+    if (isset($jsondata['institucion'])) {
+        $jsonMetadata['institucion'] = $jsondata['institucion'];
+        echo "Institución: " . ($jsondata['institucion']['nombre'] ?? 'N/A') . "\n";
+    }
+    if (isset($jsondata['cronograma'])) {
+        $jsonMetadata['cronograma'] = $jsondata['cronograma'];
+    }
+    if (isset($jsondata['requisitos'])) {
+        $jsonMetadata['requisitos'] = $jsondata['requisitos'];
+    }
+    echo "\n";
 
     $consolidatedCount = 0;
     $totalPositions = 0;
@@ -1115,8 +1135,23 @@ if ($shouldpublish && empty($convocatoriaid)) {
         echo "\nConvocatorias ready: " . count($convocatoriaids) . "\n";
     } else {
         // Normal mode: create single convocatoria.
-        $convcode = $options['convocatoria-code'] ?: "CONV-ISER-{$year}-{$semester}";
-        $convname = $options['convocatoria-name'] ?: "Convocatoria Docentes Ocasionales y Cátedra ISER {$year}-{$semester}";
+        // Use JSON metadata if available, then command line options, then defaults.
+        $convcode = $options['convocatoria-code']
+            ?: ($jsonMetadata['convocatoria']['code'] ?? null)
+            ?: "CONV-ISER-{$year}-{$semester}";
+        $convname = $options['convocatoria-name']
+            ?: ($jsonMetadata['convocatoria']['name'] ?? null)
+            ?: "Convocatoria Docentes Ocasionales y Cátedra ISER {$year}-{$semester}";
+
+        // Get additional metadata from JSON.
+        $institucionNombre = $jsonMetadata['institucion']['nombre'] ?? 'Instituto Superior de Educación Rural - ISER';
+        $acuerdoRef = $jsonMetadata['convocatoria']['acuerdo'] ?? '';
+        $responsable = $jsonMetadata['convocatoria']['responsable'] ?? '';
+        $periodoAcademico = $jsonMetadata['convocatoria']['periodo_academico'] ?? "{$year}-{$semester}";
+        $requisitosGenerales = $jsonMetadata['requisitos']['generales'] ?? [];
+        $documentosRequeridos = $jsonMetadata['requisitos']['documentos'] ?? [];
+        $cronograma = $jsonMetadata['cronograma'] ?? [];
+        $contactoInfo = $jsonMetadata['institucion']['contacto'] ?? [];
 
     // Check if exists.
     $existingconv = $DB->get_record('local_jobboard_convocatoria', ['code' => $convcode]);
@@ -1160,22 +1195,77 @@ if ($shouldpublish && empty($convocatoriaid)) {
         $openDateStr = date('d/m/Y', $opendate);
         $closeDateStr = date('d/m/Y', $closedate);
 
+        // Build requisitos HTML from JSON metadata if available.
+        $requisitosHtml = '';
+        if (!empty($requisitosGenerales)) {
+            $requisitosHtml = "<h4>Requisitos Generales (según convocatoria)</h4>\n<ol>\n";
+            foreach ($requisitosGenerales as $req) {
+                $requisitosHtml .= "<li>{$req}</li>\n";
+            }
+            $requisitosHtml .= "</ol>\n";
+        }
+
+        // Build documentos HTML from JSON metadata if available.
+        $documentosHtml = '';
+        if (!empty($documentosRequeridos)) {
+            $documentosHtml = "<h4>Documentos Requeridos (según convocatoria)</h4>\n<ul>\n";
+            foreach ($documentosRequeridos as $doc) {
+                $documentosHtml .= "<li>{$doc}</li>\n";
+            }
+            $documentosHtml .= "</ul>\n";
+        }
+
+        // Build acuerdo reference if available.
+        $acuerdoHtml = '';
+        if (!empty($acuerdoRef)) {
+            $acuerdoHtml = "<tr><th>Marco Normativo</th><td>{$acuerdoRef}</td></tr>";
+        }
+
+        // Build responsable if available.
+        $responsableHtml = '';
+        if (!empty($responsable)) {
+            $responsableHtml = "<tr><th>Responsable</th><td>{$responsable}</td></tr>";
+        }
+
+        // Build contacto HTML if available.
+        $contactoHtml = '';
+        if (!empty($contactoInfo)) {
+            $contactoHtml = "<h4>Contacto</h4>\n<ul>\n";
+            $contactoHtml .= "<li><strong>{$institucionNombre}</strong></li>\n";
+            if (!empty($contactoInfo['direccion'])) {
+                $contactoHtml .= "<li>Dirección: {$contactoInfo['direccion']}</li>\n";
+            }
+            if (!empty($contactoInfo['telefono'])) {
+                $contactoHtml .= "<li>Teléfono: {$contactoInfo['telefono']}</li>\n";
+            }
+            if (!empty($contactoInfo['email_th'])) {
+                $contactoHtml .= "<li>Correo: {$contactoInfo['email_th']}</li>\n";
+            }
+            if (!empty($contactoInfo['web'])) {
+                $contactoHtml .= "<li>Web: {$contactoInfo['web']}</li>\n";
+            }
+            $contactoHtml .= "</ul>\n";
+        }
+
         // Build comprehensive description.
         $deschtml = <<<HTML
 <div class="convocatoria-description">
-    <h3>Convocatoria para Vinculación de Docentes ISER {$year}</h3>
+    <h3>{$convname}</h3>
 
     <div class="alert alert-info">
-        <strong>Instituto Superior de Educación Rural - ISER</strong><br>
+        <strong>{$institucionNombre}</strong><br>
         Proceso de selección para docentes ocasionales y de cátedra - Vigencia {$year}
     </div>
 
     <h4>Información General</h4>
     <table class="table table-bordered">
         <tr><th>Código de Convocatoria</th><td><strong>{$convcode}</strong></td></tr>
+        <tr><th>Período Académico</th><td>{$periodoAcademico}</td></tr>
         <tr><th>Período de Inscripción</th><td>{$openDateStr} al {$closeDateStr}</td></tr>
         <tr><th>Total de Vacantes</th><td><strong>{$totalVacancies}</strong></td></tr>
         <tr><th>Modalidades</th><td>Presencial y A Distancia</td></tr>
+        {$acuerdoHtml}
+        {$responsableHtml}
     </table>
 
     <h4>Distribución de Vacantes</h4>
@@ -1204,56 +1294,9 @@ if ($shouldpublish && empty($convocatoriaid)) {
         {$programHtml}
     </ul>
 
-    <h4>Requisitos Generales</h4>
-    <ol>
-        <li>Título profesional universitario acorde al perfil requerido para la vacante</li>
-        <li>Título de posgrado (especialización, maestría o doctorado) - según perfil</li>
-        <li>Experiencia docente en educación superior (deseable mínimo 1 año)</li>
-        <li>Disponibilidad horaria para la sede y modalidad seleccionada</li>
-        <li>No tener inhabilidades ni incompatibilidades para contratar con el Estado</li>
-    </ol>
+    {$requisitosHtml}
 
-    <h4>Documentos Requeridos</h4>
-    <p>Los aspirantes deberán cargar en el sistema los siguientes documentos en formato PDF:</p>
-
-    <h5>Documentos de Identificación</h5>
-    <ul>
-        <li>Hoja de vida actualizada (formato libre o SIGEP)</li>
-        <li>Cédula de ciudadanía (ambas caras, legible)</li>
-        <li>Libreta militar (hombres menores de 50 años)</li>
-        <li>Foto reciente tipo documento (fondo blanco)</li>
-    </ul>
-
-    <h5>Documentos Académicos</h5>
-    <ul>
-        <li>Diploma y acta de grado de pregrado</li>
-        <li>Diploma y acta de grado de posgrado (si aplica)</li>
-        <li>Tarjeta profesional (para profesiones reguladas)</li>
-        <li>Certificado de vigencia de tarjeta profesional (expedición no mayor a 3 meses)</li>
-    </ul>
-
-    <h5>Documentos Laborales</h5>
-    <ul>
-        <li>Certificaciones laborales de experiencia docente</li>
-        <li>Certificaciones laborales de experiencia profesional relacionada</li>
-    </ul>
-
-    <h5>Certificados de Antecedentes (vigencia no mayor a 30 días)</h5>
-    <ul>
-        <li>Certificado de antecedentes disciplinarios - Procuraduría General de la Nación</li>
-        <li>Certificado de antecedentes fiscales - Contraloría General de la República</li>
-        <li>Certificado de antecedentes judiciales - Policía Nacional</li>
-        <li>Certificado de medidas correctivas - Policía Nacional</li>
-        <li>Certificado del Sistema de Registro de Inhabilidades por Delitos Sexuales</li>
-    </ul>
-
-    <h5>Documentos Financieros y de Seguridad Social</h5>
-    <ul>
-        <li>RUT actualizado (expedición no mayor a 3 meses)</li>
-        <li>Certificación bancaria (cuenta de ahorros o corriente a nombre del aspirante)</li>
-        <li>Certificado de afiliación a EPS</li>
-        <li>Certificado de afiliación a Fondo de Pensiones</li>
-    </ul>
+    {$documentosHtml}
 
     <h4>Proceso de Selección</h4>
     <ol>
@@ -1262,17 +1305,10 @@ if ($shouldpublish && empty($convocatoriaid)) {
         <li><strong>Evaluación de méritos:</strong> Valoración de formación y experiencia</li>
         <li><strong>Entrevista:</strong> Evaluación de competencias (si aplica)</li>
         <li><strong>Publicación de resultados:</strong> Lista de elegibles</li>
-        <li><strong>Vinculación:</strong> Sujeta a disponibilidad presupuestal</li>
+        <li><strong>Vinculación:</strong> Sujeta a disponibilidad presupuestal y según calendarios académicos</li>
     </ol>
 
-    <h4>Contacto</h4>
-    <p>Para mayor información sobre esta convocatoria:</p>
-    <ul>
-        <li><strong>Oficina de Talento Humano - ISER</strong></li>
-        <li>Correo: talento.humano@iser.edu.co</li>
-        <li>Teléfono: (607) 568XXXX</li>
-        <li>Dirección: Pamplona, Norte de Santander</li>
-    </ul>
+    {$contactoHtml}
 </div>
 HTML;
 
