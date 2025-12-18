@@ -244,15 +244,19 @@ class signup_form extends moodleform {
         // ==========================================
         // SECTION 5: Company Selection (IOMAD only)
         // ==========================================
-        if ($isiomad) {
+        if ($isiomad && !empty($companies)) {
             $mform->addElement('header', 'companyheader', get_string('signup_companyinfo', 'local_jobboard'));
             $mform->setExpanded('companyheader', true);
 
             $mform->addElement('html', '<div class="alert alert-info">' .
                 get_string('signup_company_help', 'local_jobboard') . '</div>');
 
-            // Company selector - initial options with placeholder, populated via AJAX.
+            // Company selector - populate with all available companies from customdata.
+            // $companies is an array [id => name] from iomad_helper::get_companies().
             $companyoptions = [0 => get_string('selectcompany', 'local_jobboard')];
+            foreach ($companies as $companyid => $companyname) {
+                $companyoptions[$companyid] = format_string($companyname);
+            }
             $mform->addElement('select', 'companyid', get_string('company', 'local_jobboard'), $companyoptions, [
                 'id' => 'id_companyid_signup',
             ]);
@@ -266,10 +270,10 @@ class signup_form extends moodleform {
             ]);
             $mform->addHelpButton('departmentid', 'departmentid', 'local_jobboard');
 
-            // Add JavaScript for AJAX loading of companies and departments.
+            // Add JavaScript for AJAX loading of departments when company changes.
             global $PAGE;
             $PAGE->requires->js_call_amd('local_jobboard/signup_form', 'init', [[
-                'loadCompaniesAjax' => true,
+                'loadCompaniesAjax' => false, // Companies already loaded in form.
             ]]);
         }
 
