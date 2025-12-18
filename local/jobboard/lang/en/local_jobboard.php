@@ -2332,6 +2332,7 @@ $string['noconvocatoriasreport'] = 'No convocatorias found for the selected crit
 // =============================================================================
 
 $string['browsevacancies'] = 'Browse vacancies';
+$string['browsevacancies_desc'] = 'Explore all available vacancies in our active calls';
 $string['createconvocatoria'] = 'Create convocatoria';
 $string['backtomanage'] = 'Back to management';
 $string['reviewdashboard'] = 'Review dashboard';

@@ -2348,6 +2348,7 @@ $string['noconvocatoriasreport'] = 'No se encontraron convocatorias para los cri
 // =============================================================================
 
 $string['browsevacancies'] = 'Explorar vacantes';
+$string['browsevacancies_desc'] = 'Explore todas las vacantes disponibles en nuestras convocatorias activas';
 $string['createconvocatoria'] = 'Crear convocatoria';
 $string['backtomanage'] = 'Volver a gestión';
 $string['reviewdashboard'] = 'Panel de revisión';
