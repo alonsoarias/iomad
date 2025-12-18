@@ -230,7 +230,9 @@
                                             <a href="{{validateurl}}" class="btn btn-success jb-btn-success btn-sm flex-grow-1">
                                                 <i class="fa fa-check me-1"></i>{{#str}}approve, local_jobboard{{/str}}
                                             </a>
-                                            <button type="button" class="btn btn-danger jb-btn-danger btn-sm flex-grow-1" data-bs-toggle="modal" data-bs-target="#rejectModal{{id}}">
+                                            <button type="button" class="btn btn-danger jb-btn-danger btn-sm flex-grow-1"
+                                                    onclick="jobboardRejectDocument('{{rejecturl}}', '{{sesskey}}', '{{applicationid}}', '{{id}}')"
+                                                    title="{{#str}}reject, local_jobboard{{/str}}">
                                                 <i class="fa fa-xmark me-1"></i>{{#str}}reject, local_jobboard{{/str}}
                                             </button>
                                         </div>
@@ -601,6 +603,31 @@
 
 {{! Document Preview JavaScript }}
 <script>
+// Reject document with prompt for reason
+function jobboardRejectDocument(baseUrl, sesskey, applicationid, documentid) {
+    var reason = prompt('{{#str}}rejectreason_prompt, local_jobboard{{/str}}');
+    if (reason === null) {
+        return; // User cancelled
+    }
+    if (reason.trim() === '') {
+        alert('{{#str}}rejectreason_required, local_jobboard{{/str}}');
+        return;
+    }
+
+    // Create and submit form
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = baseUrl;
+    form.innerHTML = '<input type="hidden" name="sesskey" value="' + sesskey + '">' +
+                     '<input type="hidden" name="view" value="review">' +
+                     '<input type="hidden" name="applicationid" value="' + applicationid + '">' +
+                     '<input type="hidden" name="documentid" value="' + documentid + '">' +
+                     '<input type="hidden" name="action" value="reject">' +
+                     '<input type="hidden" name="reason" value="' + reason.replace(/"/g, '&quot;') + '">';
+    document.body.appendChild(form);
+    form.submit();
+}
+
 function jobboardPreviewDocument(element) {
     var previewUrl = element.dataset.previewUrl;
     var isPdf = element.dataset.isPdf === 'true' || element.dataset.isPdf === '1';
