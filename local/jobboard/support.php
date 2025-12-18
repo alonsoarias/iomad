@@ -63,19 +63,26 @@ if ($data = $mform->get_data()) {
     $supportemails = array_filter(array_map('trim', explode(',', $supportemailssetting)));
 
     // Extract text from editor fields (editor returns array with 'text' key).
-    $description = '';
+    // We need both plain text (for text email) and HTML (for HTML email with images).
+    $descriptiontext = '';
+    $descriptionhtml = '';
     if (!empty($data->description_editor['text'])) {
-        $description = strip_tags($data->description_editor['text']);
+        $descriptionhtml = $data->description_editor['text'];
+        $descriptiontext = strip_tags($descriptionhtml);
     }
 
-    $stepstoreproduce = '';
+    $stepstoreproducetext = '';
+    $stepstoreproducehtml = '';
     if (!empty($data->steps_to_reproduce_editor['text'])) {
-        $stepstoreproduce = strip_tags($data->steps_to_reproduce_editor['text']);
+        $stepstoreproducehtml = $data->steps_to_reproduce_editor['text'];
+        $stepstoreproducetext = strip_tags($stepstoreproducehtml);
     }
 
-    $expectedbehavior = '';
+    $expectedbehaviortext = '';
+    $expectedbehaviorhtml = '';
     if (!empty($data->expected_behavior_editor['text'])) {
-        $expectedbehavior = strip_tags($data->expected_behavior_editor['text']);
+        $expectedbehaviorhtml = $data->expected_behavior_editor['text'];
+        $expectedbehaviortext = strip_tags($expectedbehaviorhtml);
     }
 
     // Build email subject.
@@ -87,14 +94,14 @@ if ($data = $mform->get_data()) {
     // Build plain text email body.
     $body = get_string('support_email_header', 'local_jobboard') . "\n\n";
     $body .= "TIPO DE ERROR: " . $errortypelabel . "\n\n";
-    $body .= "DESCRIPCIÓN:\n" . $description . "\n\n";
+    $body .= "DESCRIPCIÓN:\n" . $descriptiontext . "\n\n";
 
-    if (!empty($stepstoreproduce)) {
-        $body .= "PASOS PARA REPRODUCIR:\n" . $stepstoreproduce . "\n\n";
+    if (!empty($stepstoreproducetext)) {
+        $body .= "PASOS PARA REPRODUCIR:\n" . $stepstoreproducetext . "\n\n";
     }
 
-    if (!empty($expectedbehavior)) {
-        $body .= "COMPORTAMIENTO ESPERADO:\n" . $expectedbehavior . "\n\n";
+    if (!empty($expectedbehaviortext)) {
+        $body .= "COMPORTAMIENTO ESPERADO:\n" . $expectedbehaviortext . "\n\n";
     }
 
     $body .= "INFORMACIÓN DEL USUARIO\n";
@@ -131,26 +138,26 @@ if ($data = $mform->get_data()) {
                 📝 ' . get_string('support_error_description', 'local_jobboard') . '
             </h3>
             <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; border-left: 4px solid #1e3a5f;">
-                ' . nl2br(htmlspecialchars($description)) . '
+                ' . $descriptionhtml . '
             </div>';
 
-    if (!empty($stepstoreproduce)) {
+    if (!empty($stepstoreproducehtml)) {
         $htmlbody .= '
             <h3 style="color: #1e3a5f; margin-top: 20px; border-bottom: 2px solid #17a2b8; padding-bottom: 8px;">
                 🔄 ' . get_string('support_steps_to_reproduce', 'local_jobboard') . '
             </h3>
             <div style="background: #e7f5ff; padding: 15px; border-radius: 4px; border-left: 4px solid #17a2b8;">
-                ' . nl2br(htmlspecialchars($stepstoreproduce)) . '
+                ' . $stepstoreproducehtml . '
             </div>';
     }
 
-    if (!empty($expectedbehavior)) {
+    if (!empty($expectedbehaviorhtml)) {
         $htmlbody .= '
             <h3 style="color: #1e3a5f; margin-top: 20px; border-bottom: 2px solid #28a745; padding-bottom: 8px;">
                 ✅ ' . get_string('support_expected_behavior', 'local_jobboard') . '
             </h3>
             <div style="background: #d4edda; padding: 15px; border-radius: 4px; border-left: 4px solid #28a745;">
-                ' . nl2br(htmlspecialchars($expectedbehavior)) . '
+                ' . $expectedbehaviorhtml . '
             </div>';
     }
 

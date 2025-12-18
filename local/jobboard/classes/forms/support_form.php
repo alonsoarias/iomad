@@ -33,18 +33,36 @@ class support_form extends \moodleform {
      * Form definition.
      */
     protected function definition() {
-        global $USER;
+        global $USER, $CFG;
 
         $mform = $this->_form;
 
-        // Editor options for Moodle text editor.
+        // Editor options for Moodle text editor with image support.
+        $context = \context_system::instance();
         $editoroptions = [
-            'maxfiles' => 0,
-            'maxbytes' => 0,
+            'maxfiles' => EDITOR_UNLIMITED_FILES,
+            'maxbytes' => $CFG->maxbytes,
             'trusttext' => false,
             'noclean' => false,
-            'context' => \context_system::instance(),
+            'context' => $context,
+            'subdirs' => false,
         ];
+
+        // Instructions section.
+        $mform->addElement('header', 'instructionsheader', get_string('support_instructions_title', 'local_jobboard'));
+        $mform->setExpanded('instructionsheader', true);
+
+        // Important instructions message.
+        $instructionshtml = '<div class="alert alert-info">';
+        $instructionshtml .= '<h6 class="alert-heading"><i class="fa fa-info-circle me-2"></i>' . get_string('support_instructions_title', 'local_jobboard') . '</h6>';
+        $instructionshtml .= '<p class="mb-2">' . get_string('support_instructions_detail', 'local_jobboard') . '</p>';
+        $instructionshtml .= '<ul class="mb-0">';
+        $instructionshtml .= '<li>' . get_string('support_instructions_tip1', 'local_jobboard') . '</li>';
+        $instructionshtml .= '<li>' . get_string('support_instructions_tip2', 'local_jobboard') . '</li>';
+        $instructionshtml .= '<li>' . get_string('support_instructions_tip3', 'local_jobboard') . '</li>';
+        $instructionshtml .= '</ul>';
+        $instructionshtml .= '</div>';
+        $mform->addElement('html', $instructionshtml);
 
         // Error type section.
         $mform->addElement('header', 'errorheader', get_string('support_error_details', 'local_jobboard'));
@@ -65,17 +83,19 @@ class support_form extends \moodleform {
         $mform->addRule('error_type', get_string('required'), 'required', null, 'client');
         $mform->setType('error_type', PARAM_TEXT);
 
-        // Error description using Moodle editor.
+        // Error description using Moodle editor with image support.
         $mform->addElement('editor', 'description_editor', get_string('support_error_description', 'local_jobboard'), null, $editoroptions);
         $mform->addRule('description_editor', get_string('required'), 'required', null, 'client');
         $mform->setType('description_editor', PARAM_RAW);
         $mform->addHelpButton('description_editor', 'support_error_description', 'local_jobboard');
 
-        // Steps to reproduce (optional) using Moodle editor.
+        // Steps to reproduce (REQUIRED) using Moodle editor with image support.
         $mform->addElement('editor', 'steps_to_reproduce_editor', get_string('support_steps_to_reproduce', 'local_jobboard'), null, $editoroptions);
+        $mform->addRule('steps_to_reproduce_editor', get_string('required'), 'required', null, 'client');
         $mform->setType('steps_to_reproduce_editor', PARAM_RAW);
+        $mform->addHelpButton('steps_to_reproduce_editor', 'support_steps_to_reproduce', 'local_jobboard');
 
-        // Expected behavior (optional) using Moodle editor.
+        // Expected behavior (optional) using Moodle editor with image support.
         $mform->addElement('editor', 'expected_behavior_editor', get_string('support_expected_behavior', 'local_jobboard'), null, $editoroptions);
         $mform->setType('expected_behavior_editor', PARAM_RAW);
 
@@ -134,6 +154,15 @@ class support_form extends \moodleform {
         }
         if (strlen(trim($descriptiontext)) < 20) {
             $errors['description_editor'] = get_string('support_description_too_short', 'local_jobboard');
+        }
+
+        // Validate steps to reproduce has minimum length (now required).
+        $stepstext = '';
+        if (!empty($data['steps_to_reproduce_editor']['text'])) {
+            $stepstext = strip_tags($data['steps_to_reproduce_editor']['text']);
+        }
+        if (strlen(trim($stepstext)) < 20) {
+            $errors['steps_to_reproduce_editor'] = get_string('support_steps_too_short', 'local_jobboard');
         }
 
         return $errors;
