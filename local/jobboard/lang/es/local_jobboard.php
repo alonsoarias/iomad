@@ -1095,6 +1095,22 @@ $string['confirm_success_message'] = 'Su dirección de correo electrónico ha si
 $string['confirm_failed_title'] = 'Confirmación Fallida';
 $string['confirm_failed_message'] = 'No pudimos verificar su dirección de correo electrónico. El enlace de confirmación puede haber expirado o es inválido. Por favor intente registrarse nuevamente o contacte a soporte.';
 $string['confirm_pending_vacancy'] = 'Tiene una postulación pendiente. Después de iniciar sesión, será redirigido para completar su postulación.';
+$string['confirm_next_steps'] = 'Próximos Pasos';
+$string['confirm_step_login'] = 'Inicie sesión con su usuario y contraseña';
+$string['confirm_step_application'] = 'Complete su postulación pendiente';
+$string['confirm_step_browse'] = 'Explore las vacantes disponibles';
+$string['confirm_step_apply'] = 'Envíe sus postulaciones';
+$string['confirm_username_reminder'] = 'Su nombre de usuario es:';
+$string['confirm_possible_reasons'] = 'Posibles Razones';
+$string['confirm_reason_expired'] = 'El enlace de confirmación ha expirado';
+$string['confirm_reason_invalid'] = 'El enlace estaba incompleto o fue modificado';
+$string['confirm_reason_already'] = 'Su cuenta ya fue confirmada anteriormente';
+$string['confirm_reason_notexist'] = 'La cuenta no existe';
+$string['confirm_what_to_do'] = 'Qué Puede Hacer';
+$string['confirm_todo_trylogin'] = 'Intente iniciar sesión - su cuenta puede que ya esté activa';
+$string['confirm_todo_register'] = 'Regístrese nuevamente si no completó el proceso';
+$string['confirm_todo_contact'] = 'Contacte a soporte si el problema persiste';
+$string['confirm_need_help'] = '¿Necesita ayuda?';
 
 // =============================================================================
 // CADENAS DE AYUDA

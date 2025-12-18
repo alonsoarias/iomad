@@ -1,0 +1,112 @@
+{{!
+    @template local_jobboard/pages/user/confirm_failed
+
+    Email confirmation failure page.
+    Shows when email confirmation fails (invalid/expired link).
+
+    Context variables required:
+    * signupurl - string - URL to signup page
+    * publicurl - string - URL to public vacancies page
+    * supporturl - string - URL to support page (optional)
+
+    Example context (json):
+    {
+        "signupurl": "/local/jobboard/signup.php",
+        "publicurl": "/local/jobboard/public.php",
+        "supporturl": "/local/jobboard/support.php"
+    }
+}}
+<div class="jb-confirm-failed text-center my-5" data-region="jobboard-confirm-failed">
+    {{! Error Icon }}
+    <div class="text-danger mb-4 jb-fade-in jb-scale-in">
+        <div class="jb-error-icon">
+            <i class="fa fa-circle-xmark fa-5x" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    {{! Title }}
+    <h2 class="mb-3 text-danger jb-fade-in-up" style="animation-delay: 0.1s;">
+        {{#str}}confirm_failed_title, local_jobboard{{/str}}
+    </h2>
+
+    {{! Error Message }}
+    <p class="lead text-muted jb-fade-in-up" style="animation-delay: 0.15s;">
+        {{#str}}confirm_failed_message, local_jobboard{{/str}}
+    </p>
+
+    {{! Possible Reasons Card }}
+    <div class="card shadow-sm text-start mt-4 mx-auto jb-fade-in-up" style="max-width: 500px; animation-delay: 0.2s;">
+        <div class="card-header bg-white d-flex align-items-center">
+            <i class="fa fa-circle-question fa-lg text-warning me-3" aria-hidden="true"></i>
+            <h5 class="mb-0">
+                {{#str}}confirm_possible_reasons, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="card-body">
+            <ul class="mb-0 list-unstyled">
+                <li class="mb-2 jb-fade-in" style="animation-delay: 0.25s;">
+                    <i class="fa fa-clock text-warning me-2" aria-hidden="true"></i>
+                    {{#str}}confirm_reason_expired, local_jobboard{{/str}}
+                </li>
+                <li class="mb-2 jb-fade-in" style="animation-delay: 0.3s;">
+                    <i class="fa fa-link-slash text-warning me-2" aria-hidden="true"></i>
+                    {{#str}}confirm_reason_invalid, local_jobboard{{/str}}
+                </li>
+                <li class="mb-2 jb-fade-in" style="animation-delay: 0.35s;">
+                    <i class="fa fa-check-double text-warning me-2" aria-hidden="true"></i>
+                    {{#str}}confirm_reason_already, local_jobboard{{/str}}
+                </li>
+                <li class="jb-fade-in" style="animation-delay: 0.4s;">
+                    <i class="fa fa-user-slash text-warning me-2" aria-hidden="true"></i>
+                    {{#str}}confirm_reason_notexist, local_jobboard{{/str}}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    {{! What to Do Card }}
+    <div class="card shadow-sm text-start mt-4 mx-auto jb-fade-in-up" style="max-width: 500px; animation-delay: 0.45s;">
+        <div class="card-header bg-white d-flex align-items-center">
+            <i class="fa fa-lightbulb fa-lg text-info me-3" aria-hidden="true"></i>
+            <h5 class="mb-0">
+                {{#str}}confirm_what_to_do, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="card-body">
+            <ol class="mb-0">
+                <li class="mb-2 jb-fade-in" style="animation-delay: 0.5s;">
+                    {{#str}}confirm_todo_trylogin, local_jobboard{{/str}}
+                </li>
+                <li class="mb-2 jb-fade-in" style="animation-delay: 0.55s;">
+                    {{#str}}confirm_todo_register, local_jobboard{{/str}}
+                </li>
+                <li class="jb-fade-in" style="animation-delay: 0.6s;">
+                    {{#str}}confirm_todo_contact, local_jobboard{{/str}}
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    {{! Action Buttons }}
+    <div class="mt-4 jb-fade-in-up" style="animation-delay: 0.65s;">
+        <a href="{{signupurl}}" class="btn btn-primary jb-btn-primary btn-lg me-2 jb-hover-lift">
+            <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
+            {{#str}}signup_title, local_jobboard{{/str}}
+        </a>
+        <a href="{{publicurl}}" class="btn btn-outline-secondary btn-lg jb-hover-lift">
+            <i class="fa fa-briefcase me-2" aria-hidden="true"></i>
+            {{#str}}view_vacancies, local_jobboard{{/str}}
+        </a>
+    </div>
+
+    {{! Support Link }}
+    {{#supporturl}}
+    <div class="mt-4 jb-fade-in" style="animation-delay: 0.7s;">
+        <p class="text-muted small mb-0">
+            <i class="fa fa-headset me-1" aria-hidden="true"></i>
+            {{#str}}confirm_need_help, local_jobboard{{/str}}
+            <a href="{{supporturl}}" class="text-primary">{{#str}}contactsupport, local_jobboard{{/str}}</a>
+        </p>
+    </div>
+    {{/supporturl}}
+</div>

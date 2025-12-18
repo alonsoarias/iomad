@@ -35,7 +35,7 @@ $redirect = optional_param('redirect', '', PARAM_LOCALURL);
 
 $PAGE->set_url('/local/jobboard/confirm.php');
 $PAGE->set_context(context_system::instance());
-$PAGE->set_pagelayout('login');
+$PAGE->set_pagelayout('base');
 
 // Check if plugin-specific self-registration is enabled.
 $pluginselfreg = get_config('local_jobboard', 'enable_self_registration');
@@ -64,10 +64,13 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
         $user = $DB->get_record('user', ['secret' => $usersecret, 'mnethostid' => $CFG->mnet_localhost_id]);
     }
 
+    $pendingvacancy = null;
+
     if ($user) {
         if ($user->confirmed) {
             // Already confirmed.
             $confirmed = true;
+            $pendingvacancy = get_user_preferences('local_jobboard_pending_vacancy', null, $user->id);
         } else if ($user->secret === $usersecret) {
             // Confirm the user.
             $DB->set_field('user', 'confirmed', 1, ['id' => $user->id]);
@@ -116,11 +119,8 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
         $PAGE->set_title(get_string('confirm_success_title', 'local_jobboard'));
         $PAGE->set_heading(get_string('confirm_success_title', 'local_jobboard'));
 
-        echo $OUTPUT->header();
-
         // Build login URL.
         $loginurl = new moodle_url('/login/index.php');
-        $pendingvacancy = get_user_preferences('local_jobboard_pending_vacancy', null, $user->id);
         if ($pendingvacancy) {
             $loginurl->param('wantsurl', (new moodle_url('/local/jobboard/index.php', [
                 'view' => 'apply',
@@ -130,40 +130,17 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
             $loginurl->param('wantsurl', (new moodle_url('/local/jobboard/index.php'))->out(false));
         }
 
-        // Show success message.
+        // Build template data.
         $templatedata = [
-            'title' => get_string('confirm_success_title', 'local_jobboard'),
-            'message' => get_string('confirm_success_message', 'local_jobboard'),
-            'username' => $user->username,
-            'email' => $user->email,
-            'fullname' => fullname($user),
             'loginurl' => $loginurl->out(false),
-            'logintext' => get_string('login'),
+            'useremail' => $user->email,
+            'username' => $user->username,
             'haspendingvacancy' => !empty($pendingvacancy),
-            'pendingvacancytext' => get_string('confirm_pending_vacancy', 'local_jobboard'),
+            'pendingvacancyid' => $pendingvacancy ? (int)$pendingvacancy : 0,
         ];
 
-        // Use template if available, otherwise basic HTML.
-        try {
-            echo $OUTPUT->render_from_template('local_jobboard/pages/user/confirm_success', $templatedata);
-        } catch (Exception $e) {
-            // Fallback to basic HTML.
-            echo '<div class="card shadow-sm mx-auto" style="max-width: 500px;">';
-            echo '<div class="card-body text-center p-5">';
-            echo '<i class="fa fa-check-circle text-success" style="font-size: 4rem;"></i>';
-            echo '<h2 class="mt-4">' . $templatedata['title'] . '</h2>';
-            echo '<p class="text-muted">' . $templatedata['message'] . '</p>';
-            echo '<hr>';
-            echo '<p><strong>' . get_string('username') . ':</strong> ' . s($templatedata['username']) . '</p>';
-            echo '<p><strong>' . get_string('email') . ':</strong> ' . s($templatedata['email']) . '</p>';
-            if ($templatedata['haspendingvacancy']) {
-                echo '<div class="alert alert-info mt-3">' . $templatedata['pendingvacancytext'] . '</div>';
-            }
-            echo '<a href="' . $templatedata['loginurl'] . '" class="btn btn-primary btn-lg mt-3">';
-            echo '<i class="fa fa-sign-in-alt me-2"></i>' . $templatedata['logintext'] . '</a>';
-            echo '</div></div>';
-        }
-
+        echo $OUTPUT->header();
+        echo $OUTPUT->render_from_template('local_jobboard/pages/user/confirm_success', $templatedata);
         echo $OUTPUT->footer();
         exit;
     } else {
@@ -171,20 +148,15 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
         $PAGE->set_title(get_string('confirm_failed_title', 'local_jobboard'));
         $PAGE->set_heading(get_string('confirm_failed_title', 'local_jobboard'));
 
+        // Build template data.
+        $templatedata = [
+            'signupurl' => (new moodle_url('/local/jobboard/signup.php'))->out(false),
+            'publicurl' => (new moodle_url('/local/jobboard/public.php'))->out(false),
+            'supporturl' => (new moodle_url('/local/jobboard/support.php'))->out(false),
+        ];
+
         echo $OUTPUT->header();
-
-        echo '<div class="card shadow-sm mx-auto" style="max-width: 500px;">';
-        echo '<div class="card-body text-center p-5">';
-        echo '<i class="fa fa-times-circle text-danger" style="font-size: 4rem;"></i>';
-        echo '<h2 class="mt-4">' . get_string('confirm_failed_title', 'local_jobboard') . '</h2>';
-        echo '<p class="text-muted">' . get_string('confirm_failed_message', 'local_jobboard') . '</p>';
-        echo '<div class="mt-4">';
-        echo '<a href="' . (new moodle_url('/local/jobboard/signup.php'))->out(false) . '" class="btn btn-primary">';
-        echo '<i class="fa fa-user-plus me-2"></i>' . get_string('signup_title', 'local_jobboard') . '</a>';
-        echo ' <a href="' . (new moodle_url('/login/index.php'))->out(false) . '" class="btn btn-outline-secondary">';
-        echo '<i class="fa fa-sign-in-alt me-2"></i>' . get_string('login') . '</a>';
-        echo '</div></div></div>';
-
+        echo $OUTPUT->render_from_template('local_jobboard/pages/user/confirm_failed', $templatedata);
         echo $OUTPUT->footer();
         exit;
     }

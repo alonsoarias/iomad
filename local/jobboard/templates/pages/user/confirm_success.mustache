@@ -1,0 +1,107 @@
+{{!
+    @template local_jobboard/pages/user/confirm_success
+
+    Email confirmation success page.
+    Shows when user successfully confirms their email address.
+
+    Context variables required:
+    * loginurl - string - URL to login page with redirect
+    * useremail - string - The confirmed email address
+    * username - string - The user's username
+    * haspendingvacancy - bool - Whether user has a pending vacancy application
+    * pendingvacancyid - int - The pending vacancy ID (if any)
+
+    Example context (json):
+    {
+        "loginurl": "/login/index.php?wantsurl=/local/jobboard/index.php",
+        "useremail": "user@example.com",
+        "username": "johndoe",
+        "haspendingvacancy": true,
+        "pendingvacancyid": 123
+    }
+}}
+<div class="jb-confirm-success text-center my-5" data-region="jobboard-confirm-success">
+    {{! Success Animation Icon }}
+    <div class="text-success mb-4 jb-fade-in jb-scale-in">
+        <div class="jb-success-checkmark">
+            <i class="fa fa-circle-check fa-5x" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    {{! Title }}
+    <h2 class="mb-3 jb-fade-in-up" style="animation-delay: 0.1s;">
+        {{#str}}confirm_success_title, local_jobboard{{/str}}
+    </h2>
+
+    {{! Success Message }}
+    <p class="lead text-muted jb-fade-in-up" style="animation-delay: 0.15s;">
+        {{#str}}confirm_success_message, local_jobboard{{/str}}
+    </p>
+
+    {{! Email Badge }}
+    <div class="jb-fade-in-up mb-4" style="animation-delay: 0.2s;">
+        <span class="badge bg-success jb-badge-lg px-3 py-2">
+            <i class="fa fa-envelope-circle-check me-2" aria-hidden="true"></i>
+            {{useremail}}
+        </span>
+    </div>
+
+    {{! Pending Vacancy Notice }}
+    {{#haspendingvacancy}}
+    <div class="alert alert-info d-inline-flex align-items-center mt-3 jb-fade-in-up" role="alert" style="animation-delay: 0.25s;">
+        <i class="fa fa-briefcase me-2" aria-hidden="true"></i>
+        {{#str}}confirm_pending_vacancy, local_jobboard{{/str}}
+    </div>
+    {{/haspendingvacancy}}
+
+    {{! What's Next Card }}
+    <div class="card shadow-sm text-start mt-4 mx-auto jb-fade-in-up" style="max-width: 500px; animation-delay: 0.3s;">
+        <div class="card-header bg-white d-flex align-items-center">
+            <i class="fa fa-arrow-right-to-bracket fa-lg text-primary me-3" aria-hidden="true"></i>
+            <h5 class="mb-0">
+                {{#str}}confirm_next_steps, local_jobboard{{/str}}
+            </h5>
+        </div>
+        <div class="card-body">
+            <ol class="mb-0 jb-instruction-list">
+                <li class="mb-2 jb-fade-in" style="animation-delay: 0.35s;">
+                    <i class="fa fa-user text-primary me-2" aria-hidden="true"></i>
+                    {{#str}}confirm_step_login, local_jobboard{{/str}}
+                </li>
+                {{#haspendingvacancy}}
+                <li class="mb-2 jb-fade-in" style="animation-delay: 0.4s;">
+                    <i class="fa fa-file-lines text-primary me-2" aria-hidden="true"></i>
+                    {{#str}}confirm_step_application, local_jobboard{{/str}}
+                </li>
+                {{/haspendingvacancy}}
+                {{^haspendingvacancy}}
+                <li class="mb-2 jb-fade-in" style="animation-delay: 0.4s;">
+                    <i class="fa fa-magnifying-glass text-primary me-2" aria-hidden="true"></i>
+                    {{#str}}confirm_step_browse, local_jobboard{{/str}}
+                </li>
+                {{/haspendingvacancy}}
+                <li class="jb-fade-in" style="animation-delay: 0.45s;">
+                    <i class="fa fa-paper-plane text-primary me-2" aria-hidden="true"></i>
+                    {{#str}}confirm_step_apply, local_jobboard{{/str}}
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    {{! Login Button }}
+    <div class="mt-4 jb-fade-in-up" style="animation-delay: 0.5s;">
+        <a href="{{loginurl}}" class="btn btn-primary jb-btn-primary btn-lg jb-hover-lift">
+            <i class="fa fa-right-to-bracket me-2" aria-hidden="true"></i>
+            {{#str}}login{{/str}}
+        </a>
+    </div>
+
+    {{! Username reminder }}
+    <div class="mt-4 jb-fade-in" style="animation-delay: 0.55s;">
+        <p class="text-muted small mb-0">
+            <i class="fa fa-circle-info me-1" aria-hidden="true"></i>
+            {{#str}}confirm_username_reminder, local_jobboard{{/str}}
+            <strong class="text-dark">{{username}}</strong>
+        </p>
+    </div>
+</div>

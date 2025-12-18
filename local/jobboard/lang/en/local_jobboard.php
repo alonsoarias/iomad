@@ -1101,6 +1101,22 @@ $string['confirm_success_message'] = 'Your email address has been verified succe
 $string['confirm_failed_title'] = 'Confirmation Failed';
 $string['confirm_failed_message'] = 'We could not verify your email address. The confirmation link may have expired or is invalid. Please try registering again or contact support.';
 $string['confirm_pending_vacancy'] = 'You have a pending job application. After logging in, you will be redirected to complete your application.';
+$string['confirm_next_steps'] = 'Next Steps';
+$string['confirm_step_login'] = 'Log in with your username and password';
+$string['confirm_step_application'] = 'Complete your pending job application';
+$string['confirm_step_browse'] = 'Browse available job vacancies';
+$string['confirm_step_apply'] = 'Submit your applications';
+$string['confirm_username_reminder'] = 'Your username is:';
+$string['confirm_possible_reasons'] = 'Possible Reasons';
+$string['confirm_reason_expired'] = 'The confirmation link has expired';
+$string['confirm_reason_invalid'] = 'The link was incomplete or modified';
+$string['confirm_reason_already'] = 'Your account was already confirmed';
+$string['confirm_reason_notexist'] = 'The account does not exist';
+$string['confirm_what_to_do'] = 'What You Can Do';
+$string['confirm_todo_trylogin'] = 'Try logging in - your account may already be active';
+$string['confirm_todo_register'] = 'Register again if you haven\'t completed the process';
+$string['confirm_todo_contact'] = 'Contact support if the problem persists';
+$string['confirm_need_help'] = 'Need help?';
 
 // =============================================================================
 // HELP STRINGS
