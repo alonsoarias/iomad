@@ -28,6 +28,63 @@
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Convert draft area file URLs in HTML to base64 data URIs for email embedding.
+ *
+ * This function finds all draftfile.php URLs in the HTML content and replaces
+ * them with base64-encoded data URIs so images display correctly in emails.
+ *
+ * @param string $html The HTML content with draftfile.php URLs.
+ * @param int $draftitemid The draft area item ID.
+ * @return string The HTML with images converted to base64 data URIs.
+ */
+function local_jobboard_embed_draft_images($html, $draftitemid) {
+    global $USER;
+
+    if (empty($html) || empty($draftitemid)) {
+        return $html;
+    }
+
+    // Guests cannot upload files, so just return the HTML as-is.
+    if (!isloggedin() || isguestuser()) {
+        return $html;
+    }
+
+    $fs = get_file_storage();
+    $usercontext = context_user::instance($USER->id);
+
+    // Get all files from the draft area.
+    $files = $fs->get_area_files($usercontext->id, 'user', 'draft', $draftitemid, 'id', false);
+
+    foreach ($files as $file) {
+        $filename = $file->get_filename();
+        $mimetype = $file->get_mimetype();
+
+        // Only process image files.
+        if (strpos($mimetype, 'image/') !== 0) {
+            continue;
+        }
+
+        // Get file content and encode as base64.
+        $content = $file->get_content();
+        $base64 = base64_encode($content);
+        $datauri = 'data:' . $mimetype . ';base64,' . $base64;
+
+        // Replace draftfile.php URLs with the base64 data URI.
+        // Pattern matches: @@PLUGINFILE@@/filename or /draftfile.php/.../filename
+        $patterns = [
+            '~@@PLUGINFILE@@/' . preg_quote($filename, '~') . '~',
+            '~/draftfile\.php/[^"\']+/' . preg_quote($filename, '~') . '~',
+        ];
+
+        foreach ($patterns as $pattern) {
+            $html = preg_replace($pattern, $datauri, $html);
+        }
+    }
+
+    return $html;
+}
+
 // Set up the page (no login required - guests can report issues too).
 $context = context_system::instance();
 $PAGE->set_context($context);
@@ -62,12 +119,17 @@ if ($data = $mform->get_data()) {
     $supportemailssetting = str_replace(["\r\n", "\r", "\n"], ',', $supportemailssetting);
     $supportemails = array_filter(array_map('trim', explode(',', $supportemailssetting)));
 
-    // Extract text from editor fields (editor returns array with 'text' key).
+    // Extract text from editor fields (editor returns array with 'text' and 'itemid' keys).
     // We need both plain text (for text email) and HTML (for HTML email with images).
+    // Convert draft area images to base64 data URIs for email embedding.
     $descriptiontext = '';
     $descriptionhtml = '';
     if (!empty($data->description_editor['text'])) {
         $descriptionhtml = $data->description_editor['text'];
+        // Convert any draft images to base64 for email embedding.
+        if (!empty($data->description_editor['itemid'])) {
+            $descriptionhtml = local_jobboard_embed_draft_images($descriptionhtml, $data->description_editor['itemid']);
+        }
         $descriptiontext = strip_tags($descriptionhtml);
     }
 
@@ -75,6 +137,10 @@ if ($data = $mform->get_data()) {
     $stepstoreproducehtml = '';
     if (!empty($data->steps_to_reproduce_editor['text'])) {
         $stepstoreproducehtml = $data->steps_to_reproduce_editor['text'];
+        // Convert any draft images to base64 for email embedding.
+        if (!empty($data->steps_to_reproduce_editor['itemid'])) {
+            $stepstoreproducehtml = local_jobboard_embed_draft_images($stepstoreproducehtml, $data->steps_to_reproduce_editor['itemid']);
+        }
         $stepstoreproducetext = strip_tags($stepstoreproducehtml);
     }
 
@@ -82,6 +148,10 @@ if ($data = $mform->get_data()) {
     $expectedbehaviorhtml = '';
     if (!empty($data->expected_behavior_editor['text'])) {
         $expectedbehaviorhtml = $data->expected_behavior_editor['text'];
+        // Convert any draft images to base64 for email embedding.
+        if (!empty($data->expected_behavior_editor['itemid'])) {
+            $expectedbehaviorhtml = local_jobboard_embed_draft_images($expectedbehaviorhtml, $data->expected_behavior_editor['itemid']);
+        }
         $expectedbehaviortext = strip_tags($expectedbehaviorhtml);
     }
 
