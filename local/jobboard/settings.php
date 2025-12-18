@@ -237,7 +237,7 @@ if ($hassiteconfig) {
     ));
 
     // ==========================================================================
-    // reCAPTCHA settings.
+    // reCAPTCHA Enterprise settings.
     // ==========================================================================
     $settings->add(new admin_setting_heading(
         'local_jobboard/recaptchaheading',
@@ -253,17 +253,17 @@ if ($hassiteconfig) {
         0
     ));
 
-    // reCAPTCHA version.
-    $recaptchaversions = [
-        'v2' => get_string('recaptcha_v2', 'local_jobboard'),
-        'v3' => get_string('recaptcha_v3', 'local_jobboard'),
+    // reCAPTCHA type (standard or enterprise).
+    $recaptchatypes = [
+        'enterprise' => get_string('recaptcha_type_enterprise', 'local_jobboard'),
+        'standard' => get_string('recaptcha_type_standard', 'local_jobboard'),
     ];
     $settings->add(new admin_setting_configselect(
-        'local_jobboard/recaptcha_version',
-        get_string('recaptcha_version', 'local_jobboard'),
-        get_string('recaptcha_version_desc', 'local_jobboard'),
-        'v2',
-        $recaptchaversions
+        'local_jobboard/recaptcha_type',
+        get_string('recaptcha_type', 'local_jobboard'),
+        get_string('recaptcha_type_desc', 'local_jobboard'),
+        'enterprise',
+        $recaptchatypes
     ));
 
     // reCAPTCHA site key.
@@ -275,7 +275,24 @@ if ($hassiteconfig) {
         PARAM_TEXT
     ));
 
-    // reCAPTCHA secret key.
+    // reCAPTCHA Enterprise Project ID (Google Cloud project).
+    $settings->add(new admin_setting_configtext(
+        'local_jobboard/recaptcha_project_id',
+        get_string('recaptcha_project_id', 'local_jobboard'),
+        get_string('recaptcha_project_id_desc', 'local_jobboard'),
+        '',
+        PARAM_TEXT
+    ));
+
+    // reCAPTCHA Enterprise API Key.
+    $settings->add(new admin_setting_configpasswordunmask(
+        'local_jobboard/recaptcha_api_key',
+        get_string('recaptcha_api_key', 'local_jobboard'),
+        get_string('recaptcha_api_key_desc', 'local_jobboard'),
+        ''
+    ));
+
+    // reCAPTCHA secret key (for standard version only).
     $settings->add(new admin_setting_configpasswordunmask(
         'local_jobboard/recaptcha_secretkey',
         get_string('recaptcha_secretkey', 'local_jobboard'),
@@ -283,11 +300,11 @@ if ($hassiteconfig) {
         ''
     ));
 
-    // reCAPTCHA v3 threshold (0.0 - 1.0).
+    // reCAPTCHA score threshold (0.0 - 1.0).
     $settings->add(new admin_setting_configtext(
-        'local_jobboard/recaptcha_v3_threshold',
-        get_string('recaptcha_v3_threshold', 'local_jobboard'),
-        get_string('recaptcha_v3_threshold_desc', 'local_jobboard'),
+        'local_jobboard/recaptcha_threshold',
+        get_string('recaptcha_threshold', 'local_jobboard'),
+        get_string('recaptcha_threshold_desc', 'local_jobboard'),
         '0.5',
         PARAM_FLOAT
     ));

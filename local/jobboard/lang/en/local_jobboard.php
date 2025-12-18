@@ -1994,25 +1994,36 @@ $string['allowmultipleapplications_convocatoria_desc'] = 'Allow users to apply t
 $string['recordsperpage'] = 'Records per page';
 
 // =============================================================================
-// ADDITIONAL STRINGS - RECAPTCHA
+// ADDITIONAL STRINGS - RECAPTCHA ENTERPRISE
 // =============================================================================
 
 $string['recaptchasettings'] = 'reCAPTCHA settings';
-$string['recaptchasettings_desc'] = 'Configure Google reCAPTCHA for forms';
+$string['recaptchasettings_desc'] = 'Configure Google reCAPTCHA Enterprise or standard for forms';
 $string['recaptcha_enabled'] = 'Enable reCAPTCHA';
 $string['recaptcha_enabled_desc'] = 'Enable reCAPTCHA verification on forms';
+$string['recaptcha_type'] = 'reCAPTCHA type';
+$string['recaptcha_type_desc'] = 'Select Enterprise (recommended) or standard';
+$string['recaptcha_type_enterprise'] = 'reCAPTCHA Enterprise';
+$string['recaptcha_type_standard'] = 'reCAPTCHA Standard';
 $string['recaptcha_sitekey'] = 'Site key';
 $string['recaptcha_sitekey_desc'] = 'Google reCAPTCHA site key';
+$string['recaptcha_project_id'] = 'Project ID';
+$string['recaptcha_project_id_desc'] = 'Google Cloud project ID (Enterprise only)';
+$string['recaptcha_api_key'] = 'API key';
+$string['recaptcha_api_key_desc'] = 'Google Cloud API key (Enterprise only)';
 $string['recaptcha_secretkey'] = 'Secret key';
-$string['recaptcha_secretkey_desc'] = 'Google reCAPTCHA secret key';
-$string['recaptcha_version'] = 'reCAPTCHA version';
-$string['recaptcha_version_desc'] = 'Select reCAPTCHA version to use';
-$string['recaptcha_v2'] = 'reCAPTCHA v2';
-$string['recaptcha_v3'] = 'reCAPTCHA v3';
-$string['recaptcha_v3_threshold'] = 'reCAPTCHA v3 threshold';
-$string['recaptcha_v3_threshold_desc'] = 'Minimum score for reCAPTCHA v3 (0.0 to 1.0)';
+$string['recaptcha_secretkey_desc'] = 'Google reCAPTCHA secret key (standard version only)';
+$string['recaptcha_threshold'] = 'Score threshold';
+$string['recaptcha_threshold_desc'] = 'Minimum score to pass verification (0.0 to 1.0). Higher values are stricter.';
 $string['recaptcha_failed'] = 'reCAPTCHA verification failed';
 $string['recaptcha_required'] = 'Please complete the reCAPTCHA verification';
+$string['recaptcha_config_error'] = 'reCAPTCHA configuration error. Contact administrator.';
+$string['recaptcha_network_error'] = 'Network error verifying reCAPTCHA. Please try again.';
+$string['recaptcha_api_error'] = 'reCAPTCHA API error. Please try again.';
+$string['recaptcha_invalid_response'] = 'Invalid response from reCAPTCHA server';
+$string['recaptcha_invalid_token'] = 'Invalid or expired reCAPTCHA token';
+$string['recaptcha_action_mismatch'] = 'reCAPTCHA action mismatch';
+$string['recaptcha_score_too_low'] = 'reCAPTCHA score too low. Please try again.';
 
 // =============================================================================
 // ADDITIONAL STRINGS - IOMAD INTEGRATION

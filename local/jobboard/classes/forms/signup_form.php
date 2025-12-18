@@ -327,33 +327,16 @@ class signup_form extends moodleform {
         // ==========================================
         // SECTION 7: reCAPTCHA (if enabled)
         // ==========================================
-        $recaptchaenabled = get_config('local_jobboard', 'recaptcha_enabled');
-        if ($recaptchaenabled) {
-            $sitekey = get_config('local_jobboard', 'recaptcha_sitekey');
-            $version = get_config('local_jobboard', 'recaptcha_version') ?: 'v2';
+        if (\local_jobboard\helper\recaptcha_helper::is_enabled()) {
+            $sitekey = \local_jobboard\helper\recaptcha_helper::get_site_key();
 
             if (!empty($sitekey)) {
                 $mform->addElement('header', 'recaptchaheader', get_string('verification', 'local_jobboard'));
                 $mform->setExpanded('recaptchaheader', true);
 
-                if ($version === 'v3') {
-                    // reCAPTCHA v3 - invisible, handled via JavaScript.
-                    $mform->addElement('hidden', 'recaptcha_response', '');
-                    $mform->setType('recaptcha_response', PARAM_TEXT);
-                    $mform->addElement('html',
-                        '<script src="https://www.google.com/recaptcha/api.js?render=' . s($sitekey) . '"></script>');
-                } else {
-                    // reCAPTCHA v2 - visible checkbox.
-                    $mform->addElement('html',
-                        '<div class="form-group row fitem">' .
-                        '<div class="col-md-3"></div>' .
-                        '<div class="col-md-9">' .
-                        '<div class="g-recaptcha" data-sitekey="' . s($sitekey) . '"></div>' .
-                        '<script src="https://www.google.com/recaptcha/api.js" async defer></script>' .
-                        '</div></div>');
-                    $mform->addElement('hidden', 'recaptcha_version', 'v2');
-                    $mform->setType('recaptcha_version', PARAM_TEXT);
-                }
+                // Render the reCAPTCHA widget using the helper.
+                $recaptchahtml = \local_jobboard\helper\recaptcha_helper::render_widget('SIGNUP');
+                $mform->addElement('html', $recaptchahtml);
             }
         }
 
@@ -523,52 +506,11 @@ class signup_form extends moodleform {
             $errors['dataaccuracy'] = get_string('signup_dataaccuracy_required', 'local_jobboard');
         }
 
-        // reCAPTCHA validation.
-        $recaptchaenabled = get_config('local_jobboard', 'recaptcha_enabled');
-        if ($recaptchaenabled) {
-            $secretkey = get_config('local_jobboard', 'recaptcha_secretkey');
-            $version = get_config('local_jobboard', 'recaptcha_version') ?: 'v2';
-
-            if (!empty($secretkey)) {
-                $response = $version === 'v3'
-                    ? ($data['recaptcha_response'] ?? '')
-                    : ($_POST['g-recaptcha-response'] ?? '');
-
-                if (empty($response)) {
-                    $errors['recaptcha_response'] = get_string('recaptcha_required', 'local_jobboard');
-                } else {
-                    // Verify with Google.
-                    $verifyurl = 'https://www.google.com/recaptcha/api/siteverify';
-                    $verifydata = [
-                        'secret' => $secretkey,
-                        'response' => $response,
-                        'remoteip' => getremoteaddr(),
-                    ];
-
-                    $options = [
-                        'http' => [
-                            'method' => 'POST',
-                            'header' => 'Content-type: application/x-www-form-urlencoded',
-                            'content' => http_build_query($verifydata),
-                        ],
-                    ];
-                    $context = stream_context_create($options);
-                    $result = @file_get_contents($verifyurl, false, $context);
-
-                    if ($result) {
-                        $resultdata = json_decode($result);
-                        if (!$resultdata->success) {
-                            $errors['recaptcha_response'] = get_string('recaptcha_failed', 'local_jobboard');
-                        } else if ($version === 'v3') {
-                            // Check score for v3.
-                            $threshold = get_config('local_jobboard', 'recaptcha_v3_threshold') ?: 0.5;
-                            if (($resultdata->score ?? 0) < $threshold) {
-                                $errors['recaptcha_response'] = get_string('recaptcha_failed', 'local_jobboard');
-                            }
-                        }
-                    }
-                }
-            }
+        // reCAPTCHA validation using helper.
+        $recaptchaerror = \local_jobboard\helper\recaptcha_helper::validate_form('SIGNUP');
+        if ($recaptchaerror !== null) {
+            // Add error to a visible field - use policyagreed as fallback since recaptcha doesn't have its own field.
+            $errors['policyagreed'] = $recaptchaerror;
         }
 
         return $errors;

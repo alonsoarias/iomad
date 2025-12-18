@@ -1997,25 +1997,36 @@ $string['allowmultipleapplications_convocatoria_desc'] = 'Permitir a los usuario
 $string['recordsperpage'] = 'Registros por página';
 
 // =============================================================================
-// CADENAS ADICIONALES - RECAPTCHA
+// CADENAS ADICIONALES - RECAPTCHA ENTERPRISE
 // =============================================================================
 
 $string['recaptchasettings'] = 'Configuración de reCAPTCHA';
-$string['recaptchasettings_desc'] = 'Configurar Google reCAPTCHA para formularios';
+$string['recaptchasettings_desc'] = 'Configurar Google reCAPTCHA Enterprise o estándar para formularios';
 $string['recaptcha_enabled'] = 'Habilitar reCAPTCHA';
 $string['recaptcha_enabled_desc'] = 'Habilitar verificación reCAPTCHA en formularios';
+$string['recaptcha_type'] = 'Tipo de reCAPTCHA';
+$string['recaptcha_type_desc'] = 'Seleccione Enterprise (recomendado) o estándar';
+$string['recaptcha_type_enterprise'] = 'reCAPTCHA Enterprise';
+$string['recaptcha_type_standard'] = 'reCAPTCHA Estándar';
 $string['recaptcha_sitekey'] = 'Clave del sitio';
 $string['recaptcha_sitekey_desc'] = 'Clave del sitio de Google reCAPTCHA';
+$string['recaptcha_project_id'] = 'ID del proyecto';
+$string['recaptcha_project_id_desc'] = 'ID del proyecto de Google Cloud (solo para Enterprise)';
+$string['recaptcha_api_key'] = 'Clave de API';
+$string['recaptcha_api_key_desc'] = 'Clave de API de Google Cloud (solo para Enterprise)';
 $string['recaptcha_secretkey'] = 'Clave secreta';
-$string['recaptcha_secretkey_desc'] = 'Clave secreta de Google reCAPTCHA';
-$string['recaptcha_version'] = 'Versión de reCAPTCHA';
-$string['recaptcha_version_desc'] = 'Seleccione la versión de reCAPTCHA a usar';
-$string['recaptcha_v2'] = 'reCAPTCHA v2';
-$string['recaptcha_v3'] = 'reCAPTCHA v3';
-$string['recaptcha_v3_threshold'] = 'Umbral de reCAPTCHA v3';
-$string['recaptcha_v3_threshold_desc'] = 'Puntuación mínima para reCAPTCHA v3 (0.0 a 1.0)';
+$string['recaptcha_secretkey_desc'] = 'Clave secreta de Google reCAPTCHA (solo para versión estándar)';
+$string['recaptcha_threshold'] = 'Umbral de puntuación';
+$string['recaptcha_threshold_desc'] = 'Puntuación mínima para aprobar la verificación (0.0 a 1.0). Valores más altos son más estrictos.';
 $string['recaptcha_failed'] = 'La verificación reCAPTCHA falló';
 $string['recaptcha_required'] = 'Por favor complete la verificación reCAPTCHA';
+$string['recaptcha_config_error'] = 'Error de configuración de reCAPTCHA. Contacte al administrador.';
+$string['recaptcha_network_error'] = 'Error de red al verificar reCAPTCHA. Intente de nuevo.';
+$string['recaptcha_api_error'] = 'Error de API de reCAPTCHA. Intente de nuevo.';
+$string['recaptcha_invalid_response'] = 'Respuesta inválida del servidor reCAPTCHA';
+$string['recaptcha_invalid_token'] = 'Token de reCAPTCHA inválido o expirado';
+$string['recaptcha_action_mismatch'] = 'Acción de reCAPTCHA no coincide';
+$string['recaptcha_score_too_low'] = 'La puntuación de reCAPTCHA es muy baja. Intente de nuevo.';
 
 // =============================================================================
 // CADENAS ADICIONALES - INTEGRACIÓN IOMAD
