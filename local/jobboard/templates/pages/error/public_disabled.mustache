@@ -1,0 +1,91 @@
+{{!
+    @template local_jobboard/pages/error/public_disabled
+
+    Template for displaying the public page disabled error.
+
+    Context variables required:
+    * title - Page title
+    * message - Error message
+    * description - Extended description
+    * action - Action to take
+    * loginurl - URL to login page
+    * homeurl - URL to home page
+    * showlogin - Whether to show login button
+
+    Example context (json):
+    {
+        "title": "Page not available",
+        "message": "The public convocatorias page is not available",
+        "description": "Public access has been disabled",
+        "action": "Please log in",
+        "loginurl": "/login/index.php",
+        "homeurl": "/",
+        "showlogin": true
+    }
+}}
+
+<div class="jb-error-page">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-6">
+                <div class="card shadow-lg border-0">
+                    {{! Header with icon }}
+                    <div class="card-header bg-warning text-dark text-center py-4">
+                        <div class="mb-3">
+                            <i class="fa fa-exclamation-triangle fa-4x"></i>
+                        </div>
+                        <h2 class="mb-0 h4">{{title}}</h2>
+                    </div>
+
+                    {{! Body }}
+                    <div class="card-body text-center py-5">
+                        <p class="lead text-muted mb-4">
+                            {{message}}
+                        </p>
+
+                        {{#description}}
+                        <div class="alert alert-light border mb-4">
+                            <i class="fa fa-info-circle text-info me-2"></i>
+                            {{description}}
+                        </div>
+                        {{/description}}
+
+                        {{#action}}
+                        <p class="text-muted">
+                            <i class="fa fa-lightbulb text-warning me-2"></i>
+                            {{action}}
+                        </p>
+                        {{/action}}
+                    </div>
+
+                    {{! Footer with actions }}
+                    <div class="card-footer bg-light py-4">
+                        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                            {{#showlogin}}
+                            <a href="{{loginurl}}" class="btn btn-primary btn-lg">
+                                <i class="fa fa-sign-in-alt me-2"></i>
+                                {{#str}}login{{/str}}
+                            </a>
+                            {{/showlogin}}
+                            <a href="{{homeurl}}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fa fa-home me-2"></i>
+                                {{#str}}home{{/str}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {{! Additional help text }}
+                <div class="text-center mt-4 text-muted">
+                    <small>
+                        <i class="fa fa-question-circle me-1"></i>
+                        {{#str}}support_info_title, local_jobboard{{/str}}?
+                        <a href="{{supporturl}}" class="text-decoration-none">
+                            {{#str}}contactsupport, local_jobboard{{/str}}
+                        </a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

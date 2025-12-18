@@ -872,4 +872,26 @@ trait public_renderer {
             'str' => $strdata,
         ];
     }
+
+    /**
+     * Render the public page disabled error page.
+     *
+     * @return string HTML output.
+     */
+    public function render_public_disabled_page(): string {
+        global $CFG;
+
+        $data = [
+            'title' => get_string('error:publicpagedisabled_title', 'local_jobboard'),
+            'message' => get_string('error:publicpagedisabled', 'local_jobboard'),
+            'description' => get_string('error:publicpagedisabled_desc', 'local_jobboard'),
+            'action' => get_string('error:publicpagedisabled_action', 'local_jobboard'),
+            'loginurl' => (new \moodle_url('/login/index.php'))->out(false),
+            'homeurl' => $CFG->wwwroot,
+            'supporturl' => (new \moodle_url('/local/jobboard/support.php'))->out(false),
+            'showlogin' => !isloggedin() || isguestuser(),
+        ];
+
+        return $this->render_from_template('local_jobboard/pages/error/public_disabled', $data);
+    }
 }

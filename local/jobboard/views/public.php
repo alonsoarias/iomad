@@ -35,7 +35,16 @@ require_once(__DIR__ . '/../lib.php');
 // Check if public page is enabled.
 $enablepublic = get_config('local_jobboard', 'enable_public_page');
 if (!$enablepublic) {
-    throw new moodle_exception('error:publicpagedisabled', 'local_jobboard');
+    // Show friendly error page instead of exception.
+    $PAGE->set_pagelayout('standard');
+    $PAGE->activityheader->disable();
+    $PAGE->set_title(get_string('error:publicpagedisabled_title', 'local_jobboard'));
+    $PAGE->set_heading(get_string('error:publicpagedisabled_title', 'local_jobboard'));
+    $renderer = $PAGE->get_renderer('local_jobboard');
+    echo $OUTPUT->header();
+    echo $renderer->render_public_disabled_page();
+    echo $OUTPUT->footer();
+    exit;
 }
 
 // Get parameters.
