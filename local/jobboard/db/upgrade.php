@@ -656,6 +656,22 @@ function xmldb_local_jobboard_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2025121629, 'local', 'jobboard');
     }
 
+    // Version 3.6.51 - Make tarjeta_profesional document optional.
+    // Remove profession exemption filter - instead tarjeta profesional is now simply optional.
+    if ($oldversion < 2025121803) {
+        // Set tarjeta_profesional as optional (isrequired = 0).
+        $DB->set_field('local_jobboard_doctype', 'isrequired', 0, ['code' => 'tarjeta_profesional']);
+
+        // Clear profession_exempt field since we no longer use it for filtering.
+        $DB->set_field('local_jobboard_doctype', 'profession_exempt', null, ['code' => 'tarjeta_profesional']);
+
+        // Update timemodified.
+        $DB->set_field('local_jobboard_doctype', 'timemodified', time(), ['code' => 'tarjeta_profesional']);
+
+        // Savepoint reached.
+        upgrade_plugin_savepoint(true, 2025121803, 'local', 'jobboard');
+    }
+
     return true;
 }
 
