@@ -68,7 +68,7 @@ class application_form extends \moodleform {
         $userage = $this->calculate_user_age($birthdate);
 
         // Check if user has active ISER exemption.
-        $hasiserexemption = \local_jobboard\exemption::user_has_active_exemption($USER->id);
+        $hasiserexemption = \local_jobboard\exemption::user_has_active_exemption((int)$USER->id);
 
         // Load enabled document types.
         $doctypes = $this->load_document_types($convocatoriaid, $isexemption);
