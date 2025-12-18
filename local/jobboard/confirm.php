@@ -27,7 +27,6 @@
 
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/authlib.php');
-require_once($CFG->dirroot . '/user/lib.php');
 
 $data = optional_param('data', '', PARAM_RAW);
 $p = optional_param('p', '', PARAM_ALPHANUM);
@@ -90,7 +89,7 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
             $user = $DB->get_record('user', ['id' => $user->id]);
 
             // Check if user has a pending vacancy application.
-            $pendingvacancy = get_user_preference('local_jobboard_pending_vacancy', null, $user->id);
+            $pendingvacancy = get_user_preferences('local_jobboard_pending_vacancy', null, $user->id);
 
             // Log the confirmation.
             $dbman = $DB->get_manager();
@@ -121,7 +120,7 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
 
         // Build login URL.
         $loginurl = new moodle_url('/login/index.php');
-        $pendingvacancy = get_user_preference('local_jobboard_pending_vacancy', null, $user->id);
+        $pendingvacancy = get_user_preferences('local_jobboard_pending_vacancy', null, $user->id);
         if ($pendingvacancy) {
             $loginurl->param('wantsurl', (new moodle_url('/local/jobboard/index.php', [
                 'view' => 'apply',
