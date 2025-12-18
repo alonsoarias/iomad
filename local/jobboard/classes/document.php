@@ -88,6 +88,37 @@ class document {
     public const FILEAREA = 'application_documents';
 
     /**
+     * Document type code to filename prefix mapping.
+     *
+     * Based on institutional requirements for document naming convention.
+     * Format: Prefix + UserLastName + .pdf
+     *
+     * @var array
+     */
+    public const FILENAME_PREFIXES = [
+        'rut' => 'Rut',
+        'sigep' => 'Hv',
+        'bienes_rentas' => 'FDR',
+        'cedula' => 'Di',
+        'libreta_militar' => 'Lm',
+        'titulo_academico' => 'Tit',
+        'tarjeta_profesional' => 'Tp',
+        'formacion_complementaria' => 'Cfc',
+        'experiencia_docente' => 'Edoc',
+        'experiencia_profesional' => 'Epro',
+        'formacion_pedagogia' => 'Fped',
+        'formacion_tic' => 'Tic',
+        'antecedentes_disciplinarios' => 'Adis',
+        'antecedentes_fiscales' => 'Afis',
+        'antecedentes_judiciales' => 'Ajud',
+        'medidas_correctivas' => 'RNMC',
+        'inhabilidades' => 'Cids',
+        'redam' => 'RDAM',
+        // Text input types (no file).
+        'carta_intencion' => 'CI',
+    ];
+
+    /**
      * Constructor.
      *
      * @param int|\stdClass|null $idorrecord Document ID, database record, or null.
@@ -229,6 +260,72 @@ class document {
     }
 
     /**
+     * Generate standardized filename for a document.
+     *
+     * Follows institutional naming convention:
+     * PREFIX + UserLastName + .pdf
+     *
+     * Example: "Rut_Garcia.pdf", "Di_Lopez.pdf"
+     *
+     * @param string $documenttype The document type code.
+     * @param int $userid The user ID (owner of the document).
+     * @param string $originalfilename The original filename (to preserve extension).
+     * @return string The standardized filename.
+     */
+    public static function generate_standardized_filename(
+        string $documenttype,
+        int $userid,
+        string $originalfilename
+    ): string {
+        global $DB;
+
+        // Get the prefix for this document type.
+        $prefix = self::FILENAME_PREFIXES[$documenttype] ?? ucfirst(substr($documenttype, 0, 4));
+
+        // Get user's last name.
+        $user = $DB->get_record('user', ['id' => $userid], 'id, lastname');
+        $lastname = 'Usuario';
+        if ($user && !empty($user->lastname)) {
+            // Clean lastname: remove accents, special chars, spaces.
+            $lastname = self::sanitize_filename_part($user->lastname);
+        }
+
+        // Get file extension from original filename.
+        $extension = strtolower(pathinfo($originalfilename, PATHINFO_EXTENSION));
+        if (empty($extension)) {
+            $extension = 'pdf';
+        }
+
+        return $prefix . '_' . $lastname . '.' . $extension;
+    }
+
+    /**
+     * Sanitize a string for use in filename.
+     *
+     * Removes accents, special characters, and converts spaces to underscores.
+     *
+     * @param string $str The string to sanitize.
+     * @return string The sanitized string.
+     */
+    public static function sanitize_filename_part(string $str): string {
+        // Replace accented characters.
+        $accents = [
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
+            'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
+            'ñ' => 'n', 'Ñ' => 'N', 'ü' => 'u', 'Ü' => 'U',
+        ];
+        $str = strtr($str, $accents);
+
+        // Remove any character that is not alphanumeric or underscore.
+        $str = preg_replace('/[^a-zA-Z0-9_]/', '', str_replace(' ', '_', $str));
+
+        // Limit length and capitalize first letter.
+        $str = substr($str, 0, 50);
+
+        return ucfirst($str);
+    }
+
+    /**
      * Store uploaded file from form.
      *
      * @param int $applicationid The application ID.
@@ -270,14 +367,21 @@ class document {
             throw new \moodle_exception('error:invalidfile', 'local_jobboard');
         }
 
-        // Save to plugin file area.
+        // Generate standardized filename.
+        $standardizedfilename = self::generate_standardized_filename(
+            $documenttype,
+            $USER->id,
+            $draftfile->get_filename()
+        );
+
+        // Save to plugin file area with standardized filename.
         $filerecord = [
             'contextid' => $context->id,
             'component' => self::COMPONENT,
             'filearea' => self::FILEAREA,
             'itemid' => $applicationid,
             'filepath' => '/' . $documenttype . '/',
-            'filename' => $draftfile->get_filename(),
+            'filename' => $standardizedfilename,
         ];
 
         // Delete any existing file of this type.
