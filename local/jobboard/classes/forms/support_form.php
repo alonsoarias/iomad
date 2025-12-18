@@ -1,0 +1,140 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+namespace local_jobboard\forms;
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->libdir . '/formslib.php');
+
+/**
+ * Support form for reporting technical issues with the Job Board plugin.
+ *
+ * @package   local_jobboard
+ * @copyright 2024-2025 ISER
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class support_form extends \moodleform {
+
+    /**
+     * Form definition.
+     */
+    protected function definition() {
+        global $USER;
+
+        $mform = $this->_form;
+
+        // Error type section.
+        $mform->addElement('header', 'errorheader', get_string('support_error_details', 'local_jobboard'));
+        $mform->setExpanded('errorheader', true);
+
+        // Error type selection.
+        $errortypes = [
+            '' => get_string('support_select_error_type', 'local_jobboard'),
+            'document_upload' => get_string('support_type_document_upload', 'local_jobboard'),
+            'form_submission' => get_string('support_type_form_submission', 'local_jobboard'),
+            'page_error' => get_string('support_type_page_error', 'local_jobboard'),
+            'login_issue' => get_string('support_type_login_issue', 'local_jobboard'),
+            'display_issue' => get_string('support_type_display_issue', 'local_jobboard'),
+            'notification_issue' => get_string('support_type_notification_issue', 'local_jobboard'),
+            'other' => get_string('support_type_other', 'local_jobboard'),
+        ];
+        $mform->addElement('select', 'error_type', get_string('support_error_type', 'local_jobboard'), $errortypes);
+        $mform->addRule('error_type', get_string('required'), 'required', null, 'client');
+        $mform->setType('error_type', PARAM_TEXT);
+
+        // Error description.
+        $mform->addElement('textarea', 'description', get_string('support_error_description', 'local_jobboard'), [
+            'rows' => 5,
+            'cols' => 60,
+            'placeholder' => get_string('support_description_placeholder', 'local_jobboard'),
+        ]);
+        $mform->addRule('description', get_string('required'), 'required', null, 'client');
+        $mform->setType('description', PARAM_TEXT);
+        $mform->addHelpButton('description', 'support_error_description', 'local_jobboard');
+
+        // Steps to reproduce (optional).
+        $mform->addElement('textarea', 'steps_to_reproduce', get_string('support_steps_to_reproduce', 'local_jobboard'), [
+            'rows' => 4,
+            'cols' => 60,
+            'placeholder' => get_string('support_steps_placeholder', 'local_jobboard'),
+        ]);
+        $mform->setType('steps_to_reproduce', PARAM_TEXT);
+
+        // Expected behavior (optional).
+        $mform->addElement('textarea', 'expected_behavior', get_string('support_expected_behavior', 'local_jobboard'), [
+            'rows' => 3,
+            'cols' => 60,
+            'placeholder' => get_string('support_expected_placeholder', 'local_jobboard'),
+        ]);
+        $mform->setType('expected_behavior', PARAM_TEXT);
+
+        // Page URL where the error occurred (optional).
+        $mform->addElement('text', 'page_url', get_string('support_page_url', 'local_jobboard'), ['size' => 60]);
+        $mform->setType('page_url', PARAM_URL);
+
+        // Contact information section.
+        $mform->addElement('header', 'contactheader', get_string('support_contact_info', 'local_jobboard'));
+        $mform->setExpanded('contactheader', true);
+
+        // Reporter name.
+        $defaultname = '';
+        if (isloggedin() && !isguestuser()) {
+            $defaultname = fullname($USER);
+        }
+        $mform->addElement('text', 'reporter_name', get_string('support_reporter_name', 'local_jobboard'), ['size' => 40]);
+        $mform->addRule('reporter_name', get_string('required'), 'required', null, 'client');
+        $mform->setType('reporter_name', PARAM_TEXT);
+        $mform->setDefault('reporter_name', $defaultname);
+
+        // Reporter email.
+        $defaultemail = '';
+        if (isloggedin() && !isguestuser()) {
+            $defaultemail = $USER->email;
+        }
+        $mform->addElement('text', 'reporter_email', get_string('support_reporter_email', 'local_jobboard'), ['size' => 40]);
+        $mform->addRule('reporter_email', get_string('required'), 'required', null, 'client');
+        $mform->addRule('reporter_email', get_string('invalidemail'), 'email', null, 'client');
+        $mform->setType('reporter_email', PARAM_EMAIL);
+        $mform->setDefault('reporter_email', $defaultemail);
+
+        // Submit buttons.
+        $this->add_action_buttons(true, get_string('support_submit', 'local_jobboard'));
+    }
+
+    /**
+     * Validation.
+     *
+     * @param array $data Form data.
+     * @param array $files Files.
+     * @return array Errors.
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        // Validate error type is selected.
+        if (empty($data['error_type'])) {
+            $errors['error_type'] = get_string('required');
+        }
+
+        // Validate description has minimum length.
+        if (!empty($data['description']) && strlen(trim($data['description'])) < 20) {
+            $errors['description'] = get_string('support_description_too_short', 'local_jobboard');
+        }
+
+        return $errors;
+    }
+}

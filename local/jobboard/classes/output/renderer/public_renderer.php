@@ -263,7 +263,18 @@ trait public_renderer {
             'loginurl' => (new moodle_url('/login/index.php'))->out(false),
             'signupurl' => (new moodle_url('/local/jobboard/signup.php'))->out(false),
             'backurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out(false),
+            'supportpageurl' => $this->get_support_page_url(),
+            'showsupport' => true,
         ];
+    }
+
+    /**
+     * Get the URL for the support form page.
+     *
+     * @return string Support page URL.
+     */
+    protected function get_support_page_url(): string {
+        return (new moodle_url('/local/jobboard/support.php'))->out(false);
     }
 
     /**
@@ -419,6 +430,8 @@ trait public_renderer {
             'myapplicationsurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false),
             'backurl' => $backurl,
             'backlabel' => $backlabel,
+            'supportpageurl' => $this->get_support_page_url(),
+            'showsupport' => true,
         ];
     }
 
@@ -562,6 +575,8 @@ trait public_renderer {
             'sharelinks' => $sharelinks,
             'loginurl' => (new moodle_url('/login/index.php'))->out(false),
             'signupurl' => (new moodle_url('/local/jobboard/signup.php'))->out(false),
+            'supportpageurl' => $this->get_support_page_url(),
+            'showsupport' => true,
         ];
     }
 
@@ -786,6 +801,8 @@ trait public_renderer {
             'canapply' => $canapply,
             'loginurl' => (new moodle_url('/login/index.php'))->out(false),
             'signupurl' => (new moodle_url('/local/jobboard/signup.php'))->out(false),
+            'supportpageurl' => $this->get_support_page_url(),
+            'showsupport' => true,
         ];
     }
 
