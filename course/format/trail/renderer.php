@@ -1618,6 +1618,11 @@ class format_trail_renderer extends section_renderer {
             return '';
         }
 
+        // Ensure sectionnum is set in displayoptions to avoid deprecated get_section_number() calls.
+        if (!isset($displayoptions['sectionnum'])) {
+            $displayoptions['sectionnum'] = $section->section;
+        }
+
         $cmclass = $format->get_output_classname('content\\cm');
         $cm = new $cmclass($format, $section, $mod, $displayoptions);
         // The course outputs works with format renderers, not with course renderers.

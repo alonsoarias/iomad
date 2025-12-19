@@ -201,11 +201,17 @@ div#trailmiddle-column > ul {
 
 .course-content ul.trailicons li img {
     margin-top: 0;
+    width: 10px;
 }
 
 .course-content ul.trailicons li img.info {
     height: 100%;
     width: 100%;
+}
+
+/* Small edit icons */
+img.iconsmall.edit {
+    width: 10px;
 }
 
 /* Exclude editing icons from trail image styles */
@@ -227,10 +233,10 @@ img.iconsmall.edit,
 .course-content img.iconsmall.edit,
 .course-content ul.trailicons li img.iconsmall.edit,
 #trailshadebox_content img.iconsmall.edit {
-    width: 16px !important;
-    height: 16px !important;
-    max-width: 16px !important;
-    max-height: 16px !important;
+    width: 10px !important;
+    height: 10px !important;
+    max-width: 10px !important;
+    max-height: 10px !important;
 }
 
 .course-content li.trail_section {

@@ -104,10 +104,10 @@ body.editing #trailshadebox_content .draghandle .icon {
 body.editing img.iconsmall.edit,
 body.editing .course-content img.iconsmall.edit,
 body.editing #trailshadebox_content img.iconsmall.edit {
-    width: 16px !important;
-    height: 16px !important;
-    max-width: 16px !important;
-    max-height: 16px !important;
+    width: 10px !important;
+    height: 10px !important;
+    max-width: 10px !important;
+    max-height: 10px !important;
 }
 
 /* Boost theme - Activity cards in edit mode */
