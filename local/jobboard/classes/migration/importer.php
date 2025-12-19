@@ -614,12 +614,13 @@ class importer {
 
         foreach ($documents as $doc) {
             $doc = (object) $doc;
-            $doctypecode = $doc->doctype_code ?? null;
+            $doctypecode = $doc->doctype_code ?? $doc->documenttype ?? null;
             $files = $doc->files ?? [];
             unset($doc->doctype_code, $doc->files, $doc->original_id);
 
-            if ($doctypecode && isset($this->doctypemap[$doctypecode])) {
-                $doc->doctypeid = $this->doctypemap[$doctypecode];
+            if ($doctypecode) {
+                // Document table uses 'documenttype' (code), not 'doctypeid' (foreign key).
+                $doc->documenttype = $doctypecode;
                 $doc->applicationid = $applicationid;
                 $doc->timecreated = time();
 
