@@ -54,3 +54,49 @@ div#trailshadebox_overlay {
     z-index: 1000;
 }
 
+/* Moodle 4.5 Boost theme editing mode icon fixes */
+body.editing .course-content ul.gtopics .section .actions img,
+body.editing .course-content ul.gtopics .section .section-actions img,
+body.editing #trailshadebox_content .section .actions img {
+    width: 16px !important;
+    height: 16px !important;
+    max-width: 16px !important;
+    max-height: 16px !important;
+}
+
+body.editing .course-content ul.gtopics .activity .actions img,
+body.editing .course-content ul.gtopics .activity .activity-actions img,
+body.editing #trailshadebox_content .activity .actions img {
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* Fix for action menu trigger in Boost */
+body.editing .course-content .section-actions .dropdown-toggle,
+body.editing .course-content .activity-actions .dropdown-toggle,
+body.editing #trailshadebox_content .section-actions .dropdown-toggle {
+    padding: 0.25rem;
+}
+
+/* Fix inline edit icons */
+body.editing .course-content .inplaceeditable .quickediticon,
+body.editing #trailshadebox_content .inplaceeditable .quickediticon {
+    font-size: 12px;
+}
+
+/* Action menu alignment */
+body.editing .course-content .section-actions,
+body.editing .course-content .activity-actions,
+body.editing #trailshadebox_content .section-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Fix move handle icons */
+body.editing .course-content .draghandle .icon,
+body.editing #trailshadebox_content .draghandle .icon {
+    width: 16px;
+    height: 16px;
+}
+

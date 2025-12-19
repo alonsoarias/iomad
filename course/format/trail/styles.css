@@ -492,3 +492,119 @@ body.jsenabled #trailshadebox_content.hide_content {
     opacity: 0.7;
 }
 /* @end */
+
+/* Moodle 4.5 editing mode icon fixes */
+.course-content ul.gtopics .section .right .section_action_menu,
+.course-content ul.gtopics .section .section-actions,
+#trailshadebox_content .section .section-actions {
+    display: inline-flex;
+    align-items: center;
+}
+
+.course-content ul.gtopics .section .right .section_action_menu img,
+.course-content ul.gtopics .section .section-actions img,
+.course-content .section_action_menu .icon img,
+.course-content .section-actions .icon img,
+#trailshadebox_content .section-actions img,
+#trailshadebox_content .section_action_menu img {
+    width: 16px !important;
+    height: 16px !important;
+    margin: 0;
+    vertical-align: middle;
+}
+
+.course-content ul.gtopics .section .right .section_action_menu .smallicon,
+.course-content ul.gtopics .section .section-actions .smallicon,
+#trailshadebox_content .section-actions .smallicon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Fix for action menu icons in editing mode */
+.course-content .editing .actions,
+.course-content .editing .activity-actions,
+.course-content .editing .action-menu,
+#trailshadebox_content .editing .actions,
+#trailshadebox_content .action-menu {
+    display: inline-flex;
+    align-items: center;
+}
+
+.course-content .editing .actions img,
+.course-content .editing .activity-actions img,
+.course-content .editing .action-menu img,
+#trailshadebox_content .editing .actions img,
+#trailshadebox_content .action-menu img {
+    width: 16px !important;
+    height: 16px !important;
+    max-width: 16px !important;
+    max-height: 16px !important;
+    margin: 0 2px;
+}
+
+/* Fix SVG icons in Moodle 4.5 */
+.course-content .editing .actions .icon,
+.course-content .editing .activity-actions .icon,
+.course-content .section-actions .icon,
+#trailshadebox_content .actions .icon,
+#trailshadebox_content .section-actions .icon {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+}
+
+/* Activity icons in trail sections */
+.course-content ul.gtopics .activity .activityiconcontainer img,
+#trailshadebox_content .activity .activityiconcontainer img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Fix for cm (course module) edit icons */
+.course-content .activity .actions .icon,
+.course-content .activity .activity-actions .icon,
+#trailshadebox_content .activity .actions .icon {
+    width: 16px;
+    height: 16px;
+}
+
+.course-content .activity .actions img.icon,
+.course-content .activity .activity-actions img.icon,
+#trailshadebox_content .activity .actions img.icon {
+    width: 16px !important;
+    height: 16px !important;
+    max-width: none;
+}
+
+/* Fix edit pencil icon in section headers */
+.course-content .inplaceeditable .quickediticon img,
+#trailshadebox_content .inplaceeditable .quickediticon img {
+    width: 12px !important;
+    height: 12px !important;
+}
+
+/* Course index drawer fixes for Moodle 4.5 */
+.courseindex .courseindex-item .icons-collapse-expand {
+    width: auto;
+    height: auto;
+}
+
+/* Ensure dropdown menus display correctly */
+.course-content .section .dropdown-menu,
+#trailshadebox_content .dropdown-menu {
+    z-index: 1001;
+}
+
+/* Fix for bulk edit icons */
+.course-content .bulkselect input[type="checkbox"],
+#trailshadebox_content .bulkselect input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+/* Drag handle icon fixes */
+.course-content .editing .activity .draghandle img,
+#trailshadebox_content .editing .activity .draghandle img {
+    width: 16px !important;
+    height: 16px !important;
+}
