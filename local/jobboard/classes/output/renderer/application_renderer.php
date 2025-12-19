@@ -829,7 +829,7 @@ trait application_renderer {
             'showdeadlinewarning' => ($daysuntilclose <= 3 && $daysuntilclose > 0),
             'deadlinewarningtext' => get_string('deadlinewarning', 'local_jobboard', ceil($daysuntilclose)),
             'showdaysremaining' => ($daysuntilclose > 0),
-            'daysremainingtext' => get_string('daysremaining', 'local_jobboard', ceil($daysuntilclose)),
+            'daysremainingtext' => ceil($daysuntilclose) . ' ' . get_string('daysremaining', 'local_jobboard'),
             'deadlinebadgecolor' => $deadlinebadgecolor,
             'guidelines' => $guidelines,
             'isexemption' => $isexemption,
