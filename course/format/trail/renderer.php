@@ -1449,7 +1449,7 @@ class format_trail_renderer extends section_renderer {
 
         $format = course_get_format($course);
         if ($sectionreturn) {
-            $format->set_section_number($sectionreturn);
+            $format->set_sectionnum($sectionreturn);
         }
         $outputclass = $format->get_output_classname('content\\addsection');
         $widget = new $outputclass($format);
@@ -1606,9 +1606,9 @@ class format_trail_renderer extends section_renderer {
         $modinfo = $format->get_modinfo();
         // Output renderers works only with real section_info objects.
         if ($sectionreturn) {
-            $format->set_section_number($sectionreturn);
+            $format->set_sectionnum($sectionreturn);
         }
-        $section = $modinfo->get_section_info($format->get_section_number());
+        $section = $modinfo->get_section_info($format->get_sectionnum());
 
         $cmclass = $format->get_output_classname('content\\cm');
         $cm = new $cmclass($format, $section, $mod, $displayoptions);
