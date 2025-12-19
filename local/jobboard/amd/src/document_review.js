@@ -239,22 +239,122 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                 '[data-region="documents-list"] [data-document-id="' + nextDocumentId + '"]'
             );
             if (nextDocItem) {
-                // Load next document preview after a short delay.
+                // Load next document preview and make it current without reload.
                 setTimeout(function() {
+                    makeDocumentCurrent(nextDocItem, nextDocumentId);
                     previewDocument(nextDocItem);
-                    // Reload page to get updated UI with new current document.
-                    window.location.reload();
-                }, 500);
+                }, 300);
             }
         } else if (allReviewed) {
-            // All documents reviewed - show success message and reload to show submit form.
+            // All documents reviewed - show success message.
             Notification.addNotification({
                 message: state.strings.documentValidated || 'All documents reviewed!',
                 type: 'success'
             });
-            setTimeout(function() {
-                window.location.reload();
-            }, 1000);
+            // Update the UI to show all reviewed state.
+            updateAllReviewedState();
+        }
+
+        // Update sequential review info.
+        updateSequentialReviewInfo(stats);
+    };
+
+    /**
+     * Make a document the current one for review (add action buttons).
+     *
+     * @param {HTMLElement} docItem The document list item element.
+     * @param {int} documentId The document ID.
+     */
+    var makeDocumentCurrent = function(docItem, documentId) {
+        // Remove current styling from all items.
+        document.querySelectorAll('[data-region="documents-list"] .list-group-item').forEach(function(item) {
+            item.classList.remove('active', 'bg-primary-subtle');
+            var actions = item.querySelector('.jb-doc-actions');
+            if (actions) {
+                actions.remove();
+            }
+        });
+
+        // Add current styling to this item.
+        docItem.classList.add('active', 'bg-primary-subtle');
+
+        // Get application ID.
+        var appId = state.applicationId;
+
+        // Create action buttons HTML.
+        var actionsHtml = '<div class="mt-2 pt-2 border-top jb-doc-actions" ' +
+            'onclick="event.stopPropagation();" data-document-id="' + documentId + '" data-application-id="' + appId + '">' +
+            '<label for="doc_observation_' + documentId + '" class="form-label small fw-bold mb-1">' +
+            (state.strings.documentObservation || 'Observation') +
+            ' <span class="text-danger" title="Required for rejection">*</span></label>' +
+            '<textarea name="doc_observation_' + documentId + '" id="doc_observation_' + documentId + '" ' +
+            'class="form-control form-control-sm jb-doc-observation mb-2" rows="2" ' +
+            'data-document-id="' + documentId + '" data-application-id="' + appId + '" ' +
+            'placeholder="Enter observation..."></textarea>' +
+            '<div class="d-flex gap-2">' +
+            '<button type="button" class="btn btn-success jb-btn-success btn-sm flex-grow-1 jb-approve-btn" ' +
+            'data-document-id="' + documentId + '" data-application-id="' + appId + '">' +
+            '<i class="fa fa-check me-1"></i>' + (state.strings.approve || 'Approve') + '</button>' +
+            '<button type="button" class="btn btn-danger jb-btn-danger btn-sm flex-grow-1 jb-reject-btn" ' +
+            'data-document-id="' + documentId + '" data-application-id="' + appId + '">' +
+            '<i class="fa fa-xmark me-1"></i>' + (state.strings.reject || 'Reject') + '</button>' +
+            '</div>' +
+            '<small class="text-muted d-block mt-1">' +
+            '<i class="fa fa-info-circle me-1"></i>' +
+            (state.strings.observationRequired || 'Observation required for rejection') +
+            '</small></div>';
+
+        // Append actions to doc item.
+        docItem.insertAdjacentHTML('beforeend', actionsHtml);
+    };
+
+    /**
+     * Update the UI to show all documents reviewed state.
+     */
+    var updateAllReviewedState = function() {
+        // Hide pending alert.
+        var pendingAlert = document.querySelector('.alert-info.jb-alert-info');
+        if (pendingAlert) {
+            pendingAlert.style.display = 'none';
+        }
+
+        // Show success alert if not already showing.
+        var successAlert = document.querySelector('.alert-success.jb-alert-success');
+        if (!successAlert) {
+            var alertContainer = document.querySelector('.col-lg-8 .jb-page-header');
+            if (alertContainer) {
+                var newAlert = document.createElement('div');
+                newAlert.className = 'alert alert-success jb-alert-success d-flex align-items-center mb-4';
+                newAlert.setAttribute('role', 'alert');
+                newAlert.innerHTML = '<i class="fa fa-check-circle fa-lg me-3"></i><div>' +
+                    '<strong>All documents reviewed!</strong>' +
+                    '<span class="d-block small">Ready to submit review.</span></div>';
+                alertContainer.parentNode.insertBefore(newAlert, alertContainer.nextSibling);
+            }
+        } else {
+            successAlert.style.display = 'flex';
+        }
+
+        // Show submit form in the progress card.
+        var progressCard = document.querySelector('.card-body .mb-2 textarea[name="observations"]');
+        if (progressCard) {
+            progressCard.closest('.card').querySelector('form').style.display = 'block';
+        }
+    };
+
+    /**
+     * Update sequential review info display.
+     *
+     * @param {Object} stats The current stats.
+     */
+    var updateSequentialReviewInfo = function(stats) {
+        var currentPos = (stats.approved || 0) + (stats.rejected || 0) + 1;
+        var total = stats.total || 0;
+
+        // Update the badge and text.
+        var badge = document.querySelector('.alert-info .badge.bg-primary');
+        if (badge) {
+            badge.textContent = Math.min(currentPos, total) + ' / ' + total;
         }
     };
 
@@ -326,13 +426,25 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
-     * Handle reject form submit - validates observation and copies to reason field.
+     * Handle reject button click - AJAX rejection.
      *
-     * @param {Event} e The submit event.
+     * @param {Event} e The click event.
      */
-    var handleRejectFormSubmit = function(e) {
-        var form = e.currentTarget;
-        var documentId = form.dataset.documentId;
+    var handleRejectClick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (state.processing) {
+            return;
+        }
+
+        var btn = e.currentTarget;
+        var documentId = parseInt(btn.dataset.documentId, 10);
+        var applicationId = parseInt(btn.dataset.applicationId, 10) || state.applicationId;
+
+        if (!documentId || !applicationId) {
+            return;
+        }
 
         // Find the observation textarea for this document.
         var observationField = document.querySelector('#doc_observation_' + documentId);
@@ -343,10 +455,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
         var reason = observationField ? observationField.value.trim() : '';
 
         if (!reason) {
-            // Observation is required for rejection - prevent form submission.
-            e.preventDefault();
-            e.stopPropagation();
-
+            // Observation is required for rejection.
             if (observationField) {
                 observationField.classList.add('is-invalid', 'border-danger');
                 observationField.focus();
@@ -356,12 +465,11 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                     observationField.classList.remove('jb-shake');
                 }, 500);
             }
-            // Show error message using notification.
             Notification.addNotification({
                 message: state.strings.observationRequired || 'You must enter an observation to reject the document.',
                 type: 'error'
             });
-            return false;
+            return;
         }
 
         // Remove validation styling if present.
@@ -369,14 +477,50 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             observationField.classList.remove('is-invalid', 'border-danger');
         }
 
-        // Copy observation to the hidden reason field in the form.
-        var reasonInput = form.querySelector('.jb-reject-reason-input');
-        if (reasonInput) {
-            reasonInput.value = reason;
+        // Disable buttons and show processing.
+        state.processing = true;
+        var $btn = $(btn);
+        var originalHtml = $btn.html();
+        $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> ' +
+            (state.strings.processing || 'Processing...'));
+
+        // Also disable approve button.
+        var approveBtn = btn.closest('.d-flex').querySelector('.jb-approve-btn');
+        if (approveBtn) {
+            $(approveBtn).prop('disabled', true);
         }
 
-        // Allow form submission to proceed.
-        return true;
+        Ajax.call([{
+            methodname: 'local_jobboard_reject_document',
+            args: {documentid: documentId, applicationid: applicationId, reason: reason},
+            done: function(response) {
+                state.processing = false;
+                if (response.success) {
+                    Notification.addNotification({
+                        message: response.message || state.strings.documentRejected || 'Document rejected',
+                        type: 'success'
+                    });
+                    updateDocumentUI(documentId, 'rejected', response.stats, response.nextdocumentid, response.allreviewed);
+                } else {
+                    $btn.prop('disabled', false).html(originalHtml);
+                    if (approveBtn) {
+                        $(approveBtn).prop('disabled', false);
+                    }
+                    Notification.addNotification({
+                        message: response.message || 'Error rejecting document',
+                        type: 'error'
+                    });
+                }
+            },
+            fail: function(error) {
+                state.processing = false;
+                $btn.prop('disabled', false).html(originalHtml);
+                if (approveBtn) {
+                    $(approveBtn).prop('disabled', false);
+                }
+                Notification.exception(error);
+            }
+        }]);
     };
 
     /**
@@ -474,8 +618,17 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             $(this).removeClass('is-invalid border-danger');
         });
 
-        // Reject form submit handler - validates observation and copies to reason field.
-        $(document).on('submit', '.jb-reject-form', handleRejectFormSubmit);
+        // Approve button click handler - AJAX approval.
+        $(document).on('click', '.jb-approve-btn', handleApproveClick);
+
+        // Reject button click handler - AJAX rejection.
+        $(document).on('click', '.jb-reject-btn', handleRejectClick);
+
+        // Prevent form submission for reject forms (use AJAX instead).
+        $(document).on('submit', '.jb-reject-form', function(e) {
+            e.preventDefault();
+            return false;
+        });
 
         // Save and send button.
         $('#saveAndSendBtn').on('click', saveAndSendObservations);

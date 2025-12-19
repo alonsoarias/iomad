@@ -322,17 +322,12 @@ trait application_renderer {
             $user = \core_user::get_user($application->userid);
         }
 
-        // Document counts.
-        $documentcount = $DB->count_records('local_jobboard_document', ['applicationid' => $application->id]);
-        $docsapproved = $DB->count_records('local_jobboard_document', [
-            'applicationid' => $application->id,
-            'validationstatus' => 'approved',
-        ]);
-        $docsrejected = $DB->count_records('local_jobboard_document', [
-            'applicationid' => $application->id,
-            'validationstatus' => 'rejected',
-        ]);
-        $docspending = $documentcount - $docsapproved - $docsrejected;
+        // Document counts using document::get_stats() which joins with validation table.
+        $docstats = \local_jobboard\document::get_stats($application->id);
+        $documentcount = $docstats['total'];
+        $docsapproved = $docstats['approved'];
+        $docsrejected = $docstats['rejected'];
+        $docspending = $docstats['pending'];
         $docsprogress = $documentcount > 0 ? round(($docsapproved / $documentcount) * 100) : 0;
 
         return [
@@ -840,12 +835,16 @@ trait application_renderer {
             return ['count' => 0, 'names' => '', 'list' => []];
         }
 
-        // Get uploaded document types for this application.
-        $uploadeddocs = $DB->get_records('local_jobboard_document', ['applicationid' => $applicationid], '', 'documenttype, validationstatus');
+        // Get uploaded document types for this application with validation status.
+        $sql = "SELECT d.id, d.documenttype, COALESCE(dv.status, 'pending') as validation_status
+                  FROM {local_jobboard_document} d
+             LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
+                 WHERE d.applicationid = ?";
+        $uploadeddocs = $DB->get_records_sql($sql, [$applicationid]);
         $uploadedtypes = [];
         foreach ($uploadeddocs as $doc) {
             // Only count as uploaded if not rejected.
-            if ($doc->validationstatus !== 'rejected') {
+            if ($doc->validation_status !== 'rejected') {
                 $uploadedtypes[$doc->documenttype] = true;
             }
         }

@@ -245,23 +245,20 @@
                                                   rows="2" data-document-id="{{id}}" data-application-id="{{applicationid}}"
                                                   placeholder="{{#str}}documentobservation_placeholder, local_jobboard{{/str}}">{{{observation}}}</textarea>
                                         <div class="d-flex gap-2">
-                                            {{! Approve: Link with AJAX enhancement }}
-                                            <a href="{{validateurl}}" class="btn btn-success jb-btn-success btn-sm flex-grow-1 jb-approve-btn"
+                                            {{! Approve: Button with AJAX }}
+                                            <button type="button" class="btn btn-success jb-btn-success btn-sm flex-grow-1 jb-approve-btn"
                                                data-document-id="{{id}}"
                                                data-application-id="{{applicationid}}"
                                                title="{{#str}}approve, local_jobboard{{/str}}">
                                                 <i class="fa fa-check me-1"></i>{{#str}}approve, local_jobboard{{/str}}
-                                            </a>
-                                            {{! Reject: Form with AJAX enhancement }}
-                                            <form method="post" action="{{rejecturl}}" class="flex-grow-1 jb-reject-form" data-document-id="{{id}}">
-                                                <input type="hidden" name="reason" class="jb-reject-reason-input" value="">
-                                                <button type="submit" class="btn btn-danger jb-btn-danger btn-sm w-100 jb-reject-btn"
-                                                        data-document-id="{{id}}"
-                                                        data-application-id="{{applicationid}}"
-                                                        title="{{#str}}reject, local_jobboard{{/str}}">
-                                                    <i class="fa fa-xmark me-1"></i>{{#str}}reject, local_jobboard{{/str}}
-                                                </button>
-                                            </form>
+                                            </button>
+                                            {{! Reject: Button with AJAX }}
+                                            <button type="button" class="btn btn-danger jb-btn-danger btn-sm flex-grow-1 jb-reject-btn"
+                                                    data-document-id="{{id}}"
+                                                    data-application-id="{{applicationid}}"
+                                                    title="{{#str}}reject, local_jobboard{{/str}}">
+                                                <i class="fa fa-xmark me-1"></i>{{#str}}reject, local_jobboard{{/str}}
+                                            </button>
                                         </div>
                                         <small class="text-muted d-block mt-1">
                                             <i class="fa fa-info-circle me-1"></i>{{#str}}observation_required_for_rejection, local_jobboard{{/str}}
