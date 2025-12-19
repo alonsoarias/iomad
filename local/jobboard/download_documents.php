@@ -69,8 +69,32 @@ $idnumber = clean_filename($applicant->idnumber ?: (string)$applicant->id);
 
 $zipfilename = "documentos_{$lastname}_{$firstname}_{$idnumber}_" . date('Ymd_His') . '.zip';
 
-// Common file prefix for all documents.
-$fileprefix = "{$lastname}_{$firstname}_{$idnumber}_";
+// Sanitize lastname for use in document filenames (same logic as document class).
+$sanitizedlastname = \local_jobboard\document::sanitize_filename_part($applicant->lastname);
+
+// Document type prefixes (same as document class).
+$fileprefixes = [
+    'rut' => 'Rut',
+    'sigep' => 'Hv',
+    'bienes_rentas' => 'FDR',
+    'cedula' => 'Di',
+    'libreta_militar' => 'Lm',
+    'titulo_academico' => 'Tit',
+    'tarjeta_profesional' => 'Tp',
+    'formacion_complementaria' => 'Cfc',
+    'experiencia_docente' => 'Edoc',
+    'experiencia_profesional' => 'Epro',
+    'formacion_pedagogia' => 'Fped',
+    'formacion_tic' => 'Tic',
+    'antecedentes_disciplinarios' => 'Adis',
+    'antecedentes_fiscales' => 'Afis',
+    'antecedentes_judiciales' => 'Ajud',
+    'medidas_correctivas' => 'RNMC',
+    'inhabilidades' => 'Cids',
+    'redam' => 'RDAM',
+    'carta_intencion' => 'CI',
+    'coverletter' => 'CP', // Cover letter / Carta de presentación.
+];
 
 // Create temporary file for ZIP.
 $tempdir = make_temp_directory('local_jobboard_zip');
@@ -127,7 +151,8 @@ $wraphtmlcontent = function($title, $content) use ($applicant) {
 // Add cover letter if present.
 if (!empty($application->coverletter)) {
     $coverlettertitle = get_string('coverletter', 'local_jobboard');
-    $coverletterfilename = $fileprefix . clean_filename($coverlettertitle) . '.html';
+    // Use same naming convention: CP_{Lastname}.html
+    $coverletterfilename = $fileprefixes['coverletter'] . '_' . $sanitizedlastname . '.html';
     $htmlcontent = $wraphtmlcontent($coverlettertitle, $application->coverletter);
     $zip->addFromString($coverletterfilename, $htmlcontent);
     $filesadded++;
@@ -141,19 +166,22 @@ foreach ($documents as $doc) {
         if (is_array($appdata) && isset($appdata[$doc->documenttype])) {
             $textcontent = $appdata[$doc->documenttype];
             if (is_string($textcontent) && !empty(trim($textcontent))) {
-                // Use document type name for the filename if available.
+                // Use document type name for the title.
                 $typename = isset($doctypes[$doc->documenttype]) ?
                     $doctypes[$doc->documenttype]->name :
                     $doc->documenttype;
+                // Use same naming convention: {Prefix}_{Lastname}.html
+                $prefix = $fileprefixes[$doc->documenttype] ?? ucfirst(substr($doc->documenttype, 0, 4));
+                $textfilename = $prefix . '_' . $sanitizedlastname . '.html';
                 $htmlcontent = $wraphtmlcontent($typename, $textcontent);
-                $zip->addFromString($fileprefix . clean_filename($typename) . '.html', $htmlcontent);
+                $zip->addFromString($textfilename, $htmlcontent);
                 $filesadded++;
             }
         }
         continue;
     }
 
-    // Handle physical files.
+    // Handle physical files - use the stored filename directly (already has correct format).
     foreach ($allfiles as $file) {
         if ($file->get_filepath() === '/' . $doc->documenttype . '/' &&
             $file->get_filename() === $doc->filename) {
@@ -161,8 +189,8 @@ foreach ($documents as $doc) {
             // Get file content.
             $content = $file->get_content();
             if (!empty($content)) {
-                // Use prefix + original filename (flat structure, no folders).
-                $zip->addFromString($fileprefix . $doc->filename, $content);
+                // Use original filename directly (already follows {Prefix}_{Lastname}.ext format).
+                $zip->addFromString($doc->filename, $content);
                 $filesadded++;
             }
             break;

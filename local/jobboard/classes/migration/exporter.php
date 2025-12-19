@@ -148,7 +148,7 @@ class exporter {
      * @return array Metadata array.
      */
     protected function prepare_export_metadata(): array {
-        global $CFG;
+        global $CFG, $SITE;
 
         return [
             'plugin' => 'local_jobboard',
@@ -157,7 +157,7 @@ class exporter {
             'exported' => time(),
             'export_date' => userdate(time()),
             'moodle_version' => $CFG->version,
-            'site_name' => $CFG->shortname,
+            'site_name' => $SITE->shortname ?? $CFG->wwwroot,
             'full_export' => true,
         ];
     }
@@ -408,6 +408,12 @@ class exporter {
     protected function export_applicant_profiles(): array {
         global $DB;
 
+        // Check if table exists.
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_applicant_profile')) {
+            return [];
+        }
+
         $profiles = $DB->get_records_sql(
             "SELECT p.*, u.username, u.email, u.idnumber
                FROM {local_jobboard_applicant_profile} p
@@ -428,6 +434,12 @@ class exporter {
      */
     protected function export_consents(): array {
         global $DB;
+
+        // Check if table exists.
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_consent')) {
+            return [];
+        }
 
         $consents = $DB->get_records_sql(
             "SELECT c.*, u.username, u.email, u.idnumber
@@ -451,12 +463,20 @@ class exporter {
     protected function export_audit_logs(int $limit = 10000): array {
         global $DB;
 
+        // Check if audit table exists.
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_audit')) {
+            return [];
+        }
+
         $audits = $DB->get_records_sql(
             "SELECT a.*, u.username, u.email
                FROM {local_jobboard_audit} a
                LEFT JOIN {user} u ON u.id = a.userid
-              ORDER BY a.timecreated DESC
-              LIMIT " . $limit
+              ORDER BY a.timecreated DESC",
+            [],
+            0,
+            $limit
         );
         foreach ($audits as &$audit) {
             unset($audit->id, $audit->userid);
