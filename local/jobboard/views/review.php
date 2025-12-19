@@ -42,6 +42,7 @@ $applicationid = optional_param('applicationid', 0, PARAM_INT);
 $documentid = optional_param('documentid', 0, PARAM_INT);
 $action = optional_param('action', '', PARAM_ALPHA);
 $vacancyid = optional_param('vacancyid', 0, PARAM_INT);
+$statusfilter = optional_param('status', '', PARAM_ALPHA);
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 20, PARAM_INT);
 
@@ -133,15 +134,29 @@ $renderer = $PAGE->get_renderer('local_jobboard');
 $params = [
     'vacancyid' => $vacancyid,
     'applicationid' => $applicationid,
+    'statusfilter' => $statusfilter,
     'page' => $page,
     'perpage' => $perpage,
 ];
 
 // If no application selected, show list of applications pending review.
 if (!$applicationid) {
-    // Build filter.
-    $where = "a.status IN ('submitted', 'under_review')";
+    // Build filter - show all applications that may need review or reference.
+    // - submitted/under_review: pending initial review
+    // - docs_rejected: needs re-review after document reupload
+    // - docs_validated: reviewed and approved (for reference)
+    // - rejected: rejected by reviewer (for reference)
+    // - withdrawn: withdrawn by applicant (for reference)
+    $validstatuses = ['submitted', 'under_review', 'docs_rejected', 'docs_validated', 'rejected', 'withdrawn'];
     $sqlparams = [];
+
+    // Apply status filter if provided.
+    if (!empty($statusfilter) && in_array($statusfilter, $validstatuses)) {
+        $where = "a.status = :statusfilter";
+        $sqlparams['statusfilter'] = $statusfilter;
+    } else {
+        $where = "a.status IN ('submitted', 'under_review', 'docs_rejected', 'docs_validated', 'rejected', 'withdrawn')";
+    }
 
     if ($vacancyid) {
         $where .= " AND a.vacancyid = :vacancyid";
@@ -224,8 +239,8 @@ if (!$applicationid) {
     }
     $documents = document::get_by_application($applicationid);
 
-    // Build navigation data.
-    $navwhere = "a.status IN ('submitted', 'under_review')";
+    // Build navigation data - include all reviewable statuses for navigation.
+    $navwhere = "a.status IN ('submitted', 'under_review', 'docs_rejected', 'docs_validated', 'rejected', 'withdrawn')";
     $navparams = [];
     if ($vacancyid) {
         $navwhere .= " AND a.vacancyid = :vacancyid";

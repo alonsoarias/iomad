@@ -723,6 +723,20 @@ trait review_renderer {
         ];
 
         // Filter form.
+        $statusfilter = $params['statusfilter'] ?? '';
+
+        // Status filter options.
+        $statusoptions = [
+            ['value' => '', 'label' => get_string('allstatuses', 'local_jobboard'), 'selected' => empty($statusfilter)],
+            ['value' => 'submitted', 'label' => get_string('status_submitted', 'local_jobboard'), 'selected' => ($statusfilter === 'submitted')],
+            ['value' => 'under_review', 'label' => get_string('status_under_review', 'local_jobboard'), 'selected' => ($statusfilter === 'under_review')],
+            ['value' => 'docs_rejected', 'label' => get_string('status_docs_rejected', 'local_jobboard'), 'selected' => ($statusfilter === 'docs_rejected')],
+            ['value' => 'docs_validated', 'label' => get_string('status_docs_validated', 'local_jobboard'), 'selected' => ($statusfilter === 'docs_validated')],
+            ['value' => 'rejected', 'label' => get_string('status_rejected', 'local_jobboard'), 'selected' => ($statusfilter === 'rejected')],
+            ['value' => 'withdrawn', 'label' => get_string('status_withdrawn', 'local_jobboard'), 'selected' => ($statusfilter === 'withdrawn')],
+        ];
+
+        // Vacancy filter options.
         $vacancies = $DB->get_records('local_jobboard_vacancy', ['status' => 'published'], 'code ASC', 'id, code, title');
         $vacancyoptions = [['value' => 0, 'label' => get_string('allvacancies', 'local_jobboard'), 'selected' => ($vacancyid == 0)]];
         foreach ($vacancies as $v) {
@@ -740,7 +754,15 @@ trait review_renderer {
             ],
             'fields' => [
                 [
+                    'name' => 'status',
+                    'label' => get_string('status', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $statusoptions,
+                ],
+                [
                     'name' => 'vacancyid',
+                    'label' => get_string('vacancy', 'local_jobboard'),
+                    'isselect' => true,
                     'options' => $vacancyoptions,
                 ],
             ],
@@ -752,6 +774,20 @@ trait review_renderer {
             $isurgent = !empty($app->closedate) && ($app->closedate - time()) <= 7 * 86400;
             $haspendingdocs = (int) ($app->pendingcount ?? 0) > 0;
 
+            // Status color for visual distinction.
+            $statuscolor = 'secondary';
+            if (in_array($app->status, ['docs_validated', 'selected'])) {
+                $statuscolor = 'success';
+            } else if (in_array($app->status, ['docs_rejected', 'rejected'])) {
+                $statuscolor = 'danger';
+            } else if ($app->status === 'under_review') {
+                $statuscolor = 'warning';
+            } else if ($app->status === 'submitted') {
+                $statuscolor = 'info';
+            } else if ($app->status === 'withdrawn') {
+                $statuscolor = 'dark';
+            }
+
             $appsdata[] = [
                 'id' => $app->id,
                 'applicantname' => fullname($app),
@@ -759,12 +795,15 @@ trait review_renderer {
                 'email' => $app->email,
                 'vacancycode' => format_string($app->vacancy_code ?? ''),
                 'vacancytitle' => format_string($app->vacancy_title ?? ''),
+                'status' => $app->status,
                 'statuslabel' => get_string('status_' . $app->status, 'local_jobboard'),
+                'statuscolor' => $statuscolor,
                 'doccount' => (int) ($app->doccount ?? 0),
                 'pendingcount' => (int) ($app->pendingcount ?? 0),
                 'datesubmitted' => userdate($app->timecreated, get_string('strftimedatetime', 'langconfig')),
                 'isurgent' => $isurgent,
                 'haspendingdocs' => $haspendingdocs,
+                'isactionable' => in_array($app->status, ['submitted', 'under_review', 'docs_rejected']),
                 'reviewurl' => (new moodle_url('/local/jobboard/index.php', [
                     'view' => 'review',
                     'applicationid' => $app->id,
@@ -789,6 +828,7 @@ trait review_renderer {
             $baseurl = new moodle_url('/local/jobboard/index.php', [
                 'view' => 'review',
                 'vacancyid' => $vacancyid,
+                'status' => $statusfilter,
             ]);
             $data['pagination'] = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
         }
