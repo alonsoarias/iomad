@@ -183,9 +183,11 @@ foreach ($documents as $doc) {
     // Handle text documents (they don't have physical files in Moodle file storage).
     if ($doc->mimetype === 'text/plain') {
         // For text documents, get content from application data.
+        // Text documents are stored under 'text_documents' key in applicationdata.
         $appdata = json_decode($application->applicationdata ?? '{}', true);
-        if (is_array($appdata) && isset($appdata[$doc->documenttype])) {
-            $textcontent = $appdata[$doc->documenttype];
+        $textdocuments = $appdata['text_documents'] ?? [];
+        if (is_array($textdocuments) && isset($textdocuments[$doc->documenttype])) {
+            $textcontent = $textdocuments[$doc->documenttype]['value'] ?? '';
             if (is_string($textcontent) && !empty(trim($textcontent))) {
                 // Use document type name for the title.
                 $typename = isset($doctypes[$doc->documenttype]) ?
@@ -381,9 +383,11 @@ function download_bulk_applications(array $applicationids) {
         foreach ($documents as $doc) {
             // Handle text documents.
             if ($doc->mimetype === 'text/plain') {
+                // Text documents are stored under 'text_documents' key in applicationdata.
                 $appdata = json_decode($application->applicationdata ?? '{}', true);
-                if (is_array($appdata) && isset($appdata[$doc->documenttype])) {
-                    $textcontent = $appdata[$doc->documenttype];
+                $textdocuments = $appdata['text_documents'] ?? [];
+                if (is_array($textdocuments) && isset($textdocuments[$doc->documenttype])) {
+                    $textcontent = $textdocuments[$doc->documenttype]['value'] ?? '';
                     if (is_string($textcontent) && !empty(trim($textcontent))) {
                         $typename = isset($doctypes[$doc->documenttype]) ?
                             $doctypes[$doc->documenttype]->name :
