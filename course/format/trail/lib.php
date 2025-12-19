@@ -569,6 +569,35 @@ class format_trail extends course_format {
     }
 
     /**
+     * Returns true if this course format is compatible with content components.
+     *
+     * This is required for Moodle 4.0+ reactive course editor functionality.
+     *
+     * @return bool
+     */
+    public function supports_components() {
+        return true;
+    }
+
+    /**
+     * Returns whether this course format allows the use of the course index.
+     *
+     * @return bool
+     */
+    public function uses_course_index() {
+        return true;
+    }
+
+    /**
+     * Returns whether this course format allows the activity indentation.
+     *
+     * @return bool
+     */
+    public function uses_indentation(): bool {
+        return true;
+    }
+
+    /**
      * Custom action after section has been moved in AJAX mode
      *
      * Used in course/rest.php
@@ -3005,6 +3034,7 @@ function format_trail_inplace_editable($itemtype, $itemid, $newvalue) {
 /**
  * Indicates this format uses sections.
  *
+ * @deprecated since Moodle 2.0 MDL-19077 - use format_trail::uses_sections() instead.
  * @return bool Returns true
  */
 function callback_trail_uses_sections() {
@@ -3012,9 +3042,9 @@ function callback_trail_uses_sections() {
 }
 
 /**
- * Used to display the course structure for a course where format=trail
+ * Used to display the course structure for a course where format=trail.
  *
- *
+ * @deprecated since Moodle 2.0 - use format_trail::extend_course_navigation() instead.
  * @param array $navigation
  * @param \stdClass $course
  * @param \stdClass $coursenode
@@ -3028,6 +3058,7 @@ function callback_trail_load_content(&$navigation, $course, $coursenode) {
  * The string that is used to describe a section of the course
  * e.g. Topic, Week...
  *
+ * @deprecated since Moodle 2.0 - use format_trail::get_section_name() instead.
  * @return string
  */
 function callback_trail_definition() {

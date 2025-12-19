@@ -272,7 +272,6 @@ class format_trail_renderer extends section_renderer {
         $o .= html_writer::start_tag('div', array('class' => 'summary'));
 
         $o .= $this->format_summary_text($section);
-        $o .= core_courseformat\output\local\content\section\summary::format_summary_text();
         $o .= html_writer::end_tag('div');
 
         $o .= $this->section_availability($section);
