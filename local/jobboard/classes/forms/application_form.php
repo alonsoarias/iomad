@@ -94,16 +94,16 @@ class application_form extends \moodleform {
         // Data treatment policy.
         $this->add_policy_section($mform);
 
-        // Consent checkbox.
+        // Consent checkbox (required for final submission).
         $mform->addElement(
             'advcheckbox',
             'consentaccepted',
-            get_string('consent', 'local_jobboard'),
+            get_string('consent', 'local_jobboard') . ' <span class="text-danger">*</span>',
             get_string('consentaccepttext', 'local_jobboard'),
-            ['class' => 'jb-consent-checkbox'],
+            ['class' => 'jb-consent-checkbox', 'data-required' => 'true'],
             [0, 1]
         );
-        $mform->addRule('consentaccepted', get_string('consentrequired', 'local_jobboard'), 'nonzero', null, 'server');
+        $mform->addRule('consentaccepted', get_string('consentrequired', 'local_jobboard'), 'nonzero', null, 'client');
 
         // Digital signature.
         $mform->addElement(
@@ -163,16 +163,16 @@ class application_form extends \moodleform {
         $declhtml .= '</div>';
         $mform->addElement('html', $declhtml);
 
-        // Declaration checkbox.
+        // Declaration checkbox (required for final submission).
         $mform->addElement(
             'advcheckbox',
             'declarationaccepted',
-            get_string('declaration', 'local_jobboard'),
+            get_string('declaration', 'local_jobboard') . ' <span class="text-danger">*</span>',
             get_string('declarationaccept', 'local_jobboard'),
-            ['class' => 'jb-declaration-checkbox'],
+            ['class' => 'jb-declaration-checkbox', 'data-required' => 'true'],
             [0, 1]
         );
-        $mform->addRule('declarationaccepted', get_string('declarationrequired', 'local_jobboard'), 'nonzero', null, 'server');
+        $mform->addRule('declarationaccepted', get_string('declarationrequired', 'local_jobboard'), 'nonzero', null, 'client');
 
         // ============================================================
         // SUBMIT BUTTONS
