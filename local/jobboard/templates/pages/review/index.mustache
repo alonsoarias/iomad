@@ -1,7 +1,7 @@
 {{!
     @template local_jobboard/pages/review/index
 
-    Document review page - Redesigned following apply.mustache pattern.
+    Document review page - Clean minimal design following apply.mustache pattern.
     Supports both queue mode (list of applications) and single application review mode.
 
     Context variables:
@@ -18,759 +18,869 @@
     * initialpreview - First document data for initial preview
     * hasinitialpreview - Boolean if initial preview available
     * pagination - Pagination HTML
-
-    Example context (json):
-    {
-        "pagetitle": "Review Documents",
-        "hasapplications": true
-    }
 }}
-<div class="jb-review-page" id="jobboard-review-page">
-    <div class="container-fluid px-0">
-        {{! ========== SINGLE APPLICATION REVIEW MODE ========== }}
-        {{#selectedapplication}}
-        <div class="row g-4">
-            {{! Main Content - Document Preview }}
-            <div class="col-lg-8">
-                {{! Page Header }}
-                <div class="jb-page-header mb-4">
-                    <nav aria-label="breadcrumb" class="mb-2">
-                        <ol class="breadcrumb small mb-0">
-                            <li class="breadcrumb-item">
-                                <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="{{backurl}}">{{#str}}reviewdocuments, local_jobboard{{/str}}</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">{{selectedapplication.applicantname}}</li>
-                        </ol>
-                    </nav>
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h1 class="h3 mb-1">{{#str}}reviewapplication, local_jobboard{{/str}}</h1>
-                            <p class="text-muted mb-0">
-                                <code class="badge bg-light text-dark me-2">{{selectedapplication.vacancycode}}</code>
-                                {{selectedapplication.vacancytitle}}
-                            </p>
-                        </div>
-                        {{#shownav}}
-                        <div class="btn-group btn-group-sm">
-                            {{#prevurl}}
-                            <a href="{{prevurl}}" class="btn btn-outline-secondary"><i class="fa fa-chevron-left"></i></a>
-                            {{/prevurl}}
-                            {{^prevurl}}
-                            <button class="btn btn-outline-secondary" disabled><i class="fa fa-chevron-left"></i></button>
-                            {{/prevurl}}
-                            <span class="btn btn-outline-secondary disabled">{{navposition}}/{{navtotal}}</span>
-                            {{#nexturl}}
-                            <a href="{{nexturl}}" class="btn btn-outline-secondary"><i class="fa fa-chevron-right"></i></a>
-                            {{/nexturl}}
-                            {{^nexturl}}
-                            <button class="btn btn-outline-secondary" disabled><i class="fa fa-chevron-right"></i></button>
-                            {{/nexturl}}
-                        </div>
-                        {{/shownav}}
-                    </div>
-                </div>
-
-                {{! Sequential Review Progress }}
-                {{#haspending}}
-                <div class="alert alert-info jb-alert-info d-flex align-items-center mb-4" role="alert">
-                    <i class="fa fa-list-check fa-lg me-3"></i>
-                    <div class="flex-grow-1">
-                        <strong>{{#str}}sequentialreview, local_jobboard{{/str}}</strong>
-                        <span class="d-block small">{{#str}}reviewingdocument, local_jobboard{{/str}} {{currentdocposition}} {{#str}}of, local_jobboard{{/str}} {{totaldocs}}</span>
-                    </div>
-                    <span class="badge bg-primary">{{currentdocposition}} / {{totaldocs}}</span>
-                </div>
-                {{/haspending}}
-
-                {{! All Reviewed Success }}
-                {{#allreviewed}}
-                <div class="alert alert-success jb-alert-success d-flex align-items-center mb-4" role="alert">
-                    <i class="fa fa-check-circle fa-lg me-3"></i>
-                    <div>
-                        <strong>{{#str}}alldocsreviewed, local_jobboard{{/str}}</strong>
-                        <span class="d-block small">{{#str}}readytosubmit, local_jobboard{{/str}}</span>
-                    </div>
-                </div>
-                {{/allreviewed}}
-
-                {{! Document Preview Card }}
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">
-                            <i class="fa fa-file-lines text-primary me-2"></i>
-                            <span data-region="preview-title">
-                                {{#hasinitialpreview}}{{initialpreview.filename}}{{/hasinitialpreview}}
-                                {{^hasinitialpreview}}{{#str}}selectdocument, local_jobboard{{/str}}{{/hasinitialpreview}}
-                            </span>
-                            {{#hasinitialpreview}}
-                            <small class="d-block text-muted" data-region="preview-subtitle">{{initialpreview.typename}}</small>
-                            {{/hasinitialpreview}}
-                        </h5>
-                        <div class="btn-group btn-group-sm">
-                            {{#hasinitialpreview}}
-                            <a href="{{initialpreview.downloadurl}}" class="btn btn-outline-secondary" target="_blank" data-region="download-btn">
-                                <i class="fa fa-download me-1"></i>{{#str}}download{{/str}}
-                            </a>
-                            <button type="button" class="btn btn-outline-secondary" onclick="document.querySelector('[data-region=preview-frame]').classList.toggle('jb-preview-fullscreen')" title="{{#str}}fullscreen, local_jobboard{{/str}}">
-                                <i class="fa fa-expand"></i>
-                            </button>
-                            {{/hasinitialpreview}}
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="jb-preview-content bg-light position-relative" data-region="preview-frame" style="min-height: 500px;">
-                            {{#hasinitialpreview}}
-                            {{#initialpreview.haspreviewurl}}
-                                {{#initialpreview.ispdf}}
-                                <iframe src="{{initialpreview.previewurl}}" class="w-100 h-100 border-0" style="min-height: 500px;"></iframe>
-                                {{/initialpreview.ispdf}}
-                                {{#initialpreview.isimage}}
-                                <div class="d-flex align-items-center justify-content-center h-100 p-4" style="min-height: 500px;">
-                                    <img src="{{initialpreview.previewurl}}" alt="{{initialpreview.filename}}" class="img-fluid shadow rounded" style="max-height: 480px;">
-                                </div>
-                                {{/initialpreview.isimage}}
-                            {{/initialpreview.haspreviewurl}}
-                            {{#initialpreview.istext}}
-                            {{#initialpreview.hastextcontent}}
-                            <div class="p-4" style="min-height: 500px; overflow-y: auto;">
-                                <div class="card">
-                                    <div class="card-header bg-info text-white">
-                                        <i class="fa fa-file-alt me-2"></i>{{initialpreview.typename}}
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="text-content" style="white-space: pre-wrap;">{{{initialpreview.textcontent}}}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            {{/initialpreview.hastextcontent}}
-                            {{^initialpreview.hastextcontent}}
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 500px;">
-                                <i class="fa fa-file-circle-xmark fa-4x mb-3 text-warning"></i>
-                                <h5 class="mb-2">{{#str}}nodocumentcontent, local_jobboard{{/str}}</h5>
-                                <p class="text-center small">{{#str}}nodocumentcontent_desc, local_jobboard{{/str}}</p>
-                            </div>
-                            {{/initialpreview.hastextcontent}}
-                            {{/initialpreview.istext}}
-                            {{^initialpreview.canpreview}}{{^initialpreview.istext}}
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 500px;">
-                                <i class="fa fa-file fa-4x mb-3"></i>
-                                <p class="mb-3">{{#str}}previewnotavailable, local_jobboard{{/str}}</p>
-                                {{#initialpreview.downloadurl}}
-                                <a href="{{initialpreview.downloadurl}}" class="btn btn-primary jb-btn-primary btn-sm" target="_blank">
-                                    <i class="fa fa-download me-2"></i>{{#str}}download{{/str}}
-                                </a>
-                                {{/initialpreview.downloadurl}}
-                            </div>
-                            {{/initialpreview.istext}}{{/initialpreview.canpreview}}
-                            {{^initialpreview.haspreviewurl}}{{^initialpreview.istext}}{{#initialpreview.canpreview}}
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 500px;">
-                                <i class="fa fa-file-circle-xmark fa-4x mb-3 text-warning"></i>
-                                <h5 class="mb-2">{{#str}}nodocumentfile, local_jobboard{{/str}}</h5>
-                                <p class="text-center small">{{#str}}nodocumentfile_desc, local_jobboard{{/str}}</p>
-                            </div>
-                            {{/initialpreview.canpreview}}{{/initialpreview.istext}}{{/initialpreview.haspreviewurl}}
-                            {{/hasinitialpreview}}
-                            {{^hasinitialpreview}}
-                            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 500px;">
-                                <i class="fa fa-file-circle-question fa-4x mb-3"></i>
-                                <p>{{#str}}nodocumentstoreview, local_jobboard{{/str}}</p>
-                            </div>
-                            {{/hasinitialpreview}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{! Sidebar }}
-            <div class="col-lg-4">
-                <div class="jb-sidebar sticky-top" style="top: 80px;">
-                    {{! Applicant Info Card }}
-                    <div class="card shadow-sm mb-4 border-primary">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-user text-primary me-2"></i>
-                                {{#str}}applicantinfo, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="mb-2">
-                                <a href="{{selectedapplication.profileurl}}" class="text-decoration-none" target="_blank" title="{{#str}}viewprofile, local_jobboard{{/str}}">
-                                    {{selectedapplication.applicantname}}
-                                    <i class="fa fa-external-link-alt fa-xs ms-1 text-muted"></i>
-                                </a>
-                            </h6>
-                            <p class="small text-muted mb-1">
-                                <i class="fa fa-envelope me-2"></i>
-                                {{selectedapplication.email}}
-                            </p>
-                            <p class="small text-muted mb-2">
-                                <i class="fa fa-briefcase me-2"></i>{{selectedapplication.vacancytitle}}
-                            </p>
-                            <span class="badge bg-{{selectedapplication.statuscolor}}">{{selectedapplication.statuslabel}}</span>
-                        </div>
-                    </div>
-
-                    {{! Documents List Card }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0">
-                                <i class="fa fa-folder-open text-info me-2"></i>
-                                {{#str}}documents, local_jobboard{{/str}}
-                            </h6>
-                            {{#canvalidateall}}
-                            <a href="{{validateallurl}}" class="btn btn-success jb-btn-success btn-sm">
-                                <i class="fa fa-check-double me-1"></i>{{#str}}validateall, local_jobboard{{/str}}
-                            </a>
-                            {{/canvalidateall}}
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="list-group list-group-flush jb-documents-list" data-region="documents-list" style="max-height: 350px; overflow-y: auto;">
-                                {{#documents}}
-                                <div class="list-group-item jb-doc-item py-2 {{#iscurrent}}active bg-primary-subtle{{/iscurrent}} {{#islocked}}disabled opacity-50{{/islocked}}"
-                                     data-document-id="{{id}}"
-                                     data-preview-url="{{previewurl}}"
-                                     data-mimetype="{{mimetype}}"
-                                     data-is-pdf="{{ispdf}}"
-                                     data-is-image="{{isimage}}"
-                                     data-is-text="{{istext}}"
-                                     data-can-preview="{{canpreview}}"
-                                     data-typename="{{typename}}"
-                                     data-filename="{{filename}}"
-                                     data-download-url="{{downloadurl}}"
-                                     {{#istext}}data-text-content-encoded="{{textcontentencoded}}"{{/istext}}
-                                     {{^islocked}}onclick="jobboardPreviewDocument(this)" style="cursor: pointer;"{{/islocked}}
-                                     {{#islocked}}style="cursor: not-allowed;"{{/islocked}}>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex align-items-center flex-grow-1 min-width-0 me-2">
-                                            <span class="badge rounded-pill bg-{{statuscolor}} me-2 flex-shrink-0">{{docindex}}</span>
-                                            <i class="fa fa-{{statusicon}} text-{{statuscolor}} me-2 flex-shrink-0"></i>
-                                            <div class="min-width-0">
-                                                <div class="fw-medium text-truncate small">{{typename}}</div>
-                                                <small class="text-muted text-truncate d-block" style="font-size: 0.7rem;">{{filename}}</small>
-                                            </div>
-                                        </div>
-                                        <span class="badge bg-{{statuscolor}} small flex-shrink-0">{{statuslabel}}</span>
-                                    </div>
-
-                                    {{#rejectreason}}
-                                    <div class="small text-danger mt-1"><i class="fa fa-circle-exclamation me-1"></i>{{rejectreason}}</div>
-                                    {{/rejectreason}}
-
-                                    {{#iscurrent}}
-                                    <div class="mt-2 pt-2 border-top jb-doc-actions" data-document-id="{{id}}" data-application-id="{{applicationid}}">
-                                        <label for="doc_observation_{{id}}" class="form-label small fw-bold mb-1">
-                                            {{#str}}documentobservation, local_jobboard{{/str}}
-                                            <span class="text-danger" title="{{#str}}required_for_rejection, local_jobboard{{/str}}">*</span>
-                                        </label>
-                                        <textarea name="doc_observation_{{id}}" id="doc_observation_{{id}}"
-                                                  class="form-control form-control-sm jb-doc-observation mb-2"
-                                                  rows="2" data-document-id="{{id}}" data-application-id="{{applicationid}}"
-                                                  placeholder="{{#str}}documentobservation_placeholder, local_jobboard{{/str}}">{{{observation}}}</textarea>
-                                        <div class="d-flex gap-2">
-                                            {{! Approve: Pure AJAX button }}
-                                            <button type="button" class="btn btn-success jb-btn-success btn-sm flex-grow-1 jb-approve-btn"
-                                               data-document-id="{{id}}"
-                                               data-application-id="{{applicationid}}"
-                                               title="{{#str}}approve, local_jobboard{{/str}}">
-                                                <i class="fa fa-check me-1"></i>{{#str}}approve, local_jobboard{{/str}}
-                                            </button>
-                                            {{! Reject: Pure AJAX button }}
-                                            <button type="button" class="btn btn-danger jb-btn-danger btn-sm flex-grow-1 jb-reject-btn"
-                                                    data-document-id="{{id}}"
-                                                    data-application-id="{{applicationid}}"
-                                                    title="{{#str}}reject, local_jobboard{{/str}}">
-                                                <i class="fa fa-xmark me-1"></i>{{#str}}reject, local_jobboard{{/str}}
-                                            </button>
-                                        </div>
-                                        <small class="text-muted d-block mt-1">
-                                            <i class="fa fa-info-circle me-1"></i>{{#str}}observation_required_for_rejection, local_jobboard{{/str}}
-                                        </small>
-                                    </div>
-                                    {{/iscurrent}}
-
-                                    {{#isreviewed}}{{#observation}}
-                                    <div class="mt-1 small text-muted"><i class="fa fa-comment me-1"></i>{{{observation}}}</div>
-                                    {{/observation}}{{/isreviewed}}
-                                </div>
-                                {{/documents}}
-                            </div>
-                        </div>
-                        <div class="card-footer bg-light py-2 d-flex justify-content-between align-items-center">
-                            <a href="{{downloadzipurl}}" class="btn btn-sm btn-outline-secondary" title="{{#str}}downloadallzip, local_jobboard{{/str}}">
-                                <i class="fa fa-file-zipper me-1"></i>{{#str}}downloadzip, local_jobboard{{/str}}
-                            </a>
-                            <button type="button" class="btn btn-sm btn-primary jb-btn-primary" id="saveAndSendBtn">
-                                <i class="fa fa-paper-plane me-1"></i>{{#str}}saveandsend, local_jobboard{{/str}}
-                            </button>
-                        </div>
-                    </div>
-
-                    {{! Review Progress Card }}
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-chart-pie text-success me-2"></i>
-                                {{#str}}reviewprogress, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-around text-center mb-3">
-                                <div>
-                                    <div class="h5 mb-0 text-success">{{approvedcount}}</div>
-                                    <small class="text-muted">{{#str}}docstatus:approved, local_jobboard{{/str}}</small>
-                                </div>
-                                <div>
-                                    <div class="h5 mb-0 text-danger">{{rejectedcount}}</div>
-                                    <small class="text-muted">{{#str}}docstatus:rejected, local_jobboard{{/str}}</small>
-                                </div>
-                                <div>
-                                    <div class="h5 mb-0 text-warning">{{pendingcount}}</div>
-                                    <small class="text-muted">{{#str}}docstatus:pending, local_jobboard{{/str}}</small>
-                                </div>
-                            </div>
-                            <div class="progress mb-3" style="height: 6px;">
-                                <div class="progress-bar bg-success" style="width: {{approvedpercent}}%;"></div>
-                                <div class="progress-bar bg-danger" style="width: {{rejectedpercent}}%;"></div>
-                            </div>
-
-                            {{#allreviewed}}
-                            <form method="post" action="{{submitreviewurl}}">
-                                <input type="hidden" name="sesskey" value="{{sesskey}}">
-                                <input type="hidden" name="action" value="markreviewed">
-                                <input type="hidden" name="applicationid" value="{{selectedapplication.id}}">
-                                <input type="hidden" name="view" value="review">
-                                <div class="mb-2">
-                                    <textarea name="observations" id="observations" class="form-control form-control-sm" rows="2" placeholder="{{#str}}reviewobservations_placeholder, local_jobboard{{/str}}"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-{{completebtncolor}} btn-sm w-100">
-                                    <i class="fa fa-clipboard-check me-2"></i>{{#str}}submitreview, local_jobboard{{/str}}
-                                </button>
-                            </form>
-                            {{/allreviewed}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{! Navigation Footer }}
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center py-3 border-top">
-                    <a href="{{backurl}}" class="btn btn-outline-secondary">
-                        <i class="fa fa-arrow-left me-2"></i>
-                        {{#str}}back{{/str}}
-                    </a>
-                    <a href="{{myreviewsurl}}" class="btn btn-link text-muted">
-                        {{#str}}myreviews, local_jobboard{{/str}}
-                        <i class="fa fa-arrow-right ms-2"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{! Rejection is now handled inline via observation field }}
-        {{/selectedapplication}}
-
-        {{! ========== APPLICATIONS QUEUE MODE ========== }}
-        {{^selectedapplication}}
-        {{! Page Header with Breadcrumb }}
-        <div class="jb-page-header mb-4">
-            <nav aria-label="breadcrumb" class="mb-2">
-                <ol class="breadcrumb small mb-0">
-                    <li class="breadcrumb-item">
-                        <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">{{#str}}reviewdocuments, local_jobboard{{/str}}</li>
-                </ol>
-            </nav>
-            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
-                <div>
-                    <h1 class="h3 mb-1">{{#str}}reviewdocuments, local_jobboard{{/str}}</h1>
-                    <p class="text-muted mb-0">{{#str}}reviewqueue_desc, local_jobboard{{/str}}</p>
-                </div>
-                {{! Quick Actions - Desktop }}
-                <div class="btn-group d-none d-md-flex" role="group" aria-label="{{#str}}quickactions, local_jobboard{{/str}}">
-                    <a href="{{myreviewsurl}}" class="btn btn-outline-primary jb-btn-outline-primary btn-sm">
-                        <i class="fa fa-clipboard-list me-1"></i>
-                        {{#str}}myreviews, local_jobboard{{/str}}
-                    </a>
-                    <a href="{{dashboardurl}}" class="btn btn-outline-secondary btn-sm">
-                        <i class="fa fa-home me-1"></i>
-                        {{#str}}dashboard, local_jobboard{{/str}}
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{! Stats Bar - Compact Horizontal }}
-        {{#stats.0}}
-        <div class="card shadow-sm mb-4 border-0 bg-light">
-            <div class="card-body py-3">
-                <div class="d-flex flex-wrap align-items-center justify-content-start gap-3 gap-md-4">
-                    <span class="text-muted small fw-medium">
-                        <i class="fa fa-chart-pie me-1"></i>
-                        {{#str}}statistics, local_jobboard{{/str}}:
-                    </span>
-                    {{#stats}}
-                    <div class="d-flex align-items-center gap-2 jb-stat-item">
-                        <span class="badge bg-{{color}} rounded-pill px-3 py-2">
-                            <span class="h6 mb-0 me-1">{{value}}</span>
-                        </span>
-                        <small class="text-muted">{{label}}</small>
-                    </div>
-                    {{/stats}}
-                </div>
-            </div>
-        </div>
-        {{/stats.0}}
-
-        {{! Filter Bar - Public Page Style }}
-        {{#filterform}}
-        <div class="card shadow-sm mb-4 jb-filter-card">
-            <div class="card-header bg-white py-2 d-flex align-items-center justify-content-between">
-                <h6 class="mb-0">
-                    <i class="fa fa-filter text-primary me-2"></i>
-                    {{#str}}filter, local_jobboard{{/str}}
-                </h6>
-                {{#hasfilters}}
-                <a href="{{clearfiltersurl}}" class="btn btn-sm btn-outline-secondary">
-                    <i class="fa fa-times me-1"></i>
-                    {{#str}}clearfilters, local_jobboard{{/str}}
-                </a>
-                {{/hasfilters}}
-            </div>
-            <div class="card-body py-3">
-                <form method="get" action="{{action}}" role="search" aria-label="{{#str}}filter, local_jobboard{{/str}}" class="jb-filter-form" id="jb-review-filter-form">
-                    {{#hiddenfields}}
-                    <input type="hidden" name="{{name}}" value="{{value}}">
-                    {{/hiddenfields}}
-                    <div class="row g-3">
-                        {{! 1. Search Filter - Most commonly used }}
-                        <div class="col-12 col-md-6 col-lg-3">
-                            <label for="filter-search" class="form-label small text-muted mb-1">
-                                <i class="fa fa-search me-1"></i>{{#str}}search{{/str}}
-                            </label>
-                            <input type="text" name="search" id="filter-search"
-                                   class="form-control form-control-sm"
-                                   value="{{searchvalue}}"
-                                   placeholder="{{#str}}filter_search_placeholder, local_jobboard{{/str}}"
-                                   autocomplete="off">
-                        </div>
-
-                        {{! 2. Status Filter - Key for reviewers }}
-                        <div class="col-6 col-md-3 col-lg-2">
-                            <label for="filter-status" class="form-label small text-muted mb-1">
-                                <i class="fa fa-circle-info me-1"></i>{{#str}}status, local_jobboard{{/str}}
-                            </label>
-                            <select name="status" id="filter-status" class="form-select form-select-sm">
-                                {{#statusoptions}}
-                                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                                {{/statusoptions}}
-                            </select>
-                        </div>
-
-                        {{! 3. Code Filter - Vacancy code }}
-                        <div class="col-6 col-md-3 col-lg-2">
-                            <label for="filter-code" class="form-label small text-muted mb-1">
-                                <i class="fa fa-hashtag me-1"></i>{{#str}}code, local_jobboard{{/str}}
-                            </label>
-                            <input type="text" name="code" id="filter-code"
-                                   class="form-control form-control-sm"
-                                   value="{{codevalue}}"
-                                   placeholder="{{#str}}filter_code_placeholder, local_jobboard{{/str}}"
-                                   autocomplete="off">
-                        </div>
-
-                        {{! 4. Contract Type Filter }}
-                        {{#showcontractfilter}}
-                        <div class="col-6 col-md-3 col-lg-2">
-                            <label for="filter-contracttype" class="form-label small text-muted mb-1">
-                                <i class="fa fa-file-contract me-1"></i>{{#str}}contracttype, local_jobboard{{/str}}
-                            </label>
-                            <select name="contracttype" id="filter-contracttype" class="form-select form-select-sm">
-                                <option value="">{{#str}}allcontracttypes, local_jobboard{{/str}}</option>
-                                {{#contractoptions}}
-                                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                                {{/contractoptions}}
-                            </select>
-                        </div>
-                        {{/showcontractfilter}}
-
-                        {{! 5. Department Filter }}
-                        {{#showdepartmentfilter}}
-                        <div class="col-6 col-md-3 col-lg-2">
-                            <label for="filter-department" class="form-label small text-muted mb-1">
-                                <i class="fa fa-building me-1"></i>{{#str}}department, local_jobboard{{/str}}
-                            </label>
-                            <select name="department" id="filter-department" class="form-select form-select-sm">
-                                <option value="">{{#str}}alldepartments, local_jobboard{{/str}}</option>
-                                {{#departmentoptions}}
-                                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                                {{/departmentoptions}}
-                            </select>
-                        </div>
-                        {{/showdepartmentfilter}}
-
-                        {{! 6. Location Filter }}
-                        {{#showlocationfilter}}
-                        <div class="col-6 col-md-3 col-lg-2">
-                            <label for="filter-location" class="form-label small text-muted mb-1">
-                                <i class="fa fa-location-dot me-1"></i>{{#str}}location, local_jobboard{{/str}}
-                            </label>
-                            <select name="location" id="filter-location" class="form-select form-select-sm">
-                                <option value="">{{#str}}alllocations, local_jobboard{{/str}}</option>
-                                {{#locationoptions}}
-                                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                                {{/locationoptions}}
-                            </select>
-                        </div>
-                        {{/showlocationfilter}}
-
-                        {{! 7. Date From Filter }}
-                        <div class="col-6 col-md-3 col-lg-2">
-                            <label for="filter-datefrom" class="form-label small text-muted mb-1">
-                                <i class="fa fa-calendar me-1"></i>{{#str}}datefrom, local_jobboard{{/str}}
-                            </label>
-                            <input type="date" name="datefrom" id="filter-datefrom"
-                                   class="form-control form-control-sm"
-                                   value="{{datefromvalue}}">
-                        </div>
-
-                        {{! 8. Date To Filter }}
-                        <div class="col-6 col-md-3 col-lg-2">
-                            <label for="filter-dateto" class="form-label small text-muted mb-1">
-                                <i class="fa fa-calendar-check me-1"></i>{{#str}}dateto, local_jobboard{{/str}}
-                            </label>
-                            <input type="date" name="dateto" id="filter-dateto"
-                                   class="form-control form-control-sm"
-                                   value="{{datetovalue}}">
-                        </div>
-
-                        {{! 9. Per Page Selector }}
-                        <div class="col-6 col-md-3 col-lg-1">
-                            <label for="filter-perpage" class="form-label small text-muted mb-1">
-                                <i class="fa fa-list-ol me-1"></i>{{#str}}perpage, local_jobboard{{/str}}
-                            </label>
-                            <select name="perpage" id="filter-perpage" class="form-select form-select-sm">
-                                {{#perpageoptions}}
-                                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                                {{/perpageoptions}}
-                            </select>
-                        </div>
-
-                        {{! Filter Button }}
-                        <div class="col-6 col-md-auto d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary btn-sm w-100">
-                                <i class="fa fa-filter me-1"></i>
-                                {{#str}}filter, local_jobboard{{/str}}
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        {{/filterform}}
-
-        {{! Bulk Actions Bar (hidden by default, shown when items selected) }}
-        <div class="card shadow-sm mb-4 d-none" id="jb-bulk-actions-bar">
-            <div class="card-body py-2">
-                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-primary rounded-pill fs-6" id="jb-selected-count">0</span>
-                        <span class="text-muted">{{#str}}applicationsselected, local_jobboard{{/str}}</span>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-primary btn-sm" id="jb-download-selected-btn" data-url="{{bulkdownloadurl}}">
-                            <i class="fa fa-file-zipper me-1"></i>
-                            {{#str}}downloadselected, local_jobboard{{/str}}
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" id="jb-clear-selection-btn">
-                            <i class="fa fa-times me-1"></i>
-                            {{#str}}clearselection, local_jobboard{{/str}}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{! Applications Table - Full Width }}
-        {{#hasapplications}}
-        <div class="card shadow-sm mb-4 jb-table-card">
-            <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
-                <h5 class="mb-0">
-                    <i class="fa fa-list text-primary me-2"></i>
-                    {{#str}}pendingreviews, local_jobboard{{/str}}
-                </h5>
-                <span class="badge bg-primary rounded-pill fs-6">{{applicationcount}} {{#str}}total{{/str}}</span>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 jb-table" role="grid" aria-label="{{#str}}pendingreviews, local_jobboard{{/str}}" id="jb-applications-table">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col" class="ps-3 text-center" style="width: 50px;">
-                                    <div class="form-check mb-0">
-                                        <input class="form-check-input" type="checkbox" id="jb-select-all" aria-label="{{#str}}selectall, local_jobboard{{/str}}">
-                                    </div>
-                                </th>
-                                <th scope="col" style="min-width: 200px;">{{#str}}applicant, local_jobboard{{/str}}</th>
-                                <th scope="col" style="min-width: 200px;">{{#str}}vacancy, local_jobboard{{/str}}</th>
-                                <th scope="col" class="text-center" style="width: 130px;">{{#str}}status, local_jobboard{{/str}}</th>
-                                <th scope="col" class="text-center" style="width: 100px;">{{#str}}documents, local_jobboard{{/str}}</th>
-                                <th scope="col" class="text-center" style="width: 100px;">{{#str}}date, local_jobboard{{/str}}</th>
-                                <th scope="col" class="text-end pe-3" style="width: 140px;">{{#str}}actions, local_jobboard{{/str}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#applications}}
-                            <tr class="{{#isurgent}}table-danger{{/isurgent}}" {{#isurgent}}aria-label="{{#str}}urgent, local_jobboard{{/str}}"{{/isurgent}} data-application-id="{{id}}" data-applicant-name="{{applicantname}}">
-                                <td class="ps-3 text-center">
-                                    <div class="form-check mb-0">
-                                        <input class="form-check-input jb-application-checkbox" type="checkbox" value="{{id}}" aria-label="{{#str}}select, local_jobboard{{/str}} {{applicantname}}">
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="avatar-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width: 40px; height: 40px;">
-                                            <i class="fa fa-user"></i>
-                                        </div>
-                                        <div class="min-width-0">
-                                            <div class="fw-semibold text-truncate">
-                                                <a href="{{profileurl}}" class="text-decoration-none text-dark" target="_blank" title="{{#str}}viewprofile, local_jobboard{{/str}}">
-                                                    {{applicantname}}
-                                                </a>
-                                                {{#isurgent}}
-                                                <span class="badge bg-danger ms-1" title="{{#str}}urgent, local_jobboard{{/str}}">
-                                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                                                    <span class="visually-hidden">{{#str}}urgent, local_jobboard{{/str}}</span>
-                                                </span>
-                                                {{/isurgent}}
-                                            </div>
-                                            <span class="small text-muted text-truncate d-block" style="max-width: 180px;">{{email}}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex flex-column min-width-0">
-                                        <code class="badge bg-light text-dark border mb-1 align-self-start" style="font-size: 0.7rem;">{{vacancycode}}</code>
-                                        <span class="small text-muted jb-text-truncate-2" title="{{vacancytitle}}">{{vacancytitle}}</span>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-{{statuscolor}}">{{statuslabel}}</span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex flex-column align-items-center gap-1">
-                                        <span class="badge bg-secondary rounded-pill" title="{{#str}}totaldocuments, local_jobboard{{/str}}">
-                                            <i class="fa fa-file me-1" aria-hidden="true"></i>{{doccount}}
-                                        </span>
-                                        {{#pendingcount}}
-                                        <span class="badge bg-warning text-dark rounded-pill" title="{{#str}}pendingdocuments, local_jobboard{{/str}}">
-                                            <i class="fa fa-clock me-1" aria-hidden="true"></i>{{pendingcount}}
-                                        </span>
-                                        {{/pendingcount}}
-                                        {{^pendingcount}}
-                                        <span class="badge bg-success rounded-pill" title="{{#str}}allreviewed, local_jobboard{{/str}}">
-                                            <i class="fa fa-check" aria-hidden="true"></i>
-                                        </span>
-                                        {{/pendingcount}}
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <span class="small text-muted" title="{{#str}}datesubmitted, local_jobboard{{/str}}">
-                                        <i class="fa fa-calendar me-1 text-muted d-none d-lg-inline" aria-hidden="true"></i>{{datesubmitted}}
-                                    </span>
-                                </td>
-                                <td class="text-end pe-3">
-                                    <div class="btn-group" role="group" aria-label="{{#str}}actions, local_jobboard{{/str}}">
-                                        <a href="{{reviewurl}}" class="btn btn-primary btn-sm jb-btn-primary"
-                                           title="{{#str}}review, local_jobboard{{/str}}"
-                                           aria-label="{{#str}}review, local_jobboard{{/str}} - {{applicantname}}">
-                                            <i class="fa fa-magnifying-glass me-1" aria-hidden="true"></i>
-                                            <span class="d-none d-lg-inline">{{#str}}review, local_jobboard{{/str}}</span>
-                                        </a>
-                                        <a href="{{downloadzipurl}}" class="btn btn-outline-info btn-sm"
-                                           title="{{#str}}downloadallzip, local_jobboard{{/str}}"
-                                           aria-label="{{#str}}downloadallzip, local_jobboard{{/str}} - {{applicantname}}">
-                                            <i class="fa fa-file-zipper" aria-hidden="true"></i>
-                                        </a>
-                                        <a href="{{viewurl}}" class="btn btn-outline-secondary btn-sm"
-                                           title="{{#str}}viewapplication, local_jobboard{{/str}}"
-                                           aria-label="{{#str}}viewapplication, local_jobboard{{/str}} - {{applicantname}}">
-                                            <i class="fa fa-eye" aria-hidden="true"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {{/applications}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        {{! Pagination }}
-        {{#pagination}}
-        <nav class="mt-4" aria-label="{{#str}}pagination, local_jobboard{{/str}}">{{{pagination}}}</nav>
-        {{/pagination}}
-        {{/hasapplications}}
-
-        {{! Empty State }}
-        {{^hasapplications}}
-        <div class="card shadow-sm">
-            <div class="card-body text-center py-5">
-                <div class="jb-empty-state">
-                    <i class="fa fa-circle-check jb-empty-state-icon text-success"></i>
-                    <h5 class="jb-empty-state-title">{{#str}}nodocumentstoreview, local_jobboard{{/str}}</h5>
-                    <p class="text-muted mb-4">{{#str}}allcaughtup, local_jobboard{{/str}}</p>
-                    <div class="d-flex justify-content-center gap-2">
-                        <a href="{{myreviewsurl}}" class="btn btn-outline-primary jb-btn-outline-primary btn-sm">
-                            <i class="fa fa-clipboard-list me-1"></i>
-                            {{#str}}myreviews, local_jobboard{{/str}}
-                        </a>
-                        <a href="{{dashboardurl}}" class="btn btn-outline-secondary btn-sm">
-                            <i class="fa fa-home me-1"></i>
-                            {{#str}}dashboard, local_jobboard{{/str}}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{/hasapplications}}
-
-        {{! Quick Actions - Mobile Only }}
-        <div class="card shadow-sm mt-4 d-md-none">
-            <div class="card-body py-3">
-                <div class="d-flex gap-2">
-                    <a href="{{myreviewsurl}}" class="btn btn-outline-primary jb-btn-outline-primary btn-sm flex-fill">
-                        <i class="fa fa-clipboard-list me-1"></i>
-                        {{#str}}myreviews, local_jobboard{{/str}}
-                    </a>
-                    <a href="{{dashboardurl}}" class="btn btn-outline-secondary btn-sm flex-fill">
-                        <i class="fa fa-home me-1"></i>
-                        {{#str}}dashboard, local_jobboard{{/str}}
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{! Navigation Footer }}
-        <div class="d-flex justify-content-between align-items-center py-3 mt-4 border-top">
-            <a href="{{dashboardurl}}" class="btn btn-outline-secondary btn-sm">
-                <i class="fa fa-arrow-left me-1"></i>
-                <span class="d-none d-sm-inline">{{#str}}dashboard, local_jobboard{{/str}}</span>
+<div class="jb-review" id="jobboard-review-page">
+    {{! ========== SINGLE APPLICATION REVIEW MODE ========== }}
+    {{#selectedapplication}}
+    {{! Header }}
+    <div class="jb-review-header">
+        <div class="jb-review-header__nav">
+            <a href="{{backurl}}" class="jb-review-header__back">
+                <i class="fa fa-arrow-left"></i>
+                {{#str}}reviewdocuments, local_jobboard{{/str}}
             </a>
-            <a href="{{myreviewsurl}}" class="btn btn-link text-muted btn-sm">
-                {{#str}}myreviews, local_jobboard{{/str}}
-                <i class="fa fa-arrow-right ms-1"></i>
-            </a>
+            {{#shownav}}
+            <div class="jb-review-header__pager">
+                {{#prevurl}}<a href="{{prevurl}}" class="jb-pager-btn"><i class="fa fa-chevron-left"></i></a>{{/prevurl}}
+                {{^prevurl}}<span class="jb-pager-btn jb-pager-btn--disabled"><i class="fa fa-chevron-left"></i></span>{{/prevurl}}
+                <span class="jb-pager-count">{{navposition}}/{{navtotal}}</span>
+                {{#nexturl}}<a href="{{nexturl}}" class="jb-pager-btn"><i class="fa fa-chevron-right"></i></a>{{/nexturl}}
+                {{^nexturl}}<span class="jb-pager-btn jb-pager-btn--disabled"><i class="fa fa-chevron-right"></i></span>{{/nexturl}}
+            </div>
+            {{/shownav}}
         </div>
-        {{/selectedapplication}}
+        <h1 class="jb-review-header__title">{{#str}}reviewapplication, local_jobboard{{/str}}</h1>
+        <p class="jb-review-header__subtitle">
+            <span class="jb-code">{{selectedapplication.vacancycode}}</span>
+            {{selectedapplication.vacancytitle}}
+        </p>
     </div>
+
+    {{! Alerts }}
+    {{#haspending}}
+    <div class="jb-alert jb-alert--info">
+        <i class="fa fa-list-check"></i>
+        <span>{{#str}}sequentialreview, local_jobboard{{/str}}: {{currentdocposition}}/{{totaldocs}}</span>
+    </div>
+    {{/haspending}}
+
+    {{#allreviewed}}
+    <div class="jb-alert jb-alert--success">
+        <i class="fa fa-check-circle"></i>
+        <span>{{#str}}alldocsreviewed, local_jobboard{{/str}}</span>
+    </div>
+    {{/allreviewed}}
+
+    {{! Content Layout }}
+    <div class="jb-review-content">
+        {{! Document Preview }}
+        <div class="jb-review-main">
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <span>
+                        <i class="fa fa-file-lines"></i>
+                        <span data-region="preview-title">
+                            {{#hasinitialpreview}}{{initialpreview.filename}}{{/hasinitialpreview}}
+                            {{^hasinitialpreview}}{{#str}}selectdocument, local_jobboard{{/str}}{{/hasinitialpreview}}
+                        </span>
+                    </span>
+                    {{#hasinitialpreview}}
+                    <div class="jb-header-actions">
+                        <a href="{{initialpreview.downloadurl}}" class="jb-btn-icon" target="_blank" data-region="download-btn" title="{{#str}}download{{/str}}">
+                            <i class="fa fa-download"></i>
+                        </a>
+                        <button type="button" class="jb-btn-icon" onclick="document.querySelector('[data-region=preview-frame]').classList.toggle('jb-preview-fullscreen')" title="{{#str}}fullscreen, local_jobboard{{/str}}">
+                            <i class="fa fa-expand"></i>
+                        </button>
+                    </div>
+                    {{/hasinitialpreview}}
+                </div>
+                <div class="jb-preview" data-region="preview-frame">
+                    {{#hasinitialpreview}}
+                        {{#initialpreview.haspreviewurl}}
+                            {{#initialpreview.ispdf}}
+                            <iframe src="{{initialpreview.previewurl}}" class="jb-preview__iframe"></iframe>
+                            {{/initialpreview.ispdf}}
+                            {{#initialpreview.isimage}}
+                            <div class="jb-preview__image">
+                                <img src="{{initialpreview.previewurl}}" alt="{{initialpreview.filename}}">
+                            </div>
+                            {{/initialpreview.isimage}}
+                        {{/initialpreview.haspreviewurl}}
+                        {{#initialpreview.istext}}{{#initialpreview.hastextcontent}}
+                        <div class="jb-preview__text">
+                            <div class="jb-text-content">{{{initialpreview.textcontent}}}</div>
+                        </div>
+                        {{/initialpreview.hastextcontent}}{{/initialpreview.istext}}
+                        {{^initialpreview.canpreview}}{{^initialpreview.istext}}
+                        <div class="jb-preview__empty">
+                            <i class="fa fa-file"></i>
+                            <p>{{#str}}previewnotavailable, local_jobboard{{/str}}</p>
+                            <a href="{{initialpreview.downloadurl}}" class="jb-btn jb-btn--primary" target="_blank">
+                                <i class="fa fa-download"></i> {{#str}}download{{/str}}
+                            </a>
+                        </div>
+                        {{/initialpreview.istext}}{{/initialpreview.canpreview}}
+                    {{/hasinitialpreview}}
+                    {{^hasinitialpreview}}
+                    <div class="jb-preview__empty">
+                        <i class="fa fa-file-circle-question"></i>
+                        <p>{{#str}}nodocumentstoreview, local_jobboard{{/str}}</p>
+                    </div>
+                    {{/hasinitialpreview}}
+                </div>
+            </div>
+        </div>
+
+        {{! Sidebar }}
+        <aside class="jb-review-sidebar">
+            {{! Applicant Info }}
+            <div class="jb-card">
+                <div class="jb-card__header jb-card__header--accent">
+                    <i class="fa fa-user"></i>
+                    {{#str}}applicantinfo, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}name, local_jobboard{{/str}}</span>
+                        <a href="{{selectedapplication.profileurl}}" class="jb-info-value jb-link" target="_blank">
+                            {{selectedapplication.applicantname}} <i class="fa fa-external-link-alt fa-xs"></i>
+                        </a>
+                    </div>
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}email{{/str}}</span>
+                        <span class="jb-info-value">{{selectedapplication.email}}</span>
+                    </div>
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}status, local_jobboard{{/str}}</span>
+                        <span class="jb-badge jb-badge--{{selectedapplication.statuscolor}}">{{selectedapplication.statuslabel}}</span>
+                    </div>
+                </div>
+            </div>
+
+            {{! Documents List }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <span><i class="fa fa-folder-open"></i> {{#str}}documents, local_jobboard{{/str}}</span>
+                    <span class="jb-badge">{{approvedcount}}/{{totaldocs}}</span>
+                </div>
+                <div class="jb-progress" style="--progress: {{approvedpercent}}%;"></div>
+                <div class="jb-documents-list" data-region="documents-list">
+                    {{#documents}}
+                    <div class="jb-doc-item {{#iscurrent}}jb-doc-item--active{{/iscurrent}} {{#islocked}}jb-doc-item--locked{{/islocked}}"
+                         data-document-id="{{id}}"
+                         data-preview-url="{{previewurl}}"
+                         data-mimetype="{{mimetype}}"
+                         data-is-pdf="{{ispdf}}"
+                         data-is-image="{{isimage}}"
+                         data-is-text="{{istext}}"
+                         data-can-preview="{{canpreview}}"
+                         data-typename="{{typename}}"
+                         data-filename="{{filename}}"
+                         data-download-url="{{downloadurl}}"
+                         {{#istext}}data-text-content-encoded="{{textcontentencoded}}"{{/istext}}
+                         {{^islocked}}onclick="jobboardPreviewDocument(this)"{{/islocked}}>
+                        <div class="jb-doc-item__header">
+                            <span class="jb-doc-item__index jb-doc-item__index--{{statuscolor}}">{{docindex}}</span>
+                            <div class="jb-doc-item__info">
+                                <span class="jb-doc-item__name">{{typename}}</span>
+                                <span class="jb-doc-item__file">{{filename}}</span>
+                            </div>
+                            <span class="jb-doc-item__status jb-doc-item__status--{{statuscolor}}">
+                                <i class="fa fa-{{statusicon}}"></i>
+                            </span>
+                        </div>
+
+                        {{#iscurrent}}
+                        <div class="jb-doc-item__actions" data-document-id="{{id}}" data-application-id="{{applicationid}}">
+                            <textarea name="doc_observation_{{id}}" id="doc_observation_{{id}}"
+                                      class="jb-textarea jb-doc-observation"
+                                      rows="2" data-document-id="{{id}}" data-application-id="{{applicationid}}"
+                                      placeholder="{{#str}}documentobservation_placeholder, local_jobboard{{/str}}">{{{observation}}}</textarea>
+                            <div class="jb-doc-item__buttons">
+                                <button type="button" class="jb-btn jb-btn--success jb-approve-btn"
+                                        data-document-id="{{id}}" data-application-id="{{applicationid}}">
+                                    <i class="fa fa-check"></i> {{#str}}approve, local_jobboard{{/str}}
+                                </button>
+                                <button type="button" class="jb-btn jb-btn--danger jb-reject-btn"
+                                        data-document-id="{{id}}" data-application-id="{{applicationid}}">
+                                    <i class="fa fa-xmark"></i> {{#str}}reject, local_jobboard{{/str}}
+                                </button>
+                            </div>
+                        </div>
+                        {{/iscurrent}}
+
+                        {{#rejectreason}}
+                        <div class="jb-doc-item__reason"><i class="fa fa-exclamation-circle"></i> {{rejectreason}}</div>
+                        {{/rejectreason}}
+                    </div>
+                    {{/documents}}
+                </div>
+                <div class="jb-card__footer">
+                    <a href="{{downloadzipurl}}" class="jb-link"><i class="fa fa-file-zipper"></i> {{#str}}downloadzip, local_jobboard{{/str}}</a>
+                    <button type="button" class="jb-btn jb-btn--primary jb-btn--sm" id="saveAndSendBtn">
+                        <i class="fa fa-paper-plane"></i> {{#str}}saveandsend, local_jobboard{{/str}}
+                    </button>
+                </div>
+            </div>
+
+            {{! Review Progress }}
+            {{#allreviewed}}
+            <div class="jb-card">
+                <div class="jb-card__header jb-card__header--success">
+                    <i class="fa fa-clipboard-check"></i>
+                    {{#str}}reviewprogress, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <form method="post" action="{{submitreviewurl}}">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="action" value="markreviewed">
+                        <input type="hidden" name="applicationid" value="{{selectedapplication.id}}">
+                        <input type="hidden" name="view" value="review">
+                        <textarea name="observations" class="jb-textarea" rows="2" placeholder="{{#str}}reviewobservations_placeholder, local_jobboard{{/str}}"></textarea>
+                        <button type="submit" class="jb-btn jb-btn--{{completebtncolor}} jb-btn--full">
+                            <i class="fa fa-check-double"></i> {{#str}}submitreview, local_jobboard{{/str}}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {{/allreviewed}}
+        </aside>
+    </div>
+
+    {{! Footer Navigation }}
+    <div class="jb-review-footer">
+        <a href="{{backurl}}" class="jb-link"><i class="fa fa-arrow-left"></i> {{#str}}back{{/str}}</a>
+        <a href="{{myreviewsurl}}" class="jb-link">{{#str}}myreviews, local_jobboard{{/str}} <i class="fa fa-arrow-right"></i></a>
+    </div>
+    {{/selectedapplication}}
+
+    {{! ========== APPLICATIONS QUEUE MODE ========== }}
+    {{^selectedapplication}}
+    {{! Header }}
+    <div class="jb-review-header">
+        <div class="jb-review-header__nav">
+            <a href="{{dashboardurl}}" class="jb-review-header__back">
+                <i class="fa fa-arrow-left"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+            <a href="{{myreviewsurl}}" class="jb-review-header__action">
+                <i class="fa fa-clipboard-list"></i>
+                {{#str}}myreviews, local_jobboard{{/str}}
+            </a>
+        </div>
+        <h1 class="jb-review-header__title">{{#str}}reviewdocuments, local_jobboard{{/str}}</h1>
+        <p class="jb-review-header__subtitle">{{#str}}reviewqueue_desc, local_jobboard{{/str}}</p>
+    </div>
+
+    {{! Stats }}
+    {{#stats.0}}
+    <div class="jb-stats">
+        {{#stats}}
+        <div class="jb-stat jb-stat--{{color}}">
+            <span class="jb-stat__value">{{value}}</span>
+            <span class="jb-stat__label">{{label}}</span>
+        </div>
+        {{/stats}}
+    </div>
+    {{/stats.0}}
+
+    {{! Filters }}
+    {{#filterform}}
+    <div class="jb-card jb-filter-card">
+        <div class="jb-card__header">
+            <span><i class="fa fa-filter"></i> {{#str}}filter, local_jobboard{{/str}}</span>
+            {{#hasfilters}}
+            <a href="{{clearfiltersurl}}" class="jb-link jb-link--muted"><i class="fa fa-times"></i> {{#str}}clearfilters, local_jobboard{{/str}}</a>
+            {{/hasfilters}}
+        </div>
+        <div class="jb-card__body">
+            <form method="get" action="{{action}}" class="jb-filter-form" id="jb-review-filter-form">
+                {{#hiddenfields}}
+                <input type="hidden" name="{{name}}" value="{{value}}">
+                {{/hiddenfields}}
+                <div class="jb-filter-grid">
+                    <div class="jb-filter-item jb-filter-item--wide">
+                        <label class="jb-filter-label"><i class="fa fa-search"></i> {{#str}}search{{/str}}</label>
+                        <input type="text" name="search" class="jb-input" value="{{searchvalue}}" placeholder="{{#str}}filter_search_placeholder, local_jobboard{{/str}}">
+                    </div>
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-circle-info"></i> {{#str}}status, local_jobboard{{/str}}</label>
+                        <select name="status" class="jb-select">
+                            {{#statusoptions}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/statusoptions}}
+                        </select>
+                    </div>
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-hashtag"></i> {{#str}}code, local_jobboard{{/str}}</label>
+                        <input type="text" name="code" class="jb-input" value="{{codevalue}}" placeholder="{{#str}}filter_code_placeholder, local_jobboard{{/str}}">
+                    </div>
+                    {{#showcontractfilter}}
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-file-contract"></i> {{#str}}contracttype, local_jobboard{{/str}}</label>
+                        <select name="contracttype" class="jb-select">
+                            <option value="">{{#str}}allcontracttypes, local_jobboard{{/str}}</option>
+                            {{#contractoptions}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/contractoptions}}
+                        </select>
+                    </div>
+                    {{/showcontractfilter}}
+                    {{#showdepartmentfilter}}
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-building"></i> {{#str}}department, local_jobboard{{/str}}</label>
+                        <select name="department" class="jb-select">
+                            <option value="">{{#str}}alldepartments, local_jobboard{{/str}}</option>
+                            {{#departmentoptions}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/departmentoptions}}
+                        </select>
+                    </div>
+                    {{/showdepartmentfilter}}
+                    {{#showlocationfilter}}
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-location-dot"></i> {{#str}}location, local_jobboard{{/str}}</label>
+                        <select name="location" class="jb-select">
+                            <option value="">{{#str}}alllocations, local_jobboard{{/str}}</option>
+                            {{#locationoptions}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/locationoptions}}
+                        </select>
+                    </div>
+                    {{/showlocationfilter}}
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-calendar"></i> {{#str}}datefrom, local_jobboard{{/str}}</label>
+                        <input type="date" name="datefrom" class="jb-input" value="{{datefromvalue}}">
+                    </div>
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-calendar-check"></i> {{#str}}dateto, local_jobboard{{/str}}</label>
+                        <input type="date" name="dateto" class="jb-input" value="{{datetovalue}}">
+                    </div>
+                    <div class="jb-filter-item jb-filter-item--narrow">
+                        <label class="jb-filter-label"><i class="fa fa-list-ol"></i> {{#str}}perpage, local_jobboard{{/str}}</label>
+                        <select name="perpage" class="jb-select">
+                            {{#perpageoptions}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/perpageoptions}}
+                        </select>
+                    </div>
+                    <div class="jb-filter-item jb-filter-item--action">
+                        <button type="submit" class="jb-btn jb-btn--primary jb-btn--full">
+                            <i class="fa fa-filter"></i> {{#str}}filter, local_jobboard{{/str}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {{/filterform}}
+
+    {{! Results Container - for AJAX filtering }}
+    <div data-region="filter-results" id="jb-review-results">
+    {{! Bulk Actions }}
+    <div class="jb-bulk-bar d-none" id="jb-bulk-actions-bar">
+        <span><strong id="jb-selected-count">0</strong> {{#str}}applicationsselected, local_jobboard{{/str}}</span>
+        <div class="jb-bulk-bar__actions">
+            <button type="button" class="jb-btn jb-btn--outline" id="jb-download-selected-btn" data-url="{{bulkdownloadurl}}">
+                <i class="fa fa-file-zipper"></i> {{#str}}downloadselected, local_jobboard{{/str}}
+            </button>
+            <button type="button" class="jb-btn jb-btn--ghost" id="jb-clear-selection-btn">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    {{! Applications List }}
+    {{#hasapplications}}
+    <div class="jb-card">
+        <div class="jb-card__header">
+            <span><i class="fa fa-list"></i> {{#str}}pendingreviews, local_jobboard{{/str}}</span>
+            <span class="jb-badge jb-badge--primary">{{applicationcount}}</span>
+        </div>
+        <div class="jb-table-wrap">
+            <table class="jb-table" id="jb-applications-table">
+                <thead>
+                    <tr>
+                        <th class="jb-table__check">
+                            <input type="checkbox" id="jb-select-all" class="jb-checkbox">
+                        </th>
+                        <th>{{#str}}applicant, local_jobboard{{/str}}</th>
+                        <th>{{#str}}vacancy, local_jobboard{{/str}}</th>
+                        <th class="jb-table__center">{{#str}}status, local_jobboard{{/str}}</th>
+                        <th class="jb-table__center">{{#str}}documents, local_jobboard{{/str}}</th>
+                        <th class="jb-table__center">{{#str}}date, local_jobboard{{/str}}</th>
+                        <th class="jb-table__actions">{{#str}}actions, local_jobboard{{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#applications}}
+                    <tr class="{{#isurgent}}jb-table__row--urgent{{/isurgent}}" data-application-id="{{id}}">
+                        <td class="jb-table__check">
+                            <input type="checkbox" class="jb-checkbox jb-application-checkbox" value="{{id}}">
+                        </td>
+                        <td>
+                            <div class="jb-applicant">
+                                <div class="jb-applicant__avatar"><i class="fa fa-user"></i></div>
+                                <div class="jb-applicant__info">
+                                    <a href="{{profileurl}}" class="jb-applicant__name" target="_blank">
+                                        {{applicantname}}
+                                        {{#isurgent}}<i class="fa fa-exclamation-triangle jb-text-danger"></i>{{/isurgent}}
+                                    </a>
+                                    <span class="jb-applicant__email">{{email}}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="jb-code">{{vacancycode}}</span>
+                            <span class="jb-vacancy-title">{{vacancytitle}}</span>
+                        </td>
+                        <td class="jb-table__center">
+                            <span class="jb-badge jb-badge--{{statuscolor}}">{{statuslabel}}</span>
+                        </td>
+                        <td class="jb-table__center">
+                            <span class="jb-doc-count">
+                                <i class="fa fa-file"></i> {{doccount}}
+                                {{#pendingcount}}<span class="jb-doc-pending">{{pendingcount}}</span>{{/pendingcount}}
+                            </span>
+                        </td>
+                        <td class="jb-table__center">
+                            <span class="jb-date">{{datesubmitted}}</span>
+                        </td>
+                        <td class="jb-table__actions">
+                            <a href="{{reviewurl}}" class="jb-btn jb-btn--primary jb-btn--sm" title="{{#str}}review, local_jobboard{{/str}}">
+                                <i class="fa fa-magnifying-glass"></i>
+                            </a>
+                            <a href="{{downloadzipurl}}" class="jb-btn jb-btn--ghost jb-btn--sm" title="{{#str}}downloadallzip, local_jobboard{{/str}}">
+                                <i class="fa fa-file-zipper"></i>
+                            </a>
+                            <a href="{{viewurl}}" class="jb-btn jb-btn--ghost jb-btn--sm" title="{{#str}}viewapplication, local_jobboard{{/str}}">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {{/applications}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{! Pagination }}
+    {{#pagination}}
+    <nav class="jb-pagination">{{{pagination}}}</nav>
+    {{/pagination}}
+    {{/hasapplications}}
+
+    {{! Empty State }}
+    {{^hasapplications}}
+    <div class="jb-empty">
+        <i class="fa fa-circle-check"></i>
+        <h3>{{#str}}nodocumentstoreview, local_jobboard{{/str}}</h3>
+        <p>{{#str}}allcaughtup, local_jobboard{{/str}}</p>
+        <div class="jb-empty__actions">
+            <a href="{{myreviewsurl}}" class="jb-btn jb-btn--outline"><i class="fa fa-clipboard-list"></i> {{#str}}myreviews, local_jobboard{{/str}}</a>
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn--ghost"><i class="fa fa-home"></i> {{#str}}dashboard, local_jobboard{{/str}}</a>
+        </div>
+    </div>
+    {{/hasapplications}}
+    </div>{{! End data-region="filter-results" }}
+
+    {{! Footer -->}}
+    <div class="jb-review-footer">
+        <a href="{{dashboardurl}}" class="jb-link"><i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}</a>
+        <a href="{{myreviewsurl}}" class="jb-link">{{#str}}myreviews, local_jobboard{{/str}} <i class="fa fa-arrow-right"></i></a>
+    </div>
+    {{/selectedapplication}}
 </div>
 
-{{! All JavaScript moved to AMD module: local_jobboard/document_review }}
+<style>
+/* ================================================================
+   REVIEW PAGE - CLEAN MINIMAL DESIGN
+   Following apply.mustache pattern
+   ================================================================ */
+.jb-review {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Header */
+.jb-review-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-review-header__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.jb-review-header__back,
+.jb-review-header__action {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-review-header__back:hover,
+.jb-review-header__action:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-review-header__pager {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.jb-pager-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    color: var(--iser-gris-oscuro, #333);
+    text-decoration: none;
+    background: #fff;
+}
+
+.jb-pager-btn:hover { background: #f5f5f5; color: var(--iser-verde, #1b9e88); }
+.jb-pager-btn--disabled { opacity: 0.4; pointer-events: none; }
+.jb-pager-count { padding: 0 0.5rem; font-size: 0.75rem; color: var(--iser-gris-medio, #666); }
+
+.jb-review-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-review-header__subtitle {
+    font-size: 1rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0;
+}
+
+/* Alerts */
+.jb-alert {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+.jb-alert--info { background: #d1ecf1; color: #0c5460; }
+.jb-alert--success { background: #d4edda; color: #155724; }
+.jb-alert--warning { background: #fef3cd; color: #856404; }
+
+/* Content Layout */
+.jb-review-content {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 1024px) {
+    .jb-review-content { grid-template-columns: 1fr; }
+    .jb-review-sidebar { order: -1; }
+}
+
+/* Cards */
+.jb-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.jb-card__header {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-card__header i { color: var(--iser-verde, #1b9e88); margin-right: 0.375rem; }
+.jb-card__header--accent { background: rgba(27, 158, 136, 0.1); border-color: var(--iser-verde, #1b9e88); }
+.jb-card__header--success { background: rgba(40, 167, 69, 0.1); border-color: #28a745; }
+.jb-card__body { padding: 1rem; }
+.jb-card__footer {
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    border-top: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Header Actions */
+.jb-header-actions { display: flex; gap: 0.25rem; }
+.jb-btn-icon {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #e5e5e5; border-radius: 4px;
+    background: #fff; color: var(--iser-gris-oscuro, #333);
+    cursor: pointer; text-decoration: none;
+}
+.jb-btn-icon:hover { background: #f5f5f5; color: var(--iser-verde, #1b9e88); }
+
+/* Preview */
+.jb-preview { background: #f5f5f5; min-height: 500px; position: relative; }
+.jb-preview__iframe { width: 100%; height: 500px; border: none; }
+.jb-preview__image { display: flex; align-items: center; justify-content: center; min-height: 500px; padding: 1rem; }
+.jb-preview__image img { max-width: 100%; max-height: 480px; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.jb-preview__text { padding: 1rem; max-height: 500px; overflow-y: auto; }
+.jb-preview__empty {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 500px; color: var(--iser-gris-medio, #666); text-align: center;
+}
+.jb-preview__empty i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+.jb-preview-fullscreen { position: fixed !important; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; min-height: 100vh !important; }
+.jb-preview-fullscreen .jb-preview__iframe { height: 100vh; }
+
+/* Info Rows */
+.jb-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.8125rem;
+}
+.jb-info-row:last-child { border-bottom: none; }
+.jb-info-label { color: var(--iser-gris-medio, #666); }
+.jb-info-value { font-weight: 500; color: var(--iser-negro, #1a1a1a); }
+
+/* Progress */
+.jb-progress { height: 3px; background: #e5e5e5; }
+.jb-progress::after { content: ''; display: block; height: 100%; background: var(--iser-verde, #1b9e88); width: var(--progress, 0%); transition: width 0.3s; }
+
+/* Documents List */
+.jb-documents-list { max-height: 350px; overflow-y: auto; }
+.jb-doc-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.jb-doc-item:hover { background: #f9fafb; }
+.jb-doc-item:last-child { border-bottom: none; }
+.jb-doc-item--active { background: rgba(27, 158, 136, 0.08); border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-doc-item--locked { opacity: 0.5; cursor: not-allowed; }
+
+.jb-doc-item__header { display: flex; align-items: center; gap: 0.75rem; }
+.jb-doc-item__index {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6875rem; font-weight: 600; color: #fff; flex-shrink: 0;
+}
+.jb-doc-item__index--secondary { background: #6c757d; }
+.jb-doc-item__index--success { background: #28a745; }
+.jb-doc-item__index--danger { background: #dc3545; }
+.jb-doc-item__index--warning { background: #ffc107; color: #333; }
+
+.jb-doc-item__info { flex: 1; min-width: 0; }
+.jb-doc-item__name { display: block; font-size: 0.8125rem; font-weight: 500; color: var(--iser-negro, #1a1a1a); }
+.jb-doc-item__file { display: block; font-size: 0.6875rem; color: var(--iser-gris-medio, #666); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.jb-doc-item__status { font-size: 0.875rem; }
+.jb-doc-item__status--secondary { color: #6c757d; }
+.jb-doc-item__status--success { color: #28a745; }
+.jb-doc-item__status--danger { color: #dc3545; }
+.jb-doc-item__status--warning { color: #ffc107; }
+
+.jb-doc-item__actions { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e5e5e5; }
+.jb-doc-item__buttons { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+.jb-doc-item__reason { margin-top: 0.5rem; font-size: 0.75rem; color: #dc3545; }
+
+/* Stats */
+.jb-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.jb-stat__value { font-size: 1.5rem; font-weight: 700; }
+.jb-stat__label { font-size: 0.8125rem; color: var(--iser-gris-medio, #666); }
+.jb-stat--primary .jb-stat__value { color: var(--iser-verde, #1b9e88); }
+.jb-stat--warning .jb-stat__value { color: #ffc107; }
+.jb-stat--danger .jb-stat__value { color: #dc3545; }
+
+/* Filters */
+.jb-filter-card .jb-card__body { padding: 1rem; }
+.jb-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+}
+.jb-filter-item--wide { grid-column: span 2; }
+.jb-filter-item--narrow { max-width: 100px; }
+.jb-filter-item--action { display: flex; align-items: flex-end; }
+.jb-filter-label { display: block; font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-bottom: 0.25rem; }
+.jb-filter-label i { margin-right: 0.25rem; }
+
+/* Inputs */
+.jb-input, .jb-select, .jb-textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: #fff;
+    transition: border-color 0.15s;
+}
+.jb-input:focus, .jb-select:focus, .jb-textarea:focus {
+    border-color: var(--iser-verde, #1b9e88);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(27, 158, 136, 0.1);
+}
+.jb-textarea { min-height: 60px; resize: vertical; }
+.jb-checkbox { width: 16px; height: 16px; accent-color: var(--iser-verde, #1b9e88); cursor: pointer; }
+
+/* Buttons */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+.jb-btn--sm { padding: 0.375rem 0.625rem; font-size: 0.75rem; }
+.jb-btn--full { width: 100%; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--success { background: #28a745; color: #fff; }
+.jb-btn--success:hover { background: #218838; color: #fff; }
+.jb-btn--danger { background: #dc3545; color: #fff; }
+.jb-btn--danger:hover { background: #c82333; color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+.jb-btn--ghost { background: transparent; color: var(--iser-gris-medio, #666); }
+.jb-btn--ghost:hover { color: var(--iser-verde, #1b9e88); }
+
+/* Links */
+.jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 0.375rem; }
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-link--muted { color: var(--iser-gris-medio, #666); }
+
+/* Badges */
+.jb-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+.jb-badge--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-badge--success { background: #28a745; color: #fff; }
+.jb-badge--warning { background: #ffc107; color: #333; }
+.jb-badge--danger { background: #dc3545; color: #fff; }
+.jb-badge--secondary { background: #6c757d; color: #fff; }
+.jb-badge--info { background: #17a2b8; color: #fff; }
+
+.jb-code {
+    font-family: monospace;
+    background: #f0f0f0;
+    padding: 0.125rem 0.375rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+/* Bulk Bar */
+.jb-bulk-bar {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.jb-bulk-bar__actions { display: flex; gap: 0.5rem; }
+
+/* Table */
+.jb-table-wrap { overflow-x: auto; }
+.jb-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.jb-table th { background: #f9fafb; font-weight: 600; color: var(--iser-gris-oscuro, #333); text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e5e5; }
+.jb-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+.jb-table tbody tr:hover { background: #f9fafb; }
+.jb-table__check { width: 40px; text-align: center; }
+.jb-table__center { text-align: center; }
+.jb-table__actions { text-align: right; white-space: nowrap; }
+.jb-table__row--urgent { background: rgba(220, 53, 69, 0.05); }
+
+.jb-applicant { display: flex; align-items: center; gap: 0.75rem; }
+.jb-applicant__avatar { width: 36px; height: 36px; background: rgba(27, 158, 136, 0.1); color: var(--iser-verde, #1b9e88); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.jb-applicant__name { display: block; font-weight: 500; color: var(--iser-negro, #1a1a1a); text-decoration: none; }
+.jb-applicant__name:hover { color: var(--iser-verde, #1b9e88); }
+.jb-applicant__email { display: block; font-size: 0.75rem; color: var(--iser-gris-medio, #666); }
+
+.jb-vacancy-title { display: block; font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.jb-doc-count { display: inline-flex; align-items: center; gap: 0.25rem; color: var(--iser-gris-medio, #666); font-size: 0.8125rem; }
+.jb-doc-pending { background: #ffc107; color: #333; padding: 0.125rem 0.375rem; border-radius: 10px; font-size: 0.6875rem; font-weight: 600; margin-left: 0.25rem; }
+
+.jb-date { font-size: 0.75rem; color: var(--iser-gris-medio, #666); }
+
+/* Pagination */
+.jb-pagination { margin-top: 1.5rem; display: flex; justify-content: center; }
+
+/* Empty State */
+.jb-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+}
+.jb-empty i { font-size: 3rem; color: #28a745; margin-bottom: 1rem; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-negro, #1a1a1a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; }
+.jb-empty__actions { display: flex; justify-content: center; gap: 0.75rem; }
+
+/* Footer */
+.jb-review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0;
+    margin-top: 1.5rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Sidebar */
+.jb-review-sidebar { position: sticky; top: 80px; }
+@media (max-width: 1024px) { .jb-review-sidebar { position: static; } }
+
+/* Utilities */
+.jb-text-danger { color: #dc3545 !important; }
+.jb-text-muted { color: var(--iser-gris-medio, #666); }
+
+/* Mobile */
+@media (max-width: 768px) {
+    .jb-review-header__title { font-size: 1.25rem; }
+    .jb-filter-grid { grid-template-columns: 1fr 1fr; }
+    .jb-filter-item--wide { grid-column: span 2; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { width: 100%; }
+}
+
+/* Print */
+@media print {
+    .jb-review-sidebar, .jb-filter-card, .jb-bulk-bar, .jb-review-footer { display: none; }
+    .jb-review-content { display: block; }
+}
+</style>

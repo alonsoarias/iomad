@@ -1,0 +1,120 @@
+{{!
+    @template local_jobboard/pages/review/results
+
+    Review page results partial - used for AJAX filtering.
+    This template contains only the content that gets replaced when filters are applied.
+
+    Context variables:
+    * hasapplications - Boolean for queue mode
+    * applications - Applications array for queue mode
+    * applicationcount - Total count of applications
+    * pagination - Pagination HTML
+    * myreviewsurl - My reviews URL
+    * dashboardurl - Dashboard URL
+    * bulkdownloadurl - Bulk download URL
+}}
+{{! Bulk Actions }}
+<div class="jb-bulk-bar d-none" id="jb-bulk-actions-bar">
+    <span><strong id="jb-selected-count">0</strong> {{#str}}applicationsselected, local_jobboard{{/str}}</span>
+    <div class="jb-bulk-bar__actions">
+        <button type="button" class="jb-btn jb-btn--outline" id="jb-download-selected-btn" data-url="{{bulkdownloadurl}}">
+            <i class="fa fa-file-zipper"></i> {{#str}}downloadselected, local_jobboard{{/str}}
+        </button>
+        <button type="button" class="jb-btn jb-btn--ghost" id="jb-clear-selection-btn">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+</div>
+
+{{! Applications List }}
+{{#hasapplications}}
+<div class="jb-card">
+    <div class="jb-card__header">
+        <span><i class="fa fa-list"></i> {{#str}}pendingreviews, local_jobboard{{/str}}</span>
+        <span class="jb-badge jb-badge--primary">{{applicationcount}}</span>
+    </div>
+    <div class="jb-table-wrap">
+        <table class="jb-table" id="jb-applications-table">
+            <thead>
+                <tr>
+                    <th class="jb-table__check">
+                        <input type="checkbox" id="jb-select-all" class="jb-checkbox">
+                    </th>
+                    <th>{{#str}}applicant, local_jobboard{{/str}}</th>
+                    <th>{{#str}}vacancy, local_jobboard{{/str}}</th>
+                    <th class="jb-table__center">{{#str}}status, local_jobboard{{/str}}</th>
+                    <th class="jb-table__center">{{#str}}documents, local_jobboard{{/str}}</th>
+                    <th class="jb-table__center">{{#str}}date, local_jobboard{{/str}}</th>
+                    <th class="jb-table__actions">{{#str}}actions, local_jobboard{{/str}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#applications}}
+                <tr class="{{#isurgent}}jb-table__row--urgent{{/isurgent}}" data-application-id="{{id}}">
+                    <td class="jb-table__check">
+                        <input type="checkbox" class="jb-checkbox jb-application-checkbox" value="{{id}}">
+                    </td>
+                    <td>
+                        <div class="jb-applicant">
+                            <div class="jb-applicant__avatar"><i class="fa fa-user"></i></div>
+                            <div class="jb-applicant__info">
+                                <a href="{{profileurl}}" class="jb-applicant__name" target="_blank">
+                                    {{applicantname}}
+                                    {{#isurgent}}<i class="fa fa-exclamation-triangle jb-text-danger"></i>{{/isurgent}}
+                                </a>
+                                <span class="jb-applicant__email">{{email}}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="jb-code">{{vacancycode}}</span>
+                        <span class="jb-vacancy-title">{{vacancytitle}}</span>
+                    </td>
+                    <td class="jb-table__center">
+                        <span class="jb-badge jb-badge--{{statuscolor}}">{{statuslabel}}</span>
+                    </td>
+                    <td class="jb-table__center">
+                        <span class="jb-doc-count">
+                            <i class="fa fa-file"></i> {{doccount}}
+                            {{#pendingcount}}<span class="jb-doc-pending">{{pendingcount}}</span>{{/pendingcount}}
+                        </span>
+                    </td>
+                    <td class="jb-table__center">
+                        <span class="jb-date">{{datesubmitted}}</span>
+                    </td>
+                    <td class="jb-table__actions">
+                        <a href="{{reviewurl}}" class="jb-btn jb-btn--primary jb-btn--sm" title="{{#str}}review, local_jobboard{{/str}}">
+                            <i class="fa fa-magnifying-glass"></i>
+                        </a>
+                        <a href="{{downloadzipurl}}" class="jb-btn jb-btn--ghost jb-btn--sm" title="{{#str}}downloadallzip, local_jobboard{{/str}}">
+                            <i class="fa fa-file-zipper"></i>
+                        </a>
+                        <a href="{{viewurl}}" class="jb-btn jb-btn--ghost jb-btn--sm" title="{{#str}}viewapplication, local_jobboard{{/str}}">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                {{/applications}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{{! Pagination }}
+{{#pagination}}
+<nav class="jb-pagination">{{{pagination}}}</nav>
+{{/pagination}}
+{{/hasapplications}}
+
+{{! Empty State }}
+{{^hasapplications}}
+<div class="jb-empty">
+    <i class="fa fa-circle-check"></i>
+    <h3>{{#str}}nodocumentstoreview, local_jobboard{{/str}}</h3>
+    <p>{{#str}}allcaughtup, local_jobboard{{/str}}</p>
+    <div class="jb-empty__actions">
+        <a href="{{myreviewsurl}}" class="jb-btn jb-btn--outline"><i class="fa fa-clipboard-list"></i> {{#str}}myreviews, local_jobboard{{/str}}</a>
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn--ghost"><i class="fa fa-home"></i> {{#str}}dashboard, local_jobboard{{/str}}</a>
+    </div>
+</div>
+{{/hasapplications}}

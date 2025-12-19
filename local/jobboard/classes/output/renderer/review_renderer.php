@@ -48,6 +48,16 @@ trait review_renderer {
     }
 
     /**
+     * Render review results partial (for AJAX filtering).
+     *
+     * @param array $data Page data.
+     * @return string HTML output.
+     */
+    public function render_review_results(array $data): string {
+        return $this->render_from_template('local_jobboard/pages/review/results', $data);
+    }
+
+    /**
      * Render my reviews page.
      *
      * @param array $data Page data.

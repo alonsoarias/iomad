@@ -45,6 +45,7 @@ $vacancyid = optional_param('vacancyid', 0, PARAM_INT);
 $statusfilter = optional_param('status', '', PARAM_ALPHA);
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 20, PARAM_INT);
+$ajax = optional_param('ajax', 0, PARAM_INT);
 
 // Filter parameters - matching public page style.
 $code = optional_param('code', '', PARAM_TEXT);
@@ -433,6 +434,13 @@ if ($applicationid && isset($application) && $application->id) {
     ]]);
 }
 
+// Handle AJAX request - return only results HTML without header/footer.
+if ($ajax && !$applicationid) {
+    // AJAX response - just the results partial.
+    echo $renderer->render_review_results($data);
+    exit;
+}
+
 // Output the page.
 echo $OUTPUT->header();
 echo $renderer->render_review_page($data);
@@ -440,6 +448,7 @@ echo $renderer->render_review_page($data);
 // Initialize filter auto-submit for all users.
 $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
     'formSelector' => '.jb-filter-form',
+    'resultsSelector' => '[data-region="filter-results"]',
 ]]);
 
 // Initialize bulk selection module for application list.
