@@ -1,8 +1,7 @@
 {{!
     @template local_jobboard/pages/public/convocatoria
 
-    Public convocatoria detail page template.
-    Simplified design following apply.mustache pattern.
+    Public convocatoria detail page - Clean minimal design following jb-* pattern
 
     Context variables:
     * convocatoria (object) - Convocatoria data
@@ -19,268 +18,650 @@
     * loginurl (string) - Login URL
     * signupurl (string) - Signup URL
     * backurl (string) - Back URL
-
-    Example context (json):
-    {
-        "convocatoria": {"id": 1, "name": "2024 Call", "code": "CONV-001"},
-        "isopen": true,
-        "totalvacancies": 5
-    }
 }}
-<div class="jb-convocatoria-page" data-region="jobboard-public-convocatoria" data-convocatoria-id="{{convocatoria.id}}">
-    <div class="container-fluid px-0">
-        {{! Support Banner - Prominent at top }}
-        {{#showsupport}}
-        {{> local_jobboard/partials/support_button }}
-        {{/showsupport}}
+<div class="jb-convocatoria-detail" id="jobboard-convocatoria" data-convocatoria-id="{{convocatoria.id}}">
+    {{! Support Banner }}
+    {{#showsupport}}
+    {{> local_jobboard/partials/support_button }}
+    {{/showsupport}}
 
-        {{! Quick Info Bar }}
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-            <div class="d-flex align-items-center gap-2">
-                <code class="badge bg-light text-dark">{{convocatoria.code}}</code>
-                <span class="badge bg-{{convocatoria.statuscolor}}">{{convocatoria.statuslabel}}</span>
-                {{#isclosingsoon}}
-                <span class="badge bg-warning text-dark">
-                    <i class="fa fa-clock me-1" aria-hidden="true"></i>
-                    {{daysremaining}} {{#str}}days, local_jobboard{{/str}}
-                </span>
-                {{/isclosingsoon}}
-            </div>
+    {{! Header }}
+    <div class="jb-detail-header">
+        <div class="jb-detail-header__nav">
+            <a href="{{backurl}}" class="jb-detail-header__back">
+                <i class="fa fa-arrow-left"></i>
+                {{#str}}backtoconvocatorias, local_jobboard{{/str}}
+            </a>
             {{#totalvacancies}}
-            <a href="{{vacanciesurl}}" class="btn btn-primary jb-btn-primary btn-sm">
-                <i class="fa fa-briefcase me-2" aria-hidden="true"></i>
-                {{#str}}viewvacancies, local_jobboard{{/str}} ({{totalvacancies}})
+            <a href="{{vacanciesurl}}" class="jb-btn jb-btn--primary">
+                <i class="fa fa-briefcase"></i> {{#str}}viewvacancies, local_jobboard{{/str}} ({{totalvacancies}})
             </a>
             {{/totalvacancies}}
         </div>
+        <div class="jb-detail-header__title-row">
+            <span class="jb-code jb-code--primary">{{convocatoria.code}}</span>
+            <span class="jb-badge jb-badge--{{convocatoria.statuscolor}}">{{convocatoria.statuslabel}}</span>
+            {{#isclosingsoon}}
+            <span class="jb-badge jb-badge--warning">
+                <i class="fa fa-clock"></i> {{daysremaining}} {{#str}}days, local_jobboard{{/str}}
+            </span>
+            {{/isclosingsoon}}
+        </div>
+        <h1 class="jb-detail-header__title">{{convocatoria.name}}</h1>
+    </div>
 
-        <div class="row">
-            {{! Main Content Column }}
-            <div class="col-lg-8">
-                {{! Description Card }}
-                {{#convocatoria.description}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-file-lines text-primary me-2" aria-hidden="true"></i>
-                            {{#str}}description, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        {{{convocatoria.description}}}
-                    </div>
+    {{! Content Layout }}
+    <div class="jb-detail-content">
+        {{! Main Column }}
+        <div class="jb-detail-main">
+            {{! Description Card }}
+            {{#convocatoria.description}}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-file-lines"></i>
+                    {{#str}}description, local_jobboard{{/str}}
                 </div>
-                {{/convocatoria.description}}
-
-                {{! Terms Card }}
-                {{#convocatoria.terms}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-gavel text-warning me-2" aria-hidden="true"></i>
-                            {{#str}}convocatoriaterms, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        {{{convocatoria.terms}}}
-                    </div>
+                <div class="jb-card__body jb-card__body--content">
+                    {{{convocatoria.description}}}
                 </div>
-                {{/convocatoria.terms}}
+            </div>
+            {{/convocatoria.description}}
 
-                {{! Attachments Card - Official convocatoria PDF document }}
-                {{#convocatoria.hasattachments}}
-                <div class="card shadow-sm mb-4 border-info">
-                    <div class="card-header bg-info text-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-file-pdf me-2" aria-hidden="true"></i>
-                            {{#str}}officialdocument, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        {{#convocatoria.attachments}}
-                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-                            <div class="d-flex align-items-center">
-                                <i class="fa fa-file-pdf fa-2x text-danger me-3" aria-hidden="true"></i>
-                                <div>
-                                    <strong>{{name}}</strong>
-                                    <br>
-                                    <small class="text-muted">{{#str}}convocatoriapdf, local_jobboard{{/str}}</small>
-                                </div>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <a href="{{url}}" class="btn btn-primary jb-btn-primary" target="_blank" rel="noopener noreferrer">
-                                    <i class="fa fa-eye me-1" aria-hidden="true"></i>
-                                    {{#str}}viewpdf, local_jobboard{{/str}}
-                                </a>
-                                <a href="{{url}}" class="btn btn-outline-secondary" download>
-                                    <i class="fa fa-download me-1" aria-hidden="true"></i>
-                                    {{#str}}download{{/str}}
-                                </a>
+            {{! Terms Card }}
+            {{#convocatoria.terms}}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-gavel"></i>
+                    {{#str}}convocatoriaterms, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body jb-card__body--content">
+                    {{{convocatoria.terms}}}
+                </div>
+            </div>
+            {{/convocatoria.terms}}
+
+            {{! Attachments Card }}
+            {{#convocatoria.hasattachments}}
+            <div class="jb-card jb-card--accent">
+                <div class="jb-card__header jb-card__header--accent">
+                    <i class="fa fa-file-pdf"></i>
+                    {{#str}}officialdocument, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    {{#convocatoria.attachments}}
+                    <div class="jb-attachment">
+                        <div class="jb-attachment__info">
+                            <i class="fa fa-file-pdf jb-attachment__icon"></i>
+                            <div>
+                                <strong class="jb-attachment__name">{{name}}</strong>
+                                <span class="jb-attachment__desc">{{#str}}convocatoriapdf, local_jobboard{{/str}}</span>
                             </div>
                         </div>
-                        {{/convocatoria.attachments}}
+                        <div class="jb-attachment__actions">
+                            <a href="{{url}}" class="jb-btn jb-btn--primary jb-btn--sm" target="_blank" rel="noopener noreferrer">
+                                <i class="fa fa-eye"></i> {{#str}}viewpdf, local_jobboard{{/str}}
+                            </a>
+                            <a href="{{url}}" class="jb-btn jb-btn--outline jb-btn--sm" download>
+                                <i class="fa fa-download"></i> {{#str}}download{{/str}}
+                            </a>
+                        </div>
+                    </div>
+                    {{/convocatoria.attachments}}
+                </div>
+            </div>
+            {{/convocatoria.hasattachments}}
+        </div>
+
+        {{! Sidebar }}
+        <aside class="jb-detail-sidebar">
+            {{! Key Details Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-circle-info"></i>
+                    {{#str}}details, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <div class="jb-info-row">
+                        <span class="jb-info-label"><i class="fa fa-briefcase"></i> {{#str}}vacancies, local_jobboard{{/str}}</span>
+                        <span class="jb-badge jb-badge--primary">{{totalvacancies}}</span>
+                    </div>
+                    <div class="jb-info-row">
+                        <span class="jb-info-label"><i class="fa fa-users"></i> {{#str}}positions, local_jobboard{{/str}}</span>
+                        <span class="jb-badge jb-badge--success">{{totalpositions}}</span>
+                    </div>
+                    <div class="jb-info-row jb-info-row--last">
+                        <span class="jb-info-label"><i class="fa fa-flag"></i> {{#str}}status, local_jobboard{{/str}}</span>
+                        <span class="jb-badge jb-badge--{{convocatoria.statuscolor}}">{{convocatoria.statuslabel}}</span>
                     </div>
                 </div>
-                {{/convocatoria.hasattachments}}
             </div>
 
-            {{! Sidebar Column }}
-            <div class="col-lg-4">
-                <div class="jb-sidebar sticky-top" style="top: 1rem;">
-                    {{! Key Details Card }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white py-3">
-                            <h6 class="mb-0">
-                                <i class="fa fa-circle-info text-primary me-2" aria-hidden="true"></i>
-                                {{#str}}details, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <dl class="mb-0">
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-briefcase me-2" aria-hidden="true"></i>
-                                        {{#str}}vacancies, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0"><span class="badge bg-primary">{{totalvacancies}}</span></dd>
-                                </div>
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-users me-2" aria-hidden="true"></i>
-                                        {{#str}}positions, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0"><span class="badge bg-success">{{totalpositions}}</span></dd>
-                                </div>
-                                <div class="d-flex justify-content-between py-2">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-flag me-2" aria-hidden="true"></i>
-                                        {{#str}}status, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0"><span class="badge bg-{{convocatoria.statuscolor}}">{{convocatoria.statuslabel}}</span></dd>
-                                </div>
-                            </dl>
-                        </div>
+            {{! Dates Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-calendar-days"></i>
+                    {{#str}}dates, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <div class="jb-info-row">
+                        <span class="jb-info-label"><i class="fa fa-play jb-text-success"></i> {{#str}}startdate, local_jobboard{{/str}}</span>
+                        <strong>{{convocatoria.startdateformatted}}</strong>
                     </div>
-
-                    {{! Dates Card }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white py-3">
-                            <h6 class="mb-0">
-                                <i class="fa fa-calendar-days text-primary me-2" aria-hidden="true"></i>
-                                {{#str}}dates, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <dl class="mb-0">
-                                <div class="d-flex justify-content-between py-2 border-bottom">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-play text-success me-2" aria-hidden="true"></i>
-                                        {{#str}}startdate, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0 fw-bold">{{convocatoria.startdateformatted}}</dd>
-                                </div>
-                                <div class="d-flex justify-content-between py-2">
-                                    <dt class="fw-normal text-muted">
-                                        <i class="fa fa-stop text-danger me-2" aria-hidden="true"></i>
-                                        {{#str}}enddate, local_jobboard{{/str}}
-                                    </dt>
-                                    <dd class="mb-0 text-end">
-                                        <span class="fw-bold {{#isclosingsoon}}text-warning{{/isclosingsoon}} {{#isclosed}}text-secondary{{/isclosed}}">{{convocatoria.enddateformatted}}</span>
-                                        {{^isclosed}}
-                                        <span class="d-block small {{#isclosingsoon}}text-warning{{/isclosingsoon}}{{^isclosingsoon}}text-muted{{/isclosingsoon}}">
-                                            {{daysremaining}} {{#str}}days, local_jobboard{{/str}}
-                                        </span>
-                                        {{/isclosed}}
-                                    </dd>
-                                </div>
-                            </dl>
-
-                            {{! Progress Bar }}
+                    <div class="jb-info-row jb-info-row--last">
+                        <span class="jb-info-label"><i class="fa fa-stop jb-text-danger"></i> {{#str}}enddate, local_jobboard{{/str}}</span>
+                        <div class="jb-info-value--stacked">
+                            <strong class="{{#isclosingsoon}}jb-text-warning{{/isclosingsoon}}{{#isclosed}}jb-text-muted{{/isclosed}}">{{convocatoria.enddateformatted}}</strong>
                             {{^isclosed}}
-                            <div class="mt-3 pt-3 border-top">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <small class="text-muted">{{#str}}deadlineprogress, local_jobboard{{/str}}</small>
-                                    <small class="fw-bold">{{progresspercent}}%</small>
-                                </div>
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar bg-{{progresscolor}}" style="width: {{progresspercent}}%;"></div>
-                                </div>
-                            </div>
+                            <small class="{{#isclosingsoon}}jb-text-warning{{/isclosingsoon}}">{{daysremaining}} {{#str}}days, local_jobboard{{/str}}</small>
                             {{/isclosed}}
                         </div>
                     </div>
 
-                    {{! Share Card }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white py-3">
-                            <h6 class="mb-0">
-                                <i class="fa fa-share-nodes text-primary me-2" aria-hidden="true"></i>
-                                {{#str}}share, local_jobboard{{/str}}
-                            </h6>
+                    {{! Progress Bar }}
+                    {{^isclosed}}
+                    <div class="jb-progress-section">
+                        <div class="jb-progress-header">
+                            <span>{{#str}}deadlineprogress, local_jobboard{{/str}}</span>
+                            <strong>{{progresspercent}}%</strong>
                         </div>
-                        <div class="card-body text-center">
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="{{sharelinks.facebook}}" class="btn btn-outline-primary jb-btn-outline-primary" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
-                                </a>
-                                <a href="{{sharelinks.twitter}}" class="btn btn-outline-info jb-btn-outline-info" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                                    <i class="fab fa-twitter" aria-hidden="true"></i>
-                                </a>
-                                <a href="{{sharelinks.linkedin}}" class="btn btn-outline-primary jb-btn-outline-primary" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                                    <i class="fab fa-linkedin-in" aria-hidden="true"></i>
-                                </a>
-                                <a href="{{sharelinks.whatsapp}}" class="btn btn-outline-success jb-btn-outline-success" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                                </a>
-                            </div>
+                        <div class="jb-progress">
+                            <div class="jb-progress__bar jb-progress__bar--{{progresscolor}}" style="width: {{progresspercent}}%;"></div>
                         </div>
                     </div>
-
-                    {{! View Vacancies CTA }}
-                    {{#totalvacancies}}
-                    <div class="card shadow-sm mb-4 border-primary">
-                        <div class="card-body text-center py-4">
-                            <i class="fa fa-briefcase fa-2x text-primary mb-3" aria-hidden="true"></i>
-                            <h6 class="mb-2">{{#str}}viewvacancies, local_jobboard{{/str}}</h6>
-                            <p class="text-muted small mb-3">{{#str}}vacanciesavailable, local_jobboard, {{totalvacancies}}{{/str}}</p>
-                            <a href="{{vacanciesurl}}" class="btn btn-primary jb-btn-primary w-100">
-                                <i class="fa fa-arrow-right me-2" aria-hidden="true"></i>
-                                {{#str}}viewvacancies, local_jobboard{{/str}}
-                            </a>
-                        </div>
-                    </div>
-                    {{/totalvacancies}}
-
-                    {{! Login CTA }}
-                    {{^isloggedin}}
-                    <div class="card shadow-sm mb-4 border-warning">
-                        <div class="card-body text-center py-4">
-                            <i class="fa fa-circle-user fa-2x text-warning mb-3" aria-hidden="true"></i>
-                            <h6 class="mb-2">{{#str}}wanttoapply, local_jobboard{{/str}}</h6>
-                            <p class="text-muted small mb-3">{{#str}}loginrequiredtoapply, local_jobboard{{/str}}</p>
-                            <a href="{{loginurl}}" class="btn btn-primary jb-btn-primary w-100 mb-2">
-                                <i class="fa fa-right-to-bracket me-2" aria-hidden="true"></i>
-                                {{#str}}login{{/str}}
-                            </a>
-                            <a href="{{signupurl}}" class="btn btn-outline-primary jb-btn-outline-primary w-100">
-                                <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
-                                {{#str}}createaccount{{/str}}
-                            </a>
-                        </div>
-                    </div>
-                    {{/isloggedin}}
+                    {{/isclosed}}
                 </div>
             </div>
-        </div>
 
-        {{! Back Navigation }}
-        <div class="mt-4 pt-3 border-top">
-            <a href="{{backurl}}" class="btn btn-outline-secondary">
-                <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
-                {{#str}}backtoconvocatorias, local_jobboard{{/str}}
-            </a>
-        </div>
+            {{! Share Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-share-nodes"></i>
+                    {{#str}}share, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body jb-card__body--center">
+                    <div class="jb-share-buttons">
+                        <a href="{{sharelinks.facebook}}" class="jb-share-btn jb-share-btn--facebook" target="_blank" rel="noopener noreferrer" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="{{sharelinks.twitter}}" class="jb-share-btn jb-share-btn--twitter" target="_blank" rel="noopener noreferrer" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="{{sharelinks.linkedin}}" class="jb-share-btn jb-share-btn--linkedin" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="{{sharelinks.whatsapp}}" class="jb-share-btn jb-share-btn--whatsapp" target="_blank" rel="noopener noreferrer" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {{! View Vacancies CTA }}
+            {{#totalvacancies}}
+            <div class="jb-card jb-card--cta">
+                <div class="jb-cta-card">
+                    <i class="fa fa-briefcase jb-cta-card__icon"></i>
+                    <h4 class="jb-cta-card__title">{{#str}}viewvacancies, local_jobboard{{/str}}</h4>
+                    <p class="jb-cta-card__text">{{#str}}vacanciesavailable, local_jobboard, {{totalvacancies}}{{/str}}</p>
+                    <a href="{{vacanciesurl}}" class="jb-btn jb-btn--primary jb-btn--block">
+                        <i class="fa fa-arrow-right"></i> {{#str}}viewvacancies, local_jobboard{{/str}}
+                    </a>
+                </div>
+            </div>
+            {{/totalvacancies}}
+
+            {{! Login CTA }}
+            {{^isloggedin}}
+            <div class="jb-card jb-card--cta-warning">
+                <div class="jb-cta-card">
+                    <i class="fa fa-circle-user jb-cta-card__icon jb-cta-card__icon--warning"></i>
+                    <h4 class="jb-cta-card__title">{{#str}}wanttoapply, local_jobboard{{/str}}</h4>
+                    <p class="jb-cta-card__text">{{#str}}loginrequiredtoapply, local_jobboard{{/str}}</p>
+                    <a href="{{loginurl}}" class="jb-btn jb-btn--primary jb-btn--block">
+                        <i class="fa fa-right-to-bracket"></i> {{#str}}login{{/str}}
+                    </a>
+                    <a href="{{signupurl}}" class="jb-btn jb-btn--outline jb-btn--block">
+                        <i class="fa fa-user-plus"></i> {{#str}}createaccount{{/str}}
+                    </a>
+                </div>
+            </div>
+            {{/isloggedin}}
+        </aside>
+    </div>
+
+    {{! Footer Navigation }}
+    <div class="jb-detail-footer">
+        <a href="{{backurl}}" class="jb-link">
+            <i class="fa fa-arrow-left"></i> {{#str}}backtoconvocatorias, local_jobboard{{/str}}
+        </a>
     </div>
 </div>
 
-{{! Styles consolidated in styles.css }}
+<style>
+/* ================================================================
+   CONVOCATORIA DETAIL PAGE - CLEAN MINIMAL DESIGN
+   Following jb-* pattern
+   ================================================================ */
+.jb-convocatoria-detail {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Header */
+.jb-detail-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-detail-header__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.jb-detail-header__back {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-detail-header__back:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-detail-header__title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.jb-detail-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+/* Content Layout */
+.jb-detail-content {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.jb-detail-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.jb-detail-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: sticky;
+    top: 80px;
+}
+
+/* Cards */
+.jb-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.jb-card--accent {
+    border-color: var(--iser-azul, #0d6efd);
+}
+
+.jb-card--cta {
+    border-color: var(--iser-verde, #1b9e88);
+}
+
+.jb-card--cta-warning {
+    border-color: var(--iser-amarillo, #ffc107);
+}
+
+.jb-card__header {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-card__header i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-card__header--accent {
+    background: var(--iser-azul, #0d6efd);
+    color: #fff;
+    border-bottom-color: var(--iser-azul, #0d6efd);
+}
+
+.jb-card__header--accent i {
+    color: #fff;
+}
+
+.jb-card__body {
+    padding: 1rem;
+}
+
+.jb-card__body--content {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+.jb-card__body--content p { margin-bottom: 0.75rem; }
+.jb-card__body--content p:last-child { margin-bottom: 0; }
+.jb-card__body--content ul, .jb-card__body--content ol { padding-left: 1.25rem; margin-bottom: 0.75rem; }
+.jb-card__body--content li { margin-bottom: 0.25rem; }
+
+.jb-card__body--center {
+    text-align: center;
+}
+
+/* Info Rows */
+.jb-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.8125rem;
+}
+
+.jb-info-row--last {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.jb-info-label {
+    color: var(--iser-gris-medio, #666);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-info-label i {
+    width: 16px;
+    text-align: center;
+}
+
+.jb-info-value--stacked {
+    text-align: right;
+}
+
+.jb-info-value--stacked small {
+    display: block;
+    font-size: 0.6875rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+/* Badges */
+.jb-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.jb-badge i { font-size: 0.625rem; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-badge--warning { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-badge--danger { background: rgba(220, 53, 69, 0.15); color: #c41e3a; }
+.jb-badge--info { background: rgba(13, 110, 253, 0.15); color: #0d6efd; }
+.jb-badge--secondary { background: #e9ecef; color: #6c757d; }
+.jb-badge--verde { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+
+/* Code */
+.jb-code {
+    font-family: monospace;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.jb-code--primary {
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+}
+
+/* Progress */
+.jb-progress-section {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.jb-progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+    margin-bottom: 0.375rem;
+}
+
+.jb-progress {
+    height: 6px;
+    background: #e5e5e5;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.jb-progress__bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s;
+}
+
+.jb-progress__bar--success { background: #28a745; }
+.jb-progress__bar--warning { background: #ffc107; }
+.jb-progress__bar--danger { background: #dc3545; }
+.jb-progress__bar--primary { background: var(--iser-verde, #1b9e88); }
+
+/* Attachments */
+.jb-attachment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.jb-attachment__info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.jb-attachment__icon {
+    font-size: 2rem;
+    color: #dc3545;
+}
+
+.jb-attachment__name {
+    display: block;
+    font-size: 0.9375rem;
+}
+
+.jb-attachment__desc {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+.jb-attachment__actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Share Buttons */
+.jb-share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.jb-share-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.15s;
+    border: 2px solid;
+}
+
+.jb-share-btn--facebook { color: #1877f2; border-color: #1877f2; }
+.jb-share-btn--facebook:hover { background: #1877f2; color: #fff; }
+.jb-share-btn--twitter { color: #1da1f2; border-color: #1da1f2; }
+.jb-share-btn--twitter:hover { background: #1da1f2; color: #fff; }
+.jb-share-btn--linkedin { color: #0a66c2; border-color: #0a66c2; }
+.jb-share-btn--linkedin:hover { background: #0a66c2; color: #fff; }
+.jb-share-btn--whatsapp { color: #25d366; border-color: #25d366; }
+.jb-share-btn--whatsapp:hover { background: #25d366; color: #fff; }
+
+/* CTA Card */
+.jb-cta-card {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.jb-cta-card__icon {
+    font-size: 2rem;
+    color: var(--iser-verde, #1b9e88);
+    margin-bottom: 0.75rem;
+}
+
+.jb-cta-card__icon--warning {
+    color: var(--iser-amarillo, #ffc107);
+}
+
+.jb-cta-card__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0 0 0.375rem 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-cta-card__text {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 1rem 0;
+}
+
+/* Buttons */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.jb-btn--sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+.jb-btn--block { width: 100%; margin-bottom: 0.5rem; }
+.jb-btn--block:last-child { margin-bottom: 0; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+
+/* Links */
+.jb-link {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.jb-link:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+/* Footer */
+.jb-detail-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Utilities */
+.jb-text-success { color: #28a745 !important; }
+.jb-text-danger { color: #dc3545 !important; }
+.jb-text-warning { color: #ffc107 !important; }
+.jb-text-muted { color: var(--iser-gris-medio, #666) !important; }
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-detail-content {
+        grid-template-columns: 1fr;
+    }
+
+    .jb-detail-sidebar {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 600px) {
+    .jb-detail-header__title {
+        font-size: 1.25rem;
+    }
+
+    .jb-attachment {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .jb-attachment__actions {
+        width: 100%;
+    }
+
+    .jb-attachment__actions .jb-btn {
+        flex: 1;
+    }
+}
+
+/* Print */
+@media print {
+    .jb-detail-sidebar { display: none; }
+    .jb-detail-content { display: block; }
+    .jb-detail-footer { display: none; }
+}
+</style>
