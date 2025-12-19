@@ -174,6 +174,9 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
      * @param {boolean} allReviewed Whether all documents are reviewed.
      */
     var updateDocumentUI = function(documentId, newStatus, stats, nextDocumentId, allReviewed) {
+        // eslint-disable-next-line no-console
+        console.log('updateDocumentUI called:', {documentId: documentId, newStatus: newStatus, nextDocumentId: nextDocumentId, allReviewed: allReviewed});
+
         // Status configuration.
         var statusConfig = {
             approved: {icon: 'check-circle', color: 'success', label: 'Aprobado'},
@@ -183,8 +186,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
 
         var config = statusConfig[newStatus] || statusConfig.pending;
 
-        // Find the document list item.
-        var docItem = document.querySelector('[data-region="documents-list"] [data-document-id="' + documentId + '"]');
+        // Find the document list item - use the list-group-item class to be more specific.
+        var selector = '[data-region="documents-list"] .list-group-item[data-document-id="' + documentId + '"]';
+        // eslint-disable-next-line no-console
+        console.log('Looking for element with selector:', selector);
+
+        var docItem = document.querySelector(selector);
+        // eslint-disable-next-line no-console
+        console.log('Found docItem:', docItem);
+
         if (docItem) {
             // Update status badge.
             var statusBadge = docItem.querySelector('.badge.bg-warning, .badge.bg-success, .badge.bg-danger');
@@ -202,9 +212,16 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             // Remove current state and actions.
             docItem.classList.remove('active', 'bg-primary-subtle');
             var actionsDiv = docItem.querySelector('.jb-doc-actions');
+            // eslint-disable-next-line no-console
+            console.log('Found actionsDiv:', actionsDiv);
             if (actionsDiv) {
                 actionsDiv.remove();
+                // eslint-disable-next-line no-console
+                console.log('actionsDiv removed');
             }
+        } else {
+            // eslint-disable-next-line no-console
+            console.warn('docItem not found for documentId:', documentId);
         }
 
         // Update progress stats.
