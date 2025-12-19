@@ -15,9 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * CLI script to check document file storage for debugging.
+ * CLI script to check, repair, and update document file storage.
  *
- * Usage: php local/jobboard/cli/check_files.php --applicationid=7
+ * Usage:
+ *   php local/jobboard/cli/check_files.php --applicationid=7
+ *   php local/jobboard/cli/check_files.php --repair
+ *   php local/jobboard/cli/check_files.php --update-text
+ *   php local/jobboard/cli/check_files.php --repair --update-text
  *
  * @package   local_jobboard
  * @copyright 2024-2025 ISER
@@ -32,29 +36,48 @@ require_once($CFG->libdir . '/clilib.php');
 // Parse command line options.
 list($options, $unrecognized) = cli_get_params([
     'applicationid' => 0,
+    'repair' => false,
+    'update-text' => false,
+    'dry-run' => false,
     'help' => false,
 ], [
     'a' => 'applicationid',
+    'r' => 'repair',
+    'u' => 'update-text',
+    'd' => 'dry-run',
     'h' => 'help',
 ]);
 
 if ($options['help']) {
     echo "
-Check document file storage for debugging.
+Check, repair, and update document file storage.
 
 Options:
-  -a, --applicationid=ID    Application ID to check (default: all with issues)
+  -a, --applicationid=ID    Application ID to check/repair (default: all)
+  -r, --repair              Repair missing files from draft areas
+  -u, --update-text         Update text documents from txt to html format
+  -d, --dry-run             Show what would be done without making changes
   -h, --help                Show this help
 
-Example:
+Examples:
   php local/jobboard/cli/check_files.php --applicationid=7
+  php local/jobboard/cli/check_files.php --repair --dry-run
+  php local/jobboard/cli/check_files.php --update-text
+  php local/jobboard/cli/check_files.php --repair --update-text
 ";
     exit(0);
 }
 
 $applicationid = (int)$options['applicationid'];
+$dorepair = $options['repair'];
+$doupdatetext = $options['update-text'];
+$dryrun = $options['dry-run'];
 
-echo "\n=== JOBBOARD DOCUMENT FILE CHECKER ===\n\n";
+echo "\n=== JOBBOARD DOCUMENT FILE CHECKER ===\n";
+if ($dryrun) {
+    echo "*** DRY RUN MODE - No changes will be made ***\n";
+}
+echo "\n";
 
 // 1. Get document records.
 echo "1. DOCUMENT RECORDS FROM DATABASE:\n";
@@ -267,4 +290,175 @@ if (!empty($docsWithoutFiles)) {
     echo "All document records have corresponding files. No issues found.\n";
 }
 
-echo "\n=== END OF DIAGNOSTIC ===\n\n";
+// ============================================================
+// REPAIR FUNCTIONALITY
+// ============================================================
+if ($dorepair && !empty($docsWithoutFiles)) {
+    echo "\n7. REPAIR MISSING FILES:\n";
+    echo str_repeat('-', 60) . "\n";
+
+    $repaired = 0;
+    $failed = 0;
+
+    foreach ($docsWithoutFiles as $doc) {
+        echo "Repairing Doc ID {$doc->id} ({$doc->documenttype})...\n";
+
+        // Skip text documents - they don't have physical files.
+        if (in_array($doc->mimetype, ['text/plain', 'text/html'])) {
+            echo "  -> Skipped (text document)\n";
+            continue;
+        }
+
+        // Try to find file by contenthash anywhere in the system.
+        if (empty($doc->contenthash)) {
+            echo "  -> FAILED: No contenthash stored\n";
+            $failed++;
+            continue;
+        }
+
+        $sql = "SELECT f.*
+                FROM {files} f
+                WHERE f.contenthash = :hash
+                AND f.filename != '.'
+                LIMIT 1";
+        $sourcefile = $DB->get_record_sql($sql, ['hash' => $doc->contenthash]);
+
+        if (!$sourcefile) {
+            echo "  -> FAILED: File not found by contenthash\n";
+            $failed++;
+            continue;
+        }
+
+        // Get the stored_file object.
+        $storedfile = $fs->get_file_by_id($sourcefile->id);
+        if (!$storedfile) {
+            echo "  -> FAILED: Could not load stored file\n";
+            $failed++;
+            continue;
+        }
+
+        if ($dryrun) {
+            echo "  -> Would copy from {$sourcefile->component}/{$sourcefile->filearea}\n";
+            $repaired++;
+            continue;
+        }
+
+        // Create new file in the correct location.
+        $filepath = '/' . $doc->documenttype . '/';
+        $filerecord = [
+            'contextid' => $context->id,
+            'component' => 'local_jobboard',
+            'filearea' => 'application_documents',
+            'itemid' => $doc->applicationid,
+            'filepath' => $filepath,
+            'filename' => $doc->filename,
+        ];
+
+        try {
+            // Check if file already exists.
+            $existingfile = $fs->get_file(
+                $context->id,
+                'local_jobboard',
+                'application_documents',
+                $doc->applicationid,
+                $filepath,
+                $doc->filename
+            );
+
+            if ($existingfile) {
+                echo "  -> Skipped (file already exists)\n";
+                continue;
+            }
+
+            // Copy the file.
+            $newfile = $fs->create_file_from_storedfile($filerecord, $storedfile);
+            echo "  -> REPAIRED (copied from {$sourcefile->component}/{$sourcefile->filearea})\n";
+            $repaired++;
+        } catch (Exception $e) {
+            echo "  -> FAILED: " . $e->getMessage() . "\n";
+            $failed++;
+        }
+    }
+
+    echo "\nRepair summary: $repaired repaired, $failed failed\n";
+
+    if ($dryrun && $repaired > 0) {
+        echo "\nTo apply repairs, run without --dry-run\n";
+    }
+}
+
+// ============================================================
+// UPDATE TEXT DOCUMENTS (txt -> html)
+// ============================================================
+if ($doupdatetext) {
+    echo "\n8. UPDATE TEXT DOCUMENTS (txt -> html):\n";
+    echo str_repeat('-', 60) . "\n";
+
+    // Find all text documents with text/plain mimetype.
+    $textparams = [];
+    $textwhere = "d.mimetype = 'text/plain' AND d.issuperseded = 0";
+    if ($applicationid > 0) {
+        $textwhere .= " AND d.applicationid = :applicationid";
+        $textparams['applicationid'] = $applicationid;
+    }
+
+    $sql = "SELECT d.*, a.userid, a.applicationdata
+            FROM {local_jobboard_document} d
+            JOIN {local_jobboard_application} a ON a.id = d.applicationid
+            WHERE $textwhere
+            ORDER BY d.applicationid, d.id";
+
+    $textdocuments = $DB->get_records_sql($sql, $textparams);
+
+    echo "Found " . count($textdocuments) . " text document(s) with text/plain mimetype.\n\n";
+
+    if (empty($textdocuments)) {
+        echo "No text documents to update.\n";
+    } else {
+        $updated = 0;
+        $errors = 0;
+
+        foreach ($textdocuments as $doc) {
+            echo "Doc ID {$doc->id} (App:{$doc->applicationid}, Type:{$doc->documenttype}):\n";
+            echo "  Current: mimetype={$doc->mimetype}, filename={$doc->filename}\n";
+
+            // Determine new values.
+            $newmimetype = 'text/html';
+            $newfilename = $doc->filename;
+
+            // Update filename extension from .txt to .html.
+            if (substr($newfilename, -4) === '.txt') {
+                $newfilename = substr($newfilename, 0, -4) . '.html';
+            } else if (strpos($newfilename, '.') === false) {
+                // No extension, add .html.
+                $newfilename .= '.html';
+            }
+
+            echo "  New: mimetype={$newmimetype}, filename={$newfilename}\n";
+
+            if ($dryrun) {
+                echo "  -> Would update\n";
+                $updated++;
+            } else {
+                try {
+                    $DB->set_field('local_jobboard_document', 'mimetype', $newmimetype, ['id' => $doc->id]);
+                    $DB->set_field('local_jobboard_document', 'filename', $newfilename, ['id' => $doc->id]);
+                    echo "  -> UPDATED\n";
+                    $updated++;
+                } catch (Exception $e) {
+                    echo "  -> ERROR: " . $e->getMessage() . "\n";
+                    $errors++;
+                }
+            }
+            echo "\n";
+        }
+
+        echo "Update summary: $updated updated, $errors errors\n";
+
+        if ($dryrun && $updated > 0) {
+            echo "\nTo apply updates, run without --dry-run\n";
+        }
+    }
+}
+
+echo "\n=== END ===\n\n";
