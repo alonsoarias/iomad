@@ -1,999 +1,562 @@
 {{!
     @template local_jobboard/pages/applications/apply
 
-    Application form page - ISER Brand Design v2
-    Complete redesign with consistent styling and improved UX
+    Application form page - Clean minimal design
 
     Context variables:
-    * vacancy - Vacancy data {id, code, title, location, modality, closedateformatted}
-    * convocatoria - Convocatoria info {code, name}
-    * daysuntilclose - Days remaining until deadline
-    * showdeadlinewarning - Whether to show urgent deadline warning
-    * showdaysremaining - Whether to show days remaining badge
-    * daysremainingtext - Formatted days remaining text
-    * isexemption - Boolean if user has exemption
-    * exemptioninfo - Exemption details if applicable
+    * vacancy - Vacancy data
+    * daysuntilclose - Days remaining
+    * showdeadlinewarning - Urgent deadline warning
+    * showdaysremaining - Show days badge
+    * daysremainingtext - Days remaining text
+    * isexemption - User has exemption
+    * exemptioninfo - Exemption details
     * formhtml - Moodle form HTML
-    * requireddocs - Array of required document types
-    * hasrequireddocs - Boolean if there are required documents
-    * requireddocscount - Number of required documents
-    * viewvacancyurl - URL to view vacancy details
-    * backvacancyurl - URL to vacancy details
-    * browservacanciesurl - URL to browse vacancies
+    * requireddocs - Required documents
+    * hasrequireddocs - Has documents
+    * requireddocscount - Document count
+    * viewvacancyurl - View vacancy URL
+    * backvacancyurl - Back URL
+    * browservacanciesurl - Browse URL
 }}
-<div class="jb-apply-page" id="jobboard-apply">
-    {{! ================================================================
-        HEADER SECTION
-        ================================================================ }}
-    <header class="jb-apply-header">
-        <div class="jb-apply-header__content">
-            {{! Breadcrumb Navigation }}
-            <nav class="jb-breadcrumb" aria-label="{{#str}}breadcrumb{{/str}}">
-                <ol class="jb-breadcrumb__list">
-                    <li class="jb-breadcrumb__item">
-                        <a href="{{browservacanciesurl}}" class="jb-breadcrumb__link">
-                            <i class="fa fa-home" aria-hidden="true"></i>
-                            <span>{{#str}}vacancies, local_jobboard{{/str}}</span>
-                        </a>
-                    </li>
-                    <li class="jb-breadcrumb__separator" aria-hidden="true">
-                        <i class="fa fa-chevron-right"></i>
-                    </li>
-                    <li class="jb-breadcrumb__item">
-                        <a href="{{viewvacancyurl}}" class="jb-breadcrumb__link">{{vacancy.code}}</a>
-                    </li>
-                    <li class="jb-breadcrumb__separator" aria-hidden="true">
-                        <i class="fa fa-chevron-right"></i>
-                    </li>
-                    <li class="jb-breadcrumb__item jb-breadcrumb__item--active" aria-current="page">
-                        {{#str}}apply, local_jobboard{{/str}}
-                    </li>
-                </ol>
-            </nav>
-
-            {{! Main Title }}
-            <div class="jb-apply-header__title-row">
-                <div class="jb-apply-header__title-content">
-                    <h1 class="jb-apply-header__title">
-                        <i class="fa fa-file-signature" aria-hidden="true"></i>
-                        {{#str}}applytovacancy, local_jobboard{{/str}}
-                    </h1>
-                    <p class="jb-apply-header__subtitle">
-                        {{vacancy.title}}
-                    </p>
-                </div>
-
-                {{! Deadline Badge }}
-                {{#showdaysremaining}}
-                <div class="jb-deadline-badge {{#showdeadlinewarning}}jb-deadline-badge--urgent{{/showdeadlinewarning}}">
-                    <i class="fa fa-clock" aria-hidden="true"></i>
-                    <span class="jb-deadline-badge__text">{{daysremainingtext}}</span>
-                </div>
-                {{/showdaysremaining}}
-            </div>
+<div class="jb-apply" id="jobboard-apply">
+    {{! Header }}
+    <div class="jb-apply-header">
+        <div class="jb-apply-header__nav">
+            <a href="{{browservacanciesurl}}" class="jb-apply-header__back">
+                <i class="fa fa-arrow-left"></i>
+                {{#str}}vacancies, local_jobboard{{/str}}
+            </a>
+            {{#showdaysremaining}}
+            <span class="jb-apply-header__deadline {{#showdeadlinewarning}}jb-apply-header__deadline--urgent{{/showdeadlinewarning}}">
+                <i class="fa fa-clock"></i> {{daysremainingtext}}
+            </span>
+            {{/showdaysremaining}}
         </div>
-    </header>
-
-    {{! ================================================================
-        ALERTS SECTION
-        ================================================================ }}
-    <div class="jb-alerts-container">
-        {{! Deadline Warning }}
-        {{#showdeadlinewarning}}
-        <div class="jb-alert jb-alert--danger" role="alert">
-            <div class="jb-alert__icon">
-                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-            </div>
-            <div class="jb-alert__content">
-                <strong class="jb-alert__title">{{#str}}deadlinewarning_title, local_jobboard{{/str}}</strong>
-                <p class="jb-alert__message">{{deadlinewarningtext}}</p>
-            </div>
-        </div>
-        {{/showdeadlinewarning}}
-
-        {{! Exemption Notice }}
-        {{#isexemption}}
-        <div class="jb-alert jb-alert--info" role="alert">
-            <div class="jb-alert__icon">
-                <i class="fa fa-id-badge" aria-hidden="true"></i>
-            </div>
-            <div class="jb-alert__content">
-                <strong class="jb-alert__title">{{#str}}exemptionapplied, local_jobboard{{/str}}</strong>
-                {{#exemptioninfo}}
-                <p class="jb-alert__message">{{exemptiontype}}</p>
-                {{/exemptioninfo}}
-            </div>
-        </div>
-        {{/isexemption}}
+        <h1 class="jb-apply-header__title">{{#str}}applytovacancy, local_jobboard{{/str}}</h1>
+        <p class="jb-apply-header__vacancy">{{vacancy.title}}</p>
     </div>
 
-    {{! ================================================================
-        MAIN CONTENT LAYOUT
-        ================================================================ }}
-    <div class="jb-apply-layout">
-        {{! Main Form Column }}
-        <main class="jb-apply-main">
-            <div class="jb-form-card">
-                <div class="jb-form-card__header">
-                    <div class="jb-form-card__header-icon">
-                        <i class="fa fa-clipboard-list" aria-hidden="true"></i>
-                    </div>
-                    <div class="jb-form-card__header-text">
-                        <h2 class="jb-form-card__title">{{#str}}applicationform, local_jobboard{{/str}}</h2>
-                        <p class="jb-form-card__description">{{#str}}applicationform_desc, local_jobboard{{/str}}</p>
-                    </div>
-                </div>
-                <div class="jb-form-card__body">
-                    <div class="jb-moodle-form">
-                        {{{formhtml}}}
-                    </div>
-                </div>
+    {{! Alerts }}
+    {{#showdeadlinewarning}}
+    <div class="jb-alert jb-alert--warning">
+        <i class="fa fa-exclamation-triangle"></i>
+        <span>{{#str}}deadlinewarning_title, local_jobboard{{/str}}: {{deadlinewarningtext}}</span>
+    </div>
+    {{/showdeadlinewarning}}
+
+    {{#isexemption}}
+    <div class="jb-alert jb-alert--info">
+        <i class="fa fa-id-badge"></i>
+        <span>{{#str}}exemptionapplied, local_jobboard{{/str}}{{#exemptioninfo}}: {{exemptiontype}}{{/exemptioninfo}}</span>
+    </div>
+    {{/isexemption}}
+
+    {{! Main Content }}
+    <div class="jb-apply-content">
+        {{! Form }}
+        <div class="jb-apply-form">
+            <div class="jb-form-wrapper">
+                {{{formhtml}}}
             </div>
-        </main>
+        </div>
 
         {{! Sidebar }}
         <aside class="jb-apply-sidebar">
-            {{! Vacancy Summary Card }}
-            <div class="jb-sidebar-card">
-                <div class="jb-sidebar-card__header jb-sidebar-card__header--primary">
-                    <i class="fa fa-briefcase" aria-hidden="true"></i>
-                    <span>{{#str}}vacancysummary, local_jobboard{{/str}}</span>
+            {{! Vacancy Info }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-briefcase"></i>
+                    {{#str}}vacancysummary, local_jobboard{{/str}}
                 </div>
-                <div class="jb-sidebar-card__body">
-                    <dl class="jb-info-list">
-                        <div class="jb-info-list__item">
-                            <dt class="jb-info-list__label">{{#str}}code, local_jobboard{{/str}}</dt>
-                            <dd class="jb-info-list__value">
-                                <code class="jb-code-badge">{{vacancy.code}}</code>
-                            </dd>
-                        </div>
-                        <div class="jb-info-list__item jb-info-list__item--full">
-                            <dt class="jb-info-list__label">{{#str}}title, local_jobboard{{/str}}</dt>
-                            <dd class="jb-info-list__value jb-info-list__value--title">{{vacancy.title}}</dd>
-                        </div>
-                        {{#vacancy.location}}
-                        <div class="jb-info-list__item">
-                            <dt class="jb-info-list__label">
-                                <i class="fa fa-map-marker-alt" aria-hidden="true"></i>
-                                {{#str}}location, local_jobboard{{/str}}
-                            </dt>
-                            <dd class="jb-info-list__value">{{vacancy.location}}</dd>
-                        </div>
-                        {{/vacancy.location}}
-                        {{#vacancy.modality}}
-                        <div class="jb-info-list__item">
-                            <dt class="jb-info-list__label">
-                                <i class="fa fa-laptop-house" aria-hidden="true"></i>
-                                {{#str}}modality, local_jobboard{{/str}}
-                            </dt>
-                            <dd class="jb-info-list__value">{{vacancy.modality}}</dd>
-                        </div>
-                        {{/vacancy.modality}}
-                        <div class="jb-info-list__item">
-                            <dt class="jb-info-list__label">
-                                <i class="fa fa-calendar-alt" aria-hidden="true"></i>
-                                {{#str}}closedate, local_jobboard{{/str}}
-                            </dt>
-                            <dd class="jb-info-list__value {{#showdeadlinewarning}}jb-info-list__value--urgent{{/showdeadlinewarning}}">
-                                {{vacancy.closedateformatted}}
-                            </dd>
-                        </div>
-                    </dl>
+                <div class="jb-card__body">
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}code, local_jobboard{{/str}}</span>
+                        <span class="jb-info-value jb-code">{{vacancy.code}}</span>
+                    </div>
+                    {{#vacancy.location}}
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}location, local_jobboard{{/str}}</span>
+                        <span class="jb-info-value">{{vacancy.location}}</span>
+                    </div>
+                    {{/vacancy.location}}
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}closedate, local_jobboard{{/str}}</span>
+                        <span class="jb-info-value {{#showdeadlinewarning}}jb-text-danger{{/showdeadlinewarning}}">{{vacancy.closedateformatted}}</span>
+                    </div>
                 </div>
-                <div class="jb-sidebar-card__footer">
-                    <a href="{{viewvacancyurl}}" class="jb-btn jb-btn--outline jb-btn--block">
-                        <i class="fa fa-eye" aria-hidden="true"></i>
-                        {{#str}}viewvacancydetails, local_jobboard{{/str}}
-                    </a>
-                </div>
+                <a href="{{viewvacancyurl}}" class="jb-card__link">
+                    {{#str}}viewvacancydetails, local_jobboard{{/str}} <i class="fa fa-arrow-right"></i>
+                </a>
             </div>
 
             {{! Document Checklist }}
             {{#hasrequireddocs}}
-            <div class="jb-sidebar-card" data-region="document-checklist" data-total="{{requireddocscount}}">
-                <div class="jb-sidebar-card__header jb-sidebar-card__header--warning">
-                    <div class="jb-sidebar-card__header-main">
-                        <i class="fa fa-list-check" aria-hidden="true"></i>
-                        <span>{{#str}}documentchecklist, local_jobboard{{/str}}</span>
-                    </div>
-                    <span data-region="checklist-counter" class="jb-counter-badge">
+            <div class="jb-card" data-region="document-checklist" data-total="{{requireddocscount}}">
+                <div class="jb-card__header jb-card__header--accent">
+                    <span><i class="fa fa-list-check"></i> {{#str}}documentchecklist, local_jobboard{{/str}}</span>
+                    <span data-region="checklist-counter" class="jb-badge">
                         <span data-count="uploaded">0</span>/{{requireddocscount}}
                     </span>
                 </div>
-                <div class="jb-progress-bar">
-                    <div data-region="checklist-progress" class="jb-progress-bar__fill"></div>
-                </div>
+                <div class="jb-progress" data-region="checklist-progress"></div>
                 <ul class="jb-checklist" data-region="checklist-items">
                     {{#requireddocs}}
-                    <li class="jb-checklist__item unchecked" data-doc-code="{{code}}" data-action="scroll-to-doc" data-target="doc_{{code}}">
-                        <span class="jb-checklist__checkbox" data-icon="unchecked">
-                            <i class="fa fa-square" aria-hidden="true"></i>
-                        </span>
-                        <span class="jb-checklist__checkbox jb-checklist__checkbox--checked d-none" data-icon="checked">
-                            <i class="fa fa-check-square" aria-hidden="true"></i>
-                        </span>
-                        <span class="jb-checklist__label">{{name}}</span>
-                        <span data-status="pending" class="jb-status-badge jb-status-badge--pending">
-                            {{#str}}pending, local_jobboard{{/str}}
-                        </span>
-                        <span data-status="uploaded" class="jb-status-badge jb-status-badge--success d-none">
-                            {{#str}}uploaded, local_jobboard{{/str}}
-                        </span>
-                        {{#isrequired}}
-                        <span class="jb-required-marker" title="{{#str}}required{{/str}}">*</span>
-                        {{/isrequired}}
+                    <li class="jb-checklist__item" data-doc-code="{{code}}" data-action="scroll-to-doc" data-target="doc_{{code}}">
+                        <span class="jb-checklist__icon" data-icon="unchecked"><i class="fa fa-circle"></i></span>
+                        <span class="jb-checklist__icon jb-checklist__icon--done d-none" data-icon="checked"><i class="fa fa-check-circle"></i></span>
+                        <span class="jb-checklist__text">{{name}}</span>
+                        {{#isrequired}}<span class="jb-text-danger">*</span>{{/isrequired}}
                     </li>
                     {{/requireddocs}}
                 </ul>
-                <div data-region="all-complete" class="jb-checklist__complete d-none">
-                    <i class="fa fa-check-circle" aria-hidden="true"></i>
-                    <span>{{#str}}alldocumentsuploaded, local_jobboard{{/str}}</span>
-                </div>
-                <div class="jb-sidebar-card__note">
-                    <span class="jb-required-marker">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
+                <div data-region="all-complete" class="jb-checklist__done d-none">
+                    <i class="fa fa-check-circle"></i> {{#str}}alldocumentsuploaded, local_jobboard{{/str}}
                 </div>
             </div>
             {{/hasrequireddocs}}
 
-            {{! Help Card }}
-            <div class="jb-sidebar-card">
-                <div class="jb-sidebar-card__header jb-sidebar-card__header--info">
-                    <i class="fa fa-circle-question" aria-hidden="true"></i>
-                    <span>{{#str}}needhelp, local_jobboard{{/str}}</span>
+            {{! Help }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-circle-question"></i>
+                    {{#str}}needhelp, local_jobboard{{/str}}
                 </div>
-                <div class="jb-sidebar-card__body">
-                    <p class="jb-help-text">{{#str}}applyhelp_text, local_jobboard{{/str}}</p>
-                    {{#quicktips}}
-                    <ul class="jb-tips-list">
-                        {{#quicktips}}
-                        <li>{{.}}</li>
-                        {{/quicktips}}
-                    </ul>
-                    {{/quicktips}}
+                <div class="jb-card__body">
+                    <p class="jb-text-muted">{{#str}}applyhelp_text, local_jobboard{{/str}}</p>
                     {{#supportemail}}
-                    <div class="jb-support-section">
-                        <strong class="jb-support-label">{{#str}}contactsupport, local_jobboard{{/str}}</strong>
-                        <a href="mailto:{{supportemail}}" class="jb-btn jb-btn--ghost jb-btn--block jb-btn--sm">
-                            <i class="fa fa-envelope" aria-hidden="true"></i>
-                            {{supportemail}}
-                        </a>
-                    </div>
+                    <a href="mailto:{{supportemail}}" class="jb-card__link">
+                        <i class="fa fa-envelope"></i> {{supportemail}}
+                    </a>
                     {{/supportemail}}
                 </div>
             </div>
         </aside>
     </div>
-
-    {{! ================================================================
-        FOOTER NAVIGATION
-        ================================================================ }}
-    <footer class="jb-apply-footer">
-        <a href="{{backvacancyurl}}" class="jb-btn jb-btn--ghost">
-            <i class="fa fa-arrow-left" aria-hidden="true"></i>
-            {{#str}}backtovacancy, local_jobboard{{/str}}
-        </a>
-        <a href="{{browservacanciesurl}}" class="jb-link jb-link--primary">
-            {{#str}}browservacancies, local_jobboard{{/str}}
-            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-        </a>
-    </footer>
 </div>
 
-{{! ================================================================
-    STYLES - APPLY PAGE COMPLETE REDESIGN
-    ================================================================ }}
 <style>
 /* ================================================================
-   APPLY PAGE - BASE LAYOUT
+   APPLY PAGE - CLEAN MINIMAL DESIGN
    ================================================================ */
-.jb-apply-page {
-    --jb-page-max-width: 1200px;
-    --jb-page-padding: 1.5rem;
-    --jb-gap: 1.5rem;
-    --jb-radius-sm: 6px;
-    --jb-radius-md: 10px;
-    --jb-radius-lg: 16px;
-    --jb-shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-    --jb-shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-    --jb-shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-    --jb-transition: all 0.2s ease;
-
-    max-width: var(--jb-page-max-width);
+.jb-apply {
+    max-width: 1100px;
     margin: 0 auto;
-    padding: var(--jb-page-padding);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    padding: 1rem;
 }
 
-/* ================================================================
-   HEADER
-   ================================================================ */
+/* Header */
 .jb-apply-header {
-    background: linear-gradient(135deg, var(--iser-verde) 0%, var(--iser-verde-dark) 100%);
-    border-radius: var(--jb-radius-lg);
-    padding: 1.5rem 2rem;
-    margin-bottom: var(--jb-gap);
-    color: var(--iser-blanco);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
 }
 
-.jb-apply-header__content {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-/* Breadcrumb */
-.jb-breadcrumb__list {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 0.875rem;
-}
-
-.jb-breadcrumb__link {
-    color: rgba(255,255,255,0.8);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    transition: var(--jb-transition);
-}
-
-.jb-breadcrumb__link:hover {
-    color: var(--iser-blanco);
-}
-
-.jb-breadcrumb__separator {
-    color: rgba(255,255,255,0.4);
-    font-size: 0.625rem;
-}
-
-.jb-breadcrumb__item--active {
-    color: var(--iser-blanco);
-    font-weight: 500;
-}
-
-/* Title Row */
-.jb-apply-header__title-row {
+.jb-apply-header__nav {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.jb-apply-header__title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin: 0 0 0.25rem 0;
-    display: flex;
     align-items: center;
-    gap: 0.75rem;
+    margin-bottom: 1rem;
 }
 
-.jb-apply-header__title i {
-    opacity: 0.9;
-}
-
-.jb-apply-header__subtitle {
-    font-size: 1.125rem;
-    margin: 0;
-    opacity: 0.9;
-}
-
-/* Deadline Badge */
-.jb-deadline-badge {
+.jb-apply-header__back {
+    color: var(--iser-verde);
+    text-decoration: none;
+    font-size: 0.875rem;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(255,255,255,0.2);
-    padding: 0.625rem 1.25rem;
-    border-radius: 50px;
+}
+
+.jb-apply-header__back:hover {
+    color: var(--iser-verde-dark);
+}
+
+.jb-apply-header__deadline {
+    font-size: 0.875rem;
+    color: var(--iser-gris-medio);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.jb-apply-header__deadline--urgent {
+    color: var(--iser-rojo);
     font-weight: 600;
-    font-size: 0.9375rem;
-    white-space: nowrap;
-    backdrop-filter: blur(4px);
 }
 
-.jb-deadline-badge--urgent {
-    background: var(--iser-rojo);
-    animation: pulse-urgent 2s infinite;
+.jb-apply-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    color: var(--iser-negro);
 }
 
-@keyframes pulse-urgent {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.85; }
+.jb-apply-header__vacancy {
+    font-size: 1rem;
+    color: var(--iser-gris-medio);
+    margin: 0;
 }
 
-/* ================================================================
-   ALERTS
-   ================================================================ */
-.jb-alerts-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: var(--jb-gap);
-}
-
+/* Alerts */
 .jb-alert {
     display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    border-radius: var(--jb-radius-md);
-    border-left: 4px solid;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
 }
 
-.jb-alert--danger {
-    background: var(--iser-rojo-lighter);
-    border-color: var(--iser-rojo);
+.jb-alert--warning {
+    background: #fef3cd;
+    color: #856404;
 }
 
 .jb-alert--info {
-    background: var(--iser-azul-lighter);
-    border-color: var(--iser-azul);
+    background: #d1ecf1;
+    color: #0c5460;
 }
 
-.jb-alert__icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 1rem;
-}
-
-.jb-alert--danger .jb-alert__icon {
-    background: var(--iser-rojo);
-    color: var(--iser-blanco);
-}
-
-.jb-alert--info .jb-alert__icon {
-    background: var(--iser-azul);
-    color: var(--iser-blanco);
-}
-
-.jb-alert__content {
-    flex: 1;
-    min-width: 0;
-}
-
-.jb-alert__title {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.jb-alert--danger .jb-alert__title {
-    color: var(--iser-rojo-dark);
-}
-
-.jb-alert--info .jb-alert__title {
-    color: var(--iser-azul);
-}
-
-.jb-alert__message {
-    margin: 0;
-    font-size: 0.9375rem;
-    color: var(--iser-gris-oscuro);
-}
-
-/* ================================================================
-   MAIN LAYOUT
-   ================================================================ */
-.jb-apply-layout {
+/* Content Layout */
+.jb-apply-content {
     display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: var(--jb-gap);
+    grid-template-columns: 1fr 300px;
+    gap: 1.5rem;
     align-items: start;
 }
 
-@media (max-width: 991px) {
-    .jb-apply-layout {
+@media (max-width: 900px) {
+    .jb-apply-content {
         grid-template-columns: 1fr;
     }
-
     .jb-apply-sidebar {
         order: -1;
     }
 }
 
-/* ================================================================
-   FORM CARD
-   ================================================================ */
-.jb-form-card {
-    background: var(--iser-blanco);
-    border-radius: var(--jb-radius-lg);
-    box-shadow: var(--jb-shadow-md);
-    overflow: hidden;
+/* Form Area */
+.jb-apply-form {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
 }
 
-.jb-form-card__header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
-    background: linear-gradient(to right, var(--iser-verde-lighter), #fff);
-    border-bottom: 3px solid var(--iser-verde);
-}
-
-.jb-form-card__header-icon {
-    width: 48px;
-    height: 48px;
-    background: var(--iser-verde);
-    border-radius: var(--jb-radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--iser-blanco);
-    font-size: 1.25rem;
-    flex-shrink: 0;
-}
-
-.jb-form-card__title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--iser-negro);
-    margin: 0;
-}
-
-.jb-form-card__description {
-    font-size: 0.875rem;
-    color: var(--iser-gris-medio);
-    margin: 0.25rem 0 0 0;
-}
-
-.jb-form-card__body {
+.jb-form-wrapper {
     padding: 1.5rem;
 }
 
-/* ================================================================
-   MOODLE FORM STYLING
-   ================================================================ */
-.jb-moodle-form .mform {
+/* Moodle Form Overrides - Clean */
+.jb-form-wrapper .mform {
     max-width: 100%;
 }
 
-/* Form Headers */
-.jb-moodle-form .ftoggler,
-.jb-moodle-form .fheader,
-.jb-moodle-form fieldset legend {
-    font-size: 1.0625rem;
+.jb-form-wrapper .ftoggler,
+.jb-form-wrapper .fheader,
+.jb-form-wrapper fieldset > legend {
+    font-size: 1rem;
     font-weight: 600;
     color: var(--iser-verde-dark);
-    padding: 0.75rem 1rem;
-    margin: 1.5rem -1.5rem 1rem -1.5rem;
-    background: var(--iser-verde-lighter);
-    border-left: 4px solid var(--iser-verde);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    padding: 0.75rem 0;
+    margin: 1.25rem 0 0.75rem 0;
+    border-bottom: 2px solid var(--iser-verde);
+    background: none;
+    width: 100%;
 }
 
-.jb-moodle-form fieldset:first-of-type .ftoggler,
-.jb-moodle-form fieldset:first-of-type legend {
+.jb-form-wrapper fieldset:first-of-type .ftoggler,
+.jb-form-wrapper fieldset:first-of-type legend {
     margin-top: 0;
 }
 
-/* Form Elements Container */
-.jb-moodle-form .fitem,
-.jb-moodle-form .form-group {
-    margin-bottom: 1.25rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid #f0f0f0;
+.jb-form-wrapper .fitem,
+.jb-form-wrapper .form-group {
+    margin-bottom: 1rem;
 }
 
-.jb-moodle-form .fitem:last-child,
-.jb-moodle-form .form-group:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-/* Labels */
-.jb-moodle-form label,
-.jb-moodle-form .fitemtitle {
+.jb-form-wrapper label {
     font-weight: 500;
+    font-size: 0.875rem;
     color: var(--iser-negro);
-    margin-bottom: 0.5rem;
-    font-size: 0.9375rem;
+    margin-bottom: 0.375rem;
 }
 
-/* Input Fields */
-.jb-moodle-form input[type="text"],
-.jb-moodle-form input[type="email"],
-.jb-moodle-form input[type="password"],
-.jb-moodle-form input[type="number"],
-.jb-moodle-form textarea,
-.jb-moodle-form select,
-.jb-moodle-form .form-control {
+.jb-form-wrapper input[type="text"],
+.jb-form-wrapper input[type="email"],
+.jb-form-wrapper textarea,
+.jb-form-wrapper select,
+.jb-form-wrapper .form-control {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid var(--iser-gris-claro);
-    border-radius: var(--jb-radius-sm);
-    font-size: 1rem;
-    color: var(--iser-negro);
-    background: var(--iser-blanco);
-    transition: var(--jb-transition);
+    padding: 0.625rem 0.875rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+    transition: border-color 0.15s;
 }
 
-.jb-moodle-form input:focus,
-.jb-moodle-form textarea:focus,
-.jb-moodle-form select:focus,
-.jb-moodle-form .form-control:focus {
+.jb-form-wrapper input:focus,
+.jb-form-wrapper textarea:focus,
+.jb-form-wrapper select:focus,
+.jb-form-wrapper .form-control:focus {
     border-color: var(--iser-verde);
-    box-shadow: 0 0 0 3px rgba(27, 158, 136, 0.15);
     outline: none;
+    box-shadow: 0 0 0 2px rgba(27, 158, 136, 0.1);
 }
 
-.jb-moodle-form textarea {
-    min-height: 120px;
-    resize: vertical;
+.jb-form-wrapper textarea {
+    min-height: 100px;
 }
 
-/* Checkboxes and Radio */
-.jb-moodle-form .form-check,
-.jb-moodle-form .fcheckbox {
+/* Checkboxes */
+.jb-form-wrapper .form-check,
+.jb-form-wrapper .fcheckbox {
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    background: #fafafa;
-    border-radius: var(--jb-radius-sm);
-    border: 1px solid #eee;
+    gap: 0.625rem;
+    padding: 0.625rem;
+    background: #f9fafb;
+    border-radius: 6px;
     margin-bottom: 0.5rem;
 }
 
-.jb-moodle-form .form-check-input,
-.jb-moodle-form input[type="checkbox"] {
-    width: 1.25rem;
-    height: 1.25rem;
+.jb-form-wrapper input[type="checkbox"] {
+    width: 1.125rem;
+    height: 1.125rem;
     margin-top: 0.125rem;
     accent-color: var(--iser-verde);
-    flex-shrink: 0;
 }
 
-.jb-moodle-form .form-check-label {
+.jb-form-wrapper .form-check-label {
     font-weight: 400;
+    font-size: 0.875rem;
     color: var(--iser-gris-oscuro);
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 /* File Upload */
-.jb-moodle-form .filepicker-container,
-.jb-moodle-form .filemanager,
-.jb-moodle-form .fp-content {
-    border: 2px dashed var(--iser-gris-claro);
-    border-radius: var(--jb-radius-md);
-    background: #fafafa;
-    transition: var(--jb-transition);
+.jb-form-wrapper .filepicker-container,
+.jb-form-wrapper .filemanager {
+    border: 1px dashed #d1d5db;
+    border-radius: 6px;
+    background: #f9fafb;
 }
 
-.jb-moodle-form .filepicker-container:hover,
-.jb-moodle-form .filemanager:hover {
+.jb-form-wrapper .filepicker-container:hover,
+.jb-form-wrapper .filemanager:hover {
     border-color: var(--iser-verde);
-    background: var(--iser-verde-lighter);
 }
 
 /* Help Text */
-.jb-moodle-form .form-text,
-.jb-moodle-form .fdescription {
-    font-size: 0.8125rem;
+.jb-form-wrapper .form-text,
+.jb-form-wrapper .fdescription {
+    font-size: 0.75rem;
     color: var(--iser-gris-medio);
-    margin-top: 0.375rem;
+    margin-top: 0.25rem;
 }
 
 /* Error Messages */
-.jb-moodle-form .error,
-.jb-moodle-form .invalid-feedback,
-.jb-moodle-form .form-control-feedback {
+.jb-form-wrapper .error,
+.jb-form-wrapper .invalid-feedback {
     color: var(--iser-rojo);
-    font-size: 0.8125rem;
-    margin-top: 0.375rem;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
 }
 
-.jb-moodle-form .error::before {
-    content: "\f071";
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-}
-
-/* Required Indicator */
-.jb-moodle-form .text-danger,
-.jb-moodle-form .required {
-    color: var(--iser-rojo) !important;
-}
-
-/* Alerts inside form */
-.jb-moodle-form .alert {
-    border-radius: var(--jb-radius-sm);
-    padding: 1rem;
-    margin-bottom: 1rem;
-    font-size: 0.9375rem;
-    border: none;
-    border-left: 4px solid;
-}
-
-.jb-moodle-form .alert-info {
-    background: var(--iser-azul-lighter);
-    border-color: var(--iser-azul);
-    color: var(--iser-gris-oscuro);
-}
-
-.jb-moodle-form .alert-warning {
-    background: var(--iser-amarillo-lighter);
-    border-color: var(--iser-amarillo);
-    color: var(--iser-gris-oscuro);
-}
-
-/* Editor/WYSIWYG */
-.jb-moodle-form .editor_atto,
-.jb-moodle-form .editor_atto_content {
-    border-radius: var(--jb-radius-sm);
-}
-
-/* ================================================================
-   FORM BUTTONS - CONSISTENT STYLING
-   ================================================================ */
-.jb-moodle-form .form-group.fitem_actionbuttons,
-.jb-moodle-form #fgroup_id_buttonar,
-.jb-moodle-form .fitem_actionbuttons {
-    background: linear-gradient(to right, var(--iser-verde-lighter), #fff);
-    margin: 2rem -1.5rem -1.5rem -1.5rem;
-    padding: 1.25rem 1.5rem;
-    border-top: 2px solid var(--iser-verde);
+/* Buttons - Clean and Simple */
+.jb-form-wrapper #fgroup_id_buttonar,
+.jb-form-wrapper .fitem_actionbuttons {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    justify-content: flex-start;
-    border-bottom: none !important;
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid #e5e5e5;
 }
 
-.jb-moodle-form input[type="submit"],
-.jb-moodle-form button[type="submit"],
-.jb-moodle-form .btn-primary {
-    background: var(--iser-verde) !important;
-    color: var(--iser-blanco) !important;
-    border: none !important;
-    padding: 0.75rem 1.5rem !important;
-    font-size: 1rem !important;
-    font-weight: 600 !important;
-    border-radius: var(--jb-radius-sm) !important;
+.jb-form-wrapper input[type="submit"],
+.jb-form-wrapper button[type="submit"],
+.jb-form-wrapper .btn-primary {
+    background: var(--iser-verde);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    border-radius: 6px;
     cursor: pointer;
-    transition: var(--jb-transition);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+    transition: background 0.15s;
 }
 
-.jb-moodle-form input[type="submit"]:hover,
-.jb-moodle-form button[type="submit"]:hover,
-.jb-moodle-form .btn-primary:hover {
-    background: var(--iser-verde-dark) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(27, 158, 136, 0.3);
+.jb-form-wrapper input[type="submit"]:hover,
+.jb-form-wrapper button[type="submit"]:hover,
+.jb-form-wrapper .btn-primary:hover {
+    background: var(--iser-verde-dark);
 }
 
-.jb-moodle-form .btn-secondary,
-.jb-moodle-form input[name="savedraft"] {
-    background: var(--iser-blanco) !important;
-    color: var(--iser-verde) !important;
-    border: 2px solid var(--iser-verde) !important;
-    padding: 0.75rem 1.5rem !important;
-    font-size: 1rem !important;
-    font-weight: 600 !important;
-    border-radius: var(--jb-radius-sm) !important;
+.jb-form-wrapper .btn-secondary,
+.jb-form-wrapper input[name="savedraft"] {
+    background: #fff;
+    color: var(--iser-verde);
+    border: 1px solid var(--iser-verde);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
-.jb-moodle-form .btn-secondary:hover,
-.jb-moodle-form input[name="savedraft"]:hover {
-    background: var(--iser-verde-lighter) !important;
+.jb-form-wrapper .btn-secondary:hover,
+.jb-form-wrapper input[name="savedraft"]:hover {
+    background: var(--iser-verde-lighter);
 }
 
-.jb-moodle-form .btn-cancel,
-.jb-moodle-form input[name="cancel"] {
-    background: transparent !important;
-    color: var(--iser-gris-oscuro) !important;
-    border: 2px solid var(--iser-gris-claro) !important;
-    padding: 0.75rem 1.5rem !important;
-    font-size: 1rem !important;
-    font-weight: 500 !important;
-    border-radius: var(--jb-radius-sm) !important;
+.jb-form-wrapper input[name="cancel"],
+.jb-form-wrapper .btn-cancel {
+    background: transparent;
+    color: var(--iser-gris-medio);
+    border: 1px solid #d1d5db;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
-.jb-moodle-form .btn-cancel:hover,
-.jb-moodle-form input[name="cancel"]:hover {
-    border-color: var(--iser-gris-medio) !important;
-    background: #f5f5f5 !important;
+.jb-form-wrapper input[name="cancel"]:hover,
+.jb-form-wrapper .btn-cancel:hover {
+    background: #f5f5f5;
+    border-color: #bbb;
 }
 
-/* ================================================================
-   SIDEBAR
-   ================================================================ */
+/* Sidebar */
 .jb-apply-sidebar {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     position: sticky;
-    top: 100px;
+    top: 80px;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 900px) {
     .jb-apply-sidebar {
         position: static;
         flex-direction: row;
         flex-wrap: wrap;
     }
-
-    .jb-sidebar-card {
-        flex: 1 1 300px;
+    .jb-card {
+        flex: 1 1 250px;
     }
 }
 
-/* Sidebar Card */
-.jb-sidebar-card {
-    background: var(--iser-blanco);
-    border-radius: var(--jb-radius-md);
-    box-shadow: var(--jb-shadow-sm);
+/* Cards */
+.jb-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
     overflow: hidden;
-    transition: var(--jb-transition);
 }
 
-.jb-sidebar-card:hover {
-    box-shadow: var(--jb-shadow-md);
-}
-
-.jb-sidebar-card__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    padding: 0.875rem 1rem;
+.jb-card__header {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
     font-weight: 600;
-    font-size: 0.9375rem;
-    border-bottom: 2px solid;
-}
-
-.jb-sidebar-card__header i {
-    font-size: 1rem;
-}
-
-.jb-sidebar-card__header-main {
+    color: var(--iser-gris-oscuro);
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
 }
 
-.jb-sidebar-card__header--primary {
+.jb-card__header i {
+    color: var(--iser-verde);
+}
+
+.jb-card__header--accent {
     background: var(--iser-verde-lighter);
+    border-bottom-color: var(--iser-verde);
+}
+
+.jb-card__header--accent,
+.jb-card__header--accent i {
     color: var(--iser-verde-dark);
-    border-color: var(--iser-verde);
 }
 
-.jb-sidebar-card__header--warning {
-    background: var(--iser-amarillo-lighter);
-    color: var(--iser-amarillo-darker);
-    border-color: var(--iser-amarillo);
-}
-
-.jb-sidebar-card__header--info {
-    background: var(--iser-azul-lighter);
-    color: var(--iser-azul);
-    border-color: var(--iser-azul);
-}
-
-.jb-sidebar-card__body {
+.jb-card__body {
     padding: 1rem;
 }
 
-.jb-sidebar-card__footer {
+.jb-card__link {
+    display: block;
     padding: 0.75rem 1rem;
-    background: #fafafa;
-    border-top: 1px solid #eee;
+    font-size: 0.8125rem;
+    color: var(--iser-verde);
+    text-decoration: none;
+    text-align: center;
+    border-top: 1px solid #e5e5e5;
 }
 
-.jb-sidebar-card__note {
-    padding: 0.625rem 1rem;
-    background: #fafafa;
-    font-size: 0.75rem;
-    color: var(--iser-gris-medio);
-    border-top: 1px solid #eee;
+.jb-card__link:hover {
+    background: #f9fafb;
+    color: var(--iser-verde-dark);
 }
 
-/* Info List */
-.jb-info-list {
-    margin: 0;
-}
-
-.jb-info-list__item {
+/* Info Rows */
+.jb-info-row {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    padding: 0.625rem 0;
+    padding: 0.5rem 0;
     border-bottom: 1px solid #f0f0f0;
-    gap: 0.5rem;
+    font-size: 0.8125rem;
 }
 
-.jb-info-list__item:last-child {
+.jb-info-row:last-child {
     border-bottom: none;
     padding-bottom: 0;
 }
 
-.jb-info-list__item--full {
-    flex-direction: column;
-    align-items: stretch;
-}
-
-.jb-info-list__label {
-    font-size: 0.8125rem;
+.jb-info-label {
     color: var(--iser-gris-medio);
-    font-weight: 400;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
 }
 
-.jb-info-list__label i {
-    width: 14px;
-    text-align: center;
-}
-
-.jb-info-list__value {
+.jb-info-value {
     font-weight: 500;
     color: var(--iser-negro);
-    font-size: 0.875rem;
-    text-align: right;
 }
 
-.jb-info-list__value--title {
-    text-align: left;
-    font-weight: 600;
-}
-
-.jb-info-list__value--urgent {
-    color: var(--iser-rojo);
-    font-weight: 700;
-}
-
-.jb-code-badge {
-    background: var(--iser-verde-lighter);
-    color: var(--iser-verde-dark);
-    padding: 0.125rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-}
-
-/* Counter Badge */
-.jb-counter-badge {
-    background: var(--iser-gris-medio);
-    color: var(--iser-blanco);
-    padding: 0.25rem 0.625rem;
-    border-radius: 50px;
+.jb-code {
+    font-family: monospace;
+    background: #f0f0f0;
+    padding: 0.125rem 0.375rem;
+    border-radius: 3px;
     font-size: 0.75rem;
-    font-weight: 700;
 }
 
-/* Progress Bar */
-.jb-progress-bar {
-    height: 4px;
-    background: rgba(0,0,0,0.08);
-    overflow: hidden;
+/* Progress */
+.jb-progress {
+    height: 3px;
+    background: #e5e5e5;
 }
 
-.jb-progress-bar__fill {
+.jb-progress::after {
+    content: '';
+    display: block;
     height: 100%;
     background: var(--iser-verde);
     width: 0%;
-    transition: width 0.3s ease;
+    transition: width 0.3s;
+}
+
+/* Badge */
+.jb-badge {
+    background: var(--iser-gris-medio);
+    color: #fff;
+    padding: 0.125rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
 }
 
 /* Checklist */
@@ -1007,265 +570,82 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.625rem 1rem;
+    padding: 0.5rem 1rem;
     font-size: 0.8125rem;
-    border-bottom: 1px solid #f5f5f5;
+    color: var(--iser-gris-oscuro);
     cursor: pointer;
-    transition: var(--jb-transition);
-}
-
-.jb-checklist__item:hover {
-    background: #fafafa;
+    border-bottom: 1px solid #f5f5f5;
 }
 
 .jb-checklist__item:last-child {
     border-bottom: none;
 }
 
-.jb-checklist__checkbox {
-    color: var(--iser-gris-claro);
-    font-size: 1rem;
+.jb-checklist__item:hover {
+    background: #f9fafb;
 }
 
-.jb-checklist__checkbox--checked {
-    color: var(--iser-verde);
-}
-
-.jb-checklist__label {
-    flex: 1;
-    color: var(--iser-gris-oscuro);
-}
-
-.jb-status-badge {
-    font-size: 0.625rem;
-    padding: 0.125rem 0.375rem;
-    border-radius: 3px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.jb-status-badge--pending {
-    background: #e0e0e0;
-    color: #666;
-}
-
-.jb-status-badge--success {
-    background: var(--iser-verde);
-    color: var(--iser-blanco);
-}
-
-.jb-required-marker {
-    color: var(--iser-rojo);
-    font-weight: 700;
+.jb-checklist__icon {
+    color: #d1d5db;
     font-size: 0.875rem;
 }
 
-.jb-checklist__complete {
+.jb-checklist__icon--done {
+    color: var(--iser-verde);
+}
+
+.jb-checklist__text {
+    flex: 1;
+}
+
+.jb-checklist__done {
     padding: 0.75rem 1rem;
     background: var(--iser-verde-lighter);
     color: var(--iser-verde-dark);
+    font-size: 0.8125rem;
     text-align: center;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
 }
 
-/* Help Section */
-.jb-help-text {
-    font-size: 0.875rem;
-    color: var(--iser-gris-oscuro);
-    margin: 0 0 0.75rem 0;
+/* Utilities */
+.jb-text-danger {
+    color: var(--iser-rojo) !important;
+}
+
+.jb-text-muted {
+    color: var(--iser-gris-medio);
+    font-size: 0.8125rem;
     line-height: 1.5;
-}
-
-.jb-tips-list {
-    font-size: 0.8125rem;
-    color: var(--iser-gris-oscuro);
-    padding-left: 1.25rem;
     margin: 0;
 }
 
-.jb-tips-list li {
-    margin-bottom: 0.375rem;
-}
-
-.jb-support-section {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #eee;
-}
-
-.jb-support-label {
-    display: block;
-    font-size: 0.8125rem;
-    color: var(--iser-negro);
-    margin-bottom: 0.5rem;
-}
-
-/* ================================================================
-   BUTTONS
-   ================================================================ */
-.jb-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    border-radius: var(--jb-radius-sm);
-    text-decoration: none;
-    cursor: pointer;
-    transition: var(--jb-transition);
-    border: 2px solid transparent;
-}
-
-.jb-btn--outline {
-    background: transparent;
-    border-color: var(--iser-verde);
-    color: var(--iser-verde);
-}
-
-.jb-btn--outline:hover {
-    background: var(--iser-verde);
-    color: var(--iser-blanco);
-}
-
-.jb-btn--ghost {
-    background: transparent;
-    border-color: var(--iser-gris-claro);
-    color: var(--iser-gris-oscuro);
-}
-
-.jb-btn--ghost:hover {
-    border-color: var(--iser-gris-medio);
-    background: #f5f5f5;
-    color: var(--iser-negro);
-}
-
-.jb-btn--block {
-    width: 100%;
-}
-
-.jb-btn--sm {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8125rem;
-}
-
-/* Links */
-.jb-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    text-decoration: none;
-    font-weight: 500;
-    transition: var(--jb-transition);
-}
-
-.jb-link--primary {
-    color: var(--iser-verde);
-}
-
-.jb-link--primary:hover {
-    color: var(--iser-verde-dark);
-}
-
-/* ================================================================
-   FOOTER
-   ================================================================ */
-.jb-apply-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.25rem 0;
-    margin-top: 2rem;
-    border-top: 2px solid #eee;
-}
-
-/* ================================================================
-   RESPONSIVE
-   ================================================================ */
-@media (max-width: 767px) {
-    .jb-apply-page {
-        --jb-page-padding: 1rem;
-    }
-
-    .jb-apply-header {
-        padding: 1.25rem;
-    }
-
+/* Mobile */
+@media (max-width: 600px) {
     .jb-apply-header__title {
-        font-size: 1.375rem;
+        font-size: 1.25rem;
     }
 
-    .jb-apply-header__title-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .jb-deadline-badge {
-        align-self: flex-start;
-    }
-
-    .jb-form-card__header {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.75rem;
-    }
-
-    .jb-form-card__body {
+    .jb-form-wrapper {
         padding: 1rem;
     }
 
-    .jb-moodle-form .ftoggler,
-    .jb-moodle-form .fheader,
-    .jb-moodle-form fieldset legend {
-        margin-left: -1rem;
-        margin-right: -1rem;
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-
-    .jb-moodle-form .form-group.fitem_actionbuttons,
-    .jb-moodle-form #fgroup_id_buttonar {
-        margin-left: -1rem;
-        margin-right: -1rem;
-        padding: 1rem;
+    .jb-form-wrapper #fgroup_id_buttonar,
+    .jb-form-wrapper .fitem_actionbuttons {
         flex-direction: column;
     }
 
-    .jb-moodle-form .form-group.fitem_actionbuttons .btn,
-    .jb-moodle-form #fgroup_id_buttonar input {
+    .jb-form-wrapper #fgroup_id_buttonar input,
+    .jb-form-wrapper .fitem_actionbuttons .btn {
         width: 100%;
     }
-
-    .jb-apply-footer {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
 }
 
-/* ================================================================
-   PRINT STYLES
-   ================================================================ */
+/* Print */
 @media print {
-    .jb-apply-sidebar,
-    .jb-apply-footer,
-    .jb-breadcrumb {
+    .jb-apply-sidebar {
         display: none;
     }
-
-    .jb-apply-layout {
+    .jb-apply-content {
         display: block;
-    }
-
-    .jb-form-card {
-        box-shadow: none;
-        border: 1px solid #ccc;
     }
 }
 </style>

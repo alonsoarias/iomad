@@ -7,7 +7,7 @@
   "endtourlabel": "tour_endlabel,local_jobboard",
   "configdata": "{\"placement\":\"bottom\",\"orphan\":\"0\",\"backdrop\":\"1\",\"reflex\":\"0\",\"filtervalues\":{\"accessdate\":{\"filter_accessdate\":\"tool_usertours_accountcreation\",\"filter_accessdate_range\":0,\"filter_accessdate_enabled\":\"0\"},\"category\":[],\"course\":[],\"courseformat\":[],\"role\":[],\"theme\":[],\"cssselector\":[]}}",
   "displaystepnumbers": true,
-  "version": "2025121985",
+  "version": "2025121986",
   "steps": [
     {
       "title": "tour_apply_header_title,local_jobboard",
@@ -19,21 +19,12 @@
       "configdata": "{\"placement\":\"bottom\"}"
     },
     {
-      "title": "tour_apply_deadline_title,local_jobboard",
-      "content": "tour_apply_deadline_content,local_jobboard",
-      "contentformat": "1",
-      "targettype": "0",
-      "targetvalue": ".jb-deadline-badge",
-      "sortorder": "1",
-      "configdata": "{\"placement\":\"bottom\"}"
-    },
-    {
       "title": "tour_apply_form_title,local_jobboard",
       "content": "tour_apply_form_content,local_jobboard",
       "contentformat": "1",
       "targettype": "0",
-      "targetvalue": ".jb-form-card",
-      "sortorder": "2",
+      "targetvalue": ".jb-apply-form",
+      "sortorder": "1",
       "configdata": "{\"placement\":\"top\"}"
     },
     {
@@ -41,8 +32,8 @@
       "content": "tour_apply_sidebar_content,local_jobboard",
       "contentformat": "1",
       "targettype": "0",
-      "targetvalue": ".jb-sidebar-card__header--primary",
-      "sortorder": "3",
+      "targetvalue": ".jb-apply-sidebar .jb-card:first-child",
+      "sortorder": "2",
       "configdata": "{\"placement\":\"left\"}"
     },
     {
@@ -51,16 +42,7 @@
       "contentformat": "1",
       "targettype": "0",
       "targetvalue": "[data-region='document-checklist']",
-      "sortorder": "4",
-      "configdata": "{\"placement\":\"left\"}"
-    },
-    {
-      "title": "tour_apply_help_title,local_jobboard",
-      "content": "tour_apply_help_content,local_jobboard",
-      "contentformat": "1",
-      "targettype": "0",
-      "targetvalue": ".jb-sidebar-card__header--info",
-      "sortorder": "5",
+      "sortorder": "3",
       "configdata": "{\"placement\":\"left\"}"
     },
     {
@@ -69,7 +51,7 @@
       "contentformat": "1",
       "targettype": "0",
       "targetvalue": "#fgroup_id_buttonar, .fitem_actionbuttons",
-      "sortorder": "6",
+      "sortorder": "4",
       "configdata": "{\"placement\":\"top\"}"
     }
   ]
