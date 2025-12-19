@@ -662,9 +662,12 @@ class document {
      * @return \moodle_url|null The download URL or null if no file exists.
      */
     public function get_download_url(bool $forcedownload = true): ?\moodle_url {
-        // Text documents don't have physical files - return null.
+        // Text documents use a special download script.
         if ($this->is_text_document()) {
-            return null;
+            return new \moodle_url('/local/jobboard/download_text_document.php', [
+                'documentid' => $this->id,
+                'forcedownload' => $forcedownload ? 1 : 0,
+            ]);
         }
 
         $file = $this->get_stored_file();
