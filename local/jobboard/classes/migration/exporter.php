@@ -300,10 +300,10 @@ class exporter {
             $app->original_id = $app->id;
 
             // Get documents for this application.
+            // Note: documenttype is a code (varchar), not a foreign key ID.
             $documents = $DB->get_records_sql(
-                "SELECT d.*, dt.code as doctype_code
+                "SELECT d.*, d.documenttype as doctype_code
                    FROM {local_jobboard_document} d
-                   JOIN {local_jobboard_doctype} dt ON dt.id = d.doctypeid
                   WHERE d.applicationid = ?",
                 [$app->id]
             );
@@ -346,8 +346,16 @@ class exporter {
 
             $app->documents = array_values($documents);
 
-            // Get validations.
-            $validations = $DB->get_records('local_jobboard_doc_validation', ['applicationid' => $app->id]);
+            // Get validations for all documents in this application.
+            $docids = array_keys($documents);
+            $validations = [];
+            if (!empty($docids)) {
+                list($insql, $inparams) = $DB->get_in_or_equal($docids);
+                $validations = $DB->get_records_sql(
+                    "SELECT * FROM {local_jobboard_doc_validation} WHERE documentid $insql",
+                    $inparams
+                );
+            }
             foreach ($validations as &$val) {
                 $val->original_id = $val->id;
                 unset($val->id);
