@@ -182,6 +182,10 @@ trait application_renderer {
                 'missingdocsnames' => $missingdocs['names'],
                 'missingdocslist' => $missingdocs['list'],
                 'hasmissingdocs' => $missingdocs['count'] > 0,
+                'rejecteddocscount' => $missingdocs['rejectedcount'] ?? 0,
+                'rejecteddocsnames' => $missingdocs['rejectednames'] ?? '',
+                'rejecteddocslist' => $missingdocs['rejectedlist'] ?? [],
+                'hasrejecteddocs' => ($missingdocs['rejectedcount'] ?? 0) > 0,
                 'statusnotes' => !empty($app->statusnotes) ? format_string($app->statusnotes) : null,
                 'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]))->out(false),
                 'withdrawurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id, 'action' => 'withdraw']))->out(false),
@@ -819,21 +823,29 @@ trait application_renderer {
     /**
      * Get list of missing/pending document types for an application.
      *
-     * Returns document types that are required but not yet uploaded or are rejected.
+     * Returns document types that are required but not yet uploaded.
+     * Separates truly missing documents from rejected documents that need re-upload.
      *
      * @param int $applicationid Application ID.
      * @param int $vacancyid Vacancy ID.
      * @param int $userid User ID.
-     * @return array Array with 'count' and 'names' (comma-separated string of document type names).
+     * @return array Array with 'count', 'names', 'list', 'rejectedcount', 'rejectednames'.
      */
     protected function get_missing_documents(int $applicationid, int $vacancyid, int $userid): array {
         global $DB;
 
-        // Get required document types for this vacancy.
+        // Get required document types for this vacancy (only enabled doctypes).
         $requireddocs = \local_jobboard\document::get_required_types($vacancyid, $userid);
 
         if (empty($requireddocs)) {
-            return ['count' => 0, 'names' => '', 'list' => []];
+            return [
+                'count' => 0,
+                'names' => '',
+                'list' => [],
+                'rejectedcount' => 0,
+                'rejectednames' => '',
+                'rejectedlist' => [],
+            ];
         }
 
         // Get uploaded document types for this application with validation status.
@@ -842,29 +854,52 @@ trait application_renderer {
              LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
                  WHERE d.applicationid = ?";
         $uploadeddocs = $DB->get_records_sql($sql, [$applicationid]);
+
+        // Categorize uploaded documents.
         $uploadedtypes = [];
+        $rejectedtypes = [];
         foreach ($uploadeddocs as $doc) {
-            // Only count as uploaded if not rejected.
-            if ($doc->validation_status !== 'rejected') {
+            if ($doc->validation_status === 'rejected') {
+                // Track rejected documents separately.
+                $rejectedtypes[$doc->documenttype] = true;
+            } else {
+                // Approved or pending - counts as uploaded.
                 $uploadedtypes[$doc->documenttype] = true;
             }
         }
 
-        // Find missing or rejected document types.
+        // Find truly missing documents (never uploaded) and rejected documents.
         $missingnames = [];
+        $rejectednames = [];
+
         foreach ($requireddocs as $req) {
             $code = $req->documenttype ?? '';
-            if (!isset($uploadedtypes[$code])) {
-                // Get name from doctype object or fallback to code.
-                $name = '';
-                if (!empty($req->doctype) && !empty($req->doctype->name)) {
-                    $name = $req->doctype->name;
-                } else {
-                    $name = $code;
-                }
-                if (!empty($name)) {
-                    $missingnames[] = format_string($name);
-                }
+
+            // Skip if doctype is not enabled.
+            if (!empty($req->doctype) && isset($req->doctype->enabled) && !$req->doctype->enabled) {
+                continue;
+            }
+
+            // Get name from doctype object or fallback to code.
+            $name = '';
+            if (!empty($req->doctype) && !empty($req->doctype->name)) {
+                $name = $req->doctype->name;
+            } else {
+                $name = $code;
+            }
+
+            if (empty($name)) {
+                continue;
+            }
+
+            $formattedname = format_string($name);
+
+            if (!isset($uploadedtypes[$code]) && !isset($rejectedtypes[$code])) {
+                // Never uploaded.
+                $missingnames[] = $formattedname;
+            } else if (isset($rejectedtypes[$code]) && !isset($uploadedtypes[$code])) {
+                // Was rejected and no new upload.
+                $rejectednames[] = $formattedname;
             }
         }
 
@@ -874,6 +909,11 @@ trait application_renderer {
             'list' => array_map(function($name) {
                 return ['name' => $name];
             }, $missingnames),
+            'rejectedcount' => count($rejectednames),
+            'rejectednames' => implode(', ', $rejectednames),
+            'rejectedlist' => array_map(function($name) {
+                return ['name' => $name];
+            }, $rejectednames),
         ];
     }
 }

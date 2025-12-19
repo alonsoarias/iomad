@@ -189,13 +189,13 @@
                             </div>
                         </div>
 
-                        {{! Missing Documents Alert }}
+                        {{! Missing Documents Alert (never uploaded) }}
                         {{#hasmissingdocs}}
                         <div class="mt-3 alert alert-warning py-2 mb-0">
                             <div class="d-flex align-items-start">
-                                <i class="fa fa-exclamation-triangle me-2 mt-1"></i>
+                                <i class="fa fa-file-circle-question me-2 mt-1"></i>
                                 <div>
-                                    <strong class="small">{{#str}}actionrequired, local_jobboard{{/str}}</strong>
+                                    <strong class="small">{{#str}}missing_documents, local_jobboard{{/str}}</strong>
                                     <div class="small">
                                         {{#str}}missing_documents_list, local_jobboard{{/str}}: <strong>{{missingdocsnames}}</strong>
                                     </div>
@@ -203,6 +203,21 @@
                             </div>
                         </div>
                         {{/hasmissingdocs}}
+
+                        {{! Rejected Documents Alert (need re-upload) }}
+                        {{#hasrejecteddocs}}
+                        <div class="mt-3 alert alert-danger py-2 mb-0">
+                            <div class="d-flex align-items-start">
+                                <i class="fa fa-file-circle-xmark me-2 mt-1"></i>
+                                <div>
+                                    <strong class="small">{{#str}}rejected_documents_reupload, local_jobboard{{/str}}</strong>
+                                    <div class="small">
+                                        {{#str}}rejected_documents_list, local_jobboard{{/str}}: <strong>{{rejecteddocsnames}}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/hasrejecteddocs}}
 
                         {{! Status Notes }}
                         {{#statusnotes}}
