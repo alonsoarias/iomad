@@ -90,7 +90,7 @@ trait application_renderer {
         int $perpage,
         ?object $exemption = null
     ): array {
-        global $OUTPUT;
+        global $DB, $OUTPUT;
 
         // Progress steps for applications.
         $progresssteps = ['submitted', 'under_review', 'docs_validated', 'interview', 'selected'];
@@ -117,11 +117,28 @@ trait application_renderer {
             // Calculate progress percent.
             $progresspercent = $currentindex >= 0 ? (($currentindex + 1) / count($progresssteps)) * 100 : 0;
 
-            // Document counts.
-            $doccount = $app->document_count ?? 0;
-            $docsapproved = $app->docs_approved ?? 0;
-            $docsrejected = $app->docs_rejected ?? 0;
-            $docspending = max(0, $doccount - $docsapproved - $docsrejected);
+            // Get document stats from database.
+            $docstats = \local_jobboard\document::get_stats($app->id);
+            $doccount = $docstats['total'];
+            $docsapproved = $docstats['approved'];
+            $docsrejected = $docstats['rejected'];
+            $docspending = $docstats['pending'];
+
+            // Get vacancy and convocatoria info (use attached properties if available).
+            $vacancycode = $app->vacancycode ?? ($app->vacancy_code ?? '');
+            $vacancytitle = $app->vacancytitle ?? ($app->vacancy_title ?? '');
+
+            // Get convocatoria name from vacancy.
+            $convocatorianame = null;
+            if (!empty($app->vacancyid)) {
+                $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $app->vacancyid], 'convocatoriaid');
+                if ($vacancy && !empty($vacancy->convocatoriaid)) {
+                    $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $vacancy->convocatoriaid], 'name');
+                    if ($convocatoria) {
+                        $convocatorianame = format_string($convocatoria->name);
+                    }
+                }
+            }
 
             // Can withdraw?
             $canwithdraw = in_array($app->status, ['submitted', 'under_review']);
@@ -129,19 +146,32 @@ trait application_renderer {
             // Get missing documents for this application.
             $missingdocs = $this->get_missing_documents($app->id, $app->vacancyid, $userid);
 
+            // Calculate progress color based on document review.
+            $progresscolor = 'primary';
+            if ($doccount > 0) {
+                if ($docsapproved == $doccount) {
+                    $progresscolor = 'success';
+                } else if ($docsrejected > 0) {
+                    $progresscolor = 'danger';
+                } else if ($docspending > 0) {
+                    $progresscolor = 'warning';
+                }
+            }
+
             $applicationdata[] = [
                 'id' => $app->id,
                 'vacancyid' => $app->vacancyid,
-                'vacancycode' => $app->vacancy_code ?? '',
-                'vacancytitle' => format_string($app->vacancy_title ?? get_string('unknownvacancy', 'local_jobboard')),
+                'vacancycode' => $vacancycode,
+                'vacancytitle' => format_string($vacancytitle ?: get_string('unknownvacancy', 'local_jobboard')),
                 'vacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $app->vacancyid]))->out(false),
-                'convocatorianame' => !empty($app->convocatoria_name) ? format_string($app->convocatoria_name) : null,
+                'convocatorianame' => $convocatorianame,
                 'status' => $app->status,
                 'statuslabel' => get_string('appstatus:' . $app->status, 'local_jobboard'),
                 'statuscolor' => $this->get_application_status_class($app->status),
                 'dateapplied' => userdate($app->timecreated, get_string('strftimedate', 'langconfig')),
                 'progresssteps' => $steps,
                 'progresspercent' => round($progresspercent),
+                'progresscolor' => $progresscolor,
                 'documentcount' => $doccount,
                 'docsapproved' => $docsapproved,
                 'docsrejected' => $docsrejected,
