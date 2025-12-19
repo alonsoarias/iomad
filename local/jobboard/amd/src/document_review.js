@@ -307,6 +307,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             }
         });
 
+        // Remove disabled state from this item (it may have been locked when page loaded).
+        docItem.classList.remove('disabled', 'opacity-50');
+        docItem.style.cursor = 'pointer';
+
+        // Ensure the onclick handler is set for preview functionality.
+        if (!docItem.hasAttribute('onclick')) {
+            docItem.setAttribute('onclick', 'jobboardPreviewDocument(this)');
+        }
+
         // Add current styling to this item.
         docItem.classList.add('active', 'bg-primary-subtle');
 
