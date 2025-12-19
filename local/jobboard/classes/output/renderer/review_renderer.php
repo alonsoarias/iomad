@@ -772,6 +772,10 @@ trait review_renderer {
                     'view' => 'application',
                     'id' => $app->id,
                 ]))->out(false),
+                'downloadzipurl' => (new moodle_url('/local/jobboard/download_documents.php', [
+                    'applicationid' => $app->id,
+                    'sesskey' => sesskey(),
+                ]))->out(false),
             ];
         }
 

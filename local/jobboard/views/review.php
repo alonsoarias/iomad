@@ -168,6 +168,7 @@ if (!$applicationid) {
     $sql = "SELECT a.*, v.title as vacancy_title, v.code as vacancy_code,
                    COALESCE(c.enddate, 0) as closedate,
                    u.firstname, u.lastname, u.email,
+                   u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename,
                    (SELECT COUNT(*) FROM {local_jobboard_document} d WHERE d.applicationid = a.id AND d.issuperseded = 0) as doccount,
                    (SELECT COUNT(*) FROM {local_jobboard_document} d
                     LEFT JOIN {local_jobboard_doc_validation} dv ON dv.documentid = d.id
