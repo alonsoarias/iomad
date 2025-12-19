@@ -518,16 +518,27 @@ if ($options['delete-application'] || $options['list-applications']) {
                 }
             }
 
-            // 6. Delete notifications.
-            $notifcount = $DB->count_records_select('local_jobboard_notification',
-                "entitytype = 'application' AND entityid = :appid",
-                ['appid' => $app->id]);
-            if ($notifcount > 0) {
-                $DB->delete_records_select('local_jobboard_notification',
-                    "entitytype = 'application' AND entityid = :appid",
-                    ['appid' => $app->id]);
-                $stats['notifications'] += $notifcount;
-                if ($verbose) echo "    Deleted $notifcount notification(s)\n";
+            // 6. Delete notifications (notifications are linked via JSON data field).
+            // The notification table uses 'data' JSON field to store applicationid.
+            // We try to find and delete notifications that reference this application.
+            try {
+                $likeparam = '%"applicationid":' . $app->id . '%';
+                $notifcount = $DB->count_records_sql(
+                    "SELECT COUNT(*) FROM {local_jobboard_notification}
+                     WHERE userid = :userid AND " . $DB->sql_like('data', ':pattern'),
+                    ['userid' => $app->userid, 'pattern' => $likeparam]
+                );
+                if ($notifcount > 0) {
+                    // Use execute() for DELETE with LIKE since delete_records_sql doesn't exist.
+                    $sql = "DELETE FROM {local_jobboard_notification}
+                            WHERE userid = ? AND " . $DB->sql_like('data', '?');
+                    $DB->execute($sql, [$app->userid, $likeparam]);
+                    $stats['notifications'] += $notifcount;
+                    if ($verbose) echo "    Deleted $notifcount notification(s)\n";
+                }
+            } catch (Exception $e) {
+                // Notifications table might have different structure, skip silently.
+                if ($verbose) echo "    Note: Could not process notifications (table structure may differ)\n";
             }
 
             // 7. Delete application record.
@@ -552,9 +563,17 @@ if ($options['delete-application'] || $options['list-applications']) {
                 $stats['evaluations'] += $DB->count_records('local_jobboard_evaluation', ['applicationid' => $app->id]);
             }
 
-            $stats['notifications'] += $DB->count_records_select('local_jobboard_notification',
-                "entitytype = 'application' AND entityid = :appid",
-                ['appid' => $app->id]);
+            // Try to count notifications (may fail if table structure differs).
+            try {
+                $likeparam = '%"applicationid":' . $app->id . '%';
+                $stats['notifications'] += $DB->count_records_sql(
+                    "SELECT COUNT(*) FROM {local_jobboard_notification}
+                     WHERE userid = :userid AND " . $DB->sql_like('data', ':pattern'),
+                    ['userid' => $app->userid, 'pattern' => $likeparam]
+                );
+            } catch (Exception $e) {
+                // Skip if table structure differs.
+            }
 
             echo "  Would DELETE application ID: {$app->id}\n";
         }
