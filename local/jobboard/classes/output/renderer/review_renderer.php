@@ -1026,6 +1026,14 @@ trait review_renderer {
             }
         }
 
+        // Fallback: if carta_intencion not in text_documents, check coverletter field.
+        if (empty($textdocuments['carta_intencion']) && !empty($application->coverletter)) {
+            $textdocuments['carta_intencion'] = [
+                'type' => 'textarea',
+                'value' => $application->coverletter,
+            ];
+        }
+
         // Ensure text documents have document records for proper validation workflow.
         // Create records for any text documents that don't have them.
         $docrecordsneeded = false;
@@ -1139,6 +1147,9 @@ trait review_renderer {
                 $editor->use_editor($editorid, $editoroptions);
             }
 
+            // For text content, base64 encode for safe storage in data attribute.
+            $textcontentencoded = !empty($textcontent) ? base64_encode($textcontent) : null;
+
             $docsdata[] = [
                 'id' => $doc->id,
                 'applicationid' => $applicationid,
@@ -1157,6 +1168,7 @@ trait review_renderer {
                 'isimage' => $isimage,
                 'istext' => $istext,
                 'textcontent' => $textcontent,
+                'textcontentencoded' => $textcontentencoded,
                 'hastextcontent' => !empty($textcontent),
                 'canpreview' => $canpreview,
                 'validateurl' => (new moodle_url('/local/jobboard/index.php', [

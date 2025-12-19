@@ -169,23 +169,45 @@ $wraphtmlcontent = function($title, $content) use ($applicant) {
 </html>';
 };
 
-// Add cover letter if present.
-if (!empty($application->coverletter)) {
-    $coverlettertitle = get_string('coverletter', 'local_jobboard');
-    // Use same naming convention: CP_{Lastname}.html
-    $coverletterfilename = $fileprefixes['coverletter'] . '_' . $sanitizedlastname . '.html';
+// Get text documents from applicationdata first - these are the actual submitted text content.
+$appdata = json_decode($application->applicationdata ?? '{}', true);
+$textdocuments = $appdata['text_documents'] ?? [];
+
+// Check if carta_intencion was submitted (either as text_document or stored in coverletter field).
+$cartaintencionadded = false;
+if (!empty($textdocuments['carta_intencion']['value'])) {
+    // Carta de intención was submitted in the form - add it.
+    $coverlettertitle = get_string_manager()->string_exists('carta_intencion', 'local_jobboard')
+        ? get_string('carta_intencion', 'local_jobboard')
+        : (isset($doctypes['carta_intencion']) ? $doctypes['carta_intencion']->name : 'Carta de Intención');
+    $coverletterfilename = $fileprefixes['carta_intencion'] . '_' . $sanitizedlastname . '.html';
+    $htmlcontent = $wraphtmlcontent($coverlettertitle, $textdocuments['carta_intencion']['value']);
+    $zip->addFromString($coverletterfilename, $htmlcontent);
+    $filesadded++;
+    $cartaintencionadded = true;
+} elseif (!empty($application->coverletter)) {
+    // Fallback: carta de intención stored in coverletter field (legacy or direct storage).
+    $coverlettertitle = get_string_manager()->string_exists('carta_intencion', 'local_jobboard')
+        ? get_string('carta_intencion', 'local_jobboard')
+        : 'Carta de Intención';
+    // Use CI prefix for carta de intención
+    $coverletterfilename = $fileprefixes['carta_intencion'] . '_' . $sanitizedlastname . '.html';
     $htmlcontent = $wraphtmlcontent($coverlettertitle, $application->coverletter);
     $zip->addFromString($coverletterfilename, $htmlcontent);
     $filesadded++;
+    $cartaintencionadded = true;
 }
 
 foreach ($documents as $doc) {
     // Handle text documents (they don't have physical files in Moodle file storage).
     if ($doc->mimetype === 'text/plain') {
+        // Skip carta_intencion if already added (to avoid duplicates).
+        if ($doc->documenttype === 'carta_intencion' && $cartaintencionadded) {
+            continue;
+        }
+
         // For text documents, get content from application data.
         // Text documents are stored under 'text_documents' key in applicationdata.
-        $appdata = json_decode($application->applicationdata ?? '{}', true);
-        $textdocuments = $appdata['text_documents'] ?? [];
         if (is_array($textdocuments) && isset($textdocuments[$doc->documenttype])) {
             $textcontent = $textdocuments[$doc->documenttype]['value'] ?? '';
             if (is_string($textcontent) && !empty(trim($textcontent))) {
@@ -368,22 +390,42 @@ function download_bulk_applications(array $applicationids) {
             false
         );
 
-        // Add cover letter if present.
-        if (!empty($application->coverletter)) {
-            $coverlettertitle = get_string('coverletter', 'local_jobboard');
-            $coverletterfilename = $fileprefixes['coverletter'] . '_' . $sanitizedlastname . '.html';
+        // Get text documents from applicationdata first.
+        $appdata = json_decode($application->applicationdata ?? '{}', true);
+        $textdocuments = $appdata['text_documents'] ?? [];
+
+        // Check if carta_intencion was submitted.
+        $cartaintencionadded = false;
+        if (!empty($textdocuments['carta_intencion']['value'])) {
+            $coverlettertitle = get_string_manager()->string_exists('carta_intencion', 'local_jobboard')
+                ? get_string('carta_intencion', 'local_jobboard')
+                : (isset($doctypes['carta_intencion']) ? $doctypes['carta_intencion']->name : 'Carta de Intención');
+            $coverletterfilename = $fileprefixes['carta_intencion'] . '_' . $sanitizedlastname . '.html';
+            $htmlcontent = $wraphtmlcontent($coverlettertitle, $textdocuments['carta_intencion']['value'], $fullname);
+            $zip->addFromString($foldername . $coverletterfilename, $htmlcontent);
+            $totalfilesadded++;
+            $cartaintencionadded = true;
+        } elseif (!empty($application->coverletter)) {
+            $coverlettertitle = get_string_manager()->string_exists('carta_intencion', 'local_jobboard')
+                ? get_string('carta_intencion', 'local_jobboard')
+                : 'Carta de Intención';
+            $coverletterfilename = $fileprefixes['carta_intencion'] . '_' . $sanitizedlastname . '.html';
             $htmlcontent = $wraphtmlcontent($coverlettertitle, $application->coverletter, $fullname);
             $zip->addFromString($foldername . $coverletterfilename, $htmlcontent);
             $totalfilesadded++;
+            $cartaintencionadded = true;
         }
 
         // Process each document.
         foreach ($documents as $doc) {
             // Handle text documents.
             if ($doc->mimetype === 'text/plain') {
+                // Skip carta_intencion if already added.
+                if ($doc->documenttype === 'carta_intencion' && $cartaintencionadded) {
+                    continue;
+                }
+
                 // Text documents are stored under 'text_documents' key in applicationdata.
-                $appdata = json_decode($application->applicationdata ?? '{}', true);
-                $textdocuments = $appdata['text_documents'] ?? [];
                 if (is_array($textdocuments) && isset($textdocuments[$doc->documenttype])) {
                     $textcontent = $textdocuments[$doc->documenttype]['value'] ?? '';
                     if (is_string($textcontent) && !empty(trim($textcontent))) {

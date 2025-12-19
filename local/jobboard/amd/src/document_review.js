@@ -92,7 +92,17 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
         var isPdf = element.dataset.isPdf === 'true' || element.dataset.isPdf === '1';
         var isImage = element.dataset.isImage === 'true' || element.dataset.isImage === '1';
         var isText = element.dataset.isText === 'true' || element.dataset.isText === '1';
-        var textContent = element.dataset.textContent || '';
+        // Decode base64 encoded text content if present.
+        var textContentEncoded = element.dataset.textContentEncoded || '';
+        var textContent = '';
+        if (textContentEncoded) {
+            try {
+                textContent = atob(textContentEncoded);
+            } catch (e) {
+                // If decoding fails, try using the raw value.
+                textContent = textContentEncoded;
+            }
+        }
         var typename = element.dataset.typename;
         var filename = element.dataset.filename;
         var downloadUrl = element.dataset.downloadUrl;
@@ -140,11 +150,35 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
 
         if (isText && textContent) {
             // Text document preview - show the text content.
-            previewFrame.innerHTML = '<div class="p-4" style="min-height: 500px; overflow-y: auto;">' +
-                '<div class="card"><div class="card-header bg-info text-white">' +
-                '<i class="fa fa-file-alt me-2"></i>' + (typename || 'Documento de texto') + '</div>' +
-                '<div class="card-body"><div class="text-content" style="white-space: pre-wrap;">' +
-                textContent + '</div></div></div></div>';
+            // Create wrapper elements safely.
+            var wrapper = document.createElement('div');
+            wrapper.className = 'p-4';
+            wrapper.style.minHeight = '500px';
+            wrapper.style.overflowY = 'auto';
+
+            var card = document.createElement('div');
+            card.className = 'card';
+
+            var cardHeader = document.createElement('div');
+            cardHeader.className = 'card-header bg-info text-white';
+            cardHeader.innerHTML = '<i class="fa fa-file-alt me-2"></i>' +
+                (typename ? typename.replace(/</g, '&lt;').replace(/>/g, '&gt;') : 'Documento de texto');
+
+            var cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+
+            var contentDiv = document.createElement('div');
+            contentDiv.className = 'text-content';
+            contentDiv.style.whiteSpace = 'pre-wrap';
+            // Render text content as HTML (from WYSIWYG editor) - sanitize basic XSS patterns.
+            contentDiv.innerHTML = textContent;
+
+            cardBody.appendChild(contentDiv);
+            card.appendChild(cardHeader);
+            card.appendChild(cardBody);
+            wrapper.appendChild(card);
+            previewFrame.innerHTML = '';
+            previewFrame.appendChild(wrapper);
         } else if (previewUrl && (isPdf || isImage)) {
             if (isPdf) {
                 previewFrame.innerHTML = '<iframe src="' + previewUrl + '" class="w-100 h-100 border-0" ' +
