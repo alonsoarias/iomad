@@ -150,43 +150,13 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
-     * Reject a document with a reason from the observation field.
+     * Handle reject form submit - validates observation field and populates reason.
      *
-     * @param {string} baseUrl The base URL for the reject action.
-     * @param {string} sesskey The session key.
-     * @param {string} applicationId The application ID.
-     * @param {string} documentId The document ID.
-     * @param {string} reason The rejection reason from observation field.
+     * @param {Event} e The submit event.
      */
-    var rejectDocument = function(baseUrl, sesskey, applicationId, documentId, reason) {
-        // Create and submit form.
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = baseUrl;
-        form.innerHTML = '<input type="hidden" name="sesskey" value="' + sesskey + '">' +
-                         '<input type="hidden" name="view" value="review">' +
-                         '<input type="hidden" name="applicationid" value="' + applicationId + '">' +
-                         '<input type="hidden" name="documentid" value="' + documentId + '">' +
-                         '<input type="hidden" name="action" value="reject">' +
-                         '<input type="hidden" name="reason" value="' + reason.replace(/"/g, '&quot;') + '">';
-        document.body.appendChild(form);
-        form.submit();
-    };
-
-    /**
-     * Handle reject button click - validates observation field before rejection.
-     *
-     * @param {Event} e The click event.
-     */
-    var handleRejectClick = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        var btn = e.currentTarget;
-        var documentId = btn.dataset.documentId;
-        var rejectUrl = btn.dataset.rejectUrl;
-        var sesskey = btn.dataset.sesskey;
-        var applicationId = btn.dataset.applicationid;
+    var handleRejectFormSubmit = function(e) {
+        var form = e.currentTarget;
+        var documentId = form.dataset.documentId;
 
         // Find the observation textarea for this document.
         var observationField = document.querySelector('#doc_observation_' + documentId);
@@ -197,7 +167,10 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
         var reason = observationField ? observationField.value.trim() : '';
 
         if (!reason) {
-            // Observation is required for rejection.
+            // Observation is required for rejection - prevent form submission.
+            e.preventDefault();
+            e.stopPropagation();
+
             if (observationField) {
                 observationField.classList.add('is-invalid', 'border-danger');
                 observationField.focus();
@@ -212,7 +185,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                 message: state.strings.observationRequired || 'You must enter an observation to reject the document.',
                 type: 'error'
             });
-            return;
+            return false;
         }
 
         // Remove validation styling if present.
@@ -220,8 +193,14 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             observationField.classList.remove('is-invalid', 'border-danger');
         }
 
-        // Proceed with rejection.
-        rejectDocument(rejectUrl, sesskey, applicationId, documentId, reason);
+        // Copy observation to the hidden reason field in the form.
+        var reasonInput = form.querySelector('.jb-reject-reason-input');
+        if (reasonInput) {
+            reasonInput.value = reason;
+        }
+
+        // Allow form submission to proceed.
+        return true;
     };
 
     /**
@@ -319,8 +298,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             $(this).removeClass('is-invalid border-danger');
         });
 
-        // Reject button click handler - validates observation is required.
-        $(document).on('click', '.jb-reject-btn', handleRejectClick);
+        // Reject form submit handler - validates observation and copies to reason field.
+        $(document).on('submit', '.jb-reject-form', handleRejectFormSubmit);
 
         // Save and send button.
         $('#saveAndSendBtn').on('click', saveAndSendObservations);
@@ -350,15 +329,13 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             // Handlers already set up, will use fallback strings.
         });
 
-        // Expose reject function globally for onclick handlers.
-        window.jobboardRejectDocument = rejectDocument;
+        // Expose preview function globally for onclick handlers.
         window.jobboardPreviewDocument = previewDocument;
     };
 
     return {
         init: init,
         previewDocument: previewDocument,
-        rejectDocument: rejectDocument,
         saveAndSendObservations: saveAndSendObservations
     };
 });

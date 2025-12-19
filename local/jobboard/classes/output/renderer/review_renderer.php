@@ -974,7 +974,14 @@ trait review_renderer {
                     'action' => 'validate',
                     'sesskey' => sesskey(),
                 ]))->out(false),
-                'rejecturl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
+                // Reject URL with all params - reason will be added via form POST.
+                'rejecturl' => (new moodle_url('/local/jobboard/index.php', [
+                    'view' => 'review',
+                    'applicationid' => $applicationid,
+                    'documentid' => $doc->id,
+                    'action' => 'reject',
+                    'sesskey' => sesskey(),
+                ]))->out(false),
                 'rejectreason' => $doc->validation_reason ?? null,
                 'reviewedby' => $reviewedby,
                 'reviewedat' => $reviewedat,
