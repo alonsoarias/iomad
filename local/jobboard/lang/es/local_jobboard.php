@@ -2583,6 +2583,12 @@ $string['signup_security_title'] = 'Sus datos están seguros';
 $string['signup_security_text'] = 'Su información personal está protegida y solo será utilizada para el proceso de selección.';
 $string['alreadyregistered'] = '¿Ya está registrado?';
 $string['logintosubmit'] = 'Inicie sesión para enviar su postulación.';
+$string['signup_idnumber_username'] = 'Número de identificación como usuario';
+$string['signup_idnumber_username_help'] = 'Su número de identificación se utilizará como su nombre de usuario para iniciar sesión. Esto garantiza un nombre de usuario único y fácil de recordar.';
+$string['companyid'] = 'Sede';
+$string['companyid_help'] = 'Seleccione la sede o institución a la que desea postularse. Esto determina qué vacantes estarán disponibles para usted.';
+$string['departmentid'] = 'Departamento';
+$string['departmentid_help'] = 'Seleccione el departamento o campus dentro de la sede seleccionada. Esto ayuda a enrutar su postulación a los revisores apropiados.';
 
 // =============================================================================
 // CADENAS DEL PANEL DE CONTROL

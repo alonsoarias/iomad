@@ -2567,6 +2567,12 @@ $string['signup_security_title'] = 'Your data is secure';
 $string['signup_security_text'] = 'Your personal information is protected and will only be used for the recruitment process.';
 $string['alreadyregistered'] = 'Already registered?';
 $string['logintosubmit'] = 'Log in to submit your application.';
+$string['signup_idnumber_username'] = 'ID Number as Username';
+$string['signup_idnumber_username_help'] = 'Your ID number will be used as your username for logging in. This ensures a unique and easy-to-remember username.';
+$string['companyid'] = 'Company';
+$string['companyid_help'] = 'Select the company or institution you wish to apply to. This determines which vacancies will be available to you.';
+$string['departmentid'] = 'Department';
+$string['departmentid_help'] = 'Select the department or campus within the selected company. This helps route your application to the appropriate reviewers.';
 
 // =============================================================================
 // DASHBOARD STRINGS
