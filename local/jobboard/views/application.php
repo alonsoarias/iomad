@@ -161,4 +161,8 @@ $data = $renderer->prepare_application_detail_page_data(
 // Output the page.
 echo $OUTPUT->header();
 echo $renderer->render_application_detail_page($data);
+
+// Initialize card actions for withdraw button.
+$PAGE->requires->js_call_amd('local_jobboard/card_actions', 'init', []);
+
 echo $OUTPUT->footer();

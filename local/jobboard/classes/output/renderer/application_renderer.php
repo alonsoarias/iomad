@@ -201,7 +201,7 @@ trait application_renderer {
                 'hasrejecteddocs' => ($missingdocs['rejectedcount'] ?? 0) > 0,
                 'statusnotes' => !empty($app->statusnotes) ? format_string($app->statusnotes) : null,
                 'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]))->out(false),
-                'withdrawurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id, 'action' => 'withdraw']))->out(false),
+                'withdrawurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id, 'action' => 'withdraw', 'confirm' => 1, 'sesskey' => sesskey()]))->out(false),
                 'canwithdraw' => $canwithdraw,
             ];
         }
@@ -671,7 +671,7 @@ trait application_renderer {
             'hasworkflowactions' => !empty($workflowdata),
             'sesskey' => sesskey(),
             'workflowurl' => (new moodle_url('/local/jobboard/index.php'))->out(false),
-            'withdrawurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id, 'action' => 'withdraw']))->out(false),
+            'withdrawurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id, 'action' => 'withdraw', 'confirm' => 1, 'sesskey' => sesskey()]))->out(false),
             'reviewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'applicationid' => $application->id]))->out(false),
             'backurl' => $backurl,
             'backlabel' => $backlabel,

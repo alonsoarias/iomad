@@ -45,8 +45,12 @@ define(['core/modal_factory', 'core/modal_events', 'core/str', 'core/notificatio
     var handleConfirmAction = function(e, action) {
         e.preventDefault();
 
+        var button = e.target.closest('[data-action]');
         var stringKey = action + '_confirm';
-        var url = e.target.closest('a').href;
+        // Support both data-url attribute (for buttons) and href (for anchors).
+        var url = button.dataset.url || button.href;
+        // Use custom confirm message if provided.
+        var customConfirm = button.dataset.confirm;
         var loadedStrings = null;
 
         Str.get_strings([
@@ -55,10 +59,12 @@ define(['core/modal_factory', 'core/modal_events', 'core/str', 'core/notificatio
             {key: 'cancel', component: 'core'}
         ]).then(function(strings) {
             loadedStrings = strings;
+            // Use custom confirm message if available, otherwise use localized string.
+            var bodyMessage = customConfirm || strings[0];
             return ModalFactory.create({
                 type: ModalFactory.types.SAVE_CANCEL,
                 title: strings[1],
-                body: strings[0]
+                body: bodyMessage
             });
         }).then(function(modal) {
             modal.setSaveButtonText(loadedStrings[1]);
@@ -136,6 +142,7 @@ define(['core/modal_factory', 'core/modal_events', 'core/str', 'core/notificatio
             case 'archive':
             case 'publish':
             case 'unpublish':
+            case 'withdraw':
                 handleConfirmAction(e, action);
                 break;
             case 'quickview':
@@ -151,8 +158,8 @@ define(['core/modal_factory', 'core/modal_events', 'core/str', 'core/notificatio
      * Initialize the card actions module.
      *
      * @param {Object} config Configuration object.
-     * @param {string} [config.buttonSelector='.jb-card-action'] CSS selector for action buttons.
-     * @param {string} [config.cardSelector='.jb-vacancy-card'] CSS selector for cards.
+     * @param {string} [config.buttonSelector='[data-action]'] CSS selector for action buttons.
+     * @param {string} [config.cardSelector='.card'] CSS selector for cards.
      */
     var init = function(config) {
         if (state.initialized) {
@@ -160,8 +167,8 @@ define(['core/modal_factory', 'core/modal_events', 'core/str', 'core/notificatio
         }
 
         config = config || {};
-        state.buttonSelector = config.buttonSelector || '.jb-card-action';
-        state.cardSelector = config.cardSelector || '.jb-vacancy-card';
+        state.buttonSelector = config.buttonSelector || '[data-action]';
+        state.cardSelector = config.cardSelector || '.card';
 
         // Event delegation on body.
         document.body.addEventListener('click', onButtonClick);

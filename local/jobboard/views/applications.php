@@ -108,4 +108,7 @@ $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
     'formSelector' => '.jb-filter-form',
 ]]);
 
+// Initialize card actions for withdraw button.
+$PAGE->requires->js_call_amd('local_jobboard/card_actions', 'init', []);
+
 echo $OUTPUT->footer();
