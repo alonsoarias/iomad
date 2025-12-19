@@ -177,7 +177,38 @@ class application_form extends \moodleform {
         // ============================================================
         // SUBMIT BUTTONS
         // ============================================================
-        $this->add_action_buttons(true, get_string('submitapplication', 'local_jobboard'));
+        $buttonarray = [];
+
+        // Save Draft button.
+        $buttonarray[] = $mform->createElement(
+            'submit',
+            'savedraft',
+            get_string('savedraft', 'local_jobboard'),
+            ['class' => 'btn btn-secondary me-2']
+        );
+
+        // Submit Application button.
+        $buttonarray[] = $mform->createElement(
+            'submit',
+            'submitbutton',
+            get_string('submitapplication', 'local_jobboard'),
+            ['class' => 'btn btn-primary']
+        );
+
+        // Cancel button.
+        $buttonarray[] = $mform->createElement('cancel');
+
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
+        $mform->closeHeaderBefore('buttonar');
+    }
+
+    /**
+     * Check if the Save Draft button was pressed.
+     *
+     * @return bool True if Save Draft was pressed.
+     */
+    public function is_draft_submission(): bool {
+        return optional_param('savedraft', '', PARAM_RAW) !== '';
     }
 
     /**
@@ -466,6 +497,15 @@ class application_form extends \moodleform {
      */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
+
+        // Skip strict validation when saving as draft.
+        if ($this->is_draft_submission()) {
+            // For drafts, we don't require consent, declaration, signature, or documents.
+            // User can save partial progress at any time.
+            return $errors;
+        }
+
+        // Full validation for final submission only.
 
         // Validate consent.
         if (empty($data['consentaccepted'])) {

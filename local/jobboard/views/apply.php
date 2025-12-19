@@ -62,8 +62,8 @@ if (!$vacancy->is_open()) {
     );
 }
 
-// Check user hasn't already applied. IMPORTANT: Parameters are (vacancyid, userid).
-if (application::user_has_applied($vacancyid, $USER->id)) {
+// Check user hasn't already submitted (non-draft) application.
+if (application::user_has_submitted_application($vacancyid, $USER->id)) {
     redirect(
         new moodle_url('/local/jobboard/index.php', ['view' => 'applications']),
         get_string('alreadyapplied', 'local_jobboard'),
@@ -71,6 +71,10 @@ if (application::user_has_applied($vacancyid, $USER->id)) {
         \core\output\notification::NOTIFY_WARNING
     );
 }
+
+// Check for existing draft application.
+$draftapplication = application::get_draft($vacancyid, $USER->id);
+$isresuming = ($draftapplication !== null);
 
 // Check convocatoria application limits.
 $convocatoriaid = $vacancy->convocatoriaid ?? 0;
@@ -155,6 +159,7 @@ $customdata = [
     'vacancy' => $vacancy,
     'isexemption' => $isexemption,
     'convocatoriaid' => $convocatoriaid,
+    'draftapplication' => $draftapplication,
 ];
 
 // Form action URL must include vacancyid.
@@ -164,6 +169,16 @@ $formaction = new moodle_url('/local/jobboard/index.php', [
 ]);
 
 $mform = new application_form($formaction->out(false), $customdata);
+
+// Pre-populate form with draft data if resuming.
+if ($isresuming && $draftapplication) {
+    $draftdata = [
+        'digitalsignature' => $draftapplication->digitalsignature,
+        'coverletter' => $draftapplication->coverletter,
+        'consentaccepted' => $draftapplication->consentgiven,
+    ];
+    $mform->set_data($draftdata);
+}
 
 // ============================================================================
 // STEP 6: Handle form cancellation
@@ -176,6 +191,8 @@ if ($mform->is_cancelled()) {
 // STEP 7: Process form submission
 // ============================================================================
 if ($data = $mform->get_data()) {
+    $issavedraft = $mform->is_draft_submission();
+
     try {
         // Start transaction.
         $transaction = $DB->start_delegated_transaction();
@@ -184,17 +201,30 @@ if ($data = $mform->get_data()) {
         $applicationdata = [
             'vacancyid' => $vacancyid,
             'userid' => $USER->id,
-            'consentgiven' => 1,
-            'consenttimestamp' => time(),
-            'consentip' => getremoteaddr(),
-            'digitalsignature' => trim($data->digitalsignature),
+            'digitalsignature' => trim($data->digitalsignature ?? ''),
             'isexemption' => $isexemption ? 1 : 0,
             'coverletter' => trim($data->coverletter ?? ''),
-            'status' => 'submitted',
         ];
 
-        // Create the application.
-        $application = application::create($applicationdata);
+        // Add consent data for final submission.
+        if (!$issavedraft && !empty($data->consentaccepted)) {
+            $applicationdata['consentgiven'] = 1;
+            $applicationdata['consenttimestamp'] = time();
+            $applicationdata['consentip'] = getremoteaddr();
+        }
+
+        // Create or update application.
+        if ($issavedraft) {
+            // Save as draft.
+            $application = application::save_draft($applicationdata);
+        } else if ($draftapplication) {
+            // Submit existing draft.
+            $draftapplication->update_draft($applicationdata);
+            $application = $draftapplication->submit_draft((object) $applicationdata);
+        } else {
+            // Create and submit new application.
+            $application = application::create($applicationdata, false);
+        }
 
         if (!$application || !$application->id) {
             throw new moodle_exception('applicationcreatefailed', 'local_jobboard');
@@ -249,21 +279,40 @@ if ($data = $mform->get_data()) {
         // Commit transaction.
         $transaction->allow_commit();
 
-        // Log success.
-        \local_jobboard\audit::log(
-            \local_jobboard\audit::ACTION_SUBMIT,
-            \local_jobboard\audit::ENTITY_APPLICATION,
-            $application->id,
-            ['vacancyid' => $vacancyid, 'userid' => $USER->id]
-        );
+        // Log and redirect based on action.
+        if ($issavedraft) {
+            // Log draft save.
+            \local_jobboard\audit::log(
+                \local_jobboard\audit::ACTION_UPDATE,
+                \local_jobboard\audit::ENTITY_APPLICATION,
+                $application->id,
+                ['vacancyid' => $vacancyid, 'userid' => $USER->id, 'action' => 'draft_saved']
+            );
 
-        // Redirect to success page.
-        redirect(
-            new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]),
-            get_string('applicationsubmitted', 'local_jobboard'),
-            null,
-            \core\output\notification::NOTIFY_SUCCESS
-        );
+            // Redirect back to form with success message.
+            redirect(
+                new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $vacancyid]),
+                get_string('draftsaved', 'local_jobboard'),
+                null,
+                \core\output\notification::NOTIFY_SUCCESS
+            );
+        } else {
+            // Log final submission.
+            \local_jobboard\audit::log(
+                \local_jobboard\audit::ACTION_SUBMIT,
+                \local_jobboard\audit::ENTITY_APPLICATION,
+                $application->id,
+                ['vacancyid' => $vacancyid, 'userid' => $USER->id]
+            );
+
+            // Redirect to success page.
+            redirect(
+                new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $application->id]),
+                get_string('applicationsubmitted', 'local_jobboard'),
+                null,
+                \core\output\notification::NOTIFY_SUCCESS
+            );
+        }
 
     } catch (Exception $e) {
         // Rollback on error.

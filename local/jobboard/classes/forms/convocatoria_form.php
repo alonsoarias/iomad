@@ -104,13 +104,17 @@ class convocatoria_form extends \moodleform {
         // Header: Dates.
         $mform->addElement('header', 'datesheader', get_string('dates', 'local_jobboard'));
 
-        // Start date.
-        $mform->addElement('date_selector', 'startdate', get_string('convocatoriastartdate', 'local_jobboard'));
+        // Start date and time.
+        $mform->addElement('date_time_selector', 'startdate', get_string('convocatoriastartdate', 'local_jobboard'), [
+            'optional' => false,
+        ]);
         $mform->addRule('startdate', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
         $mform->addHelpButton('startdate', 'convocatoriastartdate', 'local_jobboard');
 
-        // End date.
-        $mform->addElement('date_selector', 'enddate', get_string('convocatoriaenddate', 'local_jobboard'));
+        // End date and time.
+        $mform->addElement('date_time_selector', 'enddate', get_string('convocatoriaenddate', 'local_jobboard'), [
+            'optional' => false,
+        ]);
         $mform->addRule('enddate', get_string('error:requiredfield', 'local_jobboard'), 'required', null, 'client');
         $mform->addHelpButton('enddate', 'convocatoriaenddate', 'local_jobboard');
 
