@@ -123,15 +123,18 @@
                     <div class="card-body p-0">
                         <div class="jb-preview-content bg-light position-relative" data-region="preview-frame" style="min-height: 500px;">
                             {{#hasinitialpreview}}
-                            {{#initialpreview.ispdf}}
-                            <iframe src="{{initialpreview.previewurl}}" class="w-100 h-100 border-0" style="min-height: 500px;"></iframe>
-                            {{/initialpreview.ispdf}}
-                            {{#initialpreview.isimage}}
-                            <div class="d-flex align-items-center justify-content-center h-100 p-4" style="min-height: 500px;">
-                                <img src="{{initialpreview.previewurl}}" alt="{{initialpreview.filename}}" class="img-fluid shadow rounded" style="max-height: 480px;">
-                            </div>
-                            {{/initialpreview.isimage}}
+                            {{#initialpreview.haspreviewurl}}
+                                {{#initialpreview.ispdf}}
+                                <iframe src="{{initialpreview.previewurl}}" class="w-100 h-100 border-0" style="min-height: 500px;"></iframe>
+                                {{/initialpreview.ispdf}}
+                                {{#initialpreview.isimage}}
+                                <div class="d-flex align-items-center justify-content-center h-100 p-4" style="min-height: 500px;">
+                                    <img src="{{initialpreview.previewurl}}" alt="{{initialpreview.filename}}" class="img-fluid shadow rounded" style="max-height: 480px;">
+                                </div>
+                                {{/initialpreview.isimage}}
+                            {{/initialpreview.haspreviewurl}}
                             {{#initialpreview.istext}}
+                            {{#initialpreview.hastextcontent}}
                             <div class="p-4" style="min-height: 500px; overflow-y: auto;">
                                 <div class="card">
                                     <div class="card-header bg-info text-white">
@@ -142,21 +145,38 @@
                                     </div>
                                 </div>
                             </div>
+                            {{/initialpreview.hastextcontent}}
+                            {{^initialpreview.hastextcontent}}
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 500px;">
+                                <i class="fa fa-file-circle-xmark fa-4x mb-3 text-warning"></i>
+                                <h5 class="mb-2">{{#str}}nodocumentcontent, local_jobboard{{/str}}</h5>
+                                <p class="text-center small">{{#str}}nodocumentcontent_desc, local_jobboard{{/str}}</p>
+                            </div>
+                            {{/initialpreview.hastextcontent}}
                             {{/initialpreview.istext}}
                             {{^initialpreview.canpreview}}{{^initialpreview.istext}}
                             <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 500px;">
                                 <i class="fa fa-file fa-4x mb-3"></i>
                                 <p class="mb-3">{{#str}}previewnotavailable, local_jobboard{{/str}}</p>
+                                {{#initialpreview.downloadurl}}
                                 <a href="{{initialpreview.downloadurl}}" class="btn btn-primary jb-btn-primary btn-sm" target="_blank">
                                     <i class="fa fa-download me-2"></i>{{#str}}download{{/str}}
                                 </a>
+                                {{/initialpreview.downloadurl}}
                             </div>
                             {{/initialpreview.istext}}{{/initialpreview.canpreview}}
+                            {{^initialpreview.haspreviewurl}}{{^initialpreview.istext}}{{#initialpreview.canpreview}}
+                            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 500px;">
+                                <i class="fa fa-file-circle-xmark fa-4x mb-3 text-warning"></i>
+                                <h5 class="mb-2">{{#str}}nodocumentfile, local_jobboard{{/str}}</h5>
+                                <p class="text-center small">{{#str}}nodocumentfile_desc, local_jobboard{{/str}}</p>
+                            </div>
+                            {{/initialpreview.canpreview}}{{/initialpreview.istext}}{{/initialpreview.haspreviewurl}}
                             {{/hasinitialpreview}}
                             {{^hasinitialpreview}}
                             <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 500px;">
                                 <i class="fa fa-file-circle-question fa-4x mb-3"></i>
-                                <p>{{#str}}selectdocumenttopreview, local_jobboard{{/str}}</p>
+                                <p>{{#str}}nodocumentstoreview, local_jobboard{{/str}}</p>
                             </div>
                             {{/hasinitialpreview}}
                         </div>
@@ -408,42 +428,95 @@
         </div>
         {{/stats.0}}
 
-        {{! Filter Bar - Horizontal Full Width }}
+        {{! Filter Bar - Advanced Filters with AJAX }}
         {{#filterform}}
         <div class="card shadow-sm mb-4">
             <div class="card-body py-3">
-                <form method="get" action="{{action}}" role="search" aria-label="{{#str}}filter, local_jobboard{{/str}}" class="jb-filter-form">
+                <form method="get" action="{{action}}" role="search" aria-label="{{#str}}filter, local_jobboard{{/str}}" class="jb-filter-form" id="jb-review-filter-form">
                     {{#hiddenfields}}
                     <input type="hidden" name="{{name}}" value="{{value}}">
                     {{/hiddenfields}}
-                    <div class="row align-items-end g-3">
+                    <div class="row align-items-end g-2 g-md-3">
                         {{#fields}}
-                        <div class="col-12 col-md-4 col-lg-3">
+                        <div class="col-6 col-md-4 col-lg-2">
                             {{#isselect}}
                             <label for="filter-{{name}}" class="form-label small fw-medium mb-1">
                                 {{label}}
                             </label>
-                            <select name="{{name}}" id="filter-{{name}}"
-                                    class="form-select form-select-sm"
-                                    onchange="this.form.submit()">
+                            <select name="{{name}}" id="filter-{{name}}" class="form-select form-select-sm jb-filter-select">
                                 {{#options}}
                                 <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
                                 {{/options}}
                             </select>
                             {{/isselect}}
+                            {{#istext}}
+                            <label for="filter-{{name}}" class="form-label small fw-medium mb-1">
+                                {{label}}
+                            </label>
+                            <input type="text" name="{{name}}" id="filter-{{name}}"
+                                   class="form-control form-control-sm jb-filter-text"
+                                   value="{{value}}"
+                                   placeholder="{{placeholder}}"
+                                   autocomplete="off">
+                            {{/istext}}
+                            {{#isdate}}
+                            <label for="filter-{{name}}" class="form-label small fw-medium mb-1">
+                                {{label}}
+                            </label>
+                            <input type="date" name="{{name}}" id="filter-{{name}}"
+                                   class="form-control form-control-sm jb-filter-date"
+                                   value="{{value}}">
+                            {{/isdate}}
                         </div>
                         {{/fields}}
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label for="filter-perpage" class="form-label small fw-medium mb-1">
+                                {{#str}}perpage, local_jobboard{{/str}}
+                            </label>
+                            <select name="perpage" id="filter-perpage" class="form-select form-select-sm jb-filter-select">
+                                {{#perpageoptions}}
+                                <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                                {{/perpageoptions}}
+                            </select>
+                        </div>
                         <div class="col-12 col-md-auto">
-                            <button type="submit" class="btn btn-primary btn-sm jb-btn-primary">
-                                <i class="fa fa-search me-1"></i>
-                                {{#str}}filter, local_jobboard{{/str}}
-                            </button>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary btn-sm jb-btn-primary">
+                                    <i class="fa fa-search me-1"></i>
+                                    {{#str}}filter, local_jobboard{{/str}}
+                                </button>
+                                <a href="{{action}}?view=review" class="btn btn-outline-secondary btn-sm" title="{{#str}}clearfilters, local_jobboard{{/str}}">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
         {{/filterform}}
+
+        {{! Bulk Actions Bar (hidden by default, shown when items selected) }}
+        <div class="card shadow-sm mb-4 d-none" id="jb-bulk-actions-bar">
+            <div class="card-body py-2">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-primary rounded-pill fs-6" id="jb-selected-count">0</span>
+                        <span class="text-muted">{{#str}}applicationsselected, local_jobboard{{/str}}</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-primary btn-sm" id="jb-download-selected-btn" data-url="{{bulkdownloadurl}}">
+                            <i class="fa fa-file-zipper me-1"></i>
+                            {{#str}}downloadselected, local_jobboard{{/str}}
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="jb-clear-selection-btn">
+                            <i class="fa fa-times me-1"></i>
+                            {{#str}}clearselection, local_jobboard{{/str}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         {{! Applications Table - Full Width }}
         {{#hasapplications}}

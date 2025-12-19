@@ -46,6 +46,13 @@ $statusfilter = optional_param('status', '', PARAM_ALPHA);
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 20, PARAM_INT);
 
+// Advanced filter parameters.
+$facultyid = optional_param('facultyid', 0, PARAM_INT);
+$programid = optional_param('programid', 0, PARAM_INT);
+$idnumber = optional_param('idnumber', '', PARAM_TEXT);
+$datefrom = optional_param('datefrom', '', PARAM_TEXT);
+$dateto = optional_param('dateto', '', PARAM_TEXT);
+
 // Page setup.
 $PAGE->set_title(get_string('reviewdocuments', 'local_jobboard'));
 $PAGE->set_heading(get_string('reviewdocuments', 'local_jobboard'));
@@ -203,6 +210,11 @@ $params = [
     'statusfilter' => $statusfilter,
     'page' => $page,
     'perpage' => $perpage,
+    'facultyid' => $facultyid,
+    'programid' => $programid,
+    'idnumber' => $idnumber,
+    'datefrom' => $datefrom,
+    'dateto' => $dateto,
 ];
 
 // If no application selected, show list of applications pending review.
@@ -229,6 +241,55 @@ if (!$applicationid) {
         $sqlparams['vacancyid'] = $vacancyid;
     }
 
+    // Faculty filter (via vacancy -> convocatoria or direct).
+    if ($facultyid) {
+        $where .= " AND EXISTS (
+            SELECT 1 FROM {local_jobboard_program} p
+            JOIN {local_jobboard_faculty} f ON f.id = p.facultyid
+            WHERE f.id = :facultyid AND (
+                p.name LIKE CONCAT('%', v.department, '%')
+                OR v.department LIKE CONCAT('%', p.name, '%')
+                OR v.title LIKE CONCAT('%', f.name, '%')
+            )
+        )";
+        $sqlparams['facultyid'] = $facultyid;
+    }
+
+    // Program filter (via vacancy department or title).
+    if ($programid) {
+        $where .= " AND EXISTS (
+            SELECT 1 FROM {local_jobboard_program} p
+            WHERE p.id = :programid AND (
+                p.name LIKE CONCAT('%', v.department, '%')
+                OR v.department LIKE CONCAT('%', p.name, '%')
+                OR v.title LIKE CONCAT('%', p.name, '%')
+            )
+        )";
+        $sqlparams['programid'] = $programid;
+    }
+
+    // ID number (cedula) filter.
+    if (!empty($idnumber)) {
+        $where .= " AND " . $DB->sql_like('u.idnumber', ':idnumber', false, false);
+        $sqlparams['idnumber'] = '%' . $DB->sql_like_escape($idnumber) . '%';
+    }
+
+    // Date range filter.
+    if (!empty($datefrom)) {
+        $fromtimestamp = strtotime($datefrom);
+        if ($fromtimestamp) {
+            $where .= " AND a.timecreated >= :datefrom";
+            $sqlparams['datefrom'] = $fromtimestamp;
+        }
+    }
+    if (!empty($dateto)) {
+        $totimestamp = strtotime($dateto . ' 23:59:59');
+        if ($totimestamp) {
+            $where .= " AND a.timecreated <= :dateto";
+            $sqlparams['dateto'] = $totimestamp;
+        }
+    }
+
     // Multi-tenant filter.
     if (iomad_helper::is_iomad_installed() && !has_capability('local/jobboard:viewallvacancies', $context)) {
         $usercompanyid = iomad_helper::get_user_companyid();
@@ -247,8 +308,9 @@ if (!$applicationid) {
     $total = $DB->count_records_sql($countsql, $sqlparams);
 
     $sql = "SELECT a.*, v.title as vacancy_title, v.code as vacancy_code,
+                   v.department as vacancy_department,
                    COALESCE(c.enddate, 0) as closedate,
-                   u.firstname, u.lastname, u.email,
+                   u.id as userid, u.firstname, u.lastname, u.email, u.idnumber,
                    u.firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename,
                    (SELECT COUNT(*) FROM {local_jobboard_document} d WHERE d.applicationid = a.id AND d.issuperseded = 0) as doccount,
                    (SELECT COUNT(*) FROM {local_jobboard_document} d

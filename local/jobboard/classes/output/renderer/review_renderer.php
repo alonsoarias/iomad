@@ -699,6 +699,11 @@ trait review_renderer {
         $vacancyid = $params['vacancyid'] ?? 0;
         $page = $params['page'] ?? 0;
         $perpage = $params['perpage'] ?? 20;
+        $facultyid = $params['facultyid'] ?? 0;
+        $programid = $params['programid'] ?? 0;
+        $idnumber = $params['idnumber'] ?? '';
+        $datefrom = $params['datefrom'] ?? '';
+        $dateto = $params['dateto'] ?? '';
 
         // Stats cards.
         $data['stats'] = [
@@ -747,6 +752,28 @@ trait review_renderer {
             ];
         }
 
+        // Faculty filter options.
+        $faculties = $DB->get_records('local_jobboard_faculty', ['enabled' => 1], 'name ASC', 'id, code, name');
+        $facultyoptions = [['value' => 0, 'label' => get_string('allfaculties', 'local_jobboard'), 'selected' => ($facultyid == 0)]];
+        foreach ($faculties as $f) {
+            $facultyoptions[] = [
+                'value' => $f->id,
+                'label' => format_string($f->code) . ' - ' . format_string($f->name),
+                'selected' => ($facultyid == $f->id),
+            ];
+        }
+
+        // Program filter options.
+        $programs = $DB->get_records('local_jobboard_program', ['enabled' => 1], 'name ASC', 'id, code, name, facultyid');
+        $programoptions = [['value' => 0, 'label' => get_string('allprograms', 'local_jobboard'), 'selected' => ($programid == 0)]];
+        foreach ($programs as $p) {
+            $programoptions[] = [
+                'value' => $p->id,
+                'label' => format_string($p->name),
+                'selected' => ($programid == $p->id),
+            ];
+        }
+
         $data['filterform'] = [
             'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'hiddenfields' => [
@@ -765,8 +792,50 @@ trait review_renderer {
                     'isselect' => true,
                     'options' => $vacancyoptions,
                 ],
+                [
+                    'name' => 'facultyid',
+                    'label' => get_string('faculty', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $facultyoptions,
+                ],
+                [
+                    'name' => 'programid',
+                    'label' => get_string('program', 'local_jobboard'),
+                    'isselect' => true,
+                    'options' => $programoptions,
+                ],
+                [
+                    'name' => 'idnumber',
+                    'label' => get_string('idnumber_cedula', 'local_jobboard'),
+                    'istext' => true,
+                    'value' => $idnumber,
+                    'placeholder' => get_string('idnumber_placeholder', 'local_jobboard'),
+                ],
+                [
+                    'name' => 'datefrom',
+                    'label' => get_string('datefrom', 'local_jobboard'),
+                    'isdate' => true,
+                    'value' => $datefrom,
+                ],
+                [
+                    'name' => 'dateto',
+                    'label' => get_string('dateto', 'local_jobboard'),
+                    'isdate' => true,
+                    'value' => $dateto,
+                ],
             ],
         ];
+
+        // Per-page options.
+        $perpageoptions = [];
+        foreach ([10, 20, 50, 100] as $opt) {
+            $perpageoptions[] = [
+                'value' => $opt,
+                'label' => $opt,
+                'selected' => $perpage == $opt,
+            ];
+        }
+        $data['perpageoptions'] = $perpageoptions;
 
         // Applications list.
         $appsdata = [];
@@ -790,17 +859,21 @@ trait review_renderer {
 
             $appsdata[] = [
                 'id' => $app->id,
+                'userid' => $app->userid,
                 'applicantname' => fullname($app),
                 'profileurl' => (new moodle_url('/user/profile.php', ['id' => $app->userid]))->out(false),
                 'email' => $app->email,
+                'idnumber' => format_string($app->idnumber ?? ''),
                 'vacancycode' => format_string($app->vacancy_code ?? ''),
                 'vacancytitle' => format_string($app->vacancy_title ?? ''),
+                'vacancydepartment' => format_string($app->vacancy_department ?? ''),
                 'status' => $app->status,
                 'statuslabel' => get_string('status_' . $app->status, 'local_jobboard'),
                 'statuscolor' => $statuscolor,
                 'doccount' => (int) ($app->doccount ?? 0),
                 'pendingcount' => (int) ($app->pendingcount ?? 0),
                 'datesubmitted' => userdate($app->timecreated, get_string('strftimedatetime', 'langconfig')),
+                'datesubmittedshort' => userdate($app->timecreated, '%Y-%m-%d'),
                 'isurgent' => $isurgent,
                 'haspendingdocs' => $haspendingdocs,
                 'isactionable' => in_array($app->status, ['submitted', 'under_review', 'docs_rejected']),
@@ -823,15 +896,44 @@ trait review_renderer {
         $data['applications'] = $appsdata;
         $data['applicationcount'] = $total;
 
-        // Pagination.
+        // Pagination with all filter parameters.
+        $paginationparams = [
+            'view' => 'review',
+            'vacancyid' => $vacancyid,
+            'status' => $statusfilter,
+            'facultyid' => $facultyid,
+            'programid' => $programid,
+            'idnumber' => $idnumber,
+            'datefrom' => $datefrom,
+            'dateto' => $dateto,
+            'perpage' => $perpage,
+        ];
         if ($total > $perpage) {
-            $baseurl = new moodle_url('/local/jobboard/index.php', [
-                'view' => 'review',
-                'vacancyid' => $vacancyid,
-                'status' => $statusfilter,
-            ]);
+            $baseurl = new moodle_url('/local/jobboard/index.php', $paginationparams);
             $data['pagination'] = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
         }
+
+        // Bulk download URL (for selected applications).
+        $data['bulkdownloadurl'] = (new moodle_url('/local/jobboard/download_documents.php', [
+            'bulk' => 1,
+            'sesskey' => sesskey(),
+        ]))->out(false);
+
+        // Session key for bulk actions.
+        $data['sesskey'] = sesskey();
+
+        // Current filter values for AJAX.
+        $data['currentfilters'] = [
+            'vacancyid' => $vacancyid,
+            'status' => $statusfilter,
+            'facultyid' => $facultyid,
+            'programid' => $programid,
+            'idnumber' => $idnumber,
+            'datefrom' => $datefrom,
+            'dateto' => $dateto,
+            'page' => $page,
+            'perpage' => $perpage,
+        ];
 
         return $data;
     }
@@ -1049,11 +1151,13 @@ trait review_renderer {
                 'ispending' => ($status === 'pending'),
                 'downloadurl' => $downloadurl ? $downloadurl->out(false) : null,
                 'previewurl' => $previewurl,
+                'haspreviewurl' => !empty($previewurl),
                 'mimetype' => $mimetype,
                 'ispdf' => $ispdf,
                 'isimage' => $isimage,
                 'istext' => $istext,
                 'textcontent' => $textcontent,
+                'hastextcontent' => !empty($textcontent),
                 'canpreview' => $canpreview,
                 'validateurl' => (new moodle_url('/local/jobboard/index.php', [
                     'view' => 'review',

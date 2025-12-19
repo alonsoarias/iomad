@@ -66,6 +66,8 @@ class exporter {
     public function get_export_counts(): array {
         global $DB;
 
+        $dbman = $DB->get_manager();
+
         $counts = [
             'doctypes' => $DB->count_records('local_jobboard_doctype'),
             'email_templates' => $DB->count_records('local_jobboard_email_template'),
@@ -76,6 +78,29 @@ class exporter {
             'exemptions' => $DB->count_records('local_jobboard_exemption'),
             'files' => 0,
         ];
+
+        // Count additional tables if they exist.
+        if ($dbman->table_exists('local_jobboard_faculty')) {
+            $counts['faculties'] = $DB->count_records('local_jobboard_faculty');
+        }
+        if ($dbman->table_exists('local_jobboard_program')) {
+            $counts['programs'] = $DB->count_records('local_jobboard_program');
+        }
+        if ($dbman->table_exists('local_jobboard_program_reviewer')) {
+            $counts['program_reviewers'] = $DB->count_records('local_jobboard_program_reviewer');
+        }
+        if ($dbman->table_exists('local_jobboard_committee')) {
+            $counts['committees'] = $DB->count_records('local_jobboard_committee');
+        }
+        if ($dbman->table_exists('local_jobboard_interview')) {
+            $counts['interviews'] = $DB->count_records('local_jobboard_interview');
+        }
+        if ($dbman->table_exists('local_jobboard_workflow_log')) {
+            $counts['workflow_logs'] = $DB->count_records('local_jobboard_workflow_log');
+        }
+        if ($dbman->table_exists('local_jobboard_applicant_profile')) {
+            $counts['profiles'] = $DB->count_records('local_jobboard_applicant_profile');
+        }
 
         // Count files in all areas.
         foreach (self::FILE_AREAS as $filearea) {
@@ -111,15 +136,38 @@ class exporter {
         // Export all data types.
         $data['doctypes'] = $this->export_doctypes();
         $data['email_templates'] = $this->export_email_templates();
+        $data['email_strings'] = $this->export_email_strings();
         $data['convocatorias'] = $this->export_convocatorias();
         $data['vacancies'] = $this->export_vacancies();
+        $data['vacancy_fields'] = $this->export_vacancy_fields();
+        $data['doc_requirements'] = $this->export_doc_requirements();
         $data['settings'] = $this->export_settings();
+        $data['config'] = $this->export_plugin_config();
         $data['exemptions'] = $this->export_exemptions();
+
+        // Export organizational structure (faculties, programs, reviewers).
+        $data['faculties'] = $this->export_faculties();
+        $data['programs'] = $this->export_programs();
+        $data['program_reviewers'] = $this->export_program_reviewers();
+
+        // Export committees and evaluations.
+        $data['committees'] = $this->export_committees();
+        $data['committee_members'] = $this->export_committee_members();
+        $data['criteria'] = $this->export_criteria();
+        $data['evaluations'] = $this->export_evaluations();
+        $data['decisions'] = $this->export_decisions();
+
+        // Export interviews.
+        $data['interviews'] = $this->export_interviews();
+        $data['interviewers'] = $this->export_interviewers();
 
         // Export applications with documents and files.
         list($applications, $appfilecount) = $this->export_applications($filesdir);
         $data['applications'] = $applications;
         $filecount += $appfilecount;
+
+        // Export workflow logs.
+        $data['workflow_logs'] = $this->export_workflow_logs();
 
         // Export all files from all areas.
         list($filesmetadata, $areafilecount) = $this->export_files($filesdir);
@@ -129,6 +177,7 @@ class exporter {
         // Export profiles and consents.
         $data['applicant_profiles'] = $this->export_applicant_profiles();
         $data['consents'] = $this->export_consents();
+        $data['notifications'] = $this->export_notifications();
         $data['audit_logs'] = $this->export_audit_logs();
 
         $data['file_count'] = $filecount;
@@ -490,6 +539,450 @@ class exporter {
             unset($audit->id, $audit->userid);
         }
         return array_values($audits);
+    }
+
+    /**
+     * Export email strings (language-specific content for templates).
+     *
+     * @return array Exported email strings.
+     */
+    protected function export_email_strings(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_email_strings')) {
+            return [];
+        }
+
+        $strings = $DB->get_records_sql(
+            "SELECT s.*, t.code as template_code
+               FROM {local_jobboard_email_strings} s
+               JOIN {local_jobboard_email_template} t ON t.id = s.templateid
+              ORDER BY s.templateid, s.lang"
+        );
+        foreach ($strings as &$str) {
+            $str->original_id = $str->id;
+            unset($str->id, $str->templateid);
+        }
+        return array_values($strings);
+    }
+
+    /**
+     * Export vacancy fields.
+     *
+     * @return array Exported vacancy fields.
+     */
+    protected function export_vacancy_fields(): array {
+        global $DB;
+
+        $fields = $DB->get_records_sql(
+            "SELECT f.*, v.code as vacancy_code
+               FROM {local_jobboard_vacancy_field} f
+               JOIN {local_jobboard_vacancy} v ON v.id = f.vacancyid
+              ORDER BY f.vacancyid, f.sortorder"
+        );
+        foreach ($fields as &$field) {
+            $field->original_id = $field->id;
+            unset($field->id, $field->vacancyid);
+        }
+        return array_values($fields);
+    }
+
+    /**
+     * Export document requirements.
+     *
+     * @return array Exported document requirements.
+     */
+    protected function export_doc_requirements(): array {
+        global $DB;
+
+        $requirements = $DB->get_records_sql(
+            "SELECT r.*, v.code as vacancy_code
+               FROM {local_jobboard_doc_requirement} r
+               JOIN {local_jobboard_vacancy} v ON v.id = r.vacancyid
+              ORDER BY r.vacancyid, r.sortorder"
+        );
+        foreach ($requirements as &$req) {
+            $req->original_id = $req->id;
+            unset($req->id, $req->vacancyid);
+        }
+        return array_values($requirements);
+    }
+
+    /**
+     * Export plugin config.
+     *
+     * @return array Exported config.
+     */
+    protected function export_plugin_config(): array {
+        global $DB;
+
+        $config = $DB->get_records('local_jobboard_config', [], 'name ASC');
+        foreach ($config as &$cfg) {
+            $cfg->original_id = $cfg->id;
+            unset($cfg->id);
+        }
+        return array_values($config);
+    }
+
+    /**
+     * Export faculties.
+     *
+     * @return array Exported faculties.
+     */
+    protected function export_faculties(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_faculty')) {
+            return [];
+        }
+
+        $faculties = $DB->get_records('local_jobboard_faculty', [], 'sortorder ASC');
+        foreach ($faculties as &$fac) {
+            $fac->original_id = $fac->id;
+            unset($fac->id);
+        }
+        return array_values($faculties);
+    }
+
+    /**
+     * Export programs.
+     *
+     * @return array Exported programs.
+     */
+    protected function export_programs(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_program')) {
+            return [];
+        }
+
+        $programs = $DB->get_records_sql(
+            "SELECT p.*, f.code as faculty_code
+               FROM {local_jobboard_program} p
+               LEFT JOIN {local_jobboard_faculty} f ON f.id = p.facultyid
+              ORDER BY p.sortorder"
+        );
+        foreach ($programs as &$prog) {
+            $prog->original_id = $prog->id;
+            unset($prog->id, $prog->facultyid);
+        }
+        return array_values($programs);
+    }
+
+    /**
+     * Export program reviewers.
+     *
+     * @return array Exported program reviewers.
+     */
+    protected function export_program_reviewers(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_program_reviewer')) {
+            return [];
+        }
+
+        $reviewers = $DB->get_records_sql(
+            "SELECT pr.*, u.username, u.email, u.idnumber,
+                    p.code as program_code,
+                    a.username as addedby_username
+               FROM {local_jobboard_program_reviewer} pr
+               JOIN {user} u ON u.id = pr.userid
+               LEFT JOIN {local_jobboard_program} p ON p.id = pr.programid
+               LEFT JOIN {user} a ON a.id = pr.addedby
+              ORDER BY pr.id"
+        );
+        foreach ($reviewers as &$rev) {
+            $rev->original_id = $rev->id;
+            unset($rev->id, $rev->userid, $rev->programid, $rev->addedby);
+        }
+        return array_values($reviewers);
+    }
+
+    /**
+     * Export committees.
+     *
+     * @return array Exported committees.
+     */
+    protected function export_committees(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_committee')) {
+            return [];
+        }
+
+        $committees = $DB->get_records_sql(
+            "SELECT c.*, f.code as faculty_code, v.code as vacancy_code,
+                    u.username as createdby_username
+               FROM {local_jobboard_committee} c
+               LEFT JOIN {local_jobboard_faculty} f ON f.id = c.facultyid
+               LEFT JOIN {local_jobboard_vacancy} v ON v.id = c.vacancyid
+               LEFT JOIN {user} u ON u.id = c.createdby
+              ORDER BY c.id"
+        );
+        foreach ($committees as &$com) {
+            $com->original_id = $com->id;
+            unset($com->id, $com->facultyid, $com->vacancyid, $com->createdby);
+        }
+        return array_values($committees);
+    }
+
+    /**
+     * Export committee members.
+     *
+     * @return array Exported committee members.
+     */
+    protected function export_committee_members(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_committee_member')) {
+            return [];
+        }
+
+        $members = $DB->get_records_sql(
+            "SELECT cm.*, u.username, u.email, u.idnumber,
+                    c.name as committee_name,
+                    a.username as addedby_username
+               FROM {local_jobboard_committee_member} cm
+               JOIN {user} u ON u.id = cm.userid
+               JOIN {local_jobboard_committee} c ON c.id = cm.committeeid
+               LEFT JOIN {user} a ON a.id = cm.addedby
+              ORDER BY cm.id"
+        );
+        foreach ($members as &$mem) {
+            $mem->original_id = $mem->id;
+            $mem->committee_original_id = $mem->committeeid;
+            unset($mem->id, $mem->userid, $mem->committeeid, $mem->addedby);
+        }
+        return array_values($members);
+    }
+
+    /**
+     * Export evaluation criteria.
+     *
+     * @return array Exported criteria.
+     */
+    protected function export_criteria(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_criteria')) {
+            return [];
+        }
+
+        $criteria = $DB->get_records_sql(
+            "SELECT cr.*, v.code as vacancy_code
+               FROM {local_jobboard_criteria} cr
+               JOIN {local_jobboard_vacancy} v ON v.id = cr.vacancyid
+              ORDER BY cr.vacancyid, cr.sortorder"
+        );
+        foreach ($criteria as &$crit) {
+            $crit->original_id = $crit->id;
+            unset($crit->id, $crit->vacancyid);
+        }
+        return array_values($criteria);
+    }
+
+    /**
+     * Export evaluations.
+     *
+     * @return array Exported evaluations.
+     */
+    protected function export_evaluations(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_evaluation')) {
+            return [];
+        }
+
+        $evaluations = $DB->get_records_sql(
+            "SELECT e.*, u.username, u.email, u.idnumber,
+                    c.name as committee_name,
+                    a.vacancy_code, a.username as applicant_username
+               FROM {local_jobboard_evaluation} e
+               JOIN {user} u ON u.id = e.userid
+               JOIN {local_jobboard_committee} c ON c.id = e.committeeid
+               JOIN (
+                   SELECT app.id, v.code as vacancy_code, usr.username
+                   FROM {local_jobboard_application} app
+                   JOIN {local_jobboard_vacancy} v ON v.id = app.vacancyid
+                   JOIN {user} usr ON usr.id = app.userid
+               ) a ON a.id = e.applicationid
+              ORDER BY e.id"
+        );
+        foreach ($evaluations as &$eval) {
+            $eval->original_id = $eval->id;
+            $eval->committee_original_id = $eval->committeeid;
+            $eval->application_original_id = $eval->applicationid;
+            unset($eval->id, $eval->userid, $eval->committeeid, $eval->applicationid);
+        }
+        return array_values($evaluations);
+    }
+
+    /**
+     * Export decisions.
+     *
+     * @return array Exported decisions.
+     */
+    protected function export_decisions(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_decision')) {
+            return [];
+        }
+
+        $decisions = $DB->get_records_sql(
+            "SELECT d.*, c.name as committee_name,
+                    u.username as decidedby_username,
+                    a.vacancy_code, a.username as applicant_username
+               FROM {local_jobboard_decision} d
+               JOIN {local_jobboard_committee} c ON c.id = d.committeeid
+               JOIN {user} u ON u.id = d.decidedby
+               JOIN (
+                   SELECT app.id, v.code as vacancy_code, usr.username
+                   FROM {local_jobboard_application} app
+                   JOIN {local_jobboard_vacancy} v ON v.id = app.vacancyid
+                   JOIN {user} usr ON usr.id = app.userid
+               ) a ON a.id = d.applicationid
+              ORDER BY d.id"
+        );
+        foreach ($decisions as &$dec) {
+            $dec->original_id = $dec->id;
+            $dec->committee_original_id = $dec->committeeid;
+            $dec->application_original_id = $dec->applicationid;
+            unset($dec->id, $dec->committeeid, $dec->applicationid, $dec->decidedby);
+        }
+        return array_values($decisions);
+    }
+
+    /**
+     * Export interviews.
+     *
+     * @return array Exported interviews.
+     */
+    protected function export_interviews(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_interview')) {
+            return [];
+        }
+
+        $interviews = $DB->get_records_sql(
+            "SELECT i.*, u.username as createdby_username,
+                    cu.username as completedby_username,
+                    a.vacancy_code, a.username as applicant_username
+               FROM {local_jobboard_interview} i
+               LEFT JOIN {user} u ON u.id = i.createdby
+               LEFT JOIN {user} cu ON cu.id = i.completedby
+               JOIN (
+                   SELECT app.id, v.code as vacancy_code, usr.username
+                   FROM {local_jobboard_application} app
+                   JOIN {local_jobboard_vacancy} v ON v.id = app.vacancyid
+                   JOIN {user} usr ON usr.id = app.userid
+               ) a ON a.id = i.applicationid
+              ORDER BY i.id"
+        );
+        foreach ($interviews as &$int) {
+            $int->original_id = $int->id;
+            $int->application_original_id = $int->applicationid;
+            unset($int->id, $int->applicationid, $int->createdby, $int->completedby);
+        }
+        return array_values($interviews);
+    }
+
+    /**
+     * Export interviewers.
+     *
+     * @return array Exported interviewers.
+     */
+    protected function export_interviewers(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_interviewer')) {
+            return [];
+        }
+
+        $interviewers = $DB->get_records_sql(
+            "SELECT iv.*, u.username, u.email, u.idnumber
+               FROM {local_jobboard_interviewer} iv
+               JOIN {user} u ON u.id = iv.userid
+              ORDER BY iv.id"
+        );
+        foreach ($interviewers as &$iv) {
+            $iv->original_id = $iv->id;
+            $iv->interview_original_id = $iv->interviewid;
+            unset($iv->id, $iv->interviewid, $iv->userid);
+        }
+        return array_values($interviewers);
+    }
+
+    /**
+     * Export workflow logs.
+     *
+     * @return array Exported workflow logs.
+     */
+    protected function export_workflow_logs(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_workflow_log')) {
+            return [];
+        }
+
+        $logs = $DB->get_records_sql(
+            "SELECT wl.*, u.username as changedby_username,
+                    a.vacancy_code, a.username as applicant_username
+               FROM {local_jobboard_workflow_log} wl
+               JOIN {user} u ON u.id = wl.changedby
+               JOIN (
+                   SELECT app.id, v.code as vacancy_code, usr.username
+                   FROM {local_jobboard_application} app
+                   JOIN {local_jobboard_vacancy} v ON v.id = app.vacancyid
+                   JOIN {user} usr ON usr.id = app.userid
+               ) a ON a.id = wl.applicationid
+              ORDER BY wl.timecreated"
+        );
+        foreach ($logs as &$log) {
+            $log->original_id = $log->id;
+            $log->application_original_id = $log->applicationid;
+            unset($log->id, $log->applicationid, $log->changedby);
+        }
+        return array_values($logs);
+    }
+
+    /**
+     * Export notifications.
+     *
+     * @return array Exported notifications.
+     */
+    protected function export_notifications(): array {
+        global $DB;
+
+        $dbman = $DB->get_manager();
+        if (!$dbman->table_exists('local_jobboard_notification')) {
+            return [];
+        }
+
+        $notifications = $DB->get_records_sql(
+            "SELECT n.*, u.username, u.email
+               FROM {local_jobboard_notification} n
+               JOIN {user} u ON u.id = n.userid
+              ORDER BY n.timecreated"
+        );
+        foreach ($notifications as &$notif) {
+            $notif->original_id = $notif->id;
+            unset($notif->id, $notif->userid);
+        }
+        return array_values($notifications);
     }
 
     /**
