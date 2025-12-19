@@ -1605,10 +1605,18 @@ class format_trail_renderer extends section_renderer {
         $format = course_get_format($course);
         $modinfo = $format->get_modinfo();
         // Output renderers works only with real section_info objects.
-        if ($sectionreturn) {
-            $format->set_sectionnum($sectionreturn);
+        // Get the section from the module's section number.
+        $section = $modinfo->get_section_info($mod->sectionnum);
+        if (!$section) {
+            // Fallback: try to get section from sectionreturn.
+            if ($sectionreturn) {
+                $section = $modinfo->get_section_info($sectionreturn);
+            }
         }
-        $section = $modinfo->get_section_info($format->get_sectionnum());
+        if (!$section) {
+            // Still no section, return empty.
+            return '';
+        }
 
         $cmclass = $format->get_output_classname('content\\cm');
         $cm = new $cmclass($format, $section, $mod, $displayoptions);
