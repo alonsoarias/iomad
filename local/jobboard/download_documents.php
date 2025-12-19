@@ -82,41 +82,48 @@ $filesadded = 0;
 $fs = get_file_storage();
 $syscontext = context_system::instance();
 
+// Get all files for this application once (more efficient).
+$allfiles = $fs->get_area_files(
+    $syscontext->id,
+    'local_jobboard',
+    'application_documents',
+    $applicationid,
+    'id',
+    false
+);
+
+// Get document types for naming text files.
+$doctypes = $DB->get_records('local_jobboard_doctype', [], '', 'code, name');
+
 foreach ($documents as $doc) {
-    // Skip text documents (they don't have physical files).
-    if ($doc->mimetype === 'text/plain' && strpos($doc->filename, '.txt') !== false) {
-        // For text documents, get content from application data and add as text file.
+    // Handle text documents (they don't have physical files in Moodle file storage).
+    if ($doc->mimetype === 'text/plain') {
+        // For text documents, get content from application data.
         $appdata = json_decode($application->applicationdata ?? '{}', true);
         if (is_array($appdata) && isset($appdata[$doc->documenttype])) {
             $textcontent = $appdata[$doc->documenttype];
             if (is_string($textcontent) && !empty(trim($textcontent))) {
-                $zip->addFromString($doc->documenttype . '.txt', $textcontent);
+                // Use document type name for the filename if available.
+                $typename = isset($doctypes[$doc->documenttype]) ?
+                    clean_filename($doctypes[$doc->documenttype]->name) :
+                    $doc->documenttype;
+                $zip->addFromString($typename . '.txt', $textcontent);
                 $filesadded++;
             }
         }
         continue;
     }
 
-    // Get stored file from Moodle file storage.
-    $files = $fs->get_area_files(
-        $syscontext->id,
-        'local_jobboard',
-        'application_documents',
-        $applicationid,
-        'id',
-        false
-    );
-
-    foreach ($files as $file) {
+    // Handle physical files.
+    foreach ($allfiles as $file) {
         if ($file->get_filepath() === '/' . $doc->documenttype . '/' &&
             $file->get_filename() === $doc->filename) {
 
             // Get file content.
             $content = $file->get_content();
             if (!empty($content)) {
-                // Build filename with document type prefix for organization.
-                $filename = $doc->documenttype . '/' . $doc->filename;
-                $zip->addFromString($filename, $content);
+                // Use original filename directly (flat structure, no folders).
+                $zip->addFromString($doc->filename, $content);
                 $filesadded++;
             }
             break;
