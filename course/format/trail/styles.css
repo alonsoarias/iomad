@@ -211,6 +211,7 @@ div#trailmiddle-column > ul {
 /* Exclude editing icons from trail image styles */
 .course-content ul.trailicons li img.icon,
 .course-content ul.trailicons li img.smallicon,
+.course-content ul.trailicons li img.iconsmall,
 .course-content ul.trailicons li .action-menu img,
 .course-content ul.trailicons li .actions img,
 .course-content ul.trailicons li .activity-actions img {
@@ -219,6 +220,17 @@ div#trailmiddle-column > ul {
     max-height: 16px !important;
     max-width: 16px !important;
     margin: 0 0.25rem;
+}
+
+/* Fix for edit summary icons (iconsmall.edit) */
+img.iconsmall.edit,
+.course-content img.iconsmall.edit,
+.course-content ul.trailicons li img.iconsmall.edit,
+#trailshadebox_content img.iconsmall.edit {
+    width: 16px !important;
+    height: 16px !important;
+    max-width: 16px !important;
+    max-height: 16px !important;
 }
 
 .course-content li.trail_section {
@@ -633,4 +645,172 @@ body.jsenabled #trailshadebox_content.hide_content {
 #trailshadebox_content .editing .activity .draghandle img {
     width: 16px !important;
     height: 16px !important;
+}
+
+/* ========================================
+   EDITING MODE IMPROVEMENTS - Moodle 4.5
+   ======================================== */
+
+/* Editing mode - Activity hover and selection states */
+body.editing .course-content ul.gtopics .activity:hover,
+body.editing .course-content ul.gtopics .activity.action-menu-shown,
+body.editing #trailshadebox_content .activity:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 0.5rem;
+}
+
+/* Editing mode - Section hover states */
+body.editing .course-content ul.gtopics .section.main:hover,
+body.editing #trailshadebox_content .section:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Activity item cursor for drag */
+body.editing .course-content .activity-item,
+body.editing #trailshadebox_content .activity-item {
+    cursor: move;
+}
+
+/* Activity dragging visual feedback */
+body.editing .course-content .activity.dragging,
+body.editing #trailshadebox_content .activity.dragging {
+    border: 2px dashed #0d6efd;
+    opacity: 0.7;
+    background-color: #f8f9fa;
+}
+
+/* Selected activity highlight */
+body.editing .course-content .activity-item.selected,
+body.editing #trailshadebox_content .activity-item.selected {
+    outline: 2px solid #0d6efd;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* Action menu button styling */
+body.editing .course-content .action-menu .btn.btn-icon,
+body.editing .course-content .section-actions .btn.btn-icon,
+body.editing #trailshadebox_content .action-menu .btn.btn-icon {
+    height: 32px;
+    width: 32px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.editing .course-content .action-menu .btn.btn-icon:hover,
+body.editing .course-content .section-actions .btn.btn-icon:hover,
+body.editing #trailshadebox_content .action-menu .btn.btn-icon:hover {
+    background-color: #e9ecef;
+}
+
+/* Inline edit link styling */
+body.editing .course-content .inplaceeditable .quickeditlink,
+body.editing #trailshadebox_content .inplaceeditable .quickeditlink {
+    position: relative;
+    z-index: 2;
+    margin-left: 0.5rem;
+}
+
+/* Add content button styling */
+body.editing .course-content .btn.add-content,
+body.editing #trailshadebox_content .btn.add-content {
+    font-size: 0.875rem;
+    font-weight: bold;
+    border-radius: 0.25rem;
+}
+
+body.editing .course-content .btn.add-content .icon,
+body.editing #trailshadebox_content .btn.add-content .icon {
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+}
+
+/* Divider hover states for add content */
+body.editing .course-content .divider:hover .divider-content,
+body.editing .course-content .divider:focus .divider-content,
+body.editing #trailshadebox_content .divider:hover .divider-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Bulk editing mode styles */
+body.editing.bulkenabled .course-content .section,
+body.editing.bulkenabled #trailshadebox_content .section {
+    margin-left: 1rem;
+}
+
+body.editing.bulkenabled .course-content .activity,
+body.editing.bulkenabled #trailshadebox_content .activity {
+    margin-top: 0.5rem;
+    margin-left: 2rem;
+    border-top: 1px dashed #dee2e6;
+}
+
+body.editing.bulkenabled .course-content .activity-item .bulkselect,
+body.editing.bulkenabled #trailshadebox_content .activity-item .bulkselect {
+    float: left;
+    margin-left: -2rem;
+}
+
+/* In-progress editing overlay */
+body.editing .course-content .editinprogress,
+body.editing #trailshadebox_content .editinprogress {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* Hidden activity styling in edit mode */
+body.editing .course-content .activity-item.hiddenactivity,
+body.editing #trailshadebox_content .activity-item.hiddenactivity {
+    background-color: #f8f9fa;
+}
+
+/* Section header draggable cursor */
+body.editing .course-content .course-section-header.draggable,
+body.editing #trailshadebox_content .course-section-header.draggable {
+    cursor: move;
+}
+
+/* Dropdown menu animation */
+body.editing .course-content .dropdown-menu.show,
+body.editing #trailshadebox_content .dropdown-menu.show {
+    animation: dropdownPop 0.15s ease-out;
+}
+
+@keyframes dropdownPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Fix visibility toggle icons */
+body.editing .course-content .v-parent-focus,
+body.editing #trailshadebox_content .v-parent-focus {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Section action menu alignment */
+body.editing .course-content .section .section-actions,
+body.editing #trailshadebox_content .section .section-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    vertical-align: middle;
+}
+
+/* Activity actions alignment */
+body.editing .course-content .activity .activity-actions,
+body.editing #trailshadebox_content .activity .activity-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
 }
