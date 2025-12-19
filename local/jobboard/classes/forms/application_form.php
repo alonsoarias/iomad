@@ -177,25 +177,20 @@ class application_form extends \moodleform {
         // ============================================================
         // SUBMIT BUTTONS
         // ============================================================
-
-        // Save Draft button.
-        $mform->addElement(
+        $buttonarray = [];
+        $buttonarray[] = $mform->createElement(
             'submit',
             'savedraft',
-            get_string('savedraft', 'local_jobboard'),
-            ['class' => 'btn btn-outline-primary']
+            get_string('savedraft', 'local_jobboard')
         );
-
-        // Submit Application button.
-        $mform->addElement(
+        $buttonarray[] = $mform->createElement(
             'submit',
             'submitbutton',
-            get_string('submitapplication', 'local_jobboard'),
-            ['class' => 'btn btn-primary']
+            get_string('submitapplication', 'local_jobboard')
         );
+        $buttonarray[] = $mform->createElement('cancel');
 
-        // Cancel button.
-        $mform->addElement('cancel');
+        $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
 
     /**
