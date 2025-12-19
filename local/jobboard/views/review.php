@@ -432,4 +432,9 @@ $PAGE->requires->js_call_amd('local_jobboard/public_filters', 'init', [[
     'formSelector' => '.jb-filter-form',
 ]]);
 
+// Initialize bulk selection module for application list.
+if (!$applicationid) {
+    $PAGE->requires->js_call_amd('local_jobboard/bulk_selection', 'init', [[]]);
+}
+
 echo $OUTPUT->footer();

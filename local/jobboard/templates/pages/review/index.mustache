@@ -530,10 +530,15 @@
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 jb-table" role="grid" aria-label="{{#str}}pendingreviews, local_jobboard{{/str}}">
+                    <table class="table table-hover align-middle mb-0 jb-table" role="grid" aria-label="{{#str}}pendingreviews, local_jobboard{{/str}}" id="jb-applications-table">
                         <thead class="table-light">
                             <tr>
-                                <th scope="col" class="ps-3" style="min-width: 200px;">{{#str}}applicant, local_jobboard{{/str}}</th>
+                                <th scope="col" class="ps-3 text-center" style="width: 50px;">
+                                    <div class="form-check mb-0">
+                                        <input class="form-check-input" type="checkbox" id="jb-select-all" aria-label="{{#str}}selectall, local_jobboard{{/str}}">
+                                    </div>
+                                </th>
+                                <th scope="col" style="min-width: 200px;">{{#str}}applicant, local_jobboard{{/str}}</th>
                                 <th scope="col" style="min-width: 200px;">{{#str}}vacancy, local_jobboard{{/str}}</th>
                                 <th scope="col" class="text-center" style="width: 130px;">{{#str}}status, local_jobboard{{/str}}</th>
                                 <th scope="col" class="text-center" style="width: 100px;">{{#str}}documents, local_jobboard{{/str}}</th>
@@ -543,8 +548,13 @@
                         </thead>
                         <tbody>
                             {{#applications}}
-                            <tr class="{{#isurgent}}table-danger{{/isurgent}}" {{#isurgent}}aria-label="{{#str}}urgent, local_jobboard{{/str}}"{{/isurgent}}>
-                                <td class="ps-3">
+                            <tr class="{{#isurgent}}table-danger{{/isurgent}}" {{#isurgent}}aria-label="{{#str}}urgent, local_jobboard{{/str}}"{{/isurgent}} data-application-id="{{id}}" data-applicant-name="{{applicantname}}">
+                                <td class="ps-3 text-center">
+                                    <div class="form-check mb-0">
+                                        <input class="form-check-input jb-application-checkbox" type="checkbox" value="{{id}}" aria-label="{{#str}}select, local_jobboard{{/str}} {{applicantname}}">
+                                    </div>
+                                </td>
+                                <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <div class="avatar-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width: 40px; height: 40px;">
                                             <i class="fa fa-user"></i>

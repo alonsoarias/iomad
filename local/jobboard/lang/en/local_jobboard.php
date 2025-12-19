@@ -2147,6 +2147,7 @@ $string['error:invalidapplication'] = 'Invalid application';
 $string['error:invaliduser'] = 'Invalid user';
 $string['error:nodocuments'] = 'No documents found for this application';
 $string['error:nodocumentstodownload'] = 'No documents available to download';
+$string['error:noapplicationsselected'] = 'No applications selected for download';
 $string['error:cannotcreatezip'] = 'Cannot create ZIP file';
 $string['error:occasionalrequiresexperience'] = 'Occasional contract requires experience';
 $string['error:pastdate'] = 'Date cannot be in the past';

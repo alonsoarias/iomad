@@ -2150,6 +2150,7 @@ $string['error:invalidapplication'] = 'Postulación inválida';
 $string['error:invaliduser'] = 'Usuario inválido';
 $string['error:nodocuments'] = 'No se encontraron documentos para esta postulación';
 $string['error:nodocumentstodownload'] = 'No hay documentos disponibles para descargar';
+$string['error:noapplicationsselected'] = 'No hay postulaciones seleccionadas para descargar';
 $string['error:cannotcreatezip'] = 'No se puede crear el archivo ZIP';
 $string['error:occasionalrequiresexperience'] = 'El contrato ocasional requiere experiencia';
 $string['error:pastdate'] = 'La fecha no puede ser en el pasado';
