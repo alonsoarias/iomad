@@ -391,11 +391,22 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     var updateSequentialReviewInfo = function(stats) {
         var currentPos = (stats.approved || 0) + (stats.rejected || 0) + 1;
         var total = stats.total || 0;
+        var displayPos = Math.min(currentPos, total);
 
-        // Update the badge and text.
-        var badge = document.querySelector('.alert-info .badge.bg-primary');
+        // Update the badge.
+        var badge = document.querySelector('.alert-info.jb-alert-info .badge.bg-primary');
         if (badge) {
-            badge.textContent = Math.min(currentPos, total) + ' / ' + total;
+            badge.textContent = displayPos + ' / ' + total;
+        }
+
+        // Update the text "Revisando documento X de Y" by replacing numbers.
+        var infoText = document.querySelector('.alert-info.jb-alert-info .d-block.small');
+        if (infoText) {
+            // Replace the numbers in the text (e.g., "Revisando documento 11 de 14" -> "Revisando documento 12 de 14").
+            var text = infoText.textContent;
+            // Match pattern: text number text number (handles different languages).
+            text = text.replace(/(\D+)(\d+)(\D+)(\d+)/, '$1' + displayPos + '$3' + total);
+            infoText.textContent = text;
         }
     };
 
