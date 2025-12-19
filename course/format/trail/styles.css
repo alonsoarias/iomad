@@ -208,6 +208,19 @@ div#trailmiddle-column > ul {
     width: 100%;
 }
 
+/* Exclude editing icons from trail image styles */
+.course-content ul.trailicons li img.icon,
+.course-content ul.trailicons li img.smallicon,
+.course-content ul.trailicons li .action-menu img,
+.course-content ul.trailicons li .actions img,
+.course-content ul.trailicons li .activity-actions img {
+    height: 16px !important;
+    width: 16px !important;
+    max-height: 16px !important;
+    max-width: 16px !important;
+    margin: 0 0.25rem;
+}
+
 .course-content li.trail_section {
     clear: both;
 }
@@ -274,6 +287,19 @@ body.jsenabled #trailshadebox_content.hide_content {
     list-style: none;
     padding-bottom: 4px;
     padding-top: 2px;
+}
+
+/* Protect editing icons in shadebox from generic styles */
+#trailshadebox_content .activity img.icon,
+#trailshadebox_content .activity img.smallicon,
+#trailshadebox_content .activity .action-menu img,
+#trailshadebox_content .activity .actions img,
+#trailshadebox_content .section .action-menu img,
+#trailshadebox_content .section .actions img {
+    height: 16px !important;
+    width: 16px !important;
+    max-height: 16px !important;
+    max-width: 16px !important;
 }
 
 #trailshadebox_content ul li.trail_section {
