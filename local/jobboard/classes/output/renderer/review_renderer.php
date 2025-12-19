@@ -878,6 +878,37 @@ trait review_renderer {
             }
         }
 
+        // Ensure text documents have document records for proper validation workflow.
+        // Create records for any text documents that don't have them.
+        $docrecordsneeded = false;
+        foreach ($textdocuments as $doccode => $textdoc) {
+            $hasrecord = false;
+            foreach ($documents as $doc) {
+                if ($doc->documenttype === $doccode && $doc->mimetype === 'text/plain') {
+                    $hasrecord = true;
+                    break;
+                }
+            }
+            if (!$hasrecord && !empty($textdoc['value'])) {
+                // Create document record for this text document.
+                try {
+                    \local_jobboard\document::create_text_document(
+                        $applicationid,
+                        $doccode,
+                        $textdoc['value']
+                    );
+                    $docrecordsneeded = true;
+                } catch (\Exception $e) {
+                    debugging('Failed to create text document record for ' . $doccode . ': ' . $e->getMessage(), DEBUG_DEVELOPER);
+                }
+            }
+        }
+
+        // Reload documents if new records were created.
+        if ($docrecordsneeded) {
+            $documents = \local_jobboard\document::get_by_application($applicationid);
+        }
+
         // Prepare documents with preview info.
         // Sequential review: find the first pending document (current) and mark others as locked.
         $docsdata = [];
@@ -1008,46 +1039,8 @@ trait review_renderer {
             $docindex++;
         }
 
-        // Add text documents (carta_intencion, etc.) to the document list.
-        foreach ($textdocuments as $doccode => $textdoc) {
-            // Get document type info.
-            $doctyperecord = $DB->get_record('local_jobboard_doctype', ['code' => $doccode]);
-            $typename = $doctyperecord ? format_string($doctyperecord->name) : $doccode;
-
-            // Text documents are considered "approved" by default (no file validation needed).
-            $docsdata[] = [
-                'id' => 'text_' . $doccode,
-                'applicationid' => $applicationid,
-                'typename' => $typename,
-                'filename' => null,
-                'status' => 'text', // Special status for text content.
-                'statuslabel' => get_string('textcontent', 'local_jobboard'),
-                'statusicon' => 'file-alt',
-                'statuscolor' => 'info',
-                'ispending' => false,
-                'downloadurl' => null,
-                'previewurl' => null,
-                'mimetype' => 'text/html',
-                'ispdf' => false,
-                'isimage' => false,
-                'canpreview' => false,
-                'istext' => true,
-                'textcontent' => $textdoc['value'],
-                'validateurl' => null,
-                'rejecturl' => null,
-                'rejectreason' => null,
-                'reviewedby' => null,
-                'reviewedat' => null,
-                'sesskey' => sesskey(),
-                'observation' => '',
-                'docindex' => $docindex + 1,
-                'iscurrent' => false,
-                'islocked' => false,
-                'isreviewed' => true, // Text docs don't need file review.
-            ];
-            $totaldocs++;
-            $docindex++;
-        }
+        // Note: Text documents now have proper document records created earlier,
+        // so they're included in the main documents loop above with proper validation workflow.
 
         // Get current document for initial preview (the one being reviewed).
         $initialpreview = null;
