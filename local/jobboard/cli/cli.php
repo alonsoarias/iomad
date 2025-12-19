@@ -101,6 +101,12 @@ list($options, $unrecognized) = cli_get_params([
     'verbose' => false,
     'export-json' => null,
     'create-sample' => false,
+    // Application deletion options.
+    'delete-application' => false,
+    'idnumber' => null,
+    'application-id' => null,
+    'vacancy-id' => null,
+    'list-applications' => false,
 ], [
     'h' => 'help',
     'i' => 'input',
@@ -120,6 +126,11 @@ list($options, $unrecognized) = cli_get_params([
     'J' => 'json',
     'T' => 'export-csv-template',
     'S' => 'create-sample',
+    'D' => 'delete-application',
+    'I' => 'idnumber',
+    'A' => 'application-id',
+    'V' => 'vacancy-id',
+    'L' => 'list-applications',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -217,6 +228,36 @@ EXAMPLES:
   # Parse only (standalone mode)
   php cli.php --export-json=perfiles.json --verbose
 
+APPLICATION MANAGEMENT:
+  -D, --delete-application  DELETE applications (requires --idnumber or --application-id)
+  -I, --idnumber=ID         User idnumber to identify the applicant
+  -A, --application-id=ID   Specific application ID to delete
+  -V, --vacancy-id=ID       Filter by vacancy ID (optional, use with --idnumber)
+  -L, --list-applications   List applications instead of deleting
+
+  IMPORTANT: Deleting an application removes ALL related data:
+    - All uploaded documents and their files
+    - Document validation records
+    - Workflow history logs
+    - Evaluation records (if any)
+    - Notification records
+
+APPLICATION DELETION EXAMPLES:
+  # List all applications for a user by idnumber
+  php cli.php --list-applications --idnumber=1234567890
+
+  # Delete ALL applications for a user by idnumber
+  php cli.php --delete-application --idnumber=1234567890
+
+  # Delete applications for a user in a specific vacancy
+  php cli.php --delete-application --idnumber=1234567890 --vacancy-id=42
+
+  # Delete a specific application by ID
+  php cli.php --delete-application --application-id=123
+
+  # Dry run (preview what would be deleted)
+  php cli.php --delete-application --idnumber=1234567890 --dryrun --verbose
+
 STRUCTURE CREATED (IOMAD Hierarchy):
   LEVEL 1 - Companies (16 Centros Tutoriales):
     - ISER Sede Pamplona (PAMPLONA) - Sede Principal
@@ -276,6 +317,289 @@ CSV;
     echo "#    - modality: PRESENCIAL, A DISTANCIA, VIRTUAL, HIBRIDA\n";
     echo "#    - faculty: FCAS or FII\n";
     echo "# 4. Save and run: php cli.php --csv=yourfile.csv --create-structure --publish\n";
+    exit(0);
+}
+
+// ============================================================
+// APPLICATION MANAGEMENT (List/Delete)
+// ============================================================
+if ($options['delete-application'] || $options['list-applications']) {
+    if (!$moodleavailable) {
+        cli_error("Application management requires Moodle. Run from Moodle installation.");
+    }
+
+    $idnumber = $options['idnumber'];
+    $applicationid = $options['application-id'] ? (int) $options['application-id'] : null;
+    $vacancyid = $options['vacancy-id'] ? (int) $options['vacancy-id'] : null;
+    $verbose = $options['verbose'];
+    $dryrun = $options['dryrun'];
+
+    // Validate parameters.
+    if (empty($idnumber) && empty($applicationid)) {
+        cli_error("You must specify --idnumber or --application-id");
+    }
+
+    // Find user by idnumber if provided.
+    $userid = null;
+    if (!empty($idnumber)) {
+        $user = $DB->get_record('user', ['idnumber' => $idnumber]);
+        if (!$user) {
+            cli_error("User with idnumber '$idnumber' not found");
+        }
+        $userid = $user->id;
+        echo "User found: {$user->firstname} {$user->lastname} (ID: {$user->id}, email: {$user->email})\n\n";
+    }
+
+    // Build query for applications.
+    $params = [];
+    $where = ['1=1'];
+
+    if ($applicationid) {
+        $where[] = 'a.id = :appid';
+        $params['appid'] = $applicationid;
+    }
+
+    if ($userid) {
+        $where[] = 'a.userid = :userid';
+        $params['userid'] = $userid;
+    }
+
+    if ($vacancyid) {
+        $where[] = 'a.vacancyid = :vacancyid';
+        $params['vacancyid'] = $vacancyid;
+    }
+
+    $wheresql = implode(' AND ', $where);
+
+    // Get applications.
+    $sql = "SELECT a.*, v.code as vacancy_code, v.title as vacancy_title, v.location, v.modality,
+                   u.firstname, u.lastname, u.email, u.idnumber as user_idnumber
+            FROM {local_jobboard_application} a
+            JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+            JOIN {user} u ON u.id = a.userid
+            WHERE $wheresql
+            ORDER BY a.timecreated DESC";
+
+    $applications = $DB->get_records_sql($sql, $params);
+
+    if (empty($applications)) {
+        echo "No applications found matching the criteria.\n";
+        exit(0);
+    }
+
+    // ============================================================
+    // LIST APPLICATIONS MODE
+    // ============================================================
+    if ($options['list-applications']) {
+        cli_heading('Applications Found: ' . count($applications));
+        echo str_repeat('-', 120) . "\n";
+        printf("%-6s | %-12s | %-15s | %-30s | %-25s | %-20s\n",
+            'ID', 'Status', 'Vacancy Code', 'Vacancy Title', 'Location', 'Date');
+        echo str_repeat('-', 120) . "\n";
+
+        foreach ($applications as $app) {
+            $title = strlen($app->vacancy_title) > 28 ? substr($app->vacancy_title, 0, 25) . '...' : $app->vacancy_title;
+            $location = strlen($app->location) > 23 ? substr($app->location, 0, 20) . '...' : $app->location;
+
+            printf("%-6d | %-12s | %-15s | %-30s | %-25s | %-20s\n",
+                $app->id,
+                $app->status,
+                $app->vacancy_code,
+                $title,
+                $location,
+                date('Y-m-d H:i', $app->timecreated)
+            );
+
+            if ($verbose) {
+                // Show documents count.
+                $doccount = $DB->count_records('local_jobboard_document', ['applicationid' => $app->id]);
+                $workflowcount = $DB->count_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
+                echo "       | Documents: $doccount | Workflow entries: $workflowcount\n";
+            }
+        }
+
+        echo str_repeat('-', 120) . "\n";
+        echo "Total: " . count($applications) . " applications\n";
+
+        if (!$options['delete-application']) {
+            echo "\nTo delete these applications, add --delete-application flag.\n";
+        }
+
+        if (!$options['delete-application']) {
+            exit(0);
+        }
+    }
+
+    // ============================================================
+    // DELETE APPLICATIONS MODE
+    // ============================================================
+    cli_heading('Deleting Applications');
+
+    $totalapps = count($applications);
+    echo "Found $totalapps application(s) to delete.\n\n";
+
+    if ($dryrun) {
+        echo "*** DRY RUN MODE - No changes will be made ***\n\n";
+    }
+
+    $stats = [
+        'applications' => 0,
+        'documents' => 0,
+        'doc_validations' => 0,
+        'workflow_logs' => 0,
+        'evaluations' => 0,
+        'notifications' => 0,
+        'files' => 0,
+    ];
+
+    // Get file storage.
+    $fs = get_file_storage();
+    $context = \context_system::instance();
+
+    foreach ($applications as $app) {
+        echo "Processing application ID: {$app->id}\n";
+        echo "  Vacancy: {$app->vacancy_code} - {$app->vacancy_title}\n";
+        echo "  User: {$app->firstname} {$app->lastname} ({$app->user_idnumber})\n";
+        echo "  Status: {$app->status}\n";
+        echo "  Created: " . date('Y-m-d H:i:s', $app->timecreated) . "\n";
+
+        // Get documents for this application.
+        $documents = $DB->get_records('local_jobboard_document', ['applicationid' => $app->id]);
+        $doccount = count($documents);
+        echo "  Documents: $doccount\n";
+
+        if (!$dryrun) {
+            // 1. Delete document validations.
+            if (!empty($documents)) {
+                $docids = array_keys($documents);
+                list($docinsql, $docparams) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED, 'did');
+                $valcount = $DB->count_records_select('local_jobboard_doc_validation', "documentid $docinsql", $docparams);
+                $DB->delete_records_select('local_jobboard_doc_validation', "documentid $docinsql", $docparams);
+                $stats['doc_validations'] += $valcount;
+                if ($verbose) echo "    Deleted $valcount document validation(s)\n";
+            }
+
+            // 2. Delete document files from Moodle file storage.
+            foreach ($documents as $doc) {
+                // Files are stored in component 'local_jobboard', filearea 'application_documents'.
+                $files = $fs->get_area_files(
+                    $context->id,
+                    'local_jobboard',
+                    'application_documents',
+                    $doc->id,
+                    'id',
+                    false
+                );
+                foreach ($files as $file) {
+                    $file->delete();
+                    $stats['files']++;
+                }
+            }
+            if ($verbose && $doccount > 0) echo "    Deleted document files from storage\n";
+
+            // 3. Delete documents records.
+            $DB->delete_records('local_jobboard_document', ['applicationid' => $app->id]);
+            $stats['documents'] += $doccount;
+            if ($verbose) echo "    Deleted $doccount document record(s)\n";
+
+            // 4. Delete workflow logs.
+            $wfcount = $DB->count_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
+            $DB->delete_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
+            $stats['workflow_logs'] += $wfcount;
+            if ($verbose) echo "    Deleted $wfcount workflow log(s)\n";
+
+            // 5. Delete evaluations (if table exists).
+            if ($DB->get_manager()->table_exists('local_jobboard_evaluation')) {
+                $evalcount = $DB->count_records('local_jobboard_evaluation', ['applicationid' => $app->id]);
+                if ($evalcount > 0) {
+                    $DB->delete_records('local_jobboard_evaluation', ['applicationid' => $app->id]);
+                    $stats['evaluations'] += $evalcount;
+                    if ($verbose) echo "    Deleted $evalcount evaluation(s)\n";
+                }
+            }
+
+            // 6. Delete notifications (notifications are linked via JSON data field).
+            // The notification table uses 'data' JSON field to store applicationid.
+            // We try to find and delete notifications that reference this application.
+            try {
+                $likeparam = '%"applicationid":' . $app->id . '%';
+                $notifcount = $DB->count_records_sql(
+                    "SELECT COUNT(*) FROM {local_jobboard_notification}
+                     WHERE userid = :userid AND " . $DB->sql_like('data', ':pattern'),
+                    ['userid' => $app->userid, 'pattern' => $likeparam]
+                );
+                if ($notifcount > 0) {
+                    // Use execute() for DELETE with LIKE since delete_records_sql doesn't exist.
+                    $sql = "DELETE FROM {local_jobboard_notification}
+                            WHERE userid = ? AND " . $DB->sql_like('data', '?');
+                    $DB->execute($sql, [$app->userid, $likeparam]);
+                    $stats['notifications'] += $notifcount;
+                    if ($verbose) echo "    Deleted $notifcount notification(s)\n";
+                }
+            } catch (Exception $e) {
+                // Notifications table might have different structure, skip silently.
+                if ($verbose) echo "    Note: Could not process notifications (table structure may differ)\n";
+            }
+
+            // 7. Delete application record.
+            $DB->delete_records('local_jobboard_application', ['id' => $app->id]);
+            $stats['applications']++;
+            echo "  DELETED application ID: {$app->id}\n";
+
+        } else {
+            // Dry run - just count.
+            $stats['applications']++;
+            $stats['documents'] += $doccount;
+
+            if (!empty($documents)) {
+                $docids = array_keys($documents);
+                list($docinsql, $docparams) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED, 'did');
+                $stats['doc_validations'] += $DB->count_records_select('local_jobboard_doc_validation', "documentid $docinsql", $docparams);
+            }
+
+            $stats['workflow_logs'] += $DB->count_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
+
+            if ($DB->get_manager()->table_exists('local_jobboard_evaluation')) {
+                $stats['evaluations'] += $DB->count_records('local_jobboard_evaluation', ['applicationid' => $app->id]);
+            }
+
+            // Try to count notifications (may fail if table structure differs).
+            try {
+                $likeparam = '%"applicationid":' . $app->id . '%';
+                $stats['notifications'] += $DB->count_records_sql(
+                    "SELECT COUNT(*) FROM {local_jobboard_notification}
+                     WHERE userid = :userid AND " . $DB->sql_like('data', ':pattern'),
+                    ['userid' => $app->userid, 'pattern' => $likeparam]
+                );
+            } catch (Exception $e) {
+                // Skip if table structure differs.
+            }
+
+            echo "  Would DELETE application ID: {$app->id}\n";
+        }
+
+        echo "\n";
+    }
+
+    // Summary.
+    echo str_repeat('=', 60) . "\n";
+    echo $dryrun ? "DRY RUN SUMMARY (no changes made):\n" : "DELETION SUMMARY:\n";
+    echo str_repeat('=', 60) . "\n";
+    echo "Applications deleted:      {$stats['applications']}\n";
+    echo "Documents deleted:         {$stats['documents']}\n";
+    echo "Document validations:      {$stats['doc_validations']}\n";
+    echo "Workflow logs:             {$stats['workflow_logs']}\n";
+    echo "Evaluations:               {$stats['evaluations']}\n";
+    echo "Notifications:             {$stats['notifications']}\n";
+    echo "Files removed:             {$stats['files']}\n";
+    echo str_repeat('=', 60) . "\n";
+
+    if ($dryrun) {
+        echo "\n*** DRY RUN - Run without --dryrun to actually delete ***\n";
+    } else {
+        echo "\n=== DELETION COMPLETE ===\n";
+    }
+
     exit(0);
 }
 
@@ -511,9 +835,6 @@ $SAMPLE_PROGRAMS = [
     ],
 ];
 
-// Initialize metadata array for JSON imports (will be populated if using --json).
-$jsonMetadata = [];
-
 if ($createsample) {
     // Generate sample vacancies: 4 per sede.
     cli_heading('Phase 1: Generating Sample Vacancy Data');
@@ -609,24 +930,7 @@ if ($createsample) {
     }
 
     echo "JSON source: " . ($jsondata['source'] ?? 'Unknown') . "\n";
-    echo "Generated: " . ($jsondata['generated'] ?? 'Unknown') . "\n";
-
-    // Extract metadata from JSON if available.
-    if (isset($jsondata['convocatoria'])) {
-        $jsonMetadata['convocatoria'] = $jsondata['convocatoria'];
-        echo "Convocatoria: " . ($jsondata['convocatoria']['name'] ?? 'N/A') . "\n";
-    }
-    if (isset($jsondata['institucion'])) {
-        $jsonMetadata['institucion'] = $jsondata['institucion'];
-        echo "Institución: " . ($jsondata['institucion']['nombre'] ?? 'N/A') . "\n";
-    }
-    if (isset($jsondata['cronograma'])) {
-        $jsonMetadata['cronograma'] = $jsondata['cronograma'];
-    }
-    if (isset($jsondata['requisitos'])) {
-        $jsonMetadata['requisitos'] = $jsondata['requisitos'];
-    }
-    echo "\n";
+    echo "Generated: " . ($jsondata['generated'] ?? 'Unknown') . "\n\n";
 
     $consolidatedCount = 0;
     $totalPositions = 0;
@@ -1135,23 +1439,8 @@ if ($shouldpublish && empty($convocatoriaid)) {
         echo "\nConvocatorias ready: " . count($convocatoriaids) . "\n";
     } else {
         // Normal mode: create single convocatoria.
-        // Use JSON metadata if available, then command line options, then defaults.
-        $convcode = $options['convocatoria-code']
-            ?: ($jsonMetadata['convocatoria']['code'] ?? null)
-            ?: "CONV-ISER-{$year}-{$semester}";
-        $convname = $options['convocatoria-name']
-            ?: ($jsonMetadata['convocatoria']['name'] ?? null)
-            ?: "Convocatoria Docentes Ocasionales y Cátedra ISER {$year}-{$semester}";
-
-        // Get additional metadata from JSON.
-        $institucionNombre = $jsonMetadata['institucion']['nombre'] ?? 'Instituto Superior de Educación Rural - ISER';
-        $acuerdoRef = $jsonMetadata['convocatoria']['acuerdo'] ?? '';
-        $responsable = $jsonMetadata['convocatoria']['responsable'] ?? '';
-        $periodoAcademico = $jsonMetadata['convocatoria']['periodo_academico'] ?? "{$year}-{$semester}";
-        $requisitosGenerales = $jsonMetadata['requisitos']['generales'] ?? [];
-        $documentosRequeridos = $jsonMetadata['requisitos']['documentos'] ?? [];
-        $cronograma = $jsonMetadata['cronograma'] ?? [];
-        $contactoInfo = $jsonMetadata['institucion']['contacto'] ?? [];
+        $convcode = $options['convocatoria-code'] ?: "CONV-ISER-{$year}-{$semester}";
+        $convname = $options['convocatoria-name'] ?: "Convocatoria Docentes Ocasionales y Cátedra ISER {$year}-{$semester}";
 
     // Check if exists.
     $existingconv = $DB->get_record('local_jobboard_convocatoria', ['code' => $convcode]);
@@ -1195,77 +1484,22 @@ if ($shouldpublish && empty($convocatoriaid)) {
         $openDateStr = date('d/m/Y', $opendate);
         $closeDateStr = date('d/m/Y', $closedate);
 
-        // Build requisitos HTML from JSON metadata if available.
-        $requisitosHtml = '';
-        if (!empty($requisitosGenerales)) {
-            $requisitosHtml = "<h4>Requisitos Generales (según convocatoria)</h4>\n<ol>\n";
-            foreach ($requisitosGenerales as $req) {
-                $requisitosHtml .= "<li>{$req}</li>\n";
-            }
-            $requisitosHtml .= "</ol>\n";
-        }
-
-        // Build documentos HTML from JSON metadata if available.
-        $documentosHtml = '';
-        if (!empty($documentosRequeridos)) {
-            $documentosHtml = "<h4>Documentos Requeridos (según convocatoria)</h4>\n<ul>\n";
-            foreach ($documentosRequeridos as $doc) {
-                $documentosHtml .= "<li>{$doc}</li>\n";
-            }
-            $documentosHtml .= "</ul>\n";
-        }
-
-        // Build acuerdo reference if available.
-        $acuerdoHtml = '';
-        if (!empty($acuerdoRef)) {
-            $acuerdoHtml = "<tr><th>Marco Normativo</th><td>{$acuerdoRef}</td></tr>";
-        }
-
-        // Build responsable if available.
-        $responsableHtml = '';
-        if (!empty($responsable)) {
-            $responsableHtml = "<tr><th>Responsable</th><td>{$responsable}</td></tr>";
-        }
-
-        // Build contacto HTML if available.
-        $contactoHtml = '';
-        if (!empty($contactoInfo)) {
-            $contactoHtml = "<h4>Contacto</h4>\n<ul>\n";
-            $contactoHtml .= "<li><strong>{$institucionNombre}</strong></li>\n";
-            if (!empty($contactoInfo['direccion'])) {
-                $contactoHtml .= "<li>Dirección: {$contactoInfo['direccion']}</li>\n";
-            }
-            if (!empty($contactoInfo['telefono'])) {
-                $contactoHtml .= "<li>Teléfono: {$contactoInfo['telefono']}</li>\n";
-            }
-            if (!empty($contactoInfo['email_th'])) {
-                $contactoHtml .= "<li>Correo: {$contactoInfo['email_th']}</li>\n";
-            }
-            if (!empty($contactoInfo['web'])) {
-                $contactoHtml .= "<li>Web: {$contactoInfo['web']}</li>\n";
-            }
-            $contactoHtml .= "</ul>\n";
-        }
-
         // Build comprehensive description.
         $deschtml = <<<HTML
 <div class="convocatoria-description">
-    <h3>{$convname}</h3>
+    <h3>Convocatoria para Vinculación de Docentes ISER {$year}</h3>
 
     <div class="alert alert-info">
-        <strong>{$institucionNombre}</strong><br>
+        <strong>Instituto Superior de Educación Rural - ISER</strong><br>
         Proceso de selección para docentes ocasionales y de cátedra - Vigencia {$year}
     </div>
 
     <h4>Información General</h4>
     <table class="table table-bordered">
         <tr><th>Código de Convocatoria</th><td><strong>{$convcode}</strong></td></tr>
-        <tr><th>Período Académico</th><td>{$periodoAcademico}</td></tr>
         <tr><th>Período de Inscripción</th><td>{$openDateStr} al {$closeDateStr}</td></tr>
         <tr><th>Total de Vacantes</th><td><strong>{$totalVacancies}</strong></td></tr>
         <tr><th>Modalidades</th><td>Presencial y A Distancia</td></tr>
-        {$acuerdoHtml}
-        {$responsableHtml}
     </table>
 
     <h4>Distribución de Vacantes</h4>
@@ -1294,9 +1528,56 @@ if ($shouldpublish && empty($convocatoriaid)) {
         {$programHtml}
     </ul>
 
-    {$requisitosHtml}
+    <h4>Requisitos Generales</h4>
+    <ol>
+        <li>Título profesional universitario acorde al perfil requerido para la vacante</li>
+        <li>Título de posgrado (especialización, maestría o doctorado) - según perfil</li>
+        <li>Experiencia docente en educación superior (deseable mínimo 1 año)</li>
+        <li>Disponibilidad horaria para la sede y modalidad seleccionada</li>
+        <li>No tener inhabilidades ni incompatibilidades para contratar con el Estado</li>
+    </ol>
 
-    {$documentosHtml}
+    <h4>Documentos Requeridos</h4>
+    <p>Los aspirantes deberán cargar en el sistema los siguientes documentos en formato PDF:</p>
+
+    <h5>Documentos de Identificación</h5>
+    <ul>
+        <li>Hoja de vida actualizada (formato libre o SIGEP)</li>
+        <li>Cédula de ciudadanía (ambas caras, legible)</li>
+        <li>Libreta militar (hombres menores de 50 años)</li>
+        <li>Foto reciente tipo documento (fondo blanco)</li>
+    </ul>
+
+    <h5>Documentos Académicos</h5>
+    <ul>
+        <li>Diploma y acta de grado de pregrado</li>
+        <li>Diploma y acta de grado de posgrado (si aplica)</li>
+        <li>Tarjeta profesional (para profesiones reguladas)</li>
+        <li>Certificado de vigencia de tarjeta profesional (expedición no mayor a 3 meses)</li>
+    </ul>
+
+    <h5>Documentos Laborales</h5>
+    <ul>
+        <li>Certificaciones laborales de experiencia docente</li>
+        <li>Certificaciones laborales de experiencia profesional relacionada</li>
+    </ul>
+
+    <h5>Certificados de Antecedentes (vigencia no mayor a 30 días)</h5>
+    <ul>
+        <li>Certificado de antecedentes disciplinarios - Procuraduría General de la Nación</li>
+        <li>Certificado de antecedentes fiscales - Contraloría General de la República</li>
+        <li>Certificado de antecedentes judiciales - Policía Nacional</li>
+        <li>Certificado de medidas correctivas - Policía Nacional</li>
+        <li>Certificado del Sistema de Registro de Inhabilidades por Delitos Sexuales</li>
+    </ul>
+
+    <h5>Documentos Financieros y de Seguridad Social</h5>
+    <ul>
+        <li>RUT actualizado (expedición no mayor a 3 meses)</li>
+        <li>Certificación bancaria (cuenta de ahorros o corriente a nombre del aspirante)</li>
+        <li>Certificado de afiliación a EPS</li>
+        <li>Certificado de afiliación a Fondo de Pensiones</li>
+    </ul>
 
     <h4>Proceso de Selección</h4>
     <ol>
@@ -1305,10 +1586,17 @@ if ($shouldpublish && empty($convocatoriaid)) {
         <li><strong>Evaluación de méritos:</strong> Valoración de formación y experiencia</li>
         <li><strong>Entrevista:</strong> Evaluación de competencias (si aplica)</li>
         <li><strong>Publicación de resultados:</strong> Lista de elegibles</li>
-        <li><strong>Vinculación:</strong> Sujeta a disponibilidad presupuestal y según calendarios académicos</li>
+        <li><strong>Vinculación:</strong> Sujeta a disponibilidad presupuestal</li>
     </ol>
 
-    {$contactoHtml}
+    <h4>Contacto</h4>
+    <p>Para mayor información sobre esta convocatoria:</p>
+    <ul>
+        <li><strong>Oficina de Talento Humano - ISER</strong></li>
+        <li>Correo: talento.humano@iser.edu.co</li>
+        <li>Teléfono: (607) 568XXXX</li>
+        <li>Dirección: Pamplona, Norte de Santander</li>
+    </ul>
 </div>
 HTML;
 
