@@ -3641,6 +3641,7 @@ $string['allcomplete'] = '¡Todo completo!';
 // =============================================================================
 
 $string['applicationform'] = 'Formulario de Postulación';
+$string['applicationform_desc'] = 'Complete todos los campos obligatorios y cargue los documentos necesarios para enviar su postulación.';
 $string['applicationsubmitted'] = 'Su postulación ha sido enviada exitosamente.';
 $string['applicationsubmitfailed'] = 'Error al enviar la postulación. Por favor intente nuevamente.';
 $string['applicationcreatefailed'] = 'Error al crear el registro de postulación.';

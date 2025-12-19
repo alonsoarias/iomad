@@ -3643,6 +3643,7 @@ $string['allcomplete'] = 'All complete!';
 // =============================================================================
 
 $string['applicationform'] = 'Application Form';
+$string['applicationform_desc'] = 'Complete all required fields and upload the necessary documents to submit your application.';
 $string['applicationsubmitted'] = 'Your application has been submitted successfully.';
 $string['applicationsubmitfailed'] = 'Failed to submit application. Please try again.';
 $string['applicationcreatefailed'] = 'Failed to create application record.';

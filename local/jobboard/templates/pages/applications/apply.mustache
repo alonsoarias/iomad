@@ -1,14 +1,16 @@
 {{!
     @template local_jobboard/pages/applications/apply
 
-    Application form page - ISER Brand Design
-    Based on Manual de Identidad Visual ISER (M-GCRP-01 v01)
+    Application form page - ISER Brand Design v2
+    Complete redesign with consistent styling and improved UX
 
     Context variables:
     * vacancy - Vacancy data {id, code, title, location, modality, closedateformatted}
     * convocatoria - Convocatoria info {code, name}
     * daysuntilclose - Days remaining until deadline
     * showdeadlinewarning - Whether to show urgent deadline warning
+    * showdaysremaining - Whether to show days remaining badge
+    * daysremainingtext - Formatted days remaining text
     * isexemption - Boolean if user has exemption
     * exemptioninfo - Exemption details if applicable
     * formhtml - Moodle form HTML
@@ -19,429 +21,1251 @@
     * backvacancyurl - URL to vacancy details
     * browservacanciesurl - URL to browse vacancies
 }}
-<div class="jb-apply-page jb-iser-theme" id="jobboard-apply">
-    {{! Top Header Bar with ISER Verde }}
-    <div class="jb-apply-header" style="background: linear-gradient(135deg, var(--iser-verde) 0%, var(--iser-verde-dark) 100%); border-radius: var(--jb-radius-lg); padding: var(--jb-space-6); margin-bottom: var(--jb-space-6); color: var(--iser-blanco);">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                {{! Breadcrumb }}
-                <nav aria-label="breadcrumb" class="mb-3">
-                    <ol class="breadcrumb mb-0" style="background: transparent; padding: 0;">
-                        <li class="breadcrumb-item">
-                            <a href="{{browservacanciesurl}}" style="color: rgba(255,255,255,0.8);">
-                                <i class="fa fa-home me-1"></i>{{#str}}vacancies, local_jobboard{{/str}}
-                            </a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a href="{{viewvacancyurl}}" style="color: rgba(255,255,255,0.8);">{{vacancy.code}}</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page" style="color: var(--iser-blanco);">
-                            {{#str}}apply, local_jobboard{{/str}}
-                        </li>
-                    </ol>
-                </nav>
+<div class="jb-apply-page" id="jobboard-apply">
+    {{! ================================================================
+        HEADER SECTION
+        ================================================================ }}
+    <header class="jb-apply-header">
+        <div class="jb-apply-header__content">
+            {{! Breadcrumb Navigation }}
+            <nav class="jb-breadcrumb" aria-label="{{#str}}breadcrumb{{/str}}">
+                <ol class="jb-breadcrumb__list">
+                    <li class="jb-breadcrumb__item">
+                        <a href="{{browservacanciesurl}}" class="jb-breadcrumb__link">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                            <span>{{#str}}vacancies, local_jobboard{{/str}}</span>
+                        </a>
+                    </li>
+                    <li class="jb-breadcrumb__separator" aria-hidden="true">
+                        <i class="fa fa-chevron-right"></i>
+                    </li>
+                    <li class="jb-breadcrumb__item">
+                        <a href="{{viewvacancyurl}}" class="jb-breadcrumb__link">{{vacancy.code}}</a>
+                    </li>
+                    <li class="jb-breadcrumb__separator" aria-hidden="true">
+                        <i class="fa fa-chevron-right"></i>
+                    </li>
+                    <li class="jb-breadcrumb__item jb-breadcrumb__item--active" aria-current="page">
+                        {{#str}}apply, local_jobboard{{/str}}
+                    </li>
+                </ol>
+            </nav>
 
-                {{! Main Title }}
-                <h1 style="font-size: var(--jb-text-3xl); font-weight: var(--jb-font-bold); margin-bottom: var(--jb-space-2); color: var(--iser-blanco);">
-                    {{#str}}applytovacancy, local_jobboard{{/str}}
-                </h1>
-                <p style="font-size: var(--jb-text-lg); margin-bottom: 0; opacity: 0.9;">
-                    <i class="fa fa-briefcase me-2"></i>{{vacancy.title}}
-                </p>
-            </div>
-            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+            {{! Main Title }}
+            <div class="jb-apply-header__title-row">
+                <div class="jb-apply-header__title-content">
+                    <h1 class="jb-apply-header__title">
+                        <i class="fa fa-file-signature" aria-hidden="true"></i>
+                        {{#str}}applytovacancy, local_jobboard{{/str}}
+                    </h1>
+                    <p class="jb-apply-header__subtitle">
+                        {{vacancy.title}}
+                    </p>
+                </div>
+
                 {{! Deadline Badge }}
                 {{#showdaysremaining}}
-                <div class="d-inline-block" style="background: {{#showdeadlinewarning}}var(--iser-rojo){{/showdeadlinewarning}}{{^showdeadlinewarning}}rgba(255,255,255,0.2){{/showdeadlinewarning}}; border-radius: var(--jb-radius-full); padding: var(--jb-space-3) var(--jb-space-5);">
-                    <i class="fa fa-clock me-2"></i>
-                    <strong>{{daysremainingtext}}</strong>
+                <div class="jb-deadline-badge {{#showdeadlinewarning}}jb-deadline-badge--urgent{{/showdeadlinewarning}}">
+                    <i class="fa fa-clock" aria-hidden="true"></i>
+                    <span class="jb-deadline-badge__text">{{daysremainingtext}}</span>
                 </div>
                 {{/showdaysremaining}}
             </div>
         </div>
+    </header>
+
+    {{! ================================================================
+        ALERTS SECTION
+        ================================================================ }}
+    <div class="jb-alerts-container">
+        {{! Deadline Warning }}
+        {{#showdeadlinewarning}}
+        <div class="jb-alert jb-alert--danger" role="alert">
+            <div class="jb-alert__icon">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            </div>
+            <div class="jb-alert__content">
+                <strong class="jb-alert__title">{{#str}}deadlinewarning_title, local_jobboard{{/str}}</strong>
+                <p class="jb-alert__message">{{deadlinewarningtext}}</p>
+            </div>
+        </div>
+        {{/showdeadlinewarning}}
+
+        {{! Exemption Notice }}
+        {{#isexemption}}
+        <div class="jb-alert jb-alert--info" role="alert">
+            <div class="jb-alert__icon">
+                <i class="fa fa-id-badge" aria-hidden="true"></i>
+            </div>
+            <div class="jb-alert__content">
+                <strong class="jb-alert__title">{{#str}}exemptionapplied, local_jobboard{{/str}}</strong>
+                {{#exemptioninfo}}
+                <p class="jb-alert__message">{{exemptiontype}}</p>
+                {{/exemptioninfo}}
+            </div>
+        </div>
+        {{/isexemption}}
     </div>
 
-    <div class="row g-4">
-        {{! Main Content Column }}
-        <div class="col-lg-8">
-            {{! Deadline Warning Alert }}
-            {{#showdeadlinewarning}}
-            <div class="jb-alert jb-alert-danger mb-4" role="alert" style="background: var(--iser-rojo-lighter); border-left: 4px solid var(--iser-rojo); border-radius: var(--jb-radius-md); padding: var(--jb-space-4);">
-                <div class="d-flex align-items-start">
-                    <div style="background: var(--iser-rojo); border-radius: var(--jb-radius-full); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <i class="fa fa-exclamation-triangle" style="color: var(--iser-blanco);"></i>
+    {{! ================================================================
+        MAIN CONTENT LAYOUT
+        ================================================================ }}
+    <div class="jb-apply-layout">
+        {{! Main Form Column }}
+        <main class="jb-apply-main">
+            <div class="jb-form-card">
+                <div class="jb-form-card__header">
+                    <div class="jb-form-card__header-icon">
+                        <i class="fa fa-clipboard-list" aria-hidden="true"></i>
                     </div>
-                    <div class="ms-3">
-                        <strong style="color: var(--iser-rojo); display: block; margin-bottom: var(--jb-space-1);">
-                            {{#str}}deadlinewarning_title, local_jobboard{{/str}}
-                        </strong>
-                        <span style="color: var(--iser-gris-oscuro);">{{deadlinewarningtext}}</span>
-                    </div>
-                </div>
-            </div>
-            {{/showdeadlinewarning}}
-
-            {{! Exemption Notice }}
-            {{#isexemption}}
-            <div class="jb-alert jb-alert-info mb-4" role="alert" style="background: var(--iser-azul-lighter); border-left: 4px solid var(--iser-azul); border-radius: var(--jb-radius-md); padding: var(--jb-space-4);">
-                <div class="d-flex align-items-start">
-                    <div style="background: var(--iser-azul); border-radius: var(--jb-radius-full); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <i class="fa fa-id-badge" style="color: var(--iser-blanco);"></i>
-                    </div>
-                    <div class="ms-3">
-                        <strong style="color: var(--iser-azul); display: block; margin-bottom: var(--jb-space-1);">
-                            {{#str}}exemptionapplied, local_jobboard{{/str}}
-                        </strong>
-                        {{#exemptioninfo}}
-                        <span style="color: var(--iser-gris-oscuro);">{{exemptiontype}}</span>
-                        {{/exemptioninfo}}
+                    <div class="jb-form-card__header-text">
+                        <h2 class="jb-form-card__title">{{#str}}applicationform, local_jobboard{{/str}}</h2>
+                        <p class="jb-form-card__description">{{#str}}applicationform_desc, local_jobboard{{/str}}</p>
                     </div>
                 </div>
-            </div>
-            {{/isexemption}}
-
-            {{! Application Form Card }}
-            <div class="jb-card" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden;">
-                {{! Card Header with ISER Rojo accent }}
-                <div class="jb-card-header" style="background: var(--jb-gray-50); padding: var(--jb-space-4) var(--jb-space-5); border-bottom: 3px solid var(--iser-verde);">
-                    <h2 style="font-size: var(--jb-text-xl); font-weight: var(--jb-font-semibold); color: var(--iser-rojo); margin: 0; display: flex; align-items: center;">
-                        <i class="fa fa-file-signature me-3" style="color: var(--iser-verde);"></i>
-                        {{#str}}applicationform, local_jobboard{{/str}}
-                    </h2>
-                </div>
-
-                {{! Card Body - Form Container }}
-                <div class="jb-card-body" style="padding: var(--jb-space-5);">
-                    <div class="jb-form-container">
+                <div class="jb-form-card__body">
+                    <div class="jb-moodle-form">
                         {{{formhtml}}}
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
 
-        {{! Sidebar Column }}
-        <div class="col-lg-4">
-            <div class="jb-sidebar" style="position: sticky; top: 100px;">
-                {{! Vacancy Summary Card }}
-                <div class="jb-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
-                    <div class="jb-card-header" style="background: var(--iser-verde-lighter); padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 2px solid var(--iser-verde);">
-                        <h3 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-verde-dark); margin: 0;">
-                            <i class="fa fa-briefcase me-2"></i>
-                            {{#str}}vacancysummary, local_jobboard{{/str}}
-                        </h3>
+        {{! Sidebar }}
+        <aside class="jb-apply-sidebar">
+            {{! Vacancy Summary Card }}
+            <div class="jb-sidebar-card">
+                <div class="jb-sidebar-card__header jb-sidebar-card__header--primary">
+                    <i class="fa fa-briefcase" aria-hidden="true"></i>
+                    <span>{{#str}}vacancysummary, local_jobboard{{/str}}</span>
+                </div>
+                <div class="jb-sidebar-card__body">
+                    <dl class="jb-info-list">
+                        <div class="jb-info-list__item">
+                            <dt class="jb-info-list__label">{{#str}}code, local_jobboard{{/str}}</dt>
+                            <dd class="jb-info-list__value">
+                                <code class="jb-code-badge">{{vacancy.code}}</code>
+                            </dd>
+                        </div>
+                        <div class="jb-info-list__item jb-info-list__item--full">
+                            <dt class="jb-info-list__label">{{#str}}title, local_jobboard{{/str}}</dt>
+                            <dd class="jb-info-list__value jb-info-list__value--title">{{vacancy.title}}</dd>
+                        </div>
+                        {{#vacancy.location}}
+                        <div class="jb-info-list__item">
+                            <dt class="jb-info-list__label">
+                                <i class="fa fa-map-marker-alt" aria-hidden="true"></i>
+                                {{#str}}location, local_jobboard{{/str}}
+                            </dt>
+                            <dd class="jb-info-list__value">{{vacancy.location}}</dd>
+                        </div>
+                        {{/vacancy.location}}
+                        {{#vacancy.modality}}
+                        <div class="jb-info-list__item">
+                            <dt class="jb-info-list__label">
+                                <i class="fa fa-laptop-house" aria-hidden="true"></i>
+                                {{#str}}modality, local_jobboard{{/str}}
+                            </dt>
+                            <dd class="jb-info-list__value">{{vacancy.modality}}</dd>
+                        </div>
+                        {{/vacancy.modality}}
+                        <div class="jb-info-list__item">
+                            <dt class="jb-info-list__label">
+                                <i class="fa fa-calendar-alt" aria-hidden="true"></i>
+                                {{#str}}closedate, local_jobboard{{/str}}
+                            </dt>
+                            <dd class="jb-info-list__value {{#showdeadlinewarning}}jb-info-list__value--urgent{{/showdeadlinewarning}}">
+                                {{vacancy.closedateformatted}}
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+                <div class="jb-sidebar-card__footer">
+                    <a href="{{viewvacancyurl}}" class="jb-btn jb-btn--outline jb-btn--block">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        {{#str}}viewvacancydetails, local_jobboard{{/str}}
+                    </a>
+                </div>
+            </div>
+
+            {{! Document Checklist }}
+            {{#hasrequireddocs}}
+            <div class="jb-sidebar-card" data-region="document-checklist" data-total="{{requireddocscount}}">
+                <div class="jb-sidebar-card__header jb-sidebar-card__header--warning">
+                    <div class="jb-sidebar-card__header-main">
+                        <i class="fa fa-list-check" aria-hidden="true"></i>
+                        <span>{{#str}}documentchecklist, local_jobboard{{/str}}</span>
                     </div>
-                    <div class="jb-card-body" style="padding: var(--jb-space-4);">
-                        <dl style="margin: 0;">
-                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-200);">
-                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
-                                    {{#str}}code, local_jobboard{{/str}}
-                                </dt>
-                                <dd style="margin: 0; font-weight: var(--jb-font-semibold); color: var(--iser-negro);">
-                                    <code style="background: var(--iser-verde-lighter); color: var(--iser-verde-dark); padding: 2px 8px; border-radius: 4px; font-size: var(--jb-text-sm);">{{vacancy.code}}</code>
-                                </dd>
-                            </div>
+                    <span data-region="checklist-counter" class="jb-counter-badge">
+                        <span data-count="uploaded">0</span>/{{requireddocscount}}
+                    </span>
+                </div>
+                <div class="jb-progress-bar">
+                    <div data-region="checklist-progress" class="jb-progress-bar__fill"></div>
+                </div>
+                <ul class="jb-checklist" data-region="checklist-items">
+                    {{#requireddocs}}
+                    <li class="jb-checklist__item unchecked" data-doc-code="{{code}}" data-action="scroll-to-doc" data-target="doc_{{code}}">
+                        <span class="jb-checklist__checkbox" data-icon="unchecked">
+                            <i class="fa fa-square" aria-hidden="true"></i>
+                        </span>
+                        <span class="jb-checklist__checkbox jb-checklist__checkbox--checked d-none" data-icon="checked">
+                            <i class="fa fa-check-square" aria-hidden="true"></i>
+                        </span>
+                        <span class="jb-checklist__label">{{name}}</span>
+                        <span data-status="pending" class="jb-status-badge jb-status-badge--pending">
+                            {{#str}}pending, local_jobboard{{/str}}
+                        </span>
+                        <span data-status="uploaded" class="jb-status-badge jb-status-badge--success d-none">
+                            {{#str}}uploaded, local_jobboard{{/str}}
+                        </span>
+                        {{#isrequired}}
+                        <span class="jb-required-marker" title="{{#str}}required{{/str}}">*</span>
+                        {{/isrequired}}
+                    </li>
+                    {{/requireddocs}}
+                </ul>
+                <div data-region="all-complete" class="jb-checklist__complete d-none">
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    <span>{{#str}}alldocumentsuploaded, local_jobboard{{/str}}</span>
+                </div>
+                <div class="jb-sidebar-card__note">
+                    <span class="jb-required-marker">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
+                </div>
+            </div>
+            {{/hasrequireddocs}}
 
-                            <div class="py-2" style="border-bottom: 1px solid var(--jb-gray-200);">
-                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm); margin-bottom: var(--jb-space-1);">
-                                    {{#str}}title, local_jobboard{{/str}}
-                                </dt>
-                                <dd style="margin: 0; font-weight: var(--jb-font-medium); color: var(--iser-negro);">{{vacancy.title}}</dd>
-                            </div>
-
-                            {{#vacancy.location}}
-                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-200);">
-                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
-                                    <i class="fa fa-map-marker-alt me-1"></i>{{#str}}location, local_jobboard{{/str}}
-                                </dt>
-                                <dd style="margin: 0; color: var(--iser-negro);">{{vacancy.location}}</dd>
-                            </div>
-                            {{/vacancy.location}}
-
-                            {{#vacancy.modality}}
-                            <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--jb-gray-200);">
-                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
-                                    <i class="fa fa-laptop-house me-1"></i>{{#str}}modality, local_jobboard{{/str}}
-                                </dt>
-                                <dd style="margin: 0; color: var(--iser-negro);">{{vacancy.modality}}</dd>
-                            </div>
-                            {{/vacancy.modality}}
-
-                            <div class="d-flex justify-content-between py-2">
-                                <dt style="color: var(--iser-gris-medio); font-weight: var(--jb-font-normal); font-size: var(--jb-text-sm);">
-                                    <i class="fa fa-calendar-alt me-1"></i>{{#str}}closedate, local_jobboard{{/str}}
-                                </dt>
-                                <dd style="margin: 0; {{#showdeadlinewarning}}color: var(--iser-rojo); font-weight: var(--jb-font-bold);{{/showdeadlinewarning}}{{^showdeadlinewarning}}color: var(--iser-negro);{{/showdeadlinewarning}}">
-                                    {{vacancy.closedateformatted}}
-                                </dd>
-                            </div>
-                        </dl>
-                    </div>
-                    <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); border-top: 1px solid var(--jb-gray-200);">
-                        <a href="{{viewvacancyurl}}" class="btn w-100" style="background: transparent; border: 2px solid var(--iser-verde); color: var(--iser-verde); font-weight: var(--jb-font-medium); border-radius: var(--jb-radius-md); transition: all 0.2s ease;">
-                            <i class="fa fa-eye me-2"></i>
-                            {{#str}}viewvacancydetails, local_jobboard{{/str}}
+            {{! Help Card }}
+            <div class="jb-sidebar-card">
+                <div class="jb-sidebar-card__header jb-sidebar-card__header--info">
+                    <i class="fa fa-circle-question" aria-hidden="true"></i>
+                    <span>{{#str}}needhelp, local_jobboard{{/str}}</span>
+                </div>
+                <div class="jb-sidebar-card__body">
+                    <p class="jb-help-text">{{#str}}applyhelp_text, local_jobboard{{/str}}</p>
+                    {{#quicktips}}
+                    <ul class="jb-tips-list">
+                        {{#quicktips}}
+                        <li>{{.}}</li>
+                        {{/quicktips}}
+                    </ul>
+                    {{/quicktips}}
+                    {{#supportemail}}
+                    <div class="jb-support-section">
+                        <strong class="jb-support-label">{{#str}}contactsupport, local_jobboard{{/str}}</strong>
+                        <a href="mailto:{{supportemail}}" class="jb-btn jb-btn--ghost jb-btn--block jb-btn--sm">
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                            {{supportemail}}
                         </a>
                     </div>
-                </div>
-
-                {{! Document Checklist Card - Dynamic with auto-marking }}
-                {{#hasrequireddocs}}
-                <div class="jb-card mb-4" data-region="document-checklist" data-total="{{requireddocscount}}" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
-                    <div class="jb-card-header" style="background: var(--iser-amarillo-lighter); padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 2px solid var(--iser-amarillo);">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h3 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-amarillo-darker); margin: 0;">
-                                <i class="fa fa-list-check me-2"></i>
-                                {{#str}}documentchecklist, local_jobboard{{/str}}
-                            </h3>
-                            <span data-region="checklist-counter" class="bg-secondary" style="color: var(--iser-blanco); padding: 4px 12px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm); font-weight: var(--jb-font-bold);">
-                                <span data-count="uploaded">0</span>/{{requireddocscount}}
-                            </span>
-                        </div>
-                        {{! Progress bar }}
-                        <div style="margin-top: var(--jb-space-2); height: 4px; background: rgba(0,0,0,0.1); border-radius: 2px; overflow: hidden;">
-                            <div data-region="checklist-progress" style="width: 0%; height: 100%; background: var(--iser-verde); transition: width 0.3s ease;"></div>
-                        </div>
-                    </div>
-                    <ul data-region="checklist-items" style="list-style: none; margin: 0; padding: 0;">
-                        {{#requireddocs}}
-                        <li data-doc-code="{{code}}" class="unchecked" style="padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 1px solid var(--jb-gray-100); display: flex; align-items: center; font-size: var(--jb-text-sm); cursor: pointer; transition: background 0.2s ease;" data-action="scroll-to-doc" data-target="doc_{{code}}">
-                            {{! Unchecked icon (empty box) }}
-                            <span data-icon="unchecked" style="width: 20px; height: 20px; border: 2px solid var(--iser-gris-claro); border-radius: 4px; margin-right: var(--jb-space-3); flex-shrink: 0; display: flex; align-items: center; justify-content: center;"></span>
-                            {{! Checked icon (green checkmark) - hidden by default }}
-                            <span data-icon="checked" class="d-none" style="width: 20px; height: 20px; background: var(--iser-verde); border-radius: 4px; margin-right: var(--jb-space-3); flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
-                                <i class="fa fa-check" style="color: white; font-size: 12px;"></i>
-                            </span>
-                            <span style="flex: 1; color: var(--iser-gris-oscuro);">{{name}}</span>
-                            {{! Status badges }}
-                            <span data-status="pending" class="badge bg-secondary" style="font-size: 10px;">{{#str}}pending, local_jobboard{{/str}}</span>
-                            <span data-status="uploaded" class="badge bg-success d-none" style="font-size: 10px;">{{#str}}uploaded, local_jobboard{{/str}}</span>
-                            {{#isrequired}}
-                            <span style="color: var(--iser-rojo); font-weight: var(--jb-font-bold); margin-left: 4px;" title="{{#str}}required{{/str}}">*</span>
-                            {{/isrequired}}
-                        </li>
-                        {{/requireddocs}}
-                    </ul>
-                    {{! All complete message - hidden by default }}
-                    <div data-region="all-complete" class="d-none" style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--iser-verde-lighter); text-align: center;">
-                        <i class="fa fa-check-circle me-2" style="color: var(--iser-verde);"></i>
-                        <span style="color: var(--iser-verde-dark); font-weight: var(--jb-font-semibold);">{{#str}}alldocumentsuploaded, local_jobboard{{/str}}</span>
-                    </div>
-                    <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); font-size: var(--jb-text-xs); color: var(--iser-gris-medio);">
-                        <span style="color: var(--iser-rojo); font-weight: var(--jb-font-bold);">*</span> {{#str}}indicatesrequired, local_jobboard{{/str}}
-                    </div>
-                </div>
-                {{/hasrequireddocs}}
-
-                {{! Help Card }}
-                <div class="jb-card" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
-                    <div class="jb-card-header" style="background: var(--iser-azul-lighter); padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 2px solid var(--iser-azul);">
-                        <h3 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); color: var(--iser-azul); margin: 0;">
-                            <i class="fa fa-circle-question me-2"></i>
-                            {{#str}}needhelp, local_jobboard{{/str}}
-                        </h3>
-                    </div>
-                    <div class="jb-card-body" style="padding: var(--jb-space-4);">
-                        <p style="font-size: var(--jb-text-sm); color: var(--iser-gris-oscuro); margin-bottom: var(--jb-space-3);">
-                            {{#str}}applyhelp_text, local_jobboard{{/str}}
-                        </p>
-                        {{#quicktips}}
-                        <ul style="font-size: var(--jb-text-sm); color: var(--iser-gris-oscuro); padding-left: var(--jb-space-4); margin-bottom: 0;">
-                            {{#quicktips}}
-                            <li style="margin-bottom: var(--jb-space-2);">{{.}}</li>
-                            {{/quicktips}}
-                        </ul>
-                        {{/quicktips}}
-
-                        {{#supportemail}}
-                        <div style="margin-top: var(--jb-space-4); padding-top: var(--jb-space-4); border-top: 1px solid var(--jb-gray-200);">
-                            <strong style="display: block; font-size: var(--jb-text-sm); color: var(--iser-negro); margin-bottom: var(--jb-space-2);">
-                                {{#str}}contactsupport, local_jobboard{{/str}}
-                            </strong>
-                            <a href="mailto:{{supportemail}}" class="btn w-100" style="background: transparent; border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); font-size: var(--jb-text-sm); border-radius: var(--jb-radius-md);">
-                                <i class="fa fa-envelope me-2"></i>
-                                {{supportemail}}
-                            </a>
-                        </div>
-                        {{/supportemail}}
-                    </div>
+                    {{/supportemail}}
                 </div>
             </div>
-        </div>
+        </aside>
     </div>
 
-    {{! Bottom Navigation }}
-    <div class="row mt-5">
-        <div class="col-12">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--jb-space-4) 0; border-top: 2px solid var(--jb-gray-200);">
-                <a href="{{backvacancyurl}}" class="btn" style="background: transparent; border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); font-weight: var(--jb-font-medium); padding: var(--jb-space-2) var(--jb-space-4); border-radius: var(--jb-radius-md);">
-                    <i class="fa fa-arrow-left me-2"></i>
-                    {{#str}}backtovacancy, local_jobboard{{/str}}
-                </a>
-                <a href="{{browservacanciesurl}}" style="color: var(--iser-verde); font-weight: var(--jb-font-medium); text-decoration: none;">
-                    {{#str}}browservacancies, local_jobboard{{/str}}
-                    <i class="fa fa-arrow-right ms-2"></i>
-                </a>
-            </div>
-        </div>
-    </div>
+    {{! ================================================================
+        FOOTER NAVIGATION
+        ================================================================ }}
+    <footer class="jb-apply-footer">
+        <a href="{{backvacancyurl}}" class="jb-btn jb-btn--ghost">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            {{#str}}backtovacancy, local_jobboard{{/str}}
+        </a>
+        <a href="{{browservacanciesurl}}" class="jb-link jb-link--primary">
+            {{#str}}browservacancies, local_jobboard{{/str}}
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        </a>
+    </footer>
 </div>
 
-{{! ISER Theme Specific Styles }}
+{{! ================================================================
+    STYLES - APPLY PAGE COMPLETE REDESIGN
+    ================================================================ }}
 <style>
-/* ISER Theme Override for Apply Page */
-.jb-apply-page.jb-iser-theme {
-    font-family: var(--jb-font-sans);
+/* ================================================================
+   APPLY PAGE - BASE LAYOUT
+   ================================================================ */
+.jb-apply-page {
+    --jb-page-max-width: 1200px;
+    --jb-page-padding: 1.5rem;
+    --jb-gap: 1.5rem;
+    --jb-radius-sm: 6px;
+    --jb-radius-md: 10px;
+    --jb-radius-lg: 16px;
+    --jb-shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --jb-shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    --jb-shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    --jb-transition: all 0.2s ease;
+
+    max-width: var(--jb-page-max-width);
+    margin: 0 auto;
+    padding: var(--jb-page-padding);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Breadcrumb styling */
-.jb-apply-page .breadcrumb-item + .breadcrumb-item::before {
-    color: rgba(255,255,255,0.5);
+/* ================================================================
+   HEADER
+   ================================================================ */
+.jb-apply-header {
+    background: linear-gradient(135deg, var(--iser-verde) 0%, var(--iser-verde-dark) 100%);
+    border-radius: var(--jb-radius-lg);
+    padding: 1.5rem 2rem;
+    margin-bottom: var(--jb-gap);
+    color: var(--iser-blanco);
 }
 
-/* Button hover states */
-.jb-apply-page .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+.jb-apply-header__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.jb-apply-page a[style*="border: 2px solid var(--iser-verde)"]:hover {
-    background: var(--iser-verde) !important;
-    color: var(--iser-blanco) !important;
+/* Breadcrumb */
+.jb-breadcrumb__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.875rem;
 }
 
-/* Form styling within the apply page */
-.jb-apply-page .jb-form-container .form-group,
-.jb-apply-page .jb-form-container .fitem {
-    margin-bottom: var(--jb-space-4);
+.jb-breadcrumb__link {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    transition: var(--jb-transition);
 }
 
-.jb-apply-page .jb-form-container label {
-    font-weight: var(--jb-font-medium);
-    color: var(--iser-negro);
-    margin-bottom: var(--jb-space-2);
+.jb-breadcrumb__link:hover {
+    color: var(--iser-blanco);
 }
 
-.jb-apply-page .jb-form-container .form-control,
-.jb-apply-page .jb-form-container input[type="text"],
-.jb-apply-page .jb-form-container input[type="email"],
-.jb-apply-page .jb-form-container textarea,
-.jb-apply-page .jb-form-container select {
-    border: 2px solid var(--iser-gris-claro);
+.jb-breadcrumb__separator {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.625rem;
+}
+
+.jb-breadcrumb__item--active {
+    color: var(--iser-blanco);
+    font-weight: 500;
+}
+
+/* Title Row */
+.jb-apply-header__title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.jb-apply-header__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.jb-apply-header__title i {
+    opacity: 0.9;
+}
+
+.jb-apply-header__subtitle {
+    font-size: 1.125rem;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Deadline Badge */
+.jb-deadline-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.2);
+    padding: 0.625rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+}
+
+.jb-deadline-badge--urgent {
+    background: var(--iser-rojo);
+    animation: pulse-urgent 2s infinite;
+}
+
+@keyframes pulse-urgent {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+}
+
+/* ================================================================
+   ALERTS
+   ================================================================ */
+.jb-alerts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: var(--jb-gap);
+}
+
+.jb-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
     border-radius: var(--jb-radius-md);
-    padding: var(--jb-space-3);
-    font-size: var(--jb-text-base);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    border-left: 4px solid;
 }
 
-.jb-apply-page .jb-form-container .form-control:focus,
-.jb-apply-page .jb-form-container input:focus,
-.jb-apply-page .jb-form-container textarea:focus,
-.jb-apply-page .jb-form-container select:focus {
+.jb-alert--danger {
+    background: var(--iser-rojo-lighter);
+    border-color: var(--iser-rojo);
+}
+
+.jb-alert--info {
+    background: var(--iser-azul-lighter);
+    border-color: var(--iser-azul);
+}
+
+.jb-alert__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+}
+
+.jb-alert--danger .jb-alert__icon {
+    background: var(--iser-rojo);
+    color: var(--iser-blanco);
+}
+
+.jb-alert--info .jb-alert__icon {
+    background: var(--iser-azul);
+    color: var(--iser-blanco);
+}
+
+.jb-alert__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.jb-alert__title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.jb-alert--danger .jb-alert__title {
+    color: var(--iser-rojo-dark);
+}
+
+.jb-alert--info .jb-alert__title {
+    color: var(--iser-azul);
+}
+
+.jb-alert__message {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--iser-gris-oscuro);
+}
+
+/* ================================================================
+   MAIN LAYOUT
+   ================================================================ */
+.jb-apply-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: var(--jb-gap);
+    align-items: start;
+}
+
+@media (max-width: 991px) {
+    .jb-apply-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .jb-apply-sidebar {
+        order: -1;
+    }
+}
+
+/* ================================================================
+   FORM CARD
+   ================================================================ */
+.jb-form-card {
+    background: var(--iser-blanco);
+    border-radius: var(--jb-radius-lg);
+    box-shadow: var(--jb-shadow-md);
+    overflow: hidden;
+}
+
+.jb-form-card__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(to right, var(--iser-verde-lighter), #fff);
+    border-bottom: 3px solid var(--iser-verde);
+}
+
+.jb-form-card__header-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--iser-verde);
+    border-radius: var(--jb-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--iser-blanco);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.jb-form-card__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--iser-negro);
+    margin: 0;
+}
+
+.jb-form-card__description {
+    font-size: 0.875rem;
+    color: var(--iser-gris-medio);
+    margin: 0.25rem 0 0 0;
+}
+
+.jb-form-card__body {
+    padding: 1.5rem;
+}
+
+/* ================================================================
+   MOODLE FORM STYLING
+   ================================================================ */
+.jb-moodle-form .mform {
+    max-width: 100%;
+}
+
+/* Form Headers */
+.jb-moodle-form .ftoggler,
+.jb-moodle-form .fheader,
+.jb-moodle-form fieldset legend {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--iser-verde-dark);
+    padding: 0.75rem 1rem;
+    margin: 1.5rem -1.5rem 1rem -1.5rem;
+    background: var(--iser-verde-lighter);
+    border-left: 4px solid var(--iser-verde);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-moodle-form fieldset:first-of-type .ftoggler,
+.jb-moodle-form fieldset:first-of-type legend {
+    margin-top: 0;
+}
+
+/* Form Elements Container */
+.jb-moodle-form .fitem,
+.jb-moodle-form .form-group {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.jb-moodle-form .fitem:last-child,
+.jb-moodle-form .form-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Labels */
+.jb-moodle-form label,
+.jb-moodle-form .fitemtitle {
+    font-weight: 500;
+    color: var(--iser-negro);
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+}
+
+/* Input Fields */
+.jb-moodle-form input[type="text"],
+.jb-moodle-form input[type="email"],
+.jb-moodle-form input[type="password"],
+.jb-moodle-form input[type="number"],
+.jb-moodle-form textarea,
+.jb-moodle-form select,
+.jb-moodle-form .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--iser-gris-claro);
+    border-radius: var(--jb-radius-sm);
+    font-size: 1rem;
+    color: var(--iser-negro);
+    background: var(--iser-blanco);
+    transition: var(--jb-transition);
+}
+
+.jb-moodle-form input:focus,
+.jb-moodle-form textarea:focus,
+.jb-moodle-form select:focus,
+.jb-moodle-form .form-control:focus {
     border-color: var(--iser-verde);
     box-shadow: 0 0 0 3px rgba(27, 158, 136, 0.15);
     outline: none;
 }
 
-/* Primary submit button */
-.jb-apply-page .jb-form-container .btn-primary,
-.jb-apply-page .jb-form-container input[type="submit"] {
-    background: var(--iser-verde);
-    border: none;
-    color: var(--iser-blanco);
-    padding: var(--jb-space-3) var(--jb-space-5);
-    font-weight: var(--jb-font-semibold);
-    border-radius: var(--jb-radius-md);
-    transition: all 0.2s ease;
+.jb-moodle-form textarea {
+    min-height: 120px;
+    resize: vertical;
 }
 
-.jb-apply-page .jb-form-container .btn-primary:hover,
-.jb-apply-page .jb-form-container input[type="submit"]:hover {
-    background: var(--iser-verde-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(27, 158, 136, 0.3);
+/* Checkboxes and Radio */
+.jb-moodle-form .form-check,
+.jb-moodle-form .fcheckbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #fafafa;
+    border-radius: var(--jb-radius-sm);
+    border: 1px solid #eee;
+    margin-bottom: 0.5rem;
 }
 
-/* Cancel/Secondary button */
-.jb-apply-page .jb-form-container .btn-secondary,
-.jb-apply-page .jb-form-container .btn-cancel {
-    background: transparent;
-    border: 2px solid var(--iser-gris-medio);
+.jb-moodle-form .form-check-input,
+.jb-moodle-form input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.125rem;
+    accent-color: var(--iser-verde);
+    flex-shrink: 0;
+}
+
+.jb-moodle-form .form-check-label {
+    font-weight: 400;
     color: var(--iser-gris-oscuro);
+    line-height: 1.5;
 }
 
-/* File upload area */
-.jb-apply-page .jb-form-container .filepicker-container,
-.jb-apply-page .jb-form-container .filemanager {
+/* File Upload */
+.jb-moodle-form .filepicker-container,
+.jb-moodle-form .filemanager,
+.jb-moodle-form .fp-content {
     border: 2px dashed var(--iser-gris-claro);
     border-radius: var(--jb-radius-md);
-    padding: var(--jb-space-4);
-    background: var(--jb-gray-50);
+    background: #fafafa;
+    transition: var(--jb-transition);
 }
 
-.jb-apply-page .jb-form-container .filepicker-container:hover,
-.jb-apply-page .jb-form-container .filemanager:hover {
+.jb-moodle-form .filepicker-container:hover,
+.jb-moodle-form .filemanager:hover {
     border-color: var(--iser-verde);
     background: var(--iser-verde-lighter);
 }
 
-/* Required field indicator */
-.jb-apply-page .jb-form-container .required::after,
-.jb-apply-page .jb-form-container .fdescription.required::before {
-    color: var(--iser-rojo);
-}
-
-/* Error messages */
-.jb-apply-page .jb-form-container .error,
-.jb-apply-page .jb-form-container .invalid-feedback {
-    color: var(--iser-rojo);
-    font-size: var(--jb-text-sm);
-}
-
-/* Help text */
-.jb-apply-page .jb-form-container .form-text,
-.jb-apply-page .jb-form-container .fdescription {
+/* Help Text */
+.jb-moodle-form .form-text,
+.jb-moodle-form .fdescription {
+    font-size: 0.8125rem;
     color: var(--iser-gris-medio);
-    font-size: var(--jb-text-sm);
+    margin-top: 0.375rem;
 }
 
-/* Document checklist checkbox hover */
-.jb-apply-page .jb-card ul li:hover {
-    background: var(--jb-gray-50);
+/* Error Messages */
+.jb-moodle-form .error,
+.jb-moodle-form .invalid-feedback,
+.jb-moodle-form .form-control-feedback {
+    color: var(--iser-rojo);
+    font-size: 0.8125rem;
+    margin-top: 0.375rem;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
 }
 
-/* Card hover effect */
-.jb-apply-page .jb-sidebar .jb-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.jb-moodle-form .error::before {
+    content: "\f071";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
 }
 
-.jb-apply-page .jb-sidebar .jb-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+/* Required Indicator */
+.jb-moodle-form .text-danger,
+.jb-moodle-form .required {
+    color: var(--iser-rojo) !important;
 }
 
-/* Responsive adjustments */
-@media (max-width: 991.98px) {
-    .jb-apply-page .jb-sidebar {
-        position: static !important;
-        margin-top: var(--jb-space-4);
+/* Alerts inside form */
+.jb-moodle-form .alert {
+    border-radius: var(--jb-radius-sm);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9375rem;
+    border: none;
+    border-left: 4px solid;
+}
+
+.jb-moodle-form .alert-info {
+    background: var(--iser-azul-lighter);
+    border-color: var(--iser-azul);
+    color: var(--iser-gris-oscuro);
+}
+
+.jb-moodle-form .alert-warning {
+    background: var(--iser-amarillo-lighter);
+    border-color: var(--iser-amarillo);
+    color: var(--iser-gris-oscuro);
+}
+
+/* Editor/WYSIWYG */
+.jb-moodle-form .editor_atto,
+.jb-moodle-form .editor_atto_content {
+    border-radius: var(--jb-radius-sm);
+}
+
+/* ================================================================
+   FORM BUTTONS - CONSISTENT STYLING
+   ================================================================ */
+.jb-moodle-form .form-group.fitem_actionbuttons,
+.jb-moodle-form #fgroup_id_buttonar,
+.jb-moodle-form .fitem_actionbuttons {
+    background: linear-gradient(to right, var(--iser-verde-lighter), #fff);
+    margin: 2rem -1.5rem -1.5rem -1.5rem;
+    padding: 1.25rem 1.5rem;
+    border-top: 2px solid var(--iser-verde);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: flex-start;
+    border-bottom: none !important;
+}
+
+.jb-moodle-form input[type="submit"],
+.jb-moodle-form button[type="submit"],
+.jb-moodle-form .btn-primary {
+    background: var(--iser-verde) !important;
+    color: var(--iser-blanco) !important;
+    border: none !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    border-radius: var(--jb-radius-sm) !important;
+    cursor: pointer;
+    transition: var(--jb-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-moodle-form input[type="submit"]:hover,
+.jb-moodle-form button[type="submit"]:hover,
+.jb-moodle-form .btn-primary:hover {
+    background: var(--iser-verde-dark) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(27, 158, 136, 0.3);
+}
+
+.jb-moodle-form .btn-secondary,
+.jb-moodle-form input[name="savedraft"] {
+    background: var(--iser-blanco) !important;
+    color: var(--iser-verde) !important;
+    border: 2px solid var(--iser-verde) !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    border-radius: var(--jb-radius-sm) !important;
+}
+
+.jb-moodle-form .btn-secondary:hover,
+.jb-moodle-form input[name="savedraft"]:hover {
+    background: var(--iser-verde-lighter) !important;
+}
+
+.jb-moodle-form .btn-cancel,
+.jb-moodle-form input[name="cancel"] {
+    background: transparent !important;
+    color: var(--iser-gris-oscuro) !important;
+    border: 2px solid var(--iser-gris-claro) !important;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    border-radius: var(--jb-radius-sm) !important;
+}
+
+.jb-moodle-form .btn-cancel:hover,
+.jb-moodle-form input[name="cancel"]:hover {
+    border-color: var(--iser-gris-medio) !important;
+    background: #f5f5f5 !important;
+}
+
+/* ================================================================
+   SIDEBAR
+   ================================================================ */
+.jb-apply-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: sticky;
+    top: 100px;
+}
+
+@media (max-width: 991px) {
+    .jb-apply-sidebar {
+        position: static;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
-    .jb-apply-page .jb-apply-header {
+    .jb-sidebar-card {
+        flex: 1 1 300px;
+    }
+}
+
+/* Sidebar Card */
+.jb-sidebar-card {
+    background: var(--iser-blanco);
+    border-radius: var(--jb-radius-md);
+    box-shadow: var(--jb-shadow-sm);
+    overflow: hidden;
+    transition: var(--jb-transition);
+}
+
+.jb-sidebar-card:hover {
+    box-shadow: var(--jb-shadow-md);
+}
+
+.jb-sidebar-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.875rem 1rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border-bottom: 2px solid;
+}
+
+.jb-sidebar-card__header i {
+    font-size: 1rem;
+}
+
+.jb-sidebar-card__header-main {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-sidebar-card__header--primary {
+    background: var(--iser-verde-lighter);
+    color: var(--iser-verde-dark);
+    border-color: var(--iser-verde);
+}
+
+.jb-sidebar-card__header--warning {
+    background: var(--iser-amarillo-lighter);
+    color: var(--iser-amarillo-darker);
+    border-color: var(--iser-amarillo);
+}
+
+.jb-sidebar-card__header--info {
+    background: var(--iser-azul-lighter);
+    color: var(--iser-azul);
+    border-color: var(--iser-azul);
+}
+
+.jb-sidebar-card__body {
+    padding: 1rem;
+}
+
+.jb-sidebar-card__footer {
+    padding: 0.75rem 1rem;
+    background: #fafafa;
+    border-top: 1px solid #eee;
+}
+
+.jb-sidebar-card__note {
+    padding: 0.625rem 1rem;
+    background: #fafafa;
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio);
+    border-top: 1px solid #eee;
+}
+
+/* Info List */
+.jb-info-list {
+    margin: 0;
+}
+
+.jb-info-list__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 0.5rem;
+}
+
+.jb-info-list__item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.jb-info-list__item--full {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.jb-info-list__label {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio);
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.jb-info-list__label i {
+    width: 14px;
+    text-align: center;
+}
+
+.jb-info-list__value {
+    font-weight: 500;
+    color: var(--iser-negro);
+    font-size: 0.875rem;
+    text-align: right;
+}
+
+.jb-info-list__value--title {
+    text-align: left;
+    font-weight: 600;
+}
+
+.jb-info-list__value--urgent {
+    color: var(--iser-rojo);
+    font-weight: 700;
+}
+
+.jb-code-badge {
+    background: var(--iser-verde-lighter);
+    color: var(--iser-verde-dark);
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+/* Counter Badge */
+.jb-counter-badge {
+    background: var(--iser-gris-medio);
+    color: var(--iser-blanco);
+    padding: 0.25rem 0.625rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Progress Bar */
+.jb-progress-bar {
+    height: 4px;
+    background: rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.jb-progress-bar__fill {
+    height: 100%;
+    background: var(--iser-verde);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Checklist */
+.jb-checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.jb-checklist__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.8125rem;
+    border-bottom: 1px solid #f5f5f5;
+    cursor: pointer;
+    transition: var(--jb-transition);
+}
+
+.jb-checklist__item:hover {
+    background: #fafafa;
+}
+
+.jb-checklist__item:last-child {
+    border-bottom: none;
+}
+
+.jb-checklist__checkbox {
+    color: var(--iser-gris-claro);
+    font-size: 1rem;
+}
+
+.jb-checklist__checkbox--checked {
+    color: var(--iser-verde);
+}
+
+.jb-checklist__label {
+    flex: 1;
+    color: var(--iser-gris-oscuro);
+}
+
+.jb-status-badge {
+    font-size: 0.625rem;
+    padding: 0.125rem 0.375rem;
+    border-radius: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.jb-status-badge--pending {
+    background: #e0e0e0;
+    color: #666;
+}
+
+.jb-status-badge--success {
+    background: var(--iser-verde);
+    color: var(--iser-blanco);
+}
+
+.jb-required-marker {
+    color: var(--iser-rojo);
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.jb-checklist__complete {
+    padding: 0.75rem 1rem;
+    background: var(--iser-verde-lighter);
+    color: var(--iser-verde-dark);
+    text-align: center;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* Help Section */
+.jb-help-text {
+    font-size: 0.875rem;
+    color: var(--iser-gris-oscuro);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.5;
+}
+
+.jb-tips-list {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-oscuro);
+    padding-left: 1.25rem;
+    margin: 0;
+}
+
+.jb-tips-list li {
+    margin-bottom: 0.375rem;
+}
+
+.jb-support-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.jb-support-label {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--iser-negro);
+    margin-bottom: 0.5rem;
+}
+
+/* ================================================================
+   BUTTONS
+   ================================================================ */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: var(--jb-radius-sm);
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--jb-transition);
+    border: 2px solid transparent;
+}
+
+.jb-btn--outline {
+    background: transparent;
+    border-color: var(--iser-verde);
+    color: var(--iser-verde);
+}
+
+.jb-btn--outline:hover {
+    background: var(--iser-verde);
+    color: var(--iser-blanco);
+}
+
+.jb-btn--ghost {
+    background: transparent;
+    border-color: var(--iser-gris-claro);
+    color: var(--iser-gris-oscuro);
+}
+
+.jb-btn--ghost:hover {
+    border-color: var(--iser-gris-medio);
+    background: #f5f5f5;
+    color: var(--iser-negro);
+}
+
+.jb-btn--block {
+    width: 100%;
+}
+
+.jb-btn--sm {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+/* Links */
+.jb-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--jb-transition);
+}
+
+.jb-link--primary {
+    color: var(--iser-verde);
+}
+
+.jb-link--primary:hover {
+    color: var(--iser-verde-dark);
+}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+.jb-apply-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    margin-top: 2rem;
+    border-top: 2px solid #eee;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 767px) {
+    .jb-apply-page {
+        --jb-page-padding: 1rem;
+    }
+
+    .jb-apply-header {
+        padding: 1.25rem;
+    }
+
+    .jb-apply-header__title {
+        font-size: 1.375rem;
+    }
+
+    .jb-apply-header__title-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .jb-deadline-badge {
+        align-self: flex-start;
+    }
+
+    .jb-form-card__header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+
+    .jb-form-card__body {
+        padding: 1rem;
+    }
+
+    .jb-moodle-form .ftoggler,
+    .jb-moodle-form .fheader,
+    .jb-moodle-form fieldset legend {
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .jb-moodle-form .form-group.fitem_actionbuttons,
+    .jb-moodle-form #fgroup_id_buttonar {
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding: 1rem;
+        flex-direction: column;
+    }
+
+    .jb-moodle-form .form-group.fitem_actionbuttons .btn,
+    .jb-moodle-form #fgroup_id_buttonar input {
+        width: 100%;
+    }
+
+    .jb-apply-footer {
+        flex-direction: column;
+        gap: 1rem;
         text-align: center;
     }
-
-    .jb-apply-page .jb-apply-header .breadcrumb {
-        justify-content: center;
-    }
 }
 
-@media (max-width: 575.98px) {
-    .jb-apply-page .jb-apply-header {
-        padding: var(--jb-space-4) !important;
+/* ================================================================
+   PRINT STYLES
+   ================================================================ */
+@media print {
+    .jb-apply-sidebar,
+    .jb-apply-footer,
+    .jb-breadcrumb {
+        display: none;
     }
 
-    .jb-apply-page .jb-card-body {
-        padding: var(--jb-space-4) !important;
+    .jb-apply-layout {
+        display: block;
+    }
+
+    .jb-form-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
     }
 }
 </style>
