@@ -856,14 +856,14 @@ function local_jobboard_get_all_doctypes(): array {
  * - Age exemption (e.g., libreta_militar exempt for 50+ years)
  *
  * @param string|null $gender The applicant's gender (M, F, O, N).
- * @param string|null $educationlevel The applicant's education level code.
+ * @param string|null $educationlevel DEPRECATED - No longer used. Kept for backward compatibility.
  * @param bool $isiserexempted Whether the applicant is ISER exempted.
  * @param int|null $userage The applicant's age in years (for age exemptions).
  * @return array Array of document type objects that are required for this applicant.
  */
 function local_jobboard_get_required_doctypes_for_applicant(
     ?string $gender = null,
-    ?string $educationlevel = null,
+    ?string $educationlevel = null, // @deprecated - profession filtering removed.
     bool $isiserexempted = false,
     ?int $userage = null
 ): array {
@@ -887,14 +887,7 @@ function local_jobboard_get_required_doctypes_for_applicant(
             }
         }
 
-        // Check profession exemption.
-        if (!empty($doctype->profession_exempt) && !empty($educationlevel)) {
-            $exemptprofessions = json_decode($doctype->profession_exempt, true);
-            if (is_array($exemptprofessions) && in_array($educationlevel, $exemptprofessions)) {
-                // Document not required for this profession.
-                continue;
-            }
-        }
+        // Note: profession_exempt was removed - no longer filtering by profession/education level.
 
         // Check ISER exemption.
         if ($isiserexempted && !empty($doctype->iserexempted)) {

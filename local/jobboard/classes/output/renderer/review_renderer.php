@@ -760,7 +760,7 @@ trait review_renderer {
                 'statuslabel' => get_string('status_' . $app->status, 'local_jobboard'),
                 'doccount' => (int) ($app->doccount ?? 0),
                 'pendingcount' => (int) ($app->pendingcount ?? 0),
-                'datesubmitted' => userdate($app->timecreated, get_string('strftimedate', 'langconfig')),
+                'datesubmitted' => userdate($app->timecreated, get_string('strftimedatetime', 'langconfig')),
                 'isurgent' => $isurgent,
                 'haspendingdocs' => $haspendingdocs,
                 'reviewurl' => (new moodle_url('/local/jobboard/index.php', [

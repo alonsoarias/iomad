@@ -825,6 +825,7 @@ trait application_renderer {
      *
      * Returns document types that are required but not yet uploaded.
      * Separates truly missing documents from rejected documents that need re-upload.
+     * Applies filters based on user gender, age, and exemption status.
      *
      * @param int $applicationid Application ID.
      * @param int $vacancyid Vacancy ID.
@@ -846,6 +847,24 @@ trait application_renderer {
                 'rejectednames' => '',
                 'rejectedlist' => [],
             ];
+        }
+
+        // Get user info for filtering.
+        $user = \core_user::get_user($userid);
+        $gender = null;
+        $userage = null;
+        $isiserexempted = false;
+
+        if ($user) {
+            // Get gender from custom profile field.
+            $gender = $this->get_user_gender($userid);
+
+            // Calculate age from profile field or user record.
+            $userage = $this->get_user_age($userid);
+
+            // Check ISER exemption.
+            $exemption = local_jobboard_get_user_exemption($userid);
+            $isiserexempted = !empty($exemption);
         }
 
         // Get uploaded document types for this application with validation status.
@@ -874,16 +893,45 @@ trait application_renderer {
 
         foreach ($requireddocs as $req) {
             $code = $req->documenttype ?? '';
+            $doctype = $req->doctype ?? null;
 
             // Skip if doctype is not enabled.
-            if (!empty($req->doctype) && isset($req->doctype->enabled) && !$req->doctype->enabled) {
+            if ($doctype && isset($doctype->enabled) && !$doctype->enabled) {
+                continue;
+            }
+
+            // Filter: Only show required documents (isrequired = 1).
+            if ($doctype && empty($doctype->isrequired)) {
+                continue;
+            }
+
+            // Filter: Gender condition.
+            if ($doctype && !empty($doctype->gender_condition)) {
+                if ($gender !== $doctype->gender_condition) {
+                    // Document not required for this gender.
+                    continue;
+                }
+            }
+
+            // Filter: Age exemption.
+            if ($doctype && $userage !== null && !empty($doctype->age_exemption_threshold)) {
+                $threshold = (int) $doctype->age_exemption_threshold;
+                if ($userage >= $threshold) {
+                    // Document not required for users at or above age threshold.
+                    continue;
+                }
+            }
+
+            // Filter: ISER exemption.
+            if ($isiserexempted && $doctype && !empty($doctype->iserexempted)) {
+                // Document is exempted for ISER previous employees.
                 continue;
             }
 
             // Get name from doctype object or fallback to code.
             $name = '';
-            if (!empty($req->doctype) && !empty($req->doctype->name)) {
-                $name = $req->doctype->name;
+            if ($doctype && !empty($doctype->name)) {
+                $name = $doctype->name;
             } else {
                 $name = $code;
             }
@@ -915,5 +963,82 @@ trait application_renderer {
                 return ['name' => $name];
             }, $rejectednames),
         ];
+    }
+
+    /**
+     * Get user's gender from profile field.
+     *
+     * @param int $userid User ID.
+     * @return string|null Gender code (M/F) or null if not set.
+     */
+    protected function get_user_gender(int $userid): ?string {
+        global $DB;
+
+        // Try to get gender from custom profile field.
+        $sql = "SELECT uid.data
+                  FROM {user_info_data} uid
+                  JOIN {user_info_field} uif ON uif.id = uid.fieldid
+                 WHERE uid.userid = ?
+                   AND uif.shortname = 'gender'";
+        $result = $DB->get_field_sql($sql, [$userid]);
+
+        if ($result) {
+            // Normalize gender value.
+            $result = strtoupper(trim($result));
+            if (in_array($result, ['M', 'MASCULINO', 'MALE', 'HOMBRE'])) {
+                return 'M';
+            }
+            if (in_array($result, ['F', 'FEMENINO', 'FEMALE', 'MUJER'])) {
+                return 'F';
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get user's age in years.
+     *
+     * @param int $userid User ID.
+     * @return int|null Age in years or null if birthdate not available.
+     */
+    protected function get_user_age(int $userid): ?int {
+        global $DB;
+
+        // Try to get birthdate from custom profile field.
+        $sql = "SELECT uid.data
+                  FROM {user_info_data} uid
+                  JOIN {user_info_field} uif ON uif.id = uid.fieldid
+                 WHERE uid.userid = ?
+                   AND uif.shortname IN ('birthdate', 'fechanacimiento', 'fecha_nacimiento')";
+        $birthdate = $DB->get_field_sql($sql, [$userid]);
+
+        if ($birthdate) {
+            try {
+                // Handle various date formats.
+                $timestamp = is_numeric($birthdate) ? (int)$birthdate : strtotime($birthdate);
+                if ($timestamp && $timestamp > 0) {
+                    $birthyear = (int)date('Y', $timestamp);
+                    $currentyear = (int)date('Y');
+                    $birthmonth = (int)date('m', $timestamp);
+                    $birthday = (int)date('d', $timestamp);
+                    $currentmonth = (int)date('m');
+                    $currentday = (int)date('d');
+
+                    $age = $currentyear - $birthyear;
+                    // Adjust if birthday hasn't occurred yet this year.
+                    if ($currentmonth < $birthmonth ||
+                        ($currentmonth == $birthmonth && $currentday < $birthday)) {
+                        $age--;
+                    }
+
+                    return $age > 0 ? $age : null;
+                }
+            } catch (\Exception $e) {
+                debugging('Error calculating user age: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            }
+        }
+
+        return null;
     }
 }

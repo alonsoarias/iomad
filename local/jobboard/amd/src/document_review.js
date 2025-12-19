@@ -287,7 +287,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
 
         // Create action buttons HTML.
         var actionsHtml = '<div class="mt-2 pt-2 border-top jb-doc-actions" ' +
-            'onclick="event.stopPropagation();" data-document-id="' + documentId + '" data-application-id="' + appId + '">' +
+            'data-document-id="' + documentId + '" data-application-id="' + appId + '">' +
             '<label for="doc_observation_' + documentId + '" class="form-label small fw-bold mb-1">' +
             (state.strings.documentObservation || 'Observation') +
             ' <span class="text-danger" title="Required for rejection">*</span></label>' +
@@ -634,7 +634,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     var setupEventHandlers = function() {
         // Document preview clicks.
         $(document).on('click', '[data-region="documents-list"] .list-group-item:not(.disabled)', function(e) {
-            if ($(e.target).closest('button, a, .jb-doc-observation').length === 0) {
+            // Don't trigger preview if clicking on action buttons, links, observations, or inside action area.
+            if ($(e.target).closest('button, a, .jb-doc-observation, .jb-doc-actions').length === 0) {
                 previewDocument(this);
             }
         });

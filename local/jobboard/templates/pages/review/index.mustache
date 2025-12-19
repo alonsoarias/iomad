@@ -235,7 +235,7 @@
                                     {{/rejectreason}}
 
                                     {{#iscurrent}}
-                                    <div class="mt-2 pt-2 border-top jb-doc-actions" onclick="event.stopPropagation();" data-document-id="{{id}}" data-application-id="{{applicationid}}">
+                                    <div class="mt-2 pt-2 border-top jb-doc-actions" data-document-id="{{id}}" data-application-id="{{applicationid}}">
                                         <label for="doc_observation_{{id}}" class="form-label small fw-bold mb-1">
                                             {{#str}}documentobservation, local_jobboard{{/str}}
                                             <span class="text-danger" title="{{#str}}required_for_rejection, local_jobboard{{/str}}">*</span>
