@@ -444,12 +444,61 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         message: response.message || state.strings.documentValidated || 'Documento aprobado',
                         type: 'success'
                     });
-                    try {
-                        updateDocumentUIWithRefs(docItem, actionsDiv, documentId, 'approved', response.stats,
-                            response.nextdocumentid, response.allreviewed);
-                    } catch (e) {
-                        // eslint-disable-next-line no-console
-                        console.error('updateDocumentUI error:', e);
+
+                    // Update UI without page reload.
+                    // 1. Find and update the current document in the list.
+                    var currentDocItem = document.querySelector(
+                        '[data-region="documents-list"] .list-group-item[data-document-id="' + documentId + '"]'
+                    );
+                    if (currentDocItem) {
+                        // Update badge to approved.
+                        var badge = currentDocItem.querySelector('.badge');
+                        if (badge) {
+                            badge.className = 'badge bg-success small flex-shrink-0';
+                            badge.textContent = 'Aprobado';
+                        }
+                        // Update icon.
+                        var icon = currentDocItem.querySelector('.fa-clock, .fa-check-circle, .fa-times-circle');
+                        if (icon) {
+                            icon.className = 'fa fa-check-circle text-success me-2 flex-shrink-0';
+                        }
+                        // Remove active state.
+                        currentDocItem.classList.remove('active', 'bg-primary-subtle');
+                    }
+
+                    // 2. Remove all action divs (there should only be one).
+                    document.querySelectorAll('.jb-doc-actions').forEach(function(el) {
+                        el.remove();
+                    });
+
+                    // 3. Update stats.
+                    var stats = response.stats;
+                    var approvedEl = document.querySelector('.h5.text-success');
+                    var rejectedEl = document.querySelector('.h5.text-danger');
+                    var pendingEl = document.querySelector('.h5.text-warning');
+                    if (approvedEl) {
+                        approvedEl.textContent = stats.approved;
+                    }
+                    if (rejectedEl) {
+                        rejectedEl.textContent = stats.rejected;
+                    }
+                    if (pendingEl) {
+                        pendingEl.textContent = stats.pending;
+                    }
+
+                    // 4. Move to next document or show completion.
+                    if (response.nextdocumentid) {
+                        var nextDocItem = document.querySelector(
+                            '[data-region="documents-list"] .list-group-item[data-document-id="' + response.nextdocumentid + '"]'
+                        );
+                        if (nextDocItem) {
+                            setTimeout(function() {
+                                makeDocumentCurrent(nextDocItem, response.nextdocumentid);
+                                previewDocument(nextDocItem);
+                            }, 300);
+                        }
+                    } else if (response.allreviewed) {
+                        updateAllReviewedState();
                     }
                 } else {
                     // AJAX returned error - show message and re-enable buttons.
@@ -593,13 +642,61 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         message: response.message || state.strings.documentRejected || 'Documento rechazado',
                         type: 'success'
                     });
-                    try {
-                        // Use stored references instead of querying again.
-                        updateDocumentUIWithRefs(docItem, actionsDiv, documentId, 'rejected', response.stats,
-                            response.nextdocumentid, response.allreviewed);
-                    } catch (e) {
-                        // eslint-disable-next-line no-console
-                        console.error('updateDocumentUI error:', e);
+
+                    // Update UI without page reload.
+                    // 1. Find and update the current document in the list.
+                    var currentDocItem = document.querySelector(
+                        '[data-region="documents-list"] .list-group-item[data-document-id="' + documentId + '"]'
+                    );
+                    if (currentDocItem) {
+                        // Update badge to rejected.
+                        var badge = currentDocItem.querySelector('.badge');
+                        if (badge) {
+                            badge.className = 'badge bg-danger small flex-shrink-0';
+                            badge.textContent = 'Rechazado';
+                        }
+                        // Update icon.
+                        var icon = currentDocItem.querySelector('.fa-clock, .fa-check-circle, .fa-times-circle');
+                        if (icon) {
+                            icon.className = 'fa fa-times-circle text-danger me-2 flex-shrink-0';
+                        }
+                        // Remove active state.
+                        currentDocItem.classList.remove('active', 'bg-primary-subtle');
+                    }
+
+                    // 2. Remove all action divs (there should only be one).
+                    document.querySelectorAll('.jb-doc-actions').forEach(function(el) {
+                        el.remove();
+                    });
+
+                    // 3. Update stats.
+                    var stats = response.stats;
+                    var approvedEl = document.querySelector('.h5.text-success');
+                    var rejectedEl = document.querySelector('.h5.text-danger');
+                    var pendingEl = document.querySelector('.h5.text-warning');
+                    if (approvedEl) {
+                        approvedEl.textContent = stats.approved;
+                    }
+                    if (rejectedEl) {
+                        rejectedEl.textContent = stats.rejected;
+                    }
+                    if (pendingEl) {
+                        pendingEl.textContent = stats.pending;
+                    }
+
+                    // 4. Move to next document or show completion.
+                    if (response.nextdocumentid) {
+                        var nextDocItem = document.querySelector(
+                            '[data-region="documents-list"] .list-group-item[data-document-id="' + response.nextdocumentid + '"]'
+                        );
+                        if (nextDocItem) {
+                            setTimeout(function() {
+                                makeDocumentCurrent(nextDocItem, response.nextdocumentid);
+                                previewDocument(nextDocItem);
+                            }, 300);
+                        }
+                    } else if (response.allreviewed) {
+                        updateAllReviewedState();
                     }
                 } else {
                     // AJAX returned error - show message and re-enable buttons.
