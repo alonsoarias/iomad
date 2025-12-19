@@ -473,7 +473,36 @@ class document {
         }
 
         // Create new file.
-        $storedfile = $fs->create_file_from_storedfile($filerecord, $draftfile);
+        try {
+            $storedfile = $fs->create_file_from_storedfile($filerecord, $draftfile);
+
+            if (!$storedfile) {
+                debugging('store_from_draft: create_file_from_storedfile returned null/false for ' .
+                    $documenttype . ', draftitemid=' . $draftitemid, DEBUG_DEVELOPER);
+                throw new \moodle_exception('error:filecopyfailed', 'local_jobboard');
+            }
+
+            // Verify the file was actually created in the correct location.
+            $verifyfile = $fs->get_file(
+                $context->id,
+                self::COMPONENT,
+                self::FILEAREA,
+                $applicationid,
+                '/' . $documenttype . '/',
+                $standardizedfilename
+            );
+
+            if (!$verifyfile) {
+                debugging('store_from_draft: File was not found after creation! ' .
+                    'Expected: ' . self::COMPONENT . '/' . self::FILEAREA . '/' . $applicationid .
+                    '/' . $documenttype . '/' . $standardizedfilename, DEBUG_DEVELOPER);
+            }
+
+        } catch (\Exception $e) {
+            debugging('store_from_draft: Exception during file creation: ' . $e->getMessage() .
+                ' for documenttype=' . $documenttype . ', applicationid=' . $applicationid, DEBUG_DEVELOPER);
+            throw $e;
+        }
 
         // Create document record.
         return self::create_from_file($applicationid, $documenttype, $storedfile, $issuedate);
