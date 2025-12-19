@@ -321,8 +321,8 @@
     font-weight: bold;
 }
 
-/* Progress Steps */
-.jb-progress-steps {
+/* Progress Steps Container */
+nav.jb-progress-steps {
     background: #f9fafb;
     border: 1px solid #e5e5e5;
     border-radius: 8px;
@@ -338,36 +338,25 @@
     letter-spacing: 0.5px;
 }
 
-.jb-progress-steps__list {
-    display: flex;
-    justify-content: space-between;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
+/* JS-generated progress steps (inside nav) */
+.jb-d-flex { display: flex; }
+.jb-justify-content-between { justify-content: space-between; }
+
+div.jb-progress-steps {
+    align-items: center;
+    gap: 0;
 }
 
-.jb-progress-steps__list::before {
-    content: '';
-    position: absolute;
-    top: 20px;
-    left: 40px;
-    right: 40px;
-    height: 2px;
-    background: #e5e5e5;
-    z-index: 0;
-}
-
-.jb-step {
+.jb-progress-step {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex: 1;
+    flex: 0 0 auto;
     position: relative;
     z-index: 1;
 }
 
-.jb-step__icon {
+.jb-progress-step-number {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -377,33 +366,64 @@
     align-items: center;
     justify-content: center;
     font-size: 0.875rem;
+    font-weight: 600;
     color: var(--iser-gris-medio, #666);
     margin-bottom: 0.5rem;
     transition: all 0.2s;
 }
 
-.jb-step--active .jb-step__icon {
-    background: var(--iser-verde, #1b9e88);
-    border-color: var(--iser-verde, #1b9e88);
-    color: #fff;
-}
-
-.jb-step--completed .jb-step__icon {
-    background: #28a745;
-    border-color: #28a745;
-    color: #fff;
-}
-
-.jb-step__label {
+.jb-progress-step-label {
     font-size: 0.6875rem;
     color: var(--iser-gris-medio, #666);
     text-align: center;
     max-width: 80px;
 }
 
-.jb-step--active .jb-step__label {
+/* Active step */
+.jb-progress-step-active .jb-progress-step-number {
+    background: var(--iser-verde, #1b9e88);
+    border-color: var(--iser-verde, #1b9e88);
+    color: #fff;
+}
+
+.jb-progress-step-active .jb-progress-step-label {
     color: var(--iser-verde-dark, #157a6a);
     font-weight: 600;
+}
+
+/* Completed step */
+.jb-progress-step-completed .jb-progress-step-number {
+    background: #28a745;
+    border-color: #28a745;
+    color: #fff;
+}
+
+.jb-progress-step-completed .jb-progress-step-label {
+    color: #28a745;
+}
+
+/* Disabled step */
+.jb-progress-step-disabled .jb-progress-step-number {
+    background: #f0f0f0;
+    border-color: #e5e5e5;
+    color: #999;
+}
+
+.jb-progress-step-disabled .jb-progress-step-label {
+    color: #999;
+}
+
+/* Connectors between steps */
+.jb-progress-connector {
+    flex: 1;
+    height: 2px;
+    background: #e5e5e5;
+    margin: 20px 0.5rem 0 0.5rem;
+    min-width: 20px;
+}
+
+.jb-progress-connector-completed {
+    background: #28a745;
 }
 
 /* Cards */
@@ -630,11 +650,6 @@
         position: static;
         order: -1;
     }
-
-    .jb-progress-steps__list::before {
-        left: 30px;
-        right: 30px;
-    }
 }
 
 @media (max-width: 600px) {
@@ -648,21 +663,20 @@
         font-size: 1.5rem;
     }
 
-    .jb-step__icon {
+    .jb-progress-step-number {
         width: 32px;
         height: 32px;
         font-size: 0.75rem;
     }
 
-    .jb-step__label {
+    .jb-progress-step-label {
         font-size: 0.5625rem;
-        max-width: 60px;
+        max-width: 50px;
     }
 
-    .jb-progress-steps__list::before {
-        top: 16px;
-        left: 20px;
-        right: 20px;
+    .jb-progress-connector {
+        margin-top: 16px;
+        min-width: 10px;
     }
 
     .jb-alert--action {

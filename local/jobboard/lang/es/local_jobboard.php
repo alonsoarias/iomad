@@ -2573,6 +2573,7 @@ $string['signup_step_personal'] = 'Personal';
 $string['signup_step_contact'] = 'Contacto';
 $string['signup_step_academic'] = 'Académico';
 $string['signup_step_confirm'] = 'Confirmar';
+$string['signup_help'] = '¿Necesita ayuda? Contacte a nuestro equipo de soporte.';
 $string['signup_benefits_title'] = '¿Por qué registrarse?';
 $string['signup_benefit_1'] = 'Postúlese a múltiples vacantes con un solo perfil';
 $string['signup_benefit_2'] = 'Siga el estado de sus postulaciones en tiempo real';

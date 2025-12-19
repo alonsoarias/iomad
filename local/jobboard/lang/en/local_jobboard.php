@@ -2557,6 +2557,7 @@ $string['signup_step_personal'] = 'Personal';
 $string['signup_step_contact'] = 'Contact';
 $string['signup_step_academic'] = 'Academic';
 $string['signup_step_confirm'] = 'Confirm';
+$string['signup_help'] = 'Need help? Contact our support team.';
 $string['signup_benefits_title'] = 'Why register?';
 $string['signup_benefit_1'] = 'Apply to multiple vacancies with a single profile';
 $string['signup_benefit_2'] = 'Track your application status in real-time';
