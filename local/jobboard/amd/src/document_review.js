@@ -471,11 +471,18 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         '[data-region="documents-list"] .list-group-item[data-document-id="' + documentId + '"]'
                     );
                     if (currentDocItem) {
-                        // Update badge to approved.
-                        var badge = currentDocItem.querySelector('.badge');
-                        if (badge) {
-                            badge.className = 'badge bg-success small flex-shrink-0';
-                            badge.textContent = 'Aprobado';
+                        // Update numbered badge (first badge - rounded-pill) to success color.
+                        var numberBadge = currentDocItem.querySelector('.badge.rounded-pill');
+                        if (numberBadge) {
+                            numberBadge.className = 'badge rounded-pill bg-success me-2 flex-shrink-0';
+                        }
+                        // Update status badge (last badge in the flex container) to approved.
+                        var statusBadge = currentDocItem.querySelector(
+                            '.d-flex.justify-content-between > .badge'
+                        );
+                        if (statusBadge) {
+                            statusBadge.className = 'badge bg-success small flex-shrink-0';
+                            statusBadge.textContent = 'Aprobado';
                         }
                         // Update icon.
                         var icon = currentDocItem.querySelector('.fa-clock, .fa-check-circle, .fa-times-circle');
@@ -491,7 +498,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         el.remove();
                     });
 
-                    // 3. Update stats.
+                    // 3. Update stats and progress.
                     var stats = response.stats;
                     var approvedEl = document.querySelector('.h5.text-success');
                     var rejectedEl = document.querySelector('.h5.text-danger');
@@ -505,6 +512,22 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                     if (pendingEl) {
                         pendingEl.textContent = stats.pending;
                     }
+
+                    // Update progress bars.
+                    var total = stats.total || 1;
+                    var approvedPercent = Math.round((stats.approved / total) * 100);
+                    var rejectedPercent = Math.round((stats.rejected / total) * 100);
+                    var approvedBar = document.querySelector('.progress .progress-bar.bg-success');
+                    var rejectedBar = document.querySelector('.progress .progress-bar.bg-danger');
+                    if (approvedBar) {
+                        approvedBar.style.width = approvedPercent + '%';
+                    }
+                    if (rejectedBar) {
+                        rejectedBar.style.width = rejectedPercent + '%';
+                    }
+
+                    // Update sequential review info.
+                    updateSequentialReviewInfo(stats);
 
                     // 4. Move to next document or show completion.
                     if (response.nextdocumentid) {
@@ -669,11 +692,18 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         '[data-region="documents-list"] .list-group-item[data-document-id="' + documentId + '"]'
                     );
                     if (currentDocItem) {
-                        // Update badge to rejected.
-                        var badge = currentDocItem.querySelector('.badge');
-                        if (badge) {
-                            badge.className = 'badge bg-danger small flex-shrink-0';
-                            badge.textContent = 'Rechazado';
+                        // Update numbered badge (first badge - rounded-pill) to danger color.
+                        var numberBadge = currentDocItem.querySelector('.badge.rounded-pill');
+                        if (numberBadge) {
+                            numberBadge.className = 'badge rounded-pill bg-danger me-2 flex-shrink-0';
+                        }
+                        // Update status badge (last badge in the flex container) to rejected.
+                        var statusBadge = currentDocItem.querySelector(
+                            '.d-flex.justify-content-between > .badge'
+                        );
+                        if (statusBadge) {
+                            statusBadge.className = 'badge bg-danger small flex-shrink-0';
+                            statusBadge.textContent = 'Rechazado';
                         }
                         // Update icon.
                         var icon = currentDocItem.querySelector('.fa-clock, .fa-check-circle, .fa-times-circle');
@@ -689,7 +719,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         el.remove();
                     });
 
-                    // 3. Update stats.
+                    // 3. Update stats and progress.
                     var stats = response.stats;
                     var approvedEl = document.querySelector('.h5.text-success');
                     var rejectedEl = document.querySelector('.h5.text-danger');
@@ -703,6 +733,22 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                     if (pendingEl) {
                         pendingEl.textContent = stats.pending;
                     }
+
+                    // Update progress bars.
+                    var total = stats.total || 1;
+                    var approvedPercent = Math.round((stats.approved / total) * 100);
+                    var rejectedPercent = Math.round((stats.rejected / total) * 100);
+                    var approvedBar = document.querySelector('.progress .progress-bar.bg-success');
+                    var rejectedBar = document.querySelector('.progress .progress-bar.bg-danger');
+                    if (approvedBar) {
+                        approvedBar.style.width = approvedPercent + '%';
+                    }
+                    if (rejectedBar) {
+                        rejectedBar.style.width = rejectedPercent + '%';
+                    }
+
+                    // Update sequential review info.
+                    updateSequentialReviewInfo(stats);
 
                     // 4. Move to next document or show completion.
                     if (response.nextdocumentid) {
