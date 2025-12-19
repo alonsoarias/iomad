@@ -704,6 +704,8 @@ trait review_renderer {
         $department = $params['department'] ?? '';
         $location = $params['location'] ?? '';
         $search = $params['search'] ?? '';
+        $datefrom = $params['datefrom'] ?? '';
+        $dateto = $params['dateto'] ?? '';
 
         // Stats cards.
         $data['stats'] = [
@@ -792,7 +794,8 @@ trait review_renderer {
         }
 
         $hasfilters = !empty($statusfilter) || !empty($code) || !empty($contracttype) ||
-                      !empty($department) || !empty($location) || !empty($search);
+                      !empty($department) || !empty($location) || !empty($search) ||
+                      !empty($datefrom) || !empty($dateto);
 
         // Filter form - public page style.
         $data['filterform'] = [
@@ -803,6 +806,8 @@ trait review_renderer {
             // Filter values.
             'codevalue' => $code,
             'searchvalue' => $search,
+            'datefromvalue' => $datefrom,
+            'datetovalue' => $dateto,
             // Status filter (specific to review page).
             'statusoptions' => $statusoptions,
             // Filter options (matching public page).
@@ -896,6 +901,8 @@ trait review_renderer {
             'department' => $department,
             'location' => $location,
             'search' => $search,
+            'datefrom' => $datefrom,
+            'dateto' => $dateto,
             'perpage' => $perpage,
         ]);
         if ($total > $perpage) {
@@ -920,6 +927,8 @@ trait review_renderer {
             'department' => $department,
             'location' => $location,
             'search' => $search,
+            'datefrom' => $datefrom,
+            'dateto' => $dateto,
             'page' => $page,
             'perpage' => $perpage,
         ];

@@ -52,6 +52,8 @@ $contracttype = optional_param('contracttype', '', PARAM_ALPHANUMEXT);
 $department = optional_param('department', '', PARAM_TEXT);
 $location = optional_param('location', '', PARAM_TEXT);
 $search = optional_param('search', '', PARAM_TEXT);
+$datefrom = optional_param('datefrom', '', PARAM_TEXT);
+$dateto = optional_param('dateto', '', PARAM_TEXT);
 
 // Page setup.
 $PAGE->set_title(get_string('reviewdocuments', 'local_jobboard'));
@@ -215,6 +217,8 @@ $params = [
     'department' => $department,
     'location' => $location,
     'search' => $search,
+    'datefrom' => $datefrom,
+    'dateto' => $dateto,
 ];
 
 // If no application selected, show list of applications pending review.
@@ -278,6 +282,22 @@ if (!$applicationid) {
         $sqlparams['search3'] = $searchlike;
         $sqlparams['search4'] = $searchlike;
         $sqlparams['search5'] = $searchlike;
+    }
+
+    // Date range filter.
+    if (!empty($datefrom)) {
+        $fromtimestamp = strtotime($datefrom);
+        if ($fromtimestamp) {
+            $where .= " AND a.timecreated >= :datefrom";
+            $sqlparams['datefrom'] = $fromtimestamp;
+        }
+    }
+    if (!empty($dateto)) {
+        $totimestamp = strtotime($dateto . ' 23:59:59');
+        if ($totimestamp) {
+            $where .= " AND a.timecreated <= :dateto";
+            $sqlparams['dateto'] = $totimestamp;
+        }
     }
 
     // Multi-tenant filter.
