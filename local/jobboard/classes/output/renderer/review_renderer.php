@@ -1118,8 +1118,8 @@ trait review_renderer {
             $ispdf = ($mimetype === 'application/pdf');
             $isimage = (strpos($mimetype, 'image/') === 0);
 
-            // Check if this is a text document (stored with mimetype 'text/plain').
-            $istext = ($mimetype === 'text/plain');
+            // Check if this is a text document (stored with mimetype 'text/plain' or 'text/html').
+            $istext = in_array($mimetype, ['text/plain', 'text/html']);
             $textcontent = null;
             if ($istext && !empty($textdocuments[$doc->documenttype])) {
                 $textcontent = $textdocuments[$doc->documenttype]['value'] ?? null;
@@ -1205,13 +1205,21 @@ trait review_renderer {
         // so they're included in the main documents loop above with proper validation workflow.
 
         // Get current document for initial preview (the one being reviewed).
+        // If no pending document, show the first document in the list.
         $initialpreview = null;
-        if ($currentdocid !== null && !empty($docsdata)) {
-            foreach ($docsdata as $docdata) {
-                if ($docdata['id'] == $currentdocid) {
-                    $initialpreview = $docdata;
-                    break;
+        if (!empty($docsdata)) {
+            if ($currentdocid !== null) {
+                // Find the current pending document.
+                foreach ($docsdata as $docdata) {
+                    if ($docdata['id'] == $currentdocid) {
+                        $initialpreview = $docdata;
+                        break;
+                    }
                 }
+            }
+            // If no current document found (all reviewed), show the first document.
+            if ($initialpreview === null) {
+                $initialpreview = reset($docsdata);
             }
         }
 
@@ -1286,7 +1294,9 @@ trait review_renderer {
         $data['hasdocuments'] = !empty($docsdata);
         $data['documents'] = $docsdata;
         $data['initialpreview'] = $initialpreview;
-        $data['hasinitialpreview'] = ($initialpreview !== null && !empty($initialpreview['previewurl']));
+        // hasinitialpreview is true if we have a previewurl OR if it's a text document with content.
+        $data['hasinitialpreview'] = ($initialpreview !== null &&
+            (!empty($initialpreview['previewurl']) || !empty($initialpreview['hastextcontent'])));
 
         $data['shownav'] = $shownav;
         $data['prevurl'] = $prevurl;

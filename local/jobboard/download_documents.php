@@ -145,9 +145,18 @@ $allfiles = $fs->get_area_files(
 $doctypes = $DB->get_records('local_jobboard_doctype', [], '', 'code, name');
 
 // Helper function to wrap text content in HTML.
-$wraphtmlcontent = function($title, $content) use ($applicant) {
+// Content from Moodle editor is already HTML, so we render it directly (Moodle editor sanitizes input).
+$wraphtmlcontent = function($title, $content, $ishtml = true) use ($applicant) {
     $fullname = fullname($applicant);
-    $formattedcontent = nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
+    // If content is already HTML (from Moodle editor), use it directly.
+    // Otherwise, escape and convert newlines.
+    if ($ishtml) {
+        // Content from TinyMCE/Atto editor - use directly, it's already sanitized.
+        $formattedcontent = $content;
+    } else {
+        // Plain text content - escape and convert newlines.
+        $formattedcontent = nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
+    }
     return '<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -159,6 +168,7 @@ $wraphtmlcontent = function($title, $content) use ($applicant) {
         h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
         .meta { color: #666; margin-bottom: 20px; font-size: 0.9em; }
         .content { background: #f9f9f9; padding: 20px; border-radius: 5px; }
+        .content p { margin: 0 0 1em 0; }
     </style>
 </head>
 <body>
@@ -200,7 +210,7 @@ if (!empty($textdocuments['carta_intencion']['value'])) {
 
 foreach ($documents as $doc) {
     // Handle text documents (they don't have physical files in Moodle file storage).
-    if ($doc->mimetype === 'text/plain') {
+    if (in_array($doc->mimetype, ['text/plain', 'text/html'])) {
         // Skip carta_intencion if already added (to avoid duplicates).
         if ($doc->documenttype === 'carta_intencion' && $cartaintencionadded) {
             continue;
@@ -210,7 +220,7 @@ foreach ($documents as $doc) {
         // Text documents are stored under 'text_documents' key in applicationdata.
         if (is_array($textdocuments) && isset($textdocuments[$doc->documenttype])) {
             $textcontent = $textdocuments[$doc->documenttype]['value'] ?? '';
-            if (is_string($textcontent) && !empty(trim($textcontent))) {
+            if (is_string($textcontent) && !empty(trim(strip_tags($textcontent)))) {
                 // Use document type name for the title.
                 $typename = isset($doctypes[$doc->documenttype]) ?
                     $doctypes[$doc->documenttype]->name :
@@ -218,7 +228,9 @@ foreach ($documents as $doc) {
                 // Use same naming convention: {Prefix}_{Lastname}.html
                 $prefix = $fileprefixes[$doc->documenttype] ?? ucfirst(substr($doc->documenttype, 0, 4));
                 $textfilename = $prefix . '_' . $sanitizedlastname . '.html';
-                $htmlcontent = $wraphtmlcontent($typename, $textcontent);
+                // Check if content type is editor (HTML content).
+                $ishtml = ($textdocuments[$doc->documenttype]['type'] ?? '') === 'editor';
+                $htmlcontent = $wraphtmlcontent($typename, $textcontent, $ishtml);
                 $zip->addFromString($textfilename, $htmlcontent);
                 $filesadded++;
             }
@@ -324,8 +336,17 @@ function download_bulk_applications(array $applicationids) {
     $doctypes = $DB->get_records('local_jobboard_doctype', [], '', 'code, name');
 
     // Helper function to wrap text content in HTML.
-    $wraphtmlcontent = function($title, $content, $fullname) {
-        $formattedcontent = nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
+    // Content from Moodle editor is already HTML, so we render it directly (Moodle editor sanitizes input).
+    $wraphtmlcontent = function($title, $content, $fullname, $ishtml = true) {
+        // If content is already HTML (from Moodle editor), use it directly.
+        // Otherwise, escape and convert newlines.
+        if ($ishtml) {
+            // Content from TinyMCE/Atto editor - use directly, it's already sanitized.
+            $formattedcontent = $content;
+        } else {
+            // Plain text content - escape and convert newlines.
+            $formattedcontent = nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
+        }
         return '<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -337,6 +358,7 @@ function download_bulk_applications(array $applicationids) {
         h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
         .meta { color: #666; margin-bottom: 20px; font-size: 0.9em; }
         .content { background: #f9f9f9; padding: 20px; border-radius: 5px; }
+        .content p { margin: 0 0 1em 0; }
     </style>
 </head>
 <body>
@@ -401,7 +423,8 @@ function download_bulk_applications(array $applicationids) {
                 ? get_string('carta_intencion', 'local_jobboard')
                 : (isset($doctypes['carta_intencion']) ? $doctypes['carta_intencion']->name : 'Carta de Intención');
             $coverletterfilename = $fileprefixes['carta_intencion'] . '_' . $sanitizedlastname . '.html';
-            $htmlcontent = $wraphtmlcontent($coverlettertitle, $textdocuments['carta_intencion']['value'], $fullname);
+            $ishtml = ($textdocuments['carta_intencion']['type'] ?? '') === 'editor';
+            $htmlcontent = $wraphtmlcontent($coverlettertitle, $textdocuments['carta_intencion']['value'], $fullname, $ishtml);
             $zip->addFromString($foldername . $coverletterfilename, $htmlcontent);
             $totalfilesadded++;
             $cartaintencionadded = true;
@@ -410,7 +433,8 @@ function download_bulk_applications(array $applicationids) {
                 ? get_string('carta_intencion', 'local_jobboard')
                 : 'Carta de Intención';
             $coverletterfilename = $fileprefixes['carta_intencion'] . '_' . $sanitizedlastname . '.html';
-            $htmlcontent = $wraphtmlcontent($coverlettertitle, $application->coverletter, $fullname);
+            // Coverletter fallback - treat as HTML since it comes from editor.
+            $htmlcontent = $wraphtmlcontent($coverlettertitle, $application->coverletter, $fullname, true);
             $zip->addFromString($foldername . $coverletterfilename, $htmlcontent);
             $totalfilesadded++;
             $cartaintencionadded = true;
@@ -419,7 +443,7 @@ function download_bulk_applications(array $applicationids) {
         // Process each document.
         foreach ($documents as $doc) {
             // Handle text documents.
-            if ($doc->mimetype === 'text/plain') {
+            if (in_array($doc->mimetype, ['text/plain', 'text/html'])) {
                 // Skip carta_intencion if already added.
                 if ($doc->documenttype === 'carta_intencion' && $cartaintencionadded) {
                     continue;
@@ -428,13 +452,14 @@ function download_bulk_applications(array $applicationids) {
                 // Text documents are stored under 'text_documents' key in applicationdata.
                 if (is_array($textdocuments) && isset($textdocuments[$doc->documenttype])) {
                     $textcontent = $textdocuments[$doc->documenttype]['value'] ?? '';
-                    if (is_string($textcontent) && !empty(trim($textcontent))) {
+                    if (is_string($textcontent) && !empty(trim(strip_tags($textcontent)))) {
                         $typename = isset($doctypes[$doc->documenttype]) ?
                             $doctypes[$doc->documenttype]->name :
                             $doc->documenttype;
                         $prefix = $fileprefixes[$doc->documenttype] ?? ucfirst(substr($doc->documenttype, 0, 4));
                         $textfilename = $prefix . '_' . $sanitizedlastname . '.html';
-                        $htmlcontent = $wraphtmlcontent($typename, $textcontent, $fullname);
+                        $ishtml = ($textdocuments[$doc->documenttype]['type'] ?? '') === 'editor';
+                        $htmlcontent = $wraphtmlcontent($typename, $textcontent, $fullname, $ishtml);
                         $zip->addFromString($foldername . $textfilename, $htmlcontent);
                         $totalfilesadded++;
                     }

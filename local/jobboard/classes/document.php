@@ -292,10 +292,10 @@ class document {
         $document = new self();
         $document->applicationid = $applicationid;
         $document->documenttype = $documenttype;
-        $document->filename = $documenttype . '.txt'; // Virtual filename for text documents.
+        $document->filename = $documenttype . '.html'; // Virtual filename for text/HTML documents.
         $document->contenthash = sha1($textcontent); // Hash for reference.
         $document->filesize = strlen($textcontent);
-        $document->mimetype = 'text/plain'; // Mark as text document.
+        $document->mimetype = 'text/html'; // Mark as HTML text document.
         $document->uploadedby = $USER->id;
         $document->timecreated = time();
 
@@ -328,7 +328,8 @@ class document {
      * @return bool True if text document.
      */
     public function is_text_document(): bool {
-        return $this->mimetype === 'text/plain' && strpos($this->filename, '.txt') !== false;
+        return in_array($this->mimetype, ['text/plain', 'text/html']) &&
+               (strpos($this->filename, '.txt') !== false || strpos($this->filename, '.html') !== false);
     }
 
     /**
