@@ -97,6 +97,7 @@ class application {
 
     /** @var array Allowed status values. */
     public const STATUSES = [
+        'draft',
         'submitted',
         'under_review',
         'docs_validated',
@@ -109,6 +110,7 @@ class application {
 
     /** @var array Allowed status transitions. */
     public const TRANSITIONS = [
+        'draft' => ['submitted'],
         'submitted' => ['under_review', 'rejected'],
         'under_review' => ['docs_validated', 'docs_rejected'],
         'docs_rejected' => ['under_review'],
@@ -216,10 +218,19 @@ class application {
      *
      * @param int $vacancyid The vacancy ID.
      * @param int $userid The user ID.
+     * @param bool $excludedrafts If true, exclude draft applications from check.
      * @return bool True if already applied.
      */
-    public static function user_has_applied(int $vacancyid, int $userid): bool {
+    public static function user_has_applied(int $vacancyid, int $userid, bool $excludedrafts = false): bool {
         global $DB;
+
+        if ($excludedrafts) {
+            return $DB->record_exists_select(
+                'local_jobboard_application',
+                'vacancyid = :vacancyid AND userid = :userid AND status != :status',
+                ['vacancyid' => $vacancyid, 'userid' => $userid, 'status' => 'draft']
+            );
+        }
 
         return $DB->record_exists('local_jobboard_application', [
             'vacancyid' => $vacancyid,
@@ -228,13 +239,57 @@ class application {
     }
 
     /**
+     * Check if user has a submitted (non-draft) application to vacancy.
+     *
+     * @param int $vacancyid The vacancy ID.
+     * @param int $userid The user ID.
+     * @return bool True if has submitted application.
+     */
+    public static function user_has_submitted_application(int $vacancyid, int $userid): bool {
+        return self::user_has_applied($vacancyid, $userid, true);
+    }
+
+    /**
+     * Get user's draft application for a vacancy.
+     *
+     * @param int $vacancyid The vacancy ID.
+     * @param int $userid The user ID.
+     * @return self|null The draft application or null.
+     */
+    public static function get_draft(int $vacancyid, int $userid): ?self {
+        global $DB;
+
+        $record = $DB->get_record('local_jobboard_application', [
+            'vacancyid' => $vacancyid,
+            'userid' => $userid,
+            'status' => 'draft',
+        ]);
+
+        if (!$record) {
+            return null;
+        }
+
+        return new self($record);
+    }
+
+    /**
+     * Check if this application is a draft.
+     *
+     * @return bool True if draft.
+     */
+    public function is_draft(): bool {
+        return $this->status === 'draft';
+    }
+
+    /**
      * Create a new application.
      *
      * @param \stdClass $data The application data.
+     * @param bool $isdraft Whether this is a draft (partial save).
      * @return self The created application.
      * @throws \moodle_exception If validation fails.
      */
-    public static function create($data): self {
+    public static function create($data, bool $isdraft = false): self {
         global $DB, $USER;
 
         // Accept both array and stdClass.
@@ -245,7 +300,7 @@ class application {
         $application = new self();
         $application->vacancyid = (int) $data->vacancyid;
         $application->userid = (int) ($data->userid ?? $USER->id);
-        $application->status = 'submitted';
+        $application->status = $isdraft ? 'draft' : 'submitted';
         $application->timecreated = time();
 
         // Set consent data.
@@ -281,8 +336,8 @@ class application {
             }
         }
 
-        // Validate.
-        $errors = $application->validate();
+        // Validate (skip consent check for drafts).
+        $errors = $application->validate($isdraft);
         if (!empty($errors)) {
             throw new \moodle_exception('error:validation', 'local_jobboard', '', implode(', ', $errors));
         }
@@ -293,7 +348,8 @@ class application {
         $application->id = $DB->insert_record('local_jobboard_application', $record);
 
         // Log workflow.
-        $application->log_workflow_change(null, 'submitted', get_string('applicationsubmitted', 'local_jobboard'));
+        $statuskey = $isdraft ? 'draftsaved' : 'applicationsubmitted';
+        $application->log_workflow_change(null, $application->status, get_string($statuskey, 'local_jobboard'));
 
         // Log audit with new values (no previous value for creation).
         $newstate = $application->to_record();
@@ -301,32 +357,212 @@ class application {
             audit::ACTION_CREATE,
             audit::ENTITY_APPLICATION,
             $application->id,
-            ['vacancyid' => $application->vacancyid, 'userid' => $application->userid],
+            ['vacancyid' => $application->vacancyid, 'userid' => $application->userid, 'isdraft' => $isdraft],
             null,
             (array) $newstate
         );
 
-        // Trigger event.
-        $event = \local_jobboard\event\application_created::create([
-            'objectid' => $application->id,
-            'context' => \context_system::instance(),
-            'relateduserid' => $application->userid,
-            'other' => ['vacancyid' => $application->vacancyid],
-        ]);
-        $event->trigger();
+        // Trigger event only for submitted applications.
+        if (!$isdraft) {
+            $event = \local_jobboard\event\application_created::create([
+                'objectid' => $application->id,
+                'context' => \context_system::instance(),
+                'relateduserid' => $application->userid,
+                'other' => ['vacancyid' => $application->vacancyid],
+            ]);
+            $event->trigger();
 
-        // Queue confirmation notification to applicant.
-        notification::queue_application_received($application);
+            // Queue confirmation notification to applicant.
+            notification::queue_application_received($application);
+        }
 
         return $application;
     }
 
     /**
+     * Create or update a draft application.
+     *
+     * @param \stdClass $data The application data.
+     * @return self The created/updated draft application.
+     */
+    public static function save_draft($data): self {
+        global $DB, $USER;
+
+        // Accept both array and stdClass.
+        if (is_array($data)) {
+            $data = (object) $data;
+        }
+
+        $vacancyid = (int) $data->vacancyid;
+        $userid = (int) ($data->userid ?? $USER->id);
+
+        // Check for existing draft.
+        $existingdraft = self::get_draft($vacancyid, $userid);
+
+        if ($existingdraft) {
+            // Update existing draft.
+            return $existingdraft->update_draft($data);
+        } else {
+            // Create new draft.
+            return self::create($data, true);
+        }
+    }
+
+    /**
+     * Update an existing draft application.
+     *
+     * @param \stdClass $data The updated data.
+     * @return self This application (updated).
+     * @throws \moodle_exception If not a draft.
+     */
+    public function update_draft($data): self {
+        global $DB;
+
+        if (!$this->is_draft()) {
+            throw new \moodle_exception('error:notadraft', 'local_jobboard');
+        }
+
+        // Accept both array and stdClass.
+        if (is_array($data)) {
+            $data = (object) $data;
+        }
+
+        // Update consent data if provided.
+        if (!empty($data->consentgiven)) {
+            $this->consentgiven = 1;
+            $this->consenttimestamp = $data->consenttimestamp ?? time();
+            $this->consentip = $data->consentip ?? self::get_user_ip();
+            $this->consentuseragent = self::get_user_agent();
+        }
+
+        // Update digital signature if provided.
+        if (isset($data->digitalsignature)) {
+            $this->digitalsignature = $data->digitalsignature;
+        }
+
+        // Update cover letter if provided.
+        if (isset($data->coverletter)) {
+            $this->coverletter = $data->coverletter;
+        }
+
+        // Update ISER exemption if provided.
+        if (isset($data->isexemption)) {
+            $this->isexemption = $data->isexemption ? 1 : 0;
+            $this->exemptionreason = $data->exemptionreason ?? '';
+        }
+
+        // Update additional application data.
+        if (!empty($data->applicationdata)) {
+            if (is_array($data->applicationdata)) {
+                $this->applicationdata = json_encode($data->applicationdata);
+            } else {
+                $this->applicationdata = $data->applicationdata;
+            }
+        }
+
+        $this->timemodified = time();
+
+        // Update database.
+        $DB->update_record('local_jobboard_application', $this->to_record());
+
+        // Log audit.
+        audit::log(
+            audit::ACTION_UPDATE,
+            audit::ENTITY_APPLICATION,
+            $this->id,
+            ['vacancyid' => $this->vacancyid, 'userid' => $this->userid, 'action' => 'draft_updated']
+        );
+
+        return $this;
+    }
+
+    /**
+     * Submit a draft application.
+     *
+     * This transitions the application from draft to submitted status.
+     *
+     * @param \stdClass|null $data Optional final data to set before submitting.
+     * @return self This application (submitted).
+     * @throws \moodle_exception If not a draft or validation fails.
+     */
+    public function submit_draft($data = null): self {
+        global $DB;
+
+        if (!$this->is_draft()) {
+            throw new \moodle_exception('error:notadraft', 'local_jobboard');
+        }
+
+        // Update with final data if provided.
+        if ($data !== null) {
+            if (is_array($data)) {
+                $data = (object) $data;
+            }
+
+            // Set consent data (required for submission).
+            if (!empty($data->consentgiven)) {
+                $this->consentgiven = 1;
+                $this->consenttimestamp = $data->consenttimestamp ?? time();
+                $this->consentip = $data->consentip ?? self::get_user_ip();
+                $this->consentuseragent = self::get_user_agent();
+            }
+
+            if (!empty($data->digitalsignature)) {
+                $this->digitalsignature = $data->digitalsignature;
+            }
+
+            if (isset($data->coverletter)) {
+                $this->coverletter = $data->coverletter;
+            }
+        }
+
+        // Validate for submission (not as draft).
+        $errors = $this->validate(false);
+        if (!empty($errors)) {
+            throw new \moodle_exception('error:validation', 'local_jobboard', '', implode(', ', $errors));
+        }
+
+        // Change status.
+        $oldstatus = $this->status;
+        $this->status = 'submitted';
+        $this->timemodified = time();
+
+        $DB->update_record('local_jobboard_application', $this->to_record());
+
+        // Log workflow change.
+        $this->log_workflow_change($oldstatus, 'submitted', get_string('applicationsubmitted', 'local_jobboard'));
+
+        // Log audit.
+        audit::log_transition(
+            audit::ENTITY_APPLICATION,
+            $this->id,
+            'status',
+            $oldstatus,
+            'submitted',
+            ['vacancyid' => $this->vacancyid, 'userid' => $this->userid]
+        );
+
+        // Trigger event.
+        $event = \local_jobboard\event\application_created::create([
+            'objectid' => $this->id,
+            'context' => \context_system::instance(),
+            'relateduserid' => $this->userid,
+            'other' => ['vacancyid' => $this->vacancyid],
+        ]);
+        $event->trigger();
+
+        // Queue confirmation notification to applicant.
+        notification::queue_application_received($this);
+
+        return $this;
+    }
+
+    /**
      * Validate the application data.
      *
+     * @param bool $isdraft If true, skip consent and signature validation (for drafts).
      * @return array Array of error messages.
      */
-    public function validate(): array {
+    public function validate(bool $isdraft = false): array {
         global $DB;
 
         $errors = [];
@@ -339,13 +575,13 @@ class application {
             $errors[] = get_string('error:vacancyclosed', 'local_jobboard');
         }
 
-        // Check user hasn't already applied (for new applications).
-        if (!$this->id && self::user_has_applied($this->vacancyid, $this->userid)) {
+        // Check user hasn't already submitted a non-draft application (for new applications).
+        if (!$this->id && self::user_has_submitted_application($this->vacancyid, $this->userid)) {
             $errors[] = get_string('error:alreadyapplied', 'local_jobboard');
         }
 
-        // Check consent is provided (for new applications).
-        if (!$this->id && empty($this->consentgiven)) {
+        // Check consent is provided (for submissions only, not drafts).
+        if (!$isdraft && !$this->id && empty($this->consentgiven)) {
             $errors[] = get_string('error:consentrequired', 'local_jobboard');
         }
 
