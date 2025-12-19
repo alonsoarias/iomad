@@ -260,6 +260,74 @@ class document {
     }
 
     /**
+     * Create a document record for text content (textarea, editor, text fields).
+     *
+     * Text documents don't have physical files but need document records
+     * for the validation workflow. The actual text content is stored in
+     * application->applicationdata JSON field.
+     *
+     * @param int $applicationid The application ID.
+     * @param string $documenttype The document type code.
+     * @param string $textcontent The text content (for hash calculation).
+     * @return self The created document.
+     */
+    public static function create_text_document(
+        int $applicationid,
+        string $documenttype,
+        string $textcontent
+    ): self {
+        global $DB, $USER;
+
+        // Mark any existing document of this type as superseded.
+        $DB->set_field('local_jobboard_document', 'issuperseded', 1, [
+            'applicationid' => $applicationid,
+            'documenttype' => $documenttype,
+            'issuperseded' => 0,
+        ]);
+
+        $document = new self();
+        $document->applicationid = $applicationid;
+        $document->documenttype = $documenttype;
+        $document->filename = $documenttype . '.txt'; // Virtual filename for text documents.
+        $document->contenthash = sha1($textcontent); // Hash for reference.
+        $document->filesize = strlen($textcontent);
+        $document->mimetype = 'text/plain'; // Mark as text document.
+        $document->uploadedby = $USER->id;
+        $document->timecreated = time();
+
+        // Insert record.
+        $record = $document->to_record();
+        unset($record->id);
+        $document->id = $DB->insert_record('local_jobboard_document', $record);
+
+        // Create validation record.
+        $validation = new \stdClass();
+        $validation->documentid = $document->id;
+        $validation->status = 'pending';
+        $validation->timecreated = time();
+        $DB->insert_record('local_jobboard_doc_validation', $validation);
+
+        // Log audit.
+        audit::log(
+            audit::ACTION_UPLOAD,
+            audit::ENTITY_DOCUMENT,
+            $document->id,
+            ['documenttype' => $documenttype, 'type' => 'text', 'applicationid' => $applicationid]
+        );
+
+        return $document;
+    }
+
+    /**
+     * Check if this is a text document (not a file).
+     *
+     * @return bool True if text document.
+     */
+    public function is_text_document(): bool {
+        return $this->mimetype === 'text/plain' && strpos($this->filename, '.txt') !== false;
+    }
+
+    /**
      * Generate standardized filename for a document.
      *
      * Follows institutional naming convention:
@@ -516,11 +584,14 @@ class document {
             return new \moodle_url('/');
         }
 
+        // Use document ID in URL, not applicationid.
+        // pluginfile.php expects document_id to look up the document record,
+        // then uses document->applicationid to find the actual file.
         return \moodle_url::make_pluginfile_url(
             $file->get_contextid(),
             $file->get_component(),
             $file->get_filearea(),
-            $file->get_itemid(), // Use the actual itemid from the stored file.
+            $this->id, // Use document ID for URL routing.
             $file->get_filepath(),
             $file->get_filename(),
             $forcedownload

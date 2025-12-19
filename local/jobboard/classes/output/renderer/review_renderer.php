@@ -930,7 +930,16 @@ trait review_renderer {
             $mimetype = $doc->mimetype ?? 'application/octet-stream';
             $ispdf = ($mimetype === 'application/pdf');
             $isimage = (strpos($mimetype, 'image/') === 0);
-            $canpreview = ($ispdf || $isimage);
+
+            // Check if this is a text document (stored with mimetype 'text/plain').
+            $istext = ($mimetype === 'text/plain');
+            $textcontent = null;
+            if ($istext && !empty($textdocuments[$doc->documenttype])) {
+                $textcontent = $textdocuments[$doc->documenttype]['value'] ?? null;
+                // Remove from textdocuments so we don't add it twice.
+                unset($textdocuments[$doc->documenttype]);
+            }
+            $canpreview = ($ispdf || $isimage || $istext);
 
             // Get existing observation for this document.
             $observation = $doc->observation ?? '';
@@ -966,6 +975,8 @@ trait review_renderer {
                 'mimetype' => $mimetype,
                 'ispdf' => $ispdf,
                 'isimage' => $isimage,
+                'istext' => $istext,
+                'textcontent' => $textcontent,
                 'canpreview' => $canpreview,
                 'validateurl' => (new moodle_url('/local/jobboard/index.php', [
                     'view' => 'review',

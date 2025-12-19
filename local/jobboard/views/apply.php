@@ -218,16 +218,27 @@ if ($data = $mform->get_data()) {
                     // Continue with other documents.
                 }
             } else if (in_array($docdata['type'], ['text', 'textarea', 'editor']) && !empty($docdata['value'])) {
-                // Text/editor documents go to applicationdata JSON field.
+                // Text/editor documents: store content in applicationdata AND create document record for validation.
                 $textdocuments[$doccode] = [
                     'type' => $docdata['type'],
                     'value' => $docdata['value'],
                     'doctypeid' => $docdata['doctypeid'] ?? 0,
                 ];
+
+                // Create document record for text document so it can be validated.
+                try {
+                    document::create_text_document(
+                        $application->id,
+                        $doccode,
+                        $docdata['value']
+                    );
+                } catch (Exception $e) {
+                    debugging('Failed to create text document record ' . $doccode . ': ' . $e->getMessage(), DEBUG_DEVELOPER);
+                }
             }
         }
 
-        // Update applicationdata with text documents if any.
+        // Update applicationdata with text documents if any (for content retrieval).
         if (!empty($textdocuments)) {
             $DB->set_field('local_jobboard_application', 'applicationdata',
                 json_encode(['text_documents' => $textdocuments]),
