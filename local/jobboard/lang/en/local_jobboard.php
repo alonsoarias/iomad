@@ -1593,6 +1593,7 @@ $string['newdocument'] = 'New document';
 $string['numdocs'] = 'Number of documents';
 $string['pendingdocs'] = 'Pending documents';
 $string['pending_docs_alert'] = 'You have {$a} pending documents to upload';
+$string['actionrequired'] = 'Action required';
 $string['alreadyvalidated'] = 'Already validated';
 $string['autovalidated'] = 'Auto-validated';
 $string['validated'] = 'Validated';
