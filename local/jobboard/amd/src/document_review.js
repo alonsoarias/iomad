@@ -471,7 +471,21 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             observationField = document.querySelector('[data-document-id="' + documentId + '"].jb-doc-observation');
         }
 
-        var reason = observationField ? observationField.value.trim() : '';
+        // Get observation value - handle TinyMCE editor if present.
+        var reason = '';
+        if (observationField) {
+            var editorId = observationField.id;
+            // Check if TinyMCE is managing this field.
+            if (window.tinyMCE && window.tinyMCE.get(editorId)) {
+                var editor = window.tinyMCE.get(editorId);
+                // Save editor content to textarea first.
+                editor.save();
+                // Get plain text content (strip HTML tags).
+                reason = editor.getContent({format: 'text'}).trim();
+            } else {
+                reason = observationField.value.trim();
+            }
+        }
 
         if (!reason) {
             // Observation is required for rejection - show popup alert.
