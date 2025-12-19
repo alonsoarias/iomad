@@ -742,22 +742,24 @@ trait review_renderer {
         // Filter form - matching public page style.
         $statusfilter = $params['statusfilter'] ?? '';
 
-        // Status filter options.
+        // Status filter options - include ALL statuses.
         $statusoptions = [
             ['value' => '', 'label' => get_string('allstatuses', 'local_jobboard'), 'selected' => empty($statusfilter)],
+            ['value' => 'draft', 'label' => get_string('status_draft', 'local_jobboard'), 'selected' => ($statusfilter === 'draft')],
             ['value' => 'submitted', 'label' => get_string('status_submitted', 'local_jobboard'), 'selected' => ($statusfilter === 'submitted')],
             ['value' => 'under_review', 'label' => get_string('status_under_review', 'local_jobboard'), 'selected' => ($statusfilter === 'under_review')],
             ['value' => 'docs_rejected', 'label' => get_string('status_docs_rejected', 'local_jobboard'), 'selected' => ($statusfilter === 'docs_rejected')],
             ['value' => 'docs_validated', 'label' => get_string('status_docs_validated', 'local_jobboard'), 'selected' => ($statusfilter === 'docs_validated')],
+            ['value' => 'interview', 'label' => get_string('status_interview', 'local_jobboard'), 'selected' => ($statusfilter === 'interview')],
+            ['value' => 'selected', 'label' => get_string('status_selected', 'local_jobboard'), 'selected' => ($statusfilter === 'selected')],
             ['value' => 'rejected', 'label' => get_string('status_rejected', 'local_jobboard'), 'selected' => ($statusfilter === 'rejected')],
             ['value' => 'withdrawn', 'label' => get_string('status_withdrawn', 'local_jobboard'), 'selected' => ($statusfilter === 'withdrawn')],
         ];
 
-        // Build filter options from all vacancies (like public page does).
+        // Build filter options from all vacancies (like public page does) - include ALL statuses.
         $vacancies = $DB->get_records_sql(
             "SELECT DISTINCT v.* FROM {local_jobboard_vacancy} v
              JOIN {local_jobboard_application} a ON a.vacancyid = v.id
-             WHERE a.status IN ('submitted', 'under_review', 'docs_rejected', 'docs_validated', 'rejected', 'withdrawn')
              ORDER BY v.code ASC"
         );
 
@@ -856,12 +858,14 @@ trait review_renderer {
                 $statuscolor = 'success';
             } else if (in_array($app->status, ['docs_rejected', 'rejected'])) {
                 $statuscolor = 'danger';
-            } else if ($app->status === 'under_review') {
+            } else if (in_array($app->status, ['under_review', 'interview'])) {
                 $statuscolor = 'warning';
             } else if ($app->status === 'submitted') {
                 $statuscolor = 'info';
             } else if ($app->status === 'withdrawn') {
                 $statuscolor = 'dark';
+            } else if ($app->status === 'draft') {
+                $statuscolor = 'secondary';
             }
 
             $appsdata[] = [

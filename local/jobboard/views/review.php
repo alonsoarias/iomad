@@ -137,7 +137,7 @@ if ($action && confirm_sesskey()) {
 
                 $app = new application($applicationid);
                 if ($app->id) {
-                    $validstatuses = ['submitted', 'under_review', 'docs_validated', 'docs_rejected', 'interview', 'selected', 'rejected'];
+                    $validstatuses = ['draft', 'submitted', 'under_review', 'docs_validated', 'docs_rejected', 'interview', 'selected', 'rejected', 'withdrawn'];
                     if (in_array($newstatus, $validstatuses)) {
                         $app->change_status($newstatus, $notes, $USER->id);
                         \core\notification::success(get_string('statuschanged', 'local_jobboard'));
@@ -224,21 +224,24 @@ $params = [
 
 // If no application selected, show list of applications pending review.
 if (!$applicationid) {
-    // Build filter - show all applications that may need review or reference.
+    // Build filter - show ALL applications with any status.
+    // - draft: saved but not yet submitted
     // - submitted/under_review: pending initial review
     // - docs_rejected: needs re-review after document reupload
-    // - docs_validated: reviewed and approved (for reference)
-    // - rejected: rejected by reviewer (for reference)
-    // - withdrawn: withdrawn by applicant (for reference)
-    $validstatuses = ['submitted', 'under_review', 'docs_rejected', 'docs_validated', 'rejected', 'withdrawn'];
+    // - docs_validated: reviewed and approved
+    // - interview: in interview stage
+    // - selected: selected for position
+    // - rejected: rejected by reviewer
+    // - withdrawn: withdrawn by applicant
+    $validstatuses = ['draft', 'submitted', 'under_review', 'docs_rejected', 'docs_validated', 'interview', 'selected', 'rejected', 'withdrawn'];
     $sqlparams = [];
 
-    // Apply status filter if provided.
+    // Apply status filter if provided, otherwise show all statuses.
     if (!empty($statusfilter) && in_array($statusfilter, $validstatuses)) {
         $where = "a.status = :statusfilter";
         $sqlparams['statusfilter'] = $statusfilter;
     } else {
-        $where = "a.status IN ('submitted', 'under_review', 'docs_rejected', 'docs_validated', 'rejected', 'withdrawn')";
+        $where = "1=1"; // Show all statuses.
     }
 
     if ($vacancyid) {
@@ -378,8 +381,8 @@ if (!$applicationid) {
     }
     $documents = document::get_by_application($applicationid);
 
-    // Build navigation data - include all reviewable statuses for navigation.
-    $navwhere = "a.status IN ('submitted', 'under_review', 'docs_rejected', 'docs_validated', 'rejected', 'withdrawn')";
+    // Build navigation data - include ALL statuses for navigation.
+    $navwhere = "1=1"; // All statuses.
     $navparams = [];
     if ($vacancyid) {
         $navwhere .= " AND a.vacancyid = :vacancyid";
