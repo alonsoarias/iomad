@@ -165,17 +165,27 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
-     * Update the UI after a document action (approve/reject).
+     * Update document UI with stored DOM references.
+     * This version receives pre-stored references to avoid issues when user navigates during AJAX.
      *
-     * @param {int} documentId The document ID that was processed.
-     * @param {string} newStatus The new status (approved/rejected).
+     * @param {HTMLElement} docItem The document list item element (stored before AJAX).
+     * @param {HTMLElement} actionsDiv The actions div element (stored before AJAX).
+     * @param {int} documentId The document ID.
+     * @param {string} newStatus The new status.
      * @param {Object} stats The updated stats.
      * @param {int} nextDocumentId The next pending document ID.
      * @param {boolean} allReviewed Whether all documents are reviewed.
      */
-    var updateDocumentUI = function(documentId, newStatus, stats, nextDocumentId, allReviewed) {
+    var updateDocumentUIWithRefs = function(docItem, actionsDiv, documentId, newStatus, stats, nextDocumentId, allReviewed) {
         // eslint-disable-next-line no-console
-        console.log('updateDocumentUI called:', {documentId: documentId, newStatus: newStatus, nextDocumentId: nextDocumentId, allReviewed: allReviewed});
+        console.log('updateDocumentUIWithRefs called:', {
+            documentId: documentId,
+            newStatus: newStatus,
+            nextDocumentId: nextDocumentId,
+            allReviewed: allReviewed,
+            hasDocItem: !!docItem,
+            hasActionsDiv: !!actionsDiv
+        });
 
         // Status configuration.
         var statusConfig = {
@@ -186,14 +196,11 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
 
         var config = statusConfig[newStatus] || statusConfig.pending;
 
-        // Find the document list item - use the list-group-item class to be more specific.
-        var selector = '[data-region="documents-list"] .list-group-item[data-document-id="' + documentId + '"]';
-        // eslint-disable-next-line no-console
-        console.log('Looking for element with selector:', selector);
-
-        var docItem = document.querySelector(selector);
-        // eslint-disable-next-line no-console
-        console.log('Found docItem:', docItem);
+        // Use stored reference if available, otherwise query.
+        if (!docItem) {
+            var selector = '[data-region="documents-list"] .list-group-item[data-document-id="' + documentId + '"]';
+            docItem = document.querySelector(selector);
+        }
 
         if (docItem) {
             // Update status badge.
@@ -209,19 +216,23 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                 statusIcon.className = 'fa fa-' + config.icon + ' text-' + config.color + ' me-2 flex-shrink-0';
             }
 
-            // Remove current state and actions.
+            // Remove current state.
             docItem.classList.remove('active', 'bg-primary-subtle');
-            var actionsDiv = docItem.querySelector('.jb-doc-actions');
+        }
+
+        // Remove actions div using stored reference.
+        if (actionsDiv && actionsDiv.parentNode) {
+            actionsDiv.remove();
             // eslint-disable-next-line no-console
-            console.log('Found actionsDiv:', actionsDiv);
-            if (actionsDiv) {
-                actionsDiv.remove();
+            console.log('actionsDiv removed using stored reference');
+        } else if (docItem) {
+            // Fallback: try to find actionsDiv inside docItem.
+            var foundActionsDiv = docItem.querySelector('.jb-doc-actions');
+            if (foundActionsDiv) {
+                foundActionsDiv.remove();
                 // eslint-disable-next-line no-console
-                console.log('actionsDiv removed');
+                console.log('actionsDiv removed using fallback query');
             }
-        } else {
-            // eslint-disable-next-line no-console
-            console.warn('docItem not found for documentId:', documentId);
         }
 
         // Update progress stats.
@@ -417,6 +428,10 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             $(rejectBtn).prop('disabled', true);
         }
 
+        // IMPORTANT: Store references to DOM elements BEFORE the AJAX call.
+        var actionsDiv = btn.closest('.jb-doc-actions');
+        var docItem = actionsDiv ? actionsDiv.closest('.list-group-item') : null;
+
         Ajax.call([{
             methodname: 'local_jobboard_validate_document',
             args: {documentid: documentId, applicationid: applicationId},
@@ -430,7 +445,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         type: 'success'
                     });
                     try {
-                        updateDocumentUI(documentId, 'approved', response.stats, response.nextdocumentid, response.allreviewed);
+                        updateDocumentUIWithRefs(docItem, actionsDiv, documentId, 'approved', response.stats,
+                            response.nextdocumentid, response.allreviewed);
                     } catch (e) {
                         // eslint-disable-next-line no-console
                         console.error('updateDocumentUI error:', e);
@@ -549,6 +565,11 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             $(approveBtn).prop('disabled', true);
         }
 
+        // IMPORTANT: Store references to DOM elements BEFORE the AJAX call.
+        // This prevents issues if user clicks on another document while AJAX is pending.
+        var actionsDiv = btn.closest('.jb-doc-actions');
+        var docItem = actionsDiv ? actionsDiv.closest('.list-group-item') : null;
+
         Ajax.call([{
             methodname: 'local_jobboard_reject_document',
             args: {documentid: documentId, applicationid: applicationId, reason: reason},
@@ -562,7 +583,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         type: 'success'
                     });
                     try {
-                        updateDocumentUI(documentId, 'rejected', response.stats,
+                        // Use stored references instead of querying again.
+                        updateDocumentUIWithRefs(docItem, actionsDiv, documentId, 'rejected', response.stats,
                             response.nextdocumentid, response.allreviewed);
                     } catch (e) {
                         // eslint-disable-next-line no-console
