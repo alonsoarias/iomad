@@ -822,7 +822,7 @@ trait review_renderer {
             'clearfiltersurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
         ];
 
-        // Per-page options.
+        // Per-page options - add to filterform for template access.
         $perpageoptions = [];
         foreach ([10, 20, 50, 100] as $opt) {
             $perpageoptions[] = [
@@ -831,6 +831,7 @@ trait review_renderer {
                 'selected' => $perpage == $opt,
             ];
         }
+        $data['filterform']['perpageoptions'] = $perpageoptions;
         $data['perpageoptions'] = $perpageoptions;
 
         // Applications list.
