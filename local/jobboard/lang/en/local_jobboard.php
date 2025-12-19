@@ -439,6 +439,7 @@ $string['applynow'] = 'Apply now';
 $string['applyforvacancy'] = 'Apply for vacancy';
 $string['submitapplication'] = 'Submit application';
 $string['savedraft'] = 'Save draft';
+$string['submitbuttonsinfo'] = 'Click "Submit application" to send your application for review. Use "Save draft" only if you need to complete it later.';
 $string['draftsaved'] = 'Draft saved successfully. You can return later to complete your application.';
 $string['withdrawapplication'] = 'Withdraw application';
 $string['applicationsubmitted'] = 'Application submitted successfully';

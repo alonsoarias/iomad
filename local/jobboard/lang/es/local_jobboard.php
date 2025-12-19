@@ -433,6 +433,7 @@ $string['applynow'] = 'Postularse ahora';
 $string['applyforvacancy'] = 'Postularse a la vacante';
 $string['submitapplication'] = 'Enviar postulación';
 $string['savedraft'] = 'Guardar borrador';
+$string['submitbuttonsinfo'] = 'Haga clic en "Enviar postulación" para enviar su postulación a revisión. Use "Guardar borrador" solo si necesita completarla después.';
 $string['draftsaved'] = 'Borrador guardado exitosamente. Puede volver más tarde para completar su postulación.';
 $string['withdrawapplication'] = 'Retirar postulación';
 $string['applicationsubmitted'] = 'Postulación enviada exitosamente';

@@ -177,17 +177,31 @@ class application_form extends \moodleform {
         // ============================================================
         // SUBMIT BUTTONS
         // ============================================================
+        // Add visual guidance before buttons.
+        $buttoninfo = '<div class="alert alert-info mt-4 mb-3">';
+        $buttoninfo .= '<i class="fa fa-info-circle me-2"></i>';
+        $buttoninfo .= '<strong>' . get_string('submitbuttonsinfo', 'local_jobboard') . '</strong>';
+        $buttoninfo .= '</div>';
+        $mform->addElement('html', $buttoninfo);
+
         $buttonarray = [];
-        $buttonarray[] = $mform->createElement(
-            'submit',
-            'savedraft',
-            get_string('savedraft', 'local_jobboard')
-        );
+
+        // Primary action: Submit Application (green, prominent)
         $buttonarray[] = $mform->createElement(
             'submit',
             'submitbutton',
-            get_string('submitapplication', 'local_jobboard')
+            '✓ ' . get_string('submitapplication', 'local_jobboard'),
+            ['class' => 'btn-success btn-lg']
         );
+
+        // Secondary action: Save Draft (outline, less prominent)
+        $buttonarray[] = $mform->createElement(
+            'submit',
+            'savedraft',
+            get_string('savedraft', 'local_jobboard'),
+            ['class' => 'btn-outline-secondary']
+        );
+
         $buttonarray[] = $mform->createElement('cancel');
 
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
