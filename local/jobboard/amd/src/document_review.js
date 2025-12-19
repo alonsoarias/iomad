@@ -570,6 +570,17 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
         var actionsDiv = btn.closest('.jb-doc-actions');
         var docItem = actionsDiv ? actionsDiv.closest('.list-group-item') : null;
 
+        // eslint-disable-next-line no-console
+        console.log('Reject click - btn:', btn);
+        // eslint-disable-next-line no-console
+        console.log('Reject click - actionsDiv:', actionsDiv);
+        // eslint-disable-next-line no-console
+        console.log('Reject click - docItem:', docItem);
+        // eslint-disable-next-line no-console
+        console.log('Reject click - btn.parentElement:', btn.parentElement);
+        // eslint-disable-next-line no-console
+        console.log('Reject click - btn.parentElement.parentElement:', btn.parentElement ? btn.parentElement.parentElement : null);
+
         Ajax.call([{
             methodname: 'local_jobboard_reject_document',
             args: {documentid: documentId, applicationid: applicationId, reason: reason},
