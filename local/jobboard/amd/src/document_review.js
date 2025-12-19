@@ -76,6 +76,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
         var previewUrl = element.dataset.previewUrl;
         var isPdf = element.dataset.isPdf === 'true' || element.dataset.isPdf === '1';
         var isImage = element.dataset.isImage === 'true' || element.dataset.isImage === '1';
+        var isText = element.dataset.isText === 'true' || element.dataset.isText === '1';
+        var textContent = element.dataset.textContent || '';
         var typename = element.dataset.typename;
         var filename = element.dataset.filename;
         var downloadUrl = element.dataset.downloadUrl;
@@ -104,10 +106,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             titleEl.parentNode.appendChild(subtitleEl);
         }
 
-        // Update download button.
+        // Update download button visibility.
         var downloadBtn = document.querySelector('[data-region="download-btn"]');
-        if (downloadBtn && downloadUrl) {
-            downloadBtn.href = downloadUrl;
+        if (downloadBtn) {
+            if (downloadUrl) {
+                downloadBtn.href = downloadUrl;
+                downloadBtn.style.display = '';
+            } else {
+                downloadBtn.style.display = 'none';
+            }
         }
 
         // Update preview frame.
@@ -116,7 +123,14 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             return;
         }
 
-        if (previewUrl && (isPdf || isImage)) {
+        if (isText && textContent) {
+            // Text document preview - show the text content.
+            previewFrame.innerHTML = '<div class="p-4" style="min-height: 500px; overflow-y: auto;">' +
+                '<div class="card"><div class="card-header bg-info text-white">' +
+                '<i class="fa fa-file-alt me-2"></i>' + (typename || 'Documento de texto') + '</div>' +
+                '<div class="card-body"><div class="text-content" style="white-space: pre-wrap;">' +
+                textContent + '</div></div></div></div>';
+        } else if (previewUrl && (isPdf || isImage)) {
             if (isPdf) {
                 previewFrame.innerHTML = '<iframe src="' + previewUrl + '" class="w-100 h-100 border-0" ' +
                     'style="min-height: 500px;"></iframe>';
@@ -287,6 +301,32 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
+     * Set up all event handlers.
+     */
+    var setupEventHandlers = function() {
+        // Document preview clicks.
+        $(document).on('click', '[data-region="documents-list"] .list-group-item:not(.disabled)', function(e) {
+            if ($(e.target).closest('button, a, .jb-doc-observation').length === 0) {
+                previewDocument(this);
+            }
+        });
+
+        // Observation auto-save.
+        $(document).on('blur', '.jb-doc-observation', autoSaveObservation);
+
+        // Clear validation styling on observation input.
+        $(document).on('input', '.jb-doc-observation', function() {
+            $(this).removeClass('is-invalid border-danger');
+        });
+
+        // Reject button click handler - validates observation is required.
+        $(document).on('click', '.jb-reject-btn', handleRejectClick);
+
+        // Save and send button.
+        $('#saveAndSendBtn').on('click', saveAndSendObservations);
+    };
+
+    /**
      * Initialize the document review module.
      *
      * @param {Object} config Configuration options.
@@ -299,35 +339,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
         config = config || {};
         state.applicationId = config.applicationId || 0;
 
-        // Load strings then set up event handlers.
-        loadStrings().then(function() {
-            // Document preview clicks.
-            $(document).on('click', '[data-region="documents-list"] .list-group-item:not(.disabled)', function(e) {
-                if ($(e.target).closest('button, a, .jb-doc-observation').length === 0) {
-                    previewDocument(this);
-                }
-            });
+        // Set up event handlers immediately (don't wait for strings).
+        setupEventHandlers();
+        state.initialized = true;
 
-            // Observation auto-save.
-            $(document).on('blur', '.jb-doc-observation', autoSaveObservation);
-
-            // Clear validation styling on observation input.
-            $(document).on('input', '.jb-doc-observation', function() {
-                $(this).removeClass('is-invalid border-danger');
-            });
-
-            // Reject button click handler - validates observation is required.
-            $(document).on('click', '.jb-reject-btn', handleRejectClick);
-
-            // Save and send button.
-            $('#saveAndSendBtn').on('click', saveAndSendObservations);
-
-            state.initialized = true;
-        }).catch(function(error) {
+        // Load strings asynchronously - handlers will use fallbacks if strings aren't ready.
+        loadStrings().catch(function(error) {
             // eslint-disable-next-line no-console
             console.error('Failed to load strings:', error);
-            // Continue without strings - will use fallbacks.
-            state.initialized = true;
+            // Handlers already set up, will use fallback strings.
         });
 
         // Expose reject function globally for onclick handlers.

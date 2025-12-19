@@ -131,7 +131,19 @@
                                 <img src="{{initialpreview.previewurl}}" alt="{{initialpreview.filename}}" class="img-fluid shadow rounded" style="max-height: 480px;">
                             </div>
                             {{/initialpreview.isimage}}
-                            {{^initialpreview.canpreview}}
+                            {{#initialpreview.istext}}
+                            <div class="p-4" style="min-height: 500px; overflow-y: auto;">
+                                <div class="card">
+                                    <div class="card-header bg-info text-white">
+                                        <i class="fa fa-file-alt me-2"></i>{{initialpreview.typename}}
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-content" style="white-space: pre-wrap;">{{{initialpreview.textcontent}}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/initialpreview.istext}}
+                            {{^initialpreview.canpreview}}{{^initialpreview.istext}}
                             <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 500px;">
                                 <i class="fa fa-file fa-4x mb-3"></i>
                                 <p class="mb-3">{{#str}}previewnotavailable, local_jobboard{{/str}}</p>
@@ -139,7 +151,7 @@
                                     <i class="fa fa-download me-2"></i>{{#str}}download{{/str}}
                                 </a>
                             </div>
-                            {{/initialpreview.canpreview}}
+                            {{/initialpreview.istext}}{{/initialpreview.canpreview}}
                             {{/hasinitialpreview}}
                             {{^hasinitialpreview}}
                             <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted" style="min-height: 500px;">
@@ -198,10 +210,12 @@
                                      data-mimetype="{{mimetype}}"
                                      data-is-pdf="{{ispdf}}"
                                      data-is-image="{{isimage}}"
+                                     data-is-text="{{istext}}"
                                      data-can-preview="{{canpreview}}"
                                      data-typename="{{typename}}"
                                      data-filename="{{filename}}"
                                      data-download-url="{{downloadurl}}"
+                                     {{#istext}}data-text-content="{{textcontent}}"{{/istext}}
                                      {{^islocked}}onclick="jobboardPreviewDocument(this)" style="cursor: pointer;"{{/islocked}}
                                      {{#islocked}}style="cursor: not-allowed;"{{/islocked}}>
                                     <div class="d-flex justify-content-between align-items-center">
