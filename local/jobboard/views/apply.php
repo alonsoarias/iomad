@@ -77,8 +77,9 @@ $draftapplication = application::get_draft($vacancyid, $USER->id);
 $isresuming = ($draftapplication !== null);
 
 // Check convocatoria application limits.
+// Skip this check if user is resuming an existing draft application.
 $convocatoriaid = $vacancy->convocatoriaid ?? 0;
-if ($convocatoriaid > 0) {
+if ($convocatoriaid > 0 && !$isresuming) {
     $eligibility = local_jobboard_can_user_apply_to_vacancy($USER->id, $vacancyid);
     if (!$eligibility['can_apply']) {
         redirect(

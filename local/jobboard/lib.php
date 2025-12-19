@@ -673,12 +673,13 @@ function local_jobboard_can_user_apply_to_vacancy(int $userid, int $vacancyid): 
     $maxapplications = isset($convocatoria->max_applications_per_user) ? (int) $convocatoria->max_applications_per_user : 0;
 
     // Count user's existing applications to vacancies in this convocatoria.
+    // Exclude draft and withdrawn applications - only count submitted or later states.
     $sql = "SELECT COUNT(a.id)
             FROM {local_jobboard_application} a
             JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
             WHERE a.userid = :userid
               AND v.convocatoriaid = :convocatoriaid
-              AND a.status != 'withdrawn'";
+              AND a.status NOT IN ('draft', 'withdrawn')";
 
     $existingcount = $DB->count_records_sql($sql, [
         'userid' => $userid,
