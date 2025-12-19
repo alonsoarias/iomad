@@ -2780,6 +2780,7 @@ $string['uploadfile'] = 'Cargar archivo';
 $string['uploadform'] = 'Formulario de carga';
 $string['uploaded'] = 'Cargado';
 $string['uploaddocsreminder'] = 'Recuerde cargar todos los documentos requeridos';
+$string['docsawaitingreview'] = 'Sus documentos han sido cargados y están en espera de revisión';
 $string['downloadtoview'] = 'Descargar para ver';
 $string['validate'] = 'Validar';
 $string['validateall'] = 'Validar todos';

@@ -2764,6 +2764,7 @@ $string['uploadfile'] = 'Upload file';
 $string['uploadform'] = 'Upload form';
 $string['uploaded'] = 'Uploaded';
 $string['uploaddocsreminder'] = 'Remember to upload all required documents';
+$string['docsawaitingreview'] = 'Your documents have been uploaded and are awaiting review';
 $string['downloadtoview'] = 'Download to view';
 $string['validate'] = 'Validate';
 $string['validateall'] = 'Validate all';

@@ -262,13 +262,15 @@
                         </div>
                         {{/statusnotes}}
 
-                        {{! Pending Alert }}
+                        {{! Pending Review Alert - only show if no missing docs but has pending reviews }}
+                        {{^hasmissingdocs}}
                         {{#haspendingdocs}}
-                        <div class="alert alert-warning jb-alert-warning mt-3 mb-0 py-2 small">
-                            <i class="fa fa-exclamation-circle me-1"></i>
-                            {{#str}}uploaddocsreminder, local_jobboard{{/str}}
+                        <div class="alert alert-info jb-alert-info mt-3 mb-0 py-2 small">
+                            <i class="fa fa-clock me-1"></i>
+                            {{#str}}docsawaitingreview, local_jobboard{{/str}}
                         </div>
                         {{/haspendingdocs}}
+                        {{/hasmissingdocs}}
                     </div>
 
                     {{! Card Footer }}

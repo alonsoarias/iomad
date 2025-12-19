@@ -181,17 +181,29 @@ class notification {
         // Get template.
         $template = $DB->get_record('local_jobboard_email_template', ['code' => $templatecode]);
 
-        if ($template) {
-            $subject = $template->subject;
-            $body = $template->body;
-        } else {
-            $subject = get_string('notification_' . $templatecode . '_subject', 'local_jobboard');
-            $body = get_string('notification_' . $templatecode . '_body', 'local_jobboard');
-        }
+        // Build Moodle string placeholders object ($a).
+        $a = new \stdClass();
+        $a->fullname = fullname($user);
+        $a->firstname = $user->firstname;
+        $a->lastname = $user->lastname;
+        $a->email = $user->email;
+        $a->sitename = format_string(get_site()->fullname);
+        $a->vacancy = $data['vacancy_title'] ?? '';
+        $a->code = $data['vacancy_code'] ?? '';
+        $a->status = $data['status'] ?? '';
+        $a->notes = $data['notes'] ?? '';
+        $a->date = userdate(time(), get_string('strftimedatetime', 'langconfig'));
+        $a->applicationurl = $data['application_url'] ?? '';
 
-        // Parse placeholders.
-        $subject = self::parse_placeholders($subject, $data, $user);
-        $body = self::parse_placeholders($body, $data, $user);
+        if ($template) {
+            // Custom template - use parse_placeholders for {KEY} format.
+            $subject = self::parse_placeholders($template->subject, $data, $user);
+            $body = self::parse_placeholders($template->body, $data, $user);
+        } else {
+            // Use default language strings with proper $a substitution.
+            $subject = get_string('notification_' . $templatecode . '_subject', 'local_jobboard', $a);
+            $body = get_string('notification_' . $templatecode . '_body', 'local_jobboard', $a);
+        }
 
         // Send.
         $supportuser = \core_user::get_support_user();

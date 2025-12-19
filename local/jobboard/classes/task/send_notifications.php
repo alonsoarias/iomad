@@ -107,19 +107,32 @@ class send_notifications extends \core\task\scheduled_task {
             'code' => $notification->templatecode,
         ]);
 
-        if (!$template) {
-            // Use default strings.
-            $subject = get_string('notification_' . $notification->templatecode . '_subject', 'local_jobboard');
-            $body = get_string('notification_' . $notification->templatecode . '_body', 'local_jobboard');
-        } else {
-            $subject = $template->subject;
-            $body = $template->body;
-        }
-
-        // Parse placeholders.
+        // Parse notification data.
         $data = json_decode($notification->data, true) ?? [];
-        $subject = $this->parse_placeholders($subject, $data, $user);
-        $body = $this->parse_placeholders($body, $data, $user);
+
+        // Build Moodle string placeholders object ($a).
+        $a = new \stdClass();
+        $a->fullname = fullname($user);
+        $a->firstname = $user->firstname;
+        $a->lastname = $user->lastname;
+        $a->email = $user->email;
+        $a->sitename = format_string(get_site()->fullname);
+        $a->vacancy = $data['vacancy_title'] ?? '';
+        $a->code = $data['vacancy_code'] ?? '';
+        $a->status = $data['status'] ?? '';
+        $a->notes = $data['notes'] ?? '';
+        $a->date = userdate(time(), get_string('strftimedatetime', 'langconfig'));
+        $a->applicationurl = $data['application_url'] ?? '';
+
+        if (!$template) {
+            // Use default language strings with proper $a substitution.
+            $subject = get_string('notification_' . $notification->templatecode . '_subject', 'local_jobboard', $a);
+            $body = get_string('notification_' . $notification->templatecode . '_body', 'local_jobboard', $a);
+        } else {
+            // Custom template - use parse_placeholders for {KEY} format.
+            $subject = $this->parse_placeholders($template->subject, $data, $user);
+            $body = $this->parse_placeholders($template->body, $data, $user);
+        }
 
         // Send email.
         $supportuser = \core_user::get_support_user();
