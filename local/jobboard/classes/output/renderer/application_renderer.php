@@ -95,6 +95,10 @@ trait application_renderer {
         // Progress steps for applications.
         $progresssteps = ['submitted', 'under_review', 'docs_validated', 'interview', 'selected'];
 
+        // Track total missing docs (not uploaded) and docs pending review separately.
+        $totalmissingdocs = 0;
+        $totalpendingreviews = 0;
+
         // Prepare application data.
         $applicationdata = [];
         foreach ($applications as $app) {
@@ -157,6 +161,12 @@ trait application_renderer {
 
             // Get missing documents for this application.
             $missingdocs = $this->get_missing_documents($app->id, $app->vacancyid, $userid);
+
+            // Accumulate totals for the top alert (only for active applications).
+            if (in_array($app->status, ['submitted', 'under_review', 'docs_rejected'])) {
+                $totalmissingdocs += $missingdocs['count'];
+                $totalpendingreviews += $docspending;
+            }
 
             // Calculate progress color based on document review.
             $progresscolor = 'primary';
@@ -313,7 +323,10 @@ trait application_renderer {
             'hasexemption' => !empty($exemption),
             'exemption' => $exemptiondata,
             'stats' => $statscards,
-            'pendingdocscount' => $stats['pending_docs'] ?? 0,
+            // Use missing docs count (truly not uploaded) for the upload alert.
+            'pendingdocscount' => $totalmissingdocs,
+            // Also provide pending reviews count (uploaded but awaiting validation).
+            'pendingreviewscount' => $totalpendingreviews,
             'filterform' => $filterform,
             'showinginfo' => $showinginfo,
             'hasapplications' => !empty($applicationdata),
