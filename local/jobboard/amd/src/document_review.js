@@ -466,8 +466,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         currentDocItem.classList.remove('active', 'bg-primary-subtle');
                     }
 
-                    // 2. Remove all action divs (there should only be one).
-                    document.querySelectorAll('.jb-doc-actions').forEach(function(el) {
+                    // 2. Remove all action divs (including editor wrappers created by Atto/TinyMCE).
+                    document.querySelectorAll('.jb-doc-actions, .editor_atto_wrap[data-document-id]').forEach(function(el) {
                         el.remove();
                     });
 
@@ -664,8 +664,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                         currentDocItem.classList.remove('active', 'bg-primary-subtle');
                     }
 
-                    // 2. Remove all action divs (there should only be one).
-                    document.querySelectorAll('.jb-doc-actions').forEach(function(el) {
+                    // 2. Remove all action divs (including editor wrappers created by Atto/TinyMCE).
+                    document.querySelectorAll('.jb-doc-actions, .editor_atto_wrap[data-document-id]').forEach(function(el) {
                         el.remove();
                     });
 
