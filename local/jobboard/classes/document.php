@@ -546,11 +546,21 @@ class document {
     /**
      * Get the stored file.
      *
+     * Searches for the file in the following order:
+     * 1. Exact match: filepath + filename as stored in document record
+     * 2. Fallback by filepath: any file in the documenttype folder
+     * 3. Fallback by contenthash: match by content hash if stored
+     *
      * @return \stored_file|null The file or null.
      */
     public function get_stored_file(): ?\stored_file {
         if ($this->storedfile !== null) {
             return $this->storedfile;
+        }
+
+        // Text documents don't have physical files.
+        if ($this->is_text_document()) {
+            return null;
         }
 
         $context = \context_system::instance();
@@ -561,16 +571,55 @@ class document {
             self::COMPONENT,
             self::FILEAREA,
             $this->applicationid,
-            'id',
+            'id DESC', // Most recent first
             false
         );
 
+        $expectedfilepath = '/' . $this->documenttype . '/';
+        $fallbackfile = null;
+
         foreach ($files as $file) {
-            if ($file->get_filepath() === '/' . $this->documenttype . '/' &&
+            // Strategy 1: Exact match on filepath and filename.
+            if ($file->get_filepath() === $expectedfilepath &&
                 $file->get_filename() === $this->filename) {
                 $this->storedfile = $file;
                 return $this->storedfile;
             }
+
+            // Strategy 2: Match by filepath (documenttype folder) - keep as fallback.
+            if ($file->get_filepath() === $expectedfilepath && $fallbackfile === null) {
+                $fallbackfile = $file;
+            }
+
+            // Strategy 3: Match by contenthash if we have one.
+            if (!empty($this->contenthash) && $file->get_contenthash() === $this->contenthash) {
+                $this->storedfile = $file;
+                // Update filename to match the actual file (for URL generation).
+                if ($file->get_filename() !== $this->filename) {
+                    debugging('Document ID ' . $this->id . ': filename mismatch. ' .
+                        'DB: "' . $this->filename . '", File: "' . $file->get_filename() . '"', DEBUG_DEVELOPER);
+                }
+                return $this->storedfile;
+            }
+        }
+
+        // Use fallback if found (file in the right folder but different filename).
+        if ($fallbackfile !== null) {
+            $this->storedfile = $fallbackfile;
+            debugging('Document ID ' . $this->id . ': using fallback file. ' .
+                'Expected: "' . $this->filename . '", Found: "' . $fallbackfile->get_filename() . '"', DEBUG_DEVELOPER);
+            return $this->storedfile;
+        }
+
+        // Log available files for debugging when file not found.
+        if (!empty($files)) {
+            $fileinfo = [];
+            foreach ($files as $f) {
+                $fileinfo[] = $f->get_filepath() . $f->get_filename();
+            }
+            debugging('Document ID ' . $this->id . ' file not found. ' .
+                'Looking for: ' . $expectedfilepath . $this->filename . '. ' .
+                'Available files: ' . implode(', ', $fileinfo), DEBUG_DEVELOPER);
         }
 
         return null;
@@ -580,12 +629,21 @@ class document {
      * Get file download URL.
      *
      * @param bool $forcedownload Force download instead of view.
-     * @return \moodle_url The download URL.
+     * @return \moodle_url|null The download URL or null if no file exists.
      */
-    public function get_download_url(bool $forcedownload = true): \moodle_url {
+    public function get_download_url(bool $forcedownload = true): ?\moodle_url {
+        // Text documents don't have physical files - return null.
+        if ($this->is_text_document()) {
+            return null;
+        }
+
         $file = $this->get_stored_file();
         if (!$file) {
-            return new \moodle_url('/');
+            debugging('Document file not found for document ID ' . $this->id .
+                ', applicationid=' . $this->applicationid .
+                ', documenttype=' . $this->documenttype .
+                ', filename=' . $this->filename, DEBUG_DEVELOPER);
+            return null;
         }
 
         // Use document ID in URL, not applicationid.

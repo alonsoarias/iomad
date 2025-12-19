@@ -35,6 +35,7 @@ define([], function() {
     var state = {
         checklistContainer: null,
         fileManagers: {},
+        textFields: {},  // Track text/textarea/editor fields.
         uploadedCount: 0,
         totalCount: 0,
         initialized: false
@@ -80,8 +81,8 @@ define([], function() {
         var fileManagerContainers = document.querySelectorAll('[id^="fitem_id_doc_"]');
 
         fileManagerContainers.forEach(function(container) {
-            // Extract document code from ID (fitem_id_doc_CODENAME).
-            var match = container.id.match(/fitem_id_doc_(.+)/);
+            // Extract document code from ID (fitem_id_doc_CODENAME or fitem_id_doc_CODENAME_editor).
+            var match = container.id.match(/fitem_id_doc_([^_]+)(?:_editor)?$/);
             if (match && match[1]) {
                 var code = match[1];
                 var fm = container.querySelector(SELECTORS.fileManager);
@@ -92,6 +93,63 @@ define([], function() {
         });
 
         return managers;
+    };
+
+    /**
+     * Get all text input fields (textarea, editor, text) mapped by document code.
+     *
+     * @return {Object} Map of document code to input element info.
+     */
+    var mapTextFields = function() {
+        var fields = {};
+        var containers = document.querySelectorAll('[id^="fitem_id_doc_"]');
+
+        containers.forEach(function(container) {
+            // Extract document code from ID.
+            // For editor fields: fitem_id_doc_carta_intencion_editor
+            // For textarea/text fields: fitem_id_doc_carta_intencion
+            var match = container.id.match(/fitem_id_doc_(.+?)(?:_editor)?$/);
+            if (match && match[1]) {
+                var code = match[1];
+
+                // Skip if already found as file manager.
+                if (state.fileManagers && state.fileManagers[code]) {
+                    return;
+                }
+
+                // Check for editor (TinyMCE/Atto).
+                var editorFrame = container.querySelector('iframe');
+                var editorTextarea = container.querySelector('textarea[id$="_editor"]');
+                var regularTextarea = container.querySelector('textarea:not([id$="_editor"])');
+                var textInput = container.querySelector('input[type="text"]');
+
+                if (editorFrame || editorTextarea) {
+                    // Moodle editor field.
+                    fields[code] = {
+                        type: 'editor',
+                        container: container,
+                        textarea: container.querySelector('textarea'),
+                        iframe: editorFrame
+                    };
+                } else if (regularTextarea) {
+                    // Regular textarea.
+                    fields[code] = {
+                        type: 'textarea',
+                        container: container,
+                        element: regularTextarea
+                    };
+                } else if (textInput) {
+                    // Text input.
+                    fields[code] = {
+                        type: 'text',
+                        container: container,
+                        element: textInput
+                    };
+                }
+            }
+        });
+
+        return fields;
     };
 
     /**
@@ -117,6 +175,44 @@ define([], function() {
                         fileManager.querySelector('.filepicker-filelist .filepicker-filename');
 
         return !!hasContent;
+    };
+
+    /**
+     * Check if a text field has meaningful content.
+     *
+     * @param {Object} fieldInfo The field info object.
+     * @return {boolean} True if field has content.
+     */
+    var hasTextContent = function(fieldInfo) {
+        if (!fieldInfo) {
+            return false;
+        }
+
+        var content = '';
+
+        if (fieldInfo.type === 'editor') {
+            // For Moodle editor, check the hidden textarea that stores the content.
+            if (fieldInfo.textarea) {
+                content = fieldInfo.textarea.value || '';
+            }
+            // Also try to get content from iframe if available.
+            if (!content && fieldInfo.iframe) {
+                try {
+                    var iframeDoc = fieldInfo.iframe.contentDocument || fieldInfo.iframe.contentWindow.document;
+                    content = iframeDoc.body ? iframeDoc.body.textContent : '';
+                } catch (e) {
+                    // Cross-origin or access denied.
+                }
+            }
+        } else if (fieldInfo.element) {
+            // For textarea or text input.
+            content = fieldInfo.element.value || '';
+        }
+
+        // Strip HTML tags and check if there's actual text content.
+        // Minimum 10 characters to consider it "filled".
+        var textOnly = content.replace(/<[^>]*>/g, '').trim();
+        return textOnly.length >= 10;
     };
 
     /**
@@ -222,11 +318,12 @@ define([], function() {
     };
 
     /**
-     * Scan all file managers and update checklist state.
+     * Scan all file managers and text fields, update checklist state.
      */
     var scanFileManagers = function() {
         var uploadedCount = 0;
 
+        // Scan file managers.
         Object.keys(state.fileManagers).forEach(function(code) {
             var fm = state.fileManagers[code];
             var isUploaded = hasFiles(fm);
@@ -234,6 +331,18 @@ define([], function() {
             updateChecklistItem(code, isUploaded);
 
             if (isUploaded) {
+                uploadedCount++;
+            }
+        });
+
+        // Scan text fields (textarea, editor, text input).
+        Object.keys(state.textFields).forEach(function(code) {
+            var fieldInfo = state.textFields[code];
+            var hasContent = hasTextContent(fieldInfo);
+
+            updateChecklistItem(code, hasContent);
+
+            if (hasContent) {
                 uploadedCount++;
             }
         });
@@ -263,6 +372,70 @@ define([], function() {
         Object.values(state.fileManagers).forEach(function(fm) {
             observer.observe(fm, observerConfig);
         });
+
+        // Observe text field containers for editor changes.
+        Object.values(state.textFields).forEach(function(fieldInfo) {
+            if (fieldInfo.container) {
+                observer.observe(fieldInfo.container, observerConfig);
+            }
+        });
+    };
+
+    /**
+     * Set up input event listeners for text fields.
+     */
+    var setupTextFieldListeners = function() {
+        Object.keys(state.textFields).forEach(function(code) {
+            var fieldInfo = state.textFields[code];
+
+            if (fieldInfo.type === 'textarea' && fieldInfo.element) {
+                // Listen for input on textarea.
+                fieldInfo.element.addEventListener('input', function() {
+                    clearTimeout(state.scanTimeout);
+                    state.scanTimeout = setTimeout(scanFileManagers, 500);
+                });
+                fieldInfo.element.addEventListener('blur', scanFileManagers);
+            } else if (fieldInfo.type === 'text' && fieldInfo.element) {
+                // Listen for input on text field.
+                fieldInfo.element.addEventListener('input', function() {
+                    clearTimeout(state.scanTimeout);
+                    state.scanTimeout = setTimeout(scanFileManagers, 500);
+                });
+                fieldInfo.element.addEventListener('blur', scanFileManagers);
+            } else if (fieldInfo.type === 'editor') {
+                // For editor, listen on the textarea (TinyMCE syncs to it).
+                if (fieldInfo.textarea) {
+                    fieldInfo.textarea.addEventListener('input', function() {
+                        clearTimeout(state.scanTimeout);
+                        state.scanTimeout = setTimeout(scanFileManagers, 500);
+                    });
+                    fieldInfo.textarea.addEventListener('change', scanFileManagers);
+                }
+                // Also try to listen to the editor iframe content.
+                if (fieldInfo.iframe) {
+                    try {
+                        var iframeDoc = fieldInfo.iframe.contentDocument || fieldInfo.iframe.contentWindow.document;
+                        iframeDoc.addEventListener('input', function() {
+                            clearTimeout(state.scanTimeout);
+                            state.scanTimeout = setTimeout(scanFileManagers, 500);
+                        });
+                        iframeDoc.addEventListener('blur', scanFileManagers);
+                    } catch (e) {
+                        // Cross-origin or access denied - rely on mutation observer.
+                    }
+                }
+            }
+        });
+
+        // Listen for TinyMCE events globally.
+        if (typeof window.tinyMCE !== 'undefined') {
+            window.tinyMCE.on('AddEditor', function(e) {
+                e.editor.on('input change blur keyup', function() {
+                    clearTimeout(state.scanTimeout);
+                    state.scanTimeout = setTimeout(scanFileManagers, 500);
+                });
+            });
+        }
     };
 
     /**
@@ -354,7 +527,14 @@ define([], function() {
         // Map file managers to document codes.
         state.fileManagers = mapFileManagers();
 
-        if (Object.keys(state.fileManagers).length === 0) {
+        // Map text fields (textarea, editor, text input) to document codes.
+        state.textFields = mapTextFields();
+
+        // Check if we have any fields to monitor.
+        var hasFileManagers = Object.keys(state.fileManagers).length > 0;
+        var hasTextFields = Object.keys(state.textFields).length > 0;
+
+        if (!hasFileManagers && !hasTextFields) {
             return;
         }
 
@@ -364,6 +544,11 @@ define([], function() {
         // Set up observers for real-time updates.
         setupObservers();
 
+        // Set up text field listeners.
+        if (hasTextFields) {
+            setupTextFieldListeners();
+        }
+
         // Event listeners.
         document.addEventListener('click', onScrollClick);
 
@@ -371,6 +556,14 @@ define([], function() {
         document.addEventListener('change', function(e) {
             if (e.target.closest(SELECTORS.fileManager)) {
                 setTimeout(scanFileManagers, 500);
+            }
+        });
+
+        // Listen for changes in textareas and inputs.
+        document.addEventListener('input', function(e) {
+            if (e.target.tagName === 'TEXTAREA' || e.target.type === 'text') {
+                clearTimeout(state.scanTimeout);
+                state.scanTimeout = setTimeout(scanFileManagers, 500);
             }
         });
 

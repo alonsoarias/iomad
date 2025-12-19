@@ -437,8 +437,17 @@ function local_jobboard_pluginfile($course, $cm, $context, $filearea, $args, $fo
         require_login();
 
         // Get the document record.
-        $document = $DB->get_record('local_jobboard_document', ['id' => $itemid], '*', MUST_EXIST);
-        $application = $DB->get_record('local_jobboard_application', ['id' => $document->applicationid], '*', MUST_EXIST);
+        $documentrecord = $DB->get_record('local_jobboard_document', ['id' => $itemid]);
+        if (!$documentrecord) {
+            debugging('Document not found: ID ' . $itemid, DEBUG_DEVELOPER);
+            return false;
+        }
+
+        $application = $DB->get_record('local_jobboard_application', ['id' => $documentrecord->applicationid]);
+        if (!$application) {
+            debugging('Application not found for document: ' . $itemid, DEBUG_DEVELOPER);
+            return false;
+        }
 
         // Check access permissions.
         $candownload = false;
@@ -457,16 +466,19 @@ function local_jobboard_pluginfile($course, $cm, $context, $filearea, $args, $fo
             return false;
         }
 
-        // Log the access.
-        \local_jobboard\audit::log('document_download', 'document', $document->id);
-
-        $fs = get_file_storage();
-        // Files are stored with applicationid as itemid, not document id.
-        $file = $fs->get_file($context->id, 'local_jobboard', $filearea, $document->applicationid, $filepath, $filename);
+        // Use the document class to get the stored file with fallback logic.
+        $document = new \local_jobboard\document($documentrecord);
+        $file = $document->get_stored_file();
 
         if (!$file || $file->is_directory()) {
+            debugging('File not found for document ID ' . $itemid .
+                '. Requested: ' . $filepath . $filename .
+                ', documenttype: ' . $documentrecord->documenttype, DEBUG_DEVELOPER);
             return false;
         }
+
+        // Log the access.
+        \local_jobboard\audit::log('document_download', 'document', $documentrecord->id);
 
         send_stored_file($file, 86400, 0, $forcedownload, $options);
         return;

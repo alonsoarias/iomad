@@ -204,19 +204,17 @@ foreach ($documents as $doc) {
         continue;
     }
 
-    // Handle physical files - use the stored filename directly (already has correct format).
-    foreach ($allfiles as $file) {
-        if ($file->get_filepath() === '/' . $doc->documenttype . '/' &&
-            $file->get_filename() === $doc->filename) {
+    // Handle physical files using the document class for improved file lookup.
+    $docobj = new \local_jobboard\document($doc);
+    $storedfile = $docobj->get_stored_file();
 
-            // Get file content.
-            $content = $file->get_content();
-            if (!empty($content)) {
-                // Use original filename directly (already follows {Prefix}_{Lastname}.ext format).
-                $zip->addFromString($doc->filename, $content);
-                $filesadded++;
-            }
-            break;
+    if ($storedfile) {
+        $content = $storedfile->get_content();
+        if (!empty($content)) {
+            // Use the actual filename from the stored file (may differ from DB record).
+            $actualfilename = $storedfile->get_filename();
+            $zip->addFromString($actualfilename, $content);
+            $filesadded++;
         }
     }
 }
@@ -402,17 +400,17 @@ function download_bulk_applications(array $applicationids) {
                 continue;
             }
 
-            // Handle physical files.
-            foreach ($allfiles as $file) {
-                if ($file->get_filepath() === '/' . $doc->documenttype . '/' &&
-                    $file->get_filename() === $doc->filename) {
+            // Handle physical files using the document class for improved file lookup.
+            $docobj = new \local_jobboard\document($doc);
+            $storedfile = $docobj->get_stored_file();
 
-                    $content = $file->get_content();
-                    if (!empty($content)) {
-                        $zip->addFromString($foldername . $doc->filename, $content);
-                        $totalfilesadded++;
-                    }
-                    break;
+            if ($storedfile) {
+                $content = $storedfile->get_content();
+                if (!empty($content)) {
+                    // Use the actual filename from the stored file (may differ from DB record).
+                    $actualfilename = $storedfile->get_filename();
+                    $zip->addFromString($foldername . $actualfilename, $content);
+                    $totalfilesadded++;
                 }
             }
         }
