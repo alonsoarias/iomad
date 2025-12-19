@@ -28,8 +28,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 use core_courseformat\base as course_format;
-use section_info;
-use navigation_node;
 
 require_once($CFG->dirroot . '/course/format/lib.php'); // For format_base.
 
@@ -628,7 +626,7 @@ class format_trail extends course_format {
      * @param navigation_node $node The course node within the navigation.
      * @return void
      */
-    public function extend_course_navigation($navigation, navigation_node $node) {
+    public function extend_course_navigation($navigation, \navigation_node $node) {
         global $PAGE;
         // If section is specified in course/view.php, make sure it is expanded in navigation.
         if ($navigation->includesectionnum === false) {
@@ -648,7 +646,7 @@ class format_trail extends course_format {
         if (!isset($sections[0])) {
             // The general section is empty, find the navigation node for it.
             $section = $modinfo->get_section_info(0);
-            $generalsection = $node->get($section->id, navigation_node::TYPE_SECTION);
+            $generalsection = $node->get($section->id, \navigation_node::TYPE_SECTION);
             if ($generalsection) {
                 // We found the node - now remove it.
                 $generalsection->remove();
@@ -662,7 +660,7 @@ class format_trail extends course_format {
      * @param section_info $section The section to check.
      * @return bool True if the section is visible.
      */
-    public function is_section_visible(section_info $section): bool {
+    public function is_section_visible(\section_info $section): bool {
         // Delegated sections visibility must be controlled by the delegating component.
         if ($section->is_delegated()) {
             $delegatedmodule = $section->get_component_instance();
