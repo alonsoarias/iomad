@@ -404,13 +404,20 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             methodname: 'local_jobboard_validate_document',
             args: {documentid: documentId, applicationid: applicationId},
             done: function(response) {
+                // eslint-disable-next-line no-console
+                console.log('Approve response:', response);
                 state.processing = false;
                 if (response.success) {
                     Notification.addNotification({
                         message: response.message || state.strings.documentValidated || 'Documento aprobado',
                         type: 'success'
                     });
-                    updateDocumentUI(documentId, 'approved', response.stats, response.nextdocumentid, response.allreviewed);
+                    try {
+                        updateDocumentUI(documentId, 'approved', response.stats, response.nextdocumentid, response.allreviewed);
+                    } catch (e) {
+                        // eslint-disable-next-line no-console
+                        console.error('updateDocumentUI error:', e);
+                    }
                 } else {
                     // AJAX returned error - show message and re-enable buttons.
                     $btn.prop('disabled', false).html(originalHtml);
@@ -529,14 +536,21 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             methodname: 'local_jobboard_reject_document',
             args: {documentid: documentId, applicationid: applicationId, reason: reason},
             done: function(response) {
+                // eslint-disable-next-line no-console
+                console.log('Reject response:', response);
                 state.processing = false;
                 if (response.success) {
                     Notification.addNotification({
                         message: response.message || state.strings.documentRejected || 'Documento rechazado',
                         type: 'success'
                     });
-                    updateDocumentUI(documentId, 'rejected', response.stats,
-                        response.nextdocumentid, response.allreviewed);
+                    try {
+                        updateDocumentUI(documentId, 'rejected', response.stats,
+                            response.nextdocumentid, response.allreviewed);
+                    } catch (e) {
+                        // eslint-disable-next-line no-console
+                        console.error('updateDocumentUI error:', e);
+                    }
                 } else {
                     // AJAX returned error - show message and re-enable buttons.
                     $btn.prop('disabled', false).html(originalHtml);

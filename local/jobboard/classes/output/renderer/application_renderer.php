@@ -129,14 +129,25 @@ trait application_renderer {
             $vacancycode = $app->vacancycode ?? ($app->vacancy_code ?? '');
             $vacancytitle = $app->vacancytitle ?? ($app->vacancy_title ?? '');
 
-            // Get convocatoria name from vacancy.
+            // Get convocatoria name and company name from vacancy.
             $convocatorianame = null;
+            $companyname = null;
             if (!empty($app->vacancyid)) {
-                $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $app->vacancyid], 'convocatoriaid');
-                if ($vacancy && !empty($vacancy->convocatoriaid)) {
-                    $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $vacancy->convocatoriaid], 'name');
-                    if ($convocatoria) {
-                        $convocatorianame = format_string($convocatoria->name);
+                $vacancy = $DB->get_record('local_jobboard_vacancy', ['id' => $app->vacancyid], 'convocatoriaid, companyid');
+                if ($vacancy) {
+                    // Get convocatoria name.
+                    if (!empty($vacancy->convocatoriaid)) {
+                        $convocatoria = $DB->get_record('local_jobboard_convocatoria', ['id' => $vacancy->convocatoriaid], 'name');
+                        if ($convocatoria) {
+                            $convocatorianame = format_string($convocatoria->name);
+                        }
+                    }
+                    // Get company name from IOMAD.
+                    if (!empty($vacancy->companyid)) {
+                        $company = $DB->get_record('company', ['id' => $vacancy->companyid], 'shortname, name');
+                        if ($company) {
+                            $companyname = format_string($company->shortname ?: $company->name);
+                        }
                     }
                 }
             }
@@ -166,10 +177,12 @@ trait application_renderer {
                 'vacancytitle' => format_string($vacancytitle ?: get_string('unknownvacancy', 'local_jobboard')),
                 'vacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $app->vacancyid]))->out(false),
                 'convocatorianame' => $convocatorianame,
+                'companyname' => $companyname,
+                'hascompany' => !empty($companyname),
                 'status' => $app->status,
                 'statuslabel' => get_string('appstatus:' . $app->status, 'local_jobboard'),
                 'statuscolor' => $this->get_application_status_class($app->status),
-                'dateapplied' => userdate($app->timecreated, get_string('strftimedate', 'langconfig')),
+                'dateapplied' => userdate($app->timecreated, get_string('strftimedatetime', 'langconfig')),
                 'progresssteps' => $steps,
                 'progresspercent' => round($progresspercent),
                 'progresscolor' => $progresscolor,
