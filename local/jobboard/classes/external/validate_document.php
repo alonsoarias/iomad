@@ -77,7 +77,7 @@ class validate_document extends external_api {
             }
 
             // Validate the document.
-            $doc->validate($USER->id);
+            $doc->validate((int)$USER->id);
 
             // Get stats for progress update.
             $stats = document::get_stats($params['applicationid']);

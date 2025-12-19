@@ -100,7 +100,7 @@ class reject_document extends external_api {
             }
 
             // Reject the document.
-            $doc->reject($USER->id, $reason);
+            $doc->reject((int)$USER->id, $reason);
 
             // Get stats for progress update.
             $stats = document::get_stats($params['applicationid']);
