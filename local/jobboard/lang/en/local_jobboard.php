@@ -2557,6 +2557,15 @@ $string['signup_step_personal'] = 'Personal';
 $string['signup_step_contact'] = 'Contact';
 $string['signup_step_academic'] = 'Academic';
 $string['signup_step_confirm'] = 'Confirm';
+$string['signup_benefits_title'] = 'Why register?';
+$string['signup_benefit_1'] = 'Apply to multiple vacancies with a single profile';
+$string['signup_benefit_2'] = 'Track your application status in real-time';
+$string['signup_benefit_3'] = 'Receive notifications about new opportunities';
+$string['signup_benefit_4'] = 'Manage your documents in one place';
+$string['signup_security_title'] = 'Your data is secure';
+$string['signup_security_text'] = 'Your personal information is protected and will only be used for the recruitment process.';
+$string['alreadyregistered'] = 'Already registered?';
+$string['logintosubmit'] = 'Log in to submit your application.';
 
 // =============================================================================
 // DASHBOARD STRINGS

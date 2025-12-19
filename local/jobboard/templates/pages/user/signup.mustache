@@ -1,9 +1,8 @@
 {{!
     @template local_jobboard/pages/user/signup
 
-    Signup page template for Job Board applicants.
-    Uses jb-* CSS classes for consistent styling.
-    Includes multi-step progress indicator and accessibility features.
+    Signup page template - Clean minimal design following jb-* pattern
+    Multi-step registration form with progress indicator
 
     Context variables:
     * title (string) - Page title
@@ -16,164 +15,671 @@
     * logintext (string) - Login button text
     * requiredfieldstext (string) - Required fields notice
     * formhtml (string) - Rendered form HTML
-    * loading (bool) - Show skeleton loading state
-
-    Example context (json):
-    {
-        "title": "Create Account",
-        "vacancy": {"title": "Professor", "code": "VAC-001"}
-    }
 }}
-{{#loading}}
-{{! Skeleton Loading State }}
-<div class="local-jobboard-signup jb-container-fluid px-3 px-md-5" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="text-center mb-4 pb-3 border-bottom">
-        <div class="jb-skeleton-avatar mx-auto mb-3" style="width: 80px; height: 80px;"></div>
-        <div class="jb-skeleton-title mx-auto mb-2" style="width: 50%;"></div>
-        <div class="jb-skeleton-text mx-auto" style="width: 70%;"></div>
-    </div>
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="jb-skeleton-text mb-2" style="width: 60%;"></div>
-            <div class="jb-skeleton-text" style="width: 40%;"></div>
-        </div>
-    </div>
-    <div class="mb-4">
-        <div class="d-flex justify-content-between">
-            <div class="jb-skeleton-avatar" style="width: 40px; height: 40px;"></div>
-            <div class="jb-skeleton-avatar" style="width: 40px; height: 40px;"></div>
-            <div class="jb-skeleton-avatar" style="width: 40px; height: 40px;"></div>
-            <div class="jb-skeleton-avatar" style="width: 40px; height: 40px;"></div>
-            <div class="jb-skeleton-avatar" style="width: 40px; height: 40px;"></div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 50px;"></div>
-            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 50px;"></div>
-            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 50px;"></div>
-        </div>
-    </div>
-</div>
-{{/loading}}
-
-{{^loading}}
-<div class="local-jobboard-signup jb-container-fluid px-3 px-md-5" data-region="jobboard-signup">
+<div class="jb-signup" id="jobboard-signup" data-region="jobboard-signup">
     {{! Skip Link for Accessibility }}
     <a href="#signup-main-content" class="jb-skip-link">
         {{#str}}skiptocontent, local_jobboard{{/str}}
     </a>
 
     {{! Header Section }}
-    <header class="text-center mb-4 pb-3 border-bottom jb-fade-in">
-        <div class="jb-signup-icon d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white mb-3" style="width: 80px; height: 80px;">
-            <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>
+    <div class="jb-signup-header">
+        <div class="jb-signup-header__icon">
+            <i class="fa fa-user-plus"></i>
         </div>
-        <h1 class="fs-3 mb-2">{{title}}</h1>
+        <h1 class="jb-signup-header__title">{{title}}</h1>
         {{#intro}}
-        <p class="text-muted mb-0">{{intro}}</p>
+        <p class="jb-signup-header__intro">{{intro}}</p>
         {{/intro}}
-    </header>
-
-    {{! Vacancy Info Card (if applying to specific vacancy) }}
-    {{#vacancy}}
-    <div class="card mb-4 border-primary jb-fade-in-up" style="animation-delay: 0.1s;">
-        <div class="card-header bg-white d-flex align-items-center py-2">
-            <i class="fa fa-briefcase fa-lg text-primary me-3" aria-hidden="true"></i>
-            <h2 class="fs-6 mb-0">
-                {{applyingfortext}}
-            </h2>
-        </div>
-        <div class="card-body py-3">
-            <h3 class="card-title fs-5 mb-2 fw-bold">{{vacancy.title}}</h3>
-            <div class="d-flex flex-wrap gap-3 small">
-                <span>
-                    <i class="fa fa-hashtag text-muted me-1" aria-hidden="true"></i>
-                    <strong>{{vacancy.code}}</strong>
-                </span>
-                {{#vacancy.location}}
-                <span>
-                    <i class="fa fa-location-dot text-muted me-1" aria-hidden="true"></i>
-                    {{vacancy.location}}
-                </span>
-                {{/vacancy.location}}
-            </div>
-        </div>
-    </div>
-    {{/vacancy}}
-
-    {{! Already have account notice }}
-    <div class="alert alert-info jb-alert-info d-flex align-items-center mb-4 jb-fade-in-up" role="alert" style="animation-delay: 0.15s;">
-        <i class="fa fa-circle-info me-3 fs-4" aria-hidden="true"></i>
-        <div class="flex-grow-1">
-            <strong>{{alreadyaccounttext}}</strong>
-        </div>
-        <a href="{{loginurl}}" class="btn btn-sm btn-primary jb-btn-primary jb-hover-lift">
-            <i class="fa fa-right-to-bracket me-1" aria-hidden="true"></i>
-            {{logintext}}
-        </a>
     </div>
 
-    {{! Required fields notice }}
-    <p class="text-muted small mb-4 jb-fade-in" aria-live="polite">
-        <span class="text-danger" aria-hidden="true">*</span>
-        {{requiredfieldstext}}
-    </p>
+    {{! Content Layout }}
+    <div class="jb-signup-content">
+        {{! Main Column }}
+        <div class="jb-signup-main">
+            {{! Vacancy Info Card }}
+            {{#vacancy}}
+            <div class="jb-card jb-card--cta">
+                <div class="jb-card__header">
+                    <i class="fa fa-briefcase"></i>
+                    {{applyingfortext}}
+                </div>
+                <div class="jb-card__body">
+                    <h4 class="jb-vacancy-title">{{vacancy.title}}</h4>
+                    <div class="jb-vacancy-meta">
+                        <span class="jb-vacancy-meta__item">
+                            <i class="fa fa-hashtag"></i>
+                            <strong>{{vacancy.code}}</strong>
+                        </span>
+                        {{#vacancy.location}}
+                        <span class="jb-vacancy-meta__item">
+                            <i class="fa fa-location-dot"></i>
+                            {{vacancy.location}}
+                        </span>
+                        {{/vacancy.location}}
+                    </div>
+                </div>
+            </div>
+            {{/vacancy}}
 
-    {{! Progress Steps Indicator }}
-    <nav class="jb-progress-container mb-4 jb-fade-in-up" id="jb-signup-progress" aria-label="{{#str}}signup_progress, local_jobboard{{/str}}" style="animation-delay: 0.2s;">
-        <p class="text-muted small mb-2 text-center">
-            {{#str}}signup_progress, local_jobboard{{/str}}
-        </p>
-        <ol class="jb-progress-steps" role="list">
-            <li class="jb-step jb-active" data-step="0" data-section="accountheader" role="listitem">
-                <div class="jb-step-icon" aria-hidden="true">
-                    <i class="fa fa-key"></i>
+            {{! Already have account alert }}
+            <div class="jb-alert jb-alert--info jb-alert--action">
+                <div class="jb-alert__main">
+                    <i class="fa fa-circle-info jb-alert__icon"></i>
+                    <strong>{{alreadyaccounttext}}</strong>
                 </div>
-                <span class="jb-step-label">{{#str}}signup_step_account, local_jobboard{{/str}}</span>
-            </li>
-            <li class="jb-step" data-step="1" data-section="personalinfo" role="listitem">
-                <div class="jb-step-icon" aria-hidden="true">
-                    <i class="fa fa-user"></i>
-                </div>
-                <span class="jb-step-label">{{#str}}signup_step_personal, local_jobboard{{/str}}</span>
-            </li>
-            <li class="jb-step" data-step="2" data-section="contactinfo" role="listitem">
-                <div class="jb-step-icon" aria-hidden="true">
-                    <i class="fa fa-phone"></i>
-                </div>
-                <span class="jb-step-label">{{#str}}signup_step_contact, local_jobboard{{/str}}</span>
-            </li>
-            <li class="jb-step" data-step="3" data-section="academicheader" role="listitem">
-                <div class="jb-step-icon" aria-hidden="true">
-                    <i class="fa fa-graduation-cap"></i>
-                </div>
-                <span class="jb-step-label">{{#str}}signup_step_academic, local_jobboard{{/str}}</span>
-            </li>
-            <li class="jb-step" data-step="4" data-section="termsheader" role="listitem">
-                <div class="jb-step-icon" aria-hidden="true">
-                    <i class="fa fa-circle-check"></i>
-                </div>
-                <span class="jb-step-label">{{#str}}signup_step_confirm, local_jobboard{{/str}}</span>
-            </li>
-        </ol>
-    </nav>
+                <a href="{{loginurl}}" class="jb-btn jb-btn--primary jb-btn--sm">
+                    <i class="fa fa-right-to-bracket"></i>
+                    {{logintext}}
+                </a>
+            </div>
 
-    {{! The form content }}
-    <main id="signup-main-content">
-        <div class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.25s;">
-            <div class="card-body">
-                {{{formhtml}}}
+            {{! Required fields notice }}
+            <p class="jb-required-notice">
+                <span class="jb-required-notice__asterisk">*</span>
+                {{requiredfieldstext}}
+            </p>
+
+            {{! Progress Steps }}
+            <nav class="jb-progress-steps" id="jb-signup-progress" aria-label="{{#str}}signup_progress, local_jobboard{{/str}}">
+                <p class="jb-progress-steps__title">{{#str}}signup_progress, local_jobboard{{/str}}</p>
+                <ol class="jb-progress-steps__list">
+                    <li class="jb-step jb-step--active" data-step="0" data-section="accountheader">
+                        <div class="jb-step__icon"><i class="fa fa-key"></i></div>
+                        <span class="jb-step__label">{{#str}}signup_step_account, local_jobboard{{/str}}</span>
+                    </li>
+                    <li class="jb-step" data-step="1" data-section="personalinfo">
+                        <div class="jb-step__icon"><i class="fa fa-user"></i></div>
+                        <span class="jb-step__label">{{#str}}signup_step_personal, local_jobboard{{/str}}</span>
+                    </li>
+                    <li class="jb-step" data-step="2" data-section="contactinfo">
+                        <div class="jb-step__icon"><i class="fa fa-phone"></i></div>
+                        <span class="jb-step__label">{{#str}}signup_step_contact, local_jobboard{{/str}}</span>
+                    </li>
+                    <li class="jb-step" data-step="3" data-section="academicheader">
+                        <div class="jb-step__icon"><i class="fa fa-graduation-cap"></i></div>
+                        <span class="jb-step__label">{{#str}}signup_step_academic, local_jobboard{{/str}}</span>
+                    </li>
+                    <li class="jb-step" data-step="4" data-section="termsheader">
+                        <div class="jb-step__icon"><i class="fa fa-circle-check"></i></div>
+                        <span class="jb-step__label">{{#str}}signup_step_confirm, local_jobboard{{/str}}</span>
+                    </li>
+                </ol>
+            </nav>
+
+            {{! Form Card }}
+            <main id="signup-main-content">
+                <div class="jb-card">
+                    <div class="jb-card__body jb-card__body--form">
+                        {{{formhtml}}}
+                    </div>
+                </div>
+            </main>
+
+            {{! Help Section }}
+            <div class="jb-signup-help">
+                <i class="fa fa-circle-question"></i>
+                {{#str}}signup_help, local_jobboard{{/str}}
             </div>
         </div>
-    </main>
 
-    {{! Help Section }}
-    <aside class="mt-4 text-center jb-fade-in" style="animation-delay: 0.3s;">
-        <p class="text-muted small mb-0">
-            <i class="fa fa-circle-question me-1" aria-hidden="true"></i>
-            {{#str}}signup_help, local_jobboard{{/str}}
-        </p>
-    </aside>
+        {{! Sidebar }}
+        <aside class="jb-signup-sidebar">
+            {{! Benefits Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-star"></i>
+                    {{#str}}signup_benefits_title, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body jb-card__body--compact">
+                    <ul class="jb-benefits">
+                        <li class="jb-benefits__item">
+                            <i class="fa fa-check-circle"></i>
+                            {{#str}}signup_benefit_1, local_jobboard{{/str}}
+                        </li>
+                        <li class="jb-benefits__item">
+                            <i class="fa fa-check-circle"></i>
+                            {{#str}}signup_benefit_2, local_jobboard{{/str}}
+                        </li>
+                        <li class="jb-benefits__item">
+                            <i class="fa fa-check-circle"></i>
+                            {{#str}}signup_benefit_3, local_jobboard{{/str}}
+                        </li>
+                        <li class="jb-benefits__item">
+                            <i class="fa fa-check-circle"></i>
+                            {{#str}}signup_benefit_4, local_jobboard{{/str}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {{! Security Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-shield-halved"></i>
+                    {{#str}}signup_security_title, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <p class="jb-security-text">{{#str}}signup_security_text, local_jobboard{{/str}}</p>
+                    <div class="jb-security-badges">
+                        <span class="jb-security-badge">
+                            <i class="fa fa-lock"></i> SSL
+                        </span>
+                        <span class="jb-security-badge">
+                            <i class="fa fa-user-shield"></i> GDPR
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            {{! Login CTA Card }}
+            <div class="jb-card jb-card--cta-warning">
+                <div class="jb-cta-card">
+                    <i class="fa fa-right-to-bracket jb-cta-card__icon jb-cta-card__icon--primary"></i>
+                    <h4 class="jb-cta-card__title">{{#str}}alreadyregistered, local_jobboard{{/str}}</h4>
+                    <p class="jb-cta-card__text">{{#str}}logintosubmit, local_jobboard{{/str}}</p>
+                    <a href="{{loginurl}}" class="jb-btn jb-btn--primary jb-btn--block">
+                        <i class="fa fa-right-to-bracket"></i> {{logintext}}
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </div>
 </div>
-{{/loading}}
+
+<style>
+/* ================================================================
+   SIGNUP PAGE - CLEAN MINIMAL DESIGN
+   Following jb-* pattern
+   ================================================================ */
+.jb-signup {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Skip Link */
+.jb-skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.jb-skip-link:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+/* Header */
+.jb-signup-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-signup-header__icon {
+    width: 80px;
+    height: 80px;
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.jb-signup-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-signup-header__intro {
+    font-size: 0.9375rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0;
+}
+
+/* Content Layout */
+.jb-signup-content {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.jb-signup-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.jb-signup-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: sticky;
+    top: 80px;
+}
+
+/* Alert */
+.jb-alert {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    align-items: center;
+}
+
+.jb-alert--info {
+    background: rgba(13, 110, 253, 0.1);
+    border: 1px solid rgba(13, 110, 253, 0.2);
+}
+
+.jb-alert--action {
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.jb-alert__main {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-alert__icon {
+    font-size: 1.125rem;
+    color: #0d6efd;
+    flex-shrink: 0;
+}
+
+/* Required Notice */
+.jb-required-notice {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0;
+}
+
+.jb-required-notice__asterisk {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Progress Steps */
+.jb-progress-steps {
+    background: #f9fafb;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.jb-progress-steps__title {
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+    text-align: center;
+    margin: 0 0 0.75rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.jb-progress-steps__list {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.jb-progress-steps__list::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    right: 40px;
+    height: 2px;
+    background: #e5e5e5;
+    z-index: 0;
+}
+
+.jb-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.jb-step__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    color: var(--iser-gris-medio, #666);
+    margin-bottom: 0.5rem;
+    transition: all 0.2s;
+}
+
+.jb-step--active .jb-step__icon {
+    background: var(--iser-verde, #1b9e88);
+    border-color: var(--iser-verde, #1b9e88);
+    color: #fff;
+}
+
+.jb-step--completed .jb-step__icon {
+    background: #28a745;
+    border-color: #28a745;
+    color: #fff;
+}
+
+.jb-step__label {
+    font-size: 0.6875rem;
+    color: var(--iser-gris-medio, #666);
+    text-align: center;
+    max-width: 80px;
+}
+
+.jb-step--active .jb-step__label {
+    color: var(--iser-verde-dark, #157a6a);
+    font-weight: 600;
+}
+
+/* Cards */
+.jb-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.jb-card--cta {
+    border-color: var(--iser-verde, #1b9e88);
+}
+
+.jb-card--cta-warning {
+    border-color: var(--iser-amarillo, #ffc107);
+}
+
+.jb-card__header {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-card__header i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-card__body {
+    padding: 1rem;
+}
+
+.jb-card__body--form {
+    padding: 1.25rem;
+}
+
+.jb-card__body--compact {
+    padding: 0;
+}
+
+/* Vacancy Info */
+.jb-vacancy-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-vacancy-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.jb-vacancy-meta__item {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.jb-vacancy-meta__item i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+/* Benefits List */
+.jb-benefits {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.jb-benefits__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.8125rem;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+.jb-benefits__item:last-child {
+    border-bottom: none;
+}
+
+.jb-benefits__item i {
+    color: #28a745;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+/* Security */
+.jb-security-text {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 0.75rem 0;
+}
+
+.jb-security-badges {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.jb-security-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: #f0f0f0;
+    border-radius: 4px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--iser-gris-medio, #666);
+}
+
+.jb-security-badge i {
+    color: #28a745;
+}
+
+/* CTA Card */
+.jb-cta-card {
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.jb-cta-card__icon {
+    font-size: 2rem;
+    color: var(--iser-verde, #1b9e88);
+    margin-bottom: 0.75rem;
+}
+
+.jb-cta-card__icon--primary {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-cta-card__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0 0 0.375rem 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-cta-card__text {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 1rem 0;
+}
+
+/* Buttons */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.jb-btn--sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+.jb-btn--block { width: 100%; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+
+/* Help Section */
+.jb-signup-help {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    padding: 1rem 0;
+}
+
+.jb-signup-help i {
+    margin-right: 0.375rem;
+}
+
+/* Form Overrides */
+.jb-card__body--form .mform .fitem {
+    margin-bottom: 1rem;
+}
+
+.jb-card__body--form .mform .form-control,
+.jb-card__body--form .mform .custom-select {
+    border-color: #d1d5db;
+    border-radius: 6px;
+    color: #1a1a1a;
+}
+
+.jb-card__body--form .mform .form-control:focus,
+.jb-card__body--form .mform .custom-select:focus {
+    border-color: var(--iser-verde, #1b9e88);
+    box-shadow: 0 0 0 2px rgba(27, 158, 136, 0.1);
+}
+
+.jb-card__body--form .mform fieldset legend {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-signup-content {
+        grid-template-columns: 1fr;
+    }
+
+    .jb-signup-sidebar {
+        position: static;
+        order: -1;
+    }
+
+    .jb-progress-steps__list::before {
+        left: 30px;
+        right: 30px;
+    }
+}
+
+@media (max-width: 600px) {
+    .jb-signup-header__title {
+        font-size: 1.25rem;
+    }
+
+    .jb-signup-header__icon {
+        width: 64px;
+        height: 64px;
+        font-size: 1.5rem;
+    }
+
+    .jb-step__icon {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+
+    .jb-step__label {
+        font-size: 0.5625rem;
+        max-width: 60px;
+    }
+
+    .jb-progress-steps__list::before {
+        top: 16px;
+        left: 20px;
+        right: 20px;
+    }
+
+    .jb-alert--action {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .jb-alert--action .jb-btn {
+        width: 100%;
+    }
+}
+
+/* Print */
+@media print {
+    .jb-signup-sidebar { display: none; }
+    .jb-signup-content { display: block; }
+    .jb-progress-steps { display: none; }
+}
+</style>

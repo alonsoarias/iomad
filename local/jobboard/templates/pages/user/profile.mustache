@@ -1,7 +1,7 @@
 {{!
     @template local_jobboard/pages/user/profile
 
-    Update profile page template - Redesigned following apply.mustache pattern.
+    Update profile page template - Clean minimal design following jb-* pattern
     Uses 2-column layout with sidebar for consistent UX across jobboard.
 
     Context variables:
@@ -11,208 +11,498 @@
     * vacancy (object) - Vacancy info {title, code, location}
     * formhtml (string) - Rendered form HTML
     * dashboardurl (string) - URL to dashboard
-    * loading (bool) - Show skeleton loading state
+    * applyurl (string) - URL to apply page
     * str (object) - Language strings
-
-    Example context (json):
-    {
-        "pagetitle": "Update Profile",
-        "intro": "Please update your profile...",
-        "hasvacancy": true,
-        "vacancy": {"title": "Professor", "code": "VAC-001"}
-    }
 }}
-{{#loading}}
-{{! Skeleton Loading State }}
-<div class="jb-profile-page" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="container-fluid px-0">
-        <div class="row g-4">
-            <div class="col-lg-8">
-                <div class="jb-skeleton-text mb-3" style="width: 200px; height: 1em;"></div>
-                <div class="jb-skeleton-title mb-2" style="width: 60%;"></div>
-                <div class="jb-skeleton-text mb-4" style="width: 80%;"></div>
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white">
-                        <div class="jb-skeleton-text" style="width: 40%;"></div>
-                    </div>
-                    <div class="card-body">
-                        <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
-                        <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
-                        <div class="jb-skeleton-text mb-3" style="width: 100%; height: 40px;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white"><div class="jb-skeleton-text" style="width: 60%;"></div></div>
-                    <div class="card-body">
-                        <div class="jb-skeleton-text mb-2" style="width: 80%;"></div>
-                        <div class="jb-skeleton-text" style="width: 50%;"></div>
-                    </div>
-                </div>
-            </div>
+<div class="jb-profile" id="jobboard-updateprofile" data-region="jobboard-profile">
+    {{! Header }}
+    <div class="jb-profile-header">
+        <div class="jb-profile-header__nav">
+            <a href="{{dashboardurl}}" class="jb-profile-header__back">
+                <i class="fa fa-arrow-left"></i>
+                {{#str}}backtodashboard, local_jobboard{{/str}}
+            </a>
         </div>
+        <div class="jb-profile-header__title-row">
+            <span class="jb-badge jb-badge--info">
+                <i class="fa fa-user-pen"></i>
+            </span>
+        </div>
+        <h1 class="jb-profile-header__title">{{pagetitle}}</h1>
+        {{#intro}}
+        <p class="jb-profile-header__intro">{{intro}}</p>
+        {{/intro}}
     </div>
-</div>
-{{/loading}}
 
-{{^loading}}
-<div class="jb-profile-page" id="jobboard-updateprofile" data-region="jobboard-profile">
-    <div class="container-fluid px-0">
-        <div class="row g-4">
-            {{! Main Content }}
-            <div class="col-lg-8">
-                {{! Page Header }}
-                <div class="jb-page-header mb-4">
-                    <nav aria-label="breadcrumb" class="mb-2">
-                        <ol class="breadcrumb small mb-0">
-                            <li class="breadcrumb-item">
-                                <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
-                            </li>
-                            {{#hasvacancy}}
-                            <li class="breadcrumb-item">
-                                <a href="{{applyurl}}">{{#str}}apply, local_jobboard{{/str}}</a>
-                            </li>
-                            {{/hasvacancy}}
-                            <li class="breadcrumb-item active" aria-current="page">{{pagetitle}}</li>
-                        </ol>
-                    </nav>
-                    <h1 class="h3 mb-1">
-                        <i class="fa fa-user-pen text-primary me-2" aria-hidden="true"></i>
-                        {{pagetitle}}
-                    </h1>
-                    {{#intro}}
-                    <p class="text-muted mb-0">{{intro}}</p>
-                    {{/intro}}
-                </div>
-
-                {{! Info Alert }}
-                <div class="alert alert-info jb-alert-info d-flex align-items-start mb-4 jb-fade-in-up" role="alert">
-                    <i class="fa fa-circle-info fa-lg me-3 mt-1"></i>
-                    <div>
-                        <strong>{{#str}}profilerequired_title, local_jobboard{{/str}}</strong>
-                        <p class="mb-0 small">{{#str}}profilerequired_desc, local_jobboard{{/str}}</p>
-                    </div>
-                </div>
-
-                {{! Profile Form Card }}
-                <div class="card shadow-sm mb-4 jb-fade-in-up">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-id-card text-primary me-2"></i>
-                            {{#str}}personalinformation, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        {{{formhtml}}}
-                    </div>
+    {{! Content Layout }}
+    <div class="jb-profile-content">
+        {{! Main Column }}
+        <div class="jb-profile-main">
+            {{! Info Alert }}
+            <div class="jb-alert jb-alert--info">
+                <i class="fa fa-circle-info jb-alert__icon"></i>
+                <div class="jb-alert__content">
+                    <strong>{{#str}}profilerequired_title, local_jobboard{{/str}}</strong>
+                    <p>{{#str}}profilerequired_desc, local_jobboard{{/str}}</p>
                 </div>
             </div>
 
-            {{! Sidebar }}
-            <div class="col-lg-4">
-                <div class="jb-sidebar sticky-top" style="top: 80px;">
-                    {{! Vacancy Summary Card - Only if applying for a vacancy }}
-                    {{#hasvacancy}}
-                    <div class="card shadow-sm mb-4 border-primary jb-hover-lift">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-briefcase text-primary me-2"></i>
-                                {{str.signup_applying_for}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <h6 class="mb-2">{{vacancy.title}}</h6>
-                            <dl class="row mb-0 small">
-                                <dt class="col-4 text-muted">{{str.code}}</dt>
-                                <dd class="col-8"><code>{{vacancy.code}}</code></dd>
-
-                                {{#vacancy.location}}
-                                <dt class="col-4 text-muted">{{#str}}location, local_jobboard{{/str}}</dt>
-                                <dd class="col-8">{{vacancy.location}}</dd>
-                                {{/vacancy.location}}
-                            </dl>
-                        </div>
-                    </div>
-                    {{/hasvacancy}}
-
-                    {{! Profile Checklist Card }}
-                    <div class="card shadow-sm mb-4 jb-hover-lift">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-list-check text-success me-2"></i>
-                                {{#str}}profilechecklist, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body p-0">
-                            <ul class="list-group list-group-flush small">
-                                <li class="list-group-item d-flex align-items-center py-2">
-                                    <i class="fa fa-circle-check text-success me-2"></i>
-                                    {{#str}}profile_field_names, local_jobboard{{/str}}
-                                </li>
-                                <li class="list-group-item d-flex align-items-center py-2">
-                                    <i class="fa fa-circle-check text-success me-2"></i>
-                                    {{#str}}profile_field_email, local_jobboard{{/str}}
-                                </li>
-                                <li class="list-group-item d-flex align-items-center py-2">
-                                    <i class="fa fa-circle text-warning me-2"></i>
-                                    {{#str}}profile_field_phone, local_jobboard{{/str}}
-                                </li>
-                                <li class="list-group-item d-flex align-items-center py-2">
-                                    <i class="fa fa-circle text-warning me-2"></i>
-                                    {{#str}}profile_field_idnumber, local_jobboard{{/str}}
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="card-footer bg-white py-2">
-                            <small class="text-muted">
-                                <i class="fa fa-info-circle me-1"></i>
-                                {{#str}}profile_required_note, local_jobboard{{/str}}
-                            </small>
-                        </div>
-                    </div>
-
-                    {{! Help Card }}
-                    <div class="card shadow-sm jb-hover-lift">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-question-circle text-info me-2"></i>
-                                {{#str}}help, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <p class="small text-muted mb-3">{{#str}}profile_help_text, local_jobboard{{/str}}</p>
-                            <div class="d-grid gap-2">
-                                <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary btn-sm">
-                                    <i class="fa fa-home me-2"></i>
-                                    {{#str}}dashboard, local_jobboard{{/str}}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            {{! Profile Form Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-id-card"></i>
+                    {{#str}}personalinformation, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body jb-card__body--form">
+                    {{{formhtml}}}
                 </div>
             </div>
         </div>
 
-        {{! Navigation Footer }}
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center py-3 border-top jb-fade-in">
-                    <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
-                        <i class="fa fa-arrow-left me-2"></i>
-                        {{#str}}backtodashboard, local_jobboard{{/str}}
+        {{! Sidebar }}
+        <aside class="jb-profile-sidebar">
+            {{! Vacancy Summary Card }}
+            {{#hasvacancy}}
+            <div class="jb-card jb-card--cta">
+                <div class="jb-card__header">
+                    <i class="fa fa-briefcase"></i>
+                    {{str.signup_applying_for}}
+                </div>
+                <div class="jb-card__body">
+                    <h4 class="jb-vacancy-title">{{vacancy.title}}</h4>
+                    <div class="jb-info-row">
+                        <span class="jb-info-label"><i class="fa fa-hashtag"></i> {{str.code}}</span>
+                        <code class="jb-code jb-code--primary">{{vacancy.code}}</code>
+                    </div>
+                    {{#vacancy.location}}
+                    <div class="jb-info-row jb-info-row--last">
+                        <span class="jb-info-label"><i class="fa fa-location-dot"></i> {{#str}}location, local_jobboard{{/str}}</span>
+                        <span>{{vacancy.location}}</span>
+                    </div>
+                    {{/vacancy.location}}
+                </div>
+            </div>
+            {{/hasvacancy}}
+
+            {{! Profile Checklist Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-list-check"></i>
+                    {{#str}}profilechecklist, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body jb-card__body--compact">
+                    <ul class="jb-checklist">
+                        <li class="jb-checklist__item jb-checklist__item--done">
+                            <i class="fa fa-circle-check"></i>
+                            {{#str}}profile_field_names, local_jobboard{{/str}}
+                        </li>
+                        <li class="jb-checklist__item jb-checklist__item--done">
+                            <i class="fa fa-circle-check"></i>
+                            {{#str}}profile_field_email, local_jobboard{{/str}}
+                        </li>
+                        <li class="jb-checklist__item jb-checklist__item--pending">
+                            <i class="fa fa-circle"></i>
+                            {{#str}}profile_field_phone, local_jobboard{{/str}}
+                        </li>
+                        <li class="jb-checklist__item jb-checklist__item--pending">
+                            <i class="fa fa-circle"></i>
+                            {{#str}}profile_field_idnumber, local_jobboard{{/str}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="jb-card__footer">
+                    <small><i class="fa fa-info-circle"></i> {{#str}}profile_required_note, local_jobboard{{/str}}</small>
+                </div>
+            </div>
+
+            {{! Help Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-circle-question"></i>
+                    {{#str}}help, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <p class="jb-help-text">{{#str}}profile_help_text, local_jobboard{{/str}}</p>
+                    <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline jb-btn--block">
+                        <i class="fa fa-home"></i>
+                        {{#str}}dashboard, local_jobboard{{/str}}
                     </a>
-                    {{#hasvacancy}}
-                    <span class="text-muted small jb-hover-primary">
-                        <i class="fa fa-info-circle me-1"></i>
-                        {{#str}}completeprofiletoapply, local_jobboard{{/str}}
-                    </span>
-                    {{/hasvacancy}}
                 </div>
             </div>
-        </div>
+        </aside>
+    </div>
+
+    {{! Footer Navigation }}
+    <div class="jb-profile-footer">
+        <a href="{{dashboardurl}}" class="jb-link">
+            <i class="fa fa-arrow-left"></i> {{#str}}backtodashboard, local_jobboard{{/str}}
+        </a>
+        {{#hasvacancy}}
+        <span class="jb-footer-note">
+            <i class="fa fa-info-circle"></i>
+            {{#str}}completeprofiletoapply, local_jobboard{{/str}}
+        </span>
+        {{/hasvacancy}}
     </div>
 </div>
-{{/loading}}
 
-{{! Styles consolidated in styles.css }}
+<style>
+/* ================================================================
+   PROFILE PAGE - CLEAN MINIMAL DESIGN
+   Following jb-* pattern
+   ================================================================ */
+.jb-profile {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Header */
+.jb-profile-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-profile-header__nav {
+    margin-bottom: 1rem;
+}
+
+.jb-profile-header__back {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-profile-header__back:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-profile-header__title-row {
+    margin-bottom: 0.5rem;
+}
+
+.jb-profile-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-profile-header__intro {
+    font-size: 0.9375rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0;
+}
+
+/* Content Layout */
+.jb-profile-content {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.jb-profile-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.jb-profile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: sticky;
+    top: 80px;
+}
+
+/* Alert */
+.jb-alert {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+}
+
+.jb-alert--info {
+    background: rgba(13, 110, 253, 0.1);
+    border: 1px solid rgba(13, 110, 253, 0.2);
+}
+
+.jb-alert__icon {
+    font-size: 1.25rem;
+    color: #0d6efd;
+    flex-shrink: 0;
+}
+
+.jb-alert__content p {
+    margin: 0.25rem 0 0 0;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+/* Cards */
+.jb-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.jb-card--cta {
+    border-color: var(--iser-verde, #1b9e88);
+}
+
+.jb-card__header {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-card__header i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-card__body {
+    padding: 1rem;
+}
+
+.jb-card__body--form {
+    padding: 1.25rem;
+}
+
+.jb-card__body--compact {
+    padding: 0;
+}
+
+.jb-card__footer {
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    border-top: 1px solid #e5e5e5;
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+.jb-card__footer i {
+    margin-right: 0.25rem;
+}
+
+/* Vacancy Title in sidebar */
+.jb-vacancy-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+/* Info Rows */
+.jb-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.8125rem;
+}
+
+.jb-info-row--last {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.jb-info-label {
+    color: var(--iser-gris-medio, #666);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-info-label i {
+    width: 14px;
+    text-align: center;
+}
+
+/* Checklist */
+.jb-checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.jb-checklist__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.8125rem;
+}
+
+.jb-checklist__item:last-child {
+    border-bottom: none;
+}
+
+.jb-checklist__item--done i {
+    color: #28a745;
+}
+
+.jb-checklist__item--pending i {
+    color: #ffc107;
+}
+
+/* Badges */
+.jb-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.jb-badge--info { background: rgba(13, 110, 253, 0.15); color: #0d6efd; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+
+/* Code */
+.jb-code {
+    font-family: monospace;
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.jb-code--primary {
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+}
+
+/* Buttons */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.jb-btn--block { width: 100%; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+
+/* Links */
+.jb-link {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.jb-link:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+/* Help Text */
+.jb-help-text {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 1rem 0;
+}
+
+/* Footer */
+.jb-profile-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.jb-footer-note {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+.jb-footer-note i {
+    margin-right: 0.25rem;
+}
+
+/* Form Overrides */
+.jb-card__body--form .mform .fitem {
+    margin-bottom: 1rem;
+}
+
+.jb-card__body--form .mform .form-control,
+.jb-card__body--form .mform .custom-select {
+    border-color: #d1d5db;
+    border-radius: 6px;
+}
+
+.jb-card__body--form .mform .form-control:focus,
+.jb-card__body--form .mform .custom-select:focus {
+    border-color: var(--iser-verde, #1b9e88);
+    box-shadow: 0 0 0 2px rgba(27, 158, 136, 0.1);
+}
+
+.jb-card__body--form .mform fieldset legend {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-profile-content {
+        grid-template-columns: 1fr;
+    }
+
+    .jb-profile-sidebar {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 600px) {
+    .jb-profile-header__title {
+        font-size: 1.25rem;
+    }
+
+    .jb-profile-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Print */
+@media print {
+    .jb-profile-sidebar { display: none; }
+    .jb-profile-content { display: block; }
+    .jb-profile-footer { display: none; }
+}
+</style>

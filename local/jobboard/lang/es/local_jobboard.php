@@ -2573,6 +2573,15 @@ $string['signup_step_personal'] = 'Personal';
 $string['signup_step_contact'] = 'Contacto';
 $string['signup_step_academic'] = 'Académico';
 $string['signup_step_confirm'] = 'Confirmar';
+$string['signup_benefits_title'] = '¿Por qué registrarse?';
+$string['signup_benefit_1'] = 'Postúlese a múltiples vacantes con un solo perfil';
+$string['signup_benefit_2'] = 'Siga el estado de sus postulaciones en tiempo real';
+$string['signup_benefit_3'] = 'Reciba notificaciones sobre nuevas oportunidades';
+$string['signup_benefit_4'] = 'Gestione sus documentos en un solo lugar';
+$string['signup_security_title'] = 'Sus datos están seguros';
+$string['signup_security_text'] = 'Su información personal está protegida y solo será utilizada para el proceso de selección.';
+$string['alreadyregistered'] = '¿Ya está registrado?';
+$string['logintosubmit'] = 'Inicie sesión para enviar su postulación.';
 
 // =============================================================================
 // CADENAS DEL PANEL DE CONTROL
