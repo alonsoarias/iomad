@@ -851,9 +851,19 @@ trait application_renderer {
 
         // Find missing or rejected document types.
         $missingnames = [];
-        foreach ($requireddocs as $doctype) {
-            if (!isset($uploadedtypes[$doctype->code])) {
-                $missingnames[] = format_string($doctype->name);
+        foreach ($requireddocs as $req) {
+            $code = $req->documenttype ?? '';
+            if (!isset($uploadedtypes[$code])) {
+                // Get name from doctype object or fallback to code.
+                $name = '';
+                if (!empty($req->doctype) && !empty($req->doctype->name)) {
+                    $name = $req->doctype->name;
+                } else {
+                    $name = $code;
+                }
+                if (!empty($name)) {
+                    $missingnames[] = format_string($name);
+                }
             }
         }
 
