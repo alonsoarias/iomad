@@ -1612,6 +1612,7 @@ $string['numdocs'] = 'Número de documentos';
 $string['pendingdocs'] = 'Documentos pendientes';
 $string['pending_docs_alert'] = 'Tiene {$a} documentos pendientes por cargar';
 $string['actionrequired'] = 'Acción requerida';
+$string['missing_documents_list'] = 'Documentos faltantes';
 $string['alreadyvalidated'] = 'Ya validado';
 $string['autovalidated'] = 'Auto-validado';
 $string['validated'] = 'Validado';

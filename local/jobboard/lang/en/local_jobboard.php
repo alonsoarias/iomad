@@ -1607,6 +1607,7 @@ $string['numdocs'] = 'Number of documents';
 $string['pendingdocs'] = 'Pending documents';
 $string['pending_docs_alert'] = 'You have {$a} pending documents to upload';
 $string['actionrequired'] = 'Action required';
+$string['missing_documents_list'] = 'Missing documents';
 $string['alreadyvalidated'] = 'Already validated';
 $string['autovalidated'] = 'Auto-validated';
 $string['validated'] = 'Validated';

@@ -126,6 +126,9 @@ trait application_renderer {
             // Can withdraw?
             $canwithdraw = in_array($app->status, ['submitted', 'under_review']);
 
+            // Get missing documents for this application.
+            $missingdocs = $this->get_missing_documents($app->id, $app->vacancyid, $userid);
+
             $applicationdata[] = [
                 'id' => $app->id,
                 'vacancyid' => $app->vacancyid,
@@ -144,6 +147,10 @@ trait application_renderer {
                 'docsrejected' => $docsrejected,
                 'docspending' => $docspending,
                 'haspendingdocs' => $docspending > 0 && in_array($app->status, ['submitted', 'under_review', 'docs_rejected']),
+                'missingdocscount' => $missingdocs['count'],
+                'missingdocsnames' => $missingdocs['names'],
+                'missingdocslist' => $missingdocs['list'],
+                'hasmissingdocs' => $missingdocs['count'] > 0,
                 'statusnotes' => !empty($app->statusnotes) ? format_string($app->statusnotes) : null,
                 'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]))->out(false),
                 'withdrawurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id, 'action' => 'withdraw']))->out(false),
@@ -780,6 +787,53 @@ trait application_renderer {
             'viewvacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'public', 'id' => $vacancyid]))->out(false),
             'backvacancyurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancy', 'id' => $vacancyid]))->out(false),
             'browservacanciesurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'vacancies']))->out(false),
+        ];
+    }
+
+    /**
+     * Get list of missing/pending document types for an application.
+     *
+     * Returns document types that are required but not yet uploaded or are rejected.
+     *
+     * @param int $applicationid Application ID.
+     * @param int $vacancyid Vacancy ID.
+     * @param int $userid User ID.
+     * @return array Array with 'count' and 'names' (comma-separated string of document type names).
+     */
+    protected function get_missing_documents(int $applicationid, int $vacancyid, int $userid): array {
+        global $DB;
+
+        // Get required document types for this vacancy.
+        $requireddocs = \local_jobboard\document::get_required_types($vacancyid, $userid);
+
+        if (empty($requireddocs)) {
+            return ['count' => 0, 'names' => '', 'list' => []];
+        }
+
+        // Get uploaded document types for this application.
+        $uploadeddocs = $DB->get_records('local_jobboard_document', ['applicationid' => $applicationid], '', 'documenttype, validationstatus');
+        $uploadedtypes = [];
+        foreach ($uploadeddocs as $doc) {
+            // Only count as uploaded if not rejected.
+            if ($doc->validationstatus !== 'rejected') {
+                $uploadedtypes[$doc->documenttype] = true;
+            }
+        }
+
+        // Find missing or rejected document types.
+        $missingnames = [];
+        foreach ($requireddocs as $doctype) {
+            if (!isset($uploadedtypes[$doctype->code])) {
+                $missingnames[] = format_string($doctype->name);
+            }
+        }
+
+        return [
+            'count' => count($missingnames),
+            'names' => implode(', ', $missingnames),
+            'list' => array_map(function($name) {
+                return ['name' => $name];
+            }, $missingnames),
         ];
     }
 }

@@ -326,25 +326,13 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
-     * Handle reject button click - validates observation and AJAX rejection.
+     * Handle reject form submit - validates observation and copies to reason field.
      *
-     * @param {Event} e The click event.
+     * @param {Event} e The submit event.
      */
-    var handleRejectClick = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (state.processing) {
-            return;
-        }
-
-        var btn = e.currentTarget;
-        var documentId = parseInt(btn.dataset.documentId, 10);
-        var applicationId = parseInt(btn.dataset.applicationId, 10) || state.applicationId;
-
-        if (!documentId || !applicationId) {
-            return;
-        }
+    var handleRejectFormSubmit = function(e) {
+        var form = e.currentTarget;
+        var documentId = form.dataset.documentId;
 
         // Find the observation textarea for this document.
         var observationField = document.querySelector('#doc_observation_' + documentId);
@@ -355,7 +343,10 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
         var reason = observationField ? observationField.value.trim() : '';
 
         if (!reason) {
-            // Observation is required for rejection.
+            // Observation is required for rejection - prevent form submission.
+            e.preventDefault();
+            e.stopPropagation();
+
             if (observationField) {
                 observationField.classList.add('is-invalid', 'border-danger');
                 observationField.focus();
@@ -365,11 +356,12 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                     observationField.classList.remove('jb-shake');
                 }, 500);
             }
+            // Show error message using notification.
             Notification.addNotification({
                 message: state.strings.observationRequired || 'You must enter an observation to reject the document.',
                 type: 'error'
             });
-            return;
+            return false;
         }
 
         // Remove validation styling if present.
@@ -377,50 +369,14 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             observationField.classList.remove('is-invalid', 'border-danger');
         }
 
-        // Disable buttons and show processing.
-        state.processing = true;
-        var $btn = $(btn);
-        var originalHtml = $btn.html();
-        $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> ' +
-            (state.strings.processing || 'Processing...'));
-
-        // Also disable approve button.
-        var approveBtn = btn.closest('.d-flex').querySelector('.jb-approve-btn');
-        if (approveBtn) {
-            $(approveBtn).prop('disabled', true);
+        // Copy observation to the hidden reason field in the form.
+        var reasonInput = form.querySelector('.jb-reject-reason-input');
+        if (reasonInput) {
+            reasonInput.value = reason;
         }
 
-        Ajax.call([{
-            methodname: 'local_jobboard_reject_document',
-            args: {documentid: documentId, applicationid: applicationId, reason: reason},
-            done: function(response) {
-                state.processing = false;
-                if (response.success) {
-                    Notification.addNotification({
-                        message: response.message || state.strings.documentRejected || 'Document rejected',
-                        type: 'success'
-                    });
-                    updateDocumentUI(documentId, 'rejected', response.stats, response.nextdocumentid, response.allreviewed);
-                } else {
-                    $btn.prop('disabled', false).html(originalHtml);
-                    if (approveBtn) {
-                        $(approveBtn).prop('disabled', false);
-                    }
-                    Notification.addNotification({
-                        message: response.message || 'Error rejecting document',
-                        type: 'error'
-                    });
-                }
-            },
-            fail: function(error) {
-                state.processing = false;
-                $btn.prop('disabled', false).html(originalHtml);
-                if (approveBtn) {
-                    $(approveBtn).prop('disabled', false);
-                }
-                Notification.exception(error);
-            }
-        }]);
+        // Allow form submission to proceed.
+        return true;
     };
 
     /**
@@ -518,11 +474,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             $(this).removeClass('is-invalid border-danger');
         });
 
-        // Approve button click handler - AJAX approval.
-        $(document).on('click', '.jb-approve-btn', handleApproveClick);
-
-        // Reject button click handler - AJAX rejection.
-        $(document).on('click', '.jb-reject-btn', handleRejectClick);
+        // Reject form submit handler - validates observation and copies to reason field.
+        $(document).on('submit', '.jb-reject-form', handleRejectFormSubmit);
 
         // Save and send button.
         $('#saveAndSendBtn').on('click', saveAndSendObservations);
