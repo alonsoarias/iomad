@@ -117,6 +117,72 @@ if ($action && confirm_sesskey()) {
                 }
             }
             break;
+
+        case 'changestatus':
+            // Reviewer can manually change application status.
+            if ($applicationid) {
+                require_capability('local/jobboard:manageworkflow', $context);
+                $newstatus = required_param('newstatus', PARAM_ALPHA);
+                $notes = optional_param('notes', '', PARAM_TEXT);
+
+                $app = new application($applicationid);
+                if ($app->id) {
+                    $validstatuses = ['submitted', 'under_review', 'docs_validated', 'docs_rejected', 'interview', 'selected', 'rejected'];
+                    if (in_array($newstatus, $validstatuses)) {
+                        $app->change_status($newstatus, $notes, $USER->id);
+                        \core\notification::success(get_string('statuschanged', 'local_jobboard'));
+                    }
+                }
+            }
+            break;
+
+        case 'deleteapplication':
+            // Reviewer can delete an application with full audit.
+            if ($applicationid) {
+                require_capability('local/jobboard:manageworkflow', $context);
+                $reason = required_param('reason', PARAM_TEXT);
+
+                $app = new application($applicationid);
+                if ($app->id) {
+                    // Capture full application data for audit before deletion.
+                    $auditdata = [
+                        'applicationid' => $app->id,
+                        'userid' => $app->userid,
+                        'vacancyid' => $app->vacancyid,
+                        'status' => $app->status,
+                        'reason' => $reason,
+                        'deletedby' => $USER->id,
+                        'deletedat' => time(),
+                    ];
+
+                    // Get applicant info for audit.
+                    $applicant = $DB->get_record('user', ['id' => $app->userid]);
+                    if ($applicant) {
+                        $auditdata['applicantname'] = fullname($applicant);
+                        $auditdata['applicantemail'] = $applicant->email;
+                    }
+
+                    // Delete the application (this will log the audit internally).
+                    $app->delete($reason);
+
+                    // Additional audit log for the deletion action.
+                    \local_jobboard\audit::log(
+                        \local_jobboard\audit::ACTION_DELETE,
+                        \local_jobboard\audit::ENTITY_APPLICATION,
+                        $applicationid,
+                        $auditdata
+                    );
+
+                    \core\notification::success(get_string('applicationdeleted', 'local_jobboard'));
+
+                    // Redirect to review list after deletion.
+                    redirect(new moodle_url('/local/jobboard/index.php', [
+                        'view' => 'review',
+                        'vacancyid' => $vacancyid,
+                    ]));
+                }
+            }
+            break;
     }
 
     // Redirect to avoid form resubmission.

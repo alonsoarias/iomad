@@ -827,4 +827,73 @@ class application {
             'total' => $total,
         ];
     }
+
+    /**
+     * Delete an application and all related data.
+     *
+     * This performs a full deletion with audit logging.
+     *
+     * @param string $reason The reason for deletion (required for audit).
+     * @return bool True on success.
+     */
+    public function delete(string $reason): bool {
+        global $DB, $USER;
+
+        if (!$this->id) {
+            return false;
+        }
+
+        // Capture full state before deletion for audit.
+        $previousstate = $this->to_record();
+        $previousstate->reason = $reason;
+
+        // Get associated documents.
+        $documents = document::get_by_application($this->id, true);
+
+        // Delete each document (this also handles files and validation records).
+        foreach ($documents as $doc) {
+            try {
+                $doc->delete();
+            } catch (\Exception $e) {
+                debugging('Error deleting document ' . $doc->id . ': ' . $e->getMessage(), DEBUG_DEVELOPER);
+            }
+        }
+
+        // Delete workflow history.
+        $DB->delete_records('local_jobboard_workflow_history', ['applicationid' => $this->id]);
+
+        // Delete the application record.
+        $DB->delete_records('local_jobboard_application', ['id' => $this->id]);
+
+        // Log comprehensive audit.
+        audit::log(
+            audit::ACTION_DELETE,
+            audit::ENTITY_APPLICATION,
+            $this->id,
+            [
+                'vacancyid' => $this->vacancyid,
+                'userid' => $this->userid,
+                'status' => $this->status,
+                'reason' => $reason,
+                'deletedby' => $USER->id,
+            ],
+            (array) $previousstate,
+            null
+        );
+
+        // Trigger event.
+        $event = \local_jobboard\event\application_deleted::create([
+            'objectid' => $this->id,
+            'context' => \context_system::instance(),
+            'userid' => $USER->id,
+            'other' => [
+                'vacancyid' => $this->vacancyid,
+                'applicantuserid' => $this->userid,
+                'reason' => $reason,
+            ],
+        ]);
+        $event->trigger();
+
+        return true;
+    }
 }
