@@ -184,7 +184,7 @@
                             </h6>
                             <p class="small text-muted mb-1">
                                 <i class="fa fa-envelope me-2"></i>
-                                <a href="mailto:{{selectedapplication.email}}">{{selectedapplication.email}}</a>
+                                {{selectedapplication.email}}
                             </p>
                             <p class="small text-muted mb-2">
                                 <i class="fa fa-briefcase me-2"></i>{{selectedapplication.vacancytitle}}
@@ -491,7 +491,7 @@
                                                 </span>
                                                 {{/isurgent}}
                                             </div>
-                                            <a href="mailto:{{email}}" class="small text-muted text-decoration-none text-truncate d-block" style="max-width: 180px;">{{email}}</a>
+                                            <span class="small text-muted text-truncate d-block" style="max-width: 180px;">{{email}}</span>
                                         </div>
                                     </div>
                                 </td>
