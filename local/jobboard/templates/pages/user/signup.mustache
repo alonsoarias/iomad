@@ -80,11 +80,6 @@
                 {{requiredfieldstext}}
             </p>
 
-            {{! Progress Steps - Container for JS-generated content }}
-            <nav class="jb-progress-steps-container" id="jb-signup-progress" aria-label="{{#str}}signup_progress, local_jobboard{{/str}}">
-                {{! JS will populate this with progress steps }}
-            </nav>
-
             {{! Form Card }}
             <main id="signup-main-content">
                 <div class="jb-card">
@@ -298,109 +293,6 @@
     color: #dc3545;
     font-weight: bold;
 }
-
-/* ================================================================
-   PROGRESS STEPS - Clean minimal design
-   ================================================================ */
-
-/* Outer container (nav element) */
-.jb-progress-steps-container {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 1.5rem 1rem;
-    margin-bottom: 1.5rem;
-}
-
-/* Inner flex wrapper (JS-generated div) */
-.jb-progress-steps-container > .jb-progress-steps {
-    display: flex !important;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 0;
-}
-
-/* Each step */
-.jb-progress-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-/* Step number circle */
-.jb-progress-step-number {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-    transition: all 0.2s ease;
-}
-
-/* Step label */
-.jb-progress-step-label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    line-height: 1.3;
-    max-width: 70px;
-}
-
-/* Active step */
-.jb-progress-step-active .jb-progress-step-number {
-    background: var(--iser-verde, #1b9e88);
-    border: 2px solid var(--iser-verde, #1b9e88);
-    color: #fff;
-}
-
-.jb-progress-step-active .jb-progress-step-label {
-    color: var(--iser-verde, #1b9e88);
-    font-weight: 600;
-}
-
-/* Completed step */
-.jb-progress-step-completed .jb-progress-step-number {
-    background: #10b981;
-    border: 2px solid #10b981;
-    color: #fff;
-}
-
-.jb-progress-step-completed .jb-progress-step-label {
-    color: #10b981;
-}
-
-/* Disabled/pending step */
-.jb-progress-step-disabled .jb-progress-step-number {
-    background: #f3f4f6;
-    border: 2px solid #e5e7eb;
-    color: #9ca3af;
-}
-
-.jb-progress-step-disabled .jb-progress-step-label {
-    color: #9ca3af;
-}
-
-/* Connector line between steps */
-.jb-progress-connector {
-    flex: 1;
-    height: 2px;
-    background: #e5e7eb;
-    margin: 22px 8px 0 8px;
-    max-width: 60px;
-    min-width: 20px;
-}
-
-.jb-progress-connector-completed {
-    background: #10b981;
-}
-
-/* ================================================================
-   END PROGRESS STEPS
-   ================================================================ */
 
 /* Cards */
 .jb-card {
@@ -639,28 +531,6 @@
         font-size: 1.5rem;
     }
 
-    /* Progress steps mobile */
-    .jb-progress-steps-container {
-        padding: 1rem 0.5rem;
-    }
-
-    .jb-progress-step-number {
-        width: 36px;
-        height: 36px;
-        font-size: 0.875rem;
-    }
-
-    .jb-progress-step-label {
-        font-size: 0.625rem;
-        max-width: 55px;
-    }
-
-    .jb-progress-connector {
-        margin-top: 18px;
-        min-width: 12px;
-        max-width: 40px;
-    }
-
     .jb-alert--action {
         flex-direction: column;
         align-items: flex-start;
@@ -676,6 +546,5 @@
 @media print {
     .jb-signup-sidebar { display: none; }
     .jb-signup-content { display: block; }
-    .jb-progress-steps-container { display: none; }
 }
 </style>
