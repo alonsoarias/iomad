@@ -160,8 +160,8 @@
                         </p>
                         {{/convocatorianame}}
 
-                        {{! Progress Bar }}
-                        {{#progresssteps}}
+                        {{! Progress Bar - Document Approval Progress }}
+                        {{#documentcount}}
                         <div class="mb-3">
                             <div class="d-flex justify-content-between small mb-1">
                                 <span class="text-muted">{{#str}}progress, local_jobboard{{/str}}</span>
@@ -171,7 +171,7 @@
                                 <div class="progress-bar bg-{{progresscolor}}" style="width: {{progresspercent}}%;"></div>
                             </div>
                         </div>
-                        {{/progresssteps}}
+                        {{/documentcount}}
 
                         {{! Document Summary }}
                         <div class="row text-center small bg-light rounded py-2 mx-0">

@@ -2741,6 +2741,7 @@ $string['documentobservation_placeholder'] = 'Enter observations about this docu
 $string['documentobservation_help'] = 'Observations will be compiled into an email for the applicant in case of corrections';
 $string['required_for_rejection'] = 'Required for rejection';
 $string['observation_required_for_rejection'] = 'Observation is required to reject the document';
+$string['observation_required_title'] = 'Observation required';
 $string['compiledocservations'] = 'Compile observations';
 $string['sendobservationsemail'] = 'Send observations email';
 $string['observationsemailsent'] = 'Observations email sent successfully';

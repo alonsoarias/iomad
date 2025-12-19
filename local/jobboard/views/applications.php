@@ -73,10 +73,11 @@ foreach ($allApplications as $app) {
     if (isset($stats[$app->status])) {
         $stats[$app->status]++;
     }
-    // Count pending documents.
-    $doccount = $app->document_count ?? 0;
-    if ($doccount == 0 && in_array($app->status, ['submitted', 'under_review', 'docs_rejected'])) {
-        $stats['pending_docs']++;
+    // Count total pending/missing documents across all applications.
+    if (in_array($app->status, ['submitted', 'under_review', 'docs_rejected'])) {
+        // Get actual pending document count from document stats.
+        $docstats = \local_jobboard\document::get_stats($app->id);
+        $stats['pending_docs'] += ($docstats['pending'] ?? 0);
     }
 }
 

@@ -57,7 +57,9 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             {key: 'documentrejected', component: 'local_jobboard'},
             {key: 'processing', component: 'local_jobboard'},
             {key: 'approve', component: 'local_jobboard'},
-            {key: 'reject', component: 'local_jobboard'}
+            {key: 'reject', component: 'local_jobboard'},
+            {key: 'ok', component: 'core'},
+            {key: 'observation_required_title', component: 'local_jobboard'}
         ]).then(function(strings) {
             state.strings = {
                 rejectPrompt: strings[0],
@@ -72,7 +74,9 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                 documentRejected: strings[9],
                 processing: strings[10],
                 approve: strings[11],
-                reject: strings[12]
+                reject: strings[12],
+                ok: strings[13],
+                observationRequiredTitle: strings[14]
             };
             return strings;
         });
@@ -359,37 +363,36 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
     };
 
     /**
-     * Handle approve button click - AJAX approval with fallback to link navigation.
+     * Handle approve button click - Pure AJAX approval.
      *
      * @param {Event} e The click event.
      */
     var handleApproveClick = function(e) {
-        // Don't prevent default yet - we'll do it only if AJAX works.
+        e.preventDefault();
+        e.stopPropagation();
+
         if (state.processing) {
-            e.preventDefault();
             return;
         }
 
         var btn = e.currentTarget;
         var documentId = parseInt(btn.dataset.documentId, 10);
         var applicationId = parseInt(btn.dataset.applicationId, 10) || state.applicationId;
-        var href = btn.href || btn.getAttribute('href');
 
         if (!documentId || !applicationId) {
-            // Let the link work normally.
+            Notification.addNotification({
+                message: 'Error: Missing document or application ID',
+                type: 'error'
+            });
             return;
         }
-
-        // Prevent default navigation - we'll try AJAX first.
-        e.preventDefault();
-        e.stopPropagation();
 
         // Disable buttons and show processing.
         state.processing = true;
         var $btn = $(btn);
         var originalHtml = $btn.html();
-        $btn.addClass('disabled').html('<i class="fa fa-spinner fa-spin me-1"></i> ' +
-            (state.strings.processing || 'Processing...'));
+        $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> ' +
+            (state.strings.processing || 'Procesando...'));
 
         // Also disable reject button.
         var rejectBtn = btn.closest('.d-flex') ? btn.closest('.d-flex').querySelector('.jb-reject-btn') : null;
@@ -404,50 +407,63 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                 state.processing = false;
                 if (response.success) {
                     Notification.addNotification({
-                        message: response.message || state.strings.documentValidated || 'Document approved',
+                        message: response.message || state.strings.documentValidated || 'Documento aprobado',
                         type: 'success'
                     });
                     updateDocumentUI(documentId, 'approved', response.stats, response.nextdocumentid, response.allreviewed);
                 } else {
-                    // AJAX returned error - fallback to link navigation.
-                    if (href) {
-                        window.location.href = href;
-                    } else {
-                        $btn.removeClass('disabled').html(originalHtml);
-                        if (rejectBtn) {
-                            $(rejectBtn).prop('disabled', false);
-                        }
-                        Notification.addNotification({
-                            message: response.message || 'Error approving document',
-                            type: 'error'
-                        });
-                    }
-                }
-            },
-            fail: function() {
-                // AJAX failed (webservice not registered?) - fallback to link navigation.
-                state.processing = false;
-                if (href) {
-                    window.location.href = href;
-                } else {
-                    $btn.removeClass('disabled').html(originalHtml);
+                    // AJAX returned error - show message and re-enable buttons.
+                    $btn.prop('disabled', false).html(originalHtml);
                     if (rejectBtn) {
                         $(rejectBtn).prop('disabled', false);
                     }
+                    Notification.addNotification({
+                        message: response.message || 'Error al aprobar el documento',
+                        type: 'error'
+                    });
                 }
+            },
+            fail: function(error) {
+                // AJAX failed - show error and re-enable buttons.
+                state.processing = false;
+                $btn.prop('disabled', false).html(originalHtml);
+                if (rejectBtn) {
+                    $(rejectBtn).prop('disabled', false);
+                }
+                // eslint-disable-next-line no-console
+                console.error('AJAX error:', error);
+                Notification.addNotification({
+                    message: 'Error de conexión. Por favor, recargue la página e intente de nuevo.',
+                    type: 'error'
+                });
             }
         }]);
     };
 
     /**
-     * Handle reject form submit - validates observation and uses AJAX with form fallback.
+     * Handle reject button click - Pure AJAX rejection with observation validation.
      *
-     * @param {Event} e The submit event.
+     * @param {Event} e The click event.
      */
-    var handleRejectFormSubmit = function(e) {
-        var form = e.currentTarget;
-        var documentId = form.dataset.documentId;
-        var applicationId = form.dataset.applicationId || state.applicationId;
+    var handleRejectClick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (state.processing) {
+            return;
+        }
+
+        var btn = e.currentTarget;
+        var documentId = parseInt(btn.dataset.documentId, 10);
+        var applicationId = parseInt(btn.dataset.applicationId, 10) || state.applicationId;
+
+        if (!documentId || !applicationId) {
+            Notification.addNotification({
+                message: 'Error: Missing document or application ID',
+                type: 'error'
+            });
+            return;
+        }
 
         // Find the observation textarea for this document.
         var observationField = document.querySelector('#doc_observation_' + documentId);
@@ -458,10 +474,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
         var reason = observationField ? observationField.value.trim() : '';
 
         if (!reason) {
-            // Observation is required for rejection - prevent form submission.
-            e.preventDefault();
-            e.stopPropagation();
-
+            // Observation is required for rejection - show popup alert.
             if (observationField) {
                 observationField.classList.add('is-invalid', 'border-danger');
                 observationField.focus();
@@ -471,11 +484,13 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
                     observationField.classList.remove('jb-shake');
                 }, 500);
             }
-            Notification.addNotification({
-                message: state.strings.observationRequired || 'You must enter an observation to reject the document.',
-                type: 'error'
-            });
-            return false;
+            // Show popup alert for missing observation.
+            Notification.alert(
+                state.strings.observationRequiredTitle || 'Observación requerida',
+                state.strings.observationRequired || 'Debe ingresar una observación para rechazar el documento.',
+                state.strings.ok || 'Aceptar'
+            );
+            return;
         }
 
         // Remove validation styling if present.
@@ -483,60 +498,58 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             observationField.classList.remove('is-invalid', 'border-danger');
         }
 
-        // Copy observation to the hidden reason field in the form.
-        var reasonInput = form.querySelector('.jb-reject-reason-input');
-        if (reasonInput) {
-            reasonInput.value = reason;
-        }
-
-        // Try AJAX first, fallback to form submission on failure.
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (state.processing) {
-            return false;
-        }
-
-        var submitBtn = form.querySelector('.jb-reject-btn');
-        var $btn = $(submitBtn);
-        var originalHtml = $btn.html();
-
         // Disable buttons and show processing.
         state.processing = true;
+        var $btn = $(btn);
+        var originalHtml = $btn.html();
         $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> ' +
-            (state.strings.processing || 'Processing...'));
+            (state.strings.processing || 'Procesando...'));
 
         // Also disable approve button.
-        var approveBtn = form.closest('.d-flex') ? form.closest('.d-flex').querySelector('.jb-approve-btn') : null;
+        var approveBtn = btn.closest('.d-flex') ? btn.closest('.d-flex').querySelector('.jb-approve-btn') : null;
         if (approveBtn) {
-            $(approveBtn).addClass('disabled');
+            $(approveBtn).prop('disabled', true);
         }
 
         Ajax.call([{
             methodname: 'local_jobboard_reject_document',
-            args: {documentid: parseInt(documentId, 10), applicationid: parseInt(applicationId, 10), reason: reason},
+            args: {documentid: documentId, applicationid: applicationId, reason: reason},
             done: function(response) {
                 state.processing = false;
                 if (response.success) {
                     Notification.addNotification({
-                        message: response.message || state.strings.documentRejected || 'Document rejected',
+                        message: response.message || state.strings.documentRejected || 'Documento rechazado',
                         type: 'success'
                     });
-                    updateDocumentUI(parseInt(documentId, 10), 'rejected', response.stats,
+                    updateDocumentUI(documentId, 'rejected', response.stats,
                         response.nextdocumentid, response.allreviewed);
                 } else {
-                    // AJAX returned error - submit form as fallback.
-                    form.submit();
+                    // AJAX returned error - show message and re-enable buttons.
+                    $btn.prop('disabled', false).html(originalHtml);
+                    if (approveBtn) {
+                        $(approveBtn).prop('disabled', false);
+                    }
+                    Notification.addNotification({
+                        message: response.message || 'Error al rechazar el documento',
+                        type: 'error'
+                    });
                 }
             },
-            fail: function() {
-                // AJAX failed (webservice not registered?) - submit form as fallback.
+            fail: function(error) {
+                // AJAX failed - show error and re-enable buttons.
                 state.processing = false;
-                form.submit();
+                $btn.prop('disabled', false).html(originalHtml);
+                if (approveBtn) {
+                    $(approveBtn).prop('disabled', false);
+                }
+                // eslint-disable-next-line no-console
+                console.error('AJAX error:', error);
+                Notification.addNotification({
+                    message: 'Error de conexión. Por favor, recargue la página e intente de nuevo.',
+                    type: 'error'
+                });
             }
         }]);
-
-        return false;
     };
 
     /**
@@ -634,11 +647,11 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/str'], function($, Aja
             $(this).removeClass('is-invalid border-danger');
         });
 
-        // Approve button/link click handler - AJAX with link fallback.
+        // Approve button click handler - Pure AJAX.
         $(document).on('click', '.jb-approve-btn', handleApproveClick);
 
-        // Reject form submit handler - AJAX with form fallback.
-        $(document).on('submit', '.jb-reject-form', handleRejectFormSubmit);
+        // Reject button click handler - Pure AJAX.
+        $(document).on('click', '.jb-reject-btn', handleRejectClick);
 
         // Save and send button.
         $('#saveAndSendBtn').on('click', saveAndSendObservations);

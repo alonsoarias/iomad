@@ -114,15 +114,16 @@ trait application_renderer {
                 ];
             }
 
-            // Calculate progress percent.
-            $progresspercent = $currentindex >= 0 ? (($currentindex + 1) / count($progresssteps)) * 100 : 0;
-
             // Get document stats from database.
             $docstats = \local_jobboard\document::get_stats($app->id);
             $doccount = $docstats['total'];
             $docsapproved = $docstats['approved'];
             $docsrejected = $docstats['rejected'];
             $docspending = $docstats['pending'];
+
+            // Calculate progress percent based on document approval (not workflow steps).
+            // This gives a more meaningful progress indicator to users.
+            $progresspercent = $doccount > 0 ? round(($docsapproved / $doccount) * 100) : 0;
 
             // Get vacancy and convocatoria info (use attached properties if available).
             $vacancycode = $app->vacancycode ?? ($app->vacancy_code ?? '');
