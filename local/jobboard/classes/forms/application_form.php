@@ -184,7 +184,7 @@ class application_form extends \moodleform {
             'submit',
             'savedraft',
             get_string('savedraft', 'local_jobboard'),
-            ['class' => 'btn btn-secondary me-2']
+            ['class' => 'btn btn-outline-primary']
         );
 
         // Submit Application button.
