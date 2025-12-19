@@ -25,9 +25,6 @@
 
 require_once(__DIR__ . '/../../config.php');
 
-use local_jobboard\document;
-use local_jobboard\application;
-
 require_login();
 
 $applicationid = required_param('applicationid', PARAM_INT);
@@ -42,9 +39,9 @@ if (!confirm_sesskey($sesskey)) {
 $context = context_system::instance();
 require_capability('local/jobboard:reviewdocuments', $context);
 
-// Get application.
-$application = new application($applicationid);
-if (!$application->id) {
+// Get application directly from DB to avoid class loading issues.
+$application = $DB->get_record('local_jobboard_application', ['id' => $applicationid]);
+if (!$application) {
     throw new moodle_exception('error:invalidapplication', 'local_jobboard');
 }
 
@@ -55,38 +52,42 @@ if (!$applicant) {
 }
 
 // Get all documents for this application.
-$documents = document::get_by_application($applicationid);
+$documents = $DB->get_records('local_jobboard_document', [
+    'applicationid' => $applicationid,
+    'issuperseded' => 0
+], 'timecreated ASC');
+
 if (empty($documents)) {
     throw new moodle_exception('error:nodocuments', 'local_jobboard');
 }
 
 // Create ZIP file.
-$zipfilename = clean_filename(
-    'documentos_' .
-    $applicant->lastname . '_' .
-    $applicant->firstname . '_' .
-    ($applicant->idnumber ?: $applicant->id) . '_' .
-    date('Ymd_His') .
-    '.zip'
-);
+$lastname = clean_filename($applicant->lastname);
+$firstname = clean_filename($applicant->firstname);
+$idnumber = clean_filename($applicant->idnumber ?: (string)$applicant->id);
+
+$zipfilename = "documentos_{$lastname}_{$firstname}_{$idnumber}_" . date('Ymd_His') . '.zip';
 
 // Create temporary file for ZIP.
 $tempdir = make_temp_directory('local_jobboard_zip');
 $tempzippath = $tempdir . '/' . $zipfilename;
 
 $zip = new ZipArchive();
-if ($zip->open($tempzippath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+$result = $zip->open($tempzippath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+if ($result !== true) {
     throw new moodle_exception('error:cannotcreatezip', 'local_jobboard');
 }
 
 $filesadded = 0;
+$fs = get_file_storage();
+$syscontext = context_system::instance();
 
 foreach ($documents as $doc) {
     // Skip text documents (they don't have physical files).
     if ($doc->mimetype === 'text/plain' && strpos($doc->filename, '.txt') !== false) {
         // For text documents, get content from application data and add as text file.
         $appdata = json_decode($application->applicationdata ?? '{}', true);
-        if (isset($appdata[$doc->documenttype])) {
+        if (is_array($appdata) && isset($appdata[$doc->documenttype])) {
             $textcontent = $appdata[$doc->documenttype];
             if (is_string($textcontent) && !empty(trim($textcontent))) {
                 $zip->addFromString($doc->documenttype . '.txt', $textcontent);
@@ -96,24 +97,31 @@ foreach ($documents as $doc) {
         continue;
     }
 
-    // Get stored file.
-    $storedfile = $doc->get_stored_file();
-    if (!$storedfile) {
-        continue;
+    // Get stored file from Moodle file storage.
+    $files = $fs->get_area_files(
+        $syscontext->id,
+        'local_jobboard',
+        'application_documents',
+        $applicationid,
+        'id',
+        false
+    );
+
+    foreach ($files as $file) {
+        if ($file->get_filepath() === '/' . $doc->documenttype . '/' &&
+            $file->get_filename() === $doc->filename) {
+
+            // Get file content.
+            $content = $file->get_content();
+            if (!empty($content)) {
+                // Build filename with document type prefix for organization.
+                $filename = $doc->documenttype . '/' . $doc->filename;
+                $zip->addFromString($filename, $content);
+                $filesadded++;
+            }
+            break;
+        }
     }
-
-    // Get file content.
-    $content = $storedfile->get_content();
-    if (empty($content)) {
-        continue;
-    }
-
-    // Build filename with document type prefix for organization.
-    $filename = $doc->documenttype . '/' . $doc->filename;
-
-    // Add to ZIP.
-    $zip->addFromString($filename, $content);
-    $filesadded++;
 }
 
 $zip->close();
@@ -121,6 +129,12 @@ $zip->close();
 if ($filesadded === 0) {
     @unlink($tempzippath);
     throw new moodle_exception('error:nodocumentstodownload', 'local_jobboard');
+}
+
+// Verify ZIP file exists and has content.
+if (!file_exists($tempzippath) || filesize($tempzippath) === 0) {
+    @unlink($tempzippath);
+    throw new moodle_exception('error:cannotcreatezip', 'local_jobboard');
 }
 
 // Send the ZIP file to the browser.
