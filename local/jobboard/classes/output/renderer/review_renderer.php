@@ -161,6 +161,7 @@ trait review_renderer {
                 'isclosed' => $isClosed,
                 'reviewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'applicationid' => $app->id]))->out(false),
                 'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]))->out(false),
+                'downloadzipurl' => (new moodle_url('/local/jobboard/download_documents.php', ['applicationid' => $app->id, 'sesskey' => sesskey()]))->out(false),
             ];
         }
 
@@ -1154,6 +1155,7 @@ trait review_renderer {
         $data['sesskey'] = sesskey();
 
         $data['backurl'] = (new moodle_url('/local/jobboard/index.php', ['view' => 'review', 'vacancyid' => $vacancyid]))->out(false);
+        $data['downloadzipurl'] = (new moodle_url('/local/jobboard/download_documents.php', ['applicationid' => $applicationid, 'sesskey' => sesskey()]))->out(false);
 
         return $data;
     }

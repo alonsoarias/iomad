@@ -2134,6 +2134,11 @@ $string['error:invaliddates'] = 'Fechas inválidas';
 $string['error:invalidpublicationtype'] = 'Tipo de publicación inválido';
 $string['error:invalidstatus'] = 'Estado inválido';
 $string['error:invalidurl'] = 'Formato de URL inválido';
+$string['error:invalidapplication'] = 'Postulación inválida';
+$string['error:invaliduser'] = 'Usuario inválido';
+$string['error:nodocuments'] = 'No se encontraron documentos para esta postulación';
+$string['error:nodocumentstodownload'] = 'No hay documentos disponibles para descargar';
+$string['error:cannotcreatezip'] = 'No se puede crear el archivo ZIP';
 $string['error:occasionalrequiresexperience'] = 'El contrato ocasional requiere experiencia';
 $string['error:pastdate'] = 'La fecha no puede ser en el pasado';
 $string['error:requiredfield'] = 'Este campo es requerido';
@@ -2770,6 +2775,8 @@ $string['sending'] = 'Enviando...';
 $string['saveandsend'] = 'Guardar y Enviar';
 $string['sent'] = '¡Enviado!';
 $string['emailerror'] = 'Error de email';
+$string['downloadzip'] = 'Descargar ZIP';
+$string['downloadallzip'] = 'Descargar todos los documentos como ZIP';
 
 // Cadenas de revisión secuencial
 $string['sequentialreview'] = 'Revisión Secuencial';

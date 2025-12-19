@@ -273,7 +273,10 @@
                                 {{/documents}}
                             </div>
                         </div>
-                        <div class="card-footer bg-light py-2 text-end">
+                        <div class="card-footer bg-light py-2 d-flex justify-content-between align-items-center">
+                            <a href="{{downloadzipurl}}" class="btn btn-sm btn-outline-secondary" title="{{#str}}downloadallzip, local_jobboard{{/str}}">
+                                <i class="fa fa-file-zipper me-1"></i>{{#str}}downloadzip, local_jobboard{{/str}}
+                            </a>
                             <button type="button" class="btn btn-sm btn-primary jb-btn-primary" id="saveAndSendBtn">
                                 <i class="fa fa-paper-plane me-1"></i>{{#str}}saveandsend, local_jobboard{{/str}}
                             </button>
@@ -520,6 +523,11 @@
                                            aria-label="{{#str}}review, local_jobboard{{/str}} - {{applicantname}}">
                                             <i class="fa fa-magnifying-glass me-1" aria-hidden="true"></i>
                                             <span class="d-none d-lg-inline">{{#str}}review, local_jobboard{{/str}}</span>
+                                        </a>
+                                        <a href="{{downloadzipurl}}" class="btn btn-outline-info btn-sm"
+                                           title="{{#str}}downloadallzip, local_jobboard{{/str}}"
+                                           aria-label="{{#str}}downloadallzip, local_jobboard{{/str}} - {{applicantname}}">
+                                            <i class="fa fa-file-zipper" aria-hidden="true"></i>
                                         </a>
                                         <a href="{{viewurl}}" class="btn btn-outline-secondary btn-sm"
                                            title="{{#str}}viewapplication, local_jobboard{{/str}}"

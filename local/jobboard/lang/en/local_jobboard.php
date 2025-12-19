@@ -2131,6 +2131,11 @@ $string['error:invaliddates'] = 'Invalid dates';
 $string['error:invalidpublicationtype'] = 'Invalid publication type';
 $string['error:invalidstatus'] = 'Invalid status';
 $string['error:invalidurl'] = 'Invalid URL format';
+$string['error:invalidapplication'] = 'Invalid application';
+$string['error:invaliduser'] = 'Invalid user';
+$string['error:nodocuments'] = 'No documents found for this application';
+$string['error:nodocumentstodownload'] = 'No documents available to download';
+$string['error:cannotcreatezip'] = 'Cannot create ZIP file';
 $string['error:occasionalrequiresexperience'] = 'Occasional contract requires experience';
 $string['error:pastdate'] = 'Date cannot be in the past';
 $string['error:requiredfield'] = 'This field is required';
@@ -2754,6 +2759,8 @@ $string['sending'] = 'Sending...';
 $string['saveandsend'] = 'Save & Send';
 $string['sent'] = 'Sent!';
 $string['emailerror'] = 'Email error';
+$string['downloadzip'] = 'Download ZIP';
+$string['downloadallzip'] = 'Download all documents as ZIP';
 
 // Sequential review strings
 $string['sequentialreview'] = 'Sequential Review';
