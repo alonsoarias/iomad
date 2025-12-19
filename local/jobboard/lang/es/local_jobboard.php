@@ -3791,6 +3791,10 @@ $string['tour_apply_checklist_title'] = 'Lista de Documentos';
 $string['tour_apply_checklist_content'] = 'Siga el progreso de su carga de documentos con esta lista. Las marcas verdes indican documentos cargados, mientras que los círculos vacíos muestran elementos pendientes.';
 $string['tour_apply_submit_title'] = 'Enviar Postulación';
 $string['tour_apply_submit_content'] = 'Una vez que haya cargado todos los documentos requeridos y revisado su información, haga clic en este botón para enviar su postulación. No podrá modificarla después del envío.';
+$string['tour_apply_deadline_title'] = 'Fecha Límite de Postulación';
+$string['tour_apply_deadline_content'] = 'Esta etiqueta muestra cuántos días quedan antes de que cierre la convocatoria. Asegúrese de enviar su postulación antes de que expire el plazo.';
+$string['tour_apply_help_title'] = '¿Necesita Ayuda?';
+$string['tour_apply_help_content'] = 'Si tiene preguntas sobre el proceso de postulación o necesita asistencia, encuentre información de contacto y recursos de soporte en esta sección.';
 
 // =============================================================================
 // TOUR DE USUARIO: LISTA DE VACANTES

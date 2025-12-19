@@ -3793,6 +3793,10 @@ $string['tour_apply_checklist_title'] = 'Document Checklist';
 $string['tour_apply_checklist_content'] = 'Track your document submission progress with this checklist. Green checkmarks indicate uploaded documents, while empty circles show pending items.';
 $string['tour_apply_submit_title'] = 'Submit Application';
 $string['tour_apply_submit_content'] = 'Once you\'ve uploaded all required documents and reviewed your information, click this button to submit your application. You cannot modify it after submission.';
+$string['tour_apply_deadline_title'] = 'Application Deadline';
+$string['tour_apply_deadline_content'] = 'This badge shows how many days remain before the application deadline. Make sure to submit your application before the deadline expires.';
+$string['tour_apply_help_title'] = 'Need Help?';
+$string['tour_apply_help_content'] = 'If you have questions about the application process or need assistance, find contact information and support resources in this section.';
 
 // =============================================================================
 // USER TOUR: VACANCIES LIST
