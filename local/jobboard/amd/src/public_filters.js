@@ -127,9 +127,6 @@ define(['core/str', 'core/notification'], function(Str, Notification) {
                 toggleLoadingIndicator(false);
                 updateUrl(queryString);
 
-                // Scroll to results smoothly.
-                resultsContainer.scrollIntoView({behavior: 'smooth', block: 'start'});
-
                 // Dispatch event for other modules.
                 var event = new CustomEvent('jobboard:filtersapplied', {
                     detail: {
