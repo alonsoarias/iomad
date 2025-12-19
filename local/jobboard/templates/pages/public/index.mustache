@@ -1,8 +1,7 @@
 {{!
     @template local_jobboard/pages/public/index
 
-    Public page - ISER Brand Design
-    Based on Manual de Identidad Visual ISER (M-GCRP-01 v01)
+    Public page - Clean minimal design following apply.mustache pattern
 
     Context variables:
     * showconvocatorias - Boolean to show convocatorias list
@@ -11,7 +10,6 @@
     * pagedescription - Page description HTML
     * stats - Array of statistic cards
     * isloggedin - Boolean if user is logged in
-    * quickaccess - Quick access buttons for logged-in users
     * convocatoria - Current convocatoria data (for vacancies mode)
     * convocatorias - Array of convocatoria cards
     * vacancies - Array of vacancy cards
@@ -22,39 +20,41 @@
     * loginurl - Login URL
     * signupurl - Signup URL
 }}
-<div class="jb-public-page jb-iser-theme" id="jobboard-public">
-    {{! Support Banner - Prominent at top }}
+<div class="jb-public" id="jobboard-public">
+    {{! Support Banner }}
     {{#showsupport}}
     {{> local_jobboard/partials/support_button }}
     {{/showsupport}}
 
     {{! ================================================================ }}
-    {{! HERO SECTION - ISER BRANDED }}
+    {{! HEADER SECTION }}
     {{! ================================================================ }}
-    <div class="jb-hero-section" style="background: linear-gradient(135deg, var(--iser-verde) 0%, var(--iser-verde-dark) 100%); border-radius: var(--jb-radius-xl); padding: var(--jb-space-8); margin-bottom: var(--jb-space-6); color: var(--iser-blanco);">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 style="font-size: var(--jb-text-4xl); font-weight: var(--jb-font-bold); margin-bottom: var(--jb-space-3);">
-                    {{#showconvocatorias}}
-                    <i class="fa fa-folder-open me-3"></i>{{#str}}openconvocatorias, local_jobboard{{/str}}
-                    {{/showconvocatorias}}
-                    {{#showvacancies}}
-                    <i class="fa fa-briefcase me-3"></i>{{#str}}vacancies, local_jobboard{{/str}}
-                    {{/showvacancies}}
-                </h1>
-                <p style="font-size: var(--jb-text-lg); opacity: 0.9; margin-bottom: 0;">
-                    {{#showconvocatorias}}{{#str}}browseconvocatorias_desc, local_jobboard{{/str}}{{/showconvocatorias}}
-                    {{#showvacancies}}{{#str}}browsevacancies_desc, local_jobboard{{/str}}{{/showvacancies}}
-                </p>
-            </div>
-            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                {{^isloggedin}}
-                <a href="{{signupurl}}" class="btn btn-lg" style="background: var(--iser-amarillo); color: var(--iser-negro); font-weight: var(--jb-font-bold); border: none; padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md);">
-                    <i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}
-                </a>
-                {{/isloggedin}}
-            </div>
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            {{#showvacancies}}
+            <a href="{{backurl}}" class="jb-public-header__back">
+                <i class="fa fa-arrow-left"></i>
+                {{#str}}convocatorias, local_jobboard{{/str}}
+            </a>
+            {{/showvacancies}}
+            {{^isloggedin}}
+            <a href="{{signupurl}}" class="jb-btn jb-btn--primary">
+                <i class="fa fa-user-plus"></i> {{#str}}createaccount{{/str}}
+            </a>
+            {{/isloggedin}}
         </div>
+        <h1 class="jb-public-header__title">
+            {{#showconvocatorias}}
+            <i class="fa fa-folder-open"></i> {{#str}}openconvocatorias, local_jobboard{{/str}}
+            {{/showconvocatorias}}
+            {{#showvacancies}}
+            <i class="fa fa-briefcase"></i> {{#str}}vacancies, local_jobboard{{/str}}
+            {{/showvacancies}}
+        </h1>
+        <p class="jb-public-header__subtitle">
+            {{#showconvocatorias}}{{#str}}browseconvocatorias_desc, local_jobboard{{/str}}{{/showconvocatorias}}
+            {{#showvacancies}}{{#str}}browsevacancies_desc, local_jobboard{{/str}}{{/showvacancies}}
+        </p>
     </div>
 
     {{! ================================================================ }}
@@ -63,134 +63,105 @@
     {{#showvacancies}}
     {{! Convocatoria Info Card }}
     {{#convocatoria}}
-    <div class="jb-convocatoria-header mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; {{#isurgent}}border-left: 4px solid var(--iser-amarillo);{{/isurgent}}">
-        <div style="padding: var(--jb-space-4) var(--jb-space-5); border-bottom: 2px solid var(--iser-verde);">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <div class="d-flex align-items-center gap-3">
-                    <code style="background: {{#isurgent}}var(--iser-amarillo){{/isurgent}}{{^isurgent}}var(--iser-verde){{/isurgent}}; color: {{#isurgent}}var(--iser-negro){{/isurgent}}{{^isurgent}}var(--iser-blanco){{/isurgent}}; padding: var(--jb-space-2) var(--jb-space-3); border-radius: var(--jb-radius-md); font-weight: var(--jb-font-bold);">{{code}}</code>
-                    <h2 style="font-size: var(--jb-text-xl); font-weight: var(--jb-font-semibold); color: var(--iser-rojo); margin: 0;">{{name}}</h2>
-                </div>
-                <div class="d-flex gap-2 flex-wrap">
-                    <span style="background: var(--iser-verde-lighter); color: var(--iser-verde-dark); padding: var(--jb-space-1) var(--jb-space-3); border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm);">
-                        <i class="fa fa-briefcase me-1"></i>{{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}
-                    </span>
-                    <span style="background: var(--iser-azul-lighter); color: var(--iser-azul); padding: var(--jb-space-1) var(--jb-space-3); border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm);">
-                        <i class="fa fa-users me-1"></i>{{totalpositions}} {{#str}}positions, local_jobboard{{/str}}
-                    </span>
-                    {{#isurgent}}
-                    <span style="background: var(--iser-rojo); color: var(--iser-blanco); padding: var(--jb-space-1) var(--jb-space-3); border-radius: var(--jb-radius-full); font-size: var(--jb-text-sm); font-weight: var(--jb-font-bold);">
-                        <i class="fa fa-exclamation-triangle me-1"></i>{{urgenttext}}
-                    </span>
-                    {{/isurgent}}
-                </div>
+    <div class="jb-card jb-convocatoria-info {{#isurgent}}jb-convocatoria-info--urgent{{/isurgent}}">
+        <div class="jb-convocatoria-info__header">
+            <div class="jb-convocatoria-info__title-row">
+                <span class="jb-code jb-code--{{#isurgent}}warning{{/isurgent}}{{^isurgent}}primary{{/isurgent}}">{{code}}</span>
+                <h2 class="jb-convocatoria-info__name">{{name}}</h2>
+            </div>
+            <div class="jb-convocatoria-info__badges">
+                <span class="jb-badge jb-badge--primary">
+                    <i class="fa fa-briefcase"></i> {{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}
+                </span>
+                <span class="jb-badge jb-badge--info">
+                    <i class="fa fa-users"></i> {{totalpositions}} {{#str}}positions, local_jobboard{{/str}}
+                </span>
+                {{#isurgent}}
+                <span class="jb-badge jb-badge--danger">
+                    <i class="fa fa-exclamation-triangle"></i> {{urgenttext}}
+                </span>
+                {{/isurgent}}
             </div>
         </div>
-        <div style="padding: var(--jb-space-3) var(--jb-space-5); background: var(--jb-gray-50);">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <div class="d-flex gap-4 flex-wrap" style="font-size: var(--jb-text-sm);">
-                    <span><i class="fa fa-calendar-check me-2" style="color: var(--iser-verde);"></i>{{#str}}startdate, local_jobboard{{/str}}: <strong>{{startdateformatted}}</strong></span>
-                    <span style="{{#isurgent}}color: var(--iser-rojo); font-weight: var(--jb-font-bold);{{/isurgent}}"><i class="fa fa-calendar-xmark me-2" style="color: var(--iser-amarillo);"></i>{{#str}}enddate, local_jobboard{{/str}}: <strong>{{enddateformatted}}</strong></span>
-                    {{#daysremaining}}
-                    <span style="background: {{#isurgent}}var(--iser-amarillo){{/isurgent}}{{^isurgent}}var(--iser-azul-lighter){{/isurgent}}; color: {{#isurgent}}var(--iser-negro){{/isurgent}}{{^isurgent}}var(--iser-azul){{/isurgent}}; padding: 2px 10px; border-radius: var(--jb-radius-full); font-weight: var(--jb-font-semibold);">{{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}</span>
-                    {{/daysremaining}}
-                </div>
-                <a href="{{detailsurl}}" style="color: var(--iser-verde); font-weight: var(--jb-font-medium); text-decoration: none;">
-                    <i class="fa fa-info-circle me-1"></i>{{#str}}viewdetails, local_jobboard{{/str}}
-                </a>
+        <div class="jb-convocatoria-info__footer">
+            <div class="jb-convocatoria-info__dates">
+                <span><i class="fa fa-calendar-check"></i> {{#str}}startdate, local_jobboard{{/str}}: <strong>{{startdateformatted}}</strong></span>
+                <span class="{{#isurgent}}jb-text-danger{{/isurgent}}"><i class="fa fa-calendar-xmark"></i> {{#str}}enddate, local_jobboard{{/str}}: <strong>{{enddateformatted}}</strong></span>
+                {{#daysremaining}}
+                <span class="jb-badge jb-badge--{{#isurgent}}warning{{/isurgent}}{{^isurgent}}info{{/isurgent}}">{{daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}</span>
+                {{/daysremaining}}
             </div>
+            <a href="{{detailsurl}}" class="jb-link">
+                <i class="fa fa-info-circle"></i> {{#str}}viewdetails, local_jobboard{{/str}}
+            </a>
         </div>
     </div>
     {{/convocatoria}}
 
-    {{! Filter Form - AJAX Enabled }}
+    {{! Filter Form }}
     {{#filterform}}
-    <div class="jb-filter-card mb-4" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden;">
-        <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); border-bottom: 1px solid var(--jb-gray-200);">
-            <div class="d-flex justify-content-between align-items-center">
-                <h6 style="margin: 0; color: var(--iser-gris-oscuro); font-weight: var(--jb-font-semibold);">
-                    <i class="fa fa-filter me-2" style="color: var(--iser-verde);"></i>{{#str}}filtervacancies, local_jobboard{{/str}}
-                </h6>
-                <span class="jb-filter-loading d-none" style="color: var(--iser-verde);">
-                    <i class="fa fa-spinner fa-spin me-1"></i>{{#str}}filtering, local_jobboard{{/str}}
-                </span>
-            </div>
+    <div class="jb-card jb-filter-card">
+        <div class="jb-card__header">
+            <span><i class="fa fa-filter"></i> {{#str}}filtervacancies, local_jobboard{{/str}}</span>
+            <span class="jb-filter-loading d-none">
+                <i class="fa fa-spinner fa-spin"></i> {{#str}}filtering, local_jobboard{{/str}}
+            </span>
         </div>
-        <div style="padding: var(--jb-space-4);">
+        <div class="jb-card__body">
             <form method="get" action="{{action}}" class="jb-filter-form">
                 {{#hiddenfields}}
                 <input type="hidden" name="{{name}}" value="{{value}}">
                 {{/hiddenfields}}
-                <div class="row g-3">
-                    {{! Row 1: Code and Search }}
-                    <div class="col-lg-3 col-md-6">
-                        <label for="filter-code" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
-                            <i class="fa fa-hashtag me-1"></i>{{#str}}code, local_jobboard{{/str}}
-                        </label>
-                        <input type="text" name="code" id="filter-code" value="{{codevalue}}" placeholder="{{#str}}filterbycode, local_jobboard{{/str}}" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base);">
+                <div class="jb-filter-grid">
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-hashtag"></i> {{#str}}code, local_jobboard{{/str}}</label>
+                        <input type="text" name="code" class="jb-input" value="{{codevalue}}" placeholder="{{#str}}filterbycode, local_jobboard{{/str}}">
                     </div>
                     {{#showcontractfilter}}
-                    <div class="col-lg-3 col-md-6">
-                        <label for="filter-contracttype" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
-                            <i class="fa fa-file-contract me-1"></i>{{#str}}contracttype, local_jobboard{{/str}}
-                        </label>
-                        <select name="contracttype" id="filter-contracttype" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco); color: var(--iser-negro);">
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-file-contract"></i> {{#str}}contracttype, local_jobboard{{/str}}</label>
+                        <select name="contracttype" class="jb-select">
                             <option value="">{{#str}}all{{/str}}</option>
-                            {{#contractoptions}}
-                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                            {{/contractoptions}}
+                            {{#contractoptions}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/contractoptions}}
                         </select>
                     </div>
                     {{/showcontractfilter}}
                     {{#showdepartmentfilter}}
-                    <div class="col-lg-3 col-md-6">
-                        <label for="filter-department" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
-                            <i class="fa fa-graduation-cap me-1"></i>{{#str}}department, local_jobboard{{/str}}
-                        </label>
-                        <select name="department" id="filter-department" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco); color: var(--iser-negro);">
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-graduation-cap"></i> {{#str}}department, local_jobboard{{/str}}</label>
+                        <select name="department" class="jb-select">
                             <option value="">{{#str}}all{{/str}}</option>
-                            {{#departmentoptions}}
-                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                            {{/departmentoptions}}
+                            {{#departmentoptions}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/departmentoptions}}
                         </select>
                     </div>
                     {{/showdepartmentfilter}}
                     {{#showlocationfilter}}
-                    <div class="col-lg-3 col-md-6">
-                        <label for="filter-location" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
-                            <i class="fa fa-map-marker-alt me-1"></i>{{#str}}location, local_jobboard{{/str}}
-                        </label>
-                        <select name="location" id="filter-location" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco); color: var(--iser-negro);">
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-location-dot"></i> {{#str}}location, local_jobboard{{/str}}</label>
+                        <select name="location" class="jb-select">
                             <option value="">{{#str}}all{{/str}}</option>
-                            {{#locationoptions}}
-                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                            {{/locationoptions}}
+                            {{#locationoptions}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/locationoptions}}
                         </select>
                     </div>
                     {{/showlocationfilter}}
                     {{#showmodalityfilter}}
-                    <div class="col-lg-3 col-md-6">
-                        <label for="filter-modality" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
-                            <i class="fa fa-laptop-house me-1"></i>{{#str}}modality, local_jobboard{{/str}}
-                        </label>
-                        <select name="modality" id="filter-modality" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base); background: var(--iser-blanco); color: var(--iser-negro);">
+                    <div class="jb-filter-item">
+                        <label class="jb-filter-label"><i class="fa fa-laptop-house"></i> {{#str}}modality, local_jobboard{{/str}}</label>
+                        <select name="modality" class="jb-select">
                             <option value="">{{#str}}all{{/str}}</option>
-                            {{#modalityoptions}}
-                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
-                            {{/modalityoptions}}
+                            {{#modalityoptions}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>{{/modalityoptions}}
                         </select>
                     </div>
                     {{/showmodalityfilter}}
-                    <div class="col-lg-3 col-md-6">
-                        <label for="filter-search" style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-1); display: block;">
-                            <i class="fa fa-search me-1"></i>{{#str}}search{{/str}}
-                        </label>
-                        <input type="search" name="search" id="filter-search" value="{{searchvalue}}" placeholder="{{#str}}searchvacancies, local_jobboard{{/str}}" style="width: 100%; padding: var(--jb-space-2) var(--jb-space-3); border: 2px solid var(--iser-gris-claro); border-radius: var(--jb-radius-md); font-size: var(--jb-text-base);">
+                    <div class="jb-filter-item jb-filter-item--wide">
+                        <label class="jb-filter-label"><i class="fa fa-search"></i> {{#str}}search{{/str}}</label>
+                        <input type="search" name="search" class="jb-input" value="{{searchvalue}}" placeholder="{{#str}}searchvacancies, local_jobboard{{/str}}">
                     </div>
                 </div>
                 {{#hasfilters}}
-                <div style="margin-top: var(--jb-space-3); padding-top: var(--jb-space-3); border-top: 1px solid var(--jb-gray-200);">
-                    <a href="{{clearfiltersurl}}" class="jb-clear-filters" data-action="reset-filters" style="color: var(--iser-rojo); font-size: var(--jb-text-sm); text-decoration: none;">
-                        <i class="fa fa-xmark me-1"></i>{{#str}}clearfilters, local_jobboard{{/str}}
+                <div class="jb-filter-actions">
+                    <a href="{{clearfiltersurl}}" class="jb-link jb-link--muted" data-action="reset-filters">
+                        <i class="fa fa-xmark"></i> {{#str}}clearfilters, local_jobboard{{/str}}
                     </a>
                 </div>
                 {{/hasfilters}}
@@ -207,14 +178,14 @@
     {{! CTA for Non-Logged In }}
     {{^isloggedin}}
     {{#hasvacancies}}
-    <div style="background: linear-gradient(135deg, var(--iser-verde-lighter) 0%, var(--iser-blanco) 100%); border: 2px solid var(--iser-verde); border-radius: var(--jb-radius-lg); padding: var(--jb-space-6); text-align: center; margin-top: var(--jb-space-6);">
-        <p style="color: var(--iser-gris-oscuro); margin-bottom: var(--jb-space-4);">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="{{signupurl}}" style="background: var(--iser-verde); color: var(--iser-blanco); padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-semibold);">
-                <i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}
+    <div class="jb-cta">
+        <p class="jb-cta__text">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
+        <div class="jb-cta__buttons">
+            <a href="{{signupurl}}" class="jb-btn jb-btn--primary">
+                <i class="fa fa-user-plus"></i> {{#str}}createaccount{{/str}}
             </a>
-            <a href="{{loginurl}}" style="background: transparent; border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-medium);">
-                <i class="fa fa-sign-in-alt me-2"></i>{{#str}}login{{/str}}
+            <a href="{{loginurl}}" class="jb-btn jb-btn--outline">
+                <i class="fa fa-sign-in-alt"></i> {{#str}}login{{/str}}
             </a>
         </div>
     </div>
@@ -226,74 +197,60 @@
     {{! MODE: CONVOCATORIAS LIST (DEFAULT) }}
     {{! ================================================================ }}
     {{#showconvocatorias}}
-    {{! Statistics Row }}
+    {{! Statistics }}
     {{#hasstats}}
-    <div class="row g-4 mb-5">
+    <div class="jb-stats">
         {{#stats}}
-        <div class="col-lg-3 col-md-6">
-            <div style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 16px rgba(0,0,0,0.08); padding: var(--jb-space-4); text-align: center; border-top: 4px solid var(--iser-{{color}}, var(--iser-verde));">
-                <div style="font-size: var(--jb-text-3xl); font-weight: var(--jb-font-bold); color: var(--iser-{{color}}, var(--iser-verde)); margin-bottom: var(--jb-space-1);">{{value}}</div>
-                <div style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio);">{{label}}</div>
-            </div>
+        <div class="jb-stat jb-stat--{{color}}">
+            <span class="jb-stat__value">{{value}}</span>
+            <span class="jb-stat__label">{{label}}</span>
         </div>
         {{/stats}}
     </div>
     {{/hasstats}}
 
     {{! Section Title }}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 style="font-size: var(--jb-text-xl); font-weight: var(--jb-font-semibold); color: var(--iser-rojo); margin: 0;">
-            <i class="fa fa-folder-open me-2" style="color: var(--iser-verde);"></i>{{#str}}openconvocatorias, local_jobboard{{/str}}
+    <div class="jb-section-header">
+        <h3 class="jb-section-header__title">
+            <i class="fa fa-folder-open"></i> {{#str}}openconvocatorias, local_jobboard{{/str}}
         </h3>
     </div>
 
     {{! Convocatorias Grid }}
     {{#hasconvocatorias}}
-    <div class="row g-4">
+    <div class="jb-grid">
         {{#convocatorias}}
-        <div class="col-lg-4 col-md-6">
-            <div class="jb-convocatoria-card" style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 4px 16px rgba(0,0,0,0.08); overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.2s ease, box-shadow 0.2s ease; {{#isurgent}}border-top: 3px solid var(--iser-amarillo);{{/isurgent}}">
-                <div style="padding: var(--jb-space-3) var(--jb-space-4); border-bottom: 1px solid var(--jb-gray-100); display: flex; justify-content: space-between; align-items: center;">
-                    <code style="background: {{#isurgent}}var(--iser-amarillo){{/isurgent}}{{^isurgent}}var(--iser-verde){{/isurgent}}; color: {{#isurgent}}var(--iser-negro){{/isurgent}}{{^isurgent}}var(--iser-blanco){{/isurgent}}; padding: var(--jb-space-1) var(--jb-space-2); border-radius: var(--jb-radius-sm); font-size: var(--jb-text-sm); font-weight: var(--jb-font-bold);">{{code}}</code>
-                    {{#isurgent}}
-                    <span style="background: var(--iser-rojo); color: var(--iser-blanco); padding: 2px 8px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-xs); font-weight: var(--jb-font-bold);">
-                        <i class="fa fa-exclamation-triangle me-1"></i>{{urgenttext}}
-                    </span>
-                    {{/isurgent}}
-                    {{^isurgent}}
-                    <span style="background: var(--iser-verde-lighter); color: var(--iser-verde); padding: 2px 8px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-xs);">
-                        <i class="fa fa-check-circle me-1"></i>{{#str}}convocatoria_status_open, local_jobboard{{/str}}
-                    </span>
-                    {{/isurgent}}
+        <div class="jb-card jb-convocatoria-card {{#isurgent}}jb-convocatoria-card--urgent{{/isurgent}}">
+            <div class="jb-convocatoria-card__header">
+                <span class="jb-code jb-code--{{#isurgent}}warning{{/isurgent}}{{^isurgent}}primary{{/isurgent}}">{{code}}</span>
+                {{#isurgent}}
+                <span class="jb-badge jb-badge--danger"><i class="fa fa-exclamation-triangle"></i> {{urgenttext}}</span>
+                {{/isurgent}}
+                {{^isurgent}}
+                <span class="jb-badge jb-badge--success"><i class="fa fa-check-circle"></i> {{#str}}convocatoria_status_open, local_jobboard{{/str}}</span>
+                {{/isurgent}}
+            </div>
+            <div class="jb-convocatoria-card__body">
+                <h4 class="jb-convocatoria-card__title">
+                    <a href="{{detailsurl}}">{{name}}</a>
+                </h4>
+                {{#descriptionexcerpt}}<p class="jb-convocatoria-card__desc">{{descriptionexcerpt}}</p>{{/descriptionexcerpt}}
+                <div class="jb-convocatoria-card__badges">
+                    <span class="jb-badge jb-badge--primary"><i class="fa fa-briefcase"></i> {{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}</span>
+                    <span class="jb-badge jb-badge--info"><i class="fa fa-users"></i> {{totalpositions}} {{#str}}positions, local_jobboard{{/str}}</span>
                 </div>
-                <div style="padding: var(--jb-space-4); flex: 1; display: flex; flex-direction: column;">
-                    <h4 style="font-size: var(--jb-text-base); font-weight: var(--jb-font-semibold); margin-bottom: var(--jb-space-3);">
-                        <a href="{{detailsurl}}" style="color: var(--iser-negro); text-decoration: none;">{{name}}</a>
-                    </h4>
-                    {{#descriptionexcerpt}}<p style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-bottom: var(--jb-space-3);">{{descriptionexcerpt}}</p>{{/descriptionexcerpt}}
-                    <div class="d-flex flex-wrap gap-2 mb-3">
-                        <span style="background: var(--iser-verde-lighter); color: var(--iser-verde-dark); padding: 2px 10px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-xs);">
-                            <i class="fa fa-briefcase me-1"></i>{{vacancycount}} {{#str}}vacancies, local_jobboard{{/str}}
-                        </span>
-                        <span style="background: var(--iser-azul-lighter); color: var(--iser-azul); padding: 2px 10px; border-radius: var(--jb-radius-full); font-size: var(--jb-text-xs);">
-                            <i class="fa fa-users me-1"></i>{{totalpositions}} {{#str}}positions, local_jobboard{{/str}}
-                        </span>
-                    </div>
-                    <div style="font-size: var(--jb-text-sm); color: var(--iser-gris-medio); margin-top: auto;">
-                        <div style="margin-bottom: var(--jb-space-1);"><i class="fa fa-calendar-check me-2" style="color: var(--iser-verde);"></i>{{#str}}startdate, local_jobboard{{/str}}: <strong style="color: var(--iser-negro);">{{startdateformatted}}</strong></div>
-                        <div style="{{#isurgent}}color: var(--iser-rojo); font-weight: var(--jb-font-bold);{{/isurgent}}"><i class="fa fa-calendar-xmark me-2" style="color: var(--iser-amarillo);"></i>{{#str}}enddate, local_jobboard{{/str}}: <strong>{{enddateformatted}}</strong></div>
-                    </div>
+                <div class="jb-convocatoria-card__dates">
+                    <div><i class="fa fa-calendar-check"></i> {{#str}}startdate, local_jobboard{{/str}}: <strong>{{startdateformatted}}</strong></div>
+                    <div class="{{#isurgent}}jb-text-danger{{/isurgent}}"><i class="fa fa-calendar-xmark"></i> {{#str}}enddate, local_jobboard{{/str}}: <strong>{{enddateformatted}}</strong></div>
                 </div>
-                <div style="padding: var(--jb-space-3) var(--jb-space-4); background: var(--jb-gray-50); border-top: 1px solid var(--jb-gray-100);">
-                    <div class="d-flex gap-2">
-                        <a href="{{detailsurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); border: 2px solid var(--iser-azul); color: var(--iser-azul); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
-                            <i class="fa fa-info-circle me-1"></i>{{#str}}details{{/str}}
-                        </a>
-                        <a href="{{vacanciesurl}}" style="flex: 1; text-align: center; padding: var(--jb-space-2); background: var(--iser-verde); color: var(--iser-blanco); border-radius: var(--jb-radius-md); text-decoration: none; font-size: var(--jb-text-sm); font-weight: var(--jb-font-medium);">
-                            <i class="fa fa-briefcase me-1"></i>{{#str}}viewvacancies, local_jobboard{{/str}}
-                        </a>
-                    </div>
-                </div>
+            </div>
+            <div class="jb-convocatoria-card__footer">
+                <a href="{{detailsurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
+                    <i class="fa fa-info-circle"></i> {{#str}}details{{/str}}
+                </a>
+                <a href="{{vacanciesurl}}" class="jb-btn jb-btn--primary jb-btn--sm">
+                    <i class="fa fa-briefcase"></i> {{#str}}viewvacancies, local_jobboard{{/str}}
+                </a>
             </div>
         </div>
         {{/convocatorias}}
@@ -302,77 +259,445 @@
 
     {{! Empty State }}
     {{^hasconvocatorias}}
-    <div style="background: var(--iser-blanco); border-radius: var(--jb-radius-lg); box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: var(--jb-space-8); text-align: center;">
-        <i class="fa fa-folder-open" style="font-size: 4rem; color: var(--iser-gris-claro); margin-bottom: var(--jb-space-4); display: block;"></i>
-        <h4 style="color: var(--iser-rojo); margin-bottom: var(--jb-space-2);">{{#str}}noconvocatorias, local_jobboard{{/str}}</h4>
-        <p style="color: var(--iser-gris-medio); max-width: 400px; margin: 0 auto;">{{#str}}noconvocatorias_desc, local_jobboard{{/str}}</p>
+    <div class="jb-empty">
+        <i class="fa fa-folder-open"></i>
+        <h3>{{#str}}noconvocatorias, local_jobboard{{/str}}</h3>
+        <p>{{#str}}noconvocatorias_desc, local_jobboard{{/str}}</p>
     </div>
     {{/hasconvocatorias}}
 
     {{! CTA for Non-Logged In }}
     {{^isloggedin}}
     {{#hasconvocatorias}}
-    <div style="background: linear-gradient(135deg, var(--iser-verde-lighter) 0%, var(--iser-blanco) 100%); border: 2px solid var(--iser-verde); border-radius: var(--jb-radius-lg); padding: var(--jb-space-6); text-align: center; margin-top: var(--jb-space-6);">
-        <p style="color: var(--iser-gris-oscuro); margin-bottom: var(--jb-space-4);">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="{{signupurl}}" style="background: var(--iser-verde); color: var(--iser-blanco); padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-semibold);">
-                <i class="fa fa-user-plus me-2"></i>{{#str}}createaccount{{/str}}
+    <div class="jb-cta">
+        <p class="jb-cta__text">{{#str}}createaccounttoapply, local_jobboard{{/str}}</p>
+        <div class="jb-cta__buttons">
+            <a href="{{signupurl}}" class="jb-btn jb-btn--primary">
+                <i class="fa fa-user-plus"></i> {{#str}}createaccount{{/str}}
             </a>
-            <a href="{{loginurl}}" style="background: transparent; border: 2px solid var(--iser-gris-medio); color: var(--iser-gris-oscuro); padding: var(--jb-space-3) var(--jb-space-5); border-radius: var(--jb-radius-md); text-decoration: none; font-weight: var(--jb-font-medium);">
-                <i class="fa fa-sign-in-alt me-2"></i>{{#str}}login{{/str}}
+            <a href="{{loginurl}}" class="jb-btn jb-btn--outline">
+                <i class="fa fa-sign-in-alt"></i> {{#str}}login{{/str}}
             </a>
         </div>
     </div>
     {{/hasconvocatorias}}
     {{/isloggedin}}
     {{/showconvocatorias}}
-
 </div>
 
-{{! ISER Theme Styles }}
 <style>
-.jb-public-page.jb-iser-theme {
-    font-family: var(--jb-font-sans);
+/* ================================================================
+   PUBLIC PAGE - CLEAN MINIMAL DESIGN
+   Following apply.mustache pattern
+   ================================================================ */
+.jb-public {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
 }
 
-.jb-public-page .jb-vacancy-card:hover,
-.jb-public-page .jb-convocatoria-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+/* Header */
+.jb-public-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
 }
 
-.jb-public-page input:focus,
-.jb-public-page select:focus {
-    border-color: var(--iser-verde) !important;
-    box-shadow: 0 0 0 3px rgba(27, 158, 136, 0.15);
+.jb-public-header__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.jb-public-header__back {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-public-header__back:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-public-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    color: var(--iser-negro, #1a1a1a);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.jb-public-header__title i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-public-header__subtitle {
+    font-size: 1rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0;
+}
+
+/* Cards */
+.jb-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.jb-card__header {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-card__header i { color: var(--iser-verde, #1b9e88); margin-right: 0.375rem; }
+.jb-card__body { padding: 1rem; }
+
+/* Convocatoria Info Card */
+.jb-convocatoria-info {
+    margin-bottom: 1.5rem;
+}
+
+.jb-convocatoria-info--urgent {
+    border-left: 4px solid var(--iser-amarillo, #ffc107);
+}
+
+.jb-convocatoria-info__header {
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid var(--iser-verde, #1b9e88);
+}
+
+.jb-convocatoria-info__title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.jb-convocatoria-info__name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--iser-rojo, #c41e3a);
+    margin: 0;
+}
+
+.jb-convocatoria-info__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.jb-convocatoria-info__footer {
+    padding: 0.75rem 1.25rem;
+    background: #f9fafb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.jb-convocatoria-info__dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+.jb-convocatoria-info__dates i {
+    margin-right: 0.375rem;
+}
+
+/* Filter Card */
+.jb-filter-card .jb-card__body { padding: 1rem; }
+.jb-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+}
+.jb-filter-item--wide { grid-column: span 2; }
+.jb-filter-label { display: block; font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-bottom: 0.25rem; }
+.jb-filter-label i { margin-right: 0.25rem; }
+.jb-filter-actions { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e5e5e5; }
+
+/* Inputs */
+.jb-input, .jb-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: #fff;
+    transition: border-color 0.15s;
+}
+.jb-input:focus, .jb-select:focus {
+    border-color: var(--iser-verde, #1b9e88);
     outline: none;
+    box-shadow: 0 0 0 2px rgba(27, 158, 136, 0.1);
 }
 
-.jb-public-page a[style*="border: 2px solid var(--iser-verde)"]:hover {
-    background: var(--iser-verde) !important;
-    color: var(--iser-blanco) !important;
+/* Stats */
+.jb-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 150px;
+}
+.jb-stat__value { font-size: 1.5rem; font-weight: 700; }
+.jb-stat__label { font-size: 0.8125rem; color: var(--iser-gris-medio, #666); }
+.jb-stat--primary .jb-stat__value { color: var(--iser-verde, #1b9e88); }
+.jb-stat--verde .jb-stat__value { color: var(--iser-verde, #1b9e88); }
+.jb-stat--amarillo .jb-stat__value { color: var(--iser-amarillo, #ffc107); }
+.jb-stat--rojo .jb-stat__value { color: var(--iser-rojo, #c41e3a); }
+.jb-stat--azul .jb-stat__value { color: var(--iser-azul, #0d6efd); }
+
+/* Section Header */
+.jb-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
-.jb-public-page a[style*="border: 2px solid var(--iser-azul)"]:hover {
-    background: var(--iser-azul) !important;
-    color: var(--iser-blanco) !important;
+.jb-section-header__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--iser-rojo, #c41e3a);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-@media (max-width: 991.98px) {
-    .jb-public-page .jb-hero-section {
-        text-align: center;
-        padding: var(--jb-space-6) !important;
-    }
-
-    .jb-public-page .jb-hero-section h1 {
-        font-size: var(--jb-text-2xl) !important;
-    }
+.jb-section-header__title i {
+    color: var(--iser-verde, #1b9e88);
 }
 
-@media (max-width: 575.98px) {
-    .jb-public-page .jb-hero-section {
-        padding: var(--jb-space-4) !important;
-        border-radius: var(--jb-radius-md) !important;
-    }
+/* Grid */
+.jb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+}
+
+/* Convocatoria Card */
+.jb-convocatoria-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.jb-convocatoria-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.jb-convocatoria-card--urgent {
+    border-top: 3px solid var(--iser-amarillo, #ffc107);
+}
+
+.jb-convocatoria-card__header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.jb-convocatoria-card__body {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.jb-convocatoria-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem 0;
+}
+
+.jb-convocatoria-card__title a {
+    color: var(--iser-negro, #1a1a1a);
+    text-decoration: none;
+}
+
+.jb-convocatoria-card__title a:hover {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-convocatoria-card__desc {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.5;
+}
+
+.jb-convocatoria-card__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.jb-convocatoria-card__dates {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin-top: auto;
+}
+
+.jb-convocatoria-card__dates div {
+    margin-bottom: 0.25rem;
+}
+
+.jb-convocatoria-card__dates i {
+    margin-right: 0.375rem;
+    width: 16px;
+}
+
+.jb-convocatoria-card__dates i.fa-calendar-check { color: var(--iser-verde, #1b9e88); }
+.jb-convocatoria-card__dates i.fa-calendar-xmark { color: var(--iser-amarillo, #ffc107); }
+
+.jb-convocatoria-card__footer {
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.jb-convocatoria-card__footer .jb-btn {
+    flex: 1;
+}
+
+/* Buttons */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+.jb-btn--sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+.jb-btn--success { background: #28a745; color: #fff; }
+.jb-btn--ghost { background: transparent; color: var(--iser-gris-medio, #666); }
+.jb-btn--ghost:hover { color: var(--iser-verde, #1b9e88); }
+
+/* Links */
+.jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 0.375rem; }
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-link--muted { color: var(--iser-gris-medio, #666); }
+
+/* Badges */
+.jb-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+.jb-badge i { font-size: 0.625rem; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-badge--warning { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-badge--danger { background: rgba(220, 53, 69, 0.15); color: #c41e3a; }
+.jb-badge--info { background: rgba(13, 110, 253, 0.15); color: #0d6efd; }
+.jb-badge--secondary { background: #e9ecef; color: #6c757d; }
+
+/* Code */
+.jb-code {
+    font-family: monospace;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+.jb-code--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-code--warning { background: var(--iser-amarillo, #ffc107); color: #333; }
+
+/* Empty State */
+.jb-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+}
+.jb-empty i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0; max-width: 400px; margin: 0 auto; }
+
+/* CTA */
+.jb-cta {
+    background: linear-gradient(135deg, rgba(27, 158, 136, 0.1) 0%, #fff 100%);
+    border: 2px solid var(--iser-verde, #1b9e88);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 1.5rem;
+}
+.jb-cta__text { color: var(--iser-gris-oscuro, #333); margin: 0 0 1rem; }
+.jb-cta__buttons { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+
+/* Utilities */
+.jb-text-danger { color: var(--iser-rojo, #c41e3a) !important; font-weight: 600; }
+
+/* Mobile */
+@media (max-width: 768px) {
+    .jb-public-header__title { font-size: 1.25rem; }
+    .jb-filter-grid { grid-template-columns: 1fr 1fr; }
+    .jb-filter-item--wide { grid-column: span 2; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { width: 100%; }
+    .jb-grid { grid-template-columns: 1fr; }
+    .jb-convocatoria-info__header { flex-direction: column; align-items: flex-start; }
+    .jb-convocatoria-info__dates { flex-direction: column; gap: 0.5rem; }
+}
+
+@media (max-width: 480px) {
+    .jb-filter-grid { grid-template-columns: 1fr; }
+    .jb-filter-item--wide { grid-column: span 1; }
+    .jb-convocatoria-card__footer { flex-direction: column; }
+}
+
+/* Print */
+@media print {
+    .jb-filter-card, .jb-cta { display: none; }
 }
 </style>
