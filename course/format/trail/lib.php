@@ -28,6 +28,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 use core_courseformat\base as course_format;
+use section_info;
+use navigation_node;
 
 require_once($CFG->dirroot . '/course/format/lib.php'); // For format_base.
 
@@ -595,6 +597,115 @@ class format_trail extends course_format {
      */
     public function uses_indentation(): bool {
         return true;
+    }
+
+    /**
+     * Generate the title for this section page.
+     *
+     * @return string the page title
+     */
+    public function page_title(): string {
+        return get_string('topicoutline');
+    }
+
+    /**
+     * Returns the display mode actually used by the course format.
+     *
+     * @return int The display mode: COURSE_DISPLAY_SINGLEPAGE or COURSE_DISPLAY_MULTIPAGE.
+     */
+    public function get_course_display(): int {
+        $settings = $this->get_settings();
+        if (isset($settings['coursedisplay'])) {
+            return $settings['coursedisplay'];
+        }
+        return COURSE_DISPLAY_SINGLEPAGE;
+    }
+
+    /**
+     * Loads all of the course sections into the navigation.
+     *
+     * @param global_navigation $navigation The navigation tree.
+     * @param navigation_node $node The course node within the navigation.
+     * @return void
+     */
+    public function extend_course_navigation($navigation, navigation_node $node) {
+        global $PAGE;
+        // If section is specified in course/view.php, make sure it is expanded in navigation.
+        if ($navigation->includesectionnum === false) {
+            $selectedsection = optional_param('section', null, PARAM_INT);
+            if ($selectedsection !== null && (!defined('AJAX_SCRIPT') || AJAX_SCRIPT == '0') &&
+                    $PAGE->url->compare(new moodle_url('/course/view.php'), URL_MATCH_BASE)) {
+                $navigation->includesectionnum = $selectedsection;
+            }
+        }
+
+        // Check if there are callbacks to extend course navigation.
+        parent::extend_course_navigation($navigation, $node);
+
+        // We want to remove the general section if it is empty.
+        $modinfo = get_fast_modinfo($this->get_course());
+        $sections = $modinfo->get_sections();
+        if (!isset($sections[0])) {
+            // The general section is empty, find the navigation node for it.
+            $section = $modinfo->get_section_info(0);
+            $generalsection = $node->get($section->id, navigation_node::TYPE_SECTION);
+            if ($generalsection) {
+                // We found the node - now remove it.
+                $generalsection->remove();
+            }
+        }
+    }
+
+    /**
+     * Returns true if the specified section is visible to the current user.
+     *
+     * @param section_info $section The section to check.
+     * @return bool True if the section is visible.
+     */
+    public function is_section_visible(section_info $section): bool {
+        // Delegated sections visibility must be controlled by the delegating component.
+        if ($section->is_delegated()) {
+            $delegatedmodule = $section->get_component_instance();
+            if ($delegatedmodule) {
+                return $delegatedmodule->is_visible();
+            }
+        }
+        // Stealth sections are not visible to users.
+        $course = $this->get_course();
+        $numsections = $this->get_last_section_number();
+        if ($section->section > $numsections) {
+            if ($section->visible) {
+                return true;
+            }
+            return false;
+        }
+        // Hidden sections are visible when 'hiddensections' option is set to show them collapsed.
+        $settings = $this->get_settings();
+        if (!empty($settings['hiddensections'])) {
+            return true;
+        }
+        return $section->uservisible;
+    }
+
+    /**
+     * Returns the last section number of the course (without delegated sections).
+     *
+     * @return int The last section number.
+     */
+    public function get_last_section_number(): int {
+        $course = $this->get_course();
+        if (isset($course->numsections)) {
+            return $course->numsections;
+        }
+        $modinfo = get_fast_modinfo($course);
+        $sections = $modinfo->get_section_info_all();
+        $lastsection = 0;
+        foreach ($sections as $section) {
+            if (!$section->is_delegated() && $section->section > $lastsection) {
+                $lastsection = $section->section;
+            }
+        }
+        return $lastsection;
     }
 
     /**
