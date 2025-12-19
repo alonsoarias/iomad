@@ -45,8 +45,9 @@ if (!$application) {
     throw new moodle_exception('error:invalidapplication', 'local_jobboard');
 }
 
-// Get applicant info for filename.
-$applicant = $DB->get_record('user', ['id' => $application->userid], 'id, firstname, lastname, idnumber');
+// Get applicant info for filename and HTML content.
+$applicant = $DB->get_record('user', ['id' => $application->userid],
+    'id, firstname, lastname, idnumber, firstnamephonetic, lastnamephonetic, middlename, alternatename');
 if (!$applicant) {
     throw new moodle_exception('error:invaliduser', 'local_jobboard');
 }
@@ -95,10 +96,37 @@ $allfiles = $fs->get_area_files(
 // Get document types for naming text files.
 $doctypes = $DB->get_records('local_jobboard_doctype', [], '', 'code, name');
 
+// Helper function to wrap text content in HTML.
+$wraphtmlcontent = function($title, $content) use ($applicant) {
+    $fullname = fullname($applicant);
+    $formattedcontent = nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8'));
+    return '<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 20px; }
+        h1 { color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        .meta { color: #666; margin-bottom: 20px; font-size: 0.9em; }
+        .content { background: #f9f9f9; padding: 20px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</h1>
+    <div class="meta">Postulante: ' . htmlspecialchars($fullname, ENT_QUOTES, 'UTF-8') . '</div>
+    <div class="content">' . $formattedcontent . '</div>
+</body>
+</html>';
+};
+
 // Add cover letter if present.
 if (!empty($application->coverletter)) {
-    $coverletterfilename = get_string('coverletter', 'local_jobboard') . '.txt';
-    $zip->addFromString(clean_filename($coverletterfilename), $application->coverletter);
+    $coverlettertitle = get_string('coverletter', 'local_jobboard');
+    $coverletterfilename = clean_filename($coverlettertitle) . '.html';
+    $htmlcontent = $wraphtmlcontent($coverlettertitle, $application->coverletter);
+    $zip->addFromString($coverletterfilename, $htmlcontent);
     $filesadded++;
 }
 
@@ -112,9 +140,10 @@ foreach ($documents as $doc) {
             if (is_string($textcontent) && !empty(trim($textcontent))) {
                 // Use document type name for the filename if available.
                 $typename = isset($doctypes[$doc->documenttype]) ?
-                    clean_filename($doctypes[$doc->documenttype]->name) :
+                    $doctypes[$doc->documenttype]->name :
                     $doc->documenttype;
-                $zip->addFromString($typename . '.txt', $textcontent);
+                $htmlcontent = $wraphtmlcontent($typename, $textcontent);
+                $zip->addFromString(clean_filename($typename) . '.html', $htmlcontent);
                 $filesadded++;
             }
         }
