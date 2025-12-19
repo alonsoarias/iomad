@@ -159,6 +159,12 @@ trait application_renderer {
             // Can withdraw?
             $canwithdraw = in_array($app->status, ['submitted', 'under_review']);
 
+            // Is draft? Can continue?
+            $isdraft = ($app->status === 'draft');
+            $continueurl = $isdraft
+                ? (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $app->vacancyid]))->out(false)
+                : null;
+
             // Get missing documents for this application.
             $missingdocs = $this->get_missing_documents($app->id, $app->vacancyid, $userid);
 
@@ -213,12 +219,14 @@ trait application_renderer {
                 'viewurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id]))->out(false),
                 'withdrawurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'application', 'id' => $app->id, 'action' => 'withdraw', 'confirm' => 1, 'sesskey' => sesskey()]))->out(false),
                 'canwithdraw' => $canwithdraw,
+                'isdraft' => $isdraft,
+                'continueurl' => $continueurl,
             ];
         }
 
         // Prepare filter form.
         $statusoptions = [['value' => '', 'label' => get_string('allstatuses', 'local_jobboard'), 'selected' => empty($status)]];
-        $statuses = ['submitted', 'under_review', 'docs_validated', 'docs_rejected', 'interview', 'selected', 'rejected', 'withdrawn'];
+        $statuses = ['draft', 'submitted', 'under_review', 'docs_validated', 'docs_rejected', 'interview', 'selected', 'rejected', 'withdrawn'];
         foreach ($statuses as $s) {
             $statusoptions[] = [
                 'value' => $s,
@@ -417,6 +425,10 @@ trait application_renderer {
         $statusicon = 'info-circle';
 
         switch ($application->status) {
+            case 'draft':
+                $statuscolor = 'warning';
+                $statusicon = 'pencil-alt';
+                break;
             case 'docs_validated':
             case 'selected':
                 $statuscolor = 'success';
@@ -596,6 +608,12 @@ trait application_renderer {
         // Can withdraw?
         $canwithdraw = $isowner && in_array($application->status, ['submitted', 'under_review']);
 
+        // Is draft? Can continue?
+        $isdraft = ($application->status === 'draft');
+        $continueurl = $isdraft
+            ? (new moodle_url('/local/jobboard/index.php', ['view' => 'apply', 'vacancyid' => $application->vacancyid]))->out(false)
+            : null;
+
         // Back navigation.
         $backurl = (new moodle_url('/local/jobboard/index.php', ['view' => 'applications']))->out(false);
         $backlabel = get_string('backtoapplications', 'local_jobboard');
@@ -680,6 +698,8 @@ trait application_renderer {
             'canreview' => $canreview && !$isowner,
             'canmanage' => $canmanage,
             'canwithdraw' => $canwithdraw,
+            'isdraft' => $isdraft,
+            'continueurl' => $continueurl,
             'workflowactions' => $workflowdata,
             'hasworkflowactions' => !empty($workflowdata),
             'sesskey' => sesskey(),

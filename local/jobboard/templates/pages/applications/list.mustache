@@ -180,6 +180,21 @@
                         {{#hascompany}}<div class="mb-2"></div>{{/hascompany}}
                         {{/convocatorianame}}
 
+                        {{! Draft Alert - Action Required }}
+                        {{#isdraft}}
+                        <div class="alert alert-warning py-2 mb-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <i class="fa fa-pencil-alt me-2"></i>
+                                <strong>{{#str}}draft_pending, local_jobboard{{/str}}</strong>
+                                <div class="small text-muted">{{#str}}draft_pending_desc, local_jobboard{{/str}}</div>
+                            </div>
+                            <a href="{{continueurl}}" class="btn btn-success btn-sm ms-3">
+                                <i class="fa fa-arrow-right me-1"></i>
+                                {{#str}}completeandsubmit, local_jobboard{{/str}}
+                            </a>
+                        </div>
+                        {{/isdraft}}
+
                         {{! Progress Bar - Document Approval Progress }}
                         {{#documentcount}}
                         <div class="mb-3">
@@ -274,10 +289,19 @@
                                     <i class="fa fa-xmark"></i>
                                 </button>
                                 {{/canwithdraw}}
+                                {{#isdraft}}
+                                {{! Draft: Show Continue Application button prominently }}
+                                <a href="{{continueurl}}" class="btn btn-success jb-btn-success">
+                                    <i class="fa fa-edit me-1"></i>
+                                    {{#str}}continueapplication, local_jobboard{{/str}}
+                                </a>
+                                {{/isdraft}}
+                                {{^isdraft}}
                                 <a href="{{viewurl}}" class="btn btn-primary jb-btn-primary">
                                     {{#str}}viewdetails, local_jobboard{{/str}}
                                     <i class="fa fa-arrow-right ms-1"></i>
                                 </a>
+                                {{/isdraft}}
                             </div>
                         </div>
                     </div>
