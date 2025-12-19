@@ -699,11 +699,11 @@ trait review_renderer {
         $vacancyid = $params['vacancyid'] ?? 0;
         $page = $params['page'] ?? 0;
         $perpage = $params['perpage'] ?? 20;
-        $facultyid = $params['facultyid'] ?? 0;
-        $programid = $params['programid'] ?? 0;
-        $idnumber = $params['idnumber'] ?? '';
-        $datefrom = $params['datefrom'] ?? '';
-        $dateto = $params['dateto'] ?? '';
+        $code = $params['code'] ?? '';
+        $contracttype = $params['contracttype'] ?? '';
+        $department = $params['department'] ?? '';
+        $location = $params['location'] ?? '';
+        $search = $params['search'] ?? '';
 
         // Stats cards.
         $data['stats'] = [
@@ -727,7 +727,7 @@ trait review_renderer {
             ],
         ];
 
-        // Filter form.
+        // Filter form - matching public page style.
         $statusfilter = $params['statusfilter'] ?? '';
 
         // Status filter options.
@@ -741,89 +741,80 @@ trait review_renderer {
             ['value' => 'withdrawn', 'label' => get_string('status_withdrawn', 'local_jobboard'), 'selected' => ($statusfilter === 'withdrawn')],
         ];
 
-        // Vacancy filter options.
-        $vacancies = $DB->get_records('local_jobboard_vacancy', ['status' => 'published'], 'code ASC', 'id, code, title');
-        $vacancyoptions = [['value' => 0, 'label' => get_string('allvacancies', 'local_jobboard'), 'selected' => ($vacancyid == 0)]];
+        // Build filter options from all vacancies (like public page does).
+        $vacancies = $DB->get_records_sql(
+            "SELECT DISTINCT v.* FROM {local_jobboard_vacancy} v
+             JOIN {local_jobboard_application} a ON a.vacancyid = v.id
+             WHERE a.status IN ('submitted', 'under_review', 'docs_rejected', 'docs_validated', 'rejected', 'withdrawn')
+             ORDER BY v.code ASC"
+        );
+
+        // Contract types.
+        $contracttypes = \local_jobboard_get_contract_types();
+        $contracttypesList = [];
+        $departmentsList = [];
+        $locationsList = [];
+
         foreach ($vacancies as $v) {
-            $vacancyoptions[] = [
-                'value' => $v->id,
-                'label' => format_string($v->code) . ' - ' . format_string($v->title),
-                'selected' => ($vacancyid == $v->id),
-            ];
+            // Contract types (Tipo de Vinculación).
+            if (!empty($v->contracttype) && !isset($contracttypesList[$v->contracttype])) {
+                $contracttypesList[$v->contracttype] = $contracttypes[$v->contracttype] ?? $v->contracttype;
+            }
+            // Departments (Programa académico).
+            if (!empty($v->department) && !isset($departmentsList[$v->department])) {
+                $departmentsList[$v->department] = $v->department;
+            }
+            // Locations (Ubicación).
+            if (!empty($v->location) && !isset($locationsList[$v->location])) {
+                $locationsList[$v->location] = $v->location;
+            }
         }
 
-        // Faculty filter options.
-        $faculties = $DB->get_records('local_jobboard_faculty', ['enabled' => 1], 'name ASC', 'id, code, name');
-        $facultyoptions = [['value' => 0, 'label' => get_string('allfaculties', 'local_jobboard'), 'selected' => ($facultyid == 0)]];
-        foreach ($faculties as $f) {
-            $facultyoptions[] = [
-                'value' => $f->id,
-                'label' => format_string($f->code) . ' - ' . format_string($f->name),
-                'selected' => ($facultyid == $f->id),
-            ];
+        // Sort options alphabetically.
+        asort($contracttypesList);
+        asort($departmentsList);
+        asort($locationsList);
+
+        // Build filter options arrays.
+        $contractoptions = [];
+        foreach ($contracttypesList as $key => $label) {
+            $contractoptions[] = ['value' => $key, 'label' => $label, 'selected' => ($contracttype === $key)];
         }
 
-        // Program filter options.
-        $programs = $DB->get_records('local_jobboard_program', ['enabled' => 1], 'name ASC', 'id, code, name, facultyid');
-        $programoptions = [['value' => 0, 'label' => get_string('allprograms', 'local_jobboard'), 'selected' => ($programid == 0)]];
-        foreach ($programs as $p) {
-            $programoptions[] = [
-                'value' => $p->id,
-                'label' => format_string($p->name),
-                'selected' => ($programid == $p->id),
-            ];
+        $departmentoptions = [];
+        foreach ($departmentsList as $key => $label) {
+            $departmentoptions[] = ['value' => $key, 'label' => $label, 'selected' => ($department === $key)];
         }
 
+        $locationoptions = [];
+        foreach ($locationsList as $key => $label) {
+            $locationoptions[] = ['value' => $key, 'label' => $label, 'selected' => ($location === $key)];
+        }
+
+        $hasfilters = !empty($statusfilter) || !empty($code) || !empty($contracttype) ||
+                      !empty($department) || !empty($location) || !empty($search);
+
+        // Filter form - public page style.
         $data['filterform'] = [
             'action' => (new moodle_url('/local/jobboard/index.php'))->out(false),
             'hiddenfields' => [
                 ['name' => 'view', 'value' => 'review'],
             ],
-            'fields' => [
-                [
-                    'name' => 'status',
-                    'label' => get_string('status', 'local_jobboard'),
-                    'isselect' => true,
-                    'options' => $statusoptions,
-                ],
-                [
-                    'name' => 'vacancyid',
-                    'label' => get_string('vacancy', 'local_jobboard'),
-                    'isselect' => true,
-                    'options' => $vacancyoptions,
-                ],
-                [
-                    'name' => 'facultyid',
-                    'label' => get_string('faculty', 'local_jobboard'),
-                    'isselect' => true,
-                    'options' => $facultyoptions,
-                ],
-                [
-                    'name' => 'programid',
-                    'label' => get_string('program', 'local_jobboard'),
-                    'isselect' => true,
-                    'options' => $programoptions,
-                ],
-                [
-                    'name' => 'idnumber',
-                    'label' => get_string('idnumber_cedula', 'local_jobboard'),
-                    'istext' => true,
-                    'value' => $idnumber,
-                    'placeholder' => get_string('idnumber_placeholder', 'local_jobboard'),
-                ],
-                [
-                    'name' => 'datefrom',
-                    'label' => get_string('datefrom', 'local_jobboard'),
-                    'isdate' => true,
-                    'value' => $datefrom,
-                ],
-                [
-                    'name' => 'dateto',
-                    'label' => get_string('dateto', 'local_jobboard'),
-                    'isdate' => true,
-                    'value' => $dateto,
-                ],
-            ],
+            // Filter values.
+            'codevalue' => $code,
+            'searchvalue' => $search,
+            // Status filter (specific to review page).
+            'statusoptions' => $statusoptions,
+            // Filter options (matching public page).
+            'showcontractfilter' => !empty($contractoptions),
+            'contractoptions' => $contractoptions,
+            'showdepartmentfilter' => !empty($departmentoptions),
+            'departmentoptions' => $departmentoptions,
+            'showlocationfilter' => !empty($locationoptions),
+            'locationoptions' => $locationoptions,
+            // Filter state.
+            'hasfilters' => $hasfilters,
+            'clearfiltersurl' => (new moodle_url('/local/jobboard/index.php', ['view' => 'review']))->out(false),
         ];
 
         // Per-page options.
@@ -897,17 +888,16 @@ trait review_renderer {
         $data['applicationcount'] = $total;
 
         // Pagination with all filter parameters.
-        $paginationparams = [
+        $paginationparams = array_filter([
             'view' => 'review',
-            'vacancyid' => $vacancyid,
             'status' => $statusfilter,
-            'facultyid' => $facultyid,
-            'programid' => $programid,
-            'idnumber' => $idnumber,
-            'datefrom' => $datefrom,
-            'dateto' => $dateto,
+            'code' => $code,
+            'contracttype' => $contracttype,
+            'department' => $department,
+            'location' => $location,
+            'search' => $search,
             'perpage' => $perpage,
-        ];
+        ]);
         if ($total > $perpage) {
             $baseurl = new moodle_url('/local/jobboard/index.php', $paginationparams);
             $data['pagination'] = $OUTPUT->paging_bar($total, $page, $perpage, $baseurl);
@@ -924,13 +914,12 @@ trait review_renderer {
 
         // Current filter values for AJAX.
         $data['currentfilters'] = [
-            'vacancyid' => $vacancyid,
             'status' => $statusfilter,
-            'facultyid' => $facultyid,
-            'programid' => $programid,
-            'idnumber' => $idnumber,
-            'datefrom' => $datefrom,
-            'dateto' => $dateto,
+            'code' => $code,
+            'contracttype' => $contracttype,
+            'department' => $department,
+            'location' => $location,
+            'search' => $search,
             'page' => $page,
             'perpage' => $perpage,
         ];

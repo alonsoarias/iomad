@@ -46,12 +46,12 @@ $statusfilter = optional_param('status', '', PARAM_ALPHA);
 $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', 20, PARAM_INT);
 
-// Advanced filter parameters.
-$facultyid = optional_param('facultyid', 0, PARAM_INT);
-$programid = optional_param('programid', 0, PARAM_INT);
-$idnumber = optional_param('idnumber', '', PARAM_TEXT);
-$datefrom = optional_param('datefrom', '', PARAM_TEXT);
-$dateto = optional_param('dateto', '', PARAM_TEXT);
+// Filter parameters - matching public page style.
+$code = optional_param('code', '', PARAM_TEXT);
+$contracttype = optional_param('contracttype', '', PARAM_ALPHANUMEXT);
+$department = optional_param('department', '', PARAM_TEXT);
+$location = optional_param('location', '', PARAM_TEXT);
+$search = optional_param('search', '', PARAM_TEXT);
 
 // Page setup.
 $PAGE->set_title(get_string('reviewdocuments', 'local_jobboard'));
@@ -210,11 +210,11 @@ $params = [
     'statusfilter' => $statusfilter,
     'page' => $page,
     'perpage' => $perpage,
-    'facultyid' => $facultyid,
-    'programid' => $programid,
-    'idnumber' => $idnumber,
-    'datefrom' => $datefrom,
-    'dateto' => $dateto,
+    'code' => $code,
+    'contracttype' => $contracttype,
+    'department' => $department,
+    'location' => $location,
+    'search' => $search,
 ];
 
 // If no application selected, show list of applications pending review.
@@ -241,53 +241,43 @@ if (!$applicationid) {
         $sqlparams['vacancyid'] = $vacancyid;
     }
 
-    // Faculty filter (via vacancy -> convocatoria or direct).
-    if ($facultyid) {
-        $where .= " AND EXISTS (
-            SELECT 1 FROM {local_jobboard_program} p
-            JOIN {local_jobboard_faculty} f ON f.id = p.facultyid
-            WHERE f.id = :facultyid AND (
-                p.name LIKE CONCAT('%', v.department, '%')
-                OR v.department LIKE CONCAT('%', p.name, '%')
-                OR v.title LIKE CONCAT('%', f.name, '%')
-            )
-        )";
-        $sqlparams['facultyid'] = $facultyid;
+    // Code filter (vacancy code).
+    if (!empty($code)) {
+        $where .= " AND " . $DB->sql_like('v.code', ':code', false, false);
+        $sqlparams['code'] = '%' . $DB->sql_like_escape($code) . '%';
     }
 
-    // Program filter (via vacancy department or title).
-    if ($programid) {
-        $where .= " AND EXISTS (
-            SELECT 1 FROM {local_jobboard_program} p
-            WHERE p.id = :programid AND (
-                p.name LIKE CONCAT('%', v.department, '%')
-                OR v.department LIKE CONCAT('%', p.name, '%')
-                OR v.title LIKE CONCAT('%', p.name, '%')
-            )
-        )";
-        $sqlparams['programid'] = $programid;
+    // Contract type filter.
+    if (!empty($contracttype)) {
+        $where .= " AND v.contracttype = :contracttype";
+        $sqlparams['contracttype'] = $contracttype;
     }
 
-    // ID number (cedula) filter.
-    if (!empty($idnumber)) {
-        $where .= " AND " . $DB->sql_like('u.idnumber', ':idnumber', false, false);
-        $sqlparams['idnumber'] = '%' . $DB->sql_like_escape($idnumber) . '%';
+    // Department filter (Programa académico).
+    if (!empty($department)) {
+        $where .= " AND v.department = :department";
+        $sqlparams['department'] = $department;
     }
 
-    // Date range filter.
-    if (!empty($datefrom)) {
-        $fromtimestamp = strtotime($datefrom);
-        if ($fromtimestamp) {
-            $where .= " AND a.timecreated >= :datefrom";
-            $sqlparams['datefrom'] = $fromtimestamp;
-        }
+    // Location filter (Ubicación).
+    if (!empty($location)) {
+        $where .= " AND v.location = :location";
+        $sqlparams['location'] = $location;
     }
-    if (!empty($dateto)) {
-        $totimestamp = strtotime($dateto . ' 23:59:59');
-        if ($totimestamp) {
-            $where .= " AND a.timecreated <= :dateto";
-            $sqlparams['dateto'] = $totimestamp;
-        }
+
+    // General search filter.
+    if (!empty($search)) {
+        $searchlike = '%' . $DB->sql_like_escape($search) . '%';
+        $where .= " AND (" . $DB->sql_like('v.title', ':search1', false, false) .
+                 " OR " . $DB->sql_like('v.code', ':search2', false, false) .
+                 " OR " . $DB->sql_like('u.firstname', ':search3', false, false) .
+                 " OR " . $DB->sql_like('u.lastname', ':search4', false, false) .
+                 " OR " . $DB->sql_like('u.email', ':search5', false, false) . ")";
+        $sqlparams['search1'] = $searchlike;
+        $sqlparams['search2'] = $searchlike;
+        $sqlparams['search3'] = $searchlike;
+        $sqlparams['search4'] = $searchlike;
+        $sqlparams['search5'] = $searchlike;
     }
 
     // Multi-tenant filter.
