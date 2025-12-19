@@ -96,26 +96,30 @@ class document {
      * @var array
      */
     public const FILENAME_PREFIXES = [
-        'rut' => 'Rut',
-        'sigep' => 'Hv',
-        'bienes_rentas' => 'FDR',
-        'cedula' => 'Di',
-        'libreta_militar' => 'Lm',
-        'titulo_academico' => 'Tit',
-        'tarjeta_profesional' => 'Tp',
-        'formacion_complementaria' => 'Cfc',
-        'experiencia_docente' => 'Edoc',
-        'experiencia_profesional' => 'Epro',
-        'formacion_pedagogia' => 'Fped',
-        'formacion_tic' => 'Tic',
-        'antecedentes_disciplinarios' => 'Adis',
-        'antecedentes_fiscales' => 'Afis',
-        'antecedentes_judiciales' => 'Ajud',
-        'medidas_correctivas' => 'RNMC',
-        'inhabilidades' => 'Cids',
-        'redam' => 'RDAM',
+        'rut' => 'Rut',                           // Fotocopia del RUT actualizado.
+        'sigep' => 'Hv',                          // Hoja de vida.
+        'bienes_rentas' => 'FDR',                 // Formato de Declaración de Bienes y Rentas.
+        'cedula' => 'Di',                         // Documento de identidad.
+        'libreta_militar' => 'Lm',                // Libreta militar.
+        'diploma_pregrado' => 'Preg',             // Diploma de pregrado.
+        'acta_pregrado' => 'Apreg',               // Acta de grado pregrado.
+        'tarjeta_profesional' => 'Tp',            // Tarjeta Profesional.
+        'diploma_posgrado' => 'Posg',             // Diploma posgrado.
+        'acta_posgrado' => 'Aposg',               // Acta de grado Posgrado.
+        'experiencia_docente' => 'Edoc',          // Experiencia docente.
+        'experiencia_profesional' => 'Epro',      // Experiencia profesional.
+        'formacion_complementaria' => 'Cfc',      // Certificados de formación complementaria.
+        'formacion_pedagogia' => 'Fped',          // Formación en pedagogía.
+        'formacion_tic' => 'Tic',                 // Formación TIC.
+        'antecedentes_disciplinarios' => 'Adis',  // Antecedentes disciplinarios.
+        'antecedentes_fiscales' => 'Afis',        // Antecedentes fiscales.
+        'antecedentes_judiciales' => 'Ajud',      // Antecedentes judiciales.
+        'medidas_correctivas' => 'RNMC',          // Registro Nacional de Medidas Correctivas.
+        'inhabilidades' => 'Cids',                // Consulta de Inhabilidades, Delitos sexuales.
+        'redam' => 'RDAM',                        // Registro de Deudores Alimentarios Morosos.
         // Text input types (no file).
-        'carta_intencion' => 'CI',
+        'carta_intencion' => 'CI',                // Carta de intención.
+        'coverletter' => 'CP',                    // Carta de presentación.
     ];
 
     /**
