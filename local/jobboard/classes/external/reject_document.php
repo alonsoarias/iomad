@@ -45,7 +45,7 @@ class reject_document extends external_api {
         return new external_function_parameters([
             'documentid' => new external_value(PARAM_INT, 'The document ID to reject'),
             'applicationid' => new external_value(PARAM_INT, 'The application ID'),
-            'reason' => new external_value(PARAM_TEXT, 'The rejection reason'),
+            'reason' => new external_value(PARAM_RAW, 'The rejection reason'),
         ]);
     }
 
@@ -73,7 +73,8 @@ class reject_document extends external_api {
         require_capability('local/jobboard:reviewdocuments', $context);
 
         // Reason is required for rejection.
-        $reason = trim($params['reason']);
+        // Sanitize the reason (PARAM_RAW accepts input, but we clean for storage).
+        $reason = clean_param(trim($params['reason']), PARAM_TEXT);
         if (empty($reason)) {
             return [
                 'success' => false,
