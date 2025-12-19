@@ -101,6 +101,12 @@ list($options, $unrecognized) = cli_get_params([
     'verbose' => false,
     'export-json' => null,
     'create-sample' => false,
+    // Application deletion options.
+    'delete-application' => false,
+    'idnumber' => null,
+    'application-id' => null,
+    'vacancy-id' => null,
+    'list-applications' => false,
 ], [
     'h' => 'help',
     'i' => 'input',
@@ -120,6 +126,11 @@ list($options, $unrecognized) = cli_get_params([
     'J' => 'json',
     'T' => 'export-csv-template',
     'S' => 'create-sample',
+    'D' => 'delete-application',
+    'I' => 'idnumber',
+    'A' => 'application-id',
+    'V' => 'vacancy-id',
+    'L' => 'list-applications',
 ]);
 
 if (!empty($unrecognized) && $moodleavailable) {
@@ -217,6 +228,36 @@ EXAMPLES:
   # Parse only (standalone mode)
   php cli.php --export-json=perfiles.json --verbose
 
+APPLICATION MANAGEMENT:
+  -D, --delete-application  DELETE applications (requires --idnumber or --application-id)
+  -I, --idnumber=ID         User idnumber to identify the applicant
+  -A, --application-id=ID   Specific application ID to delete
+  -V, --vacancy-id=ID       Filter by vacancy ID (optional, use with --idnumber)
+  -L, --list-applications   List applications instead of deleting
+
+  IMPORTANT: Deleting an application removes ALL related data:
+    - All uploaded documents and their files
+    - Document validation records
+    - Workflow history logs
+    - Evaluation records (if any)
+    - Notification records
+
+APPLICATION DELETION EXAMPLES:
+  # List all applications for a user by idnumber
+  php cli.php --list-applications --idnumber=1234567890
+
+  # Delete ALL applications for a user by idnumber
+  php cli.php --delete-application --idnumber=1234567890
+
+  # Delete applications for a user in a specific vacancy
+  php cli.php --delete-application --idnumber=1234567890 --vacancy-id=42
+
+  # Delete a specific application by ID
+  php cli.php --delete-application --application-id=123
+
+  # Dry run (preview what would be deleted)
+  php cli.php --delete-application --idnumber=1234567890 --dryrun --verbose
+
 STRUCTURE CREATED (IOMAD Hierarchy):
   LEVEL 1 - Companies (16 Centros Tutoriales):
     - ISER Sede Pamplona (PAMPLONA) - Sede Principal
@@ -276,6 +317,270 @@ CSV;
     echo "#    - modality: PRESENCIAL, A DISTANCIA, VIRTUAL, HIBRIDA\n";
     echo "#    - faculty: FCAS or FII\n";
     echo "# 4. Save and run: php cli.php --csv=yourfile.csv --create-structure --publish\n";
+    exit(0);
+}
+
+// ============================================================
+// APPLICATION MANAGEMENT (List/Delete)
+// ============================================================
+if ($options['delete-application'] || $options['list-applications']) {
+    if (!$moodleavailable) {
+        cli_error("Application management requires Moodle. Run from Moodle installation.");
+    }
+
+    $idnumber = $options['idnumber'];
+    $applicationid = $options['application-id'] ? (int) $options['application-id'] : null;
+    $vacancyid = $options['vacancy-id'] ? (int) $options['vacancy-id'] : null;
+    $verbose = $options['verbose'];
+    $dryrun = $options['dryrun'];
+
+    // Validate parameters.
+    if (empty($idnumber) && empty($applicationid)) {
+        cli_error("You must specify --idnumber or --application-id");
+    }
+
+    // Find user by idnumber if provided.
+    $userid = null;
+    if (!empty($idnumber)) {
+        $user = $DB->get_record('user', ['idnumber' => $idnumber]);
+        if (!$user) {
+            cli_error("User with idnumber '$idnumber' not found");
+        }
+        $userid = $user->id;
+        echo "User found: {$user->firstname} {$user->lastname} (ID: {$user->id}, email: {$user->email})\n\n";
+    }
+
+    // Build query for applications.
+    $params = [];
+    $where = ['1=1'];
+
+    if ($applicationid) {
+        $where[] = 'a.id = :appid';
+        $params['appid'] = $applicationid;
+    }
+
+    if ($userid) {
+        $where[] = 'a.userid = :userid';
+        $params['userid'] = $userid;
+    }
+
+    if ($vacancyid) {
+        $where[] = 'a.vacancyid = :vacancyid';
+        $params['vacancyid'] = $vacancyid;
+    }
+
+    $wheresql = implode(' AND ', $where);
+
+    // Get applications.
+    $sql = "SELECT a.*, v.code as vacancy_code, v.title as vacancy_title, v.location, v.modality,
+                   u.firstname, u.lastname, u.email, u.idnumber as user_idnumber
+            FROM {local_jobboard_application} a
+            JOIN {local_jobboard_vacancy} v ON v.id = a.vacancyid
+            JOIN {user} u ON u.id = a.userid
+            WHERE $wheresql
+            ORDER BY a.timecreated DESC";
+
+    $applications = $DB->get_records_sql($sql, $params);
+
+    if (empty($applications)) {
+        echo "No applications found matching the criteria.\n";
+        exit(0);
+    }
+
+    // ============================================================
+    // LIST APPLICATIONS MODE
+    // ============================================================
+    if ($options['list-applications']) {
+        cli_heading('Applications Found: ' . count($applications));
+        echo str_repeat('-', 120) . "\n";
+        printf("%-6s | %-12s | %-15s | %-30s | %-25s | %-20s\n",
+            'ID', 'Status', 'Vacancy Code', 'Vacancy Title', 'Location', 'Date');
+        echo str_repeat('-', 120) . "\n";
+
+        foreach ($applications as $app) {
+            $title = strlen($app->vacancy_title) > 28 ? substr($app->vacancy_title, 0, 25) . '...' : $app->vacancy_title;
+            $location = strlen($app->location) > 23 ? substr($app->location, 0, 20) . '...' : $app->location;
+
+            printf("%-6d | %-12s | %-15s | %-30s | %-25s | %-20s\n",
+                $app->id,
+                $app->status,
+                $app->vacancy_code,
+                $title,
+                $location,
+                date('Y-m-d H:i', $app->timecreated)
+            );
+
+            if ($verbose) {
+                // Show documents count.
+                $doccount = $DB->count_records('local_jobboard_document', ['applicationid' => $app->id]);
+                $workflowcount = $DB->count_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
+                echo "       | Documents: $doccount | Workflow entries: $workflowcount\n";
+            }
+        }
+
+        echo str_repeat('-', 120) . "\n";
+        echo "Total: " . count($applications) . " applications\n";
+
+        if (!$options['delete-application']) {
+            echo "\nTo delete these applications, add --delete-application flag.\n";
+        }
+
+        if (!$options['delete-application']) {
+            exit(0);
+        }
+    }
+
+    // ============================================================
+    // DELETE APPLICATIONS MODE
+    // ============================================================
+    cli_heading('Deleting Applications');
+
+    $totalapps = count($applications);
+    echo "Found $totalapps application(s) to delete.\n\n";
+
+    if ($dryrun) {
+        echo "*** DRY RUN MODE - No changes will be made ***\n\n";
+    }
+
+    $stats = [
+        'applications' => 0,
+        'documents' => 0,
+        'doc_validations' => 0,
+        'workflow_logs' => 0,
+        'evaluations' => 0,
+        'notifications' => 0,
+        'files' => 0,
+    ];
+
+    // Get file storage.
+    $fs = get_file_storage();
+    $context = \context_system::instance();
+
+    foreach ($applications as $app) {
+        echo "Processing application ID: {$app->id}\n";
+        echo "  Vacancy: {$app->vacancy_code} - {$app->vacancy_title}\n";
+        echo "  User: {$app->firstname} {$app->lastname} ({$app->user_idnumber})\n";
+        echo "  Status: {$app->status}\n";
+        echo "  Created: " . date('Y-m-d H:i:s', $app->timecreated) . "\n";
+
+        // Get documents for this application.
+        $documents = $DB->get_records('local_jobboard_document', ['applicationid' => $app->id]);
+        $doccount = count($documents);
+        echo "  Documents: $doccount\n";
+
+        if (!$dryrun) {
+            // 1. Delete document validations.
+            if (!empty($documents)) {
+                $docids = array_keys($documents);
+                list($docinsql, $docparams) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED, 'did');
+                $valcount = $DB->count_records_select('local_jobboard_doc_validation', "documentid $docinsql", $docparams);
+                $DB->delete_records_select('local_jobboard_doc_validation', "documentid $docinsql", $docparams);
+                $stats['doc_validations'] += $valcount;
+                if ($verbose) echo "    Deleted $valcount document validation(s)\n";
+            }
+
+            // 2. Delete document files from Moodle file storage.
+            foreach ($documents as $doc) {
+                // Files are stored in component 'local_jobboard', filearea 'application_documents'.
+                $files = $fs->get_area_files(
+                    $context->id,
+                    'local_jobboard',
+                    'application_documents',
+                    $doc->id,
+                    'id',
+                    false
+                );
+                foreach ($files as $file) {
+                    $file->delete();
+                    $stats['files']++;
+                }
+            }
+            if ($verbose && $doccount > 0) echo "    Deleted document files from storage\n";
+
+            // 3. Delete documents records.
+            $DB->delete_records('local_jobboard_document', ['applicationid' => $app->id]);
+            $stats['documents'] += $doccount;
+            if ($verbose) echo "    Deleted $doccount document record(s)\n";
+
+            // 4. Delete workflow logs.
+            $wfcount = $DB->count_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
+            $DB->delete_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
+            $stats['workflow_logs'] += $wfcount;
+            if ($verbose) echo "    Deleted $wfcount workflow log(s)\n";
+
+            // 5. Delete evaluations (if table exists).
+            if ($DB->get_manager()->table_exists('local_jobboard_evaluation')) {
+                $evalcount = $DB->count_records('local_jobboard_evaluation', ['applicationid' => $app->id]);
+                if ($evalcount > 0) {
+                    $DB->delete_records('local_jobboard_evaluation', ['applicationid' => $app->id]);
+                    $stats['evaluations'] += $evalcount;
+                    if ($verbose) echo "    Deleted $evalcount evaluation(s)\n";
+                }
+            }
+
+            // 6. Delete notifications.
+            $notifcount = $DB->count_records_select('local_jobboard_notification',
+                "entitytype = 'application' AND entityid = :appid",
+                ['appid' => $app->id]);
+            if ($notifcount > 0) {
+                $DB->delete_records_select('local_jobboard_notification',
+                    "entitytype = 'application' AND entityid = :appid",
+                    ['appid' => $app->id]);
+                $stats['notifications'] += $notifcount;
+                if ($verbose) echo "    Deleted $notifcount notification(s)\n";
+            }
+
+            // 7. Delete application record.
+            $DB->delete_records('local_jobboard_application', ['id' => $app->id]);
+            $stats['applications']++;
+            echo "  DELETED application ID: {$app->id}\n";
+
+        } else {
+            // Dry run - just count.
+            $stats['applications']++;
+            $stats['documents'] += $doccount;
+
+            if (!empty($documents)) {
+                $docids = array_keys($documents);
+                list($docinsql, $docparams) = $DB->get_in_or_equal($docids, SQL_PARAMS_NAMED, 'did');
+                $stats['doc_validations'] += $DB->count_records_select('local_jobboard_doc_validation', "documentid $docinsql", $docparams);
+            }
+
+            $stats['workflow_logs'] += $DB->count_records('local_jobboard_workflow_log', ['applicationid' => $app->id]);
+
+            if ($DB->get_manager()->table_exists('local_jobboard_evaluation')) {
+                $stats['evaluations'] += $DB->count_records('local_jobboard_evaluation', ['applicationid' => $app->id]);
+            }
+
+            $stats['notifications'] += $DB->count_records_select('local_jobboard_notification',
+                "entitytype = 'application' AND entityid = :appid",
+                ['appid' => $app->id]);
+
+            echo "  Would DELETE application ID: {$app->id}\n";
+        }
+
+        echo "\n";
+    }
+
+    // Summary.
+    echo str_repeat('=', 60) . "\n";
+    echo $dryrun ? "DRY RUN SUMMARY (no changes made):\n" : "DELETION SUMMARY:\n";
+    echo str_repeat('=', 60) . "\n";
+    echo "Applications deleted:      {$stats['applications']}\n";
+    echo "Documents deleted:         {$stats['documents']}\n";
+    echo "Document validations:      {$stats['doc_validations']}\n";
+    echo "Workflow logs:             {$stats['workflow_logs']}\n";
+    echo "Evaluations:               {$stats['evaluations']}\n";
+    echo "Notifications:             {$stats['notifications']}\n";
+    echo "Files removed:             {$stats['files']}\n";
+    echo str_repeat('=', 60) . "\n";
+
+    if ($dryrun) {
+        echo "\n*** DRY RUN - Run without --dryrun to actually delete ***\n";
+    } else {
+        echo "\n=== DELETION COMPLETE ===\n";
+    }
+
     exit(0);
 }
 
