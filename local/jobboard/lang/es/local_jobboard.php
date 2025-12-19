@@ -137,6 +137,7 @@ $string['showmore'] = 'Mostrar más';
 $string['showless'] = 'Mostrar menos';
 $string['viewall'] = 'Ver todo';
 $string['viewdetails'] = 'Ver detalles';
+$string['viewprofile'] = 'Ver perfil';
 $string['continue'] = 'Continuar';
 $string['finish'] = 'Finalizar';
 $string['next'] = 'Siguiente';

@@ -755,6 +755,7 @@ trait review_renderer {
             $appsdata[] = [
                 'id' => $app->id,
                 'applicantname' => fullname($app),
+                'profileurl' => (new moodle_url('/user/profile.php', ['id' => $app->userid]))->out(false),
                 'email' => $app->email,
                 'vacancycode' => format_string($app->vacancy_code ?? ''),
                 'vacancytitle' => format_string($app->vacancy_title ?? ''),
@@ -1116,6 +1117,7 @@ trait review_renderer {
         $data['selectedapplication'] = [
             'id' => $applicationid,
             'applicantname' => fullname($applicant),
+            'profileurl' => (new moodle_url('/user/profile.php', ['id' => $applicant->id]))->out(false),
             'email' => $applicant->email,
             'dateapplied' => userdate($application->timecreated, get_string('strftimedate', 'langconfig')),
             'vacancycode' => format_string($vacancy->code ?? ''),
