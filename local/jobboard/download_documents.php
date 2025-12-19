@@ -69,6 +69,9 @@ $idnumber = clean_filename($applicant->idnumber ?: (string)$applicant->id);
 
 $zipfilename = "documentos_{$lastname}_{$firstname}_{$idnumber}_" . date('Ymd_His') . '.zip';
 
+// Common file prefix for all documents.
+$fileprefix = "{$lastname}_{$firstname}_{$idnumber}_";
+
 // Create temporary file for ZIP.
 $tempdir = make_temp_directory('local_jobboard_zip');
 $tempzippath = $tempdir . '/' . $zipfilename;
@@ -124,7 +127,7 @@ $wraphtmlcontent = function($title, $content) use ($applicant) {
 // Add cover letter if present.
 if (!empty($application->coverletter)) {
     $coverlettertitle = get_string('coverletter', 'local_jobboard');
-    $coverletterfilename = clean_filename($coverlettertitle) . '.html';
+    $coverletterfilename = $fileprefix . clean_filename($coverlettertitle) . '.html';
     $htmlcontent = $wraphtmlcontent($coverlettertitle, $application->coverletter);
     $zip->addFromString($coverletterfilename, $htmlcontent);
     $filesadded++;
@@ -143,7 +146,7 @@ foreach ($documents as $doc) {
                     $doctypes[$doc->documenttype]->name :
                     $doc->documenttype;
                 $htmlcontent = $wraphtmlcontent($typename, $textcontent);
-                $zip->addFromString(clean_filename($typename) . '.html', $htmlcontent);
+                $zip->addFromString($fileprefix . clean_filename($typename) . '.html', $htmlcontent);
                 $filesadded++;
             }
         }
@@ -158,8 +161,8 @@ foreach ($documents as $doc) {
             // Get file content.
             $content = $file->get_content();
             if (!empty($content)) {
-                // Use original filename directly (flat structure, no folders).
-                $zip->addFromString($doc->filename, $content);
+                // Use prefix + original filename (flat structure, no folders).
+                $zip->addFromString($fileprefix . $doc->filename, $content);
                 $filesadded++;
             }
             break;
