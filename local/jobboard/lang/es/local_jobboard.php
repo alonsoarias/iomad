@@ -1299,6 +1299,19 @@ $string['viewdetails'] = 'Ver Detalles';
 // Notificaciones pendientes
 $string['pendingnotifications'] = 'Notificaciones Pendientes';
 $string['notification_application_received'] = 'Postulación recibida';
+$string['notification_application_received_subject'] = 'Confirmación de Postulación - {$a->vacancy}';
+$string['notification_application_received_body'] = 'Estimado/a {$a->fullname},
+
+Hemos recibido su postulación para la vacante "{$a->vacancy}" (Código: {$a->code}).
+
+Su postulación ha sido registrada exitosamente y se encuentra en proceso de revisión. Recibirá notificaciones sobre el estado de su postulación a través de este correo electrónico.
+
+Fecha de postulación: {$a->date}
+
+Puede consultar el estado de su postulación en cualquier momento accediendo a la plataforma.
+
+Atentamente,
+{$a->sitename}';
 $string['notification_docs_validated'] = 'Documentos validados';
 $string['notification_docs_rejected'] = 'Documentos requieren atención';
 $string['notification_interview_scheduled'] = 'Entrevista programada';

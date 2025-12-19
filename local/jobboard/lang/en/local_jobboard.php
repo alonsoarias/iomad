@@ -1305,6 +1305,19 @@ $string['viewdetails'] = 'View Details';
 // Pending notifications
 $string['pendingnotifications'] = 'Pending Notifications';
 $string['notification_application_received'] = 'Application received';
+$string['notification_application_received_subject'] = 'Application Confirmation - {$a->vacancy}';
+$string['notification_application_received_body'] = 'Dear {$a->fullname},
+
+We have received your application for the vacancy "{$a->vacancy}" (Code: {$a->code}).
+
+Your application has been successfully registered and is under review. You will receive notifications about your application status via this email.
+
+Application date: {$a->date}
+
+You can check the status of your application at any time by logging into the platform.
+
+Best regards,
+{$a->sitename}';
 $string['notification_docs_validated'] = 'Documents validated';
 $string['notification_docs_rejected'] = 'Documents need attention';
 $string['notification_interview_scheduled'] = 'Interview scheduled';
