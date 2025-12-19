@@ -95,6 +95,13 @@ $allfiles = $fs->get_area_files(
 // Get document types for naming text files.
 $doctypes = $DB->get_records('local_jobboard_doctype', [], '', 'code, name');
 
+// Add cover letter if present.
+if (!empty($application->coverletter)) {
+    $coverletterfilename = get_string('coverletter', 'local_jobboard') . '.txt';
+    $zip->addFromString(clean_filename($coverletterfilename), $application->coverletter);
+    $filesadded++;
+}
+
 foreach ($documents as $doc) {
     // Handle text documents (they don't have physical files in Moodle file storage).
     if ($doc->mimetype === 'text/plain') {
