@@ -2,11 +2,11 @@
     @template local_jobboard/pages/review/assign_reviewer
 
     Assign reviewer to applications page template.
-    Simplified design following apply.mustache pattern.
+    Clean design following jb-* pattern.
 
     Context variables:
     * pagetitle - Page title string
-    * stats - Statistics object (unassigned, reviewers, assigned, avgworkload)
+    * stats - Statistics object
     * vacancies - Vacancies for filter dropdown
     * selectedvacancyid - Currently selected vacancy ID
     * reviewers - Available reviewers with workload
@@ -17,244 +17,395 @@
     * actionformurl - URL for action form
     * dashboardurl - URL to dashboard
     * reviewurl - URL to review applications
-    * bulkvalidateurl - URL to bulk validation
     * sesskey - Session key
-
-    Example context (json):
-    {
-        "pagetitle": "Assign Reviewer",
-        "stats": {"unassigned": 10, "reviewers": 5, "assigned": 25, "avgworkload": 5.0}
-    }
 }}
-<div class="jb-assign-reviewer" data-region="jobboard-assign-reviewer">
-    {{! Quick Actions Bar }}
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
-        <div class="btn-group btn-group-sm">
-            <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
-                <i class="fa fa-gauge me-1" aria-hidden="true"></i>
-                {{#str}}dashboard, local_jobboard{{/str}}
+<div class="jb-assign" id="jobboard-assign-reviewer">
+    {{! ================================================================ }}
+    {{! HEADER SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-assign-header">
+        <div class="jb-assign-header__nav">
+            <a href="{{dashboardurl}}" class="jb-link">
+                <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-            <a href="{{reviewurl}}" class="btn btn-outline-primary jb-btn-outline-primary">
-                <i class="fa fa-clipboard-check me-1" aria-hidden="true"></i>
-                {{#str}}reviewapplications, local_jobboard{{/str}}
+        </div>
+        <div class="jb-assign-header__main">
+            <h1 class="jb-assign-header__title">
+                <i class="fa fa-user-plus"></i> {{pagetitle}}
+            </h1>
+            <a href="{{reviewurl}}" class="jb-btn jb-btn--outline">
+                <i class="fa fa-clipboard-check"></i> {{#str}}reviewapplications, local_jobboard{{/str}}
             </a>
         </div>
     </div>
 
-    {{! Statistics Cards }}
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-2">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-warning">
-                <div class="card-body text-center py-3">
-                    <div class="h3 text-warning mb-0 jb-stat-value">{{stats.unassigned}}</div>
-                    <small class="text-muted jb-stat-label">{{#str}}unassignedapplications, local_jobboard{{/str}}</small>
-                </div>
+    {{! ================================================================ }}
+    {{! STATISTICS SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-stats">
+        <div class="jb-stat jb-stat--warning">
+            <i class="fa fa-clock"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.unassigned}}</span>
+                <span class="jb-stat__label">{{#str}}unassignedapplications, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-primary">
-                <div class="card-body text-center py-3">
-                    <div class="h3 text-primary mb-0 jb-stat-value">{{stats.reviewers}}</div>
-                    <small class="text-muted jb-stat-label">{{#str}}availablereviewers, local_jobboard{{/str}}</small>
-                </div>
+        <div class="jb-stat jb-stat--primary">
+            <i class="fa fa-users"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.reviewers}}</span>
+                <span class="jb-stat__label">{{#str}}availablereviewers, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-success">
-                <div class="card-body text-center py-3">
-                    <div class="h3 text-success mb-0 jb-stat-value">{{stats.assigned}}</div>
-                    <small class="text-muted jb-stat-label">{{#str}}totalassigned, local_jobboard{{/str}}</small>
-                </div>
+        <div class="jb-stat jb-stat--success">
+            <i class="fa fa-check-circle"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.assigned}}</span>
+                <span class="jb-stat__label">{{#str}}totalassigned, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 mb-2">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-info">
-                <div class="card-body text-center py-3">
-                    <div class="h3 text-info mb-0 jb-stat-value">{{stats.avgworkload}}</div>
-                    <small class="text-muted jb-stat-label">{{#str}}avgworkload, local_jobboard{{/str}}</small>
-                </div>
+        <div class="jb-stat jb-stat--info">
+            <i class="fa fa-chart-bar"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.avgworkload}}</span>
+                <span class="jb-stat__label">{{#str}}avgworkload, local_jobboard{{/str}}</span>
             </div>
         </div>
     </div>
 
-    {{! Vacancy Filter }}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light py-2">
-            <h6 class="mb-0"><i class="fa fa-filter me-2 text-muted"></i>{{#str}}filter{{/str}}</h6>
-        </div>
-        <div class="card-body py-3">
-            <form method="get" action="{{filterformurl}}" class="d-flex flex-wrap align-items-center gap-2 jb-filter-form">
-                <select name="vacancyid" id="vacancyid" class="form-select form-select-sm" style="max-width: 300px;">
+    {{! ================================================================ }}
+    {{! FILTER SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-card jb-filter-card">
+        <form method="get" action="{{filterformurl}}" class="jb-filter-form">
+            <div class="jb-filter-form__select">
+                <label class="jb-filter-label">{{#str}}vacancy, local_jobboard{{/str}}</label>
+                <select name="vacancyid" class="jb-select">
                     <option value="0">{{#str}}allvacancies, local_jobboard{{/str}}</option>
                     {{#vacancies}}
                     <option value="{{id}}" {{#selected}}selected{{/selected}}>{{label}}</option>
                     {{/vacancies}}
                 </select>
-                <button type="submit" class="btn btn-primary jb-btn-primary btn-sm">
-                    <i class="fa fa-filter me-1" aria-hidden="true"></i>
-                    {{#str}}filter{{/str}}
-                </button>
-            </form>
-        </div>
+            </div>
+            <button type="submit" class="jb-btn jb-btn--primary">
+                <i class="fa fa-filter"></i> {{#str}}filter{{/str}}
+            </button>
+        </form>
     </div>
 
-    {{! Reviewer Workload Summary }}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light py-2 d-flex justify-content-between align-items-center">
-            <h6 class="mb-0"><i class="fa fa-users me-2 text-muted"></i>{{#str}}reviewerworkload, local_jobboard{{/str}}</h6>
-            <span class="badge bg-secondary">{{stats.reviewers}} {{#str}}reviewers, local_jobboard{{/str}}</span>
+    {{! ================================================================ }}
+    {{! REVIEWER WORKLOAD SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-card">
+        <div class="jb-card__header">
+            <div class="jb-card__header-icon jb-card__header-icon--primary">
+                <i class="fa fa-users"></i>
+            </div>
+            <h2 class="jb-card__header-title">{{#str}}reviewerworkload, local_jobboard{{/str}}</h2>
+            <span class="jb-badge jb-badge--primary">{{stats.reviewers}} {{#str}}reviewers, local_jobboard{{/str}}</span>
         </div>
-        <div class="card-body py-3">
+        <div class="jb-card__body">
             {{#hasreviewers}}
-            <div class="row">
+            <div class="jb-reviewer-grid">
                 {{#reviewers}}
-                <div class="col-lg-4 col-md-6 mb-3">
-                    <div class="card h-100 border-start border-{{workloadcolor}} border-3">
-                        <div class="card-body py-2">
-                            <h6 class="mb-1">
-                                <i class="fa fa-user text-muted me-2" aria-hidden="true"></i>
-                                {{fullname}}
-                            </h6>
-                            <span class="badge bg-{{workloadcolor}} mb-2">
-                                {{workload}} {{#str}}activeassignments, local_jobboard{{/str}}
-                            </span>
-                            {{#hasstats}}
-                            <div class="small text-muted">
-                                <i class="fa fa-check me-1" aria-hidden="true"></i>
-                                {{#str}}reviewed, local_jobboard{{/str}}: <strong>{{stats.reviewed}}</strong>
-                                <span class="mx-2">|</span>
-                                <i class="fa fa-clock me-1" aria-hidden="true"></i>
-                                {{#str}}avgtime, local_jobboard{{/str}}: <strong>{{stats.avgtime}}h</strong>
-                            </div>
-                            {{/hasstats}}
-                        </div>
+                <div class="jb-reviewer-card jb-reviewer-card--{{workloadcolor}}">
+                    <div class="jb-reviewer-card__header">
+                        <i class="fa fa-user"></i>
+                        <span class="jb-reviewer-card__name">{{fullname}}</span>
                     </div>
+                    <div class="jb-reviewer-card__workload">
+                        <span class="jb-badge jb-badge--{{workloadcolor}}">{{workload}} {{#str}}activeassignments, local_jobboard{{/str}}</span>
+                    </div>
+                    {{#hasstats}}
+                    <div class="jb-reviewer-card__stats">
+                        <span><i class="fa fa-check"></i> {{stats.reviewed}}</span>
+                        <span><i class="fa fa-clock"></i> {{stats.avgtime}}h</span>
+                    </div>
+                    {{/hasstats}}
                 </div>
                 {{/reviewers}}
             </div>
             {{/hasreviewers}}
             {{^hasreviewers}}
-            <div class="text-center py-4">
-                <i class="fa fa-users fa-3x text-muted mb-3" aria-hidden="true"></i>
-                <p class="text-muted mb-0">{{#str}}noreviewers, local_jobboard{{/str}}</p>
+            <div class="jb-empty">
+                <i class="fa fa-users"></i>
+                <h3>{{#str}}noreviewers, local_jobboard{{/str}}</h3>
             </div>
             {{/hasreviewers}}
         </div>
     </div>
 
-    {{! Auto-Assign Section }}
-    <div class="card shadow-sm mb-4 border-info">
-        <div class="card-header bg-light py-2">
-            <h6 class="mb-0">
-                <i class="fa fa-wand-magic-sparkles me-2 text-info" aria-hidden="true"></i>
-                {{#str}}autoassign, local_jobboard{{/str}}
-            </h6>
+    {{! ================================================================ }}
+    {{! AUTO-ASSIGN SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-card jb-card--info">
+        <div class="jb-card__header">
+            <div class="jb-card__header-icon jb-card__header-icon--info">
+                <i class="fa fa-wand-magic-sparkles"></i>
+            </div>
+            <h2 class="jb-card__header-title">{{#str}}autoassign, local_jobboard{{/str}}</h2>
         </div>
-        <div class="card-body py-3">
-            <form method="post" action="{{actionformurl}}" class="d-flex flex-wrap align-items-center gap-2">
+        <div class="jb-card__body">
+            <form method="post" action="{{actionformurl}}" class="jb-auto-assign-form">
                 <input type="hidden" name="sesskey" value="{{sesskey}}">
                 <input type="hidden" name="action" value="autoassign">
                 <input type="hidden" name="vacancyid" value="{{selectedvacancyid}}">
-                <label for="maxperreviewer" class="form-label mb-0 small">{{#str}}maxperreviewer, local_jobboard{{/str}}</label>
-                <input type="number" name="maxperreviewer" id="maxperreviewer" value="20"
-                       min="1" max="100" class="form-control form-control-sm" style="width: 80px;">
-                <button type="submit" class="btn btn-info jb-btn-info btn-sm">
-                    <i class="fa fa-wand-magic-sparkles me-1" aria-hidden="true"></i>
-                    {{#str}}autoassignall, local_jobboard{{/str}}
-                </button>
+                <div class="jb-auto-assign-form__row">
+                    <label class="jb-auto-assign-form__label">{{#str}}maxperreviewer, local_jobboard{{/str}}</label>
+                    <input type="number" name="maxperreviewer" value="20" min="1" max="100" class="jb-input jb-input--number">
+                    <button type="submit" class="jb-btn jb-btn--info">
+                        <i class="fa fa-wand-magic-sparkles"></i> {{#str}}autoassignall, local_jobboard{{/str}}
+                    </button>
+                </div>
             </form>
-            <small class="text-muted mt-2 d-block">
-                <i class="fa fa-circle-info me-1" aria-hidden="true"></i>
-                {{#str}}autoassignhelp, local_jobboard{{/str}}
-            </small>
+            <p class="jb-help-text">
+                <i class="fa fa-info-circle"></i> {{#str}}autoassignhelp, local_jobboard{{/str}}
+            </p>
         </div>
     </div>
 
-    {{! Manual Assignment Section }}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light py-2 d-flex justify-content-between align-items-center">
-            <h6 class="mb-0"><i class="fa fa-hand-pointer me-2 text-muted"></i>{{#str}}manualassign, local_jobboard{{/str}}</h6>
-            <span class="badge bg-warning text-dark">{{stats.unassigned}} {{#str}}pendingassignment, local_jobboard{{/str}}</span>
+    {{! ================================================================ }}
+    {{! MANUAL ASSIGNMENT SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-card">
+        <div class="jb-card__header">
+            <div class="jb-card__header-icon jb-card__header-icon--warning">
+                <i class="fa fa-hand-pointer"></i>
+            </div>
+            <h2 class="jb-card__header-title">{{#str}}manualassign, local_jobboard{{/str}}</h2>
+            <span class="jb-badge jb-badge--warning">{{stats.unassigned}} {{#str}}pendingassignment, local_jobboard{{/str}}</span>
         </div>
-        <div class="card-body py-3">
+        <div class="jb-card__body">
             {{#hasunassigned}}
             <form method="post" action="{{actionformurl}}" id="manual-assign-form">
                 <input type="hidden" name="sesskey" value="{{sesskey}}">
                 <input type="hidden" name="action" value="assign">
                 <input type="hidden" name="vacancyid" value="{{selectedvacancyid}}">
 
-                {{! Reviewer Selection }}
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label for="reviewerid" class="form-label small fw-bold">
-                            <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
-                            {{#str}}assignto, local_jobboard{{/str}}
-                        </label>
-                        <select name="reviewerid" id="reviewerid" class="form-select form-select-sm" required>
-                            <option value="">{{#str}}selectreviewer, local_jobboard{{/str}}</option>
-                            {{#reviewers}}
-                            <option value="{{id}}">{{fullname}} ({{workload}} {{#str}}assigned, local_jobboard{{/str}}){{workloadindicator}}</option>
-                            {{/reviewers}}
-                        </select>
-                    </div>
+                <div class="jb-assign-to">
+                    <label class="jb-assign-to__label">
+                        <i class="fa fa-user-plus"></i> {{#str}}assignto, local_jobboard{{/str}}
+                    </label>
+                    <select name="reviewerid" class="jb-select" required>
+                        <option value="">{{#str}}selectreviewer, local_jobboard{{/str}}</option>
+                        {{#reviewers}}
+                        <option value="{{id}}">{{fullname}} ({{workload}} {{#str}}assigned, local_jobboard{{/str}}){{workloadindicator}}</option>
+                        {{/reviewers}}
+                    </select>
                 </div>
 
-                {{! Select All Checkbox }}
-                <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="selectallapp">
-                    <label class="form-check-label fw-bold" for="selectallapp">{{#str}}selectall{{/str}}</label>
+                <div class="jb-select-all">
+                    <label class="jb-checkbox">
+                        <input type="checkbox" id="selectallapp">
+                        <span>{{#str}}selectall{{/str}}</span>
+                    </label>
                 </div>
 
-                {{! Applications Table }}
-                <div class="table-responsive">
-                    <table class="table table-hover table-sm">
-                        <thead class="table-light">
+                <div class="jb-table-container">
+                    <table class="jb-table">
+                        <thead>
                             <tr>
-                                <th scope="col" style="width: 40px;"></th>
-                                <th scope="col">{{#str}}applicant, local_jobboard{{/str}}</th>
-                                <th scope="col">{{#str}}vacancy, local_jobboard{{/str}}</th>
-                                <th scope="col">{{#str}}status{{/str}}</th>
-                                <th scope="col">{{#str}}dateapplied, local_jobboard{{/str}}</th>
+                                <th style="width: 40px;"></th>
+                                <th>{{#str}}applicant, local_jobboard{{/str}}</th>
+                                <th>{{#str}}vacancy, local_jobboard{{/str}}</th>
+                                <th class="jb-text-center">{{#str}}status{{/str}}</th>
+                                <th class="jb-hide-md">{{#str}}dateapplied, local_jobboard{{/str}}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#unassigned}}
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="applications[]" value="{{id}}" class="form-check-input app-checkbox">
+                                    <input type="checkbox" name="applications[]" value="{{id}}" class="jb-checkbox-input app-checkbox">
                                 </td>
                                 <td><strong>{{applicantname}}</strong></td>
-                                <td><code class="text-primary small">{{vacancycode}}</code></td>
-                                <td><span class="badge bg-{{statuscolor}}">{{statustext}}</span></td>
-                                <td class="text-muted small">{{dateapplied}}</td>
+                                <td><code class="jb-code jb-code--primary">{{vacancycode}}</code></td>
+                                <td class="jb-text-center">
+                                    <span class="jb-badge jb-badge--{{statuscolor}}">{{statustext}}</span>
+                                </td>
+                                <td class="jb-hide-md jb-text-muted">{{dateapplied}}</td>
                             </tr>
                             {{/unassigned}}
                         </tbody>
                     </table>
                 </div>
 
-                <div class="mt-3">
-                    <button type="submit" class="btn btn-primary jb-btn-primary btn-sm">
-                        <i class="fa fa-user-plus me-2" aria-hidden="true"></i>
-                        {{#str}}assignselected, local_jobboard{{/str}}
+                <div class="jb-form-actions">
+                    <button type="submit" class="jb-btn jb-btn--primary">
+                        <i class="fa fa-user-plus"></i> {{#str}}assignselected, local_jobboard{{/str}}
                     </button>
                 </div>
             </form>
             {{/hasunassigned}}
             {{^hasunassigned}}
-            <div class="text-center py-4">
-                <i class="fa fa-circle-check fa-3x text-success mb-3" aria-hidden="true"></i>
-                <h6 class="text-success mb-2">{{#str}}alldone, local_jobboard{{/str}}</h6>
-                <p class="text-muted mb-0">{{#str}}nounassignedapplications, local_jobboard{{/str}}</p>
+            <div class="jb-empty jb-empty--success">
+                <i class="fa fa-circle-check"></i>
+                <h3>{{#str}}alldone, local_jobboard{{/str}}</h3>
+                <p>{{#str}}nounassignedapplications, local_jobboard{{/str}}</p>
             </div>
             {{/hasunassigned}}
         </div>
     </div>
+
+    {{! ================================================================ }}
+    {{! FOOTER NAVIGATION }}
+    {{! ================================================================ }}
+    <div class="jb-footer-nav">
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-arrow-left"></i> {{#str}}backtodashboard, local_jobboard{{/str}}
+        </a>
+        <a href="{{reviewurl}}" class="jb-link">
+            {{#str}}reviewapplications, local_jobboard{{/str}} <i class="fa fa-arrow-right"></i>
+        </a>
+    </div>
 </div>
 
-{{! Styles consolidated in styles.css }}
+<style>
+/* Assign Reviewer Page - Clean jb-* Design */
+.jb-assign { max-width: 1200px; padding: 1rem; }
 
-{{! JavaScript for select all }}
+/* Header */
+.jb-assign-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-assign-header__nav { margin-bottom: 1rem; }
+.jb-assign-header__main { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.jb-assign-header__title { font-size: 1.5rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-assign-header__title i { color: var(--iser-verde, #1b9e88); }
+
+/* Links */
+.jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
+
+/* Stats - Border-left pattern */
+.jb-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 160px; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-stat:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jb-stat > i { font-size: 1.5rem; opacity: 0.7; }
+.jb-stat__data { display: flex; flex-direction: column; }
+.jb-stat__value { font-size: 1.5rem; font-weight: 700; color: var(--iser-negro, #1a1a1a); line-height: 1; }
+.jb-stat__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+.jb-stat--success { border-left: 3px solid #28a745; }
+.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
+.jb-stat--warning { border-left: 3px solid #ffc107; }
+.jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #d39e00; }
+.jb-stat--info { border-left: 3px solid #17a2b8; }
+.jb-stat--info .jb-stat__value, .jb-stat--info > i { color: #17a2b8; }
+
+/* Cards */
+.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; }
+.jb-card--info { border-top: 3px solid #17a2b8; }
+.jb-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 0.75rem; background: #f9fafb; }
+.jb-card__header-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
+.jb-card__header-icon--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-card__header-icon--warning { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
+.jb-card__header-icon--info { background: rgba(23, 162, 184, 0.15); color: #17a2b8; }
+.jb-card__header-title { flex: 1; font-size: 0.9375rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); }
+.jb-card__body { padding: 1rem; }
+
+/* Filter Card */
+.jb-filter-card { padding: 1rem; margin-bottom: 1.5rem; }
+.jb-filter-form { display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.jb-filter-form__select { min-width: 200px; }
+.jb-filter-label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--iser-gris-medio, #666); margin-bottom: 0.375rem; }
+
+/* Reviewer Grid */
+.jb-reviewer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.jb-reviewer-card { background: #f9fafb; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; }
+.jb-reviewer-card--success { border-left: 3px solid #28a745; }
+.jb-reviewer-card--warning { border-left: 3px solid #ffc107; }
+.jb-reviewer-card--danger { border-left: 3px solid #dc3545; }
+.jb-reviewer-card__header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+.jb-reviewer-card__header i { color: var(--iser-gris-medio, #666); }
+.jb-reviewer-card__name { font-weight: 600; color: var(--iser-negro, #1a1a1a); }
+.jb-reviewer-card__workload { margin-bottom: 0.5rem; }
+.jb-reviewer-card__stats { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--iser-gris-medio, #666); }
+.jb-reviewer-card__stats i { margin-right: 0.25rem; }
+
+/* Auto-assign Form */
+.jb-auto-assign-form__row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.jb-auto-assign-form__label { font-size: 0.875rem; color: var(--iser-gris-oscuro, #333); }
+.jb-help-text { font-size: 0.8125rem; color: var(--iser-gris-medio, #666); margin: 0.75rem 0 0; }
+.jb-help-text i { margin-right: 0.25rem; }
+
+/* Assign-to Section */
+.jb-assign-to { margin-bottom: 1rem; max-width: 400px; }
+.jb-assign-to__label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--iser-negro, #1a1a1a); margin-bottom: 0.5rem; }
+.jb-assign-to__label i { margin-right: 0.375rem; color: var(--iser-verde, #1b9e88); }
+
+/* Select All */
+.jb-select-all { margin-bottom: 1rem; padding: 0.75rem; background: #f9fafb; border-radius: 6px; }
+.jb-checkbox { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: 500; }
+.jb-checkbox-input { width: 18px; height: 18px; cursor: pointer; }
+
+/* Table */
+.jb-table-container { overflow-x: auto; }
+.jb-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.jb-table th, .jb-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #f0f0f0; }
+.jb-table th { font-weight: 600; color: var(--iser-gris-oscuro, #333); background: #f9fafb; font-size: 0.8125rem; }
+.jb-table tbody tr:hover td { background: #f9fafb; }
+.jb-text-center { text-align: center; }
+.jb-text-muted { color: var(--iser-gris-medio, #666); font-size: 0.8125rem; }
+.jb-hide-md { display: table-cell; }
+
+/* Form Actions */
+.jb-form-actions { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #f0f0f0; }
+
+/* Form Elements */
+.jb-input, .jb-select { padding: 0.5rem 0.75rem; font-size: 0.875rem; border: 1px solid #d1d5db; border-radius: 6px; background: #fff; transition: border-color 0.15s; }
+.jb-input:focus, .jb-select:focus { outline: none; border-color: var(--iser-verde, #1b9e88); box-shadow: 0 0 0 3px rgba(27, 158, 136, 0.15); }
+.jb-input--number { width: 80px; }
+.jb-select { width: 100%; }
+
+/* Badges */
+.jb-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.6875rem; font-weight: 600; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-badge--warning { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-badge--danger { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
+.jb-badge--info { background: rgba(23, 162, 184, 0.15); color: #0c5460; }
+
+/* Code */
+.jb-code { font-family: 'Monaco', 'Consolas', monospace; padding: 0.125rem 0.375rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+.jb-code--primary { background: rgba(27, 158, 136, 0.1); color: var(--iser-verde, #1b9e88); }
+
+/* Empty State */
+.jb-empty { text-align: center; padding: 3rem 1rem; }
+.jb-empty > i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; display: block; }
+.jb-empty h3 { font-size: 1.125rem; color: var(--iser-gris-oscuro, #333); margin: 0 0 0.5rem; }
+.jb-empty p { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0; }
+.jb-empty--success > i { color: #28a745; }
+
+/* Buttons */
+.jb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.5rem 1rem; border: 1px solid transparent; border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; border-color: var(--iser-verde, #1b9e88); }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+.jb-btn--info { background: #17a2b8; color: #fff; border-color: #17a2b8; }
+.jb-btn--info:hover { background: #138496; color: #fff; }
+
+/* Footer Nav */
+.jb-footer-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; margin-top: 1rem; border-top: 1px solid #e5e5e5; }
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-hide-md { display: none; }
+}
+@media (max-width: 768px) {
+    .jb-assign-header__main { flex-direction: column; align-items: flex-start; }
+    .jb-assign-header__title { font-size: 1.25rem; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { min-width: 100%; }
+    .jb-filter-form { flex-direction: column; align-items: stretch; }
+    .jb-filter-form__select { min-width: 100%; }
+    .jb-reviewer-grid { grid-template-columns: 1fr; }
+    .jb-auto-assign-form__row { flex-direction: column; align-items: stretch; }
+    .jb-footer-nav { flex-direction: column; gap: 1rem; text-align: center; }
+}
+@media print { .jb-btn, .jb-assign-header__nav, .jb-filter-card, .jb-footer-nav { display: none; } }
+</style>
+
 {{#hasunassigned}}
 {{#js}}
 (function() {
