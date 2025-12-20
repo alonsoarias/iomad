@@ -50,40 +50,40 @@
     {{! STATISTICS SECTION }}
     {{! ================================================================ }}
     <div class="jb-stats">
-        <div class="jb-stat jb-stat--primary">
-            <div class="jb-stat__icon">
+        <div class="jb-stat-card jb-stat-card--primary">
+            <div class="jb-stat-card__icon">
                 <i class="fa fa-shield"></i>
             </div>
-            <div class="jb-stat__data">
-                <span class="jb-stat__value">{{stats.total}}</span>
-                <span class="jb-stat__label">{{#str}}totalexemptions, local_jobboard{{/str}}</span>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.total}}</span>
+                <span class="jb-stat-card__label">{{#str}}totalexemptions, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="jb-stat jb-stat--success">
-            <div class="jb-stat__icon">
+        <div class="jb-stat-card jb-stat-card--success">
+            <div class="jb-stat-card__icon">
                 <i class="fa fa-circle-check"></i>
             </div>
-            <div class="jb-stat__data">
-                <span class="jb-stat__value">{{stats.active}}</span>
-                <span class="jb-stat__label">{{#str}}activeexemptions, local_jobboard{{/str}}</span>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.active}}</span>
+                <span class="jb-stat-card__label">{{#str}}activeexemptions, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="jb-stat jb-stat--warning">
-            <div class="jb-stat__icon">
+        <div class="jb-stat-card jb-stat-card--warning">
+            <div class="jb-stat-card__icon">
                 <i class="fa fa-clock"></i>
             </div>
-            <div class="jb-stat__data">
-                <span class="jb-stat__value">{{stats.expired}}</span>
-                <span class="jb-stat__label">{{#str}}expiredexemptions, local_jobboard{{/str}}</span>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.expired}}</span>
+                <span class="jb-stat-card__label">{{#str}}expiredexemptions, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="jb-stat jb-stat--danger">
-            <div class="jb-stat__icon">
+        <div class="jb-stat-card jb-stat-card--danger">
+            <div class="jb-stat-card__icon">
                 <i class="fa fa-ban"></i>
             </div>
-            <div class="jb-stat__data">
-                <span class="jb-stat__value">{{stats.revoked}}</span>
-                <span class="jb-stat__label">{{#str}}revokedexemptions, local_jobboard{{/str}}</span>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.revoked}}</span>
+                <span class="jb-stat-card__label">{{#str}}revokedexemptions, local_jobboard{{/str}}</span>
             </div>
         </div>
     </div>
@@ -269,23 +269,20 @@
 
 /* Stats */
 .jb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-.jb-stat { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; }
-.jb-stat__icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
-.jb-stat__data { display: flex; flex-direction: column; }
-.jb-stat__value { font-size: 1.5rem; font-weight: 700; line-height: 1; }
-.jb-stat__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
-.jb-stat--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
-.jb-stat--primary .jb-stat__icon { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
-.jb-stat--primary .jb-stat__value { color: var(--iser-verde, #1b9e88); }
-.jb-stat--success { border-top: 3px solid #28a745; }
-.jb-stat--success .jb-stat__icon { background: rgba(40, 167, 69, 0.15); color: #28a745; }
-.jb-stat--success .jb-stat__value { color: #28a745; }
-.jb-stat--warning { border-top: 3px solid #ffc107; }
-.jb-stat--warning .jb-stat__icon { background: rgba(255, 193, 7, 0.2); color: #856404; }
-.jb-stat--warning .jb-stat__value { color: #856404; }
-.jb-stat--danger { border-top: 3px solid #dc3545; }
-.jb-stat--danger .jb-stat__icon { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
-.jb-stat--danger .jb-stat__value { color: #dc3545; }
+.jb-stat-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jb-stat-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat-card--success { border-top: 3px solid #28a745; }
+.jb-stat-card--warning { border-top: 3px solid #ffc107; }
+.jb-stat-card--danger { border-top: 3px solid #dc3545; }
+.jb-stat-card__icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+.jb-stat-card--primary .jb-stat-card__icon { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-stat-card--success .jb-stat-card__icon { background: rgba(40, 167, 69, 0.15); color: #28a745; }
+.jb-stat-card--warning .jb-stat-card__icon { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
+.jb-stat-card--danger .jb-stat-card__icon { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
+.jb-stat-card__content { display: flex; flex-direction: column; }
+.jb-stat-card__value { font-size: 1.5rem; font-weight: 700; color: var(--iser-negro, #1a1a1a); line-height: 1; }
+.jb-stat-card__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
 
 /* Filter Card */
 .jb-filter-card { padding: 1rem; margin-bottom: 1.5rem; }
