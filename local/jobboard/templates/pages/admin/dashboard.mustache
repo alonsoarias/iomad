@@ -1,7 +1,7 @@
 {{!
     @template local_jobboard/pages/admin/dashboard
 
-    Main dashboard page template - Clean minimal design with jb-* pattern.
+    Main dashboard page template - Ultra minimalist design with jb-* pattern.
     Provides role-based views for admins, reviewers, and applicants.
 
     Context variables:
@@ -28,23 +28,18 @@
     * recentactivity (array) - Recent activity items
 }}
 <div class="jb-dashboard" id="jobboard-dashboard">
-    {{! ================================================================ }}
-    {{! HEADER SECTION }}
-    {{! ================================================================ }}
-    <div class="jb-dashboard-header">
-        <div class="jb-dashboard-header__nav">
+    {{! Header }}
+    <div class="jb-header">
+        <div class="jb-header__top">
             {{#showpubliclink}}
-            <a href="{{publicurl}}" class="jb-dashboard-header__link">
+            <a href="{{publicurl}}" class="jb-link">
                 <i class="fa fa-globe"></i> {{#str}}viewpublicpage, local_jobboard{{/str}}
             </a>
             {{/showpubliclink}}
-            <div class="jb-dashboard-header__actions">
+            <div class="jb-header__actions">
                 {{#isapplicant}}
                 <a href="{{applicationsurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
                     <i class="fa fa-folder-open"></i> {{#str}}myapplications, local_jobboard{{/str}}
-                </a>
-                <a href="{{profileurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
-                    <i class="fa fa-user-pen"></i> {{#str}}updateprofile_button, local_jobboard{{/str}}
                 </a>
                 {{/isapplicant}}
                 {{#isadmin}}
@@ -54,320 +49,172 @@
                 {{/isadmin}}
             </div>
         </div>
-        <h1 class="jb-dashboard-header__title">
-            <i class="fa fa-gauge"></i> {{#str}}dashboard, local_jobboard{{/str}}
-        </h1>
-        {{#welcome.rolelabel}}
-        <span class="jb-badge jb-badge--secondary">{{welcome.rolelabel}}</span>
-        {{/welcome.rolelabel}}
+        <h1 class="jb-header__title">{{#str}}dashboard, local_jobboard{{/str}}</h1>
+        {{#welcome.rolelabel}}<span class="jb-badge jb-badge--muted">{{welcome.rolelabel}}</span>{{/welcome.rolelabel}}
     </div>
 
-    {{! ================================================================ }}
-    {{! ALERTS SECTION }}
-    {{! ================================================================ }}
+    {{! Alerts }}
     {{#alerts.0}}
     <div class="jb-alerts">
         {{#alerts}}
         <div class="jb-alert jb-alert--{{type}}">
             <i class="fa fa-{{icon}}"></i>
-            <div class="jb-alert__content">
-                {{#title}}<strong>{{title}}</strong>{{/title}}
-                <span>{{message}}</span>
+            <div class="jb-alert__body">
+                {{#title}}<strong>{{title}}</strong> {{/title}}{{message}}
             </div>
-            {{#actionurl}}
-            <a href="{{actionurl}}" class="jb-btn jb-btn--sm jb-btn--{{type}}">{{actionlabel}}</a>
-            {{/actionurl}}
+            {{#actionurl}}<a href="{{actionurl}}" class="jb-btn jb-btn--sm jb-btn--{{type}}">{{actionlabel}}</a>{{/actionurl}}
         </div>
         {{/alerts}}
     </div>
     {{/alerts.0}}
 
-    {{! ================================================================ }}
-    {{! URGENT: NEXT CONVOCATORIA DEADLINE BANNER }}
-    {{! ================================================================ }}
+    {{! Deadline Banner }}
     {{#hasnextconvocatoria}}
-    <div class="jb-alert jb-alert--{{nextconvocatoria.alertclass}} jb-alert--banner">
-        <div class="jb-alert__icon">
-            {{#nextconvocatoria.iscritical}}
-            <i class="fa fa-triangle-exclamation jb-pulse"></i>
-            {{/nextconvocatoria.iscritical}}
-            {{^nextconvocatoria.iscritical}}
-            <i class="fa fa-calendar-xmark"></i>
-            {{/nextconvocatoria.iscritical}}
+    <div class="jb-banner jb-banner--{{nextconvocatoria.alertclass}}">
+        <div class="jb-banner__content">
+            <span class="jb-badge jb-badge--{{nextconvocatoria.alertclass}}">
+                {{#nextconvocatoria.iscritical}}<i class="fa fa-fire"></i> {{#str}}critical, local_jobboard{{/str}}{{/nextconvocatoria.iscritical}}
+                {{^nextconvocatoria.iscritical}}<i class="fa fa-clock"></i> {{nextconvocatoria.daysremaining}} {{#str}}days, local_jobboard{{/str}}{{/nextconvocatoria.iscritical}}
+            </span>
+            <span class="jb-banner__text"><strong>{{nextconvocatoria.code}}</strong> {{nextconvocatoria.name}}</span>
         </div>
-        <div class="jb-alert__content">
-            <div class="jb-alert__header">
-                {{#nextconvocatoria.iscritical}}
-                <span class="jb-badge jb-badge--danger jb-badge--pulse">
-                    <i class="fa fa-fire"></i> {{#str}}critical, local_jobboard{{/str}}
-                </span>
-                {{/nextconvocatoria.iscritical}}
-                <strong class="jb-alert__title">{{nextconvocatoria.code}}</strong> - {{nextconvocatoria.name}}
-            </div>
-            <div class="jb-alert__meta">
-                <i class="fa fa-clock"></i>
-                {{#str}}closingon, local_jobboard{{/str}} <strong>{{nextconvocatoria.enddate}}</strong>
-                <span class="jb-badge jb-badge--{{nextconvocatoria.alertclass}}">
-                    {{nextconvocatoria.daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
-                </span>
-            </div>
-        </div>
-        <a href="{{nextconvocatoria.url}}" class="jb-btn jb-btn--{{nextconvocatoria.alertclass}} jb-btn--sm">
-            <i class="fa fa-eye"></i> {{#str}}viewdetails, local_jobboard{{/str}}
-        </a>
+        <a href="{{nextconvocatoria.url}}" class="jb-link">{{#str}}viewdetails, local_jobboard{{/str}} <i class="fa fa-arrow-right"></i></a>
     </div>
     {{/hasnextconvocatoria}}
 
-    {{! ================================================================ }}
-    {{! ADMIN/MANAGER SECTION }}
-    {{! ================================================================ }}
+    {{! Admin Section }}
     {{#isadmin}}
-    <section class="jb-section">
-        <div class="jb-section-header">
-            <h2 class="jb-section-header__title">
-                <i class="fa fa-gauge"></i> {{#str}}administracion, local_jobboard{{/str}}
-            </h2>
-        </div>
+    {{#stats.0}}
+    <div class="jb-stats">
+        {{#stats}}
+        <a href="{{url}}" class="jb-stat jb-stat--{{color}}">
+            <span class="jb-stat__value">{{value}}</span>
+            <span class="jb-stat__label">{{label}}</span>
+        </a>
+        {{/stats}}
+    </div>
+    {{/stats.0}}
 
-        {{! Statistics }}
-        {{#stats.0}}
-        <div class="jb-stats">
-            {{#stats}}
-            <a href="{{url}}" class="jb-stat jb-stat--{{color}}">
-                <i class="fa fa-{{icon}}"></i>
-                <div class="jb-stat__data">
-                    <span class="jb-stat__value">{{value}}</span>
-                    <span class="jb-stat__label">{{label}}</span>
-                </div>
-            </a>
-            {{/stats}}
-        </div>
-        {{/stats.0}}
-
-        {{! Admin Action Cards }}
+    <div class="jb-section">
+        <h2 class="jb-section__title">{{#str}}administracion, local_jobboard{{/str}}</h2>
         {{#adminsections.0}}
-        <div class="jb-grid jb-grid--3">
+        <div class="jb-cards">
             {{#adminsections}}
-            <div class="jb-card jb-action-card">
-                <div class="jb-action-card__header jb-action-card__header--{{color}}">
-                    <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}folder{{/icon}}"></i>
+            <a href="{{url}}" class="jb-card jb-card--{{color}}">
+                <div class="jb-card__icon"><i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}folder{{/icon}}"></i></div>
+                <div class="jb-card__content">
                     <h3>{{title}}</h3>
+                    <p>{{description}}</p>
                 </div>
-                <div class="jb-action-card__body">
-                    <p class="jb-action-card__desc">{{description}}</p>
-                    {{#features.0}}
-                    <ul class="jb-feature-list">
-                        {{#features}}
-                        <li><i class="fa fa-circle-check"></i> {{.}}</li>
-                        {{/features}}
-                    </ul>
-                    {{/features.0}}
-                </div>
-                <div class="jb-action-card__footer">
-                    <a href="{{url}}" class="jb-btn jb-btn--{{color}} jb-btn--block">
-                        <span>{{buttonlabel}}</span>
-                        <i class="fa fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
+                <i class="fa fa-chevron-right jb-card__arrow"></i>
+            </a>
             {{/adminsections}}
         </div>
         {{/adminsections.0}}
+    </div>
 
-        {{! Workflow Management Section }}
-        {{#workflowsections.0}}
-        <div class="jb-subsection">
-            <h3 class="jb-subsection__title">
-                <i class="fa fa-diagram-project"></i> {{#str}}workflowmanagement, local_jobboard{{/str}}
-            </h3>
-            <div class="jb-grid jb-grid--3">
-                {{#workflowsections}}
-                <div class="jb-card jb-mini-card">
-                    <div class="jb-mini-card__body">
-                        <div class="jb-mini-card__header">
-                            <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}list-check{{/icon}} jb-mini-card__icon jb-mini-card__icon--{{color}}"></i>
-                            <h4>{{title}}</h4>
-                        </div>
-                        <p>{{description}}</p>
-                        <a href="{{url}}" class="jb-btn jb-btn--outline jb-btn--sm">
-                            {{buttonlabel}} <i class="fa fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                {{/workflowsections}}
-            </div>
+    {{#workflowsections.0}}
+    <div class="jb-section">
+        <h2 class="jb-section__title">{{#str}}workflowmanagement, local_jobboard{{/str}}</h2>
+        <div class="jb-cards jb-cards--compact">
+            {{#workflowsections}}
+            <a href="{{url}}" class="jb-card jb-card--mini">
+                <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}list-check{{/icon}} jb-card__icon--{{color}}"></i>
+                <span>{{title}}</span>
+            </a>
+            {{/workflowsections}}
         </div>
-        {{/workflowsections.0}}
+    </div>
+    {{/workflowsections.0}}
 
-        {{! Reports Section }}
-        {{#reportsections.0}}
-        <div class="jb-subsection">
-            <h3 class="jb-subsection__title">
-                <i class="fa fa-chart-bar"></i> {{#str}}reportsanddata, local_jobboard{{/str}}
-            </h3>
-            <div class="jb-grid jb-grid--3">
-                {{#reportsections}}
-                <div class="jb-card jb-mini-card">
-                    <div class="jb-mini-card__body">
-                        <div class="jb-mini-card__header">
-                            <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}chart-pie{{/icon}} jb-mini-card__icon jb-mini-card__icon--{{color}}"></i>
-                            <h4>{{title}}</h4>
-                        </div>
-                        <p>{{description}}</p>
-                        <a href="{{url}}" class="jb-btn jb-btn--outline jb-btn--sm">
-                            {{buttonlabel}} <i class="fa fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                {{/reportsections}}
-            </div>
+    {{#reportsections.0}}
+    <div class="jb-section">
+        <h2 class="jb-section__title">{{#str}}reportsanddata, local_jobboard{{/str}}</h2>
+        <div class="jb-cards jb-cards--compact">
+            {{#reportsections}}
+            <a href="{{url}}" class="jb-card jb-card--mini">
+                <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}chart-pie{{/icon}} jb-card__icon--{{color}}"></i>
+                <span>{{title}}</span>
+            </a>
+            {{/reportsections}}
         </div>
-        {{/reportsections.0}}
+    </div>
+    {{/reportsections.0}}
 
-        {{! Configuration Section }}
-        {{#configsections.0}}
-        <div class="jb-subsection">
-            <h3 class="jb-subsection__title">
-                <i class="fa fa-gears"></i> {{#str}}systemconfiguration, local_jobboard{{/str}}
-            </h3>
-            <div class="jb-grid jb-grid--4">
-                {{#configsections}}
-                <a href="{{url}}" class="jb-card jb-config-card">
-                    <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}gear{{/icon}} jb-config-card__icon jb-config-card__icon--{{color}}"></i>
-                    <h4>{{title}}</h4>
-                    <p>{{description}}</p>
-                </a>
-                {{/configsections}}
-            </div>
+    {{#configsections.0}}
+    <div class="jb-section">
+        <h2 class="jb-section__title">{{#str}}systemconfiguration, local_jobboard{{/str}}</h2>
+        <div class="jb-cards jb-cards--compact">
+            {{#configsections}}
+            <a href="{{url}}" class="jb-card jb-card--mini">
+                <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}gear{{/icon}} jb-card__icon--{{color}}"></i>
+                <span>{{title}}</span>
+            </a>
+            {{/configsections}}
         </div>
-        {{/configsections.0}}
-    </section>
+    </div>
+    {{/configsections.0}}
     {{/isadmin}}
 
-    {{! ================================================================ }}
-    {{! REVIEWER SECTION }}
-    {{! ================================================================ }}
+    {{! Reviewer Section }}
     {{#isreviewer}}
-    <section class="jb-section">
-        <div class="jb-section-header">
-            <h2 class="jb-section-header__title">
-                <i class="fa fa-clipboard-check"></i> {{#str}}reviewertasks, local_jobboard{{/str}}
-            </h2>
-        </div>
-
-        <div class="jb-reviewer-grid">
-            <div class="jb-card jb-reviewer-card">
-                <div class="jb-reviewer-card__header">
-                    <div class="jb-reviewer-card__title">
-                        <i class="fa fa-list-check"></i>
-                        <h3>{{#str}}myreviews, local_jobboard{{/str}}</h3>
-                    </div>
+    <div class="jb-section">
+        <h2 class="jb-section__title">{{#str}}reviewertasks, local_jobboard{{/str}}</h2>
+        <div class="jb-review-box">
+            <div class="jb-review-box__main">
+                <div class="jb-review-box__header">
+                    <span>{{#str}}myreviews, local_jobboard{{/str}}</span>
                     {{#reviewersection.pendingcount}}
-                    <span class="jb-badge jb-badge--warning jb-badge--pulse">
-                        {{reviewersection.pendingcount}} {{#str}}pending, local_jobboard{{/str}}
-                    </span>
+                    <span class="jb-badge jb-badge--warning">{{reviewersection.pendingcount}} {{#str}}pending, local_jobboard{{/str}}</span>
                     {{/reviewersection.pendingcount}}
                 </div>
-                <div class="jb-reviewer-card__body">
-                    <p>{{#str}}myreviews_desc, local_jobboard{{/str}}</p>
-
-                    {{#reviewersection.haspendingreview}}
-                    <div class="jb-alert jb-alert--warning jb-alert--compact">
-                        <i class="fa fa-triangle-exclamation"></i>
-                        <div class="jb-alert__content">
-                            <strong>{{#str}}attentionrequired, local_jobboard{{/str}}</strong>
-                            <span>{{#str}}pending_reviews_alert, local_jobboard, {{reviewersection.pendingcount}}{{/str}}</span>
-                        </div>
-                    </div>
-                    {{/reviewersection.haspendingreview}}
-
-                    {{^reviewersection.haspendingreview}}
-                    <div class="jb-alert jb-alert--success jb-alert--compact">
-                        <i class="fa fa-circle-check"></i>
-                        <span>{{#str}}nopendingreview, local_jobboard{{/str}}</span>
-                    </div>
-                    {{/reviewersection.haspendingreview}}
-                </div>
-                <div class="jb-reviewer-card__footer">
-                    <a href="{{reviewersection.url}}" class="jb-btn jb-btn--info">
-                        <i class="fa fa-clipboard-list"></i>
-                        {{#str}}viewmyreviews, local_jobboard{{/str}}
-                        <i class="fa fa-arrow-right"></i>
-                    </a>
-                </div>
+                <p>{{#str}}myreviews_desc, local_jobboard{{/str}}</p>
+                <a href="{{reviewersection.url}}" class="jb-btn jb-btn--primary">
+                    {{#str}}viewmyreviews, local_jobboard{{/str}} <i class="fa fa-arrow-right"></i>
+                </a>
             </div>
-
-            <div class="jb-card jb-stat-card jb-stat-card--info">
-                <div class="jb-stat-card__body">
-                    <i class="fa fa-award"></i>
-                    <span class="jb-stat-card__value">{{reviewersection.completedcount}}</span>
-                    <span class="jb-stat-card__label">{{#str}}completedreviews, local_jobboard{{/str}}</span>
-                </div>
+            <div class="jb-review-box__stat">
+                <span class="jb-review-box__value">{{reviewersection.completedcount}}</span>
+                <span class="jb-review-box__label">{{#str}}completedreviews, local_jobboard{{/str}}</span>
             </div>
         </div>
-    </section>
+    </div>
     {{/isreviewer}}
 
-    {{! ================================================================ }}
-    {{! APPLICANT SECTION }}
-    {{! ================================================================ }}
+    {{! Applicant Section }}
     {{#isapplicant}}
-    <section class="jb-section">
-        <div class="jb-section-header">
-            <h2 class="jb-section-header__title">
-                <i class="fa fa-user"></i> {{#str}}myapplications, local_jobboard{{/str}}
-            </h2>
-        </div>
+    {{#applicantstats.0}}
+    <div class="jb-stats">
+        {{#applicantstats}}
+        <a href="{{#url}}{{url}}{{/url}}{{^url}}#{{/url}}" class="jb-stat jb-stat--{{color}}">
+            <span class="jb-stat__value">{{value}}</span>
+            <span class="jb-stat__label">{{label}}</span>
+        </a>
+        {{/applicantstats}}
+    </div>
+    {{/applicantstats.0}}
 
-        {{! Applicant Statistics }}
-        {{#applicantstats.0}}
-        <div class="jb-stats">
-            {{#applicantstats}}
-            <a href="{{#url}}{{url}}{{/url}}{{^url}}#{{/url}}" class="jb-stat jb-stat--{{color}}">
-                <i class="fa fa-{{icon}}"></i>
-                <div class="jb-stat__data">
-                    <span class="jb-stat__value">{{value}}</span>
-                    <span class="jb-stat__label">{{label}}</span>
-                </div>
-            </a>
-            {{/applicantstats}}
-        </div>
-        {{/applicantstats.0}}
-
-        {{! Applicant Action Cards }}
-        {{#applicantsections.0}}
-        <div class="jb-grid jb-grid--3">
+    {{#applicantsections.0}}
+    <div class="jb-section">
+        <h2 class="jb-section__title">{{#str}}myapplications, local_jobboard{{/str}}</h2>
+        <div class="jb-cards">
             {{#applicantsections}}
-            <div class="jb-card jb-action-card">
-                <div class="jb-action-card__header jb-action-card__header--{{color}}">
-                    <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}file-lines{{/icon}}"></i>
+            <a href="{{url}}" class="jb-card jb-card--{{color}}">
+                <div class="jb-card__icon"><i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}file-lines{{/icon}}"></i></div>
+                <div class="jb-card__content">
                     <h3>{{title}}</h3>
+                    <p>{{description}}</p>
+                    {{#alert}}<span class="jb-card__alert jb-card__alert--{{alerttype}}">{{alert}}</span>{{/alert}}
                 </div>
-                <div class="jb-action-card__body">
-                    <p class="jb-action-card__desc">{{description}}</p>
-                    {{#alert}}
-                    <div class="jb-alert jb-alert--{{alerttype}} jb-alert--compact">
-                        <i class="fa fa-circle-info"></i>
-                        <span>{{alert}}</span>
-                    </div>
-                    {{/alert}}
-                </div>
-                <div class="jb-action-card__footer">
-                    <a href="{{url}}" class="jb-btn jb-btn--{{color}} jb-btn--block">
-                        <span>{{buttonlabel}}</span>
-                        <i class="fa fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
+                <i class="fa fa-chevron-right jb-card__arrow"></i>
+            </a>
             {{/applicantsections}}
         </div>
-        {{/applicantsections.0}}
-    </section>
+    </div>
+    {{/applicantsections.0}}
     {{/isapplicant}}
 
-    {{! ================================================================ }}
-    {{! VIEWER ONLY SECTION }}
-    {{! ================================================================ }}
+    {{! Viewer Only }}
     {{#isvieweronly}}
     <div class="jb-empty">
         <i class="fa fa-eye"></i>
@@ -381,611 +228,378 @@
     </div>
     {{/isvieweronly}}
 
-    {{! ================================================================ }}
-    {{! RECENT ACTIVITY TIMELINE }}
-    {{! ================================================================ }}
+    {{! Recent Activity }}
     {{#hasrecentactivity}}
-    <section class="jb-section jb-section--activity">
-        <div class="jb-section-header">
-            <h2 class="jb-section-header__title">
-                <i class="fa fa-clock-rotate-left"></i> {{#str}}recentactivity, local_jobboard{{/str}}
-            </h2>
+    <div class="jb-section">
+        <div class="jb-section__header">
+            <h2 class="jb-section__title">{{#str}}recentactivity, local_jobboard{{/str}}</h2>
             {{#viewallactivityurl}}
-            <a href="{{viewallactivityurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
-                {{#str}}viewall, local_jobboard{{/str}}
-            </a>
+            <a href="{{viewallactivityurl}}" class="jb-link jb-link--sm">{{#str}}viewall, local_jobboard{{/str}}</a>
             {{/viewallactivityurl}}
         </div>
-
-        <div class="jb-card">
-            <ul class="jb-activity-list">
-                {{#recentactivity}}
-                <li class="jb-activity-item">
-                    <i class="fa fa-{{icon}} jb-activity-item__icon jb-activity-item__icon--{{color}}"></i>
-                    <div class="jb-activity-item__content">
-                        <a href="{{url}}" class="jb-activity-item__label">{{label}}</a>
-                        <span class="jb-activity-item__time">
-                            <i class="fa fa-clock"></i> {{timecreated}}
-                        </span>
-                    </div>
-                    <a href="{{url}}" class="jb-btn jb-btn--ghost jb-btn--sm">
-                        <i class="fa fa-chevron-right"></i>
-                    </a>
-                </li>
-                {{/recentactivity}}
-            </ul>
-        </div>
-    </section>
+        <ul class="jb-activity">
+            {{#recentactivity}}
+            <li>
+                <i class="fa fa-{{icon}} jb-activity__icon--{{color}}"></i>
+                <a href="{{url}}" class="jb-activity__label">{{label}}</a>
+                <span class="jb-activity__time">{{timecreated}}</span>
+            </li>
+            {{/recentactivity}}
+        </ul>
+    </div>
     {{/hasrecentactivity}}
 </div>
 
 <style>
-/* ================================================================
-   DASHBOARD PAGE - CLEAN MINIMAL DESIGN
-   Following jb-* pattern
-   ================================================================ */
+/* Dashboard - Ultra Minimalist */
 .jb-dashboard {
     max-width: 1200px;
     padding: 1rem;
 }
 
 /* Header */
-.jb-dashboard-header {
+.jb-header {
     margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding-bottom: 1rem;
     border-bottom: 1px solid #e5e5e5;
 }
 
-.jb-dashboard-header__nav {
+.jb-header__top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
-.jb-dashboard-header__link {
+.jb-header__actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.jb-header__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+/* Links */
+.jb-link {
     color: var(--iser-verde, #1b9e88);
     text-decoration: none;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.375rem;
 }
 
-.jb-dashboard-header__link:hover {
-    color: var(--iser-verde-dark, #157a6a);
-}
-
-.jb-dashboard-header__actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.jb-dashboard-header__title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0 0 0.5rem 0;
-    color: var(--iser-negro, #1a1a1a);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.jb-dashboard-header__title i {
-    color: var(--iser-verde, #1b9e88);
-}
-
-/* Sections */
-.jb-section {
-    margin-bottom: 2rem;
-}
-
-.jb-section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.jb-section-header__title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--iser-gris-oscuro, #333);
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.jb-section-header__title i {
-    color: var(--iser-verde, #1b9e88);
-}
-
-.jb-subsection {
-    margin-top: 1.5rem;
-}
-
-.jb-subsection__title {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--iser-gris-medio, #666);
-    margin: 0 0 1rem 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #f0f0f0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.jb-subsection__title i {
-    color: var(--iser-verde, #1b9e88);
-}
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-link--sm { font-size: 0.75rem; }
 
 /* Alerts */
-.jb-alerts {
-    margin-bottom: 1rem;
-}
+.jb-alerts { margin-bottom: 1rem; }
 
 .jb-alert {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.75rem;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 0.75rem;
-}
-
-.jb-alert > i,
-.jb-alert__icon > i {
-    font-size: 1.25rem;
-    margin-top: 0.125rem;
-}
-
-.jb-alert__content {
-    flex: 1;
-}
-
-.jb-alert__content strong,
-.jb-alert__title {
-    display: inline;
-    margin-right: 0.25rem;
-}
-
-.jb-alert__content span {
-    font-size: 0.875rem;
-    opacity: 0.9;
-}
-
-.jb-alert__header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.25rem;
-}
-
-.jb-alert__meta {
-    font-size: 0.8125rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.jb-alert--info {
-    background: rgba(13, 110, 253, 0.1);
-    border: 1px solid rgba(13, 110, 253, 0.2);
-    color: #0d6efd;
-}
-
-.jb-alert--warning {
-    background: rgba(255, 193, 7, 0.15);
-    border: 1px solid rgba(255, 193, 7, 0.3);
-    color: #856404;
-}
-
-.jb-alert--danger {
-    background: rgba(220, 53, 69, 0.1);
-    border: 1px solid rgba(220, 53, 69, 0.2);
-    color: #c41e3a;
-}
-
-.jb-alert--success {
-    background: rgba(40, 167, 69, 0.1);
-    border: 1px solid rgba(40, 167, 69, 0.2);
-    color: #28a745;
-}
-
-.jb-alert--compact {
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
     font-size: 0.875rem;
 }
 
-.jb-alert--banner {
+.jb-alert > i { font-size: 1rem; }
+.jb-alert__body { flex: 1; }
+.jb-alert--info { background: rgba(13, 110, 253, 0.08); color: #0d6efd; }
+.jb-alert--warning { background: rgba(255, 193, 7, 0.12); color: #856404; }
+.jb-alert--danger { background: rgba(220, 53, 69, 0.08); color: #c41e3a; }
+.jb-alert--success { background: rgba(40, 167, 69, 0.08); color: #28a745; }
+
+/* Banner */
+.jb-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
     flex-wrap: wrap;
 }
 
-.jb-alert--banner .jb-alert__icon {
-    flex-shrink: 0;
+.jb-banner__content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
 }
+
+.jb-banner__text { font-size: 0.875rem; }
+.jb-banner--warning { background: rgba(255, 193, 7, 0.12); color: #856404; }
+.jb-banner--danger { background: rgba(220, 53, 69, 0.08); color: #c41e3a; }
 
 /* Stats */
 .jb-stats {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.75rem;
     margin-bottom: 1.5rem;
+    flex-wrap: wrap;
 }
 
 .jb-stat {
+    flex: 1;
+    min-width: 120px;
+    padding: 1rem;
     background: #fff;
     border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex: 1;
-    min-width: 180px;
+    border-radius: 6px;
     text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s;
 }
 
 .jb-stat:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-color: var(--iser-verde, #1b9e88);
     text-decoration: none;
 }
 
-.jb-stat > i {
-    font-size: 1.75rem;
-    opacity: 0.7;
-}
-
-.jb-stat__data {
-    display: flex;
-    flex-direction: column;
-}
-
 .jb-stat__value {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
     line-height: 1;
 }
 
 .jb-stat__label {
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     color: var(--iser-gris-medio, #666);
     margin-top: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
 }
 
-.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
-.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value { color: var(--iser-verde, #1b9e88); }
+.jb-stat--info .jb-stat__value { color: #0d6efd; }
+.jb-stat--success .jb-stat__value { color: #28a745; }
+.jb-stat--warning .jb-stat__value { color: #e0a800; }
+.jb-stat--danger .jb-stat__value { color: #dc3545; }
 
-.jb-stat--info { border-left: 3px solid #0d6efd; }
-.jb-stat--info .jb-stat__value, .jb-stat--info > i { color: #0d6efd; }
-
-.jb-stat--success { border-left: 3px solid #28a745; }
-.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
-
-.jb-stat--warning { border-left: 3px solid #ffc107; }
-.jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #856404; }
-
-.jb-stat--danger { border-left: 3px solid #dc3545; }
-.jb-stat--danger .jb-stat__value, .jb-stat--danger > i { color: #dc3545; }
-
-/* Cards */
-.jb-card {
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    overflow: hidden;
+/* Sections */
+.jb-section {
+    margin-bottom: 1.5rem;
 }
 
-/* Grid */
-.jb-grid {
-    display: grid;
-    gap: 1rem;
-}
-
-.jb-grid--3 {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
-
-.jb-grid--4 {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-}
-
-/* Action Cards */
-.jb-action-card {
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.jb-action-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.jb-action-card__header {
-    padding: 1rem;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.jb-action-card__header h3 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.jb-action-card__header i {
-    font-size: 1.25rem;
-}
-
-.jb-action-card__header--primary { background: var(--iser-verde, #1b9e88); }
-.jb-action-card__header--success { background: #28a745; }
-.jb-action-card__header--warning { background: #e0a800; color: #1a1a1a; }
-.jb-action-card__header--info { background: #0d6efd; }
-.jb-action-card__header--secondary { background: #6c757d; }
-
-.jb-action-card__body {
-    padding: 1rem;
-    flex: 1;
-}
-
-.jb-action-card__desc {
-    font-size: 0.875rem;
-    color: var(--iser-gris-medio, #666);
-    margin: 0 0 0.75rem;
-}
-
-.jb-feature-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.jb-feature-list li {
-    font-size: 0.8125rem;
-    color: var(--iser-gris-medio, #666);
-    padding: 0.25rem 0;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-}
-
-.jb-feature-list li i {
-    color: var(--iser-verde, #1b9e88);
-    margin-top: 0.125rem;
-}
-
-.jb-action-card__footer {
-    padding: 1rem;
-    background: #f9fafb;
-    border-top: 1px solid #f0f0f0;
-}
-
-/* Mini Cards */
-.jb-mini-card {
-    background: #f9fafb;
-    border: none;
-    transition: box-shadow 0.2s;
-}
-
-.jb-mini-card:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.jb-mini-card__body {
-    padding: 1rem;
-}
-
-.jb-mini-card__header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.jb-mini-card__header h4 {
-    margin: 0;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--iser-negro, #1a1a1a);
-}
-
-.jb-mini-card__icon {
-    font-size: 1.25rem;
-}
-
-.jb-mini-card__icon--primary { color: var(--iser-verde, #1b9e88); }
-.jb-mini-card__icon--success { color: #28a745; }
-.jb-mini-card__icon--warning { color: #ffc107; }
-.jb-mini-card__icon--info { color: #0d6efd; }
-.jb-mini-card__icon--secondary { color: #6c757d; }
-
-.jb-mini-card__body p {
-    font-size: 0.8125rem;
-    color: var(--iser-gris-medio, #666);
-    margin: 0 0 0.75rem;
-}
-
-/* Config Cards */
-.jb-config-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 1.25rem 1rem;
-    text-decoration: none;
-    background: #f9fafb;
-    border: none;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.jb-config-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    text-decoration: none;
-}
-
-.jb-config-card__icon {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
-}
-
-.jb-config-card__icon--primary { color: var(--iser-verde, #1b9e88); }
-.jb-config-card__icon--success { color: #28a745; }
-.jb-config-card__icon--warning { color: #ffc107; }
-.jb-config-card__icon--info { color: #0d6efd; }
-.jb-config-card__icon--secondary { color: #6c757d; }
-.jb-config-card__icon--dark { color: #343a40; }
-
-.jb-config-card h4 {
-    margin: 0 0 0.25rem;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--iser-negro, #1a1a1a);
-}
-
-.jb-config-card p {
-    margin: 0;
-    font-size: 0.75rem;
-    color: var(--iser-gris-medio, #666);
-}
-
-/* Reviewer Section */
-.jb-reviewer-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1rem;
-}
-
-.jb-reviewer-card__header {
-    padding: 1rem;
+.jb-section__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #f9fafb;
-    border-bottom: 1px solid #e5e5e5;
 }
 
-.jb-reviewer-card__title {
+.jb-section__title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Cards */
+.jb-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.jb-card {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-}
-
-.jb-reviewer-card__title i {
-    font-size: 1.25rem;
-    color: #0d6efd;
-}
-
-.jb-reviewer-card__title h3 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.jb-reviewer-card__body {
+    gap: 1rem;
     padding: 1rem;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
 }
 
-.jb-reviewer-card__body p {
-    font-size: 0.875rem;
-    color: var(--iser-gris-medio, #666);
-    margin: 0 0 1rem;
+.jb-card:hover {
+    border-color: var(--iser-verde, #1b9e88);
+    background: #fafafa;
+    text-decoration: none;
 }
 
-.jb-reviewer-card__footer {
-    padding: 1rem;
-    background: #f9fafb;
-    border-top: 1px solid #f0f0f0;
-}
-
-/* Stat Card (large) */
-.jb-stat-card {
+.jb-card__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.jb-stat-card__body {
-    padding: 2rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.jb-stat-card__body > i {
-    font-size: 2.5rem;
-    opacity: 0.8;
-    margin-bottom: 0.5rem;
-}
-
-.jb-stat-card__value {
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1;
-}
-
-.jb-stat-card__label {
-    font-size: 0.875rem;
-    opacity: 0.9;
-    margin-top: 0.25rem;
-}
-
-.jb-stat-card--info {
-    background: #0d6efd;
-    color: #fff;
-}
-
-/* Activity List */
-.jb-activity-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.jb-activity-item {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.jb-activity-item:last-child {
-    border-bottom: none;
-}
-
-.jb-activity-item__icon {
     font-size: 1rem;
-    margin-right: 1rem;
+    flex-shrink: 0;
 }
 
-.jb-activity-item__icon--primary { color: var(--iser-verde, #1b9e88); }
-.jb-activity-item__icon--success { color: #28a745; }
-.jb-activity-item__icon--warning { color: #ffc107; }
-.jb-activity-item__icon--info { color: #0d6efd; }
-.jb-activity-item__icon--secondary { color: #6c757d; }
+.jb-card--primary .jb-card__icon { background: rgba(27, 158, 136, 0.1); color: var(--iser-verde, #1b9e88); }
+.jb-card--success .jb-card__icon { background: rgba(40, 167, 69, 0.1); color: #28a745; }
+.jb-card--warning .jb-card__icon { background: rgba(255, 193, 7, 0.15); color: #856404; }
+.jb-card--info .jb-card__icon { background: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+.jb-card--secondary .jb-card__icon { background: #f0f0f0; color: #6c757d; }
 
-.jb-activity-item__content {
+.jb-card__content {
     flex: 1;
     min-width: 0;
 }
 
-.jb-activity-item__label {
-    display: block;
+.jb-card__content h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-card__content p {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0.125rem 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.jb-card__alert {
+    display: inline-block;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+}
+
+.jb-card__alert--warning { background: rgba(255, 193, 7, 0.15); color: #856404; }
+.jb-card__alert--info { background: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+
+.jb-card__arrow {
+    color: #ccc;
+    font-size: 0.75rem;
+}
+
+.jb-card:hover .jb-card__arrow {
+    color: var(--iser-verde, #1b9e88);
+}
+
+/* Compact Cards */
+.jb-cards--compact {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.jb-card--mini {
+    flex: 0 0 auto;
+    padding: 0.625rem 1rem;
+    gap: 0.5rem;
+}
+
+.jb-card--mini i {
+    font-size: 0.875rem;
+}
+
+.jb-card--mini span {
+    font-size: 0.8125rem;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-card__icon--primary { color: var(--iser-verde, #1b9e88); }
+.jb-card__icon--success { color: #28a745; }
+.jb-card__icon--warning { color: #e0a800; }
+.jb-card__icon--info { color: #0d6efd; }
+.jb-card__icon--secondary { color: #6c757d; }
+.jb-card__icon--dark { color: #343a40; }
+
+/* Review Box */
+.jb-review-box {
+    display: flex;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.jb-review-box__main {
+    flex: 1;
+    padding: 1rem;
+}
+
+.jb-review-box__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.jb-review-box__main p {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 0.75rem;
+}
+
+.jb-review-box__stat {
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #0d6efd;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+}
+
+.jb-review-box__value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.jb-review-box__label {
+    font-size: 0.6875rem;
+    opacity: 0.9;
+    margin-top: 0.25rem;
+}
+
+/* Activity */
+.jb-activity {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+}
+
+.jb-activity li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.875rem;
+}
+
+.jb-activity li:last-child { border-bottom: none; }
+
+.jb-activity__icon--primary { color: var(--iser-verde, #1b9e88); }
+.jb-activity__icon--success { color: #28a745; }
+.jb-activity__icon--warning { color: #ffc107; }
+.jb-activity__icon--info { color: #0d6efd; }
+.jb-activity__icon--secondary { color: #6c757d; }
+
+.jb-activity__label {
+    flex: 1;
     color: var(--iser-negro, #1a1a1a);
     text-decoration: none;
     white-space: nowrap;
@@ -993,145 +607,63 @@
     text-overflow: ellipsis;
 }
 
-.jb-activity-item__label:hover {
-    color: var(--iser-verde, #1b9e88);
-}
+.jb-activity__label:hover { color: var(--iser-verde, #1b9e88); }
 
-.jb-activity-item__time {
+.jb-activity__time {
     font-size: 0.75rem;
     color: var(--iser-gris-medio, #666);
 }
 
-.jb-activity-item__time i {
-    margin-right: 0.25rem;
-}
-
-/* Empty State */
+/* Empty */
 .jb-empty {
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 3rem 2rem;
     background: #fff;
     border: 1px solid #e5e5e5;
-    border-radius: 8px;
+    border-radius: 6px;
 }
 
 .jb-empty > i {
-    font-size: 3rem;
+    font-size: 2.5rem;
     color: #d1d5db;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .jb-empty h3 {
-    font-size: 1.25rem;
-    color: var(--iser-negro, #1a1a1a);
-    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    margin: 0 0 0.25rem;
 }
 
 .jb-empty p {
+    font-size: 0.875rem;
     color: var(--iser-gris-medio, #666);
-    margin: 0 0 1.5rem;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 0 1rem;
 }
 
 /* Buttons */
 .jb-btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 0.375rem;
     padding: 0.5rem 1rem;
     border: 1px solid transparent;
     border-radius: 6px;
     font-size: 0.8125rem;
     font-weight: 500;
-    cursor: pointer;
     text-decoration: none;
+    cursor: pointer;
     transition: all 0.15s;
 }
 
-.jb-btn--sm {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.75rem;
-}
-
-.jb-btn--block {
-    width: 100%;
-    justify-content: space-between;
-}
-
-.jb-btn--primary {
-    background: var(--iser-verde, #1b9e88);
-    color: #fff;
-}
-
-.jb-btn--primary:hover {
-    background: var(--iser-verde-dark, #157a6a);
-    color: #fff;
-}
-
-.jb-btn--success {
-    background: #28a745;
-    color: #fff;
-}
-
-.jb-btn--success:hover {
-    background: #218838;
-    color: #fff;
-}
-
-.jb-btn--warning {
-    background: #ffc107;
-    color: #1a1a1a;
-}
-
-.jb-btn--warning:hover {
-    background: #e0a800;
-    color: #1a1a1a;
-}
-
-.jb-btn--danger {
-    background: #dc3545;
-    color: #fff;
-}
-
-.jb-btn--danger:hover {
-    background: #c82333;
-    color: #fff;
-}
-
-.jb-btn--info {
-    background: #0d6efd;
-    color: #fff;
-}
-
-.jb-btn--info:hover {
-    background: #0b5ed7;
-    color: #fff;
-}
-
-.jb-btn--outline {
-    background: transparent;
-    border-color: #d1d5db;
-    color: var(--iser-gris-oscuro, #333);
-}
-
-.jb-btn--outline:hover {
-    border-color: var(--iser-verde, #1b9e88);
-    color: var(--iser-verde, #1b9e88);
-}
-
-.jb-btn--ghost {
-    background: transparent;
-    padding: 0.375rem 0.5rem;
-    color: var(--iser-gris-medio, #666);
-}
-
-.jb-btn--ghost:hover {
-    background: rgba(0,0,0,0.05);
-    color: var(--iser-verde, #1b9e88);
-}
+.jb-btn--sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+.jb-btn--info { background: #0d6efd; color: #fff; }
+.jb-btn--warning { background: #ffc107; color: #1a1a1a; }
+.jb-btn--danger { background: #dc3545; color: #fff; }
+.jb-btn--success { background: #28a745; color: #fff; }
 
 /* Badges */
 .jb-badge {
@@ -1139,11 +671,12 @@
     align-items: center;
     gap: 0.25rem;
     padding: 0.25rem 0.5rem;
-    border-radius: 10px;
+    border-radius: 4px;
     font-size: 0.6875rem;
     font-weight: 600;
 }
 
+.jb-badge--muted { background: #f0f0f0; color: var(--iser-gris-medio, #666); }
 .jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
 .jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
 .jb-badge--warning { background: rgba(255, 193, 7, 0.2); color: #856404; }
@@ -1151,76 +684,20 @@
 .jb-badge--info { background: rgba(13, 110, 253, 0.15); color: #0d6efd; }
 .jb-badge--secondary { background: #e9ecef; color: #6c757d; }
 
-.jb-badge--pulse {
-    animation: jb-pulse 2s infinite;
-}
-
-@keyframes jb-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
-}
-
-.jb-pulse {
-    animation: jb-pulse 1.5s infinite;
-}
-
 /* Mobile */
-@media (max-width: 992px) {
-    .jb-reviewer-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
 @media (max-width: 768px) {
-    .jb-dashboard-header__nav {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .jb-dashboard-header__title {
-        font-size: 1.25rem;
-    }
-
-    .jb-stats {
-        flex-direction: column;
-    }
-
-    .jb-stat {
-        width: 100%;
-    }
-
-    .jb-grid--3,
-    .jb-grid--4 {
-        grid-template-columns: 1fr;
-    }
-
-    .jb-alert--banner {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .jb-alert--banner .jb-btn {
-        margin-top: 0.75rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .jb-dashboard-header__actions {
-        width: 100%;
-        flex-direction: column;
-    }
-
-    .jb-dashboard-header__actions .jb-btn {
-        width: 100%;
-    }
+    .jb-header__top { flex-direction: column; align-items: flex-start; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { min-width: 100%; }
+    .jb-cards--compact { flex-direction: column; }
+    .jb-review-box { flex-direction: column; }
+    .jb-review-box__stat { width: 100%; padding: 1rem; flex-direction: row; gap: 0.5rem; justify-content: center; }
+    .jb-banner { flex-direction: column; align-items: flex-start; }
 }
 
 /* Print */
 @media print {
-    .jb-btn,
-    .jb-dashboard-header__actions {
-        display: none;
-    }
+    .jb-btn, .jb-header__actions { display: none; }
 }
 </style>
 

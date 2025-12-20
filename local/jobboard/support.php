@@ -393,7 +393,7 @@ echo '<style>
    Following jb-* pattern
    ================================================================ */
 .jb-support {
-    max-width: 900px;
+    max-width: 1200px;
     padding: 1rem;
 }
 
