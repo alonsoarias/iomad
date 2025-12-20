@@ -23,28 +23,25 @@
 }}
 <div class="jb-reports" id="jobboard-reports">
     {{! Header }}
-    <div class="jb-reports-header">
-        <div class="jb-reports-header__nav">
-            <a href="{{dashboardurl}}" class="jb-link">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-        </div>
-        <div class="jb-reports-header__main">
-            <div class="jb-reports-header__title-wrap">
-                <h1 class="jb-reports-header__title">
-                    <i class="fa fa-chart-bar"></i> {{#str}}reports, local_jobboard{{/str}}
-                </h1>
-            </div>
             {{#exportlinks.0}}
             <div class="jb-export-group">
                 {{#exportlinks}}
-                <a href="{{url}}" class="jb-btn jb-btn--sm jb-btn--outline-{{color}}">
+                <a href="{{url}}" class="jb-btn jb-btn--sm jb-btn--outline">
                     <i class="fa fa-{{icon}}"></i> {{label}}
                 </a>
                 {{/exportlinks}}
             </div>
             {{/exportlinks.0}}
         </div>
+        <h1 class="jb-public-header__title">
+            <i class="fa fa-chart-bar"></i> {{#str}}reports, local_jobboard{{/str}}
+        </h1>
+        <p class="jb-public-header__subtitle">{{#str}}reportshelp, local_jobboard{{/str}}</p>
     </div>
 
     {{! Report Type Tabs }}
@@ -59,12 +56,10 @@
 
     {{! Convocatoria Selection Required }}
     {{#noconvocatoriaselected}}
-    <div class="jb-card jb-card--warning">
+    <div class="jb-card">
         <div class="jb-card__header">
-            <div class="jb-card__header-icon jb-card__header-icon--warning">
-                <i class="fa fa-triangle-exclamation"></i>
-            </div>
-            <h2 class="jb-card__title">{{#str}}selectconvocatoria_required, local_jobboard{{/str}}</h2>
+            <i class="fa fa-triangle-exclamation" style="color: #d39e00;"></i>
+            {{#str}}selectconvocatoria_required, local_jobboard{{/str}}
         </div>
         <div class="jb-card__body">
             <p class="jb-card__desc">{{#str}}selectconvocatoria_required_desc, local_jobboard{{/str}}</p>
@@ -162,13 +157,12 @@
         </div>
 
         {{! Status Breakdown }}
+        <div class="jb-section-header">
+            <h3 class="jb-section-header__title">
+                <i class="fa fa-chart-bar"></i> {{#str}}applicationsbystatus, local_jobboard{{/str}}
+            </h3>
+        </div>
         <div class="jb-card">
-            <div class="jb-card__header">
-                <div class="jb-card__header-icon">
-                    <i class="fa fa-chart-bar"></i>
-                </div>
-                <h2 class="jb-card__title">{{#str}}applicationsbystatus, local_jobboard{{/str}}</h2>
-            </div>
             <div class="jb-card__body jb-card__body--flush">
                 {{#overview.hasstatusdata}}
                 <table class="jb-table">
@@ -210,13 +204,12 @@
         {{! APPLICATIONS REPORT }}
         {{! ================================================================== }}
         {{#isapplications}}
+        <div class="jb-section-header">
+            <h3 class="jb-section-header__title">
+                <i class="fa fa-briefcase"></i> {{#str}}applicationsbyvacancy, local_jobboard{{/str}}
+            </h3>
+        </div>
         <div class="jb-card">
-            <div class="jb-card__header">
-                <div class="jb-card__header-icon">
-                    <i class="fa fa-briefcase"></i>
-                </div>
-                <h2 class="jb-card__title">{{#str}}applicationsbyvacancy, local_jobboard{{/str}}</h2>
-            </div>
             <div class="jb-card__body jb-card__body--flush">
                 {{#applications.hasdata}}
                 <table class="jb-table">
@@ -277,10 +270,8 @@
             {{! Rejection Reasons }}
             <div class="jb-card">
                 <div class="jb-card__header">
-                    <div class="jb-card__header-icon jb-card__header-icon--warning">
-                        <i class="fa fa-triangle-exclamation"></i>
-                    </div>
-                    <h2 class="jb-card__title">{{#str}}rejectionreasons, local_jobboard{{/str}}</h2>
+                    <i class="fa fa-triangle-exclamation" style="color: #d39e00;"></i>
+                    {{#str}}rejectionreasons, local_jobboard{{/str}}
                 </div>
                 <div class="jb-card__body jb-card__body--flush">
                     {{#documents.hasrejections}}
@@ -305,10 +296,8 @@
             {{! Pending by Type }}
             <div class="jb-card">
                 <div class="jb-card__header">
-                    <div class="jb-card__header-icon jb-card__header-icon--info">
-                        <i class="fa fa-clock"></i>
-                    </div>
-                    <h2 class="jb-card__title">{{#str}}pendingbytype, local_jobboard{{/str}}</h2>
+                    <i class="fa fa-clock" style="color: #17a2b8;"></i>
+                    {{#str}}pendingbytype, local_jobboard{{/str}}
                 </div>
                 <div class="jb-card__body jb-card__body--flush">
                     {{#documents.haspending}}
@@ -332,13 +321,12 @@
         </div>
 
         {{! By Document Type Table }}
+        <div class="jb-section-header">
+            <h3 class="jb-section-header__title">
+                <i class="fa fa-file-lines"></i> {{#str}}bydocumenttype, local_jobboard{{/str}}
+            </h3>
+        </div>
         <div class="jb-card">
-            <div class="jb-card__header">
-                <div class="jb-card__header-icon">
-                    <i class="fa fa-file-lines"></i>
-                </div>
-                <h2 class="jb-card__title">{{#str}}bydocumenttype, local_jobboard{{/str}}</h2>
-            </div>
             <div class="jb-card__body jb-card__body--flush">
                 {{#documents.hasbytypedata}}
                 <table class="jb-table">
@@ -372,13 +360,12 @@
         {{! REVIEWERS REPORT }}
         {{! ================================================================== }}
         {{#isreviewers}}
+        <div class="jb-section-header">
+            <h3 class="jb-section-header__title">
+                <i class="fa fa-users"></i> {{#str}}reviewerperformance, local_jobboard{{/str}}
+            </h3>
+        </div>
         <div class="jb-card">
-            <div class="jb-card__header">
-                <div class="jb-card__header-icon">
-                    <i class="fa fa-users"></i>
-                </div>
-                <h2 class="jb-card__title">{{#str}}reviewerperformance, local_jobboard{{/str}}</h2>
-            </div>
             <div class="jb-card__body jb-card__body--flush">
                 {{#reviewers.hasdata}}
                 <table class="jb-table">
@@ -427,13 +414,12 @@
         {{! TIMELINE REPORT }}
         {{! ================================================================== }}
         {{#istimeline}}
+        <div class="jb-section-header">
+            <h3 class="jb-section-header__title">
+                <i class="fa fa-calendar-days"></i> {{#str}}dailyapplications, local_jobboard{{/str}}
+            </h3>
+        </div>
         <div class="jb-card">
-            <div class="jb-card__header">
-                <div class="jb-card__header-icon">
-                    <i class="fa fa-calendar-days"></i>
-                </div>
-                <h2 class="jb-card__title">{{#str}}dailyapplications, local_jobboard{{/str}}</h2>
-            </div>
             <div class="jb-card__body jb-card__body--flush">
                 {{#timeline.hasdata}}
                 <table class="jb-table">
@@ -473,12 +459,10 @@
 
         {{! Empty State - No Data }}
         {{^hasdata}}
-        <div class="jb-empty-state">
-            <div class="jb-empty-state__icon">
-                <i class="fa fa-chart-bar"></i>
-            </div>
-            <h3 class="jb-empty-state__title">{{#str}}nodata, local_jobboard{{/str}}</h3>
-            <p class="jb-empty-state__desc">{{#str}}trydifferentfilters, local_jobboard{{/str}}</p>
+        <div class="jb-empty">
+            <i class="fa fa-chart-bar"></i>
+            <h3>{{#str}}nodata, local_jobboard{{/str}}</h3>
+            <p>{{#str}}trydifferentfilters, local_jobboard{{/str}}</p>
         </div>
         {{/hasdata}}
     </div>
@@ -502,15 +486,22 @@
 </div>
 
 <style>
-/* Reports Page - Clean jb-* Design */
+/* Reports Page - Following public/index.mustache pattern */
 .jb-reports { max-width: 1200px; padding: 1rem; }
 
-/* Header */
-.jb-reports-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
-.jb-reports-header__nav { margin-bottom: 1rem; }
-.jb-reports-header__main { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-.jb-reports-header__title { font-size: 1.5rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
-.jb-reports-header__title i { color: var(--iser-verde, #1b9e88); }
+/* Header - Same as public/index */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+
+/* Section Header */
+.jb-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-section-header__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-rojo, #c41e3a); margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+.jb-section-header__title i { color: var(--iser-verde, #1b9e88); }
 
 /* Links */
 .jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -548,14 +539,10 @@
 .jb-grid { display: grid; gap: 1.5rem; margin-bottom: 1.5rem; }
 .jb-grid--2 { grid-template-columns: repeat(2, 1fr); }
 
-/* Cards */
-.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; }
-.jb-card--warning { border-top: 3px solid #ffc107; }
-.jb-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 0.75rem; }
-.jb-card__header-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
-.jb-card__header-icon--warning { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
-.jb-card__header-icon--info { background: rgba(23, 162, 184, 0.15); color: #17a2b8; }
-.jb-card__title { font-size: 1rem; font-weight: 600; margin: 0; flex: 1; color: var(--iser-negro, #1a1a1a); }
+/* Cards - Following public/index pattern */
+.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+.jb-card__header { padding: 0.75rem 1rem; font-size: 0.8125rem; font-weight: 600; color: var(--iser-gris-oscuro, #333); background: #f9fafb; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; gap: 0.5rem; }
+.jb-card__header i { color: var(--iser-verde, #1b9e88); }
 .jb-card__body { padding: 1rem; }
 .jb-card__body--flush { padding: 0; }
 .jb-card__desc { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1rem; line-height: 1.5; }
@@ -643,13 +630,16 @@
 .jb-btn--outline-info { background: transparent; border-color: #17a2b8; color: #17a2b8; }
 .jb-btn--outline-info:hover { background: #17a2b8; color: #fff; }
 
-/* Empty State */
+/* Empty State - Same as public/index */
+.jb-empty { text-align: center; padding: 3rem 1.5rem; background: #f9fafb; border-radius: 8px; margin-bottom: 1.5rem; }
+.jb-empty i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0; max-width: 400px; margin: 0 auto; }
+/* Compact empty state for cards */
 .jb-empty-state { text-align: center; padding: 3rem 1.5rem; background: #f9fafb; border-radius: 8px; margin-bottom: 1.5rem; }
 .jb-empty-state--compact { padding: 2rem 1rem; margin: 0; background: transparent; }
-.jb-empty-state__icon { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
 .jb-empty-state--compact i { font-size: 2rem; color: #d1d5db; margin-bottom: 0.75rem; }
-.jb-empty-state__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-negro, #1a1a1a); margin: 0 0 0.5rem; }
-.jb-empty-state__desc, .jb-empty-state--compact p { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0; }
+.jb-empty-state--compact p { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0; }
 
 /* Footer Nav */
 .jb-footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; padding: 1.5rem 0; margin-top: 1rem; border-top: 1px solid #e5e5e5; }
@@ -660,8 +650,9 @@
     .jb-filter-form__row { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
-    .jb-reports-header__title { font-size: 1.25rem; }
-    .jb-reports-header__main { flex-direction: column; align-items: flex-start; }
+    .jb-public-header__title { font-size: 1.25rem; }
+    .jb-public-header__nav { flex-direction: column; gap: 0.75rem; }
+    .jb-export-group { width: 100%; justify-content: flex-start; }
     .jb-stats { flex-direction: column; }
     .jb-stat { min-width: 100%; }
     .jb-tabs { flex-direction: column; }
