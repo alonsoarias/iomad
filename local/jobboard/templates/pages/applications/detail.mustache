@@ -1,517 +1,1029 @@
 {{!
     @template local_jobboard/pages/applications/detail
 
-    Application detail page - Clean and professional design.
-    Follows the same pattern as the apply page.
+    Application detail page - Clean minimal design following jb-* pattern.
 
     Context variables:
-    * application - Application data {id, status, statuslabel, statuscolor, statusicon, statusnotes, dateapplied, coverletter, digitalsignature, consenttimestamp}
-    * vacancy - Vacancy data {id, code, title, location, viewurl}
-    * applicant - Applicant info for reviewers {fullname, email, idnumber, phone, initials}
+    * application - Application data
+    * vacancy - Vacancy data
+    * applicant - Applicant info (for reviewers)
     * documents - Array of document data
-    * hasdocuments - Boolean if has documents
+    * hasdocuments - Boolean
     * documentcount - Number of documents
-    * docsapproved - Number of approved documents
-    * docsrejected - Number of rejected documents
-    * docspending - Number of pending documents
-    * history - Status history timeline data
-    * hashistory - Boolean if has history
-    * workflowactions - Available workflow actions (for managers)
-    * hasworkflowactions - Boolean if has workflow actions
-    * canmanage - Boolean if can manage workflow
-    * canreview - Boolean if can review documents
-    * isowner - Boolean if viewing own application
-    * canwithdraw - Boolean if can withdraw
-    * hasexemption - Boolean if has exemption
-    * exemptiontype - Exemption type label
+    * docsapproved - Approved count
+    * docsrejected - Rejected count
+    * docspending - Pending count
+    * history - Status history
+    * hashistory - Boolean
+    * workflowactions - Available workflow actions
+    * hasworkflowactions - Boolean
+    * canmanage - Boolean
+    * canreview - Boolean
+    * isowner - Boolean
+    * canwithdraw - Boolean
+    * hasexemption - Boolean
+    * exemptiontype - Exemption type
     * exemptionref - Exemption reference
-    * backurl - URL to go back
-    * backlabel - Label for back button
-    * dashboardurl - URL to dashboard
-    * reviewurl - URL to review documents
-    * withdrawurl - URL to withdraw
-    * workflowurl - URL for workflow actions
+    * backurl - Back URL
+    * backlabel - Back label
+    * dashboardurl - Dashboard URL
+    * reviewurl - Review URL
+    * withdrawurl - Withdraw URL
     * sesskey - Session key
-
-    Example context (json):
-    {
-        "application": {"id": 1, "status": "submitted", "statuslabel": "Submitted"},
-        "vacancy": {"code": "VAC-001", "title": "Developer"}
-    }
 }}
 <div class="jb-application-detail" id="jobboard-application-detail" data-application-id="{{application.id}}">
-    <div class="container-fluid px-0">
-        <div class="row g-4">
-            {{! Main Content }}
-            <div class="col-lg-8">
-                {{! Page Header }}
-                <div class="jb-page-header mb-4">
-                    <nav aria-label="breadcrumb" class="mb-2">
-                        <ol class="breadcrumb small mb-0">
-                            <li class="breadcrumb-item">
-                                <a href="{{dashboardurl}}">{{#str}}dashboard, local_jobboard{{/str}}</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="{{backurl}}">{{backlabel}}</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">{{#str}}application, local_jobboard{{/str}} #{{application.id}}</li>
-                        </ol>
-                    </nav>
-                    <h1 class="h3 mb-1">{{vacancy.title}}</h1>
-                    <p class="text-muted mb-0">
-                        <code class="me-2">{{vacancy.code}}</code>
-                        <span class="badge bg-{{application.statuscolor}}">{{application.statuslabel}}</span>
-                    </p>
-                </div>
+    {{! Header }}
+    <div class="jb-detail-header">
+        <div class="jb-detail-header__nav">
+            <a href="{{backurl}}" class="jb-detail-header__back">
+                <i class="fa fa-arrow-left"></i>
+                {{backlabel}}
+            </a>
+            {{#isdraft}}
+            <a href="{{continueurl}}" class="jb-btn jb-btn--success">
+                <i class="fa fa-edit"></i> {{#str}}completeandsubmit, local_jobboard{{/str}}
+            </a>
+            {{/isdraft}}
+        </div>
+        <div class="jb-detail-header__title-row">
+            <span class="jb-code jb-code--primary">{{vacancy.code}}</span>
+            <span class="jb-badge jb-badge--{{application.statuscolor}}">
+                <i class="fa fa-{{application.statusicon}}"></i> {{application.statuslabel}}
+            </span>
+        </div>
+        <h1 class="jb-detail-header__title">{{vacancy.title}}</h1>
+        <p class="jb-detail-header__subtitle">
+            <i class="fa fa-hashtag"></i> {{#str}}application, local_jobboard{{/str}} #{{application.id}}
+        </p>
+    </div>
 
-                {{! Status Alert }}
-                <div class="alert alert-{{application.statuscolor}} jb-alert-{{application.statuscolor}} d-flex align-items-center mb-4 jb-fade-in-up" role="alert">
-                    <i class="fa fa-{{application.statusicon}} fa-lg me-3"></i>
-                    <div>
-                        <strong>{{#str}}currentstatus, local_jobboard{{/str}}: {{application.statuslabel}}</strong>
-                        {{#application.statusnotes}}
-                        <span class="d-block small">{{application.statusnotes}}</span>
-                        {{/application.statusnotes}}
-                    </div>
-                </div>
+    {{! Status Alert }}
+    <div class="jb-alert jb-alert--{{application.statuscolor}}">
+        <i class="fa fa-{{application.statusicon}}"></i>
+        <div class="jb-alert__content">
+            <strong>{{#str}}currentstatus, local_jobboard{{/str}}: {{application.statuslabel}}</strong>
+            {{#application.statusnotes}}
+            <span>{{application.statusnotes}}</span>
+            {{/application.statusnotes}}
+        </div>
+    </div>
 
-                {{! Draft Alert - Action Required }}
-                {{#isdraft}}
-                <div class="alert alert-warning jb-alert-warning mb-4 jb-fade-in-up" role="alert">
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                        <div class="d-flex align-items-center">
-                            <i class="fa fa-pencil-alt fa-lg me-3"></i>
-                            <div>
-                                <strong>{{#str}}draft_pending, local_jobboard{{/str}}</strong>
-                                <span class="d-block small">{{#str}}draft_pending_desc, local_jobboard{{/str}}</span>
-                            </div>
-                        </div>
-                        <a href="{{continueurl}}" class="btn btn-success jb-btn-success">
-                            <i class="fa fa-edit me-1"></i>
-                            {{#str}}completeandsubmit, local_jobboard{{/str}}
-                        </a>
-                    </div>
-                </div>
-                {{/isdraft}}
+    {{! Draft Alert }}
+    {{#isdraft}}
+    <div class="jb-alert jb-alert--warning jb-alert--action">
+        <i class="fa fa-pencil-alt"></i>
+        <div class="jb-alert__content">
+            <strong>{{#str}}draft_pending, local_jobboard{{/str}}</strong>
+            <span>{{#str}}draft_pending_desc, local_jobboard{{/str}}</span>
+        </div>
+        <a href="{{continueurl}}" class="jb-btn jb-btn--success jb-btn--sm">
+            <i class="fa fa-edit"></i> {{#str}}completeandsubmit, local_jobboard{{/str}}
+        </a>
+    </div>
+    {{/isdraft}}
 
-                {{! Exemption Notice }}
-                {{#hasexemption}}
-                <div class="alert alert-info jb-alert-info d-flex align-items-center mb-4" role="alert">
-                    <i class="fa fa-id-badge fa-lg me-3"></i>
-                    <div>
-                        <strong>{{#str}}exemptionapplied, local_jobboard{{/str}}</strong>
-                        <span class="d-block small">{{exemptiontype}}{{#exemptionref}} ({{exemptionref}}){{/exemptionref}}</span>
-                    </div>
-                </div>
-                {{/hasexemption}}
+    {{! Exemption Notice }}
+    {{#hasexemption}}
+    <div class="jb-alert jb-alert--info">
+        <i class="fa fa-id-badge"></i>
+        <div class="jb-alert__content">
+            <strong>{{#str}}exemptionapplied, local_jobboard{{/str}}</strong>
+            <span>{{exemptiontype}}{{#exemptionref}} ({{exemptionref}}){{/exemptionref}}</span>
+        </div>
+    </div>
+    {{/hasexemption}}
 
-                {{! Applicant Info Card (for reviewers) }}
-                {{#applicant}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-user text-primary me-2"></i>
-                            {{#str}}applicantinfo, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                <span class="fs-5 fw-bold">{{initials}}</span>
-                            </div>
-                            <div>
-                                <h6 class="mb-0">{{fullname}}</h6>
-                                <a href="mailto:{{email}}" class="text-muted small">{{email}}</a>
-                            </div>
-                        </div>
-                        <dl class="row mb-0 small">
-                            {{#idnumber}}
-                            <dt class="col-4 text-muted">{{#str}}idnumber{{/str}}</dt>
-                            <dd class="col-8">{{idnumber}}</dd>
-                            {{/idnumber}}
-                            {{#phone}}
-                            <dt class="col-4 text-muted">{{#str}}phone{{/str}}</dt>
-                            <dd class="col-8">{{phone}}</dd>
-                            {{/phone}}
-                        </dl>
-                    </div>
+    {{! Content Layout }}
+    <div class="jb-detail-content">
+        {{! Main Column }}
+        <div class="jb-detail-main">
+            {{! Applicant Info Card (for reviewers) }}
+            {{#applicant}}
+            <div class="jb-card">
+                <div class="jb-card__header jb-card__header--accent">
+                    <i class="fa fa-user"></i>
+                    {{#str}}applicantinfo, local_jobboard{{/str}}
                 </div>
-                {{/applicant}}
-
-                {{! Cover Letter Card }}
-                {{#application.coverletter}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-envelope-open-text text-primary me-2"></i>
-                            {{#str}}coverletter, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="border-start border-primary border-3 ps-3">
-                            {{{application.coverletter}}}
+                <div class="jb-card__body">
+                    <div class="jb-applicant-info">
+                        <div class="jb-applicant-info__avatar">{{initials}}</div>
+                        <div class="jb-applicant-info__details">
+                            <h4>{{fullname}}</h4>
+                            <a href="mailto:{{email}}" class="jb-link">{{email}}</a>
                         </div>
                     </div>
-                </div>
-                {{/application.coverletter}}
-
-                {{! Documents Card }}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">
-                                <i class="fa fa-file-lines text-primary me-2"></i>
-                                {{#str}}uploadeddocuments, local_jobboard{{/str}}
-                            </h5>
-                            <span class="badge bg-secondary">{{documentcount}}</span>
+                    <div class="jb-info-grid">
+                        {{#idnumber}}
+                        <div class="jb-info-item">
+                            <span class="jb-info-item__label"><i class="fa fa-id-card"></i> {{#str}}idnumber{{/str}}</span>
+                            <span class="jb-info-item__value">{{idnumber}}</span>
                         </div>
+                        {{/idnumber}}
+                        {{#phone}}
+                        <div class="jb-info-item">
+                            <span class="jb-info-item__label"><i class="fa fa-phone"></i> {{#str}}phone{{/str}}</span>
+                            <span class="jb-info-item__value">{{phone}}</span>
+                        </div>
+                        {{/phone}}
                     </div>
-
-                    {{#hasdocuments}}
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0 small jb-table">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>{{#str}}documenttype, local_jobboard{{/str}}</th>
-                                    <th class="d-none d-md-table-cell">{{#str}}filename, local_jobboard{{/str}}</th>
-                                    <th class="text-center">{{#str}}status, local_jobboard{{/str}}</th>
-                                    <th class="text-end">{{#str}}actions{{/str}}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#documents}}
-                                <tr>
-                                    <td>
-                                        <i class="fa fa-file text-{{statuscolor}} me-2"></i>
-                                        {{typename}}
-                                    </td>
-                                    <td class="text-muted d-none d-md-table-cell">
-                                        <span class="text-truncate d-inline-block" style="max-width: 150px;" title="{{filename}}">
-                                            {{filename}}
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-{{statuscolor}}">
-                                            <i class="fa fa-{{statusicon}} me-1"></i>
-                                            {{statuslabel}}
-                                        </span>
-                                    </td>
-                                    <td class="text-end">
-                                        <div class="btn-group btn-group-sm">
-                                            {{#downloadurl}}
-                                            <a href="{{downloadurl}}" class="btn btn-outline-primary jb-btn-outline-primary" target="_blank" title="{{#str}}download{{/str}}">
-                                                <i class="fa fa-download"></i>
-                                            </a>
-                                            {{/downloadurl}}
-                                            {{#canreupload}}
-                                            <a href="{{reuploadurl}}" class="btn btn-outline-warning jb-btn-outline-warning" title="{{#str}}reupload, local_jobboard{{/str}}">
-                                                <i class="fa fa-upload"></i>
-                                            </a>
-                                            {{/canreupload}}
-                                        </div>
-                                    </td>
-                                </tr>
-                                {{#rejectreason}}
-                                <tr class="table-danger">
-                                    <td colspan="4" class="small py-2">
-                                        <i class="fa fa-exclamation-circle text-danger me-2"></i>
-                                        <strong>{{#str}}rejectreason, local_jobboard{{/str}}:</strong> {{rejectreason}}
-                                    </td>
-                                </tr>
-                                {{/rejectreason}}
-                                {{/documents}}
-                            </tbody>
-                        </table>
-                    </div>
-                    {{/hasdocuments}}
-
-                    {{^hasdocuments}}
-                    <div class="card-body text-center py-4">
-                        <i class="fa fa-file-circle-question fa-3x text-muted mb-3"></i>
-                        <p class="text-muted mb-0">{{#str}}nodocuments, local_jobboard{{/str}}</p>
-                    </div>
-                    {{/hasdocuments}}
                 </div>
+            </div>
+            {{/applicant}}
 
-                {{! Status History Card }}
-                {{#hashistory}}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">
-                            <i class="fa fa-clock-rotate-left text-secondary me-2"></i>
-                            {{#str}}statushistory, local_jobboard{{/str}}
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="jb-timeline">
-                            {{#history}}
-                            <div class="d-flex mb-3 {{^islast}}pb-3 border-bottom{{/islast}}">
-                                <div class="flex-shrink-0 me-3">
-                                    <span class="badge bg-{{statuscolor}} rounded-circle p-2">
-                                        <i class="fa fa-circle" style="font-size: 8px;"></i>
+            {{! Cover Letter Card }}
+            {{#application.coverletter}}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-envelope-open-text"></i>
+                    {{#str}}coverletter, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body jb-card__body--content jb-card__body--quote">
+                    {{{application.coverletter}}}
+                </div>
+            </div>
+            {{/application.coverletter}}
+
+            {{! Documents Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-file-lines"></i>
+                    {{#str}}uploadeddocuments, local_jobboard{{/str}}
+                    <span class="jb-badge jb-badge--secondary">{{documentcount}}</span>
+                </div>
+                {{#hasdocuments}}
+                <div class="jb-table-wrapper">
+                    <table class="jb-table">
+                        <thead>
+                            <tr>
+                                <th>{{#str}}documenttype, local_jobboard{{/str}}</th>
+                                <th class="jb-hide-mobile">{{#str}}filename, local_jobboard{{/str}}</th>
+                                <th class="jb-text-center">{{#str}}status, local_jobboard{{/str}}</th>
+                                <th class="jb-text-right">{{#str}}actions{{/str}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#documents}}
+                            <tr>
+                                <td>
+                                    <i class="fa fa-file jb-text-{{statuscolor}}"></i>
+                                    {{typename}}
+                                </td>
+                                <td class="jb-hide-mobile jb-text-muted">
+                                    <span class="jb-truncate" title="{{filename}}">{{filename}}</span>
+                                </td>
+                                <td class="jb-text-center">
+                                    <span class="jb-badge jb-badge--{{statuscolor}}">
+                                        <i class="fa fa-{{statusicon}}"></i> {{statuslabel}}
                                     </span>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <span class="badge bg-{{statuscolor}}">{{statuslabel}}</span>
-                                        <small class="text-muted">{{timeformatted}}</small>
+                                </td>
+                                <td class="jb-text-right">
+                                    <div class="jb-btn-group">
+                                        {{#downloadurl}}
+                                        <a href="{{downloadurl}}" class="jb-btn jb-btn--outline jb-btn--sm" target="_blank" title="{{#str}}download{{/str}}">
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                        {{/downloadurl}}
+                                        {{#canreupload}}
+                                        <a href="{{reuploadurl}}" class="jb-btn jb-btn--warning jb-btn--sm" title="{{#str}}reupload, local_jobboard{{/str}}">
+                                            <i class="fa fa-upload"></i>
+                                        </a>
+                                        {{/canreupload}}
                                     </div>
-                                    {{#notes}}
-                                    <p class="small text-muted mb-1 mt-1">{{notes}}</p>
-                                    {{/notes}}
-                                    {{#changedbyname}}
-                                    <small class="text-muted">
-                                        <i class="fa fa-user me-1"></i>{{changedbyname}}
-                                    </small>
-                                    {{/changedbyname}}
-                                </div>
-                            </div>
-                            {{/history}}
-                        </div>
-                    </div>
+                                </td>
+                            </tr>
+                            {{#rejectreason}}
+                            <tr class="jb-table-row--danger">
+                                <td colspan="4">
+                                    <i class="fa fa-exclamation-circle jb-text-danger"></i>
+                                    <strong>{{#str}}rejectreason, local_jobboard{{/str}}:</strong> {{rejectreason}}
+                                </td>
+                            </tr>
+                            {{/rejectreason}}
+                            {{/documents}}
+                        </tbody>
+                    </table>
                 </div>
-                {{/hashistory}}
+                {{/hasdocuments}}
+                {{^hasdocuments}}
+                <div class="jb-empty jb-empty--small">
+                    <i class="fa fa-file-circle-question"></i>
+                    <p>{{#str}}nodocuments, local_jobboard{{/str}}</p>
+                </div>
+                {{/hasdocuments}}
             </div>
 
-            {{! Sidebar }}
-            <div class="col-lg-4">
-                <div class="jb-sidebar sticky-top" style="top: 80px;">
-                    {{! Vacancy Summary Card }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-briefcase text-primary me-2"></i>
-                                {{#str}}vacancysummary, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <dl class="row mb-0 small">
-                                <dt class="col-5 text-muted">{{#str}}code, local_jobboard{{/str}}</dt>
-                                <dd class="col-7"><code>{{vacancy.code}}</code></dd>
-
-                                <dt class="col-5 text-muted">{{#str}}title, local_jobboard{{/str}}</dt>
-                                <dd class="col-7">{{vacancy.title}}</dd>
-
-                                {{#vacancy.location}}
-                                <dt class="col-5 text-muted">{{#str}}location, local_jobboard{{/str}}</dt>
-                                <dd class="col-7">{{vacancy.location}}</dd>
-                                {{/vacancy.location}}
-
-                                <dt class="col-5 text-muted">{{#str}}dateapplied, local_jobboard{{/str}}</dt>
-                                <dd class="col-7">{{application.dateapplied}}</dd>
-                            </dl>
-                        </div>
-                        <div class="card-footer bg-light">
-                            <a href="{{vacancy.viewurl}}" class="btn btn-outline-primary jb-btn-outline-primary btn-sm w-100">
-                                <i class="fa fa-eye me-1"></i>
-                                {{#str}}viewvacancydetails, local_jobboard{{/str}}
-                            </a>
-                        </div>
-                    </div>
-
-                    {{! Documents Summary Card }}
-                    {{#hasdocuments}}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0">
-                                    <i class="fa fa-list-check text-info me-2"></i>
-                                    {{#str}}documentstatus, local_jobboard{{/str}}
-                                </h6>
-                                <span class="badge bg-secondary">{{documentcount}}</span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row text-center">
-                                <div class="col-4">
-                                    <div class="h4 text-success mb-0">{{docsapproved}}</div>
-                                    <small class="text-muted">{{#str}}approved, local_jobboard{{/str}}</small>
+            {{! Status History Card }}
+            {{#hashistory}}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-clock-rotate-left"></i>
+                    {{#str}}statushistory, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <div class="jb-timeline">
+                        {{#history}}
+                        <div class="jb-timeline-item {{^islast}}jb-timeline-item--border{{/islast}}">
+                            <div class="jb-timeline-item__dot jb-timeline-item__dot--{{statuscolor}}"></div>
+                            <div class="jb-timeline-item__content">
+                                <div class="jb-timeline-item__header">
+                                    <span class="jb-badge jb-badge--{{statuscolor}}">{{statuslabel}}</span>
+                                    <span class="jb-timeline-item__time">{{timeformatted}}</span>
                                 </div>
-                                <div class="col-4">
-                                    <div class="h4 text-warning mb-0">{{docspending}}</div>
-                                    <small class="text-muted">{{#str}}pending, local_jobboard{{/str}}</small>
-                                </div>
-                                <div class="col-4">
-                                    <div class="h4 text-danger mb-0">{{docsrejected}}</div>
-                                    <small class="text-muted">{{#str}}rejected, local_jobboard{{/str}}</small>
-                                </div>
-                            </div>
-                            {{#docsprogress}}
-                            <div class="progress mt-3" style="height: 8px;">
-                                <div class="progress-bar bg-success" style="width: {{docsprogress}}%"></div>
-                                <div class="progress-bar bg-danger" style="width: {{docsrejectedpercent}}%"></div>
-                            </div>
-                            {{/docsprogress}}
-                        </div>
-                    </div>
-                    {{/hasdocuments}}
-
-                    {{! Application Details Card }}
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-circle-info text-primary me-2"></i>
-                                {{#str}}applicationdetails, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <ul class="list-group list-group-flush small">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span class="text-muted">{{#str}}applicationid, local_jobboard{{/str}}</span>
-                                <code>#{{application.id}}</code>
-                            </li>
-                            {{#application.digitalsignature}}
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span class="text-muted">{{#str}}digitalsignature, local_jobboard{{/str}}</span>
-                                <code class="small">{{application.digitalsignature}}</code>
-                            </li>
-                            {{/application.digitalsignature}}
-                            {{#application.consenttimestamp}}
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span class="text-muted">{{#str}}consentgiven, local_jobboard{{/str}}</span>
-                                <span class="badge bg-success">
-                                    <i class="fa fa-check me-1"></i>{{application.consenttimestamp}}
+                                {{#notes}}
+                                <p class="jb-timeline-item__notes">{{notes}}</p>
+                                {{/notes}}
+                                {{#changedbyname}}
+                                <span class="jb-timeline-item__by">
+                                    <i class="fa fa-user"></i> {{changedbyname}}
                                 </span>
-                            </li>
-                            {{/application.consenttimestamp}}
-                        </ul>
-                    </div>
-
-                    {{! Workflow Actions Card (for managers) }}
-                    {{#canmanage}}
-                    {{#hasworkflowactions}}
-                    <div class="card shadow-sm mb-4 border-warning">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-list-check text-warning me-2"></i>
-                                {{#str}}workflowactions, local_jobboard{{/str}}
-                            </h6>
+                                {{/changedbyname}}
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <form method="post" action="{{workflowurl}}">
-                                <input type="hidden" name="sesskey" value="{{sesskey}}">
-                                <input type="hidden" name="view" value="application">
-                                <input type="hidden" name="id" value="{{application.id}}">
-                                <input type="hidden" name="action" value="changestatus">
-
-                                <div class="mb-3">
-                                    <label for="newstatus" class="form-label small fw-bold">
-                                        {{#str}}changestatus, local_jobboard{{/str}}
-                                    </label>
-                                    <select name="newstatus" id="newstatus" class="form-select form-select-sm" required>
-                                        <option value="">{{#str}}selectstatus, local_jobboard{{/str}}</option>
-                                        {{#workflowactions}}
-                                        <option value="{{value}}">{{label}}</option>
-                                        {{/workflowactions}}
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="notes" class="form-label small">
-                                        {{#str}}optionalnotes, local_jobboard{{/str}}
-                                    </label>
-                                    <textarea name="notes" id="notes" class="form-control form-control-sm" rows="2"></textarea>
-                                </div>
-
-                                <button type="submit" class="btn btn-warning jb-btn-warning btn-sm w-100">
-                                    <i class="fa fa-save me-1"></i>
-                                    {{#str}}updatestatus, local_jobboard{{/str}}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    {{/hasworkflowactions}}
-                    {{/canmanage}}
-
-                    {{! Review Documents Card (for reviewers) }}
-                    {{#canreview}}
-                    <div class="card shadow-sm mb-4 border-success">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-check-double text-success me-2"></i>
-                                {{#str}}reviewdocuments, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body text-center">
-                            <p class="small text-muted mb-3">{{#str}}reviewdocuments_desc, local_jobboard{{/str}}</p>
-                            <a href="{{reviewurl}}" class="btn btn-success jb-btn-success btn-sm w-100">
-                                <i class="fa fa-clipboard-check me-1"></i>
-                                {{#str}}startreview, local_jobboard{{/str}}
-                            </a>
-                        </div>
-                    </div>
-                    {{/canreview}}
-
-                    {{! Continue Draft Card (for owner with draft) }}
-                    {{#isdraft}}
-                    <div class="card shadow-sm mb-4 border-success">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-edit text-success me-2"></i>
-                                {{#str}}completeapplication, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <p class="small text-muted mb-3">{{#str}}draft_action_desc, local_jobboard{{/str}}</p>
-                            <a href="{{continueurl}}" class="btn btn-success jb-btn-success btn-sm w-100">
-                                <i class="fa fa-arrow-right me-1"></i>
-                                {{#str}}completeandsubmit, local_jobboard{{/str}}
-                            </a>
-                        </div>
-                    </div>
-                    {{/isdraft}}
-
-                    {{! Withdraw Card (for owner) }}
-                    {{#canwithdraw}}
-                    <div class="card shadow-sm mb-4 border-danger">
-                        <div class="card-header bg-white">
-                            <h6 class="mb-0">
-                                <i class="fa fa-xmark text-danger me-2"></i>
-                                {{#str}}withdrawapplication, local_jobboard{{/str}}
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <p class="small text-muted mb-3">{{#str}}withdrawwarning, local_jobboard{{/str}}</p>
-                            <button type="button"
-                                    class="btn btn-outline-danger jb-btn-outline-danger btn-sm w-100"
-                                    data-action="withdraw"
-                                    data-url="{{withdrawurl}}"
-                                    data-confirm="{{#str}}confirmwithdraw, local_jobboard{{/str}}">
-                                <i class="fa fa-xmark me-1"></i>
-                                {{#str}}withdraw, local_jobboard{{/str}}
-                            </button>
-                        </div>
-                    </div>
-                    {{/canwithdraw}}
-
-                    {{! Back Navigation Card }}
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <a href="{{backurl}}" class="btn btn-outline-secondary btn-sm w-100">
-                                <i class="fa fa-arrow-left me-1"></i>
-                                {{backlabel}}
-                            </a>
-                        </div>
+                        {{/history}}
                     </div>
                 </div>
             </div>
+            {{/hashistory}}
         </div>
 
-        {{! Navigation Footer }}
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center py-3 border-top jb-fade-in">
-                    <a href="{{backurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
-                        <i class="fa fa-arrow-left me-2"></i>
-                        {{backlabel}}
-                    </a>
-                    <a href="{{dashboardurl}}" class="btn btn-link text-muted jb-hover-primary">
-                        {{#str}}backtodashboard, local_jobboard{{/str}}
-                        <i class="fa fa-arrow-right ms-2"></i>
+        {{! Sidebar }}
+        <aside class="jb-detail-sidebar">
+            {{! Vacancy Summary Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-briefcase"></i>
+                    {{#str}}vacancysummary, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}code, local_jobboard{{/str}}</span>
+                        <code>{{vacancy.code}}</code>
+                    </div>
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}title, local_jobboard{{/str}}</span>
+                        <span>{{vacancy.title}}</span>
+                    </div>
+                    {{#vacancy.location}}
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}location, local_jobboard{{/str}}</span>
+                        <span>{{vacancy.location}}</span>
+                    </div>
+                    {{/vacancy.location}}
+                    <div class="jb-info-row jb-info-row--last">
+                        <span class="jb-info-label">{{#str}}dateapplied, local_jobboard{{/str}}</span>
+                        <strong>{{application.dateapplied}}</strong>
+                    </div>
+                </div>
+                <div class="jb-card__footer">
+                    <a href="{{vacancy.viewurl}}" class="jb-btn jb-btn--outline jb-btn--block">
+                        <i class="fa fa-eye"></i> {{#str}}viewvacancydetails, local_jobboard{{/str}}
                     </a>
                 </div>
             </div>
-        </div>
+
+            {{! Documents Summary Card }}
+            {{#hasdocuments}}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-list-check"></i>
+                    {{#str}}documentstatus, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <div class="jb-doc-stats">
+                        <div class="jb-doc-stat jb-doc-stat--success">
+                            <span class="jb-doc-stat__value">{{docsapproved}}</span>
+                            <span class="jb-doc-stat__label">{{#str}}approved, local_jobboard{{/str}}</span>
+                        </div>
+                        <div class="jb-doc-stat jb-doc-stat--warning">
+                            <span class="jb-doc-stat__value">{{docspending}}</span>
+                            <span class="jb-doc-stat__label">{{#str}}pending, local_jobboard{{/str}}</span>
+                        </div>
+                        <div class="jb-doc-stat jb-doc-stat--danger">
+                            <span class="jb-doc-stat__value">{{docsrejected}}</span>
+                            <span class="jb-doc-stat__label">{{#str}}rejected, local_jobboard{{/str}}</span>
+                        </div>
+                    </div>
+                    {{#docsprogress}}
+                    <div class="jb-progress">
+                        <div class="jb-progress__bar jb-progress__bar--success" style="width: {{docsprogress}}%;"></div>
+                        <div class="jb-progress__bar jb-progress__bar--danger" style="width: {{docsrejectedpercent}}%;"></div>
+                    </div>
+                    {{/docsprogress}}
+                </div>
+            </div>
+            {{/hasdocuments}}
+
+            {{! Application Details Card }}
+            <div class="jb-card">
+                <div class="jb-card__header">
+                    <i class="fa fa-circle-info"></i>
+                    {{#str}}applicationdetails, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}applicationid, local_jobboard{{/str}}</span>
+                        <code>#{{application.id}}</code>
+                    </div>
+                    {{#application.digitalsignature}}
+                    <div class="jb-info-row">
+                        <span class="jb-info-label">{{#str}}digitalsignature, local_jobboard{{/str}}</span>
+                        <code class="jb-code--small">{{application.digitalsignature}}</code>
+                    </div>
+                    {{/application.digitalsignature}}
+                    {{#application.consenttimestamp}}
+                    <div class="jb-info-row jb-info-row--last">
+                        <span class="jb-info-label">{{#str}}consentgiven, local_jobboard{{/str}}</span>
+                        <span class="jb-badge jb-badge--success">
+                            <i class="fa fa-check"></i> {{application.consenttimestamp}}
+                        </span>
+                    </div>
+                    {{/application.consenttimestamp}}
+                </div>
+            </div>
+
+            {{! Workflow Actions Card (for managers) }}
+            {{#canmanage}}
+            {{#hasworkflowactions}}
+            <div class="jb-card jb-card--cta-warning">
+                <div class="jb-card__header jb-card__header--warning">
+                    <i class="fa fa-list-check"></i>
+                    {{#str}}workflowactions, local_jobboard{{/str}}
+                </div>
+                <div class="jb-card__body">
+                    <form method="post" action="{{workflowurl}}" class="jb-form">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="hidden" name="view" value="application">
+                        <input type="hidden" name="id" value="{{application.id}}">
+                        <input type="hidden" name="action" value="changestatus">
+                        <div class="jb-form-group">
+                            <label class="jb-form-label">{{#str}}changestatus, local_jobboard{{/str}}</label>
+                            <select name="newstatus" class="jb-select" required>
+                                <option value="">{{#str}}selectstatus, local_jobboard{{/str}}</option>
+                                {{#workflowactions}}
+                                <option value="{{value}}">{{label}}</option>
+                                {{/workflowactions}}
+                            </select>
+                        </div>
+                        <div class="jb-form-group">
+                            <label class="jb-form-label">{{#str}}optionalnotes, local_jobboard{{/str}}</label>
+                            <textarea name="notes" class="jb-textarea" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="jb-btn jb-btn--warning jb-btn--block">
+                            <i class="fa fa-save"></i> {{#str}}updatestatus, local_jobboard{{/str}}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {{/hasworkflowactions}}
+            {{/canmanage}}
+
+            {{! Review Documents Card (for reviewers) }}
+            {{#canreview}}
+            <div class="jb-card jb-card--cta">
+                <div class="jb-cta-card">
+                    <i class="fa fa-check-double jb-cta-card__icon jb-cta-card__icon--success"></i>
+                    <h4 class="jb-cta-card__title">{{#str}}reviewdocuments, local_jobboard{{/str}}</h4>
+                    <p class="jb-cta-card__text">{{#str}}reviewdocuments_desc, local_jobboard{{/str}}</p>
+                    <a href="{{reviewurl}}" class="jb-btn jb-btn--success jb-btn--block">
+                        <i class="fa fa-clipboard-check"></i> {{#str}}startreview, local_jobboard{{/str}}
+                    </a>
+                </div>
+            </div>
+            {{/canreview}}
+
+            {{! Continue Draft Card }}
+            {{#isdraft}}
+            <div class="jb-card jb-card--cta">
+                <div class="jb-cta-card">
+                    <i class="fa fa-edit jb-cta-card__icon jb-cta-card__icon--success"></i>
+                    <h4 class="jb-cta-card__title">{{#str}}completeapplication, local_jobboard{{/str}}</h4>
+                    <p class="jb-cta-card__text">{{#str}}draft_action_desc, local_jobboard{{/str}}</p>
+                    <a href="{{continueurl}}" class="jb-btn jb-btn--success jb-btn--block">
+                        <i class="fa fa-arrow-right"></i> {{#str}}completeandsubmit, local_jobboard{{/str}}
+                    </a>
+                </div>
+            </div>
+            {{/isdraft}}
+
+            {{! Withdraw Card }}
+            {{#canwithdraw}}
+            <div class="jb-card jb-card--closed">
+                <div class="jb-cta-card">
+                    <i class="fa fa-xmark jb-cta-card__icon jb-cta-card__icon--muted"></i>
+                    <h4 class="jb-cta-card__title">{{#str}}withdrawapplication, local_jobboard{{/str}}</h4>
+                    <p class="jb-cta-card__text">{{#str}}withdrawwarning, local_jobboard{{/str}}</p>
+                    <button type="button" class="jb-btn jb-btn--danger-outline jb-btn--block"
+                            data-action="withdraw"
+                            data-url="{{withdrawurl}}"
+                            data-confirm="{{#str}}confirmwithdraw, local_jobboard{{/str}}">
+                        <i class="fa fa-xmark"></i> {{#str}}withdraw, local_jobboard{{/str}}
+                    </button>
+                </div>
+            </div>
+            {{/canwithdraw}}
+        </aside>
+    </div>
+
+    {{! Footer Navigation }}
+    <div class="jb-detail-footer">
+        <a href="{{backurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-arrow-left"></i> {{backlabel}}
+        </a>
+        <a href="{{dashboardurl}}" class="jb-link">
+            {{#str}}backtodashboard, local_jobboard{{/str}} <i class="fa fa-arrow-right"></i>
+        </a>
     </div>
 </div>
 
-{{! Styles consolidated in styles.css }}
+<style>
+/* ================================================================
+   APPLICATION DETAIL PAGE - CLEAN MINIMAL DESIGN
+   Following jb-* pattern
+   ================================================================ */
+.jb-application-detail {
+    max-width: 1200px;
+    padding: 1rem;
+}
+
+/* Header */
+.jb-detail-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-detail-header__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.jb-detail-header__back {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-detail-header__back:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-detail-header__title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.jb-detail-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-detail-header__subtitle {
+    font-size: 0.875rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0.25rem 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+/* Content Layout */
+.jb-detail-content {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.jb-detail-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.jb-detail-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: sticky;
+    top: 80px;
+}
+
+/* Alerts */
+.jb-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.jb-alert > i {
+    font-size: 1.25rem;
+    margin-top: 0.125rem;
+}
+
+.jb-alert__content {
+    flex: 1;
+}
+
+.jb-alert__content strong {
+    display: block;
+}
+
+.jb-alert__content span {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.jb-alert--action {
+    flex-wrap: wrap;
+}
+
+.jb-alert--success { background: rgba(40, 167, 69, 0.1); border: 1px solid rgba(40, 167, 69, 0.2); color: #1e7e34; }
+.jb-alert--warning { background: rgba(255, 193, 7, 0.15); border: 1px solid rgba(255, 193, 7, 0.3); color: #856404; }
+.jb-alert--danger { background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2); color: #c41e3a; }
+.jb-alert--info { background: rgba(13, 110, 253, 0.1); border: 1px solid rgba(13, 110, 253, 0.2); color: #0d6efd; }
+.jb-alert--secondary { background: #f9fafb; border: 1px solid #e5e5e5; color: #6c757d; }
+.jb-alert--primary { background: rgba(27, 158, 136, 0.1); border: 1px solid rgba(27, 158, 136, 0.2); color: var(--iser-verde-dark, #157a6a); }
+
+/* Cards */
+.jb-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.jb-card--cta { border-color: var(--iser-verde, #1b9e88); }
+.jb-card--cta-warning { border-color: var(--iser-amarillo, #ffc107); }
+.jb-card--closed { border-color: var(--iser-gris-medio, #666); background: #f9fafb; }
+
+.jb-card__header {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-card__header i { color: var(--iser-verde, #1b9e88); }
+.jb-card__header .jb-badge { margin-left: auto; }
+
+.jb-card__header--accent {
+    background: rgba(27, 158, 136, 0.1);
+    border-bottom: 2px solid var(--iser-verde, #1b9e88);
+}
+
+.jb-card__header--warning {
+    background: rgba(255, 193, 7, 0.15);
+    color: #856404;
+}
+
+.jb-card__header--warning i { color: #856404; }
+
+.jb-card__body { padding: 1rem; }
+
+.jb-card__body--content {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+.jb-card__body--quote {
+    border-left: 3px solid var(--iser-verde, #1b9e88);
+    padding-left: 1rem;
+    margin-left: 0.5rem;
+}
+
+.jb-card__footer {
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Applicant Info */
+.jb-applicant-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.jb-applicant-info__avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.125rem;
+}
+
+.jb-applicant-info__details h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+}
+
+/* Info Grid */
+.jb-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.jb-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.jb-info-item__label {
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+.jb-info-item__label i {
+    margin-right: 0.375rem;
+}
+
+.jb-info-item__value {
+    font-weight: 500;
+}
+
+/* Info Rows */
+.jb-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.8125rem;
+}
+
+.jb-info-row--last { border-bottom: none; padding-bottom: 0; }
+
+.jb-info-label {
+    color: var(--iser-gris-medio, #666);
+}
+
+/* Document Stats */
+.jb-doc-stats {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    margin-bottom: 0.75rem;
+}
+
+.jb-doc-stat__value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: block;
+}
+
+.jb-doc-stat__label {
+    font-size: 0.6875rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+.jb-doc-stat--success .jb-doc-stat__value { color: #28a745; }
+.jb-doc-stat--warning .jb-doc-stat__value { color: #ffc107; }
+.jb-doc-stat--danger .jb-doc-stat__value { color: #dc3545; }
+
+/* Progress */
+.jb-progress {
+    height: 8px;
+    background: #e5e5e5;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+}
+
+.jb-progress__bar {
+    height: 100%;
+}
+
+.jb-progress__bar--success { background: #28a745; }
+.jb-progress__bar--warning { background: #ffc107; }
+.jb-progress__bar--danger { background: #dc3545; }
+.jb-progress__bar--primary { background: var(--iser-verde, #1b9e88); }
+
+/* Timeline */
+.jb-timeline {
+    padding-left: 0.5rem;
+}
+
+.jb-timeline-item {
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 1rem;
+}
+
+.jb-timeline-item--border {
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 1rem;
+}
+
+.jb-timeline-item__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+}
+
+.jb-timeline-item__dot--success { background: #28a745; }
+.jb-timeline-item__dot--warning { background: #ffc107; }
+.jb-timeline-item__dot--danger { background: #dc3545; }
+.jb-timeline-item__dot--info { background: #0d6efd; }
+.jb-timeline-item__dot--secondary { background: #6c757d; }
+.jb-timeline-item__dot--primary { background: var(--iser-verde, #1b9e88); }
+
+.jb-timeline-item__content {
+    flex: 1;
+}
+
+.jb-timeline-item__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.jb-timeline-item__time {
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+.jb-timeline-item__notes {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0.375rem 0;
+}
+
+.jb-timeline-item__by {
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+/* Table */
+.jb-table-wrapper {
+    overflow-x: auto;
+}
+
+.jb-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+}
+
+.jb-table th {
+    background: #f9fafb;
+    padding: 0.625rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.jb-table td {
+    padding: 0.625rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.jb-table tbody tr:hover {
+    background: rgba(27, 158, 136, 0.03);
+}
+
+.jb-table-row--danger td {
+    background: rgba(220, 53, 69, 0.05);
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+}
+
+/* CTA Card */
+.jb-cta-card {
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.jb-cta-card__icon {
+    font-size: 2rem;
+    color: var(--iser-verde, #1b9e88);
+    margin-bottom: 0.75rem;
+}
+
+.jb-cta-card__icon--success { color: #28a745; }
+.jb-cta-card__icon--muted { color: var(--iser-gris-medio, #666); }
+
+.jb-cta-card__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0 0 0.375rem 0;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-cta-card__text {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 1rem 0;
+}
+
+/* Badges */
+.jb-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.jb-badge i { font-size: 0.625rem; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-badge--warning { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-badge--danger { background: rgba(220, 53, 69, 0.15); color: #c41e3a; }
+.jb-badge--info { background: rgba(13, 110, 253, 0.15); color: #0d6efd; }
+.jb-badge--secondary { background: #e9ecef; color: #6c757d; }
+
+/* Code */
+.jb-code {
+    font-family: monospace;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.jb-code--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-code--small { font-size: 0.6875rem; }
+
+/* Buttons */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.jb-btn--sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+.jb-btn--block { width: 100%; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--success { background: #28a745; color: #fff; }
+.jb-btn--success:hover { background: #218838; color: #fff; }
+.jb-btn--warning { background: #ffc107; color: #1a1a1a; }
+.jb-btn--warning:hover { background: #e0a800; color: #1a1a1a; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+.jb-btn--danger-outline { background: transparent; border-color: #dc3545; color: #dc3545; }
+.jb-btn--danger-outline:hover { background: #dc3545; color: #fff; }
+
+.jb-btn-group {
+    display: flex;
+    gap: 0.375rem;
+}
+
+/* Links */
+.jb-link {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
+
+/* Forms */
+.jb-form-group {
+    margin-bottom: 0.75rem;
+}
+
+.jb-form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    margin-bottom: 0.375rem;
+}
+
+.jb-select, .jb-textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: #fff;
+}
+
+.jb-select:focus, .jb-textarea:focus {
+    border-color: var(--iser-verde, #1b9e88);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(27, 158, 136, 0.1);
+}
+
+/* Empty State */
+.jb-empty {
+    text-align: center;
+    padding: 2rem;
+}
+
+.jb-empty--small {
+    padding: 1.5rem;
+}
+
+.jb-empty > i {
+    font-size: 2.5rem;
+    color: #d1d5db;
+    margin-bottom: 0.75rem;
+}
+
+.jb-empty p {
+    color: var(--iser-gris-medio, #666);
+    margin: 0;
+}
+
+/* Footer */
+.jb-detail-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Utilities */
+.jb-text-center { text-align: center; }
+.jb-text-right { text-align: right; }
+.jb-text-muted { color: var(--iser-gris-medio, #666); }
+.jb-text-success { color: #28a745; }
+.jb-text-warning { color: #ffc107; }
+.jb-text-danger { color: #dc3545; }
+
+.jb-truncate {
+    max-width: 150px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.jb-hide-mobile {
+    display: table-cell;
+}
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-detail-content { grid-template-columns: 1fr; }
+    .jb-detail-sidebar { position: static; order: -1; }
+}
+
+@media (max-width: 768px) {
+    .jb-detail-header__title { font-size: 1.25rem; }
+    .jb-hide-mobile { display: none; }
+    .jb-table th, .jb-table td { padding: 0.5rem; }
+}
+
+/* Print */
+@media print {
+    .jb-detail-sidebar { display: none; }
+    .jb-detail-content { display: block; }
+    .jb-detail-footer, .jb-btn { display: none; }
+}
+</style>
