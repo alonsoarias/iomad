@@ -18,12 +18,12 @@
 }}
 <div class="jb-convlist" id="jobboard-convocatorias">
     {{! Header }}
-    <div class="jb-convlist-header">
-        <div class="jb-convlist-header__nav">
-            <a href="{{dashboardurl}}" class="jb-link">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-            <div class="jb-convlist-header__actions">
+            <div class="jb-header-actions">
                 <a href="{{importurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
                     <i class="fa fa-file-csv"></i> {{#str}}importvacancies, local_jobboard{{/str}}
                 </a>
@@ -34,10 +34,10 @@
                 {{/cancreate}}
             </div>
         </div>
-        <h1 class="jb-convlist-header__title">
+        <h1 class="jb-public-header__title">
             <i class="fa fa-calendar-alt"></i> {{#str}}manageconvocatorias, local_jobboard{{/str}}
         </h1>
-        <p class="jb-convlist-header__subtitle">{{#str}}manageconvocatorias_desc, local_jobboard{{/str}}</p>
+        <p class="jb-public-header__subtitle">{{#str}}manageconvocatorias_desc, local_jobboard{{/str}}</p>
     </div>
 
     {{! Stats Cards }}
@@ -232,13 +232,20 @@
 /* Convocatorias List Page - Clean jb-* Design */
 .jb-convlist { max-width: 1200px; padding: 1rem; }
 
-/* Header */
-.jb-convlist-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
-.jb-convlist-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem; }
-.jb-convlist-header__actions { display: flex; gap: 0.5rem; }
-.jb-convlist-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
-.jb-convlist-header__title i { color: var(--iser-verde, #1b9e88); }
-.jb-convlist-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+/* Header - Same as public/index */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+.jb-header-actions { display: flex; gap: 0.5rem; }
+
+/* Section Header */
+.jb-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-section-header__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-rojo, #c41e3a); margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+.jb-section-header__title i { color: var(--iser-verde, #1b9e88); }
 
 /* Links */
 .jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -343,11 +350,11 @@
 .jb-btn__badge { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px; background: #17a2b8; color: #fff; font-size: 0.625rem; font-weight: 600; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
 .jb-btn-group { display: inline-flex; gap: 0.25rem; }
 
-/* Empty State */
-.jb-empty-state { text-align: center; padding: 3rem 1.5rem; background: #f9fafb; border-radius: 8px; margin-bottom: 1.5rem; }
+/* Empty State - Same as public/index */
+.jb-empty-state { text-align: center; padding: 4rem 2rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; margin-bottom: 1.5rem; }
 .jb-empty-state__icon { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
-.jb-empty-state__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-negro, #1a1a1a); margin: 0 0 0.5rem; }
-.jb-empty-state__desc { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; }
+.jb-empty-state__title { font-size: 1.25rem; font-weight: 600; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty-state__desc { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; }
 
 /* Pagination */
 .jb-pagination { margin-top: 1.5rem; display: flex; justify-content: center; }
@@ -361,8 +368,8 @@
     .jb-conv-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
-    .jb-convlist-header__nav { flex-direction: column; align-items: flex-start; }
-    .jb-convlist-header__title { font-size: 1.25rem; }
+    .jb-public-header__nav { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .jb-public-header__title { font-size: 1.25rem; }
     .jb-stats { grid-template-columns: 1fr; }
     .jb-filter-form__row { flex-direction: column; }
     .jb-filter-form__field { width: 100%; }

@@ -17,9 +17,9 @@
     {{! ================================================================ }}
     {{! HEADER SECTION }}
     {{! ================================================================ }}
-    <div class="jb-browse-header">
-        <div class="jb-browse-header__nav">
-            <a href="{{dashboardurl}}" class="jb-browse-header__back">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
@@ -27,10 +27,10 @@
                 <i class="fa fa-briefcase"></i> {{#str}}browsevacancies, local_jobboard{{/str}}
             </a>
         </div>
-        <h1 class="jb-browse-header__title">
+        <h1 class="jb-public-header__title">
             <i class="fa fa-folder-open"></i> {{#str}}browseconvocatorias, local_jobboard{{/str}}
         </h1>
-        <p class="jb-browse-header__subtitle">
+        <p class="jb-public-header__subtitle">
             {{#str}}browseconvocatorias_desc, local_jobboard{{/str}}
         </p>
     </div>
@@ -103,52 +103,19 @@
     padding: 1rem;
 }
 
-/* Header */
-.jb-browse-header {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e5e5e5;
-}
+/* Header - Same as public/index */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
 
-.jb-browse-header__nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.jb-browse-header__back {
-    color: var(--iser-verde, #1b9e88);
-    text-decoration: none;
-    font-size: 0.875rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.jb-browse-header__back:hover {
-    color: var(--iser-verde-dark, #157a6a);
-}
-
-.jb-browse-header__title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0 0 0.25rem 0;
-    color: var(--iser-negro, #1a1a1a);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.jb-browse-header__title i {
-    color: var(--iser-verde, #1b9e88);
-}
-
-.jb-browse-header__subtitle {
-    font-size: 1rem;
-    color: var(--iser-gris-medio, #666);
-    margin: 0;
-}
+/* Section Header */
+.jb-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-section-header__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-rojo, #c41e3a); margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+.jb-section-header__title i { color: var(--iser-verde, #1b9e88); }
 
 /* Stats */
 .jb-stats {
@@ -398,34 +365,11 @@
     border-top: 1px solid #f0f0f0;
 }
 
-/* Empty State */
-.jb-empty {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-}
-
-.jb-empty > i {
-    font-size: 3rem;
-    color: #d1d5db;
-    margin-bottom: 1rem;
-}
-
-.jb-empty h3 {
-    font-size: 1.25rem;
-    color: var(--iser-negro, #1a1a1a);
-    margin: 0 0 0.5rem;
-}
-
-.jb-empty p {
-    color: var(--iser-gris-medio, #666);
-    margin: 0 0 1.5rem;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-}
+/* Empty State - Same as public/index */
+.jb-empty { text-align: center; padding: 4rem 2rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; }
+.jb-empty > i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; }
 
 /* Pagination */
 .jb-pagination {
@@ -511,42 +455,14 @@
 
 /* Mobile */
 @media (max-width: 768px) {
-    .jb-browse-header__nav {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-    }
-
-    .jb-browse-header__title {
-        font-size: 1.25rem;
-    }
-
-    .jb-stats {
-        flex-direction: column;
-    }
-
-    .jb-stat {
-        width: 100%;
-    }
-
-    .jb-tabs {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-    }
-
-    .jb-tab {
-        white-space: nowrap;
-    }
-
-    .jb-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .jb-footer-nav {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
+    .jb-public-header__nav { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .jb-public-header__title { font-size: 1.25rem; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { width: 100%; }
+    .jb-tabs { overflow-x: auto; flex-wrap: nowrap; }
+    .jb-tab { white-space: nowrap; }
+    .jb-grid { grid-template-columns: 1fr; }
+    .jb-footer-nav { flex-direction: column; gap: 1rem; text-align: center; }
 }
 
 /* Print */

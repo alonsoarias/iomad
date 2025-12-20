@@ -21,9 +21,9 @@
     {{! ================================================================ }}
     {{! HEADER SECTION }}
     {{! ================================================================ }}
-    <div class="jb-applications-header">
-        <div class="jb-applications-header__nav">
-            <a href="{{dashboardurl}}" class="jb-applications-header__back">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
@@ -31,10 +31,10 @@
                 <i class="fa fa-search"></i> {{#str}}browsevacancies, local_jobboard{{/str}}
             </a>
         </div>
-        <h1 class="jb-applications-header__title">
+        <h1 class="jb-public-header__title">
             <i class="fa fa-file-alt"></i> {{#str}}myapplications, local_jobboard{{/str}}
         </h1>
-        <p class="jb-applications-header__subtitle">
+        <p class="jb-public-header__subtitle">
             {{#str}}myapplications_desc, local_jobboard{{/str}}
         </p>
     </div>
@@ -329,52 +329,19 @@
     padding: 1rem;
 }
 
-/* Header */
-.jb-applications-header {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e5e5e5;
-}
+/* Header - Same as public/index */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
 
-.jb-applications-header__nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.jb-applications-header__back {
-    color: var(--iser-verde, #1b9e88);
-    text-decoration: none;
-    font-size: 0.875rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.jb-applications-header__back:hover {
-    color: var(--iser-verde-dark, #157a6a);
-}
-
-.jb-applications-header__title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0 0 0.25rem 0;
-    color: var(--iser-negro, #1a1a1a);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.jb-applications-header__title i {
-    color: var(--iser-verde, #1b9e88);
-}
-
-.jb-applications-header__subtitle {
-    font-size: 1rem;
-    color: var(--iser-gris-medio, #666);
-    margin: 0;
-}
+/* Section Header */
+.jb-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-section-header__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-rojo, #c41e3a); margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+.jb-section-header__title i { color: var(--iser-verde, #1b9e88); }
 
 /* Alerts */
 .jb-alert {
@@ -960,35 +927,14 @@
 
 /* Mobile */
 @media (max-width: 768px) {
-    .jb-applications-header__title {
-        font-size: 1.25rem;
-    }
-
-    .jb-stats {
-        flex-direction: column;
-    }
-
-    .jb-stat {
-        width: 100%;
-    }
-
-    .jb-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .jb-filter-grid {
-        flex-direction: column;
-    }
-
-    .jb-filter-item {
-        width: 100%;
-    }
-
-    .jb-footer-nav {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
+    .jb-public-header__title { font-size: 1.25rem; }
+    .jb-public-header__nav { flex-direction: column; gap: 0.75rem; align-items: stretch; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { width: 100%; }
+    .jb-grid { grid-template-columns: 1fr; }
+    .jb-filter-grid { flex-direction: column; }
+    .jb-filter-item { width: 100%; }
+    .jb-footer-nav { flex-direction: column; gap: 1rem; text-align: center; }
 }
 
 @media (max-width: 480px) {

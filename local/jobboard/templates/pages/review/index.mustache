@@ -23,14 +23,14 @@
     {{! ========== SINGLE APPLICATION REVIEW MODE ========== }}
     {{#selectedapplication}}
     {{! Header }}
-    <div class="jb-review-header">
-        <div class="jb-review-header__nav">
-            <a href="{{backurl}}" class="jb-review-header__back">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{backurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i>
                 {{#str}}reviewdocuments, local_jobboard{{/str}}
             </a>
             {{#shownav}}
-            <div class="jb-review-header__pager">
+            <div class="jb-pager">
                 {{#prevurl}}<a href="{{prevurl}}" class="jb-pager-btn"><i class="fa fa-chevron-left"></i></a>{{/prevurl}}
                 {{^prevurl}}<span class="jb-pager-btn jb-pager-btn--disabled"><i class="fa fa-chevron-left"></i></span>{{/prevurl}}
                 <span class="jb-pager-count">{{navposition}}/{{navtotal}}</span>
@@ -39,8 +39,10 @@
             </div>
             {{/shownav}}
         </div>
-        <h1 class="jb-review-header__title">{{#str}}reviewapplication, local_jobboard{{/str}}</h1>
-        <p class="jb-review-header__subtitle">
+        <h1 class="jb-public-header__title">
+            <i class="fa fa-clipboard-check"></i> {{#str}}reviewapplication, local_jobboard{{/str}}
+        </h1>
+        <p class="jb-public-header__subtitle">
             <span class="jb-code">{{selectedapplication.vacancycode}}</span>
             {{selectedapplication.vacancytitle}}
         </p>
@@ -248,19 +250,21 @@
     {{! ========== APPLICATIONS QUEUE MODE ========== }}
     {{^selectedapplication}}
     {{! Header }}
-    <div class="jb-review-header">
-        <div class="jb-review-header__nav">
-            <a href="{{dashboardurl}}" class="jb-review-header__back">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i>
                 {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-            <a href="{{myreviewsurl}}" class="jb-review-header__action">
+            <a href="{{myreviewsurl}}" class="jb-btn jb-btn--outline">
                 <i class="fa fa-clipboard-list"></i>
                 {{#str}}myreviews, local_jobboard{{/str}}
             </a>
         </div>
-        <h1 class="jb-review-header__title">{{#str}}reviewdocuments, local_jobboard{{/str}}</h1>
-        <p class="jb-review-header__subtitle">{{#str}}reviewqueue_desc, local_jobboard{{/str}}</p>
+        <h1 class="jb-public-header__title">
+            <i class="fa fa-file-lines"></i> {{#str}}reviewdocuments, local_jobboard{{/str}}
+        </h1>
+        <p class="jb-public-header__subtitle">{{#str}}reviewqueue_desc, local_jobboard{{/str}}</p>
     </div>
 
     {{! Stats }}
@@ -483,70 +487,26 @@
     padding: 1rem;
 }
 
-/* Header */
-.jb-review-header {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e5e5e5;
-}
+/* Header - Same as public/index */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
 
-.jb-review-header__nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.jb-review-header__back,
-.jb-review-header__action {
-    color: var(--iser-verde, #1b9e88);
-    text-decoration: none;
-    font-size: 0.875rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.jb-review-header__back:hover,
-.jb-review-header__action:hover {
-    color: var(--iser-verde-dark, #157a6a);
-}
-
-.jb-review-header__pager {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.jb-pager-btn {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px;
-    color: var(--iser-gris-oscuro, #333);
-    text-decoration: none;
-    background: #fff;
-}
-
+/* Pager */
+.jb-pager { display: flex; align-items: center; gap: 0.25rem; }
+.jb-pager-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid #e5e5e5; border-radius: 4px; color: var(--iser-gris-oscuro, #333); text-decoration: none; background: #fff; }
 .jb-pager-btn:hover { background: #f5f5f5; color: var(--iser-verde, #1b9e88); }
 .jb-pager-btn--disabled { opacity: 0.4; pointer-events: none; }
 .jb-pager-count { padding: 0 0.5rem; font-size: 0.75rem; color: var(--iser-gris-medio, #666); }
 
-.jb-review-header__title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0 0 0.25rem 0;
-    color: var(--iser-negro, #1a1a1a);
-}
-
-.jb-review-header__subtitle {
-    font-size: 1rem;
-    color: var(--iser-gris-medio, #666);
-    margin: 0;
-}
+/* Section Header */
+.jb-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-section-header__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-rojo, #c41e3a); margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+.jb-section-header__title i { color: var(--iser-verde, #1b9e88); }
 
 /* Alerts */
 .jb-alert {
@@ -837,17 +797,11 @@
 /* Pagination */
 .jb-pagination { margin-top: 1.5rem; display: flex; justify-content: center; }
 
-/* Empty State */
-.jb-empty {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-}
-.jb-empty i { font-size: 3rem; color: #28a745; margin-bottom: 1rem; }
-.jb-empty h3 { font-size: 1.25rem; color: var(--iser-negro, #1a1a1a); margin: 0 0 0.5rem; }
-.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; }
+/* Empty State - Same as public/index */
+.jb-empty { text-align: center; padding: 4rem 2rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; }
+.jb-empty i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; }
 .jb-empty__actions { display: flex; justify-content: center; gap: 0.75rem; }
 
 /* Footer */
