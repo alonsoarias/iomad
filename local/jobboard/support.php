@@ -321,35 +321,319 @@ if ($data = $mform->get_data()) {
 // Display the page.
 echo $OUTPUT->header();
 
-// Page content.
-echo '<div class="jb-support-page" data-region="jobboard-support-form">';
+// Page content with jb-* design pattern.
+echo '<div class="jb-support" id="jobboard-support-form">';
+
+// Header section.
+echo '<div class="jb-support-header">';
+echo '<div class="jb-support-header__nav">';
+echo '<a href="' . (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out() . '" class="jb-support-header__back">';
+echo '<i class="fa fa-arrow-left"></i> ' . get_string('back', 'local_jobboard');
+echo '</a>';
+echo '</div>';
+echo '<h1 class="jb-support-header__title">';
+echo '<i class="fa fa-headset"></i> ' . get_string('support_page_title', 'local_jobboard');
+echo '</h1>';
+echo '<p class="jb-support-header__subtitle">' . get_string('support_info_description', 'local_jobboard') . '</p>';
+echo '</div>';
 
 // Warning banner - This is ONLY for technical support.
-echo '<div class="alert alert-warning mb-4">';
-echo '<h5 class="alert-heading"><i class="fa fa-exclamation-triangle me-2"></i>' . get_string('support_warning_title', 'local_jobboard') . '</h5>';
-echo '<p class="mb-0">' . get_string('support_warning_message', 'local_jobboard') . '</p>';
+echo '<div class="jb-alert jb-alert--warning">';
+echo '<i class="fa fa-exclamation-triangle"></i>';
+echo '<div class="jb-alert__content">';
+echo '<strong>' . get_string('support_warning_title', 'local_jobboard') . '</strong>';
+echo '<span>' . get_string('support_warning_message', 'local_jobboard') . '</span>';
+echo '</div>';
 echo '</div>';
 
 // Information card.
-echo '<div class="card shadow-sm mb-4">';
-echo '<div class="card-header bg-primary text-white">';
-echo '<h5 class="mb-0"><i class="fa fa-bug me-2"></i>' . get_string('support_info_title', 'local_jobboard') . '</h5>';
+echo '<div class="jb-card jb-support-info">';
+echo '<div class="jb-card__header jb-card__header--primary">';
+echo '<i class="fa fa-bug"></i> ' . get_string('support_info_title', 'local_jobboard');
 echo '</div>';
-echo '<div class="card-body">';
-echo '<p>' . get_string('support_info_description', 'local_jobboard') . '</p>';
-echo '<h6 class="mt-3"><i class="fa fa-check-circle text-success me-2"></i>' . get_string('support_examples_title', 'local_jobboard') . '</h6>';
-echo '<ul class="mb-0">';
-echo '<li>' . get_string('support_example_1', 'local_jobboard') . '</li>';
-echo '<li>' . get_string('support_example_2', 'local_jobboard') . '</li>';
-echo '<li>' . get_string('support_example_3', 'local_jobboard') . '</li>';
-echo '<li>' . get_string('support_example_4', 'local_jobboard') . '</li>';
+echo '<div class="jb-card__body">';
+echo '<h4 class="jb-support-info__title">';
+echo '<i class="fa fa-check-circle"></i> ' . get_string('support_examples_title', 'local_jobboard');
+echo '</h4>';
+echo '<ul class="jb-support-info__list">';
+echo '<li><i class="fa fa-check"></i> ' . get_string('support_example_1', 'local_jobboard') . '</li>';
+echo '<li><i class="fa fa-check"></i> ' . get_string('support_example_2', 'local_jobboard') . '</li>';
+echo '<li><i class="fa fa-check"></i> ' . get_string('support_example_3', 'local_jobboard') . '</li>';
+echo '<li><i class="fa fa-check"></i> ' . get_string('support_example_4', 'local_jobboard') . '</li>';
 echo '</ul>';
 echo '</div>';
 echo '</div>';
+
+// Form section.
+echo '<div class="jb-card jb-support-form">';
+echo '<div class="jb-card__header">';
+echo '<i class="fa fa-edit"></i> ' . get_string('support_form_title', 'local_jobboard');
+echo '</div>';
+echo '<div class="jb-card__body">';
 
 // Display the form.
 $mform->display();
 
 echo '</div>';
+echo '</div>';
+
+// Footer navigation.
+echo '<div class="jb-footer-nav">';
+echo '<a href="' . (new moodle_url('/local/jobboard/index.php', ['view' => 'public']))->out() . '" class="jb-btn jb-btn--outline">';
+echo '<i class="fa fa-arrow-left"></i> ' . get_string('back', 'local_jobboard');
+echo '</a>';
+echo '</div>';
+
+echo '</div>';
+
+// Custom styles for support page.
+echo '<style>
+/* ================================================================
+   SUPPORT PAGE - CLEAN MINIMAL DESIGN
+   Following jb-* pattern
+   ================================================================ */
+.jb-support {
+    max-width: 900px;
+    padding: 1rem;
+}
+
+/* Header */
+.jb-support-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-support-header__nav {
+    margin-bottom: 1rem;
+}
+
+.jb-support-header__back {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-support-header__back:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-support-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--iser-negro, #1a1a1a);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.jb-support-header__title i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-support-header__subtitle {
+    font-size: 1rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0;
+}
+
+/* Alert */
+.jb-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.jb-alert > i {
+    font-size: 1.25rem;
+    margin-top: 0.125rem;
+}
+
+.jb-alert__content {
+    flex: 1;
+}
+
+.jb-alert__content strong {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.jb-alert__content span {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.jb-alert--warning {
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    color: #856404;
+}
+
+/* Cards */
+.jb-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.jb-card__header {
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-card__header i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-card__header--primary {
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+}
+
+.jb-card__header--primary i {
+    color: #fff;
+}
+
+.jb-card__body {
+    padding: 1.25rem;
+}
+
+/* Support Info */
+.jb-support-info__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-support-info__title i {
+    color: #28a745;
+}
+
+.jb-support-info__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.jb-support-info__list li {
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+.jb-support-info__list li i {
+    color: var(--iser-verde, #1b9e88);
+    margin-top: 0.125rem;
+}
+
+/* Footer Nav */
+.jb-footer-nav {
+    display: flex;
+    justify-content: flex-start;
+    padding: 1.5rem 0;
+    margin-top: 1rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Buttons */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.jb-btn--outline {
+    background: transparent;
+    border-color: #d1d5db;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+.jb-btn--outline:hover {
+    border-color: var(--iser-verde, #1b9e88);
+    color: var(--iser-verde, #1b9e88);
+}
+
+/* Form styling */
+.jb-support-form .mform fieldset {
+    margin-bottom: 1rem;
+}
+
+.jb-support-form .mform legend {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    border-bottom: 2px solid var(--iser-verde, #1b9e88);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.jb-support-form .mform .form-group {
+    margin-bottom: 1rem;
+}
+
+.jb-support-form .mform .form-control {
+    border-radius: 6px;
+    border-color: #d1d5db;
+}
+
+.jb-support-form .mform .form-control:focus {
+    border-color: var(--iser-verde, #1b9e88);
+    box-shadow: 0 0 0 2px rgba(27, 158, 136, 0.15);
+}
+
+.jb-support-form .mform .btn-primary {
+    background: var(--iser-verde, #1b9e88);
+    border-color: var(--iser-verde, #1b9e88);
+    border-radius: 6px;
+}
+
+.jb-support-form .mform .btn-primary:hover {
+    background: var(--iser-verde-dark, #157a6a);
+    border-color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-support-form .mform .btn-secondary {
+    border-radius: 6px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .jb-support-header__title {
+        font-size: 1.25rem;
+    }
+}
+</style>';
 
 echo $OUTPUT->footer();

@@ -1,7 +1,7 @@
 {{!
     @template local_jobboard/pages/admin/dashboard
 
-    Main dashboard page template with enhanced UX.
+    Main dashboard page template - Clean minimal design with jb-* pattern.
     Provides role-based views for admins, reviewers, and applicants.
 
     Context variables:
@@ -26,450 +26,1203 @@
     * nextconvocatoria (object) - Next convocatoria data
     * hasrecentactivity (bool) - Has recent activity
     * recentactivity (array) - Recent activity items
-    * loading (bool) - Show loading state
 }}
-<div class="local-jobboard-dashboard" data-region="jobboard-dashboard">
-    {{! Skip Link - Hidden until focused (Bootstrap 5 native) }}
-    <a href="#main-content" class="visually-hidden-focusable">
-        {{#str}}skiptomain, local_jobboard{{/str}}
-    </a>
-
-    {{! Simple Page Header }}
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-        <div>
-            <h1 class="h4 mb-1">
-                <i class="fa fa-gauge text-primary me-2" aria-hidden="true"></i>
-                {{#str}}dashboard, local_jobboard{{/str}}
-            </h1>
-            {{#welcome.rolelabel}}
-            <span class="badge bg-secondary">{{welcome.rolelabel}}</span>
-            {{/welcome.rolelabel}}
-        </div>
-        {{! Quick Actions }}
-        <nav class="d-flex flex-wrap gap-2" aria-label="{{#str}}quickactions, local_jobboard{{/str}}">
+<div class="jb-dashboard" id="jobboard-dashboard">
+    {{! ================================================================ }}
+    {{! HEADER SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-dashboard-header">
+        <div class="jb-dashboard-header__nav">
             {{#showpubliclink}}
-            <a href="{{publicurl}}" class="btn btn-outline-primary jb-btn-outline-primary btn-sm">
-                <i class="fa fa-globe me-1" aria-hidden="true"></i>
-                {{#str}}viewpublicpage, local_jobboard{{/str}}
+            <a href="{{publicurl}}" class="jb-dashboard-header__link">
+                <i class="fa fa-globe"></i> {{#str}}viewpublicpage, local_jobboard{{/str}}
             </a>
             {{/showpubliclink}}
-            {{#isapplicant}}
-            <a href="{{applicationsurl}}" class="btn btn-outline-secondary btn-sm">
-                <i class="fa fa-folder-open me-1" aria-hidden="true"></i>
-                {{#str}}myapplications, local_jobboard{{/str}}
-            </a>
-            <a href="{{profileurl}}" class="btn btn-outline-info jb-btn-outline-info btn-sm">
-                <i class="fa fa-user-pen me-1" aria-hidden="true"></i>
-                {{#str}}updateprofile_button, local_jobboard{{/str}}
-            </a>
-            {{/isapplicant}}
-            {{#isadmin}}
-            <a href="{{manageurl}}" class="btn btn-primary btn-sm jb-btn-primary">
-                <i class="fa fa-gears me-1" aria-hidden="true"></i>
-                {{#str}}managevacancies, local_jobboard{{/str}}
-            </a>
-            {{/isadmin}}
-        </nav>
-    </div>
-
-    {{! Main Content Area }}
-    <main id="main-content">
-        {{! System Alerts }}
-        {{#alerts.0}}
-        <section class="jb-alerts-section mb-4" role="region" aria-label="{{#str}}notifications{{/str}}">
-            {{#alerts}}
-            <div class="jb-fade-in-down">
-                {{> local_jobboard/components/alert }}
-            </div>
-            {{/alerts}}
-        </section>
-        {{/alerts.0}}
-
-        {{! Urgent: Next Convocatoria Deadline Banner }}
-        {{#hasnextconvocatoria}}
-        <div class="alert jb-alert-{{nextconvocatoria.alertclass}} d-flex flex-column jb-flex-md-row align-items-start jb-align-items-md-center mb-4 jb-fade-in-up"
-             role="alert"
-             aria-live="polite">
-            <div class="d-flex align-items-center mb-2 mb-md-0">
-                <div class="flex-shrink-0 me-3">
-                    {{#nextconvocatoria.iscritical}}
-                    <span class="jb-pulse">
-                        <i class="fa fa-triangle-exclamation fa-2x" aria-hidden="true"></i>
-                    </span>
-                    {{/nextconvocatoria.iscritical}}
-                    {{^nextconvocatoria.iscritical}}
-                    <i class="fa fa-calendar-xmark fa-2x" aria-hidden="true"></i>
-                    {{/nextconvocatoria.iscritical}}
-                </div>
-                <div>
-                    <div class="fw-bold mb-1">
-                        {{#nextconvocatoria.iscritical}}
-                        <span class="badge bg-danger me-2">
-                            <i class="fa fa-fire me-1" aria-hidden="true"></i>
-                            {{#str}}critical, local_jobboard{{/str}}
-                        </span>
-                        {{/nextconvocatoria.iscritical}}
-                        <span class="text-dark">{{nextconvocatoria.code}}</span> - {{nextconvocatoria.name}}
-                    </div>
-                    <small class="d-block">
-                        <i class="fa fa-clock me-1" aria-hidden="true"></i>
-                        {{#str}}closingon, local_jobboard{{/str}} <strong>{{nextconvocatoria.enddate}}</strong>
-                        <span class="badge jb-badge-{{nextconvocatoria.alertclass}} ms-2">
-                            {{nextconvocatoria.daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
-                        </span>
-                    </small>
-                </div>
-            </div>
-            <div class="jb-ml-md-auto mt-2 jb-mt-md-0">
-                <a href="{{nextconvocatoria.url}}" class="btn jb-btn-{{nextconvocatoria.alertclass}} btn-sm jb-hover-lift">
-                    <i class="fa fa-eye me-1" aria-hidden="true"></i>
-                    {{#str}}viewdetails, local_jobboard{{/str}}
+            <div class="jb-dashboard-header__actions">
+                {{#isapplicant}}
+                <a href="{{applicationsurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
+                    <i class="fa fa-folder-open"></i> {{#str}}myapplications, local_jobboard{{/str}}
                 </a>
+                <a href="{{profileurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
+                    <i class="fa fa-user-pen"></i> {{#str}}updateprofile_button, local_jobboard{{/str}}
+                </a>
+                {{/isapplicant}}
+                {{#isadmin}}
+                <a href="{{manageurl}}" class="jb-btn jb-btn--primary jb-btn--sm">
+                    <i class="fa fa-gears"></i> {{#str}}managevacancies, local_jobboard{{/str}}
+                </a>
+                {{/isadmin}}
             </div>
         </div>
-        {{/hasnextconvocatoria}}
+        <h1 class="jb-dashboard-header__title">
+            <i class="fa fa-gauge"></i> {{#str}}dashboard, local_jobboard{{/str}}
+        </h1>
+        {{#welcome.rolelabel}}
+        <span class="jb-badge jb-badge--secondary">{{welcome.rolelabel}}</span>
+        {{/welcome.rolelabel}}
+    </div>
 
-        {{! ==================== ADMIN/MANAGER SECTION ==================== }}
-        {{#isadmin}}
-        <section class="jb-admin-section mb-5" aria-labelledby="admin-heading">
-            <header class="jb-section-header d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fs-5 text-muted mb-0" id="admin-heading">
-                    <i class="fa fa-gauge me-2" aria-hidden="true"></i>
-                    {{#str}}administracion, local_jobboard{{/str}}
-                </h2>
-            </header>
-
-            {{! Statistics Dashboard }}
-            {{#stats.0}}
-            <div class="row mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
-                {{#stats}}
-                <div class="col-lg-3 col-md-6 mb-3">
-                    {{> local_jobboard/components/stat_card }}
-                </div>
-                {{/stats}}
+    {{! ================================================================ }}
+    {{! ALERTS SECTION }}
+    {{! ================================================================ }}
+    {{#alerts.0}}
+    <div class="jb-alerts">
+        {{#alerts}}
+        <div class="jb-alert jb-alert--{{type}}">
+            <i class="fa fa-{{icon}}"></i>
+            <div class="jb-alert__content">
+                {{#title}}<strong>{{title}}</strong>{{/title}}
+                <span>{{message}}</span>
             </div>
-            {{/stats.0}}
+            {{#actionurl}}
+            <a href="{{actionurl}}" class="jb-btn jb-btn--sm jb-btn--{{type}}">{{actionlabel}}</a>
+            {{/actionurl}}
+        </div>
+        {{/alerts}}
+    </div>
+    {{/alerts.0}}
 
-            {{! Admin Action Cards }}
-            {{#adminsections.0}}
-            <div class="row">
-                {{#adminsections}}
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <article class="card h-100 shadow-sm jb-hover-lift jb-fade-in-up">
-                        <div class="card-header jb-bg-{{color}} text-white">
-                            <h3 class="fs-6 mb-0 d-flex align-items-center">
-                                {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}
-                                {{^icon}}<i class="fa fa-folder me-2" aria-hidden="true"></i>{{/icon}}
-                                {{title}}
-                            </h3>
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <p class="text-muted mb-3">{{description}}</p>
-                            {{#features.0}}
-                            <ul class="jb-list-unstyled small text-muted mb-0 jb-mt-auto">
-                                {{#features}}
-                                <li class="mb-1 d-flex align-items-start">
-                                    <i class="fa fa-circle-check jb-text-{{../color}} me-2 mt-1" aria-hidden="true"></i>
-                                    <span>{{.}}</span>
-                                </li>
-                                {{/features}}
-                            </ul>
-                            {{/features.0}}
-                        </div>
-                        <div class="card-footer bg-white">
-                            <a href="{{url}}" class="btn jb-btn-{{color}} w-100 d-flex justify-content-between align-items-center">
-                                <span>{{buttonlabel}}</span>
-                                <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </article>
-                </div>
-                {{/adminsections}}
+    {{! ================================================================ }}
+    {{! URGENT: NEXT CONVOCATORIA DEADLINE BANNER }}
+    {{! ================================================================ }}
+    {{#hasnextconvocatoria}}
+    <div class="jb-alert jb-alert--{{nextconvocatoria.alertclass}} jb-alert--banner">
+        <div class="jb-alert__icon">
+            {{#nextconvocatoria.iscritical}}
+            <i class="fa fa-triangle-exclamation jb-pulse"></i>
+            {{/nextconvocatoria.iscritical}}
+            {{^nextconvocatoria.iscritical}}
+            <i class="fa fa-calendar-xmark"></i>
+            {{/nextconvocatoria.iscritical}}
+        </div>
+        <div class="jb-alert__content">
+            <div class="jb-alert__header">
+                {{#nextconvocatoria.iscritical}}
+                <span class="jb-badge jb-badge--danger jb-badge--pulse">
+                    <i class="fa fa-fire"></i> {{#str}}critical, local_jobboard{{/str}}
+                </span>
+                {{/nextconvocatoria.iscritical}}
+                <strong class="jb-alert__title">{{nextconvocatoria.code}}</strong> - {{nextconvocatoria.name}}
             </div>
-            {{/adminsections.0}}
+            <div class="jb-alert__meta">
+                <i class="fa fa-clock"></i>
+                {{#str}}closingon, local_jobboard{{/str}} <strong>{{nextconvocatoria.enddate}}</strong>
+                <span class="jb-badge jb-badge--{{nextconvocatoria.alertclass}}">
+                    {{nextconvocatoria.daysremaining}} {{#str}}daysremaining, local_jobboard{{/str}}
+                </span>
+            </div>
+        </div>
+        <a href="{{nextconvocatoria.url}}" class="jb-btn jb-btn--{{nextconvocatoria.alertclass}} jb-btn--sm">
+            <i class="fa fa-eye"></i> {{#str}}viewdetails, local_jobboard{{/str}}
+        </a>
+    </div>
+    {{/hasnextconvocatoria}}
 
-            {{! Workflow Management Section }}
-            {{#workflowsections.0}}
-            <h3 class="h6 text-muted mb-3 mt-4 border-bottom pb-2">
-                <i class="fa fa-diagram-project me-2" aria-hidden="true"></i>
-                {{#str}}workflowmanagement, local_jobboard{{/str}}
+    {{! ================================================================ }}
+    {{! ADMIN/MANAGER SECTION }}
+    {{! ================================================================ }}
+    {{#isadmin}}
+    <section class="jb-section">
+        <div class="jb-section-header">
+            <h2 class="jb-section-header__title">
+                <i class="fa fa-gauge"></i> {{#str}}administracion, local_jobboard{{/str}}
+            </h2>
+        </div>
+
+        {{! Statistics }}
+        {{#stats.0}}
+        <div class="jb-stats">
+            {{#stats}}
+            <a href="{{url}}" class="jb-stat jb-stat--{{color}}">
+                <i class="fa fa-{{icon}}"></i>
+                <div class="jb-stat__data">
+                    <span class="jb-stat__value">{{value}}</span>
+                    <span class="jb-stat__label">{{label}}</span>
+                </div>
+            </a>
+            {{/stats}}
+        </div>
+        {{/stats.0}}
+
+        {{! Admin Action Cards }}
+        {{#adminsections.0}}
+        <div class="jb-grid jb-grid--3">
+            {{#adminsections}}
+            <div class="jb-card jb-action-card">
+                <div class="jb-action-card__header jb-action-card__header--{{color}}">
+                    <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}folder{{/icon}}"></i>
+                    <h3>{{title}}</h3>
+                </div>
+                <div class="jb-action-card__body">
+                    <p class="jb-action-card__desc">{{description}}</p>
+                    {{#features.0}}
+                    <ul class="jb-feature-list">
+                        {{#features}}
+                        <li><i class="fa fa-circle-check"></i> {{.}}</li>
+                        {{/features}}
+                    </ul>
+                    {{/features.0}}
+                </div>
+                <div class="jb-action-card__footer">
+                    <a href="{{url}}" class="jb-btn jb-btn--{{color}} jb-btn--block">
+                        <span>{{buttonlabel}}</span>
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            {{/adminsections}}
+        </div>
+        {{/adminsections.0}}
+
+        {{! Workflow Management Section }}
+        {{#workflowsections.0}}
+        <div class="jb-subsection">
+            <h3 class="jb-subsection__title">
+                <i class="fa fa-diagram-project"></i> {{#str}}workflowmanagement, local_jobboard{{/str}}
             </h3>
-            <div class="row mb-4">
+            <div class="jb-grid jb-grid--3">
                 {{#workflowsections}}
-                <div class="col-md-4 col-sm-6 mb-3">
-                    <div class="card border-0 bg-light h-100 jb-hover-shadow">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}list-check{{/icon}} fa-lg text-{{color}} me-2" aria-hidden="true"></i>
-                                <h4 class="fs-6 mb-0">{{title}}</h4>
-                            </div>
-                            <p class="small text-muted mb-2">{{description}}</p>
-                            <a href="{{url}}" class="btn btn-sm btn-outline-{{color}}">
-                                {{buttonlabel}}
-                                <i class="fa fa-arrow-right ms-1" aria-hidden="true"></i>
-                            </a>
+                <div class="jb-card jb-mini-card">
+                    <div class="jb-mini-card__body">
+                        <div class="jb-mini-card__header">
+                            <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}list-check{{/icon}} jb-mini-card__icon jb-mini-card__icon--{{color}}"></i>
+                            <h4>{{title}}</h4>
                         </div>
+                        <p>{{description}}</p>
+                        <a href="{{url}}" class="jb-btn jb-btn--outline jb-btn--sm">
+                            {{buttonlabel}} <i class="fa fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
                 {{/workflowsections}}
             </div>
-            {{/workflowsections.0}}
+        </div>
+        {{/workflowsections.0}}
 
-            {{! Reports Section }}
-            {{#reportsections.0}}
-            <h3 class="h6 text-muted mb-3 mt-4 border-bottom pb-2">
-                <i class="fa fa-chart-bar me-2" aria-hidden="true"></i>
-                {{#str}}reportsanddata, local_jobboard{{/str}}
+        {{! Reports Section }}
+        {{#reportsections.0}}
+        <div class="jb-subsection">
+            <h3 class="jb-subsection__title">
+                <i class="fa fa-chart-bar"></i> {{#str}}reportsanddata, local_jobboard{{/str}}
             </h3>
-            <div class="row mb-4">
+            <div class="jb-grid jb-grid--3">
                 {{#reportsections}}
-                <div class="col-md-4 col-sm-6 mb-3">
-                    <div class="card border-0 bg-light h-100 jb-hover-shadow">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}chart-pie{{/icon}} fa-lg text-{{color}} me-2" aria-hidden="true"></i>
-                                <h4 class="fs-6 mb-0">{{title}}</h4>
-                            </div>
-                            <p class="small text-muted mb-2">{{description}}</p>
-                            <a href="{{url}}" class="btn btn-sm btn-outline-{{color}}">
-                                {{buttonlabel}}
-                                <i class="fa fa-arrow-right ms-1" aria-hidden="true"></i>
-                            </a>
+                <div class="jb-card jb-mini-card">
+                    <div class="jb-mini-card__body">
+                        <div class="jb-mini-card__header">
+                            <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}chart-pie{{/icon}} jb-mini-card__icon jb-mini-card__icon--{{color}}"></i>
+                            <h4>{{title}}</h4>
                         </div>
+                        <p>{{description}}</p>
+                        <a href="{{url}}" class="jb-btn jb-btn--outline jb-btn--sm">
+                            {{buttonlabel}} <i class="fa fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
                 {{/reportsections}}
             </div>
-            {{/reportsections.0}}
+        </div>
+        {{/reportsections.0}}
 
-            {{! Configuration Section }}
-            {{#configsections.0}}
-            <h3 class="h6 text-muted mb-3 mt-4 border-bottom pb-2">
-                <i class="fa fa-gears me-2" aria-hidden="true"></i>
-                {{#str}}systemconfiguration, local_jobboard{{/str}}
+        {{! Configuration Section }}
+        {{#configsections.0}}
+        <div class="jb-subsection">
+            <h3 class="jb-subsection__title">
+                <i class="fa fa-gears"></i> {{#str}}systemconfiguration, local_jobboard{{/str}}
             </h3>
-            <div class="row mb-4">
+            <div class="jb-grid jb-grid--4">
                 {{#configsections}}
-                <div class="col-md-3 col-sm-6 mb-3">
-                    <a href="{{url}}" class="card border-0 bg-light h-100 jb-hover-lift text-decoration-none">
-                        <div class="card-body text-center py-3">
-                            <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}gear{{/icon}} fa-2x text-{{color}} mb-2" aria-hidden="true"></i>
-                            <h4 class="fs-6 mb-1 text-dark">{{title}}</h4>
-                            <p class="small text-muted mb-0">{{description}}</p>
-                        </div>
-                    </a>
-                </div>
+                <a href="{{url}}" class="jb-card jb-config-card">
+                    <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}gear{{/icon}} jb-config-card__icon jb-config-card__icon--{{color}}"></i>
+                    <h4>{{title}}</h4>
+                    <p>{{description}}</p>
+                </a>
                 {{/configsections}}
             </div>
-            {{/configsections.0}}
+        </div>
+        {{/configsections.0}}
+    </section>
+    {{/isadmin}}
 
-            {{! Advanced Tools Section (Migration & Plugin Settings) }}
-            {{#hasadvancedtools}}
-            <h3 class="h6 text-muted mb-3 mt-4 border-bottom pb-2">
-                <i class="fa fa-screwdriver-wrench me-2" aria-hidden="true"></i>
-                {{#str}}advancedtools, local_jobboard{{/str}}
-            </h3>
-            <div class="row mb-4">
-                {{#migrateurl}}
-                <div class="col-md-4 col-sm-6 mb-3">
-                    <a href="{{migrateurl}}" class="card border-0 bg-light h-100 jb-hover-lift text-decoration-none">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fa fa-right-left fa-lg text-warning me-2" aria-hidden="true"></i>
-                                <h4 class="fs-6 mb-0 text-dark">{{#str}}migration, local_jobboard{{/str}}</h4>
-                            </div>
-                            <p class="small text-muted mb-0">{{#str}}migration_desc, local_jobboard{{/str}}</p>
-                        </div>
-                    </a>
+    {{! ================================================================ }}
+    {{! REVIEWER SECTION }}
+    {{! ================================================================ }}
+    {{#isreviewer}}
+    <section class="jb-section">
+        <div class="jb-section-header">
+            <h2 class="jb-section-header__title">
+                <i class="fa fa-clipboard-check"></i> {{#str}}reviewertasks, local_jobboard{{/str}}
+            </h2>
+        </div>
+
+        <div class="jb-reviewer-grid">
+            <div class="jb-card jb-reviewer-card">
+                <div class="jb-reviewer-card__header">
+                    <div class="jb-reviewer-card__title">
+                        <i class="fa fa-list-check"></i>
+                        <h3>{{#str}}myreviews, local_jobboard{{/str}}</h3>
+                    </div>
+                    {{#reviewersection.pendingcount}}
+                    <span class="jb-badge jb-badge--warning jb-badge--pulse">
+                        {{reviewersection.pendingcount}} {{#str}}pending, local_jobboard{{/str}}
+                    </span>
+                    {{/reviewersection.pendingcount}}
                 </div>
-                {{/migrateurl}}
-                {{#pluginsettingsurl}}
-                <div class="col-md-4 col-sm-6 mb-3">
-                    <a href="{{pluginsettingsurl}}" class="card border-0 bg-light h-100 jb-hover-lift text-decoration-none">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fa fa-sliders fa-lg text-secondary me-2" aria-hidden="true"></i>
-                                <h4 class="fs-6 mb-0 text-dark">{{#str}}pluginsettings, local_jobboard{{/str}}</h4>
-                            </div>
-                            <p class="small text-muted mb-0">{{#str}}pluginsettings_desc, local_jobboard{{/str}}</p>
-                        </div>
-                    </a>
-                </div>
-                {{/pluginsettingsurl}}
-            </div>
-            {{/hasadvancedtools}}
-        </section>
-        {{/isadmin}}
+                <div class="jb-reviewer-card__body">
+                    <p>{{#str}}myreviews_desc, local_jobboard{{/str}}</p>
 
-        {{! ==================== REVIEWER SECTION ==================== }}
-        {{#isreviewer}}
-        <section class="jb-reviewer-section mb-5" aria-labelledby="reviewer-heading">
-            <header class="jb-section-header mb-4">
-                <h2 class="fs-5 text-muted mb-0" id="reviewer-heading">
-                    <i class="fa fa-clipboard-check me-2" aria-hidden="true"></i>
-                    {{#str}}reviewertasks, local_jobboard{{/str}}
-                </h2>
-            </header>
-
-            <div class="row">
-                <div class="col-lg-8 mb-4 mb-lg-0">
-                    <article class="card shadow-sm h-100 jb-fade-in-up">
-                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <h3 class="fs-6 mb-0 d-flex align-items-center">
-                                <i class="fa fa-list-check fa-lg text-info me-3" aria-hidden="true"></i>
-                                {{#str}}myreviews, local_jobboard{{/str}}
-                            </h3>
-                            {{#reviewersection.pendingcount}}
-                            <span class="badge bg-warning text-dark jb-pulse">
-                                {{reviewersection.pendingcount}} {{#str}}pending, local_jobboard{{/str}}
-                            </span>
-                            {{/reviewersection.pendingcount}}
-                        </div>
-                        <div class="card-body">
-                            <p class="text-muted mb-3">{{#str}}myreviews_desc, local_jobboard{{/str}}</p>
-
-                            {{#reviewersection.haspendingreview}}
-                            <div class="alert alert-warning jb-alert-warning d-flex align-items-center" role="alert">
-                                <i class="fa fa-triangle-exclamation fa-lg me-3" aria-hidden="true"></i>
-                                <div>
-                                    <strong>{{#str}}attentionrequired, local_jobboard{{/str}}</strong>
-                                    <p class="mb-0 small">{{#str}}pending_reviews_alert, local_jobboard, {{reviewersection.pendingcount}}{{/str}}</p>
-                                </div>
-                            </div>
-                            {{/reviewersection.haspendingreview}}
-
-                            {{^reviewersection.haspendingreview}}
-                            <div class="alert alert-success jb-alert-success d-flex align-items-center" role="status">
-                                <i class="fa fa-circle-check fa-lg me-3" aria-hidden="true"></i>
-                                <span>{{#str}}nopendingreview, local_jobboard{{/str}}</span>
-                            </div>
-                            {{/reviewersection.haspendingreview}}
-                        </div>
-                        <div class="card-footer bg-white">
-                            <a href="{{reviewersection.url}}" class="btn btn-info jb-btn-info jb-hover-lift">
-                                <i class="fa fa-clipboard-list me-2" aria-hidden="true"></i>
-                                {{#str}}viewmyreviews, local_jobboard{{/str}}
-                                <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </article>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card shadow-sm h-100 bg-info text-white jb-fade-in-up">
-                        <div class="card-body text-center d-flex flex-column justify-content-center">
-                            <i class="fa fa-award fa-3x opacity-75 mb-3" aria-hidden="true"></i>
-                            <p class="fs-1 fw-bold mb-1">{{reviewersection.completedcount}}</p>
-                            <p class="mb-0 opacity-75">{{#str}}completedreviews, local_jobboard{{/str}}</p>
+                    {{#reviewersection.haspendingreview}}
+                    <div class="jb-alert jb-alert--warning jb-alert--compact">
+                        <i class="fa fa-triangle-exclamation"></i>
+                        <div class="jb-alert__content">
+                            <strong>{{#str}}attentionrequired, local_jobboard{{/str}}</strong>
+                            <span>{{#str}}pending_reviews_alert, local_jobboard, {{reviewersection.pendingcount}}{{/str}}</span>
                         </div>
                     </div>
+                    {{/reviewersection.haspendingreview}}
+
+                    {{^reviewersection.haspendingreview}}
+                    <div class="jb-alert jb-alert--success jb-alert--compact">
+                        <i class="fa fa-circle-check"></i>
+                        <span>{{#str}}nopendingreview, local_jobboard{{/str}}</span>
+                    </div>
+                    {{/reviewersection.haspendingreview}}
+                </div>
+                <div class="jb-reviewer-card__footer">
+                    <a href="{{reviewersection.url}}" class="jb-btn jb-btn--info">
+                        <i class="fa fa-clipboard-list"></i>
+                        {{#str}}viewmyreviews, local_jobboard{{/str}}
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
-        </section>
-        {{/isreviewer}}
 
-        {{! ==================== APPLICANT SECTION ==================== }}
-        {{#isapplicant}}
-        <section class="jb-applicant-section mb-5" aria-labelledby="applicant-heading">
-            <header class="jb-section-header mb-4">
-                <h2 class="fs-5 text-muted mb-0" id="applicant-heading">
-                    <i class="fa fa-user me-2" aria-hidden="true"></i>
-                    {{#str}}myapplications, local_jobboard{{/str}}
-                </h2>
-            </header>
-
-            {{! Applicant Statistics }}
-            {{#applicantstats.0}}
-            <div class="row mb-4" role="region" aria-label="{{#str}}mystats, local_jobboard{{/str}}">
-                {{#applicantstats}}
-                <div class="col-lg-3 col-md-6 mb-3">
-                    {{> local_jobboard/components/stat_card }}
+            <div class="jb-card jb-stat-card jb-stat-card--info">
+                <div class="jb-stat-card__body">
+                    <i class="fa fa-award"></i>
+                    <span class="jb-stat-card__value">{{reviewersection.completedcount}}</span>
+                    <span class="jb-stat-card__label">{{#str}}completedreviews, local_jobboard{{/str}}</span>
                 </div>
-                {{/applicantstats}}
             </div>
-            {{/applicantstats.0}}
+        </div>
+    </section>
+    {{/isreviewer}}
 
-            {{! Applicant Action Cards }}
-            {{#applicantsections.0}}
-            <div class="row">
-                {{#applicantsections}}
-                <div class="col-lg-6 mb-4">
-                    <article class="card h-100 shadow-sm jb-hover-lift jb-fade-in-up">
-                        <div class="card-header jb-bg-{{color}} text-white">
-                            <h3 class="fs-6 mb-0">
-                                {{#icon}}<i class="fa fa-{{icon}} me-2" aria-hidden="true"></i>{{/icon}}
-                                {{^icon}}<i class="fa fa-file-lines me-2" aria-hidden="true"></i>{{/icon}}
-                                {{title}}
-                            </h3>
-                        </div>
-                        <div class="card-body">
-                            <p class="text-muted mb-3">{{description}}</p>
-                            {{#alert}}
-                            <div class="alert jb-alert-{{alerttype}} d-flex align-items-center mb-0" role="alert">
-                                <i class="fa fa-circle-info me-2" aria-hidden="true"></i>
-                                <span class="small">{{alert}}</span>
-                            </div>
-                            {{/alert}}
-                        </div>
-                        <div class="card-footer bg-white">
-                            <a href="{{url}}" class="btn jb-btn-{{color}} d-flex justify-content-between align-items-center">
-                                <span>{{buttonlabel}}</span>
-                                <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </article>
+    {{! ================================================================ }}
+    {{! APPLICANT SECTION }}
+    {{! ================================================================ }}
+    {{#isapplicant}}
+    <section class="jb-section">
+        <div class="jb-section-header">
+            <h2 class="jb-section-header__title">
+                <i class="fa fa-user"></i> {{#str}}myapplications, local_jobboard{{/str}}
+            </h2>
+        </div>
+
+        {{! Applicant Statistics }}
+        {{#applicantstats.0}}
+        <div class="jb-stats">
+            {{#applicantstats}}
+            <a href="{{#url}}{{url}}{{/url}}{{^url}}#{{/url}}" class="jb-stat jb-stat--{{color}}">
+                <i class="fa fa-{{icon}}"></i>
+                <div class="jb-stat__data">
+                    <span class="jb-stat__value">{{value}}</span>
+                    <span class="jb-stat__label">{{label}}</span>
                 </div>
-                {{/applicantsections}}
-            </div>
-            {{/applicantsections.0}}
-        </section>
-        {{/isapplicant}}
+            </a>
+            {{/applicantstats}}
+        </div>
+        {{/applicantstats.0}}
 
-        {{! ==================== VIEWER ONLY SECTION ==================== }}
-        {{#isvieweronly}}
-        <section class="jb-viewer-section">
-            {{> local_jobboard/components/empty_state }}
-        </section>
-        {{/isvieweronly}}
-
-        {{! ==================== RECENT ACTIVITY TIMELINE ==================== }}
-        {{#hasrecentactivity}}
-        <section class="mt-5" aria-labelledby="activity-heading">
-            <header class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="h6 text-muted mb-0" id="activity-heading">
-                    <i class="fa fa-clock-rotate-left me-2" aria-hidden="true"></i>
-                    {{#str}}recentactivity, local_jobboard{{/str}}
-                </h2>
-                {{#viewallactivityurl}}
-                <a href="{{viewallactivityurl}}" class="btn btn-sm btn-outline-secondary">
-                    {{#str}}viewall, local_jobboard{{/str}}
-                </a>
-                {{/viewallactivityurl}}
-            </header>
-            <div class="card shadow-sm">
-                <ul class="list-group list-group-flush">
-                    {{#recentactivity}}
-                    <li class="list-group-item d-flex align-items-center py-2">
-                        <i class="fa fa-{{icon}} text-{{color}} me-3" aria-hidden="true"></i>
-                        <div class="flex-grow-1 min-width-0">
-                            <a href="{{url}}" class="text-dark text-decoration-none d-block text-truncate">
-                                {{label}}
-                            </a>
-                            <small class="text-muted">
-                                <i class="fa fa-clock me-1" aria-hidden="true"></i>
-                                <time datetime="{{timecreatediso}}">{{timecreated}}</time>
-                            </small>
-                        </div>
-                        <a href="{{url}}" class="btn btn-sm btn-outline-secondary ms-2" aria-label="{{#str}}view{{/str}}">
-                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                        </a>
-                    </li>
-                    {{/recentactivity}}
-                </ul>
+        {{! Applicant Action Cards }}
+        {{#applicantsections.0}}
+        <div class="jb-grid jb-grid--3">
+            {{#applicantsections}}
+            <div class="jb-card jb-action-card">
+                <div class="jb-action-card__header jb-action-card__header--{{color}}">
+                    <i class="fa fa-{{#icon}}{{icon}}{{/icon}}{{^icon}}file-lines{{/icon}}"></i>
+                    <h3>{{title}}</h3>
+                </div>
+                <div class="jb-action-card__body">
+                    <p class="jb-action-card__desc">{{description}}</p>
+                    {{#alert}}
+                    <div class="jb-alert jb-alert--{{alerttype}} jb-alert--compact">
+                        <i class="fa fa-circle-info"></i>
+                        <span>{{alert}}</span>
+                    </div>
+                    {{/alert}}
+                </div>
+                <div class="jb-action-card__footer">
+                    <a href="{{url}}" class="jb-btn jb-btn--{{color}} jb-btn--block">
+                        <span>{{buttonlabel}}</span>
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
-        </section>
-        {{/hasrecentactivity}}
-    </main>
+            {{/applicantsections}}
+        </div>
+        {{/applicantsections.0}}
+    </section>
+    {{/isapplicant}}
+
+    {{! ================================================================ }}
+    {{! VIEWER ONLY SECTION }}
+    {{! ================================================================ }}
+    {{#isvieweronly}}
+    <div class="jb-empty">
+        <i class="fa fa-eye"></i>
+        <h3>{{#str}}vieweronly_title, local_jobboard{{/str}}</h3>
+        <p>{{#str}}vieweronly_desc, local_jobboard{{/str}}</p>
+        {{#showpubliclink}}
+        <a href="{{publicurl}}" class="jb-btn jb-btn--primary">
+            <i class="fa fa-globe"></i> {{#str}}viewpublicpage, local_jobboard{{/str}}
+        </a>
+        {{/showpubliclink}}
+    </div>
+    {{/isvieweronly}}
+
+    {{! ================================================================ }}
+    {{! RECENT ACTIVITY TIMELINE }}
+    {{! ================================================================ }}
+    {{#hasrecentactivity}}
+    <section class="jb-section jb-section--activity">
+        <div class="jb-section-header">
+            <h2 class="jb-section-header__title">
+                <i class="fa fa-clock-rotate-left"></i> {{#str}}recentactivity, local_jobboard{{/str}}
+            </h2>
+            {{#viewallactivityurl}}
+            <a href="{{viewallactivityurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
+                {{#str}}viewall, local_jobboard{{/str}}
+            </a>
+            {{/viewallactivityurl}}
+        </div>
+
+        <div class="jb-card">
+            <ul class="jb-activity-list">
+                {{#recentactivity}}
+                <li class="jb-activity-item">
+                    <i class="fa fa-{{icon}} jb-activity-item__icon jb-activity-item__icon--{{color}}"></i>
+                    <div class="jb-activity-item__content">
+                        <a href="{{url}}" class="jb-activity-item__label">{{label}}</a>
+                        <span class="jb-activity-item__time">
+                            <i class="fa fa-clock"></i> {{timecreated}}
+                        </span>
+                    </div>
+                    <a href="{{url}}" class="jb-btn jb-btn--ghost jb-btn--sm">
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                </li>
+                {{/recentactivity}}
+            </ul>
+        </div>
+    </section>
+    {{/hasrecentactivity}}
 </div>
+
+<style>
+/* ================================================================
+   DASHBOARD PAGE - CLEAN MINIMAL DESIGN
+   Following jb-* pattern
+   ================================================================ */
+.jb-dashboard {
+    max-width: 1200px;
+    padding: 1rem;
+}
+
+/* Header */
+.jb-dashboard-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-dashboard-header__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.jb-dashboard-header__link {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-dashboard-header__link:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-dashboard-header__actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.jb-dashboard-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--iser-negro, #1a1a1a);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.jb-dashboard-header__title i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+/* Sections */
+.jb-section {
+    margin-bottom: 2rem;
+}
+
+.jb-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-section-header__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-section-header__title i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-subsection {
+    margin-top: 1.5rem;
+}
+
+.jb-subsection__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-subsection__title i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+/* Alerts */
+.jb-alerts {
+    margin-bottom: 1rem;
+}
+
+.jb-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+}
+
+.jb-alert > i,
+.jb-alert__icon > i {
+    font-size: 1.25rem;
+    margin-top: 0.125rem;
+}
+
+.jb-alert__content {
+    flex: 1;
+}
+
+.jb-alert__content strong,
+.jb-alert__title {
+    display: inline;
+    margin-right: 0.25rem;
+}
+
+.jb-alert__content span {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.jb-alert__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+}
+
+.jb-alert__meta {
+    font-size: 0.8125rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.jb-alert--info {
+    background: rgba(13, 110, 253, 0.1);
+    border: 1px solid rgba(13, 110, 253, 0.2);
+    color: #0d6efd;
+}
+
+.jb-alert--warning {
+    background: rgba(255, 193, 7, 0.15);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    color: #856404;
+}
+
+.jb-alert--danger {
+    background: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+    color: #c41e3a;
+}
+
+.jb-alert--success {
+    background: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.2);
+    color: #28a745;
+}
+
+.jb-alert--compact {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.jb-alert--banner {
+    flex-wrap: wrap;
+}
+
+.jb-alert--banner .jb-alert__icon {
+    flex-shrink: 0;
+}
+
+/* Stats */
+.jb-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.jb-stat {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    min-width: 180px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.jb-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-decoration: none;
+}
+
+.jb-stat > i {
+    font-size: 1.75rem;
+    opacity: 0.7;
+}
+
+.jb-stat__data {
+    display: flex;
+    flex-direction: column;
+}
+
+.jb-stat__value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.jb-stat__label {
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+    margin-top: 0.25rem;
+}
+
+.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+
+.jb-stat--info { border-left: 3px solid #0d6efd; }
+.jb-stat--info .jb-stat__value, .jb-stat--info > i { color: #0d6efd; }
+
+.jb-stat--success { border-left: 3px solid #28a745; }
+.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
+
+.jb-stat--warning { border-left: 3px solid #ffc107; }
+.jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #856404; }
+
+.jb-stat--danger { border-left: 3px solid #dc3545; }
+.jb-stat--danger .jb-stat__value, .jb-stat--danger > i { color: #dc3545; }
+
+/* Cards */
+.jb-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Grid */
+.jb-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.jb-grid--3 {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.jb-grid--4 {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+/* Action Cards */
+.jb-action-card {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.jb-action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.jb-action-card__header {
+    padding: 1rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.jb-action-card__header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.jb-action-card__header i {
+    font-size: 1.25rem;
+}
+
+.jb-action-card__header--primary { background: var(--iser-verde, #1b9e88); }
+.jb-action-card__header--success { background: #28a745; }
+.jb-action-card__header--warning { background: #e0a800; color: #1a1a1a; }
+.jb-action-card__header--info { background: #0d6efd; }
+.jb-action-card__header--secondary { background: #6c757d; }
+
+.jb-action-card__body {
+    padding: 1rem;
+    flex: 1;
+}
+
+.jb-action-card__desc {
+    font-size: 0.875rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 0.75rem;
+}
+
+.jb-feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.jb-feature-list li {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    padding: 0.25rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.jb-feature-list li i {
+    color: var(--iser-verde, #1b9e88);
+    margin-top: 0.125rem;
+}
+
+.jb-action-card__footer {
+    padding: 1rem;
+    background: #f9fafb;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* Mini Cards */
+.jb-mini-card {
+    background: #f9fafb;
+    border: none;
+    transition: box-shadow 0.2s;
+}
+
+.jb-mini-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.jb-mini-card__body {
+    padding: 1rem;
+}
+
+.jb-mini-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.jb-mini-card__header h4 {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-mini-card__icon {
+    font-size: 1.25rem;
+}
+
+.jb-mini-card__icon--primary { color: var(--iser-verde, #1b9e88); }
+.jb-mini-card__icon--success { color: #28a745; }
+.jb-mini-card__icon--warning { color: #ffc107; }
+.jb-mini-card__icon--info { color: #0d6efd; }
+.jb-mini-card__icon--secondary { color: #6c757d; }
+
+.jb-mini-card__body p {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 0.75rem;
+}
+
+/* Config Cards */
+.jb-config-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.25rem 1rem;
+    text-decoration: none;
+    background: #f9fafb;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.jb-config-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-decoration: none;
+}
+
+.jb-config-card__icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.jb-config-card__icon--primary { color: var(--iser-verde, #1b9e88); }
+.jb-config-card__icon--success { color: #28a745; }
+.jb-config-card__icon--warning { color: #ffc107; }
+.jb-config-card__icon--info { color: #0d6efd; }
+.jb-config-card__icon--secondary { color: #6c757d; }
+.jb-config-card__icon--dark { color: #343a40; }
+
+.jb-config-card h4 {
+    margin: 0 0 0.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--iser-negro, #1a1a1a);
+}
+
+.jb-config-card p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+/* Reviewer Section */
+.jb-reviewer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+}
+
+.jb-reviewer-card__header {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-reviewer-card__title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.jb-reviewer-card__title i {
+    font-size: 1.25rem;
+    color: #0d6efd;
+}
+
+.jb-reviewer-card__title h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.jb-reviewer-card__body {
+    padding: 1rem;
+}
+
+.jb-reviewer-card__body p {
+    font-size: 0.875rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 1rem;
+}
+
+.jb-reviewer-card__footer {
+    padding: 1rem;
+    background: #f9fafb;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* Stat Card (large) */
+.jb-stat-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.jb-stat-card__body {
+    padding: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.jb-stat-card__body > i {
+    font-size: 2.5rem;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+}
+
+.jb-stat-card__value {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.jb-stat-card__label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    margin-top: 0.25rem;
+}
+
+.jb-stat-card--info {
+    background: #0d6efd;
+    color: #fff;
+}
+
+/* Activity List */
+.jb-activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.jb-activity-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.jb-activity-item:last-child {
+    border-bottom: none;
+}
+
+.jb-activity-item__icon {
+    font-size: 1rem;
+    margin-right: 1rem;
+}
+
+.jb-activity-item__icon--primary { color: var(--iser-verde, #1b9e88); }
+.jb-activity-item__icon--success { color: #28a745; }
+.jb-activity-item__icon--warning { color: #ffc107; }
+.jb-activity-item__icon--info { color: #0d6efd; }
+.jb-activity-item__icon--secondary { color: #6c757d; }
+
+.jb-activity-item__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.jb-activity-item__label {
+    display: block;
+    color: var(--iser-negro, #1a1a1a);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.jb-activity-item__label:hover {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-activity-item__time {
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+.jb-activity-item__time i {
+    margin-right: 0.25rem;
+}
+
+/* Empty State */
+.jb-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+}
+
+.jb-empty > i {
+    font-size: 3rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+.jb-empty h3 {
+    font-size: 1.25rem;
+    color: var(--iser-negro, #1a1a1a);
+    margin: 0 0 0.5rem;
+}
+
+.jb-empty p {
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 1.5rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Buttons */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.jb-btn--sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+}
+
+.jb-btn--block {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.jb-btn--primary {
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+}
+
+.jb-btn--primary:hover {
+    background: var(--iser-verde-dark, #157a6a);
+    color: #fff;
+}
+
+.jb-btn--success {
+    background: #28a745;
+    color: #fff;
+}
+
+.jb-btn--success:hover {
+    background: #218838;
+    color: #fff;
+}
+
+.jb-btn--warning {
+    background: #ffc107;
+    color: #1a1a1a;
+}
+
+.jb-btn--warning:hover {
+    background: #e0a800;
+    color: #1a1a1a;
+}
+
+.jb-btn--danger {
+    background: #dc3545;
+    color: #fff;
+}
+
+.jb-btn--danger:hover {
+    background: #c82333;
+    color: #fff;
+}
+
+.jb-btn--info {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.jb-btn--info:hover {
+    background: #0b5ed7;
+    color: #fff;
+}
+
+.jb-btn--outline {
+    background: transparent;
+    border-color: #d1d5db;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+.jb-btn--outline:hover {
+    border-color: var(--iser-verde, #1b9e88);
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-btn--ghost {
+    background: transparent;
+    padding: 0.375rem 0.5rem;
+    color: var(--iser-gris-medio, #666);
+}
+
+.jb-btn--ghost:hover {
+    background: rgba(0,0,0,0.05);
+    color: var(--iser-verde, #1b9e88);
+}
+
+/* Badges */
+.jb-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-badge--warning { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-badge--danger { background: rgba(220, 53, 69, 0.15); color: #c41e3a; }
+.jb-badge--info { background: rgba(13, 110, 253, 0.15); color: #0d6efd; }
+.jb-badge--secondary { background: #e9ecef; color: #6c757d; }
+
+.jb-badge--pulse {
+    animation: jb-pulse 2s infinite;
+}
+
+@keyframes jb-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.jb-pulse {
+    animation: jb-pulse 1.5s infinite;
+}
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-reviewer-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .jb-dashboard-header__nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .jb-dashboard-header__title {
+        font-size: 1.25rem;
+    }
+
+    .jb-stats {
+        flex-direction: column;
+    }
+
+    .jb-stat {
+        width: 100%;
+    }
+
+    .jb-grid--3,
+    .jb-grid--4 {
+        grid-template-columns: 1fr;
+    }
+
+    .jb-alert--banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .jb-alert--banner .jb-btn {
+        margin-top: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .jb-dashboard-header__actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .jb-dashboard-header__actions .jb-btn {
+        width: 100%;
+    }
+}
+
+/* Print */
+@media print {
+    .jb-btn,
+    .jb-dashboard-header__actions {
+        display: none;
+    }
+}
+</style>
 
 {{#js}}
 require(['local_jobboard/dashboard'], function(dashboard) {
