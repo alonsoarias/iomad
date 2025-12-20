@@ -2,8 +2,7 @@
     @template local_jobboard/pages/program_reviewers
 
     Program reviewers management page template.
-    Uses jb-* CSS classes for consistent styling with embedded styles.
-    Includes accessibility features, animations, and loading states.
+    Uses jb-* CSS classes following public/index.mustache pattern.
 
     Context variables:
     * pagetitle - Page title string
@@ -21,225 +20,485 @@
     * backurl - URL to go back
     * loading - bool - Show skeleton loading state
 }}
+{{#loading}}
+<div class="jb-program-reviewers" aria-busy="true">
+    <div class="jb-skeleton-header"></div>
+    <div class="jb-skeleton-stats">
+        <div class="jb-skeleton-stat"></div>
+        <div class="jb-skeleton-stat"></div>
+        <div class="jb-skeleton-stat"></div>
+        <div class="jb-skeleton-stat"></div>
+    </div>
+    <div class="jb-skeleton-card"></div>
+    <div class="jb-skeleton-card"></div>
+</div>
+{{/loading}}
+
+{{^loading}}
+<div class="jb-program-reviewers" id="jobboard-program-reviewers">
+    {{! ================================================================ }}
+    {{! HEADER SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{backurl}}" class="jb-public-header__back">
+                <i class="fa fa-{{backicon}}"></i>
+                {{backlabel}}
+            </a>
+            <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
+                <i class="fa fa-gauge"></i> {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+        </div>
+        <h1 class="jb-public-header__title">
+            <i class="fa fa-user-check"></i> {{pagetitle}}
+        </h1>
+        <p class="jb-public-header__subtitle">
+            {{#islistview}}{{#str}}programreviewerhelp, local_jobboard{{/str}}{{/islistview}}
+            {{#isprogramview}}{{program.name}}{{/isprogramview}}
+        </p>
+    </div>
+
+    {{#islistview}}
+    {{! ================================================================ }}
+    {{! LIST VIEW - Programs Overview }}
+    {{! ================================================================ }}
+
+    {{! Statistics }}
+    <div class="jb-stats">
+        <div class="jb-stat jb-stat--primary">
+            <i class="fa fa-users"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.totalreviewers}}</span>
+                <span class="jb-stat__label">{{#str}}totalreviewers, local_jobboard{{/str}}</span>
+            </div>
+        </div>
+        <div class="jb-stat jb-stat--success">
+            <i class="fa fa-circle-check"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.active}}</span>
+                <span class="jb-stat__label">{{#str}}activereviewers, local_jobboard{{/str}}</span>
+            </div>
+        </div>
+        <div class="jb-stat jb-stat--warning">
+            <i class="fa fa-star"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.leadreviewers}}</span>
+                <span class="jb-stat__label">{{#str}}leadreviewers, local_jobboard{{/str}}</span>
+            </div>
+        </div>
+        <div class="jb-stat jb-stat--info">
+            <i class="fa fa-graduation-cap"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{stats.programswithreviewers}}</span>
+                <span class="jb-stat__label">{{#str}}programswithreviewers, local_jobboard{{/str}}</span>
+            </div>
+        </div>
+    </div>
+
+    {{! Programs with Reviewers Section }}
+    <div class="jb-section-header">
+        <h3 class="jb-section-header__title">
+            <i class="fa fa-graduation-cap"></i> {{#str}}programswithreviewers, local_jobboard{{/str}}
+        </h3>
+    </div>
+
+    {{#hasprogramswithreviewers}}
+    <div class="jb-card">
+        <div class="jb-card__body jb-card__body--table">
+            <table class="jb-table">
+                <thead>
+                    <tr>
+                        <th>{{#str}}program, local_jobboard{{/str}}</th>
+                        <th class="text-center">{{#str}}reviewers, local_jobboard{{/str}}</th>
+                        <th class="text-center">{{#str}}leadreviewers, local_jobboard{{/str}}</th>
+                        <th class="text-center">{{#str}}actions{{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#programswithreviewers}}
+                    <tr>
+                        <td>
+                            <i class="fa fa-folder" style="color: var(--iser-amarillo, #ffc107);"></i>
+                            {{name}}
+                        </td>
+                        <td class="text-center">
+                            <span class="jb-badge jb-badge--info">{{reviewercount}}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="jb-badge jb-badge--warning">
+                                <i class="fa fa-star"></i> {{leadcount}}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{manageurl}}" class="jb-btn jb-btn--primary jb-btn--sm">
+                                <i class="fa fa-users"></i> {{#str}}manage{{/str}}
+                            </a>
+                        </td>
+                    </tr>
+                    {{/programswithreviewers}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/hasprogramswithreviewers}}
+    {{^hasprogramswithreviewers}}
+    <div class="jb-empty">
+        <i class="fa fa-graduation-cap"></i>
+        <h3>{{#str}}noprogramswithreviewers, local_jobboard{{/str}}</h3>
+        <p>{{#str}}addreviewerstoprogram, local_jobboard{{/str}}</p>
+    </div>
+    {{/hasprogramswithreviewers}}
+
+    {{! Add Reviewers to Program Section }}
+    <div class="jb-section-header" style="margin-top: 2rem;">
+        <h3 class="jb-section-header__title">
+            <i class="fa fa-circle-plus"></i> {{#str}}addreviewerstoprogram, local_jobboard{{/str}}
+        </h3>
+    </div>
+
+    {{#hasallcategories}}
+    <div class="jb-card">
+        <div class="jb-card__body jb-card__body--list">
+            <ul class="jb-program-list">
+                {{#allcategories}}
+                <li class="jb-program-item">
+                    <a href="{{selecturl}}" class="jb-program-link">
+                        <span>
+                            {{{indent}}}
+                            <i class="fa fa-{{icon}}"></i>
+                            {{name}}
+                        </span>
+                        {{#hasreviewers}}
+                        <span class="jb-badge jb-badge--success">{{reviewercount}}</span>
+                        {{/hasreviewers}}
+                    </a>
+                </li>
+                {{/allcategories}}
+            </ul>
+        </div>
+    </div>
+    {{/hasallcategories}}
+    {{/islistview}}
+
+    {{#isprogramview}}
+    {{! ================================================================ }}
+    {{! PROGRAM VIEW - Single Program Reviewers }}
+    {{! ================================================================ }}
+
+    {{! Add Reviewer Form Card }}
+    <div class="jb-card">
+        <div class="jb-card__header">
+            <i class="fa fa-user-plus"></i> {{#str}}addreviewer, local_jobboard{{/str}}
+        </div>
+        <div class="jb-card__body">
+            {{#hasavailableusers}}
+            <form method="post" action="{{addformurl}}" class="jb-add-form">
+                <input type="hidden" name="sesskey" value="{{sesskey}}">
+                <input type="hidden" name="action" value="add">
+                <input type="hidden" name="categoryid" value="{{program.id}}">
+
+                <div class="jb-add-form__grid">
+                    <div class="jb-add-form__field jb-add-form__field--user">
+                        <label class="jb-filter-label">
+                            <i class="fa fa-user"></i> {{#str}}selectuser, local_jobboard{{/str}}
+                        </label>
+                        <select name="userid" class="jb-select">
+                            <option value="">-- {{#str}}selectuser, local_jobboard{{/str}} --</option>
+                            {{#availableusers}}
+                            <option value="{{id}}">{{fullname}} ({{email}})</option>
+                            {{/availableusers}}
+                        </select>
+                    </div>
+
+                    <div class="jb-add-form__field">
+                        <label class="jb-filter-label">
+                            <i class="fa fa-id-badge"></i> {{#str}}role{{/str}}
+                        </label>
+                        <select name="role" class="jb-select">
+                            <option value="reviewer">{{#str}}role_reviewer, local_jobboard{{/str}}</option>
+                            <option value="lead">{{#str}}role_lead_reviewer, local_jobboard{{/str}}</option>
+                        </select>
+                    </div>
+
+                    <div class="jb-add-form__field jb-add-form__field--action">
+                        <button type="submit" class="jb-btn jb-btn--success">
+                            <i class="fa fa-plus"></i> {{#str}}add{{/str}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+            {{/hasavailableusers}}
+            {{^hasavailableusers}}
+            <div class="jb-alert jb-alert--info">
+                <i class="fa fa-circle-info"></i>
+                {{#str}}nousersavailable, local_jobboard{{/str}}
+            </div>
+            {{/hasavailableusers}}
+        </div>
+    </div>
+
+    {{! Assigned Reviewers Section }}
+    <div class="jb-section-header">
+        <h3 class="jb-section-header__title">
+            <i class="fa fa-users"></i> {{#str}}assignedreviewers, local_jobboard{{/str}}
+        </h3>
+    </div>
+
+    {{#hasreviewers}}
+    <div class="jb-grid">
+        {{#reviewers}}
+        <div class="jb-reviewer-card {{#islead}}jb-reviewer-card--lead{{/islead}}{{^islead}}jb-reviewer-card--reviewer{{/islead}} {{#isinactive}}jb-reviewer-card--inactive{{/isinactive}}">
+            <div class="jb-reviewer-card__info">
+                <div class="jb-reviewer-card__name">{{fullname}}</div>
+                <div class="jb-reviewer-card__email">{{email}}</div>
+                <div class="jb-reviewer-card__badges">
+                    {{#islead}}
+                    <span class="jb-badge jb-badge--warning">
+                        <i class="fa fa-star"></i> {{#str}}role_lead_reviewer, local_jobboard{{/str}}
+                    </span>
+                    {{/islead}}
+                    {{^islead}}
+                    <span class="jb-badge jb-badge--info">{{#str}}role_reviewer, local_jobboard{{/str}}</span>
+                    {{/islead}}
+                    {{#isactive}}
+                    <span class="jb-badge jb-badge--success">{{#str}}active{{/str}}</span>
+                    {{/isactive}}
+                    {{^isactive}}
+                    <span class="jb-badge jb-badge--secondary">{{#str}}inactive, local_jobboard{{/str}}</span>
+                    {{/isactive}}
+                </div>
+            </div>
+            <div class="jb-reviewer-card__actions">
+                <a href="{{changeroleurl}}" class="jb-btn jb-btn--ghost" title="{{#str}}changerole, local_jobboard{{/str}}">
+                    <i class="fa fa-right-left"></i>
+                </a>
+                <a href="{{togglestatusurl}}" class="jb-btn jb-btn--ghost" title="{{togglestatustitle}}">
+                    <i class="fa {{togglestatusicon}}"></i>
+                </a>
+                <a href="{{removeurl}}" class="jb-btn jb-btn--ghost jb-btn--danger" title="{{#str}}remove{{/str}}"
+                   onclick="return confirm('{{#str}}confirmremovereviewer, local_jobboard{{/str}}');">
+                    <i class="fa fa-trash-can"></i>
+                </a>
+            </div>
+        </div>
+        {{/reviewers}}
+    </div>
+    {{/hasreviewers}}
+    {{^hasreviewers}}
+    <div class="jb-empty">
+        <i class="fa fa-user-plus"></i>
+        <h3>{{#str}}noreviewersforprogram, local_jobboard{{/str}}</h3>
+        <p>{{#str}}addreviewer, local_jobboard{{/str}}</p>
+    </div>
+    {{/hasreviewers}}
+    {{/isprogramview}}
+</div>
+{{/loading}}
+
 <style>
-/* ========================================================
-   JOBBOARD PROGRAM REVIEWERS - EMBEDDED STYLES
-   ======================================================== */
-:root {
-    --iser-verde: #1b9e88;
-    --iser-verde-dark: #157a6a;
-    --iser-verde-light: rgba(27, 158, 136, 0.1);
-    --iser-azul: #0d6efd;
-    --iser-amarillo: #ffc107;
-    --iser-rojo: #dc3545;
-    --iser-gris: #6c757d;
-    --iser-gris-claro: #f8f9fa;
-    --iser-gris-oscuro: #333;
-    --iser-border: #e9ecef;
-    --iser-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --iser-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.12);
-    --iser-radius: 0.5rem;
-    --iser-radius-sm: 0.375rem;
-}
-
-/* Container */
+/* ================================================================
+   PROGRAM REVIEWERS - Following public/index.mustache pattern
+   ================================================================ */
 .jb-program-reviewers {
-    max-width: 1400px;
-    margin: 0 auto;
+    max-width: 1200px;
+    padding: 1rem;
 }
 
-/* Skip Link */
-.jb-skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: var(--iser-verde);
-    color: white;
-    padding: 8px 16px;
-    z-index: 100;
-    transition: top 0.3s;
+/* Header - Same as public/index */
+.jb-public-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-public-header__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.jb-public-header__back {
+    color: var(--iser-verde, #1b9e88);
     text-decoration: none;
-    border-radius: 0 0 var(--iser-radius-sm) var(--iser-radius-sm);
-}
-.jb-skip-link:focus {
-    top: 0;
-}
-
-/* Page Header */
-.jb-page-header {
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--iser-border);
-}
-.jb-page-header h1 {
-    color: var(--iser-gris-oscuro);
-}
-.jb-page-header h1 i {
-    color: var(--iser-verde);
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-/* Stats Section - Border Left Pattern */
+.jb-public-header__back:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-public-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    color: var(--iser-negro, #1a1a1a);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.jb-public-header__title i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-public-header__subtitle {
+    font-size: 1rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0;
+}
+
+/* Stats - Border-left pattern (same as public/index) */
 .jb-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
+
 .jb-stat {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 1.25rem;
-    background: white;
-    border-radius: var(--iser-radius);
-    box-shadow: var(--iser-shadow);
-    transition: all 0.2s ease;
+    flex: 1;
+    min-width: 160px;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .jb-stat:hover {
-    box-shadow: var(--iser-shadow-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
-.jb-stat--primary { border-left: 3px solid var(--iser-verde); }
-.jb-stat--success { border-left: 3px solid #28a745; }
-.jb-stat--warning { border-left: 3px solid var(--iser-amarillo); }
-.jb-stat--info { border-left: 3px solid #17a2b8; }
-.jb-stat i {
+
+.jb-stat > i {
     font-size: 1.5rem;
-    opacity: 0.9;
+    opacity: 0.7;
 }
-.jb-stat--primary i { color: var(--iser-verde); }
-.jb-stat--success i { color: #28a745; }
-.jb-stat--warning i { color: var(--iser-amarillo); }
-.jb-stat--info i { color: #17a2b8; }
+
 .jb-stat__data {
     display: flex;
     flex-direction: column;
 }
+
 .jb-stat__value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--iser-gris-oscuro);
-    line-height: 1.2;
-}
-.jb-stat__label {
-    font-size: 0.8rem;
-    color: var(--iser-gris);
+    line-height: 1;
 }
 
-/* Card Component */
-.jb-card {
-    background: white;
-    border-radius: var(--iser-radius);
-    box-shadow: var(--iser-shadow);
-    margin-bottom: 1.5rem;
-    overflow: hidden;
+.jb-stat__label {
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+    margin-top: 0.25rem;
 }
-.jb-card__header {
+
+.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+.jb-stat--success { border-left: 3px solid #28a745; }
+.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
+.jb-stat--warning { border-left: 3px solid #ffc107; }
+.jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #856404; }
+.jb-stat--info { border-left: 3px solid #17a2b8; }
+.jb-stat--info .jb-stat__value, .jb-stat--info > i { color: #17a2b8; }
+
+/* Section Header */
+.jb-section-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
-    background: var(--iser-gris-claro);
-    border-bottom: 1px solid var(--iser-border);
+    margin-bottom: 1rem;
 }
-.jb-card__header-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--iser-radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-.jb-card__header-icon--primary { background: var(--iser-verde-light); color: var(--iser-verde); }
-.jb-card__header-icon--success { background: rgba(40, 167, 69, 0.1); color: #28a745; }
-.jb-card__header-icon--secondary { background: rgba(108, 117, 125, 0.1); color: var(--iser-gris); }
-.jb-card__header-icon--info { background: rgba(23, 162, 184, 0.1); color: #17a2b8; }
-.jb-card__title {
-    font-size: 1rem;
+
+.jb-section-header__title {
+    font-size: 1.125rem;
     font-weight: 600;
-    color: var(--iser-gris-oscuro);
+    color: var(--iser-rojo, #c41e3a);
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
+
+.jb-section-header__title i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+/* Cards */
+.jb-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.jb-card__header {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-card__header i {
+    color: var(--iser-verde, #1b9e88);
+}
+
 .jb-card__body {
-    padding: 1.25rem;
+    padding: 1rem;
 }
-.jb-card__body--table {
+
+.jb-card__body--table,
+.jb-card__body--list {
     padding: 0;
 }
 
-/* Table Styles */
+/* Table */
 .jb-table {
     width: 100%;
     border-collapse: collapse;
 }
+
 .jb-table th {
-    background: var(--iser-gris-claro);
+    background: #f9fafb;
     font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--iser-gris);
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--iser-border);
+    border-bottom: 1px solid #e5e5e5;
     text-align: left;
 }
+
 .jb-table td {
-    padding: 0.875rem 1rem;
-    border-bottom: 1px solid var(--iser-border);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.875rem;
     vertical-align: middle;
 }
+
 .jb-table tbody tr:last-child td {
     border-bottom: none;
 }
+
 .jb-table tbody tr:hover {
     background: rgba(27, 158, 136, 0.03);
 }
-.jb-table .text-center { text-align: center; }
 
-/* Reviewer Grid */
-.jb-reviewer-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1rem;
-}
-.jb-reviewer-card {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem;
-    background: white;
-    border: 1px solid var(--iser-border);
-    border-radius: var(--iser-radius-sm);
-    transition: all 0.2s ease;
-}
-.jb-reviewer-card:hover {
-    box-shadow: var(--iser-shadow);
-    border-color: var(--iser-verde);
-}
-.jb-reviewer-card--lead { border-left: 3px solid var(--iser-amarillo); }
-.jb-reviewer-card--reviewer { border-left: 3px solid #17a2b8; }
-.jb-reviewer-card--inactive { opacity: 0.6; background: var(--iser-gris-claro); }
-.jb-reviewer-card__info {
-    flex: 1;
-    min-width: 0;
-}
-.jb-reviewer-card__name {
-    font-weight: 600;
-    color: var(--iser-gris-oscuro);
-    margin-bottom: 0.25rem;
-}
-.jb-reviewer-card__email {
-    font-size: 0.85rem;
-    color: var(--iser-gris);
-}
-.jb-reviewer-card__badges {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-}
-.jb-reviewer-card__actions {
-    display: flex;
-    gap: 0.25rem;
+.jb-table .text-center {
+    text-align: center;
 }
 
 /* Program List */
@@ -248,152 +507,263 @@
     padding: 0;
     margin: 0;
 }
+
 .jb-program-item {
-    border-bottom: 1px solid var(--iser-border);
+    border-bottom: 1px solid #f0f0f0;
 }
+
 .jb-program-item:last-child {
     border-bottom: none;
 }
+
 .jb-program-link {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.25rem;
-    color: var(--iser-gris-oscuro);
+    padding: 0.75rem 1rem;
+    color: var(--iser-gris-oscuro, #333);
     text-decoration: none;
-    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    transition: background 0.15s;
 }
+
 .jb-program-link:hover {
     background: rgba(27, 158, 136, 0.05);
-    color: var(--iser-verde);
+    color: var(--iser-verde, #1b9e88);
 }
+
 .jb-program-link i {
-    color: var(--iser-amarillo);
+    color: var(--iser-amarillo, #ffc107);
     margin-right: 0.5rem;
+}
+
+/* Grid */
+.jb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+}
+
+/* Reviewer Card */
+.jb-reviewer-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.jb-reviewer-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.jb-reviewer-card--lead {
+    border-left: 3px solid var(--iser-amarillo, #ffc107);
+}
+
+.jb-reviewer-card--reviewer {
+    border-left: 3px solid #17a2b8;
+}
+
+.jb-reviewer-card--inactive {
+    opacity: 0.6;
+    background: #f9fafb;
+}
+
+.jb-reviewer-card__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.jb-reviewer-card__name {
+    font-weight: 600;
+    color: var(--iser-gris-oscuro, #333);
+    margin-bottom: 0.25rem;
+}
+
+.jb-reviewer-card__email {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin-bottom: 0.5rem;
+}
+
+.jb-reviewer-card__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+}
+
+.jb-reviewer-card__actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+/* Add Form */
+.jb-add-form__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.jb-add-form__field {
+    flex: 0 0 auto;
+    min-width: 150px;
+}
+
+.jb-add-form__field--user {
+    flex: 1;
+    min-width: 250px;
+}
+
+.jb-add-form__field--action {
+    flex: 0 0 auto;
+}
+
+/* Form Elements */
+.jb-filter-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+    margin-bottom: 0.25rem;
+}
+
+.jb-filter-label i {
+    margin-right: 0.25rem;
+}
+
+.jb-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: #fff;
+    color: #1a1a1a;
+    transition: border-color 0.15s;
+}
+
+.jb-select:focus {
+    border-color: var(--iser-verde, #1b9e88);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(27, 158, 136, 0.1);
+}
+
+/* Buttons */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.jb-btn--sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+}
+
+.jb-btn--primary {
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+}
+
+.jb-btn--primary:hover {
+    background: var(--iser-verde-dark, #157a6a);
+    color: #fff;
+}
+
+.jb-btn--success {
+    background: #28a745;
+    color: #fff;
+}
+
+.jb-btn--success:hover {
+    background: #218838;
+    color: #fff;
+}
+
+.jb-btn--outline {
+    background: transparent;
+    border-color: #d1d5db;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+.jb-btn--outline:hover {
+    border-color: var(--iser-verde, #1b9e88);
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-btn--ghost {
+    background: transparent;
+    color: var(--iser-gris-medio, #666);
+    padding: 0.375rem;
+}
+
+.jb-btn--ghost:hover {
+    color: var(--iser-verde, #1b9e88);
+    background: rgba(27, 158, 136, 0.05);
+}
+
+.jb-btn--ghost.jb-btn--danger:hover {
+    color: var(--iser-rojo, #c41e3a);
+    background: rgba(196, 30, 58, 0.05);
 }
 
 /* Badges */
 .jb-badge {
     display: inline-flex;
     align-items: center;
+    gap: 0.25rem;
     padding: 0.25rem 0.5rem;
-    border-radius: var(--iser-radius-sm);
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-.jb-badge--success { background: rgba(40, 167, 69, 0.1); color: #28a745; }
-.jb-badge--warning { background: rgba(255, 193, 7, 0.15); color: #856404; }
-.jb-badge--info { background: rgba(23, 162, 184, 0.1); color: #17a2b8; }
-.jb-badge--secondary { background: rgba(108, 117, 125, 0.1); color: var(--iser-gris); }
-.jb-badge--primary { background: var(--iser-verde-light); color: var(--iser-verde); }
-.jb-badge i { margin-right: 0.25rem; }
-
-/* Button Styles */
-.jb-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: var(--iser-radius-sm);
-    font-weight: 500;
-    font-size: 0.875rem;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-}
-.jb-btn--primary {
-    background: var(--iser-verde);
-    color: white;
-}
-.jb-btn--primary:hover {
-    background: var(--iser-verde-dark);
-    color: white;
-}
-.jb-btn--success {
-    background: #28a745;
-    color: white;
-}
-.jb-btn--success:hover {
-    background: #218838;
-    color: white;
-}
-.jb-btn--outline {
-    background: white;
-    border-color: var(--iser-border);
-    color: var(--iser-gris);
-}
-.jb-btn--outline:hover {
-    border-color: var(--iser-verde);
-    color: var(--iser-verde);
-}
-.jb-btn--sm {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.8rem;
-}
-.jb-btn--icon {
-    padding: 0.375rem;
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--iser-border);
-    background: white;
-    color: var(--iser-gris);
-}
-.jb-btn--icon:hover {
-    border-color: var(--iser-verde);
-    color: var(--iser-verde);
-}
-.jb-btn--icon.btn-outline-info { border-color: #17a2b8; color: #17a2b8; }
-.jb-btn--icon.btn-outline-info:hover { background: rgba(23, 162, 184, 0.1); }
-.jb-btn--icon.btn-outline-danger { border-color: var(--iser-rojo); color: var(--iser-rojo); }
-.jb-btn--icon.btn-outline-danger:hover { background: rgba(220, 53, 69, 0.1); }
-
-/* Form Styles */
-.jb-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: flex-end;
-}
-.jb-form__group {
-    flex: 1;
-    min-width: 200px;
-}
-.jb-form__label {
-    display: block;
-    font-weight: 500;
-    font-size: 0.85rem;
-    color: var(--iser-gris-oscuro);
-    margin-bottom: 0.5rem;
-}
-.jb-form__select {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--iser-border);
-    border-radius: var(--iser-radius-sm);
-    font-size: 0.875rem;
-    transition: border-color 0.2s;
-}
-.jb-form__select:focus {
-    outline: none;
-    border-color: var(--iser-verde);
-    box-shadow: 0 0 0 3px var(--iser-verde-light);
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
 }
 
-/* Empty State */
-.jb-empty-state {
-    text-align: center;
-    padding: 3rem 1.5rem;
+.jb-badge i {
+    font-size: 0.625rem;
 }
-.jb-empty-state__icon {
-    font-size: 4rem;
-    color: var(--iser-border);
-    margin-bottom: 1rem;
+
+.jb-badge--primary {
+    background: rgba(27, 158, 136, 0.15);
+    color: var(--iser-verde-dark, #157a6a);
 }
-.jb-empty-state__text {
-    color: var(--iser-gris);
-    margin: 0;
+
+.jb-badge--success {
+    background: rgba(40, 167, 69, 0.15);
+    color: #1e7e34;
+}
+
+.jb-badge--warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: #856404;
+}
+
+.jb-badge--danger {
+    background: rgba(220, 53, 69, 0.15);
+    color: #c41e3a;
+}
+
+.jb-badge--info {
+    background: rgba(13, 110, 253, 0.15);
+    color: #0d6efd;
+}
+
+.jb-badge--secondary {
+    background: #e9ecef;
+    color: #6c757d;
 }
 
 /* Alert */
@@ -402,419 +772,142 @@
     align-items: center;
     gap: 0.75rem;
     padding: 1rem;
-    border-radius: var(--iser-radius-sm);
-}
-.jb-alert--info {
-    background: rgba(23, 162, 184, 0.1);
-    color: #0c5460;
-    border: 1px solid rgba(23, 162, 184, 0.2);
-}
-.jb-alert--help {
-    background: var(--iser-gris-claro);
-    color: var(--iser-gris);
-    border: 1px solid var(--iser-border);
+    border-radius: 6px;
+    font-size: 0.875rem;
 }
 
-/* Footer */
-.jb-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    border-top: 1px solid var(--iser-border);
-    margin-top: 1.5rem;
+.jb-alert--info {
+    background: rgba(13, 110, 253, 0.1);
+    color: #0c5460;
+    border: 1px solid rgba(13, 110, 253, 0.2);
 }
-.jb-footer__nav {
-    display: flex;
-    gap: 0.75rem;
+
+.jb-alert i {
+    font-size: 1.25rem;
+}
+
+/* Empty State */
+.jb-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+}
+
+.jb-empty > i {
+    font-size: 3rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.jb-empty h3 {
+    font-size: 1.25rem;
+    color: var(--iser-rojo, #c41e3a);
+    margin: 0 0 0.5rem;
+}
+
+.jb-empty p {
+    color: var(--iser-gris-medio, #666);
+    margin: 0;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 /* Skeleton Loading */
-.jb-skeleton-title,
-.jb-skeleton-text {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+.jb-skeleton-header,
+.jb-skeleton-stat,
+.jb-skeleton-card {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: jb-skeleton-pulse 1.5s infinite;
-    border-radius: var(--iser-radius-sm);
+    border-radius: 8px;
 }
-.jb-skeleton-title { height: 32px; }
-.jb-skeleton-text { height: 20px; }
 
-/* Animations */
+.jb-skeleton-header {
+    height: 100px;
+    margin-bottom: 1.5rem;
+}
+
+.jb-skeleton-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.jb-skeleton-stat {
+    flex: 1;
+    height: 80px;
+}
+
+.jb-skeleton-card {
+    height: 200px;
+    margin-bottom: 1rem;
+}
+
 @keyframes jb-skeleton-pulse {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
-@keyframes jb-fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-@keyframes jb-fade-in-up {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.jb-fade-in {
-    animation: jb-fade-in 0.3s ease-out forwards;
-}
-.jb-fade-in-up {
-    animation: jb-fade-in-up 0.3s ease-out forwards;
-}
 
-/* Responsive */
-@media (max-width: 992px) {
-    .jb-stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .jb-reviewer-grid {
-        grid-template-columns: 1fr;
-    }
-}
+/* Mobile */
 @media (max-width: 768px) {
-    .jb-stats {
-        grid-template-columns: 1fr;
-    }
-    .jb-page-header {
+    .jb-public-header__nav {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
+        gap: 0.75rem;
     }
-    .jb-form {
+
+    .jb-public-header__title {
+        font-size: 1.25rem;
+    }
+
+    .jb-stats {
         flex-direction: column;
     }
-    .jb-form__group {
+
+    .jb-stat {
         width: 100%;
     }
-    .jb-table {
-        font-size: 0.85rem;
+
+    .jb-grid {
+        grid-template-columns: 1fr;
     }
-    .jb-table th,
-    .jb-table td {
-        padding: 0.5rem;
-    }
-    .jb-footer {
+
+    .jb-add-form__grid {
         flex-direction: column;
-        gap: 1rem;
+    }
+
+    .jb-add-form__field,
+    .jb-add-form__field--user {
+        width: 100%;
+    }
+
+    .jb-skeleton-stats {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .jb-reviewer-card {
+        flex-direction: column;
+    }
+
+    .jb-reviewer-card__actions {
+        width: 100%;
+        justify-content: flex-end;
+        padding-top: 0.75rem;
+        border-top: 1px solid #f0f0f0;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Print */
+@media print {
+    .jb-btn--outline,
+    .jb-public-header__nav {
+        display: none;
     }
 }
 </style>
-
-{{#loading}}
-{{! Skeleton Loading State }}
-<div class="jb-program-reviewers" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="d-flex justify-content-between mb-4">
-        <div class="jb-skeleton-title" style="width: 200px;"></div>
-        <div class="jb-skeleton-text" style="width: 100px; height: 38px;"></div>
-    </div>
-    <div class="jb-stats">
-        <div class="jb-skeleton-text" style="height: 80px;"></div>
-        <div class="jb-skeleton-text" style="height: 80px;"></div>
-        <div class="jb-skeleton-text" style="height: 80px;"></div>
-        <div class="jb-skeleton-text" style="height: 80px;"></div>
-    </div>
-    <div class="jb-skeleton-text mb-4" style="height: 250px;"></div>
-    <div class="jb-skeleton-text" style="height: 200px;"></div>
-</div>
-{{/loading}}
-
-{{^loading}}
-<div class="jb-program-reviewers" data-region="jobboard-program-reviewers">
-    {{! Skip Link for Accessibility }}
-    <a href="#program-reviewers-content" class="jb-skip-link">
-        {{#str}}skiptocontent, local_jobboard{{/str}}
-    </a>
-
-    {{! Page Header }}
-    <header class="jb-page-header jb-fade-in">
-        <h1 class="fs-3 mb-0">
-            <i class="fa fa-user-check me-2" aria-hidden="true"></i>
-            {{pagetitle}}
-        </h1>
-        <a href="{{backurl}}" class="jb-btn jb-btn--outline">
-            <i class="fa fa-{{backicon}}" aria-hidden="true"></i>
-            {{backlabel}}
-        </a>
-    </header>
-
-    <main id="program-reviewers-content">
-        {{#islistview}}
-        {{! ================================================================== }}
-        {{! LIST VIEW - Programs Overview }}
-        {{! ================================================================== }}
-
-        {{! Statistics Cards - Border Left Pattern }}
-        <section class="jb-stats jb-fade-in-up" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
-            <div class="jb-stat jb-stat--primary">
-                <i class="fa fa-users" aria-hidden="true"></i>
-                <div class="jb-stat__data">
-                    <span class="jb-stat__value">{{stats.totalreviewers}}</span>
-                    <span class="jb-stat__label">{{#str}}totalreviewers, local_jobboard{{/str}}</span>
-                </div>
-            </div>
-            <div class="jb-stat jb-stat--success">
-                <i class="fa fa-circle-check" aria-hidden="true"></i>
-                <div class="jb-stat__data">
-                    <span class="jb-stat__value">{{stats.active}}</span>
-                    <span class="jb-stat__label">{{#str}}activereviewers, local_jobboard{{/str}}</span>
-                </div>
-            </div>
-            <div class="jb-stat jb-stat--warning">
-                <i class="fa fa-star" aria-hidden="true"></i>
-                <div class="jb-stat__data">
-                    <span class="jb-stat__value">{{stats.leadreviewers}}</span>
-                    <span class="jb-stat__label">{{#str}}leadreviewers, local_jobboard{{/str}}</span>
-                </div>
-            </div>
-            <div class="jb-stat jb-stat--info">
-                <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-                <div class="jb-stat__data">
-                    <span class="jb-stat__value">{{stats.programswithreviewers}}</span>
-                    <span class="jb-stat__label">{{#str}}programswithreviewers, local_jobboard{{/str}}</span>
-                </div>
-            </div>
-        </section>
-
-        {{! Programs with Reviewers Table }}
-        <section class="jb-card jb-fade-in-up" aria-labelledby="programs-heading">
-            <div class="jb-card__header">
-                <div class="jb-card__header-icon jb-card__header-icon--primary">
-                    <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-                </div>
-                <h2 class="jb-card__title" id="programs-heading">
-                    {{#str}}programswithreviewers, local_jobboard{{/str}}
-                </h2>
-            </div>
-            <div class="jb-card__body--table">
-                {{#hasprogramswithreviewers}}
-                <div class="table-responsive">
-                    <table class="jb-table">
-                        <thead>
-                            <tr>
-                                <th>{{#str}}program, local_jobboard{{/str}}</th>
-                                <th class="text-center">{{#str}}reviewers, local_jobboard{{/str}}</th>
-                                <th class="text-center">{{#str}}leadreviewers, local_jobboard{{/str}}</th>
-                                <th class="text-center">{{#str}}actions{{/str}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#programswithreviewers}}
-                            <tr class="jb-fade-in">
-                                <td>
-                                    <i class="fa fa-folder text-warning me-2" aria-hidden="true"></i>
-                                    {{name}}
-                                </td>
-                                <td class="text-center">
-                                    <span class="jb-badge jb-badge--info">{{reviewercount}}</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="jb-badge jb-badge--warning">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        {{leadcount}}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{manageurl}}" class="jb-btn jb-btn--primary jb-btn--sm">
-                                        <i class="fa fa-users" aria-hidden="true"></i>
-                                        {{#str}}manage{{/str}}
-                                    </a>
-                                </td>
-                            </tr>
-                            {{/programswithreviewers}}
-                        </tbody>
-                    </table>
-                </div>
-                {{/hasprogramswithreviewers}}
-                {{^hasprogramswithreviewers}}
-                <div class="jb-empty-state">
-                    <i class="fa fa-graduation-cap jb-empty-state__icon" aria-hidden="true"></i>
-                    <p class="jb-empty-state__text">{{#str}}noprogramswithreviewers, local_jobboard{{/str}}</p>
-                </div>
-                {{/hasprogramswithreviewers}}
-            </div>
-        </section>
-
-        {{! All Categories List }}
-        <section class="jb-card jb-fade-in-up" aria-labelledby="addreviewers-heading">
-            <div class="jb-card__header">
-                <div class="jb-card__header-icon jb-card__header-icon--secondary">
-                    <i class="fa fa-circle-plus" aria-hidden="true"></i>
-                </div>
-                <h2 class="jb-card__title" id="addreviewers-heading">
-                    {{#str}}addreviewerstoprogram, local_jobboard{{/str}}
-                </h2>
-            </div>
-            <div class="jb-card__body--table">
-                {{#hasallcategories}}
-                <ul class="jb-program-list">
-                    {{#allcategories}}
-                    <li class="jb-program-item jb-fade-in">
-                        <a href="{{selecturl}}" class="jb-program-link">
-                            <span>
-                                {{{indent}}}
-                                <i class="fa fa-{{icon}}" aria-hidden="true"></i>
-                                {{name}}
-                            </span>
-                            {{#hasreviewers}}
-                            <span class="jb-badge jb-badge--success">{{reviewercount}}</span>
-                            {{/hasreviewers}}
-                        </a>
-                    </li>
-                    {{/allcategories}}
-                </ul>
-                {{/hasallcategories}}
-            </div>
-        </section>
-        {{/islistview}}
-
-        {{#isprogramview}}
-        {{! ================================================================== }}
-        {{! PROGRAM VIEW - Single Program Reviewers }}
-        {{! ================================================================== }}
-
-        {{! Add Reviewer Form }}
-        <section class="jb-card jb-fade-in-up" aria-labelledby="add-reviewer-heading">
-            <div class="jb-card__header">
-                <div class="jb-card__header-icon jb-card__header-icon--success">
-                    <i class="fa fa-user-plus" aria-hidden="true"></i>
-                </div>
-                <h2 class="jb-card__title" id="add-reviewer-heading">
-                    {{#str}}addreviewer, local_jobboard{{/str}}
-                </h2>
-            </div>
-            <div class="jb-card__body">
-                {{#hasavailableusers}}
-                <form method="post" action="{{addformurl}}" class="jb-form">
-                    <input type="hidden" name="sesskey" value="{{sesskey}}">
-                    <input type="hidden" name="action" value="add">
-                    <input type="hidden" name="categoryid" value="{{program.id}}">
-
-                    <div class="jb-form__group">
-                        <label class="jb-form__label" for="userid">
-                            {{#str}}selectuser, local_jobboard{{/str}}
-                        </label>
-                        <select name="userid" id="userid" class="jb-form__select">
-                            <option value="">-- {{#str}}selectuser, local_jobboard{{/str}} --</option>
-                            {{#availableusers}}
-                            <option value="{{id}}">{{fullname}} ({{email}})</option>
-                            {{/availableusers}}
-                        </select>
-                    </div>
-
-                    <div class="jb-form__group" style="max-width: 200px;">
-                        <label class="jb-form__label" for="role">
-                            {{#str}}role{{/str}}
-                        </label>
-                        <select name="role" id="role" class="jb-form__select">
-                            <option value="reviewer">{{#str}}role_reviewer, local_jobboard{{/str}}</option>
-                            <option value="lead">{{#str}}role_lead_reviewer, local_jobboard{{/str}}</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="jb-btn jb-btn--success">
-                        <i class="fa fa-plus" aria-hidden="true"></i>
-                        {{#str}}add{{/str}}
-                    </button>
-                </form>
-                {{/hasavailableusers}}
-                {{^hasavailableusers}}
-                <div class="jb-alert jb-alert--info">
-                    <i class="fa fa-circle-info" aria-hidden="true"></i>
-                    {{#str}}nousersavailable, local_jobboard{{/str}}
-                </div>
-                {{/hasavailableusers}}
-            </div>
-        </section>
-
-        {{! Current Reviewers - Grid View }}
-        <section class="jb-card jb-fade-in-up" aria-labelledby="reviewers-heading">
-            <div class="jb-card__header">
-                <div class="jb-card__header-icon jb-card__header-icon--primary">
-                    <i class="fa fa-users" aria-hidden="true"></i>
-                </div>
-                <h2 class="jb-card__title" id="reviewers-heading">
-                    {{#str}}assignedreviewers, local_jobboard{{/str}}
-                </h2>
-            </div>
-            <div class="jb-card__body">
-                {{#hasreviewers}}
-                <div class="jb-reviewer-grid">
-                    {{#reviewers}}
-                    <div class="jb-reviewer-card {{#islead}}jb-reviewer-card--lead{{/islead}}{{^islead}}jb-reviewer-card--reviewer{{/islead}} {{#isinactive}}jb-reviewer-card--inactive{{/isinactive}} jb-fade-in">
-                        <div class="jb-reviewer-card__info">
-                            <div class="jb-reviewer-card__name">{{fullname}}</div>
-                            <div class="jb-reviewer-card__email">{{email}}</div>
-                            <div class="jb-reviewer-card__badges">
-                                {{#islead}}
-                                <span class="jb-badge jb-badge--warning">
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                    {{#str}}role_lead_reviewer, local_jobboard{{/str}}
-                                </span>
-                                {{/islead}}
-                                {{^islead}}
-                                <span class="jb-badge jb-badge--info">
-                                    {{#str}}role_reviewer, local_jobboard{{/str}}
-                                </span>
-                                {{/islead}}
-                                {{#isactive}}
-                                <span class="jb-badge jb-badge--success">{{#str}}active{{/str}}</span>
-                                {{/isactive}}
-                                {{^isactive}}
-                                <span class="jb-badge jb-badge--secondary">{{#str}}inactive, local_jobboard{{/str}}</span>
-                                {{/isactive}}
-                            </div>
-                        </div>
-                        <div class="jb-reviewer-card__actions">
-                            <a href="{{changeroleurl}}" class="jb-btn jb-btn--icon btn-outline-info"
-                               title="{{#str}}changerole, local_jobboard{{/str}}">
-                                <i class="fa fa-right-left" aria-hidden="true"></i>
-                            </a>
-                            <a href="{{togglestatusurl}}" class="jb-btn jb-btn--icon"
-                               title="{{togglestatustitle}}">
-                                <i class="fa {{togglestatusicon}}" aria-hidden="true"></i>
-                            </a>
-                            <a href="{{removeurl}}" class="jb-btn jb-btn--icon btn-outline-danger"
-                               title="{{#str}}remove{{/str}}"
-                               onclick="return confirm('{{#str}}confirmremovereviewer, local_jobboard{{/str}}');">
-                                <i class="fa fa-trash-can" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-                    {{/reviewers}}
-                </div>
-                {{/hasreviewers}}
-                {{^hasreviewers}}
-                <div class="jb-empty-state">
-                    <i class="fa fa-user-plus jb-empty-state__icon" aria-hidden="true"></i>
-                    <p class="jb-empty-state__text">{{#str}}noreviewersforprogram, local_jobboard{{/str}}</p>
-                </div>
-                {{/hasreviewers}}
-            </div>
-        </section>
-        {{/isprogramview}}
-    </main>
-
-    {{! Help Section }}
-    <aside class="jb-alert jb-alert--help jb-fade-in" aria-labelledby="help-heading">
-        <i class="fa fa-circle-info" aria-hidden="true"></i>
-        <div>
-            <strong id="help-heading">{{#str}}help{{/str}}:</strong>
-            {{#str}}programreviewerhelp, local_jobboard{{/str}}
-        </div>
-    </aside>
-
-    {{! Footer Navigation }}
-    <footer class="jb-footer jb-fade-in">
-        <div class="jb-footer__nav">
-            <a href="{{backurl}}" class="jb-btn jb-btn--outline">
-                <i class="fa fa-{{backicon}}" aria-hidden="true"></i>
-                {{backlabel}}
-            </a>
-        </div>
-        <div class="jb-footer__nav">
-            <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline">
-                <i class="fa fa-gauge" aria-hidden="true"></i>
-                {{#str}}dashboard, local_jobboard{{/str}}
-            </a>
-        </div>
-    </footer>
-</div>
-{{/loading}}
