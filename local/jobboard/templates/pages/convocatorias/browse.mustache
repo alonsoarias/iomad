@@ -1,8 +1,7 @@
 {{!
     @template local_jobboard/pages/convocatorias/browse
 
-    Browse convocatorias page template.
-    Simplified design following apply.mustache pattern.
+    Browse convocatorias page template - Clean minimal design with jb-* pattern.
 
     Context variables:
     * dashboardurl - URL to dashboard
@@ -13,183 +12,549 @@
     * hasconvocatorias - Boolean
     * convocatorias - Array of convocatoria card data
     * pagination - Pagination HTML
-
-    Example context (json):
-    {
-        "hasconvocatorias": true,
-        "convocatorias": [{"id": 1, "name": "2024 Call", "code": "CONV-001"}]
-    }
 }}
-<div class="jb-browse-convocatorias" data-region="jobboard-browse-convocatorias">
-    {{! Page Header }}
-    <header class="jb-page-header mb-4">
-        <h1 class="h4 mb-2">
-            <i class="fa fa-folder-open text-primary me-2" aria-hidden="true"></i>
-            {{#str}}browseconvocatorias, local_jobboard{{/str}}
+<div class="jb-browse" id="jobboard-browse-convocatorias">
+    {{! ================================================================ }}
+    {{! HEADER SECTION }}
+    {{! ================================================================ }}
+    <div class="jb-browse-header">
+        <div class="jb-browse-header__nav">
+            <a href="{{dashboardurl}}" class="jb-browse-header__back">
+                <i class="fa fa-arrow-left"></i>
+                {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
+            <a href="{{vacanciesurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
+                <i class="fa fa-briefcase"></i> {{#str}}browsevacancies, local_jobboard{{/str}}
+            </a>
+        </div>
+        <h1 class="jb-browse-header__title">
+            <i class="fa fa-folder-open"></i> {{#str}}browseconvocatorias, local_jobboard{{/str}}
         </h1>
-        <p class="text-muted mb-0">{{#str}}browseconvocatorias_desc, local_jobboard{{/str}}</p>
-    </header>
+        <p class="jb-browse-header__subtitle">
+            {{#str}}browseconvocatorias_desc, local_jobboard{{/str}}
+        </p>
+    </div>
 
-    {{! Statistics Row }}
+    {{! ================================================================ }}
+    {{! STATISTICS SECTION }}
+    {{! ================================================================ }}
     {{#stats.0}}
-    <div class="row mb-4">
+    <div class="jb-stats">
         {{#stats}}
-        <div class="col-lg-3 col-md-6 mb-2">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-{{color}}">
-                <div class="card-body text-center py-3">
-                    <div class="h3 text-{{color}} mb-0 jb-stat-value">{{value}}</div>
-                    <small class="text-muted jb-stat-label">{{label}}</small>
-                </div>
+        <div class="jb-stat jb-stat--{{color}}">
+            <i class="fa fa-{{icon}}"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{value}}</span>
+                <span class="jb-stat__label">{{label}}</span>
             </div>
         </div>
         {{/stats}}
     </div>
     {{/stats.0}}
 
-    {{! Filter Tabs }}
+    {{! ================================================================ }}
+    {{! FILTER TABS }}
+    {{! ================================================================ }}
     {{#tabs.0}}
-    <ul class="nav nav-tabs mb-4">
+    <div class="jb-tabs">
         {{#tabs}}
-        <li class="nav-item">
-            <a href="{{url}}" class="nav-link {{#active}}active{{/active}}">
-                {{label}}
-                <span class="badge bg-{{color}} ms-1">{{count}}</span>
-            </a>
-        </li>
+        <a href="{{url}}" class="jb-tab {{#active}}jb-tab--active{{/active}}">
+            {{label}}
+            <span class="jb-tab__count jb-tab__count--{{color}}">{{count}}</span>
+        </a>
         {{/tabs}}
-    </ul>
+    </div>
     {{/tabs.0}}
 
     {{! Results Info }}
     {{#showinginfo}}
-    <p class="text-muted small mb-3">
-        <i class="fa fa-circle-info me-1" aria-hidden="true"></i>
-        {{showinginfo}}
+    <p class="jb-results-info">
+        <i class="fa fa-info-circle"></i> {{showinginfo}}
     </p>
     {{/showinginfo}}
 
-    {{! Convocatorias Grid }}
+    {{! ================================================================ }}
+    {{! CONVOCATORIAS GRID }}
+    {{! ================================================================ }}
     <div data-region="filter-results">
-    {{#hasconvocatorias}}
-    <div class="row">
-        {{#convocatorias}}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm {{#isclosingsoon}}border-warning{{/isclosingsoon}}">
-                <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
-                    <code class="badge {{#isclosingsoon}}bg-warning text-dark{{/isclosingsoon}}{{^isclosingsoon}}{{#isopen}}bg-primary{{/isopen}}{{#isclosed}}bg-secondary{{/isclosed}}{{/isclosingsoon}}">{{code}}</code>
-                    {{#isclosingsoon}}
-                    <span class="badge bg-danger small">
-                        <i class="fa fa-clock me-1" aria-hidden="true"></i>
-                        {{daysremaining}} {{#str}}days, local_jobboard{{/str}}
-                    </span>
-                    {{/isclosingsoon}}
-                    {{^isclosingsoon}}
-                    {{#isopen}}
-                    <span class="badge bg-success small">
-                        <i class="fa fa-check-circle me-1" aria-hidden="true"></i>
-                        {{#str}}convocatoria_status_open, local_jobboard{{/str}}
-                    </span>
-                    {{/isopen}}
-                    {{#isclosed}}
-                    <span class="badge bg-secondary small">
-                        {{#str}}convocatoria_status_closed, local_jobboard{{/str}}
-                    </span>
-                    {{/isclosed}}
-                    {{/isclosingsoon}}
-                </div>
-                <div class="card-body d-flex flex-column">
-                    <h6 class="card-title mb-3">
-                        <a href="{{viewurl}}" class="text-decoration-none text-dark">{{name}}</a>
-                    </h6>
-                    {{#description}}
-                    <p class="text-muted small mb-3">{{description}}</p>
-                    {{/description}}
-                    <div class="mt-auto">
-                        <div class="small text-muted mb-2">
-                            <i class="fa fa-calendar-check text-success me-2" aria-hidden="true"></i>
-                            {{startdateformatted}} → {{enddateformatted}}
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <i class="fa fa-briefcase text-primary me-2" aria-hidden="true"></i>
-                            {{#hasvacancies}}
-                            <span class="badge bg-primary">{{vacancycount}}</span>
-                            <span class="ms-1 small">{{#str}}vacancies, local_jobboard{{/str}}</span>
-                            {{/hasvacancies}}
-                            {{^hasvacancies}}
-                            <span class="text-muted small">{{#str}}novacancies, local_jobboard{{/str}}</span>
-                            {{/hasvacancies}}
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-white">
-                    {{#hasvacancies}}
-                    {{#isopen}}
-                    <a href="{{viewurl}}" class="btn btn-primary jb-btn-primary btn-sm w-100">
-                        <i class="fa fa-arrow-right me-2" aria-hidden="true"></i>
-                        {{#str}}viewvacancies, local_jobboard{{/str}}
-                    </a>
-                    {{/isopen}}
-                    {{^isopen}}
-                    <a href="{{viewurl}}" class="btn btn-outline-secondary btn-sm w-100">
-                        <i class="fa fa-eye me-2" aria-hidden="true"></i>
-                        {{#str}}viewconvocatoria, local_jobboard{{/str}}
-                    </a>
-                    {{/isopen}}
-                    {{/hasvacancies}}
-                    {{^hasvacancies}}
-                    <span class="btn btn-outline-secondary btn-sm w-100 disabled">
-                        {{#str}}novacancies, local_jobboard{{/str}}
-                    </span>
-                    {{/hasvacancies}}
-                </div>
-            </div>
-        </div>
-        {{/convocatorias}}
+        {{> local_jobboard/partials/browse_convocatorias_results }}
     </div>
-    {{/hasconvocatorias}}
 
-    {{! Empty State }}
-    {{^hasconvocatorias}}
-    <div class="card shadow-sm">
-        <div class="card-body text-center py-5">
-            <div class="jb-empty-state">
-                <i class="fa fa-calendar-xmark jb-empty-state-icon" aria-hidden="true"></i>
-                <h5 class="jb-empty-state-title">{{#str}}noconvocatorias, local_jobboard{{/str}}</h5>
-                <p class="jb-empty-state-description">{{#str}}noconvocatorias_desc, local_jobboard{{/str}}</p>
-                <div class="jb-empty-state-actions">
-                    <a href="{{dashboardurl}}" class="btn btn-primary jb-btn-primary">
-                        <i class="fa fa-house me-2" aria-hidden="true"></i>
-                        {{#str}}backtodashboard, local_jobboard{{/str}}
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{/hasconvocatorias}}
-
-    {{! Pagination }}
-    {{#pagination}}
-    <nav class="mt-4 d-flex justify-content-center jb-fade-in" aria-label="{{#str}}pagination, local_jobboard{{/str}}">
-        {{{pagination}}}
-    </nav>
-    {{/pagination}}
-    </div>{{! Close filter-results }}
-
-    {{! Navigation Footer }}
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center py-3 border-top jb-fade-in">
-                <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
-                    <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
-                    {{#str}}backtodashboard, local_jobboard{{/str}}
-                </a>
-                <a href="{{vacanciesurl}}" class="btn btn-link text-muted jb-hover-primary">
-                    {{#str}}browsevacancies, local_jobboard{{/str}}
-                    <i class="fa fa-arrow-right ms-2" aria-hidden="true"></i>
-                </a>
-            </div>
-        </div>
+    {{! ================================================================ }}
+    {{! FOOTER NAVIGATION }}
+    {{! ================================================================ }}
+    <div class="jb-footer-nav">
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-arrow-left"></i> {{#str}}backtodashboard, local_jobboard{{/str}}
+        </a>
+        <a href="{{vacanciesurl}}" class="jb-link">
+            {{#str}}browsevacancies, local_jobboard{{/str}} <i class="fa fa-arrow-right"></i>
+        </a>
     </div>
 </div>
 
-{{! Styles consolidated in styles.css }}
+<style>
+/* ================================================================
+   BROWSE CONVOCATORIAS PAGE - CLEAN MINIMAL DESIGN
+   Following jb-* pattern
+   ================================================================ */
+.jb-browse {
+    max-width: 1200px;
+    padding: 1rem;
+}
+
+/* Header */
+.jb-browse-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jb-browse-header__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.jb-browse-header__back {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-browse-header__back:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+.jb-browse-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    color: var(--iser-negro, #1a1a1a);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.jb-browse-header__title i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-browse-header__subtitle {
+    font-size: 1rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0;
+}
+
+/* Stats */
+.jb-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.jb-stat {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    min-width: 160px;
+}
+
+.jb-stat > i {
+    font-size: 1.5rem;
+    opacity: 0.7;
+}
+
+.jb-stat__data {
+    display: flex;
+    flex-direction: column;
+}
+
+.jb-stat__value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.jb-stat__label {
+    font-size: 0.75rem;
+    color: var(--iser-gris-medio, #666);
+    margin-top: 0.25rem;
+}
+
+.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+
+.jb-stat--success { border-left: 3px solid #28a745; }
+.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
+
+.jb-stat--warning { border-left: 3px solid #ffc107; }
+.jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #856404; }
+
+.jb-stat--info { border-left: 3px solid #0d6efd; }
+.jb-stat--info .jb-stat__value, .jb-stat--info > i { color: #0d6efd; }
+
+.jb-stat--secondary { border-left: 3px solid #6c757d; }
+.jb-stat--secondary .jb-stat__value, .jb-stat--secondary > i { color: #6c757d; }
+
+/* Tabs */
+.jb-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.jb-tab {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--iser-gris-medio, #666);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.15s;
+}
+
+.jb-tab:hover {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-tab--active {
+    color: var(--iser-verde, #1b9e88);
+    border-bottom-color: var(--iser-verde, #1b9e88);
+}
+
+.jb-tab__count {
+    padding: 0.125rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.jb-tab__count--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-tab__count--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-tab__count--secondary { background: #e9ecef; color: #6c757d; }
+
+/* Results Info */
+.jb-results-info {
+    font-size: 0.875rem;
+    color: var(--iser-gris-medio, #666);
+    margin-bottom: 1rem;
+}
+
+.jb-results-info i {
+    margin-right: 0.375rem;
+}
+
+/* Grid */
+.jb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1rem;
+}
+
+/* Convocatoria Card */
+.jb-conv-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.jb-conv-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.jb-conv-card--urgent {
+    border-left: 3px solid #ffc107;
+}
+
+.jb-conv-card__header {
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    background: #f9fafb;
+}
+
+.jb-conv-card__code {
+    font-family: monospace;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.jb-conv-card__code--open { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-conv-card__code--urgent { background: rgba(255, 193, 7, 0.2); color: #856404; }
+.jb-conv-card__code--closed { background: #e9ecef; color: #6c757d; }
+
+.jb-conv-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.jb-conv-card__badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-conv-card__badge--danger { background: rgba(220, 53, 69, 0.15); color: #c41e3a; }
+.jb-conv-card__badge--secondary { background: #e9ecef; color: #6c757d; }
+
+.jb-conv-card__body {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.jb-conv-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+}
+
+.jb-conv-card__title a {
+    color: var(--iser-negro, #1a1a1a);
+    text-decoration: none;
+}
+
+.jb-conv-card__title a:hover {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-conv-card__desc {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 0.75rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.jb-conv-card__meta {
+    margin-top: auto;
+}
+
+.jb-conv-card__dates {
+    font-size: 0.8125rem;
+    color: var(--iser-gris-medio, #666);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jb-conv-card__dates i {
+    color: #28a745;
+}
+
+.jb-conv-card__vacancies {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+}
+
+.jb-conv-card__vacancies i {
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-conv-card__vacancies-count {
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+    padding: 0.125rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.jb-conv-card__footer {
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    border-top: 1px solid #f0f0f0;
+}
+
+/* Empty State */
+.jb-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+}
+
+.jb-empty > i {
+    font-size: 3rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+.jb-empty h3 {
+    font-size: 1.25rem;
+    color: var(--iser-negro, #1a1a1a);
+    margin: 0 0 0.5rem;
+}
+
+.jb-empty p {
+    color: var(--iser-gris-medio, #666);
+    margin: 0 0 1.5rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Pagination */
+.jb-pagination {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* Footer Nav */
+.jb-footer-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0;
+    margin-top: 1rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Buttons */
+.jb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.jb-btn--sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+}
+
+.jb-btn--block {
+    width: 100%;
+}
+
+.jb-btn--primary {
+    background: var(--iser-verde, #1b9e88);
+    color: #fff;
+}
+
+.jb-btn--primary:hover {
+    background: var(--iser-verde-dark, #157a6a);
+    color: #fff;
+}
+
+.jb-btn--outline {
+    background: transparent;
+    border-color: #d1d5db;
+    color: var(--iser-gris-oscuro, #333);
+}
+
+.jb-btn--outline:hover {
+    border-color: var(--iser-verde, #1b9e88);
+    color: var(--iser-verde, #1b9e88);
+}
+
+.jb-btn--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Links */
+.jb-link {
+    color: var(--iser-verde, #1b9e88);
+    text-decoration: none;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.jb-link:hover {
+    color: var(--iser-verde-dark, #157a6a);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .jb-browse-header__nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .jb-browse-header__title {
+        font-size: 1.25rem;
+    }
+
+    .jb-stats {
+        flex-direction: column;
+    }
+
+    .jb-stat {
+        width: 100%;
+    }
+
+    .jb-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+
+    .jb-tab {
+        white-space: nowrap;
+    }
+
+    .jb-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .jb-footer-nav {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+/* Print */
+@media print {
+    .jb-browse-header__nav,
+    .jb-footer-nav,
+    .jb-btn {
+        display: none;
+    }
+}
+</style>

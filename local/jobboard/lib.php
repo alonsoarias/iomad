@@ -1064,12 +1064,16 @@ function local_jobboard_get_dashboard_stats(int $userid, bool $isadmin = false, 
             AND (c.enddate IS NULL OR c.enddate >= :now2)";
     $stats['available_vacancies'] = (int) $DB->count_records_sql($sql, ['now1' => $now, 'now2' => $now]);
 
-    // Pending documents for my applications.
+    // Pending documents for my applications (only count actually uploaded docs).
+    // Documents pending validation = uploaded files that haven't been reviewed yet.
     $sql = "SELECT COUNT(d.id)
             FROM {local_jobboard_document} d
             JOIN {local_jobboard_application} a ON a.id = d.applicationid
             LEFT JOIN {local_jobboard_doc_validation} v ON v.documentid = d.id
             WHERE a.userid = :userid
+            AND a.status NOT IN ('draft', 'withdrawn')
+            AND d.contenthash IS NOT NULL
+            AND d.contenthash != ''
             AND (v.id IS NULL OR v.status = 'pending')";
     $stats['pending_docs'] = (int) $DB->count_records_sql($sql, ['userid' => $userid]);
 
