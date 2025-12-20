@@ -25,25 +25,24 @@
     {{! ================================================================ }}
     {{! HEADER SECTION }}
     {{! ================================================================ }}
-    <div class="jb-exemptions-header">
-        <div class="jb-exemptions-header__nav">
-            <a href="{{dashboardurl}}" class="jb-link">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-        </div>
-        <div class="jb-exemptions-header__main">
-            <h1 class="jb-exemptions-header__title">
-                <i class="fa fa-shield"></i> {{pagetitle}}
-            </h1>
-            <div class="jb-exemptions-header__actions">
-                <a href="{{addurl}}" class="jb-btn jb-btn--primary">
+            <div class="jb-header-actions">
+                <a href="{{addurl}}" class="jb-btn jb-btn--primary jb-btn--sm">
                     <i class="fa fa-plus"></i> {{#str}}addexemption, local_jobboard{{/str}}
                 </a>
-                <a href="{{importurl}}" class="jb-btn jb-btn--outline">
+                <a href="{{importurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
                     <i class="fa fa-upload"></i> {{#str}}importexemptions, local_jobboard{{/str}}
                 </a>
             </div>
         </div>
+        <h1 class="jb-public-header__title">
+            <i class="fa fa-shield"></i> {{pagetitle}}
+        </h1>
+        <p class="jb-public-header__subtitle">{{#str}}exemptionsdesc, local_jobboard{{/str}}</p>
     </div>
 
     {{! ================================================================ }}
@@ -247,13 +246,15 @@
 /* Exemptions Page - Clean jb-* Design */
 .jb-exemptions { max-width: 1200px; padding: 1rem; }
 
-/* Header */
-.jb-exemptions-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
-.jb-exemptions-header__nav { margin-bottom: 1rem; }
-.jb-exemptions-header__main { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-.jb-exemptions-header__title { font-size: 1.5rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
-.jb-exemptions-header__title i { color: var(--iser-verde, #1b9e88); }
-.jb-exemptions-header__actions { display: flex; gap: 0.5rem; }
+/* Header - Same as public/index */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+.jb-header-actions { display: flex; gap: 0.5rem; }
 
 /* Links */
 .jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -330,11 +331,11 @@
 .jb-badge--secondary { background: #e9ecef; color: #6c757d; }
 .jb-badge--outline { background: transparent; border: 1px solid #d1d5db; color: var(--iser-gris-oscuro, #333); }
 
-/* Empty State */
-.jb-empty { text-align: center; padding: 3rem 1rem; }
+/* Empty State - Same as public/index */
+.jb-empty { text-align: center; padding: 4rem 2rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; }
 .jb-empty > i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; display: block; }
-.jb-empty h3 { font-size: 1.125rem; color: var(--iser-gris-oscuro, #333); margin: 0 0 0.5rem; }
-.jb-empty p { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; }
 
 /* Buttons */
 .jb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.5rem 1rem; border: 1px solid transparent; border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
@@ -360,10 +361,10 @@
     .jb-hide-md { display: none; }
 }
 @media (max-width: 768px) {
-    .jb-exemptions-header__main { flex-direction: column; align-items: flex-start; }
-    .jb-exemptions-header__title { font-size: 1.25rem; }
-    .jb-exemptions-header__actions { width: 100%; }
-    .jb-exemptions-header__actions .jb-btn { flex: 1; }
+    .jb-public-header__nav { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .jb-public-header__title { font-size: 1.25rem; }
+    .jb-header-actions { width: 100%; }
+    .jb-header-actions .jb-btn { flex: 1; }
     .jb-stats { flex-direction: column; }
     .jb-stat { min-width: 100%; }
     .jb-filter-form { flex-direction: column; align-items: stretch; }

@@ -19,16 +19,16 @@
 }}
 <div class="jb-templates" id="jobboard-templates">
     {{! Header }}
-    <div class="jb-templates-header">
-        <div class="jb-templates-header__nav">
-            <a href="{{dashboardurl}}" class="jb-link">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i> {{str.dashboard}}
             </a>
         </div>
-        <h1 class="jb-templates-header__title">
+        <h1 class="jb-public-header__title">
             <i class="fa fa-envelope"></i> {{str.emailtemplates}}
         </h1>
-        <p class="jb-templates-header__subtitle">{{#str}}templatesdesc, local_jobboard{{/str}}</p>
+        <p class="jb-public-header__subtitle">{{#str}}templatesdesc, local_jobboard{{/str}}</p>
     </div>
 
     {{! Stats Cards }}
@@ -176,12 +176,10 @@
 
     {{! Empty State }}
     {{^hastemplates}}
-    <div class="jb-empty-state">
-        <div class="jb-empty-state__icon">
-            <i class="fa fa-envelope-open"></i>
-        </div>
-        <h3 class="jb-empty-state__title">{{str.notemplates}}</h3>
-        <p class="jb-empty-state__desc">{{#str}}notemplates_desc, local_jobboard{{/str}}</p>
+    <div class="jb-empty">
+        <i class="fa fa-envelope-open"></i>
+        <h3>{{str.notemplates}}</h3>
+        <p>{{#str}}notemplates_desc, local_jobboard{{/str}}</p>
         <a href="{{installurl}}" class="jb-btn jb-btn--primary">
             <i class="fa fa-download"></i> {{str.installdefaults}}
         </a>
@@ -246,12 +244,14 @@
 /* Templates Page - Clean jb-* Design */
 .jb-templates { max-width: 1200px; padding: 1rem; }
 
-/* Header */
-.jb-templates-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
-.jb-templates-header__nav { margin-bottom: 1rem; }
-.jb-templates-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
-.jb-templates-header__title i { color: var(--iser-verde, #1b9e88); }
-.jb-templates-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+/* Header - Same as public/index */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
 
 /* Links */
 .jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -338,11 +338,11 @@
 .jb-btn--icon { padding: 0.375rem 0.5rem; }
 .jb-btn-group { display: inline-flex; gap: 0.25rem; }
 
-/* Empty State */
-.jb-empty-state { text-align: center; padding: 3rem 1.5rem; background: #f9fafb; border-radius: 8px; margin-bottom: 1.5rem; }
-.jb-empty-state__icon { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
-.jb-empty-state__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-negro, #1a1a1a); margin: 0 0 0.5rem; }
-.jb-empty-state__desc { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; }
+/* Empty State - Same as public/index */
+.jb-empty { text-align: center; padding: 4rem 2rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; margin-bottom: 1.5rem; }
+.jb-empty > i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; display: block; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; }
 
 /* Help Section */
 .jb-help-section { background: #f9fafb; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
@@ -367,7 +367,7 @@
     .jb-help-section__grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
-    .jb-templates-header__title { font-size: 1.25rem; }
+    .jb-public-header__title { font-size: 1.25rem; }
     .jb-stats { grid-template-columns: 1fr; }
     .jb-tabs { flex-direction: column; }
     .jb-hide-mobile { display: none; }

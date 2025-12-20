@@ -195,12 +195,10 @@
 
         {{! Empty State }}
         {{^hasconvocatorias}}
-        <div class="jb-empty-state">
-            <div class="jb-empty-state__icon">
-                <i class="fa fa-folder-open"></i>
-            </div>
-            <h3 class="jb-empty-state__title">{{#str}}noconvocatorias, local_jobboard{{/str}}</h3>
-            <p class="jb-empty-state__desc">{{#str}}noconvocatoriasdesc, local_jobboard{{/str}}</p>
+        <div class="jb-empty">
+            <i class="fa fa-folder-open"></i>
+            <h3>{{#str}}noconvocatorias, local_jobboard{{/str}}</h3>
+            <p>{{#str}}noconvocatoriasdesc, local_jobboard{{/str}}</p>
             {{#cancreate}}
             <a href="{{createurl}}" class="jb-btn jb-btn--primary">
                 <i class="fa fa-plus"></i> {{#str}}addconvocatoria, local_jobboard{{/str}}
@@ -351,10 +349,10 @@
 .jb-btn-group { display: inline-flex; gap: 0.25rem; }
 
 /* Empty State - Same as public/index */
-.jb-empty-state { text-align: center; padding: 4rem 2rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; margin-bottom: 1.5rem; }
-.jb-empty-state__icon { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
-.jb-empty-state__title { font-size: 1.25rem; font-weight: 600; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
-.jb-empty-state__desc { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; }
+.jb-empty { text-align: center; padding: 4rem 2rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; margin-bottom: 1.5rem; }
+.jb-empty > i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; display: block; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; }
 
 /* Pagination */
 .jb-pagination { margin-top: 1.5rem; display: flex; justify-content: center; }

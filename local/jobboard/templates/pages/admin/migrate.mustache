@@ -30,11 +30,13 @@
     {{! DRY RUN RESULTS VIEW }}
     {{! ================================================================ }}
     {{#hasdryrunresults}}
-    <div class="jb-migrate-header">
-        <a href="{{backurl}}" class="jb-link">
-            <i class="fa fa-arrow-left"></i> {{#str}}back{{/str}}
-        </a>
-        <h1 class="jb-migrate-header__title">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{backurl}}" class="jb-public-header__back">
+                <i class="fa fa-arrow-left"></i> {{#str}}back{{/str}}
+            </a>
+        </div>
+        <h1 class="jb-public-header__title">
             <i class="fa fa-flask"></i> {{#str}}dryrunresults, local_jobboard{{/str}}
         </h1>
     </div>
@@ -60,16 +62,16 @@
     {{! ================================================================ }}
     {{^hasdryrunresults}}
     {{! Header }}
-    <div class="jb-migrate-header">
-        <div class="jb-migrate-header__nav">
-            <a href="{{backurl}}" class="jb-link">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{backurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i> {{backtext}}
             </a>
         </div>
-        <h1 class="jb-migrate-header__title">
+        <h1 class="jb-public-header__title">
             <i class="fa fa-right-left"></i> {{pagetitle}}
         </h1>
-        <p class="jb-migrate-header__subtitle">{{pagedesc}}</p>
+        <p class="jb-public-header__subtitle">{{pagedesc}}</p>
     </div>
 
     {{! Info Alert }}
@@ -180,12 +182,14 @@
 /* Migration Page - Clean jb-* Design */
 .jb-migrate { max-width: 1200px; padding: 1rem; }
 
-/* Header */
-.jb-migrate-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
-.jb-migrate-header__nav { margin-bottom: 1rem; }
-.jb-migrate-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
-.jb-migrate-header__title i { color: var(--iser-verde, #1b9e88); }
-.jb-migrate-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+/* Header - Same as public/index */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
 
 /* Links */
 .jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -261,7 +265,7 @@
     .jb-grid--2 { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
-    .jb-migrate-header__title { font-size: 1.25rem; }
+    .jb-public-header__title { font-size: 1.25rem; }
     .jb-export-data__grid { grid-template-columns: 1fr; }
 }
 @media print { .jb-btn, .jb-migrate-header__nav { display: none; } }

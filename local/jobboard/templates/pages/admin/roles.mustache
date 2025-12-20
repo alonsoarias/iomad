@@ -18,15 +18,16 @@
     {{! ================================================================ }}
     {{! HEADER SECTION }}
     {{! ================================================================ }}
-    <div class="jb-roles-header">
-        <div class="jb-roles-header__nav">
-            <a href="{{dashboardurl}}" class="jb-link">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
             </a>
         </div>
-        <h1 class="jb-roles-header__title">
+        <h1 class="jb-public-header__title">
             <i class="fa fa-user-tag"></i> {{#str}}manageroles, local_jobboard{{/str}}
         </h1>
+        <p class="jb-public-header__subtitle">{{#str}}manageroles_desc, local_jobboard{{/str}}</p>
     </div>
 
     {{! ================================================================ }}
@@ -259,11 +260,14 @@ document.getElementById('usersearch').addEventListener('keyup', function() {
 /* Roles Page - Clean jb-* Design */
 .jb-roles { max-width: 1200px; padding: 1rem; }
 
-/* Header */
-.jb-roles-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
-.jb-roles-header__nav { margin-bottom: 1rem; }
-.jb-roles-header__title { font-size: 1.5rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
-.jb-roles-header__title i { color: var(--iser-verde, #1b9e88); }
+/* Header - Same as public/index */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
 
 /* Links */
 .jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -356,10 +360,11 @@ document.getElementById('usersearch').addEventListener('keyup', function() {
 .jb-user-cell { display: flex; flex-direction: column; }
 .jb-user-cell small { color: var(--iser-gris-medio, #666); }
 
-/* Empty State */
-.jb-empty { text-align: center; padding: 2rem; }
-.jb-empty > i { font-size: 2.5rem; color: #d1d5db; margin-bottom: 0.75rem; display: block; }
-.jb-empty h3 { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+/* Empty State - Same as public/index */
+.jb-empty { text-align: center; padding: 4rem 2rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; }
+.jb-empty > i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; display: block; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto; }
 
 /* Form Elements */
 .jb-form-group { margin-bottom: 1rem; }
@@ -405,7 +410,7 @@ document.getElementById('usersearch').addEventListener('keyup', function() {
     .jb-grid--2-1 { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
-    .jb-roles-header__title { font-size: 1.25rem; }
+    .jb-public-header__title { font-size: 1.25rem; }
     .jb-stats { flex-direction: column; }
     .jb-stat { width: 100%; }
     .jb-grid--3 { grid-template-columns: 1fr; }
