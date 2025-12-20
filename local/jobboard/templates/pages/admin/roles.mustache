@@ -33,23 +33,19 @@
     {{! STATISTICS SECTION }}
     {{! ================================================================ }}
     <div class="jb-stats">
-        <div class="jb-stat-card jb-stat-card--info">
-            <div class="jb-stat-card__icon">
-                <i class="fa fa-users"></i>
-            </div>
-            <div class="jb-stat-card__content">
-                <span class="jb-stat-card__value">{{totalusers}}</span>
-                <span class="jb-stat-card__label">{{#str}}totalassignedusers, local_jobboard{{/str}}</span>
+        <div class="jb-stat jb-stat--info">
+            <i class="fa fa-users"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{totalusers}}</span>
+                <span class="jb-stat__label">{{#str}}totalassignedusers, local_jobboard{{/str}}</span>
             </div>
         </div>
         {{#pluginroles}}
-        <a href="{{manageurl}}" class="jb-stat-card jb-stat-card--{{color}} jb-stat-card--link">
-            <div class="jb-stat-card__icon">
-                <i class="fa fa-{{icon}}"></i>
-            </div>
-            <div class="jb-stat-card__content">
-                <span class="jb-stat-card__value">{{usercount}}</span>
-                <span class="jb-stat-card__label">{{name}}</span>
+        <a href="{{manageurl}}" class="jb-stat jb-stat--{{color}}">
+            <i class="fa fa-{{icon}}"></i>
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{usercount}}</span>
+                <span class="jb-stat__label">{{name}}</span>
             </div>
         </a>
         {{/pluginroles}}
@@ -273,23 +269,24 @@ document.getElementById('usersearch').addEventListener('keyup', function() {
 .jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
 .jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
 
-/* Stats */
-.jb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-.jb-stat-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit; transition: transform 0.2s, box-shadow 0.2s; }
-.jb-stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-decoration: none; }
-.jb-stat-card--link { cursor: pointer; }
-.jb-stat-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
-.jb-stat-card--success { border-top: 3px solid #28a745; }
-.jb-stat-card--info { border-top: 3px solid #17a2b8; }
-.jb-stat-card--warning { border-top: 3px solid #ffc107; }
-.jb-stat-card__icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
-.jb-stat-card--primary .jb-stat-card__icon { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
-.jb-stat-card--success .jb-stat-card__icon { background: rgba(40, 167, 69, 0.15); color: #28a745; }
-.jb-stat-card--info .jb-stat-card__icon { background: rgba(23, 162, 184, 0.15); color: #17a2b8; }
-.jb-stat-card--warning .jb-stat-card__icon { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
-.jb-stat-card__content { display: flex; flex-direction: column; }
-.jb-stat-card__value { font-size: 1.5rem; font-weight: 700; color: var(--iser-negro, #1a1a1a); line-height: 1; }
-.jb-stat-card__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+/* Stats - Matching Public View Style (border-left) */
+.jb-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 160px; text-decoration: none; color: inherit; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-stat:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-decoration: none; }
+.jb-stat > i { font-size: 1.5rem; opacity: 0.7; }
+.jb-stat__data { display: flex; flex-direction: column; }
+.jb-stat__value { font-size: 1.5rem; font-weight: 700; line-height: 1; }
+.jb-stat__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+.jb-stat--success { border-left: 3px solid #28a745; }
+.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
+.jb-stat--info { border-left: 3px solid #0d6efd; }
+.jb-stat--info .jb-stat__value, .jb-stat--info > i { color: #0d6efd; }
+.jb-stat--warning { border-left: 3px solid #ffc107; }
+.jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #856404; }
+.jb-stat--secondary { border-left: 3px solid #6c757d; }
+.jb-stat--secondary .jb-stat__value, .jb-stat--secondary > i { color: #6c757d; }
 
 /* Section */
 .jb-section { margin-bottom: 2rem; }
@@ -311,15 +308,15 @@ document.getElementById('usersearch').addEventListener('keyup', function() {
 .jb-card__header-title { flex: 1; font-size: 0.9375rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); }
 .jb-card__body { padding: 1rem; }
 
-/* Action Cards - Matching Dashboard Style */
-.jb-action-card { display: flex; flex-direction: column; height: 100%; transition: transform 0.2s, box-shadow 0.2s; }
-.jb-action-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+/* Action Cards - Matching Public View Style */
+.jb-action-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-action-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 .jb-action-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
 .jb-action-card--success { border-top: 3px solid #28a745; }
 .jb-action-card--warning { border-top: 3px solid #ffc107; }
 .jb-action-card--info { border-top: 3px solid #0d6efd; }
 .jb-action-card--secondary { border-top: 3px solid #6c757d; }
-.jb-action-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+.jb-action-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; background: #f9fafb; }
 .jb-action-card__icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
 .jb-action-card__icon--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
 .jb-action-card__icon--success { background: rgba(40, 167, 69, 0.15); color: #28a745; }
@@ -327,10 +324,10 @@ document.getElementById('usersearch').addEventListener('keyup', function() {
 .jb-action-card__icon--info { background: rgba(13, 110, 253, 0.15); color: #0d6efd; }
 .jb-action-card__icon--secondary { background: #e9ecef; color: #6c757d; }
 .jb-action-card__body { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
-.jb-action-card__title { font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem; color: var(--iser-negro, #1a1a1a); }
+.jb-action-card__title { font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem; color: var(--iser-negro, #1a1a1a); line-height: 1.4; }
 .jb-action-card__desc { font-size: 0.8125rem; color: var(--iser-gris-medio, #666); margin: 0 0 0.75rem; line-height: 1.5; }
-.jb-action-card__footer { padding: 0.75rem 1rem; background: #f9fafb; border-top: 1px solid #f0f0f0; display: flex; gap: 0.5rem; }
-.jb-action-card__footer .jb-btn { flex: 1; }
+.jb-action-card__footer { padding: 0.75rem 1rem; background: #f9fafb; border-top: 1px solid #f0f0f0; }
+.jb-action-card__footer .jb-btn { width: 100%; }
 
 /* Caps Preview */
 .jb-caps-preview__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); display: block; margin-bottom: 0.5rem; }
@@ -405,12 +402,12 @@ document.getElementById('usersearch').addEventListener('keyup', function() {
 
 /* Mobile */
 @media (max-width: 992px) {
-    .jb-stats { grid-template-columns: repeat(2, 1fr); }
     .jb-grid--2-1 { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
     .jb-roles-header__title { font-size: 1.25rem; }
-    .jb-stats { grid-template-columns: 1fr; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { width: 100%; }
     .jb-grid--3 { grid-template-columns: 1fr; }
     .jb-footer-nav { flex-direction: column; }
     .jb-footer-nav .jb-btn { width: 100%; }
