@@ -32,20 +32,19 @@
     {{! ================================================================ }}
     {{! HEADER SECTION }}
     {{! ================================================================ }}
-    <div class="jb-bulk-validate-header">
-        <div class="jb-bulk-validate-header__nav">
-            <a href="{{dashboardurl}}" class="jb-link">
+    <div class="jb-public-header">
+        <div class="jb-public-header__nav">
+            <a href="{{dashboardurl}}" class="jb-public-header__back">
                 <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
             </a>
-        </div>
-        <div class="jb-bulk-validate-header__main">
-            <h1 class="jb-bulk-validate-header__title">
-                <i class="fa fa-list-check"></i> {{pagetitle}}
-            </h1>
-            <a href="{{reviewurl}}" class="jb-btn jb-btn--outline">
+            <a href="{{reviewurl}}" class="jb-btn jb-btn--outline jb-btn--sm">
                 <i class="fa fa-clipboard-check"></i> {{#str}}reviewapplications, local_jobboard{{/str}}
             </a>
         </div>
+        <h1 class="jb-public-header__title">
+            <i class="fa fa-list-check"></i> {{pagetitle}}
+        </h1>
+        <p class="jb-public-header__subtitle">{{#str}}bulkvalidatehelp, local_jobboard{{/str}}</p>
     </div>
 
     {{! ================================================================ }}
@@ -101,13 +100,13 @@
     {{! PENDING BY TYPE SECTION }}
     {{! ================================================================ }}
     {{#haspendingbytype}}
+    {{! Section Header }}
+    <div class="jb-section-header">
+        <h3 class="jb-section-header__title">
+            <i class="fa fa-folder-open"></i> {{#str}}pendingbytype, local_jobboard{{/str}}
+        </h3>
+    </div>
     <div class="jb-card">
-        <div class="jb-card__header">
-            <div class="jb-card__header-icon jb-card__header-icon--warning">
-                <i class="fa fa-folder-open"></i>
-            </div>
-            <h2 class="jb-card__header-title">{{#str}}pendingbytype, local_jobboard{{/str}}</h2>
-        </div>
         <div class="jb-card__body">
             <div class="jb-type-grid">
                 {{#pendingbytype}}
@@ -128,14 +127,14 @@
     {{! DOCUMENTS LIST SECTION }}
     {{! ================================================================ }}
     {{#hastypeselected}}
+    {{! Section Header }}
+    <div class="jb-section-header">
+        <h3 class="jb-section-header__title">
+            <i class="fa fa-file-lines"></i> {{typename}}
+        </h3>
+        <span class="jb-badge jb-badge--warning">{{documentcount}} {{#str}}documents, local_jobboard{{/str}}</span>
+    </div>
     <div class="jb-card">
-        <div class="jb-card__header">
-            <div class="jb-card__header-icon jb-card__header-icon--primary">
-                <i class="fa fa-file-lines"></i>
-            </div>
-            <h2 class="jb-card__header-title">{{typename}}</h2>
-            <span class="jb-badge jb-badge--warning">{{documentcount}} {{#str}}documents, local_jobboard{{/str}}</span>
-        </div>
         <div class="jb-card__body">
             {{#hasdocuments}}
             <form method="post" action="{{actionformurl}}" id="bulk-validate-form">
@@ -284,15 +283,22 @@
 </div>
 
 <style>
-/* Bulk Validate Page - Clean jb-* Design */
+/* Bulk Validate Page - Following public/index.mustache pattern */
 .jb-bulk-validate { max-width: 1200px; padding: 1rem; }
 
-/* Header */
-.jb-bulk-validate-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
-.jb-bulk-validate-header__nav { margin-bottom: 1rem; }
-.jb-bulk-validate-header__main { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-.jb-bulk-validate-header__title { font-size: 1.5rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
-.jb-bulk-validate-header__title i { color: var(--iser-verde, #1b9e88); }
+/* Header - Same as public/index */
+.jb-public-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-public-header__nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-public-header__back { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-public-header__back:hover { color: var(--iser-verde-dark, #157a6a); }
+.jb-public-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-public-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-public-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+
+/* Section Header */
+.jb-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.jb-section-header__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-rojo, #c41e3a); margin: 0; display: flex; align-items: center; gap: 0.5rem; }
+.jb-section-header__title i { color: var(--iser-verde, #1b9e88); }
 
 /* Links */
 .jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -311,13 +317,10 @@
 .jb-stat--warning { border-left: 3px solid #ffc107; }
 .jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #d39e00; }
 
-/* Cards */
-.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; }
-.jb-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 0.75rem; background: #f9fafb; }
-.jb-card__header-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
-.jb-card__header-icon--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
-.jb-card__header-icon--warning { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
-.jb-card__header-title { flex: 1; font-size: 0.9375rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); }
+/* Cards - Following public/index pattern */
+.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+.jb-card__header { padding: 0.75rem 1rem; font-size: 0.8125rem; font-weight: 600; color: var(--iser-gris-oscuro, #333); background: #f9fafb; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; gap: 0.5rem; }
+.jb-card__header i { color: var(--iser-verde, #1b9e88); }
 .jb-card__body { padding: 1rem; }
 
 /* Filter Card */
@@ -386,15 +389,17 @@
 .jb-code { font-family: 'Monaco', 'Consolas', monospace; padding: 0.125rem 0.375rem; border-radius: 4px; font-size: 0.75rem; background: #f3f4f6; color: var(--iser-gris-oscuro, #333); }
 .jb-code--primary { background: rgba(27, 158, 136, 0.1); color: var(--iser-verde, #1b9e88); }
 
-/* Empty State */
-.jb-empty { text-align: center; padding: 3rem 1rem; }
+/* Empty State - Same as public/index */
+.jb-empty { text-align: center; padding: 4rem 2rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; }
 .jb-empty > i { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; display: block; }
-.jb-empty h3 { font-size: 1.125rem; color: var(--iser-gris-oscuro, #333); margin: 0 0 0.5rem; }
-.jb-empty p { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0; }
+.jb-empty h3 { font-size: 1.25rem; color: var(--iser-rojo, #c41e3a); margin: 0 0 0.5rem; }
+.jb-empty p { color: var(--iser-gris-medio, #666); margin: 0; max-width: 400px; margin: 0 auto; }
 .jb-empty--success > i { color: #28a745; }
+.jb-empty--success h3 { color: #28a745; }
 
 /* Buttons */
 .jb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.5rem 1rem; border: 1px solid transparent; border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+.jb-btn--sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
 .jb-btn--block { width: 100%; }
 .jb-btn--icon { padding: 0.375rem; width: 32px; height: 32px; border: 1px solid #d1d5db; background: #fff; color: var(--iser-gris-oscuro, #333); }
 .jb-btn--icon:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
@@ -422,15 +427,15 @@
     .jb-bulk-actions__grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
-    .jb-bulk-validate-header__main { flex-direction: column; align-items: flex-start; }
-    .jb-bulk-validate-header__title { font-size: 1.25rem; }
+    .jb-public-header__nav { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .jb-public-header__title { font-size: 1.25rem; }
     .jb-stats { flex-direction: column; }
-    .jb-stat { min-width: 100%; }
+    .jb-stat { width: 100%; }
     .jb-filter-form { flex-direction: column; align-items: stretch; }
     .jb-filter-form__group { min-width: 100%; }
     .jb-type-grid { grid-template-columns: repeat(2, 1fr); }
     .jb-footer-nav { flex-direction: column; }
     .jb-footer-nav .jb-btn { width: 100%; }
 }
-@media print { .jb-btn, .jb-bulk-validate-header__nav, .jb-filter-card, .jb-footer-nav, .jb-bulk-actions { display: none; } }
+@media print { .jb-btn, .jb-public-header__nav, .jb-filter-card, .jb-footer-nav, .jb-bulk-actions { display: none; } }
 </style>
