@@ -151,13 +151,11 @@
         {{! Stats Row }}
         <div class="jb-stats">
             {{#overview.stats}}
-            <div class="jb-stat-card jb-stat-card--{{color}}">
-                <div class="jb-stat-card__icon">
-                    <i class="fa fa-{{icon}}"></i>
-                </div>
-                <div class="jb-stat-card__content">
-                    <span class="jb-stat-card__value">{{value}}</span>
-                    <span class="jb-stat-card__label">{{label}}</span>
+            <div class="jb-stat jb-stat--{{color}}">
+                <i class="fa fa-{{icon}}"></i>
+                <div class="jb-stat__data">
+                    <span class="jb-stat__value">{{value}}</span>
+                    <span class="jb-stat__label">{{label}}</span>
                 </div>
             </div>
             {{/overview.stats}}
@@ -264,13 +262,11 @@
         {{! Stats Row }}
         <div class="jb-stats">
             {{#documents.stats}}
-            <div class="jb-stat-card jb-stat-card--{{color}}">
-                <div class="jb-stat-card__icon">
-                    <i class="fa fa-{{icon}}"></i>
-                </div>
-                <div class="jb-stat-card__content">
-                    <span class="jb-stat-card__value">{{value}}</span>
-                    <span class="jb-stat-card__label">{{label}}</span>
+            <div class="jb-stat jb-stat--{{color}}">
+                <i class="fa fa-{{icon}}"></i>
+                <div class="jb-stat__data">
+                    <span class="jb-stat__value">{{value}}</span>
+                    <span class="jb-stat__label">{{label}}</span>
                 </div>
             </div>
             {{/documents.stats}}
@@ -529,24 +525,24 @@
 .jb-tab:hover { background: #fff; color: var(--iser-verde, #1b9e88); }
 .jb-tab--active { background: #fff; color: var(--iser-verde, #1b9e88); font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
 
-/* Stats */
-.jb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-.jb-stat-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; transition: transform 0.2s, box-shadow 0.2s; }
-.jb-stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-.jb-stat-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
-.jb-stat-card--success { border-top: 3px solid #28a745; }
-.jb-stat-card--warning { border-top: 3px solid #ffc107; }
-.jb-stat-card--danger { border-top: 3px solid #dc3545; }
-.jb-stat-card--info { border-top: 3px solid #17a2b8; }
-.jb-stat-card__icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
-.jb-stat-card--primary .jb-stat-card__icon { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
-.jb-stat-card--success .jb-stat-card__icon { background: rgba(40, 167, 69, 0.15); color: #28a745; }
-.jb-stat-card--warning .jb-stat-card__icon { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
-.jb-stat-card--danger .jb-stat-card__icon { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
-.jb-stat-card--info .jb-stat-card__icon { background: rgba(23, 162, 184, 0.15); color: #17a2b8; }
-.jb-stat-card__content { display: flex; flex-direction: column; }
-.jb-stat-card__value { font-size: 1.5rem; font-weight: 700; color: var(--iser-negro, #1a1a1a); line-height: 1; }
-.jb-stat-card__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+/* Stats - Border-left pattern */
+.jb-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; flex: 1; min-width: 160px; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-stat:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jb-stat > i { font-size: 1.5rem; opacity: 0.7; }
+.jb-stat__data { display: flex; flex-direction: column; }
+.jb-stat__value { font-size: 1.5rem; font-weight: 700; color: var(--iser-negro, #1a1a1a); line-height: 1; }
+.jb-stat__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+.jb-stat--success { border-left: 3px solid #28a745; }
+.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
+.jb-stat--warning { border-left: 3px solid #ffc107; }
+.jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #d39e00; }
+.jb-stat--danger { border-left: 3px solid #dc3545; }
+.jb-stat--danger .jb-stat__value, .jb-stat--danger > i { color: #dc3545; }
+.jb-stat--info { border-left: 3px solid #17a2b8; }
+.jb-stat--info .jb-stat__value, .jb-stat--info > i { color: #17a2b8; }
 
 /* Grid */
 .jb-grid { display: grid; gap: 1.5rem; margin-bottom: 1.5rem; }
@@ -660,14 +656,14 @@
 
 /* Mobile */
 @media (max-width: 992px) {
-    .jb-stats { grid-template-columns: repeat(2, 1fr); }
     .jb-grid--2 { grid-template-columns: 1fr; }
     .jb-filter-form__row { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
     .jb-reports-header__title { font-size: 1.25rem; }
     .jb-reports-header__main { flex-direction: column; align-items: flex-start; }
-    .jb-stats { grid-template-columns: 1fr; }
+    .jb-stats { flex-direction: column; }
+    .jb-stat { min-width: 100%; }
     .jb-tabs { flex-direction: column; }
     .jb-filter-form__row { grid-template-columns: 1fr; }
     .jb-hide-mobile { display: none; }
@@ -675,4 +671,88 @@
     .jb-footer-nav .jb-btn { width: 100%; justify-content: center; }
 }
 @media print { .jb-btn, .jb-filter-card, .jb-footer-nav, .jb-tabs, .jb-alert { display: none; } }
+
+/* Loading state */
+.jb-report-content { position: relative; min-height: 200px; }
+.jb-report-content.jb-loading::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.8); z-index: 10; }
+.jb-report-content.jb-loading::after { content: ''; position: absolute; top: 50%; left: 50%; width: 32px; height: 32px; margin: -16px 0 0 -16px; border: 3px solid #e5e5e5; border-top-color: var(--iser-verde, #1b9e88); border-radius: 50%; z-index: 11; animation: jb-spin 0.8s linear infinite; }
+@keyframes jb-spin { to { transform: rotate(360deg); } }
 </style>
+
+{{! AJAX Tab Switching }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var container = document.getElementById('jobboard-reports');
+    if (!container) return;
+
+    var tabs = container.querySelectorAll('.jb-tab');
+    var content = container.querySelector('.jb-report-content');
+    var filterCard = container.querySelector('.jb-filter-card');
+    var currentUrl = new URL(window.location.href);
+
+    tabs.forEach(function(tab) {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            var url = new URL(this.href);
+
+            // Update active tab
+            tabs.forEach(function(t) { t.classList.remove('jb-tab--active'); });
+            this.classList.add('jb-tab--active');
+
+            // Show loading state
+            if (content) content.classList.add('jb-loading');
+
+            // Fetch new content via AJAX
+            fetch(url.href, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(function(response) { return response.text(); })
+            .then(function(html) {
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(html, 'text/html');
+                var newContent = doc.querySelector('.jb-report-content');
+                var newFilters = doc.querySelector('.jb-filter-card');
+                var newAlert = doc.querySelector('.jb-alert');
+
+                // Replace content
+                if (newContent && content) {
+                    content.innerHTML = newContent.innerHTML;
+                    content.setAttribute('data-report', newContent.getAttribute('data-report'));
+                }
+                if (newFilters && filterCard) {
+                    filterCard.innerHTML = newFilters.innerHTML;
+                }
+
+                // Update or remove alert
+                var existingAlert = container.querySelector('.jb-alert');
+                if (newAlert) {
+                    if (existingAlert) {
+                        existingAlert.outerHTML = newAlert.outerHTML;
+                    } else if (filterCard) {
+                        filterCard.insertAdjacentHTML('beforebegin', newAlert.outerHTML);
+                    }
+                } else if (existingAlert) {
+                    existingAlert.remove();
+                }
+
+                // Update URL without reload
+                history.pushState({}, '', url.href);
+
+                // Remove loading state
+                if (content) content.classList.remove('jb-loading');
+            })
+            .catch(function(error) {
+                console.error('Error loading report:', error);
+                if (content) content.classList.remove('jb-loading');
+                // Fallback to normal navigation
+                window.location.href = url.href;
+            });
+        });
+    });
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', function() {
+        window.location.reload();
+    });
+});
+</script>

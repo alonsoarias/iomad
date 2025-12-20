@@ -202,8 +202,11 @@
     <div class="jb-stats">
         {{#stats}}
         <div class="jb-stat jb-stat--{{color}}">
-            <span class="jb-stat__value">{{value}}</span>
-            <span class="jb-stat__label">{{label}}</span>
+            {{#icon}}<i class="fa fa-{{icon}}"></i>{{/icon}}
+            <div class="jb-stat__data">
+                <span class="jb-stat__value">{{value}}</span>
+                <span class="jb-stat__label">{{label}}</span>
+            </div>
         </div>
         {{/stats}}
     </div>
@@ -454,26 +457,43 @@
     box-shadow: 0 0 0 2px rgba(27, 158, 136, 0.1);
 }
 
-/* Stats */
+/* Stats - Border-left pattern */
 .jb-stats { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
 .jb-stat {
     background: #fff;
     border: 1px solid #e5e5e5;
     border-radius: 8px;
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.25rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
     flex: 1;
-    min-width: 150px;
+    min-width: 160px;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-.jb-stat__value { font-size: 1.5rem; font-weight: 700; }
-.jb-stat__label { font-size: 0.8125rem; color: var(--iser-gris-medio, #666); }
-.jb-stat--primary .jb-stat__value { color: var(--iser-verde, #1b9e88); }
-.jb-stat--verde .jb-stat__value { color: var(--iser-verde, #1b9e88); }
-.jb-stat--amarillo .jb-stat__value { color: var(--iser-amarillo, #ffc107); }
-.jb-stat--rojo .jb-stat__value { color: var(--iser-rojo, #c41e3a); }
-.jb-stat--azul .jb-stat__value { color: var(--iser-azul, #0d6efd); }
+.jb-stat:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jb-stat > i { font-size: 1.5rem; opacity: 0.7; }
+.jb-stat__data { display: flex; flex-direction: column; }
+.jb-stat__value { font-size: 1.5rem; font-weight: 700; line-height: 1; }
+.jb-stat__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+.jb-stat--primary { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--primary .jb-stat__value, .jb-stat--primary > i { color: var(--iser-verde, #1b9e88); }
+.jb-stat--verde { border-left: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat--verde .jb-stat__value, .jb-stat--verde > i { color: var(--iser-verde, #1b9e88); }
+.jb-stat--success { border-left: 3px solid #28a745; }
+.jb-stat--success .jb-stat__value, .jb-stat--success > i { color: #28a745; }
+.jb-stat--amarillo { border-left: 3px solid var(--iser-amarillo, #ffc107); }
+.jb-stat--amarillo .jb-stat__value, .jb-stat--amarillo > i { color: #856404; }
+.jb-stat--warning { border-left: 3px solid #ffc107; }
+.jb-stat--warning .jb-stat__value, .jb-stat--warning > i { color: #856404; }
+.jb-stat--rojo { border-left: 3px solid var(--iser-rojo, #c41e3a); }
+.jb-stat--rojo .jb-stat__value, .jb-stat--rojo > i { color: var(--iser-rojo, #c41e3a); }
+.jb-stat--danger { border-left: 3px solid #dc3545; }
+.jb-stat--danger .jb-stat__value, .jb-stat--danger > i { color: #dc3545; }
+.jb-stat--azul { border-left: 3px solid var(--iser-azul, #0d6efd); }
+.jb-stat--azul .jb-stat__value, .jb-stat--azul > i { color: var(--iser-azul, #0d6efd); }
+.jb-stat--info { border-left: 3px solid #17a2b8; }
+.jb-stat--info .jb-stat__value, .jb-stat--info > i { color: #17a2b8; }
 
 /* Section Header */
 .jb-section-header {
