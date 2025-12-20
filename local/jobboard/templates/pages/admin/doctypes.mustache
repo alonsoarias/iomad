@@ -1,249 +1,320 @@
 {{!
     @template local_jobboard/pages/admin/doctypes
 
-    Document types management page template.
-    Uses jb-* CSS classes for consistent styling.
-    Includes accessibility features, animations, and loading states.
+    Document types management page - Clean design with jb-* pattern.
 
     Context variables:
-    * pagetitle (string) - Page title
-    * stats (object) - Statistics {total, enabled, required, conditional}
-    * doctypes (array) - Array of document types
-    * hasdoctypes (bool) - Has doctypes
-    * totalcount (number) - Total count
-    * addurl (string) - URL to add new doctype
-    * dashboardurl (string) - URL to dashboard
-    * templatesurl (string) - URL to email templates
-    * abouttitle (string) - About section title
-    * aboutdesc (string) - About section description
-    * loading (bool) - Show skeleton loading state
-
-    Example context (json):
-    {
-        "pagetitle": "Manage Document Types",
-        "stats": {"total": 10, "enabled": 8, "required": 5, "conditional": 3}
-    }
+    * pagetitle - Page title
+    * stats - Statistics {total, enabled, required, conditional}
+    * doctypes - Array of document types
+    * hasdoctypes - Has doctypes
+    * totalcount - Total count
+    * addurl - URL to add new doctype
+    * dashboardurl - URL to dashboard
+    * templatesurl - URL to email templates
+    * abouttitle - About section title
+    * aboutdesc - About section description
+    * ajaxreorderurl - URL for AJAX reorder
 }}
-{{#loading}}
-{{! Skeleton Loading State }}
-<div class="local-jobboard-admin-doctypes" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div class="jb-skeleton-title" style="width: 40%;"></div>
-        <div class="d-flex gap-2">
-            <div class="jb-skeleton-text" style="width: 120px; height: 40px;"></div>
-            <div class="jb-skeleton-text" style="width: 120px; height: 40px;"></div>
+<div class="jb-doctypes" id="jobboard-doctypes">
+    {{! Header }}
+    <div class="jb-doctypes-header">
+        <div class="jb-doctypes-header__nav">
+            <a href="{{dashboardurl}}" class="jb-link">
+                <i class="fa fa-arrow-left"></i> {{#str}}dashboard, local_jobboard{{/str}}
+            </a>
         </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            {{> local_jobboard/components/stat_card }}
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body p-0">
-            {{> local_jobboard/components/table }}
-        </div>
-    </div>
-</div>
-{{/loading}}
-
-{{^loading}}
-<div class="local-jobboard-admin-doctypes" data-region="jobboard-admin-doctypes">
-    {{! Skip Link - Hidden until focused (Bootstrap 5 native) }}
-    <a href="#doctypes-main-content" class="visually-hidden-focusable">
-        {{#str}}skiptocontent, local_jobboard{{/str}}
-    </a>
-
-    {{! Page Header - Breadcrumbs handled by Moodle via $PAGE->navbar }}
-    <header class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-        <h1 class="h4 mb-0">
-            <i class="fa fa-file-lines text-primary me-2" aria-hidden="true"></i>
-            {{pagetitle}}
+        <h1 class="jb-doctypes-header__title">
+            <i class="fa fa-file-lines"></i> {{pagetitle}}
         </h1>
-        <div class="btn-group" role="group" aria-label="{{#str}}doctypeactions, local_jobboard{{/str}}">
-            <a href="{{addurl}}" class="btn btn-primary jb-btn-primary">
-                <i class="fa fa-plus me-2" aria-hidden="true"></i>
-                {{#str}}adddoctype, local_jobboard{{/str}}
-            </a>
-            <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-btn-outline-secondary">
-                <i class="fa fa-gauge me-2" aria-hidden="true"></i>
-                {{#str}}dashboard, local_jobboard{{/str}}
-            </a>
-        </div>
-    </header>
+        <p class="jb-doctypes-header__subtitle">{{#str}}doctypesdesc, local_jobboard{{/str}}</p>
+    </div>
 
-    {{! Statistics Cards }}
-    <section class="row mb-4" role="region" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-primary">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-folder fa-2x text-primary mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.total}}</div>
-                    <div class="small text-muted jb-stat-label">{{#str}}totaldoctypes, local_jobboard{{/str}}</div>
-                </div>
+    {{! Stats Cards }}
+    <div class="jb-stats">
+        <div class="jb-stat-card jb-stat-card--primary">
+            <div class="jb-stat-card__icon">
+                <i class="fa fa-folder"></i>
+            </div>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.total}}</span>
+                <span class="jb-stat-card__label">{{#str}}totaldoctypes, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-success">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-circle-check fa-2x text-success mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.enabled}}</div>
-                    <div class="small text-muted jb-stat-label">{{#str}}enableddoctypes, local_jobboard{{/str}}</div>
-                </div>
+        <div class="jb-stat-card jb-stat-card--success">
+            <div class="jb-stat-card__icon">
+                <i class="fa fa-circle-check"></i>
+            </div>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.enabled}}</span>
+                <span class="jb-stat-card__label">{{#str}}enableddoctypes, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-info">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-star fa-2x text-info mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.required}}</div>
-                    <div class="small text-muted jb-stat-label">{{#str}}requireddoctypes, local_jobboard{{/str}}</div>
-                </div>
+        <div class="jb-stat-card jb-stat-card--info">
+            <div class="jb-stat-card__icon">
+                <i class="fa fa-star"></i>
+            </div>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.required}}</span>
+                <span class="jb-stat-card__label">{{#str}}requireddoctypes, local_jobboard{{/str}}</span>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100 jb-stat-card jb-card-accent-warning">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-filter fa-2x text-warning mb-2" aria-hidden="true"></i>
-                    <div class="fs-3 fw-bold text-dark jb-stat-value">{{stats.conditional}}</div>
-                    <div class="small text-muted jb-stat-label">{{#str}}conditionaldoctypes, local_jobboard{{/str}}</div>
-                </div>
+        <div class="jb-stat-card jb-stat-card--warning">
+            <div class="jb-stat-card__icon">
+                <i class="fa fa-filter"></i>
             </div>
-        </div>
-    </section>
-
-    {{! Help Info }}
-    <div class="alert jb-alert-info d-flex align-items-start mb-4" role="alert">
-        <i class="fa fa-circle-info fa-lg me-3 mt-1" aria-hidden="true"></i>
-        <div>
-            <strong class="d-block mb-1">{{abouttitle}}</strong>
-            <p class="mb-0 small">{{aboutdesc}}</p>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.conditional}}</span>
+                <span class="jb-stat-card__label">{{#str}}conditionaldoctypes, local_jobboard{{/str}}</span>
+            </div>
         </div>
     </div>
 
-    {{! Main Content }}
-    <main id="doctypes-main-content">
-        {{! Document Types List }}
-        {{#hasdoctypes}}
-        <section class="card shadow-sm mb-4 jb-fade-in-up jb-table-card" aria-labelledby="doctypes-heading" style="animation-delay: 0.3s;">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h2 class="fs-5 mb-0" id="doctypes-heading">
-                    <i class="fa fa-list text-primary me-2" aria-hidden="true"></i>
-                    {{#str}}doctypelist, local_jobboard{{/str}}
-                </h2>
-                <span class="badge bg-primary rounded-pill">
-                    {{totalcount}} {{#str}}items, local_jobboard{{/str}}
-                </span>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0 jb-table" aria-label="{{#str}}doctypelist, local_jobboard{{/str}}">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col" class="text-center" style="width: 80px;">
-                                    <i class="fa fa-arrows-up-down text-muted" aria-hidden="true" title="{{#str}}dragtoorder, local_jobboard{{/str}}"></i>
-                                </th>
-                                <th scope="col">{{#str}}code, local_jobboard{{/str}}</th>
-                                <th scope="col">{{#str}}name{{/str}}</th>
-                                <th scope="col" class="d-none jb-d-lg-table-cell">{{#str}}category, local_jobboard{{/str}}</th>
-                                <th scope="col" class="text-center">{{#str}}required, local_jobboard{{/str}}</th>
-                                <th scope="col" class="d-none d-md-table-cell">{{#str}}conditions, local_jobboard{{/str}}</th>
-                                <th scope="col" class="text-center">{{#str}}status{{/str}}</th>
-                                <th scope="col" class="text-end" style="min-width: 120px;">{{#str}}actions{{/str}}</th>
-                            </tr>
-                        </thead>
-                        <tbody id="doctypes-sortable-body" data-ajax-url="{{ajaxreorderurl}}">
-                            {{#doctypes}}
-                            <tr data-doctype-id="{{id}}" class="jb-sortable-row {{^enabled}}jb-table-secondary opacity-75{{/enabled}}" draggable="true">
-                                <td class="text-center jb-drag-cell">
-                                    <span class="jb-drag-handle" title="{{#str}}dragtoorder, local_jobboard{{/str}}">
-                                        <i class="fa fa-grip-vertical text-muted"></i>
-                                    </span>
-                                    <span class="badge bg-light text-dark fw-normal ms-2">{{sortorder}}</span>
-                                </td>
-                                <td>
-                                    <code class="text-primary fw-bold">{{code}}</code>
-                                </td>
-                                <td>
-                                    <strong>{{displayname}}</strong>
-                                    {{#description}}
-                                    <br><small class="text-muted">{{description}}</small>
-                                    {{/description}}
-                                </td>
-                                <td class="d-none jb-d-lg-table-cell">
-                                    {{#categoryname}}
-                                    <span class="badge jb-badge-outline-secondary">{{categoryname}}</span>
-                                    {{/categoryname}}
-                                </td>
-                                <td class="text-center">{{{requiredbadge}}}</td>
-                                <td class="d-none d-md-table-cell">{{{conditionshtml}}}</td>
-                                <td class="text-center">{{{statusbadge}}}</td>
-                                <td class="text-end">
-                                    <div class="btn-group btn-group-sm" role="group" aria-label="{{#str}}doctypeactions, local_jobboard{{/str}}">
-                                        <a href="{{editurl}}" class="btn btn-outline-primary jb-btn-outline-primary" title="{{#str}}edit{{/str}}">
-                                            <i class="fa fa-pen-to-square" aria-hidden="true"></i>
-                                            <span class="visually-hidden">{{#str}}edit{{/str}}</span>
-                                        </a>
-                                        <a href="{{toggleurl}}" class="btn jb-btn-outline-{{#enabled}}warning{{/enabled}}{{^enabled}}success{{/enabled}}" title="{{toggletitle}}">
-                                            <i class="fa {{toggleicon}}" aria-hidden="true"></i>
-                                            <span class="visually-hidden">{{toggletitle}}</span>
-                                        </a>
-                                        <a href="{{deleteurl}}" class="btn btn-outline-danger jb-btn-outline-danger" title="{{#str}}delete{{/str}}" onclick="return confirm('{{#str}}confirmdeletedoctype, local_jobboard{{/str}}');">
-                                            <i class="fa fa-trash-can" aria-hidden="true"></i>
-                                            <span class="visually-hidden">{{#str}}delete{{/str}}</span>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {{/doctypes}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        {{/hasdoctypes}}
+    {{! Action Bar }}
+    <div class="jb-action-bar">
+        <a href="{{addurl}}" class="jb-btn jb-btn--primary">
+            <i class="fa fa-plus"></i> {{#str}}adddoctype, local_jobboard{{/str}}
+        </a>
+    </div>
 
-        {{! Empty State }}
-        {{^hasdoctypes}}
-        <div class="jb-empty-state" role="status">
-            <i class="fa fa-folder-open jb-empty-state-icon" aria-hidden="true"></i>
-            <h2 class="jb-empty-state-title">{{#str}}nodoctypes, local_jobboard{{/str}}</h2>
-            <p class="jb-empty-state-description">{{#str}}nodoctypesdesc, local_jobboard{{/str}}</p>
-            <div class="jb-empty-state-actions">
-                <a href="{{addurl}}" class="btn btn-primary jb-btn-primary">
-                    <i class="fa fa-plus me-2" aria-hidden="true"></i>
-                    {{#str}}adddoctype, local_jobboard{{/str}}
-                </a>
-            </div>
+    {{! Info Alert }}
+    <div class="jb-alert jb-alert--info">
+        <i class="fa fa-circle-info"></i>
+        <div class="jb-alert__content">
+            <strong>{{abouttitle}}</strong>
+            <span>{{aboutdesc}}</span>
         </div>
-        {{/hasdoctypes}}
-    </main>
+    </div>
 
-    {{! Navigation Footer }}
-    <nav class="jb-navigation-footer d-flex flex-wrap justify-content-center gap-2 mt-4 py-3 border-top jb-fade-in" aria-label="{{#str}}pagenavigation, local_jobboard{{/str}}">
-        <a href="{{dashboardurl}}" class="btn btn-outline-secondary">
-            <i class="fa fa-gauge me-2" aria-hidden="true"></i>
-            {{#str}}dashboard, local_jobboard{{/str}}
+    {{! Document Types Table }}
+    {{#hasdoctypes}}
+    <div class="jb-card">
+        <div class="jb-card__header">
+            <div class="jb-card__header-icon">
+                <i class="fa fa-list"></i>
+            </div>
+            <h2 class="jb-card__title">{{#str}}doctypelist, local_jobboard{{/str}}</h2>
+            <span class="jb-badge jb-badge--primary">{{totalcount}} {{#str}}items, local_jobboard{{/str}}</span>
+        </div>
+        <div class="jb-card__body jb-card__body--flush">
+            <table class="jb-table jb-table--sortable">
+                <thead>
+                    <tr>
+                        <th class="jb-text-center" style="width: 80px;">
+                            <i class="fa fa-arrows-up-down jb-text-muted" title="{{#str}}dragtoorder, local_jobboard{{/str}}"></i>
+                        </th>
+                        <th>{{#str}}code, local_jobboard{{/str}}</th>
+                        <th>{{#str}}name{{/str}}</th>
+                        <th class="jb-hide-tablet">{{#str}}category, local_jobboard{{/str}}</th>
+                        <th class="jb-text-center">{{#str}}required, local_jobboard{{/str}}</th>
+                        <th class="jb-hide-mobile">{{#str}}conditions, local_jobboard{{/str}}</th>
+                        <th class="jb-text-center">{{#str}}status{{/str}}</th>
+                        <th class="jb-text-right" style="min-width: 120px;">{{#str}}actions{{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody id="doctypes-sortable-body" data-ajax-url="{{ajaxreorderurl}}">
+                    {{#doctypes}}
+                    <tr data-doctype-id="{{id}}" class="jb-sortable-row {{^enabled}}jb-row--muted{{/enabled}}" draggable="true">
+                        <td class="jb-text-center jb-drag-cell">
+                            <span class="jb-drag-handle" title="{{#str}}dragtoorder, local_jobboard{{/str}}">
+                                <i class="fa fa-grip-vertical"></i>
+                            </span>
+                            <span class="jb-badge jb-badge--light">{{sortorder}}</span>
+                        </td>
+                        <td>
+                            <code class="jb-code">{{code}}</code>
+                        </td>
+                        <td>
+                            <strong>{{displayname}}</strong>
+                            {{#description}}
+                            <span class="jb-table__desc">{{description}}</span>
+                            {{/description}}
+                        </td>
+                        <td class="jb-hide-tablet">
+                            {{#categoryname}}
+                            <span class="jb-badge jb-badge--outline">{{categoryname}}</span>
+                            {{/categoryname}}
+                        </td>
+                        <td class="jb-text-center">{{{requiredbadge}}}</td>
+                        <td class="jb-hide-mobile">{{{conditionshtml}}}</td>
+                        <td class="jb-text-center">{{{statusbadge}}}</td>
+                        <td class="jb-text-right">
+                            <div class="jb-btn-group">
+                                <a href="{{editurl}}" class="jb-btn jb-btn--icon jb-btn--outline-primary" title="{{#str}}edit{{/str}}">
+                                    <i class="fa fa-pen-to-square"></i>
+                                </a>
+                                <a href="{{toggleurl}}" class="jb-btn jb-btn--icon jb-btn--outline-{{#enabled}}warning{{/enabled}}{{^enabled}}success{{/enabled}}" title="{{toggletitle}}">
+                                    <i class="fa {{toggleicon}}"></i>
+                                </a>
+                                <a href="{{deleteurl}}" class="jb-btn jb-btn--icon jb-btn--outline-danger" title="{{#str}}delete{{/str}}" onclick="return confirm('{{#str}}confirmdeletedoctype, local_jobboard{{/str}}');">
+                                    <i class="fa fa-trash-can"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/doctypes}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/hasdoctypes}}
+
+    {{! Empty State }}
+    {{^hasdoctypes}}
+    <div class="jb-empty-state">
+        <div class="jb-empty-state__icon">
+            <i class="fa fa-folder-open"></i>
+        </div>
+        <h3 class="jb-empty-state__title">{{#str}}nodoctypes, local_jobboard{{/str}}</h3>
+        <p class="jb-empty-state__desc">{{#str}}nodoctypesdesc, local_jobboard{{/str}}</p>
+        <a href="{{addurl}}" class="jb-btn jb-btn--primary">
+            <i class="fa fa-plus"></i> {{#str}}adddoctype, local_jobboard{{/str}}
         </a>
-        <a href="{{templatesurl}}" class="btn btn-outline-primary jb-btn-outline-primary">
-            <i class="fa fa-envelope me-2" aria-hidden="true"></i>
-            {{#str}}emailtemplates, local_jobboard{{/str}}
+    </div>
+    {{/hasdoctypes}}
+
+    {{! Footer Navigation }}
+    <div class="jb-footer-nav">
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-gauge"></i> {{#str}}dashboard, local_jobboard{{/str}}
         </a>
-    </nav>
+        <a href="{{templatesurl}}" class="jb-btn jb-btn--outline-primary">
+            <i class="fa fa-envelope"></i> {{#str}}emailtemplates, local_jobboard{{/str}}
+        </a>
+    </div>
 </div>
-{{/loading}}
 
 {{#js}}
 require(['local_jobboard/doctypes_sortable'], function(module) {
     module.init('#doctypes-sortable-body', '{{ajaxreorderurl}}');
 });
 {{/js}}
+
+<style>
+/* Document Types Page - Clean jb-* Design */
+.jb-doctypes { max-width: 1200px; padding: 1rem; }
+
+/* Header */
+.jb-doctypes-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-doctypes-header__nav { margin-bottom: 1rem; }
+.jb-doctypes-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-doctypes-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-doctypes-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+
+/* Links */
+.jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
+
+/* Stats */
+.jb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jb-stat-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat-card--success { border-top: 3px solid #28a745; }
+.jb-stat-card--info { border-top: 3px solid #17a2b8; }
+.jb-stat-card--warning { border-top: 3px solid #ffc107; }
+.jb-stat-card__icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+.jb-stat-card--primary .jb-stat-card__icon { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-stat-card--success .jb-stat-card__icon { background: rgba(40, 167, 69, 0.15); color: #28a745; }
+.jb-stat-card--info .jb-stat-card__icon { background: rgba(23, 162, 184, 0.15); color: #17a2b8; }
+.jb-stat-card--warning .jb-stat-card__icon { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
+.jb-stat-card__content { display: flex; flex-direction: column; }
+.jb-stat-card__value { font-size: 1.5rem; font-weight: 700; color: var(--iser-negro, #1a1a1a); line-height: 1; }
+.jb-stat-card__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+
+/* Action Bar */
+.jb-action-bar { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
+
+/* Alerts */
+.jb-alert { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+.jb-alert > i { font-size: 1.125rem; margin-top: 0.125rem; }
+.jb-alert__content { flex: 1; }
+.jb-alert__content strong { display: block; margin-bottom: 0.25rem; font-size: 0.875rem; }
+.jb-alert__content span { font-size: 0.8125rem; opacity: 0.9; }
+.jb-alert--info { background: rgba(13, 110, 253, 0.1); border: 1px solid rgba(13, 110, 253, 0.2); color: #0d6efd; }
+
+/* Cards */
+.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; }
+.jb-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 0.75rem; }
+.jb-card__header-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
+.jb-card__title { font-size: 1rem; font-weight: 600; margin: 0; flex: 1; color: var(--iser-negro, #1a1a1a); }
+.jb-card__body { padding: 1rem; }
+.jb-card__body--flush { padding: 0; }
+
+/* Table */
+.jb-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.jb-table th { padding: 0.75rem 1rem; text-align: left; font-weight: 600; color: var(--iser-gris-oscuro, #333); background: #f9fafb; border-bottom: 1px solid #e5e5e5; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.025em; }
+.jb-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; color: var(--iser-gris-oscuro, #333); vertical-align: middle; }
+.jb-table tbody tr:hover { background: #f9fafb; }
+.jb-table tbody tr:last-child td { border-bottom: none; }
+.jb-table__desc { display: block; font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
+.jb-row--muted { opacity: 0.6; }
+
+/* Sortable Table */
+.jb-table--sortable .jb-sortable-row { cursor: grab; }
+.jb-table--sortable .jb-sortable-row:active { cursor: grabbing; }
+.jb-drag-handle { cursor: grab; color: #d1d5db; margin-right: 0.5rem; }
+.jb-drag-handle:hover { color: var(--iser-verde, #1b9e88); }
+.jb-drag-cell { display: flex; align-items: center; justify-content: center; gap: 0.25rem; }
+
+/* Code */
+.jb-code { font-family: 'Monaco', 'Consolas', monospace; font-size: 0.8125rem; color: var(--iser-verde, #1b9e88); background: rgba(27, 158, 136, 0.1); padding: 0.125rem 0.375rem; border-radius: 4px; }
+
+/* Text Utilities */
+.jb-text-center { text-align: center; }
+.jb-text-right { text-align: right; }
+.jb-text-muted { color: #9ca3af; }
+.jb-hide-mobile { display: table-cell; }
+.jb-hide-tablet { display: table-cell; }
+
+/* Badges */
+.jb-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.6875rem; font-weight: 500; }
+.jb-badge i { font-size: 0.625rem; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-badge--warning { background: rgba(255, 193, 7, 0.15); color: #856404; }
+.jb-badge--info { background: rgba(23, 162, 184, 0.15); color: #0c5460; }
+.jb-badge--secondary { background: #e9ecef; color: #6c757d; }
+.jb-badge--light { background: #f8f9fa; color: #666; border: 1px solid #e5e5e5; }
+.jb-badge--outline { background: transparent; border: 1px solid #d1d5db; color: var(--iser-gris-oscuro, #333); }
+
+/* Buttons */
+.jb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.5rem 1rem; border: 1px solid transparent; border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+.jb-btn--outline-primary { background: transparent; border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+.jb-btn--outline-primary:hover { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--outline-success { background: transparent; border-color: #28a745; color: #28a745; }
+.jb-btn--outline-success:hover { background: #28a745; color: #fff; }
+.jb-btn--outline-warning { background: transparent; border-color: #ffc107; color: #856404; }
+.jb-btn--outline-warning:hover { background: #ffc107; color: #212529; }
+.jb-btn--outline-danger { background: transparent; border-color: #dc3545; color: #dc3545; }
+.jb-btn--outline-danger:hover { background: #dc3545; color: #fff; }
+.jb-btn--icon { padding: 0.375rem 0.5rem; }
+.jb-btn-group { display: inline-flex; gap: 0.25rem; }
+
+/* Empty State */
+.jb-empty-state { text-align: center; padding: 3rem 1.5rem; background: #f9fafb; border-radius: 8px; margin-bottom: 1.5rem; }
+.jb-empty-state__icon { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
+.jb-empty-state__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-negro, #1a1a1a); margin: 0 0 0.5rem; }
+.jb-empty-state__desc { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; }
+
+/* Footer Nav */
+.jb-footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; padding: 1.5rem 0; margin-top: 1rem; border-top: 1px solid #e5e5e5; }
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-stats { grid-template-columns: repeat(2, 1fr); }
+    .jb-hide-tablet { display: none; }
+}
+@media (max-width: 768px) {
+    .jb-doctypes-header__title { font-size: 1.25rem; }
+    .jb-stats { grid-template-columns: 1fr; }
+    .jb-hide-mobile { display: none; }
+    .jb-footer-nav { flex-direction: column; }
+    .jb-footer-nav .jb-btn { width: 100%; justify-content: center; }
+}
+@media print { .jb-btn, .jb-action-bar, .jb-footer-nav, .jb-drag-handle { display: none; } }
+</style>

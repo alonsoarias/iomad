@@ -1,171 +1,216 @@
 {{!
     @template local_jobboard/pages/import_vacancies
 
-    Import vacancies form page.
-    Uses jb-* CSS classes for consistent styling.
-    Includes accessibility features, animations, and loading states.
+    Import vacancies form page - Clean design with jb-* pattern.
 
-    Context variables required for this template:
-    * pagetitle - string - Page title
-    * breadcrumbs - array - Breadcrumb items
-    * backurl - string - Back URL
-    * backtext - string - Back button text
-    * csvcolumns - array - CSV column documentation
-    * csvexample - string - CSV example content
-    * formhtml - string - Rendered form HTML
-    * loading - bool - Show skeleton loading state
-    * str - object - Language strings
-
-    Example context (json):
-    {
-        "pagetitle": "Import Vacancies",
-        "backurl": "/local/jobboard/index.php?view=convocatorias"
-    }
+    Context variables:
+    * pagetitle - Page title
+    * backurl - Back URL
+    * backtext - Back button text
+    * csvcolumns - CSV column documentation
+    * csvexample - CSV example content
+    * formhtml - Rendered form HTML
+    * str - Language strings
 }}
-{{#loading}}
-{{! Skeleton Loading State }}
-<div class="jb-import-vacancies" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="mb-4">
-        <div class="jb-skeleton-text" style="width: 180px; height: 38px;"></div>
+<div class="jb-import" id="jobboard-import">
+    {{! Header }}
+    <div class="jb-import-header">
+        <div class="jb-import-header__nav">
+            <a href="{{backurl}}" class="jb-link">
+                <i class="fa fa-arrow-left"></i> {{str.backtoconvocatorias}}
+            </a>
+        </div>
+        <h1 class="jb-import-header__title">
+            <i class="fa fa-file-import"></i> {{str.importvacancies}}
+        </h1>
+        <p class="jb-import-header__subtitle">{{#str}}importvacancies_desc, local_jobboard{{/str}}</p>
     </div>
-    <div class="card mb-4">
-        <div class="card-header">
-            <div class="jb-skeleton-text" style="width: 150px;"></div>
-        </div>
-        <div class="card-body">
-            <div class="jb-skeleton-text mb-3" style="width: 100%; height: 200px;"></div>
-            <div class="jb-skeleton-text" style="width: 100%; height: 80px;"></div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="jb-skeleton-text" style="width: 100%; height: 150px;"></div>
-        </div>
-    </div>
-</div>
-{{/loading}}
 
-{{^loading}}
-<div class="jb-import-vacancies" data-region="jobboard-import-vacancies">
-    {{! Skip Link for Accessibility }}
-    <a href="#import-form-content" class="jb-skip-link">
-        {{#str}}skiptocontent, local_jobboard{{/str}}
-    </a>
-
-    {{! Page Header }}
-    <header class="d-flex justify-content-between align-items-center mb-4 jb-fade-in">
-        <h3 class="mb-0">
-            <i class="fa fa-file-import text-primary me-2" aria-hidden="true"></i>
-            {{str.importvacancies}}
-        </h3>
-        <a href="{{backurl}}" class="btn btn-outline-secondary jb-hover-lift">
-            <i class="fa fa-arrow-left me-2" aria-hidden="true"></i>
-            {{str.backtoconvocatorias}}
-        </a>
-    </header>
-
-    {{! CSV Format Help Card }}
-    <section class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.05s;" aria-labelledby="csv-format-heading">
-        <div class="card-header bg-white d-flex align-items-center">
-            <i class="fa fa-file-csv fa-lg text-info me-3" aria-hidden="true"></i>
-            <h5 class="mb-0" id="csv-format-heading">
-                {{str.csvformat}}
-            </h5>
+    {{! CSV Format Documentation }}
+    <div class="jb-card jb-card--info">
+        <div class="jb-card__header">
+            <div class="jb-card__header-icon jb-card__header-icon--info">
+                <i class="fa fa-file-csv"></i>
+            </div>
+            <h2 class="jb-card__title">{{str.csvformat}}</h2>
         </div>
-        <div class="card-body">
-            <p class="text-muted mb-4">{{str.csvformatdesc}}</p>
+        <div class="jb-card__body">
+            <p class="jb-card__desc">{{str.csvformatdesc}}</p>
 
             {{! Column Documentation Table }}
-            <div class="table-responsive mb-4">
-                <table class="table jb-table-sm table-bordered table-striped" aria-describedby="csv-format-heading">
-                    <thead class="jb-thead-dark">
-                        <tr>
-                            <th scope="col">
-                                <i class="fa fa-columns me-1" aria-hidden="true"></i>
-                                {{str.column}}
-                            </th>
-                            <th scope="col">
-                                <i class="fa fa-circle-info me-1" aria-hidden="true"></i>
-                                {{str.description}}
-                            </th>
-                            <th scope="col" class="text-center">
-                                <i class="fa fa-asterisk me-1" aria-hidden="true"></i>
-                                {{str.required}}
-                            </th>
-                            <th scope="col">
-                                <i class="fa fa-code me-1" aria-hidden="true"></i>
-                                {{str.example}}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#csvcolumns}}
-                        <tr class="jb-fade-in" style="animation-delay: calc(0.1s + {{@index}} * 0.02s);">
-                            <td><code class="text-primary">{{name}}</code></td>
-                            <td>{{description}}</td>
-                            <td class="text-center">
-                                {{#isrequired}}
-                                <span class="badge bg-danger">{{#str}}yes{{/str}}</span>
-                                {{/isrequired}}
-                                {{^isrequired}}
-                                <span class="badge bg-secondary">{{#str}}no{{/str}}</span>
-                                {{/isrequired}}
-                            </td>
-                            <td><code class="text-muted">{{example}}</code></td>
-                        </tr>
-                        {{/csvcolumns}}
-                    </tbody>
-                </table>
-            </div>
+            <table class="jb-table jb-table--compact">
+                <thead>
+                    <tr>
+                        <th><i class="fa fa-columns"></i> {{str.column}}</th>
+                        <th><i class="fa fa-circle-info"></i> {{str.description}}</th>
+                        <th class="jb-text-center"><i class="fa fa-asterisk"></i> {{str.required}}</th>
+                        <th class="jb-hide-mobile"><i class="fa fa-code"></i> {{str.example}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#csvcolumns}}
+                    <tr>
+                        <td><code class="jb-code">{{name}}</code></td>
+                        <td>{{description}}</td>
+                        <td class="jb-text-center">
+                            {{#isrequired}}
+                            <span class="jb-badge jb-badge--danger">{{#str}}yes{{/str}}</span>
+                            {{/isrequired}}
+                            {{^isrequired}}
+                            <span class="jb-badge jb-badge--secondary">{{#str}}no{{/str}}</span>
+                            {{/isrequired}}
+                        </td>
+                        <td class="jb-hide-mobile"><code class="jb-code jb-code--muted">{{example}}</code></td>
+                    </tr>
+                    {{/csvcolumns}}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-            {{! CSV Example }}
-            <div class="card bg-light mb-0">
-                <div class="card-header bg-white d-flex align-items-center">
-                    <i class="fa fa-code fa-lg text-secondary me-3" aria-hidden="true"></i>
-                    <h6 class="mb-0">
-                        {{str.csvexample}}
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted small mb-3">{{str.csvexampledesc}}</p>
-                    <pre class="bg-dark text-light p-3 rounded small jb-code-block mb-3"><code>{{csvexample}}</code></pre>
-                    <div class="alert alert-warning jb-alert-warning d-flex align-items-center mb-0" role="note">
-                        <i class="fa fa-lightbulb me-2" aria-hidden="true"></i>
-                        <small>{{str.csvexampletip}}</small>
-                    </div>
-                </div>
+    {{! CSV Example }}
+    <div class="jb-card">
+        <div class="jb-card__header">
+            <div class="jb-card__header-icon">
+                <i class="fa fa-code"></i>
+            </div>
+            <h2 class="jb-card__title">{{str.csvexample}}</h2>
+        </div>
+        <div class="jb-card__body">
+            <p class="jb-card__desc">{{str.csvexampledesc}}</p>
+            <div class="jb-code-block">
+                <pre><code>{{csvexample}}</code></pre>
+            </div>
+            <div class="jb-alert jb-alert--warning jb-alert--compact">
+                <i class="fa fa-lightbulb"></i>
+                <span>{{str.csvexampletip}}</span>
             </div>
         </div>
-    </section>
+    </div>
 
-    {{! Import Form Card }}
-    <main id="import-form-content">
-        <section class="card shadow-sm jb-fade-in-up" style="animation-delay: 0.1s;" aria-labelledby="import-form-heading">
-            <div class="card-header bg-white d-flex align-items-center">
-                <i class="fa fa-upload fa-lg text-primary me-3" aria-hidden="true"></i>
-                <h5 class="mb-0" id="import-form-heading">
-                    {{#str}}uploadcsv, local_jobboard{{/str}}
-                </h5>
+    {{! Import Form }}
+    <div class="jb-card jb-card--primary">
+        <div class="jb-card__header">
+            <div class="jb-card__header-icon jb-card__header-icon--primary">
+                <i class="fa fa-upload"></i>
             </div>
-            <div class="card-body">
+            <h2 class="jb-card__title">{{#str}}uploadcsv, local_jobboard{{/str}}</h2>
+        </div>
+        <div class="jb-card__body">
+            <div class="jb-form-container">
                 {{{formhtml}}}
             </div>
-        </section>
-    </main>
-
-    {{! Help Tips }}
-    <aside class="mt-4 jb-fade-in" style="animation-delay: 0.15s;">
-        <div class="alert jb-alert-light d-flex align-items-start">
-            <i class="fa fa-circle-info text-info me-3 mt-1" aria-hidden="true"></i>
-            <div>
-                <strong class="d-block mb-1">{{#str}}importtips, local_jobboard{{/str}}</strong>
-                <ul class="mb-0 small text-muted jb-pl-3">
-                    <li>{{#str}}importtip1, local_jobboard{{/str}}</li>
-                    <li>{{#str}}importtip2, local_jobboard{{/str}}</li>
-                    <li>{{#str}}importtip3, local_jobboard{{/str}}</li>
-                </ul>
-            </div>
         </div>
-    </aside>
+    </div>
+
+    {{! Tips Section }}
+    <div class="jb-tips">
+        <div class="jb-tips__header">
+            <i class="fa fa-circle-info"></i>
+            <h3>{{#str}}importtips, local_jobboard{{/str}}</h3>
+        </div>
+        <ul class="jb-tips__list">
+            <li><i class="fa fa-check"></i> {{#str}}importtip1, local_jobboard{{/str}}</li>
+            <li><i class="fa fa-check"></i> {{#str}}importtip2, local_jobboard{{/str}}</li>
+            <li><i class="fa fa-check"></i> {{#str}}importtip3, local_jobboard{{/str}}</li>
+        </ul>
+    </div>
+
+    {{! Footer Navigation }}
+    <div class="jb-footer-nav">
+        <a href="{{backurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-arrow-left"></i> {{str.backtoconvocatorias}}
+        </a>
+    </div>
 </div>
-{{/loading}}
+
+<style>
+/* Import Page - Clean jb-* Design */
+.jb-import { max-width: 900px; padding: 1rem; }
+
+/* Header */
+.jb-import-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-import-header__nav { margin-bottom: 1rem; }
+.jb-import-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-import-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-import-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
+
+/* Links */
+.jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
+
+/* Cards */
+.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; }
+.jb-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
+.jb-card--info { border-top: 3px solid #17a2b8; }
+.jb-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 0.75rem; }
+.jb-card__header-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
+.jb-card__header-icon--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-card__header-icon--info { background: rgba(23, 162, 184, 0.15); color: #17a2b8; }
+.jb-card__title { font-size: 1rem; font-weight: 600; margin: 0; flex: 1; color: var(--iser-negro, #1a1a1a); }
+.jb-card__body { padding: 1rem; }
+.jb-card__desc { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1rem; line-height: 1.5; }
+
+/* Table */
+.jb-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.jb-table--compact { font-size: 0.8125rem; }
+.jb-table th { padding: 0.625rem 0.75rem; text-align: left; font-weight: 600; color: var(--iser-gris-oscuro, #333); background: #f9fafb; border-bottom: 1px solid #e5e5e5; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.025em; }
+.jb-table th i { margin-right: 0.375rem; opacity: 0.7; }
+.jb-table td { padding: 0.625rem 0.75rem; border-bottom: 1px solid #f0f0f0; color: var(--iser-gris-oscuro, #333); }
+.jb-table tbody tr:hover { background: #f9fafb; }
+.jb-table tbody tr:last-child td { border-bottom: none; }
+
+/* Code */
+.jb-code { font-family: 'Monaco', 'Consolas', monospace; font-size: 0.75rem; color: var(--iser-verde, #1b9e88); background: rgba(27, 158, 136, 0.1); padding: 0.125rem 0.375rem; border-radius: 4px; }
+.jb-code--muted { color: var(--iser-gris-medio, #666); background: #f1f5f9; }
+
+/* Code Block */
+.jb-code-block { background: #1e293b; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; overflow-x: auto; }
+.jb-code-block pre { margin: 0; }
+.jb-code-block code { font-family: 'Monaco', 'Consolas', monospace; font-size: 0.75rem; color: #e2e8f0; white-space: pre; }
+
+/* Text Utilities */
+.jb-text-center { text-align: center; }
+.jb-hide-mobile { display: table-cell; }
+
+/* Badges */
+.jb-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.6875rem; font-weight: 500; }
+.jb-badge--danger { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
+.jb-badge--secondary { background: #e9ecef; color: #6c757d; }
+
+/* Alerts */
+.jb-alert { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem; border-radius: 8px; }
+.jb-alert > i { font-size: 1rem; margin-top: 0.125rem; }
+.jb-alert > span { font-size: 0.8125rem; line-height: 1.5; }
+.jb-alert--warning { background: rgba(255, 193, 7, 0.15); border: 1px solid rgba(255, 193, 7, 0.3); color: #856404; }
+.jb-alert--compact { padding: 0.75rem; }
+
+/* Form Container */
+.jb-form-container { }
+.jb-form-container .form-group { margin-bottom: 1rem; }
+
+/* Tips Section */
+.jb-tips { background: #f9fafb; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem; }
+.jb-tips__header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.jb-tips__header i { font-size: 1.125rem; color: #17a2b8; }
+.jb-tips__header h3 { font-size: 0.9375rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); }
+.jb-tips__list { list-style: none; padding: 0; margin: 0; }
+.jb-tips__list li { font-size: 0.8125rem; color: var(--iser-gris-medio, #666); padding: 0.375rem 0; display: flex; align-items: flex-start; gap: 0.625rem; }
+.jb-tips__list li i { color: var(--iser-verde, #1b9e88); font-size: 0.75rem; margin-top: 0.25rem; }
+
+/* Buttons */
+.jb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.5rem 1rem; border: 1px solid transparent; border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+
+/* Footer Nav */
+.jb-footer-nav { display: flex; justify-content: flex-start; padding: 1.5rem 0; margin-top: 1rem; border-top: 1px solid #e5e5e5; }
+
+/* Mobile */
+@media (max-width: 768px) {
+    .jb-import-header__title { font-size: 1.25rem; }
+    .jb-hide-mobile { display: none; }
+    .jb-table--compact th, .jb-table--compact td { padding: 0.5rem; }
+}
+@media print { .jb-btn, .jb-footer-nav { display: none; } }
+</style>

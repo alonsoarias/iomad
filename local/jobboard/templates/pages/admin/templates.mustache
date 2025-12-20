@@ -1,321 +1,378 @@
 {{!
     @template local_jobboard/pages/admin_templates
 
-    Email Templates administration page.
-    Uses jb-* CSS classes for consistent styling.
-    Includes accessibility features, animations, and loading states.
+    Email Templates administration page - Clean design with jb-* pattern.
 
-    Context variables required for this template:
-    * pageurl - string - Base page URL
-    * stats - object - Statistics (total, enabled, disabled, categories)
-    * categories - array - Available categories for tabs
-    * currentcategory - string - Currently selected category
-    * hastemplates - boolean - Whether there are templates
-    * templates - array - List of templates
-    * installurl - string - URL to install defaults
-    * dashboardurl - string - Dashboard URL
-    * doctypesurl - string - Doctypes admin URL
-    * rolesurl - string - Roles admin URL
-    * settingsurl - string - Plugin settings URL
-    * loading - bool - Show skeleton loading state
-    * str - object - Language strings
-
-    Example context (json):
-    {
-        "pageurl": "/local/jobboard/admin/templates.php",
-        "stats": {
-            "total": 10,
-            "enabled": 8,
-            "disabled": 2,
-            "categories": 5
-        },
-        "hastemplates": true
-    }
+    Context variables:
+    * pageurl - Base page URL
+    * stats - Statistics (total, enabled, disabled, categories)
+    * categories - Available categories for tabs
+    * currentcategory - Currently selected category
+    * hastemplates - Whether there are templates
+    * templates - List of templates
+    * installurl - URL to install defaults
+    * dashboardurl - Dashboard URL
+    * doctypesurl - Doctypes admin URL
+    * rolesurl - Roles admin URL
+    * settingsurl - Plugin settings URL
+    * str - Language strings
 }}
-{{#loading}}
-{{! Skeleton Loading State }}
-<div class="jb-admin-templates" aria-busy="true" aria-label="{{#str}}loading{{/str}}">
-    <div class="d-flex justify-content-between mb-4">
-        <div class="jb-skeleton-title" style="width: 200px;"></div>
-        <div class="d-flex gap-2">
-            <div class="jb-skeleton-text" style="width: 100px; height: 38px;"></div>
-            <div class="jb-skeleton-text" style="width: 120px; height: 38px;"></div>
+<div class="jb-templates" id="jobboard-templates">
+    {{! Header }}}
+    <div class="jb-templates-header">
+        <div class="jb-templates-header__nav">
+            <a href="{{dashboardurl}}" class="jb-link">
+                <i class="fa fa-arrow-left"></i> {{str.dashboard}}
+            </a>
+        </div>
+        <h1 class="jb-templates-header__title">
+            <i class="fa fa-envelope"></i> {{str.emailtemplates}}
+        </h1>
+        <p class="jb-templates-header__subtitle">{{#str}}templatesdesc, local_jobboard{{/str}}</p>
+    </div>
+
+    {{! Stats Cards }}}
+    <div class="jb-stats">
+        <div class="jb-stat-card jb-stat-card--primary">
+            <div class="jb-stat-card__icon">
+                <i class="fa fa-envelope"></i>
+            </div>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.total}}</span>
+                <span class="jb-stat-card__label">{{str.totaltemplates}}</span>
+            </div>
+        </div>
+        <div class="jb-stat-card jb-stat-card--success">
+            <div class="jb-stat-card__icon">
+                <i class="fa fa-circle-check"></i>
+            </div>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.enabled}}</span>
+                <span class="jb-stat-card__label">{{str.templatesenabled}}</span>
+            </div>
+        </div>
+        <div class="jb-stat-card jb-stat-card--warning">
+            <div class="jb-stat-card__icon">
+                <i class="fa fa-circle-pause"></i>
+            </div>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.disabled}}</span>
+                <span class="jb-stat-card__label">{{str.templatesdisabled}}</span>
+            </div>
+        </div>
+        <div class="jb-stat-card jb-stat-card--info">
+            <div class="jb-stat-card__icon">
+                <i class="fa fa-folder"></i>
+            </div>
+            <div class="jb-stat-card__content">
+                <span class="jb-stat-card__value">{{stats.categories}}</span>
+                <span class="jb-stat-card__label">{{str.templatecategories}}</span>
+            </div>
         </div>
     </div>
-    <div class="row mb-4">
-        <div class="col-md-3"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
-        <div class="col-md-3"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
-        <div class="col-md-3"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
-        <div class="col-md-3"><div class="jb-skeleton-text" style="height: 80px;"></div></div>
+
+    {{! Install Defaults Action }}}
+    <div class="jb-action-bar">
+        <a href="{{installurl}}" class="jb-btn jb-btn--success">
+            <i class="fa fa-download"></i> {{str.installdefaults}}
+        </a>
     </div>
-    <div class="card">
-        <div class="card-header"><div class="jb-skeleton-text" style="width: 300px;"></div></div>
-        <div class="card-body"><div class="jb-skeleton-text" style="height: 300px;"></div></div>
+
+    {{! Category Tabs }}}
+    <div class="jb-tabs">
+        <a href="{{pageurl}}" class="jb-tab {{^currentcategory}}jb-tab--active{{/currentcategory}}">
+            <i class="fa fa-list"></i>
+            <span>{{str.all}}</span>
+            <span class="jb-tab__count">{{stats.total}}</span>
+        </a>
+        {{#categories}}
+        <a href="{{url}}" class="jb-tab {{#isactive}}jb-tab--active{{/isactive}}">
+            <span>{{name}}</span>
+            <span class="jb-tab__count">{{count}}</span>
+        </a>
+        {{/categories}}
+    </div>
+
+    {{! Templates Table }}}
+    {{#hastemplates}}
+    <div class="jb-card">
+        <div class="jb-card__header">
+            <div class="jb-card__header-icon">
+                <i class="fa fa-list"></i>
+            </div>
+            <h2 class="jb-card__title">{{str.emailtemplates}}</h2>
+            <span class="jb-badge jb-badge--primary">{{stats.total}}</span>
+        </div>
+        <div class="jb-card__body jb-card__body--flush">
+            <table class="jb-table">
+                <thead>
+                    <tr>
+                        <th>{{str.templatename}}</th>
+                        <th>{{str.templatecode}}</th>
+                        <th class="jb-hide-mobile">{{str.templatecategory}}</th>
+                        <th class="jb-hide-mobile">{{str.subject}}</th>
+                        <th class="jb-text-center">{{str.status}}</th>
+                        <th class="jb-text-center">{{str.actions}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#templates}}
+                    <tr class="{{#isdisabled}}jb-row--muted{{/isdisabled}}">
+                        <td>
+                            <strong>{{name}}</strong>
+                            {{#isdefault}}
+                            <span class="jb-badge jb-badge--light">
+                                <i class="fa fa-star"></i> {{str.default}}
+                            </span>
+                            {{/isdefault}}
+                        </td>
+                        <td>
+                            <code class="jb-code">{{code}}</code>
+                        </td>
+                        <td class="jb-hide-mobile">
+                            <span class="jb-badge jb-badge--outline">
+                                <i class="fa fa-folder"></i> {{categoryname}}
+                            </span>
+                        </td>
+                        <td class="jb-hide-mobile">
+                            <span class="jb-text-truncate" title="{{subjectfull}}">{{subjectpreview}}</span>
+                        </td>
+                        <td class="jb-text-center">
+                            {{#enabled}}
+                            <span class="jb-badge jb-badge--success">
+                                <i class="fa fa-circle-check"></i> {{str.enabled}}
+                            </span>
+                            {{/enabled}}
+                            {{^enabled}}
+                            <span class="jb-badge jb-badge--secondary">
+                                <i class="fa fa-circle-xmark"></i> {{str.disabled}}
+                            </span>
+                            {{/enabled}}
+                        </td>
+                        <td class="jb-text-center">
+                            <div class="jb-btn-group">
+                                <a href="{{editurl}}" class="jb-btn jb-btn--icon jb-btn--outline-primary" title="{{str.edit}}">
+                                    <i class="fa fa-pen-to-square"></i>
+                                </a>
+                                {{#hassavedid}}
+                                <a href="{{toggleurl}}" class="jb-btn jb-btn--icon jb-btn--outline-secondary" title="{{str.togglestatus}}">
+                                    <i class="fa {{toggleicon}}"></i>
+                                </a>
+                                {{/hassavedid}}
+                                {{#canreset}}
+                                <a href="{{reseturl}}" class="jb-btn jb-btn--icon jb-btn--outline-warning" title="{{str.resettodefault}}" onclick="return confirm('{{str.confirmreset}}');">
+                                    <i class="fa fa-rotate-left"></i>
+                                </a>
+                                {{/canreset}}
+                            </div>
+                        </td>
+                    </tr>
+                    {{/templates}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/hastemplates}}
+
+    {{! Empty State }}}
+    {{^hastemplates}}
+    <div class="jb-empty-state">
+        <div class="jb-empty-state__icon">
+            <i class="fa fa-envelope-open"></i>
+        </div>
+        <h3 class="jb-empty-state__title">{{str.notemplates}}</h3>
+        <p class="jb-empty-state__desc">{{#str}}notemplates_desc, local_jobboard{{/str}}</p>
+        <a href="{{installurl}}" class="jb-btn jb-btn--primary">
+            <i class="fa fa-download"></i> {{str.installdefaults}}
+        </a>
+    </div>
+    {{/hastemplates}}
+
+    {{! Help Section }}}
+    <div class="jb-help-section">
+        <div class="jb-help-section__header">
+            <i class="fa fa-circle-question"></i>
+            <h3>{{str.templatehelptitle}}</h3>
+        </div>
+        <div class="jb-help-section__grid">
+            <div class="jb-help-item">
+                <div class="jb-help-item__icon jb-help-item__icon--primary">
+                    <i class="fa fa-code"></i>
+                </div>
+                <div class="jb-help-item__content">
+                    <h4>{{str.placeholders}}</h4>
+                    <p>{{str.templatehelpplaceholders}}</p>
+                </div>
+            </div>
+            <div class="jb-help-item">
+                <div class="jb-help-item__icon jb-help-item__icon--warning">
+                    <i class="fa fa-code"></i>
+                </div>
+                <div class="jb-help-item__content">
+                    <h4>{{str.htmlsupport}}</h4>
+                    <p>{{str.templatehelphtml}}</p>
+                </div>
+            </div>
+            <div class="jb-help-item">
+                <div class="jb-help-item__icon jb-help-item__icon--info">
+                    <i class="fa fa-building"></i>
+                </div>
+                <div class="jb-help-item__content">
+                    <h4>{{str.multitenant}}</h4>
+                    <p>{{str.templatehelptenant}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{! Footer Navigation }}}
+    <div class="jb-footer-nav">
+        <a href="{{dashboardurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-gauge"></i> {{str.dashboard}}
+        </a>
+        <a href="{{doctypesurl}}" class="jb-btn jb-btn--outline-primary">
+            <i class="fa fa-file-lines"></i> {{str.doctypes}}
+        </a>
+        <a href="{{rolesurl}}" class="jb-btn jb-btn--outline-info">
+            <i class="fa fa-user-tag"></i> {{str.manageroles}}
+        </a>
+        <a href="{{settingsurl}}" class="jb-btn jb-btn--outline">
+            <i class="fa fa-gear"></i> {{str.pluginsettings}}
+        </a>
     </div>
 </div>
-{{/loading}}
 
-{{^loading}}
-<div class="jb-admin-templates" data-region="jobboard-admin-templates">
-    {{! Skip Link for Accessibility }}
-    <a href="#templates-content" class="jb-skip-link">
-        {{#str}}skiptocontent, local_jobboard{{/str}}
-    </a>
+<style>
+/* Templates Page - Clean jb-* Design */
+.jb-templates { max-width: 1200px; padding: 1rem; }
 
-    {{! Page Header }}
-    <header class="jb-page-header d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 jb-fade-in">
-        <h2 class="jb-page-title mb-0">
-            <i class="fa fa-envelope text-primary me-2" aria-hidden="true"></i>
-            {{str.emailtemplates}}
-        </h2>
-        <nav class="jb-header-actions" aria-label="{{#str}}actions{{/str}}">
-            <a href="{{dashboardurl}}" class="btn btn-outline-secondary me-2 jb-hover-lift">
-                <i class="fa fa-gauge me-1" aria-hidden="true"></i>
-                {{str.dashboard}}
-            </a>
-            <a href="{{installurl}}" class="btn btn-success jb-btn-success jb-hover-lift">
-                <i class="fa fa-download me-1" aria-hidden="true"></i>
-                {{str.installdefaults}}
-            </a>
-        </nav>
-    </header>
+/* Header */
+.jb-templates-header { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e5e5; }
+.jb-templates-header__nav { margin-bottom: 1rem; }
+.jb-templates-header__title { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.25rem; color: var(--iser-negro, #1a1a1a); display: flex; align-items: center; gap: 0.75rem; }
+.jb-templates-header__title i { color: var(--iser-verde, #1b9e88); }
+.jb-templates-header__subtitle { font-size: 1rem; color: var(--iser-gris-medio, #666); margin: 0; }
 
-    {{! Statistics Cards }}
-    <section class="row mb-4" aria-label="{{#str}}statistics, local_jobboard{{/str}}">
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.05s;">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-envelope fa-2x text-primary mb-2" aria-hidden="true"></i>
-                    <div class="fs-2 fw-bold text-dark">{{stats.total}}</div>
-                    <div class="small text-muted">{{str.totaltemplates}}</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.1s;">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-circle-check fa-2x text-success mb-2" aria-hidden="true"></i>
-                    <div class="fs-2 fw-bold text-dark">{{stats.enabled}}</div>
-                    <div class="small text-muted">{{str.templatesenabled}}</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.15s;">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-circle-pause fa-2x text-warning mb-2" aria-hidden="true"></i>
-                    <div class="fs-2 fw-bold text-dark">{{stats.disabled}}</div>
-                    <div class="small text-muted">{{str.templatesdisabled}}</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="card shadow-sm h-100 jb-fade-in-up" style="animation-delay: 0.2s;">
-                <div class="card-body text-center py-3">
-                    <i class="fa fa-folder fa-2x text-info mb-2" aria-hidden="true"></i>
-                    <div class="fs-2 fw-bold text-dark">{{stats.categories}}</div>
-                    <div class="small text-muted">{{str.templatecategories}}</div>
-                </div>
-            </div>
-        </div>
-    </section>
+/* Links */
+.jb-link { color: var(--iser-verde, #1b9e88); text-decoration: none; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+.jb-link:hover { color: var(--iser-verde-dark, #157a6a); }
 
-    {{! Category Filter Tabs and Templates Table }}
-    <main id="templates-content">
-        <div class="card shadow-sm mb-4 jb-fade-in-up" style="animation-delay: 0.25s;">
-            <div class="card-header bg-white p-0">
-                <nav aria-label="{{#str}}templatecategories, local_jobboard{{/str}}">
-                    <ul class="nav nav-tabs jb-nav-fill card-header-tabs mb-0">
-                        <li class="nav-item">
-                            <a href="{{pageurl}}" class="nav-link {{^currentcategory}}jb-active{{/currentcategory}}"
-                               {{^currentcategory}}aria-current="page"{{/currentcategory}}>
-                                <i class="fa fa-list me-1" aria-hidden="true"></i>
-                                {{str.all}}
-                                <span class="badge bg-primary ms-1">{{stats.total}}</span>
-                            </a>
-                        </li>
-                        {{#categories}}
-                        <li class="nav-item">
-                            <a href="{{url}}" class="nav-link {{#isactive}}jb-active{{/isactive}}"
-                               {{#isactive}}aria-current="page"{{/isactive}}>
-                                {{name}}
-                                <span class="badge bg-secondary ms-1">{{count}}</span>
-                            </a>
-                        </li>
-                        {{/categories}}
-                    </ul>
-                </nav>
-            </div>
+/* Stats */
+.jb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.jb-stat-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; display: flex; align-items: center; gap: 1rem; transition: transform 0.2s, box-shadow 0.2s; }
+.jb-stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.jb-stat-card--primary { border-top: 3px solid var(--iser-verde, #1b9e88); }
+.jb-stat-card--success { border-top: 3px solid #28a745; }
+.jb-stat-card--warning { border-top: 3px solid #ffc107; }
+.jb-stat-card--info { border-top: 3px solid #17a2b8; }
+.jb-stat-card__icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+.jb-stat-card--primary .jb-stat-card__icon { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-stat-card--success .jb-stat-card__icon { background: rgba(40, 167, 69, 0.15); color: #28a745; }
+.jb-stat-card--warning .jb-stat-card__icon { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
+.jb-stat-card--info .jb-stat-card__icon { background: rgba(23, 162, 184, 0.15); color: #17a2b8; }
+.jb-stat-card__content { display: flex; flex-direction: column; }
+.jb-stat-card__value { font-size: 1.5rem; font-weight: 700; color: var(--iser-negro, #1a1a1a); line-height: 1; }
+.jb-stat-card__label { font-size: 0.75rem; color: var(--iser-gris-medio, #666); margin-top: 0.25rem; }
 
-            <div class="card-body">
-                {{^hastemplates}}
-                {{! Empty State }}
-                <div class="text-center py-5" role="status">
-                    <i class="fa fa-envelope-open fa-4x text-muted opacity-50 mb-3" aria-hidden="true"></i>
-                    <h5 class="text-muted mb-2">{{str.notemplates}}</h5>
-                    <p class="text-muted small mb-4">{{#str}}notemplates_desc, local_jobboard{{/str}}</p>
-                    <a href="{{installurl}}" class="btn btn-primary jb-btn-primary jb-hover-lift">
-                        <i class="fa fa-download me-2" aria-hidden="true"></i>
-                        {{str.installdefaults}}
-                    </a>
-                </div>
-                {{/hastemplates}}
+/* Action Bar */
+.jb-action-bar { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
 
-                {{#hastemplates}}
-                {{! Templates Table }}
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped jb-table" aria-label="{{str.emailtemplates}}">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col">
-                                    <i class="fa fa-tag me-1" aria-hidden="true"></i>
-                                    {{str.templatename}}
-                                </th>
-                                <th scope="col">
-                                    <i class="fa fa-code me-1" aria-hidden="true"></i>
-                                    {{str.templatecode}}
-                                </th>
-                                <th scope="col">
-                                    <i class="fa fa-folder me-1" aria-hidden="true"></i>
-                                    {{str.templatecategory}}
-                                </th>
-                                <th scope="col">
-                                    <i class="fa fa-heading me-1" aria-hidden="true"></i>
-                                    {{str.subject}}
-                                </th>
-                                <th scope="col" class="text-center">{{str.status}}</th>
-                                <th scope="col" class="text-center">{{str.actions}}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#templates}}
-                            <tr class="{{#isdisabled}}jb-table-secondary{{/isdisabled}} jb-fade-in" style="animation-delay: calc(0.3s + {{@index}} * 0.03s);">
-                                <td>
-                                    <strong>{{name}}</strong>
-                                    {{#isdefault}}
-                                    <span class="badge bg-light text-dark ms-1">
-                                        <i class="fa fa-star text-warning me-1" aria-hidden="true"></i>
-                                        {{str.default}}
-                                    </span>
-                                    {{/isdefault}}
-                                </td>
-                                <td>
-                                    <code class="text-primary">{{code}}</code>
-                                </td>
-                                <td>
-                                    <span class="badge {{categorybadgeclass}}">
-                                        <i class="fa fa-folder me-1" aria-hidden="true"></i>
-                                        {{categoryname}}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="text-truncate d-inline-block" style="max-width: 200px;" title="{{subjectfull}}">
-                                        {{subjectpreview}}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    {{#enabled}}
-                                    <span class="badge bg-success">
-                                        <i class="fa fa-circle-check me-1" aria-hidden="true"></i>
-                                        {{str.enabled}}
-                                    </span>
-                                    {{/enabled}}
-                                    {{^enabled}}
-                                    <span class="badge bg-secondary">
-                                        <i class="fa fa-circle-xmark me-1" aria-hidden="true"></i>
-                                        {{str.disabled}}
-                                    </span>
-                                    {{/enabled}}
-                                </td>
-                                <td class="text-center jb-action-buttons">
-                                    <div class="btn-group" role="group" aria-label="{{#str}}actions{{/str}}">
-                                        <a href="{{editurl}}" class="btn btn-sm btn-outline-primary jb-btn-outline-primary" title="{{str.edit}}" aria-label="{{str.edit}} {{name}}">
-                                            <i class="fa fa-pen-to-square" aria-hidden="true"></i>
-                                        </a>
-                                        {{#hassavedid}}
-                                        <a href="{{toggleurl}}" class="btn btn-sm btn-outline-secondary" title="{{str.togglestatus}}" aria-label="{{str.togglestatus}} {{name}}">
-                                            <i class="fa {{toggleicon}}" aria-hidden="true"></i>
-                                        </a>
-                                        {{/hassavedid}}
-                                        {{#canreset}}
-                                        <a href="{{reseturl}}" class="btn btn-sm btn-outline-warning jb-btn-outline-warning" title="{{str.resettodefault}}" aria-label="{{str.resettodefault}} {{name}}"
-                                           onclick="return confirm('{{str.confirmreset}}');">
-                                            <i class="fa fa-rotate-left" aria-hidden="true"></i>
-                                        </a>
-                                        {{/canreset}}
-                                    </div>
-                                </td>
-                            </tr>
-                            {{/templates}}
-                        </tbody>
-                    </table>
-                </div>
-                {{/hastemplates}}
-            </div>
-        </div>
-    </main>
+/* Tabs */
+.jb-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; padding: 0.5rem; background: #f9fafb; border-radius: 8px; }
+.jb-tab { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.875rem; color: var(--iser-gris-oscuro, #333); background: transparent; transition: all 0.15s; }
+.jb-tab:hover { background: #fff; color: var(--iser-verde, #1b9e88); }
+.jb-tab--active { background: #fff; color: var(--iser-verde, #1b9e88); font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.jb-tab__count { font-size: 0.75rem; padding: 0.125rem 0.5rem; border-radius: 10px; background: #e5e5e5; color: var(--iser-gris-medio, #666); }
+.jb-tab--active .jb-tab__count { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
 
-    {{! Help Section }}
-    <aside class="card shadow-sm mb-4 jb-fade-in" style="animation-delay: 0.35s;">
-        <div class="card-header bg-white d-flex align-items-center">
-            <i class="fa fa-circle-question fa-lg text-secondary me-3" aria-hidden="true"></i>
-            <h6 class="mb-0">
-                {{str.templatehelptitle}}
-            </h6>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <div class="d-flex align-items-start">
-                        <i class="fa fa-code fa-lg text-primary me-3 mt-1" aria-hidden="true"></i>
-                        <div>
-                            <h6 class="mb-1">{{str.placeholders}}</h6>
-                            <small class="text-muted">{{str.templatehelpplaceholders}}</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <div class="d-flex align-items-start">
-                        <i class="fa fa-code fa-lg text-warning me-3 mt-1" aria-hidden="true"></i>
-                        <div>
-                            <h6 class="mb-1">{{str.htmlsupport}}</h6>
-                            <small class="text-muted">{{str.templatehelphtml}}</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="d-flex align-items-start">
-                        <i class="fa fa-building fa-lg text-info me-3 mt-1" aria-hidden="true"></i>
-                        <div>
-                            <h6 class="mb-1">{{str.multitenant}}</h6>
-                            <small class="text-muted">{{str.templatehelptenant}}</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </aside>
+/* Cards */
+.jb-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; overflow: hidden; margin-bottom: 1.5rem; }
+.jb-card__header { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 0.75rem; }
+.jb-card__header-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
+.jb-card__title { font-size: 1rem; font-weight: 600; margin: 0; flex: 1; color: var(--iser-negro, #1a1a1a); }
+.jb-card__body { padding: 1rem; }
+.jb-card__body--flush { padding: 0; }
 
-    {{! Navigation Footer }}
-    <footer class="card shadow-sm bg-light jb-fade-in" style="animation-delay: 0.4s;">
-        <div class="card-body d-flex flex-wrap align-items-center justify-content-center gap-2">
-            <a href="{{dashboardurl}}" class="btn btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-gauge me-2" aria-hidden="true"></i>
-                {{str.dashboard}}
-            </a>
-            <a href="{{doctypesurl}}" class="btn btn-outline-primary jb-btn-outline-primary jb-hover-lift">
-                <i class="fa fa-file-lines me-2" aria-hidden="true"></i>
-                {{str.doctypes}}
-            </a>
-            <a href="{{rolesurl}}" class="btn btn-outline-info jb-btn-outline-info jb-hover-lift">
-                <i class="fa fa-user-tag me-2" aria-hidden="true"></i>
-                {{str.manageroles}}
-            </a>
-            <a href="{{settingsurl}}" class="btn btn-outline-secondary jb-hover-lift">
-                <i class="fa fa-gear me-2" aria-hidden="true"></i>
-                {{str.pluginsettings}}
-            </a>
-        </div>
-    </footer>
-</div>
-{{/loading}}
+/* Table */
+.jb-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.jb-table th { padding: 0.75rem 1rem; text-align: left; font-weight: 600; color: var(--iser-gris-oscuro, #333); background: #f9fafb; border-bottom: 1px solid #e5e5e5; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.025em; }
+.jb-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; color: var(--iser-gris-oscuro, #333); }
+.jb-table tbody tr:hover { background: #f9fafb; }
+.jb-table tbody tr:last-child td { border-bottom: none; }
+.jb-row--muted { opacity: 0.6; }
+
+/* Code */
+.jb-code { font-family: 'Monaco', 'Consolas', monospace; font-size: 0.8125rem; color: var(--iser-verde, #1b9e88); background: rgba(27, 158, 136, 0.1); padding: 0.125rem 0.375rem; border-radius: 4px; }
+
+/* Text Utilities */
+.jb-text-center { text-align: center; }
+.jb-text-truncate { display: inline-block; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--iser-gris-medio, #666); font-size: 0.8125rem; }
+.jb-hide-mobile { display: table-cell; }
+
+/* Badges */
+.jb-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 10px; font-size: 0.6875rem; font-weight: 500; }
+.jb-badge i { font-size: 0.625rem; }
+.jb-badge--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde-dark, #157a6a); }
+.jb-badge--success { background: rgba(40, 167, 69, 0.15); color: #1e7e34; }
+.jb-badge--warning { background: rgba(255, 193, 7, 0.15); color: #856404; }
+.jb-badge--secondary { background: #e9ecef; color: #6c757d; }
+.jb-badge--light { background: #f8f9fa; color: #666; border: 1px solid #e5e5e5; }
+.jb-badge--outline { background: transparent; border: 1px solid #d1d5db; color: var(--iser-gris-oscuro, #333); }
+
+/* Buttons */
+.jb-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.5rem 1rem; border: 1px solid transparent; border-radius: 6px; font-size: 0.8125rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+.jb-btn--primary { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--primary:hover { background: var(--iser-verde-dark, #157a6a); color: #fff; }
+.jb-btn--success { background: #28a745; color: #fff; }
+.jb-btn--success:hover { background: #218838; color: #fff; }
+.jb-btn--outline { background: transparent; border-color: #d1d5db; color: var(--iser-gris-oscuro, #333); }
+.jb-btn--outline:hover { border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+.jb-btn--outline-primary { background: transparent; border-color: var(--iser-verde, #1b9e88); color: var(--iser-verde, #1b9e88); }
+.jb-btn--outline-primary:hover { background: var(--iser-verde, #1b9e88); color: #fff; }
+.jb-btn--outline-info { background: transparent; border-color: #17a2b8; color: #17a2b8; }
+.jb-btn--outline-info:hover { background: #17a2b8; color: #fff; }
+.jb-btn--outline-secondary { background: transparent; border-color: #6c757d; color: #6c757d; }
+.jb-btn--outline-secondary:hover { background: #6c757d; color: #fff; }
+.jb-btn--outline-warning { background: transparent; border-color: #ffc107; color: #856404; }
+.jb-btn--outline-warning:hover { background: #ffc107; color: #212529; }
+.jb-btn--icon { padding: 0.375rem 0.5rem; }
+.jb-btn-group { display: inline-flex; gap: 0.25rem; }
+
+/* Empty State */
+.jb-empty-state { text-align: center; padding: 3rem 1.5rem; background: #f9fafb; border-radius: 8px; margin-bottom: 1.5rem; }
+.jb-empty-state__icon { font-size: 3rem; color: #d1d5db; margin-bottom: 1rem; }
+.jb-empty-state__title { font-size: 1.125rem; font-weight: 600; color: var(--iser-negro, #1a1a1a); margin: 0 0 0.5rem; }
+.jb-empty-state__desc { font-size: 0.875rem; color: var(--iser-gris-medio, #666); margin: 0 0 1.5rem; }
+
+/* Help Section */
+.jb-help-section { background: #f9fafb; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+.jb-help-section__header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.jb-help-section__header i { font-size: 1.25rem; color: var(--iser-gris-medio, #666); }
+.jb-help-section__header h3 { font-size: 1rem; font-weight: 600; margin: 0; color: var(--iser-negro, #1a1a1a); }
+.jb-help-section__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.jb-help-item { display: flex; gap: 1rem; }
+.jb-help-item__icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.jb-help-item__icon--primary { background: rgba(27, 158, 136, 0.15); color: var(--iser-verde, #1b9e88); }
+.jb-help-item__icon--warning { background: rgba(255, 193, 7, 0.15); color: #d39e00; }
+.jb-help-item__icon--info { background: rgba(23, 162, 184, 0.15); color: #17a2b8; }
+.jb-help-item__content h4 { font-size: 0.875rem; font-weight: 600; margin: 0 0 0.25rem; color: var(--iser-negro, #1a1a1a); }
+.jb-help-item__content p { font-size: 0.8125rem; color: var(--iser-gris-medio, #666); margin: 0; line-height: 1.4; }
+
+/* Footer Nav */
+.jb-footer-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; padding: 1.5rem 0; margin-top: 1rem; border-top: 1px solid #e5e5e5; }
+
+/* Mobile */
+@media (max-width: 992px) {
+    .jb-stats { grid-template-columns: repeat(2, 1fr); }
+    .jb-help-section__grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .jb-templates-header__title { font-size: 1.25rem; }
+    .jb-stats { grid-template-columns: 1fr; }
+    .jb-tabs { flex-direction: column; }
+    .jb-hide-mobile { display: none; }
+    .jb-footer-nav { flex-direction: column; }
+    .jb-footer-nav .jb-btn { width: 100%; justify-content: center; }
+}
+@media print { .jb-btn, .jb-action-bar, .jb-footer-nav { display: none; } }
+</style>
